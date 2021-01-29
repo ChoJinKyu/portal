@@ -17,16 +17,13 @@ sap.ui.define([
     "ext/lib/util/Multilingual",
     "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
-    "ext/cm/util/control/ui/EmployeeDialog"
-    // @ts-ignore
-    // @ts-ignore
-], function (BaseController, History, MessageBox, MessageToast, Filter, FilterOperator, FilterType, Sorter, JSONModel, ColumnListItem,
-    // @ts-ignore
-    Fragment, TransactionManager, Formatter, Validator, Multilingual, ManagedModel, ManagedListModel, EmployeeDialog) {
+    "cm/util/control/ui/EmployeeDialog",
+
+], function (BaseController, History, MessageBox, MessageToast, Filter, FilterOperator, FilterType, Sorter, JSONModel, ColumnListItem, Fragment, TransactionManager, Formatter, Validator, Multilingual, ManagedModel, ManagedListModel, EmployeeDialog) {
     "use strict";
 
-
     var i18nModel; //i18n 모델
+
     return BaseController.extend("pg.tm.tmMonitoring.controller.Detail", {
 
         formatter: Formatter,
@@ -290,7 +287,7 @@ sap.ui.define([
                     that.getRouter().navTo("main", {}, true);
 
                 }
-               
+
             } else {
                 MessageBox.confirm(i18nModel.getText("/NPG00013"), {
                     actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
@@ -427,6 +424,13 @@ sap.ui.define([
             this.byId("managerListTable").getBinding("items").filter(new Filter("employee_number", FilterOperator.Contains, " "));
             //refresh model
             this.getView().getModel().refresh(true);
+            //tokens remove
+            this.byId("combo_purchasing_type").removeAllSelectedItems();
+            this.byId("company_edit_combo").removeAllSelectedItems();
+            this.byId("bizunit_edit_combo").removeAllSelectedItems();
+            this.byId("multiInputWithEmployeeValueHelp").removeAllTokens();
+            this.byId("multicombo_cycle").removeAllSelectedItems();
+           
         },
 
         /**

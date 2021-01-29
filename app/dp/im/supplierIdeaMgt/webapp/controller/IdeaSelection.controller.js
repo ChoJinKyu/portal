@@ -279,7 +279,7 @@ sap.ui.define([
                     idea_progress_status_code
                     업체에서 SUBMIT인 경우 정의 필요
                 */
-                if( flag == "D"){
+                if( flag == "T"){
                     if(!oDetailsModel.isChanged() ) {
                         MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
                         return;
@@ -288,17 +288,20 @@ sap.ui.define([
                 }else if( flag == "R"){
                     statsCode = "SUBMIT";
                 }
+            }if( flag == "D"){
+                CUType = "D";
+                statsCode = "DELETE";
             }
-            if(oData.vi_amount==null){
+            if(oData.vi_amount=="" ||  oData.vi_amount==null || parseInt(oData.vi_amount) == undefined || parseInt(oData.vi_amount) == NaN){
                 oData.vi_amount = "0";
             }
-            if(oData.monthly_mtlmob_quantity==null){
+            if(oData.monthly_mtlmob_quantity=="" || oData.monthly_mtlmob_quantity==null || parseInt(oData.monthly_mtlmob_quantity) == undefined || parseInt(oData.monthly_mtlmob_quantity) == NaN){
                 oData.monthly_mtlmob_quantity = "0";
             }
-            if(oData.monthly_purchasing_amount==null){
+            if(oData.monthly_purchasing_amount=="" || oData.monthly_purchasing_amount==null || parseInt(oData.monthly_purchasing_amount) == undefined || parseInt(oData.monthly_purchasing_amount) == NaN){
                 oData.monthly_purchasing_amount = "0";
             }
-            if(oData.annual_purchasing_amount==null){
+            if(oData.annual_purchasing_amount=="" || oData.annual_purchasing_amount==null || parseInt(oData.annual_purchasing_amount) == undefined || parseInt(oData.annual_purchasing_amount) == NaN){
                 oData.annual_purchasing_amount = "0";
             }
 
@@ -356,22 +359,24 @@ sap.ui.define([
                             data: JSON.stringify(inputData),
                             contentType: "application/json",
                             success: function (rst) {
-                                console.log(rst);
+                                // console.log(rst);
                                 if(rst.return_code =="S"){
                                     sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
-                                    if( flag == "D"){
+                                    if( flag == "T"){
                                         v_this.onSearch(rst.return_msg );
                                     }else if( flag == "R"){
                                         v_this.onPageNavBackButtonPress();
+                                    }else if( flag == "D"){
+                                        v_this.onPageNavBackButtonPress();
                                     }
                                 }else{
-                                    console.log(rst);
+                                    // console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
                                 }
                             },
                             error: function (rst) {
-                                    console.log("eeeeee");
-                                    console.log(rst);
+                                    // console.log("eeeeee");
+                                    // console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
                                     v_this.onSearch(rst.return_msg );
                             }
@@ -402,6 +407,7 @@ sap.ui.define([
             this.byId("pageCancelButton").setEnabled(false);
             this.byId("pageListButton").setEnabled(true);
             this.byId("pageSubmitButton").setEnabled(false);
+            this.byId("pageDeleteButton").setEnabled(false);
         },
         
         _toEditMode: function () {
@@ -412,6 +418,9 @@ sap.ui.define([
             this.byId("pageNavBackButton").setVisible(false);
             this.byId("pageEditButton").setEnabled(false);
             this.byId("pageSaveButton").setEnabled(true);
+            if (this._sIdeaNumber !== "new"){
+                this.byId("pageDeleteButton").setEnabled(true);
+            }
             this.byId("pageCancelButton").setEnabled(true);
             this.byId("pageListButton").setEnabled(false);
             this.byId("pageSubmitButton").setEnabled(true);

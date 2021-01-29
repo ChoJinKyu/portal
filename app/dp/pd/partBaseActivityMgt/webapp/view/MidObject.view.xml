@@ -1,10 +1,9 @@
-<mvc:View controllerName="dp.pd.partBaseActivityMgt.controller.IdeaSelection" 
+<mvc:View controllerName="dp.pd.partBaseActivityMgt.controller.MidObject"
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 
 	xmlns:layout="sap.ui.layout" 
     xmlns:form="sap.ui.layout.form"
-    xmlns:sc="sap.suite.ui.commons"
 	xmlns:core="sap.ui.core"
     xmlns:richtexteditor="sap.ui.richtexteditor"
 	height="100%">
@@ -18,348 +17,371 @@
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 
-		showFooter="false">
+		showFooter="true">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
+                <uxap:heading>
                     <HBox alignItems="End">
-                        <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
-					    <Title text="{I18N>/IDEA} {I18N>/DETAIL}" wrapping="true" />
+                        <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" tooltip="back to the list" press=".handleClose" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <Title text="{I18N>/PART_BASE_ACTIVITY} {I18N>/DETAIL}" wrapping="true" class="" />
                     </HBox>
-				</uxap:expandedHeading>
-				<uxap:snappedHeading>
-					    <Title text="{I18N>/IDEA} {I18N>/DETAIL}" wrapping="true" />
-				</uxap:snappedHeading>
+                </uxap:heading>				
+                <uxap:navigationActions>
+                    <OverflowToolbarButton type="Transparent" icon="sap-icon://full-screen" press="handleFullScreen" tooltip="Enter Full Screen Mode" visible="{contModel>/midObject/visibleFullScreenBtn}"/>
+                    <OverflowToolbarButton type="Transparent" icon="sap-icon://exit-full-screen" press="handleExitFullScreen" tooltip="Exit Full Screen Mode" visible="{= !${contModel>/midObject/visibleFullScreenBtn}}"/>                    					
+                </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
-		<uxap:headerContent>
-			<FlexBox wrap="Wrap" visible="true" width="100%">
-                
-                <layout:Grid
-                        containerQuery="true"
-                        defaultIndent="XL1 L1 M1 S1"
-                        defaultSpan="XL3 L3 M3 S3">
-                    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                        <ObjectStatus
-                            title="{I18N>/IDEA} {I18N>/SEQUENCE} "
-                            text="{master>/idea_number}"/>
-                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
-                        <ObjectStatus
-                            title="{I18N>/SUPPLIER} "
-                            text="{master>/supplier_local_name}"/>
-                        <layout:VerticalLayout span="XL2 L3 M6 S12" />
-                        <ObjectStatus
-                            id="createUser"         
-                            title="{I18N>/IDEA} {I18N>/WRITER} "
-                            text="{master>/idea_create_user_local_name}"/>
-                        <layout:VerticalLayout span="XL2 L3 M6 S12" />
-                        <ObjectStatus
-                            id="ideaDate"         
-                            title="{I18N>/IDEA} {I18N>/WRITE_DATE} "
-                            text="{
-                                    path: 'master>/idea_date',
-                                    type: 'sap.ui.model.type.Date',
-                                    formatOptions: {
-                                    pattern: 'yyyy/MM/dd'
-                                    }
-                                }"/>
-                        <layout:VerticalLayout span="XL2 L3 M6 S12" />
-                    </layout:VerticalLayout>
-                    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
-                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
-                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
-                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
-                        <ObjectStatus
-                            title="{I18N>/PROGRESS}{I18N>/STATUS}"
-                            text="{master>/idea_progress_status_name}"/>
-                        <layout:VerticalLayout span="XL2 L3 M1 S12" />
-                    </layout:VerticalLayout>
-                    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                        <Label text="{I18N>/PROGRESS}{I18N>/STATUS} : " labelFor="searchIdeaManager"></Label>
-                        <sc:MicroProcessFlow>
-                            <sc:content>
-                                <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
-                                <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
-                                <sc:MicroProcessFlowItem icon="sap-icon://circle-task-2" stepWidth="3em"/>
-                                <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
-                                <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
-                                <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="3em"/>
-                            </sc:content>
-                        </sc:MicroProcessFlow>
-                        <layout:HorizontalLayout>
-                            <Text text="PR" width="4em" textAlign="Center"/>
-                            <Text text="Budget" width="4em" textAlign="Center"/>
-                            <Text text="RFQ" width="5em" textAlign="Center"/>
-                            <Text text="Mold Spec" width="5em" textAlign="Center"/>
-                            <Text text="Purchase Contract" width="5em" textAlign="Center"/>
-                            <Text text="PO" width="5em" textAlign="Center"/>
-                        </layout:HorizontalLayout>
-                    </layout:VerticalLayout>
-                </layout:Grid>
-                
-                
-                
-			</FlexBox>
-		</uxap:headerContent>
+        <uxap:headerContent>						
+            <FlexBox wrap="Wrap" visible="true">
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<Label text="{I18N>/UPDATE_USER_ID} :"/>
+                        <Label text="{master>/update_user_id}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+					</layout:HorizontalLayout>
+				</layout:VerticalLayout>
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<Label text="{I18N>/LATEST} {I18N>/CHANGE} {I18N>/DATE_TIME} :" class="sapUiLargeMarginBegin" />
+                        <Label text="{
+                            path: 'master>/local_update_dtm',
+                            formatter: '.dateFormatter.toUTCDateTimeString'
+                        }"  
+                        class="sapUiTinyMarginBegin"  
+                        design="Bold"/>
+					</layout:HorizontalLayout>					
+				</layout:VerticalLayout>
+			</FlexBox>            
+		</uxap:headerContent>       
 
 		<uxap:sections>
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/BASIC_INFO}">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/DEFAULT}{I18N>/INFORMATION}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1">
-                    <form:SimpleForm id="midObjectForm" editable="{midObjectViewModel>/isEditMode}">                    
-                        <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
-                            <layout:Grid containerQuery="true" defaultSpan="XL2 L4">
-                                <VBox>
-                                    <Label text="{I18N>/COMPANY}: " labelFor="ideaCompany"  required="true"></Label>
-                                    <Input id="hidIdeaNumber"  visible="true" value="{details>/idea_number}"/>
-                                    <ComboBox id="ideaCompany" width="250em" editable="false"
-                                        selectedKey="{details>/company_code}"
-                                        items="{
-                                            path: 'org>/Company',
-                                            sorter: { path: 'company_code' }
-                                        }">
-                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
-                                    </ComboBox>
+                        <form:SimpleForm         
+                            editable="true"
+                            layout="ResponsiveGridLayout"			
+                            labelSpanXL="12"
+                            labelSpanL="12"
+                            labelSpanM="12"
+                            labelSpanS="12"
+                            adjustLabelSpan="false"
+                            emptySpanXL="0"
+                            emptySpanL="0"
+                            emptySpanM="0"
+                            emptySpanS="0"
+                            columnsXL="1"
+                            columnsL="1"
+                            columnsM="1" >
+                            
+                            <form:content>
+                                <VBox>            
+                                    <Label text="{I18N>/PROD_ACTIVITY_CODE}"/>
+                                    <Input value="{
+                                            path: 'master>/activity_code',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 40
+                                            }
+                                        }" editable="{contModel>/createMode}"></Input>
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                </VBox>
+                                <VBox>			
+                                    <Label text="{I18N>/DESCRIPTION}"/>
+                                    <Input value="{
+                                            path: 'master>/description',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 240
+                                            }
+                                        }" editable="{contModel>/editMode}"></Input>
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL12 L12 M12 S12" />
+                                        </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="{I18N>/BUSINESS_UNIT}: " labelFor="ideaBizUnit" ></Label>
-                                    <ComboBox id="ideaBizUnit" width="250em" editable="true" visible="{viewModel>/editMode}"
-                                        selectedKey="{details>/bizunit_code}"
-                                        items="{
-                                            path: 'org>/Unit',
-                                            sorter: { path: 'bizunit_code' }
-                                        }">
-                                        <core:Item key="{org>bizunit_code}" text="[{org>bizunit_code}] {org>bizunit_name}" />
-                                    </ComboBox>
-                                    <Text id="ideaBizUnitTxt" width="80%" textAlign="Left"  text="{master>bizunit_name}" visible="{viewModel>/showMode}"/>
-                                </VBox>
-                                <VBox>
-                                    <Label text="{I18N>/PRODUCT_GROUP}: " labelFor="ideaGroupCode" required="true" ></Label>
-                                    <ComboBox id="ideaGroupCode" width="250em" editable="true" visible="{viewModel>/editMode}"
-                                        selectedKey="{details>/idea_product_group_code}"
-                                        items="{
-                                        path: 'common>/Code',
-                                        parameters: {
-                                            tenant_id : 'L2100'
-                                            , group_code : 'DP_IM_IDEA_PRODUCT_GROUP'
-                                        },
-                                        filters : [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                {path: 'group_code', operator: 'EQ', value1: 'DP_IM_IDEA_PRODUCT_GROUP'}],
-                                        sorter: { path: 'sort_no'}
-                                        }">
-                                        <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
-                                    </ComboBox>
-                                    <Text id="ideaGroupCodeTxt" width="80%" textAlign="Left"  text="{master>/idea_product_group_name}" visible="{viewModel>/showMode}"/>
-                                </VBox>
-                            </layout:Grid>
-                            <layout:Grid containerQuery="true" defaultSpan="L12 M12 S12">
-                                <VBox>
-                                    <Label
-                                        text="{I18N>/IDEA} {I18N>/NAME}: "
-                                        labelFor="ideaName" required="true">
-                                    </Label>
-                                    <Input id="ideaName"  width="80%"  visible="{viewModel>/editMode}"
-                                        placeholder="{I18N>/IDEA} {I18N>/NAME}" value="{details>/idea_title}"/>
-                                    <Text id="ideaNameTxt" width="80%" textAlign="Left"  text="{master>/idea_title}" visible="{viewModel>/showMode}"/>
-                                </VBox>
-                            </layout:Grid>
-                            <layout:Grid containerQuery="true" defaultSpan="XL2 L4">
-                                <VBox>
-                                    <Label text="{I18N>/IDEA} {I18N>/TYPE}: " labelFor="ideaType"  required="true"></Label>
-                                    <ComboBox id="ideaType" width="250em" editable="true" visible="{viewModel>/editMode}"
-                                        selectedKey="{details>/idea_type_code}"
-                                        items="{
-                                        path: 'common>/Code',
-                                        parameters: {
-                                            tenant_id : 'L2100'
-                                            , group_code : 'DP_IM_IDEA_TYPE'
-                                        },
-                                        filters : [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                {path: 'group_code', operator: 'EQ', value1: 'DP_IM_IDEA_TYPE'}],
-                                        sorter: { path: 'sort_no'}
-                                        }">
-                                        <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
-                                    </ComboBox>
-                                    <Text id="ideaTypeTxt" width="80%" textAlign="Left"  text="{master>/idea_type_name}" visible="{viewModel>/showMode}"/>
-                                </VBox>
-                                <VBox>
-                                    <Label text="{I18N>/IDEA} {I18N>/PERIOD}: " labelFor="ideaPeriod"  required="true"></Label>
-                                    <ComboBox id="ideaPeriod" width="250em" editable="true" visible="{viewModel>/editMode}"
-                                        selectedKey="{details>/idea_period_code}"
-                                        items="{
-                                        path: 'common>/Code',
-                                        parameters: {
-                                            tenant_id : 'L2100'
-                                            , group_code : 'DP_IM_IDEA_PERIOD'
-                                        },
-                                        filters : [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                {path: 'group_code', operator: 'EQ', value1: 'DP_IM_IDEA_PERIOD'}],
-                                        sorter: { path: 'sort_no'}
-                                        }">
-                                        <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
-                                    </ComboBox>
-                                    <Text id="ideaPeriodTxt" width="80%" textAlign="Left"  text="{master>/idea_period_name}" visible="{viewModel>/showMode}"/>
-                                </VBox>
-                                <VBox>
-                                    <Label text="{I18N>/IDEA} {I18N>/MANAGER} : " labelFor="ideaManager" required="true"></Label>
-                                    <Input id="ideaManager"  width="80%"  visible="{viewModel>/editMode}" placeholder="All"
-                                        showValueHelp="true" valueHelpRequest=".onIdeaManagerDialogPress" 
-                                                        liveChange=".onNameChk" value="{details>/idea_manager_local_name}" >
-                                    </Input>
-                                    <Input id="ideaManagerId"  visible="false" value="{details>/idea_manager_empno}"  ></Input>
-                                    <Text id="ideaManagerTxt" width="80%" textAlign="Left"  text="{master>/idea_manager_local_name}" visible="{viewModel>/showMode}"/>
-                                </VBox>
-                            </layout:Grid>
-                            <layout:Grid containerQuery="true" defaultSpan="L12 M12 S12">
-                                <VBox>
-                                    <Label
-                                        text="{I18N>/PART} {I18N>/NAME}: "
-                                        labelFor="partName">
-                                    </Label>
-                                    <Input id="partName"  width="80%"   visible="{viewModel>/editMode}"
-                                        placeholder="{I18N>/PART} {I18N>/NAME}" value="{details>/idea_part_desc}"/>
-                                    <Text id="partNameTxt" width="80%" textAlign="Left"  text="{master>/idea_part_desc}" visible="{viewModel>/showMode}"/>
-                                </VBox>
-                            </layout:Grid>
-                            <layout:Grid containerQuery="true" defaultSpan="L12 M12 S12">
-                                <VBox>
-                                    <Label
-                                        text="{I18N>/IDEA} {I18N>/CONTENTS}({I18N>/ASIS}): "
-                                        labelFor="ideaContentsAsis">
-                                    </Label>
-                                    <Input id="ideaContentsAsis"  width="80%"  visible="{viewModel>/editMode}"
-                                        placeholder="{I18N>/IDEA} {I18N>/CONTENTS}" value="{details>/current_proposal_contents}"/>
-                                    <Text id="ideaContentsAsisTxt" width="80%" textAlign="Left"  text="{master>/current_proposal_contents}" visible="{viewModel>/showMode}"/>
-                                </VBox>
-                            </layout:Grid>
-                            <layout:Grid containerQuery="true" defaultSpan="L12 M12 S12">
-                                <VBox>
-                                    <Label
-                                        text="{I18N>/IDEA} {I18N>/CONTENTS}({I18N>/TOBE}): "
-                                        labelFor="ideaContentsTobe">
-                                    </Label>
-                                    <Input id="ideaContentsTobe"  width="80%"  visible="{viewModel>/editMode}"
-                                        placeholder="{I18N>/IDEA} {I18N>/CONTENTS}" value="{details>/change_proposal_contents}"/>
-                                    <Text id="ideaContentsTobeTxt" width="80%" textAlign="Left"  text="{master>/change_proposal_contents}" visible="{viewModel>/showMode}"/>
-                                </VBox>
-                            </layout:Grid>
-
-                      
-                        </VBox>
-                        </form:SimpleForm>                    
+                                    <Label text="{I18N>/STATUS}"/>                                    
+                                    <SegmentedButton 
+                                        id="editUseflag"
+                                        selectedKey="{master>/active_flag}" 
+                                        selectionChange=""
+                                        enabled="{contModel>/editMode}"
+                                        width="100%">
+                                        <items>
+                                            <SegmentedButtonItem text="Active" width="5em" key="true"/>
+                                            <SegmentedButtonItem text="Inactive" width="5em" key="false"/>
+                                        </items>
+                                    </SegmentedButton>                                        
+                                    <layoutData>
+                                        <layout:GridData
+                                            span="XL2 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>                                
+                            </form:content>
+                        </form:SimpleForm>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
-			</uxap:ObjectPageSection>
+			</uxap:ObjectPageSection>            				
 
-            <!-- 첨부파일 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/Attachments}">
+			<uxap:ObjectPageSection 
+                titleUppercase="false" 
+                title="{I18N>/MULTILINGUAL} ({= (${languages>/PdPartBaseActivityLng})?${languages>/PdPartBaseActivityLng}.length:0})">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-						<uxap:blocks>
-                            <!-- File Upload 시작-->
-                            <UploadCollection
-                                id="UploadCollection"
-                                maximumFilenameLength="55"
-                                maximumFileSize="10"
-                                multiple="true"
-                                sameFilenameAllowed="true"
-                                instantUpload="false"
-                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
-                                change="onChange"
-                                fileDeleted="onFileDeleted"
-                                filenameLengthExceed="onFilenameLengthExceed"
-                                fileSizeExceed="onFileSizeExceed"
-                                typeMissmatch="onTypeMissmatch"
-                                uploadComplete="onUploadComplete"
-                                beforeUploadStarts="onBeforeUploadStarts" />
-                            <!-- File Upload 끝-->
-						</uxap:blocks>
-					</uxap:ObjectPageSubSection>
-                </uxap:subSections>
-            </uxap:ObjectPageSection>
-            <!-- 첨부파일 끝 -->
-
-			<uxap:ObjectPageSection id="pageSectionMain2" titleUppercase="false" title="개선효과">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection id="pageSubSection2">
-                    <form:SimpleForm id="midObjectForm2" editable="{midObjectViewModel>/isEditMode}">                    
-                        <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
-                            <Table id="tableAttachments" 
-                                sticky="HeaderToolbar,ColumnHeaders" 
-                                inset="false" 
-                                class="sapFDynamicPageAlignContent" 
-                                mode="None"
-                                items="{
-                                path: 'list>/SupplierPerform'
-                                }"
-                                width="98%">
-                                <columns>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="자재코드" />
+                    <uxap:blocks>
+						<Table 
+                            id="lngTable" 
+                            mode="{= ${contModel>/readMode}?'None':'MultiSelect'}"
+                            sticky="HeaderToolbar,ColumnHeaders"
+                            inset="false"
+                            class="sapFDynamicPageAlignContent"
+                            width="auto"
+                            items="{
+                                path: 'languages>/PdPartBaseActivityLng'
+                            }">
+							<headerToolbar>
+                                <Toolbar visible="{contModel>/editMode}">
+                                    <ToolbarSpacer/>
+                                    <HBox >
+                                        <Button
+                                            id="lngTableAddButton" 
+                                            type="Transparent" 
+                                            text="{I18N>/ROW_ADD}"
+                                            press=".onLngTableAddButtonPress"/>
+                                        <Button
+                                            id="lngTableDeleteButton" 
+                                            type="Transparent" 
+                                            text="{I18N>/ROW_DELETE}"
+                                            press=".onLngTableDeleteButtonPress"/>
+                                    </HBox>
+                                </Toolbar>
+                            </headerToolbar>
+							<columns>
+                                    <Column 
+                                        visible="{contModel>/editMode}"
+                                        width="4em">
+                                        <Text text="{I18N>/STATUS}"/>
                                     </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="단위" />
+                                    <Column>
+                                        <Text text="{I18N>/LANGUAGE}" />
                                     </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="월 물동수량" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="통화" />
-                                    </Column>
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="VI 금액" />
-                                    </Column>
-
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="월 구매금액" />
-                                    </Column>  
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="년 구매금액" />
-                                    </Column> 
-                                     <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="정성적 효과" />
+                                    <Column>
+                                        <Text text="{I18N>/ACTIVITY_NAME}" />
                                     </Column>
                                 </columns>
                                 <items>
-                                    <ColumnListItem type="Inactive" >
+                                    <ColumnListItem>
                                         <cells>
-                                            <Text text="{list>material_code}"/>
-                                            <Text text="{list>purchasing_uom_code}"/>
-                                            <Text text="{list>monthly_mtlmob_quantity}"/>
-                                            <Text text="{list>currency_code}"/>
-                                            <Text text="{list>vi_amount}"/>
-
-                                            <Text text="{list>monthly_purchasing_amount}"/>
-                                            <Text text="{list>annual_purchasing_amount}"/>
-                                            <Text text="{list>perform_contents}"/>
-                                         </cells>
+                                            <Text text="{languages>_row_state_}"/>
+                                            <HBox>
+                                                <Text
+                                                    visible="{contModel>/readMode}"
+                                                    text="{languages>language_cd}" />                                                
+                                                <ComboBox 
+                                                    visible="{contModel>/editMode}"
+                                                    showSecondaryValues= "true"
+                                                    width="100%" 
+                                                    selectedKey="{languages>language_cd}"
+                                                    items="{
+                                                        path: 'util>/Code',
+                                                        filters: [
+                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},                                        
+                                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                                        ]
+                                                    }" editable="{= ${languages>_row_state_} === 'C' }" required="true"> 
+                                                    <items>
+                                                        <core:Item key="{util>code}" text="{util>code}: {util>code_name}" />
+                                                    </items>
+                                                </ComboBox>
+                                            </HBox>
+                                            <HBox
+                                                direction="Column">
+                                                <Text
+                                                    visible="{contModel>/readMode}"
+                                                    text="{languages>code_name}" 
+                                                    tooltip="{languages>code_name}"/>
+                                                <Input
+                                                    visible="{contModel>/editMode}"
+                                                    maxLength="240"
+                                                    value="{languages>code_name}"
+                                                    tooltip="{languages>code_name}" />
+                                            </HBox>
+                                        </cells>
                                     </ColumnListItem>
                                 </items>
                             </Table>
-                        </VBox>
-                        </form:SimpleForm>                    
+                        </uxap:blocks>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-
-            <!-- 결재라인 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="결재라인">
+            <uxap:ObjectPageSection 
+                titleUppercase="false" 
+                title="{I18N>/CATEGORY} ({= (${category>/PdPartBaseActivityCategory})?${category>/PdPartBaseActivityCategory}.length:0})">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-						<uxap:blocks>
-                            <!-- Approval & Reference 시작 -->
-                            <HBox>
-        
-                            </HBox>
-                            <!-- Approval & Reference 끝 -->
-						</uxap:blocks>
+                    <uxap:blocks>
+						<Table 
+                            id="cateTable" 
+                            mode="{= ${contModel>/readMode}?'None':'MultiSelect'}"
+                            sticky="HeaderToolbar,ColumnHeaders"
+                            inset="false"
+                            class="sapFDynamicPageAlignContent"
+                            width="auto"
+                            items="{
+                                path: 'category>/PdPartBaseActivityCategory'
+                            }">
+							<headerToolbar>
+                                <Toolbar visible="{contModel>/editMode}">
+                                    <ToolbarSpacer/>
+                                    <HBox >
+                                        <Button
+                                            id="cateTableAddButton" 
+                                            type="Transparent" 
+                                            text="Target Category"
+                                            press=""/>                                        
+                                    </HBox>
+                                </Toolbar>
+                            </headerToolbar>
+							<columns>
+                                    <Column 
+                                        visible="{contModel>/editMode}"
+                                        width="4em">
+                                        <Text text="{I18N>/STATUS}"/>
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/GROUP}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/CATEGORY}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/USE}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/S_GRADE_STANDARD_DAYS}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/A_GRADE_STANDARD_DAYS}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/B_GRADE_STANDARD_DAYS}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/C_GRADE_STANDARD_DAYS}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/D_GRADE_STANDARD_DAYS}" />
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{category>_row_state_}"/>                                            
+                                            <HBox
+                                                direction="Column">
+                                                <Text
+                                                    visible="{contModel>/readMode}"
+                                                    text="{category>category_group_code}" 
+                                                    tooltip="{category>category_group_code}"/>
+                                                <Input
+                                                    visible="{contModel>/editMode}"
+                                                    editable="{= ${category>_row_state_} === 'C' }"
+                                                    maxLength="30"
+                                                    value="{category>category_group_code}"
+                                                    tooltip="{category>category_group_code}" />
+                                            </HBox>
+                                            <HBox
+                                                direction="Column">
+                                                <Text
+                                                    visible="{contModel>/readMode}"
+                                                    text="{category>category_code}" 
+                                                    tooltip="{category>category_code}"/>
+                                                <Input
+                                                    visible="{contModel>/editMode}"
+                                                    editable="{= ${category>_row_state_} === 'C' }"
+                                                    maxLength="40"
+                                                    value="{category>category_code}"
+                                                    tooltip="{category>category_code}" />
+                                            </HBox>
+                                            <HBox
+                                                direction="Column">
+                                                <Text
+                                                    visible="{contModel>/readMode}"
+                                                    text="{= !!${category>active_flag} ? 'Y' : 'N'}"/>
+                                                <ToggleButton
+                                                    visible="{contModel>/editMode}"                                                    
+                                                    text="{= ${category>active_flag}? 'Yes':'No'}" 
+                                                    pressed="{category>active_flag}"/>
+                                            </HBox>
+                                            <HBox
+                                                direction="Column">
+                                                <Text
+                                                    visible="{contModel>/readMode}"
+                                                    text="{category>s_grade_standard_days}"/>
+                                                <Input
+                                                    visible="{contModel>/editMode}"
+                                                    editable="{contModel>/editMode}"
+                                                    maxLength="40"
+                                                    value="{category>s_grade_standard_days}"/>
+                                            </HBox>
+                                            <HBox
+                                                direction="Column">
+                                                <Text
+                                                    visible="{contModel>/readMode}"
+                                                    text="{category>a_grade_standard_days}"/>
+                                                <Input
+                                                    visible="{contModel>/editMode}"
+                                                    editable="{contModel>/editMode}"
+                                                    maxLength="40"
+                                                    value="{category>a_grade_standard_days}"/>
+                                            </HBox>
+                                            <HBox
+                                                direction="Column">
+                                                <Text
+                                                    visible="{contModel>/readMode}"
+                                                    text="{category>b_grade_standard_days}"/>
+                                                <Input
+                                                    visible="{contModel>/editMode}"
+                                                    editable="{contModel>/editMode}"
+                                                    maxLength="40"
+                                                    value="{category>b_grade_standard_days}"/>
+                                            </HBox>
+                                            <HBox
+                                                direction="Column">
+                                                <Text
+                                                    visible="{contModel>/readMode}"
+                                                    text="{category>c_grade_standard_days}"/>
+                                                <Input
+                                                    visible="{contModel>/editMode}"
+                                                    editable="{contModel>/editMode}"
+                                                    maxLength="40"
+                                                    value="{category>c_grade_standard_days}"/>
+                                            </HBox>
+                                            <HBox
+                                                direction="Column">
+                                                <Text
+                                                    visible="{contModel>/readMode}"
+                                                    text="{category>d_grade_standard_days}"/>
+                                                <Input
+                                                    visible="{contModel>/editMode}"
+                                                    editable="{contModel>/editMode}"
+                                                    maxLength="40"
+                                                    value="{category>d_grade_standard_days}"/>
+                                            </HBox>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </uxap:blocks>
 					</uxap:ObjectPageSubSection>
-                </uxap:subSections>
-            </uxap:ObjectPageSection>
-            <!-- 결재라인 끝 -->
+				</uxap:subSections>
+			</uxap:ObjectPageSection>            
 
 		</uxap:sections>
 		
@@ -373,12 +395,10 @@
                     ariaHasPopup="Dialog"
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
-                
-                <Button id="pageEditButton" type="Transparent" text="{I18N>/EDIT}" press=".onPageEditButtonPress" />
-				<Button id="pageSaveButton" type="Transparent" text="{I18N>/TEMP_SAVE}" press=".onPageSaveButtonPress('D')" />
-				<Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButtonPress"/>
-				<Button id="pageListButton" type="Transparent" text="{I18N>/LIST}" press=".onPageListButtonPress"/>
-                <Button id="pageSubmitButton" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSaveButtonPress('R')" />
+                <Button id="pageEditButton" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditButtonPress" />							
+                <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress"/>
+                <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteEditButtonPress"/>
+                <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />	
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

@@ -14,7 +14,6 @@ service spviBasePriceArlV4Service {
         requestor_empno        : String(30);
         request_date           : String(8);
         attch_group_number     : String(100);
-
         local_create_dtm       : DateTime;
         local_update_dtm       : DateTime;
         create_user_id         : String(255);
@@ -26,7 +25,6 @@ service spviBasePriceArlV4Service {
         tenant_id              : String(5);
         approval_number        : String(30);
         net_price_type_code    : String(30);
-
         local_create_dtm       : DateTime;
         local_update_dtm       : DateTime;
         create_user_id         : String(255);
@@ -121,13 +119,13 @@ service spviBasePriceArlV4Service {
     //type CmdType : String enum { insert; upsert; delete; };
 
     type InputAprlDataType : {
-        BasePriceAprlMstType   : array of BasePriceAprlMstType;
-        BasePriceAprlApproverType             : array of BasePriceAprlApproverType;
-        BasePriceAprlRefererType              : array of BasePriceAprlRefererType;
-        BasePriceAprlTypeType                 : array of BasePriceAprlTypeType;
-        BasePriceAprlItemType                 : array of BasePriceAprlItemType;
-        BasePriceAprlDtlType                  : array of BasePriceAprlDtlType;
-        type_code   : String(10);
+        BasePriceAprlMstType        : array of BasePriceAprlMstType;
+        BasePriceAprlApproverType   : array of BasePriceAprlApproverType;
+        BasePriceAprlRefererType    : array of BasePriceAprlRefererType;
+        BasePriceAprlTypeType       : array of BasePriceAprlTypeType;
+        BasePriceAprlItemType       : array of BasePriceAprlItemType;
+        BasePriceAprlDtlType        : array of BasePriceAprlDtlType;
+        type_code                   : String(10);
     }
 
     type OutputDataType : {

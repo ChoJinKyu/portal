@@ -57,7 +57,6 @@ sap.ui.define([
                 that = this;
             },
             onInputSupplierWithOrgValuePress: function () {
-
                 if (!this.oSupplierWithOrgValueHelp) {
                     this.oSupplierWithOrgValueHelp = new SupplierWithOrgDialog({
                         //title: "Supplier",

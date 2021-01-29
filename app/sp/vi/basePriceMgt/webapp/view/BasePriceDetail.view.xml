@@ -190,7 +190,7 @@
                                             <t:template>
                                                 <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" required="true"
                                                             displayFormat="y-MM" class="sapUiSmallMarginBottom" 
-                                                            value="{ path: 'detailModel>apply_start_date' }" />
+                                                            value="{ path: 'detailModel>apply_start_date'}" />
                                             </t:template>
                                         </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
@@ -424,36 +424,10 @@
 			<OverflowToolbar visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}">
 				<ToolbarSpacer />
                 <Button
-                    text="{I18N>/CHANGE_DEVELOPER}"
-                    visible="{= ${detailViewModel>/viewMode}}"
-                    press=".onDeveloping" />
-                <Button
-                    text="{I18N>/EDIT}" 
-                    visible="{= !${detailViewModel>/viewMode}}"
-                    press=".onEditToggle" />
-                <Button
-                    text="{I18N>/CANCEL}"
-                    visible="{= ${detailViewModel>/viewMode}}"
-                    press=".onEditToggle" />
-				<Button
-                    text="{I18N>/DRAFT}" 
-                    visible="{= ${detailViewModel>/viewMode}}"
-                    press=".onDraft" />
-                <!-- <Button
-                    text="{I18N>/PREVIEW}" 
-                    enabled="{= ${detailModel>/approval_status_code} === '10' ? true : false}"
-                    press=".onPreview" /> -->
-                <!-- <Button
-                    text="{I18N>/CANCEL}" press=".onBack" /> -->
-                <Button
-                    text="{I18N>/DELETE}" 
-                    visible="{= !${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
-                    press=".onDelete" />
-                <Button
                     type="Emphasized"
                     text="{I18N>/REQUEST}"
-                    visible="{= !${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
-                    press=".onRequest" />
+                    visible="true"
+                    press=".onSave" />
 			</OverflowToolbar>
 		</uxap:footer>
         <!-- footer 끝 -->

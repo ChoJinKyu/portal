@@ -39,7 +39,7 @@ sap.ui.define([
                 languageCd: new Filter("language_cd", FilterOperator.EQ, "KO")
             };
 
-            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title", this.getModel("I18N").getText("/SELECT_SUPPLIER"));
+            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title", this.getModel("I18N").getText("/SELECT_BP"));
 
             //this.oSearchField = new sap.m.SearchField({ placeholder: "검색"});
             this.oSupplierCode = new Input({ submit: this.loadData.bind(this), placeholder: "Search" });
@@ -243,7 +243,8 @@ sap.ui.define([
             ]
         },
 
-        createTableColumns: function () {
+        createTableColumns: function (oEvent) {
+            console.log(oEvent);
             return [
                 new Column({
                     hAlign: "Center",
@@ -263,7 +264,8 @@ sap.ui.define([
                 new Column({
                     hAlign: "Center",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
-                    template: new Text({ text: "{supplier_code}" })
+                    template: new Text({ text: "{supplier_code}" }),
+                    width: "50%"
                 }),
                 new Column({
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME") }),
@@ -392,6 +394,9 @@ sap.ui.define([
             if (sStatus) aFilters.push(new Filter("supplier_status_code", FilterOperator.EQ, sStatus));
 
             this.oDialog.setBusy(true);
+
+            //fixed column 
+            this.oDialog.getAggregation("content")[0].getAggregation("items")[1].setFixedColumnCount(5);
 
             oServiceModel.read("/supplierView", {
                 filters: aFilters,

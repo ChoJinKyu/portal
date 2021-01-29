@@ -18,7 +18,7 @@ sap.ui.define([
         self: null,
 
         oServiceModel: new ODataModel({
-            serviceUrl: "srv-api/odata/v2/sp.supplierMasterService/",
+            serviceUrl: "srv-api/odata/v2/sp.supplierMasterMgtService/",
             defaultBindingMode: "OneWay",
             defaultCountMode: "Inline",
             refreshAfterChange: false,

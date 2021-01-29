@@ -11,9 +11,10 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text",
     "sap/m/Input" ,
-    "sap/ui/model/odata/v2/ODataModel",
+    "sap/ui/model/odata/v2/ODataModel", 
+    "ext/lib/util/Multilingual",
 ], function (Parent, Renderer, ODataV2ServiceProvider, Filter
-    , FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input,ODataModel) {
+    , FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input,ODataModel, Multilingual) {
     "use strict";
 
      var oServiceModel = new ODataModel({
@@ -26,6 +27,7 @@ sap.ui.define([
 
     var EmployeeDialog = Parent.extend("dp.md.util.controller.ui.EmployeeDialog", {
 
+        
         metadata: {
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "70em"},
@@ -35,6 +37,11 @@ sap.ui.define([
         },
 
         renderer: Renderer,
+
+        onInit: function () { 
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+         } ,
 
         createSearchFilters: function(){
             this.oDepartment = new Input({ placeholder: "Department Name or No."});
@@ -54,13 +61,13 @@ sap.ui.define([
         createTableColumns: function(){
             return [
                 new Column({
-                    label: new Label({text: "Name / Job Title / Department"}),
+                    label: new Label({text: this.getModel("I18N").getText("/NAME") + " / "+this.getModel("I18N").getText("/POSITION")+" / " +this.getModel("I18N").getText("/DEPARTMENT")}),
                     template: new Text({text: "{"+this.getProperty("textField")+"}"})
                 }),
                 new Column({
                     width: "15%",
                     hAlign: "Center",
-                    label: new Label({text: "Employee No."}),
+                    label: new Label({text: this.getModel("I18N").getText("/EMPLOYEE_NUMBER")}),
                     template: new Text({text: "{"+this.getProperty("keyField")+"}"})
                 })
             ];

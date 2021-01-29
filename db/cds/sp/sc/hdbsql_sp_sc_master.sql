@@ -10,8 +10,23 @@ select * from SP_SC_OUTCOME_CODE;
 
 -- @block Bookmarked query
 -- @group SP_SC
--- @name SP_SC_AWARD_TYPE_CODE - 
+-- @name SP_SC_AWARD_TYPE_CODE - 폐기예정
 select * from SP_SC_AWARD_TYPE_CODE;
+
+-- @block Bookmarked query
+-- @group SP_SC
+-- @name SP_SC_AWARD_TYPE_CODE_VIEW - 
+select * from SP_SC_AWARD_TYPE_CODE_VIEW;
+
+-- @block Bookmarked query
+-- @group SP_SC
+-- @name SP_SC_AWARD_TYPE_CODE - 
+select * from SP_SC_AWARD_METHOD_CODE_VIEW;
+
+-- @block Bookmarked query
+-- @group SP_SC
+-- @name SP_SC_AWARD_TYPE_CODE - 
+select * from SP_SC_NEGO_AWARD_METHOD_CODE;
 
 -- @block Bookmarked query
 -- @group SP_SC
@@ -23,7 +38,7 @@ select * from SP_SC_EMPLOYEE_VIEW;
 -- @group Common
 -- @name Contents to Csv
 DO BEGIN
-DECLARE OBJECT_NAME NVARCHAR(255) DEFAULT 'SP_SC_OUTCOME_CODE';
+DECLARE OBJECT_NAME NVARCHAR(255) DEFAULT 'SP_SC_NEGO_AWARD_METHOD_CODE';
 DECLARE SQL_STRING NVARCHAR(3000) DEFAULT '';
 DECLARE STRING_CSV NVARCHAR(9000) DEFAULT '';
 DECLARE CREATED INT DEFAULT 0;

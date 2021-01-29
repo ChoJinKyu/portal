@@ -3,6 +3,7 @@ using { cm.Code_View as cm_Code } from '../../../../db/cds/cm/CM_CODE_VIEW-model
 using { cm.Country_View as cm_Country } from '../../../../db/cds/cm/CM_COUNTRY_VIEW-model';
 using { cm.Currency_View as cm_Currency } from '../../../../db/cds/cm/CM_CURRENCY_VIEW-model';
 using { cm.Time_Zone as cm_Timezone } from '../../../../db/cds/cm/CM_TIME_ZONE-model';
+using { cm.File_Dtl as cm_File } from '../../../../db/cds/cm/CM_FILE_DTL-model';
 
 
 namespace cm.util;
@@ -124,6 +125,22 @@ service CommonService {
             a.dst_end_time_rate
         from
             cm_Timezone a
+    ;
+
+    @readonly
+    view File as
+        select
+            key a.tenant_id,
+            key a.file_group_id,
+            key a.file_id,
+            a.sort_number,
+            a.origin_name,
+            a.saved_name,
+            a.file_size,
+            a.mime_type,
+            a.confirm_flag
+        from
+            cm_File a
     ;
 
 }

@@ -254,14 +254,7 @@ sap.ui.define([
 
             if(this.getModel("approver").getData().Approvers != undefined){ 
                 var ap = this.getModel("approver").getData().Approvers;
-                var len = 0; 
-
-                if(this.getView().getModel("mode").getProperty("/viewFlag")){
-                    len = ap.length;
-                }else{
-                    len =  ap.length -1;
-                }
-                for(var i = 0 ; i < len ; i++){
+                for(var i = 0 ; i < ap.length ; i++){
                     this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
                 }
             }
@@ -344,7 +337,8 @@ sap.ui.define([
         } , 
         onPageRequestCancelButtonPress : function () { 
             this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 요청취소 
-            this._moldRecepitApprovalDataSetting();
+            this.approvalRequestCancel(); 
+           // this._moldRecepitApprovalDataSetting();
         } , 
 
         _moldRecepitApprovalDataSetting : function () { 
@@ -353,7 +347,8 @@ sap.ui.define([
             var bModel = this.getModel("mdRecepit");
             this.approvalDetails_data = [] ;
             this.moldMaster_data = [] ;
-            
+            this.asset_data = [];
+
             if(this.validator.validate(this.byId("generalInfoLayout") ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
                 this.getModel("appMaster").setProperty("/approve_status_code", this.firstStatusCode); 
@@ -362,6 +357,28 @@ sap.ui.define([
           
             var that = this;
             
+            // 삭제 row 먼저 추가되어야 데이터가 정상 저장됨 
+            if(bModel._aRemovedRows.length > 0){
+                bModel._aRemovedRows.forEach(function(item){
+                    that.approvalDetails_data.push({
+                        tenant_id : that.tenant_id 
+                        , approval_number : that.approval_number 
+                        , mold_id : item.mold_id 
+                        , _row_state_ : "D"
+                    });
+
+                    that.asset_data.push({
+                        tenant_id : that.tenant_id 
+                        , mold_id : item.mold_id 
+                        , acq_department_code : item.acq_department_code
+                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+                    });
+                });
+            }
+
+
+
+
             if(bModel.getData().MoldRecepit != undefined && bModel.getData().MoldRecepit.length > 0){
 
                 bModel.getData().MoldRecepit.forEach(function(item){
@@ -371,31 +388,16 @@ sap.ui.define([
                         , mold_id : item.mold_id 
                         , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
                     });
-                    that.moldMaster_data.push({
-                         tenant_id : that.tenant_id 
+
+                    that.asset_data.push({
+                        tenant_id : that.tenant_id 
                         , mold_id : item.mold_id 
-                        , acq_department_code : item.acq_department_code 
+                        , acq_department_code : item.acq_department_code
                         , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
                     });
+
                 });
 
-            }
-
-            if(bModel._aRemovedRows.length > 0){
-                bModel._aRemovedRows.forEach(function(item){
-                    that.approvalDetails_data.push({
-                        tenant_id : that.tenant_id 
-                        , approval_number : that.approval_number 
-                        , mold_id : item.mold_id 
-                        , _row_state_ : "D"
-                    });
-                    that.moldMaster_data.push({
-                         tenant_id : that.tenant_id 
-                        , mold_id : item.mold_id 
-                        , acq_department_code : item.acq_department_code  
-                        , _row_state_ : "D"
-                    });
-                });
             }
 
 

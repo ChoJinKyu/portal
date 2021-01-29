@@ -1,5 +1,5 @@
 sap.ui.define([
-    "./BaseController",
+    "ext/lib/controller/BaseController",
     "sap/ui/core/routing/History",
     "sap/ui/model/json/JSONModel",
     "ext/lib/model/ManagedListModel",
@@ -18,6 +18,7 @@ sap.ui.define([
     "sap/m/Input",
     "sap/m/ComboBox",
     "sap/ui/core/Item",
+    "sap/m/SegmentedButtonItem",
     'sap/ui/core/Element',
     "sap/ui/core/syncStyleClass",
     'sap/m/Label',
@@ -29,7 +30,7 @@ sap.ui.define([
     "sap/ui/model/Sorter"
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter
     , FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text
-    , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, ODataModel, ExcelUtil
+    , Token, Input, ComboBox, Item, SegmentedButtonItem, Element, syncStyleClass, Label, SearchField, Multilingual, ODataModel, ExcelUtil
     , Validator, Sorter) {
     "use strict";
     /**
@@ -86,9 +87,11 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "list_temp");
             this.setModel(new ManagedListModel(), "orgMap");
             this.setModel(new ManagedListModel(), "requestors");
+            this.setModel(new ManagedListModel(), "SegmentedItem");
             this.setModel(new JSONModel(), "excelModel");
             this.getView().setModel(this.oServiceModel, 'supplierModel');
-
+            
+            
         
             this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -174,7 +177,6 @@ sap.ui.define([
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
             this.getView().byId("searchPlantE").bindItems(bindItemInfo);
         },
-
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -744,7 +746,9 @@ sap.ui.define([
         */
         handleConfirm: function (targetControl) {
 
-            var id = toggleButtonId.split('--')[2];
+            var sId = toggleButtonId.split('--');
+            var id = sId[sId.length-1];
+            console.log(id);
             var page = ""
             var appTypeCode = "";
             var company_code = this.byId("searchCompanyF").getSelectedKey();
@@ -946,9 +950,42 @@ sap.ui.define([
 		 */
         _onRoutedThisPage: function () {
             this.getModel("approvalListView").setProperty("/headerExpanded", true);
-            this.setModel(new ManagedListModel(), "orgMap");
+            this.setModel(new ManagedListModel(), "orgMap"); 
+
+            this._segmentSrch();
+
         },
         
+        _segmentSrch : function (){
+             
+            var oView = this.getView(),
+                oModel = this.getModel("SegmentedItem") ,
+                codeName = this.getModel('I18N').getText("/ALL")
+                ;
+             var aSearchFilters = [];
+                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600'));
+                aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'CM_APPROVE_STATUS'));
+
+
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("util"));
+            oModel.read("/Code", {
+                filters: aSearchFilters,
+                success: function (oData) {     
+                    oModel.addRecord({
+                        code: ""
+                      ,  code_name: "All"   
+                      ,  group_code: "CM_APPROVE_STATUS"
+                      ,  parent_code: null
+                      ,  parent_group_code: null
+                      ,  sort_no: "0"
+                    },"/Code",0);
+                    oView.setBusy(false);
+                    
+                }
+            });
+        } ,
+
         /**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
@@ -1127,10 +1164,10 @@ sap.ui.define([
 
 
                     }               
-                    
-                    oView.setBusy(false);
-                    
+                    nModel.refresh(true);
+                    oView.setBusy(false);       
                 }
+                
             });
            
             

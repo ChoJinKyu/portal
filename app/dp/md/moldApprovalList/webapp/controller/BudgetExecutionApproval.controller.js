@@ -115,8 +115,7 @@ sap.ui.define([
                     }
                     if(oData.results[0].investment_ecst_type_code != undefined && oData.results[0].investment_ecst_type_code != ""){
                         that._searchAssetType(oData.results[0].investment_ecst_type_code, function(oData){
-                        // console.log(oData);
-                    });
+                        });
                     }
                     
                 } else {
@@ -133,8 +132,7 @@ sap.ui.define([
                     md.setProperty("/account_code", "");
                     md.setProperty("/account_code_nm", "");
                     md.setProperty("/provisional_budget_amount", ""); 
-                    that._searchAssetType("I");
-                    
+                    that._searchAssetType("I", function(oData){}); 
                 }
 
             });
@@ -157,12 +155,11 @@ sap.ui.define([
         },
         onBudgetChange : function ( oEvent ){
             this._searchAssetType(this.getModel('mdCommon').getProperty('/investment_ecst_type_code'), function(oData){
-            //    console.log("/// investment_ecst_type_code " , oData);
-                // console.log(oData);
+
             });
         } ,
-        _searchAssetType : function(parent_code,callback){ // 목록의 combo 조회 
-            // this.getView().setModel(new ManagedListModel(), "assetTypeCodeList"); // Asset Type 
+        _searchAssetType : function(parent_code,callback){ // 목록의 combo 조회  
+
            var aFilter = [new Filter("group_code", FilterOperator.EQ, 'DP_MD_ASSET_TYPE' )
                 , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                 , new Filter("parent_code", FilterOperator.EQ, parent_code)
@@ -174,6 +171,7 @@ sap.ui.define([
             oModel.read("/CodeView", {
                 filters: aFilter,
                 success: function (oData) {
+                    console.log(" oData>>> " , oData);
                     oView.setBusy(false);
                     callback(oData);
                 }
@@ -193,7 +191,6 @@ sap.ui.define([
             oModel.read("/Company", {
                 filters: nFilter,
                 success: function (oData) {
-                    // console.log("Company oData>>> " , oData) 
                     oView.setBusy(false);
                 }
             });
@@ -239,11 +236,7 @@ sap.ui.define([
           * ,     , oArges : company_code , org_code (필수)
           */
         onBudgetExecutionAddPress: function (oEvent) {
-            // console.log("oEvent>>>>");
             var oModel = this.getModel("mdItemMaster");
-
-            // console.log(" mdItemMaster >>>> ", oModel);
-
             var mIdArr = [];
             if (oModel.oData.ItemBudgetExecution != undefined && oModel.oData.ItemBudgetExecution.length > 0) {
                 oModel.oData.ItemBudgetExecution.forEach(function (item) {
@@ -303,9 +296,8 @@ sap.ui.define([
             }, "/ItemBudgetExecution");
 
             if (oModel.getProperty("/entityName") == undefined) { // 신규시 entityName 없어서 행삭제를 못하고 있음 
-                oModel.setProperty("/entityName", "ItemBudgetExecution");
+                oModel.setProperty("/entityName", "ItemBudgetExecution"); 
             }
-
         },
         // 부서 버튼 클릭 
         onValueHelpRequestedDept: function () {
@@ -334,8 +326,6 @@ sap.ui.define([
                     //  detailModel.markRemoved(idx)
                 });
                 budgetExecutionTable.clearSelection();
-
-                // console.log("detailModel", detailModel);
             } else {
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
@@ -400,14 +390,8 @@ sap.ui.define([
 
             if (this.getModel("approver").getData().Approvers != undefined) {
                 var ap = this.getModel("approver").getData().Approvers;
-                var len = 0;
 
-                if (this.getView().getModel("mode").getProperty("/viewFlag")) {
-                    len = ap.length;
-                } else {
-                    len = ap.length - 1;
-                }
-                for (var i = 0; i < len; i++) {
+                for (var i = 0; i < ap.length; i++) {
                     this.getModel("approverPreview").addRecord(ap[i], "/Approvers");
                 }
             }
@@ -455,7 +439,8 @@ sap.ui.define([
         },
         onPageRequestCancelButtonPress: function () {
             this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 요청취소 
-            this._budgetExecutionDataSetting();
+            this.approvalRequestCancel(); 
+          //  this._budgetExecutionDataSetting();
         },
         _budgetExecutionDataSetting: function () {
             this.approval_type_code = "B";
@@ -489,6 +474,42 @@ sap.ui.define([
             }
 
             var that = this;
+
+            // 삭제 row 먼저 추가되어야 데이터가 정상 저장됨 
+            if (bModel._aRemovedRows.length > 0) {
+                bModel._aRemovedRows.forEach(function (item) {
+                    that.approvalDetails_data.push({
+                        tenant_id: that.tenant_id
+                        , approval_number: that.approval_number
+                        , mold_id: item.mold_id
+                        , _row_state_: "D"
+                    });
+                    that.moldMaster_data.push({
+                        tenant_id: that.tenant_id
+                        , mold_id: item.mold_id
+                        , account_code: account_code
+                        , investment_ecst_type_code: investment_ecst_type_code
+                        , acq_department_code: acq_department_code
+                        , accounting_department_code: accounting_department_code
+                        , import_company_code: import_company_code
+                        , project_code: project_code
+                        , import_company_org_code: import_company_org_code
+                        , mold_production_type_code: item.mold_production_type_code
+                        , mold_item_type_code: item.mold_item_type_code
+                        , provisional_budget_amount: item.provisional_budget_amount
+                        , asset_type_code: item.asset_type_code
+                        , _row_state_: "D"
+                    });
+                    that.asset_data.push({
+                        tenant_id: that.tenant_id
+                        , mold_id: item.mold_id
+                        , _row_state_: "D"
+                    });
+                });
+            }
+
+
+
 
             if (bModel.getData().ItemBudgetExecution != undefined && bModel.getData().ItemBudgetExecution.length > 0) {
 
@@ -537,37 +558,7 @@ sap.ui.define([
 
             }
 
-            if (bModel._aRemovedRows.length > 0) {
-                bModel._aRemovedRows.forEach(function (item) {
-                    that.approvalDetails_data.push({
-                        tenant_id: that.tenant_id
-                        , approval_number: that.approval_number
-                        , mold_id: item.mold_id
-                        , _row_state_: "D"
-                    });
-                    that.moldMaster_data.push({
-                        tenant_id: that.tenant_id
-                        , mold_id: item.mold_id
-                        , account_code: account_code
-                        , investment_ecst_type_code: investment_ecst_type_code
-                        , acq_department_code: acq_department_code
-                        , accounting_department_code: accounting_department_code
-                        , import_company_code: import_company_code
-                        , project_code: project_code
-                        , import_company_org_code: import_company_org_code
-                        , mold_production_type_code: item.mold_production_type_code
-                        , mold_item_type_code: item.mold_item_type_code
-                        , provisional_budget_amount: item.provisional_budget_amount
-                        , asset_type_code: item.asset_type_code
-                        , _row_state_: "D"
-                    });
-                    that.asset_data.push({
-                        tenant_id: that.tenant_id
-                        , mold_id: item.mold_id
-                        , _row_state_: "D"
-                    });
-                });
-            }
+           
             this._commonDataSettingAndSubmit();
         }
     });

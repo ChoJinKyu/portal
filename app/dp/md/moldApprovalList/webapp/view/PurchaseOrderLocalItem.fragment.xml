@@ -35,7 +35,7 @@
                     >
                     <table:extension>
                         <OverflowToolbar>
-                            <Title text="Total PO Amount : {path: 'payment>/purchasing_amount', formatter: '.numberFormatter.toNumberString'} [{payment>/currency_code}]" level="H2"/>
+                            <Title text="Total PO Amount : {path: 'amount>/purchasing_amount', formatter: '.numberFormatter.toNumberString'} [{amount>/currency_code}]" level="H2"/>
                             
                             <ToolbarSpacer/>
                             <Button id="btnPoItemAdd"    type="Transparent" text="{I18N>/ROW_ADD}" press=".onPoItemAddRow" visible="{mode>/editFlag}">
@@ -170,12 +170,6 @@
                             </table:template>
                         </table:Column>
                         <table:Column width="12em" hAlign="Center" visible="false">
-                            <Label text="Partial Payment"/>
-                            <table:template>
-                                <Text id="split_pay_type_code" text="{purOrderItem>split_pay_type_code}" />
-                            </table:template>
-                        </table:Column>
-                        <table:Column width="12em" hAlign="Center" visible="false">
                             <Label text="Account Code"/>
                             <table:template>
                                 <Text id="account_code" text="{purOrderItem>account_code}" />
@@ -187,46 +181,63 @@
 		</form:SimpleForm>
         <form:SimpleForm editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
 			<form:content>
-                <VBox>
-                    <CheckBox id="partialPayment" text="Partial Payment" editable="{mode>/editFlag}"
-                        selected="{payment>/partial_payment}" />
-                    <layoutData>
-                        <layout:GridData span="XL6 L6 M6 S12" />
-                    </layoutData>
-                </VBox>
-                <VBox>
-                    <SegmentedButton id="splitPayTypeCode" selectedKey="{payment>/split_pay_type_code}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onChangePayment"
-                        enabled="{= ${payment>/partial_payment}?${mode>/editFlag}:false }" >
-                        <items>
-                            <SegmentedButtonItem text="Rate (%)" key="R" width="6em" />
-                            <SegmentedButtonItem text="Amount" key="A" width="6em" />
-                        </items>
-                    </SegmentedButton>
-                    <layoutData>
-                        <layout:GridData span="XL6 L6 M6 S12" />
-                    </layoutData>
-                </VBox>
-                <VBox>
-                    <Label text="Advanced"/>
-                    <Input id="advanced" value="{payment>/prepay}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }"  />
-                    <layoutData>
-                        <layout:GridData span="XL2 L3 M6 S12" />
-                    </layoutData>
-                </VBox>
-                <VBox>
-                    <Label text="Part"/>
-                    <Input id="part" value="{payment>/progresspay}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }"  />
-                    <layoutData>
-                        <layout:GridData span="XL2 L3 M6 S12" />
-                    </layoutData>
-                </VBox>
-                <VBox>
-                    <Label text="Residual"/>
-                    <Input id="residual" value="{payment>/rpay}" textAlign="End" change=".onChangePayment" editable="{= ${payment>/partial_payment}?${mode>/editFlag}:false }"  />
-                    <layoutData>
-                        <layout:GridData span="XL2 L3 M6 S12" />
-                    </layoutData>
-                </VBox>
+                <!-- Payment Table -->
+                <Table id="paymentTable"
+                        sticky="HeaderToolbar,ColumnHeaders" 
+                        class="sapFDynamicPageAlignContent" 
+                        inset="false"
+                        mode="MultiSelect" 
+                        width="auto"
+                        items="{payment>/Payments}" 
+                        >
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <ToolbarSpacer/>
+                            <Button id="btnPaymentAdd"    type="Transparent" text="{I18N>/ROW_ADD}" press=".onPaymentAddRow" visible="{mode>/editFlag}">
+                                <customData>
+                                    <core:CustomData key="multi" value="true" />
+                                </customData>
+                            </Button>
+                            <Button id="btnPaymentDelete" type="Transparent" text="{I18N>/ROW_DELETE}"  press=".onPaymentDelRow" visible="{mode>/editFlag}"/>
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column minScreenWidth="Tablet" hAlign="Center"  width="3.5em" >
+                            <Text text="{I18N>/SEQUENCE}" />
+                        </Column>
+                        <Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                            <Text text="{I18N>/TYPE}" />
+                        </Column>
+                        <Column minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                            <Text text="비율" />
+                        </Column>
+                        <Column minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                            <Text text="금액" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Active" press=".onItemApprovalPress">
+                            <cells>
+                                <Text text="{payment>pay_sequence}" />
+                                <Select width="100%"
+                                    selectedKey="{payment>split_pay_type_code}" 
+                                    items="{ path : 'util>/Code',
+                                                filters : [
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_SPLIT_PAY_TYPE'}
+                                                ],
+                                                sorter: { path: 'sort_no'} 
+                                            }"
+                                    editable="{= ${payment>pay_sequence} === 1 || ${payment>pay_sequence} === '1' ? true : false}"
+                                    change="splitPayTypeChange" >  
+                                    <core:Item key="{util>code}" text="{util>code_name}" />
+                                </Select>
+                                <Input value="{payment>pay_rate}" editable="{= ${payment>split_pay_type_code} === 'R' ? true : false}" />
+                                <Input value="{payment>pay_price}" editable="{= ${payment>split_pay_type_code} === 'A' ? true : false}" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
             </form:content>
 		</form:SimpleForm>
 	</VBox>

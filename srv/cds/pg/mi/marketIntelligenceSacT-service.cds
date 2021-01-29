@@ -1,5 +1,7 @@
 //Table
-using {pg.It_Mst_Exch_Rate as DailyExchRate} from '../../../../db/cds/pg/it/PG_IT_MST_EXCH_RATE-model';     // 일별환율 Mst
+using {pg.It_Mst_Exch_Rate as DailyExchRate} from '../../../../db/cds/pg/it/PG_IT_MST_EXCH_RATE-model';                             // 일별환율 Mst
+using {pg.MI_Material_Price_Management as MaterialPrice} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_PRICE_MANAGEMENT-model';     // 시황자재 가격관리
+using {pg.MI_Material_Code as MaterialCode} from '../../../../db/cds/pg/mi/PG_MI_MATERIAL_CODE-model';                              // 시황자재 코드
 //View
 using {pg as MiBom} from '../../../../db/cds/pg/mi/PG_MI_SAC_MI_BOM_MAPPING_VIEW-model';            //시황BOM Mapping
 using {pg as MatBom} from '../../../../db/cds/pg/mi/PG_MI_SAC_MAT_BOM_MAPPING_VIEW-model';          //자재-시황자재 Mapping
@@ -23,6 +25,7 @@ service marketIntelligenceSacTService {
     view MiSacMaterialInfoView @(title : '자재별 정보 View') as select from MaterialInfo.Mi_Sac_Material_Info_View;            //자재별 정보
     view MiSacExchRateView @(title : '환율 View') as select from ExchRate.Mi_Sac_Exch_Rate_View;                               //환율
 
+    // 일별 환율구분코드별 환율 정보 View
     view MiSacDailyExchRateView @(title : '일별환율 View') as 
     select
         key tenant_id
@@ -33,6 +36,29 @@ service marketIntelligenceSacTService {
            ,'PG0101_00010'  as  mi_measure : String(20)
            ,exchange_rate
     from DailyExchRate
+    ;
+
+    // 시황정보분석 View
+    view MiSacMiInfomationView @(title : '시황정보분석 View') as
+    select 
+            'Actual'			as  version : String(10)
+            ,pmmpm.tenant_id	as  tenant
+            ,pmmpm.mi_material_code || '_'|| pmmpm.exchange || '_'|| pmmpm.termsdelv || '_'|| pmmpm.quantity_unit || '_'|| pmmpm.currency_unit  as  price_unit : String(100)
+            ,pmmpm.mi_material_code
+            ,pmmc.category_code
+            ,pmmpm.exchange
+            ,pmmpm.termsdelv
+            ,pmmpm.quantity_unit
+            ,pmmpm.currency_unit
+            ,pmmpm.exchange_unit
+            ,to_char(pmmpm.mi_date,  'YYYYMMDD')    as  date : String(8)
+            ,'PG0101_00020'		as  mi_measure : String(15)
+            ,pmmpm.price		as	value
+    from	MaterialPrice             pmmpm
+            inner join  MaterialCode  pmmc
+                on  pmmc.tenant_id         =  pmmpm.tenant_id
+                and pmmc.mi_material_code  =  pmmpm.mi_material_code
+    where	pmmpm.use_flag  =  true
     ;
 
 

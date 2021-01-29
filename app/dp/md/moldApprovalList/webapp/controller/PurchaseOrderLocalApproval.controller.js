@@ -69,31 +69,37 @@ sap.ui.define([
         /* =========================================================== */
         _onApprovalPage: function () {
             this.getView().setModel(new ManagedListModel(), "purOrderItem");
-            this.getView().setModel(new ManagedModel(), "payment");
+            this.getView().setModel(new ManagedListModel(), "payment");
+            this.getView().setModel(new ManagedModel(), "amount");
             
             var schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number),
                              new Filter("tenant_id", FilterOperator.EQ, 'L2600')];
             
-            var oModel = this.getModel('payment'),
+            var oModel = this.getModel('amount'),
                 poAmount = 0,
                 currencyCode = "";
             this._bindViewPurchaseOrder("/PurchaseOrderItems", "purOrderItem", schFilter, function (oData) {
-                var splitPayTypeCode = null;
+                //var splitPayTypeCode = null;
                 if (oData.results.length > 0) {
                     oData.results.forEach(function (item) {
                         poAmount = poAmount + Number(item.purchasing_amount);
                     });
-                    splitPayTypeCode = oData.results[0].split_pay_type_code;
+                    //splitPayTypeCode = oData.results[0].split_pay_type_code;
                     currencyCode = oData.results[0].currency_code;
-                    oModel.setProperty("/split_pay_type_code", splitPayTypeCode);
-                    oModel.setProperty("/prepay", oData.results[0].prepay);
-                    oModel.setProperty("/progresspay", oData.results[0].progresspay);
-                    oModel.setProperty("/rpay", oData.results[0].rpay);
+                    //oModel.setProperty("/split_pay_type_code", splitPayTypeCode);
+                    //oModel.setProperty("/prepay", oData.results[0].prepay);
+                    //oModel.setProperty("/progresspay", oData.results[0].progresspay);
+                    //oModel.setProperty("/rpay", oData.results[0].rpay);
                 }
 
                 oModel.setProperty("/purchasing_amount", poAmount);
                 oModel.setProperty("/currency_code", currencyCode);
-                oModel.setProperty("/partial_payment", splitPayTypeCode === null ? false : true);
+                //oModel.setProperty("/partial_payment", splitPayTypeCode === null ? false : true);
+                
+            }.bind(this));
+
+            this._bindViewPurchaseOrder("/Payments", "payment", schFilter, function (oData) {
+                
                 
             }.bind(this));
         },
@@ -157,6 +163,7 @@ sap.ui.define([
             }
 
             this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs, function (oDataMold) {
+                console.log("selected data list >>>> ", oDataMold);
                 if (oDataMold.length > 0) {
                     oDataMold.forEach(function (item) {
                         this._addMoldItemTable(item);
@@ -175,7 +182,7 @@ sap.ui.define([
             oModel.addRecord({
                 "tenant_id": this.tenant_id,
                 "approval_number": this.approval_number,
-                "mold_id": data.mold_id + "",
+                "mold_id": String(data.mold_id),
                 "model": data.model,
                 "mold_number": data.mold_number,
                 "mold_sequence": data.mold_sequence,
@@ -193,7 +200,7 @@ sap.ui.define([
             }, "/PurchaseOrderItems", 0);
             //this.validator.clearValueState(this.byId("poItemTable"));
 
-            var pModel = this.getModel('payment'),
+            var pModel = this.getModel('amount'),
                 poAmount = Number(pModel.getData().purchasing_amount) + Number(data.purchasing_amount);
             pModel.setProperty("/purchasing_amount", poAmount);
             if(pModel.getProperty("/currency_code") === ""){
@@ -216,7 +223,7 @@ sap.ui.define([
             var oTable = this.byId("poItemTable"),
                 oModel = this.getModel("purOrderItem"),
                 oSelected = oTable.getSelectedIndices().reverse(),
-                pModel = this.getModel('payment'),
+                pModel = this.getModel('amount'),
                 removePoAmt = 0;
 
             if (oSelected.length > 0) {
@@ -234,6 +241,75 @@ sap.ui.define([
             pModel.setProperty("/purchasing_amount", poAmount);
             if(oModel.getData().PurchaseOrderItems.length == 0){
                 pModel.setProperty("/currency_code", "");
+            }
+        },
+
+        /**
+         * @description : Payment 항목의 Add 버튼 클릭
+         */
+        onPaymentAddRow: function (oEvent) {
+            var oModel = this.getModel("payment"),
+                iModel = this.getModel("purOrderItem");
+
+            var mIdArr = [];
+            if (iModel.oData.PurchaseOrderItems === undefined || iModel.oData.PurchaseOrderItems.length < 1) {
+                MessageToast.show("분할결제할 Item이 없습니다.");
+                return;
+            }
+
+            oModel.addRecord({
+                "tenant_id": this.tenant_id,
+                "approval_number": this.approval_number,
+                "pay_sequence": oModel.oData.Payments.length + 1,
+                "split_pay_type_code": (oModel.oData.Payments.length > 0 ? oModel.oData.Payments[0].split_pay_type_code : 'R'),
+                "pay_rate": "",
+                "pay_price": ""
+            }, "/Payment");
+        },
+
+        /**
+         * @description Payment 의 delete 버튼 누를시 
+         */
+        onPaymentDelRow: function () {
+            var oTable = this.byId("paymentTable"),
+                oModel = this.getModel("payment"),
+                aItems = oTable.getSelectedItems(),
+                aIndices = [];
+
+            if (aItems.length > 0) {
+                aItems.forEach(function (oItem) {
+                    aIndices.push(oModel.getProperty("/Payments").indexOf(oItem.getBindingContext("payment").getObject()));
+                });
+                
+                aIndices.reverse().forEach(function (nIndex) {
+                    oModel.removeRecord(nIndex);
+                });
+
+                oTable.removeSelections(true);
+
+                for (var i = 0; i < oModel.getData().Payments.length; i++) {
+                    oModel.getData().Payments[i].pay_sequence = i + 1;
+                }
+                oModel.refresh(true);
+            } else {
+                MessageBox.error("삭제할 목록을 선택해주세요.");
+            }
+        },
+
+        splitPayTypeChange: function (oEvent) {
+            var oModel = this.getModel("payment"),
+                payment = oModel.getData().Payments,
+                sSelectedKey = oModel.getProperty(oEvent.getSource().getBindingInfo("selectedKey").binding.getContext().getPath()).split_pay_type_code;
+
+
+            if(payment.length > 1){
+                payment[0].pay_rate = null;
+                payment[0].pay_price = null;
+                for(var idx = 1; idx < payment.length; idx++){
+                    payment[idx].split_pay_type_code = sSelectedKey;
+                    payment[idx].pay_rate = null;
+                    payment[idx].pay_price = null;
+                }
             }
         },
 
@@ -407,13 +483,16 @@ sap.ui.define([
 
             var oModel = this.getModel("purOrderItem"),
                 orderItems = oModel.getData().PurchaseOrderItems,
+                aModel = this.getModel("amount"),
+                purchasing_amount =  aModel.getData().purchasing_amount,
                 pModel = this.getModel("payment"),
-                split_pay_type_code = pModel.getData().split_pay_type_code,
+                payments = pModel.getData().Payments,
+                total = 0;
+                /*split_pay_type_code = pModel.getData().split_pay_type_code,
                 prepay =  pModel.getData().prepay,
                 progresspay =  pModel.getData().progresspay,
                 rpay =  pModel.getData().rpay,
-                purchasing_amount =  pModel.getData().purchasing_amount,
-                total = Number(prepay) + Number(progresspay) + Number(rpay);
+                total = Number(prepay) + Number(progresspay) + Number(rpay);*/
 
             if(orderItems.length > 1){
                 var accountCode = orderItems[0].account_code,
@@ -435,6 +514,26 @@ sap.ui.define([
                 }
             }
 
+            if(payments.length > 1){
+                var splitPayTypeCode = payments[0].split_pay_type_code;
+
+                for(var idx = 0; idx < payments.length; idx++){
+                    if(splitPayTypeCode === 'A'){
+                        total = total + Number(payments[idx].pay_price);
+                    }else{
+                        total = total + Number(payments[idx].pay_rate);
+                    }
+                }
+
+                if(splitPayTypeCode === 'A' && total !== purchasing_amount){
+                    MessageToast.show("금액 합계가 맞지 않습니다.");
+                    return;
+                }else if(splitPayTypeCode === 'R' && total !== 100){
+                    MessageToast.show("Rate가 100이 아닙니다.");
+                    return;
+                }
+            }
+/*
             if(this.getView().byId("partialPayment").getSelected()){
                 if(split_pay_type_code === "A"){
                     if(prepay >= total){
@@ -473,35 +572,15 @@ sap.ui.define([
                 progresspay =  null;
                 rpay =  null;
             }
-
+*/
             this.approval_type_code = "V";
 
             this.getModel("appMaster").setProperty("/approve_status_code", approveStatusCode);
 
             this.approvalDetails_data = [];
-            this.moldMaster_data = [];
+            this.payment_data = [];
             
-            if(orderItems.length > 0){//orderItems != undefined && 
-                orderItems.forEach(function(item){
-                    this.approvalDetails_data.push({
-                        tenant_id : this.tenant_id, 
-                        approval_number : this.approval_number, 
-                        mold_id : item.mold_id, 
-                        _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
-                    });
-                    this.moldMaster_data.push({
-                        tenant_id : this.tenant_id,
-                        mold_id : item.mold_id,
-                        split_pay_type_code : split_pay_type_code,
-                        prepay : prepay,
-                        progresspay : progresspay,
-                        rpay : rpay,
-                        _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
-                    });
-                }.bind(this));
-
-            }
-
+            // 삭제 row 부터 추가되어야 정상 저장됨 
             if(oModel._aRemovedRows.length > 0){
                 oModel._aRemovedRows.forEach(function(item){
                     this.approvalDetails_data.push({
@@ -510,17 +589,35 @@ sap.ui.define([
                         mold_id : item.mold_id, 
                         _row_state_ : "D"
                     });
-                    this.moldMaster_data.push({
-                        tenant_id : this.tenant_id, 
-                        mold_id : item.mold_id, 
-                        split_pay_type_code : "",
-                        prepay : null,
-                        progresspay : null,
-                        rpay : null,
-                        _row_state_ : "D"
-                    });
                 }.bind(this));
             }
+
+            if(orderItems.length > 0){//orderItems != undefined && 
+                orderItems.forEach(function(item){
+                    this.approvalDetails_data.push({
+                        tenant_id : this.tenant_id, 
+                        approval_number : this.approval_number, 
+                        mold_id : item.mold_id, 
+                        _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+                    });
+                }.bind(this));
+
+            }
+
+            if(payments.length > 0){
+                payments.forEach(function(item){
+                    this.payment_data.push({
+                        tenant_id : this.tenant_id, 
+                        approval_number : this.approval_number, 
+                        pay_sequence : String(item.pay_sequence), 
+                        split_pay_type_code : item.split_pay_type_code,
+                        pay_rate : item.pay_rate,
+                        pay_price : item.pay_price
+                    });
+                }.bind(this));
+
+            }
+
 
             this._commonDataSettingAndSubmit();
         }

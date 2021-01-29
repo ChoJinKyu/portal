@@ -1,0 +1,128 @@
+<mvc:View controllerName="xx.template3ColumnsLayout.controller.TemplateMainList"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core" 
+    xmlns:lib-m="ext.lib.control.m"
+    height="100%">
+
+    <f:DynamicPage id="page"
+        headerExpanded="{mainListViewModel>/headerExpanded}" 
+        toggleHeaderOnTitleClick="true">
+        <!-- DynamicPage Title -->
+        <f:title>
+
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="3컬럼 Layout" />
+                </f:heading>
+                <f:actions>
+                </f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions>
+                <f:breadcrumbs>
+                </f:breadcrumbs>
+            </f:DynamicPageTitle>
+            
+        </f:title>
+        <!-- DynamicPage Header -->
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm id="pageSearchForm" class="searchBox" maxContainerCols="2" layout="ResponsiveGridLayout" editable="true" 
+                    adjustLabelSpan="false" 
+                    labelSpanL="4" 
+                    labelSpanM="4" 
+                    emptySpanL="0" 
+                    emptySpanM="0" 
+                    columnsL="2" 
+                    columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="{I18N>/KEYWORD}:" labelFor="searchKeyword"></Label>
+                            <Input id="searchKeyword" placeholder="{I18N>/KEYWORD}"></Input>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="{I18N>/COUNTRY}:" labelFor="searchCountry"></Label>
+                            <MultiInput id="searchCountry"
+                                placeholder="{I18N>/COUNTRY}"
+                                showValueHelp="true" valueHelpRequest=".onSearchCountryDialogPress">
+                            </MultiInput>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
+                            <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress"/>
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData>
+                        </FlexBox>
+                    </form:content>
+                </form:SimpleForm>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <VBox>
+                <Table id="mainTable" 
+                        sticky="HeaderToolbar,ColumnHeaders" 
+                        inset="false" 
+                        growing="true"
+                        growingThreshold="20"
+                        class="sapFDynamicPageAlignContent" 
+                        items="{list>/}"
+                        mode="None" 
+                        width="auto">
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title text="Main List ({= ${list>/}.length || 0})" level="H2"/>
+                            <ToolbarSpacer/>
+                            <Button type="Transparent" press=".onMainTableExportButtonPress" icon="sap-icon://excel-attachment" />
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column minScreenWidth="Tablet" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                            <Label text="{I18N>/COMPANY}" />
+                        </Column>
+                        <Column minScreenWidth="Tablet" hAlign="Center" width="7rem">
+                            <Label text="{I18N>/CURRENCY}" />
+                        </Column>
+                        <Column minScreenWidth="Tablet" hAlign="Center" width="7rem">
+                            <Label text="{I18N>/COUNTRY}" />
+                        </Column>
+                        <Column minScreenWidth="Tablet" hAlign="Center" width="7rem">
+                            <Label text="{I18N>/LANGUAGE}" />
+                        </Column>
+                        <Column minScreenWidth="Tablet" hAlign="Center" width="7rem">
+                            <Label text="Using" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Navigation" press=".onMainTableItemPress">
+                            <cells>
+                                <ObjectIdentifier title="{list>company_code}" text="{list>company_name}"/>
+                                <ObjectIdentifier text="{list>currency_name}, {list>currency_code}"/>
+                                <ObjectIdentifier text="{list>country_name}, {list>country_code}"/>
+                                <ObjectIdentifier text="{list>language_name}, {list>language_code}"/>
+                                <ObjectStatus icon="{= ${list>use_flag} === true ? 'sap-icon://accept' : ''}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </f:content>
+        <!-- DynamicPage Footer -->
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
+				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+</mvc:View>

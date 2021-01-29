@@ -252,7 +252,7 @@ sap.ui.define([
             
             var self = this;
             var oModel = this.getModel('orgMap');
-            oModel.setTransactionModel(this.getModel('purOrg'));
+            // oModel.setTransactionModel(this.getModel('purOrg'));
 		},
 
 		/**

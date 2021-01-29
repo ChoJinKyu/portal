@@ -57,6 +57,9 @@ service PrCreateV4Service {
         pr_progress_status_code: String;
         remark: String;
         sloc_code : String;
+        supplier_code : String;
+        item_category_code : String;
+        account_assignment_category_code : String;
         account_code : String;
         cctr_code : String;
         wbs_code : String;
@@ -65,7 +68,7 @@ service PrCreateV4Service {
         service_desc : String;
     };
 
-    type PrCreateSaveType {
+    type PrCreateSaveType : {
         tenant_id : String;
         company_code : String;
         pr_number: String;
@@ -103,6 +106,6 @@ service PrCreateV4Service {
         return_msg  : String(5000);
     }
 
-    action SavePrCreateProc (inputData : array of PrCreateSaveType) returns array of OutType;
+    action SavePrCreateProc (inputData : PrCreateSaveType) returns array of OutType;
 
 }

@@ -1,0 +1,234 @@
+<mvc:View controllerName="ep.ne.ucContractMgt.controller.UcContractDetail" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns="sap.m" 
+	xmlns:uxap="sap.uxap" 
+	xmlns:layout="sap.ui.layout" 
+    xmlns:form="sap.ui.layout.form"
+    xmlns:sc="sap.suite.ui.commons"
+	xmlns:core="sap.ui.core"
+    xmlns:richtexteditor="sap.ui.richtexteditor"
+	height="100%">
+
+	<uxap:ObjectPageLayout id="page"
+		toggleHeaderOnTitleClick="true"
+		alwaysShowContentHeader = "true"
+		preserveHeaderStateOnScroll="false"
+		headerContentPinnable="true"
+		isChildPage="true"
+		upperCaseAnchorBar="false"
+		showTitleInHeaderContent="true"
+		showEditHeaderButton="true" 
+		showFooter="false">
+		<uxap:headerTitle>
+			<uxap:ObjectPageDynamicHeaderTitle>
+                <uxap:heading>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <Title text="LOI 발행품의" wrapping="true" class="" />
+                    </HBox>
+                </uxap:heading>              
+				<!-- <uxap:expandedHeading>
+					<Title text="LOI 발행품의" wrapping="true" />
+				</uxap:expandedHeading>
+				<uxap:snappedHeading>
+					<Title text="LOI 발행품의" wrapping="true" />
+				</uxap:snappedHeading> -->
+                <uxap:navigationActions>
+					<!-- <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/> -->
+                </uxap:navigationActions>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+			<FlexBox wrap="Wrap" visible="true">
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <ObjectStatus
+                        title="LOI 번호: "
+                        text="{midObjectViewModel>/viewLoiNumber}"/>
+                    <ObjectStatus
+                        id="createUser"         
+                        title="작성자"
+                        text="**민"/>
+				</layout:VerticalLayout>
+
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <ObjectStatus 
+                        id="createDate"
+                        title="작성일자"
+                        text="{
+                                path: 'master>/publish_date',
+                                formatter: '.dateFormatter.toUTCDateString'
+                            }" />
+
+                    <ObjectStatus
+                        id="createDepartment"
+                        title="작성부서"
+                        text="첨단소재.구매2.공사구매팀(청주P)"/>
+                    </layout:VerticalLayout>
+
+                    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                        <Label text="Status :"/>
+                    <ObjectStatus
+                        class="sapMObjectStatusLarge"
+                        text="{master>/loi_publish_status_name}"
+                        state="Error" />
+                </layout:VerticalLayout>
+
+                <!-- <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <Label text="Process : "/>
+                    <HBox>
+                        <sc:MicroProcessFlow>
+                            <sc:content>
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                            </sc:content>
+                        </sc:MicroProcessFlow>
+                    </HBox>
+                    <HBox>
+                        <Text text="LOI요청"  width="4em" renderWhitespace="true" />
+                        <Text text=" LOI업체&#10; 선정"  width="4em" renderWhitespace="true" />
+                        <Text text="LOI발행" width="6em" textAlign="Center" />
+                        <Text text=" LOI발행&#10; 통보" renderWhitespace="true" />
+                    </HBox>
+                </layout:VerticalLayout>   -->
+
+			</FlexBox>
+		</uxap:headerContent>
+
+		<uxap:sections>
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="품의정보">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSection1">
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+            <!-- 첨부파일 시작 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <!-- File Upload 시작-->
+                            <UploadCollection
+                                id="UploadCollection"
+                                maximumFilenameLength="55"
+                                maximumFileSize="10"
+                                multiple="true"
+                                sameFilenameAllowed="true"
+                                instantUpload="false"
+                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                change="onChange"
+                                fileDeleted="onFileDeleted"
+                                filenameLengthExceed="onFilenameLengthExceed"
+                                fileSizeExceed="onFileSizeExceed"
+                                typeMissmatch="onTypeMissmatch"
+                                uploadComplete="onUploadComplete"
+                                beforeUploadStarts="onBeforeUploadStarts" />
+                            <!-- File Upload 끝-->
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- 첨부파일 끝 -->
+
+			<!-- Detail 에 관한 정보 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="대상품목">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<Table id="midTable" 
+								sticky="HeaderToolbar,ColumnHeaders" 
+								inset="false" 
+                                items="{
+                                    path: 'details>/LOIPublishItemView',
+                                    sorter: { 
+                                        path: 'item_sequence',
+                                        descending: false 
+                                    }                   
+                                }"
+								class="sapFDynamicPageAlignContent" 
+								width="auto">
+
+							<headerToolbar>
+								<OverflowToolbar>
+                                    <Title text="Items ({= ${details>/LOIPublishItemView}.length || 0})" level="H2"/>
+									<ToolbarSpacer/>
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+                                <Column id="midOrgTypeCodeColumn" minScreenWidth="Tablet" hAlign="Center">
+									<Text text="플랜트" />
+								</Column>
+								<Column id="midValueColumn" minScreenWidth="Tablet" hAlign="Center" width="200px">
+									<Text text="품명" />
+								</Column>
+								<Column id="midValueColumn2" minScreenWidth="Tablet" hAlign="Center"  width="200px">
+									<Text text="규격" />
+								</Column>                                
+                                <Column id="midStartDateColumn" minScreenWidth="Tablet" hAlign="Center"  width="70px" >
+									<Text text="단위" />
+								</Column>
+                                <Column id="midEndDateColumn" minScreenWidth="Tablet" hAlign="Center"  width="50px">
+									<Text text="수량" />
+								</Column>
+                                <Column id="midEndDateColumn6" minScreenWidth="Tablet" hAlign="Center" >
+									<Text text="비고" />
+								</Column>
+
+							</columns>
+							<items>
+                                <ColumnListItem>
+									<cells>
+                                        <Text text="{details>plant_name}"/>
+                                        <Text text="{details>item_desc}"/>
+                                        <Text text="{details>spec_desc}"/>
+                                        <Text text="{details>unit}"/>
+                                        <Text text="{details>request_quantity}"/>
+                                        <Text text="{details>delivery_request_date}"/>
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>            
+
+            <!-- 결재라인 시작 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="결재라인">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <!-- Approval & Reference 시작 -->
+                            <HBox>
+        
+                            </HBox>
+                            <!-- Approval & Reference 끝 -->
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- 결재라인 끝 -->
+
+		</uxap:sections>
+		
+		<uxap:footer>
+			<OverflowToolbar>
+                <Button
+                    icon="sap-icon://alert"
+                    type="Emphasized"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                    press=".onMessagePopoverPress" />
+				<ToolbarSpacer />
+                <Button id="pageEditButton" type="Transparent" text="Edit" press=".onPageEditButtonPress" />
+                <Button id="pageSaveButton" type="Emphasized" text="Draft" press=".onPageSaveButtonPress('D')" />
+                <Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
+                <Button id="pageDeleteButton" type="Transparent" text="Delete" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>                
+                <Button id="pageRequestButton" type="Emphasized" text="Request" press=".onPageSaveButtonPress('R')" />
+                <Button id="pageByPassButton" type="Emphasized" text="ByPass" press=".onPageSaveButtonPress('B')" />
+			</OverflowToolbar>
+		</uxap:footer>
+	</uxap:ObjectPageLayout>
+</mvc:View>

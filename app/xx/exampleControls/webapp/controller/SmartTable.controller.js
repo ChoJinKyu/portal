@@ -1,10 +1,9 @@
 sap.ui.define([
 	"./Empty.controller",
-	"ext/lib/model/v2/ODataDelegateModel",
 	"sap/ui/model/json/JSONModel",
 	"sap/m/MessageBox",
 	"sap/m/MessageToast"
-], function (Controller, DelegateModel, JSONModel, MessageBox, MessageToast) {
+], function (Controller, JSONModel, MessageBox, MessageToast) {
 	"use strict";
 
 	return Controller.extend("xx.exampleControls.controller.SmartTable", {

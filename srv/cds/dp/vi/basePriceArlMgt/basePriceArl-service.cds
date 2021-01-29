@@ -5,7 +5,7 @@ using {dp.VI_Base_Price_Arl_Mst as arlMaster} from '../../../../../db/cds/dp/vi/
 using {dp.VI_Base_Price_Arl_Dtl as arlDetail} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_DTL-model';
 using {dp.VI_Base_Price_Arl_Price as arlPrice} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_PRICE-model';
 using {dp.VI_Base_Price_Arl_requestor_his as arlRequestorHis} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_REQUESTOR_HIS-model';
-using {dp.Base_Price_Info as priceInfo} from '../../../../../db/cds/dp/vi/DP_BASE_PRICE_INFO-model';
+using {dp.VI_Base_Price_Mst as priceMaster} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_MST-model';
 using {cm.Code_Dtl as codeDtl} from '../../../../../db/cds/cm/CM_CODE_DTL-model';
 using {cm.Code_Lng as codeLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using {cm.Org_Tenant as tenant} from '../../../../../db/cds/cm/CM_ORG_TENANT-model';
@@ -24,44 +24,77 @@ namespace dp;
 @path : '/dp.BasePriceArlService'
 service BasePriceArlService {
 
-    entity Base_Price_Info              as
-        select from priceInfo pi
+    entity Base_Price_Mst              as
+        select from priceMaster as pm
+        left outer join materialMst as mtr
+            on pm.tenant_id = mtr.tenant_id
+            and pm.material_code = mtr.material_code
+        left outer join supplierMst as sup
+            on pm.tenant_id = sup.tenant_id
+            and pm.supplier_code = sup.supplier_code
+        left outer join codeLng as cd01
+            on cd01.tenant_id = pm.tenant_id
+            and cd01.group_code = 'DP_VI_MARKET_CODE'
+            and cd01.code = pm.market_code
+            and cd01.language_cd = 'KO'
+        left outer join codeLng as cd02
+            on cd02.tenant_id = pm.tenant_id
+            and cd02.group_code = 'DP_VI_BASE_PRICE_GROUND_CODE'
+            and cd02.code = pm.base_price_ground_code
+            and cd02.language_cd = 'KO'
+        left outer join codeLng as cd03
+            on cd03.tenant_id = pm.tenant_id
+            and cd03.group_code = 'DP_NEW_CHANGE_CODE'
+            and cd03.code = pm.new_change_type_code
+            and cd03.language_cd = 'KO'
         {
-            key pi.tenant_id,
-            key pi.company_code,
-            key pi.org_type_code,
-            key pi.org_code,
-            key pi.material_code,
-            key pi.supplier_code,
-            key pi.market_code,
-            key pi.base_date,
-                pi.approval_number,
-                pi.item_sequence,
-                pi.base_uom_code,
-                pi.new_base_price,
-                pi.new_base_price_currency_code,
-                pi.base_price_ground_code,
-                pi.base_price_start_date,
-                pi.base_price_end_date,
-                pi.first_purchasing_net_price,
-                pi.first_pur_netprice_curr_cd,
-                pi.first_pur_netprice_str_dt,
-                pi.effective_flag,
-                pi.buyer_empno,
-                pi.new_change_type_code,
-                pi.repr_material_org_code,
-                pi.repr_material_code,
-                pi.repr_material_supplier_code,
-                pi.repr_material_market_code,
-                pi.erp_interface_flag,
-                pi.erp_interface_date,
-                pi.local_create_dtm,
-                pi.local_update_dtm,
-                pi.create_user_id,
-                pi.update_user_id,
-                pi.system_create_dtm,
-                pi.system_update_dtm
+            key pm.tenant_id,
+            key pm.company_code,
+            key pm.org_type_code,
+            key pm.org_code,
+            key pm.material_code,
+            key pm.supplier_code,
+            key pm.market_code,
+            key pm.base_date,
+                cd01.code_name as market_code_nm : String(240),
+                mtr.material_desc,
+                mtr.material_spec,
+                sup.supplier_local_name,
+                pm.approval_number,
+                pm.item_sequence,
+                pm.base_uom_code,
+                pm.new_base_price,
+                pm.new_base_price_currency_code,
+                pm.base_price_ground_code,
+                cd02.code_name as base_price_ground_code_nm : String(240),
+                pm.base_price_start_date,
+                pm.base_price_end_date,
+                pm.first_purchasing_net_price,
+                pm.first_pur_netprice_curr_cd,
+                pm.first_pur_netprice_str_dt,
+                pm.effective_flag,
+                pm.buyer_empno,
+                pm.new_change_type_code,
+                cd03.code_name as new_change_type_code_nm : String(240),
+                pm.repr_material_org_code,
+                pm.repr_material_code,
+                pm.repr_material_supplier_code,
+                pm.repr_material_market_code,
+                pm.erp_interface_flag,
+                pm.erp_interface_date,
+                pm.local_create_dtm,
+                pm.local_update_dtm,
+                pm.create_user_id,
+                pm.update_user_id,
+                pm.system_create_dtm,
+                pm.system_update_dtm
         };
+
+    annotate Base_Price_Mst with {
+        market_code_nm              @title : '납선명'  @description : '납선코드 이름';
+        base_price_ground_code_nm   @title : '기준단가근거명'  @description : '기준단가근거코드 이름';
+        new_change_type_code_nm     @title : '신규변경구분명'  @description : '신규변경구분코드 이름';
+    };
 
     entity Base_Price_Arl_Master        as
         select from arlMasterSuper sup

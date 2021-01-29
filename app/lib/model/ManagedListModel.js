@@ -99,7 +99,7 @@ sap.ui.define([
         read: function (sPath, oParameters) {
             oParameters = oParameters || {};
             var fSuccessHandler = oParameters.success,
-                fFetchAllSuccess = oParameters.fetchAllSuccess;
+                fFetchAllSuccess = oParameters.fetchOthersSuccess;
             this._oTransactionModel.read(sPath, jQuery.extend(oParameters, {
                 success: function (oData) {
                     this._transactionPath = sPath;
@@ -107,7 +107,7 @@ sap.ui.define([
                     if (fSuccessHandler)
                         fSuccessHandler.apply(this._oTransactionModel, arguments);
                 }.bind(this),
-                fetchAllSuccess: function(aSuccesses){
+                fetchOthersSuccess: function(aSuccesses){
                     var aData = this.getProperty(sPath);
                     aSuccesses.forEach(function(oSuccess){
                         aData = aData.concat(oSuccess.results);

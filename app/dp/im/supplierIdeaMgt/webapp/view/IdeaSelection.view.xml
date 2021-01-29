@@ -254,7 +254,7 @@
                                     </VBox>
                                     <VBox>
                                         <Label text="VI {I18N>/AMOUNT} (KRW): " labelFor="partNo" />
-                                        <Input id="viAmount"  width="80%"   visible="{viewModel>/editMode}"
+                                        <Input id="viAmount" type="Number"  width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/vi_amount}" textAlign="Right" />
                                         <Text id="viAmountTxt" width="80%" textAlign="Right"  text="{
                                                         path: 'details>/vi_amount', 
@@ -263,7 +263,7 @@
                                     </VBox>
                                     <VBox>
                                         <Label text="{I18N>/MM} {I18N>/MTLMOB}(EA): " labelFor="partNo" />
-                                        <Input id="monthMtlmob"  width="80%"   visible="{viewModel>/editMode}"
+                                        <Input id="monthMtlmob" type="Number"   width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/monthly_mtlmob_quantity}" textAlign="Right"/>
                                         <Text id="monthMtlmobTxt" width="80%" textAlign="Right"  text="{
                                                         path: 'details>/monthly_mtlmob_quantity', 
@@ -272,7 +272,7 @@
                                     </VBox>
                                     <VBox>
                                         <Label text="{I18N>/MM} impact (KRW): " labelFor="partNo" />
-                                        <Input id="mmImpct"  width="80%"   visible="{viewModel>/editMode}"
+                                        <Input id="mmImpct" type="Number"   width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/monthly_purchasing_amount}" textAlign="Right"/>
                                         <Text id="mmImpctTxt" width="80%" textAlign="Right"  text="{
                                                         path: 'details>/monthly_purchasing_amount', 
@@ -281,7 +281,7 @@
                                     </VBox>
                                     <VBox>
                                         <Label text="{I18N>/ANNUAL} impact (KRW): " labelFor="partNo" />
-                                        <Input id="annualImpact"  width="80%"   visible="{viewModel>/editMode}"
+                                        <Input id="annualImpact" type="Number"   width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/annual_purchasing_amount}" textAlign="Right"/>
                                         <Text id="annualImpactTxt" width="80%" textAlign="Right"  text="{
                                                         path: 'details>/annual_purchasing_amount', 
@@ -364,8 +364,9 @@
 				<ToolbarSpacer />
                 
                 <Button id="pageEditButton" type="Transparent" text="{I18N>/EDIT}" press=".onPageEditButtonPress" />
-				<Button id="pageSaveButton" type="Transparent" text="{I18N>/TEMP_SAVE}" press=".onPageSaveButtonPress('D')" />
+				<Button id="pageSaveButton" type="Transparent" text="{I18N>/TEMP_SAVE}" press=".onPageSaveButtonPress('T')" />
 				<Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButtonPress"/>
+				<Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" press=".onPageSaveButtonPress('D')"/>
 				<Button id="pageListButton" type="Transparent" text="{I18N>/LIST}" press=".onPageListButtonPress"/>
                 <Button id="pageSubmitButton" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSaveButtonPress('R')" />
 			</OverflowToolbar>

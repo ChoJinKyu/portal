@@ -16,7 +16,6 @@ sap.ui.define([
 ], function (Parent, Renderer, Multilingual, ValueHelpDialog, ODataV2ServiceProvider, Filter, FilterOperator, GridData, VBox, Column, Label, Text, Input, jQuery) {
     "use strict";
 
-    //TODO : Localization (Title)
     var CodeValueHelp = Parent.extend("ext.lib.control.ui.CodeValueHelp", {
 
         metadata: {
@@ -27,7 +26,8 @@ sap.ui.define([
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "35em"},
                 contentHeight: { type: "string", group: "Appearance" },
                 keyField: { type: "string", group: "Misc", defaultValue: "code" },
-                textField: { type: "string", group: "Misc", defaultValue: "code_name" }
+                textField: { type: "string", group: "Misc", defaultValue: "code_name" },
+                visibleRowCount: { type: "int", group: "Appearance", defaultValue: 7 }
             },
             defaultAggregation: "items",
             aggregations: {
@@ -62,10 +62,12 @@ sap.ui.define([
             this.oDialog = new ValueHelpDialog({
                 closeWhenApplied: this.getProperty("closeWhenApplied"),
                 multiSelection: this.getProperty("multiSelection"),
+                visibleRowCount: this.getProperty("visibleRowCount"),
                 keyField: this.getProperty("keyField"),
                 textField: this.getProperty("textField"),
                 filters: this.createSearchFilters(),
-                columns: this.createTableColumns()
+                columns: this.createTableColumns(),
+                tableOptions: this.getTableOptions ? this.getTableOptions() : {}
             });
 
             this.oDialog.setTitle(this.getProperty("title"));

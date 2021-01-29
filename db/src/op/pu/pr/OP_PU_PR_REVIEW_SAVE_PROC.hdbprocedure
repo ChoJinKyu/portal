@@ -39,13 +39,11 @@ BEGIN
 
     DECLARE param_error CONDITION FOR SQL_ERROR_CODE 10000;
     DECLARE txn_error   CONDITION FOR SQL_ERROR_CODE 10001;
-    DECLARE var_commit    NVARCHAR(100)  := 'COMMIT';
-    DECLARE var_rollback  NVARCHAR(100)  := 'ROLLBACK';
 
     -- SQL Error 처리
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
-            --EXEC (:var_rollback);
+            --ROLLBACK;
             O_MSG_TBL = SELECT 'NG' RETURN_CODE, 'PR Review Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')' RETURN_MSG FROM DUMMY;
         END;
 
@@ -97,7 +95,7 @@ BEGIN
     -- Cursor 실행
     FOR l_pr_item AS c_pr_item DO
 
-        IF (l_pr_item.TRANSACTION_CODE = 'U') THEN  -- I:신규, U:수정, D:삭제
+        --IF (l_pr_item.TRANSACTION_CODE = 'U') THEN  -- I:신규, U:수정, D:삭제
 
             -- 재작성요청(REWRITE), 마감(CLOSING), 담당자변경(CHANGE)
                 IF (:I_JOB_TYPE = 'REWRITE') THEN
@@ -132,7 +130,6 @@ BEGIN
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
                         --AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
-                        --AND    l_pr_item.TRANSACTION_CODE = 'U'
                         ;
                     END;
 
@@ -169,7 +166,6 @@ BEGIN
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
                         AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
-                        --AND    l_pr_item.TRANSACTION_CODE = 'U'
                         ;
                     END;
 
@@ -206,7 +202,6 @@ BEGIN
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
                         AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
-                        --AND    l_pr_item.TRANSACTION_CODE = 'U'
                         ;
                     END;
 
@@ -214,13 +209,13 @@ BEGIN
                     SIGNAL param_error SET MESSAGE_TEXT = 'PR Review Processing error.(Please Check Job Type)';
                 END IF;
 
-        END IF;
+        --END IF;
 
     END FOR;
 
     /**** Business Logic - End ****/
 
-    --EXEC (:var_commit);
+    --COMMIT;
     O_MSG_TBL = SELECT 'OK' RETURN_CODE, 'Successfully Saved.' RETURN_MSG FROM DUMMY;
 
 END;

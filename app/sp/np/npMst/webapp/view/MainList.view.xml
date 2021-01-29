@@ -201,7 +201,7 @@
                             </VBox>
                             <VBox>
                                 <!-- <Input id="test" type="Text" liveChange=".chkReplaceChange" /> -->
-                                <MultiInput id="test" type="Text" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".vhVendorPoolCode" />
+                                <MultiInput id="testVendorpoll" type="Text" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".vhVendorPoolCode" />
                                 <!-- <pg-m:CodePicker id="search_supplier_code"
                                     placeholder="Enter a Supplier name"
                                     keyField="supplier_code"
@@ -219,6 +219,9 @@
                                     <pg-m:SupplierValueHelp contentWidth="800px" title="Choose a supplier"
                                         keyFieldHeaderText="Supplier ID" textFieldHeaderText="Supplier" />
                                 </pg-m:CodePicker> -->
+                            </VBox>
+                            <VBox>
+                                <MultiInput id="testSupplier" type="Text" showValueHelp="true" valueHelpOnly="true" valueHelpRequest=".vhSupplierCode" />
                             </VBox>
                         </form:content>
                     </form:SimpleForm>

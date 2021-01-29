@@ -27,7 +27,7 @@
 		editHeaderButtonPress="handleEditBtnPress" >
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
+                <uxap:expandedHeading>
 					<Title text="Budget Execution Approval" wrapping="true" />
 				</uxap:expandedHeading>
 
@@ -53,6 +53,14 @@
                 <uxap:navigationActions>
 					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
                 </uxap:navigationActions>
+
+
+				<!-- <uxap:heading> 
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" />
+                        <Title text="Budget Execution Approval" wrapping="true" class="" />
+                    </HBox>
+				</uxap:heading> -->
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
@@ -164,9 +172,9 @@
 			</FlexBox>
 		</uxap:headerContent>
 
-		<uxap:sections id="pss">
+		<uxap:sections>
 
-			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="General Info">
+			<uxap:ObjectPageSection titleUppercase="true" title="General Info">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageGeneralInfoSection">
                     
@@ -176,12 +184,9 @@
 
             <uxap:ObjectPageSection titleUppercase="false" title="Item for Budget Execution">
 				<uxap:subSections>
-                   
-
                 <uxap:ObjectPageSubSection id="pageItemSection">
                 
                 </uxap:ObjectPageSubSection>
-                    
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 

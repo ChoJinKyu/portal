@@ -1,4 +1,15 @@
-<mvc:View xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:uxap="sap.uxap" xmlns:table="sap.ui.table" xmlns:u="sap.ui.unified" xmlns:rte="sap.ui.richtexteditor" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" displayBlock="true" xmlns:cm-ui="ext.cm.util.control.ui" controllerName="pg.tm.tmMonitoring.controller.Detail">
+<mvc:View 
+    xmlns="sap.m" 
+    xmlns:core="sap.ui.core" 
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns:uxap="sap.uxap" 
+    xmlns:u="sap.ui.unified" 
+    xmlns:rte="sap.ui.richtexteditor" 
+    xmlns:l="sap.ui.layout" 
+    xmlns:f="sap.ui.layout.form" 
+    displayBlock="true" 
+    xmlns:cm-ui="cm.util.control.ui"
+    controllerName="pg.tm.tmMonitoring.controller.Detail">
 	<App id="idAppControl">
 		<Page title="{I18N>/MONITORING_MANAGEMENT}" showNavButton="true" navButtonType="Back" navButtonPress="onNavToBack">
 			<content>
@@ -26,7 +37,7 @@
 														<Text text="{=${manager_local_name} === ''? 'No Manager Data' : ${manager_local_name}.replaceAll(';', ', ')}" visible="{=!${DetailView>/isEditMode}}"/>
 														<MultiInput id="multiInputWithEmployeeValueHelp" visible="{=${DetailView>/isEditMode}}" tokenUpdate="onTokenUpdate" showValueHelp="false"/>
 														<layoutData>
-															<l:GridData span="XL3 L3 M6 S12"/>
+															<l:GridData span="XL3 L4 M4 S12"/>
 														</layoutData>
 													</VBox>
 													<VBox id="managerVBox" class="sapUiNoMarginTop">
@@ -126,7 +137,7 @@
 														<CheckBox id="alarm_flag" text="{I18N>/ALRAM}" editable="{=${DetailView>/isEditMode}}" selected="{=${operation_mode_alram_flag} === 'true' ? true : false}"/>
 													</HBox>
 													<layoutData>
-														<l:GridData span="XL4 L4 M6 S12"/>
+														<l:GridData span="XL3 L4 M4 S12"/>
 													</layoutData>
 												</VBox>
 												<VBox id="cycleVBox">
@@ -136,7 +147,7 @@
 														<core:Item key="{code}" text="{code_name}"/>
 													</MultiComboBox>
 													<layoutData>
-														<l:GridData span="XL4 L4 M6 S12"/>
+														<l:GridData span="XL3 L4 M4 S12"/>
 													</layoutData>
 												</VBox>
 											</f:content>

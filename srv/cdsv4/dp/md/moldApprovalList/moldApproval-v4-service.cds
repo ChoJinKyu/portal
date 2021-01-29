@@ -101,10 +101,10 @@ service MoldApprovalV4Service {
         book_currency_code: String ;
         budget_exrate_date: String ;
         budget_exrate: String ;
-        split_pay_type_code: String ;
-        pay_sequence           : String;
-        pay_type_code         : String;
-        prepay: String ;
+        //split_pay_type_code: String ;
+        //pay_sequence           : String;
+        //pay_type_code         : String;
+        //prepay: String ;
         progresspay: String ;
         rpay: String ;
         mold_sales_status_code: String ;
@@ -144,11 +144,11 @@ service MoldApprovalV4Service {
 
     type Payment_v4 {
         tenant_id             : String;
-        mold_id               : String;
+        approval_number       : String;
         pay_sequence          : String;
-        pay_type_code         : String;
-        pay_rate              : Decimal;
-        pay_price             : Decimal;
+        split_pay_type_code   : String;
+        pay_rate              : String;
+        pay_price             : String;
     };
 
     // 자산 테이블 
@@ -189,6 +189,13 @@ service MoldApprovalV4Service {
         plant_code : String;
         resultCode : Integer;
     }
+
+    type apprStatus {
+         approvalMaster :  ApprovalMaster_v4
+    }
+	
+	
+	action updateApproveStatusCode ( inputData : apprStatus ) returns resultMsg; // request cancel 시 필요  
 
     action saveMoldApproval ( inputData : data ) returns resultMsg;
     action deleteApproval (inputData : ApprDeleteData) returns resultMsg;
