@@ -27,32 +27,16 @@
 		editHeaderButtonPress="handleEditBtnPress" >
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
-					<Title text="Budget Execution Approval" wrapping="true" />
-				</uxap:expandedHeading>
+				<uxap:heading> 
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <Title text="Budget Execution Approval" wrapping="true" class="" />
+                    </HBox>
+				</uxap:heading>
 
-				<uxap:snappedHeading>
-                    <FlexBox fitContainer="true" alignItems="Center">
-						<Title text="Budget Execution Approval" wrapping="true"/>
-					</FlexBox>
-				</uxap:snappedHeading>
-
-			    <uxap:expandedContent>
-				</uxap:expandedContent>
-
-				<uxap:snappedContent>
-				</uxap:snappedContent>
-
-				<uxap:snappedTitleOnMobile>
-				</uxap:snappedTitleOnMobile>
-
-				<uxap:actions>
-				    
-				</uxap:actions>
-
-                <uxap:navigationActions>
+                <!-- <uxap:navigationActions>
 					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
-                </uxap:navigationActions>
+                </uxap:navigationActions> -->
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
