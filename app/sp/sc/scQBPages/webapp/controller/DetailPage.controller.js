@@ -102,7 +102,7 @@ sap.ui.define([
                 var oToolPage = this.getView().oParent.oParent.oParent.oContainer.oParent;
 
                 var oMode = $.sap.negoMode;
-                
+
                 //이동하려는 app의 component name,url
                 if(oMode == "NW"){
                     var sComponent = "sp.sc.scQBMgt",
@@ -507,14 +507,14 @@ sap.ui.define([
 
                             for( var i = 0 ; i < pToken.length ; i++ ) {
 
-                                if( pToken[i].getProperty("key") != "" ) {
+                                if( pToken[i].supplier_code != "" ) {
 
                                     // var indexTemp = Number(seqTemp) + i;
         
                                     // objTemp.item_supplier_sequence = "0000";
         
-                                    objTemp.supplier_code = pToken[i].getProperty("key");
-                                    objTemp.supplier_name = pToken[i].getProperty("text");
+                                    objTemp.supplier_code = pToken[i].supplier_code;
+                                    objTemp.supplier_name = pToken[i].supplier_local_name;
                                     objTemp.supplier_type_code = "RAW MATERIAL";
         
                                     var supplierItem_S = this.getSupplierItem(objTemp);
@@ -529,7 +529,7 @@ sap.ui.define([
                             
                             objTemp.specific_supplier_count = objTemp.Suppliers.length;
 
-                            this.getView().getModel("NegoHeaders").refresh();
+                            this.getView().getModel("NegoItemPrices").refresh();
                         }
 
                         // var bLength = this.getView().byId("table_Specific").getItems().length;
@@ -675,7 +675,7 @@ sap.ui.define([
                 // this.oSupplierWithOrgMultiValueHelp.setTokens(this.byId("multiinput_supplierwithorg_code").getTokens());
             },
 
-            onSullpierLoadPopup: function () {
+            onSupplierLoadPopup: function () {
                 // this.onMultiInputSupplierWithOrgValuePress(null);
                 if( this._selectedLineItem ) {
                     var supplierList = this._selectedLineItem.Suppliers;
@@ -707,7 +707,7 @@ sap.ui.define([
 
                 // this.getView().byId("table_Specific").setSelectedIndex(this._oIndex);
 
-                this.onSullpierLoadPopup();
+                this.onSupplierLoadPopup();
                 
             },
             onLoadSuppliers: function (e) {
