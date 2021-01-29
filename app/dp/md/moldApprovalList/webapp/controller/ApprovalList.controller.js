@@ -87,6 +87,7 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "list_temp");
             this.setModel(new ManagedListModel(), "orgMap");
             this.setModel(new ManagedListModel(), "requestors");
+            this.setModel(new ManagedListModel(), "SegmentedItem");
             this.setModel(new JSONModel(), "excelModel");
             this.getView().setModel(this.oServiceModel, 'supplierModel');
             
@@ -973,9 +974,43 @@ sap.ui.define([
 		 */
         _onRoutedThisPage: function () {
             this.getModel("approvalListView").setProperty("/headerExpanded", true);
-            this.setModel(new ManagedListModel(), "orgMap");
+            this.setModel(new ManagedListModel(), "orgMap"); 
+
+            this._segmentSrch();
+
         },
         
+        _segmentSrch : function (){
+             
+            var oView = this.getView(),
+                oModel = this.getModel("SegmentedItem") ,
+                codeName = this.getModel('I18N').getText("/ALL")
+                ;
+             var aSearchFilters = [];
+                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600'));
+                aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'CM_APPROVE_STATUS'));
+
+
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("util"));
+            oModel.read("/Code", {
+                filters: aSearchFilters,
+                success: function (oData) {
+                        console.log("code>>> " , oData);           
+                    oModel.addRecord({
+                        code: ""
+                      ,  code_name: "All"   
+                      ,  group_code: "CM_APPROVE_STATUS"
+                      ,  parent_code: null
+                      ,  parent_group_code: null
+                      ,  sort_no: "0"
+                    },"/Code",0);
+                    oView.setBusy(false);
+                    
+                }
+            });
+        } ,
+
         /**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
