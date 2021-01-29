@@ -40,21 +40,24 @@ sap.ui.define([
             delete mParameters.fetchOthers;
             delete mParameters.success;
             delete mParameters.urlParameters;
-            urlParameters["$inlinecount"] = "allpages";
+            if(this._listExpected(sPath))
+                urlParameters["$inlinecount"] = "allpages";
             Parent.prototype.read.call(this, sPath, jQuery.extend(true, {}, mParameters, {
                 urlParameters: urlParameters,
                 success: function (oData) {
-                    this._setCount(sPath, oData);
-                    if(bFetchOthers === true){
-                        if(this.hasMore(sPath)){
-                            this._fetchOthers(sPath, mParameters, this.getAllCount(sPath), this.getCount(sPath));
-                        }else{
-                            if(fFetchOthersSuccess)
-                                fFetchOthersSuccess.call(this, []);
+                    if(oData.results){
+                        this._setCount(sPath, oData);
+                        if(bFetchOthers === true){
+                            if(this.hasMore(sPath)){
+                                this._fetchOthers(sPath, mParameters, this.getAllCount(sPath), this.getCount(sPath));
+                            }else{
+                                if(fFetchOthersSuccess)
+                                    fFetchOthersSuccess.call(this, []);
+                            }
                         }
                     }
                     if (fSuccessHandler)
-                        fSuccessHandler.call(this, oData, bFetchOthers === true && this.hasMore(sPath));
+                        fSuccessHandler.call(this, oData, oData.results && bFetchOthers === true && this.hasMore(sPath));
                 }.bind(this)
             }));
         },
@@ -112,6 +115,10 @@ sap.ui.define([
                         errorHandler.apply(this, arguments);
                 }.bind(this)
             }));
+        },
+
+        _listExpected: function(sPath){
+            return sPath.indexOf("(") == -1;
         }
         
     });
