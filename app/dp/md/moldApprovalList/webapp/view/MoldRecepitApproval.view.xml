@@ -29,7 +29,7 @@
 			<uxap:ObjectPageDynamicHeaderTitle>
                 <uxap:heading> 
                     <HBox alignItems="End">
-                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" />
                         <Title text="Mold Recepit Approval" wrapping="true" class="" />
                     </HBox>
 				</uxap:heading>
