@@ -57,10 +57,10 @@
                         <HBox height="auto" >
                             <VBox alignContent="Center" alignItems="Center" justifyContent="Center" class="darkgrayBG"
                                 width="10%" height="auto" id= "aaa"  >
-                                <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMarginBeginEnd "
-                                    alignContent="Center" alignItems="Center" justifyContent="Center" >
-                                    <Text text="{rbg>/evaluation_type/OP}" class="mText " textAlign="Right"/>
-                                </VBox>
+                                <!-- <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMarginBeginEnd "
+                                    alignContent="Center" alignItems="Center" justifyContent="Center" > -->
+                                    <Text text="{rbg>/evaluation_type/OP}" class="mText " />
+                                <!-- </VBox> -->
                             </VBox>
                             <VBox width="90%" height="100%" class="" >
                                 <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd leftM  mouseP whiteBG" displayInline="true"  id="vboxB1">
@@ -248,10 +248,10 @@
                         <HBox height="auto" >
                             <VBox alignContent="Center" alignItems="Center" justifyContent="Center"  class="darkgrayBG sapUiSmallMarginTop"
                                 width="10%" height="auto"   >
-                                <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMarginBeginEnd  "
-                                    alignContent="Center" alignItems="Center" justifyContent="Center" >
+                                <!-- <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMarginBeginEnd  "
+                                    alignContent="Center" alignItems="Center" justifyContent="Center" > -->
                                     <Text text="{rbg>/evaluation_type/PNP}" class="mText" />
-                                </VBox>
+                                <!-- </VBox> -->
                             </VBox>
                             <VBox width="90%" height="100%" >
                                 <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd sapUiSmallMarginTop mouseP whiteBG leftM" displayInline="true" id="vboxB3" >
