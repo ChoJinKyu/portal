@@ -91,7 +91,7 @@ sap.ui.define([
             this.setModel(new JSONModel(), "excelModel");
             this.getView().setModel(this.oServiceModel, 'supplierModel');
             
-            //this.setApproveStatus();
+            
         
             this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -177,30 +177,6 @@ sap.ui.define([
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
             this.getView().byId("searchPlantE").bindItems(bindItemInfo);
         },
-
-        setApproveStatus: function(){
-            
-            var filter = new Filter({
-                            filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
-                                    new Filter("group_code", FilterOperator.EQ, 'CM_APPROVE_STATUS')
-                                ],
-                                and: true
-                        });
-           
-            var bindItemInfo = 
-                {
-                    path: 'util>/Code',
-                    filters: filter,
-                    template: new SegmentedButtonItem({
-                        width: '5em', key: "{util>code}", text: "{util>code_name}"
-                    })         
-                };
-            this.getView().byId("searchStatus").bindItems(bindItemInfo);
-            console.log(bindItemInfo);
-            // this.getView().byId("searchStatus").addItem()
-        },
-
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -995,8 +971,7 @@ sap.ui.define([
             oModel.setTransactionModel(this.getModel("util"));
             oModel.read("/Code", {
                 filters: aSearchFilters,
-                success: function (oData) {
-                        console.log("code>>> " , oData);           
+                success: function (oData) {     
                     oModel.addRecord({
                         code: ""
                       ,  code_name: "All"   
