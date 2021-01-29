@@ -131,6 +131,12 @@ sap.ui.define([
                 }
             });
         },
+        _toEditModeEachApproval: function () {
+       
+        },
+        _toShowModeEachApproval: function () {
+            
+        },
         _pssCancelSearch : function(aFilter,callback){ 
             var oView = this.getView(),
                 oModel = this.getModel("cancelList");

@@ -744,7 +744,9 @@ sap.ui.define([
         */
         handleConfirm: function (targetControl) {
 
-            var id = toggleButtonId.split('--')[2];
+            var sId = toggleButtonId.split('--');
+            var id = sId[sId.length-1];
+            console.log(id);
             var page = ""
             var appTypeCode = "";
             var company_code = this.byId("searchCompanyF").getSelectedKey();
