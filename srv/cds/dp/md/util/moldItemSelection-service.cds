@@ -58,7 +58,7 @@ service MoldItemSelectionService {
                 m.receiving_complete_date,
                 m.account_code,
                 m.accounting_department_code,
-                m.acq_department_code, 
+                ass.acq_department_code, 
                 dep.department_local_name as acq_department_code_nm : String(240) ,
                 m.remark,
                 m.eco_number,
