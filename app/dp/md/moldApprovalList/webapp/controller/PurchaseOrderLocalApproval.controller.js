@@ -580,6 +580,18 @@ sap.ui.define([
             this.approvalDetails_data = [];
             this.payment_data = [];
             
+            // 삭제 row 부터 추가되어야 정상 저장됨 
+            if(oModel._aRemovedRows.length > 0){
+                oModel._aRemovedRows.forEach(function(item){
+                    this.approvalDetails_data.push({
+                        tenant_id : this.tenant_id, 
+                        approval_number : this.approval_number, 
+                        mold_id : item.mold_id, 
+                        _row_state_ : "D"
+                    });
+                }.bind(this));
+            }
+
             if(orderItems.length > 0){//orderItems != undefined && 
                 orderItems.forEach(function(item){
                     this.approvalDetails_data.push({
@@ -606,16 +618,6 @@ sap.ui.define([
 
             }
 
-            if(oModel._aRemovedRows.length > 0){
-                oModel._aRemovedRows.forEach(function(item){
-                    this.approvalDetails_data.push({
-                        tenant_id : this.tenant_id, 
-                        approval_number : this.approval_number, 
-                        mold_id : item.mold_id, 
-                        _row_state_ : "D"
-                    });
-                }.bind(this));
-            }
 
             this._commonDataSettingAndSubmit();
         }

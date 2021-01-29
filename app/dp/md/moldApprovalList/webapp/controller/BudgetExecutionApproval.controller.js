@@ -474,6 +474,42 @@ sap.ui.define([
 
             var that = this;
 
+            // 삭제 row 먼저 추가되어야 데이터가 정상 저장됨 
+            if (bModel._aRemovedRows.length > 0) {
+                bModel._aRemovedRows.forEach(function (item) {
+                    that.approvalDetails_data.push({
+                        tenant_id: that.tenant_id
+                        , approval_number: that.approval_number
+                        , mold_id: item.mold_id
+                        , _row_state_: "D"
+                    });
+                    that.moldMaster_data.push({
+                        tenant_id: that.tenant_id
+                        , mold_id: item.mold_id
+                        , account_code: account_code
+                        , investment_ecst_type_code: investment_ecst_type_code
+                        , acq_department_code: acq_department_code
+                        , accounting_department_code: accounting_department_code
+                        , import_company_code: import_company_code
+                        , project_code: project_code
+                        , import_company_org_code: import_company_org_code
+                        , mold_production_type_code: item.mold_production_type_code
+                        , mold_item_type_code: item.mold_item_type_code
+                        , provisional_budget_amount: item.provisional_budget_amount
+                        , asset_type_code: item.asset_type_code
+                        , _row_state_: "D"
+                    });
+                    that.asset_data.push({
+                        tenant_id: that.tenant_id
+                        , mold_id: item.mold_id
+                        , _row_state_: "D"
+                    });
+                });
+            }
+
+
+
+
             if (bModel.getData().ItemBudgetExecution != undefined && bModel.getData().ItemBudgetExecution.length > 0) {
 
                 var account_code = mModel.getData().account_code;
@@ -521,37 +557,7 @@ sap.ui.define([
 
             }
 
-            if (bModel._aRemovedRows.length > 0) {
-                bModel._aRemovedRows.forEach(function (item) {
-                    that.approvalDetails_data.push({
-                        tenant_id: that.tenant_id
-                        , approval_number: that.approval_number
-                        , mold_id: item.mold_id
-                        , _row_state_: "D"
-                    });
-                    that.moldMaster_data.push({
-                        tenant_id: that.tenant_id
-                        , mold_id: item.mold_id
-                        , account_code: account_code
-                        , investment_ecst_type_code: investment_ecst_type_code
-                        , acq_department_code: acq_department_code
-                        , accounting_department_code: accounting_department_code
-                        , import_company_code: import_company_code
-                        , project_code: project_code
-                        , import_company_org_code: import_company_org_code
-                        , mold_production_type_code: item.mold_production_type_code
-                        , mold_item_type_code: item.mold_item_type_code
-                        , provisional_budget_amount: item.provisional_budget_amount
-                        , asset_type_code: item.asset_type_code
-                        , _row_state_: "D"
-                    });
-                    that.asset_data.push({
-                        tenant_id: that.tenant_id
-                        , mold_id: item.mold_id
-                        , _row_state_: "D"
-                    });
-                });
-            }
+           
             this._commonDataSettingAndSubmit();
         }
     });

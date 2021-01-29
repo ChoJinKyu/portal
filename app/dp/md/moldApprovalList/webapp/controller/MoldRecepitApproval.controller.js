@@ -356,6 +356,28 @@ sap.ui.define([
           
             var that = this;
             
+            // 삭제 row 먼저 추가되어야 데이터가 정상 저장됨 
+            if(bModel._aRemovedRows.length > 0){
+                bModel._aRemovedRows.forEach(function(item){
+                    that.approvalDetails_data.push({
+                        tenant_id : that.tenant_id 
+                        , approval_number : that.approval_number 
+                        , mold_id : item.mold_id 
+                        , _row_state_ : "D"
+                    });
+
+                    that.asset_data.push({
+                        tenant_id : that.tenant_id 
+                        , mold_id : item.mold_id 
+                        , acq_department_code : item.acq_department_code
+                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+                    });
+                });
+            }
+
+
+
+
             if(bModel.getData().MoldRecepit != undefined && bModel.getData().MoldRecepit.length > 0){
 
                 bModel.getData().MoldRecepit.forEach(function(item){
@@ -375,24 +397,6 @@ sap.ui.define([
 
                 });
 
-            }
-
-            if(bModel._aRemovedRows.length > 0){
-                bModel._aRemovedRows.forEach(function(item){
-                    that.approvalDetails_data.push({
-                        tenant_id : that.tenant_id 
-                        , approval_number : that.approval_number 
-                        , mold_id : item.mold_id 
-                        , _row_state_ : "D"
-                    });
-
-                    that.asset_data.push({
-                        tenant_id : that.tenant_id 
-                        , mold_id : item.mold_id 
-                        , acq_department_code : item.acq_department_code
-                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
-                    });
-                });
             }
 
 
