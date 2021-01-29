@@ -114,12 +114,11 @@ sap.ui.define([
             aSorters.push(new Sorter("wbs_code", false));
             this.oDialog.setBusy(true);
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.pu.MstService/").read("/Wbs_Mst", {
-                fetchOthers: true,  //TODL: please disable fetchOthers option for performance
+                fetchOthers: true,  //TODO: 가능하면 fetchOthers 옵션을 false 하세요.
                 filters: aFilters,
                 sorters: aSorters,
-                success: function(oData, bHasMore){
+                success: function(oData){
                     this.oDialog.setData(oData.results, false);
-                    if(!bHasMore) this.oDialog.setBusy(false);
                 }.bind(this),
                 fetchOthersSuccess: function(aDatas){
                     var aDialogData = this.oDialog.getData();

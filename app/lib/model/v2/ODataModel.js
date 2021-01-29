@@ -50,7 +50,7 @@ sap.ui.define([
                             this._fetchOthers(sPath, mParameters, this.getAllCount(sPath), this.getCount(sPath));
                         }else{
                             if(fFetchOthersSuccess)
-                                fFetchOthersSuccess.call(this, [oData]);
+                                fFetchOthersSuccess.call(this, []);
                         }
                     }
                     if (fSuccessHandler)
