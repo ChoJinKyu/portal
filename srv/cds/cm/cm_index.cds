@@ -17,3 +17,4 @@ using from './util/common-service';
 using from './orgProcOrgTypeMgt/orgProcOrgTypeMgt-service';
 using from './util/org-service';
 using from './util/hr-service';
+using from './util/sppUserSession-service';
