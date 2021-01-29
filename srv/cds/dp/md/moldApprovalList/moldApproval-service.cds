@@ -23,7 +23,8 @@ service MoldApprovalService {
     entity Referers as projection on referer.Referer;
     entity MoldMasters as projection on moldMst.Md_Mst;
     entity Quotation as projection on qtn.Md_Quotation;
-    entity Asset as projection on ass.Md_Asset;
-    entity Employee as projection on employee.Hr_Employee;
+    entity Asset as projection on ass.Md_Asset; 
+    /*  Payment 는 프로시저에서 저장함 */ 
+    entity Employee as projection on employee.Hr_Employee; // 관계때문에 들어온 엔터티 
     
 }

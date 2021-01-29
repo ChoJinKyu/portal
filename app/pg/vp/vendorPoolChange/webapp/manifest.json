@@ -194,35 +194,12 @@
                     "target": [
                         "mainObject"
                     ]
-                },
-                {
-                    "pattern": "midObject/{layout}/{tenantId}/{orgCode}/{operationUnitCode}/{vendorPool}/{temptype}/{target}",
-                    "name": "midPage",
-                    "target": [
-                        "midTreeObject"
-                    ]
-                },
-                {
-                    "pattern": "midObjectDetail/{layout}/{tenantId}/{orgCode}/{operationUnitCode}/{vendorPool}/{temptype}/{target}",
-                    "name": "midPageDetail",
-                    "target": [
-                        "midTreeObject",
-                        "midDetailObject"
-                    ]
                 }
             ],
             "targets": {
                 "mainObject": {
                     "viewName": "MainList",
                     "controlAggregation": "beginColumnPages"
-                },
-                "midTreeObject": {
-                    "viewName": "MidObjectTree",
-                    "controlAggregation": "beginColumnPages"
-                },
-                "midDetailObject": {
-                    "viewName": "MidObjectDetail",
-                    "controlAggregation": "midColumnPages"
                 },
                 "notFound": {
                     "viewName": "MidObjectNotFound",

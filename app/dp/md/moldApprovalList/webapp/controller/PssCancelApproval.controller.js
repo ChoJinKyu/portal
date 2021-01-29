@@ -178,30 +178,10 @@ sap.ui.define([
 
             if(this.getModel("approver").getData().Approvers != undefined){ 
                 var ap = this.getModel("approver").getData().Approvers;
-                var len = 0; 
-
-                if(this.getView().getModel("mode").getProperty("/viewFlag")){
-                    len = ap.length;
-                }else{
-                    len =  ap.length -1;
-                }
-                for(var i = 0 ; i < len ; i++){
+                for(var i = 0 ; i < ap.length ; i++){
                     this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
                 }
             }
-            
-            // console.log("approverPreview " , this.getModel("approverPreview").getData());
-
-        //     var ref = this.getModel("referer");
-        //     this.getView().setModel(new ManagedModel(), "refererPreview");
-
-        //    var rArr = [];
-        //    if(ref.getData().Referers != undefined && ref.getData().Referers.length >0){
-        //         ref.getData().Referers.forEach(function(item){
-        //             rArr.push(item.referer_empno); 
-        //         });
-        //     }
-        //     this.getModel("refererPreview").setProperty("/refArr", rArr);
 
             var oView = this.getView();
 

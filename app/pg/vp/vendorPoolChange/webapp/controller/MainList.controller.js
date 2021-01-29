@@ -25,7 +25,6 @@ sap.ui.define([
     "sap/ui/core/syncStyleClass",
     'sap/m/Label',
     'sap/m/SearchField',
-    "ext/lib/util/ValidatorUtil",
     "sap/f/library",
     "ext/lib/util/ControlUtil",
     "sap/ui/model/resource/ResourceModel"
@@ -56,7 +55,6 @@ sap.ui.define([
     syncStyleClass,
     Label,
     SearchField,
-    ValidatorUtil,
     library,
     ControlUtil,
     ResourceModel
@@ -93,7 +91,7 @@ sap.ui.define([
 
         /*
          * cm에서 제공하는 dateFormatter 
-         * */  
+         * */
         dateFormatter: DateFormatter,
 
         /* =========================================================== */
@@ -172,21 +170,29 @@ sap.ui.define([
         onDialogTreeCreate: function () {
             var oView = this.getView();
 
-            if (!this.treeDialog) {
-                this.treeDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "pg.vp.vendorPoolChange.view.DialogCreateTree",
-                    controller: this
-                }).then(function (tDialog) {
-                    // connect dialog to the root view of this component (models, lifecycle)
-                    oView.addDependent(tDialog);
-                    return tDialog;
-                });
+            if (!this.byId("search_Operation_ORG_E").getSelectedKey()) {
+                MessageToast.show("ORG를 입력해주세요.");
+            } else if (!this.byId("search_Operation_UNIT_E").getSelectedKey()) {
+                MessageToast.show("ORG UNIT을 입력해주세요.");
+            } else {
+                if (!this.treeDialog) {
+                    this.treeDialog = Fragment.load({
+                        id: oView.getId(),
+                        name: "pg.vp.vendorPoolChange.view.DialogCreateTree",
+                        controller: this
+                    }).then(function (tDialog) {
+                        // connect dialog to the root view of this component (models, lifecycle)
+                        oView.addDependent(tDialog);
+                        return tDialog;
+                    });
+                }
+                this.treeDialog.then(function (tDialog) {
+                    tDialog.open();
+                    // this.onAfterDialog();
+                }.bind(this));
             }
-            this.treeDialog.then(function (tDialog) {
-                tDialog.open();
-                // this.onAfterDialog();
-            }.bind(this));
+
+
         },
 
         createTreePopupClose: function (oEvent) {
@@ -398,7 +404,7 @@ sap.ui.define([
 
         /*
          *  Search 영역에서 입력 한 정보를 필터링 하기 위한 function
-         * */ 
+         * */
         _getSearchStates: function () {
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
             var aSearchFilters = [];
@@ -434,13 +440,13 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("change_date", FilterOperator.BT, s_Operation_DATE_E_FR, s_Operation_DATE_E_TO));
                 if (s_Operation_ORG_E && s_Operation_ORG_E.length > 0) {
                     //aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, s_Operation_ORG_E));
-                     aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, "BIZ00200"));
+                    aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, "BIZ00200"));
                 }
                 if (s_Operation_UNIT_E && s_Operation_UNIT_E.length > 0) {
                     aSearchFilters.push(new Filter("operation_unit_code", FilterOperator.EQ, s_Operation_UNIT_E));
                 }
                 if (s_Operation_CHANGER_E && s_Operation_CHANGER_E.length > 0) {
-                    aSearchFilters.push(new Filter("changer_empno", FilterOperator.EQ, s_Operation_CHANGER_E));  
+                    aSearchFilters.push(new Filter("changer_empno", FilterOperator.EQ, s_Operation_CHANGER_E));
                 }
                 if (s_Operation_VENDOR_E && s_Operation_CHANGER_E.length > 0) {
                     aSearchFilters.push(new Filter("vendor_pool_code", FilterOperator.EQ, s_Operation_VENDOR_E));
@@ -485,17 +491,17 @@ sap.ui.define([
          *  $List 영역에서 Status Label 포맷을 위한 Formatter
          * */
 
-        labelColorFormatter : function (sStautsCodeParam) {
+        labelColorFormatter: function (sStautsCodeParam) {
             switch (sStautsCodeParam) {
-                case 'IW' : 
+                case 'IW':
                     return 3;
-                case 'DR' : 
+                case 'DR':
                     return 1;
-                case 'RQ' : 
+                case 'RQ':
                     return 8;
-                case 'IP' : 
+                case 'IP':
                     return 9;
-                default : 
+                default:
                     return null;
             }
         }
