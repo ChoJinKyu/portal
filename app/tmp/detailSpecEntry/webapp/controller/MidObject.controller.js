@@ -50,6 +50,7 @@ sap.ui.define([
 			this.setModel(new ManagedListModel(), "schedule");
             this.setModel(new ManagedModel(), "spec");
             this.setModel(new ManagedModel(), "tmpCcDpMdSpec");
+            this.setModel(new ManagedModel(), "tmpCcDpMdSpecG");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.aDataModels.length = 0;
@@ -309,7 +310,6 @@ sap.ui.define([
 				oPageSubSection.removeAllBlocks();
 				oPageSubSection.addBlock(oFragment);
             })
-
             var mode = sFragmentName.split('_')[1];
 
             var oPageSubSection2 = this.byId("pageSubSection2");
@@ -349,6 +349,13 @@ sap.ui.define([
             var tenantId = this._sTenantId;
             debugger
             this._loadTemplate(tenantId, templateId, sectionId);
+
+            // Grid Section Sample
+            var oPageSubSection5 = this.byId("pageSubSection5");
+            this._loadFragment("L2600_test_grid", function(oFragment){
+				oPageSubSection5.removeAllBlocks();
+				oPageSubSection5.addBlock(oFragment);
+            })  
         },
         _loadTemplate: function(tenant_id, templateId, sectionId){
             var input = {};
@@ -364,6 +371,11 @@ sap.ui.define([
             appModel.read("/tmpCcDpMdSpec('"+this._sMoldId+"')", {
 
             });
+
+            // var gridModel = this.getView().getModel("tmpCcDpMdSpecG");
+            // gridModel.setTransactionModel(this.getModel("tmpMgr"));
+            // gridModel.read("/tmpCcDpMdSpec", {
+            // });
 
             $.ajax({
                 url: "tmp/SampleSolutionized/webapp/srv-api/odata/v4/tmp.TmpMgrService/RetrieveTemplateSample",
