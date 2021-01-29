@@ -1,5 +1,5 @@
 sap.ui.define([
-    "./BaseController",
+    "ext/lib/controller/BaseController",
     "sap/ui/core/routing/History",
     "sap/ui/model/json/JSONModel",
     "ext/lib/model/ManagedListModel",
@@ -18,6 +18,7 @@ sap.ui.define([
     "sap/m/Input",
     "sap/m/ComboBox",
     "sap/ui/core/Item",
+    "sap/m/SegmentedButtonItem",
     'sap/ui/core/Element',
     "sap/ui/core/syncStyleClass",
     'sap/m/Label',
@@ -29,7 +30,7 @@ sap.ui.define([
     "sap/ui/model/Sorter"
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, ApprovalListPersoService, Filter
     , FilterOperator, Fragment, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text
-    , Token, Input, ComboBox, Item, Element, syncStyleClass, Label, SearchField, Multilingual, ODataModel, ExcelUtil
+    , Token, Input, ComboBox, Item, SegmentedButtonItem, Element, syncStyleClass, Label, SearchField, Multilingual, ODataModel, ExcelUtil
     , Validator, Sorter) {
     "use strict";
     /**
@@ -88,7 +89,8 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "requestors");
             this.setModel(new JSONModel(), "excelModel");
             this.getView().setModel(this.oServiceModel, 'supplierModel');
-
+            
+            this.setApproveStatus();
         
             this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -173,6 +175,30 @@ sap.ui.define([
                 
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
             this.getView().byId("searchPlantE").bindItems(bindItemInfo);
+        },
+
+        setApproveStatus: function(){
+            
+            var filter = new Filter({
+                            filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                                    new Filter("group_code", FilterOperator.EQ, 'CM_APPROVE_STATUS')
+                                ],
+                                and: true
+                        });
+            // var sorter = [];
+            // aSorter.push(new Sorter("util>sort_no", true));
+
+            var bindItemInfo = {
+                    path: 'util>/Code',
+                    filters: filter,
+                    sorters: new Sorter("sort_no", true),
+                    template: new SegmentedButtonItem({
+                        width: '5em', key: "{util>code}", text: "{util>code_name}"
+                    })
+                };
+            this.getView().byId("searchStatus").bindItems(bindItemInfo);
+            console.log(bindItemInfo);
         },
 
 
