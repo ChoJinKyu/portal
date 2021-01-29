@@ -407,6 +407,7 @@ sap.ui.define([
             this.byId("pageCancelButton").setEnabled(false);
             this.byId("pageListButton").setEnabled(true);
             this.byId("pageSubmitButton").setEnabled(false);
+            this.byId("pageDeleteButton").setEnabled(false);
         },
         
         _toEditMode: function () {
@@ -417,6 +418,9 @@ sap.ui.define([
             this.byId("pageNavBackButton").setVisible(false);
             this.byId("pageEditButton").setEnabled(false);
             this.byId("pageSaveButton").setEnabled(true);
+            if (this._sIdeaNumber !== "new"){
+                this.byId("pageDeleteButton").setEnabled(true);
+            }
             this.byId("pageCancelButton").setEnabled(true);
             this.byId("pageListButton").setEnabled(false);
             this.byId("pageSubmitButton").setEnabled(true);
