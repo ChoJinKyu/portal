@@ -7,6 +7,7 @@ using {ep as extraItem} from '../../../../db/cds/ep/ne/EP_UC_EXTRA_ITEM-model';
 using {ep as item} from '../../../../db/cds/ep/ne/EP_UC_ITEM-model';
 using {ep as itemClass} from '../../../../db/cds/ep/ne/EP_UC_ITEM_CLASS-model';
 using {ep as approvalDtlView} from '../../../../db/cds/ep/ne/EP_UC_APPROVAL_DTL_VIEW-model';
+using {ep as approvalMstView} from '../../../../db/cds/ep/ne/EP_UC_APPROVAL_MST_VIEW-model';
 
 namespace ep;
 
@@ -21,4 +22,5 @@ service UcContractMgtService {
     entity UcItem             as projection on item.Uc_Item;
     entity UcItemClass        as projection on itemClass.Uc_Item_Class;
     entity UcApprovalDtlView  as projection on approvalDtlView.Uc_Approval_Dtl_View;
+    entity UcApprovalMstView  as projection on approvalMstView.Uc_Approval_Mst_View;
 }

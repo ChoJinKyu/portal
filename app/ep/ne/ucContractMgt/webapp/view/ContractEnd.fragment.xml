@@ -1,0 +1,31 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core" 
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout" >
+    <Dialog id="dialogContractEnd" class="sapUiSmallMargin" title="" contentWidth="35%" >
+        <VBox class="sapUiSmallMargin">
+            <form:SimpleForm id="contractEndForm" editable="false" >
+                <form:toolbar>
+                    <Toolbar>
+                        <Title text="계약종료사유"/>
+                    </Toolbar>
+                </form:toolbar>             
+                <!-- <Label text="비고"/> -->
+                <TextArea id="saveDeleteReason" value="{
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 1500
+                    }
+                }" required="true" rows="4" />                
+            </form:SimpleForm> 
+        </VBox>       
+      
+        <ToolbarSpacer/>
+        <HBox alignItems="Center" justifyContent="Center" >
+            <Button text="Cancel" class="sapUiSmallMargin" press=".onExitContractEnd"/>
+            <Button text="Save" class="sapUiSmallMargin" type="Emphasized" press=".onSaveContractEnd"/>
+        </HBox>
+    </Dialog>
+</core:FragmentDefinition>

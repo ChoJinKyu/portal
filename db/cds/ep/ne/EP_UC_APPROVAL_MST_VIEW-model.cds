@@ -3,7 +3,7 @@ namespace ep;
 using util from '../../cm/util/util-model';
 
 @cds.persistence.exists
-entity Uc_Approval_Dtl_View {
+entity Uc_Approval_Mst_View {
 
     key tenant_id                      : String(5) not null;
     key company_code                   : String(10) not null;
@@ -26,4 +26,4 @@ entity Uc_Approval_Dtl_View {
         delete_reason                  : String(3000);
 }
 
-extend Uc_Approval_Dtl_View with util.Managed;
+extend Uc_Approval_Mst_View with util.Managed;

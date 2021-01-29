@@ -1,0 +1,260 @@
+<mvc:View controllerName="ep.ne.ucContractMgt.controller.UcContractList"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:t="sap.ui.table"
+    xmlns:core="sap.ui.core" 
+    xmlns:lib-m="ext.lib.control.m"
+    xmlns:u="sap.ui.unified"
+    height="100%">
+
+    <f:DynamicPage id="page"
+        headerExpanded="true" 
+        toggleHeaderOnTitleClick="true">        
+        <!-- DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="공사단가계약" />
+                </f:heading>
+                <f:snappedContent>
+                </f:snappedContent>
+                <f:expandedContent>
+                </f:expandedContent>
+                <f:actions>
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                </f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <!-- DynamicPage Header -->
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="운영단위(플렌트) : " labelFor="searchOrgCode"></Label>
+                            <Input id="searchOrgCode" placeholder="플랜트" submit=".onPageSearchButtonPress" showValueHelp="true" valueHelpRequest=".openPlantPopup" />
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="계약명 : " labelFor="searchTitle"/>
+                            <Input id="searchTitle" submit=".onPageSearchButtonPress" placeholder="" />                                
+                            <layoutData>
+                                <layout:GridData span="XL2 L4 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="계약종료일자 :" labelFor="searchEndDate"></Label>
+                            <DateRangeSelection id="searchEndDate" displayFormat="yyyy-MM-dd" width="100%" placeholder="" />     
+                            <layoutData>
+                                <layout:GridData span="XL2 L2 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="단기계약그룹번호 :" labelFor="searchDocumentNo"></Label>
+                            <MultiInput width="100%"
+                                id="searchDocumentNo"
+                                suggestionItems="{
+                                    path: '/UcApprovalMst',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'company_code', operator: 'EQ', value1: 'LGCKR'},
+                                        {path: 'net_price_contract_degree', operator: 'EQ', value1: '0'}
+                                    ]
+                                }"
+                                showValueHelp="false" placeholder="" submit=".onPageSearchButtonPress">
+                                <core:Item key="{net_price_contract_document_no}" text="{net_price_contract_document_no}" />
+                            </MultiInput>    
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M12 S12" />
+                            </layoutData>
+                        </VBox>    
+                    </form:content>
+                </form:SimpleForm>
+                <form:SimpleForm id="pageSearchForm2" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="Status : " labelFor="searchStatusCode"/>
+                            <SegmentedButton id="searchStatusCode" class="sapUiSmallMarginBottom" selectedKey="All" width="100%">                                            
+                                <items>
+                                    <SegmentedButtonItem text="All" key="all" width="4rem" />
+                                    <SegmentedButtonItem text="작성중" key="711010" width="5rem" />
+                                    <SegmentedButtonItem text="결재진행중" key="711020" width="6rem" />
+                                    <SegmentedButtonItem text="결재반려" key="711030" width="5rem" />
+                                    <SegmentedButtonItem text="결재완료" key="711040" width="5rem" />
+                                </items>
+                            </SegmentedButton> 
+                            <!-- <SegmentedButton id="searchStatusCode" selectedKey="{list>/net_price_contract_status_code}" items="{
+                                            path: 'common>/Code',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                {path: 'group_code', operator: 'EQ', value1: 'EP_NET_PRICE_CONTRACT_STATUS'}
+                                            ],
+                                            sorter: { path: 'code'}
+                                        }" class="sapUiSmallMarginBottom">
+                                <items>
+                                    <SegmentedButtonItem width="6rem" key="{common>code}" text="{common>code_name}" />
+                                </items>                                                        
+                            </SegmentedButton>                                        -->
+                            <layoutData>
+                                <layout:GridData span="XL2 L4 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="계약유효상태 : " labelFor="searchEffectiveStatus"/>
+                            <SegmentedButton id="searchEffectiveStatus" class="sapUiSmallMarginBottom" selectedKey="All" width="100%">                                            
+                                <items>
+                                    <SegmentedButtonItem text="All" key="all" width="3rem"  />
+                                    <SegmentedButtonItem text="유효" key="1" width="3rem"  />
+                                    <SegmentedButtonItem text="만료" key="2" width="3rem"  />
+                                    <SegmentedButtonItem text="종료" key="3" width="3rem"  />
+                                    <SegmentedButtonItem text="대기" key="4" width="3rem"  />
+                                </items>
+                            </SegmentedButton>                     
+                            <!-- <SegmentedButton id="searchEffectiveStatus" selectedKey="{list>/effective_status_name}" items="{
+                                            path: 'common>/Code',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                {path: 'group_code', operator: 'EQ', value1: 'EP_CONTRACT_EFFECTIVE_STATUS'}
+                                            ],
+                                            sorter: { path: 'code'}
+                                        }" class="sapUiSmallMarginBottom">
+                                <items>
+                                    <SegmentedButtonItem width="5em" key="{common>code}" text="{common>code_name}" />
+                                </items>                                                        
+                            </SegmentedButton>                               -->
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="계약일수(%) :" labelFor="searchDayCount"></Label>
+                            <Slider id="searchDayCount" enableTickmarks="true" showAdvancedTooltip="true" step="5" min="0" max="100" width="100%" />
+                            <layoutData>
+                                <layout:GridData span="XL2 L2 M12 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="협력사명 :" labelFor="searchSupplierName"></Label>
+                            <Input id="searchSupplierName" placeholder="협력사" submit=".onPageSearchButtonPress" showValueHelp="true" valueHelpRequest=".openSupplierPopup" />
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M12 S12" />
+                            </layoutData>
+                        </VBox>                                              
+                    </form:content>
+                </form:SimpleForm>                
+            </f:DynamicPageHeader>
+        </f:header>
+
+        <f:content>
+            <t:Table id="mainTable"
+            selectionMode="MultiToggle"
+            rows="{
+                path: 'list>/'        
+            }"
+            cellClick=".onCellClick"
+            rowSelectionChange=".onCheck"
+            visibleRowCountMode="Auto"
+            fixedColumnCount="2"
+            columnResize="onColumnResize"
+            width="100%">
+            <t:extension>
+                <OverflowToolbar class="sapFDynamicPageAlignContent">
+                <Title text="공사단가계약 {= ${list>/}.length > 0 ? '(' + ${list>/}.length + ')' : ''}" level="H2"/>
+                <ToolbarSpacer/>
+                <Button text="신규작성" id="RfqButton" press=".onRfqButtonPress" type="Transparent"/>
+                <Button text="계약변경" id="supplierSelectionButton" press=".onSupplierSelectionButtonPress" type="Transparent"/>
+                <Button text="계약종료" id="publishButton" press=".onPublishButtonPress"   type="Transparent"/>
+                <ToolbarSeparator/>
+                <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                    <layoutData>
+                    <OverflowToolbarLayoutData priority="NeverOverflow"/>
+                    </layoutData>
+                </Button>
+                </OverflowToolbar>
+            </t:extension>
+            <t:rowSettingsTemplate>
+            </t:rowSettingsTemplate>
+            <t:columns>
+                <t:Column id="mainDocumentNo" width="10rem" hAlign="Center">
+                <Label text="단기계약그룹번호" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="11{list>net_price_contract_document_no}"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="mainDegree" width="4rem" hAlign="Center">
+                <Label text="차수" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>net_price_contract_degree}"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="mainTitle" width="15rem">
+                <Label text="계약명" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>net_price_contract_title}" />
+                </t:template>
+                </t:Column> 
+                <t:Column id="mainItemClass" width="8rem">
+                <Label text="대분류(공종)" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>ep_item_class_name}"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="mainSupplierName" width="12rem">
+                <Label text="협력사명" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>supplier_name}"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="mainStartDate" width="8rem" hAlign="Center">
+                <Label text="계약시작일자" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{
+                                path: 'list>net_price_contract_start_date',
+                                formatter: '.dateFormatter.toUTCDateString'
+                            }"/>
+                </t:template>
+                </t:Column>  
+                <t:Column id="mainEndDate" width="8rem" hAlign="Center">
+                <Label text="계약종료일자" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{
+                                path: 'list>net_price_contract_end_date',
+                                formatter: '.dateFormatter.toUTCDateString'
+                            }"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="mainStatusCode" width="7rem" hAlign="Center">
+                <Label text="계약진행상태" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>net_price_contract_status_name}"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="mainEffectiveStatusName" width="7rem" hAlign="Center">
+                <Label text="계약유효상태" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>effective_status_name}"/>
+                </t:template>
+                </t:Column> 
+                <t:Column id="mainDayCount" width="6rem" hAlign="Right">
+                <Label text="계약일수" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>net_price_contract_day_count}"/>
+                    <!-- <Text  text="{
+                                path: 'list>net_price_contract_day_count',
+                                formatter: '.numberFormatter.toNumberString'
+                            }" /> -->
+                </t:template>
+                </t:Column>
+            </t:columns>
+            </t:Table>
+        </f:content>
+    </f:DynamicPage>
+</mvc:View>
