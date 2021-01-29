@@ -269,6 +269,20 @@ BEGIN
                 RETURN;
 
             END;
+            
+        ELSEIF ( :I_SAVE_TAB.CUD_TYPE_CODE[1] = 'D' ) THEN
+        
+            BEGIN
+                DELETE FROM DP_IM_SUPPLIER_IDEA
+                WHERE TENANT_ID = REC_DATA.TENANT_ID
+                AND COMPANY_CODE = REC_DATA.COMPANY_CODE
+                AND IDEA_NUMBER = REC_DATA.IDEA_NUMBER;
+
+                EXEC (:V_COMMIT);
+                :O_RETURN_TAB.INSERT(('S', 'SUD',REC_DATA.IDEA_NUMBER),1);
+                RETURN;
+
+            END;
         ELSE
             BEGIN
                 UPDATE DP_IM_SUPPLIER_IDEA
@@ -307,7 +321,7 @@ BEGIN
                 AND IDEA_NUMBER = REC_DATA.IDEA_NUMBER;
 
                 EXEC (:V_COMMIT);
-                :O_RETURN_TAB.INSERT(('S', 'SUC',REC_DATA.IDEA_NUMBER),1);
+                :O_RETURN_TAB.INSERT(('S', 'SUU',REC_DATA.IDEA_NUMBER),1);
                 RETURN;
 
             END;
