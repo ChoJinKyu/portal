@@ -139,11 +139,11 @@
 			"routes": [{
   
                     "name": "detailPage",
-                    "pattern": "detailObject/{type},{outcome},{header_id}",
+                    "pattern": "detailObject/{mode},{type},{outcome},{header_id}",
                     "target": ["detailObject"]
                 },{
                     "name": "detailPage2",
-                    "pattern": "detailObject2/{type},{outcome},{header_id}",
+                    "pattern": "detailObject2/{mode},{type},{outcome},{header_id}",
                     "target": ["detailObject2"]
                 }
             
