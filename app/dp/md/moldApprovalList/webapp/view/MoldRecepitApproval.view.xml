@@ -27,12 +27,38 @@
 		editHeaderButtonPress="handleEditBtnPress" >
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-                <uxap:heading> 
+                <uxap:expandedHeading>
+					<Title text="Mold Recepit Approval" wrapping="true" />
+				</uxap:expandedHeading>
+
+				<uxap:snappedHeading>
+                    <FlexBox fitContainer="true" alignItems="Center">
+						<Title text="Mold Recepit Approval" wrapping="true"/>
+					</FlexBox>
+				</uxap:snappedHeading>
+
+			    <uxap:expandedContent>
+				</uxap:expandedContent>
+
+				<uxap:snappedContent>
+				</uxap:snappedContent>
+
+				<uxap:snappedTitleOnMobile>
+				</uxap:snappedTitleOnMobile>
+
+				<uxap:actions>
+                    <!-- 상단 버튼 영역 --> 
+				</uxap:actions>
+
+                <uxap:navigationActions>
+					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
+                </uxap:navigationActions>
+                <!-- <uxap:heading> 
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" />
                         <Title text="Mold Recepit Approval" wrapping="true" class="" />
                     </HBox>
-				</uxap:heading>
+				</uxap:heading> -->
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
