@@ -25,6 +25,7 @@
 using { pg as vpTreeView } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_TREE_LNG_VIEW-model';
 using { pg as vpDetailView } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_DETAIL_VIEW-model';
 using { pg as vpSupplierDtl} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_SUPPLIER_VIEW-model';
+using { pg as vpSupplierPopupDtl} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_SUPPLIER_POPUP_VIEW-model';
 using { pg as vpMaterialDtl} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_ITEM_DTL-model';
 using { pg as vpMaterialMst} from '../../../../../db/cds/pg/vp/PG_VP_MATERIAL_MST_VIEW-model';
 using { pg as vpManagerDtl } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MANAGER_DTL-model';
@@ -345,6 +346,45 @@ service VpMappingService {
                 vpTreeDrillType.Vp_Vendor_Pool_Leaf_Info_View(
                     p_language_code: 'KO',
                     p_drill_type: 'ALL'
+                ) mst
+        ;
+
+        @readonly
+        view vpSupplierPopupDtlView as 
+            select
+                     key mst.language_cd                            
+                    ,key mst.temp_type                              
+                    ,key mst.tenant_id                              
+                    ,key mst.company_code                           
+                    ,key mst.org_type_code                          
+                    ,key mst.org_code                               
+                    ,key mst.vendor_pool_code                       
+                    ,key mst.supplier_code                          
+                    ,mst.supplier_local_name                        
+                    ,mst.supplier_english_name                      
+                    ,mst.supplier_company_code                      
+                    ,mst.supplier_company_name                      
+                    ,mst.inactive_status_code                       
+                    ,mst.supeval_control_flag                       
+                    ,mst.supeval_control_start_date                 
+                    ,mst.supeval_control_end_date                   
+                    ,mst.supplier_rm_control_flag                   
+                    ,mst.supplier_base_portion_rate                 
+                    ,mst.vendor_pool_level1_code                    
+                    ,mst.vendor_pool_level2_code                    
+                    ,mst.vendor_pool_level3_code                    
+                    ,mst.vendor_pool_level4_code                    
+                    ,mst.vendor_pool_level5_code                    
+                    ,mst.vendor_pool_mapping_use_flag               
+                    ,mst.register_reason                            
+                    ,mst.approval_number                            
+                    ,mst.local_update_dtm                           
+                    ,mst.update_user_id                             
+            from
+                vpSupplierPopupDtl.Vp_Vendor_Pool_Supplier_Popup_View(
+                    p_language_code: 'KO',
+                    p_tenant_id: 'L2100',
+                    p_company_code: '*'
                 ) mst
         ;
 
