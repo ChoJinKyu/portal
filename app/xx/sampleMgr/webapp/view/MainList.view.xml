@@ -39,6 +39,9 @@
                         <IconTabFilter id="ViewCrud" text="View CRUD" key="ViewCrud" > 
                             <mvc:XMLView viewName="xx.sampleMgr.view.ViewCrud"></mvc:XMLView>
                         </IconTabFilter>
+                        <IconTabFilter id="Seesion" text="Seesion List" key="Seesion" > 
+                            <mvc:XMLView viewName="xx.sampleMgr.view.SessionData"></mvc:XMLView>
+                        </IconTabFilter>
                     </items>
                 </IconTabBar>
             </f:content>
