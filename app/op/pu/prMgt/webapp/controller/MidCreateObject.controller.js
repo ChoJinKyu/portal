@@ -622,24 +622,28 @@ sap.ui.define([
             var oViewModel = this.getModel("viewModel");
             var oViewData = $.extend(true, {}, oViewModel.getData());
 
-debugger;
-
             var bReturn=true;
             var aViewDataPrDtl = oViewData.Pr_Dtl;
             if(aViewDataPrDtl.length > 0){
                 //aViewDataPrDtl.forEach(function(item, idx){
                 aViewDataPrDtl.some(function(item, idx){
-
                     if(item["org_code"] === null || item["org_code"] === ""){
                         var msg = that.getModel("I18N").getText("/ECM01002");
-                        msg += "\r\n(" + idx + "번째 열의" + that.getModel("I18N").getText("/ORG_CODE") + ")";
+                        msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/ORG_CODE") + ")";
                         MessageToast.show(msg);
                         bReturn = false;
                         return bReturn;
                     }
                     if(item["pr_desc"] === null || item["pr_desc"] === ""){
                         var msg = that.getModel("I18N").getText("/ECM01002");
-                        msg += "\r\n(" + idx + "번째 열의" + that.getModel("I18N").getText("/PR_ITEM_NAME") + ")";
+                        msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/PR_ITEM_NAME") + ")";
+                        MessageToast.show(msg);
+                        bReturn = false;
+                        return bReturn;
+                    }
+                    if(item["price_unit"] !== null && item["price_unit"] !== "" && item["price_unit"] > 10000){
+                        var msg = that.getModel("I18N").getText("/LIMIT_EXCEEDED");
+                        msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/PRICE_UNIT") + ")";
                         MessageToast.show(msg);
                         bReturn = false;
                         return bReturn;
@@ -715,8 +719,7 @@ debugger;
             //품의내용
             //var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
             //oViewData.PrMst.approval_contents = approvalContents;
-            
-            
+                
 
             // Master data
             var oMaster = oViewData.PrMst;
@@ -768,54 +771,20 @@ debugger;
             var aDetails = [];
             var aViewDataPrDtl = oViewData.Pr_Dtl;
             if(aViewDataPrDtl.length > 0){
-                aViewDataPrDtl.forEach(function(item, idx){
-                    if(item.delivery_request_date && item.delivery_request_date != ""){
-                        drdateY = item.delivery_request_date.getFullYear();
-                        drdateM = item.delivery_request_date.getMonth() + 1;
-                        drdateD = item.delivery_request_date.getDate();
-                        delivery_request_date = drdateY + "-" + (drdateM >= 10 ? drdateM : "0"+drdateM) + "-" + (drdateD >= 10 ? drdateD : "0"+drdateD);
-                    }else{
-                        delivery_request_date = "";
-                    }
-
+                aViewDataPrDtl.forEach(function(item, idx){ 
                     var oDetailData = that._fnSetPrDetailData(item);
-                    oDetailData.delivery_request_date = delivery_request_date;
-                    //oDetailData.pr_item_number = ++idx + "";
                     aDetails.push(oDetailData);
                 });
             }
-
             oMasterData.details = aDetails;
-
-
-            //대표품목명
-            // var pr_desc = "";
-            // var prDtlCnt = oViewData.Pr_Dtl.length;
-            // if(prDtlCnt === 0){
-            //     pr_desc = oViewData.Pr_Dtl[0].pr_desc;
-            // }else{
-            //     pr_desc = oViewData.Pr_Dtl[0].pr_desc + ' 외 ' + (prDtlCnt-1) + "건";
-            // }
-            // oViewData.pr_desc = pr_desc;
-
-            //품의내용
-            //var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
-            //oViewData.PrMst.approval_contents = approvalContents;
-
-            //Send data
-            // var oPrData = {};
-            // oPrData = oViewData.PrMst;
-            // oPrData.details = oViewData.Pr_Dtl;
-
-            // var sendData = {}, masterDatas=[];
-            // masterDatas.push(oPrData);
-            // sendData.inputData = masterDatas;
 
 
             // 전송 데이터 세팅
             var sendData = {}, aInputData=[];
-            aInputData.push(oMasterData);
-            sendData.inputData = aInputData;
+            //aInputData.push(oMasterData);
+            //sendData.inputData = aInputData;
+            sendData.inputData = oMasterData;
+
 
             // Call ajax
             that._fnCallAjax(
@@ -863,7 +832,18 @@ debugger;
          * 품목정보 세팅
          */
         _fnSetPrDetailData: function(item){
-            var returnData = {
+            // 납품요청일
+            var drdateY, drdateM, drdateD, delivery_request_date;
+            if(item.delivery_request_date && item.delivery_request_date != ""){
+                drdateY = item.delivery_request_date.getFullYear();
+                drdateM = item.delivery_request_date.getMonth() + 1;
+                drdateD = item.delivery_request_date.getDate();
+                delivery_request_date = drdateY + "-" + (drdateM >= 10 ? drdateM : "0"+drdateM) + "-" + (drdateD >= 10 ? drdateD : "0"+drdateD);
+            }else{
+                delivery_request_date = "";
+            }
+
+            var oPrDetailData = {
                         tenant_id           : item.tenant_id,
                         company_code        : item.company_code,
                         pr_number           : item.pr_number,
@@ -872,7 +852,7 @@ debugger;
                         org_code            : (item.org_code) ? item.org_code : "", 
                         buyer_empno         : (item.buyer_empno) ? item.buyer_empno : "",
                         currency_code       : (item.currency_code) ? item.currency_code : "KRW",
-                        estimated_price     : (item.estimated_price) ? item.estimated_price : "", 
+                        estimated_price     : (item.estimated_price) ? item.estimated_price+"" : "", 
                         material_code       : (item.material_code) ? item.material_code : "",
                         material_group_code : (item.material_group_code) ? item.material_group_code : "",
                         pr_desc             : (item.pr_desc) ? item.pr_desc : "",                        
@@ -880,19 +860,22 @@ debugger;
                         pr_unit             : (item.pr_unit) ? item.pr_unit : "",
                         requestor_empno     : (item.requestor_empno) ? item.requestor_empno : "A60264",
                         requestor_name      : (item.requestor_name) ? item.requestor_name : "김구매",
-                        delivery_request_date: (item.delivery_request_date) ? item.delivery_request_date : new Date(),
+                        delivery_request_date: delivery_request_date,
                         purchasing_group_code: (item.purchasing_group_code) ? item.purchasing_group_code : "",
-                        price_unit          : (item.price_unit) ? item.price_unit : "",
+                        price_unit          : (!item.price_unit || item.price_unit === "") ? null : item.price_unit+"",
                         pr_progress_status_code: (item.pr_progress_status_code && item.pr_progress_status_code != "") ? item.pr_progress_status_code : "10",
                         remark              : (item.remark) ? item.remark : "",
                         sloc_code           : (item.sloc_code) ? item.sloc_code : "",
+                        supplier_code       : (item.supplier_code) ? item.supplier_code : "",
+                        item_category_code  : (item.item_category_code) ? item.item_category_code : "",
+                        account_assignment_category_code : (item.account_assignment_category_code) ? item.account_assignment_category_code : "",
                         account_code        : (item.account_code) ? item.account_code : "",
                         cctr_code           : (item.cctr_code) ? item.cctr_code : "",
                         wbs_code            : (item.wbs_code) ? item.wbs_code : "",
                         asset_number        : (item.asset_number) ? item.asset_number : "",
                         order_number        : (item.order_number) ? item.order_number : ""
             }
-            return returnData;
+            return oPrDetailData;
         },
 
 
