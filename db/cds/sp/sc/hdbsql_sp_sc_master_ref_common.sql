@@ -76,11 +76,25 @@ SELECT TOP 50 * FROM DUMMY WHERE 1=1
 -- AND FIELD = "VALUE"
 ;
 
+
+
+
+
+/**********************************************************************************************************/
+--** dd
+/**********************************************************************************************************/
+-- @block Bookmarked query
+-- @group SP_SC
+-- @name TABLES - 설명
+SELECT TOP 50 * FROM M_SQL_PLAN_CACHE WHERE 1=1 
+-- AND FIELD = "VALUE"
+;
+
 -- @block Bookmarked query
 -- @group Common
--- @name Contents to Csv
+-- @name Contents to Csv | Sp_Sc_Award_Method_Code
 DO BEGIN
-DECLARE OBJECT_NAME NVARCHAR(255) DEFAULT 'SP_SC_OUTCOME_CODE';
+DECLARE OBJECT_NAME NVARCHAR(255) DEFAULT 'SP_SC_AWARD_METHOD_CODE_VIEW';
 DECLARE SQL_STRING NVARCHAR(3000) DEFAULT '';
 DECLARE STRING_CSV NVARCHAR(9000) DEFAULT '';
 DECLARE CREATED INT DEFAULT 0;
