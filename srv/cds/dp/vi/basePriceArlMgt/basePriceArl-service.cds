@@ -25,7 +25,28 @@ namespace dp;
 service BasePriceArlService {
 
     entity Base_Price_Mst              as
-        select from priceMaster pm
+        select from priceMaster as pm
+        left outer join materialMst as mtr
+            on pm.tenant_id = mtr.tenant_id
+            and pm.material_code = mtr.material_code
+        left outer join supplierMst as sup
+            on pm.tenant_id = sup.tenant_id
+            and pm.supplier_code = sup.supplier_code
+        left outer join codeLng as cd01
+            on cd01.tenant_id = pm.tenant_id
+            and cd01.group_code = 'DP_VI_MARKET_CODE'
+            and cd01.code = pm.market_code
+            and cd01.language_cd = 'KO'
+        left outer join codeLng as cd02
+            on cd02.tenant_id = pm.tenant_id
+            and cd02.group_code = 'DP_VI_BASE_PRICE_GROUND_CODE'
+            and cd02.code = pm.base_price_ground_code
+            and cd02.language_cd = 'KO'
+        left outer join codeLng as cd03
+            on cd03.tenant_id = pm.tenant_id
+            and cd03.group_code = 'DP_NEW_CHANGE_CODE'
+            and cd03.code = pm.new_change_type_code
+            and cd03.language_cd = 'KO'
         {
             key pm.tenant_id,
             key pm.company_code,
@@ -35,12 +56,17 @@ service BasePriceArlService {
             key pm.supplier_code,
             key pm.market_code,
             key pm.base_date,
+                cd01.code_name as market_code_nm : String(240),
+                mtr.material_desc,
+                mtr.material_spec,
+                sup.supplier_local_name,
                 pm.approval_number,
                 pm.item_sequence,
                 pm.base_uom_code,
                 pm.new_base_price,
                 pm.new_base_price_currency_code,
                 pm.base_price_ground_code,
+                cd02.code_name as base_price_ground_code_nm : String(240),
                 pm.base_price_start_date,
                 pm.base_price_end_date,
                 pm.first_purchasing_net_price,
@@ -49,6 +75,7 @@ service BasePriceArlService {
                 pm.effective_flag,
                 pm.buyer_empno,
                 pm.new_change_type_code,
+                cd03.code_name as new_change_type_code_nm : String(240),
                 pm.repr_material_org_code,
                 pm.repr_material_code,
                 pm.repr_material_supplier_code,
@@ -62,6 +89,12 @@ service BasePriceArlService {
                 pm.system_create_dtm,
                 pm.system_update_dtm
         };
+
+    annotate Base_Price_Mst with {
+        market_code_nm              @title : '납선명'  @description : '납선코드 이름';
+        base_price_ground_code_nm   @title : '기준단가근거명'  @description : '기준단가근거코드 이름';
+        new_change_type_code_nm     @title : '신규변경구분명'  @description : '신규변경구분코드 이름';
+    };
 
     entity Base_Price_Arl_Master        as
         select from arlMasterSuper sup
