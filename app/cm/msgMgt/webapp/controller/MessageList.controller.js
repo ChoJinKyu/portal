@@ -196,10 +196,9 @@ sap.ui.define([
                     new Sorter("language_code", true),
 					new Sorter("chain_code")
 				],
-				success: function(oData, bHasMore){
+				success: function(oData){
 					this.validator.clearValueState(this.byId("mainTable"));
 					this.byId("mainTable").clearSelection();
-                    if(!bHasMore) oTable.setBusy(false);
 				}.bind(this),
 				fetchOthersSuccess: function(aData, aErrors){
 					oTable.setBusy(false);

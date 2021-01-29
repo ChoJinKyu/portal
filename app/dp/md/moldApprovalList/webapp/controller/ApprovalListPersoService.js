@@ -88,7 +88,6 @@ sap.ui.define(["jquery.sap.global"],
                 }
                 var oBundle = this._oBundle;
                 oDeferred.resolve(oBundle);
-                console.log(oBundle);
                 return oDeferred.promise();
             },
 
@@ -108,7 +107,6 @@ sap.ui.define(["jquery.sap.global"],
 
                 //set personalization
                 this._oBundle = oInitialData;
-                console.log("this._oBundle >>>>", this._oBundle);
                 oDeferred.resolve();
                 return oDeferred.promise();
             },

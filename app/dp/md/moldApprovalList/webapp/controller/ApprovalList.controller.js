@@ -90,7 +90,7 @@ sap.ui.define([
             this.setModel(new JSONModel(), "excelModel");
             this.getView().setModel(this.oServiceModel, 'supplierModel');
             
-            this.setApproveStatus();
+            //this.setApproveStatus();
         
             this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -186,19 +186,18 @@ sap.ui.define([
                                 ],
                                 and: true
                         });
-            // var sorter = [];
-            // aSorter.push(new Sorter("util>sort_no", true));
-
-            var bindItemInfo = {
+           
+            var bindItemInfo = 
+                {
                     path: 'util>/Code',
                     filters: filter,
-                    sorters: new Sorter("sort_no", true),
                     template: new SegmentedButtonItem({
                         width: '5em', key: "{util>code}", text: "{util>code_name}"
-                    })
+                    })         
                 };
             this.getView().byId("searchStatus").bindItems(bindItemInfo);
             console.log(bindItemInfo);
+            // this.getView().byId("searchStatus").addItem()
         },
 
 

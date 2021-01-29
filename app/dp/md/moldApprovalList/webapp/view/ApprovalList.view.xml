@@ -237,15 +237,22 @@
                             <SegmentedButton 
                                     id="searchStatus" 
                                     selectedKey="" 
-                                    width="100%" >
+                                    width="100%" 
+                                    items="{path : 'util>/Code',
+                                              filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVE_STATUS'}
+                                              ],
+                                              sorter: {path: 'sort_no'}
+                            }">
                                 <items>
+                                    <SegmentedButtonItem width="5em" text="{util>code_name}" key="{util>code}"/>
                                     <!-- <SegmentedButtonItem text="All" key="" width=""/>
                                     <SegmentedButtonItem text="Appr-Req" key="AR" width="5em"/>
                                     <SegmentedButtonItem text="Draft" key="DR" width="5em" />
                                     <SegmentedButtonItem text="In-Appr" key="IA" width="5em" />
                                     <SegmentedButtonItem text="Apprvd" key="AP" width="5em" />
-                                    <SegmentedButtonItem text="Rejected" key="RJ" width="5em" /> -->
-                                     
+                                    <SegmentedButtonItem text="Rejected" key="RJ" width="5em" /> -->    
                                 </items>
                             </SegmentedButton>
                             <layoutData>

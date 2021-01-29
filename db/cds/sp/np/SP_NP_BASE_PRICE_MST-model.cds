@@ -4,8 +4,8 @@ using util from '../../cm/util/util-model';
 
 entity Np_Base_Price_Mst {
   key tenant_id                  : String(5)               not null   @title: '테넌트ID' ;
-  key company_code               : String(10) default '*'  not null   @title: '회사코드' ;
-  key org_type_code              : String(2)  default 'PL' not null   @title: '구매운영조직유형' ;
+  key company_code               : String(10)              not null   @title: '회사코드' ;
+  key org_type_code              : String(2)               not null   @title: '구매운영조직유형' ;
   key org_code                   : String(10)              not null   @title: '구매운영조직코드' ;
   key supplier_code              : String(15)              not null   @title: '공급업체코드' ;
   key material_code              : String(40)              not null   @title: '자재코드' ;
