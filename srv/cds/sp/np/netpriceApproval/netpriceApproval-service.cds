@@ -70,18 +70,18 @@ service NpApprovalService {
                    AND cd.group_code  = 'sp_net_price_type'
                    AND cd.language_cd = clc.language_code
                	   AND cd.code        = cam.approve_status_code
-			   )  AS approve_status_name     : String
+			   )  AS approve_status_name : String
 
              , cam.requestor_empno             /* requestor */
 			 , CASE WHEN clc.language_code = 'EN' THEN che.user_english_name
 			        WHEN clc.language_code = 'KO' THEN che.user_local_name
 					ELSE che.user_english_name
-			   END AS requestor_empnm  : String
+			   END AS requestor_empnm : String
 
 			 , CASE WHEN clc.language_code = 'EN' THEN chd.department_english_name
 			        WHEN clc.language_code = 'KO' THEN chd.department_local_name
 					ELSE che.user_english_name
-			   END AS requestor_teamnm   : String         /* requestor team */
+			   END AS requestor_teamnm : String         /* requestor team */
 
                                                 /* ??? outcome ??? */
              , cam.request_date                 /* request date */
