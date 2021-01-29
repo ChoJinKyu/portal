@@ -152,7 +152,7 @@ sap.ui.define([
 			var oView = this.getView(),
 				oModel = this.getModel("list");
 			oView.setBusy(true);
-			this.getModel().read("/Company", {
+			this.getModel().read("/CompanyView", {
                 filters: aSearchFilters,
                 fetchOthers: true,
 				success: function(oData){

@@ -116,50 +116,41 @@
 						<Table id="midTable" 
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
-								items="{details>/ControlOptionDetails}"
+								items="{department>/}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
 								mode="SingleSelectLeft" 
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
-									<Title text="Most 10 Departments" level="H2"/>
+                                    <Title text="Most Important Departments ({= ${department>/}.length || 0})" level="H2"/>
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
 									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
 									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" />
-									<ToolbarSeparator/>
-									<SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" />
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
-								<Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
-									<Text text="S" />
+								<Column minScreenWidth="Tablet" hAlign="Center" >
+									<Label text="{I18N>/CODE}" />
 								</Column>
-								<Column id="mainColumnCode" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Code" />
+								<Column minScreenWidth="Tablet" hAlign="Center">
+									<Label text="{I18N>/DEPARTMENT}" />
 								</Column>
-								<Column id="midColumnLevelCode" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="Level" />
+								<Column minScreenWidth="Tablet" hAlign="Center">
+									<Label text="Level Value" />
 								</Column>
-								<Column id="midColumnLevelValue" minScreenWidth="Tablet" hAlign="Center">
-									<Text text="Level Value" />
-								</Column>
-								<Column id="midColumnValue" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="Value" />
+								<Column minScreenWidth="Tablet" hAlign="Center" >
+									<Label text="Value" />
 								</Column>
 							</columns>
 							<items>
 								<ColumnListItem type="Inactive" press=".onMidTableItemPress">
 									<cells>
-										<ObjectStatus icon="{
-											path: 'details>_row_state_',
-											formatter: '.formatter.toModelStateColumnIcon'
-										}" />
-										<Text text="{details>control_option_code}"/>
-										<Input value="{details>control_option_level_code}"/>
-										<Input value="{details>control_option_level_val}"/>
-										<Input value="{details>control_option_val}"/>
+										<Text text="{department>department_code}"/>
+										<Input value="{department>department_level_code}"/>
+										<Input value="{department>department_level_val}"/>
+										<Input value="{department>department_val}"/>
 									</cells>
 								</ColumnListItem>
 							</items>
