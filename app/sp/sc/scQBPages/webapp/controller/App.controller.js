@@ -42,7 +42,7 @@ sap.ui.define([
                 // }
                 
                 var routeName;
-                debugger;
+                
                 if (pType === "RFQ" || pType === "RFP") {
                     routeName = "detailPage";
                 } else {
@@ -56,15 +56,6 @@ sap.ui.define([
                 inputModel.setData({ type : "E"});
                 this.getView().setModel(inputModel, "defaultModel");
                 
-                // this.getRouter().navTo(routeName);
-
-
-                // if( this._cNum == "1" || this._cNum =="3"){
-                //      this.getRouter().navTo("detailPage", { type : this._cNum, outcome : outcome } );
-                // }else{
-                //     this.getOwnerComponent().getRouter().navTo("detailPage2", { type : this._cNum, outcome : outcome } );
-                // }
-                // this._clickEvent("0");
 
 			}
 		});

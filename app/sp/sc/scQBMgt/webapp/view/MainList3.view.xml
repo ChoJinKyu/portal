@@ -39,113 +39,55 @@
                 <f:expandedContent>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" visible="false" />
                 </f:actions>
-                <!-- <f:navigationActions>
-                    <Button icon="sap-icon://unfavorite" type="Transparent" />
-                </f:navigationActions> -->
             </f:DynamicPageTitle>
         </f:title>
 
         <f:header> 
             <f:DynamicPageHeader pinnable="true">
                 <!-- <form:SimpleForm id="pageSearchForm"  editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" 
-                        labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" >
-                    <form:content>
-                        <VBox>
-                            <Label text="Negotiation Type" labelFor="Negotiation Type" ></Label>
-                                <Input />
-                                <layoutData>
-                                    <layout:GridData span="XL3 L3 M6 S12" />
-                                </layoutData>
-                           
-                        </VBox>
-                        <VBox>
-                            <Label text="Negotiation No" labelFor="Negotiation No"  />
-                            <Input />
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Outcome" labelFor="Outcome"  />
-                            <Input />
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Buyer" labelFor="Buyer"  />
-                            <Input />
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Date" />
-                            <ComboBox width="100%" />
-
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M4 S4" />
-                            </layoutData>
-                            
-                        </VBox>
-                        <VBox>
-                            <Label text="From"/>
-                            <DatePicker
-                                placeholder="YYYY/MM/DD"
-                                change="handleChange"
-                                class="sapUiSmallMarginBottom"/>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M4 S4" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="To"/>
-                            <DatePicker
-                                placeholder="YYYY/MM/DD"
-                                change="handleChange"
-                                class="sapUiSmallMarginBottom"/>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M4 S4" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Title"   />
-                            <Input />
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        
-                        <VBox>
-                            <Label text="Status"  />
-                            <ComboBox width="100%" />
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Status"  />
-                            <ComboBox width="100%" />
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Status"  />
-                            <ComboBox width="100%" />
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                           
-                    </form:content>
-                </form:SimpleForm> -->
-                <form:SimpleForm id="pageSearchForm"  editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" 
                          >
-                    <form:content>
-                        <VBox width="100%">
+                    <form:content> -->
+                    <smartFilterBar:SmartFilterBar id="smartFilterBar"  useToolbar="false"  enableBasicSearch="false"
+                                considerSelectionVariants="true" entitySet="MICategoryHierarchyStructureView" search="filterSearch" >
+                        <smartFilterBar:controlConfiguration>
+                            <smartFilterBar:ControlConfiguration id="abcd" key="path_code" index="1" label="{I18N>/CATEGORY_CODE}" width="100%"
+                                groupId="_BASIC" visibleInAdvancedArea="true" >
+                                <smartFilterBar:customControl>
+                                    <HBox width="100%">
+                                        <Input id="filterCategoryCode" placeholder="Category Code" liveChange="liveCategoryCode"/>
+                                        <Input id="filterCategoryCode2" placeholder="Category Code" liveChange="liveCategoryCode"/>
+                                        <Input id="filterCategoryCode3" placeholder="Category Code" liveChange="liveCategoryCode"/>
+                                    </HBox>
+                                </smartFilterBar:customControl>
+                            </smartFilterBar:ControlConfiguration>
+                            <smartFilterBar:ControlConfiguration key="category_name" index="2" label=""
+                                groupId="_BASIC" visibleInAdvancedArea="true">
+                                <smartFilterBar:customControl>
+                                    <Input id="filterCategoryName" placeholder="Category Name" />
+                                </smartFilterBar:customControl>
+                            </smartFilterBar:ControlConfiguration>
+                            <smartFilterBar:ControlConfiguration key="system_create_dtm" index="3" label="{I18N>/WRITE_DATE}"
+                                groupId="_BASIC" visibleInAdvancedArea="true" class="widthAdd">
+                                <smartFilterBar:customControl>
+                                <DateRangeSelection 
+                                    id="filterCreateDate" 
+                                    showFooter="true" placeholder="YYYY/MM/DD - YYYY/MM/DD" displayFormat="yyyy/MM/dd"
+                                    change="filterCreateDateChange"/>	
+                                </smartFilterBar:customControl>
+                            </smartFilterBar:ControlConfiguration>
+
+                        </smartFilterBar:controlConfiguration>
+                        <smartFilterBar:layoutData>
+                            <FlexItemData shrinkFactor="0"/>
+                        </smartFilterBar:layoutData>
+                    </smartFilterBar:SmartFilterBar>
+
+
+
+
+                        <!-- <VBox width="100%">
                             <HBox width="100%" class="sapUiSmallMarginBottom">
                                 <VBox width="25%">
                                     <Label text="Negotiation Type" labelFor="Negotiation Type" class="sapMLabelNoText" ></Label>
@@ -194,7 +136,6 @@
                                     <HBox width="95%">
                                         <VBox class="sapUiTinyMarginEnd">
                                             <Label text="Date" />
-                                            <!-- <ComboBox placeholder="Create Date" width="100%" > -->
                                             <ComboBox selectedKey="3" width="100%" >
                                                 <core:Item key="1" text="Open Date"/>
                                                 <core:Item key="2" text="Close Date"/>
@@ -279,9 +220,9 @@
                                     </layoutData>
                                 </VBox>
                             </HBox>
-                        </VBox> 
-                    </form:content>
-                </form:SimpleForm>
+                        </VBox>  -->
+                    <!-- </form:content>
+                </form:SimpleForm> -->
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
@@ -289,7 +230,7 @@
                             useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true" 
                             useTablePersonalisation="true" header="Negotiation Workbench List" showRowCount="true" 
                             enableAutoBinding="true" tableBindingPath="{viewModel>/NegoHeaders}"
-                            class="sapUiResponsiveContentPadding sapUiLargeMarginBottom"
+                            class="sapUiResponsiveContentPadding sapUiSmallMarginBottom"
                             initiallyVisibleFields=""
                             beforeRebindTable="beforeRebindTable"
                             >
@@ -309,7 +250,7 @@
                     </smartTable:customToolbar>
                     <t:Table 
                         enableColumnFreeze="true"
-                        visibleRowCount="15"
+                        visibleRowCount="14"
                         rows="{
                                     path: '/NegoItemPrices',
                                     sorter: {
@@ -327,8 +268,8 @@
                                 </t:customData>
                                 <Label text="Negotiation No" design="Bold"/>
                                 <t:template>
-                                    <!-- <ObjectStatus text="{Header/nego_document_number}" /> -->
-                                    <ObjectStatus text="1" active="true" press=""  />
+                                    <ObjectStatus text="{Header/nego_document_number}" active="true" press="onNegoNumberPress"  />
+                                    <!-- <ObjectStatus text="1" active="true" press=""  /> -->
                                     <!-- <Text text="{Header/nego_document_number}" wrapping="false" /> -->
                                     <!-- <Text text="1" wrapping="false" /> -->
                                 </t:template>
@@ -388,7 +329,7 @@
                                     <Text text="{Header/supplier_participation_flag}" wrapping="false" />
                                 </t:template> 
                             </t:Column>
-                            <t:Column width="7rem" sortProperty="Header/remaining_hours" filterProperty="Header/remaining_hours">
+                            <t:Column width="7rem" hAlign="Center" sortProperty="Header/remaining_hours" filterProperty="Header/remaining_hours">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "Header/remaining_hours", "leadingProperty": "Header/remaining_hours", "sortProperty": "Header/remaining_hours", "filterProperty": "Header/remaining_hours"}'/>
                                 </t:customData>
@@ -435,6 +376,15 @@
                                 <Label text="Quote Style" design="Bold"/>
                                 <t:template>
                                     <Text text="{Header/negotiation_style_code}" wrapping="false" />
+                                </t:template>  
+                            </t:Column> 
+                            <t:Column width="8rem" hAlign="Center" sortProperty="Header/bidding_result_open_status_code" filterProperty="Header/bidding_result_open_status_code">
+                                <t:customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "Header/bidding_result_open_status_code", "leadingProperty": "Header/bidding_result_open_status_code", "sortProperty": "Header/bidding_result_open_status_code", "filterProperty": "Header/bidding_result_open_status_code"}'/>
+                                </t:customData>
+                                <Label text="Bid Open Status" design="Bold"/>
+                                <t:template>
+                                    <Text text="{Header/bidding_result_open_status_code}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
                             <t:Column width="12rem" hAlign="Center" sortProperty="Header/negotiation_output_class_code" filterProperty="Header/negotiation_output_class_code">
