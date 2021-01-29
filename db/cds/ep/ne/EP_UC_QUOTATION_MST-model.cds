@@ -24,6 +24,7 @@ entity Uc_Quotation_Mst {
         quotation_write_date          : Date;
         quotation_confirmed_date      : Date;
         quotation_amount              : Decimal;
+        currency_code                 : String(15);
         attch_group_number            : String(100);
         completion_flag               : Boolean;
         completion_date               : Date;

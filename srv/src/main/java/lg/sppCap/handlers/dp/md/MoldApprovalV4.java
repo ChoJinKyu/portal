@@ -664,4 +664,44 @@ public class MoldApprovalV4 implements EventHandler {
             jdbc.execute(v_sql_dropTable);
         }
     }
+
+    // request cancel
+    @On(event = UpdateApproveStatusCodeContext.CDS_NAME)
+    public void updateApprovalStatus(UpdateApproveStatusCodeContext context){
+
+        ApprStatus data = context.getInputData();
+        ApprovalMasterV4 aMaster = data.getApprovalMaster();
+
+        ResultMsg msg = ResultMsg.create();
+        msg.setMessageCode("NCM01001");
+        msg.setResultCode(0);
+        msg.setCompanyCode(aMaster.getCompanyCode());
+        msg.setPlantCode(aMaster.getOrgCode());
+
+        try {
+                msg.setApprovalNumber(aMaster.getApprovalNumber()); 
+                ApprovalMasters master =  ApprovalMasters.create();  
+                master.setTenantId(aMaster.getTenantId());
+                master.setApprovalNumber(aMaster.getApprovalNumber());
+                master.setApproveStatusCode(aMaster.getApproveStatusCode());
+                master.setRequestorEmpno(aMaster.getRequestorEmpno());
+                master.setRequestDate(aMaster.getRequestDate());
+                master.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+                master.setUpdateUserId(aMaster.getUpdateUserId());
+                CqnUpdate masterUpdate = Update.entity(ApprovalMasters_.CDS_NAME).data(master);
+                Result resultDetail = moldApprovalService.run(masterUpdate);
+        } catch (Exception e) {
+            msg.setMessageCode("FAILURE");
+            msg.setResultCode(-1);
+            e.printStackTrace();
+        }
+
+        context.setResult(msg);
+        context.setCompleted();
+    
+    } 
+
+
+
+
 }

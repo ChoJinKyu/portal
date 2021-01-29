@@ -1033,6 +1033,60 @@ sap.ui.define([
             }
         },
 
+
+        approvalRequestCancel : function () { // request cancel 
+            var mst = this.getModel("appMaster").getData();
+            var data = {
+                inputData: {
+                    approvalMaster: {
+                        tenant_id: this.tenant_id
+                        , approval_number: this.approval_number
+                        , company_code: this.company_code
+                        , org_code: this.plant_code
+                        , approve_status_code: mst.approve_status_code
+                        , requestor_empno: mst.requestor_empno
+                        , request_date: this._getToday()
+                        , update_user_id: mst.requestor_empno
+                        , local_update_dtm: new Date()
+                    }
+                }
+            }
+            var msg = "";
+            var isOk = false;
+            if(this.firstStatusCode == "AR" && this.getModel('appMaster').getProperty("/approve_status_code") == "DR"){ 
+                isOk = true;
+                msg = "요청 취소 하시겠습니까?";
+            }
+
+            if(isOk){
+                var oView = this.getView();
+                var that = this;
+                MessageBox.confirm(msg, {
+                    title: "Comfirmation",
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: function (sButton) {
+                        if (sButton === MessageBox.Action.OK) { 
+                            this.firstStatusCode = that.getModel('appMaster').getProperty("/approve_status_code");
+                            oView.setBusy(true);
+                            that.callAjax(data, "updateApproveStatusCode"
+                                , function(result){
+                                    oView.setBusy(false);
+                                    MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
+                                if (result.resultCode > -1) {
+                                    that.onLoadThisPage(result);
+                                }
+                            });
+                        }else{ 
+                            that.getModel("appMaster").setProperty("/approve_status_code", that.firstStatusCode);
+                        };
+                    }
+                });
+            }
+
+
+        }, 
+
+
         callAjax: function (data, fn , callback) {
             console.log("send data >>>> ", data);
             var url = "/dp/md/moldApprovalList/webapp/srv-api/odata/v4/dp.MoldApprovalV4Service/" + fn;

@@ -190,6 +190,13 @@ service MoldApprovalV4Service {
         resultCode : Integer;
     }
 
+    type apprStatus {
+         approvalMaster :  ApprovalMaster_v4
+    }
+	
+	
+	action updateApproveStatusCode ( inputData : apprStatus ) returns resultMsg; // request cancel 시 필요  
+
     action saveMoldApproval ( inputData : data ) returns resultMsg;
     action deleteApproval (inputData : ApprDeleteData) returns resultMsg;
 }

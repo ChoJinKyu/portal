@@ -1,0 +1,84 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout" displayBlock="true"
+    xmlns:richtexteditor="sap.ui.richtexteditor"
+	xmlns:core="sap.ui.core">
+
+    <VBox id="publishShowBox">
+
+        <form:SimpleForm id="publishForm1Show" editable="false"> 
+            <VBox alignContent="Center" alignItems="Stretch"> 
+                <Label text="* 품의명" design="Bold" class="sapMLabelNoText"/>
+                <Text text="{master>/loi_publish_title}" width="100%"/>
+            </VBox>
+        </form:SimpleForm>
+
+        <form:SimpleForm id="publishForm2Show" editable="false">
+        
+            <VBox alignContent="Center">
+                <Label text="* 협력사명" textAlign="left" design="Bold" class="sapMLabelNoText" />
+                <Text text="{master>/supplier_code}" />
+                <layoutData>
+                    <layout:GridData span="XL6 L6 M6 S12" />
+                </layoutData>    
+            </VBox>      
+
+            <VBox alignContent="Center">
+                <Label text="* 계약서식" design="Bold" class="sapMLabelNoText"/>
+                <Text text="{= ${master>/contract_format_id} === 'K' ? '구매의향서(국문)' : '구매의향서(영문)' }" />
+                <layoutData>
+                    <layout:GridData span="XL6 L6 M6 S12" />
+                </layoutData>     
+            </VBox> 
+
+            <VBox alignContent="Center">
+                <Label text="* 계약일자" design="Bold" class="sapMLabelNoText"/>
+                <Text text="{master>/contract_date}" />  
+                <layoutData>
+                    <layout:GridData span="XL6 L6 M6 S12" />
+                </layoutData>     
+            </VBox>
+            
+            <VBox alignContent="Center">
+                <Label text="* 서명방식" design="Bold" class="sapMLabelNoText"/>
+                <Text text="{= ${master>/offline_flag} === true ? '오프라인' : '온라인' }" />
+                <layoutData>
+                    <layout:GridData span="XL6 L6 M6 S12" />
+                </layoutData>     
+            </VBox>
+
+        </form:SimpleForm>
+
+        <form:SimpleForm id="publishForm3Show" editable="false"> 
+            <VBox alignContent="Center" alignItems="Stretch"> 
+                <Label  text="* 부대조건" 
+                            design="Bold" 
+                            class="sapUiSmallMarginBottom"/>
+                <Text text="{master>/additional_condition_desc}" />            
+            </VBox>
+        </form:SimpleForm>
+
+        <form:SimpleForm id="publishForm4Show" editable="false"> 
+            <VBox alignContent="Center" alignItems="Stretch"> 
+                <Label  text="* 특기사항" 
+                            design="Bold" 
+                            class="sapUiSmallMarginBottom"/>
+                <richtexteditor:RichTextEditor
+                    editorType="TinyMCE4"
+                    width="98%"
+                    height="200px"
+                    editable="false"
+                    customToolbar="true"
+                    showGroupFont="true"
+                    showGroupLink="true"
+                    showGroupInsert="true"
+                    value="{master>/special_note}">
+                </richtexteditor:RichTextEditor> 
+            </VBox>
+        </form:SimpleForm>        
+
+    </VBox>
+
+</core:FragmentDefinition>

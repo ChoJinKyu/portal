@@ -28,15 +28,13 @@ SQL SECURITY INVOKER
 AS
 BEGIN
 
-	DECLARE EXIT HANDLER FOR SQLEXCEPTION
-	BEGIN
-		ROLLBACK;
-	END;
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
     
     BEGIN
     	DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             :O_MSG.INSERT(('NG', 'Evaluation type processing error. (' || ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE || ')'), 1);
+            RESIGNAL;
         END;
     
         MERGE INTO SP_SE_EVAL_TYPE AS ET
@@ -89,14 +87,11 @@ BEGIN
         ;
     END;
 
-    IF :O_MSG.RETURN_CODE[1] = 'NG' THEN
-        SIGNAL SQL_ERROR_CODE 10000;
-    END IF;
-    
     BEGIN
     	DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             :O_MSG.INSERT(('NG', 'Evaluation grade processing error. (' || ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE || ')'), 1);
+            RESIGNAL;
         END;
         
         DELETE FROM SP_SE_EVAL_GRADE
@@ -175,10 +170,6 @@ BEGIN
         ;
     END;
 
-    IF :O_MSG.RETURN_CODE[1] = 'NG' THEN
-        SIGNAL SQL_ERROR_CODE 10001;
-    END IF;
-    
     COMMIT;
     O_MSG = SELECT 'OK' RETURN_CODE, 'Successfully Saved.' RETURN_MSG FROM DUMMY;
 END;

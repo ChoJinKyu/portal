@@ -210,41 +210,7 @@ sap.ui.define([
 		 * Event handler for saving page changes
 		 * @public
 		 */
-        onPageSaveButtonPress: function(){
-            // var oView = this.getView(),
-            //     oMasterModel = this.getModel("master"),
-            //     oDetailsModel = this.getModel("details"),
-            //     that = this;
-
-            // if (this._sTenantId !== "new"){
-            //     if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
-            //         MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-            //         return;
-            //     }
-            // }
-                
-            // if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
-            // if(this.validator.validate(this.byId("midTable")) !== true) return;
-
-			// MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
-			// 	title : this.getModel("I18N").getText("/SAVE"),
-			// 	initialFocus : sap.m.MessageBox.Action.CANCEL,
-			// 	onClose : function(sButton) {
-			// 		if (sButton === MessageBox.Action.OK) {
-			// 			oView.setBusy(true);
-			// 			oTransactionManager.submit({						
-			// 				success: function(ok){
-			// 					that._toShowMode();
-            //                     oView.setBusy(false);
-            //                     that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-			// 					MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
-			// 				}
-			// 			});
-			// 		};
-			// 	}
-            // });
-            // this.validator.clearValueState(this.byId("midObjectForm1Edit"));
-            // this.validator.clearValueState(this.byId("midTable"));
+        onPageSaveButtonPress: function(){            
            
             var oView = this.getView();
             var oMasterModel = this.getModel("master");
