@@ -9,7 +9,6 @@ entity Get_Uc_Approval_Dtl_View {
     key company_code                   : String(10) not null;
     key net_price_contract_document_no : String(50) not null;
     key net_price_contract_degree      : Integer64 not null;
-        ep_item_class_code             : String(50);
         ep_item_code                   : String(50);
         item_desc                      : String(200);
         spec_desc                      : String(1000);

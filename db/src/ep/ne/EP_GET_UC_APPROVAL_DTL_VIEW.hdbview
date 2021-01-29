@@ -1,7 +1,6 @@
 view EP_GET_UC_APPROVAL_DTL_VIEW as
 select
-    item.ep_item_class_code             --설비공사용품목분류코드
-    ,dtl.ep_item_code	                --설비공사용품목코드
+     dtl.ep_item_code	                --설비공사용품목코드
     ,dtl.item_desc                      --품목명
     ,dtl.spec_desc	                    --규격설명
     ,dtl.unit	                        --단위
@@ -26,10 +25,4 @@ on dtl.tenant_id = mst.tenant_id
 and dtl.company_code = mst.company_code
 and dtl.net_price_contract_document_no = mst.net_price_contract_document_no
 and dtl.net_price_contract_degree = mst.net_price_contract_degree
-left outer join ep_uc_item as item
-on dtl.tenant_id = item.tenant_id
-and dtl.company_code = item.company_code
-and dtl.org_type_code = item.org_type_code
-and dtl.org_code = item.org_code
-and dtl.ep_item_code = item.ep_item_code
 ;
