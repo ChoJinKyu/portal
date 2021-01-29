@@ -4,7 +4,7 @@ sap.ui.define([
 ], function (Parent, ODataUtil) {
     "use strict";
     
-    var FETCH_ALL_GROUP_ID = "__fetchAll_GroupId__";
+    var FETCH_ALL_GROUP_ID = "__fetchOthers_GroupId__";
 
     var ODataV2Model = Parent.extend("ext.lib.model.v2.ODataModel", {
         _CLASS: "ext.lib.model.v2.ODataModel",
@@ -34,9 +34,10 @@ sap.ui.define([
 
         read: function (sPath, mParameters) {
             var fSuccessHandler = mParameters.success,
-                bFetchAll = mParameters.fetchAll,
+                fFetchOthersSuccess = mParameters.fetchOthersSuccess,
+                bFetchOthers = mParameters.fetchOthers,
                 urlParameters = mParameters.urlParameters || {};
-            delete mParameters.fetchAll;
+            delete mParameters.fetchOthers;
             delete mParameters.success;
             delete mParameters.urlParameters;
             urlParameters["$inlinecount"] = "allpages";
@@ -44,24 +45,29 @@ sap.ui.define([
                 urlParameters: urlParameters,
                 success: function (oData) {
                     this._setCount(sPath, oData);
-                    if(bFetchAll === true && this.hasMore(sPath)){
-                        this._fetchAll(sPath, mParameters, this.getAllCount(sPath), this.getCount(sPath));
+                    if(bFetchOthers === true){
+                        if(this.hasMore(sPath)){
+                            this._fetchOthers(sPath, mParameters, this.getAllCount(sPath), this.getCount(sPath));
+                        }else{
+                            if(fFetchOthersSuccess)
+                                fFetchOthersSuccess.call(this, [oData]);
+                        }
                     }
                     if (fSuccessHandler)
-                        fSuccessHandler.call(this, oData, bFetchAll === true && this.hasMore(sPath));
+                        fSuccessHandler.call(this, oData, bFetchOthers === true && this.hasMore(sPath));
                 }.bind(this)
             }));
         },
         
-        _fetchAll: function(sPath, mParameters, nCount, nSkip){
+        _fetchOthers: function(sPath, mParameters, nCount, nSkip){
             var nSkip = nSkip || 0,
                 nCeil = Math.ceil((nCount - nSkip) / 1000),
                 aData = [],
                 urlParameters = mParameters.urlParameters || {},
-                fFetchAllSuccess = mParameters.fetchAllSuccess,
-                fFetchAllError = mParameters.fetchAllError;
-            delete mParameters.fetchAllSuccess;
-            delete mParameters.fetchAllError;
+                fFetchOthersSuccess = mParameters.fetchOthersSuccess,
+                fFetchOthersError = mParameters.fetchOthersError;
+            delete mParameters.fetchOthersSuccess;
+            delete mParameters.fetchOthersError;
             if(urlParameters){
                 delete urlParameters["$inlinecount"];
             }
@@ -79,16 +85,16 @@ sap.ui.define([
                 success: function(aData){
                     var aResult = ODataUtil.parseBatchResponses(aData);
                     if(aResult.errors.length < 1){
-                        if(fFetchAllSuccess)
-                            fFetchAllSuccess.call(this, aResult.successes);
+                        if(fFetchOthersSuccess)
+                            fFetchOthersSuccess.call(this, aResult.successes);
                     }else{
-                        if(fetchAllError)
-                            fetchAllError.call(this, aResult.errors, aResult.successes);
+                        if(fetchOthersError)
+                            fetchOthersError.call(this, aResult.errors, aResult.successes);
                     }
                 }.bind(this),
                 error: function(oEvent){
-                    if(fetchAllError)
-                        fetchAllError.call(this, oEvent);
+                    if(fetchOthersError)
+                        fetchOthersError.call(this, oEvent);
                 }.bind(this)
             });
         },

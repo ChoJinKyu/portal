@@ -114,14 +114,14 @@ sap.ui.define([
             aSorters.push(new Sorter("wbs_code", false));
             this.oDialog.setBusy(true);
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.pu.MstService/").read("/Wbs_Mst", {
-                fetchAll: true,  //TODL: please disable fetchAll option for performance
+                fetchOthers: true,  //TODL: please disable fetchOthers option for performance
                 filters: aFilters,
                 sorters: aSorters,
                 success: function(oData, bHasMore){
                     this.oDialog.setData(oData.results, false);
                     if(!bHasMore) this.oDialog.setBusy(false);
                 }.bind(this),
-                fetchAllSuccess: function(aDatas){
+                fetchOthersSuccess: function(aDatas){
                     var aDialogData = this.oDialog.getData();
                     aDatas.forEach(function(oData){
                         aDialogData = aDialogData.concat(oData.results);

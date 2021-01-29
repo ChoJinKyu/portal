@@ -189,7 +189,7 @@ sap.ui.define([
 			oTable.setBusy(true);
             oModel.setTransactionModel(this.getModel());
 			oModel.read("/Message", {
-                fetchAll: true,
+                fetchOthers: true,
                 filters: aSearchFilters,
                 sorters: [
 					new Sorter("message_code"),
@@ -201,7 +201,7 @@ sap.ui.define([
 					this.byId("mainTable").clearSelection();
                     if(!bHasMore) oTable.setBusy(false);
 				}.bind(this),
-				fetchAllSuccess: function(aData, aErrors){
+				fetchOthersSuccess: function(aData, aErrors){
 					oTable.setBusy(false);
 				}.bind(this)
 			});

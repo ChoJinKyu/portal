@@ -132,14 +132,14 @@ sap.ui.define([
             aSorters.push(new Sorter("user_local_name", false));
             this.oDialog.setBusy(true);
             ODataV2ServiceProvider.getService("cm.util.HrService").read("/Employee", {
-                fetchAll: true,  //TODL: please disable fetchAll option for performance
+                fetchOthers: true,  //TODL: please disable fetchOthers option for performance
                 filters: aFilters,
                 sorters: aSorters,
                 success: function(oData, bHasMore){
                     this.oDialog.setData(oData.results, false);
                     if(!bHasMore) this.oDialog.setBusy(false);
                 }.bind(this),
-                fetchAllSuccess: function(aDatas){
+                fetchOthersSuccess: function(aDatas){
                     var aDialogData = this.oDialog.getData();
                     aDatas.forEach(function(oData){
                         aDialogData = aDialogData.concat(oData.results);
