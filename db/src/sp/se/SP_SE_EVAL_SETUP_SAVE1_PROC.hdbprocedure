@@ -40,44 +40,15 @@ LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 AS
 BEGIN
-    DECLARE V_TRANACTION_CODE NVARCHAR(1);
-    --DECLARE var_commit  NVARCHAR(100) := 'COMMIT';
-    --DECLARE var_rollback NVARCHAR(100) := 'ROLLBACK';
-    --DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    --BEGIN
-    	--EXEC (:var_rollback);
-    --	O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
-    --END;
-      
-    --평가 운영 단위 삭제 인 경우 : 화면에서 DELETE_FLAG가 'Y'인 경우만 삭제 처리될 수 있도록 Validation됨.
-    /*
-    DELETE FROM SP_SE_OPERATION_UNIT_MST
-    WHERE  (TENANT_ID,
-    	    COMPANY_CODE,
-    	    ORG_TYPE_CODE,
-    	    ORG_CODE,
-    	    EVALUATION_OPERATION_UNIT_CODE) IN (SELECT TENANT_ID,
-                                                     COMPANY_CODE,
-                                                     ORG_TYPE_CODE,
-                                                     ORG_CODE,
-                                                     EVALUATION_OPERATION_UNIT_CODE
-                                              FROM   :I_OPMST
-                                              WHERE  TRANSACTION_CODE = 'D')
-    ;
-   
-    IF ::ROWCOUNT = 0 AND :I_OPMST.TRANSACTION_CODE[1] = 'D' THEN
-        SIGNAL SQL_ERROR_CODE 10000 SET MESSAGE_TEXT = 'There is no information to delete.';
-    END IF;
-   */
-   
-    --IF (:I_STATUS_TAB.COMPANY_CODE[V_IDX] IS NULL ) THEN
-    --        :O_RETURN_TAB.INSERT(('E', 'EDP','This is no value(COMPANY_CODE)'),1);
-    --        RETURN;      
-    --     END IF;
-   
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+    	ROLLBACK;
+    END;
+    
     BEGIN
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
+            ROLLBACK;
             O_MSG = SELECT  'NG' RETURN_CODE, 'Operation unit master Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')' RETURN_MSG FROM  DUMMY;
         END;
        
@@ -196,6 +167,11 @@ BEGIN
                            AND    VP.VENDOR_POOL_OPERATION_UNIT_CODE = MA.VENDOR_POOL_OPERATION_UNIT_CODE)
         ;
     END;
+
+    IF :O_MSG.RETURN_CODE[1] = 'NG' THEN
+        SIGNAL SQL_ERROR_CODE 10000;
+    END IF;
+   
    
     BEGIN
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -269,6 +245,11 @@ BEGIN
         
         ; 
     END;
+
+    IF :O_MSG.RETURN_CODE[1] = 'NG' THEN
+        SIGNAL SQL_ERROR_CODE 10001;
+    END IF;
+   
    
     BEGIN
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -353,7 +334,12 @@ BEGIN
                   ,QTT.SYSTEM_UPDATE_DTM = NOW()
         ;
     END;
- 
+
+    IF :O_MSG.RETURN_CODE[1] = 'NG' THEN
+        SIGNAL SQL_ERROR_CODE 10002;
+    END IF;
+
+    COMMIT;
     O_MSG = SELECT 'OK' RETURN_CODE, 'Successfully Saved.' RETURN_MSG FROM DUMMY;
     	    	                                
 END;
