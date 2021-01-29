@@ -166,9 +166,44 @@ sap.ui.define([
                 return "Center";
             },
             onApplyePress: function(e){
+
+                if(!this._nego){
+                    this._nego = this.getView().getModel("nego").oData;
+                }
+                var type ;      // Negotiation Type
+                if(this._cNum == "1"){                          // RFQ (견적 계획)
+                    type ="RFQ";
+                }else if(this._cNum == "2"){                    // Competitive Bidding (입찰 계획)
+                    type ="CPB";
+                }else if(this._cNum == "3"){                    // RFP (견적 계획)
+                    type ="RFP";
+                }else if(this._cNum == "4"){                    // 2-Step Bidding (입찰 계획)
+                    type ="TSB";
+                }
+                
+
                 var oRbgName = "rbg" + this._cNum ;
                 var oRbg = this.getView().byId(oRbgName);
-                var outcome =oRbg.getSelectedButton().getText();
+                var outcomeText =oRbg.getSelectedButton().getText();
+                var outcomeCode;
+
+                for(var i=0; i<this._nego.length; i++){
+                    var nego = this._nego[i];
+                    if(nego.nego_type_code == type){
+                        var negoOutcomes = nego.Outcomes;
+                        for(var j=0; j<negoOutcomes.length; j++){
+                            var negoOutcome = negoOutcomes[j];
+                            if(negoOutcome.outcome_name == outcomeText){
+                                outcomeCode = negoOutcome.outcome_code;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+
+
+
                 // var outcome = oRbg.getSelectedIndex() + 1;
                 
                 // // 기존 시작 =========================================================================================
@@ -189,7 +224,7 @@ sap.ui.define([
                     sUrl = "../sp/sc/scQBPages/webapp";
                     
                 //  생성 구분 코드(NC : Negotiation Create, NW : Negotiation Workbench) / Negotiation Type / outcome 
-                var changeHash =  "NC/" + this._cNum + "/" + outcome ;   
+                var changeHash =  "NC/" + type + "/" + outcomeCode ;   
                 HashChanger.getInstance().replaceHash("");
 
                 Component.load({
