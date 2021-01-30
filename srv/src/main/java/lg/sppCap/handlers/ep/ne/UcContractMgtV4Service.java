@@ -59,7 +59,7 @@ public class UcContractMgtV4Service implements EventHandler {
 								.append(")");
 
         String v_sql_dropTableD = "DROP TABLE #LOCAL_TEMP_EP_UC_NET_CONTRACT_END_PROC";                                        
-		String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_EP_UC_NET_CONTRACT_END_PROC VALUES (?, ?, ?, ?, ?, ?)";
+		String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_EP_UC_NET_CONTRACT_END_PROC VALUES (?, ?, ?, ?, ?)";
 		String v_sql_callProc = "CALL EP_UC_NET_CONTRACT_END_PROC( I_TABLE => #LOCAL_TEMP_EP_UC_NET_CONTRACT_END_PROC, O_TABLE_MESSAGE => ? )";
 
 

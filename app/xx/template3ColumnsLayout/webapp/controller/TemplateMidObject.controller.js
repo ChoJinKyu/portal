@@ -1,7 +1,6 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"ext/lib/util/Multilingual",
-	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
 	"sap/ui/model/json/JSONModel",
@@ -20,19 +19,19 @@ sap.ui.define([
 	"sap/m/Input",
 	"ext/lib/control/m/CodeComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, Formatter, DateFormatter, 
+], function (BaseController, Multilingual, ManagedModel, ManagedListModel, JSONModel, Validator, Formatter, DateFormatter, 
         Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
         ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, CodeComboBox, Item) {
 	"use strict";
-
-	var oTransactionManager;
 
 	return BaseController.extend("xx.template3ColumnsLayout.controller.TemplateMidObject", {
 
 		validator: new Validator(),
 		
-		formatter: Formatter,
-		dateFormatter: DateFormatter,
+        formatter: Formatter,
+        
+        dateFormatter: DateFormatter,
+        
 		viewFormatter: (function(){
 			return {
 				toYesNo: function(oData){
@@ -55,10 +54,6 @@ sap.ui.define([
 			this.setModel(new JSONModel(), "company");
 			this.setModel(new JSONModel(), "department");
 			this.setModel(new JSONModel(), "midObjectViewModel");
-
-			oTransactionManager = new TransactionManager();
-			oTransactionManager.addDataModel(this.getModel("company"));
-			oTransactionManager.addDataModel(this.getModel("department"));
 
             this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
             
@@ -128,7 +123,6 @@ sap.ui.define([
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
 						oMasterModel.removeData();
-						oMasterModel.setTransactionModel(that.getModel());
 						oMasterModel.submitChanges({
 							success: function(ok){
 								oView.setBusy(false);
@@ -143,31 +137,29 @@ sap.ui.define([
 
 		onMidTableAddButtonPress: function(){
 			var oTable = this.byId("midTable"),
-				oDetailsModel = this.getModel("department");
-			oDetailsModel.addRecord({
+				oDepartmentModel = this.getModel("department");
+			oDepartmentModel.addRecord({
 				"tenant_id": this._sTenantId,
 				"company_code": this._sCompanyCode,
 				"control_option_level_code": "",
 				"control_option_level_val": "",
-				"company_name": "",
-				"local_create_dtm": new Date(),
-				"local_update_dtm": new Date()
+				"company_name": ""
 			}, "/Company");
             this.validator.clearValueState(this.byId("midTable"));
 		},
 
 		onMidTableDeleteButtonPress: function(){
 			var oTable = this.byId("midTable"),
-				oDetailsModel = this.getModel("department"),
+				oDepartmentModel = this.getModel("department"),
 				aItems = oTable.getSelectedItems(),
 				aIndices = [];
 			aItems.forEach(function(oItem){
-				aIndices.push(oDetailsModel.getProperty("/Company").indexOf(oItem.getBindingContext("department").getObject()));
+				aIndices.push(oDepartmentModel.getProperty("/Company").indexOf(oItem.getBindingContext("department").getObject()));
 			});
 			aIndices = aIndices.sort(function(a, b){return b-a;});
 			aIndices.forEach(function(nIndex){
-				//oDetailsModel.removeRecord(nIndex);
-				oDetailsModel.markRemoved(nIndex);
+				//oDepartmentModel.removeRecord(nIndex);
+				oDepartmentModel.markRemoved(nIndex);
 			});
 			oTable.removeSelections(true);
             this.validator.clearValueState(this.byId("midTable"));
@@ -180,10 +172,10 @@ sap.ui.define([
         onPageSaveButtonPress: function(){
             var oView = this.getView(),
                 oMasterModel = this.getModel("company"),
-                oDetailsModel = this.getModel("department"),
+                oDepartmentModel = this.getModel("department"),
                 that = this;
                 
-			if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
+			if(!oMasterModel.isChanged() && !oDepartmentModel.isChanged()) {
 				MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
 				return;
             }
@@ -196,14 +188,14 @@ sap.ui.define([
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oTransactionManager.submit({
-							success: function(ok){
-								that._toShowMode();
-								oView.setBusy(false);
-                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-								MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
-							}
-						});
+						// oTransactionManager.submit({
+						// 	success: function(ok){
+						// 		that._toShowMode();
+						// 		oView.setBusy(false);
+                        //         that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+						// 		MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
+						// 	}
+						// });
 					};
 				}
 			});
@@ -217,7 +209,7 @@ sap.ui.define([
         onPageCancelEditButtonPress: function(){
             var oView = this.getView(),
                 oMasterModel = this.getModel("company"),
-                oDetailsModel = this.getModel("department"),
+                oDepartmentModel = this.getModel("department"),
 				cancelEdit = function(){
 					if(this.getModel("midObjectViewModel").getProperty("/isAddedMode") == true){
 						this.onPageNavBackButtonPress.call(this);
@@ -227,7 +219,7 @@ sap.ui.define([
 					}
 				}.bind(this);
 				
-			if(oMasterModel.isChanged() || oDetailsModel.isChanged()) {
+			if(oMasterModel.isChanged() || oDepartmentModel.isChanged()) {
 				MessageBox.confirm(this.getModel("I18N").getText("/NCM00007"), {
 					title : "Comfirmation",
 					initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -248,15 +240,15 @@ sap.ui.define([
 		_onMasterDataChanged: function(oEvent){
 			if(this.getModel("midObjectViewModel").getProperty("/isAddedMode") == true){
 				var oMasterModel = this.getModel("company");
-				var oDetailsModel = this.getModel("department");
+				var oDepartmentModel = this.getModel("department");
 				var sTenantId = oMasterModel.getProperty("/tenant_id");
 				var sControlOPtionCode = oMasterModel.getProperty("/company_code");
-				var oDetailsData = oDetailsModel.getData();
+				var oDetailsData = oDepartmentModel.getData();
 				oDetailsData.forEach(function(oItem, nIndex){
-					oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-					oDetailsModel.setProperty("/"+nIndex+"/company_code", sControlOPtionCode);
+					oDepartmentModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
+					oDepartmentModel.setProperty("/"+nIndex+"/company_code", sControlOPtionCode);
 				});
-				oDetailsModel.setData(oDetailsData);
+				oDepartmentModel.setData(oDetailsData);
 			}
 		},
 
@@ -281,9 +273,9 @@ sap.ui.define([
 					"use_flag": true
 				}, "/Company");
 
-				var oDetailsModel = this.getModel("department");
-                oDetailsModel.setData([], "/Company");
-				oDetailsModel.addRecord({
+				var oDepartmentModel = this.getModel("department");
+                oDepartmentModel.setData([], "/Company");
+				oDepartmentModel.addRecord({
 					"tenant_id": this._sTenantId,
 					"company_code": this._sCompanyCode,
 					"company_name": ""
@@ -301,17 +293,20 @@ sap.ui.define([
 					}.bind(this)
 				});
 			
-				// oView.setBusy(true);
-				// var oDetailsModel = this.getModel("department");
-				// oDetailsModel.read("/Company", {
-				// 	filters: [
-				// 		new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-				// 		new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
-				// 	],
-				// 	success: function(oData){
-				// 		oView.setBusy(false);
-				// 	}
-				// });
+				oView.setBusy(true);
+				this.getModel().read("/Department", {
+                    urlParameters: {
+                        "$expand": "parent,children"
+                    },
+					filters: [
+						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+						new Filter("company_code", FilterOperator.EQ, "LGCKR"),
+					],
+					success: function(oData){
+                        this.getModel("department").setProperty("/", oData.results);
+						oView.setBusy(false);
+					}.bind(this)
+				});
 				this._toShowMode();
 			}
 		},
@@ -326,7 +321,6 @@ sap.ui.define([
 
 			this.byId("midTableAddButton").setEnabled(!FALSE);
 			this.byId("midTableDeleteButton").setEnabled(!FALSE);
-			this.byId("midTableSearchField").setEnabled(FALSE);
 			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
 			this.byId("midTable").getColumns()[0].setVisible(!FALSE);
 			this._bindMidTable(this.oEditableTemplate, "Edit");
@@ -342,7 +336,6 @@ sap.ui.define([
 
 			this.byId("midTableAddButton").setEnabled(!TRUE);
 			this.byId("midTableDeleteButton").setEnabled(!TRUE);
-			this.byId("midTableSearchField").setEnabled(TRUE);
 			this.byId("midTable").setMode(sap.m.ListMode.None);
 			this.byId("midTable").getColumns()[0].setVisible(!TRUE);
 			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
@@ -351,14 +344,8 @@ sap.ui.define([
 		_initTableTemplates: function(){
 			this.oReadOnlyTemplate = new ColumnListItem({
 				cells: [
-					new ObjectStatus({
-						icon: {
-							path: 'department>_row_state_',
-							formatter: this.formatter.toModelStateColumnIcon
-						}
-					}), 
 					new ObjectIdentifier({
-						text: "{department>company_code}"
+						text: "{department>departmentcode}"
 					}), 
 					new ObjectIdentifier({
 						text: "{department>control_option_level_code}"
@@ -367,7 +354,7 @@ sap.ui.define([
 						text: "{department>control_option_level_val}"
 					}), 
 					new Text({
-						text: "{department>company_name}"
+						text: "{department>departmentname}"
 					})
 				],
 				type: sap.m.ListType.Inactive
@@ -375,14 +362,8 @@ sap.ui.define([
 
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
-					new ObjectStatus({
-						icon: {
-							path: 'department>_row_state_',
-							formatter: this.formatter.toModelStateColumnIcon
-						}
-					}),
 					new Text({
-						text: "{department>company_code}"
+						text: "{department>department_code}"
 					}), 
 					new CodeComboBox({
 						selectedKey: "{department>control_option_level_code}",
@@ -409,7 +390,7 @@ sap.ui.define([
 					}),
 					new Input({
 						value: {
-							path: "department>company_name",
+							path: "department>department_name",
                             type: new sap.ui.model.type.String(null, {
 								maxLength: 100
 							})
@@ -422,7 +403,7 @@ sap.ui.define([
 
 		_bindMidTable: function(oTemplate, sKeyboardMode){
 			this.byId("midTable").bindItems({
-				path: "department>/Company",
+				path: "department>/",
 				template: oTemplate
 			}).setKeyboardMode(sKeyboardMode);
 		},

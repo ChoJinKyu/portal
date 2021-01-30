@@ -23,6 +23,7 @@ entity Uc_Approval_Mst_View {
         effective_status_code          : String(3);
         effective_status_name          : String(10);
         net_price_contract_day_count   : Decimal;
+        net_price_contract_chg_type_cd : String(30);
         delete_reason                  : String(3000);
 }
 

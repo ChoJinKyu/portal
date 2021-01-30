@@ -29,6 +29,13 @@
                 "settings": {
                     "odataVersion": "4.0"
                 }
+            },
+            "session": {
+                "uri": "srv-api/odata/v2/cm.util.SppUserSessionService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
             }
         }
     },
@@ -91,6 +98,15 @@
             },
             "v4Proc": {
                 "dataSource": "v4Proc",
+                "preload": false,
+                "settings": {
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": false
+                }
+            },
+            "session": {
+                "dataSource": "session",
                 "preload": false,
                 "settings": {
                     "synchronizationMode": "None",

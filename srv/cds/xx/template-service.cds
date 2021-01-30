@@ -3,6 +3,7 @@ using from '../../../db/cds/xx/template/XX_MESSAGE-model';
 using {xx as controlOption} from '../../../db/cds/xx/template/XX_CONTROL_OPTION_DTL-model';
 using from '../../../db/cds/xx/template/XX_TENANT-model';
 using from '../../../db/cds/xx/template/XX_COMPANY-model';
+using from '../../../db/cds/xx/template/XX_COMPANY_VIEW-model';
 using from '../../../db/cds/xx/template/XX_PLANT-model';
 using from '../../../db/cds/xx/template/XX_DEPARTMENT-model';
 using from '../../../db/cds/xx/template/XX_EMPLOYEE-model';
@@ -29,6 +30,8 @@ service TemplateService {
     entity Currency_View as projection on Currency;
     entity Country_View as projection on Country;
     entity Code_View as projection on Code;
+
+    entity CompanyView as projection on xx.Company_View;
 
 }
 

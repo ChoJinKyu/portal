@@ -12,7 +12,7 @@ using {op.Pu_Pr_Template_DtlView as prTDtlView} from '../../../../../db/cds/op/p
  using {cm.Code_Lng as cdLng}                   from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 
 
-@path : '/op.pu.TemplateService'
+@path : '/op.mst.TemplateService'
 service TemplateService {
 
     entity Pr_TMst as projection on op.Pu_Pr_Template_Mst;

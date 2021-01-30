@@ -6,7 +6,10 @@ modules:
 - name: sppCap_srv_dev
   type: java
   path: srv
+  properties:
+    SPRING_PROFILES_ACTIVE: cloud
   requires:
+  - name: uaa_sppCap
   - name: sppDb_hdi_dev
   provides:
   - name: srv-api

@@ -1,0 +1,165 @@
+PROCEDURE SP_NP_NET_PRICE_APPROVAL_SAVE_PROC (
+	 IN   APPROVAL_NUMBER   NVARCHAR(20)
+    ,IN   I_DTL				TABLE (
+    							 DTL_SEQ         NVARCHAR(20)
+                            )
+                            
+	,IN   I_USER_ID 		NVARCHAR(255)
+    ,OUT  O_MSG				TABLE (
+    							 RETURN_CODE     NVARCHAR(2)
+                            	,RETURN_MSG      NVARCHAR(1000)
+                            )
+)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER 
+AS
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+    	:O_MSG.INSERT(('NG', '단가품의 저장 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')'), 1);
+    END;
+    
+    BEGIN
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION RESIGNAL SET MESSAGE_TEXT = '공통 결재 마스터 등록 오류';	-- 결재 마스터 등록하면서, 오류 발생 함.
+
+		INSERT INTO CM_APPROVAL_MST A(
+			  A.TENANT_ID
+			, A.APPROVAL_NUMBER
+			, A.LEGACY_APPROVAL_NUMBER
+			, A.COMPANY_CODE
+			, A.ORG_TYPE_CODE
+			, A.ORG_CODE
+			, A.CHAIN_CODE
+			, A.APPROVAL_TYPE_CODE
+			, A.APPROVAL_TITLE
+			, A.APPROVAL_CONTENTS
+			, A.APPROVE_STATUS_CODE
+			, A.REQUESTOR_EMPNO
+			, A.REQUEST_DATE
+			, A.ATTCH_GROUP_NUMBER
+			, A.LOCAL_CREATE_DTM
+			, A.LOCAL_UPDATE_DTM
+			, A.CREATE_USER_ID
+			, A.UPDATE_USER_ID
+			, A.SYSTEM_CREATE_DTM
+			, A.SYSTEM_UPDATE_DTM
+		) VALUES (
+			  'L2100'     -- A.TENANT_ID
+			, '100990'    -- A.APPROVAL_NUMBER
+			, NULL        -- A.LEGACY_APPROVAL_NUMBER
+			, 'LGCKR'     -- A.COMPANY_CODE
+			, 'PL'        -- A.ORG_TYPE_CODE
+			, '1000'      -- A.ORG_CODE
+			, 'NULL'      -- A.CHAIN_CODE
+			, 'NPA01'    -- A.APPROVAL_TYPE_CODE
+			, 'Procedure Test'    -- A.APPROVAL_TITLE
+			, 'Procedure Test....'    -- A.APPROVAL_CONTENTS
+			, 'S01'    -- A.APPROVE_STATUS_CODE
+			, :I_USER_ID    -- A.REQUESTOR_EMPNO
+			, NOW()  -- A.REQUEST_DATE
+			, NULL    -- A.ATTCH_GROUP_NUMBER
+            , NOW()
+            , NOW()
+            , :I_USER_ID
+            , :I_USER_ID
+            , NOW()
+            , NOW()
+		);
+    END;
+
+    BEGIN
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION RESIGNAL SET MESSAGE_TEXT = '단가품의 마스터 등록 오류';	-- 결재 마스터 등록하면서, 오류 발생 함.
+
+		INSERT INTO SP_NP_NET_PRICE_APPROVAL_MST A(
+			A.TENANT_ID
+			, A.COMPANY_CODE
+			, A.ORG_TYPE_CODE
+			, A.ORG_CODE
+			, A.APPROVAL_NUMBER
+			, A.NET_PRICE_DOCUMENT_TYPE_CODE
+			, A.NET_PRICE_SOURCE_CODE
+			, A.QUOTATION_NUMBER
+			, A.QUOTATION_SEQUENCE
+			, A.BIDDING_TYPE_CODE
+			, A.BUYER_EMPNO
+			, A.EFFECTIVE_START_DATE
+			, A.EFFECTIVE_END_DATE
+			, A.TENTPRC_FLAG
+			, A.BASE_PRICE_INPUT_FLAG
+			, A.APPROVAL_EXCL_FLAG
+			, A.LOCAL_CREATE_DTM
+			, A.LOCAL_UPDATE_DTM
+			, A.CREATE_USER_ID
+			, A.UPDATE_USER_ID
+			, A.SYSTEM_CREATE_DTM
+			, A.SYSTEM_UPDATE_DTM
+		) VALUES (
+			  'L2100'     -- A.TENANT_ID
+			, 'LGCKR'     -- A.COMPANY_CODE
+			, 'PL'        -- A.ORG_TYPE_CODE
+			, '1000'      -- A.ORG_CODE
+			, '100990'    -- A.APPROVAL_NUMBER
+			, NULL        -- A.NET_PRICE_DOCUMENT_TYPE_CODE
+			, NULL        -- A.NET_PRICE_SOURCE_CODE
+			, NULL        -- A.QUOTATION_NUMBER
+			, NULL        -- A.QUOTATION_SEQUENCE
+			, NULL        -- A.BIDDING_TYPE_CODE
+			, NULL        -- A.BUYER_EMPNO
+			, NULL        -- A.EFFECTIVE_START_DATE
+			, NULL        -- A.EFFECTIVE_END_DATE
+			, NULL        -- A.TENTPRC_FLAG
+			, NULL        -- A.BASE_PRICE_INPUT_FLAG
+			, NULL        -- A.APPROVAL_EXCL_FLAG
+            , NOW()
+            , NOW()
+            , :I_USER_ID
+            , :I_USER_ID
+            , NOW()
+            , NOW()
+		);
+    END;
+    
+    
+    
+    
+    BEGIN
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            :O_MSG.INSERT(('NG', '단가품의 상세 등록 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')'), 1);
+            RESIGNAL;
+        END;
+       
+        INSERT INTO SP_NP_NET_PRICE_APPROVAL_DTL A (
+			  A.TENANT_ID
+			, A.COMPANY_CODE
+			, A.ORG_TYPE_CODE
+			, A.ORG_CODE
+			, A.APPROVAL_NUMBER
+			, A.ITEM_SEQUENCE
+			, A.LOCAL_CREATE_DTM
+			, A.LOCAL_UPDATE_DTM
+			, A.CREATE_USER_ID
+			, A.UPDATE_USER_ID
+			, A.SYSTEM_CREATE_DTM
+			, A.SYSTEM_UPDATE_DTM
+        )
+        SELECT 
+			    'L2100'     -- A.TENANT_ID
+			  , 'LGCKR'     -- A.COMPANY_CODE
+			  , 'PL'        -- A.ORG_TYPE_CODE
+			  , '1000'      -- A.ORG_CODE
+			  , '100990'    -- A.APPROVAL_NUMBER
+		      , DTL.DTL_SEQ
+              , NOW()
+              , NOW()
+              , :I_USER_ID
+              , :I_USER_ID
+              , NOW()
+              , NOW()
+          FROM :I_DTL  DTL
+        ;
+    END;
+   
+    :O_MSG.INSERT(('OK', 'Successfully Saved.'), 1);
+    	    	                                
+END;

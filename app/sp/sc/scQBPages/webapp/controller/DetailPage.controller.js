@@ -14,13 +14,14 @@ sap.ui.define([
         "sap/ui/core/Component",
         "sap/ui/core/routing/HashChanger",
         "sap/ui/core/ComponentContainer",
+        "../controller/SimpleChangeDialog",
         //"../controller/NonPriceInf"
         // "sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType" , RTE, EditorType
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (BaseController, Filter, FilterOperator,MessageBox,MessageToast, Multilingual, JSONModel,SupplierSelection,Formatter,MaterialMasterDialog,SupplierWithOrgDialog,Component, HashChanger, ComponentContainer) {
+	function (BaseController, Filter, FilterOperator,MessageBox,MessageToast, Multilingual, JSONModel,SupplierSelection,Formatter,MaterialMasterDialog,SupplierWithOrgDialog,Component, HashChanger, ComponentContainer, SimpleChangeDialog) {
         "use strict";
         
 		return BaseController.extend("sp.sc.scQBPages.controller.DetailPage", {
@@ -46,6 +47,8 @@ sap.ui.define([
                     
                     "propInfo": {
                         outCome: "etc",
+                        mode: "",
+                        isNPMode: false,
                         isEditMode: false,
                         isDescEditMode: false
                     },
@@ -59,11 +62,15 @@ sap.ui.define([
                 // var that = this;
 
                 this.viewModel = new JSONModel({
-                    NegoHeaders : {nego_type_code: "", negotiation_output_class_code: ""},
+                    NegoHeaders : {
+                        nego_type_code: "", 
+                        negotiation_output_class_code: "", 
+                        immediate_apply_flag: "Y"
+                    },
                     NPHeader : []
                 });
                 this.getView().setModel(this.viewModel, "viewModel");
-                this.getView().setModel( new JSONModel(this.viewModel.NegoHeaders), "NegoHeaders");
+                this.getView().setModel( new JSONModel(this.viewModel.getData().NegoHeaders), "NegoHeaders");
                 this.getView().setModel( new JSONModel(), "NegoItemPrices");
                 this.getView().setModel( new JSONModel(), "NegoItemSuppliers");
                 
@@ -212,8 +219,15 @@ sap.ui.define([
                 // &$format=json
                 // &$select=*,Items
                 // &$expand=Items
-                
-                 if( e.getParameter("arguments").mode === "NC" )  // Create 모드일 경우는 editmode : true
+                this.getView().getModel("propInfo").setProperty("/mode", e.getParameter("arguments").mode );
+                // RFQ, TSB
+                if( this._type == "RFP" || this._type == "TSB"){
+                    this.getView().getModel("propInfo").setProperty("/isNPMode", true );                    
+                }else {
+                    this.getView().getModel("propInfo").setProperty("/isNPMode", false );
+                }
+
+                if( e.getParameter("arguments").mode === "NC" )  // Create 모드일 경우는 editmode : true
                 {
                     this.getView().getModel("propInfo").setProperty("/isEditMode", true );
 
@@ -726,6 +740,9 @@ sap.ui.define([
                 // Suppliers
                 oView.getModel("NegoItemPrices").setData(this._selectedLineItem);
                 that.getView().byId("panel_SuppliersContent").setExpanded(true);
+                that.getView().byId("panel_Evaluation").setExpanded(true);
+                that.getView().byId("panel_Potential").setExpanded(true);
+                that.getView().byId("panel_Specific").setExpanded(true);
 
             },
 
@@ -1295,10 +1312,17 @@ sap.ui.define([
                     flag = false;
                     errorObject.push("h5");
                 }
-                // if(oHeader.h6.length < 1){
+
+                var ItemCheckFlag = this._NPCheckItem(e, oPopupType, oHeader.h6);
+                // if(ItemCheckFlag == false){
                 //     flag = false;
-                //     errorObject.push("h6");
                 // }
+                // target score 값이 공백이 아니어야 함.
+                if(oHeader.h6.length < 1 || !ItemCheckFlag){
+                    flag = false;
+                    errorObject.push("h6");
+                }
+
 
                 var errItemObject = [];
 
@@ -1340,10 +1364,10 @@ sap.ui.define([
                     this._NPError(e, errorObject, errItemObject, oPopupType);
                 }
                 
-                var ItemCheckFlag = this._NPCheckItem(e, oPopupType, oHeader.h6);
-                if(ItemCheckFlag == false){
-                    flag = false;
-                }
+                // var ItemCheckFlag = this._NPCheckItem(e, oPopupType, oHeader.h6);
+                // if(ItemCheckFlag == false){
+                //     flag = false;
+                // }
 
                 return flag;
 
@@ -1400,37 +1424,42 @@ sap.ui.define([
                 //     }
                 // }
 
-                // Target Score : Item 점수 비교 => Target Score >= Item 점수
-                var Inth6 = parseInt(oTargetScore);
-                
-                for(var i=0; i<oItems.length; i++){
-                    var oItem = oItems[i];
-                    var oCell;
-                    if(IntType == "1"){
-                        oCell = oItem.getCells()[3];
-                        
-                        if(oItem.getCells()[1].getValue() > oItem.getCells()[2].getValue()){
-                            oItem.getCells()[1].setValueState("Error");
-                            oItem.getCells()[1].setValueStateText("ToDate가 From보다 클 수 없음");
-                            oItem.getCells()[2].setValueState("Error");
-                            oItem.getCells()[2].setValueStateText("ToDate가 From보다 클 수 없음");
-                            flag = false;
-                            console.log("from : to =====", oItem.getCells()[1].getValue(), " : ",oItem.getCells()[2].getValue());
-                        }
-                    }else if(IntType == "2"){
-                        oCell = oItem.getCells()[6];
-                    }else if(IntType == "3"){
-                        oCell = oItem.getCells()[8];
-                    }
-                    var value = oCell.getValue();
+                if( oTargetScore != "" ) {
 
-                    if(parseInt(value) > Inth6){
-                        flag = false;
-                        oCell.setValueState("Error");
-                        oCell.setValueStateText("Target Score보다 클 수 없음");
+                    // Target Score : Item 점수 비교 => Target Score >= Item 점수
+                    var Inth6 = parseInt(oTargetScore);
+                    
+                    for(var i=0; i<oItems.length; i++){
+                        var oItem = oItems[i];
+                        var oCell;
+                        if(IntType == "1"){
+                            oCell = oItem.getCells()[3];
+                            
+                            if(oItem.getCells()[1].getValue() > oItem.getCells()[2].getValue()){
+                                oItem.getCells()[1].setValueState("Error");
+                                oItem.getCells()[1].setValueStateText("ToDate가 From보다 클 수 없음");
+                                oItem.getCells()[2].setValueState("Error");
+                                oItem.getCells()[2].setValueStateText("ToDate가 From보다 클 수 없음");
+                                flag = false;
+                                console.log("from : to =====", oItem.getCells()[1].getValue(), " : ",oItem.getCells()[2].getValue());
+                            }
+                        }else if(IntType == "2"){
+                            oCell = oItem.getCells()[6];
+                        }else if(IntType == "3"){
+                            oCell = oItem.getCells()[8];
+                        }
+                        var value = oCell.getValue();
+    
+                        if(parseInt(value) > Inth6){
+                            flag = false;
+                            oCell.setValueState("Error");
+                            oCell.setValueStateText("Target Score보다 클 수 없음");
+                        }
+                        console.log("index ==== ",i);
+                        console.log("targetScore : 점수 ==== ", Inth6, " : ", parseInt(value));
                     }
-                    console.log("index ==== ",i);
-                    console.log("targetScore : 점수 ==== ", Inth6, " : ", parseInt(value));
+                }else {
+                    flag = false;
                 }
 
                 return flag;
@@ -1534,6 +1563,44 @@ sap.ui.define([
                     fromDate.setEnabled(false);
                 }
             },
+
+            /** Simple Change Start  **/
+            onSimpleChangePress: function() {
+                 if (!this._SimpleChangeDialog) {
+                    this._SimpleChangeDialog = sap.ui.xmlfragment("SimpleChangeDialog", "sp.sc.scQBPages.view.SimpleChangeDialog", this);
+                    // var NPInfPopupUtil = new JSONModel({ type: "1" });
+                    // this.getView().setModel(NPInfPopupUtil, "NPInfPopupUtil");
+
+
+                    this.getView().addDependent(this._SimpleChangeDialog);
+                    // this._isAddPersonalPopup = true;
+                }
+                
+                this._SimpleChangeDialog.open();
+                // if(!this.oSimpleChangeDialog){
+                //     this.oSimpleChangeDialog = new SimpleChangeDialog({
+                //         title: "Choose MaterialMaster",
+                //         MultiSelection: true,
+                //         items: {
+                //             filters: [
+                //                 new Filter("tenant_id", "EQ", "L1100")
+                //             ]
+                //         }
+                //     });
+                //     // this.oSimpleChangeDialog.attachEvent("apply", function(oEvent){
+                //     //     materialItem = oEvent.mParameters.item;
+
+                //     //     this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[5].getAggregation("items")[0].setValue(materialItem.material_code);
+                //     //     this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[6].getAggregation("items")[0].setValue(materialItem.material_desc);
+                //     //     console.log("materialItem : ", materialItem);
+
+                //     // }.bind(this));
+
+                // }
+                // this.oSimpleChangeDialog.open();
+            },
+
+            /** Simple Change End  **/
 
 
             

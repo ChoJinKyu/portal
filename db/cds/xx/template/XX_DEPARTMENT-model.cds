@@ -17,9 +17,17 @@ entity Department {
         sort_number                  : Decimal;
         full_path_desc               : String(300);
 
-        parent                       : Association to xx.Company
+        company                      : Association to xx.Company
+                                        on  company.tenant_id  = tenant_id
+                                        and company.company_code = company_code;
+                                        
+        parent                       : Association to Department
                                         on  parent.tenant_id  = tenant_id
-                                        and parent.company_code = company_code;
+                                        and parent.department_code = parent_department_code;
+                                        
+        children                     : Composition of many Department
+                                        on  children.tenant_id  = tenant_id
+                                        and children.parent_department_code = department_code;
 }
 
 extend Department with util.Managed;

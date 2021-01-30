@@ -88,23 +88,13 @@
                                 displayFormat='yyyy-MM'
                                 valueFormat ="yyyy-MM"
                                 value="{applicationSup>/popUpInvestPlanMst/investment_yyyymm}"/>
-                            <!-- <DatePicker editable="true"
-                                value="{
-                                    path:'',
-                                    type:'sap.ui.model.odata.type.Date',
-                                    formatOptions: {
-                                        UTC: true, format: 'yM'
-                                    }
-                                }"/> -->
                             <layoutData>
                                <layout:GridData span="XL3 L3 M3 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="신청금액(원) :" required="true"/>
-                            <Input editable="{midObjectView>/editMode}"
-                                    value="{applicationSup>/popUpInvestPlanMst/appl_amount}"
-                                    type="Number"/>
+                            <Input type="Number" value="{path: 'applicationSup>/popUpInvestPlanMst/appl_amount', type: 'sap.ui.model.type.Integer'}"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S12" />
                             </layoutData>
@@ -139,9 +129,7 @@
                         </VBox>
                         <VBox>
                             <Label text="년간 예상물동 :" required="true"/>
-                            <Input editable="{midObjectView>/editMode}"
-                                    value="{applicationSup>/popUpInvestPlanMst/annual_mtlmob_quantity}"
-                                    type="Number"/>
+                            <Input type="Number" value="{path: 'applicationSup>/popUpInvestPlanMst/annual_mtlmob_quantity', type: 'sap.ui.model.type.Integer'}"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S12" />
                             </layoutData>

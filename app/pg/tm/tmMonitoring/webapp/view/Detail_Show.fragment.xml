@@ -8,20 +8,7 @@
             type="{= ${activate_flag} === true? 'Information' : 'Warning'}"/>
 		<f:SimpleForm 
             editable="false" 
-            layout="ResponsiveGridLayout" 
-            labelSpanXL="4" 
-            labelSpanL="4" 
-            labelSpanM="4" 
-            labelSpanS="12" 
-            adjustLabelSpan="false" 
-            emptySpanXL="0" 
-            emptySpanL="0" 
-            emptySpanM="0" 
-            emptySpanS="0" 
-            columnsXL="3" 
-            columnsL="2" 
-            columnsM="2" 
-            singleContainerFullSize="false">
+            layout="ResponsiveGridLayout">
 			<f:content id="informationPageSectionForm">
 				<Label text="{I18N>/TYPE_NAME}"/>
 				<Text text="{monitoring_type_name}" width="100%"/>

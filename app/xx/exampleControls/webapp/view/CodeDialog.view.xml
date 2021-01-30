@@ -5,6 +5,7 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout"
     xmlns:cm-ui="cm.util.control.ui"
+    xmlns:op-ui="op.util.control.ui"
     height="100%">
 
     <Page id="page" 
@@ -114,6 +115,70 @@
                                  <layout:GridData span="XL10 L10 M10 S10" />
                             </layoutData>
                         </VBox>
+
+                        <!-- OP-->
+
+                        <VBox>
+                            <Label text="Account (op.util.control.ui.AccountDialog): " labelFor="multiInputWithAccountValueHelp"></Label>
+                             <MultiInput id="multiInputWithAccountValueHelp"
+                                placeholder="Choose Accounts"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputWithAccountPress">
+                            </MultiInput> 
+                            <layoutData>
+                                 <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>
+
+
+                        <VBox>
+                            <Label text="Asset (op.util.control.ui.AssetDialog): " labelFor="multiInputWithAssetValueHelp"></Label>
+                             <MultiInput id="multiInputWithAssetValueHelp"
+                                placeholder="Choose Assets"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputWithAssetPress">
+                            </MultiInput> 
+                            <layoutData>
+                                 <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>
+
+                        <VBox>
+                            <Label text="Cost Center (op.util.control.ui.CctrDialog): " labelFor="multiInputWithCctrValueHelp"></Label>
+                             <MultiInput id="multiInputWithCctrValueHelp"
+                                placeholder="Choose Cctrs"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputWithCctrPress">
+                            </MultiInput> 
+                            <layoutData>
+                                 <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>
+
+                        <VBox>
+                            <Label text="Order (op.util.control.ui.OrderDialog): " labelFor="multiInputWithOrderValueHelp"></Label>
+                             <MultiInput id="multiInputWithOrderValueHelp"
+                                placeholder="Choose Orders"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputWithOrderPress">
+                            </MultiInput> 
+                            <layoutData>
+                                 <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>
+
+                       
+
+                         <VBox>
+                            <Label text="Account (cm.util.control.ui.WbsDialog): " labelFor="multiInputWithWbsValueHelp"></Label>
+                             <MultiInput id="multiInputWithWbsValueHelp"
+                                placeholder="Choose WBS"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputWithWbsPress">
+                            </MultiInput> 
+                            <layoutData>
+                                 <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>
+
+
+                        <!-- OP End-->
+
 
                         <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
                             <Button text="Open Employee Dialog" type="Transparent" press=".onInputWithCompanyDetailValuePress"/>

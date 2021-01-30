@@ -86,11 +86,8 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column minScreenWidth="Tablet" hAlign="Center" width="10rem">
-                            <Label text="{I18N>/CODE}" />
-                        </Column>
                         <Column minScreenWidth="Tablet" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Label text="{I18N>/NAME}" />
+                            <Label text="{I18N>/COMPANY}" />
                         </Column>
                         <Column minScreenWidth="Tablet" hAlign="Center" width="7rem">
                             <Label text="{I18N>/CURRENCY}" />
@@ -101,17 +98,18 @@
                         <Column minScreenWidth="Tablet" hAlign="Center" width="7rem">
                             <Label text="{I18N>/LANGUAGE}" />
                         </Column>
+                        <Column minScreenWidth="Tablet" hAlign="Center" width="7rem">
+                            <Label text="Using" />
+                        </Column>
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>
-                                <ObjectIdentifier text="{list>company_code}"/>
-                                <ObjectIdentifier text="{list>company_name}"/>
-                                <Text text="{list>currency_code}" />
-                                <Text text="{list>country_code}" />
-                                <Text text="{list>language_code}" />
-                                <ObjectStatus
-                                    icon="{= ${list>use_flag} === true ? 'sap-icon://accept' : ''}"/>
+                                <ObjectIdentifier title="{list>company_code}" text="{list>company_name}"/>
+                                <ObjectIdentifier text="{list>currency_name}, {list>currency_code}"/>
+                                <ObjectIdentifier text="{list>country_name}, {list>country_code}"/>
+                                <ObjectIdentifier text="{list>language_name}, {list>language_code}"/>
+                                <ObjectStatus icon="{= ${list>use_flag} === true ? 'sap-icon://accept' : ''}"/>
                             </cells>
                         </ColumnListItem>
                     </items>
