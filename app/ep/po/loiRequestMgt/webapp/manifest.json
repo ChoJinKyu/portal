@@ -173,6 +173,7 @@
     "resourceRoots": {
       "ext.lib": "../../../../lib",
       "cm.util": "../../../../cm/util",
+      "sp.util": "../../../../sp/util",  
       "ext.util": "../../../util",
       "ext.pg": "../../../../pg"
     },
@@ -204,8 +205,8 @@
 					]
 				},
 				{
-					"pattern": "midObject/{layout}/{tenantId}/{companyCode}/{loiWriteNumber}",
-					"name": "midPage",
+					"pattern": "midObject/{tenantId}/{companyCode}/{loiWriteNumber}",
+					"name": "requestPage",
 					"target": [
 						"midObject"
 					]
@@ -220,7 +221,7 @@
                 },
 				"midObject": {
                     "viewName": "MidObject",
-                    "viewId": "midPage",
+                    "viewId": "requestPage",
                     "viewLevel": 2
 				},
 				"notFound": {

@@ -11,6 +11,7 @@
     xmlns:lib-m="ext.lib.control.m"
     xmlns:t="sap.ui.table"
     xmlns:cm-ui="cm.util.control.ui"
+    xmlns:sp-ui="sp.util.control.ui"
     xmlns:html="http://www.w3.org/1999/xhtml"
 	height="100%">
 
@@ -151,10 +152,6 @@
 			<uxap:ObjectPageSection titleUppercase="false" title="대상품목">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-
-
-
-                    
 						<Table id="midTable" 
 								sticky="HeaderToolbar,ColumnHeaders" 
 								inset="false" 
@@ -206,7 +203,7 @@
                                 <Column id="midCurrencyCodeColumn" minScreenWidth="Tablet" hAlign="Center" width="70px">
 									<Label text="통화" />
 								</Column>
-                                <Column id="midRequestNetPrice" minScreenWidth="Tablet" hAlign="End" width="100px">
+                                <Column id="midRequestNetPrice" minScreenWidth="Tablet" hAlign="Right" width="100px">
 									<Label text="단가" />
 								</Column>
                                 <Column id="midRequestAmountColumn" minScreenWidth="Tablet" hAlign="Center" width="100px">
@@ -547,9 +544,17 @@
                                     </HBox>  
 
                                     <HBox>   
-                                        <Input value="{details>supplier_code}" 
+                                        <!-- <Input value="{details>supplier_code}" 
                                             visible="{=!${midObjectView>/isShowMode}}"
-                                            width="100%"/>  
+                                            width="100%"/> -->
+
+                                        <MultiInput value="{details>supplier_code}" 
+                                            id="multiinput_supplierwithorg_code" placeholder="{I18N>/SUPPLIER}"
+                                            showValueHelp="true" valueHelpRequest=".onMultiInputSupplierWithOrgValuePress"
+                                            visible="{=!${midObjectView>/isShowMode}}">
+                                        </MultiInput>
+
+
                                         <!-- <Input id="search_Sup" placeholder="Input data" 
                                                showValueHelp="true" 
                                                valueHelpOnly="false" 
@@ -676,13 +681,23 @@
                         />
 
     <cm-ui:PlantDialog id="plantDialog" 
-                            title="직원 검색"
+                            title="플랜트 검색"
                             items="{
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                 ]
                             }"
                             apply=".onPlantDialogApplyPress"
+                        />
+
+    <sp-ui:SupplierWithOrgDialog id="supplierWithOrgDialog" 
+                            title="공급업체 검색"
+                            items="{
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                ]
+                            }"
+                            apply=".onSupplierDialogApplyPress"
                         />
 
 </mvc:View>
