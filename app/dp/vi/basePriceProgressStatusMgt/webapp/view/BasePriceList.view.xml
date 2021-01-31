@@ -12,7 +12,7 @@
   height="100%">
     <f:DynamicPage
         headerExpanded="true"
-        showFooter="true"
+        fitContent="true"
         toggleHeaderOnTitleClick="true">
         <f:title>
             <f:DynamicPageTitle>
@@ -38,11 +38,7 @@
                             <ComboBox
                                 width="100%"
                                 selectedKey="{filterModel>/type}"
-                                items="{
-                                path: 'filterModel>/type_list',
-                                filters: [
-                                ]
-                                }">
+                                items="{filterModel>/type_list}">
                                 <items>
                                 <core:Item key="{filterModel>code}" text="{filterModel>code_name}" />
                                 </items>
@@ -87,13 +83,6 @@
                         <!-- Plant 끝 -->
 
                         <!-- Material Code 시작 -->
-                        <!-- <VBox>
-                            <Label text="{I18N>/MATERIAL_CODE}"></Label>
-                            <SearchField value="{filterModel>/materialCode}" search=".onGetMaterialCodeDialogData" />
-                            <layoutData>
-                                <layout:GridData span="XL2 L4 M6 S12" />
-                            </layoutData>
-                        </VBox> -->
                         <VBox>
                             <Label text="{I18N>/MATERIAL_CODE}" />
                             <MultiInput
@@ -133,24 +122,14 @@
                         <VBox height="56px">
                             <Label text="{I18N>/REQUESTOR}"></Label>
                             <MultiInput id="multiInputWithEmployeeValueHelp"
-                            placeholder="Choose employees from the ValueHelp"
-                            showValueHelp="true" valueHelpRequest=".onMultiInputWithEmployeeValuePress">
+                                placeholder="Choose employees from the ValueHelp"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputWithEmployeeValuePress">
                             </MultiInput>
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
                         </VBox>
                         <!-- Requset By 끝 -->
-
-                        <!-- Agreed By 시작 -->
-                        <!-- <VBox>
-                            <Label text="{I18N>/AGREED_BY}"></Label>
-                            <SearchField value="{filterModel>/agreedBy}" />
-                            <layoutData>
-                                <layout:GridData span="XL2 L4 M6 S12" />
-                            </layoutData>
-                        </VBox> -->
-                        <!-- Agreed By 끝 -->
 
                         <!-- Status 시작 -->
                         <VBox>
@@ -169,26 +148,12 @@
                             </layoutData>
                         </VBox>
                         <!-- Status 끝 -->
-
-                        <!-- <VBox>
-                            <Label text="임시 tenant"></Label>
-                            <ComboBox
-                                width="100%"
-                                selectedKey="{basePriceProgressStatusMgtRootModel>/tenantId}"
-                                items="{basePriceProgressStatusMgtRootModel>/tenantList}">
-                                <items>
-                                <core:Item key="{basePriceProgressStatusMgtRootModel>tenant_id}" text="{basePriceProgressStatusMgtRootModel>tenant_name}" />
-                                </items>
-                            </ComboBox>
-                            <layoutData>
-                                <layout:GridData span="XL2 L4 M6 S12" />
-                            </layoutData>
-                        </VBox> -->
                     </form:content>
                 </form:SimpleForm>
                 <!--Filterbar 끝-->
             </f:DynamicPageHeader>
         </f:header>
+        
         <f:content>
             <!--Base Price List 시작-->
             <t:Table id="listTable"
@@ -210,7 +175,6 @@
                         <Label text="{I18N>/APPROVAL_NUMBER}" textAlign="Center" />
                         <t:template>
                             <Link text="{listModel>approval_number}" press=".onGoDetail" />
-                            <!-- <Text text="{listModel>approval_number}" /> -->
                         </t:template>
                     </t:Column>
                     <t:Column width="18rem">

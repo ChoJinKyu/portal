@@ -25,12 +25,12 @@
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
                     <HBox alignItems="End">
-                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBack" />
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onGoToList" />
                         <Title text="{I18N>/NEW_BASE_PRICE}" wrapping="true"/>
                     </HBox>
 				</uxap:expandedHeading>
                 <!-- <uxap:navigationActions>
-					<OverflowToolbarButton icon="sap-icon://decline" text="{I18N>/BACK}" press=".onBack" />
+					<OverflowToolbarButton icon="sap-icon://decline" text="{I18N>/BACK}" press=".onGoToList" />
                 </uxap:navigationActions> -->
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -112,8 +112,6 @@
                                 <VBox>
                                     <Label text="{I18N>/DESCRIPTION}" required="true"/>
                                     <!-- Text Editor 시작 -->
-                                    <!-- <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
-                                    </layout:VerticalLayout> -->
                                     <rte:RichTextEditor 
                                         width="100%" 
                                         height="200px" 
@@ -176,74 +174,6 @@
 						<uxap:blocks>
                             <!-- Approval & Reference 시작 -->
                             <core:Fragment fragmentName="dp.vi.basePriceArlMgt.view.ApprovalLine" type="XML" />
-                            <!-- <VBox>
-                            <Table id="ApprovalTable"
-                                    growing="true"
-                                    growingThreshold="20"
-                                    class="sapFDynamicPageAlignContent"
-                                    mode="None"
-                                    width="auto"
-                                    items="{appdetailModel>/undefined}"
-                                    >
-                                <headerToolbar>
-                                    <OverflowToolbar>
-                                    <Label text="Approval Line"/>
-                                    </OverflowToolbar>
-                                </headerToolbar>
-                                <columns>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="3rem" >
-                                        <Text text="No." />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="6em" >
-                                        <Text text="Type" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" width="16em" >
-                                        <Text text="Name/Dept" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Comment" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" width="6em" >
-                                        <Text text="Status" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" width="8em" >
-                                        <Text text="Add / Delete" />
-                                    </Column>
-                                </columns>
-                                <items>
-                                    <ColumnListItem>
-                                        <cells>
-                                            <Text text="{appdetailModel>no}" />
-                                            <ComboBox  width="100%"
-                                                selectedKey="{appdetailModel>type}"
-                                                enabled="{appdetailModel>editMode}"
-                                                items="{
-                                                    path: 'org>/Org_Company',
-                                                    filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                    ],
-                                                    sorter: { path: 'company_code'},
-                                                    templateShareable:false
-                                                }"
-                                                >
-                                            <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
-                                            </ComboBox>
-                                            <SearchField enabled="{appdetailModel>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appdetailModel>nameDept}"/>
-                                            <Text text="{appdetailModel>status}" />
-                                            <Text text="{appdetailModel>comment}" />
-                                            <Button icon="{appdetailModel>arrowUp}" press=".onSortUp(${appdetailModel>no})" tooltip="sort" visible="{= ${appdetailModel>arrowUp}===''?false:true }"></Button>
-                                            <Button icon="{appdetailModel>arrowDown}" press=".onSortDown(${appdetailModel>no})"  visible="{= ${appdetailModel>arrowDown}===''?false:true }" tooltip="sort"></Button>
-                                            <Button icon="sap-icon://delete" press=".setApprovalRemoveRow(${appdetailModel>no})" tooltip="삭제" visible="{appdetailModel>trashShow}"></Button>
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>
-                            </Table>
-
-                            <Text text="Referrer" />
-                            <Input value="{detailModel>/abc}"
-                                showValueHelp="true"
-                                valueHelpRequest=".onOpenMaterialCode" />
-                            </VBox> -->
                             <!-- Approval & Reference 끝 -->
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
@@ -259,7 +189,7 @@
                 <Button
                     text="{I18N>/CHANGE_DEVELOPER}"
                     enabled="{= ${detailViewModel>/viewMode}}"
-                    press=".onDeveloping" />
+                    press=".onMultiInputWithEmployeeValuePress($event, 'changeDeveloper')" />
                 <Button
                     text="{I18N>/EDIT}" 
                     enabled="{= !${detailViewModel>/viewMode}}"
@@ -269,7 +199,7 @@
                     enabled="{= ${detailModel>/approve_status_code} === '10' ? true : false}"
                     press=".onPreview" /> -->
                 <!-- <Button
-                    text="{I18N>/CANCEL}" press=".onBack" /> -->
+                    text="{I18N>/CANCEL}" press=".onGoToList" /> -->
 				<Button
                     text="{I18N>/DRAFT}" 
                     enabled="{= ${detailViewModel>/viewMode}}"

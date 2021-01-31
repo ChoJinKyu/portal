@@ -26,22 +26,6 @@
             <t:Column width="18rem">
                 <Label text="{I18N>/COMPANY}" textAlign="Center" width="100%" />
                 <t:template>
-                    <!-- <ComboBox width="100%" 
-                        editable="{= ${detailViewModel>/viewMode} &amp;&amp; ${rootModel>/config/DP_VI_COMPANY_EDITABLE_FLAG} === 'Y' ? true : false}"
-                        selectedKey="{detailModel>company_code}" 
-                        items="{
-                            path: 'org>/Company',
-                            filters: [
-                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                            ],
-                            sorter: { path: 'company_code'},
-                            templateShareable:false
-                        }"
-                        change=".onChangeCompany">
-                        <items>
-                            <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
-                        </items>
-                    </ComboBox> -->
                     <Text text="{detailModel>company_code}" />
                 </t:template>
             </t:Column>
@@ -49,19 +33,6 @@
             <t:Column width="18rem">
                 <Label  text="{I18N>/DP_VI_AP_PUR_ORG}" textAlign="Center" width="100%" />
                 <t:template>
-                    <!-- <Text text="{detailModel>org_code}" /> -->
-                    <!-- <ComboBox width="100%"
-                        editable="{detailViewModel>/viewMode}"
-                        selectedKey="{
-                            path: 'detailModel>org_code',
-                            templateShareable:false}" 
-                        items="{
-                            path: 'detailModel>purOrg',
-                            templateShareable:false}">
-                        <items>
-                            <core:Item key="{detailModel>org_code}" text="[{detailModel>org_code}]{detailModel>org_name}" />
-                        </items>
-                    </ComboBox> -->
                     <Text text="{detailModel>org_name}" />
                 </t:template>
             </t:Column>

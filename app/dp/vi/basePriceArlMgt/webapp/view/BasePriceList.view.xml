@@ -36,7 +36,6 @@
                     <!-- Type 시작 -->
                     <VBox>
                         <Label text="{I18N>/APPROVAL_TYPE_CODE} "></Label>
-                        <!-- <Label text="Type"></Label> -->
                         <ComboBox
                             width="100%"
                             selectedKey="{filterModel>/type}"
@@ -54,7 +53,6 @@
                     <!-- Approval Number 시작 -->
                     <VBox>
                         <Label text="{I18N>/APPROVAL_NUMBER} " />
-                        <!-- <Label text="Approval Number" /> -->
                         <Input value="{filterModel>/approvalNumber}" change=".onSearch" />
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
@@ -65,7 +63,6 @@
                     <!-- Approval Title 시작 -->
                     <VBox>
                         <Label text="{I18N>/APPROVAL_TITLE} " />
-                        <!-- <Label text="Approval Title" /> -->
                         <Input value="{filterModel>/approvalTitle}" change=".onSearch" />
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
@@ -76,7 +73,6 @@
                     <!-- Request Date 시작 -->
                     <VBox>
                         <Label text="{I18N>/REQUEST_DATE} "></Label>
-                        <!-- <Label text="Request Date"></Label> -->
                         <DateRangeSelection
                              value="{
                                     parts: [
@@ -95,11 +91,9 @@
                     <!-- Request By 시작 -->
                     <VBox height="56px">
                         <Label text="{I18N>/REQUESTOR} "></Label>
-                        <!-- <Label text="Request By"></Label> -->
-                        <!-- <SearchField value="{filterModel>/requestBy}" /> -->
                         <MultiInput id="multiInputWithEmployeeValueHelp"
                             placeholder="Choose employees from the ValueHelp"
-                            showValueHelp="true" valueHelpRequest=".onMultiInputWithEmployeeValuePress">
+                            showValueHelp="true" valueHelpRequest=".onMultiInputWithEmployeeValuePress($event, 'multiInputWithEmployeeValueHelp')">
                         </MultiInput>
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
@@ -110,52 +104,36 @@
                     <!-- Status 시작 -->
                     <VBox>
                         <Label text="{I18N>/STATUS} "></Label>
-                        <!-- <Label text="Status"></Label> -->
-                        <SegmentedButton id="searchStatusS" selectedKey="{filterModel>/status}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
-                            <items>
-                                <SegmentedButtonItem text="{I18N>/ALL}" key="" />
-                                <SegmentedButtonItem text="{rootModel>/processList/0/code_name}" key="{rootModel>/processList/0/code}" width="4.7rem" />
-                                <SegmentedButtonItem text="{rootModel>/processList/1/code_name}" key="{rootModel>/processList/1/code}" width="5.2rem" />
-                                <SegmentedButtonItem text="{rootModel>/processList/2/code_name}" key="{rootModel>/processList/2/code}" width="4.8rem" />
-                                <SegmentedButtonItem text="{rootModel>/processList/3/code_name}" key="{rootModel>/processList/3/code}" width="4.5rem" />
-                                <SegmentedButtonItem text="{rootModel>/processList/4/code_name}" key="{rootModel>/processList/4/code}" width="4.5rem" />
-                            </items>
-                        </SegmentedButton>
-                        <layoutData>
-                            <layout:GridData span="XL4 L4 M6 S12" />
-                        </layoutData>
-                    </VBox>
-                    <!-- Status 끝 -->
-                    <!-- <VBox>
-                        <Label text="임시 tenant"></Label>
                         <ComboBox
                             width="100%"
-                            selectedKey="{basePriceProgressStatusMgtRootModel>/tenantId}"
-                            items="{basePriceProgressStatusMgtRootModel>/tenantList}">
+                            selectedKey="{filterModel>/status}"
+                            items="{rootModel>/processList}">
                             <items>
-                            <core:Item key="{basePriceProgressStatusMgtRootModel>tenant_id}" text="{basePriceProgressStatusMgtRootModel>tenant_name}" />
+                            <core:Item key="{rootModel>code}" text="{rootModel>code_name}" />
                             </items>
                         </ComboBox>
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
-                    </VBox> -->
+                    </VBox>
+                    <!-- Status 끝 -->
                 </form:content>
             </form:SimpleForm>
             <!--Filterbar 끝-->
         </f:DynamicPageHeader>
       </f:header>
+      
       <f:content>
         <!--Base Price List 시작-->
         <t:Table id="listTable"
             selectionMode="None"
             rows="{listModel>/results}"
+            cellClick=".onGoDetail"
             visibleRowCountMode="Auto">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                     <Title text="{I18N>/BASE_PRICE_LIST} ({= ${listModel>/results}.length || 0})" level="H2"/>
                     <ToolbarSpacer />
-                    <!-- <Button text="{I18N>/CREATE}" press=".onGoDetail" /> -->
                     <Button text="{I18N>/CREATE}" press=".onOpenCreateDialog" />
                     <ToolbarSeparator/>
                     <Button icon="sap-icon://excel-attachment" press=".onExcelExport" >
@@ -179,24 +157,14 @@
                 <t:Column hAlign="Center" width="10rem">
                     <Label text="{I18N>/APPROVAL_NUMBER}" textAlign="Center" />
                     <t:template>
-                        <Link text="{listModel>approval_number}" press=".onGoDetail" />
+                        <!-- <Link text="{listModel>approval_number}" press=".onGoDetail" /> -->
+                        <Text text="{listModel>approval_number}" />
                     </t:template>
                 </t:Column>
                 <t:Column>
                     <Label text="{I18N>/APPROVAL_TITLE}" textAlign="Center" width="100%" />
                     <t:template>
                         <Text text="{listModel>approval_title}" tooltip="{listModel>approval_title}" />
-                    </t:template>
-                </t:Column>
-                <t:Column hAlign="Center" width="12rem">
-                    <Label text="{I18N>/STATUS}" textAlign="Center" width="100%" />
-                    <t:template>
-                        <tnt:InfoLabel 
-                            text="{listModel>approve_status_code_nm}" 
-                            colorScheme="{
-                                path: 'listModel>approve_status_code',
-                                formatter: '.onStatusColor'
-                            }" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="7rem">
@@ -212,6 +180,23 @@
                     <t:template>
                         <Text text="{listModel>requestor_local_nm} {listModel>requestor_job_title} / {listModel>requestor_dept_local_nm}" 
                             tooltip="{listModel>requestor_local_nm} {listModel>requestor_job_title} / {listModel>requestor_dept_local_nm}"  />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/STATUS}" textAlign="Center" width="100%" />
+                    <t:template>
+                        <tnt:InfoLabel 
+                            text="{listModel>approve_status_code_nm}" 
+                            colorScheme="{
+                                path: 'listModel>approve_status_code',
+                                formatter: '.onStatusColor'
+                            }" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="2rem">
+                    <Label text="" />
+                    <t:template>
+                        <ObjectStatus icon="sap-icon://feeder-arrow" />
                     </t:template>
                 </t:Column>
             </t:columns>

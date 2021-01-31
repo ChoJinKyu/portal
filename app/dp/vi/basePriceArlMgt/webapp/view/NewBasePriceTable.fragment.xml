@@ -116,7 +116,8 @@
                         items="{
                             path: 'detailViewModel>/basis',
                             templateShareable:false}"
-                        selectedKey="{detailModel>base_price_ground_code}">
+                        selectedKey="{detailModel>base_price_ground_code}"
+                        change=".onChangeBasis">
                         <items>
                             <core:Item key="{detailViewModel>code}" text="{detailViewModel>code_name}" />
                         </items>
@@ -187,6 +188,7 @@
                                 }
                             }" 
                         visible="{detailViewModel>/viewMode}"
+                        editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
                         textAlign="End" />
                     <Text text="{
                                 parts: [
@@ -208,6 +210,7 @@
                     <VBox>
                     <ComboBox
                         visible="{detailViewModel>/viewMode}"
+                        editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
                         items="{
                             path: 'detailViewModel>/currency',
                             templateShareable:false}"
@@ -250,6 +253,7 @@
                                 }
                             }" 
                         visible="{detailViewModel>/viewMode}"
+                        enabled="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
                         textAlign="End" />
                     <Text text="{
                                 parts: [
@@ -274,6 +278,7 @@
                     <VBox>
                     <ComboBox
                         visible="{detailViewModel>/viewMode}"
+                        enabled="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
                         items="{
                             path: 'detailViewModel>/currency',
                             templateShareable:false}"
@@ -316,6 +321,7 @@
                                 }
                             }" 
                         visible="{detailViewModel>/viewMode}"
+                        enabled="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
                         textAlign="End" />
                     <Text text="{
                                 parts: [
@@ -343,6 +349,7 @@
                         items="{
                             path: 'detailViewModel>/currency',
                             templateShareable:false}"
+                            enabled="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
                         selectedKey="{detailModel>prices/1/new_base_price_currency_code}">
                         <items>
                             <core:Item key="{detailViewModel>currency_code}" text="{detailViewModel>currency_code}" />
@@ -376,12 +383,9 @@
                     <Input
                         value="{detailModel>PART_NO}"
                         editable="{detailViewModel>/viewMode}"
-                        visible="{= ${detailModel>base_price_ground_code} === '30' ? true : false }"
+                        visible="{= ${detailModel>base_price_ground_code} === ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
                         showValueHelp="true"
-                        valueHelpRequest=".onDeveloping" >
-                        <customData>
-                            <core:CustomData key="dialog" value="familyMaterialCode"  />
-                        </customData>
+                        valueHelpRequest=".onOpenFamilyMaterialCodeDialog" >
                     </Input>
                 </t:template>
                 </t:Column>

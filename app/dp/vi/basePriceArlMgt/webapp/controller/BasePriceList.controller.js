@@ -17,9 +17,13 @@ sap.ui.define([
     return BaseController.extend("dp.vi.basePriceArlMgt.controller.BasePriceList", {
         dateFormatter: DateFormatter,
 
+        /**
+         * status code에 따라 상태를 나타내는 색 세팅
+         */
         onStatusColor: function (sStautsCodeParam) {
             var sReturnValue = 1;
 
+            // AR: Approval Request, IA: In progress Approval, AP: Approved, RJ: Rejected
             if( sStautsCodeParam === "AR" ) {
                 sReturnValue = 8;
             }else if( sStautsCodeParam === "IA" ) {
@@ -37,14 +41,17 @@ sap.ui.define([
             var oRootModel = this.getOwnerComponent().getModel("rootModel");
             sTenantId = oRootModel.getProperty("/tenantId");
 
+            // 초기 filter값 세팅
             var oToday = new Date();
             var oFilter = {tenantId: sTenantId,
                         dateValue: new Date(this._changeDateString(new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30), "-")),
                         secondDateValue: new Date(this._changeDateString(oToday, "-"))};
+            // 기준단가 목록 테이블 모델 세팅                        
             this.setModel(new JSONModel(), "listModel");
+            // filter 모델 세팅
             this.setModel(new JSONModel(oFilter), "filterModel");
 
-            // 품의 유형 조회
+            // 품의 유형 조회 시작
             var aApprovalTypeCodeFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId")),
                                         new Filter("group_code", FilterOperator.EQ, "DP_VI_APPROVAL_TYPE")];
             this.getOwnerComponent().getModel("commonODataModel").read("/Code", {
@@ -58,8 +65,9 @@ sap.ui.define([
                     console.log("error", data);
                 }
             });
+            // 품의 유형 조회 끝
 
-            // Dialog에서 사용할 Model 생성
+            // Dialog에서 사용할 Model 세팅
             this.setModel(new JSONModel({materialCode: [], familyMaterialCode: [], supplier: []}), "dialogModel");
 
             this.getRouter().getRoute("basePriceList").attachPatternMatched(this.onSearch, this);
@@ -81,7 +89,7 @@ sap.ui.define([
             var oSecondDateValue = oFilterModelData.secondDateValue;
             var aRequestors = this.byId("multiInputWithEmployeeValueHelp").getTokens();
 
-            // 유형이 있는 경우
+            // 품의유형이 있는 경우
             if( sType ) {
                 aFilters.push(new Filter("approval_type_code", FilterOperator.EQ, sType));
             }
@@ -151,8 +159,9 @@ sap.ui.define([
          */
         onGoDetail: function (oEvent) {
             var oListModel = this.getModel("listModel");
-            var oBindingContext = oEvent.getSource().getBindingContext("listModel");
+            var oBindingContext = oEvent.getParameter("rowBindingContext");
 
+            // 테이블 Row를 클릭했을 경우
             if( oBindingContext ) {
                 var approvalTarget = "";
                 var sPath = oBindingContext.getPath();
@@ -167,7 +176,9 @@ sap.ui.define([
                 }
 
                 this.getModel("rootModel").setProperty("/selectedApprovalType", approvalTarget);
-            }else {
+            }
+            // 생성버튼 클릭했을 경우
+            else {
                 this.getModel("rootModel").setProperty("/selectedData", {});
             }
 
@@ -284,29 +295,6 @@ sap.ui.define([
                 oDialog.close();
             });
         },
-
-        /**
-         * 요청자 Dialog
-         */
-        onMultiInputWithEmployeeValuePress: function(){
-            if(!this.oEmployeeMultiSelectionValueHelp){
-                this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
-                    title: "Choose Employees",
-                    multiSelection: true,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, sTenantId)
-                        ]
-                    }
-                });
-                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
-                    this.byId("multiInputWithEmployeeValueHelp").setTokens(oEvent.getSource().getTokens());
-                }.bind(this));
-            }
-            this.oEmployeeMultiSelectionValueHelp.open();
-            this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("multiInputWithEmployeeValueHelp").getTokens());
-        },
-
         /**
          * ==================== Dialog 끝 ==========================
          */
