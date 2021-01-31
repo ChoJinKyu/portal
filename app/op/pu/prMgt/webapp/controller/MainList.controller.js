@@ -764,88 +764,88 @@ sap.ui.define([
         },
 
 
-        onMultiInputWithOrderPress: function(){
-            if(!this.oOrderMultiSelectionValueHelp){
-                this.oOrderMultiSelectionValueHelp = new OrderDialog({
-                    title: "Choose Orders",
-                    multiSelection: true,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                            new Filter("company_code", FilterOperator.EQ, "LGCKR"),
-                        ]
-                    }
-                });
-                this.oOrderMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
-                    this.byId("multiInputWithOrderValueHelp").setTokens(oEvent.getSource().getTokens());
-                }.bind(this));
-            }
-            this.oOrderMultiSelectionValueHelp.open();
-            this.oOrderMultiSelectionValueHelp.setTokens(this.byId("multiInputWithOrderValueHelp").getTokens());
-        },
+        // onMultiInputWithOrderPress: function(){
+        //     if(!this.oOrderMultiSelectionValueHelp){
+        //         this.oOrderMultiSelectionValueHelp = new OrderDialog({
+        //             title: "Choose Orders",
+        //             multiSelection: true,
+        //             items: {
+        //                 filters: [
+        //                     new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+        //                     new Filter("company_code", FilterOperator.EQ, "LGCKR"),
+        //                 ]
+        //             }
+        //         });
+        //         this.oOrderMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+        //             this.byId("multiInputWithOrderValueHelp").setTokens(oEvent.getSource().getTokens());
+        //         }.bind(this));
+        //     }
+        //     this.oOrderMultiSelectionValueHelp.open();
+        //     this.oOrderMultiSelectionValueHelp.setTokens(this.byId("multiInputWithOrderValueHelp").getTokens());
+        // },
 
 
-        onMultiInputWithAssetPress: function(){
-            if(!this.oAssetMultiSelectionValueHelp){
-                this.oAssetMultiSelectionValueHelp = new AssetDialog({
-                    title: "Choose Assets",
-                    multiSelection: true,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                            new Filter("company_code", FilterOperator.EQ, "LGCKR"),
-                        ]
-                    }
-                });
-                this.oAssetMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
-                    this.byId("multiInputWithAssetValueHelp").setTokens(oEvent.getSource().getTokens());
-                }.bind(this));
-            }
-            this.oAssetMultiSelectionValueHelp.open();
-            this.oAssetMultiSelectionValueHelp.setTokens(this.byId("multiInputWithAssetValueHelp").getTokens());
-        },
+        // onMultiInputWithAssetPress: function(){
+        //     if(!this.oAssetMultiSelectionValueHelp){
+        //         this.oAssetMultiSelectionValueHelp = new AssetDialog({
+        //             title: "Choose Assets",
+        //             multiSelection: true,
+        //             items: {
+        //                 filters: [
+        //                     new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+        //                     new Filter("company_code", FilterOperator.EQ, "LGCKR"),
+        //                 ]
+        //             }
+        //         });
+        //         this.oAssetMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+        //             this.byId("multiInputWithAssetValueHelp").setTokens(oEvent.getSource().getTokens());
+        //         }.bind(this));
+        //     }
+        //     this.oAssetMultiSelectionValueHelp.open();
+        //     this.oAssetMultiSelectionValueHelp.setTokens(this.byId("multiInputWithAssetValueHelp").getTokens());
+        // },
 
-        onMultiInputWithAccountPress: function(){
-            if(!this.oAccountMultiSelectionValueHelp){
-                this.oAccountMultiSelectionValueHelp = new AccountDialog({
-                    title: "Choose Accounts",
-                    multiSelection: true,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                            new Filter("company_code", FilterOperator.EQ, "LGCKR"),
-                        ]
-                    }
-                });
-                this.oAccountMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
-                    this.byId("multiInputWithAccountValueHelp").setTokens(oEvent.getSource().getTokens());
-                }.bind(this));
-            }
-            this.oAccountMultiSelectionValueHelp.open();
-            this.oAccountMultiSelectionValueHelp.setTokens(this.byId("multiInputWithAssetValueHelp").getTokens());
-        },
+        // onMultiInputWithAccountPress: function(){
+        //     if(!this.oAccountMultiSelectionValueHelp){
+        //         this.oAccountMultiSelectionValueHelp = new AccountDialog({
+        //             title: "Choose Accounts",
+        //             multiSelection: true,
+        //             items: {
+        //                 filters: [
+        //                     new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+        //                     new Filter("company_code", FilterOperator.EQ, "LGCKR"),
+        //                 ]
+        //             }
+        //         });
+        //         this.oAccountMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+        //             this.byId("multiInputWithAccountValueHelp").setTokens(oEvent.getSource().getTokens());
+        //         }.bind(this));
+        //     }
+        //     this.oAccountMultiSelectionValueHelp.open();
+        //     this.oAccountMultiSelectionValueHelp.setTokens(this.byId("multiInputWithAssetValueHelp").getTokens());
+        // },
 
 
-         onMultiInputWithCctrPress: function(){
-            if(!this.oCctrMultiSelectionValueHelp){
-                this.oCctrMultiSelectionValueHelp = new CctrDialog({
-                    title: "Choose Cctrs",
-                    multiSelection: true,
-                    effectiveDate: this.getFormatDate( new Date()),
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                            new Filter("company_code", FilterOperator.EQ, "LGCKR"),
-                        ]
-                    }
-                });
-                this.oCctrMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
-                    this.byId("multiInputWithCctrValueHelp").setTokens(oEvent.getSource().getTokens());
-                }.bind(this));
-            }
-            this.oCctrMultiSelectionValueHelp.open();
-            this.oCctrMultiSelectionValueHelp.setTokens(this.byId("multiInputWithCctrValueHelp").getTokens());
-        },
+        //  onMultiInputWithCctrPress: function(){
+        //     if(!this.oCctrMultiSelectionValueHelp){
+        //         this.oCctrMultiSelectionValueHelp = new CctrDialog({
+        //             title: "Choose Cctrs",
+        //             multiSelection: true,
+        //             effectiveDate: this.getFormatDate( new Date()),
+        //             items: {
+        //                 filters: [
+        //                     new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+        //                     new Filter("company_code", FilterOperator.EQ, "LGCKR"),
+        //                 ]
+        //             }
+        //         });
+        //         this.oCctrMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+        //             this.byId("multiInputWithCctrValueHelp").setTokens(oEvent.getSource().getTokens());
+        //         }.bind(this));
+        //     }
+        //     this.oCctrMultiSelectionValueHelp.open();
+        //     this.oCctrMultiSelectionValueHelp.setTokens(this.byId("multiInputWithCctrValueHelp").getTokens());
+        // },
 
 
         

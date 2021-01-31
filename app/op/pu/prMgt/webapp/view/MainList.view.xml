@@ -41,7 +41,7 @@
                     <form:content>
                         <VBox>
                                
-                            <MultiInput id="multiInputWithOrderValueHelp"
+                            <!-- <MultiInput id="multiInputWithOrderValueHelp"
                                 placeholder="Choose Orders"
                                 showValueHelp="true" valueHelpRequest=".onMultiInputWithOrderPress">
                             </MultiInput> 
@@ -60,7 +60,7 @@
                               <MultiInput id="multiInputWithCctrValueHelp"
                                 placeholder="Choose Cctrs"
                                 showValueHelp="true" valueHelpRequest=".onMultiInputWithCctrPress">
-                            </MultiInput> 
+                            </MultiInput>  -->
 
 
                             <Label text="{I18N>/PR_REQUEST_DATE}" labelFor="searchRequestDate" required="true"></Label>
