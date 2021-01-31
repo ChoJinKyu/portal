@@ -1,0 +1,40 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core" 
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout" >
+    <Dialog id="dialogRfq" class="sapUiSmallMargin" title="" contentWidth="35%" >
+        <VBox class="sapUiSmallMargin">
+            <form:SimpleForm id="RfqForm" editable="false" >
+                <form:toolbar>
+                    <Toolbar>
+                        <Title text="견적번호 입력"/>
+                    </Toolbar>
+                </form:toolbar>   
+       
+                    <Label text="견적번호"/>
+                    <Input id="saveQuotationNumber" value="{
+                        type: 'sap.ui.model.type.String',
+                        constraints: {
+                            maxLength: 50
+                        }
+                    }" required="true" editable="true"/>
+                    <Label text="견적품목번호"/>
+                    <Input id="saveQuotationItemNumber" value="{
+                        type: 'sap.ui.model.type.String',
+                        constraints: {
+                            maxLength: 50
+                        }
+                    }" required="true" editable="true"/>      
+           
+            </form:SimpleForm> 
+        </VBox>       
+      
+        <ToolbarSpacer/>
+        <HBox alignItems="Center" justifyContent="Center" >
+            <Button text="Cancel" class="sapUiSmallMargin" press=".onExitRfq"/>
+            <Button text="Save" class="sapUiSmallMargin" type="Emphasized" press=".onRfqSave"/>
+        </HBox>
+    </Dialog>
+</core:FragmentDefinition>

@@ -1,0 +1,146 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core" 
+    xmlns:f="sap.f"
+    xmlns:t="sap.ui.table"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout" >
+    <Dialog id="dialogVos" class="sapUiSmallMargin" title="단가계약품목"  contentWidth="100%">
+        <f:DynamicPage id="page2"
+        headerExpanded="true" 
+        toggleHeaderOnTitleClick="true">  
+
+        <!-- <f:header>
+            <f:DynamicPageHeader pinnable="false">
+                <form:SimpleForm id="popSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label
+                                text="공사명: "
+                                labelFor="searchConstName">
+                            </Label>
+                            <Input id="searchConstName" 
+                                placeholder="Search"/>
+                            <layoutData>
+                                <layout:GridData
+                                    span="XL2 L4 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="공사시작일자 : " labelFor="searchConstDate" required = "true"/>
+                            <DateRangeSelection id="searchConstDate" displayFormat="yyyy-MM-dd" width="100%" placeholder="" />                                
+                            <layoutData>
+                                <layout:GridData span="XL2 L4 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                                                              
+                    </form:content>
+                </form:SimpleForm>
+                            
+            </f:DynamicPageHeader>
+        </f:header> -->
+
+        <f:content>
+        <!-- <VBox class="sapUiSmallMargin"> -->
+            <!-- <form:SimpleForm id="VosForm" editable="false" > -->
+            <form:SimpleForm id="VosForm" editable="false">                    
+                        <!-- <VBox>  -->
+                            
+                            <t:Table id="popTable"
+                            selectionMode="MultiToggle"
+                            rows="{
+                                path: 'popUcQuotationSup>/'
+                            }"
+                            cellClick=".onCellClickPress"
+                            rowSelectionChange=".onCheck"
+                            visibleRowCountMode="Auto"
+                            fixedColumnCount="8"
+                            columnResize="onColumnResize">
+                            <t:extension>
+                                <OverflowToolbar class="sapFDynamicPageAlignContent">
+                                <Title text="Contract Item List {= ${popUcQuotationSup>/}.length > 0 ? '(' + ${popUcQuotationSup>/}.length + ')' : ''}" level="H2"/>
+                                <ToolbarSpacer/>
+                                
+                                <!-- <ToolbarSeparator/>
+                                <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                                    <layoutData>
+                                    <OverflowToolbarLayoutData priority="NeverOverflow"/>
+                                    </layoutData>
+                                </Button> -->
+                                </OverflowToolbar>
+                            </t:extension>
+    
+                            <t:columns>
+                                <t:Column id="popEpItemCode" width="8rem" hAlign="Center">
+                                <Label text="품목코드" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{popUcQuotationSup>ep_item_code}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="popItemDesc" width="15rem">
+                                <Label text="품목명" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{popUcQuotationSup>item_desc}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="popSpecDesc" width="20rem">
+                                <Label text="규격" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{popUcQuotationSup>spec_desc}" />
+                                </t:template>
+                                </t:Column> 
+                                <t:Column id="popUnit" width="4rem">
+                                <Label text="단위" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{popUcQuotationSup>unit}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="popMaterialNetPrice" width="8rem" hAlign="Right">
+                                <Label text="자재단가" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{popUcQuotationSup>material_net_price}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="popLaborNetPrice" width="8rem" hAlign="Right">
+                                <Label text="노무단가" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{popUcQuotationSup>labor_net_price}"/>
+                                </t:template>
+                                </t:Column>  
+                                <t:Column id="popNetPriceContractTitle" width="15rem" hAlign="Center">
+                                <Label text="계약명" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{popUcQuotationSup>net_price_contract_title}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="popNetPriceContractStartDate" width="8rem" hAlign="Center"> 
+                                <Label text="계약기간" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <!-- <Text text="{popUcQuotationSup>net_price_contract_date}"/> -->
+                                    <Text text="{
+                                            path: 'popUcQuotationSup>net_price_contract_start_date',
+                                            type: 'sap.ui.model.type.Date',
+                                            formatOptions: {
+                                                pattern: 'yyyy/MM/dd'
+                                            }                                        
+                                        }" /> 
+                                </t:template>
+                                </t:Column>
+                                
+                            </t:columns>
+                            </t:Table>
+
+                                            
+                        <!-- </VBox> -->
+                        </form:SimpleForm>   
+        <!-- </VBox>     -->
+        </f:content>  
+        </f:DynamicPage> 
+      
+        <ToolbarSpacer/>
+        <HBox alignItems="End" justifyContent="End" >
+            <Button text="Cancel" type="Transparent"  class="sapUiSmallMargin" press=".onExitContractItem"/>
+            <Button text="Apply" class="sapUiSmallMargin" type="Emphasized" press=".onContractItemSelectionApply"/>
+        </HBox>
+    </Dialog>
+</core:FragmentDefinition>
