@@ -8,15 +8,23 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/ui/core/Fragment",
 
     "op/util/library/Aop",
-], function (Controller, Multilingual, DateFormatter, NumberFormatter, ExcelUtil, JSONModel, Filter, FilterOperator, Aop) {
+], function (Controller, Multilingual, DateFormatter, NumberFormatter, ExcelUtil, JSONModel, Filter, FilterOperator, Fragment, Aop) {
     "use strict";
 	return Controller.extend("op.util.controller.BaseController", {
         /////////////////////////////////////////////////////////////
         // Hook
         /////////////////////////////////////////////////////////////
         "op.init": function() {
+            // Session
+            this.setModel(new JSONModel({
+                tenant_id: "L2100",
+                company_code: "LGCKR",
+                employee_number: null
+            }), "session");
+            this.$session = this.getModel("session").getData();
             // 다국어
             this.setModel(new Multilingual().getModel(), "I18N");
             // 기능추가 - Event Handler
@@ -35,7 +43,6 @@ sap.ui.define([
         // Filter
         generateFilters: function(model, filters) {
             // model Object
-            // var jData = this.getModel(model||"").getData();
             var jData = 
                 typeof model == "string" 
                 ? this.getModel(model||"").getData() 
@@ -82,18 +89,88 @@ sap.ui.define([
                     return filter instanceof Array ? [ ...acc, ...filter ] : [ ...acc, filter ];
                 }, filters || []);
         },
+        // Fragment
+        fragment: function(id, properties, handlers, context) {
 
+            // Promise
+            var mDeferred = $.Deferred();
+            
+            var that = context || this;
+            var view = that.getView();
+
+            // Load
+            Fragment.load($.extend({}, {
+                id: view.getId(),
+                controller: that
+            }, properties))
+            .then(function(f) {
+                // Fragment 추가
+                view.addDependent(f);
+
+                // Open
+                f.open();
+            })
+            .catch(function(e) {
+                mDeferred.reject(e);
+            });
+
+            // Event Handler
+            Object
+                .keys(handlers)
+                .forEach(h => {
+                    !this[h]
+                    &&
+                    (this[h] = handlers[h])
+                    &&
+                    Aop.around(h, (f) => {
+                        var [event, action, ...args] = f.arguments = Array.prototype.slice.call(f.arguments);
+                        // resolve, reject
+                        var settled = args[args.length-1]["settled"];
+                        var value = Aop.next.call(this, f);
+                        // 아무일도 하지 않는다.
+                        if (settled && value === false) return ;
+                        // Clear
+                        settled && setTimeout(() => {
+                            that.byId(id).close();
+                            that.byId(id).destroy();
+                            Object
+                                .keys(handlers)
+                                .forEach(h => that[h] = undefined);
+                        }, 0);
+                        return settled ? mDeferred[settled](value) : value;
+                    }, that, true);
+                });
+
+            return mDeferred.promise();
+        },
         /////////////////////////////////////////////////////////////
         // Service
         /////////////////////////////////////////////////////////////
+        // call procedure
+        procedure: function(service, entry, input) {
+
+            var mDeferred = $.Deferred();
+
+            $.ajax({
+                url: ["/op/pu/prReviewMgt/webapp/srv-api/odata/v4/", service, "/", entry].join(""),
+                type: "POST",
+                data: JSON.stringify(input),
+                contentType: "application/json",
+                success: mDeferred.resolve,
+                error: mDeferred.reject
+            });
+
+            return mDeferred.promise();
+        },
+
         // 조회
         search: function (searchModel, model, entity, isSingle) {
 
-            var mDeferred = new $.Deferred();
+            var mDeferred = $.Deferred();
 
             // Call Service
             (function() {
-                var oDeferred = new $.Deferred();
+                var oDeferred = $.Deferred();
                 this.getView()
                     .setBusy(true)
                     .getModel().read("/"+entity, $.extend({
@@ -113,6 +190,7 @@ sap.ui.define([
             }).bind(this))
             // 실패시
             .fail(function (oError) {
+                mDeferred.reject(oError);
             })
             // 모래시계해제
             .always((function () {
@@ -152,6 +230,6 @@ sap.ui.define([
 
         // 개인화
         // I/F : 
-        onPersonalize: function () {},        
+        onPersonalize: function () {},
 	});
 });

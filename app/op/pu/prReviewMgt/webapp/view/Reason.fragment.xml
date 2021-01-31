@@ -1,0 +1,50 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core" 
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout" >
+    <Dialog id="reason" class="sapUiSmallMargin" title="(미정)마감사유"  afterOpen=".onAfterOpen($event, 'default', {})">
+        <VBox class="sapUiSmallMargin" >
+            <!-- <form:SimpleForm
+                editable="false"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="4"
+                labelSpanL="3"
+                labelSpanM="4"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="4"
+                emptySpanM="0"
+                emptySpanS="0"     
+                singleContainerFullSize="false" >                    
+                <form:content>
+                    <TextArea value="{fragment>/processedReason}" width="100%" rows="5" class="sapUiSmallMarginBegin sapUiLargeMarginEnd">
+                        <layoutData>
+                            <layout:GridData span="XL12 L12 M12 S12" />
+                        </layoutData> 
+                    </TextArea>
+                </form:content>
+            </form:SimpleForm> -->
+            <form:SimpleForm>
+                <TextArea value="{fragment>/processedReason}" rows="3" />
+            </form:SimpleForm>
+        </VBox>
+        <ToolbarSpacer/>
+        <VBox>
+            <HBox alignItems="End" justifyContent="End" >
+                <Button text="Cancel" class="sapUiSmallMarginEnd" 
+                    press=".onCancel($event, 'default', {
+                        settled: 'reject'
+                    })"
+                />
+                <Button text="Apply" class="sapUiSmallMarginEnd" type="Emphasized" 
+                    press=".onCommit($event, 'default', ${fragment>/processedReason}, {
+                        settled: 'resolve'
+                    })"
+                />
+            </HBox>
+        </VBox>
+    </Dialog>
+</core:FragmentDefinition>

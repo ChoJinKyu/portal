@@ -16,7 +16,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{I18N>/PURCHASE_REQUISITION} {I18N>/WRITE} {I18N>/CURST}" />
+                    <Title text="(미정)구매요청 검토/접수" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -69,7 +69,7 @@
                                 items="{
                                     path: 'util>/Code',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100' },
                                         {path: 'group_code', operator: 'EQ', value1: 'OP_PR_CREATE_STATUS_CODE'}
                                     ]
                                 }"
@@ -106,8 +106,8 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <!-- 구매요청 접수일자 (미정) -->
-                            <Label text="{I18N>/PR_RECEIPT_DATE}"/>
+                            <!-- 확정일자 (미정) -->
+                            <Label text="(미정)확정일자"/>
                             <DateRangeSelection 
                                 width="100%"
                                 value="{
@@ -286,9 +286,14 @@
                         <OverflowToolbar>
                             <Title text="{i18n>appTitle} ({= ${list>/Pr_ReviewListView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button text="(미정)재작성요청" type="Transparent" press=".onButtonPress($event, 'REWRITE')" />
-                            <Button text="(미정)마감" type="Transparent" press=".onButtonPress($event, 'CLOSING')" />
-                            <Button text="(미정)구매담당자변경" type="Transparent" press=".onButtonPress($event, 'CHANGE')" />
+                            <Button text="(미정)RFQ작성" type="Transparent" press=".onButtonPress($event, 'RFQ', { tId: 'mainTable', service: 'op.prReviewMgtV4Service', entry: 'CallPrReviewWriteProc' })" />
+                            <Button text="(미정)입찰작성" type="Transparent" press=".onButtonPress($event, 'BIDDING', { tId: 'mainTable', service: 'op.prReviewMgtV4Service', entry: 'CallPrReviewWriteProc' })" />
+                            <!-- <Button text="(미정)소액공사품의 작성" type="Transparent" press=".onButtonPress($event, 'REPORT', { tId: 'mainTable', service: 'op.prReviewMgtV4Service', entry: 'CallPrReviewWriteProc' })" />
+                            <Button text="(미정)PO작성" type="Transparent" press=".onButtonPress($event, 'PO_WRITE', { tId: 'mainTable', service: 'op.prReviewMgtV4Service', entry: 'CallPrReviewWriteProc' })" /> -->
+                            
+                            <Button text="(미정)재작성요청" type="Transparent" press=".onButtonPress($event, 'REWRITE', { tId: 'mainTable', service: 'op.prReviewMgtV4Service', entry: 'CallPrReviewSaveProc' })" />
+                            <Button text="(미정)마감" type="Transparent" press=".onButtonPress($event, 'CLOSING', { tId: 'mainTable', service: 'op.prReviewMgtV4Service', entry: 'CallPrReviewSaveProc' })" />
+                            <Button text="(미정)구매담당자변경" type="Transparent" press=".onButtonPress($event, 'CHANGE', { tId: 'mainTable', service: 'op.prReviewMgtV4Service', entry: 'CallPrReviewSaveProc' })" />
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://excel-attachment" press="onExcelDownload($event, 'Download', ${list>/Pr_ReviewListView}, {fileName: 'PR Review List', tId: 'mainTable' })">
                                 <layoutData>

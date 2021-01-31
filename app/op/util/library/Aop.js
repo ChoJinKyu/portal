@@ -4,8 +4,8 @@ sap.ui.define([
 	"use strict";
 
 	var Aop = {
-        around: function(pointcut, advice, context) {
-            for (var member in context.__proto__) {
+        around: function(pointcut, advice, context, proto) {
+            for (var member in (!proto ? context.__proto__ : context)) {
                 if(typeof context[member] == 'function' && member.match(pointcut)) {
                     let target = context[member];
                     context[member] = function() {
