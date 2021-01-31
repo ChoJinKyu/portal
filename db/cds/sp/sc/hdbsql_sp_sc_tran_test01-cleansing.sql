@@ -42,9 +42,13 @@ call sys.GET_INSUFFICIENT_PRIVILEGE_ERROR_DETAILS('F3844D24DES02B418B9977692D85A
 -- @block Bookmarked query
 -- @group SP_SC
 -- @name TABLES - 설명
-SELECT TOP 50 * FROM DUMMY WHERE 1=1 
--- AND FIELD = "VALUE"
-;
+COLUMN TABLE sp_Sc_Nego_Items (
+  id INTEGER NOT NULL,
+  name NVARCHAR(5000),
+  parent_id INTEGER NOT NULL,
+  PRIMARY KEY(id)
+);
+
 -- @block Bookmarked query
 -- @group SP_SC
 -- @name TABLES - 설명

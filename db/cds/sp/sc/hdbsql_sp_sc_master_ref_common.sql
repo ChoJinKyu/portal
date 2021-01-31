@@ -140,7 +140,14 @@ AND ( 1=0
     -- OR upper(group_code) like upper('%Payment%Terms%')
     -- OR upper(group_code) like upper('%Market%')
     -- OR upper(group_code) like upper('%Award%')
-    OR upper(group_code) like upper('%Nego%')
+    -- OR upper(group_code) like upper('%Nego%')
+    -- OR upper(group_code) like upper('%DP_VI_MARKET_CODE%')
+    -- OR upper(group_code) like upper('%PAYMENT_TERMS%')
+    -- OR upper(group_code) like upper('%OP_INCOTERMS%')
+    OR upper(group_code) like upper('%SP_SC_AWARD_PROG_STATUS_CODE%')
+    OR upper(group_code) like upper('%SP_SC_NEGO_PROG_STATUS_CODE%')
+    OR upper(group_code) like upper('%SP_SC_AWARD_TYPE_CODE%')
+    OR upper(group_code) like upper('%SP_SC_AWARD_METHOD_CODE%')
 );
 
 /**********************************************************************************************************/

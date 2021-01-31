@@ -26,7 +26,28 @@ select * from SP_SC_AWARD_METHOD_CODE_VIEW;
 -- @block Bookmarked query
 -- @group SP_SC
 -- @name SP_SC_AWARD_TYPE_CODE - 
-select * from SP_SC_NEGO_AWARD_METHOD_CODE;
+select 
+  TENANT_ID
+, NEGO_PARENT_TYPE_CODE
+, NEGO_PARENT_TYPE.NEGO_PARENT_NAME
+-- , AWARD_TYPE_CODE
+-- , AWARD_TYPE.AWARD_TYPE_NAME
+-- , AWARD_METHOD_CODE
+-- , AWARD_METHOD.AWARD_METHOD_NAME
+-- , SORT_NO
+-- , LOCAL_CREATE_DTM
+-- , LOCAL_UPDATE_DTM
+-- , CREATE_USER_ID
+-- , UPDATE_USER_ID
+-- , SYSTEM_CREATE_DTM
+-- , SYSTEM_UPDATE_DTM
+from SP_SC_NEGO_AWARD_METHOD_CODE;
+
+-- @block Bookmarked query
+-- @group SP_SC
+-- @name SP_SC_NEGO_SUPEVAL_TYPE_CODE - 
+select *
+ from SP_SC_NEGO_SUPEVAL_TYPE_CODE;
 
 -- @block Bookmarked query
 -- @group SP_SC
