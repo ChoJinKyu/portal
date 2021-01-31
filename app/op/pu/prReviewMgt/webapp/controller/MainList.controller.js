@@ -181,11 +181,11 @@ sap.ui.define([
                 return;
             }
             // 아래의 모든 작업은 진행상태가 결재완료(30), 생성완료(50) 상태에서만 가능하다.
-            // if (items.filter(e => !(e.pr_progress_status_code == "30" || e.pr_progress_status_code == "50")).length > 0) {
-            //     // 결재완료, 생성완료만 선택가능합니다.
-            //     MessageBox.alert("(메세지)결재완료, 생성완료만 처리 할 수 있습니다.");
-            //     return ;
-            // }
+            if (items.filter(e => !(e.pr_progress_status_code == "30" || e.pr_progress_status_code == "50")).length > 0) {
+                // 결재완료, 생성완료만 선택가능합니다.
+                MessageBox.alert("(메세지)결재완료, 생성완료만 처리 할 수 있습니다.");
+                return ;
+            }
             // 구매담당자가 본인이 아닐 경우 Confirm 메시지 띄움.
             if (items.filter(e => !(e.buyer_empno != this.$session.employee_number)).length > 0) {
                 message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다.\n확인시 자동으로 본인 담당으로 변경됩니다.\nRFQ작성을 진행하시겠습니까?";
@@ -221,29 +221,35 @@ sap.ui.define([
                     onClose: (function (sButton) {
                         if (sButton === MessageBox.Action.OK) {
 
-                            if (action == 'CLOSING' /*|| action == 'CHANGE' || action == 'REWRITE'*/) {
+                            if (action == 'CLOSING' || action == 'CHANGE' || action == 'REWRITE') {
                                 // 사유입력
                                 this.fragment("reason", {
                                     name: "op.pu.prReviewMgt.view.Reason"
                                 }, {
                                     onAfterOpen: (function() {
                                         this.setModel(new JSONModel({
-                                            processedReason: ""
+                                            "reason": {
+                                                action: action,
+                                                buyer_empno: "",
+                                                processedReason: ""
+                                            }
                                         }), "fragment");
                                     }).bind(this),
                                     onCommit: function() {
                                         var [event, action, value, ...args] = arguments;
-                                        console.log(">>>>>>>>>>>>> onCommit", arguments);
-                                        if (!value) {
+                                        if (value.action == 'CHANGE' && !value.buyer_empno) {
+                                            MessageBox.alert("(미정)구매담당자를 선택하세요.");
+                                            return false;
+                                        }
+                                        if (!value.processedReason) {
                                             MessageBox.alert("(미정)사유를 입력하세요.");
                                             return false;
                                         }
-                                        return { processedReason: value };
+                                        return value;
                                     },
                                     onCancel: function() {
                                         var [event, action, ...args] = arguments;
-                                        console.log(">>>>>>>>>>>>> onCancel", arguments);
-                                        return value;
+                                        return ;
                                     }
                                 }, this).done(result => {
                                     var { buyerEmpno, buyerDepartmentCode, processedReason } = result;

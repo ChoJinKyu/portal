@@ -101,7 +101,7 @@ sap.ui.define([
             // Load
             Fragment.load($.extend({}, {
                 id: view.getId(),
-                controller: that
+                controller: (this[id] = {})
             }, properties))
             .then(function(f) {
                 // Fragment 추가
@@ -118,9 +118,9 @@ sap.ui.define([
             Object
                 .keys(handlers)
                 .forEach(h => {
-                    !this[h]
+                    !this[id][h]
                     &&
-                    (this[h] = handlers[h])
+                    (this[id][h] = handlers[h])
                     &&
                     Aop.around(h, (f) => {
                         var [event, action, ...args] = f.arguments = Array.prototype.slice.call(f.arguments);
@@ -135,10 +135,10 @@ sap.ui.define([
                             that.byId(id).destroy();
                             Object
                                 .keys(handlers)
-                                .forEach(h => that[h] = undefined);
+                                .forEach(h => that[id][h] = undefined);
                         }, 0);
                         return settled ? mDeferred[settled](value) : value;
-                    }, that, true);
+                    }, that[id], true);
                 });
 
             return mDeferred.promise();
