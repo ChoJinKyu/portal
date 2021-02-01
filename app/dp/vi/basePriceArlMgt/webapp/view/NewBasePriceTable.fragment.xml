@@ -47,7 +47,7 @@
             </t:Column>
             <!-- <t:Column hAlign="Center" width="6rem"> -->
             <t:Column width="18rem">
-                <Label  text="{I18N>/DP_VI_AP_PUR_ORG}" textAlign="Center" width="100%" />
+                <Label  text="{I18N>/VI_APPROVE_ORG_CODE}" textAlign="Center" width="100%" />
                 <t:template>
                     <!-- <Text text="{detailModel>org_code}" /> -->
                     <!-- <ComboBox width="100%"
@@ -368,7 +368,7 @@
             <t:Column headerSpan="4" width="6rem">
                 <t:multiLabels>
                     <Label text="{I18N>/FAMILY_MATERIAL_CODE}" textAlign="Center" width="100%" />
-                    <Label  text="{I18N>/DP_VI_AP_PUR_ORG}" textAlign="Center" width="100%" />
+                    <Label  text="{I18N>/VI_APPROVE_ORG_CODE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
                     <Text text="{detailModel>PART_NO}" />
