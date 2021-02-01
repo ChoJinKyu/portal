@@ -6,7 +6,9 @@
 -- @block Bookmarked query
 -- @group SP_SC
 -- @name TABLES - 설명
-SELECT TOP 50 *, children.*
+SELECT TOP 50 
+-- *, children.*
+TENANT_ID,GROUP_CODE,children.CODE,children.CODE_DESCRIPTION,CHAIN_CODE,GROUP_NAME,GROUP_DESCRIPTION,MAXIMUM_COLUMN_SIZE
 FROM cm_Code_Mst cd WHERE 1=1 
 AND ( 1=0 
     OR upper(cd.group_code) like upper('%Incoterms%')
