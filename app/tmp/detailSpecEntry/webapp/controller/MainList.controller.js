@@ -61,6 +61,7 @@ sap.ui.define([
             this._doInitSearch();
 			
             this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedListModel(), "dpMdMstSpecViewG");
             this.setModel(new ManagedListModel(), "orgMap");
             this.setModel(new ManagedListModel(), "division");
 
@@ -79,17 +80,18 @@ sap.ui.define([
          * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
          */
 		_doInitSearch: function(){
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
+            var companyRole = 'LGESL';
+            var orgRole = 'A040';
 
             this.getView().setModel(this.getOwnerComponent().getModel());
 
-            this.setDivision('LGEKR');
+            this.setDivision(companyRole);
 
             //접속자 법인 사업부로 바꿔줘야함
-            // this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
-            // this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
-            // this.getView().byId("searchDivisionS").setSelectedKeys(['DFZ']);
-            // this.getView().byId("searchDivisionE").setSelectedKeys(['DFZ']);
+            this.getView().byId("searchCompanyS").setSelectedKeys(companyRole);
+            this.getView().byId("searchCompanyE").setSelectedKeys(companyRole);
+            this.getView().byId("searchDivisionS").setSelectedKeys(orgRole);
+            this.getView().byId("searchDivisionE").setSelectedKeys(orgRole);
 
             /** Date */
             var today = new Date();
@@ -260,7 +262,7 @@ sap.ui.define([
             */
               Fragment.load({
                     id: this.getView().getId(),
-					name: "tmp.detailSpecEntry.view.test_grid",
+					name: "tmp.detailSpecEntry.view.L2600_Retrieve_DP0401-501_SCTG001_Grid",
 					controller: this          
             }).then(function(oFragment){
                       var oPageSubSection = this.getView().byId("page");
@@ -299,12 +301,13 @@ sap.ui.define([
 		 */
 		_applySearch: function(aSearchFilters) {
 			var oView = this.getView(),
-				oModel = this.getModel("list");
+				oModel = this.getModel("dpMdMstSpecViewG");
 			oView.setBusy(true);
 			oModel.setTransactionModel(this.getModel());
 			oModel.read("/MoldMasterSpec", {
 				filters: aSearchFilters,
 				success: function(oData){
+                    debugger
 					oView.setBusy(false);
 				}
 			});

@@ -42,6 +42,7 @@ service TmpMgrService {
         where a.META_ATTR_ID = b.META_ATTR_ID 
         and   a.SCR_COL_GROUP_ID = c.SCR_COL_GROUP_ID 
         and   a.SCR_TMPL_ID = d.SCR_TMPL_ID
+        and   a.SCR_TMPL_ID = c.SCR_TMPL_ID
         order by a.META_ATTR_ID,a.SCR_TMPL_ID,c.GROUP_DP_SEQ,a.SCR_COL_DP_SEQ ;
 
 

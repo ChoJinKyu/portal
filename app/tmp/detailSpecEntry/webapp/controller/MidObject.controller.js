@@ -332,16 +332,16 @@ sap.ui.define([
             //item type에 따른 템플릿 ID 분기
             if(itemType == 'P' || itemType == 'E'){
                 if(mode == "Show"){
-                    templateId = "SCTT001";
+                    templateId = "SCTM001";
                 }else if(mode == "Edit"){
-                    templateId = "SCTT001";
+                    templateId = "SCTM001";
                 } 
                 sectionId = "pageSubSection3";
             }else{
                 if(mode == "Show"){
-                    templateId = "SCTT001";
+                    templateId = "SCTM001";
                 }else if(mode == "Edit"){
-                    templateId = "SCTT001";
+                    templateId = "SCTM001";
                 }
                 sectionId = "pageSubSection4";
             }
