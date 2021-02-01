@@ -129,7 +129,7 @@ service MoldApprovalListService {
         emp.user_local_name ||'/'|| emp.job_title||'/'||hr.department_local_name as referer_name : String(240)
     from referer.Referer rf 
     join emp.Hr_Employee emp on emp.employee_number = rf.referer_empno 
-    join Dept hr on hr.department_id = emp.department_id 
+    join Dept hr on hr.department_code = emp.department_code 
     and hr.tenant_id = emp.tenant_id ;
 
     // 레퍼러 조회 팝업 
@@ -144,7 +144,7 @@ service MoldApprovalListService {
         emp.user_english_name , 
         emp.email_id 
     from emp.Hr_Employee  emp 
-    join Dept hr on hr.department_id = emp.department_id and hr.tenant_id = emp.tenant_id ;
+    join Dept hr on hr.department_code = emp.department_code and hr.tenant_id = emp.tenant_id ;
 
     // approvalline 저장목록 조회 
     view Approvers as
@@ -176,7 +176,7 @@ service MoldApprovalListService {
         emp.user_korean_name ||'['|| emp.user_english_name||'] /'||hr.department_local_name as approver_name  : String(240)
     from approver.Approver ar 
     join emp.Hr_Employee  emp on emp.employee_number = ar.approver_empno 
-    join  Dept hr on hr.department_id = emp.department_id  and hr.tenant_id = emp.tenant_id 
+    join  Dept hr on hr.department_code = emp.department_code  and hr.tenant_id = emp.tenant_id 
     order by ar.approve_sequence asc 
     ;
 }
