@@ -165,7 +165,7 @@
                     }"
                     rowSelectionChange=".onCheck"
                     visibleRowCount="15"
-                    fixedColumnCount="11"
+                    fixedColumnCount="10"
                     columnResize="onColumnResize">
                 <t:extension>
                     <OverflowToolbar>
@@ -176,6 +176,16 @@
                         <ToolbarSeparator/>
                             <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
                                             buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="Upload"/>
+                        <!-- <MenuButton buttonMode="Split" useDefaultActionOnly="true" 
+                                    icon="sap-icon://excel-attachment" defaultAction=".onExport">
+                            <menu>
+                            </menu>
+                        </MenuButton> -->
+                            <Button icon="sap-icon://excel-attachment" press=".onExport">
+                                <layoutData>
+                                    <OverflowToolbarLayoutData priority="NeverOverflow" />
+                                </layoutData>
+                            </Button>
                             <OverflowToolbarButton icon="sap-icon://action-settings" tooltip="Column Settings" text="Column Settings" press="onColumns"/>
                     </OverflowToolbar>
                 </t:extension>

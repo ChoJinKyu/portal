@@ -8,18 +8,40 @@ using {dp as materialMst} from '../../dp/mm/DP_MM_MATERIAL_MST-model';
 /* Master Association */
 using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model';
 using {
-    sp.Sc_Outcome_Code                   as scOutcomeCode,
-    sp.Sc_Nego_Parent_Type_Code          as scNegoParentTypeCode,
-    sp.Sc_Nego_Type_Code                 as scNegoTypeCode,
-    sp.Sc_Award_Type_Code_View           as scAwardTypeCodeView,
-    sp.Sc_Nego_Prog_Status_Code_View     as scNegoProgStatusCodeView,
-    sp.Sc_Award_Prog_Status_Code_View,
+    sp.Sc_Outcome_Code,
+    sp.Sc_Nego_Parent_Type_Code,
+    sp.Sc_Nego_Type_Code,            /*<--폐기예정*/
     sp.Sc_Nego_Award_Method_Code,
     sp.Sc_Nego_Award_Method_Map,
-    sp.Sc_Award_Method_Code_View
+    sp.Sc_Negotiation_Style_Map,
 } from '../../sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
 
+/** 타스크럼 재정의[Redefined, Restricted, Materialized 등] */
+using { sp.Sc_Employee_View 
+} from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+
+using {
+    sp.Sc_Nego_Prog_Status_Code_View,
+    sp.Sc_Award_Prog_Status_Code_View,
+    sp.Sc_Award_Type_Code_View,
+    sp.Sc_Award_Method_Code_View,
+    sp.Sc_Market_Code_View,
+    sp.Sc_Payment_Terms_View,
+    sp.Sc_Incoterms_View
+} from '../../sp/sc/SP_SC_REFERENCE_COMMON.model';
+
+
 // using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
+
+/* ToBe 
+Operating Org
+db/cds/cm/CM_PUR_ORG_TYPE_VIEW-model.cds
+db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model.cds
+db/cds/cm/CM_PUR_OPERATION_ORG-model.cds
+( PUR_ORG_TYPE_MAPPING-PROCESS_TYPE_CODE  & ORG_TYPE_CODE )
+PUR_OPERATION_ORG-ORG_CODE
+PUR_OPERATION_ORG-ORG_NAME
+*/
 
 
 /*********************************** Local Type ************************************/
@@ -29,44 +51,6 @@ type PriceAmountT: Decimal(28,5);
 type UnitT       : String(3)      @title: '{i18n>quantityUnit}';
 type QuantityT   : Decimal(28,3) @(title: '{i18n>quantity}', Measures.Unit: Units.Quantity );
 /***********************************************************************************/
-
-/***********************************************************************************/
-/*************************** For NegoHeaders-buyer_empno ***************************/
-// Sc_Employee_View = Hr_Employee =+ Hr_Department =+ cm.Org_Company
-/* How to Use:
-        buyer_employee : Association to Sc_Employee_View    //UseCase        
-                            on buyer_employee.tenant_id = $self.tenant_id
-                              and buyer_employee.employee_number = $self.buyer_empno;
-*/
-using {cm.Hr_Employee} from '../../cm/CM_HR_EMPLOYEE-model';
-using {cm.Hr_Department} from '../../cm/CM_HR_DEPARTMENT-model';
-using {cm.Org_Company} from '../../cm/CM_ORG_COMPANY-model';
-@cds.autoexpose  // Sc_Employee_View = Hr_Employee + Hr_Department
-define entity Sc_Employee_View as select from Hr_Employee as he
-    left outer join Hr_Department as hd
-    on he.tenant_id = hd.tenant_id 
-      and he.department_id = hd.department_id
-    left outer join Org_Company as oc
-    on hd.tenant_id = oc.tenant_id 
-      and hd.company_id = oc.company_code
-    {
-        key he.tenant_id,
-        key he.employee_number,
-            map($user.locale,'ko',he.user_korean_name
-                            ,'en',he.user_english_name
-                            , he.user_local_name)
-                    as employee_name : Hr_Employee: user_local_name,
-            he.department_id : Hr_Department: department_id,
-            map($user.locale,'ko',hd.department_korean_name
-                            ,'en',hd.department_english_name
-                            , hd.department_local_name)
-                    as department_name : Hr_Department: department_local_name,
-            hd.company_id as company_code : Org_Company: company_code,
-            map($user.locale,'en',hd.company_english_name
-                            // ,'ko',hd.company_korean_name
-                            , hd.company_local_name)
-                    as company_name : Org_Company: company_name
-    };
 
 
 entity Sc_Nego_Headers {
@@ -85,7 +69,7 @@ entity Sc_Nego_Headers {
         nego_document_title             : String(300)        @title : '협상문서제목';
         nego_document_desc              : String(4000)       @title : '협상문서설명';
         nego_progress_status_code       : String(30)         @title : '협상진행상태코드';
-        nego_progress_status : Association to scNegoProgStatusCodeView
+        nego_progress_status : Association to Sc_Nego_Prog_Status_Code_View
                             on nego_progress_status.tenant_id       = $self.tenant_id
                               and nego_progress_status.nego_progress_status_code = $self.nego_progress_status_code;
         award_progress_status_code      : String(25)         @title : '낙찰진행상태코드';
@@ -96,12 +80,12 @@ entity Sc_Nego_Headers {
         reply_times                     : Integer            @title : '회신횟수';
         supplier_count                  : Integer            @title : '공급업체개수';
         nego_type_code                  : String(25)         @title : '협상유형코드';
-        nego_type      : Association to one scNegoTypeCode 
+        nego_type      : Association to one Sc_Nego_Type_Code 
                             on nego_type.tenant_id       = $self.tenant_id
                               and nego_type.nego_type_code = $self.nego_type_code;
         //    purchasing_order_type_code : String(30)   @title: '구매주문유형코드' ;
-        outcome_code   : type of scOutcomeCode:outcome_code  @title : '아웃컴코드';
-        outcome        : Association to scOutcomeCode 
+        outcome_code   : type of Sc_Outcome_Code:outcome_code  @title : '아웃컴코드';
+        outcome        : Association to Sc_Outcome_Code 
                             on outcome.tenant_id = $self.tenant_id 
                               and outcome.nego_type_code = $self.nego_type_code
                               and outcome.outcome_code = $self.outcome_code
@@ -124,6 +108,11 @@ entity Sc_Nego_Headers {
         auto_rfq                        : String(1)          @title : 'Auto RFQ';
         items_count                     : Integer            @title : '품목수';
         negotiation_style_code          : String(30)         @title : '협상스타일코드';
+        negotiation_style : Association to one Sc_Negotiation_Style_Map
+                            on    negotiation_style.tenant_id              = $self.tenant_id
+                              and negotiation_style.nego_type_code         = $self.nego_type_code
+                              and negotiation_style.negotiation_style_code = $self.negotiation_style_code
+                            @title : '협상유형&협상스타일 Navi.';
         //    by_step_bidding_flag : String(1)   @title: '단계별입찰여부' ;
         //    round_bidding_flag : String(1)   @title: '회차입찰여부' ;
         //    nego_round_largest_times : Integer   @title: '협상회차최대횟수' ;
@@ -137,9 +126,9 @@ entity Sc_Nego_Headers {
         actual_extension_count          : Integer            @title : '실제연장횟수';
         remaining_hours                 : Decimal(28, 2)     @title : '잔여시간';
         note_content                    : LargeBinary        @title : '노트내용';
-        award_type_code                 : scAwardTypeCodeView:award_type_code @title : '낙찰유형코드';
-        award_type : Association to scAwardTypeCodeView
-                            on award_type.tenant_id       = $self.tenant_id
+        award_type_code                 : Sc_Award_Type_Code_View:award_type_code @title : '낙찰유형코드';
+        award_type : Association to Sc_Award_Type_Code_View
+                            on    award_type.tenant_id       = $self.tenant_id
                               and award_type.award_type_code = $self.award_type_code 
                             @title : '낙찰유형 Navi.';
         award_method_code               : Sc_Award_Method_Code_View:award_method_code @title : '낙찰방법코드';
@@ -221,8 +210,11 @@ entity Sc_Nego_Headers_View as
             ;
     } into {
         *,
+        // Master Text 추가 
         nego_type.nego_parent_type_code,
-        award_method_map2.sort_no as nego_award_method_sort_no,
+        buyer_employee.company_code,
+        award_method_map2,                                      //[가능]명시적으로 포함 시켜야 실제 디자인타임에 Association으로 적용됨
+        award_method_map2.sort_no as nego_award_method_sort_no, //[가능]Association으로 추가되지 않고 디자인타임의 Left Outer Join으로 적용된다.
         round(seconds_between($now, closing_date)/3600,2) as remain_times  : Decimal(28, 2)
     };
 
