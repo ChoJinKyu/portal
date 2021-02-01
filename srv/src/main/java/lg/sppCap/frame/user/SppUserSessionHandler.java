@@ -23,7 +23,7 @@ public class SppUserSessionHandler implements EventHandler{
     SppUserSession sppUserSession;
 
     @On(event = CdsService.EVENT_READ, entity = SppUserSession_.CDS_NAME) 
-    public  void searchUserInfoSession2(CdsReadEventContext context){
+    public  void searchUserInfoSession(CdsReadEventContext context){
         List<Map<String, String>> result = new ArrayList<Map<String, String>>();
         Map<String, String> userMap = sppUserSession.getUserSessionInfo();
         result.add(userMap);

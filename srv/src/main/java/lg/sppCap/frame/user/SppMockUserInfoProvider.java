@@ -8,12 +8,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sap.cds.services.request.ModifiableUserInfo;
 import com.sap.cds.services.request.UserInfo;
 import com.sap.cds.services.runtime.UserInfoProvider;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -22,12 +25,15 @@ import org.springframework.stereotype.Component;
 @Profile("!cloud")
 public class SppMockUserInfoProvider implements UserInfoProvider {
 
+    private final static Logger log = LoggerFactory.getLogger(SppMockUserInfoProvider.class);
+
     private static final String MOCK_USER_FILE = "MockUser.json";
 
     @Override
     public UserInfo get() {
 
         Map<String, List<String>> attributes = new HashMap<String, List<String>>();
+        String userName = "anonymous";
 
         JSONParser parser = new JSONParser();
         ClassPathResource classPathResource = new ClassPathResource(MOCK_USER_FILE);
@@ -41,7 +47,10 @@ public class SppMockUserInfoProvider implements UserInfoProvider {
             for (Object key : jsonUserInfo.keySet()) {
                 attributes.put((String) key, new ArrayList<>(Arrays.asList((String) jsonUserInfo.get(key))));
             }
+
+            userName = (String) jsonUserInfo.get("USER_ID");
         } catch (IOException | ParseException e) {
+            log.error("Please check MockUser.json file. Path : /srv/src/main/resources/");
             e.printStackTrace();
         } finally {
             if(inputStreamReader != null){
@@ -53,7 +62,12 @@ public class SppMockUserInfoProvider implements UserInfoProvider {
             }
         }        
 
-        return UserInfo.create().setAttributes(attributes);
+        ModifiableUserInfo modifiableUserInfo = UserInfo.create();
+        modifiableUserInfo.setAttributes(attributes);
+        modifiableUserInfo.setName(userName);
+        return modifiableUserInfo;
+
+        //return UserInfo.create().setAttributes(attributes);
         
     }
 

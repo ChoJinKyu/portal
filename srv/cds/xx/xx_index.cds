@@ -6,3 +6,4 @@ using {xx as sampleMgr} from './sampleMgr-service';
 using {xx as sampleMstMgr} from './sampleMstMgr-service';
 using from './testTable-service';
 using {xx as variantManagement} from './variantManagement-service';
+using from './sampleSession-service';
