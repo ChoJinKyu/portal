@@ -4,6 +4,7 @@
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
     xmlns:f="sap.f"
+    xmlns:lib_f="ext.lib.control.f"
     xmlns:tnt="sap.tnt"
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout"
@@ -11,11 +12,49 @@
     <f:DynamicPage id="dynamicPageId1" headerExpanded="true" toggleHeaderOnTitleClick="{/titleClickable}">
         <!-- DynamicPage Title -->
         <f:title>
-            <f:DynamicPageTitle>
-                <f:heading>
-                    <Title text="{I18N>/CODE_MANAGEMENT}"/>
-                </f:heading>
-            </f:DynamicPageTitle>
+            <lib_f:CustomDynamicPageTitle>
+                <lib_f:heading>
+                    <HBox alignItems="Center">
+                        <Button icon="sap-icon://unfavorite" type="Transparent" />
+                        <Title text="{I18N>/CODE_MANAGEMENT}"/>
+                    </HBox>
+                </lib_f:heading>
+                <lib_f:fixedContent>
+                    <form:SimpleForm
+                    maxContainerCols="2"
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    adjustLabelSpan="false"
+                    labelSpanL="4"
+                    labelSpanM="4"
+                    emptySpanL="0"
+                    emptySpanM="0"
+                    columnsL="2"
+                    columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label
+                                    text="{I18N>/KEYWORD}: "
+                                    labelFor="search_Keyword">
+                                </Label>
+                                <Input id="search_keyword" 
+                                    placeholder="Code Group or Code Group Name"/>
+                                <layoutData>
+                                    <layout:GridData
+                                        span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </lib_f:fixedContent>
+                <lib_f:actions>
+                    <Button 
+                        id="btn_search"
+                        text="{I18N>/SEARCH}"
+                        type="Emphasized"
+                        press=".onSearch"/>
+                </lib_f:actions>
+            </lib_f:CustomDynamicPageTitle>
         </f:title>
         <!-- DynamicPage Header -->
         <f:header>
@@ -107,31 +146,6 @@
                                     span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <VBox>
-                            <Label
-                                text="{I18N>/KEYWORD}: "
-                                labelFor="search_Keyword">
-                            </Label>
-                            <Input id="search_keyword" 
-                                placeholder="Code Group or Code Group Name"/>
-                            <layoutData>
-                                <layout:GridData
-                                    span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <FlexBox
-                            alignItems="Start"
-                            justifyContent="End">
-                            <Button 
-                                id="btn_search"
-                                text="{I18N>/SEARCH}"
-                                type="Emphasized"
-                                press=".onSearch"/>
-                            <layoutData>
-                                <layout:GridData
-                                    span="XL4 L12 M12 S12" />
-                            </layoutData>
-                        </FlexBox>
                     </form:content>
                 </form:SimpleForm>
             </f:DynamicPageHeader>

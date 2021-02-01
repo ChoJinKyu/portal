@@ -508,7 +508,7 @@ sap.ui.define([
             var aLanguages = oViewModel.getProperty("/languageList");
             aLanguages.forEach(function(item){
                 if(item.code === langCode){
-                    sLangText = item.code_description;
+                    sLangText = item.code_name;
                     return false;
                 }
             });

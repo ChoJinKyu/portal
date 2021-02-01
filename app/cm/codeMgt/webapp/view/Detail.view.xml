@@ -26,7 +26,7 @@
         <headerTitle>
             <ObjectPageDynamicHeaderTitle>
                 <heading>
-                    <m:HBox alignItems="End">
+                    <m:HBox alignItems="Center">
                         <m:OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".handleClose"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
                         <m:Title text="Code Group Detail" wrapping="true" class="" />
                     </m:HBox>
