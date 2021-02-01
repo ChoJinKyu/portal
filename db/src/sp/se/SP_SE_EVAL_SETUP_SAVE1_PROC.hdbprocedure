@@ -117,17 +117,18 @@ BEGIN
         END;
        
         DELETE FROM SP_SE_OPERATION_UNIT_MAP MA
-        WHERE  NOT EXISTS (SELECT 1
-                           FROM   :I_OPMST MST,
-                                  :I_VPOP VP
-                           WHERE  MST.TENANT_ID = MA.TENANT_ID
-                           AND    MST.COMPANY_CODE = MA.COMPANY_CODE
-                           AND    MST.ORG_TYPE_CODE = MA.ORG_TYPE_CODE
-                           AND    MST.ORG_CODE = MA.ORG_CODE
-                           AND    MST.EVALUATION_OPERATION_UNIT_CODE = MA.EVALUATION_OPERATION_UNIT_CODE
-                           AND    VP.VENDOR_POOL_OPERATION_UNIT_CODE = MA.VENDOR_POOL_OPERATION_UNIT_CODE)
+        WHERE  (MA.TENANT_ID,
+                MA.COMPANY_CODE,
+                MA.ORG_TYPE_CODE,
+                MA.ORG_CODE,
+                MA.EVALUATION_OPERATION_UNIT_CODE) IN (SELECT MST.TENANT_ID,
+                                                              MST.COMPANY_CODE,
+                                                              MST.ORG_TYPE_CODE,
+                                                              MST.ORG_CODE,
+                                                              MST.EVALUATION_OPERATION_UNIT_CODE
+                                                       FROM   :I_OPMST MST)
         ;
-	    
+
         INSERT INTO SP_SE_OPERATION_UNIT_MAP
             (TENANT_ID
             ,COMPANY_CODE
@@ -155,15 +156,8 @@ BEGIN
               ,NOW()
         FROM   :I_OPMST MST,
                :I_VPOP VP
-        WHERE  NOT EXISTS (SELECT 1
-                           FROM   SP_SE_OPERATION_UNIT_MAP MA
-                           WHERE  MST.TENANT_ID = MA.TENANT_ID
-                           AND    MST.COMPANY_CODE = MA.COMPANY_CODE
-                           AND    MST.ORG_TYPE_CODE = MA.ORG_TYPE_CODE
-                           AND    MST.ORG_CODE = MA.ORG_CODE
-                           AND    MST.EVALUATION_OPERATION_UNIT_CODE = MA.EVALUATION_OPERATION_UNIT_CODE
-                           AND    VP.VENDOR_POOL_OPERATION_UNIT_CODE = MA.VENDOR_POOL_OPERATION_UNIT_CODE)
         ;
+        
     END;
    
     BEGIN

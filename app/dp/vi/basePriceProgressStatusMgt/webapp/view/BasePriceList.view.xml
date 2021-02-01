@@ -68,7 +68,7 @@
 
                         <!-- Plant 시작 -->
                         <VBox>
-                            <Label text="{I18N>/DP_VI_AP_PUR_ORG}"></Label>
+                            <Label text="{I18N>/VI_APPROVE_ORG_CODE}"></Label>
                             <ComboBox width="100%" 
                                 selectedKey="{filterModel>/org_code}" 
                                 items="{filterModel>/selectedPurOrg}">
@@ -205,7 +205,7 @@
                         </t:template>
                     </t:Column>
                     <t:Column width="12rem">
-                        <Label text="{I18N>/DP_VI_AP_PUR_ORG}" textAlign="Center" width="100%" />
+                        <Label text="{I18N>/VI_APPROVE_ORG_CODE}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>org_name}" />
                         </t:template>

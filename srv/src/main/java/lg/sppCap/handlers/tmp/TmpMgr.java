@@ -192,11 +192,10 @@ public class TmpMgr implements EventHandler {
         }
         content += "\n</core:FragmentDefinition>";
 
-        String fileName = ("S".equals(params.get("funcType")) ? "_Save_":"_Retrieve_") + params.get("screenId") + "_" 
+        String fileName = ("S".equals(params.get("funcType")) ? "Save_":"Retrieve_") + params.get("screenId") + "_" 
         + params.get("templateId") + ("G".equals(params.get("formType")) ? "_Grid" : "Detail");
-        fileName += ".fragment.xml";
 
-        File file = new File(path + fileName);
+        File file = new File(path + params.get("tenantId") + "_" + fileName + ".fragment.xml");
         try {
             FileWriter writer = new FileWriter(file);
             writer.write(content);
@@ -256,11 +255,11 @@ public class TmpMgr implements EventHandler {
         content += "\n\t\t\tclass=\"sapFDynamicPageAlignContent\" ";
         content += "\n\t\t\tupdateFinished=\".onMainTableUpdateFinished\"";
         content += "\n\t\t\titemPress=\"onItemPress\"";
-        content += "\n\t\t\titems=\"{list>/MoldMasterSpec}\"";
+        content += "\n\t\t\titems=\"{" + JdbcUtils.convertUnderscoreNameToPropertyName((String) result.get(0).get("OWNER_TABLE_ID")) + "G>/MoldMasterSpec}\"";
         content += "\n\t\t\twidth=\"auto\">";
         content += "\n\t\t\t<headerToolbar>";
         content += "\n\t\t\t\t<OverflowToolbar>";
-        content += "\n\t\t\t\t\t<Title text=\"{I18N>/LIST} ({= ${list>/MoldMasterSpec}.length || 0})\" level=\"H2\"/>";
+        content += "\n\t\t\t\t\t<Title text=\"{I18N>/LIST} ({= ${" + JdbcUtils.convertUnderscoreNameToPropertyName((String) result.get(0).get("OWNER_TABLE_ID")) + ">/MoldMasterSpec}.length || 0})\" level=\"H2\"/>";
         content += "\n\t\t\t\t\t<ToolbarSpacer/>";
         content += "\n\t\t\t\t\t<Button icon=\"sap-icon://action-settings\" press=\".onMainTablePersoButtonPressed\" >";
         content += "\n\t\t\t\t\t\t<layoutData>";
@@ -276,10 +275,10 @@ public class TmpMgr implements EventHandler {
             columns += "\n\t\t\t<Column>";
             columns += "\n\t\t\t\t<Text text=\"" + row.get("COL_ID").toString().replaceAll("_", " ") + "\" />";
             columns += "\n\t\t\t</Column>";
-            cells += "\n\t\t\t\t\t<ObjectIdentifier text=\"{" + JdbcUtils.convertUnderscoreNameToPropertyName((String) row.get("OWNER_TABLE_ID")) + "G>/" + ((String)row.get("COL_ID")).toLowerCase() + "}\" />";
+            cells += "\n\t\t\t\t\t<ObjectIdentifier text=\"{" + JdbcUtils.convertUnderscoreNameToPropertyName((String) row.get("OWNER_TABLE_ID")) + "G>" + ((String)row.get("COL_ID")).toLowerCase() + "}\" />";
             if("DATE".equalsIgnoreCase((String) row.get("DATA_TYPE"))) {
                 cells += "\n\t\t\t\t\t<DatePicker valueFormat=\"yyyyMMdd\" displayFormat=\"yyyy-MM-dd\" placeholder=\"YYYY-MM-DD\" editable=\"false\" class=\"readonlyField\"";
-                cells += " value=\"{"+ JdbcUtils.convertUnderscoreNameToPropertyName((String) row.get("OWNER_TABLE_ID")) + ">/" + ((String)row.get("COL_ID")).toLowerCase() +"} \"/>";
+                cells += " value=\"{"+ JdbcUtils.convertUnderscoreNameToPropertyName((String) row.get("OWNER_TABLE_ID")) + "G>" + ((String)row.get("COL_ID")).toLowerCase() +"} \"/>";
             }
         }
         columns += "\n\t\t</columns>";

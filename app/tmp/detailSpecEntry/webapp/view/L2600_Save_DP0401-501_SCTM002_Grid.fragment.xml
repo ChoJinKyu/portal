@@ -1,0 +1,240 @@
+<core:FragmentDefinition xmlns="sap.m"  xmlns:l="sap.ui.layout" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:uxap="sap.uxap" >
+	<VBox>
+		<Table id="mainTable" 
+			sticky="HeaderToolbar,ColumnHeaders" 
+			inset="false" 
+			growing="true"
+			mode="SingleSelectMaster"
+			growingThreshold="10"
+			class="sapFDynamicPageAlignContent" 
+			updateFinished=".onMainTableUpdateFinished"
+			itemPress="onItemPress"
+			items="{list>/MoldMasterSpec}"
+			width="auto">
+			<headerToolbar>
+				<OverflowToolbar>
+					<Title text="{I18N>/LIST} ({= ${list>/MoldMasterSpec}.length || 0})" level="H2"/>
+					<ToolbarSpacer/>
+					<Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow" />
+						</layoutData>
+					</Button>
+				</OverflowToolbar>
+			</headerToolbar>
+		<columns>
+			<Column>
+				<Text text="USE MATERIAL VALUE" />
+			</Column>
+			<Column>
+				<Text text="USE MATERIAL VALUE" />
+			</Column>
+			<Column>
+				<Text text="USE MATERIAL VALUE" />
+			</Column>
+			<Column>
+				<Text text="INSPECTION FLAG" />
+			</Column>
+			<Column>
+				<Text text="INSPECTION FLAG" />
+			</Column>
+			<Column>
+				<Text text="INSPECTION FLAG" />
+			</Column>
+			<Column>
+				<Text text="ASSEMBLY APPROVAL FLAG" />
+			</Column>
+			<Column>
+				<Text text="ASSEMBLY APPROVAL FLAG" />
+			</Column>
+			<Column>
+				<Text text="ASSEMBLY APPROVAL FLAG" />
+			</Column>
+			<Column>
+				<Text text="REQUEST LIFE SHOT COUNT" />
+			</Column>
+			<Column>
+				<Text text="REQUEST LIFE SHOT COUNT" />
+			</Column>
+			<Column>
+				<Text text="REQUEST LIFE SHOT COUNT" />
+			</Column>
+			<Column>
+				<Text text="CAVITY PROCESS QTY" />
+			</Column>
+			<Column>
+				<Text text="CAVITY PROCESS QTY" />
+			</Column>
+			<Column>
+				<Text text="CAVITY PROCESS QTY" />
+			</Column>
+			<Column>
+				<Text text="DIE FORM" />
+			</Column>
+			<Column>
+				<Text text="DIE FORM" />
+			</Column>
+			<Column>
+				<Text text="DIE FORM" />
+			</Column>
+			<Column>
+				<Text text="MOLD HOT RUNNER QTY" />
+			</Column>
+			<Column>
+				<Text text="MOLD HOT RUNNER QTY" />
+			</Column>
+			<Column>
+				<Text text="MOLD HOT RUNNER QTY" />
+			</Column>
+			<Column>
+				<Text text="MOLD SIZE" />
+			</Column>
+			<Column>
+				<Text text="MOLD SIZE" />
+			</Column>
+			<Column>
+				<Text text="MOLD SIZE" />
+			</Column>
+			<Column>
+				<Text text="MOLD WEIGHT" />
+			</Column>
+			<Column>
+				<Text text="HOT RUNNER MAKER NAME" />
+			</Column>
+			<Column>
+				<Text text="MOLD SIZE 2" />
+			</Column>
+			<Column>
+				<Text text="ORDER QTY" />
+			</Column>
+			<Column>
+				<Text text="MOLD OUTFORM SPEC NAME" />
+			</Column>
+			<Column>
+				<Text text="MOLD RUNNEROUT SPEC NAME" />
+			</Column>
+			<Column>
+				<Text text="MOLD UNDERCUT SPEC NAME" />
+			</Column>
+			<Column>
+				<Text text="MOLD HOT RUNNER SPEC NAME" />
+			</Column>
+			<Column>
+				<Text text="MOLD GATE SPEC NAME" />
+			</Column>
+			<Column>
+				<Text text="MOLD RETURN TYPE NAME" />
+			</Column>
+			<Column>
+				<Text text="MOLD FORMOUT METHOD" />
+			</Column>
+			<Column>
+				<Text text="MOLD SAMPLE QTY" />
+			</Column>
+			<Column>
+				<Text text="SPARE PART EYEBOLT COUNT" />
+			</Column>
+			<Column>
+				<Text text="SPARE PART EJSLAVE COUNT" />
+			</Column>
+			<Column>
+				<Text text="SPARE PART EJECTOR PIN COUNT" />
+			</Column>
+			<Column>
+				<Text text="SPARE PART HEATER COUNT" />
+			</Column>
+			<Column>
+				<Text text="SPARE PART SPEAKER CORE COUNT" />
+			</Column>
+			<Column>
+				<Text text="SPARE PART ETC COUNT" />
+			</Column>
+			<Column>
+				<Text text="MOLD CAVITY MATERIAL NAME" />
+			</Column>
+			<Column>
+				<Text text="MOLD CORE MATERIAL NAME" />
+			</Column>
+			<Column>
+				<Text text="MOLD SLIDE CORE MATERIAL NAME" />
+			</Column>
+			<Column>
+				<Text text="MOLD SLOPE MATERIAL NAME" />
+			</Column>
+			<Column>
+				<Text text="TOP CIRCLE MATERIAL NAME" />
+			</Column>
+			<Column>
+				<Text text="BOTTOM CIRCLE MATERIAL NAME" />
+			</Column>
+			<Column>
+				<Text text="CYCLE TIME" />
+			</Column>
+			<Column>
+				<Text text="MOLD SPEC REGISTER DATE" />
+			</Column>
+			<Column>
+				<Text text="MOLD TYPE CODE" />
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem type="Navigation">
+				<cells>
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/use_material_value}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/use_material_value}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/use_material_value}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/inspection_flag}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/inspection_flag}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/inspection_flag}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/assembly_approval_flag}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/assembly_approval_flag}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/assembly_approval_flag}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/request_life_shot_count}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/request_life_shot_count}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/request_life_shot_count}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/cavity_process_qty}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/cavity_process_qty}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/cavity_process_qty}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/die_form}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/die_form}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/die_form}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_hot_runner_qty}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_hot_runner_qty}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_hot_runner_qty}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_size}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_size}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_size}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_weight}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/hot_runner_maker_name}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_size_2}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/order_qty}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_outform_spec_name}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_runnerout_spec_name}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_undercut_spec_name}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_hot_runner_spec_name}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_gate_spec_name}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_return_type_name}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_formout_method}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_sample_qty}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/spare_part_eyebolt_count}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/spare_part_ejslave_count}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/spare_part_ejector_pin_count}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/spare_part_heater_count}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/spare_part_speaker_core_count}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/spare_part_etc_count}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_cavity_material_name}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_core_material_name}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_slide_core_material_name}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_slope_material_name}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/top_circle_material_name}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/bottom_circle_material_name}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/cycle_time}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_spec_register_date}" />
+					<DatePicker valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField" value="{tmpCcDpMdSpec>/mold_spec_register_date} "/>
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>/mold_type_code}" />
+				</cells>
+			</ColumnListItem>
+		</items>
+		</Table>
+	</VBox>
+</core:FragmentDefinition>
