@@ -26,9 +26,6 @@ extend Pd_Part_Category_Creation_Request with util.Managed;
 @cds.persistence.exists
 entity Pd_Part_Category_Creation_Request_View {
   key  tenant_id                             : String;
-  key  company_code                          : String;
-  key  org_type_code                         : String;
-  key  org_code                              : String;
   key  request_number                        : String;
   key  category_group_code                   : String;
         approval_number                       : String;
