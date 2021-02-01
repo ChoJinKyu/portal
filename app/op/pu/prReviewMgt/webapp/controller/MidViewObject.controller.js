@@ -20,8 +20,7 @@ sap.ui.define([
 	return BaseController.extend("op.pu.prReviewMgt.controller.MidViewObject", {
 
 		/* =========================================================== */
-        /* lifecycle methods                                  
-                 */
+        /* lifecycle methods                                           */
 		/* =========================================================== */
 		/**
 		 * Called when the controller is instantiated.

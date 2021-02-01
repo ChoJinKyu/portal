@@ -2,20 +2,26 @@ sap.ui.define([
     "op/util/controller/BaseController",
 
     "sap/ui/model/json/JSONModel",
-    "cm/util/control/ui/EmployeeDialog",    
     "ext/lib/util/Validator",
     "sap/m/TablePersoController",
     "./MainListPersoService",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/ui/model/Sorter",
+
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/core/Fragment",
-    
-    "dp/util/control/ui/MaterialMasterDialog",
-], function (BaseController, JSONModel, EmployeeDialog, Validator,
+
+    "cm/util/control/ui/EmployeeDialog",    
+    "dp/util/control/ui/MaterialOrgDialog",
+    "cm/util/control/ui/PlantDialog",
+], function (BaseController, JSONModel, Validator,
     TablePersoController, MainListPersoService,
-    Filter, FilterOperator, MessageBox, MessageToast, Fragment, MaterialMasterDialog, Aop) {
+    Filter, FilterOperator, Sorter, MessageBox, MessageToast, Fragment, 
+    EmployeeDialog,
+    MaterialOrgDialog, 
+    PlantDialog) {
     "use strict";
 
     return BaseController.extend("op.pu.prReviewMgt.controller.MainList", {
@@ -87,7 +93,8 @@ sap.ui.define([
             this.getRouter()
                 .getRoute("mainPage")
                 .attachPatternMatched(function() {
-                    this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
+                    this.getModel("mainListViewModel")
+                        .setProperty("/headerExpanded", true);
                 }, this);
         },
         // 화면호출시실행
@@ -99,34 +106,52 @@ sap.ui.define([
         /* =========================================================== */
         // 공통 다이얼로그 호출
         onValueHelpRequest: function() {
-            // Declare
-            var [event, bindings] = arguments;
-            var [model, paths] = bindings.split(">");
-            var Dialog = this.onValueHelpRequest[bindings];
-            // Dialog Set
-            !Dialog
+
+            var [event, action, ...args] = arguments;
+
+            // 자재코드
+            action == "material"
             &&
-            (Dialog = this.onValueHelpRequest[bindings] = new MaterialMasterDialog({
-                title: "Choose MaterialMaster",
-                MultiSelection: true,
+            this.dialog(new MaterialOrgDialog({
+                title: "Choose Material Code",
+                MultiSelection: false,
                 items: {
                     filters: [
                         new Filter("tenant_id", "EQ", this.$session.tenant_id)
                     ]
-                }
-            }))
-            .attachEvent("apply", (function (event) {
-                // Default - material_code
-                this.getModel(model).setProperty(
-                    paths, 
-                    event.mParameters.item[paths.split("/")[paths.split("/").length-1]]
+                },
+                orgCode: ""
+            }), function(result) {
+                this.getModel("jSearch").setProperty(
+                    "/material_code", 
+                    result.mParameters.item["/material_code".split("/")["/material_code".split("/").length-1]]
                 );
-            }).bind(this))
-            .attachEvent("cancel", (function (event) {
-            }).bind(this))
+            });
 
-            // Dialog Open
-            Dialog.open();
+            // 조직코드
+            action == "org"
+            &&
+            this.dialog(new PlantDialog({
+                title: "(미정)조직을 선택하세요.)",
+                MultiSelection: false,
+                items: {
+                    filters: [
+                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code)                            
+                    ],
+                    sorters: [
+                        new Sorter("plant_name")
+                    ]
+                }
+            }), 
+            function(result) {
+                //debugger;
+                // result.getSource().getTokens()[0].getKey()
+                // selectedKeys="{jSearch>/org_code/values}"
+                // this.getModel("jSearch").setProperty(
+                //     "/material_code", 
+                //     result.mParameters.item["/material_code".split("/")["/material_code".split("/").length-1]]
+                // );
+            });
         },
         // 조회
         onSearch: function (event) {
@@ -141,13 +166,14 @@ sap.ui.define([
         onColumnListItemPress: function () {
 
             var [ event, model ] = arguments,
-                record = this.getModel(model).getProperty(event.getSource().getBindingContextPath());
-
-            this.getRouter().navTo("midView", {
-                layout: this.getOwnerComponent()
+                layout = this.getOwnerComponent()
                             .getHelper()
                             .getNextUIState(1)
                             .layout,
+                record = this.getModel(model).getProperty(event.getSource().getBindingContextPath());
+
+            this.getRouter().navTo("midView", {
+                layout: layout,
                 "?query": {
                     tenant_id: record.tenant_id,
                     company_code: record.company_code,
@@ -155,6 +181,8 @@ sap.ui.define([
                     pr_item_number: record.pr_item_number
                 }
             });
+            this.getModel("mainListViewModel")
+                .setProperty("/headerExpanded", layout !== "TwoColumnsMidExpanded"); 
         },
         onButtonPress: function () {
             var [ event, action, ...args ] = arguments;
@@ -263,7 +291,10 @@ sap.ui.define([
                                             userId: this.$session.user_id
                                         }
                                     })
-                                    .done(result => console.log(">>>>>>>>> Success", result))
+                                    .done((function(result) {
+                                        console.log(">>>>>>>>> Success", result);
+                                        this.search("jSearch", "list", "Pr_ReviewListView");
+                                    }).bind(this))
                                     .fail(e => console.log(">>>>>>>>> failure", e));
                                 });
                             }
@@ -286,7 +317,10 @@ sap.ui.define([
                                         userId: ""
                                     }
                                 })
-                                .done(result => console.log(">>>>>>>>> Success", result))
+                                .done((function(result) {
+                                    console.log(">>>>>>>>> Success", result);
+                                    this.search("jSearch", "list", "Pr_ReviewListView");
+                                }).bind(this))
                                 .fail(e => console.log(">>>>>>>>> failure", e));
                             }
                         }
