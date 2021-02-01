@@ -33,17 +33,28 @@ sap.ui.define([
              * 콤보박스, 버튼들에 공통코드 바인딩
              */
             , _setBindComboNBtnItems : function(){
+                var oUserInfo, aFilters;
+                oUserInfo = this._getUserSession();
 
-                this._setBindCommonItems({
+                this._setBindItems({
                     id : "btnEvaluExeMode",
-                    groupCode : "SP_SE_EVAL_ARTICLE_TYPE_CODE"
+                    path : "common>/Code",
+                    template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
+                    filters : [
+                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
+                        new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE")
+                    ]
+                });
+                this._setBindItems({
+                    id : "btnEvaluArtType",
+                    path : "common>/Code",
+                    template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
+                    filters : [
+                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
+                        new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE")
+                    ]
                 });
 
-                this._setBindCommonItems({
-                    id : "btnEvaluArtType",
-                    groupCode : "SP_SE_EVAL_ARTICLE_TYPE_CODE"
-                });
-                
                 this._setBindCommonItems({
                     id : "comboEvaluDisScrType",
                     groupCode : "SP_SE_EVAL_DISTRB_SCR_TYPE_CD"

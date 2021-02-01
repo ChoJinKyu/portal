@@ -168,6 +168,7 @@ sap.ui.define([
 
             return oNewObj;
         }
+        
         /***
          * Bind Items
          */
