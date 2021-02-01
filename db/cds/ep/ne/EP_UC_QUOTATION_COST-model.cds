@@ -14,6 +14,7 @@ entity Uc_Quotation_Cost {
         base_apply_rate        : Decimal;
         cost_apply_rate        : Decimal;
         cost_apply_amount      : Decimal;
+        currency_code          : String(15);
         remark                 : String(3000);
         org_type_code          : String(2);
         org_code               : String(10);
