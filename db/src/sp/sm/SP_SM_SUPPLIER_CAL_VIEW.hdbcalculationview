@@ -58,7 +58,7 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="SP_SM_SUPPLIER_ROLE"/></calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="referential" referentialDirection="left">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="TENANT_ID"/>
       <viewAttribute id="COMPANY_CODE"/>
@@ -89,7 +89,7 @@
     <joinAttribute name="TENANT_ID"/>
     <joinAttribute name="SUPPLIER_CODE"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="referential" filterExpressionLanguage="COLUMN_ENGINE">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="leftOuter" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
       <viewAttribute id="TENANT_ID"/>
       <viewAttribute id="COMPANY_CODE"/>
@@ -126,7 +126,7 @@
     <joinAttribute name="TENANT_ID"/>
     <joinAttribute name="SUPPLIER_CODE"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinType="referential">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="TENANT_ID"/>
       <viewAttribute id="COMPANY_CODE"/>
@@ -184,7 +184,7 @@
     <input node="CM_CODE_LNG"/>
     <filter>(&quot;LANGUAGE_CD&quot;=upper(midstr('??LOCALE??',1,2))) and (&quot;GROUP_CODE&quot;='SP_SM_SUPPLIER_TYPE')</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_4" cardinality="C1_1" joinType="textTable" languageColumn="LANGUAGE_CD">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_4" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="TENANT_ID"/>
       <viewAttribute id="COMPANY_CODE"/>
@@ -233,7 +233,7 @@
     <input emptyUnionBehavior="undefined" node="Status_Lng$$$$CM_CODE_LNG$$"/>
     <filter>(&quot;LANGUAGE_CD&quot;=upper(midstr('??LOCALE??',1,2))) and (&quot;GROUP_CODE&quot;='SP_SM_SUPPLIER_STATUS_CODE')</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_5" cardinality="C1_1" joinType="textTable" languageColumn="LANGUAGE_CD">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_5" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="TENANT_ID"/>
       <viewAttribute id="COMPANY_CODE"/>

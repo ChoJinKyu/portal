@@ -91,7 +91,7 @@
     <input node="SP_SM_SUPPLIER_ROLE">
       <mapping xsi:type="Calculation:AttributeMapping" target="OLD_MAKER_CODE" source="OLD_SUPPLIER_CODE"/>
     </input></calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_1" dynamic="false" joinType="leftOuter" optimizeJoinColumns="false" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" dynamic="false" joinType="leftOuter" optimizeJoinColumns="false" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="TENANT_ID"/>
       <viewAttribute id="MAKER_CODE"/>
@@ -184,7 +184,7 @@
     <input emptyUnionBehavior="undefined" node="CM_CODE_LNG"/>
     <filter>(&quot;LANGUAGE_CD&quot;=upper(midstr('??LOCALE??',1,2))) and (&quot;GROUP_CODE&quot;='SP_SM_SUPPLIER_STATUS_CODE')</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_5" cardinality="C1_1" joinType="textTable" languageColumn="LANGUAGE_CD">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_5" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="TENANT_ID"/>
       <viewAttribute id="MAKER_CODE"/>
@@ -295,7 +295,7 @@
     <calculatedViewAttributes/>
     <input node="SP_SM_COUNTRY_MST"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_6" joinType="referential">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_6" joinType="leftOuter" optimizeJoinColumns="false">
     <viewAttributes>
       <viewAttribute id="TENANT_ID"/>
       <viewAttribute id="COUNTRY_CODE"/>
@@ -326,7 +326,7 @@
     <joinAttribute name="TENANT_ID"/>
     <joinAttribute name="COUNTRY_CODE"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_7" joinType="referential" referentialDirection="left">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_7" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="TENANT_ID"/>
       <viewAttribute id="MAKER_CODE"/>
