@@ -1,0 +1,10 @@
+#sementic view에 대한 association 확장은 mixin을 사용하면 됩니다.
+##Sementic View Association#https://cap.cloud.sap/docs/cds/cql#query-local-mixins
+
+#HANA Native Object를 감싼 cds.entity는 entity 안에 association을 적용 후 projection으로 감싸면 projection의 HANA Native Viw Object에 cds.entity 적용한 association이 전파되고 이것과 다른 entity간에 association을 맺으면 됩니다.
+##Native Object Association#https://cap.cloud.sap/docs/advanced/hana#associations-and-compositions
+
+#대략 적으로 다음과 같습니다.
+1. cds entity - association > cds view - association[use mixin] => Service
+2. hana native object > cds entity[cds.persistent.exist] - association > cds projection[association 전파] > cds view association[use mixin] => Service
+ 

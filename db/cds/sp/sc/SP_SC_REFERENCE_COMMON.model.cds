@@ -25,6 +25,7 @@ using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model';
   Sc_Nego_Prog_Status_Code_View  - [공통코드=SP_SC_NEGO_PROG_STATUS_CODE][SP_SC] 협상진행상태
   Sc_Award_Type_Code_View        - [공통코드=SP_SC_AWARD_TYPE_CODE][SP_SC] 낙찰유형
   Sc_Award_Method_Code_View      - [공통코드=SP_SC_AWARD_METHOD_CODE][SP_SC] 낙찰방법
+  
 // ## 견적 아이템
   Sc_Market_Code_View            - [공통코드=DP_VI_MARKET_CODE] 마켓코드
   Sc_Payment_Terms_View          - [공통코드=PAYMENT_TERMS] 페이먼트텀즈

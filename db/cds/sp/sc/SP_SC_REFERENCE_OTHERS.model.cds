@@ -1,6 +1,10 @@
 namespace sp;
 
 using util from '../../cm/util/util-model';
+using {cm.Code_Mst} from '../../cm/CM_CODE_MST-model';
+using {cm.Code_Dtl} from '../../cm/CM_CODE_DTL-model';
+using {cm.Code_Lng} from '../../cm/CM_CODE_LNG-model';
+using {cm.Org_Tenant} from '../../cm/CM_ORG_TENANT-model';
 
 /* ToBe 
 Operating Org
@@ -56,8 +60,6 @@ define entity Sc_Employee_View as select from Hr_Employee as he
     //         on      company.tenant_id = $self.tenant_id
     //             and company.company_code = $self.company_code
     // };
-    
-
 
 /***********************************************************************************/
 /*************************** For NegoHeaders-buyer_empno ***************************/
@@ -79,3 +81,44 @@ PUR_OPERATION_ORG-ORG_NAME
 using {cm.Pur_Org_Type_View} from '../../cm/CM_PUR_ORG_TYPE_VIEW-model';
 using {cm.Pur_Org_Type_Mapping} from '../../cm/CM_PUR_ORG_TYPE_MAPPING-model';
 using {cm.Pur_Operation_Org} from '../../cm/CM_PUR_OPERATION_ORG-model';
+
+@cds.autoexpose  // Sc_Pur_Operation_Org = Pur_Org_Type_View[process_type_code='SP03:견적입찰'] + Pur_Operation_Org + Code_Lng[group_code='CM_ORG_TYPE_CODE']
+entity Sc_Pur_Operation_Org as
+    select from Pur_Org_Type_Mapping as POTM
+    inner join Pur_Operation_Org as POO
+        on(
+            POTM.tenant_id = POO.tenant_id
+            and POTM.org_type_code = POO.org_type_code
+            and POTM.org_type_code = POO.org_type_code
+        )
+        and process_type_code = 'SP03'
+    mixin {
+        org_type : Association to Code_Lng
+                       on (    org_type.tenant_id = $projection.tenant_id
+                           and org_type.code = $projection.org_type_code )
+                       and org_type.group_code = 'CM_ORG_TYPE_CODE'
+                       and lower( org_type.language_cd ) = substring( $user.locale, 1, 2 )
+                       ;
+    }
+    into {
+        key POO.tenant_id,
+        key POO.company_code,
+        key POO.org_code,
+            POO.org_name,
+            POO.org_type_code,
+            org_type,
+            POO.purchase_org_code,
+            POO.plant_code,
+            POO.affiliate_code,
+            POO.bizdivision_code,
+            POO.bizunit_code,
+            POO.au_code,
+            POO.hq_au_code,
+            POO.use_flag
+    };
+
+/* select * from cm_Pur_Org_Type_View where 1=1
+and TENANT_ID = 'L2100' 
+and COMPANY_CODE = '*'
+and PROCESS_TYPE_CODE = 'SP03'
+; */

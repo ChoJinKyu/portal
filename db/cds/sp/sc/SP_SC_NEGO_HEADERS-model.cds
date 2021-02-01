@@ -17,7 +17,9 @@ using {
 } from '../../sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
 
 /** 타스크럼 재정의[Redefined, Restricted, Materialized 등] */
-using { sp.Sc_Employee_View 
+using { 
+    sp.Sc_Employee_View,
+    sp.Sc_Pur_Operation_Org
 } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
 
 using {
@@ -62,7 +64,7 @@ entity Sc_Nego_Headers {
                                               and Items.nego_header_id = $self.nego_header_id;
         reference_nego_header_id        : type of nego_header_id @title : '참조협상헤더ID';
         previous_nego_header_id         : Integer64          @title : '이존협상헤더ID';
-        operation_unit_code             : String(30)         @title : '운영단위코드';
+        operation_unit_code             : String(10)         @title : '운영단위코드';
         reference_nego_document_number  : Integer            @title : '참조협상문서번호';
         nego_document_round             : Integer            @title : '협상문서회차';
         nego_document_number            : String(50)         @title : '협상문서번호';
@@ -202,6 +204,36 @@ entity Sc_Nego_Headers_Ext as projection on Sc_Nego_Headers {
 // #Query-Local Mixins#https://cap.cloud.sap/docs/cds/cql#query-local-mixins
 entity Sc_Nego_Headers_View as
     select from Sc_Nego_Headers mixin {
+        operation_org : association to Sc_Pur_Operation_Org 
+            on operation_org.tenant_id = $projection.tenant_id
+            and operation_org.company_code = $projection.company_code
+            and operation_org.org_code = $projection.operation_unit_code
+            ;
+        award_method_map2 : association to Sc_Nego_Award_Method_Code 
+            on award_method_map2.tenant_id = $projection.tenant_id
+            and award_method_map2.nego_parent_type_code = $projection.nego_parent_type_code
+            and award_method_map2.award_type_code = $projection.award_type_code
+            and award_method_map2.award_method_code = $projection.award_method_code
+            ;
+    } into {
+        *,
+        // Master Text 추가 
+        nego_type.nego_parent_type_code,
+        buyer_employee.company_code,
+        award_method_map2,                                      //[가능]명시적으로 포함 시켜야 실제 디자인타임에 Association으로 적용됨
+        award_method_map2.sort_no as nego_award_method_sort_no, //[가능]Association으로 추가되지 않고 디자인타임의 Left Outer Join으로 적용된다.
+        round(seconds_between($now, closing_date)/3600,2) as remain_times  : Decimal(28, 2),
+        operation_org //[가능]명시적으로 포함 시켜야 실제 디자인타임에 Association으로 적용됨
+    };
+
+  annotate Sc_Nego_Headers_View with @( 
+        title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가',readonly
+  ) {
+        remain_times @title:'잔여시간' @description:'잔여시간=마감시간-현재시간' @readonly;
+  };
+
+entity Sc_Nego_Headers_View1 as
+    select from Sc_Nego_Headers mixin {
         award_method_map2 : association to Sc_Nego_Award_Method_Code 
             on award_method_map2.tenant_id = $projection.tenant_id
             and award_method_map2.nego_parent_type_code = $projection.nego_parent_type_code
@@ -218,11 +250,19 @@ entity Sc_Nego_Headers_View as
         round(seconds_between($now, closing_date)/3600,2) as remain_times  : Decimal(28, 2)
     };
 
-  annotate Sc_Nego_Headers_View with @( 
-        title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가',readonly
-  ) {
-        remain_times @title:'잔여시간' @description:'잔여시간=마감시간-현재시간' @readonly;
-  };
+entity Sc_Nego_Headers_View2 as
+    select from Sc_Nego_Headers_View1 mixin {
+        operation_org : association to Sc_Pur_Operation_Org 
+            on operation_org.tenant_id = $projection.tenant_id
+            and operation_org.company_code = $projection.company_code
+            and operation_org.org_code = $projection.operation_unit_code
+            ;
+    } into {
+        *,
+        operation_org //[가능]명시적으로 포함 시켜야 실제 디자인타임에 Association으로 적용됨
+    };
+
+
 
 entity Sc_Nego_Headers_View_Ext as projection on Sc_Nego_Headers_View;
 
