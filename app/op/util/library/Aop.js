@@ -4,8 +4,8 @@ sap.ui.define([
 	"use strict";
 
 	var Aop = {
-        around: function(pointcut, advice, context, proto) {
-            for (var member in (!proto ? context.__proto__ : context)) {
+        around: function(pointcut, advice, context, isHandler = false) {
+            for (var member in (context = isHandler ? context.__proto__ : context)) {
                 if(typeof context[member] == 'function' && member.match(pointcut)) {
                     let target = context[member];
                     context[member] = function() {
@@ -21,38 +21,7 @@ sap.ui.define([
 
     return {
         ...Aop,
-        // 바인딩 정보를 해석하여 적절한 데이터를 반환한다.
-        // '${...>/.../..}' 요렇게 들어온것도 데이터를 반환한다.
-        // '${list>this/tenant_id}' : this 는 테이블에서 현재 선택된 Row 에 해당하는 Context 및 Row Index 를 나타낸다.
-        // 정규식도 지원
-        addFuncForArgs: function(regExp, context) {
-
-            Aop.around(regExp, (function(f) {
-                f.arguments = Array.prototype.slice.call(f.arguments).map(function(arg) {
-                    if (typeof arg == "string" && arg[0] == "$") {
-                        arg = arg.replace(/\$/, "").replace(/{/, "").replace(/}/, "");
-                        var [model, paths] = arg.split(">");
-                        try {
-                            paths = paths.split("/").map(p => {
-                                p == "this" && (p = f.arguments[0].getSource().getBindingContextPath());
-                                return p;
-                            }).join("/").replace(/\/\//g, "/");
-                            arg = context.getModel(model||"").getProperty(paths);
-                        }
-                        catch (error) {
-                            console.error(error);
-                            arg = undefined;
-                        }
-                    }
-                    return arg;
-                }, context || this);
-                return Aop.next.call(this, f);
-            }).bind(context || this), context || this);
-
-        },
-        // Validator 기능추가
-        addFuncForValidator: function(regExp, targets, context) {
-        },
+        
         // Button Action
         addFuncForButton: function(context, type) {
 
@@ -70,13 +39,10 @@ sap.ui.define([
                     this.getModel("fcl").setProperty("/layout", LayoutType.OneColumn);
                     return "NavBack";
                 }).call(context || this, args[args.length-1]||{}))
-                // ||
-                // !isDefault && (isDefault = (function(arg) {
-                //     if (arg["action"] != "Cancel") return false;
-                //     return true;
-                // }).call(context || this, args[args.length-1]||{}))
+               
                 return Aop.next.call(this, f);
-            }).bind(context || this), context || this);
+
+            }).bind(context || this), context || this, true);
 
         },
         // Navigation Action
@@ -108,8 +74,34 @@ sap.ui.define([
                     return "Exit";
                 }).call(context || this, args[args.length-1]||{}))
                 return Aop.next.call(this, f);
-            }).bind(context || this), context || this);
 
-        }
+            }).bind(context || this), context || this, true);
+
+        },
+        // 바인딩 정보를 해석하여 적절한 데이터를 반환한다.
+        // 정규식도 지원
+        // addFuncForArgs: function(regExp, context) {
+        //     Aop.around(regExp, (function(f) {
+        //         f.arguments = Array.prototype.slice.call(f.arguments).map(function(arg) {
+        //             if (typeof arg == "string" && arg[0] == "$") {
+        //                 arg = arg.replace(/\$/, "").replace(/{/, "").replace(/}/, "");
+        //                 var [model, paths] = arg.split(">");
+        //                 try {
+        //                     paths = paths.split("/").map(p => {
+        //                         p == "this" && (p = f.arguments[0].getSource().getBindingContextPath());
+        //                         return p;
+        //                     }).join("/").replace(/\/\//g, "/");
+        //                     arg = context.getModel(model||"").getProperty(paths);
+        //                 }
+        //                 catch (error) {
+        //                     console.error(error);
+        //                     arg = undefined;
+        //                 }
+        //             }
+        //             return arg;
+        //         }, context || this);
+        //         return Aop.next.call(this, f);
+        //     }).bind(context || this), context || this, true);
+        // },
     }
 });
