@@ -21,7 +21,7 @@ service SourcingV4Service {
     entity NegoHeaders @(title : '협상헤더정보')                    as projection on negoHeaders;
     /* 협상을 요청하기 위한 아이템의 가격정보를 관리한다. */
     entity NegoItemPrices @(title : '협상아이템정보')                as projection on negoItemPrices{ *,
-    Header : redirected to NegoHeaders
+        Header : redirected to NegoHeaders
     };
     /* 협상을 요청하기 위한 아이템별 협력업체정보를 관리한다. */
     entity NegoSuppliers @(title : '협상아이템업체정보')               as projection on negoSuppliers;
