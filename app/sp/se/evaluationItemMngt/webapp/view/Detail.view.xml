@@ -309,7 +309,7 @@
                                 </Column>
                                 <Column
                                     visible="{=
-                                        ${viewModel>/Detail/Header/evaluation_result_input_type_cd} === 'SCLE'
+                                        ${viewModel>/Detail/Header/evaluation_result_input_type_cd} !== 'NSCLE'
                                     }"
                                 >
                                     <!-- 배점 -->

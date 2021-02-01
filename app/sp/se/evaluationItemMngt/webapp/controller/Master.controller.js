@@ -66,23 +66,6 @@ sap.ui.define([
                 oViewModel.setProperty("/App/layout", "OneColumn");
             }
             /***
-             * 세션 유저정보를 가져온다.
-             */
-            , _getUserSession : function(){
-                var oUserInfo;
-                
-                oUserInfo = {
-                    loginUserId : "TestUser",
-                    tenantId : "L2100",
-                    companyCode : "LGCKR",
-                    orgTypeCode : "BU",
-                    orgCode : "BIZ00100",
-                    evalPersonEmpno : "5480"
-                };
-
-                return oUserInfo;
-            }
-            /***
              * 평가조직 (orgCode) 콤보박스 아이템 바인딩
              * 1. 세션유저 정보를 가지고 아이템을 구성한다.
              * 2. 첫번째 아이템으로 선택해준다.
@@ -454,23 +437,6 @@ sap.ui.define([
                                         );
                                     }
                                 }
-                                
-                                // var sKey, sParentKey;
-                                // sKey = oRowData.evaluation_article_code;
-                                // sParentKey = oRowData.parent_evaluation_article_code;
-                                // if(aDataKeys.indexOf(sKey) === -1){
-                                //     aDataKeys.push(sKey);
-                                //     aDummyFilters.push(
-                                //         new Filter({ path : "evaluation_article_code", operator : "EQ", value1 : sKey })
-                                //     );
-                                // }
-
-                                // if(aDataKeys.indexOf(sParentKey) === -1){
-                                //     aDataKeys.push(sParentKey);
-                                //     aDummyFilters.push(
-                                //         new Filter({ path : "evaluation_article_code", operator : "EQ", value1 : sParentKey })
-                                //     );
-                                // }
                             });
                             
                             aTableFilter = [
