@@ -84,11 +84,12 @@ sap.ui.define([
                             var oChainKey = {
                                 tenant_id:item.tenant_id,
                                 group_code:"CM_CHAIN_CD",
-                                code:item.chain_code
+                                code:item.chain_code,
+                                language_cd:"KO" //사용자 언어 
                             };
                             var sChainPath =  oUtilModel.createKey("/Code", oChainKey);
                             var oChain = oUtilModel.getProperty(sChainPath);
-                            var sChainText = (oChain)?oChain.code_description:"";
+                            var sChainText = (oChain)?oChain.code_name:"";
 
                             var sTargetPath = "/CodeMasters/"+i+"/chain_name";
                             oViewModel.setProperty(sTargetPath, sChainText);
