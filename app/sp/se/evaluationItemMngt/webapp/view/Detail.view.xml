@@ -114,6 +114,7 @@
                                     id="btnEvaluExeMode"
                                     selectedKey="{viewModel>/Detail/Header/evaluation_execute_mode_code}"
                                     enabled="{viewModel>/App/EditMode}"
+                                    selectionChange="onSelectChangExecMode"
                                 />
                                 <layoutData>
                                     <layout:GridData span="L3 M3 S6" />
