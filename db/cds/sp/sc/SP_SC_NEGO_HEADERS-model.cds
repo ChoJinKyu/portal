@@ -35,17 +35,6 @@ using {
 
 // using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
 
-/* ToBe 
-Operating Org
-db/cds/cm/CM_PUR_ORG_TYPE_VIEW-model.cds
-db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model.cds
-db/cds/cm/CM_PUR_OPERATION_ORG-model.cds
-( PUR_ORG_TYPE_MAPPING-PROCESS_TYPE_CODE  & ORG_TYPE_CODE )
-PUR_OPERATION_ORG-ORG_CODE
-PUR_OPERATION_ORG-ORG_NAME
-*/
-
-
 /*********************************** Local Type ************************************/
 type CurrencyT   : String(5)      @title: '{i18n>currency}';
 type AmountT     : Decimal(28,2);

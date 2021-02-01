@@ -6,21 +6,12 @@ using {cm.Code_Dtl} from '../../cm/CM_CODE_DTL-model';
 using {cm.Code_Lng} from '../../cm/CM_CODE_LNG-model';
 using {cm.Org_Tenant} from '../../cm/CM_ORG_TENANT-model';
 
-/* ToBe 
-Operating Org
-db/cds/cm/CM_PUR_ORG_TYPE_VIEW-model.cds
-db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model.cds
-db/cds/cm/CM_PUR_OPERATION_ORG-model.cds
-( PUR_ORG_TYPE_MAPPING-PROCESS_TYPE_CODE  & ORG_TYPE_CODE )
-PUR_OPERATION_ORG-ORG_CODE
-PUR_OPERATION_ORG-ORG_NAME
-*/
-
-
 /***********************************************************************************/
 /*************************** For NegoHeaders-buyer_empno ***************************/
+/*
 // Sc_Employee_View = Hr_Employee =+ Hr_Department =+ cm.Org_Company
-/* How to Use:
+// #How to use : as association
+using { sp.Sc_Employee_View, sp.Sc_Pur_Operation_Org } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
         buyer_employee : Association to Sc_Employee_View    //UseCase        
                             on buyer_employee.tenant_id = $self.tenant_id
                               and buyer_employee.employee_number = $self.buyer_empno;
@@ -28,6 +19,7 @@ PUR_OPERATION_ORG-ORG_NAME
 using {cm.Hr_Employee} from '../../cm/CM_HR_EMPLOYEE-model';
 using {cm.Hr_Department} from '../../cm/CM_HR_DEPARTMENT-model';
 using {cm.Org_Company} from '../../cm/CM_ORG_COMPANY-model';
+
 @cds.autoexpose  // Sc_Employee_View = Hr_Employee + Hr_Department
 define entity Sc_Employee_View as select from Hr_Employee as he
     left outer join Hr_Department as hd
@@ -54,33 +46,32 @@ define entity Sc_Employee_View as select from Hr_Employee as he
                             , hd.company_local_name)
                     as company_name : Org_Company: company_name
     };
-    // Cannot Extent with View or Projection
-    // extend Sc_Employee_View with {
-    //     company : Association to Org_Company
-    //         on      company.tenant_id = $self.tenant_id
-    //             and company.company_code = $self.company_code
-    // };
+    // Cannot Extend with View or Projection, Use view mixin {} into {}
 
 /***********************************************************************************/
-/*************************** For NegoHeaders-buyer_empno ***************************/
-// Sc_Employee_View = Hr_Employee =+ Hr_Department =+ cm.Org_Company
-/* How to Use:
-        buyer_employee : Association to Sc_Employee_View    //UseCase        
-                            on buyer_employee.tenant_id = $self.tenant_id
-                              and buyer_employee.employee_number = $self.buyer_empno;
+/******************* For NegoHeaders-operation_unit_code ***************************/
+/******************* For NegoItemPrices-operation_unit_code ************************/
+/* 
+// #Sc_Pur_Operation_Org == Pur_Org_Type_Mapping[process_type_code='SP03:견적입찰'] = Pur_Operation_Org =+ Code_Lng[group_code='CM_ORG_TYPE_CODE']
+// #How to use : as association
+using { sp.Sc_Pur_Operation_Org } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+        operation_org : association to Sc_Pur_Operation_Org 
+            on operation_org.tenant_id = $projection.tenant_id
+            and operation_org.company_code = $projection.company_code
+            and operation_org.org_code = $projection.operation_unit_code
+            ; 
 */
-/* ToBe 
-Operating Org
-db/cds/cm/CM_PUR_ORG_TYPE_VIEW-model.cds
-db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model.cds
-db/cds/cm/CM_PUR_OPERATION_ORG-model.cds
-( PUR_ORG_TYPE_MAPPING-PROCESS_TYPE_CODE  & ORG_TYPE_CODE )
-PUR_OPERATION_ORG-ORG_CODE
-PUR_OPERATION_ORG-ORG_NAME
-*/
+
 using {cm.Pur_Org_Type_View} from '../../cm/CM_PUR_ORG_TYPE_VIEW-model';
 using {cm.Pur_Org_Type_Mapping} from '../../cm/CM_PUR_ORG_TYPE_MAPPING-model';
 using {cm.Pur_Operation_Org} from '../../cm/CM_PUR_OPERATION_ORG-model';
+
+entity Sc_Pur_Org_Type_Mapping as select from Pur_Org_Type_Mapping distinct {
+    process_type_code,
+    company_code,
+    org_type_code
+} where process_type_code = 'SP03'
+;
 
 @cds.autoexpose  // Sc_Pur_Operation_Org = Pur_Org_Type_View[process_type_code='SP03:견적입찰'] + Pur_Operation_Org + Code_Lng[group_code='CM_ORG_TYPE_CODE']
 entity Sc_Pur_Operation_Org as
@@ -88,10 +79,12 @@ entity Sc_Pur_Operation_Org as
     inner join Pur_Operation_Org as POO
         on(
             POTM.tenant_id = POO.tenant_id
-            and POTM.org_type_code = POO.org_type_code
+            and POTM.company_code = POO.company_code
             and POTM.org_type_code = POO.org_type_code
         )
-        and process_type_code = 'SP03'
+        and POTM.process_type_code = 'SP03'
+        and POTM.use_flag = TRUE
+        and POO.use_flag = TRUE
     mixin {
         org_type : Association to Code_Lng
                        on (    org_type.tenant_id = $projection.tenant_id
@@ -117,8 +110,33 @@ entity Sc_Pur_Operation_Org as
             POO.use_flag
     };
 
-/* select * from cm_Pur_Org_Type_View where 1=1
+/* 
+// #조직 유형 뷰
+select * from cm_Pur_Org_Type_View where 1=1
 and TENANT_ID = 'L2100' 
 and COMPANY_CODE = '*'
 and PROCESS_TYPE_CODE = 'SP03'
-; */
+; 
+
+// #참조 :
+VIEW PG_VP_VENDOR_POOL_OPERATION_ORG_VIEW AS
+SELECT DISTINCT
+       TENANT_ID,
+       OPERATION_ORG_CODE,
+       OPERATION_ORG_NAME,
+       '3' AS ORG_MAX_LEVEL
+FROM  (SELECT OO.TENANT_ID,
+              OO.ORG_CODE OPERATION_ORG_CODE,
+              OO.ORG_NAME OPERATION_ORG_NAME
+       FROM   CM_PUR_ORG_TYPE_MAPPING OM,
+              CM_PUR_OPERATION_ORG OO
+       WHERE  OM.PROCESS_TYPE_CODE = 'PG05'
+       AND    OM.TENANT_ID= OO.TENANT_ID
+       AND    OM.COMPANY_CODE = OO.COMPANY_CODE
+       AND    OM.ORG_TYPE_CODE = OO.ORG_TYPE_CODE
+       AND    OO.USE_FLAG = TRUE)
+WHERE  OPERATION_ORG_CODE IS NOT NULL
+AND    OPERATION_ORG_CODE NOT IN ('BIZ00000')
+;
+*/
+
