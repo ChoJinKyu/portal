@@ -5,6 +5,11 @@
 	xmlns:core="sap.ui.core">
 	<form:SimpleForm id="midObjectForm1Show" editable="false">		
         
+        <Label text="{I18N>/BIZUNIT_CODE}" />
+        <Text text="{master>/org_code}"/>
+        <Label text="{I18N>/BIZUNIT_NAME}" />
+        <Text text="{master>/org_infos/bizunit_name}"/>
+
         <Label text="{I18N>/SPMD_CATEGORY_CODE}" />
         <Text text="{master>/spmd_category_code}"/>
         <Label text="{I18N>/SPMD_CATEGORY_CODE_NAME}"/>
