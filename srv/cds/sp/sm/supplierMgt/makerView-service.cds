@@ -5,6 +5,7 @@ using {sp as mkView} from '../../../../../db/cds/sp/sm/SP_SM_MAKER_VIEW-model';
 using {sp as mkCalView} from '../../../../../db/cds/sp/sm/SP_SM_MAKER_CAL_VIEW-model';
 using {sp as bpCalView} from '../../../../../db/cds/sp/sm/SP_SM_BUSINESS_PARTNER_CAL_VIEW-model';
 using {sp as mkMstView} from '../../../../../db/cds/sp/sm/SP_SM_MASTER_CAL_VIEW-model';
+using {sp as mkRegReqCalView} from '../../../../../db/cds/sp/sm/SP_SM_MAKER_REG_REQ_CAL_VIEW-model';
 //Common Organization
 using {cm as OrgCompany} from '../../../../../db/cds/cm/CM_ORG_COMPANY-model';
 using {cm as OrgUnit} from '../../../../../db/cds/cm/CM_ORG_UNIT-model';
@@ -29,6 +30,9 @@ service makerViewService {
 
     @readonly
     view BusinessPartnerView @(title : '비즈니스파트너 View') as select from bpCalView.Sm_Business_Partner_Cal_View;
+
+    @readonly
+    view MakerRegistrationRequestView @(title : '제조사 등록 신청 View') as select from mkRegReqCalView.Sm_Maker_Reg_Req_Cal_View;
 
     //Maker Master View
     //Maker Status View

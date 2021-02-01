@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="SP_SM_MAKER_REG_REQ_CAL_VIEW" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="Calculation View: Maker Registration Request"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="SP_SM_MAKER_REQUEST">
+    <resourceUri>SP_SM_MAKER_REQUEST</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="TENANT_ID"/>
+      <viewAttribute id="MAKER_REQUEST_SEQUENCE"/>
+      <viewAttribute id="MAKER_REQUEST_TYPE_CODE"/>
+      <viewAttribute id="MAKER_PROGRESS_STATUS_CODE"/>
+      <viewAttribute id="REQUESTOR_EMPNO"/>
+      <viewAttribute id="TAX_ID"/>
+      <viewAttribute id="SUPPLIER_CODE"/>
+      <viewAttribute id="SUPPLIER_LOCAL_NAME"/>
+      <viewAttribute id="SUPPLIER_ENGLISH_NAME"/>
+      <viewAttribute id="COUNTRY_CODE"/>
+      <viewAttribute id="COUNTRY_NAME"/>
+      <viewAttribute id="VAT_NUMBER"/>
+      <viewAttribute id="ZIP_CODE"/>
+      <viewAttribute id="LOCAL_ADDRESS_1"/>
+      <viewAttribute id="LOCAL_ADDRESS_2"/>
+      <viewAttribute id="LOCAL_ADDRESS_3"/>
+      <viewAttribute id="LOCAL_FULL_ADDRESS"/>
+      <viewAttribute id="ENGLISH_ADDRESS_1"/>
+      <viewAttribute id="ENGLISH_ADDRESS_2"/>
+      <viewAttribute id="ENGLISH_ADDRESS_3"/>
+      <viewAttribute id="ENGLISH_FULL_ADDRESS"/>
+      <viewAttribute id="AFFILIATE_CODE"/>
+      <viewAttribute id="AFFILIATE_CODE_NAME"/>
+      <viewAttribute id="COMPANY_CLASS_CODE"/>
+      <viewAttribute id="COMPANY_CLASS_NAME"/>
+      <viewAttribute id="REPRE_NAME"/>
+      <viewAttribute id="TEL_NUMBER"/>
+      <viewAttribute id="EMAIL_ADDRESS"/>
+      <viewAttribute id="SUPPLIER_STATUS_CODE"/>
+      <viewAttribute id="SUPPLIER_STATUS_NAME"/>
+      <viewAttribute id="BIZ_CERTI_ATTCH_NUMBER"/>
+      <viewAttribute id="ATTCH_NUMBER_2"/>
+      <viewAttribute id="ATTCH_NUMBER_3"/>
+      <viewAttribute id="LOCAL_CREATE_DTM"/>
+      <viewAttribute id="LOCAL_UPDATE_DTM"/>
+      <viewAttribute id="CREATE_USER_ID"/>
+      <viewAttribute id="UPDATE_USER_ID"/>
+      <viewAttribute id="SYSTEM_CREATE_DTM"/>
+      <viewAttribute id="SYSTEM_UPDATE_DTM"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="SP_SM_MAKER_REQUEST"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Projection_1">
+  <attributes>
+    <attribute id="TENANT_ID" key="true" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TENANT_ID"/>
+      <keyMapping columnObjectName="Projection_1" columnName="TENANT_ID"/>
+    </attribute>
+    <attribute id="MAKER_REQUEST_SEQUENCE" key="true" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_REQUEST_SEQUENCE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="MAKER_REQUEST_SEQUENCE"/>
+    </attribute>
+    <attribute id="MAKER_REQUEST_TYPE_CODE" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_REQUEST_TYPE_CODE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="MAKER_REQUEST_TYPE_CODE"/>
+    </attribute>
+    <attribute id="MAKER_PROGRESS_STATUS_CODE" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_PROGRESS_STATUS_CODE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="MAKER_PROGRESS_STATUS_CODE"/>
+    </attribute>
+    <attribute id="REQUESTOR_EMPNO" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REQUESTOR_EMPNO"/>
+      <keyMapping columnObjectName="Projection_1" columnName="REQUESTOR_EMPNO"/>
+    </attribute>
+    <attribute id="TAX_ID" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TAX_ID"/>
+      <keyMapping columnObjectName="Projection_1" columnName="TAX_ID"/>
+    </attribute>
+    <attribute id="SUPPLIER_CODE" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SUPPLIER_CODE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="SUPPLIER_CODE"/>
+    </attribute>
+    <attribute id="SUPPLIER_LOCAL_NAME" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SUPPLIER_LOCAL_NAME"/>
+      <keyMapping columnObjectName="Projection_1" columnName="SUPPLIER_LOCAL_NAME"/>
+    </attribute>
+    <attribute id="SUPPLIER_ENGLISH_NAME" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SUPPLIER_ENGLISH_NAME"/>
+      <keyMapping columnObjectName="Projection_1" columnName="SUPPLIER_ENGLISH_NAME"/>
+    </attribute>
+    <attribute id="COUNTRY_CODE" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COUNTRY_CODE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="COUNTRY_CODE"/>
+    </attribute>
+    <attribute id="COUNTRY_NAME" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COUNTRY_NAME"/>
+      <keyMapping columnObjectName="Projection_1" columnName="COUNTRY_NAME"/>
+    </attribute>
+    <attribute id="VAT_NUMBER" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VAT_NUMBER"/>
+      <keyMapping columnObjectName="Projection_1" columnName="VAT_NUMBER"/>
+    </attribute>
+    <attribute id="ZIP_CODE" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ZIP_CODE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="ZIP_CODE"/>
+    </attribute>
+    <attribute id="LOCAL_ADDRESS_1" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCAL_ADDRESS_1"/>
+      <keyMapping columnObjectName="Projection_1" columnName="LOCAL_ADDRESS_1"/>
+    </attribute>
+    <attribute id="LOCAL_ADDRESS_2" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCAL_ADDRESS_2"/>
+      <keyMapping columnObjectName="Projection_1" columnName="LOCAL_ADDRESS_2"/>
+    </attribute>
+    <attribute id="LOCAL_ADDRESS_3" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCAL_ADDRESS_3"/>
+      <keyMapping columnObjectName="Projection_1" columnName="LOCAL_ADDRESS_3"/>
+    </attribute>
+    <attribute id="LOCAL_FULL_ADDRESS" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCAL_FULL_ADDRESS"/>
+      <keyMapping columnObjectName="Projection_1" columnName="LOCAL_FULL_ADDRESS"/>
+    </attribute>
+    <attribute id="ENGLISH_ADDRESS_1" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ENGLISH_ADDRESS_1"/>
+      <keyMapping columnObjectName="Projection_1" columnName="ENGLISH_ADDRESS_1"/>
+    </attribute>
+    <attribute id="ENGLISH_ADDRESS_2" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ENGLISH_ADDRESS_2"/>
+      <keyMapping columnObjectName="Projection_1" columnName="ENGLISH_ADDRESS_2"/>
+    </attribute>
+    <attribute id="ENGLISH_ADDRESS_3" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ENGLISH_ADDRESS_3"/>
+      <keyMapping columnObjectName="Projection_1" columnName="ENGLISH_ADDRESS_3"/>
+    </attribute>
+    <attribute id="ENGLISH_FULL_ADDRESS" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ENGLISH_FULL_ADDRESS"/>
+      <keyMapping columnObjectName="Projection_1" columnName="ENGLISH_FULL_ADDRESS"/>
+    </attribute>
+    <attribute id="AFFILIATE_CODE" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AFFILIATE_CODE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="AFFILIATE_CODE"/>
+    </attribute>
+    <attribute id="AFFILIATE_CODE_NAME" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AFFILIATE_CODE_NAME"/>
+      <keyMapping columnObjectName="Projection_1" columnName="AFFILIATE_CODE_NAME"/>
+    </attribute>
+    <attribute id="COMPANY_CLASS_CODE" order="24" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COMPANY_CLASS_CODE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="COMPANY_CLASS_CODE"/>
+    </attribute>
+    <attribute id="COMPANY_CLASS_NAME" order="25" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COMPANY_CLASS_NAME"/>
+      <keyMapping columnObjectName="Projection_1" columnName="COMPANY_CLASS_NAME"/>
+    </attribute>
+    <attribute id="REPRE_NAME" order="26" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REPRE_NAME"/>
+      <keyMapping columnObjectName="Projection_1" columnName="REPRE_NAME"/>
+    </attribute>
+    <attribute id="TEL_NUMBER" order="27" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TEL_NUMBER"/>
+      <keyMapping columnObjectName="Projection_1" columnName="TEL_NUMBER"/>
+    </attribute>
+    <attribute id="EMAIL_ADDRESS" order="28" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="EMAIL_ADDRESS"/>
+      <keyMapping columnObjectName="Projection_1" columnName="EMAIL_ADDRESS"/>
+    </attribute>
+    <attribute id="SUPPLIER_STATUS_CODE" order="29" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SUPPLIER_STATUS_CODE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="SUPPLIER_STATUS_CODE"/>
+    </attribute>
+    <attribute id="SUPPLIER_STATUS_NAME" order="30" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SUPPLIER_STATUS_NAME"/>
+      <keyMapping columnObjectName="Projection_1" columnName="SUPPLIER_STATUS_NAME"/>
+    </attribute>
+    <attribute id="BIZ_CERTI_ATTCH_NUMBER" order="31" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BIZ_CERTI_ATTCH_NUMBER"/>
+      <keyMapping columnObjectName="Projection_1" columnName="BIZ_CERTI_ATTCH_NUMBER"/>
+    </attribute>
+    <attribute id="ATTCH_NUMBER_2" order="32" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ATTCH_NUMBER_2"/>
+      <keyMapping columnObjectName="Projection_1" columnName="ATTCH_NUMBER_2"/>
+    </attribute>
+    <attribute id="ATTCH_NUMBER_3" order="33" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ATTCH_NUMBER_3"/>
+      <keyMapping columnObjectName="Projection_1" columnName="ATTCH_NUMBER_3"/>
+    </attribute>
+    <attribute id="LOCAL_CREATE_DTM" order="34" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCAL_CREATE_DTM"/>
+      <keyMapping columnObjectName="Projection_1" columnName="LOCAL_CREATE_DTM"/>
+    </attribute>
+    <attribute id="LOCAL_UPDATE_DTM" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCAL_UPDATE_DTM"/>
+      <keyMapping columnObjectName="Projection_1" columnName="LOCAL_UPDATE_DTM"/>
+    </attribute>
+    <attribute id="CREATE_USER_ID" order="36" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CREATE_USER_ID"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CREATE_USER_ID"/>
+    </attribute>
+    <attribute id="UPDATE_USER_ID" order="37" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="UPDATE_USER_ID"/>
+      <keyMapping columnObjectName="Projection_1" columnName="UPDATE_USER_ID"/>
+    </attribute>
+    <attribute id="SYSTEM_CREATE_DTM" order="38" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SYSTEM_CREATE_DTM"/>
+      <keyMapping columnObjectName="Projection_1" columnName="SYSTEM_CREATE_DTM"/>
+    </attribute>
+    <attribute id="SYSTEM_UPDATE_DTM" order="39" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SYSTEM_UPDATE_DTM"/>
+      <keyMapping columnObjectName="Projection_1" columnName="SYSTEM_UPDATE_DTM"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+
+  <sortAttributes>
+
+    <sortAttribute id="TENANT_ID" direction="ASC"/>
+
+    <sortAttribute id="MAKER_REQUEST_SEQUENCE" direction="ASC"/>
+
+  </sortAttributes>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="92" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
