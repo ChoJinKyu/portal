@@ -1,0 +1,98 @@
+<core:FragmentDefinition xmlns="sap.m"  xmlns:l="sap.ui.layout" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:uxap="sap.uxap" >
+<VBox class="sapUiSmallMargin">
+<form:SimpleForm editable="false" layout="ResponsiveGridLayout">
+<form:content>
+	<VBox height="3.5rem"><Label text="PRESS OPEN SIZE"/>
+		<Input value="{tmpCcDpMdSpec>/press_open_size}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="PRESS MATERIAL THICKNESS"/>
+		<Input value="{tmpCcDpMdSpec>/press_material_thickness}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="PRESS MATERIAL SIZE"/>
+		<Input value="{tmpCcDpMdSpec>/press_material_size}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="SPARE PART P PUNCH COUNT"/>
+		<Input value="{tmpCcDpMdSpec>/spare_part_p_punch_count}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="SPARE PART B PUNCH COUNT"/>
+		<Input value="{tmpCcDpMdSpec>/spare_part_b_punch_count}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="SPARE PART SPRING COUNT"/>
+		<Input value="{tmpCcDpMdSpec>/spare_part_spring_count}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="SPARE PART DIE BUTTON COUNT"/>
+		<Input value="{tmpCcDpMdSpec>/spare_part_die_button_count}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="TOP HOLDER MATERIAL NAME"/>
+		<Input value="{tmpCcDpMdSpec>/top_holder_material_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="BOTTOM HOLDER MATERIAL NAME"/>
+		<Input value="{tmpCcDpMdSpec>/bottom_holder_material_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="DIE MATERIAL NAME"/>
+		<Input value="{tmpCcDpMdSpec>/die_material_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="STRIPPER MATERIAL NAME"/>
+		<Input value="{tmpCcDpMdSpec>/stripper_material_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="PUNCH HOLDER MATERIAL NAME"/>
+		<Input value="{tmpCcDpMdSpec>/punch_holder_material_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="PUNCH MATERIAL NAME"/>
+		<Input value="{tmpCcDpMdSpec>/punch_material_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="PAD VALVE MATERIAL NAME"/>
+		<Input value="{tmpCcDpMdSpec>/pad_valve_material_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="PAD MATERIAL NAME"/>
+		<Input value="{tmpCcDpMdSpec>/pad_material_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+</form:content>
+</form:SimpleForm>
+</VBox>
+</core:FragmentDefinition>
