@@ -121,7 +121,8 @@ service EvaluationItemMngtService {
            etv.hierarchy_is_cycle,        /*순환구조여부(0:False, 1:True)*/
            etv.hierarchy_is_orphan,       /*전개후 연결이 끊어진 노드여부(0:False, 1:True)*/
            CASE WHEN etv.hierarchy_tree_size = 1 THEN 'leaf' ELSE 'expanded' END AS drill_state : String(10),
-           CASE WHEN etv.evaluation_article_lvl_attr_cd = 'ITEM' AND etv.hierarchy_tree_size = 1 THEN 'Y' ELSE 'N' END AS leaf_flag : String(1)
+           CASE WHEN etv.evaluation_article_lvl_attr_cd = 'ITEM' AND etv.hierarchy_tree_size = 1 THEN 'Y' ELSE 'N' END AS leaf_flag : String(1),
+           key etv.tenant_id||etv.company_code||etv.org_code||etv.evaluation_type_code||etv.evaluation_article_code AS ref_key : String(500) /*상세참조키*/
     FROM  exportTreeView etv
           INNER JOIN opUnitMst oum
           ON   etv.tenant_id     = oum.tenant_id
