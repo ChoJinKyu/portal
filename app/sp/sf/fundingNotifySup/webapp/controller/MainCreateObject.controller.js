@@ -10,8 +10,11 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "jquery.sap.global",
-    "sap/m/CheckBox"
-], function (BaseController, Multilingual, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, jQuery, CheckBox) {
+    "sap/m/CheckBox",
+    "sap/ui/core/ValueState",
+	"sap/ui/core/message/Message",
+    "sap/ui/core/MessageType"
+], function (BaseController, Multilingual, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, jQuery, CheckBox, ValueState, Message, MessageType) {
 
     "use strict";
 
@@ -51,7 +54,7 @@ sap.ui.define([
             this.getModel("fundingApp");
         },
 
-        //전화면으로 전환
+        //list 화면으로 전환
         onPageNavBackButtonPress: function () {
             this.getRouter().navTo("mainList", {}, true);
         },
@@ -81,9 +84,20 @@ sap.ui.define([
         onPageSaveButtonPress: function (oEvent) {
 
             var procSaveTemp = {},
+                that=this,
                 urlPram = this.getModel("contModel").getProperty("/oArgs"),
                 oPramDataModel = this.getModel("applicationSup"),
-                oPramCheack = this.getModel("contModel").getProperty("/detail/checkModel");
+                oPramCheackValue=[],
+                oPramCheack = this.getModel("contModel").getProperty("/detail/checkModel"),
+                aFilters = [];
+
+            for(var i = 0; i<oPramCheack.length; i++){
+                if(oPramCheack[i]){
+                    oPramCheackValue.push(i+1);
+                }else{
+                    oPramCheackValue.push("")
+                }
+            }
 
             procSaveTemp = {
                 funding_appl_number: oPramDataModel.getProperty("/funding_appl_number")
@@ -102,7 +116,7 @@ sap.ui.define([
                 , appl_user_name: oPramDataModel.getProperty("/appl_user_name")
                 , appl_user_tel_number: oPramDataModel.getProperty("/appl_user_tel_number")
                 , appl_user_email_address: oPramDataModel.getProperty("/appl_user_email_address")
-                , funding_reason_code: oPramCheack.toString()
+                , funding_reason_code: oPramCheackValue.toString()
                 , collateral_type_code: oPramDataModel.getProperty("/collateral_type_code")
                 , collateral_amount: parseInt(oPramDataModel.getProperty("/collateral_amount"))
                 , collateral_attch_group_number: ""
@@ -119,6 +133,11 @@ sap.ui.define([
                             data: JSON.stringify(procSaveTemp),
                             contentType: "application/json",
                             success: function (oData) {
+                                aFilters.push(new Filter("supplier_code", FilterOperator.EQ, urlPram.supplierCode));
+                                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, urlPram.tenantId));
+                                aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, urlPram.fundingNotifyNumber));
+                                
+                                that._onObjectRead(aFilters);
                                 MessageToast.show("Success to save.");
                             }
                         });
@@ -154,7 +173,7 @@ sap.ui.define([
                 , appl_user_name: oPramDataModel.getProperty("/appl_user_name")
                 , appl_user_tel_number: oPramDataModel.getProperty("/appl_user_tel_number")
                 , appl_user_email_address: oPramDataModel.getProperty("/appl_user_email_address")
-                , funding_reason_code: oPramCheack.toString()
+                , funding_reason_code: oPramCheack.toString().replaceAll("false", "")
                 , collateral_type_code: oPramDataModel.getProperty("/collateral_type_code")
                 , collateral_amount: parseInt(oPramDataModel.getProperty("/collateral_amount"))
                 , collateral_attch_group_number: ""
@@ -184,12 +203,29 @@ sap.ui.define([
             var procSaveInvPlan = {},
                 invPlanDtl = [],
                 oPramMstDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanMst"),
-                oPramDtlDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanDtl");
+                oPramDtlDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanDtl"),
+                oInvestment_plan_sequence=0,
+                that=this,
+                oView= this.byId("investmentPlanDetails");
+            
+                var aControls = oView.getControlsByFieldGroupId("newRequired");
+                var bValid = this._isValidControl(aControls);
+
+            if(!bValid){
+                return;
+            }
+
+            if(!oPramMstDataModel.investment_plan_sequence){
+                oInvestment_plan_sequence=0;
+            }else{
+                oInvestment_plan_sequence=oPramMstDataModel.investment_plan_sequence;
+            };
+
 
             procSaveInvPlan = {
-                crud_type: oPramMstDataModel.crud_type
+                crud_type: "C"
                 , funding_appl_number: this.getModel("applicationSup").getProperty("/funding_appl_number")
-                , investment_plan_sequence: parseInt(oPramMstDataModel.investment_plan_sequence)
+                , investment_plan_sequence: parseInt(oInvestment_plan_sequence)
                 , investment_type_code: oPramMstDataModel.investment_type_code
                 , investment_project_name: oPramMstDataModel.investment_project_name
                 , investment_yyyymm: String(oPramMstDataModel.investment_yyyymm).replace("-", "")
@@ -201,25 +237,25 @@ sap.ui.define([
                 , execution_yyyymm: String(oPramMstDataModel.execution_yyyymm).replace("-", "")
                 , investment_effect: oPramMstDataModel.investment_effect
                 , investment_place: oPramMstDataModel.investment_place
-                , InvPlanDtlType:[]
+                , dtlType:[]
             };
 
             var dtlcnt =this.getModel("applicationSup").getProperty("/popUpInvestPlanDtl").length;
-            
+
             for(var i = 0; i < dtlcnt; i++){
                 invPlanDtl.push({
-                     crud_type: ""                      		            //C:신규/R:읽기/U:수정/D:삭제
-                    , funding_appl_number: ""           			    //자금지원신청번호	
-                    , investment_plan_sequence: parseInt(oPramMstDataModel.investment_plan_sequence)            //투자계획순번	
-                    , investment_plan_item_sequence: parseInt(oPramDtlDataModel[i].investment_plan_item_sequence)       //투자계획품목순번	
-                    , investment_item_name: oPramDtlDataModel[i].investment_item_name                         //투자품목명	
-                    , investment_item_purchasing_price: parseInt(oPramDtlDataModel[i].investment_item_purchasing_price)    //투자품목구매가격	
-                    , investment_item_purchasing_qty: parseInt(oPramDtlDataModel[i].investment_item_purchasing_qty)      //투자품목구매수량	
-                    , investment_item_purchasing_amt: parseInt(oPramDtlDataModel[i].investment_item_purchasing_amt)      //투자품목구매금액
+                     crud_type: "C"//C:신규/R:읽기/U:수정/D:삭제
+                    , funding_appl_number: this.getModel("applicationSup").getProperty("/funding_appl_number")//자금지원신청번호	
+                    , investment_plan_sequence: parseInt(oInvestment_plan_sequence)//투자계획순번
+                    , investment_plan_item_sequence: parseInt(oPramDtlDataModel[i].investment_plan_item_sequence)//투자계획품목순번	
+                    , investment_item_name: oPramDtlDataModel[i].investment_item_name//투자품목명	
+                    , investment_item_purchasing_price: parseInt(oPramDtlDataModel[i].investment_item_purchasing_price)//투자품목구매가격	
+                    , investment_item_purchasing_qty: parseInt(oPramDtlDataModel[i].investment_item_purchasing_qty)//투자품목구매수량	
+                    , investment_item_purchasing_amt: parseInt(oPramDtlDataModel[i].investment_item_purchasing_amt)//투자품목구매금액
                 });
             };
 
-            procSaveInvPlan.InvPlanDtlType=invPlanDtl;
+            procSaveInvPlan.dtlType=invPlanDtl;
             
             MessageBox.confirm("Are you sure ?", {
                 title: "Comfirmation",
@@ -232,6 +268,7 @@ sap.ui.define([
                             data: JSON.stringify(procSaveInvPlan),
                             contentType: "application/json",
                             success: function (oData) {
+                                that.onCreatePopupClose();
                                 MessageToast.show("Success to save.");
                             }
                         });
@@ -241,6 +278,39 @@ sap.ui.define([
 
         },
 
+        //투자 계획 상세 목록 삭제
+        onInvestmentDtlDeleteButtonPress : function(oEvent){
+            var checkRow = this.byId("investmentDtl").getSelectedItems(),
+                invPlanDtl = [],
+                invDtlData = {},
+                dtlType={},
+                that=this,
+                oPramMstDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanMst"),
+                oPramDtlDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanDtl");
+
+            
+            for(var i = 0; i < checkRow.length; i++){
+                invPlanDtl.push({
+                    funding_appl_number: this.getModel("applicationSup").getProperty("/funding_appl_number")//자금지원신청번호	
+                    , investment_plan_sequence: parseInt(oPramMstDataModel.investment_plan_sequence)//투자계획순번
+                    , investment_plan_item_sequence: parseInt(checkRow[i].getBindingContext("applicationSup").getObject().investment_plan_item_sequence)//투자계획품목순번	
+                });
+            };
+
+            invDtlData.dtlType =invPlanDtl;
+
+            jQuery.ajax({
+                url: "srv-api/odata/v4/sp.FundingApplicationV4Service/ProcDelInvPlanDtl",
+                type: "POST",
+                data: JSON.stringify(invDtlData),
+                contentType: "application/json",
+                success: function (oData) {
+                    that.onCreatePopupClose();
+                    MessageToast.show("Success to save.");
+                }
+            });
+        },
+
         //투자계획 팝업
         onOpenInvestmentDtl: function (oEvent) {
             var oView = this.getView(),
@@ -248,7 +318,10 @@ sap.ui.define([
                 bFilters = [],
                 cFilters = [],
                 that = this,
-                rowPath = oEvent.getSource().getParent().getBindingContext("applicationSup").getPath();
+                rowPath = oEvent.getSource().getParent().getBindingContext("applicationSup").getPath(),
+                aControls = oView.getControlsByFieldGroupId("newRequired");
+                
+                this._clearValueState(aControls);
 
             if (!this.pDialog) {
                 this.pDialog = Fragment.load({
@@ -261,11 +334,12 @@ sap.ui.define([
                     return oDialog;
                 });
             };
-
+            
             bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, this.getModel("applicationSup").getProperty("/funding_appl_number")));
             bFilters.push(new Filter("investment_plan_sequence", FilterOperator.EQ, this.getModel("applicationSup").getProperty(rowPath + "/investment_plan_sequence")));
 
             this.pDialog.then(function (oDialog) {
+                
                 //투자계획 팝업 마스터 조회
                 oModel.read("/InvestPlanMstView", {
                     filters: bFilters,
@@ -279,6 +353,7 @@ sap.ui.define([
                         oModel.read("/InvestPlanDtlView", {
                             filters: cFilters,
                             success: function (Result) {
+                                that.byId("investmentDtl").removeSelections();
                                 that.getModel("applicationSup").setProperty("/popUpInvestPlanDtl", Result.results);
                             },
                             error: function (oError) {
@@ -317,6 +392,11 @@ sap.ui.define([
 
                 this.pDialog.then(function (oDialog) {
                     oDialog.open();
+                    that.byId("investmentDtl").removeSelections();
+
+                    var aControls = that.byId("investmentPlanDetails").getControlsByFieldGroupId("newRequired");
+                
+                    that._clearValueState(aControls);
                     that.getModel("applicationSup").setProperty("/popUpInvestPlanMst", {});
                     that.getModel("applicationSup").setProperty("/popUpInvestPlanDtl", []);
                 });
@@ -437,21 +517,27 @@ sap.ui.define([
             this._sFundingNotifyNumber = oArgs.fundingNotifyNumber;
             this._sSupplierCode = oArgs.supplierCode;
 
-            var oView = this.getView(),
-                oModel = this.getModel("fundingApp"),
-                that = this,
-                aFilters = [],
-                bFilters = [];
+            var aFilters = [];
 
             this.getModel("contModel").setProperty("/oArgs", oArgs);
+
             aFilters.push(new Filter("supplier_code", FilterOperator.EQ, this._sSupplierCode));
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId));
             aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, this._sFundingNotifyNumber));
 
+            this._onObjectRead(aFilters);
+        },
+
+        _onObjectRead : function(filters){
+            var oView = this.getView(),
+                oModel = this.getModel("fundingApp"),
+                that = this,
+                bFilters = [];
+            
             //신청서 마스터 조회
             oModel.read("/FundingApplDataView", {
                 //Filter : 공고번호, sub 정보
-                filters: aFilters,
+                filters: filters,
                 success: function (oRetrievedResult) {
                     var aArr = [];
                     var aCheckedData = that.getModel("contModel").getProperty("/detail/checkModel") || [];
@@ -538,6 +624,74 @@ sap.ui.define([
             } else {
                 return true;
             }
+        },
+
+        /***
+         * Control 유형에 따른 필수 값 확인
+         */
+        _isValidControl : function(aControls){
+            var oMessageManager = sap.ui.getCore().getMessageManager(),
+                bAllValid = false,
+                oI18n = this.getView().getModel("I18N");
+                
+            oMessageManager.removeAllMessages();
+            bAllValid = aControls.every(function(oControl){
+                var sEleName = oControl.getMetadata().getElementName(),
+                    sValue;
+                
+                switch(sEleName){
+                    case "sap.m.Input":
+                    case "sap.m.TextArea":
+                        sValue = oControl.getValue();
+                        break;
+                    case "sap.m.ComboBox":
+                        sValue = oControl.getSelectedKey();
+                        break;
+                    default:
+                        return true;
+                }
+                
+                if(!oControl.getProperty('editable')) return true;
+                if(oControl.getProperty('required')){
+                    if(!sValue){
+                        oControl.setValueState(ValueState.Error);
+                        oControl.setValueStateText(oI18n.getText("/ECM01002"));
+                        oMessageManager.addMessages(new Message({
+                            message: oI18n.getText("/ECM01002"),
+                            type: MessageType.Error
+                        }));
+                        bAllValid = false;
+                        oControl.focus();
+                        return false;
+                    }else{
+                        oControl.setValueState(ValueState.None);
+                    }
+                }
+                return true;
+            });
+
+            return bAllValid;
+        },
+
+        /**
+         * ValueState 초기화
+         */
+        _clearValueState : function(aControls){
+             aControls.forEach(function(oControl){
+                var sEleName = oControl.getMetadata().getElementName(),
+                    sValue;
+                
+                switch(sEleName){
+                    case "sap.m.Input":
+                    case "sap.m.TextArea":
+                    case "sap.m.ComboBox":
+                        break;
+                    default:
+                        return;
+                }
+                oControl.setValueState(ValueState.None);
+                oControl.setValueStateText();
+            });
         }
     })
 });
