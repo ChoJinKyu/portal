@@ -48,7 +48,8 @@ service NpApprovalService {
     /* 단가 품의 내역 조회 View */
     view NpApprovalListView as
         SELECT
-               key pam.tenant_id
+               key clc.language_code
+             , key pam.tenant_id
              , key pam.company_code
              , key pam.org_type_code
              , key pam.org_code	                    /* operating org */
@@ -67,7 +68,7 @@ service NpApprovalService {
              , (SELECT cd.code_name
                   FROM CM_CODE_LNG AS cd
                  WHERE cd.tenant_id   = cam.tenant_id
-                   AND cd.group_code  = 'sp_net_price_type'
+                   AND cd.group_code  = 'CM_APPROVE_STATUS'
                    AND cd.language_cd = clc.language_code
                	   AND cd.code        = cam.approve_status_code
 			   )  AS approve_status_name : String

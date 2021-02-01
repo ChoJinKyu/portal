@@ -28,3 +28,5 @@ on dtl.tenant_id = mst.tenant_id
 and dtl.company_code = mst.company_code
 and dtl.const_quotation_number = mst.const_quotation_number
 ;
+
+

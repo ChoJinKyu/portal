@@ -149,7 +149,6 @@ sap.ui.define([
                 contentType: "application/json",
                 type: "GET",
                 success: function(oData){ 
-                    // this.byId("title").setText("Vendor Pool별 관리특성 List ("+oData.value.length+")");
                     var v_list = oView.getModel("title").getData();
                     v_list.MdVpMatrial = oData.value;
                     oView.getModel("title").updateBindings(true); 
@@ -288,7 +287,7 @@ sap.ui.define([
                     contentType: "application/json",
                     type: "GET",
                     success: function(oData2){ 
-                        this.byId("title").setText("List ("+oData2.value.length+")");
+                        this.byId("title").setText(this.getModel("I18N").getText("/LIST") +" ("+oData2.value.length+")");
                         this.setItemList(oData2);
                     }.bind(this)   
                                         

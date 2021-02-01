@@ -111,12 +111,23 @@ service FundingApplicationService {
             ,fa.collateral_attch_group_number   //담보 약식확인서 첨부파일 그룹번호
             ,fa.funding_step_code               //자금지원 단계 코드
             ,fa.funding_status_code             //자금지원 상태 코드
+            //------------업체정보------------
+            ,supp.supplier_local_name as supplier_name  //업체명
+			,supp.tax_id                                //사업자번호
+			,supp.local_full_address                    //주소
+			,supp.repre_name                            //대표자명
+			,supp.email_address                         //이메일주소
+			,supp.tel_number                            //전화번호
+            ,supp.mobile_phone_number                   //폰번호
         from sp.Sf_Funding_Application as fa
         left outer join codeView cv_m           //상환방법 공통코드 조인
         on   cv_m.tenant_id  = fa.tenant_id
         and  cv_m.group_code = 'SP_SF_REPAYMENT_METHOD'
         and  cv_m.code       = fa.repayment_method_code
         and  cv_m.language_cd = 'KO'
+        left outer join sp.Sm_Supplier_Mst as supp
+        on fa.tenant_id = supp.tenant_id
+        and fa.supplier_code = supp.supplier_code
         where 1=1
         ;
 

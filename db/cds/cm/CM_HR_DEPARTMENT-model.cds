@@ -4,7 +4,7 @@ using util from './util/util-model';
 
 entity Hr_Department {
     key tenant_id                    : String(5) not null;
-    key department_id                : String(100) not null;
+        department_id                : String(100) not null;
     key department_code              : String(50) not null;
         department_local_name        : String(240) not null;
         department_korean_name       : String(240);

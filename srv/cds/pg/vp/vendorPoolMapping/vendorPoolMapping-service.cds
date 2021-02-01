@@ -105,7 +105,7 @@ service VpMappingService {
         where  md.tenant_id = he.tenant_id
         and    md.vendor_pool_person_empno = he.employee_number
         and    he.tenant_id = hd.tenant_id
-        and    he.department_id = hd.department_id
+        and    he.department_code = hd.department_code
         and    ifnull(md.vendor_pool_mapping_use_flag, true) = true;
 
         view vpManagerDtlParamView @(title : 'Vendor Pool Manager Mapping Parm View') (sTenant_id: String,sVendor_pool_code: String ) as
@@ -131,7 +131,7 @@ service VpMappingService {
         where  md.tenant_id = he.tenant_id
         and    md.vendor_pool_person_empno = he.employee_number
         and    he.tenant_id = hd.tenant_id
-        and    he.department_id = hd.department_id
+        and    he.department_code = hd.department_code
         and    ifnull(md.vendor_pool_mapping_use_flag, true) = true
         and    he.tenant_id = :sTenant_id
         and    md.vendor_pool_code = :sVendor_pool_code;

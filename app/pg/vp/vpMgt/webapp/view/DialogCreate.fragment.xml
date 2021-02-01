@@ -200,7 +200,7 @@
                     singleContainerFullSize="false" >
                     <form:content>
                         <!-- 팝업 영역 -->
-                        <core:Title text="Category Info" />                        
+                        <core:Title text="{I18N>/CATEGORY_INFO}" />                        
                         <VBox>
                             <Label text = "{I18N>/HIGHER_LEVEL}" design="Bold"/> 
                                 <Text id="pop_higher_level_path" text=""/>
@@ -239,14 +239,14 @@
                             </layoutData> 
                         </VBox> 
                         <!-- <VBox id="v_pop_detail_info"> -->
-                        <core:Title id="pop_detail_info" text="Detail Info" />  
+                        <core:Title id="pop_detail_info" text="{I18N>/DETAIL_INFORMATION}" />  
                         <!-- </VBox> -->
                     
                                 <VBox id="v_pop_repr_department_code">
                                     <Label text = "{I18N>/DEPARTMENT}" design="Bold"/> 
                                         <lib-m:CodePicker id="pop_repr_department_code"
                                         placeholder="Enter a department name"
-                                        keyField="department_id"
+                                        keyField="department_code"
                                         textField="department_local_name"
                                         suggestionItems="{
                                             path: '/',
@@ -341,15 +341,15 @@
                                         <layout:GridData span="XL1 L1 M1 S12" />
                                     </layoutData> 
                                 </VBox>                         
-                                <VBox id="v_pop_maker_material_code_mngt_flag">
-                                    <Label text = "Maker P/N" design="Bold"/> 
+                                <VBox id="v_pop_maker_material_code_mngt_flag" >
+                                    <Label text = "MakerP/N" design="Bold"/> 
                                         <Switch id="pop_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
                                             </layoutData>
                                         </Switch> 
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                        <layout:GridData span="XL1 L1 M1 S12"  />
                                     </layoutData> 
                                 </VBox> 
                                 <VBox id="v_pop_vendor_pool_apply_exception_flag">

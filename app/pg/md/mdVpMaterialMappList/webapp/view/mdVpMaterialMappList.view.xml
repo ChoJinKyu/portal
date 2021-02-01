@@ -20,7 +20,7 @@
       <f:title>
         <f:DynamicPageTitle>
           <f:heading>
-            <Title text="{i18n>appTitle}" />
+            <Title text="{I18N>/MATERIAL_BASE_INFO_MANAGEMENT}" />
           </f:heading>  
         <f:snappedContent>
         </f:snappedContent>        
@@ -38,7 +38,7 @@
                             columnsM="2">
                 <form:content>
                     <VBox>
-                        <Label text="테넌트" labelFor="searchTenantCombo" required="true"></Label>
+                        <Label text="{I18N>/TENANT}" labelFor="searchTenantCombo" required="true"></Label>
                         <ComboBox id="searchTenantCombo" width="100%" items="{
                                 path: 'org>/Org_Tenant',
                                 filters: []
@@ -70,7 +70,7 @@
                         </layoutData> 
                     </VBox>
                     <VBox>
-                        <Label text= "Vendor Pool" labelFor="search_Vp_Name"></Label>
+                        <Label text= "{I18N>/VENDOR_POOL}" labelFor="search_Vp_Name"></Label>
                         <HBox>
                             <SearchField id="search_Vp_Name"
                                         search=".onDialogTreeCreate" 
@@ -99,7 +99,7 @@
                         <form:content>
 
                         <VBox>
-                            <Label text="대표부서코드"></Label>
+                            <Label text="{I18N>/REPR_DEPARTMENT_CODE}"></Label>
                             <lib-m:CodePicker id="search_Dept"
                                 placeholder="Enter a department name"
                                 keyField="department_id"
@@ -122,7 +122,7 @@
 
                         <VBox>
                             <Label
-                                text="등록여부"
+                                text="{I18N>/REGISTER_FLAG}"
                                 labelFor="search_codeGroupStatusflag">
                             </Label>
                             <SegmentedButton 
@@ -130,30 +130,9 @@
                                 selectedKey="" 
                                 width="100%">
                                 <items>
-                                    <SegmentedButtonItem text="All" width="4em"/>
-                                    <SegmentedButtonItem text="등록" width="4em" key="100"/>
-                                    <SegmentedButtonItem text="미등록" width="4em" key="200"/>
-                                </items>
-                            </SegmentedButton>
-                            <layoutData>
-                                <layout:GridData
-                                    span="XL2 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-
-                        <VBox>
-                            <Label
-                                text="사용/미사용 여부"
-                                labelFor="search_codeGroupStatusflag">
-                            </Label>
-                            <SegmentedButton 
-                                id="search_useflag"
-                                selectedKey="" 
-                                width="100%">
-                                <items>
-                                    <SegmentedButtonItem text="All" width="4em"/>
-                                    <SegmentedButtonItem text="사용" width="4em" key="100"/>
-                                    <SegmentedButtonItem text="미사용" width="4em" key="200"/>
+                                    <SegmentedButtonItem text="{I18N>/ALL}" width="4em"/>
+                                    <SegmentedButtonItem text="{I18N>/REGISTER}" width="4em" key="100"/>
+                                    <SegmentedButtonItem text="{I18N>/UNREGISTERED}" width="4em" key="200"/>
                                 </items>
                             </SegmentedButton>
                             <layoutData>
@@ -186,14 +165,14 @@
                     }"
                     rowSelectionChange=".onCheck"
                     visibleRowCount="15"
-                    fixedColumnCount="9"
+                    fixedColumnCount="11"
                     columnResize="onColumnResize">
                 <t:extension>
                     <OverflowToolbar>
                         <Title id="title" level="H2"/> 
                         <ToolbarSpacer/>
-                        <Button id="mainTableCancelButton" text="Cancel" type="Transparent" press=".onMainTableCancelButtonPress" />
-                        <Button id="mainTableSaveButton" text="Save" type="Emphasized" press=".onMainTableSaveButtonPress"/>
+                        <Button id="mainTableCancelButton" text="{I18N>/CANCEL}" type="Transparent" press=".onMainTableCancelButtonPress" />
+                        <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress"/>
                         <ToolbarSeparator/>
                             <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
                                             buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="Upload"/>
@@ -209,47 +188,51 @@
                                 path: 'list>_row_state_',
                                 formatter: '.formatter.toModelStateColumnIcon'
                             }" />
-                            <!-- <Text text="{list>_row_state_}"></Text> -->
                         </t:template>
                     </t:Column>
-                    <t:Column label="VP Lv.3" width="8rem" hAlign="Center" >    
+                    <t:Column label="{I18N>/VENDOR_POOL_CODE}" width="8rem" hAlign="Center" >    
+                        <t:template>
+                            <Text text="{list>vendor_pool_code}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="{I18N>/VENDOR_POOL_LOCAL_NAME}" width="8rem" hAlign="Center" >    
                         <t:template>
                             <Text text="{list>vendor_pool_local_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="자재코드" width="8rem" hAlign="Center" >    
+                    <t:Column label="{I18N>/MATERIAL_CODE}" width="8rem" hAlign="Center" >    
                         <t:template>
                             <Text text="{list>material_code}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="자재명" width="8rem" hAlign="Center" >    
+                    <t:Column label="{I18N>/MATERIAL_NAME}" width="8rem" hAlign="Center" >    
                         <t:template>
                             <Text text="{list>material_code_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="사용여부" width="6rem" hAlign="Center" >    
-                        <t:template>
-                            <Text text="{list>use_flag}" wrapping="false" />
-                        </t:template>
-                    </t:Column>
-                    <t:Column label="VP매핑여부" width="6rem" hAlign="Center" >    
+                    <t:Column label="{I18N>/REGISTER_FLAG}" width="6rem" hAlign="Center" >    
                         <t:template>
                             <Text text="{list>mapping_flag}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="공급업체코드" width="8rem" hAlign="Center" >    
+                    <t:Column label="{I18N>/SUPPLIER_CODE}" width="8rem" hAlign="Center" >    
                         <t:template>
                             <Text text="{list>supplier_code}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="공급업체명" width="8rem" hAlign="Center" >    
+                    <t:Column label="{I18N>/SUPPLIER_LOCAL_NAME}" width="8rem" hAlign="Center" >    
                         <t:template>
                             <Text text="{list>supplier_code_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="대표부서명" width="8rem" hAlign="Center" >    
+                    <t:Column label="{I18N>/REPR_DEPARTMENT_CODE}" width="8rem" hAlign="Center" >    
                         <t:template>
-                            <Text text="{list>department_local_name}" wrapping="false" />
+                            <Text text="{list>repr_department_code}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column label="{I18N>/REPR_DEPARTMENT_NAME}" width="8rem" hAlign="Center" >    
+                        <t:template>
+                            <Text text="{list>department_local_name}" wrapping="false"/>
                         </t:template>
                     </t:Column>
                 </t:columns>

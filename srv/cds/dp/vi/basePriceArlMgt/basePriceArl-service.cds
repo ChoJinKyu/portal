@@ -101,12 +101,12 @@ service BasePriceArlService {
         inner join arlMaster sub
             on sup.tenant_id = sub.tenant_id
             and sup.approval_number = sub.approval_number
-        inner join employee emp
+        left outer join employee emp
             on sup.tenant_id = emp.tenant_id
             and sup.requestor_empno = emp.employee_number
-        inner join Dept dept
+        left outer join Dept dept
             on emp.tenant_id = dept.tenant_id
-            and emp.department_id = dept.department_id
+            and emp.department_code = dept.department_code
         left outer join codeLng as cd01
             on cd01.tenant_id = sup.tenant_id
             and cd01.group_code = 'DP_VI_APPROVAL_TYPE'
@@ -162,7 +162,7 @@ service BasePriceArlService {
             and app.approver_empno = emp.employee_number
         inner join Dept dept
             on emp.tenant_id = dept.tenant_id
-            and emp.department_id = dept.department_id
+            and emp.department_code = dept.department_code
         left outer join codeLng as cd01
             on cd01.tenant_id = app.tenant_id
             and cd01.group_code = 'CM_APPROVER_TYPE'
@@ -210,7 +210,7 @@ service BasePriceArlService {
             and ref.referer_empno = emp.employee_number
         inner join Dept dept
             on emp.tenant_id = dept.tenant_id
-            and emp.department_id = dept.department_id
+            and emp.department_code = dept.department_code
         {
             key ref.tenant_id,
             key ref.approval_number,

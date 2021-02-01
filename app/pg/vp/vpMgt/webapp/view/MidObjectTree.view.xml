@@ -17,14 +17,14 @@
             <f:title>
                 <f:DynamicPageTitle>
                     <f:heading>
-                        <Title text="Vendor Pool" />
+                        <Title text="{I18N>/VENDOR_POOL}" />
                     </f:heading>
                     <f:snappedContent>
                         <form:SimpleForm id="pageSearchFormS" maxContainerCols="3" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
                             <HBox>
                                 <VBox class="sapUiLargeMarginEnd">
-                                    <Label text="Operation ORG" labelFor="mid_Tree_Operation_ORG_S" required="true"></Label>
+                                    <Label text="{I18N>/OPERATION_ORG}" labelFor="mid_Tree_Operation_ORG_S" required="true"></Label>
                                     <ComboBox id="mid_Tree_Operation_ORG_S" width="100%" selectedKey="BIZ00200" items="{
                                         path: '/VpOperationOrg',
                                         filters: [
@@ -41,7 +41,7 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="Operation UINT" labelFor="mid_Tree_Operation_UNIT_S" required="true"></Label>
+                                    <Label text="{I18N>/OPERATION_UNIT}" labelFor="mid_Tree_Operation_UNIT_S" required="true"></Label>
                                     <ComboBox id="mid_Tree_Operation_UNIT_S" width="100%" selectedKey="" 
                                     items="{
                                                         path : 'util>/Code',
@@ -66,7 +66,7 @@
                             <form:content>
                             <HBox>
                                 <VBox class="sapUiLargeMarginEnd" >
-                                    <Label text="Operation ORG" labelFor="mid_Tree_Operation_ORG_E" required="true"></Label>
+                                    <Label text="{I18N>/OPERATION_ORG}" labelFor="mid_Tree_Operation_ORG_E" required="true"></Label>
                                     <ComboBox id="mid_Tree_Operation_ORG_E" width="100%" selectedKey="BIZ00200"  items="{
                                         path: '/VpOperationOrg',
                                         filters: [
@@ -83,7 +83,7 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="Operation UINT" labelFor="mid_Tree_Operation_UNIT_E" required="true"></Label>
+                                    <Label text="{I18N>/OPERATION_UNIT}" labelFor="mid_Tree_Operation_UNIT_E" required="true"></Label>
                                     <ComboBox id="mid_Tree_Operation_UNIT_E" width="100%" selectedKey="" 
                                     items="{
                                                         path : 'util>/Code',
@@ -103,7 +103,7 @@
                         </form:SimpleForm>
                     </f:expandedContent>
                     <f:actions>
-                        <Button id="midTreeSearchButton" text="Search" type="Emphasized" press=".onMidTreeSearchButtonPress" />
+                        <Button id="midTreeSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onMidTreeSearchButtonPress" />
                     </f:actions>
                     <f:navigationActions>
                         <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -117,7 +117,7 @@
                     <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="Vendor Pool" labelFor="mid_Tree_Vp_Name"></Label>
+                                <Label text="{I18N>/VENDOR_POOL}" labelFor="mid_Tree_Vp_Name"></Label>
                                 <HBox>
                                     <Input id="mid_Tree_Vp_Name" placeholder="Input data"></Input>
                                 </HBox>
@@ -156,7 +156,7 @@
                     </table:extension>     
                         <!-- visibleRowCountMode="Auto"> -->
                     <table:columns>
-                            <table:Column label="Vendor Pool" >
+                            <table:Column label="{I18N>/VENDOR_POOL}" >
                                 <table:template>
                                     <Text id="mt_vpNm" text="{tree>vendor_pool_local_name}" wrapping="false" />
                                 </table:template>
