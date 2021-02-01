@@ -22,7 +22,7 @@ namespace sp;
 service makerViewService {
 
     //Table
-    entity MakerCountryManagement @(title : '제조사 국가관리') as projection on mkCntry.Sm_Country_Mst;
+    // entity MakerCountryManagement @(title : '제조사 국가관리') as projection on mkCntry.Sm_Country_Mst;
 
     // View
     @readonly
@@ -45,8 +45,8 @@ service makerViewService {
                 makerView.code_name
         }
         where
-            group_code = 'SP_SM_SUPPLIER_STATUS_CODE'
-            and code <> 'S'
+            trim(group_code) = 'SP_SM_SUPPLIER_STATUS_CODE'
+            and trim(code) <> 'S'
         order by
             tenant_id,
             sort_no
@@ -63,7 +63,7 @@ service makerViewService {
                 makerView.code_name
         }
         where
-            group_code = 'SP_SM_BP_ROLE_CODE'
+            trim(group_code) = 'SP_SM_BP_ROLE_CODE'
         and trim(code) <> '100000'
         order by
             tenant_id,
@@ -80,7 +80,7 @@ service makerViewService {
                 makerView.code_name
         }
         where
-            group_code = 'SP_SM_SUPPLIE_REG_PROG_CODE'
+            trim(group_code) = 'SP_SM_SUPPLIE_REG_PROG_CODE'
         order by
             tenant_id,
             sort_no
@@ -96,7 +96,7 @@ service makerViewService {
                 makerView.code_name
         }
         where
-            group_code = 'SP_SM_SUPPLIER_STATUS_CODE'
+            trim(group_code) = 'SP_SM_SUPPLIER_STATUS_CODE'
         order by
             tenant_id,
             sort_no
@@ -112,7 +112,7 @@ service makerViewService {
                 makerView.code_name
         }
         where
-            group_code = 'SP_SM_SUPPLIER_REG_STATUS_CODE'
+            trim(group_code) = 'SP_SM_SUPPLIER_REG_STATUS_CODE'
         order by
             tenant_id,
             sort_no
@@ -129,7 +129,7 @@ service makerViewService {
                 makerView.code_name
         }
         where
-            group_code = 'SP_SM_SUPPLIER_REG_STATUS_CODE'
+            trim(group_code) = 'SP_SM_SUPPLIER_REG_STATUS_CODE'
         order by
             tenant_id,
             sort_no
@@ -145,7 +145,7 @@ service makerViewService {
                 makerView.code_name
         }
         where
-            group_code = 'SP_SM_SUPPLIER_TYPE'
+            trim(group_code) = 'SP_SM_SUPPLIER_TYPE'
         order by
             tenant_id,
             sort_no
