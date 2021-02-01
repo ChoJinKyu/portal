@@ -159,14 +159,14 @@ service FundingApplicationV4Service {
     ) returns array of RtnObjInvDtl;
 
     //------------------투자계획서 마스터 삭제
-    // action procDelInvPlan (mstType: array of invPlanMstDelType  //마스터 삭제 데이터 타입
-    //                        ,user_id : String(30)                //작성자id
-    // ) returns array of RtnObjInvDtl;
+    action ProcDelInvPlan (mstType: array of InvPlanMstDelType      //마스터 삭제 데이터 타입
+                            ,user_id : String(30)                   //작성자id
+    ) returns array of RtnObjInvDtl;
 
-    // //------------------투자계획서 상세 삭제
-    // action procDelInvPlanDtl (dtlType: array of invPlanDtlType  //상세 삭제 데이터 타입
-    //                        ,user_id : String(30)                //작성자id
-    // ) returns array of RtnObj;
+    //------------------투자계획서 상세 삭제
+    action ProcDelInvPlanDtl (dtlType: array of InvPlanDtlDelType   //상세 삭제 데이터 타입
+                            ,user_id : String(30)                   //작성자id
+    ) returns array of RtnObj;
 
     
 }
