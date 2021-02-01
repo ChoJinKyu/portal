@@ -1,4 +1,4 @@
-<mvc:View controllerName="xx.template3ColumnsLayout.controller.TemplateMainList"
+<mvc:View controllerName="xx.template3ColumnsLayout.controller.TemplateBeginColumn"
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 
@@ -86,19 +86,19 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column minScreenWidth="Tablet" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+                        <Column minScreenWidth="Desktop" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
                             <Label text="{I18N>/COMPANY}" />
                         </Column>
-                        <Column minScreenWidth="Tablet" hAlign="Center" width="7rem">
+                        <Column minScreenWidth="Desktop" hAlign="Center" width="7rem">
                             <Label text="{I18N>/CURRENCY}" />
                         </Column>
-                        <Column minScreenWidth="Tablet" hAlign="Center" width="7rem">
+                        <Column minScreenWidth="Desktop" hAlign="Center" width="7rem">
                             <Label text="{I18N>/COUNTRY}" />
                         </Column>
-                        <Column minScreenWidth="Tablet" hAlign="Center" width="7rem">
+                        <Column minScreenWidth="Desktop" hAlign="Center" width="7rem">
                             <Label text="{I18N>/LANGUAGE}" />
                         </Column>
-                        <Column minScreenWidth="Tablet" hAlign="Center" width="7rem">
+                        <Column minScreenWidth="Desktop" hAlign="Center" width="7rem">
                             <Label text="Using" />
                         </Column>
                     </columns>

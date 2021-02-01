@@ -98,17 +98,17 @@
       }
     },
     "resources": {
-        "css": [
-            {
-                "uri": "../../../lib/css/style.css"
-            },
-            {
-                "uri": "../../../lib/css/layout.css"
-            },
-            {
-                "uri": "css/style.css"
-            }
-        ]
+      "css": [
+        {
+          "uri": "../../../lib/css/style.css"
+        },
+        {
+          "uri": "../../../lib/css/layout.css"
+        },
+        {
+          "uri": "css/style.css"
+        }
+      ]
     },
     "resourceRoots": {
       "ext.lib": "../../../lib",
@@ -120,7 +120,7 @@
         "viewType": "XML",
         "viewPath": "xx.template3ColumnsLayout.view",
         "controlId": "fcl",
-				"transition": "slide",
+        "transition": "slide",
         "bypassed": {
           "target": [
             "notFound"
@@ -129,41 +129,50 @@
         "async": true
       },
       "routes": [
-          {
-              "pattern": ":layout:",
-              "name": "mainPage",
-              "target": [
-                  "mainObject"
-              ]
-          },
-          {
-              "pattern": "midObject/{layout}/{tenantId}^{companyCode}",
-              "name": "midPage",
-              "target": [
-                  "mainObject",
-                  "midObject"
-              ]
-          }
+        {
+          "pattern": ":layout:",
+          "name": "beginPage",
+          "target": [
+            "beginColumn"
+          ]
+        },
+        {
+          "pattern": "midColumn/{layout}/{tenantId}^{companyCode}",
+          "name": "midPage",
+          "target": [
+            "beginColumn",
+            "midColumn"
+          ]
+        },
+        {
+          "pattern": "endColumn/{layout}/{tenantId}^{companyCode}^{departmentCode}",
+          "name": "endPage",
+          "target": [
+            "beginColumn",
+            "midColumn",
+            "endColumn"
+          ]
+        }
       ],
       "targets": {
-          "mainObject": {
-              "viewName": "TemplateMainList",
-              "controlAggregation": "beginColumnPages"
-          },
-          "midObject": {
-              "viewName": "TemplateMidObject",
-              "controlAggregation": "midColumnPages"
-          },
-          "notFound": {
-            "viewName": "NotFound",
-            "viewPath": "ext.lib.view",
-            "viewId": "notFound"
-          }
+        "beginColumn": {
+          "viewName": "TemplateBeginColumn",
+          "controlAggregation": "beginColumnPages"
+        },
+        "midColumn": {
+          "viewName": "TemplateMidColumn",
+          "controlAggregation": "midColumnPages"
+        },
+        "endColumn": {
+          "viewName": "TemplateEndColumn",
+          "controlAggregation": "endColumnPages"
+        },
+        "notFound": {
+          "viewName": "NotFound",
+          "viewPath": "ext.lib.view",
+          "viewId": "notFound"
+        }
       }
     }
-  },
-  "sap.cloud": {
-    "public": true,
-    "service": "sppCap_ui_dev"
   }
 }

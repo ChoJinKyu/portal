@@ -17,7 +17,7 @@ sap.ui.define([
         Filter, FilterOperator, MessageBox, MessageToast, jQuery) {
 	"use strict";
 
-	return BaseController.extend("xx.template3ColumnsLayout.controller.TemplateMainList", {
+	return BaseController.extend("xx.template3ColumnsLayout.controller.TemplateBeginColumn", {
 
 		dateFormatter: DateFormatter,
 
@@ -26,14 +26,14 @@ sap.ui.define([
 		/* =========================================================== */
 
 		/**
-		 * Called when the mainList controller is instantiated.
+		 * Called when the controller is instantiated.
 		 * @public
 		 */
 		onInit : function () {
 			var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new JSONModel(), "list");
-            this.setModel(new JSONModel(), "mainListViewModel");
+            this.setModel(new JSONModel(), "beginPageViewModel");
 
 			oMultilingual.attachEvent("ready", function(oEvent){
 				var oI18nModel = oEvent.getParameter("model");
@@ -44,7 +44,7 @@ sap.ui.define([
 				}, true);
 			}.bind(this));
 			
-			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+			this.getRouter().getRoute("beginPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this.enableMessagePopover();
         },
@@ -119,7 +119,7 @@ sap.ui.define([
 			});
 
             if(oNextUIState.layout === "TwoColumnsMidExpanded"){
-                this.getModel("mainListViewModel").setProperty("/headerExpandFlag", false);
+                this.getModel("beginPageViewModel").setProperty("/headerExpandFlag", false);
             }
 
 			var oItem = oEvent.getSource();
@@ -139,7 +139,7 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(){
-			this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
+			this.getModel("beginPageViewModel").setProperty("/headerExpanded", true);
 			this.byId("pageSearchButton").firePress();
 		},
 
