@@ -33,7 +33,7 @@ sap.ui.define([
             Parent.prototype.constructor.apply(this, arguments);  
 
             this.oModel = new OPUiModel();
-            var oXhr = ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.mst.TemplateService/");
+            var oXhr = ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.mst.templateService/");
             var oQuery = {
                 urlParameters: {
                     "$select": "ettLabel,ettStatus"
