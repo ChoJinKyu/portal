@@ -32,7 +32,7 @@ BEGIN
              where emp.tenant_id = I_TENANT_ID
                and emp.tenant_id = dept.tenant_id
                and emp.employee_number = I_EMPLOYEE_NUMBER
-               and emp.department_id = dept.department_id;
+               and emp.department_code = dept.department_code;
 	    else
 	        select emp.user_local_name || ' ' || emp.job_title
 	          into O_RETURN
