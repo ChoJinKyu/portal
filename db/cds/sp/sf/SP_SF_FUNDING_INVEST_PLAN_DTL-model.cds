@@ -26,10 +26,12 @@ entity Sf_Funding_Invest_Plan_Dtl {
     key funding_appl_number              : String(10) @title : '자금지원신청번호';
     key investment_plan_sequence         : Integer    @title : '투자계획순번';
     key investment_plan_item_sequence    : Integer    @title : '투자계획품목순번';
-        investment_item_name             : String(500)@title : '투자품목명';
-        investment_item_purchasing_price : Decimal    @title : '투자품목구매가격';
-        investment_item_purchasing_qty   : Decimal    @title : '투자품목구매수량';
-        investment_item_purchasing_amt   : Decimal    @title : '투자품목구매금액';
+        tenant_id                        : String(5) not null  @title : '테넌트ID';
+        company_code                     : String(10) not null @title : '회사코드';
+        investment_item_name             : String(500) not null @title : '투자품목명';
+        investment_item_purchasing_price : Decimal    not null @title : '투자품목구매가격';
+        investment_item_purchasing_qty   : Decimal    not null @title : '투자품목구매수량';
+        investment_item_purchasing_amt   : Decimal    not null @title : '투자품목구매금액';
 }
 
 extend Sf_Funding_Invest_Plan_Dtl with util.Managed;

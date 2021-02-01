@@ -60,6 +60,12 @@ BEGIN
     
 	--자금지원 신청번호 추출
 	V_FUNDING_APPL_NUMBER := :I_FUNDING_APPL_NUMBER;
+
+
+    /***********************************************
+	최종 에러처리
+	***********************************************/
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 	
 	BEGIN
 	
@@ -74,6 +80,7 @@ BEGIN
 							,::SQL_ERROR_CODE AS ERR_CODE
 							,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
 						FROM DUMMY;
+            RESIGNAL;           
 		END;
 		
 		-------------------------------------------------------------------------------[필수체크]	
@@ -181,6 +188,7 @@ BEGIN
 							,::SQL_ERROR_CODE AS ERR_CODE
 							,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
 						FROM DUMMY;
+            RESIGNAL;
 		END;
 	
 		

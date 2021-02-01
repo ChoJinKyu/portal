@@ -48,6 +48,10 @@ BEGIN
 	FROM :I_DTL_DATA
 	;
     
+    /***********************************************
+	최종 에러처리
+	***********************************************/
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 	
 	
 	-----------------------------------------------데이터 커서
@@ -71,6 +75,7 @@ BEGIN
 								,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
 								,:V_MST_SEQ AS RTN_INVESTMENT_PLAN_SEQUENCE 
 							FROM DUMMY;
+                RESIGNAL;
 			END;
 			
 			-------------------------------------------------------------------------------[넘어온 데이터가 있는지 체크]
@@ -94,6 +99,7 @@ BEGIN
 								,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
 								,:V_MST_SEQ AS RTN_INVESTMENT_PLAN_SEQUENCE 
 							FROM DUMMY;
+                RESIGNAL;
 			END;
 		
 			-------------------------------------------------------------------------------[투자계획 상세 테이블 삭제]

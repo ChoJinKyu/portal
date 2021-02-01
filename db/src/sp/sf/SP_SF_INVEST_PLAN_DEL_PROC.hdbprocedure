@@ -45,7 +45,11 @@ BEGIN
 	FROM :I_MST_DATA
 	;
     
-	
+
+	/***********************************************
+	최종 에러처리
+	***********************************************/
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 	
 	-----------------------------------------------마스터 데이터 커서
 	FOR REC_MST_DATA AS CUR_MST_DATA DO
@@ -66,6 +70,7 @@ BEGIN
 								,::SQL_ERROR_CODE AS ERR_CODE
 								,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
 							FROM DUMMY;
+                RESIGNAL;
 			END;
 			
 			-------------------------------------------------------------------------------[넘어온 데이터가 있는지 체크]
@@ -88,6 +93,7 @@ BEGIN
 								,::SQL_ERROR_CODE AS ERR_CODE
 								,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
 							FROM DUMMY;
+                RESIGNAL;
 			END;
 		
 			-------------------------------------------------------------------------------[투자계획 마스터 테이블 삭제]
