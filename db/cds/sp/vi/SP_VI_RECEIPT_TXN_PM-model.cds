@@ -42,6 +42,7 @@ entity Vi_Receipt_Txn_Pm {
     key currency_code    : String(3) not null  @title : '통화코드';
         receipt_quantity : Decimal             @title : '입고수량';
         receipt_amount   : Decimal             @title : '입고금액';
+        
 }
 
 extend Vi_Receipt_Txn_Pm with util.Managed;

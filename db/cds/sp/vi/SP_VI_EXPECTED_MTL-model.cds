@@ -38,6 +38,7 @@ entity Vi_Expected_Mtl {
     key plant_code    : String(10) not null @title : '플랜트코드';
     key material_code : String(40) not null @title : '자재코드';
         txn_type_code : String(30)          @title : '거래유형코드';
+        
 }
 
 extend Vi_Expected_Mtl with util.Managed;

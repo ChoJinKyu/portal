@@ -42,6 +42,7 @@ entity Vi_Expected_Receipt {
         currency_code    : String(3)           @title : '통화코드';
         market_code      : String(1)           @title : '납선코드';
         receipt_quantity : Decimal             @title : '입고수량';
+        
 }
 
 extend Vi_Expected_Receipt with util.Managed;

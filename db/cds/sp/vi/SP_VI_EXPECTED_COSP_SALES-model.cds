@@ -42,6 +42,7 @@ entity Vi_Expected_Cosp_Sales {
     key currency_code  : String(3) not null  @title : '통화코드';
         sales_quantity : Decimal             @title : '매출수량';
         sales_amount   : Decimal             @title : '매출금액';
+        
 }
 
 extend Vi_Expected_Cosp_Sales with util.Managed;
