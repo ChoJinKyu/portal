@@ -27,9 +27,7 @@ sap.ui.define([
             this.$session = this.getModel("session").getData();
             // 다국어
             this.setModel(new Multilingual().getModel(), "I18N");
-            // 기능추가 - Event Handler
-            Aop.addFuncForArgs("onSearch", this);
-            Aop.addFuncForArgs("onColumnListItemPress", this);
+            // 기능추가
             Aop.addFuncForButton(this);
             Aop.addFuncForNavigation(this);
         },
@@ -138,7 +136,7 @@ sap.ui.define([
                                 .forEach(h => that[id][h] = undefined);
                         }, 0);
                         return settled ? mDeferred[settled](value) : value;
-                    }, that[id], true);
+                    }, that[id]);
                 });
 
             return mDeferred.promise();
@@ -201,20 +199,11 @@ sap.ui.define([
         },
 
         /////////////////////////////////////////////////////////////
-        // Event Handler : 지우면 않 됨
+        // Event Handler - 지우지 말 것
         /////////////////////////////////////////////////////////////
-        // 버튼클릭
-        // I/F : [event, action[, a, b, ...], ...args]
-        // action == 'default' 인 경우는 (args[args.length-1]["action"] IN ("NavBack", "Full", "Exit")을 참고하여)자동처리
-        // default 액션의 경우 : 후단 처리를 위해서는 각 화면의 컨트롤러에서 후 처리만을 기재해주면 된다.
-        onButtonPress: function () {},
-
         // 네비게이션
-        // I/F : [event, action[, a, b, ...], ...args]
-        // action == 'default' 인 경우는 (args[args.length-1]["action"] IN ("NavBack", "Full", "Exit")을 참고하여)자동처리
-        // NavBack: 이전, Full: 전체화면, Exit: 전체화면해제
-        // default 액션의 경우 : 후단 처리를 위해서는 각 화면의 컨트롤러에서 후 처리만을 기재해주면 된다.
         onNavigationActions: function () {},
+        onButtonPress: function () {},
 
         // Excel
         onExcel: function () {

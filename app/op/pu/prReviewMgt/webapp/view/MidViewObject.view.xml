@@ -34,7 +34,7 @@
                         icon="sap-icon://full-screen" 
                         type="Transparent"
                         tooltip="Enter Full Screen Mode" 
-                        press=".onNavigationActions.call(this, $event, 'default', { action: 'Full' })"
+                        press=".onNavigationActions($event, 'default', { action: 'Full' })"
                     />  -->
                     <!-- 전체화면해제 -->
                     <!-- visible="{= ${midObjectView>/screen} === 'Full' }"
@@ -42,7 +42,7 @@
                         icon="sap-icon://exit-full-screen" 
                         type="Transparent"
                         tooltip="Exit Full Screen Mode" 
-                        press=".onNavigationActions.call(this, $event, 'default', { action: 'Exit' })"
+                        press=".onNavigationActions($event, 'default', { action: 'Exit' })"
                     />  -->
                     <!-- 뒤로가기 -->
                     <!-- visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }" -->
@@ -51,7 +51,7 @@
                         type="Transparent"
                         text="back" 
                         tooltip="Back to the list" 
-                        press=".onNavigationActions.call(this, $event, 'default', { action: 'NavBack' })"
+                        press=".onNavigationActions($event, 'default', { action: 'NavBack' })"
                     />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
@@ -380,7 +380,7 @@
                                         </Column>
                                     </columns>
                                     <items>
-                                        <ColumnListItem type="Navigation" press=".onColumnListItemPress.call(this, $event, '${list>/this}')">
+                                        <ColumnListItem type="Navigation">
                                             <cells>
                                                 <!-- 코스트센터 -->
                                                 <Text text="[{accounts>cctr_code}] {accounts>cctr_name}" width="10em" textAlign="Left" />
@@ -412,7 +412,7 @@
                 <Button text="(미정)변경이력" type="Transparent" press=".onButtonPress($event, 'changed')" />
                 <Button text="(미정)발주이력" type="Transparent" press=".onButtonPress($event, 'ordered')" />
                 <Button text="(미정)사용실적" type="Transparent" press=".onButtonPress($event, 'results')" />
-			    <Button text="{I18N>/CLOSE}" type="Emphasized"  press=".onButtonPress.call(this, $event, 'default', { action: 'NavBack' })" />
+			    <Button text="{I18N>/CLOSE}" type="Emphasized"  press=".onButtonPress($event, 'default', { action: 'NavBack' })" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

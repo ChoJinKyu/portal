@@ -63,7 +63,7 @@
                             <!-- 구매요청생성상태코드 -->
                             <Label text="{I18N>/PR_CREATE_STATUS_CODE}"/>
                             <MultiComboBox
-                                selectedKeys="{jSearch>/pr_progress_status_code/values}"
+                                selectedKeys="{jSearch>/pr_create_status_code/values}"
                                 showSecondaryValues="false"
                                 width="100%"
                                 items="{
@@ -370,7 +370,7 @@
                         </Column>
                     </columns>
                     <items>
-                        <ColumnListItem type="Navigation" press=".onColumnListItemPress.call(this, $event, '${list>/this}')">
+                        <ColumnListItem type="Navigation" press=".onColumnListItemPress($event, 'list')">
                             <cells>
                                 <!-- 구매요청 번호 -->
                                 <Text text="{list>pr_number}" vAlign="Left" />
