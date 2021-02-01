@@ -6,7 +6,7 @@ sap.ui.define([
     "ext/lib/util/Validator",
     "ext/lib/util/ExcelUtil",
     "cm/util/control/ui/EmployeeDialog",
-    "dp/md/util/controller/ModelDeveloperSelection",
+    "cm/util/control/ui/CmDialogHelp",
     "./DevelopmentReceiptPersoService",
     "sap/ui/base/ManagedObject",
     "sap/ui/core/routing/History",
@@ -29,7 +29,7 @@ sap.ui.define([
     'sap/m/SearchField',
     "sap/m/Text",
     "sap/m/Token"
-], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, ExcelUtil, EmployeeDialog, ModelDeveloperSelection, DevelopmentReceiptPersoService,
+], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, ExcelUtil, EmployeeDialog, CmDialogHelp, DevelopmentReceiptPersoService,
     ManagedObject, History, Element, Fragment, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item,
     ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token) {
     "use strict";
@@ -39,8 +39,6 @@ sap.ui.define([
         dateFormatter: DateFormatter,
 
         validator: new Validator(),
-
-        modelDeveloperSelection: new ModelDeveloperSelection(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -202,20 +200,6 @@ sap.ui.define([
             this._oTPC.refresh();
         },
 
-		/**
-		 * Event handler when a table item gets pressed
-		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
-		 * @public
-		 */
-        onMoldMstTableItemPress: function (oEvent) {
-            // The source is the list item that got pressed
-            this._showMainObject(oEvent.getSource());
-        },
-
-        onMoldMstTableUserSearch: function (oEvent) {
-            this.modelDeveloperSelection.showModelDeveloperSelection(this, oEvent);
-        },
-
         onInputWithEmployeeValuePress: function(oEvent){
             oEvent.getSource().getParent().getCells()[0].setSelected(true);
             var index = oEvent.getSource().getBindingContext("list").getPath().split('/')[2];
@@ -236,81 +220,6 @@ sap.ui.define([
             oModel.setProperty("/MoldMstView/"+rowIndex+"/mold_developer_empno", employeeNumber);
         },
 
-        /**
-         * @description employee 팝업 닫기 
-         */
-        onExitEmployee: function () {
-            this.byId("dialogEmployeeSelection").close();
-            // this.byId("dialogEmployeeSelection").destroy();
-        },
-
-        /**
-         * @description employee 팝업 열기 
-         */
-        handleEmployeeSelectDialogPress: function (oEvent) {
-
-            var oView = this.getView();
-            var oButton = oEvent.getSource();
-            if (!this._oDialog) {
-                this._oDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "dp.md.developmentReceipt.view.Employee",
-                    controller: this
-                }).then(function (oDialog) {
-                    oView.addDependent(oDialog);
-                    return oDialog;
-                }.bind(this));
-            }
-
-            this._oDialog.then(function (oDialog) {
-                oDialog.open();
-            });
-
-        },
-
-        /**
-         * @description employee 팝업에서 apply 버튼 누르기 
-         */
-        /*onEmploySelectionApply: function () {
-            var oTable = this.byId("employeeSelectTable");
-            var aItems = oTable.getSelectedItems();
-            var that = this;
-            aItems.forEach(function (oItem) {
-                var obj = new JSONModel({
-                    model: oItem.getCells()[0].getText()
-                    , moldPartNo: oItem.getCells()[1].getText()
-                });
-                that._approvalRowAdd(obj);
-            });
-            this.onExitEmployee();
-        },
-*/
-
-        /**
-         * @description Approval Row에 add 하기 
-         */
-        /*_approvalRowAdd: function (obj) {
-            var oTable = this.byId("moldMstTable"),
-                oModel = this.getModel("list");
-            var aItems = oTable.getRows();
-            var oldItems = [];
-            
-            aItems.forEach(function (oItem) {
-                //  console.log("oItem >>> " , oItem.mAggregations.cells[0].mProperties.text);
-                //  console.log("oItem >>> " , oItem.mAggregations.cells[1].mProperties.selectedKey);
-                //  console.log("oItem >>> " , oItem.mAggregations.cells[2].mProperties.value);
-                var item = {
-                    "no": oItem.mAggregations.cells[0].mProperties.text,
-                    "type": oItem.mAggregations.cells[1].mProperties.selectedKey,
-                    "nameDept": oItem.mAggregations.cells[2].mProperties.value,
-                }
-                oldItems.push(item);
-            });
-
-            this.getView().setModel(new ManagedListModel(), "list"); // oldItems 에 기존 데이터를 담아 놓고 나서 다시 모델을 리셋해서 다시 담는 작업을 함 
-
-        },
-*/
 		/**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
@@ -788,7 +697,7 @@ sap.ui.define([
         
         inputFieldChange : function (oEvent) {
             oEvent.getSource().getParent().getCells()[0].setSelected(true);
-            var colName = oEvent.getSource().sId.split('--')[2].split('-')[0],
+            var colName = oEvent.getSource().sId.split('developmentReceipt--')[1].split('-')[0],
                 familyPartNumber1 = oEvent.getSource().getParent().getCells()[25].mProperties.value,
                 familyPartNumber2 = oEvent.getSource().getParent().getCells()[26].mProperties.value,
                 familyPartNumber3 = oEvent.getSource().getParent().getCells()[27].mProperties.value,
@@ -833,7 +742,18 @@ sap.ui.define([
         
         onSelectChange : function (oEvent) {
             oEvent.getSource().getParent().getCells()[0].setSelected(true);
-            var combo, colName = oEvent.getSource().sId.split('--')[2].split('-')[0],
+
+            var rowIndex = oEvent.getSource().getBindingContext("list").getPath().split('/')[2],
+                oModel = this.getModel("list");
+
+            oModel.setProperty("/MoldMstView/"+rowIndex+"/mold_type_name", null);
+            oModel.setProperty("/MoldMstView/"+rowIndex+"/mold_type_code", null);
+        
+            oModel.setProperty("/MoldMstView/"+rowIndex+"/die_form_name", null);
+            oModel.setProperty("/MoldMstView/"+rowIndex+"/die_form", null);
+
+
+            /*var combo, colName = oEvent.getSource().sId.split('developmentReceipt--')[1].split('-')[0],
                 key = this.getModel("list").getProperty(oEvent.getSource().getBindingInfo("selectedKey").binding.getContext().getPath()).mold_item_type_code;
 
             if(colName === "mold_item_type_code"){
@@ -864,9 +784,60 @@ sap.ui.define([
                         key: "{util>code}", text: "{util>code_name}"
                     })
                 });
-            }
+            }*/
+
         },
         
+        onCmInputWithCodeValuePress: function(oEvent){
+            oEvent.getSource().getParent().getCells()[0].setSelected(true);
+
+            var rowIndex = oEvent.getSource().getBindingContext("list").getPath().split('/')[2],
+                oModel = this.getModel("list"),
+                colName = oEvent.getSource().sId.split('developmentReceipt--')[1].split('-')[0],
+                popupTitle = "Mold Type",
+                groupCode = "DP_MD_MOLD_TYPE",
+                parentCode = oModel.getProperty(oEvent.getSource().getBindingContext("list").getPath()).mold_item_type_code;
+
+            if(colName === "die_form_name"){
+                popupTitle = "Mold Structure";
+                groupCode = "DP_MD_MOLD_STRUCTURE";
+                if(parentCode !== 'P'){
+                    parentCode = 'M';
+                }
+            }
+            
+            this.oCmDialogHelp = new CmDialogHelp({
+                title: popupTitle,
+                keyFieldLabel : "{I18N>/CODE}",
+                textFieldLabel : "{I18N>/NAME}",
+                keyField : "code",
+                textField : "code_name",
+                items: {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, "L2600"),
+                        new Filter("group_code", FilterOperator.EQ, groupCode),
+                        new Filter("parent_code", FilterOperator.EQ, parentCode)
+                    ],
+                    sorters: [
+                        new Sorter("sort_no", false)
+                    ],
+                    serviceName: "cm.util.CommonService",
+                    entityName: "Code"
+                }
+            });
+            this.oCmDialogHelp.attachEvent("apply", function(iEvent){
+                if(colName === "mold_type_name"){
+                    oModel.setProperty("/MoldMstView/"+rowIndex+"/mold_type_name", iEvent.getParameter("item").code_name);
+                    oModel.setProperty("/MoldMstView/"+rowIndex+"/mold_type_code", iEvent.getParameter("item").code);
+                }else{
+                    oModel.setProperty("/MoldMstView/"+rowIndex+"/die_form_name", iEvent.getParameter("item").code_name);
+                    oModel.setProperty("/MoldMstView/"+rowIndex+"/die_form", iEvent.getParameter("item").code);
+                }
+            }.bind(this));
+            
+            this.oCmDialogHelp.open();
+        },
+
         onRefresh: function () {
             var oBinding = this.byId("moldMstTable").getBinding("rows");
             this.getView().setBusy(true);

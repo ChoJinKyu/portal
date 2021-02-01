@@ -64,12 +64,14 @@ entity Md_Mst_View {
         family_part_number_5            : String(240)           @title:'가족부품번호5';
         mold_cost_analysis_type_code    : String(30)            @title:'금형원가분석유형코드';
         mold_type_code                  : String(30)            @title:'금형유형코드';
+        mold_type_name                  : String(150)           @title:'금형유형명';
         mold_mfger_code                 : String(10)            @title:'금형공급업체코드';
         mold_developer_empno            : String(255)           @title:'금형개발자사번';
         mold_developer_name             : String(480)           @title:'금형개발자명';
         scrap_date                      : String(8)             @title:'폐기일자';
         use_department_code             : String(30)            @title:'사용부서코드';
         die_form                        : String(10)	        @title:'다이형상';
+        die_form_name                   : String(150)	        @title:'다이형상명';
         mold_size                       : String(10)	        @title:'금형크기';
         local_create_dtm                : DateTime    not null  @title: '로컬등록시간';
         update_type                     : String(15)            @title: '화면에서 click한 Button';
