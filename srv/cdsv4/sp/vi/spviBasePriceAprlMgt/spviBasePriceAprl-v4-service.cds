@@ -62,7 +62,7 @@ service spviBasePriceArlV4Service {
     type BasePriceAprlItemType : {
         tenant_id	              : String(5)    ;
         approval_number	          : String(50)   ;
-        item_sequence	          : String(50)   ;
+        item_sequence	          : Decimal   ;
         company_code	          : String(10)   ;
         bizunit_code	          : String(10)   ;
         management_mprice_code	  : String(30)   ;

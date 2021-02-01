@@ -2,6 +2,8 @@ package lg.sppCap.handlers.sp.vi;
 
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
+
+import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.time.Instant;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,8 +28,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sap.cds.services.handler.EventHandler;
+import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
+
+import lg.sppCap.util.TimezoneUtil;
 
 import cds.gen.sp.spvibasepricearlv4service.*;
 
@@ -40,6 +46,96 @@ public class SpviBasePriceArlServiceV4 implements EventHandler {
 
     @Autowired
     private JdbcTemplate jdbc;   
+
+
+    @Transactional(rollbackFor = SQLException.class)
+    @Before(event=SpViBasePriceAprlProcContext.CDS_NAME)
+    public void beforeSpViBasePriceAprlProc(SpViBasePriceAprlProcContext context) {
+        
+        log.info("#### before ###SpViBasePriceAprlProc");
+
+        Instant localNow = TimezoneUtil.getZonedNow().toInstant(); //로컬 시간
+
+        String SP_VI_APPROVAL_NUMBER_FUNC = "";
+
+        Collection<BasePriceAprlMstType> BasePriceAprlMstTypes = context.getInputData().getBasePriceAprlMstType();
+        Collection<BasePriceAprlApproverType> BasePriceAprlApproverTypes = context.getInputData().getBasePriceAprlApproverType();
+        Collection<BasePriceAprlRefererType> BasePriceAprlRefererTypes = context.getInputData().getBasePriceAprlRefererType();
+        Collection<BasePriceAprlTypeType> BasePriceAprlTypeTypes = context.getInputData().getBasePriceAprlTypeType();
+        Collection<BasePriceAprlItemType> BasePriceAprlItemTypes = context.getInputData().getBasePriceAprlItemType();
+        Collection<BasePriceAprlDtlType> BasePriceAprlDtlTypes = context.getInputData().getBasePriceAprlDtlType();
+
+        
+        String tenant_id =  "";
+        String approval_number = "";
+        
+        //품의마스터 품의번호 세팅
+        for(BasePriceAprlMstType BasePriceAprlMst : BasePriceAprlMstTypes){
+            tenant_id =  BasePriceAprlMst.getTenantId();
+
+            SP_VI_APPROVAL_NUMBER_FUNC = "SELECT SP_VI_APPROVAL_NUMBER_FUNC(?) FROM DUMMY";
+            approval_number = jdbc.queryForObject(SP_VI_APPROVAL_NUMBER_FUNC, new Object[] { tenant_id }, String.class);
+
+            BasePriceAprlMst.setApprovalNumber(approval_number);
+            BasePriceAprlMst.setLocalCreateDtm(localNow);
+            BasePriceAprlMst.setLocalUpdateDtm(localNow);
+        }
+        //양산가품의서유형 품의번호 세팅
+        for(BasePriceAprlTypeType BasePriceAprlType : BasePriceAprlTypeTypes){
+            BasePriceAprlType.setApprovalNumber(approval_number);
+            BasePriceAprlType.setLocalCreateDtm(localNow);
+            BasePriceAprlType.setLocalUpdateDtm(localNow);
+        }
+
+        //품의참조자
+        for(BasePriceAprlRefererType BasePriceAprlReferer : BasePriceAprlRefererTypes){
+            BasePriceAprlReferer.setApprovalNumber(approval_number);
+            BasePriceAprlReferer.setLocalCreateDtm(localNow);
+            BasePriceAprlReferer.setLocalUpdateDtm(localNow);
+        }
+
+        String SP_VI_ITEM_SEQUENCE_FUNC = "SELECT SP_VI_ITEM_SEQUENCE_FUNC(?,?,?) FROM DUMMY";    
+
+        BigDecimal increament = new BigDecimal("1");
+        BigDecimal item_sequence = new BigDecimal(1);
+
+        //양산품의ITEM //Dtl
+        for(BasePriceAprlItemType BasePriceAprlItem : BasePriceAprlItemTypes){
+            
+            BasePriceAprlItem.setApprovalNumber(approval_number);
+            BasePriceAprlItem.setLocalCreateDtm(localNow);
+            BasePriceAprlItem.setLocalUpdateDtm(localNow);
+
+            item_sequence = jdbc.queryForObject(SP_VI_ITEM_SEQUENCE_FUNC, new Object[] { tenant_id, approval_number, 1 }, BigDecimal.class);
+            BasePriceAprlItem.setItemSequence(increament);
+            increament = increament.add(new BigDecimal("1"));
+
+            log.info("item_sequence : " + item_sequence);
+            log.info("increament : " + increament);
+        }
+
+        int i_Approver = 1;
+        //품의승인자 품의번호 세팅
+        for(BasePriceAprlApproverType BasePriceAprlApprover : BasePriceAprlApproverTypes){
+            
+            BasePriceAprlApprover.setApprovalNumber(approval_number);
+            BasePriceAprlApprover.setApproveSequence(Integer.toString(i_Approver));
+            BasePriceAprlApprover.setLocalCreateDtm(localNow);
+            BasePriceAprlApprover.setLocalUpdateDtm(localNow); 
+            i_Approver++;
+        }
+
+        //일반품의시 사용안함
+        for(BasePriceAprlDtlType BasePriceAprlDtl : BasePriceAprlDtlTypes){
+            BasePriceAprlDtl.setApprovalNumber(approval_number);
+            BasePriceAprlDtl.setItemSequence(item_sequence);
+            BasePriceAprlDtl.setLocalCreateDtm(localNow);
+            BasePriceAprlDtl.setLocalUpdateDtm(localNow);
+            BasePriceAprlDtl.setMetalTypeCode("1");
+
+           
+        }
+    }
 
     @Transactional(rollbackFor = SQLException.class)
     @On(event=SpViBasePriceAprlProcContext.CDS_NAME)
@@ -62,7 +158,7 @@ public class SpviBasePriceArlServiceV4 implements EventHandler {
         v_sql_createTableMaster.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_MATER ");
         v_sql_createTableMaster.append("(");
         v_sql_createTableMaster.append("TENANT_ID             NVARCHAR(5),");
-        v_sql_createTableMaster.append("APPROVAL_NUMBER       NVARCHAR(30),");
+        v_sql_createTableMaster.append("APPROVAL_NUMBER       NVARCHAR(30),");        
         v_sql_createTableMaster.append("CHAIN_CODE            NVARCHAR(30),");
         v_sql_createTableMaster.append("APPROVAL_TYPE_CODE    NVARCHAR(30),");
         v_sql_createTableMaster.append("APPROVAL_TITLE        NVARCHAR(300),");
@@ -242,9 +338,9 @@ public class SpviBasePriceArlServiceV4 implements EventHandler {
                 Object[] values = new Object[] {
                     v_inRow.get("tenant_id"),
                     v_inRow.get("approval_number"),
-                    v_inRow.get("approval_sequence"),
-                    v_inRow.get("approval_empno"),
-                    v_inRow.get("approval_type_code"),
+                    v_inRow.get("approve_sequence"),
+                    v_inRow.get("approver_empno"),
+                    v_inRow.get("approver_type_code"),
                     v_inRow.get("approve_status_code"),
                     v_inRow.get("local_create_dtm"),
                     v_inRow.get("local_update_dtm"),
@@ -357,7 +453,7 @@ public class SpviBasePriceArlServiceV4 implements EventHandler {
         // Dtl Local Temp Table 생성
         jdbc.execute(v_sql_createTableDtl.toString());
 
-        // Dtl Local Temp Table에 insert
+        //Dtl Local Temp Table에 insert
         List<Object[]> batch_Dtl = new ArrayList<Object[]>();
         if(!ViMetalDetailType.isEmpty() && ViMetalDetailType.size() > 0){
         log.info("-----> ViMetalDetailType : " + ViMetalDetailType.size());
