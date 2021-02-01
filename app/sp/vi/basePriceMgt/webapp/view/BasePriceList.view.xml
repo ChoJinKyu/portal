@@ -17,11 +17,10 @@
       <f:title>
         <f:DynamicPageTitle>
           <f:heading>
-            <Title text="{I18N>/BASE_PRICE_APPROVAL_LIST}" />
+            <Title text="{I18N>/SP_BASE_PRICE_APPROVAL_LIST}" />
           </f:heading>
           <f:actions>
             <Button text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/>
-            <!-- <Button text="Search" type="Emphasized" press=".onSearch"/> -->
           </f:actions>
         </f:DynamicPageTitle>
       </f:title>
@@ -36,7 +35,6 @@
                     <!-- Type 시작 -->
                     <VBox>
                         <Label text="{I18N>/TYPE} "></Label>
-                        <!-- <Label text="Type"></Label> -->
                         <ComboBox
                             width="100%"
                             selectedKey="{filterModel>/type}"
@@ -58,7 +56,6 @@
                     <!-- Approval Number 시작 -->
                     <VBox>
                         <Label text="{I18N>/APPROVAL_NUMBER} " />
-                        <!-- <Label text="Approval Number" /> -->
                         <Input value="{filterModel>/approvalNumber}" change=".onSearch" />
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
@@ -69,7 +66,6 @@
                     <!-- Approval Title 시작 -->
                     <VBox>
                         <Label text="{I18N>/APPROVAL_TITLE} " />
-                        <!-- <Label text="Approval Title" /> -->
                         <Input value="{filterModel>/approvalTitle}" change=".onSearch" />
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
@@ -80,7 +76,6 @@
                     <!-- Request Date 시작 -->
                     <VBox>
                         <Label text="{I18N>/REQUEST_DATE} "></Label>
-                        <!-- <Label text="Request Date"></Label> -->
                         <DateRangeSelection
                              value="{
                                     parts: [
@@ -99,8 +94,6 @@
                     <!-- Request By 시작 -->
                     <VBox height="56px">
                         <Label text="{I18N>/REQUESTOR} "></Label>
-                        <!-- <Label text="Request By"></Label> -->
-                        <!-- <SearchField value="{filterModel>/requestBy}" /> -->
                         <lib-m:CodePicker
                             placeholder="Enter a Employee name"
                             value="{filterModel>/requestBy}"
@@ -122,18 +115,39 @@
                         </layoutData>
                     </VBox>
                     <!-- Request By 끝 -->
+                    <!-- 품의유형 시작 -->
+                    <VBox>
+                        <Label text="{I18N>/SP_APPROVAL_TYPE}"></Label>
+                        <ComboBox
+                            width="100%"
+                            selectedKey="{filterModel>/net_price_type_code}"
+                            items="{
+                            path: 'codeMgt>/CodeLanguages',
+                            filters: [ 
+                                 {path: 'group_code', operator: 'EQ', value1: 'SP_VI_NET_PRICE_TYPE_CODE'}
+                            ]
+                            }">
+                            <items>
+                            <core:Item key="{codeMgt>code}" text="{codeMgt>code_name}" />
+                            </items>
+                        </ComboBox>
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- 품의유형 끝 -->
 
                     <!-- Status 시작 -->
                     <VBox>
                         <Label text="{I18N>/STATUS} "></Label>
-                        <!-- <Label text="Status"></Label> -->
                         <SegmentedButton id="searchStatusS" selectedKey="{filterModel>/status}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                             <items>
                                 <SegmentedButtonItem text="{I18N>/ALL}" key="" />
-                                <SegmentedButtonItem text="{rootModel>/processList/0/code_name}" key="10" width="4.7rem" />
-                                <SegmentedButtonItem text="{rootModel>/processList/1/code_name}" key="20" width="5.2rem" />
-                                <SegmentedButtonItem text="{rootModel>/processList/2/code_name}" key="30" width="4.8rem" />
-                                <SegmentedButtonItem text="{rootModel>/processList/3/code_name}" key="40" width="4.5rem" />
+                                <SegmentedButtonItem text="{rootModel>/processList/0/code_name}" key="{rootModel>/processList/0/code}" width="4.7rem" />
+                                <SegmentedButtonItem text="{rootModel>/processList/1/code_name}" key="{rootModel>/processList/1/code}" width="5.2rem" />
+                                <SegmentedButtonItem text="{rootModel>/processList/2/code_name}" key="{rootModel>/processList/2/code}" width="4.8rem" />
+                                <SegmentedButtonItem text="{rootModel>/processList/3/code_name}" key="{rootModel>/processList/3/code}" width="4.5rem" />
+                                <SegmentedButtonItem text="{rootModel>/processList/4/code_name}" key="{rootModel>/processList/4/code}" width="4.5rem" />
                             </items>
                         </SegmentedButton>
                         <layoutData>
@@ -141,20 +155,6 @@
                         </layoutData>
                     </VBox>
                     <!-- Status 끝 -->
-                    <!-- <VBox>
-                        <Label text="임시 tenant"></Label>
-                        <ComboBox
-                            width="100%"
-                            selectedKey="{basePriceProgressStatusMgtRootModel>/tenantId}"
-                            items="{basePriceProgressStatusMgtRootModel>/tenantList}">
-                            <items>
-                            <core:Item key="{basePriceProgressStatusMgtRootModel>tenant_id}" text="{basePriceProgressStatusMgtRootModel>tenant_name}" />
-                            </items>
-                        </ComboBox>
-                        <layoutData>
-                            <layout:GridData span="XL2 L4 M6 S12" />
-                        </layoutData>
-                    </VBox> -->
                 </form:content>
             </form:SimpleForm>
             <!--Filterbar 끝-->
@@ -170,7 +170,6 @@
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                     <Title text="{I18N>/BASE_PRICE_LIST} ({= ${listModel>/results}.length || 0})" level="H2"/>
                     <ToolbarSpacer />
-                    <!-- <Button text="{I18N>/CREATE}" press=".onGoDetail" /> -->
                     <Button text="{I18N>/CREATE}" press=".onOpenCreateDialog" />
                     <ToolbarSeparator/>
                     <Button icon="sap-icon://excel-attachment" press=".onExcelExport" >
@@ -178,10 +177,6 @@
                             <OverflowToolbarLayoutData priority="NeverOverflow" />
                         </layoutData>
                     </Button>
-                    <!-- <Button text="Create" press=".onGoDetail" /> -->
-                    <!-- <Button icon="sap-icon://excel-attachment" />
-                    <Button icon="sap-icon://group-2" />
-                    <Button icon="sap-icon://action-settings" /> -->
                 </OverflowToolbar>
             </t:extension>
             <t:columns>
@@ -195,6 +190,17 @@
                     <Label text="{I18N>/APPROVAL_TITLE}" textAlign="Center" width="100%" />
                     <t:template>
                         <Text text="{listModel>approval_title}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="12rem">
+                    <Label text="{I18N>/SP_APPROVAL_TYPE}"  textAlign="Center" width="100%" />
+                    <t:template>
+                        <tnt:InfoLabel 
+                            text="{listModel>net_price_type_code_nm}" 
+                            colorScheme="{
+                                path: 'listModel>net_price_type_code',
+                                formatter: '.onStatusColor'
+                            }" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">

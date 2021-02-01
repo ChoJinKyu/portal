@@ -25,6 +25,12 @@ sap.ui.define([
                 sReturnValue = 7;
             }else if( sStautsCodeParam === "40" ) {
                 sReturnValue = 3;
+            }else if( sStautsCodeParam === "NPT01" ) {
+                sReturnValue = 1;
+            }else if( sStautsCodeParam === "NPT02" ) {
+                sReturnValue = 2;
+            }else if( sStautsCodeParam === "NPT03" ) {
+                sReturnValue = 3;
             }
 
             return sReturnValue;
@@ -40,10 +46,7 @@ sap.ui.define([
                                         type: "1",
                                         dateValue: new Date(this._changeDateFormat(new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30), "-")),
                                         secondDateValue: new Date(this._changeDateFormat(oToday, "-")),
-                                        type_list:[{code:"1", text:"개발구매"}]}), "filterModel");
-
-            // Dialog에서 사용할 Model 생성
-            this.setModel(new JSONModel({materialCode: [], familyMaterialCode: [], supplier: []}), "dialogModel");
+                                        type_list:[{code:"1", text:"양산VI품의"}]}), "filterModel");
 
             this.getRouter().getRoute("basePriceList").attachPatternMatched(this.onSearch, this);
         },
@@ -60,11 +63,12 @@ sap.ui.define([
                 sApprovalTitle = oFilterModelData.approvalTitle,
                 sRequestBy = oFilterModelData.requestBy,
                 oDateValue = oFilterModelData.dateValue,
-                oSecondDateValue = oFilterModelData.secondDateValue;
+                oSecondDateValue = oFilterModelData.secondDateValue,
+                oNetPriceTypeCodeNm = oFilterModelData.net_price_type_code;
 
             // Status가 있는 경우
             if( sStatus ) {
-                aFilters.push(new Filter("approval_status_code", FilterOperator.EQ, sStatus));
+                aFilters.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
             }
 
             // Approval Number가 있는 경우
@@ -87,6 +91,11 @@ sap.ui.define([
                 aFilters.push(new Filter("approval_requestor_empno", FilterOperator.EQ, sRequestBy));
             }
 
+            // 품의유형이 있는경우
+            if( oNetPriceTypeCodeNm ) {
+                aFilters.push(new Filter("net_price_type_code", FilterOperator.EQ, oNetPriceTypeCodeNm));
+            }       
+
             this._getBasePriceList(aFilters);
         },
         
@@ -95,11 +104,11 @@ sap.ui.define([
          */
         _getBasePriceList: function(filtersParam) {
             var oView = this.getView();
-            var oModel = this.getModel();
+            var oModel = this.getModel("basePriceArl");
             filtersParam =  Array.isArray(filtersParam) ? filtersParam : [];
             oView.setBusy(true);
 
-            oModel.read("/Base_Price_Arl_Master", {
+            oModel.read("/Base_Price_Aprl_Master", {
                 filters : filtersParam,
                 success : function(data){
                     oView.setBusy(false);
@@ -136,30 +145,14 @@ sap.ui.define([
          */
         _getPreZero: function (iDataParam) {
             return (iDataParam<10 ? "0"+iDataParam : iDataParam);
-        },
-
-        /**
-         * 상세 페이지로 이동
-         */
-        onGoDetail: function (oEvent) {
-            var oListModel = this.getModel("listModel");
-            var oBindingContext = oEvent.getSource().getBindingContext("listModel");
-
-            if( oBindingContext ) {
-                var sPath = oBindingContext.getPath();
-                var oRootModel = this.getModel("rootModel");
-                oRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
-            }
-
-            this.getRouter().navTo("basePriceDetail");
-        },
+        }
 
         /**
          * 
          * Excel Download 
          */
         
-        onExcelExport: function (oEvent) {
+        , onExcelExport: function (oEvent) {
             var sTableId = oEvent.getSource().getParent().getParent().getId();
             if ( !sTableId ) { 
                 return; 
@@ -179,49 +172,25 @@ sap.ui.define([
                 /**
          * ==================== Dialog 시작 ==========================
          */
-        /**
-         * Dialog.fragment open
-         */
-		onOpenDialog: function (oEvent) {
-            var oView = this.getView();
-
-            if( !oEvent.getParameter("clearButtonPressed") ) {
-                if ( !this._oMaterialDialog ) {
-                    this._oMaterialDialog = Fragment.load({
-                        id: oView.getId(),
-                        name: "sp.vi.basePriceMgt.view.MaterialDialog",
-                        controller: this
-                    }).then(function (oDialog) {
-                        oView.addDependent(oDialog);
-                        return oDialog;
-                    });
-                }
-
-                this._oMaterialDialog.then(function(oDialog) {
-                    oDialog.open();
-
-                    this.onGetDialogData();
-                }.bind(this));
-            }
-        },
 
         /**
         * 생성 Dialog Open
         */
         onOpenCreateDialog: function () {
+            debugger;
             var oView = this.getView();
 
-            if ( !this._createDialog ) {
-                this._createDialog = Fragment.load({
+            if ( !this._spcreateDialog ) {
+                this._spcreateDialog = Fragment.load({
                     id: oView.getId(),
-                    name: "sp.vi.basePriceMgt.view.CreateDialog",
+                    name: "sp.vi.basePriceMgt.view.SpViCreateDialog",
                     controller: this
                 }).then(function (oDialog) {
                     oView.addDependent(oDialog);
                     return oDialog;
                 });
             }
-            this._createDialog.then(function (oDialog) {
+            this._spcreateDialog.then(function (oDialog) {
                 oDialog.open();
                 
             });
@@ -264,27 +233,51 @@ sap.ui.define([
         handleConfirm: function (oEvent) {
             var id = toggleButtonId.split('--')[2];
             var approvalTarget = "";
+            var oRootModel = this.getModel("rootModel");           
+
+            
             
             if( !id ){       
                 MessageBox.error("품의서 유형을 선택해주세요");
                 return;
-            }
-            else{
-                if(id.indexOf("newVI") > -1){
-                    approvalTarget = "NewBasePriceTable";
-                }else if(id.indexOf("changeVI") > -1){
+            }else{
+                if(id.indexOf("General") > -1){
+                    this.getRouter().navTo("basePriceDetail");
+
+                }else if(id.indexOf("InternalTrading") > -1){
+                    approvalTarget = "ChangeBasePriceTable";
+
+                }else if(id.indexOf("ProcessingCost") > -1){
+                    approvalTarget = "ChangeBasePriceTable";
+
+                }else if(id.indexOf("Sulphate") > -1){
+                    approvalTarget = "ChangeBasePriceTable";
+
+                }else if(id.indexOf("Anode") > -1){
                     approvalTarget = "ChangeBasePriceTable";
                 }
-            }
-            
-            var oRootModel = this.getModel("rootModel");
-            oRootModel.setProperty("/selectedApprovalType", approvalTarget);
+            }    
+        }
 
-            this.onGoDetail(oEvent);
+
+        /**
+         * 상세 페이지로 이동
+         */
+        , onGoDetail: function (oEvent) {
+            var oListModel = this.getModel("listModel");
+            var oBindingContext = oEvent.getSource().getBindingContext("listModel");
+
+            if( oBindingContext ) {
+                var sPath = oBindingContext.getPath();
+                var oRootModel = this.getModel("rootModel");
+                oRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
+            }
+
+            this.getRouter().navTo("basePriceDetail");
         },
 
         createPopupClose: function (oEvent) {
-             this._createDialog.then(function(oDialog) {
+             this._spcreateDialog.then(function(oDialog) {
                 oDialog.close();
             });
         },

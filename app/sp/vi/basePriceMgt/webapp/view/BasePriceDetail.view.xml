@@ -12,6 +12,7 @@
     xmlns:tnt="sap.tnt"    
     xmlns:co="sap.suite.ui.commons"
     xmlns:rte="sap.ui.richtexteditor"
+    xmlns:u="sap.ui.unified"
     height="100%">
 
     <uxap:ObjectPageLayout
@@ -40,10 +41,10 @@
 			<FlexBox wrap="Wrap">
                 <!-- base Info 시작 -->
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
-                    <ObjectStatus title="{I18N>/APPROVAL_NO}" text="{detailModel>/approval_number}"/>
+                    <ObjectStatus title="{I18N>/APPROVAL_NO}" text="{I18N>/AUTOMATIC}"/>
                     <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/create_user_id}"/>
                     <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/>
-                    <ObjectStatus title="사번본부" text="{detailModel>/corp}"/>
+                    <ObjectStatus title="사번본부" text="{detailModel>/bizunit_name}"/>
                 </layout:VerticalLayout>
                 <!-- base Info 끝 -->
 
@@ -72,25 +73,20 @@
                                     state="{= ${detailModel>/approval_status_code} === '30' ? 'Error' : 'None'}" 
                                     stepWidth="5rem"
                                     icon="{= ${detailModel>/approval_status_code} === '30' ? 'sap-icon://circle-task' : ''}" /> -->
-                                <co:MicroProcessFlowItem  
-                                    state="Error" 
-                                    stepWidth="5rem" 
-                                    icon="sap-icon://complete" />
-                                <co:MicroProcessFlowItem 
-                                    state="None" 
-                                    stepWidth="5rem"
-                                    icon="sap-icon://circle-task" />
-                                <co:MicroProcessFlowItem 
-                                    state="None" 
-                                    stepWidth="5rem"
-                                    icon="sap-icon://circle-task" />
+                                <co:MicroProcessFlowItem state="Error" stepWidth="5rem" icon="sap-icon://complete" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="5rem" icon="sap-icon://circle-task" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="5rem" icon="sap-icon://circle-task" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="5rem" icon="sap-icon://circle-task" />
+                                <co:MicroProcessFlowItem state="None" stepWidth="5rem" icon="sap-icon://circle-task" />
                             </co:content>
                         </co:MicroProcessFlow>
                     </HBox>
                     <HBox>
-                        <Text text="{I18N>/DRAFT}" width="4rem" />
-                        <Text text="{I18N>/REQUEST_FOR_APPROVAL}" width="6rem" textAlign="Center" />
-                        <Text text="{I18N>/APPROVED}" width="6rem" textAlign="Center" />
+                        <Text text="{I18N>/DRAFT}" width="5rem" />
+                        <Text text="{I18N>/TEMP_SAVE}" width="7rem" />
+                        <Text text="결재요청" width="6rem" />
+                        <Text text="결재중" width="5rem" />
+                        <Text text="{I18N>/APPROVED}" width="6rem" textAlign="Center" />                        
                     </HBox>
 				</layout:VerticalLayout>
                 <!-- Process 끝 -->
@@ -112,8 +108,6 @@
                                 <VBox>
                                     <Label text="{I18N>/DESCRIPTION}" required="true"/>
                                     <!-- Text Editor 시작 -->
-                                    <!-- <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
-                                    </layout:VerticalLayout> -->
                                     <rte:RichTextEditor 
                                         width="100%" 
                                         height="200px" 
@@ -138,24 +132,32 @@
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
                             <VBox>
-                            <t:Table id="BasePriceDetailTable" selectionMode="Single" width="auto" class="sapFDynamicPageAlignContent" visibleRowCountMode="Auto" 
-                                  rows="{detailModel>/details}">
+                            <t:Table id="BasePriceDetailTable" selectionMode="MultiToggle" width="auto" class="sapFDynamicPageAlignContent" 
+                                visibleRowCountMode="Auto"
+                                rows="{detailModel>/details}"/>
                                     <t:extension>
                                         <OverflowToolbar class="sapFDynamicPageAlignContent">
-                                            <Title text="{I18N>/BASE_PRICE_LIST}" level="H2"/>
+                                            <Title text="{I18N>/BASE_PRICE_LIST}({= ${detailModel>/details}.length || 0}) " level="H2"/>
                                         <ToolbarSpacer />
-                                        <Label text="{I18N>/MANAGEMENT}/{I18N>/MARKET_PRICE}" class="sapUiTinyMarginEnd" textAlign="Left" /> 
-                                        <ComboBox id="listManagementComboBox" width="7rem" selectedKey="" 
+                                        <!-- <Label text="{I18N>/MANAGEMENT}/{I18N>/MARKET_PRICE}" class="sapUiTinyMarginEnd" textAlign="Left" /> 
+                                        <ComboBox id="listManagementComboBox" width="7rem" selectedKey=""
                                             items="{path: 'rootModel>/management_mprice_code'}">
                                             <items>
                                                 <core:Item key="{rootModel>code}" text="{rootModel>text}" />
                                             </items>
                                         </ComboBox>
-                                        <ToolbarSeparator/>
-                                        <Button text="{I18N>/TEMPLATE}" type="Emphasized" press=".onTemplateDownload" />
-                                        <Button text="{I18N>/UPLOAD}" type="Emphasized" press=".onExcelUpload" />
-                                        <Button text="{I18N>/ROW_ADD}" type="Emphasized" press=".onListRowAdd" />
+                                        <ToolbarSeparator/> -->
+                                        <Button text="Add mgmt." type="Emphasized" press=".onRowSelectadd('MANAGEMENT')" />
+                                        <Button text="Add MP" type="Emphasized" press=".onRowSelectadd('MARKET_PRICE')" />
                                         <Button text="{I18N>/ROW_DELETE}" type="Emphasized" press=".onListRowDelete" />
+
+                                        <u:FileUploader id="FileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
+                                        buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="{I18N>/UPLOAD}" enabled="false"/>
+                                        <Button icon="sap-icon://download" iconOnly="true" type="Transparent" enabled="false" tooltip="{I18N>/TEMPLATE}"/>  
+
+                                        <!-- <Button text="{I18N>/TEMPLATE}" type="Emphasized" press=".onTemplateDownload" />
+                                        <Button text="{I18N>/UPLOAD}" type="Emphasized" press=".onExcelUpload" /> -->
+
                                         <!-- <Button icon="sap-icon://excel-attachment" press=".onExcelExportPress"/>
                                         <Button icon="sap-icon://excel-attachment" press=".onExcelExportPress"/>
                                         <Button icon="sap-icon://excel-attachment" press=".onExcelExportPress"/> --> 
@@ -220,7 +222,11 @@
                                         <t:template>
                                             <ComboBox id="CorpComboBox" width="100%"  selectedKey="{detailModel>corporation}" 
                                                 editable="{= ${detailModel>row_state} === 'edit' }"
-                                                items="{ path: 'rootModel>/org_Company' }" change=".onChangeCorporation"> 
+                                                items="{ path: 'rootModel>/org_Company',
+                                                        filters: [
+                                                        {path: 'affiliate_code', operator: 'EQ', value1: 'C100'}
+                                                        ]
+                                                }" change=".onChangeCorporation"> 
                                                 <items>
                                                     <core:Item key="{rootModel>company_code}" text="{rootModel>affiliate_code} [{rootModel>company_code}]" />
                                                 </items>
@@ -281,7 +287,7 @@
                                             <items>
                                                 <core:Item key="{currencyODataModel>currency_code}" text="{currencyODataModel>currency_code}" />
                                             </items>
-                                        </ComboBox>
+                                            </ComboBox>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
@@ -346,72 +352,7 @@
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
                             <!-- Approval & Reference 시작 -->
-                            <core:Fragment fragmentName="sp.vi.basePriceMgt.view.ApprovalLine" type="XML" />
-                            <!-- <VBox>
-                            <Table id="ApprovalTable"
-                                    growing="true"
-                                    growingThreshold="20"
-                                    class="sapFDynamicPageAlignContent"
-                                    mode="None"
-                                    width="auto"
-                                    items="{appdetailModel>/undefined}"
-                                    >
-                                <headerToolbar>
-                                    <OverflowToolbar>
-                                    <Label text="{I18N>/APPROVAL_LINE}"/>
-                                    </OverflowToolbar>
-                                </headerToolbar>
-                                <columns>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="3rem" >
-                                        <Text text="{I18N>/LINE_NO}" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="6em" >
-                                        <Text text="{I18N>/TYPE}" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" width="16em" >
-                                        <Text text="{I18N>/NAME}/{I18N>/DEPARTMENT}" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="{I18N>/DESCRIPTION}" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" width="6em" >
-                                        <Text text="{I18N>/STATUS}" />
-                                    </Column>
-                                </columns>
-                                <items>
-                                    <ColumnListItem>
-                                        <cells>
-                                            <Text text="{appdetailModel>no}" />
-                                            <ComboBox  width="100%"
-                                                selectedKey="{appdetailModel>type}"
-                                                enabled="{appdetailModel>editMode}"
-                                                items="{
-                                                    path: 'org>/Org_Company',
-                                                    filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                    ],
-                                                    sorter: { path: 'company_code'},
-                                                    templateShareable:false
-                                                }"
-                                                >
-                                            <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
-                                            </ComboBox>
-                                            <SearchField enabled="{appdetailModel>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appdetailModel>nameDept}"/>
-                                            <Text text="{appdetailModel>status}" />
-                                            <Text text="{appdetailModel>comment}" />
-                                            <Button icon="{appdetailModel>arrowUp}" press=".onSortUp(${appdetailModel>no})" tooltip="sort" visible="{= ${appdetailModel>arrowUp}===''?false:true }"></Button>
-                                            <Button icon="{appdetailModel>arrowDown}" press=".onSortDown(${appdetailModel>no})"  visible="{= ${appdetailModel>arrowDown}===''?false:true }" tooltip="sort"></Button>
-                                            <Button icon="sap-icon://delete" press=".setApprovalRemoveRow(${appdetailModel>no})" tooltip="삭제" visible="{appdetailModel>trashShow}"></Button>
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>
-                            </Table>
-
-                            <Text text="Referrer" />
-                            <Input value="{detailModel>/abc}"
-                                showValueHelp="true"
-                                valueHelpRequest=".onOpenMaterialCode" />
-                            </VBox> -->
+                            <core:Fragment fragmentName="sp.vi.basePriceMgt.view.ApprovalLines" type="XML" />
                             <!-- Approval & Reference 끝 -->
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
@@ -422,13 +363,10 @@
 
         <!-- footer 시작 -->
         <uxap:footer>
-			<OverflowToolbar visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}">
+			<OverflowToolbar visible="true">
 				<ToolbarSpacer />
-                <Button
-                    type="Emphasized"
-                    text="{I18N>/REQUEST}"
-                    visible="true"
-                    press=".onSave" />
+                <Button type="Emphasized" text="{I18N>/TEMP_SAVE}" visible="true" press=".onSave" />
+                <Button type="Emphasized" text="{I18N>/DRAFT}" visible="true" press=".onDraft" />
 			</OverflowToolbar>
 		</uxap:footer>
         <!-- footer 끝 -->
