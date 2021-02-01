@@ -228,12 +228,12 @@
                                                 ],
                                                 sorter: { path: 'sort_no'} 
                                             }"
-                                    editable="{= ${payment>pay_sequence} === 1 || ${payment>pay_sequence} === '1' ? true : false}"
+                                    editable="{= ${payment>pay_sequence} === 1 || ${payment>pay_sequence} === '1' ? ${mode>/editFlag} : false}"
                                     change="splitPayTypeChange" >  
                                     <core:Item key="{util>code}" text="{util>code_name}" />
                                 </Select>
-                                <Input value="{payment>pay_rate}" editable="{= ${payment>split_pay_type_code} === 'R' ? true : false}" />
-                                <Input value="{payment>pay_price}" editable="{= ${payment>split_pay_type_code} === 'A' ? true : false}" />
+                                <Input value="{payment>pay_rate}" editable="{= ${payment>split_pay_type_code} === 'R' ? ${mode>/editFlag} : false}" />
+                                <Input value="{payment>pay_price}" editable="{= ${payment>split_pay_type_code} === 'A' ? ${mode>/editFlag} : false}" />
                             </cells>
                         </ColumnListItem>
                     </items>
