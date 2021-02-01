@@ -49,7 +49,7 @@ BEGIN
 	/***********************************************
 	최종 에러처리
 	***********************************************/
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+    --DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 	
 	-----------------------------------------------마스터 데이터 커서
 	FOR REC_MST_DATA AS CUR_MST_DATA DO

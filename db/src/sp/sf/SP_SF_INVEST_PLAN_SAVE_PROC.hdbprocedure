@@ -80,7 +80,7 @@ BEGIN
     /***********************************************
 	최종 에러처리
 	***********************************************/
-	DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+	--DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 	
 	BEGIN
 	

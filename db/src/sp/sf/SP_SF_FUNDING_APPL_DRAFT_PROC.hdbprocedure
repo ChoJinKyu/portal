@@ -56,7 +56,7 @@ BEGIN
 	
 
 
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+    --DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 	
 	BEGIN
 		/************************************************
