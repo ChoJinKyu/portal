@@ -106,7 +106,7 @@ public class SpviBasePriceArlServiceV4 implements EventHandler {
             BasePriceAprlItem.setLocalCreateDtm(localNow);
             BasePriceAprlItem.setLocalUpdateDtm(localNow);
 
-            item_sequence = jdbc.queryForObject(SP_VI_ITEM_SEQUENCE_FUNC, new Object[] { tenant_id, approval_number, 1 }, BigDecimal.class);
+            // item_sequence = jdbc.queryForObject(SP_VI_ITEM_SEQUENCE_FUNC, new Object[] { tenant_id, approval_number, 1 }, BigDecimal.class);
             BasePriceAprlItem.setItemSequence(increament);
             increament = increament.add(new BigDecimal("1"));
 

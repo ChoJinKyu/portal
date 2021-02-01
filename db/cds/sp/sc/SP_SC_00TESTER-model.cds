@@ -293,7 +293,7 @@ entity Sc_Test_Session_Context {
     key HOST          : String(64) not null;
     key PORT          : Integer not null;
     key CONNECTION_ID : Integer not null;
-    key "KEY"         : String(5000);
+    key ELEMENT       : String(5000);
         VALUE         : String(5000);
         SECTION       : String(8)
 };

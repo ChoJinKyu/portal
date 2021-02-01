@@ -42,10 +42,17 @@
 				             persistencyKey="PageVariantPKey" />                      -->
                     <!-- Smart Filter --><!--considerSelectionVariants Variant 표시 -->
 
-                    <smartFilterBar:SmartFilterBar id="smartFilterBar" 
+                    <!-- <smartFilterBar:SmartFilterBar id="smartFilterBar" 
                     entitySet="MIMatListView" 
                     considerSelectionVariants="false" 
-                    enableBasicSearch="false" >
+                    useToolbar="false"
+                    enableBasicSearch="false" > -->
+
+                    <smartFilterBar:SmartFilterBar id="smartFilterBar" 
+                        entitySet="MIMatListView" 
+                        considerSelectionVariants="false" 
+                        useToolbar="false"
+                        enableBasicSearch="false" >
                         <smartFilterBar:controlConfiguration>
 
                             <!-- 시황자재코드 -->
@@ -131,7 +138,7 @@
                     showTablePersonalisation="false"
                     header="시황자재 Master List"
                     showRowCount="true"
-                    editable="true"                    
+                    editable="false"                    
                     persistencyKey="SmartTableAnalytical_Explored"
                     enableAutoBinding="true"                     
                     class="sapUiResponsiveContentPadding"                    

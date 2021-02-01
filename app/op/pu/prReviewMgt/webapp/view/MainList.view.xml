@@ -222,13 +222,24 @@
                                     <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
                                 </items>
                             </MultiComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                            <!-- <MultiInput
+                                placeholder="(미정)조직을 선택하세요."
+                                showValueHelp="true" 
+                                valueHelpRequest=".onValueHelpRequest($event, 'org', {})" 
+                            />
+                            <layoutData>
+                                <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData> -->
                             <!-- 자재코드 -->
                             <Label text="{I18N>/MATERIAL_CODE}"/>
                             <Input
                                 value="{jSearch>/material_code}"
                                 placeholder="(미정)자재를 선택하세요"
                                 showValueHelp="true"
-                                valueHelpRequest=".onValueHelpRequest($event, 'jSearch>/material_code')" 
+                                valueHelpRequest=".onValueHelpRequest($event, 'material', 'jSearch>/material_code', {})" 
                             />
                             <!-- 구매담당자 부서 -->
                             <Label text="{I18N>/BUYER_DEPARTMENT}" labelFor="searchRequestDepartmentS"/>
@@ -342,7 +353,7 @@
                         </Column>
                         <!-- 잔여수량 -->
                         <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
-                            <Text text="{I18N>/STOCK_QUANTITY}" />
+                            <Text text="{I18N>/REMAIN_QUANTITY}" />
                         </Column>
                         <!-- 납품요청 일자 -->
                         <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
@@ -373,11 +384,11 @@
                         <ColumnListItem type="Navigation" press=".onColumnListItemPress($event, 'list')">
                             <cells>
                                 <!-- 구매요청 번호 -->
-                                <Text text="{list>pr_number}" vAlign="Left" />
+                                <Text text="{list>pr_number}"/>
                                 <!-- 구매요청 유형 -->
-                                <Text text="{list>pr_type_name}" vAlign="Left" />
+                                <Text text="{list>pr_type_name}"/>
                                 <!-- 품목 번호 -->
-                                <Text text="{list>pr_item_number}" vAlign="Left"/>
+                                <Text text="{list>pr_item_number}"/>
                                 <!-- 조직코드 -->
                                 <Text text="{list>org_code}"/>
                                 <!-- 자재코드 -->
@@ -390,12 +401,12 @@
                                 <Text text="{
                                     path: 'list>pr_quantity', 
                                     formatter: '.numberFormatter.toNumberString'
-                                }" textAlign="Right"/>
+                                }"/>
                                 <!-- 잔여수량 -->
                                 <Text text="{
                                     path: 'list>remain_quantity', 
                                     formatter: '.numberFormatter.toNumberString'
-                                }" textAlign="Right"/>
+                                }"/>
                                 <!-- 납품요청 일자 -->
                                 <Text text="{
                                     path: 'list>delivery_request_date',
@@ -405,7 +416,7 @@
                                 <Text text="{
                                     path: 'list>estimated_price', 
                                     formatter: '.numberFormatter.toNumberString'
-                                }" textAlign="Right"/>
+                                }"/>
                                 <!-- 통화 -->
                                 <Text text="{list>currency_code}"/>
                                 <!-- 구매담당자 -->
@@ -436,7 +447,7 @@
                     text="{= ${message>/}.length }"
                     visible="{= ${message>/}.length > 0 }"
                     ariaHasPopup="Dialog"
-                    press=".onMessagePopoverPress" />               
+                    press=".onMessagePopoverPress" />
             </OverflowToolbar>
         </f:footer>
     </f:DynamicPage>

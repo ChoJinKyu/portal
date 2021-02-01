@@ -179,6 +179,88 @@
 
                         <!-- OP End-->
 
+                        <!--SP Start-->
+                        <VBox>
+                            <Label text="Single Supplier With Org" labelFor="input_supplierwithorg_code"></Label>
+                            <Input id="input_supplierwithorg_code"
+                            placeholder="Choose a supplier from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onInputSupplierWithOrgValuePress" />
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Multi Supplier With Org" labelFor="multiinput_supplierwithorg_code"></Label>
+                                <MultiInput id="multiinput_supplierwithorg_code"
+                                placeholder="Choose codes from the ValueHelp"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputSupplierWithOrgValuePress">
+                            </MultiInput>
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Single Supplier" labelFor="input_supplier_code"></Label>
+                            <Input id="input_supplier_code"
+                            placeholder="Choose a supplier from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onInputSupplierValuePress" />
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Multi Supplier" labelFor="multiinput_supplier_code"></Label>
+                                <MultiInput id="multiinput_supplier_code"
+                                placeholder="Choose codes from the ValueHelp"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputSupplierValuePress">
+                            </MultiInput>
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+
+                        
+                        <VBox>
+                            <Label text="Single Maker" labelFor="input_maker_code"></Label>
+                            <Input id="input_maker_code"
+                            placeholder="Choose a maker from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onInputMakerValuePress" />
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Multi Maker" labelFor="multiinput_maker_code"></Label>
+                            <MultiInput id="multiinput_maker_code"
+                            placeholder="Choose a maker from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onMultiInputMakerValuePress">
+                            </MultiInput>
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+
+                        <VBox>
+                            <Label text="Single BP" labelFor="input_bp_code"></Label>
+                            <Input id="input_bp_code"
+                            placeholder="Choose a BP from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onInputBPValuePress" />
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Multi BP" labelFor="multiinput_bp_code"></Label>
+                            <MultiInput id="multiinput_bp_code"
+                            placeholder="Choose a BP from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onMultiInputBPValuePress">
+                            </MultiInput>
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <!-- SP End-->
+
 
                         <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
                             <Button text="Open Employee Dialog" type="Transparent" press=".onInputWithCompanyDetailValuePress"/>

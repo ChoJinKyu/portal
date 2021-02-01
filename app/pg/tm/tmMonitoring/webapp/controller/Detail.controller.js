@@ -75,13 +75,6 @@ sap.ui.define([
                 this.manager = oEvent.getParameter("arguments")["manager"],
                 this.manager_local_name = oEvent.getParameter("arguments")["manager_local_name"];
 
-            //senario_number max view
-            oView.getModel().read("/TaskMonitoringMaxScenarioNumberView", {
-                success: function (oData) {
-                    this.senario_number_max = oData.results[0].max_scenario_number;
-                }.bind(this),
-                error: function () { }
-            });
 
             //필수입력항목 검사 결과 초기화
             this.validator.clearValueState(this._oFragments.Detail_Edit);
@@ -287,7 +280,7 @@ sap.ui.define([
                     that.getRouter().navTo("main", {}, true);
 
                 }
-
+                this.getView().getModel().refresh(true);
             } else {
                 MessageBox.confirm(i18nModel.getText("/NPG00013"), {
                     actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
@@ -430,7 +423,7 @@ sap.ui.define([
             this.byId("bizunit_edit_combo").removeAllSelectedItems();
             this.byId("multiInputWithEmployeeValueHelp").removeAllTokens();
             this.byId("multicombo_cycle").removeAllSelectedItems();
-           
+
         },
 
         /**

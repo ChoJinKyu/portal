@@ -104,12 +104,13 @@ sap.ui.define([
              */
             , _onPatternMatched: function (e) {
                 var oArgs, oComponent, oViewModel, oHeader,
-                    oView, aControls;
+                    oView, aControls, oTable;
 
                 oArgs = e.getParameter("arguments");
                 oComponent = this.getOwnerComponent();
                 oViewModel = oComponent.getModel("viewModel");
                 oHeader = oViewModel.getProperty("/Detail/Header");
+                oTable = this.byId("tblEvalItemScle");
                 oView = this.getView();
 
                 if( oArgs.new === "Y" ){
@@ -122,7 +123,8 @@ sap.ui.define([
                     oViewModel.setProperty("/App/layout", "TwoColumnsMidExpanded");
                     oViewModel.setProperty("/App/EditMode", false);
                 }
-
+                
+                oTable.removeSelections(true);
                 oViewModel.setProperty("/Args", oArgs);
 
                 if(!oHeader){
@@ -180,7 +182,7 @@ sap.ui.define([
                 oView.setBusy(true);
                 oODataModel.read("/EvalItemScle",{
                     filters : aFilters,
-                    sorter : [
+                    sorters : [
                         new Sorter("sort_sequence")
                     ],
                     success : function(oData){
@@ -256,7 +258,7 @@ sap.ui.define([
                     }
                 }
 
-                oTable.removeSelections();
+                oTable.removeSelections(true);
                 oViewModel.setProperty("/Detail/Item", aScaleListData);
 
                 // aSelectedItems.forEach(function(oItem){

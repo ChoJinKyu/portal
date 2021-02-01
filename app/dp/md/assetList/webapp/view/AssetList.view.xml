@@ -31,8 +31,7 @@
                                         items="{
                                             path: 'purOrg>/Pur_Operation_Org',
                                             filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'},
-                                                {path: 'org_type_code', operator: 'EQ', value1: 'AU'}
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                             ],
                                             sorter: { path: 'org_code'}
                                         }"
@@ -91,12 +90,11 @@
                                         items="{
                                             path: 'purOrg>/Pur_Operation_Org',
                                             filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'},
-                                                {path: 'org_type_code', operator: 'EQ', value1: 'AU'}
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
                                             ],
                                             sorter: { path: 'org_code'}
                                         }"
-                                        selectionFinish="handleSelectionFinishDiv" required="true">
+                                        required="true">
                                     <items>
                                         <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}] {purOrg>org_name}" />
                                     </items>
@@ -205,7 +203,7 @@
         <f:content>
             <table:Table id="assetListTable"
                     selectionMode="MultiToggle"
-                    fixedColumnCount="6"
+                    fixedColumnCount="5"
                     visibleRowCountMode="Auto"
                     rows="{list>/MoldMstView}"
                     cellClick=".onCellClick"

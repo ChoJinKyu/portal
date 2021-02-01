@@ -24,8 +24,8 @@ service McstBomMgtService {
     @readonly
     entity Org_Division            as projection on orgDiv.Org_Division;        
 
-    @readonly
-    entity Hr_Department            as projection on hrDept.Hr_Department;
+    //@readonly
+    //entity Hr_Department            as projection on hrDept.Hr_Department;
 
     view Org_Material as
         select key msi.tenant_id

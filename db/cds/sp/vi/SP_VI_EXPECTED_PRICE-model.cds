@@ -44,6 +44,7 @@ entity Vi_Expected_Price {
         net_price          : Decimal             @title : '단위가격';
         currency_code      : String(3)           @title : '통화코드';
         market_code        : String(1)           @title : '납선코드';
+        
 }
 
 extend Vi_Expected_Price with util.Managed;

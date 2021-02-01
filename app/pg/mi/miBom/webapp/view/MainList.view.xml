@@ -49,6 +49,7 @@
                     <smartFilterBar:SmartFilterBar id="smartFilterBar" 
                     entitySet="MIMaterialCodeBOMManagementHeaderView" 
                     considerSelectionVariants="false" 
+                    useToolbar="false"
                     enableBasicSearch="false" >
                         <smartFilterBar:controlConfiguration>                            
                             <!-- 자재명 -->

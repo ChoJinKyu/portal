@@ -6,6 +6,11 @@
 	<form:SimpleForm id="midObjectForm1Edit" editable="false" >
 		
 		<!-- <core:Title text="Normal" /> -->	
+        <Label text="{I18N>/BIZUNIT_CODE}" />
+        <Text text="{master>/org_code}"/>
+        <Label text="{I18N>/BIZUNIT_NAME}" />
+        <Text text="{master>/org_infos/bizunit_name}"/>
+        
         <Label text="{I18N>/SPMD_CATEGORY_CODE}" />
         <Text text="{master>/spmd_category_code}"/>
         <Label text="{I18N>/SPMD_CATEGORY_CODE_NAME}" required="true"/>

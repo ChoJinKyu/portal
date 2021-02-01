@@ -98,6 +98,22 @@ service makerViewService {
             sort_no
         ;
 
+    //Business Partner Status View
+    @readonly
+    view BusinessPartnerRegistrationStatusView @(title : '비즈니스파트너 등록 상태 View') as
+        select from mkMstView.Sm_Master_Cal_View as makerView {
+            key makerView.tenant_id,
+            key makerView.code,
+                makerView.sort_no,
+                makerView.code_name
+        }
+        where
+            group_code = 'SP_SM_SUPPLIER_REG_STATUS_CODE'
+        order by
+            tenant_id,
+            sort_no
+        ;
+
     //Master View
     //Maker Registration Request Status View
     @readonly

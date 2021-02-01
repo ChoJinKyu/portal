@@ -141,6 +141,37 @@ sap.ui.define([
 
             return mDeferred.promise();
         },
+        // dialog
+        dialog: function(Dialog, callback) {
+            // 저장 (strict mode)
+            var key = (new Date()).getTime().toString();
+            this.dialog[key] = Dialog;
+            // 해제
+            var release = (function() {
+                setTimeout(() => {
+                    Dialog.close();
+                    Dialog.destroy();
+                    delete this.dialog[key];
+                }, 0);
+                return arguments;
+            }).bind(this);
+            // Deferred
+            var mDeferred = $.Deferred();
+            Dialog
+                .attachEvent("apply", function (e) {
+                    !!callback 
+                    &&
+                    typeof callback == "function"
+                    &&
+                    callback.call(this, e);
+                    mDeferred.resolve(release(e));
+                }, this)
+                .attachEvent("cancel", function () {
+                    mDeferred.reject(release());
+                }, this)
+                .open();
+            return mDeferred.promise();
+        },
         /////////////////////////////////////////////////////////////
         // Service
         /////////////////////////////////////////////////////////////

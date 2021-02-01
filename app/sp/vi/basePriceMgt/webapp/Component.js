@@ -115,25 +115,25 @@ sap.ui.define([
                 }
             });
 
-            // 상태값 조회
-            // var aFilters = [];
-            // aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId")));
-            // aFilters.push(new Filter("group_code", FilterOperator.EQ, "CM_APPROVE_STATUS"));
+            //상태값 조회
+            var aFilters = [];
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId")));
+            aFilters.push(new Filter("group_code", FilterOperator.EQ, "CM_APPROVE_STATUS"));
 
-            // this.getModel("commonODataModel").read("/Code", {
-            //     filters : aFilters,
-            //     urlParameters: {
-            //         "$orderby": "sort_no"
-            //     },
-            //     success : function(data){
-            //         if( data ) {
-            //             oRootModel.setProperty("/processList", data.results);
-            //         }
-            //     }.bind(this),
-            //     error : function(data){
-            //         console.log("error", data);
-            //     }
-            // });
+            this.getModel("commonODataModel").read("/Code", {
+                filters : aFilters,
+                urlParameters: {
+                    "$orderby": "sort_no"
+                },
+                success : function(data){
+                    if( data ) {
+                        oRootModel.setProperty("/processList", data.results);
+                    }
+                }.bind(this),
+                error : function(data){
+                    console.log("error", data);
+                }
+            });
         },
     });
 });

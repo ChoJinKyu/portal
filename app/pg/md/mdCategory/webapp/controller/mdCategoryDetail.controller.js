@@ -298,6 +298,9 @@ sap.ui.define([
                 oView.setBusy(true);
                 oMasterModel.setTransactionModel(this.getModel());
                 oMasterModel.read(sObjectPath, {
+                    urlParameters: {
+                        "$expand": "org_infos"
+                    },
                     success: function(oData){
                         oView.setBusy(false);
                     }
@@ -387,6 +390,9 @@ sap.ui.define([
                 oView.setBusy(true);
                 oMasterModel.setTransactionModel(this.getModel());
                 oMasterModel.read(sObjectPath, {
+                    urlParameters: {
+                        "$expand": "org_infos"
+                    },
                     success: function(oData){
                         oView.setBusy(false);
                     }

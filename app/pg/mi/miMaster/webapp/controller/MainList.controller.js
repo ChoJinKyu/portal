@@ -72,16 +72,18 @@ sap.ui.define([
 				// }, true);
 
 				// Smart Filter Button 명 처리 START
-				var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
-				$.each(b, function (index, item) {
-					if (item.sId.search("btnGo") !== -1) {
-						if(oi18nSearch==null){
-							oi18nSearch = "조회";
-						}						
-						item.setText(oi18nSearch);
-					}
-				}.bind(this));
-			}.bind(this));
+				// var b = this.getView().byId("smartFilterBar").getContent()[0].getContent();
+				// $.each(b, function (index, item) {
+				// 	if (item.sId.search("btnGo") !== -1) {
+				// 		if(oi18nSearch==null){
+				// 			oi18nSearch = "조회";
+				// 		}						
+				// 		item.setText(oi18nSearch);
+				// 	}
+				// }.bind(this));
+            }.bind(this));
+            
+            this.getView().byId("smartFilterBar")._oSearchButton.setText("조회");
 
 			var oUi,
 				oResourceBundle = this.getResourceBundle();

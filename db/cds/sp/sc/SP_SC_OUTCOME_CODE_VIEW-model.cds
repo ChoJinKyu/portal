@@ -6,6 +6,13 @@ using {cm as codeDtl} from '../../cm/CM_CODE_DTL-model';
 using {cm as codeLng} from '../../cm/CM_CODE_LNG-model';
 using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model';
 
+using {
+    sp.Sc_Award_Type_Code_View,
+    sp.Sc_Award_Method_Code_View
+} from '../../sp/sc/SP_SC_REFERENCE_COMMON.model';
+
+
+
 // using {sp as ScOutcomeCodeView} from '../../sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
 
 
@@ -16,7 +23,7 @@ using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model';
 // # NegoType: 속성관리 필요(견적/입찰여부|가격/비가격여부) //예: RFQ/RFP/입찰/2step입찰
 
 /*************************************************************************************/
-//** 마스터 리스트
+//** 마스터 - 선언부
 /*************************************************************************************/
 /** 
 // # 공통 코드
@@ -49,12 +56,19 @@ AND ( 1=0
 // # 양산(전략) 구매 - 소싱 코드
 // ## 견적 헤더
   Sc_Nego_Parent_Type_Code       - [SP_SC] 협상상위유형[견적/입찰]
-  Sc_Award_Type_Code             - [SP_SC] 낙찰유형[라인별기준|총액기준]
+    [1:N] Sc_Nego_Type_Code              - [SP_SC] 협상유형
+  Sc_Nego_Type_Code              - [SP_SC] 협상유형
+    [N:1] Sc_Nego_Parent_Type_Code       - [SP_SC] 협상상위유형[견적/입찰]
+    [N:1] Sc_Nego_Supeval_Type_Code      - [SP_SC] 협상공급업체평가유형[가격/가격+비가격]
+    [1:N] Sc_Outcome_Code                - [SP_SC] 아웃컴
+  [폐기예정]Sc_Award_Type_Code             - [SP_SC] 낙찰유형[라인별기준|총액기준] - 폐기예정 : 현시점 견적/입찰 구분 불필요
   Sc_Nego_Award_Method_Code      - [SP_SC] 협상낙찰방법[최저가격공급업체/다중공급업체]
      ==> Nego Parent Type vs Award Type vs Award Method
+    [N:1] Sc_Nego_Parent_Type_Code       - [SP_SC] 협상상위유형[견적/입찰]
+    [N:1] Sc_Award_Type_Code_View        - [공통코드=SP_SC_AWARD_TYPE_CODE][SP_SC] 낙찰유형
+    [N:1] Sc_Award_Method_Code_View      - [공통코드=SP_SC_AWARD_METHOD_CODE][SP_SC] 낙찰방법
   Sc_Nego_Supeval_Type_Code      - [SP_SC] 협상공급업체평가유형[가격/가격+비가격]
-  Sc_Evaluation_Type_Code        - [SP_SC] 평가유형[가격/가격+비가격] << 폐기예정
-  Sc_Nego_Type_Code              - [SP_SC] 협상유형
+  [폐기]Sc_Evaluation_Type_Code        - [SP_SC] 평가유형[가격/가격+비가격] << 폐기예정
   Sc_Outcome_Code                - [SP_SC] 아웃컴
 **/
 /*************************************************************************************/
@@ -85,20 +99,44 @@ entity Sc_Nego_Parent_Type_Code {
 // nego_parent_type_desc : localized String(1000)           @title : 'Description';
 };
 
-
 extend Sc_Nego_Parent_Type_Code with util.Managed;
 
-@cds.autoexpose  // 낙찰 유형(라인별기준|총액기준)
-entity Sc_Award_Type_Code {
-    key tenant_id             : type of orgTenant.Org_Tenant : tenant_id               @title : '테넌트ID';
-    key nego_parent_type_code : type of Sc_Nego_Parent_Type_Code:nego_parent_type_code @title : '협상상위유형코드';
-    key award_type_code       : String(30) not null                                    @title : '낙찰유형코드';
-        sort_no               : Decimal not null                                       @title : '정렬번호';
-        award_type_name       : localized String(240)                                  @title : '낙찰유형이름';
-// award_type_desc : localized String(1000)                 @title : 'Description';
+@cds.autoexpose  // 협상유형코드(RFQ|RFP|BID|2ndBID)
+entity Sc_Nego_Type_Code {
+    key tenant_id             : type of orgTenant.Org_Tenant : tenant_id                 @title : '테넌트ID';
+    key nego_type_code        : String(30) not null                                      @title : '협상타입코드';
+        sort_no               : Decimal not null                                         @title : '정렬번호';
+        nego_parent_type_code : type of Sc_Nego_Parent_Type_Code : nego_parent_type_code @title : '협상상위유형코드';
+        nego_parent_type : Association to Sc_Nego_Parent_Type_Code 
+                             on nego_parent_type.tenant_id       = $self.tenant_id
+                             and nego_parent_type.nego_parent_type_code = $self.nego_parent_type_code
+                             @title : '협상상위유형 Navi.';
+        nego_supeval_type_code  : type of Sc_Nego_Supeval_Type_Code : nego_supeval_type_code   @title : '평가유형코드';
+        nego_supeval_type : Association to Sc_Nego_Supeval_Type_Code 
+                             on nego_supeval_type.tenant_id       = $self.tenant_id
+                             and nego_supeval_type.nego_supeval_type_code = $self.nego_supeval_type_code
+                             @title : '협상공급업체평가유형 Navi.';
+        nego_type_name        : localized String(240)                                    @title : '협상타입이름';
+        Outcomes : Association to many Sc_Outcome_Code 
+                             on Outcomes.tenant_id       = $self.tenant_id
+                             and Outcomes.nego_type_code = $self.nego_type_code
+                             @title : 'Outcomes Navi.';
+// nego_type_desc : localized String(1000)           @title : 'Description';
 };
 
-extend Sc_Award_Type_Code with util.Managed;
+extend Sc_Nego_Type_Code with util.Managed;
+
+// @cds.autoexpose  // 낙찰 유형(라인별기준|총액기준) - 보류 : 현기준 견적/입찰 구분 불필요
+// entity Sc_Award_Type_Code {
+//     key tenant_id             : type of orgTenant.Org_Tenant : tenant_id               @title : '테넌트ID';
+//     key nego_parent_type_code : type of Sc_Nego_Parent_Type_Code:nego_parent_type_code @title : '협상상위유형코드';
+//     key award_type_code       : String(30) not null                                    @title : '낙찰유형코드';
+//         sort_no               : Decimal not null                                       @title : '정렬번호';
+//         award_type_name       : localized String(240)                                  @title : '낙찰유형이름';
+// // award_type_desc : localized String(1000)                 @title : 'Description';
+// };
+
+// extend Sc_Award_Type_Code with util.Managed;
 
 @cds.autoexpose  // 낙찰 방법(최저가격공급업체|다중공급업체) : NegoParentType vs AwardType vs AwardMethod
 entity Sc_Nego_Award_Method_Code {
@@ -137,6 +175,40 @@ entity Sc_Nego_Award_Method_Map as projection on Sc_Nego_Award_Method_Code {
             award_method.award_method_name
 };
 
+// Cannot Extend with View or Project => How to use????
+// extend entity Sc_Nego_Award_Method_Map {
+//         award_method2 : Association to Sc_Award_Method_Code_View 
+//                              on award_method2.tenant_id       = $self.tenant_id
+//                              and award_method2.award_method_code = $self.award_method_code
+//                              @title : '낙찰방법2 Navi.';
+// };
+
+@cds.autoexpose  // 협상 스타일(최저가격공급업체|다중공급업체) : NegoParentType vs NegotiationStyle
+entity Sc_Negotiation_Style_Code {
+    key tenant_id             : type of orgTenant.Org_Tenant : tenant_id               @title : '테넌트ID';
+    key nego_parent_type_code : type of Sc_Nego_Parent_Type_Code:nego_parent_type_code @title : '협상상위유형코드';
+        nego_parent_type : Association to Sc_Nego_Parent_Type_Code 
+                             on nego_parent_type.tenant_id       = $self.tenant_id
+                             and nego_parent_type.nego_parent_type_code = $self.nego_parent_type_code
+                             @title : '협상상위유형 Navi.';
+    key negotiation_style_code: String(30)                                             @title : '협상스타일코드';
+        negotiation_style_name: localized String(240)                                  @title : '협상스타일이름';
+        sort_no               : Decimal not null                                       @title : '정렬번호';
+// negotiation_style_desc : localized String(1000)                 @title : 'Description';
+};
+extend Sc_Negotiation_Style_Code with util.Managed;
+
+@cds.autoexpose  // 낙찰 방법(최저가격공급업체|다중공급업체) : NegoType vs AwardType vs AwardMethod
+entity Sc_Negotiation_Style_Map as projection on Sc_Negotiation_Style_Code {
+        key tenant_id,
+        key nego_parent_type.nego_types.nego_type_code,
+            nego_parent_type.nego_types.nego_type_name,
+        key negotiation_style_code,
+            negotiation_style_name,
+            nego_parent_type_code,
+            nego_parent_type.nego_parent_type_name
+};
+
 // define view Sc_Nego_Award_Method_Code_View as
 //     select from Sc_Nego_Type_Code as ntc
 //     inner join Sc_Nego_Award_Method_Code namc
@@ -154,16 +226,16 @@ entity Sc_Nego_Award_Method_Map as projection on Sc_Nego_Award_Method_Code {
 //             namc.award_method.award_method_name
 //     };
 
-@cds.autoexpose  // 평가유형(가격|가격&비가격)
-entity Sc_Evaluation_Type_Code {
-    key tenant_id             : type of orgTenant.Org_Tenant : tenant_id @title : '테넌트ID';
-    key evaluation_type_code  : String(30) not null                      @title : '평가유형코드';
-        sort_no               : Decimal not null                         @title : '정렬번호';
-        evaluation_type_name  : localized String(240)                     @title : '평가유형이름';
-// evaluation_type_desc : localized String(1000)           @title : 'Description';
-};
-
-extend Sc_Evaluation_Type_Code with util.Managed;
+// @cds.autoexpose  // 평가유형(가격|가격&비가격)-폐기예정
+// entity Sc_Evaluation_Type_Code {
+//     key tenant_id             : type of orgTenant.Org_Tenant : tenant_id @title : '테넌트ID';
+//     key evaluation_type_code  : String(30) not null                      @title : '평가유형코드';
+//         sort_no               : Decimal not null                         @title : '정렬번호';
+//         evaluation_type_name  : localized String(240)                     @title : '평가유형이름';
+// // evaluation_type_desc : localized String(1000)           @title : 'Description';
+// };
+// 
+// extend Sc_Evaluation_Type_Code with util.Managed;
 
 @cds.autoexpose  // 협상공급업체평가유형(가격|가격&비가격)
 entity Sc_Nego_Supeval_Type_Code {
@@ -175,36 +247,6 @@ entity Sc_Nego_Supeval_Type_Code {
 };
 
 extend Sc_Nego_Supeval_Type_Code with util.Managed;
-
-@cds.autoexpose  // 협상유형코드(RFQ|RFP|BID|2ndBID)
-entity Sc_Nego_Type_Code {
-    key tenant_id             : type of orgTenant.Org_Tenant : tenant_id                 @title : '테넌트ID';
-    key nego_type_code        : String(30) not null                                      @title : '협상타입코드';
-        sort_no               : Decimal not null                                         @title : '정렬번호';
-        nego_parent_type_code : type of Sc_Nego_Parent_Type_Code : nego_parent_type_code @title : '협상상위유형코드';
-        nego_parent_type : Association to Sc_Nego_Parent_Type_Code 
-                             on nego_parent_type.tenant_id       = $self.tenant_id
-                             and nego_parent_type.nego_parent_type_code = $self.nego_parent_type_code
-                             @title : '협상상위유형 Navi.';
-        nego_supeval_type_code  : type of Sc_Nego_Supeval_Type_Code : nego_supeval_type_code   @title : '평가유형코드';
-        nego_supeval_type : Association to Sc_Nego_Supeval_Type_Code 
-                             on nego_supeval_type.tenant_id       = $self.tenant_id
-                             and nego_supeval_type.nego_supeval_type_code = $self.nego_supeval_type_code
-                             @title : '협상공급업체평가유형 Navi.';
-        evaluation_type_code  : type of Sc_Evaluation_Type_Code : evaluation_type_code   @title : '평가유형코드';
-        evaluation_type : Association to Sc_Evaluation_Type_Code 
-                             on evaluation_type.tenant_id       = $self.tenant_id
-                             and evaluation_type.evaluation_type_code = $self.evaluation_type_code
-                             @title : '평가유형 Navi.';
-        nego_type_name        : localized String(240)                                    @title : '협상타입이름';
-        Outcomes : Association to many Sc_Outcome_Code 
-                             on Outcomes.tenant_id       = $self.tenant_id
-                             and Outcomes.nego_type_code = $self.nego_type_code
-                             @title : 'Outcomes Navi.';
-// nego_type_desc : localized String(1000)           @title : 'Description';
-};
-
-extend Sc_Nego_Type_Code with util.Managed;
 
 @cds.autoexpose  // 아웃컴코드(BPA)
 entity Sc_Outcome_Code {
@@ -225,109 +267,3 @@ entity Sc_Outcome_Code {
 };
 
 extend Sc_Outcome_Code with util.Managed;
-
-@cds.autoexpose  // SP_SC_NEGO_PROG_STATUS_CODE : 협상 상태 코드[예:Approval]
-define view Sc_Nego_Prog_Status_Code_View as
-    select from codeMst.Code_Dtl as cd {
-        key cd.tenant_id,
-        key cd.code      as nego_progress_status_code,
-            cd.sort_no,
-            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name as nego_progress_status_name
-    } 
-    where group_code = 'SP_SC_NEGO_PROG_STATUS_CODE';
-
-@cds.autoexpose  // SP_SC_NEGO_PROG_STATUS_CODE : 협상 상태 코드[예:Approval]
-define view Sc_Award_Prog_Status_Code_View as
-    select from codeMst.Code_Dtl as cd {
-        key cd.tenant_id,
-        key cd.code      as award_progress_status_code,
-            cd.sort_no,
-            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name as award_progress_status_name
-    } 
-    where group_code = 'SP_SC_AWARD_PROG_STATUS_CODE';
-
-@cds.autoexpose  // SP_SC_AWARD_TYPE_CODE : 어워드 유형[예:Award By Lines]
-define view Sc_Award_Type_Code_View as
-    select from codeMst.Code_Dtl as cd {
-        key cd.tenant_id,
-        key cd.code      as award_type_code,
-            cd.sort_no,
-            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name as award_type_name
-    }
-    where group_code = 'SP_SC_AWARD_TYPE_CODE';
-
-@cds.autoexpose  // SP_SC_AWARD_METHOD_CODE : 어워드 유형[예:Award By Lines]
-define view Sc_Award_Method_Code_View as
-    select from codeMst.Code_Dtl as cd {
-        key cd.tenant_id,
-        key cd.code      as award_method_code,
-            cd.sort_no,
-            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name as award_method_name
-    }
-    where group_code = 'SP_SC_AWARD_METHOD_CODE';
-
-@cds.autoexpose  // OP_INCOTERMS : 인커텀즈 코드[예:]
-define view Sc_Incoterms_View as
-    select from codeMst.Code_Dtl {
-        key tenant_id,
-        key code      as incoterms_code,
-            sort_no,
-            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name 
-                      as incoterms_name
-    } 
-    where group_code = 'OP_INCOTERMS';
-    
-@cds.autoexpose  // PAYMENT_TERMS : 페이먼트텀즈 코드[예:]
-define view Sc_Payment_Terms_View as
-    select from codeMst.Code_Dtl {
-        key tenant_id,
-        key code      as payment_terms_code,
-            sort_no,
-            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name 
-                      as payment_terms_name
-    } 
-    where group_code = 'PAYMENT_TERMS';
-
-@cds.autoexpose  // DP_VI_MARKET_CODE : 마켓 코드[예:]
-define view Sc_Market_Code_View as
-    select from codeMst.Code_Dtl {
-        key tenant_id,
-        key code      as market_code,
-            sort_no,
-            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name 
-                      as market_name
-    } 
-    where group_code = 'DP_VI_MARKET_CODE';
-
-@cds.autoexpose  //
-define view Sc_Award_Type_Code_View1 as
-    select
-        key cd.tenant_id,
-        key cd.code            as award_type_code,
-            cd.sort_no,
-            children.code_name as award_type_name
-    from codeDtl.Code_Dtl as cd
-    left outer join codeLng.Code_Lng as children
-        on ((   children.tenant_id = cd.tenant_id
-                and children.group_code = cd.group_code
-                and children.code = cd.code   )
-            and ( lower(children.language_cd) = substring($user.locale, 1, 2) )
-        )
-    where cd.group_code = 'SP_SC_AWARD_TYPE_CODE';
-
-/* 
---# DB SQL Statement
-select
-    cd.tenant_id,
-    cd.code            as award_type_code,
-    cd.sort_no,
-    children.code_name as award_type_name
-from codeDtl.Code_Dtl as cd
-left outer join codeLng.Code_Lng as children
-    on ((   children.tenant_id = cd.tenant_id
-            and children.group_code = cd.group_code
-            and children.code = cd.code   )
-        and ( lower(children.language_cd) = substring(session_context('LOCALE'), 1, 2) )
-    )
-where cd.group_code = 'SP_SC_AWARD_TYPE_CODE';
- */

@@ -1901,8 +1901,8 @@ sap.ui.define([
         chkReplaceChange: function (oEvent) {
             console.log("livechange!!");
             //var regex = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/gi;     // 특수문자 제거 (한글 영어 숫자만)
-            var regex = /[^a-zA-Z0-9\s ]/gi;                   // 특수문자 제거 (영어 숫자만)
-            //test Str ===> var regex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g;  //한글 제거 11/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g%^&*()_+|<
+            // var regex = /[^a-zA-Z0-9\s ]/gi;                   // 특수문자 제거 (영어 숫자만)
+            var regex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g;  //한글 제거 11/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g%^&*()_+|<
 
             var newValue = oEvent.getParameter("newValue");
             //$(this).val(v.replace(regexp,''));

@@ -60,6 +60,7 @@ service VpSearchService {
                 repr_department_name,
                 managers_name,
                 managers_id,
+                leaf_yn,
                 hierarchy_rank,
                 vendor_pool_path_code,
                 vendor_pool_path_name

@@ -51,10 +51,11 @@
                     <form:content> -->
                         <!-- <VBox> -->
                             <smartFilterBar:SmartFilterBar id="smartFilterBar"  useToolbar="false"  enableBasicSearch="false"
-                                considerSelectionVariants="true" entitySet="MICategoryHierarchyStructureView" search="filterSearch" >
+                                basicSearchFieldName="category_code"
+                                considerSelectionVariants="true" entitySet="a" search="filterSearch" >
 
                                 <smartFilterBar:controlConfiguration>
-                                    <smartFilterBar:ControlConfiguration key="path_code" index="1" label="{I18N>/CATEGORY_CODE}"
+                                    <smartFilterBar:ControlConfiguration key="category_code" index="1" label="{I18N>/CATEGORY_CODE}"
                                         groupId="_BASIC" visibleInAdvancedArea="true" >
                                         <smartFilterBar:customControl>
                                             <Input id="filterCategoryCode" placeholder="Category Code" liveChange="liveCategoryCode"/>

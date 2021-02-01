@@ -1,0 +1,17 @@
+// sppcap/srv/src/main/resources/ 하위에 MockUser.json 으로 만들어서 사용
+{
+    "USER_ID": "test@lgcns.com",
+    "TENANT_ID": "L2100",
+    "COMPANY_CODE": "LGCKR",
+    "EMPLOYEE_NUMBER": "00000",
+    "EMPLOYEE_NAME": "test MockUp",
+    "ENGLISH_EMPLOYEE_NAME": "System Test",
+    "EMPLOYEE_STATUS_CODE": "C",
+    "LANGUAGE_CODE": "KO",
+    "TIMEZONE_CODE": "AS054",
+    "DATE_FORMAT_TYPE": "YYYY-MM-DD",
+    "DIGITS_FORMAT_TYPE": "1,000.00",
+    "CURRENCY_CODE": "KRW",
+    "EMAIL": "test@lgcns.com",
+    "ROLES": "[IAS_Spp_Basic_Collection, IAS_Viewer_C, IAS_SysAdmin_C]"
+}

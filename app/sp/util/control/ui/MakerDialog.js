@@ -81,7 +81,7 @@ sap.ui.define([
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/STATUS_CODE") }),
+                        new Label({ text: this.getModel("I18N").getText("/STATUS") }),
                         this.oStatus
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M5 S10" })
@@ -99,12 +99,12 @@ sap.ui.define([
                     template: new Text({ text: "{maker_code}" })
                 }),
                 new Column({
-                    width: "25%",
+                    hAlign: "Center",
                     label: new Label({ text: this.getModel("I18N").getText("/MAKER_LOCAL_NAME") }),
                     template: new Text({ text: "{maker_local_name}", wrapping: false })
                 }),
                 new Column({
-                    width: "25%",
+                    hAlign: "Center",
                     label: new Label({ text: this.getModel("I18N").getText("/MAKER_ENGLISH_NAME") }),
                     template: new Text({ text: "{maker_english_name}", wrapping: false })
                 }),
@@ -114,12 +114,13 @@ sap.ui.define([
                     template: new Text({ text: "{tax_id}" })
                 }),
                 new Column({
+                    hAlign: "Center",
                     label: new Label({ text: this.getModel("I18N").getText("/OLD_MAKER_CODE") }),
                     template: new Text({ text: "{old_maker_code}" })
                 }),
                 new Column({
                     hAlign: "Center",
-                    label: new Label({ text: this.getModel("I18N").getText("/STATUS_CODE") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/STATUS") }),
                     template: new sap.tnt.InfoLabel(
                         { text: "{maker_status_name}", displayOnly: true }
                     ).bindProperty("colorScheme", {

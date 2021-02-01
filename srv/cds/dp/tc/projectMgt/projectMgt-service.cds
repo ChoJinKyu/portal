@@ -45,8 +45,8 @@ service ProjectMgtService {
     @readonly
     entity Hr_Employee             as projection on hrEmployee.Hr_Employee;
 
-    @readonly
-    entity Hr_Department            as projection on hrDept.Hr_Department; 
+    //@readonly
+    //entity Hr_Department            as projection on hrDept.Hr_Department; 
 
     @readonly
     entity Org_Division            as projection on orgDiv.Org_Division;

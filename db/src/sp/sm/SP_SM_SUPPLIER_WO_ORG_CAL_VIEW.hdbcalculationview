@@ -40,7 +40,7 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="SP_SM_SUPPLIER_ROLE"/></calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="referential" referentialDirection="left" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="leftOuter" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="TENANT_ID"/>
       <viewAttribute id="SUPPLIER_CODE"/>
@@ -83,7 +83,7 @@
     <input emptyUnionBehavior="undefined" node="CM_CODE_LNG"/>
     <filter>(&quot;LANGUAGE_CD&quot;=upper(midstr('??LOCALE??',1,2))) and (&quot;GROUP_CODE&quot;='SP_SM_SUPPLIER_STATUS_CODE')</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_5" cardinality="C1_1" joinType="textTable" languageColumn="LANGUAGE_CD">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_5" joinType="leftOuter">
     <viewAttributes>
       <viewAttribute id="TENANT_ID"/>
       <viewAttribute id="SUPPLIER_CODE"/>
