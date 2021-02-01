@@ -283,7 +283,8 @@ sap.ui.define([
              * @param sBtnGubun - 버튼 구분자
              */
             , onPressCreate : function(oEvent, sBtnGubun){
-                var oNavParam, oTreeTable, aSelectedIdx, oContext, oRowData, oViewModel;
+                var oNavParam, oTreeTable, aSelectedIdx, oContext, oRowData, oViewModel,
+                    oView, oI18NModel;
 
                 oTreeTable = this.byId("treeTable");
                 aSelectedIdx = oTreeTable.getSelectedIndices();
@@ -303,11 +304,18 @@ sap.ui.define([
                 }
                 oContext = oTreeTable.getContextByIndex(aSelectedIdx[0]);
                 oRowData = this._deepCopy( oContext.getObject() );
-                oViewModel = this.getView().getModel("viewModel");
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
 
                 oRowData.evaluation_execute_mode_code = oRowData.evaluation_execute_mode_code || "QLTVE_EVAL";
                 oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
                 oRowData.qttive_eval_article_calc_formula = oRowData.qttive_eval_article_calc_formula || "";
+
+                if(oRowData.leaf_flag === "N"){
+                    oI18NModel = oView.getModel("I18N");
+                    MessageBox.warning(oI18NModel.getProperty("/ESP00001"));
+                    return;
+                }
 
                 oViewModel.setProperty("/Detail", {
                     Header : oRowData,
@@ -377,7 +385,7 @@ sap.ui.define([
                         path : "/EvalItemListView",
                         filters : aFilters,
                         sorter : [
-                            new Sorter("evaluation_article_path_sequence")
+                            new Sorter("hierarchy_rank")
                         ],
                         parameters : {
                             countMode: 'Inline',
@@ -469,7 +477,7 @@ sap.ui.define([
                                 path : "/EvalItemListView",
                                 filters : aTableFilter,
                                 sorter : [
-                                    new Sorter("evaluation_article_path_sequence")
+                                    new Sorter("hierarchy_rank")
                                 ],
                                 parameters : {
                                     countMode: 'Inline',

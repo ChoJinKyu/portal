@@ -180,7 +180,7 @@ sap.ui.define([
                 oView.setBusy(true);
                 oODataModel.read("/EvalItemScle",{
                     filters : aFilters,
-                    sorter : [
+                    sorters : [
                         new Sorter("sort_sequence")
                     ],
                     success : function(oData){
