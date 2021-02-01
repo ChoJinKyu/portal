@@ -31,6 +31,7 @@ BEGIN
     DECLARE P_HIDE_COLUMN_FLAG      BOOLEAN ;
     DECLARE P_DISPLAY_COLUMN_FLAG   BOOLEAN ;
     DECLARE P_MANDATORY_COLUMN_FLAG BOOLEAN ;
+    DECLARE P_INPUT_COLUMN_FLAG     BOOLEAN ;
     DECLARE P_PR_TEMPLATE_NUMBER    NVARCHAR(10) ;
 
     LCNT = 5;
@@ -39,9 +40,9 @@ BEGIN
     WHILE :LCNT > 0 DO 
 
     /* 필드 정보가 있는지 검색...... */
-        SELECT      HIDE_COLUMN_FLAG  , DISPLAY_COLUMN_FLAG  , MANDATORY_COLUMN_FLAG 
-            INTO  P_HIDE_COLUMN_FLAG, P_DISPLAY_COLUMN_FLAG, P_MANDATORY_COLUMN_FLAG
-                DEFAULT NULL , NULL , NULL 
+        SELECT      HIDE_COLUMN_FLAG  , DISPLAY_COLUMN_FLAG  , MANDATORY_COLUMN_FLAG, INPUT_COLUMN_FLAG
+            INTO  P_HIDE_COLUMN_FLAG, P_DISPLAY_COLUMN_FLAG, P_MANDATORY_COLUMN_FLAG, P_INPUT_COLUMN_FLAG
+                DEFAULT NULL , NULL , NULL, NULL
             FROM    OP_PU_PR_TEMPLATE_DTL
             WHERE   TENANT_ID           = :I_TENANT_ID
                 AND COLUMN_NAME         = :I_COLUMN_NAME 
@@ -73,7 +74,9 @@ BEGIN
             ELSEIF :P_DISPLAY_COLUMN_FLAG = True THEN
                     OUT_COLUMN_FLAG := 'Display' ;
             ELSEIF :P_MANDATORY_COLUMN_FLAG = True THEN
-                    OUT_COLUMN_FLAG := 'Mandatory' ;            
+                    OUT_COLUMN_FLAG := 'Mandatory' ; 
+            ELSEIF :P_INPUT_COLUMN_FLAG = True THEN
+                    OUT_COLUMN_FLAG := 'Input' ;                    
             END IF;
 
             RETURN ;

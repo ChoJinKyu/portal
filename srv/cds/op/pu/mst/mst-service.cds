@@ -22,7 +22,7 @@ using {cm.Hr_Department as Dept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT
 using {cm.Code_Lng as cdLng}     from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 
 
-@path : '/op.pu.MstService'
+@path : '/op.mst.mstService'
 service MstService {
     entity Pr_Mst     as projection on op.Pu_Pr_Mst;
     entity Pr_Dtl     as projection on op.Pu_Pr_Dtl;
