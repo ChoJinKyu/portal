@@ -1791,6 +1791,7 @@ sap.ui.define([
                 var s_Operation_ORG_E = this.getView().byId("search_Operation_ORG_E").getSelectedKey();
                 var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
                 var s_Dept = this.getView().byId("search_Dept").getSelectedKey();
+                // debugger
                 var s_Man = this.getView().byId("search_Man").getSelectedKey();
 
                 var s_VPC = this.getView().byId("search_Vp_Code").getValue();
@@ -1814,7 +1815,7 @@ sap.ui.define([
                     aSearchFilters.push(new Filter("repr_department_code", FilterOperator.EQ, s_Dept));
                 }
                 if (s_Man && s_Man.length > 0) {
-                    aSearchFilters.push(new Filter("managers_name", FilterOperator.EQ, s_Man));
+                    aSearchFilters.push(new Filter("managers_id", FilterOperator.Contains, s_Man));
                 }
                 if (s_VPC && s_VPC.length > 0) {
                     aSearchFilters.push(new Filter("vendor_pool_path_code", FilterOperator.Contains, s_VPC));
