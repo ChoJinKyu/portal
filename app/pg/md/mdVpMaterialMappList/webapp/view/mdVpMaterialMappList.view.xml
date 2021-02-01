@@ -132,7 +132,7 @@
                                 <items>
                                     <SegmentedButtonItem text="{I18N>/ALL}" width="4em"/>
                                     <SegmentedButtonItem text="{I18N>/REGISTER}" width="4em" key="100"/>
-                                    <SegmentedButtonItem text="{I18N>/UNREGISTER}" width="4em" key="200"/>
+                                    <SegmentedButtonItem text="{I18N>/UNREGISTERED}" width="4em" key="200"/>
                                 </items>
                             </SegmentedButton>
                             <layoutData>
@@ -210,12 +210,7 @@
                             <Text text="{list>material_code_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="사용여부" width="6rem" hAlign="Center" >    
-                        <t:template>
-                            <Text text="{list>use_flag}" wrapping="false" />
-                        </t:template>
-                    </t:Column>
-                    <t:Column label="VP매핑여부" width="6rem" hAlign="Center" >    
+                    <t:Column label="{I18N>/REGISTER_FLAG}" width="6rem" hAlign="Center" >    
                         <t:template>
                             <Text text="{list>mapping_flag}" wrapping="false" />
                         </t:template>
