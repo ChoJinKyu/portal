@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/dp.DevelopmentReceiptService/",
+        "uri": "srv-api/odata/v2/dp.DevelopmentReceipt/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -166,11 +166,11 @@
         }
       ],
       "targets": {
-        "developmentReceipt": {
-          "viewName": "DevelopmentReceipt",
-          "viewId": "developmentReceipt",
+        "assetList": {
+          "viewName": "AssetList",
+          "viewId": "assetList",
           "viewLevel": 1,
-          "title": "{i18n>developmentReceiptViewTitle}"
+          "title": "{i18n>assetListViewTitle}"
         },
         "notFound": {
           "viewName": "NotFound",

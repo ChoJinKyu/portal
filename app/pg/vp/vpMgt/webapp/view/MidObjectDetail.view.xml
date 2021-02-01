@@ -38,9 +38,9 @@
 		</uxap:headerTitle>
 
 		<uxap:sections id="testFrag">
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="General Info">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/GENERAL_INFO}">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection id="{I18N>/GENERAL_INFO}">
+					<uxap:ObjectPageSubSection id="pageSubSection1">
                         <form:SimpleForm
                             editable="true"
                             layout="ResponsiveGridLayout"
@@ -88,6 +88,13 @@
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
                                 </VBox>
+                                <VBox>      
+                                    <Label text="{I18N>/DESCRIPTION}" design="Bold"/>
+                                    <TextArea id="general_vendor_pool_desc" row="5" width="100%" />
+                                    <layoutData>
+                                        <layout:GridData span="XL12 L12 M12 S12" />
+                                    </layoutData>                                                                                                                              
+                                </VBox> 
                                 <core:Title text="{I18N>/DETAIL_INFORMATION}" />                        
                                 <VBox>
                                     <Label text="{I18N>/DEPARTMENT}" design="Bold"/>
@@ -271,13 +278,7 @@
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
                                 </VBox>   
-                                <VBox>      
-                                    <Label text="{I18N>/DESCRIPTION}" design="Bold"/>
-                                    <TextArea id="general_vendor_pool_desc" row="5" width="100%" />
-                                    <layoutData>
-                                        <layout:GridData span="XL6 L6 M6 S12" />
-                                    </layoutData>                                                                                                                              
-                                </VBox> 
+ 
                             </form:content>
                         </form:SimpleForm>                    
                     </uxap:ObjectPageSubSection>
@@ -313,7 +314,7 @@
                                         }" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="Supplier Code" width="11em" filterProperty="supplier_code">
+                                <table:Column label="{I18N>/SUPPLIER_CODE}" width="11em" filterProperty="supplier_code">
                                     <table:template>
                                         <lib-m:CodePicker id="supplier_code"
                                             placeholder="Enter a department name"
@@ -334,12 +335,12 @@
                                     </table:template>
                                 </table:Column>
                                 
-                                <table:Column label="Supplier Name" width="8em" filterProperty="supplier_local_name">
+                                <table:Column label="{I18N>/SUPPLIER_NAME}" width="8em" filterProperty="supplier_local_name">
                                     <table:template>
                                         <Text text="{suplist>supplier_local_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="Supplier Name(Eng)" width="10em" filterProperty="supplier_english_name">
+                                <table:Column label="{I18N>/SUPPLIER_NAME}" width="10em" filterProperty="supplier_english_name">
                                     <table:template>
                                         <Text text="{suplist>supplier_english_name}" wrapping="false" />
                                     </table:template>
@@ -359,7 +360,7 @@
                                         <Text text="{suplist>supplier_status_code}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="평가통제여부" width="8em" filterProperty="supeval_control_flag">
+                                <table:Column label="{I18N>/EVAL_CONTROL_FLAG}" width="8em" filterProperty="supeval_control_flag">
                                     <table:template>
                                         <Switch id="suptable_supeval_control_flag" state="{suplist>supeval_control_flag}" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
@@ -369,7 +370,7 @@
                                         <!-- <Text text="{suplist>supeval_control_flag}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="통제시작일" width="8em" filterProperty="supeval_control_start_date">
+                                <table:Column label="{I18N>/EVAL_CONTROL_START_DATE}" width="8em" filterProperty="supeval_control_start_date">
                                     <table:template>
                                         <!-- <DatePicker  
                                         placeholder="Date" 
@@ -377,16 +378,18 @@
                                         valueFormat="yyyyMMdd" 
                                         displayFormat="yyyy-MM-dd"/> -->
                                     <DatePicker 
-                                     value="{ path: 'suplist>supeval_control_start_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' } }" />
+                                     value="{ path: 'suplist>supeval_control_start_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyyyMMdd' } }" />
                                         <!-- <Text text="{suplist>supeval_control_start_date}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="통제종료일" width="8em" filterProperty="supeval_control_end_date">
+                                <table:Column label="{I18N>/EVAL_CONTROL_END_DATE}" width="8em" filterProperty="supeval_control_end_date">
                                     <table:template>
-                                        <Text text="{suplist>supeval_control_end_date}" wrapping="false" />
+                                        <DatePicker 
+                                     value="{ path: 'suplist>supeval_control_end_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyyyMMdd' } }" />
+                                        
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="RM 통제여부" width="8em" filterProperty="supplier_rm_control_flag">
+                                <table:Column label="{I18N>/RM_CONTROL_FLAG}" width="8em" filterProperty="supplier_rm_control_flag">
                                     <table:template>
                                         <Switch id="suptable_supplier_rm_control_flag" state="{suplist>supplier_rm_control_flag}" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
@@ -396,12 +399,13 @@
                                         <!-- <Text text="{suplist>supplier_rm_control_flag}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="Basic Portion(%)" width="8em" filterProperty="supplier_base_portion_rate">
+                                <table:Column label="{I18N>/BASIC_PORTION}" width="8em" filterProperty="supplier_base_portion_rate">
                                     <table:template>
-                                        <Text text="{suplist>supplier_base_portion_rate}" wrapping="false" />
+                                        <Input id="suptable_supplier_base_portion_rate" placeholder="" value="{suplist>supplier_base_portion_rate}"></Input> 
+                                        
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="Use Flag" width="8em" filterProperty="vendor_pool_mapping_use_flag">
+                                <table:Column label="{I18N>/USE_FLAG}" width="8em" filterProperty="vendor_pool_mapping_use_flag">
                                     <table:template>
                                         <Switch id="suptable_vendor_pool_mapping_use_flag" state="{suplist>vendor_pool_mapping_use_flag}" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
@@ -411,12 +415,12 @@
                                         <!-- <Text text="{suplist>vendor_pool_mapping_use_flag}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="등록근거" width="8em" filterProperty="register_reason">
+                                <table:Column label="{I18N>/REGISTER_REASON}" width="8em" filterProperty="register_reason">
                                     <table:template>
                                         <Text text="{sppList>register_reason}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="등록일자" width="8em" filterProperty="local_update_dtm">
+                                <table:Column label="{I18N>/REG_DATE}" width="8em" filterProperty="local_update_dtm">
                                     <table:template>
                                     <!-- <DatePicker  
                                         placeholder="Date" 
@@ -450,7 +454,7 @@
                             rows="{path: 'matlist>/vpMaterialDtlView'}">
                             <table:extension>
                                 <OverflowToolbar>
-                                    <Title text="List ({= ${matlist>/vpMaterialDtlView}.length || 0})" level="H2"/>
+                                    <Title text="{I18N>/LIST} ({= ${matlist>/vpMaterialDtlView}.length || 0})" level="H2"/>
                                     <ToolbarSpacer/>
                                     <Button id="metListtAdd"    type="Emphasized" text="{I18N>/ADDITION}"        press=".materialAddRow"   enabled="{mode>/viewFlag}" />
                                     <Button id="metListDel"     type="Emphasized" text="{I18N>/DELETE}"     press=".materialDelRow"   enabled="{mode>/viewFlag}" />                                    
@@ -459,7 +463,7 @@
                             </table:extension>
                             <table:columns>
                                 <table:Column id="mainColumnStateMet" minScreenWidth="Tablet" hAlign="Center" width="40px" >
-                                    <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                                    <ObjectStatus icon="sap-icon://document" text="{I18N>/STATE}" visible="false" />
                                     <table:template>
                                         <ObjectStatus icon="{
                                             path: 'matlist>_row_state_',
@@ -467,7 +471,7 @@
                                         }" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="Material Code" width="20%" filterProperty="material_code">
+                                <table:Column label="{I18N>/MATERIAL_CODE}" width="20%" filterProperty="material_code">
                                     <table:template>
                                         <lib-m:CodePicker id="material_code"
                                             placeholder="Enter a material name"
@@ -487,22 +491,22 @@
                                         </lib-m:CodePicker>
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="Spec." width="50%" filterProperty="material_desc">
+                                <table:Column label="{I18N>/MATERIAL_SPEC}" width="50%" filterProperty="material_desc">
                                     <table:template>
                                         <Text text="{matlist>material_desc}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="Spec." width="0em" filterProperty="vendor_pool_mapping_use_flag">
+                                <table:Column label="Use Flag" width="0em" filterProperty="vendor_pool_mapping_use_flag">
                                     <table:template>
                                         <Text text="{matlist>vendor_pool_mapping_use_flag}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="등록근거" width="15%" filterProperty="register_reason">
+                                <table:Column label="{I18N>/REGISTER_REASON}" width="15%" filterProperty="register_reason">
                                     <table:template>
                                         <Text text="{matlist>register_reason}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="등록일자" width="15%" filterProperty="local_update_dtm">
+                                <table:Column label="{I18N>/REG_DATE}" width="15%" filterProperty="local_update_dtm">
                                     <table:template>
                                         <!-- <DatePicker  
                                             placeholder="Date" 
@@ -536,7 +540,7 @@
 
                             <table:extension>
                                 <OverflowToolbar>
-                                    <Title text="List ({= ${manlist>/vPSearchMngListView}.length || 0})" level="H2"/>
+                                    <Title text="{I18N>/LIST} ({= ${manlist>/vPSearchMngListView}.length || 0})" level="H2"/>
                                     <ToolbarSpacer/>
                                     <Button id="mngListtAdd"    type="Emphasized" text="{I18N>/ADDITION}"        press=".managerAddRow"   enabled="{mode>/viewFlag}" />
                                     <Button id="mngListDel"     type="Emphasized" text="{I18N>/DELETE}"     press=".managerDelRow"   enabled="{mode>/viewFlag}" />                                    
@@ -548,7 +552,7 @@
                             </table:extension>
                             <table:columns>
                                 <table:Column id="mainColumnStateMng" minScreenWidth="Tablet" hAlign="Center" width="40px" >
-                                    <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                                    <ObjectStatus icon="sap-icon://document" text="{I18N>/STATE}" visible="false" />
                                     <table:template>
                                         <ObjectStatus icon="{
                                             path: 'manlist>_row_state_',
@@ -556,7 +560,7 @@
                                         }" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="이름" width="20%" filterProperty="user_local_name">
+                                <table:Column label="{I18N>/EMPLOYEE_NAME}" width="20%" filterProperty="user_local_name">
                                     <table:template>
                                         <lib-m:CodePicker id="user_local_name"
                                             placeholder="Enter a vendor_pool_person_empno"
@@ -586,17 +590,18 @@
                                         <Text text="{manlist>user_english_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="직위" width="20%" filterProperty="job_title">
+                                <table:Column label="{I18N>/USER_POSITION}" width="20%" filterProperty="job_title">
                                     <table:template>
                                         <Text text="{manlist>job_title}" wrapping="false" />
                                     </table:template>
                                 </table:Column>    
                                 <table:Column label="담당자역할" width="20%" filterProperty="vendor_pool_person_role_text">
                                     <table:template>
-                                        <Text text="{manlist>vendor_pool_person_role_text}" wrapping="false" />
+                                        <Input id="vendor_pool_person_role_text" placeholder="Input data" value="{manlist>vendor_pool_person_role_text}"></Input> 
+
                                     </table:template>
                                 </table:Column>                                                            
-                                <table:Column label="부서" width="20%" filterProperty="department_korean_name">
+                                <table:Column label="{I18N>/DEPARTMENT}" width="20%" filterProperty="department_korean_name">
                                     <table:template>
                                         <Text text="{manlist>department_local_name}" wrapping="false" />
                                     </table:template>
@@ -617,7 +622,7 @@
                                         <Text text="{manlist>vendor_pool_mapping_use_flag}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="등록일자" width="20%" filterProperty="local_update_dtm">
+                                <table:Column label="{I18N>/REG_DATE}" width="20%" filterProperty="local_update_dtm">
                                     <table:template>
                                         <Text  text="{path: 'manlist>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"/>
                                         <!-- <Text text="{manlist>local_update_dtm}" wrapping="false" /> -->
@@ -634,8 +639,8 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Emphasized" text="Save" press=".onDetailSaveButtonPress" />
-				<Button type="Transparent" text="Cancel" press=".onPageNavBackButtonPress"/>
+				<Button type="Emphasized" text="{I18N>/SAVE}" press=".onDetailSaveButtonPress" />
+				<Button type="Transparent" text="{I18N>/CANCEL}" press=".onPageNavBackButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
 

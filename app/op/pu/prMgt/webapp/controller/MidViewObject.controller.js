@@ -101,23 +101,6 @@ sap.ui.define([
         _fnSetCreateData : function(oArgs){          
         },
 
-        dTtFormatter : function(code){
-            
-            //this._fnGetChainList();
-            // console.log('chainFormatter',code)
-            var oViewModel = this.getModel("detailModel");
-            // var aChain = this._fnGetChainList();
-            // console.log('aChain',aChain)
-       
-            return code;
-            // aChain.forEach(function(item){
-            //     if(this.code === code){
-            //         return code + " : " + this.code_description;
-            //     }
-            // })
-        },
-
-
          /**
          * 기존 데이터 조회  
          */
@@ -179,13 +162,6 @@ sap.ui.define([
         },
         _setUI : function (){
 
-            // oDetailModel.setProperty("/TenantId", oArgs.tenantId);  
-            // oDetailModel.setProperty("/CompanyCode", oArgs.company_code);  
-            // oDetailModel.setProperty("/XtnTypeCode", "CREATE"); 
-            // oDetailModel.setProperty("/PrNumber", oArgs.pr_number); 
-            // oDetailModel.setProperty("/PrCreateStatusCode", data.results[0].pr_create_status_code );
-            // oDetailModel.setProperty("/PrTemplateNumber"  , data.results[0].pr_template_number ); 
-
             var oDetailModel = this.getModel('detailModel');
 
             var oOPUi = new OPUi({
@@ -241,9 +217,9 @@ sap.ui.define([
             this.getRouter().navTo("midModify", {
                 layout: oNextUIState.layout,
                 vMode: "EDIT",
-                tenantId: oDetailModel.getProperty("/tenantId"),
-                company_code: oDetailModel.getProperty("/company_code"),
-                pr_number: oDetailModel.getProperty("/pr_number")
+                tenantId: oDetailModel.getProperty("/TenantId"),
+                company_code: oDetailModel.getProperty("/CompanyCode"),
+                pr_number: oDetailModel.getProperty("/PrNumber")
 
                 
             });
@@ -266,22 +242,14 @@ sap.ui.define([
             this.getRouter().navTo("midModify", {
                 layout: oNextUIState.layout,
                 vMode: "COPY",
-                tenantId: oDetailModel.getProperty("/tenantId"),
-                company_code: oDetailModel.getProperty("/company_code"),
-                pr_number: oDetailModel.getProperty("/pr_number")
+                tenantId: oDetailModel.getProperty("/TenantId"),
+                company_code: oDetailModel.getProperty("/CompanyCode"),
+                pr_number: oDetailModel.getProperty("/PrNumber")
 
                 
             });
 
-            // if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
-            //     this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
-            // }
-
-            //var oItem = oEvent.getSource();
-            //oItem.setNavigated(true);
-            //var oParent = oItem.getParent();
-            // store index of the item clicked, which can be used later in the columnResize event
-            //this.iIndex = oParent.indexOfItem(oItem);
+           
         },
          onPageDeleteButtonPress: function () {
 
@@ -293,10 +261,10 @@ sap.ui.define([
 
 
             var oDeletingKey = {
-                tenant_id: oDetailModel.getProperty("/tenantId"),
-                company_code:oDetailModel.getProperty("/company_code"),
-                pr_number: oDetailModel.getProperty("/pr_number"),      
-                pr_create_status_code: oDetailModel.getProperty("/pr_create_status_code")                
+                tenant_id: oDetailModel.getProperty("/TenantId"),
+                company_code:oDetailModel.getProperty("/CompanyCode"),
+                pr_number: oDetailModel.getProperty("/PrNumber"),      
+                pr_create_status_code: oDetailModel.getProperty("/PrCreateStatusCode")                
             } ;
 
 

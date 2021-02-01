@@ -1,5 +1,5 @@
 sap.ui.define([
-	"dp/developmentReceipt/model/models",
+	"dp/assetList/model/models",
 	"sap/ui/Device"
 ], function (models, Device) {
 	"use strict";

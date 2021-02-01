@@ -4,9 +4,6 @@ VIEW DP_PD_PART_CATEGORY_VIEW
 SELECT X.NODE_ID
       ,X.PARENT_ID
       ,X.TENANT_ID
-      ,X.company_code
-      ,X.org_type_code
-      ,X.org_code
       ,X.CATEGORY_GROUP_CODE
       ,X.CATEGORY_CODE
       ,X.CATEGORY_NAME

@@ -11,9 +11,6 @@ service CreationRequestV4Service {
 
     type PdCategoryCreationRequetType : {
             tenant_id : String;
-            company_code : String;
-            org_type_code : String;
-            org_code : String;
             request_number : String;
             category_group_code : String;
             approval_number : String;
@@ -31,9 +28,6 @@ service CreationRequestV4Service {
 
     type PdCategoryApprovalType : {
             tenant_id : String;
-            company_code : String;
-            org_type_code : String;
-            org_code : String;
             request_number : String;
             approve_sequence : Decimal;
             approval_number : String;

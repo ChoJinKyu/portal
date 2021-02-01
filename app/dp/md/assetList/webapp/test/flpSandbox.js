@@ -62,7 +62,7 @@ sap.ui.define([
 								"resolutionResult": {
 									"applicationType": "SAPUI5",
 									"additionalInformation": "SAPUI5.Component=dp.md.assetList",
-									"url": sap.ui.require.toUrl("dp/developmentReceipt")
+									"url": sap.ui.require.toUrl("dp/assetList")
 								}
 							}
 						}
