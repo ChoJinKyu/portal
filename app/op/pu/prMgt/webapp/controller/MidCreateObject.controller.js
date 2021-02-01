@@ -23,13 +23,14 @@ sap.ui.define([
     "sap/m/ColumnListItem", 
     "sap/m/Label",
     "cm/util/control/ui/EmployeeDialog",
-    "dp/util/control/ui/MaterialMasterDialog",
+    "cm/util/control/ui/PlantDialog",
     "dp/util/control/ui/MaterialOrgDialog",
+    "op/util/control/ui/UomDialog",
     "op/util/control/ui/WbsDialog"
 ], function (BaseController, ManagedListModel, ManagedModel, Multilingual, Validator, DateFormatter, NumberFormatter, CodeValueHelp, 
             JSONModel, History, RichTextEditor, Filter, FilterOperator, Sorter,
             Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label,
-            EmployeeDialog, MaterialMasterDialog, MaterialOrgDialog, WbsDialog) {
+            EmployeeDialog, PlantDialog, MaterialOrgDialog, UomDialog, WbsDialog) {
             
     "use strict";
     
@@ -308,12 +309,15 @@ sap.ui.define([
             oTemplateData.forEach(function(item, idx){
                 var oTableName = item.table_name;
                 var oColumnName = item.column_name;
-                var oSetFlagData = {
-                    "display_column_flag" : item.display_column_flag,
-                    "hide_column_flag" : item.hide_column_flag,
-                    "input_column_flag" : item.input_column_flag,
-                    "mandatory_column_flag" : item.mandatory_column_flag
-                };
+                
+                // var oSetFlagData = {
+                //     "hide_column_flag" : item.hide_column_flag,
+                //     "display_column_flag" : item.display_column_flag,
+                //     "input_column_flag" : item.input_column_flag,
+                //     "mandatory_column_flag" : item.mandatory_column_flag
+                // };
+
+                var oSetFlagData = that._fnSetVisibleColumnFlag(item);
                 
                 if(!oContDisplayFlag[oTableName]){
                     oContDisplayFlag[oTableName] = {};
@@ -324,6 +328,38 @@ sap.ui.define([
 
             //var oMATERIAL_CODEdisplay_column_flag = oContModel.getProperty("/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag");
             //console.log("DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag > " + oMATERIAL_CODEdisplay_column_flag);
+        },
+
+        /**
+         * Template 항목 Visible model 세팅 - Flag 세팅
+         * - mandatory_column_flag가 true이면 input, display, hide flag는 true로 세팅
+         * - input_column_flag가 true이면 display, hide flag는 true로 세팅
+         * - display_column_flag true이면 hide flag는 true로 세팅
+         */
+        _fnSetVisibleColumnFlag : function(oTemplateColumnData){
+            var hide_column_flag = oTemplateColumnData.hide_column_flag;
+            var display_column_flag = oTemplateColumnData.display_column_flag;
+            var input_column_flag = oTemplateColumnData.input_column_flag;
+            var mandatory_column_flag = oTemplateColumnData.mandatory_column_flag;
+
+            if(mandatory_column_flag){
+                hide_column_flag = false;
+                display_column_flag = true;
+                input_column_flag = true;
+            }else if(input_column_flag){
+                hide_column_flag = false;
+                display_column_flag = true;
+            }else if(display_column_flag){
+                hide_column_flag = false;
+            }
+
+            var oSetFlagData = {
+                "hide_column_flag" : hide_column_flag,
+                "display_column_flag" : display_column_flag,
+                "input_column_flag" : input_column_flag,
+                "mandatory_column_flag" : mandatory_column_flag
+            };
+            return oSetFlagData;
         },
 
         /**
@@ -913,34 +949,27 @@ sap.ui.define([
             });
         },
 
-        //==================== Material Code Dialog 시작 ====================        
-        /**
-         * 자재정보 검색 MaterialDialog.fragment open
-         */
+        //==================== 자재코드 Material Code Dialog 시작 ==================== 
 		onOpenMaterialDialog: function (oEvent) {
             sSelectedPath = oEvent.getSource().getBindingContext("viewModel").getPath();
             var that = this;
-                //oViewModel = this.getModel("viewModel");
-            //var oSelectedData = oViewModel.getProperty(sSelectedPath);
-
 
             if(!this.oSearchMultiMaterialMasterDialog){
-                //this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
                 this.oSearchMultiMaterialMasterDialog = new MaterialOrgDialog({                
-                    title: "Choose MaterialMaster",
+                    title: "Choose Material Code",
                     multiSelection: false,
                     items: {
                         filters: [
-                            //new Filter("tenant_id", FilterOperator.EQ, "L1100")
                             new Filter("tenant_id", FilterOperator.EQ, this.tenantId)                            
                         ]
-                    }
+                    },
+                    orgCode: ""
                 });
                 this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
                     var oMaterialData = oEvent.getParameter("item");
                     var oViewModel = this.getModel("viewModel");
                     var oSelectedData = oViewModel.getProperty(sSelectedPath);
-
+                    
                     oSelectedData.org_code = (oMaterialData.org_code && oMaterialData.org_code !== "") ? oMaterialData.org_code:"";
                     oSelectedData.material_code = oMaterialData.material_code;
                     oSelectedData.pr_desc = (oMaterialData.material_desc && oMaterialData.material_desc !== "") ? oMaterialData.material_desc:"";
@@ -948,51 +977,10 @@ sap.ui.define([
                     oSelectedData.buyer_empno = (oMaterialData.buyer_empno && oMaterialData.buyer_empno !== "") ? oMaterialData.buyer_empno:"";
                     oSelectedData.purchasing_group_code = (oMaterialData.purchasing_group_code && oMaterialData.purchasing_group_code !== "") ? oMaterialData.purchasing_group_code:"";                    
                     oSelectedData.material_group_code = oMaterialData.material_group_code; 
-
                     oViewModel.refresh();
                 }.bind(that));
             }
             this.oSearchMultiMaterialMasterDialog.open();
-
-            //var aTokens = this.byId("searchMultiMaterialMasterDialog").getTokens();
-            //this.oSearchMultiMaterialMasterDialog.setTokens(aTokens);
-
-
-
-            // var oSampleData = {
-            //         "familyMaterialCode": [],
-            //         "materialCode": [{"org_code": "A001", "material_code": "A001-01-01"},
-            //                         {"org_code": "A002", "material_code": "A001-01-02"},
-            //                         {"org_code": "A003", "material_code": "A001-01-03"},
-            //                         {"org_code": "A004", "material_code": "A001-01-04"},
-            //                         {"org_code": "A005", "material_code": "A001-01-05"},
-            //                         {"org_code": "A005", "material_code": "A001-01-06"},
-            //                         {"org_code": "A005", "material_code": "A001-01-07"},
-            //                         {"org_code": "A005", "material_code": "A001-01-08"},
-            //                         {"org_code": "A005", "material_code": "A001-01-09"},
-            //                         {"org_code": "A005", "material_code": "A001-01-10"}]
-            //         };
-            // this.setModel(new JSONModel(oSampleData), "materialCodeModel");
-
-           // oMarterialCodeModel.attachRequestCompleted(function(data) {
-                // if (!this._oMaterialDialog) {
-                //     this._oMaterialDialog = Fragment.load({
-                //         id: oView.getId(),
-                //         name: "op.pu.prMgt.view.MaterialDialog",
-                //         controller: this
-                //     }).then(function (oDialog) {
-                //         oView.addDependent(oDialog);
-                //         return oDialog;
-                //     });
-                // }
-                // this._oMaterialDialog.then(function(oDialog) {
-                //     oDialog.open();
-                // });
-            //}.bind(this));
-
-            // this._oDialogTableSelect.then(function (oDialog) {
-            //     oDialog.open();
-            // });
         },
         
         /**
@@ -1039,6 +1027,39 @@ sap.ui.define([
         // },
         //==================== Material Code Dialog 끝 ====================
  
+
+        //==================== 구매조직코드 검색 Dialog 시작 ====================  
+		onOpenSearchPurOperationOrgDialog: function (oEvent) {
+            sSelectedPath = oEvent.getSource().getBindingContext("viewModel").getPath();
+            var that = this;
+            
+            if(!this.oSearchPurOperationOrgDialog){
+                this.oSearchPurOperationOrgDialog = new PlantDialog({
+                    title: "Choose Organization Code",
+                    multiSelection: false,
+                    items: {
+                        filters: [
+                            new Filter("company_code", FilterOperator.EQ, that.company_code)                            
+                        ],
+                        sorters: [
+                            new Sorter("plant_name")
+                        ]
+                    }
+                });
+                this.oSearchPurOperationOrgDialog.attachEvent("apply", function(oEvent){
+                    var oItemData = oEvent.getParameter("item");
+                    var oViewModel = that.getModel("viewModel");
+                    var oSelectedData = oViewModel.getProperty(sSelectedPath);
+
+                    if(oItemData.plant_code && oItemData.plant_code !== ""){
+                        oSelectedData.org_code = oItemData.plant_code;                    
+                        oViewModel.refresh();
+                    }                    
+                }.bind(that));
+            }
+            this.oSearchPurOperationOrgDialog.open();
+        }, 
+
         //==================== WBS 검색 Dialog 시작 ====================  
 		onOpenSearchWbsDialog: function (oEvent) {
             sSelectedPath = oEvent.getSource().getBindingContext("viewModel").getPath();
@@ -1061,6 +1082,29 @@ sap.ui.define([
             }
             this.oSearchWbsDialog.open();
         }, 
+
+        //==================== 단위(UOM) 검색 Dialog ====================
+        onOpenUomDialog: function(oEvent){
+            sSelectedPath = oEvent.getSource().getBindingContext("viewModel").getPath();
+            var that = this;
+            
+            if(!this.oSearchUomDialog){
+                this.oSearchUomDialog = new UomDialog({
+                    title: "Choose Uom Code"
+                });
+                this.oSearchUomDialog.attachEvent("apply", function(oEvent){
+                    var oItemData = oEvent.getParameter("item");
+                    var oViewModel = that.getModel("viewModel");
+                    var oSelectedData = oViewModel.getProperty(sSelectedPath);
+
+                    if(oItemData.uom_code && oItemData.uom_code !== ""){
+                        oSelectedData.pr_unit = oItemData.uom_code;                    
+                        oViewModel.refresh();
+                    }                    
+                }.bind(that));
+            }
+            this.oSearchUomDialog.open();
+        },
 
         //==================== 사원정보 검색 Dialog 시작 ====================  
 		onOpenSearchEmpDialog: function (oEvent) {
@@ -1087,37 +1131,6 @@ sap.ui.define([
             }
             this.oSearchEmpDialog.open();
         }, 
-
-        //==================== 단위(UOM) 검색 Dialog ====================
-        onOpenUomDialog: function(oEvent){
-            sSelectedPath = oEvent.getSource().getBindingContext("viewModel").getPath();
-            var that = this;
-
-            if(!this.oUomCodeValueHelp){
-                this.oUomCodeValueHelp = new CodeValueHelp({
-                    title: "Choose Uom",
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                            new Filter("group_code", FilterOperator.EQ, "CM_CHAIN_CD")
-                        ],
-                        sorters: [
-                            new Sorter("sort_no", true)
-                        ],
-                        serviceName: "dp.util.MmService",
-                        entityName: "Uom"
-                    }
-                });
-                this.oUomCodeValueHelp.attachEvent("apply", function(oEvent){
-                    var oViewModel = that.getModel("viewModel");
-                    var oSelectedData = oViewModel.getProperty(sSelectedPath);
-                    oSelectedData.buyer_empno = oEvent.getParameter("item").code;                    
-                    oViewModel.refresh();
-                }.bind(that));
-            }
-            this.oUomCodeValueHelp.open();
-        },
-
 
 
 

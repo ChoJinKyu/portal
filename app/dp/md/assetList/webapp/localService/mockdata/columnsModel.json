@@ -1,0 +1,19 @@
+{
+	"cols": [
+		{
+            "AffiliateCode": "AffiliateCode",
+            "label": "Affiliate Code",
+			"template": "AffiliateCode",
+			"width": "8rem"
+		},
+		{
+			"label": "Affiliate Name",
+			"template": "AffiliateName",
+			"width": "8rem"
+		},
+		{
+			"label": "Affiliate Full Name",
+			"template": "Name"
+		}
+	]
+}

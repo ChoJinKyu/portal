@@ -26,7 +26,7 @@ sap.ui.define([
     "sap/ui/core/syncStyleClass",
     'sap/m/Label',
     'sap/m/SearchField',
-    "ext/lib/util/ValidatorUtil",
+    // "ext/lib/util/ValidatorUtil",
     "sap/f/library",
     "ext/lib/util/ControlUtil",
     "sap/ui/model/resource/ResourceModel",
@@ -63,7 +63,7 @@ sap.ui.define([
     syncStyleClass,
     Label,
     SearchField,
-    ValidatorUtil,
+    // ValidatorUtil,
     library,
     ControlUtil,
     ResourceModel,
@@ -1945,6 +1945,10 @@ sap.ui.define([
             }
             this.oSearchSupplierDialog.open(sSearchObj);
         },
+        vhMaterialCode: function () {
+
+        },
+
         vhSupplier: function () {
 
             if (this.byId("search_Vp_Code").getValue()) {

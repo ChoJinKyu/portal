@@ -16,20 +16,17 @@ LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 AS
 BEGIN
+    
+    
     /*평가항목 관리 - 평가항목 저장*/
     DECLARE V_SORT_SEQUENCE INT = 0;
     DECLARE V_EVALUATION_ARTICLE_CODE NVARCHAR(15) = '';
-    SELECT  IFNULL(I_USER_ID,'SYSTEM') INTO I_USER_ID FROM DUMMY;     
-   
+
     /* SQL Error 처리 */
-    BEGIN
-        DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            ROLLBACK;
-            O_MSG = SELECT  'NG' RETURN_CODE, 'Insert Evaluation Item Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')' RETURN_MSG FROM  DUMMY;
-        END;
-    END;
-    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+
+    SELECT  IFNULL(I_USER_ID,'SYSTEM') INTO I_USER_ID FROM DUMMY;
+
     SELECT IFNULL(MAX(EIM.SORT_SEQUENCE),0) + 1 SORT_SEQUENCE
     INTO   V_SORT_SEQUENCE
     FROM   SP_SE_EVAL_ITEM_MST EIM
@@ -49,6 +46,13 @@ BEGIN
     
     /*Evaluation Item Insert*/
     BEGIN
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+        
+            O_MSG = SELECT  'NG' RETURN_CODE, 'Insert Evaluation Item Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')' RETURN_MSG FROM  DUMMY;
+            RESIGNAL;
+        END;
+
         INSERT INTO SP_SE_EVAL_ITEM_MST
         (TENANT_ID
         ,COMPANY_CODE

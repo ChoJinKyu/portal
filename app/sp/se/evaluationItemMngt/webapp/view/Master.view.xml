@@ -137,7 +137,7 @@
             <t:TreeTable 
                 id="treeTable"
                 enableSelectAll="false"
-                visibleRowCount="16"
+                visibleRowCount="11"
                 enableColumnReordering="false"
                 class="sapFDynamicPageAlignContent" 
                 rowSelectionChange="onRowSelectionChange"
@@ -180,37 +180,37 @@
                         </t:template>
                     </t:Column>
                     <!-- 평가운영단위 -->
-                    <t:Column label="{I18N>/EVAL_OP_UNT}" width="7em">    
+                    <t:Column label="{I18N>/EVAL_OP_UNT}" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{evaluation_operation_unit_name}" tooltip="{evaluation_operation_unit_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 평가유형명 -->
-                    <t:Column label="{I18N>/EVALUATION_TYPE_NAME}" width="7em">    
+                    <t:Column label="{I18N>/EVALUATION_TYPE_NAME}" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{evaluation_type_name}" tooltip="{evaluation_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 평가수행방식 -->
-                    <t:Column label="{I18N>/EVAL_EXEC_MODE}" width="7em">    
+                    <t:Column label="{I18N>/EVAL_EXEC_MODE}" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{evaluation_execute_mode_name}" tooltip="{evaluation_execute_mode_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 평가항목구분-->
-                    <t:Column label="{I18N>/EVAL_ITEM_TYPE}" width="7em">    
+                    <t:Column label="{I18N>/EVAL_ITEM_TYPE}" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{evaluation_article_type_name}" tooltip="{evaluation_article_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 배점유형 -->
-                    <t:Column label="{I18N>/DISTRB_SCOR_TYPE}" width="7em">    
+                    <t:Column label="{I18N>/DISTRB_SCOR_TYPE}" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{evaluation_distrb_scr_type_name}" tooltip="{evaluation_distrb_scr_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- Scale유형 -->
-                    <t:Column label="{I18N>/SCLE_TYPE}" width="7em">    
+                    <t:Column label="{I18N>/SCLE_TYPE}" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{evaluation_result_input_type_name}" tooltip="{evaluation_result_input_type_name}" wrapping="false" />
                         </t:template>
@@ -222,19 +222,19 @@
                         </t:template>
                     </t:Column>
                     <!-- 정렬 -->
-                    <t:Column label="{I18N>/SORT}" width="5em">    
+                    <t:Column label="{I18N>/SORT}" width="5em" hAlign="Center">    
                         <t:template>
                             <Text text="{sort_sequence}" tooltip="{sort_sequence}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 작성자 -->
-                    <t:Column label="{I18N>/WRITER}" width="8em">    
+                    <t:Column label="{I18N>/WRITER}" width="8em" hAlign="Center">    
                         <t:template>
                             <Text text="{writer}" tooltip="{writer}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 작성일자 -->
-                    <t:Column label="{I18N>/WRITE_DATE}" width="8em">    
+                    <t:Column label="{I18N>/WRITE_DATE}" width="8em" hAlign="Center">    
                         <t:template>
                             <Text text="{
                                 path:'write_tm',

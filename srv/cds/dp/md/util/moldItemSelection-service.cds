@@ -117,7 +117,7 @@ service MoldItemSelectionService {
                                    
         left join supplier s1 on s1.supplier_code = m.supplier_code  and s1.tenant_id = m.tenant_id 
         left join supplier s2 on s2.supplier_code = m.production_supplier_code and s2.tenant_id = m.tenant_id  
-        left join cmDept.Hr_Department dep on dep.department_id = ass.acq_department_code and dep.tenant_id = ass.tenant_id 
+        left join cmDept.Hr_Department dep on dep.department_code = ass.acq_department_code and dep.tenant_id = ass.tenant_id 
         left join moldSche.Md_Schedule ps on ps.mold_id = m.mold_id and ps.mold_develope_date_type_code = 'P'
         left join moldSche.Md_Schedule rs on rs.mold_id = m.mold_id and rs.mold_develope_date_type_code = 'R' 
         left join codeLng.Code_Lng as cl on cl.code = m.mold_item_type_code 

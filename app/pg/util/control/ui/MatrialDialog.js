@@ -12,7 +12,22 @@ sap.ui.define([
     "sap/m/Text",
     "sap/m/Input",
     "sap/m/SearchField"
-], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, SearchField) {
+], function (
+    Parent, 
+    Renderer, 
+    ODataV2ServiceProvider, 
+    Filter, 
+    FilterOperator, 
+    Sorter, 
+    GridData, 
+    VBox, 
+    Column, 
+    Label, 
+    Text, 
+    Input, 
+    SearchField
+    )
+    {
     "use strict";
 
     var martrialDialog = Parent.extend("pg.util.control.ui.MartrialDialog", {
@@ -28,6 +43,70 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function () {
+            that = this;
+            this.oPlant = new Input({ placeholder: this.getModel("I18N").getText("/PLANT") });
+            this.oOperationOrg = new Input({ placeholder: this.getModel("I18N").getText("/OPERATION_ORG") });
+
+            var oItemTemplate = new sap.ui.core.Item({
+                key: "{code}",
+                text: "{code_name}"
+            });
+
+            this.oOperationUnitComb = new ComboBox({
+                id: "operationUint",
+                items: {
+                    path: "/items",
+                    template: oItemTemplate
+                }
+            });
+
+            this.oVendorPoolCode = new Input({
+                placeholder : this.getModel("I18N").getText("/VENDOR_POOL_CODE"),
+                showValueHelp : true,
+                valueHelpOnly : true,
+                valueHelpRequest: function (oEvent) {
+                    this.oVendorPoolDialogPop = new VendorPoolDialogPop({
+                        multiSelection: false,
+                        keyField: "VENDOR_POOL_CODE",
+                        textField: "VENDOR_POOL_NAME",
+                        filters: [
+                            new VBox({
+                                items: [
+                                    new Label({ text: this.getModel("I18N").getText("/KEYWORD") }),
+                                    new Input({placeholder : this.getModel("I18N").getText("/VENDOR_POOL_CODE")})
+                                ],
+                                layoutData: new GridData({ span: "XL2 L3 M5 S10" })
+                            })
+                        ],
+                        columns: [
+                            new Column({
+                                width: "75%",
+                                label: new Label({ text: this.getModel("I18N").getText("/VALUE") }),
+                                template: new Text({ text: "vendorpool code" })
+                            }),
+                            new Column({
+                                width: "25%",
+                                hAlign: "Center",
+                                label: new Label({ text: this.getModel("I18N").getText("/CODE") }),
+                                template: new Text({ text: "vendorpool name" })
+                            })
+                        ]
+                    });
+
+                    this.oVendorPoolDialogPop.setContentWidth("300px");
+                    var sSearchObj = {};
+                    sSearchObj.tanent_id = "L2100";
+                    //sSearchObj.vendor_pool_code = oSearchValue;
+                    this.oVendorPoolDialogPop.open(sSearchObj);
+                    this.oVendorPoolDialogPop.attachEvent("apply", function (oEvent) {
+                        console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
+                        that.oVendorPoolCode.setValue(null);
+                        that.oVendorPoolCode.setValue(oEvent.mParameters.item.vendor_pool_code);
+                    }.bind(this));
+                }
+            });
+
+
             this.oMaterialCode = new SearchField({ placeholder: this.getModel("I18N").getText("/SUPPLIER_CODE") });
 
             this.oMaterialCode.attachEvent("change", this.loadData.bind(this));
@@ -35,8 +114,29 @@ sap.ui.define([
             return [
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
-                        this.oMaterialCode
+                        new Label({ text: this.getModel("I18N").getText("/PLANT") }),
+                        this.oPlant
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M3 S12" })
+                }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/OPERATION_ORG") }),
+                        this.oOperationOrg
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M3 S12" })
+                }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT") }),
+                        this.oOperationUnitComb
+                    ],
+                    layoutData: new GridData({ span: "XL2 L3 M3 S12" })
+                }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") }),
+                        this.oVendorPoolCode
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M3 S12" })
                 })
@@ -51,14 +151,19 @@ sap.ui.define([
                     template: new Text({ text: "{operation_unit_code}" })
                 }),
                 new Column({
-                    width: "25%",
+                    width: "20%",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") }),
                     template: new Text({ text: "{vendor_pool_code}" })
                 }),
                 new Column({
-                    width: "55%",
+                    width: "20%",
                     label: new Label({ text: this.getModel("I18N").getText("/MATERIAL_CODE") }),
                     template: new Text({ text: "{material_code}" })
+                }),
+                new Column({
+                    width: "40%",
+                    label: new Label({ text: this.getModel("I18N").getText("/MATERIAL_DESC") }),
+                    template: new Text({ text: "{material_desc}" })
                 })
             ];
         },

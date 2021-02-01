@@ -634,6 +634,20 @@ sap.ui.define([
                     oViewModel.setProperty("/App/EditMode", !bEditFlg);
                 }
             }
+            /**
+             * 평가수행방식 변경시
+             * 단위, 항목산식 초기화
+             */
+            , onSelectChangExecMode : function(){
+                var oView, oViewModel, oHeader;
 
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
+                oHeader = oViewModel.getProperty("/Detail/Header");
+
+                oHeader.qttive_item_uom_code = "";
+                oHeader.qttive_eval_article_calc_formula = "";
+                oViewModel.setProperty("/Detail/Header", oHeader);
+            }
 		});
 	});
