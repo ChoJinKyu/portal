@@ -146,6 +146,17 @@ service makerViewService {
             bizunit_code
     ;
 
+    @readonly
+    view companyView @(title : '회사코드 View') as
+        select
+            key tenant_id, //테넌트ID
+            key company_code, //회사코드
+                company_name //회사명
+        from OrgCompany.Org_Company
+        order by
+            tenant_id,
+            company_code;
+
     //Contry View
     @readonly
     view CountryView @(title : '국가 View') as
