@@ -100,15 +100,15 @@ sap.ui.define([
             //aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oSearchObj.orgCode));
 
             if (sMatrialCodePop) {
-                aFilters.push(new Filter("material_code", FilterOperator.EQ, sMatrialCodePop.toUpperCase()));
+                aFilters.push(new Filter("material_code", FilterOperator.Contains, "'" + sMatrialCodePop.toUpperCase() + "'"));
             }
 
             if (sMatrialNamePop) {
-                aFilters.push(new Filter("material_desc", FilterOperator.EQ, sMatrialNamePop.toUpperCase()));
+                aFilters.push(new Filter("material_desc", FilterOperator.Contains, "'" + sMatrialNamePop.toUpperCase() + "'"));
             }
 
             if (sMatrialSpecPop) {
-                aFilters.push(new Filter("material_spec", FilterOperator.EQ, sMatrialSpecPop.toUpperCase()));
+                aFilters.push(new Filter("material_spec", FilterOperator.Contains, sMatrialSpecPop.toUpperCase()));
             }
 
 
@@ -140,7 +140,7 @@ sap.ui.define([
             this.loadData();
             this.oDialog.open();
         }
-    });
+    });                          
 
     return matrialDialogPop;
 }, /* bExport= */ true);
