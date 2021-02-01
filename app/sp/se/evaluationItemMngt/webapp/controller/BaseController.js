@@ -61,7 +61,26 @@ sap.ui.define([
             return $Dfferred;
         }
 
+        /***
+         * 세션 유저정보를 가져온다.
+         */
+        , _getUserSession : function(){
+            var oUserInfo;
+            
+            oUserInfo = {
+                loginUserId : "TestUser",
+                tenantId : "L2100",
+                companyCode : "LGCKR",
+                orgTypeCode : "BU",
+                orgCode : "BIZ00100",
+                evalPersonEmpno : "5480"
+            };
 
+            return oUserInfo;
+        }
+        /***
+         * Control 유형에 따른 필수 값 확인
+         */
         , _isValidControl : function(aControls){
             var oMessageManager = sap.ui.getCore().getMessageManager(),
                 bAllValid = false,
@@ -106,7 +125,9 @@ sap.ui.define([
 
             return bAllValid;
         }
-
+        /**
+         * ValueState 초기화
+         */
         , _clearValueState : function(aControls){
              aControls.forEach(function(oControl){
                 var sEleName = oControl.getMetadata().getElementName(),
@@ -124,7 +145,9 @@ sap.ui.define([
                 oControl.setValueStateText();
             });
         }
-
+        /**
+         * deep Copy 
+         */
         , _deepCopy : function(oData){
             var oNewObj;
             
@@ -144,6 +167,16 @@ sap.ui.define([
             }
 
             return oNewObj;
+        }
+        /***
+         * Bind Items
+         */
+        , _setBindItems : function(oParam){
+            this.byId(oParam.id).bindItems({
+                path : oParam.path,
+                filters : oParam.filters,
+                template : oParam.template
+            });
         }
 	});
 });
