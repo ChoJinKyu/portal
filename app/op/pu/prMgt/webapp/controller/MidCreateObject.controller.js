@@ -26,11 +26,12 @@ sap.ui.define([
     "cm/util/control/ui/PlantDialog",
     "dp/util/control/ui/MaterialOrgDialog",
     "op/util/control/ui/UomDialog",
-    "op/util/control/ui/WbsDialog"
+    "op/util/control/ui/WbsDialog",
+    "sp/util/control/ui/SupplierDialog"
 ], function (BaseController, ManagedListModel, ManagedModel, Multilingual, Validator, DateFormatter, NumberFormatter, CodeValueHelp, 
             JSONModel, History, RichTextEditor, Filter, FilterOperator, Sorter,
             Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label,
-            EmployeeDialog, PlantDialog, MaterialOrgDialog, UomDialog, WbsDialog) {
+            EmployeeDialog, PlantDialog, MaterialOrgDialog, UomDialog, WbsDialog, SupplierDialog) {
             
     "use strict";
     
@@ -961,6 +962,9 @@ sap.ui.define([
                     items: {
                         filters: [
                             new Filter("tenant_id", FilterOperator.EQ, this.tenantId)                            
+                        ],
+                        sorters: [
+                            new Sorter("material_code")
                         ]
                     },
                     orgCode: ""
@@ -1132,7 +1136,37 @@ sap.ui.define([
             this.oSearchEmpDialog.open();
         }, 
 
+        //==================== 공급업체코드 - Supplier Code 검색 Dialog 시작 ====================  
+		onOpenSearchSupplierDialog : function (oEvent) {
+            sSelectedPath = oEvent.getSource().getBindingContext("viewModel").getPath();
+            var that = this;
+            
+            if(!this.oSearchSupplierDialog){
+                this.oSearchSupplierDialog = new SupplierDialog({
+                    title: "Choose Supplier Code",
+                    multiSelection: false,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, that.tenantId)                            
+                        ],
+                        sorters: [
+                            new Sorter("supplier_local_name")
+                        ]
+                    }
+                });
+                this.oSearchSupplierDialog.attachEvent("apply", function(oEvent){
+                    var oItemData = oEvent.getParameter("item");
+                    var oViewModel = that.getModel("viewModel");
+                    var oSelectedData = oViewModel.getProperty(sSelectedPath);
 
+                    if(oItemData.supplier_code && oItemData.supplier_code !== ""){
+                        oSelectedData.supplier_code = oItemData.supplier_code;                    
+                        oViewModel.refresh();
+                    }                    
+                }.bind(that));
+            }
+            this.oSearchSupplierDialog.open();
+        }, 
 
 
 

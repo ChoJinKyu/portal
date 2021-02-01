@@ -1,9 +1,6 @@
 PROCEDURE DP_PD_CATEGORY_CREATION_REQUEST_SAVE_PROC (		
     IN  CRUD_TYPE NVARCHAR(1),
     IN  I_M TABLE ( TENANT_ID NVARCHAR(5), 
-                    COMPANY_CODE NVARCHAR(10),
-                    ORG_TYPE_CODE NVARCHAR(2),
-                    ORG_CODE NVARCHAR(10),
                     REQUEST_NUMBER NVARCHAR(30),
                     CATEGORY_GROUP_CODE NVARCHAR(30),
                     APPROVAL_NUMBER NVARCHAR(50),
@@ -20,9 +17,6 @@ PROCEDURE DP_PD_CATEGORY_CREATION_REQUEST_SAVE_PROC (
                     UPDATE_USER_ID NVARCHAR(255),
                     CRUD_TYPE NVARCHAR(1) ),
     IN  I_D TABLE ( TENANT_ID NVARCHAR(5),
-                    COMPANY_CODE NVARCHAR(10),
-                    ORG_TYPE_CODE NVARCHAR(2),
-                    ORG_CODE NVARCHAR(10),
                     REQUEST_NUMBER NVARCHAR(30),
                     APPROVE_SEQUENCE DECIMAL,
                     APPROVAL_NUMBER NVARCHAR(50),
@@ -52,8 +46,8 @@ BEGIN
         END;
 
         DELETE FROM DP_PD_PART_CATEGORY_APPROVAL D
-        WHERE (D.TENANT_ID, D.COMPANY_CODE, D.ORG_TYPE_CODE, D.ORG_CODE, D.REQUEST_NUMBER, D.APPROVE_SEQUENCE ) IN
-            ( SELECT TENANT_ID, COMPANY_CODE, ORG_TYPE_CODE, ORG_CODE, REQUEST_NUMBER, APPROVE_SEQUENCE FROM :I_D )
+        WHERE (D.TENANT_ID, D.REQUEST_NUMBER, D.APPROVE_SEQUENCE ) IN
+            ( SELECT TENANT_ID, REQUEST_NUMBER, APPROVE_SEQUENCE FROM :I_D )
         ;
 /*
         IF ::rowcount = 0 THEN
@@ -61,8 +55,8 @@ BEGIN
         END IF;
 */
         DELETE FROM DP_PD_PART_CATEGORY_CREATION_REQUEST M
-        WHERE (M.TENANT_ID, M.COMPANY_CODE, M.ORG_TYPE_CODE, M.ORG_CODE, M.REQUEST_NUMBER, M.CATEGORY_GROUP_CODE ) IN
-            ( SELECT TENANT_ID, COMPANY_CODE, ORG_TYPE_CODE, ORG_CODE, REQUEST_NUMBER, CATEGORY_GROUP_CODE FROM :I_M )
+        WHERE (M.TENANT_ID, M.REQUEST_NUMBER, M.CATEGORY_GROUP_CODE ) IN
+            ( SELECT TENANT_ID, REQUEST_NUMBER, CATEGORY_GROUP_CODE FROM :I_M )
         ;
       END;
     ELSE
@@ -97,21 +91,15 @@ BEGIN
                         ,UPDATE_USER_ID
                     FROM :I_M
                    WHERE TENANT_ID = M.TENANT_ID
-                     AND COMPANY_CODE = M.COMPANY_CODE
-                     AND ORG_TYPE_CODE = M.ORG_TYPE_CODE
-                     AND ORG_CODE = M.ORG_TYPE_CODE
                      AND REQUEST_NUMBER = M.REQUEST_NUMBER
                      AND CATEGORY_GROUP_CODE = M.CATEGORY_GROUP_CODE
                 )
-                WHERE (M.TENANT_ID, M.COMPANY_CODE, M.ORG_TYPE_CODE, M.ORG_CODE, M.REQUEST_NUMBER, M.CATEGORY_GROUP_CODE ) IN
-                ( SELECT TENANT_ID, COMPANY_CODE, ORG_TYPE_CODE, ORG_CODE, REQUEST_NUMBER, CATEGORY_GROUP_CODE FROM :I_M )
+                WHERE (M.TENANT_ID, M.REQUEST_NUMBER, M.CATEGORY_GROUP_CODE ) IN
+                ( SELECT TENANT_ID, REQUEST_NUMBER, CATEGORY_GROUP_CODE FROM :I_M )
             ;
         ELSE
             INSERT INTO DP_PD_PART_CATEGORY_CREATION_REQUEST M
                       ( TENANT_ID
-                        ,COMPANY_CODE	
-                        ,ORG_TYPE_CODE	
-                        ,ORG_CODE	
                         ,REQUEST_NUMBER	
                         ,CATEGORY_GROUP_CODE	
                         ,APPROVAL_NUMBER	
@@ -133,9 +121,6 @@ BEGIN
                         ,SYSTEM_UPDATE_DTM
                       )
                  SELECT TENANT_ID
-                        ,COMPANY_CODE	
-                        ,ORG_TYPE_CODE	
-                        ,ORG_CODE	
                         ,REQUEST_NUMBER	
                         ,CATEGORY_GROUP_CODE	
                         ,APPROVAL_NUMBER	
@@ -162,8 +147,8 @@ BEGIN
 
         /*  I_D Table의 Data 일괄 삭제 */
         DELETE FROM DP_PD_PART_CATEGORY_APPROVAL D
-        WHERE (D.TENANT_ID, D.COMPANY_CODE, D.ORG_TYPE_CODE, D.ORG_CODE, D.REQUEST_NUMBER, D.APPROVE_SEQUENCE ) IN
-            ( SELECT TENANT_ID, COMPANY_CODE, ORG_TYPE_CODE, ORG_CODE, REQUEST_NUMBER, APPROVE_SEQUENCE
+        WHERE (D.TENANT_ID, D.REQUEST_NUMBER, D.APPROVE_SEQUENCE ) IN
+            ( SELECT TENANT_ID, REQUEST_NUMBER, APPROVE_SEQUENCE
                 FROM :I_D id
                WHERE id.CRUD_TYPE = 'D'
             )
@@ -173,9 +158,6 @@ BEGIN
         MERGE INTO DP_PD_PART_CATEGORY_APPROVAL D
             USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE IN ('C','U')  ) id
             ON ( D.TENANT_ID = id.TENANT_ID
-                AND D.COMPANY_CODE = id.COMPANY_CODE
-                AND D.ORG_TYPE_CODE = id.ORG_TYPE_CODE
-                AND D.ORG_CODE = id.ORG_CODE
                 AND D.REQUEST_NUMBER = id.REQUEST_NUMBER
                 AND D.APPROVE_SEQUENCE = id.APPROVE_SEQUENCE
                 AND id.CRUD_TYPE IN ('C','U') )
@@ -190,9 +172,6 @@ BEGIN
                 ,D.UPDATE_USER_ID = id.UPDATE_USER_ID
         WHEN NOT MATCHED THEN
             INSERT ( TENANT_ID
-                    ,COMPANY_CODE
-                    ,ORG_TYPE_CODE
-                    ,ORG_CODE
                     ,REQUEST_NUMBER
                     ,APPROVE_SEQUENCE
                     ,APPROVAL_NUMBER
@@ -208,9 +187,6 @@ BEGIN
                     ,SYSTEM_UPDATE_DTM
                 )
             VALUES ( id.TENANT_ID
-                    ,id.COMPANY_CODE
-                    ,id.ORG_TYPE_CODE
-                    ,id.ORG_CODE
                     ,id.REQUEST_NUMBER
                     ,id.APPROVE_SEQUENCE
                     ,id.APPROVAL_NUMBER

@@ -52,7 +52,7 @@ sap.ui.define([
 
             //this.oPlant = new Input({ placeholder: this.getModel("I18N").getText("/PLANT") });
             this.oOperationOrgComb = new ComboBox({
-                id: "operationOrg",
+                id: "operationOrgVp",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -68,7 +68,7 @@ sap.ui.define([
             });
 
             this.oOperationUnitComb = new ComboBox({
-                id: "operationUint",
+                id: "operationUnitVp",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -130,7 +130,7 @@ sap.ui.define([
             // });
 
             this.oVendorPoolLvl1 = new ComboBox({
-                id: "vendorPoolLvl1",
+                id: "vendorPoolLvl1Vp",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -145,7 +145,7 @@ sap.ui.define([
                 }.bind(this)
             });
             this.oVendorPoolLvl2 = new ComboBox({
-                id: "vendorPoolLvl2",
+                id: "vendorPoolLvl2Vp",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -160,7 +160,7 @@ sap.ui.define([
                 }.bind(this)
             });
             this.oVendorPoolLvl3 = new ComboBox({
-                id: "vendorPoolLvl3",
+                id: "vendorPoolLvl3Vp",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -175,7 +175,7 @@ sap.ui.define([
                 }.bind(this)
             });
             this.oVendorPoolLvl4 = new ComboBox({
-                id: "vendorPoolLvl4",
+                id: "vendorPoolLvl4Vp",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -190,7 +190,7 @@ sap.ui.define([
                 }.bind(this)
             });
             this.oVendorPoolLvl5 = new ComboBox({
-                id: "vendorPoolLvl5",
+                id: "vendorPoolLvl5Vp",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
