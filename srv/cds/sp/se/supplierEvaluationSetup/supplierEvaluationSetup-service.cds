@@ -154,7 +154,7 @@ service SupEvalSetupService {
         where  mgr.tenant_id = emp.tenant_id
         and    mgr.evaluation_op_unt_person_empno = emp.employee_number
         and    emp.tenant_id = dept.tenant_id
-        and    emp.department_id = dept.department_id
+        and    emp.department_code = dept.department_code
         ;
 
     /* Evaluation Type List */
