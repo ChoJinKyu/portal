@@ -68,7 +68,7 @@ sap.ui.define([
                 intent: "#Template-display"
             }, true);
 
-            //this._doInitSearch();
+            this._doInitSearch();
             //this._doInitTablePerso();
 
             var oMultilingual = new Multilingual();
@@ -92,73 +92,25 @@ sap.ui.define([
 
         },
 
-        onAfterRendering: function () {
-            //this.getModel().setDeferredGroups(["bindReceipt", "cancelBind", "delete", "receipt"]);
-            this.byId("pageSearchButton").firePress();
-            return;
-        },
+        // onAfterRendering: function () {
+        //     //this.getModel().setDeferredGroups(["bindReceipt", "cancelBind", "delete", "receipt"]);
+        //     this.byId("pageSearchButton").firePress();
+        //     return;
+        // },
 
         /**
          * @private
          * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
          */
         _doInitSearch: function () {
-            this.getView().setModel(this.getOwnerComponent().getModel());
-
-            this.setDivision('LGESL');//LGEKR
+            //this.getView().setModel(this.getOwnerComponent().getModel());
 
             //접속자 법인 사업부로 바꿔줘야함
-            this.getView().byId("searchCompanyS").setSelectedKeys(['LGESL']);
-            this.getView().byId("searchCompanyE").setSelectedKeys(['LGESL']);
             this.getView().byId("searchDivisionS").setSelectedKeys(['A040']);//CCZ', 'DHZ', 'PGZ
             this.getView().byId("searchDivisionE").setSelectedKeys(['A040']);
-
-            /** Create Date */
-            var today = new Date();
-
-            this.getView().byId("searchCreationDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
-            this.getView().byId("searchCreationDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-            this.getView().byId("searchCreationDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
-            this.getView().byId("searchCreationDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
         },
 
-        setDivision: function (companyCode) {
-/*
-            var filter = new Filter({
-                filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
-                    new Filter("org_type_code", FilterOperator.EQ, 'AU'),
-                    new Filter("company_code", FilterOperator.EQ, companyCode)
-                ],
-                and: true
-            });
-
-            var bindItemInfo = {
-                path: 'purOrg>/Pur_Operation_Org',
-                filters: filter,
-                template: new Item({
-                    key: "{purOrg>org_code}", text: "[{purOrg>org_code}] {purOrg>org_name}"
-                })
-            };
-*/
-            var filter = new Filter({
-                filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
-                    new Filter("company_code", FilterOperator.EQ, companyCode)
-                ],
-                and: true
-            });
-
-            var bindItemInfo = {
-                path: '/Divisions',
-                filters: filter,
-                template: new Item({
-                    key: "{org_code}", text: "[{org_code}] {org_name}"
-                })
-            };
-            this.getView().byId("searchDivisionS").bindItems(bindItemInfo);
-            this.getView().byId("searchDivisionE").bindItems(bindItemInfo);
-        },
+        
 
         _onRoutedThisPage : function(){
             this._segmentSrch();
@@ -170,7 +122,7 @@ sap.ui.define([
                 oModel = this.getModel("SegmentedItem") ,
                 codeName = this.getModel('I18N').getText("/ALL")
                 ;
-            
+            console.log("codeName >>>>", this.getModel('I18N'));
              var aSearchFilters = [];
                 aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600'));
                 aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'DP_MD_ASSET_STATUS'));
@@ -1064,19 +1016,19 @@ sap.ui.define([
 
         _getSearchStates: function () {
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
-                company = this.getView().byId("searchCompany" + sSurffix).getSelectedKeys(),
+                //company = this.getView().byId("searchCompany" + sSurffix).getSelectedKeys(),
                 division = this.getView().byId("searchDivision" + sSurffix).getSelectedKeys(),
-                status = this.getView().byId("searchStatus" + sSurffix).getSelectedKey(),
-                //status = Element.registry.get(statusSelectedItemId).getText(),
-                receiptFromDate = this.getView().byId("searchCreationDate" + sSurffix).getDateValue(),
-                receiptToDate = this.getView().byId("searchCreationDate" + sSurffix).getSecondDateValue(),
-                itemType = this.getView().byId("searchItemType").getSelectedKeys(),
-                productionType = this.getView().byId("searchProductionType").getSelectedKeys(),
-                eDType = this.getView().byId("searchEDType").getSelectedKey(),
+                // status = this.getView().byId("searchStatus" + sSurffix).getSelectedKey(),
+                // //status = Element.registry.get(statusSelectedItemId).getText(),
+                // receiptFromDate = this.getView().byId("searchCreationDate" + sSurffix).getDateValue(),
+                // receiptToDate = this.getView().byId("searchCreationDate" + sSurffix).getSecondDateValue(),
+                // itemType = this.getView().byId("searchItemType").getSelectedKeys(),
+                // productionType = this.getView().byId("searchProductionType").getSelectedKeys(),
+                // eDType = this.getView().byId("searchEDType").getSelectedKey(),
                 description = this.getView().byId("searchDescription").getValue(),
                 model = this.getView().byId("searchModel").getValue(),
-                moldNo = this.getView().byId("searchPart").getValue(),
-                familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
+                moldNo = this.getView().byId("searchMoldNumber").getValue();
+                // familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
 
             var aTableSearchState = [];
             var companyFilters = [];
@@ -1084,19 +1036,7 @@ sap.ui.define([
 
             aTableSearchState.push(new Filter("mold_purchasing_type_code", FilterOperator.EQ, "L"));
 
-            if (company.length > 0) {
-
-                company.forEach(function (item) {
-                    companyFilters.push(new Filter("company_code", FilterOperator.EQ, item));
-                });
-
-                aTableSearchState.push(
-                    new Filter({
-                        filters: companyFilters,
-                        and: false
-                    })
-                );
-            }
+            
 
             if (division.length > 0) {
 
@@ -1112,46 +1052,11 @@ sap.ui.define([
                 );
             }
 
-            if (receiptFromDate || receiptToDate) {
-                aTableSearchState.push(new Filter("local_create_dtm", FilterOperator.BT, receiptFromDate, receiptToDate));
-            }
             if (status) {
                 aTableSearchState.push(new Filter("mold_progress_status_code", FilterOperator.EQ, status));
             }
             
-            if(itemType.length > 0){
-
-                var _itemTypeFilters = [];
-                itemType.forEach(function(item){
-                    _itemTypeFilters.push(new Filter("mold_item_type_code", FilterOperator.EQ, item ));
-                });
-
-                aTableSearchState.push(
-                    new Filter({
-                        filters: _itemTypeFilters,
-                        and: false
-                    })
-                );
-            }
-
-            if(productionType.length > 0){
-
-                var _productionTypeFilters = [];
-                productionType.forEach(function(item){
-                    _productionTypeFilters.push(new Filter("mold_production_type_code", FilterOperator.EQ, item ));
-                });
-
-                aTableSearchState.push(
-                    new Filter({
-                        filters: _productionTypeFilters,
-                        and: false
-                    })
-                );
-            }
-
-            if (eDType && eDType.length > 0) {
-                aTableSearchState.push(new Filter("mold_location_type_code", FilterOperator.EQ, eDType));
-            }
+            
             if (model && model.length > 0) {
                 aTableSearchState.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + model.toLowerCase() + "'"));
             }
@@ -1161,18 +1066,7 @@ sap.ui.define([
             if (description && description.length > 0) {
                 aTableSearchState.push(new Filter("tolower(spec_name)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));
             }
-            if (familyPartNo && familyPartNo.length > 0) {
-                aTableSearchState.push(new Filter({
-                    filters: [
-                        new Filter("family_part_number_1", FilterOperator.Contains, familyPartNo.toUpperCase()),
-                        new Filter("family_part_number_2", FilterOperator.Contains, familyPartNo.toUpperCase()),
-                        new Filter("family_part_number_3", FilterOperator.Contains, familyPartNo.toUpperCase()),
-                        new Filter("family_part_number_4", FilterOperator.Contains, familyPartNo.toUpperCase()),
-                        new Filter("family_part_number_5", FilterOperator.Contains, familyPartNo.toUpperCase())
-                    ],
-                    and: false
-                }));
-            }
+            
             return aTableSearchState;
         },
 
