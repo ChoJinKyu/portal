@@ -319,7 +319,7 @@ public class MoldApprovalV4 implements EventHandler {
 
         Collection<ApprovalMasterV4> aMaster = data.getApprovalMaster();
         ResultMsg msg = ResultMsg.create();
-        String v_sql_callProc = "CALL DP_MD_APPROVAL_DELETE_ITEM_PROC(I_APPROVAL_NUMBER => ?,I_APPROVAL_TYPE_CODE => ? I_TENANT_ID => ?)";
+        String v_sql_callProc = "CALL DP_MD_APPROVAL_DELETE_ITEM_PROC(I_APPROVAL_NUMBER => ?,I_APPROVAL_TYPE_CODE => ?, I_TENANT_ID => ?)";
             
         System.out.println("data>>> " + data);
         try {
