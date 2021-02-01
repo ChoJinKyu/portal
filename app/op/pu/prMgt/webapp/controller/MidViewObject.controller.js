@@ -12,9 +12,11 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-    "ext/lib/util/Validator"
+    "ext/lib/util/Validator",
+    "op/util/controller/OPUi",
+    "op/util/controller/UiControlSet",
 ], function (BaseController, Multilingual, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
-                Filter, FilterOperator, Fragment, MessageBox, MessageToast, Validator) {
+                Filter, FilterOperator, Fragment, MessageBox, MessageToast, Validator, OPUi, UiControlSet) {
      "use strict";
     
     var oTransactionManager;
@@ -27,6 +29,7 @@ sap.ui.define([
 	return BaseController.extend("op.pu.prMgt.controller.MidViewObject", {
 
         dateFormatter: DateFormatter,
+        uiControlSet: UiControlSet,
         
         
 		/* =========================================================== */
@@ -44,16 +47,13 @@ sap.ui.define([
 					busy : true,
 					delay : 0
                 });                
-
-            //this.getView().setModel(new ManagedListModel(), "PrMstView");
-            // this.getView().setModel(new ManagedListModel(), "PrMst");
-            // this.getView().setModel(new ManagedListModel(), "PrDtl");       
-            
+      
+            // 템플릿 정보 모델.
             this.getView().setModel(new JSONModel(), "tModel");       
 
-            // view에서 사용할 메인 Model
-            this.setModel(new JSONModel(), "detailModel"); 
+            // view에서 사용할 메인 Model    
             this.setModel(new JSONModel(), "viewModel"); 
+            this.setModel(new JSONModel(), "detailModel"); 
             
             
             var oMultilingual = new Multilingual();            
@@ -83,21 +83,13 @@ sap.ui.define([
 		 */
 		_onObjectMatched : function (oEvent) { 
             var oArgs = oEvent.getParameter("arguments");
-            var sTenantId = oArgs.tenantId;
-            
+           
             // 초기 데이터 설정
-            if(sTenantId && sTenantId === "new") {
+            if(oArgs.tenantId && oArgs.tenantId === "new") {
                 this._fnSetCreateData(oArgs);
             }else{
                 this._fnGetMasterData(oArgs);
             }
-
-            //this._createViewBindData(oArgs); 
-			//this._onLoadApprovalRow();
-            //this.oSF = this.getView().byId("searchField");
-
-            // 템플릿 리스트 조회
-            //this._fnGetPrTemplateList();
 
             // 텍스트 에디터
             //this.setRichEditor();	
@@ -130,9 +122,18 @@ sap.ui.define([
          * 기존 데이터 조회  
          */
         _fnGetMasterData : function(oArgs){
-
+            
             var oViewModel = this.getModel('viewModel');
             var oDetailModel = this.getModel('detailModel');
+
+
+            oDetailModel.setProperty("/TenantId", oArgs.tenantId);  
+            oDetailModel.setProperty("/CompanyCode", oArgs.company_code);  
+            oDetailModel.setProperty("/XtnTypeCode", "CREATE"); 
+            oDetailModel.setProperty("/PrNumber", oArgs.pr_number); 
+           // oDetailModel.setProperty("/XtnTypeCode", oArgs.vMode );  
+             
+
             var that = this;
 
             var aFilters = [
@@ -140,13 +141,6 @@ sap.ui.define([
                     new Filter("company_code"   , FilterOperator.EQ, oArgs.company_code),
                     new Filter("pr_number"      , FilterOperator.EQ, oArgs.pr_number)
                 ];   
-
-            var tFilters = [
-                    new Filter("tenant_id"          , FilterOperator.EQ, oArgs.tenantId),
-                    new Filter("pr_template_number" , FilterOperator.EQ, oDetailModel.getProperty("/pr_template_number") ),
-                    new Filter("txn_type_code" , FilterOperator.EQ, "CREATE" )
-                ];  
-    
             
             var sExpand  = "dtls,tplm";
 
@@ -157,14 +151,11 @@ sap.ui.define([
                     success : function(data){
                         //debugger;
                         //oDetailModel.setData( data.results[0]);
-                        oDetailModel.setProperty("/mst" , data.results[0]);    
-                        oDetailModel.setProperty("/pr_number", oArgs.pr_number);                       
-                        oDetailModel.setProperty("/company_code", oArgs.company_code);
-                        oDetailModel.setProperty("/tenantId", oArgs.tenantId);
-                        oDetailModel.setProperty("/pr_create_status_code", data.results[0].pr_create_status_code );
-                        oDetailModel.setProperty("/pr_template_number", data.results[0].pr_template_number );  
+                        oDetailModel.setProperty("/mst" , data.results[0]);     
+                        oDetailModel.setProperty("/PrCreateStatusCode", data.results[0].pr_create_status_code );
+                        oDetailModel.setProperty("/PrTemplateNumber"  , data.results[0].pr_template_number );  
                         
-                        that._setUI(oArgs.tenantId, "CREATE", data.results[0].pr_template_number) ;
+                        that._setUI() ;
           
                         //oCodeMasterTable.setBusy(false);
                     },
@@ -185,70 +176,24 @@ sap.ui.define([
                     }
                 });
 
-               
-                // oServiceModel.read("/Pr_TDtlVIew",{                         
-                //     filters : tFilters,
-                //     success : function(data){
-                //         debugger;
-                //         //oDetailModel.setProperty(data.results[0], "detailModel"); 
-                //       // oDetailModel.setProperty("/tdtl" , data.results);    
-                //         //oCodeMasterTable.setBusy(false);
-                //         setTimeout(() => {
-                // oDetailModel.setProperty("/tdtl" , data.results);   
-                //         }, 100);
-                //     },
-                //     error : function(data){
-                //         debugger;
-                //         //oCodeMasterTable.setBusy(false);
-                //     }
-                // });
-
-
-
-
-            // this._bindView("/Pr_Mst", "mst", aFilters, function(oData){
-            //      oDetailModel.setProperty("/dtl" , oData); 
-            // });
-
-
-            // this._bindView("/MoldMasters('" + this._sMoldId + "')", "master", [], function(oData){
-            //     self._toShowMode();
-            // });
-           
-           
-            
-            //oTransactionManager.setServiceModel(this.getModel());
-
         },
-        _setUI : function (tenantId, txn_type_code, pr_template_number){
-            
-            var oTemplateModel = this.getModel('tModel');
-            var oServiceModel = this.getModel();
+        _setUI : function (){
 
-            var aFilters = [
-                new Filter("tenant_id"          , FilterOperator.EQ, tenantId),
-                new Filter("pr_template_number" , FilterOperator.EQ, pr_template_number ),
-                new Filter("txn_type_code"      , FilterOperator.EQ, txn_type_code ),
-                new Filter("table_name"      , FilterOperator.EQ, "OP_PU_PR_MST" )
-            ];  
+            // oDetailModel.setProperty("/TenantId", oArgs.tenantId);  
+            // oDetailModel.setProperty("/CompanyCode", oArgs.company_code);  
+            // oDetailModel.setProperty("/XtnTypeCode", "CREATE"); 
+            // oDetailModel.setProperty("/PrNumber", oArgs.pr_number); 
+            // oDetailModel.setProperty("/PrCreateStatusCode", data.results[0].pr_create_status_code );
+            // oDetailModel.setProperty("/PrTemplateNumber"  , data.results[0].pr_template_number ); 
 
+            var oDetailModel = this.getModel('detailModel');
 
-            oServiceModel.read("/Pr_TDtlVIew",{
-                filters : aFilters,
-                success : function(data){
-                    //oDetailModel.setProperty(data.results[0], "detailModel"); 
-                    oTemplateModel.setProperty("/mst" , data.results);    
-                    //oCodeMasterTable.setBusy(false);
-                },
-                error : function(data){
-                    //oCodeMasterTable.setBusy(false);
-                }
+            var oOPUi = new OPUi({
+                tenantId:   oDetailModel.getProperty("/TenantId"),
+                txnType:    oDetailModel.getProperty("/XtnTypeCode"),
+                templateNumber: oDetailModel.getProperty("/PrTemplateNumber")
             });
-
-           
-
-
-
+            this.setModel(oOPUi.getModel(), "OPUI");
         },
         
 
