@@ -91,10 +91,10 @@ sap.ui.define([
             var oFilterModelData = oFilterModel.getData();
             var aMasterFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
             var aDetailFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
-            var sType = oFilterModelData.type;
+            var aType = oFilterModelData.type || [];
             var sCompanyCode = oFilterModelData.company_code;
             var sOrgCode = oFilterModelData.org_code;
-            var sStatus = oFilterModelData.status;
+            var aStatus = oFilterModelData.status || [];
             var aMaterialCodes = oFilterModelData.materialCodes;
             var sApprovalNumber = oFilterModelData.approvalNumber;
             var oDateValue = oFilterModelData.dateValue;
@@ -102,8 +102,17 @@ sap.ui.define([
             var aRequestors = this.byId("multiInputWithEmployeeValueHelp").getTokens();
 
             // 품의유형이 있는 경우
-            if( sType ) {
-                aMasterFilters.push(new Filter("approval_type_code", FilterOperator.EQ, sType));
+            if( 0<aType.length ) {
+                var aTypeFilter = [];
+                
+                aType.forEach(function (sType) {
+                    aTypeFilter.push(new Filter("approval_type_code", FilterOperator.EQ, sType));
+                });
+
+                aMasterFilters.push(new Filter({
+                    filters: aTypeFilter,
+                    and: false
+                }));
             }
 
             // Company Code가 있는 경우
@@ -117,8 +126,17 @@ sap.ui.define([
             }
 
             // Status가 있는 경우
-            if( sStatus ) {
-                aMasterFilters.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
+            if( 0<aStatus.length ) {
+                var aStatusFilter = [];
+                
+                aStatus.forEach(function (sStatus) {
+                    aStatusFilter.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
+                });
+
+                aMasterFilters.push(new Filter({
+                    filters: aStatusFilter,
+                    and: false
+                }));
             }
 
             // Material Code가 있는 경우
@@ -193,7 +211,7 @@ sap.ui.define([
 
                             if( oMaster.approval_number === oDetail.approval_number ) {
                                 oDetail.prices = [];
-                                aList.push($.extend(true, oMaster, oDetail));
+                                aList.push($.extend(true, {}, oMaster, oDetail));
 
                                 let aTempFilters = [];
                                 aTempFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenantId));

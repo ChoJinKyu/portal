@@ -26,7 +26,7 @@
 				<uxap:expandedHeading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onGoToList" />
-                        <Title text="{I18N>/NEW_BASE_PRICE}" wrapping="true"/>
+                        <Title text="{detailViewModel>/basePriceTitle}" wrapping="true"/>
                     </HBox>
 				</uxap:expandedHeading>
                 <!-- <uxap:navigationActions>
@@ -188,7 +188,7 @@
 				<ToolbarSpacer />
                 <Button
                     text="{I18N>/CHANGE_DEVELOPER}"
-                    enabled="{= ${detailViewModel>/viewMode}}"
+                    enabled="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
                     press=".onMultiInputWithEmployeeValuePress($event, 'changeDeveloper')" />
                 <Button
                     text="{I18N>/EDIT}" 

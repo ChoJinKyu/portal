@@ -17,7 +17,7 @@
                 id="familyMaterialCodeTable"
                 selectionMode="None"
                 rows="{dialogModel>/familyMaterialCode}"
-                rowSelectionChange=".onSelectFamilyMaterialCode"
+                cellClick=".onSelectFamilyMaterialCode"
                 fixedColumnCount="3">
                 <table:extension>
                     <OverflowToolbar>
@@ -67,14 +67,14 @@
                             <Text text="{dialogModel>supplier_local_name}" tooltip="{dialogModel>supplier_local_name}" />
                         </table:template>
                     </table:Column>
-                    <table:Column hAlign="Center" width="10rem">
+                    <!-- <table:Column hAlign="Center" width="10rem">
                         <Label text="{I18N>/CURRENT_ORDER_RATE}" />
                         <table:template>
                             <Text text="" />
                         </table:template>
-                    </table:Column>
+                    </table:Column> -->
                     <table:Column hAlign="Center" width="8rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
-                        <Label text="{I18N>/CURRENCY_PRICE}" textAlign="Center" />
+                        <Label text="{I18N>/CURRENT_PRICE}" textAlign="Center" />
                         <table:template>
                             <Text text="{
                                 parts: [
@@ -134,7 +134,7 @@
                         </table:template>
                     </table:Column>
                     <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
-                        <Label text="{I18N>/NPD_BASE_PRICE}" textAlign="Center" />
+                        <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" />
                         <table:template>
                             <Text text="{
                                 parts: [
@@ -163,16 +163,18 @@
                                 formatter: '.dateFormatter.toDateString'}" />
                         </table:template>
                     </table:Column>
-                    <table:Column headerSpan="9" hAlign="Center" width="8rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
+
+                    <!-- DOMESTIC 시작 -->
+                    <table:Column headerSpan="9" hAlign="Center" width="8rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
-                            <Label text="{I18N>/CURRENCY_PRICE}" textAlign="Center" />
+                            <Label text="{I18N>/CURRENT_PRICE}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
                             <Text text="{
                                 parts: [
-                                    {path: 'dialogModel>prices/0/current_price'},
-                                    {path: 'dialogModel>prices/0/current_price_currency_code'}
+                                    {path: 'dialogModel>prices/2/current_price'},
+                                    {path: 'dialogModel>prices/2/current_price_currency_code'}
                                 ],
                                 type: 'sap.ui.model.type.Currency',
                                 formatOptions: {
@@ -182,25 +184,25 @@
                             textAlign="End" width="100%" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
                             <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{dialogModel>prices/0/current_price_currency_code}" />
+                            <Text text="{dialogModel>prices/2/current_price_currency_code}" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
                             <Label text="{I18N>/START_DATE}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{dialogModel>prices/0/current_price_start_date}" />
+                            <Text text="{dialogModel>prices/2/current_price_start_date}" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
                             <Label text="{I18N>/BASE_PRICE}" textAlign="Center" />
@@ -208,8 +210,8 @@
                         <table:template>
                             <Text text="{
                                 parts: [
-                                    {path: 'dialogModel>prices/0/base_price'},
-                                    {path: 'dialogModel>prices/0/base_price_currency_code'}
+                                    {path: 'dialogModel>prices/2/base_price'},
+                                    {path: 'dialogModel>prices/2/base_price_currency_code'}
                                 ],
                                 type: 'sap.ui.model.type.Currency',
                                 formatOptions: {
@@ -219,34 +221,34 @@
                             textAlign="End" width="100%" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
                             <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{dialogModel>prices/0/base_price_currency_code}" />
+                            <Text text="{dialogModel>prices/2/base_price_currency_code}" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
                             <Label text="{I18N>/BASE_DATE}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{dialogModel>prices/0/base_date}" />
+                            <Text text="{dialogModel>prices/2/base_date}" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
-                            <Label text="{I18N>/NPD_BASE_PRICE}" textAlign="Center" />
+                            <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
                             <Text text="{
                                 parts: [
-                                    {path: 'dialogModel>prices/0/new_base_price'},
-                                    {path: 'dialogModel>prices/0/new_base_price_currency_code'}
+                                    {path: 'dialogModel>prices/2/new_base_price'},
+                                    {path: 'dialogModel>prices/2/new_base_price_currency_code'}
                                 ],
                                 type: 'sap.ui.model.type.Currency',
                                 formatOptions: {
@@ -256,30 +258,33 @@
                             textAlign="End" width="100%" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
                             <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{dialogModel>prices/0/new_base_price_currency_code}" />
+                            <Text text="{dialogModel>prices/2/new_base_price_currency_code}" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" />
                             <Label text="{I18N>/START_DATE}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
                             <Text text="{
-                                path: 'dialogModel>prices/0/new_base_price_start_date',
+                                path: 'dialogModel>prices/2/new_base_price_start_date',
                                 formatter: '.dateFormatter.toDateString'}" />
                         </table:template>
                     </table:Column>
-                    <table:Column headerSpan="9" hAlign="Center" width="8rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <!-- DOMESTIC 끝 -->
+
+                    <!-- EXPORT 시작 -->
+                    <table:Column headerSpan="9" hAlign="Center" width="8rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/EXPORT}" textAlign="Center" />
-                            <Label text="{I18N>/CURRENCY_PRICE}" textAlign="Center" />
+                            <Label text="{I18N>/CURRENT_PRICE}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
                             <Text text="{
@@ -295,7 +300,7 @@
                             textAlign="End" width="100%" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/EXPORT}" textAlign="Center" />
                             <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" />
@@ -304,7 +309,7 @@
                             <Text text="{dialogModel>prices/1/current_price_currency_code}" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/EXPORT}" textAlign="Center" />
                             <Label text="{I18N>/START_DATE}" textAlign="Center" />
@@ -315,7 +320,7 @@
                                 formatter: '.dateFormatter.toDateString'}" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/EXPORT}" textAlign="Center" />
                             <Label text="{I18N>/BASE_PRICE}" textAlign="Center" />
@@ -334,7 +339,7 @@
                             textAlign="End" width="100%" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/EXPORT}" textAlign="Center" />
                             <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" />
@@ -343,7 +348,7 @@
                             <Text text="{dialogModel>prices/1/base_price_currency_code}" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/EXPORT}" textAlign="Center" />
                             <Label text="{I18N>/BASE_DATE}" textAlign="Center" />
@@ -354,10 +359,10 @@
                                 formatter: '.dateFormatter.toDateString'}" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/EXPORT}" textAlign="Center" />
-                            <Label text="{I18N>/NPD_BASE_PRICE}" textAlign="Center" />
+                            <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
                             <Text text="{
@@ -373,7 +378,7 @@
                             textAlign="End" width="100%" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/EXPORT}" textAlign="Center" />
                             <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" />
@@ -382,7 +387,7 @@
                             <Text text="{dialogModel>prices/1/new_base_price_currency_code}" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <table:multiLabels>
                             <Label text="{I18N>/EXPORT}" textAlign="Center" />
                             <Label text="{I18N>/START_DATE}" textAlign="Center" />
@@ -393,14 +398,16 @@
                                 formatter: '.dateFormatter.toDateString'}" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="20rem" textAlign="Center" >
-                        <Label text="{I18N>/DESCRIPTION}" />
+                    <!-- EXPORT 끝 -->
+
+                    <table:Column width="20rem" >
+                        <Label text="{I18N>/DESCRIPTION}" textAlign="Center" width="100%" />
                         <table:template>
                             <Text text="" tooltip="" />
                         </table:template>
                     </table:Column>
                     <table:Column width="20rem">
-                        <Label text="{I18N>/SPECIPICATION}" />
+                        <Label text="{I18N>/SPEC_DESC}" textAlign="Center" width="100%" />
                         <table:template>
                             <Text text="" tooltip="" />
                         </table:template>
