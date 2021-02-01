@@ -442,7 +442,7 @@ sap.ui.define([
              */
             var oViMst = {
                     tenant_id               : oData.tenant_id,               //테넌트
-                    approval_number         : "",                          //품의번호(자동채번)
+                    approval_number         : null,                          //품의번호   핸들러에서 부여
                     chain_code              : "SP",                          //체인코드(SP)
                     approval_type_code      : type_code,                     //타입코드(일반(NPT01), SRS(NPT02), 알박/동박(NPT03), 양극재/전구체(NPT04), 사내거래(NPT05), Pack(NPT06))
                     approval_title          : oData.approval_title,          //제목
@@ -450,13 +450,12 @@ sap.ui.define([
                     approve_status_code     : String(oData.approval_status_code),    //프로세스상태코드(임시저장00, 초안(10), 승인요청(20), 결재완료(30))
                     requestor_empno         : oData.create_user_id,          //요청자(임시A5392)세션정보 받아야함
                     request_date            : date,                          //요청일자(YYYYMMDD)
-                    attch_group_number      : "",                          //??
-                    local_create_dtm        : null,                          
-                    local_update_dtm        : null,                          
+                    attch_group_number      : "",                            //??
+                    local_create_dtm        : null,                          //핸들러에서 부여       
+                    local_update_dtm        : null,                          //핸들러에서 부여
                     create_user_id          : oData.create_user_id,
                     update_user_id          : oData.create_user_id
-                };
-            
+                };            
             var aViMst = [oViMst];
 
 
@@ -470,13 +469,13 @@ sap.ui.define([
             aApproverList.forEach(function(oPrice, idx) {
                 var oNewApproverObj = {};
                     oNewApproverObj['tenant_id'] = oData.tenant_id;
-                    oNewApproverObj['approval_number'] = null;
-                    oNewApproverObj['approve_sequence'] = null;
-                    oNewApproverObj['approve_empno'] = aApproverList[idx].approve_empno;
+                    oNewApproverObj['approval_number'] = null;                  //핸들러에서 부여  
+                    oNewApproverObj['approve_sequence'] = null;                 //핸들러에서 부여  
+                    oNewApproverObj['approver_empno'] = "A53924";               //임시
                     oNewApproverObj['approver_type_code'] = type_code;
                     oNewApproverObj['approve_status_code'] = String(oData.approval_status_code);
-                    oNewApproverObj['local_create_dtm'] = today;
-                    oNewApproverObj['local_update_dtm'] = today;
+                    oNewApproverObj['local_create_dtm'] = null;
+                    oNewApproverObj['local_update_dtm'] = null;
                     oNewApproverObj['create_user_id'] = oData.create_user_id;
                     oNewApproverObj['update_user_id'] = oData.create_user_id;
                 aViApproverType.push(oNewApproverObj);
@@ -492,10 +491,10 @@ sap.ui.define([
             aRefererList.forEach(function(oPrice, idx) {
                 var oNewRefererObj = {};
                     oNewRefererObj['tenant_id'] = oData.tenant_id;
-                    oNewRefererObj['approval_number'] = null;
-                    oNewRefererObj['referer_empno'] = oRefererData.referer_empno;
-                    oNewRefererObj['local_create_dtm'] = today;
-                    oNewRefererObj['local_update_dtm'] = today;
+                    oNewRefererObj['approval_number'] = null;    //핸들러에서 부여  
+                    oNewRefererObj['referer_empno'] = oData.create_user_id;  //임시
+                    oNewRefererObj['local_create_dtm'] = null;  //핸들러에서 부여       
+                    oNewRefererObj['local_update_dtm'] = null;  //핸들러에서 부여  
                     oNewRefererObj['create_user_id'] = oData.create_user_id;
                     oNewRefererObj['update_user_id'] = oData.create_user_id;
                 aViRefererType.push(oNewRefererObj);
@@ -508,8 +507,8 @@ sap.ui.define([
                     tenant_id               : oData.tenant_id,               //테넌트
                     approval_number         : null,                          //품의번호(자동채번)
                     net_price_type_code      : type_code,                     //타입코드(일반(NPT01), SRS(NPT02), 알박/동박(NPT03), 양극재/전구체(NPT04), 사내거래(NPT05), Pack(NPT06))
-                    local_create_dtm        : today,                          
-                    local_update_dtm        : today,                          
+                    local_create_dtm        : null,                          
+                    local_update_dtm        : null,                          
                     create_user_id          : oData.create_user_id,
                     update_user_id          : oData.create_user_id
                 };
@@ -533,13 +532,13 @@ sap.ui.define([
 
                 var oNewPriceObj = {};
                     oNewPriceObj['tenant_id'] = oData.tenant_id;
-                    oNewPriceObj['approval_number'] = null;
-                    oNewPriceObj['item_sequence'] = null;
+                    oNewPriceObj['approval_number'] = null;                       //핸들러에서 부여
+                    oNewPriceObj['item_sequence'] = null;                         //임시  핸들러에서 부여
                     oNewPriceObj['company_code'] = aPriceData[idx].corporation;
                     oNewPriceObj['bizunit_code'] = null;
                     oNewPriceObj['management_mprice_code'] = aPriceData[idx].management;
                     oNewPriceObj['base_year'] = String(aPriceData[idx].base_year);
-                    oNewPriceObj['apply_start_yyyymm'] = apply_start_yyyymm;
+                    oNewPriceObj['apply_start_yyyymm'] = String(apply_start_yyyymm);
                     oNewPriceObj['apply_end_yyyymm'] = apply_end_yyyymm;
                     oNewPriceObj['bizdivision_code'] = aPriceData[idx].bizdivision_code;
                     oNewPriceObj['plant_code'] = aPriceData[idx].plant;
@@ -556,8 +555,8 @@ sap.ui.define([
                     oNewPriceObj['metal_net_price'] = null;
                     oNewPriceObj['coating_mat_net_price'] = null;
                     oNewPriceObj['fabric_net_price'] = null;
-                    oNewPriceObj['local_create_dtm'] = today;
-                    oNewPriceObj['local_update_dtm'] = today;
+                    oNewPriceObj['local_create_dtm'] = null;               //핸들러에서 부여
+                    oNewPriceObj['local_update_dtm'] = null;               //핸들러에서 부여
                     oNewPriceObj['create_user_id'] = oData.create_user_id;
                     oNewPriceObj['update_user_id'] = oData.create_user_id;                    
                 aPriceResult.push(oNewPriceObj);
@@ -572,15 +571,15 @@ sap.ui.define([
             var aMetalDetailList = oMetalDetailData.List;
             aMetalDetailList.forEach(function(oPrice, idx) {
                 var aMetalDetailList = {};
-                    aMetalDetailList['tenant_id'] = null;
+                    aMetalDetailList['tenant_id'] = oData.tenant_id;
                     aMetalDetailList['approval_number'] = null;
                     aMetalDetailList['item_sequence'] = null;
-                    aMetalDetailList['metal_type_code'] = null;
+                    aMetalDetailList['metal_type_code'] = null; //임시
                     aMetalDetailList['metal_net_price'] = null;
                     aMetalDetailList['local_create_dtm'] = null;
                     aMetalDetailList['local_update_dtm'] = null;
-                    aMetalDetailList['create_user_id'] = null;
-                    aMetalDetailList['update_user_id'] = null;
+                    aMetalDetailList['create_user_id'] = oData.create_user_id;
+                    aMetalDetailList['update_user_id'] = oData.create_user_id;
                 aViMetalDetailType.push(aMetalDetailList);
             });
 
@@ -613,7 +612,7 @@ sap.ui.define([
                 success: function(data){
                     console.log("_sendSaveData", data);
                     //debugger;
-                    if(data.return_code === "OK") {
+                    if(data) {
                         MessageBox.show("적용되었습니다.", {at: "Center Center"});
                     } else {
                         MessageBox.show("저장 실패 하였습니다.", {at: "Center Center"});
@@ -679,6 +678,10 @@ sap.ui.define([
                                     "approval_title": "",
                                     "approval_status_code": "10",
                                     "create_user_id": "A53924", 
+                                    "company_code" : "LGCKR",
+                                    "corp" : "석유화학",
+                                    "org_type_code" : "PL",
+                                    "local_update_dtm" : oToday,
                                     "details": []};
                 oDetailModel.setData(oNewBasePriceData);
                 oDetailViewModel.setProperty("/detailsLength", 0);

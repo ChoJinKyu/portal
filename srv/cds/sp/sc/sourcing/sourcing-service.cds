@@ -1,5 +1,6 @@
 //cds-service sourcing-v4-service.cds
 using {sp.Sc_Nego_Headers as negoHeaders} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
+using {sp.Sc_Nego_Headers_View as negoHeadersView} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
 using {sp.Sc_Nego_Item_Prices as negoItemPrices} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 using {sp.Sc_Nego_Suppliers as negoSuppliers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 using {sp.Sc_Nego_Headers_New_Record_View as negoHeadersNewRecordView} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW-model';
@@ -27,18 +28,16 @@ service SourcingService {
     /* 협상에 대한 헤더 정보의 신규 레코드 초기 값 레코드를 생성한다. */
     entity NegoHeadersNewRecordView @(title : '협상헤더정보-신규레코드') as projection on negoHeadersNewRecordView;
 
-    view NegoHeadersView as
-        select from negoHeaders {
-            *,
-             seconds_between($now,closing_date) as remain_times : Decimal(28, 2)
-        };
+    // view NegoHeadersView as select from negoHeadersView;
+    entity NegoHeadersView as projection on negoHeadersView;
     // @odata.draft.enabled
 
-/*     마스터 
+    /* 마스터 @cds.autoexpose entity //> master association 생략 가능
     entity ScOutcomeCode @(title : 'OutcomCode')              as projection on scOutcomeCode;
     entity ScNegoTypeCode @(title : '협상유형코드')                 as projection on scNegoTypeCode;
     entity ScNegoParentTypeCode @(title : '협상유형코드')           as projection on scNegoParentTypeCode;
     entity ScAwardTypeCodeView @(title : 'AwardTypeCode')     as projection on scAwardTypeCodeView;
-    entity ScNegoProgStatusCodeView @(title : '협상상태코드')       as projection on scNegoProgStatusCodeView; */
+    entity ScNegoProgStatusCodeView @(title : '협상상태코드')       as projection on scNegoProgStatusCodeView;
+    */ 
 
 }

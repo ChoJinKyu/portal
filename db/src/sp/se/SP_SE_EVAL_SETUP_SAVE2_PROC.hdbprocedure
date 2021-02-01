@@ -171,5 +171,5 @@ BEGIN
     END;
 
     COMMIT;
-    O_MSG = SELECT 'OK' RETURN_CODE, 'Successfully Saved.' RETURN_MSG FROM DUMMY;
+    :O_MSG.INSERT(('OK', 'Successfully Saved.'), 1);
 END;
