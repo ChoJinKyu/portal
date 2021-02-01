@@ -136,9 +136,8 @@
         <f:content>
             <t:TreeTable 
                 id="treeTable"
-                visibleRowCountMode="Auto"
                 enableSelectAll="false"
-                minAutoRowCount="16"
+                visibleRowCount="13"
                 enableColumnReordering="false"
                 class="sapFDynamicPageAlignContent" 
                 rowSelectionChange="onRowSelectionChange"
