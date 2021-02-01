@@ -29,7 +29,6 @@ sap.ui.define([
                 tenantId: { type: "string", group: "Misc", defaultValue: "" },
                 companyCode: { type: "string", group: "Misc", defaultValue: "" },
                 orgCode: { type: "string", group: "Misc", defaultValue: "" },
-                plantLabel: { type: "string", group: "Misc", defaultValue: "" },
                 purOrg: { type: "object", group: "Misc", defaultValue: {} },
                 aggregations: {
                     filters: []

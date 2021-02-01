@@ -68,7 +68,7 @@
 
                         <!-- Plant 시작 -->
                         <VBox>
-                            <Label text="{rootModel>/plantLabel}"></Label>
+                            <Label text="{I18N>/DP_VI_AP_PUR_ORG}"></Label>
                             <ComboBox width="100%" 
                                 selectedKey="{filterModel>/org_code}" 
                                 items="{filterModel>/selectedPurOrg}">
@@ -132,7 +132,7 @@
                         <!-- Requset By 끝 -->
 
                         <!-- Status 시작 -->
-                        <VBox>
+                        <!-- <VBox>
                             <Label text="{I18N>/STATUS}"></Label>
                             <SegmentedButton id="searchStatusS" selectedKey="{filterModel>/status}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                                 <items>
@@ -145,6 +145,20 @@
                             </SegmentedButton>
                             <layoutData>
                                 <layout:GridData span="XL4 L4 M6 S12" />
+                            </layoutData>
+                        </VBox> -->
+                        <VBox>
+                            <Label text="{I18N>/STATUS} "></Label>
+                            <ComboBox
+                                width="100%"
+                                selectedKey="{filterModel>/status}"
+                                items="{rootModel>/processList}">
+                                <items>
+                                <core:Item key="{rootModel>code}" text="{rootModel>code_name}" />
+                                </items>
+                            </ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
                         </VBox>
                         <!-- Status 끝 -->
@@ -159,6 +173,7 @@
             <t:Table id="listTable"
                 selectionMode="None"
                 rows="{listModel>/}"
+                cellClick=".onGoDetail"
                 fixedColumnCount="4"
                 visibleRowCountMode="Auto">
                 <t:extension>
@@ -172,9 +187,15 @@
                 </t:extension>
                 <t:columns>
                     <t:Column hAlign="Center" width="10rem">
+                        <Label text="{I18N>/APPROVAL_TYPE_CODE}" textAlign="Center" />
+                        <t:template>
+                            <Text text="{listModel>approval_type_code_nm}" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column hAlign="Center" width="10rem">
                         <Label text="{I18N>/APPROVAL_NUMBER}" textAlign="Center" />
                         <t:template>
-                            <Link text="{listModel>approval_number}" press=".onGoDetail" />
+                            <Text text="{listModel>approval_number}" />
                         </t:template>
                     </t:Column>
                     <t:Column width="18rem">
@@ -184,7 +205,7 @@
                         </t:template>
                     </t:Column>
                     <t:Column width="12rem">
-                        <Label text="{rootModel>/plantLabel}" textAlign="Center" width="100%" />
+                        <Label text="{I18N>/DP_VI_AP_PUR_ORG}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>org_name}" />
                         </t:template>
@@ -376,7 +397,14 @@
                     <t:Column hAlign="Center"  width="8rem">
                         <Label text="{I18N>/REQUESTOR}" />
                         <t:template>
-                            <Text text="{listModel>requestor_local_nm}" />
+                            <Text text="{listModel>requestor_local_nm} {listModel>requestor_job_title}" 
+                                tooltip="{listModel>requestor_local_nm} {listModel>requestor_job_title}"  />
+                        </t:template>
+                    </t:Column>
+                    <t:Column hAlign="Center" width="2rem">
+                        <Label text="" />
+                        <t:template>
+                            <ObjectStatus icon="sap-icon://feeder-arrow" />
                         </t:template>
                     </t:Column>
                     <!-- <t:Column hAlign="Center"  width="2rem">

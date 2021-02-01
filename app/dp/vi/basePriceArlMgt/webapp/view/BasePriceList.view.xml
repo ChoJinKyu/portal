@@ -175,11 +175,18 @@
                                 formatter: '.onChangeDateFormat'}" />
                     </t:template>
                 </t:Column>
-                <t:Column width="25rem">
+                <!-- <t:Column width="25rem">
                     <Label text="{I18N>/REQUESTOR}" textAlign="Center" width="100%" />
                     <t:template>
                         <Text text="{listModel>requestor_local_nm} {listModel>requestor_job_title} / {listModel>requestor_dept_local_nm}" 
                             tooltip="{listModel>requestor_local_nm} {listModel>requestor_job_title} / {listModel>requestor_dept_local_nm}"  />
+                    </t:template>
+                </t:Column> -->
+                <t:Column width="8rem">
+                    <Label text="{I18N>/REQUESTOR}" textAlign="Center" width="100%" />
+                    <t:template>
+                        <Text text="{listModel>requestor_local_nm} {listModel>requestor_job_title}" 
+                            tooltip="{listModel>requestor_local_nm} {listModel>requestor_job_title}" textAlign="Center" width="100%"   />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">
