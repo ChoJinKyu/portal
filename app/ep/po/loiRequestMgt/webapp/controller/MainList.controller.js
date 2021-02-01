@@ -143,7 +143,7 @@ sap.ui.define([
                 tenantId: "new",
                 companyCode: "new",
                 loiWriteNumber: "new"
-            });
+            });  
         },
 
         /**
