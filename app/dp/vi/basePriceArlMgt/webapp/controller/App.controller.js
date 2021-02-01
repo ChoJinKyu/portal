@@ -3,8 +3,8 @@ sap.ui.define([
   "sap/m/MessageBox",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
-  "dpmd/util/controller/EmployeeDeptDialog"
-], function (BaseController, MessageBox, Filter, FilterOperator, EmployeeDeptDialog) {
+  "cm/util/control/ui/EmployeeDialog"
+], function (BaseController, MessageBox, Filter, FilterOperator, EmployeeDialog) {
   "use strict";
 
   return BaseController.extend("dp.vi.basePriceArlMgt.controller.App", {
@@ -95,8 +95,8 @@ sap.ui.define([
 
 
         if(!this.oEmployeeMultiSelectionValueHelp || this.oEmployeeMultiSelectionValueHelp.getMultiSelection() !== bMultiSelection ){
-            this.oEmployeeMultiSelectionValueHelp = new EmployeeDeptDialog({
-                title: "Choose Referer",
+            this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
+                title: "Choose Employees",
                 multiSelection: bMultiSelection,
                 closeWhenApplied: bCloseWhenApplied,
                 items: {

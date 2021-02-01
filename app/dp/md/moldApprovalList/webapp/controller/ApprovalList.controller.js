@@ -962,6 +962,7 @@ sap.ui.define([
                 oModel = this.getModel("SegmentedItem") ,
                 codeName = this.getModel('I18N').getText("/ALL")
                 ;
+            
              var aSearchFilters = [];
                 aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600'));
                 aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'CM_APPROVE_STATUS'));
@@ -974,7 +975,7 @@ sap.ui.define([
                 success: function (oData) {     
                     oModel.addRecord({
                         code: ""
-                      ,  code_name: "All"   
+                      ,  code_name: codeName   
                       ,  group_code: "CM_APPROVE_STATUS"
                       ,  parent_code: null
                       ,  parent_group_code: null

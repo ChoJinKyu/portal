@@ -301,7 +301,7 @@ sap.ui.define([
          */
         onGoDetail: function (oEvent) {
             var oListModel = this.getModel("listModel");
-            var oBindingContext = oEvent.getSource().getBindingContext("listModel");
+            var oBindingContext = oEvent.getParameter("rowBindingContext");
 
             if( oBindingContext ) {
                 var sPath = oBindingContext.getPath();

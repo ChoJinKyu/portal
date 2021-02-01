@@ -42,7 +42,7 @@ sap.ui.define([
                     companyCode : "LGCKR",
                     orgTypeCode : "BU",
                     orgCode : "BIZ00100",
-                    evalPersonEmpno : "5706"
+                    evalPersonEmpno : "5480"
                 };
 
                 return oUserInfo;

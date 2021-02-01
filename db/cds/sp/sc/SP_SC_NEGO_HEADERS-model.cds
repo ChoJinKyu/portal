@@ -13,9 +13,22 @@ using {
     sp.Sc_Nego_Type_Code                 as scNegoTypeCode,
     sp.Sc_Award_Type_Code_View           as scAwardTypeCodeView,
     sp.Sc_Nego_Prog_Status_Code_View     as scNegoProgStatusCodeView,
+    sp.Sc_Award_Prog_Status_Code_View,
+    sp.Sc_Nego_Award_Method_Code,
+    sp.Sc_Nego_Award_Method_Map,
+    sp.Sc_Award_Method_Code_View
 } from '../../sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
 
 // using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
+
+
+/*********************************** Local Type ************************************/
+type CurrencyT   : String(5)      @title: '{i18n>currency}';
+type AmountT     : Decimal(28,2);
+type PriceAmountT: Decimal(28,5);
+type UnitT       : String(3)      @title: '{i18n>quantityUnit}';
+type QuantityT   : Decimal(28,3) @(title: '{i18n>quantity}', Measures.Unit: Units.Quantity );
+/***********************************************************************************/
 
 /***********************************************************************************/
 /*************************** For NegoHeaders-buyer_empno ***************************/
@@ -76,20 +89,25 @@ entity Sc_Nego_Headers {
                             on nego_progress_status.tenant_id       = $self.tenant_id
                               and nego_progress_status.nego_progress_status_code = $self.nego_progress_status_code;
         award_progress_status_code      : String(25)         @title : '낙찰진행상태코드';
+        award_progress_status : Association to Sc_Award_Prog_Status_Code_View
+                            on award_progress_status.tenant_id       = $self.tenant_id
+                              and award_progress_status.award_progress_status_code = $self.award_progress_status_code;
         //    award_date : Date   @title: '낙찰일자' ;
         reply_times                     : Integer            @title : '회신횟수';
         supplier_count                  : Integer            @title : '공급업체개수';
         nego_type_code                  : String(25)         @title : '협상유형코드';
-        nego_type      : Association to scNegoTypeCode
+        nego_type      : Association to one scNegoTypeCode 
                             on nego_type.tenant_id       = $self.tenant_id
                               and nego_type.nego_type_code = $self.nego_type_code;
         //    purchasing_order_type_code : String(30)   @title: '구매주문유형코드' ;
         outcome_code   : type of scOutcomeCode:outcome_code  @title : '아웃컴코드';
-        outcome        : Association to scOutcomeCode
+        outcome        : Association to scOutcomeCode 
                             on outcome.tenant_id = $self.tenant_id 
                               and outcome.nego_type_code = $self.nego_type_code
-                              and outcome.outcome_code = $self.outcome_code;
-        negotiation_output_class_code   : String(100)        @title : '협상산출물분류코드';
+                              and outcome.outcome_code = $self.outcome_code
+                            //   excluding { local_create_dtm }
+                              ;
+        negotiation_output_class_code   : String(100)        @title : '협상산출물분류코드-삭제예정(OUTCOME_CODE대체)';
         // buyer_empno                     : String(30)         @title : '구매담당자사번';
         buyer_empno                     : type of Sc_Employee_View : employee_number @title : '구매담당자사번';
         buyer_employee : Association to Sc_Employee_View    //UseCase        
@@ -119,12 +137,31 @@ entity Sc_Nego_Headers {
         actual_extension_count          : Integer            @title : '실제연장횟수';
         remaining_hours                 : Decimal(28, 2)     @title : '잔여시간';
         note_content                    : LargeBinary        @title : '노트내용';
-        award_type_code                 : String(100)        @title : '낙찰유형코드';
+        award_type_code                 : scAwardTypeCodeView:award_type_code @title : '낙찰유형코드';
         award_type : Association to scAwardTypeCodeView
                             on award_type.tenant_id       = $self.tenant_id
-                              and award_type.award_type_code = $self.award_type_code;
+                              and award_type.award_type_code = $self.award_type_code 
+                            @title : '낙찰유형 Navi.';
+        award_method_code               : Sc_Award_Method_Code_View:award_method_code @title : '낙찰방법코드';
+        // nego_award_method : Association to one Sc_Nego_Award_Method_Code
+        //                     on nego_award_method.tenant_id       = $self.tenant_id
+        //                       and nego_award_method.nego_parent_type.nego_types.nego_type_code = $self.nego_type_code
+        //                       and nego_award_method.award_type_code = $self.award_type_code
+        //                       and nego_award_method.award_method_code = $self.award_method_code
+        //                     @title : '낙찰방법 Navi.';
+        award_method : Association to one Sc_Award_Method_Code_View
+                            on award_method.tenant_id       = $self.tenant_id
+                              and award_method.award_method_code = $self.award_method_code
+                            @title : '낙찰방법 Navi.';
+        award_method_map : Association to one Sc_Nego_Award_Method_Map
+                            on award_method_map.tenant_id       = $self.tenant_id
+                              and award_method_map.nego_type_code = $self.nego_type_code
+                              and award_method_map.award_type_code = $self.award_type_code
+                              and award_method_map.award_method_code = $self.award_method_code
+                            @title : '협상유형&낙찰유형&낙찰방법 Navi.';
         target_amount_config_flag       : String(1)          @title : '목표금액설정여부';
-        target_amount                   : Decimal(28, 2)     @title : '목표금액';
+        target_currency                 : String(5)          @title : '목표통화';
+        target_amount                   : PriceAmountT       @( title: '목표금액', Measures.ISOCurrency: target_currency);
         //    award_supplier_option_mtd_cd : String(100)   @title: '낙찰공급업체선택방법코드' ;
         //    award_supplier_count : Integer   @title: '낙찰공급업체건수' ;
         //    purchasing_ord_portion_rate_val : String(100)   @title: '구매주문분배비율문자값' ;
@@ -162,3 +199,100 @@ entity Sc_Nego_Headers {
 }
 
 extend Sc_Nego_Headers with util.Managed;
+
+entity Sc_Nego_Headers_Ext as projection on Sc_Nego_Headers {
+    * , seconds_between(
+        $now, closing_date
+    ) as remain_times : Decimal(28, 2) @(
+        title : '잔여시간',
+        readonly
+    )
+};
+
+
+// #Query-Local Mixins#https://cap.cloud.sap/docs/cds/cql#query-local-mixins
+entity Sc_Nego_Headers_View as
+    select from Sc_Nego_Headers mixin {
+        award_method_map2 : association to Sc_Nego_Award_Method_Code 
+            on award_method_map2.tenant_id = $projection.tenant_id
+            and award_method_map2.nego_parent_type_code = $projection.nego_parent_type_code
+            and award_method_map2.award_type_code = $projection.award_type_code
+            and award_method_map2.award_method_code = $projection.award_method_code
+            ;
+    } into {
+        *,
+        nego_type.nego_parent_type_code,
+        award_method_map2.sort_no as nego_award_method_sort_no,
+        round(seconds_between($now, closing_date)/3600,2) as remain_times  : Decimal(28, 2)
+    };
+
+  annotate Sc_Nego_Headers_View with @( 
+        title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가',readonly
+  ) {
+        remain_times @title:'잔여시간' @description:'잔여시간=마감시간-현재시간' @readonly;
+  };
+
+entity Sc_Nego_Headers_View_Ext as projection on Sc_Nego_Headers_View;
+
+
+//   annotate Sc_Nego_Headers_View with @( 
+//         title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가',readonly
+//   );
+//   annotate Sc_Nego_Headers_View with {
+//         remain_times @title:'잔여시간' @description:'잔여시간=마감시간-현재시간' @readonly;
+//   };
+
+/***********************************************************************************
+@cds.persistence.exists 사용된 네이티브 데이터베이스 개체 Entity와의 직접적인 Association 연결은 오류를 일으킨다
+
+네이티브 데이터베이스 개체 Entity를 프로젝션올 감싼 뒤에 다시 Association에 참여 시킬 수 있다.
+
+****************************************** Error *************************************
+entity Orders
+{
+  key id: Integer;
+  orderName: String;
+  items: composition of Item on $self = items.parent;
+};
+
+@cds.persistence.exists
+entity Items
+{
+  key id: Integer;
+  name: String;
+  parent: association to Orders;
+};
+
+view OrdersView as select from Orders
+{
+  id,
+  orderName,
+  items.name
+};
+
+entity ItemSelection as projection on Items;
+****************************************** Correction *************************************
+entity Orders
+{
+  key id: Integer;
+  orderName: String;
+  items: composition of ItemSelection on $self = items.parent; // <--- compose ItemSelection instead Items
+};
+
+@cds.persistence.exists
+entity Items
+{
+  key id: Integer;
+  name: String;
+  parent: association to Orders;
+};
+
+view OrdersView as select from Orders
+{
+  id,
+  orderName,
+  items.name // <--- is transformable into a valid JOIN expression
+};
+
+entity ItemSelection as projection on Items;
+***********************************************************************************/

@@ -30,14 +30,13 @@ SELECT NOW AS NOW_IS_LOCALTIME
 , TO_NVARCHAR(LOCALTOUTC(NOW,'US/Alaska','platform'), 'YYYYMMDDHH24MISS') AS YYYYMMDDHH24MISS_LOCALTOUTC_UTC_9
 	FROM (SELECT NOW() AS NOW FROM DUMMY)
 ;
+
 -- @block Bookmarked query
 -- @group SP_SC
 -- @name #SessionContext
 -- @table M_SESSION_CONTEXT
-SELECT TOP 50 current_user,* FROM M_SESSION_CONTEXT WHERE 1=1
-AND CONNECTION_ID = current_connection
--- AND FIELD = "VALUE"
-;
+select CURRENT_UTCTIMESTAMP,CURRENT_TIMESTAMP,* from m_session_context where connection_id = current_connection;
+
 -- @block Bookmarked query
 -- @group SP_SC
 -- @name TABLES - 설명

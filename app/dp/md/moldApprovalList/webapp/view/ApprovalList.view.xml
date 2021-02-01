@@ -30,7 +30,8 @@
                                         ],
                                         sorter: { path: 'company_code'}
                                     }" 
-                                    selectionFinish="handleSelectionFinishComp" required="true">
+                                    selectionFinish="handleSelectionFinishComp" 
+                                    required="true">
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
@@ -181,7 +182,7 @@
                         </VBox>
                         <HBox height="4em">
                             <VBox width="87%">
-                                <Label text="몰드 No" labelFor="searchMoldNo"></Label>
+                                <Label text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}" labelFor="searchMoldNo"></Label>
                                 <Input id="searchMoldNo" 
                                         showValueHelp="true"  
                                         valueHelpRequest=".onValueHelpRequested"
