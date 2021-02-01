@@ -144,15 +144,8 @@ public class MdCategoryServiceV4 implements EventHandler {
                 @Override
                 public Map<String, String> mapRow(ResultSet v_rs, int rowNum) throws SQLException {
                     Map<String, String> rsltMap = new HashMap<String, String>();
-                    rsltMap.put("tenantId", v_rs.getString("tenant_id"));
-                    rsltMap.put("companyCode", v_rs.getString("company_code"));
-                    rsltMap.put("orgTypeCode", v_rs.getString("org_type_code"));
-                    rsltMap.put("orgCode", v_rs.getString("org_code"));
-                    rsltMap.put("vendorPoolCode", v_rs.getString("vendor_pool_code"));
-                    rsltMap.put("materialCode", v_rs.getString("material_code"));
-                    rsltMap.put("supplierCode", v_rs.getString("supplier_code"));
-                    rsltMap.put("successFlag", v_rs.getString("success_flag"));
-                    rsltMap.put("rtnMesg", v_rs.getString("rtn_mesg"));
+                    rsltMap.put("return_code", v_rs.getString("return_code"));
+                    rsltMap.put("return_msg", v_rs.getString("return_msg"));
 
                     rsltList.add(rsltMap);  // 결과값 Return;
 
@@ -171,6 +164,7 @@ public class MdCategoryServiceV4 implements EventHandler {
                 }
             }, paramList);
 
+            // TODO : rsltList<CommonReturnType>의 마지막Row getReturnCode()가 '00000'이 아니면 Procedure Error로 판단.
             rsltInfoMap.put("procRslt", rsltList);  // Procedure Result
 
             rtnRslt.setRsltCd("000");
@@ -257,19 +251,15 @@ public class MdCategoryServiceV4 implements EventHandler {
             //for(int iInsrtCnt : updateCounts) log.info("### [2-1] array ###["+iInsrtCnt+"]###");
 
             // Procedure Call
-            List<MdVpMappingItemProcType> rsltList = new ArrayList<MdVpMappingItemProcType>();
-            SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<MdVpMappingItemProcType>() {
+            List<CommonReturnType> rsltList = new ArrayList<CommonReturnType>();
+            SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<CommonReturnType>() {
                 @Override
-                public MdVpMappingItemProcType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                    MdVpMappingItemProcType v_row = MdVpMappingItemProcType.create();
+                public CommonReturnType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                    CommonReturnType v_row = CommonReturnType.create();
 
-                    v_row.setTenantId(v_rs.getString("tenant_id"));
-                    v_row.setCompanyCode(v_rs.getString("company_code"));
-                    v_row.setOrgTypeCode(v_rs.getString("org_type_code"));
-                    v_row.setOrgCode(v_rs.getString("org_code"));
-                    v_row.setVendorPoolCode(v_rs.getString("vendor_pool_code"));
-                    v_row.setSpmdCategoryCode(v_rs.getString("spmd_category_code"));
-                    v_row.setSpmdCharacterCode(v_rs.getString("spmd_character_code"));
+                    // 처리결과 Return;
+                    v_row.setReturnCode(v_rs.getString("return_code"));
+                    v_row.setReturnMsg(v_rs.getString("return_msg"));
 
                     rsltList.add(v_row);  // 결과값 Return;
 
@@ -288,6 +278,7 @@ public class MdCategoryServiceV4 implements EventHandler {
                 }
             }, paramList);
 
+            // TODO : rsltList<CommonReturnType>의 마지막Row getReturnCode()가 '00000'이 아니면 Procedure Error로 판단.
             rsltInfoMap.put("procRslt", rsltList);  // Procedure Result
 
             rtnRslt.setRsltCd("000");
@@ -366,23 +357,20 @@ public class MdCategoryServiceV4 implements EventHandler {
             }
 
             int[] updateCounts = jdbc.batchUpdate(v_sql_insertTable, batch);
-
+            
             // Procedure Call
-            List<MdVpMappingStatusProcType> rsltList = new ArrayList<MdVpMappingStatusProcType>();
-            SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<MdVpMappingStatusProcType>() {
+            List<CommonReturnType> rsltList = new ArrayList<CommonReturnType>();
+            SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<CommonReturnType>() {
                 @Override
-                public MdVpMappingStatusProcType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                    MdVpMappingStatusProcType v_row = MdVpMappingStatusProcType.create();
-
-                    v_row.setTenantId(v_rs.getString("tenant_id"));
-                    v_row.setCompanyCode(v_rs.getString("company_code"));
-                    v_row.setOrgTypeCode(v_rs.getString("org_type_code"));
-                    v_row.setOrgCode(v_rs.getString("org_code"));
-                    v_row.setVendorPoolCode(v_rs.getString("vendor_pool_code"));
-                    v_row.setConfirmedStatusCode(v_rs.getString("confirmed_status_code"));
-                    v_row.setUpdateUserId(v_rs.getString("update_user_id"));
+                public CommonReturnType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                    CommonReturnType v_row = CommonReturnType.create();
+                    
+                    // 처리결과 Return;
+                    v_row.setReturnCode(v_rs.getString("return_code"));
+                    v_row.setReturnMsg(v_rs.getString("return_msg"));
 
                     rsltList.add(v_row);  // 결과값 Return;
+
                     return v_row;
                 }
             });
@@ -398,6 +386,7 @@ public class MdCategoryServiceV4 implements EventHandler {
                 }
             }, paramList);
 
+            // TODO : rsltList<CommonReturnType>의 마지막Row getReturnCode()가 '00000'이 아니면 Procedure Error로 판단.
             rsltInfoMap.put("procRslt", rsltList);  // Procedure Result
 
             rtnRslt.setRsltCd("000");

@@ -18,7 +18,7 @@ namespace pg;
 @path : '/pg.MdCategoryV4Service'
 service MdCategoryV4Service {
 
-        // Category범주코드 생성 DB Object로 생성된 View를 model-cds로 entity를 생성하는 경우
+    // Category범주코드 생성 DB Object로 생성된 View를 model-cds로 entity를 생성하는 경우
     view MdNewCategoryCode(tenant_id: String, company_code: String, org_type_code: String, org_code: String) as 
             select from newCateCodeView.Md_Category_Code_View(tenant_id: :tenant_id, company_code: :company_code, org_type_code: :org_type_code, org_code: :org_code);
 
@@ -362,22 +362,15 @@ service MdCategoryV4Service {
 		and cid.spmd_category_code = :spmd_category_code
 		;
 
+    // Return Type정의 사용
+    type CommonReturnType : {
+        return_code : String(20);
+        return_msg  : String(5000);
+    };
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    // Vendor Pool Level-3별 Category범주>Item특성 Mapping 목록 Parameter View V4호출
+    // [Dynamic 테스트] Vendor Pool Level-3별 Category범주>Item특성 Mapping 목록 Parameter View V4호출
     // URL : /pg.MdCategoryV4Service/MdVpMappingItemViewProc
     /*********************************
     {"language_code":"EN"}
@@ -413,6 +406,6 @@ service MdCategoryV4Service {
     type MdVpMappingItemViewData {
         titles: many DynamicTitle;
         records: many DynamicRecord;
-    };
+    };    
 
 }
