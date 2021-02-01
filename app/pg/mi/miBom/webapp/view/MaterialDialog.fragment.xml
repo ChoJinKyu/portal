@@ -17,16 +17,16 @@
 			<Toolbar>   
                 <Panel class="sapUiTinyMarginTop">                             
                 <FlexBox alignItems="Center" justifyContent="End">
-                <Label  text="Vendor :" 
-                        width="55px" 
+                <Label  text="{I18N>/OLD_SUPPLIER} :" 
+                        width="100px" 
                         class="sapUiTinyMarginBegin"/>
                 <ComboBox   enabled="false"   
                             class="sapUiTinyMarginBegin sapUiSmallMarginEnd"
                             placeholder="{I18N>/OPTION}">
                             <core:Item key="{vendor_pool_code}" text="{vendor_pool_local_name}"/>
                 </ComboBox>
-                <Label  text="{I18N>/MATERIAL_CODE} :" 
-                        width="65px"
+                <Label  text="{I18N>/MATERIAL} :" 
+                        width="45px"
                         class="sapUiTinyMarginBegin"
                         visible="{= ${_oUiData>/radioButtonGroup} === 0 }"
                 />
@@ -59,7 +59,7 @@
                     <core:Item key="{supplier_code}" text="{supplier_code}"/>
                 </ComboBox>           
 
-                <Label  text="{I18N>/MATERIAL} :"
+                <Label  text="{I18N>/MATERIAL_NAME} :"
                         class="sapUiSmallMarginBegin"
                         visible="{= ${_oUiData>/radioButtonGroup} === 0}"
                 />                  
@@ -99,17 +99,12 @@
                 <columns>
                     <Column hAlign="Center" >
                         <header>
-                            <Label text="가격정보"/>                            
+                            <Label text="{I18N>/PRICE_INFORMATION_TYPE}"/>
                         </header>
                     </Column>
                     <Column hAlign="Center" >
                         <header>
-                            <Label text="Vendor"/>                            
-                        </header>
-                    </Column>
-                    <Column hAlign="Center" >
-                        <header>
-                            <Label text="{I18N>/MATERIAL_CODE}"/>                            
+                            <Label text="{I18N>/OLD_SUPPLIER}"/>                            
                         </header>
                     </Column>
                     <Column hAlign="Center" >
@@ -119,12 +114,17 @@
                     </Column>
                     <Column hAlign="Center" >
                         <header>
-                            <Label text="{I18N>/SUPPLIER}"/>                            
+                            <Label text="{I18N>/MATERIAL_NAME}"/>                            
+                        </header>
+                    </Column>
+                    <Column hAlign="Center" >
+                        <header>
+                            <Label text="{I18N>/SUPPLIER}"/>
                         </header>
                     </Column>    
                     <Column hAlign="Center" >
                         <header>
-                            <Label text="{I18N>/SUPPLIER_LOCAL_NAME}"/>                            
+                            <Label text="{I18N>/SUPPLIER_NAME}"/>                            
                         </header>
                     </Column>                                                                                                 
                 </columns>

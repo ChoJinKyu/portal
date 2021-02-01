@@ -6,7 +6,9 @@
 -- @block Bookmarked query
 -- @group SP_SC
 -- @name TABLES - 설명
-SELECT TOP 50 *, children.*
+SELECT TOP 50 
+-- *, children.*
+TENANT_ID,GROUP_CODE,children.CODE,children.CODE_DESCRIPTION,CHAIN_CODE,GROUP_NAME,GROUP_DESCRIPTION,MAXIMUM_COLUMN_SIZE
 FROM cm_Code_Mst cd WHERE 1=1 
 AND ( 1=0 
     OR upper(cd.group_code) like upper('%Incoterms%')
@@ -162,9 +164,9 @@ SELECT TOP 50 * FROM M_SQL_PLAN_CACHE WHERE 1=1
 
 -- @block Bookmarked query
 -- @group Common
--- @name Contents to Csv | Sp_Sc_Award_Method_Code
+-- @name Contents to Csv | Sp_Sc_Negotiation_Style_Code
 DO BEGIN
-DECLARE OBJECT_NAME NVARCHAR(255) DEFAULT 'SP_SC_AWARD_METHOD_CODE_VIEW';
+DECLARE OBJECT_NAME NVARCHAR(255) DEFAULT 'SP_SC_NEGOTIATION_STYLE_CODE';
 DECLARE SQL_STRING NVARCHAR(3000) DEFAULT '';
 DECLARE STRING_CSV NVARCHAR(9000) DEFAULT '';
 DECLARE CREATED INT DEFAULT 0;

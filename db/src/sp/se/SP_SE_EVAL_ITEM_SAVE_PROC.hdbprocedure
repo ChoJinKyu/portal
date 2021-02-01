@@ -11,7 +11,7 @@ PROCEDURE SP_SE_EVAL_ITEM_SAVE_PROC (
                         ,EVALUATION_ARTICLE_TYPE_CODE     NVARCHAR(30)
                         ,EVALUATION_DISTRB_SCR_TYPE_CD    NVARCHAR(30)
                         ,EVALUATION_RESULT_INPUT_TYPE_CD  NVARCHAR(30)
-                        ,QTTIVE_ITEM_UOM_CODE             NVARCHAR(3)
+                        ,QTTIVE_ITEM_UOM_CODE             NVARCHAR(30)
                         ,QTTIVE_EVAL_ARTICLE_CALC_FORMULA NVARCHAR(1000)
                         ,EVALUATION_ARTICLE_DESC          NVARCHAR(3000)
                         ,SORT_SEQUENCE                    DECIMAL
@@ -220,22 +220,27 @@ BEGIN
         FOR IDX IN 1..RECORD_COUNT(:I_SCLE_TYPE) DO
             
             IF IFNULL(:I_SCLE_TYPE.OPTION_ARTICLE_NUMBER[IDX],'X') = 'X' THEN
-                --Get Max OPTION_ARTICLE_NUMBER
-                SELECT TO_NUMBER(IFNULL(MAX(EIO.OPTION_ARTICLE_NUMBER),'0')) + 1
-                INTO   V_OPTION_ARTICLE_NUMBER
-                FROM   SP_SE_EVAL_ITEM_OPT EIO
-                WHERE  EXISTS (SELECT 1
-                               FROM   :I_SCLE_TYPE    SCLE
-                               WHERE  SCLE.TENANT_ID     = EIO.TENANT_ID
-                               AND    SCLE.COMPANY_CODE  = EIO.COMPANY_CODE
-                               AND    SCLE.ORG_TYPE_CODE = EIO.ORG_TYPE_CODE
-                               AND    SCLE.ORG_CODE      = EIO.ORG_CODE
-                               AND    SCLE.EVALUATION_OPERATION_UNIT_CODE = EIO.EVALUATION_OPERATION_UNIT_CODE
-                               AND    SCLE.EVALUATION_TYPE_CODE           = EIO.EVALUATION_TYPE_CODE
-                               AND    SCLE.EVALUATION_ARTICLE_CODE        = EIO.EVALUATION_ARTICLE_CODE
-                              )
-                ;
-
+                
+                IF V_OPTION_ARTICLE_NUMBER = 0 THEN 
+                    --Get Max OPTION_ARTICLE_NUMBER
+                    SELECT TO_NUMBER(IFNULL(MAX(EIO.OPTION_ARTICLE_NUMBER),'0')) + 1
+                    INTO   V_OPTION_ARTICLE_NUMBER
+                    FROM   SP_SE_EVAL_ITEM_OPT EIO
+                    WHERE  EXISTS (SELECT 1
+                                   FROM   :I_SCLE_TYPE    SCLE
+                                   WHERE  SCLE.TENANT_ID     = EIO.TENANT_ID
+                                   AND    SCLE.COMPANY_CODE  = EIO.COMPANY_CODE
+                                   AND    SCLE.ORG_TYPE_CODE = EIO.ORG_TYPE_CODE
+                                   AND    SCLE.ORG_CODE      = EIO.ORG_CODE
+                                   AND    SCLE.EVALUATION_OPERATION_UNIT_CODE = EIO.EVALUATION_OPERATION_UNIT_CODE
+                                   AND    SCLE.EVALUATION_TYPE_CODE           = EIO.EVALUATION_TYPE_CODE
+                                   AND    SCLE.EVALUATION_ARTICLE_CODE        = EIO.EVALUATION_ARTICLE_CODE
+                                  )
+                    ;
+                ELSE
+                    V_OPTION_ARTICLE_NUMBER = :V_OPTION_ARTICLE_NUMBER + 1;
+                END IF;
+              
                 I_SCLE_TYPE.OPTION_ARTICLE_NUMBER[IDX] = :V_OPTION_ARTICLE_NUMBER;
 
             END IF;

@@ -1197,25 +1197,25 @@ sap.ui.define([
             oModel.setProperty("/Approvers/"+rowIndex+"/approver_name", userName + " / " + departmentLocalName);
         },
 
-    //    onMultiInputWithEmployeeValuePress: function(){ 
-    //         if(!this.oEmployeeMultiSelectionValueHelp){
-    //            this.oEmployeeMultiSelectionValueHelp = new EmployeeDeptDialog({
-    //                 title: "Choose Referer",
-    //                 multiSelection: true,
-    //                 items: {
-    //                     filters: [
-    //                         new Filter("tenant_id", FilterOperator.EQ, _sTenantId)
-    //                     ]
-    //                 }
-    //             });
-    //             this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
-    //                 this.byId("referMulti").setTokens(oEvent.getSource().getTokens());
+       onMultiInputWithEmployeeValuePressReferer: function(){ 
+            if(!this.oEmployeeMultiSelectionValueHelp){
+               this.oEmployeeMultiSelectionValueHelp = new EmployeeDeptDialog({
+                    title: "Choose Referer",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, _sTenantId)
+                        ]
+                    }
+                });
+                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    this.byId("referMulti").setTokens(oEvent.getSource().getTokens());
                  
-    //             }.bind(this));
-    //         }
-    //         this.oEmployeeMultiSelectionValueHelp.open();
-    //         this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("referMulti").getTokens());
-    //     },
+                }.bind(this));
+            }
+            this.oEmployeeMultiSelectionValueHelp.open();
+            this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("referMulti").getTokens());
+        },
 
 
 

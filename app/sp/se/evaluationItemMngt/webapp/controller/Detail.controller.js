@@ -29,111 +29,92 @@ sap.ui.define([
                 this.getOwnerComponent().getRouter().getRoute("Detail").attachPatternMatched(this._onPatternMatched, this);
                 
             }
-
             /***
-             * 세션 유저정보를 가져온다.
+             * 콤보박스, 버튼들에 공통코드 바인딩
              */
-            , _getUserSession : function(){
-                var oUserInfo;
-                
-                oUserInfo = {
-                    loginUserId : "TestUser",
-                    tenantId : "L2100",
-                    companyCode : "LGCKR",
-                    orgTypeCode : "BU",
-                    orgCode : "BIZ00100",
-                    evalPersonEmpno : "5706"
-                };
-
-                return oUserInfo;
-            }
             , _setBindComboNBtnItems : function(){
-                var oUserInfo;
+                var oUserInfo, aFilters;
                 oUserInfo = this._getUserSession();
 
                 this._setBindItems({
                     id : "btnEvaluExeMode",
                     path : "common>/Code",
-                    template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}" }),
+                    template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
                     filters : [
                         new Filter("tenant_id", "EQ", oUserInfo.tenantId),
                         new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE")
                     ]
                 });
-                
                 this._setBindItems({
                     id : "btnEvaluArtType",
                     path : "common>/Code",
-                    template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}" }),
+                    template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
                     filters : [
                         new Filter("tenant_id", "EQ", oUserInfo.tenantId),
                         new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE")
                     ]
                 });
-                
-                this._setBindItems({
+
+                this._setBindCommonItems({
                     id : "comboEvaluDisScrType",
-                    path : "common>/Code",
-                    template : new ListItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
-                    filters : [
-                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                        new Filter("group_code", "EQ", "SP_SE_EVAL_DISTRB_SCR_TYPE_CD")
-                    ]
+                    groupCode : "SP_SE_EVAL_DISTRB_SCR_TYPE_CD"
                 });
                 
-                this._setBindItems({
+                this._setBindCommonItems({
                     id : "comboEvaluResultInputType",
-                    path : "common>/Code",
-                    template : new ListItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
-                    filters : [
-                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                        new Filter("group_code", "EQ", "SP_SE_EVAL_SCALE_TYPE_CD")
-                    ]
+                    groupCode : "SP_SE_EVAL_SCALE_TYPE_CD"
                 });
-
-                this._setBindItems({
+                
+                this._setBindCommonItems({
                     id : "comboQttItemUom",
-                    path : "common>/Code",
-                    template : new ListItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
-                    filters : [
-                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                        new Filter("group_code", "EQ", "SP_SE_QTTIVE_UOM_CODE")
-                    ]
+                    groupCode : "SP_SE_QTTIVE_UOM_CODE"
                 });
 
-                this._setBindItems({
+                this._setBindCommonItems({
                     id : "comboNodeType",
-                    path : "common>/Code",
-                    template : new ListItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
-                    filters : [
-                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                        new Filter("group_code", "EQ", "SP_SE_EVAL_NODE_TYPE_CD")
-                    ]
+                    groupCode : "SP_SE_EVAL_NODE_TYPE_CD"
                 });
-
                 
             }
+            /***
+             * 공통 코드 BindItems
+             * 
+             * @param id            컨트롤 아이디
+             * @param groupCode     호출할 공통 그룹 코드
+             */
+            , _setBindCommonItems : function(oParam){
+                var oUserInfo, aFilters;
+                oUserInfo = this._getUserSession();
+                aFilters = [];
 
-            , _setBindItems : function(oParam){
+                aFilters = [
+                    new Filter("tenant_id", "EQ", oUserInfo.tenantId),
+                    new Filter("group_code", "EQ", oParam.groupCode)
+                ];
 
-                this.byId(oParam.id).bindItems({
-                    path : oParam.path,
-                    filters : oParam.filters,
-                    template : oParam.template
+                this._setBindItems({
+                    id : oParam.id,
+                    path : "common>/Code",
+                    template : new ListItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
+                    filters : aFilters
                 });
             }
-
+            /**
+             * Detail PatternMatched
+             */
             , _onPatternMatched: function (e) {
                 var oArgs, oComponent, oViewModel, oHeader,
-                    oView, aControls;
+                    oView, aControls, oTable;
 
                 oArgs = e.getParameter("arguments");
                 oComponent = this.getOwnerComponent();
                 oViewModel = oComponent.getModel("viewModel");
                 oHeader = oViewModel.getProperty("/Detail/Header");
+                oTable = this.byId("tblEvalItemScle");
                 oView = this.getView();
 
                 if( oArgs.new === "Y" ){
+                    // 신규건인지 확인
                     oViewModel.setProperty("/App/layout", "TwoColumnsBeginExpanded");
                     aControls = oView.getControlsByFieldGroupId("newRequired");
                     this._clearValueState(aControls);
@@ -142,13 +123,19 @@ sap.ui.define([
                     oViewModel.setProperty("/App/layout", "TwoColumnsMidExpanded");
                     oViewModel.setProperty("/App/EditMode", false);
                 }
-
+                
+                oTable.removeSelections(true);
                 oViewModel.setProperty("/Args", oArgs);
 
                 if(!oHeader){
+                    // 잘못된 접근
                     return;
                 }
-                
+                /***
+                 * 계산식 변수들 바인딩
+                 * 조회조건 evaluation_operation_unit_code 에따라 다름
+                 * 
+                 */
                 var oCalculationBuilder;
                 oCalculationBuilder = this.byId("calculationBuilder");
                 oCalculationBuilder.bindAggregation("variables",{
@@ -168,7 +155,9 @@ sap.ui.define([
 
                 this._readItem();
             }
-
+            /**
+             * scale 데이터 조회
+             */
             , _readItem : function(){
                 var oComponent, oView, oViewModel, oODataModel, aFilters, oHeader;
                 
@@ -193,7 +182,7 @@ sap.ui.define([
                 oView.setBusy(true);
                 oODataModel.read("/EvalItemScle",{
                     filters : aFilters,
-                    sorter : [
+                    sorters : [
                         new Sorter("sort_sequence")
                     ],
                     success : function(oData){
@@ -210,6 +199,9 @@ sap.ui.define([
                     }
                 });
             }
+            /**
+             * scale 선택시 edit mode 변경
+             */
             , onSelectTableItem : function(oEvent){
                 var sEvaluResultInType, oHeader, oView, oViewModel, oSelectItem,
                     oBindContxtPath, oRowData, bSeletFlg, bEditMode;
@@ -241,7 +233,9 @@ sap.ui.define([
 
                 oViewModel.setProperty(oBindContxtPath, oRowData);
             }
-
+            /**
+             * scale 라인 삭제
+             */
             , onPressItemDelete : function(){
                 var oTable, oView, oViewModel, aSelectedItems, aContxtPath, aScaleListData;
                 
@@ -264,7 +258,7 @@ sap.ui.define([
                     }
                 }
 
-                oTable.removeSelections();
+                oTable.removeSelections(true);
                 oViewModel.setProperty("/Detail/Item", aScaleListData);
 
                 // aSelectedItems.forEach(function(oItem){
@@ -278,6 +272,9 @@ sap.ui.define([
                 //     oViewModel.setProperty(sItemPath, oItemData);
                 // })
             }
+            /***
+             * scale 라인 추가
+             */
             , onPressItemAdd : function(){
                 var oView, oViewModel, oHeader, aItems, oNewData, aFields;
                 
@@ -310,6 +307,9 @@ sap.ui.define([
                 aItems.unshift(oNewData);
                 oViewModel.setProperty("/Detail/Item", aItems);
             }
+            /***
+             * scale 재조회
+             */
             , onPressItemCancle : function(){
                 var oI18NModel, oView;
 
@@ -327,11 +327,16 @@ sap.ui.define([
                 });
 
             }
-
+            /**
+             * detail 페이지 종료
+             */
             , onPressPageNavBack : function(){
                 
                 this.getOwnerComponent().getRouter().navTo("Master");
             }
+            /**
+             * 해당 상세 평가 삭제
+             */
             , onPressDelete : function(){
                 var sURLPath, oSaveData, oView, oViewModel, oArgs, oComponent,
                     oI18NModel;
@@ -393,6 +398,9 @@ sap.ui.define([
                     }.bind(this)
                 });
             }
+            /***
+             * 해당 상세 평가 저장
+             */
             , onPressSave : function(){
                 var sURLPath, oSaveData, oView, oViewModel, oArgs, oComponent,
                     oI18NModel;
@@ -457,6 +465,10 @@ sap.ui.define([
                     }.bind(this)
                 });
             }
+            /**
+             * 저장시 Validation 필수값 확인
+             * 
+             */
             , _checkValidation : function(){
                 var bValid, oView, oViewModel, oArgs, aControls;
                 
@@ -473,10 +485,11 @@ sap.ui.define([
                     bValid = this._isValidControl(aControls);
                 }
 
-
-
                 return bValid;
             }
+            /***
+             * 저장시 데이터 구조 맞추기
+             */
             , _getSaveData : function(sTransactionCode){
                 var oSaveData, oUserInfo, oView, oViewModel,
                     aItemFields, aScleFields, oHeader, oItemType,
@@ -489,6 +502,7 @@ sap.ui.define([
                 oArgs = oViewModel.getProperty("/Args");
                 
                 if(oArgs.new === "Y"){
+                    //신규 건일때
                     oNewHeader = oViewModel.getProperty("/Detail/NewHeader");
                     sLevel = oArgs.level;
                     oSaveData = {
@@ -512,10 +526,6 @@ sap.ui.define([
 
                     return oSaveData;
                 }
-
-
-
-
 
 
                 aItemFields = [
@@ -587,7 +597,9 @@ sap.ui.define([
 
                 return oSaveData;
             }
-            
+            /***
+             * 수정 변경모드 
+             */
             , onPressModeChange : function(oEvent, sGubun){
                 var oView, oViewModel, bEditFlg, oComponent, oMasterPage, oTreeTable,
                     aSelectedIdices, oContext, oRowData, oI18NModel;
@@ -624,6 +636,20 @@ sap.ui.define([
                     oViewModel.setProperty("/App/EditMode", !bEditFlg);
                 }
             }
+            /**
+             * 평가수행방식 변경시
+             * 단위, 항목산식 초기화
+             */
+            , onSelectChangExecMode : function(){
+                var oView, oViewModel, oHeader;
 
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
+                oHeader = oViewModel.getProperty("/Detail/Header");
+
+                oHeader.qttive_item_uom_code = "";
+                oHeader.qttive_eval_article_calc_formula = "";
+                oViewModel.setProperty("/Detail/Header", oHeader);
+            }
 		});
 	});

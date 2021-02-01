@@ -17,7 +17,7 @@
 		},
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v2/sp.negoHeadersService/",
+                "uri": "srv-api/odata/v2/sp.sourcingService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"

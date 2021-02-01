@@ -66,23 +66,6 @@ sap.ui.define([
                 oViewModel.setProperty("/App/layout", "OneColumn");
             }
             /***
-             * 세션 유저정보를 가져온다.
-             */
-            , _getUserSession : function(){
-                var oUserInfo;
-                
-                oUserInfo = {
-                    loginUserId : "TestUser",
-                    tenantId : "L2100",
-                    companyCode : "LGCKR",
-                    orgTypeCode : "BU",
-                    orgCode : "BIZ00100",
-                    evalPersonEmpno : "5706"
-                };
-
-                return oUserInfo;
-            }
-            /***
              * 평가조직 (orgCode) 콤보박스 아이템 바인딩
              * 1. 세션유저 정보를 가지고 아이템을 구성한다.
              * 2. 첫번째 아이템으로 선택해준다.
@@ -300,7 +283,8 @@ sap.ui.define([
              * @param sBtnGubun - 버튼 구분자
              */
             , onPressCreate : function(oEvent, sBtnGubun){
-                var oNavParam, oTreeTable, aSelectedIdx, oContext, oRowData, oViewModel;
+                var oNavParam, oTreeTable, aSelectedIdx, oContext, oRowData, oViewModel,
+                    oView, oI18NModel;
 
                 oTreeTable = this.byId("treeTable");
                 aSelectedIdx = oTreeTable.getSelectedIndices();
@@ -320,11 +304,18 @@ sap.ui.define([
                 }
                 oContext = oTreeTable.getContextByIndex(aSelectedIdx[0]);
                 oRowData = this._deepCopy( oContext.getObject() );
-                oViewModel = this.getView().getModel("viewModel");
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
 
                 oRowData.evaluation_execute_mode_code = oRowData.evaluation_execute_mode_code || "QLTVE_EVAL";
                 oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
                 oRowData.qttive_eval_article_calc_formula = oRowData.qttive_eval_article_calc_formula || "";
+
+                if(oRowData.leaf_flag === "N"){
+                    oI18NModel = oView.getModel("I18N");
+                    MessageBox.warning(oI18NModel.getProperty("/ESP00001"));
+                    return;
+                }
 
                 oViewModel.setProperty("/Detail", {
                     Header : oRowData,
@@ -394,7 +385,7 @@ sap.ui.define([
                         path : "/EvalItemListView",
                         filters : aFilters,
                         sorter : [
-                            new Sorter("evaluation_article_path_sequence")
+                            new Sorter("hierarchy_rank")
                         ],
                         parameters : {
                             countMode: 'Inline',
@@ -454,23 +445,6 @@ sap.ui.define([
                                         );
                                     }
                                 }
-                                
-                                // var sKey, sParentKey;
-                                // sKey = oRowData.evaluation_article_code;
-                                // sParentKey = oRowData.parent_evaluation_article_code;
-                                // if(aDataKeys.indexOf(sKey) === -1){
-                                //     aDataKeys.push(sKey);
-                                //     aDummyFilters.push(
-                                //         new Filter({ path : "evaluation_article_code", operator : "EQ", value1 : sKey })
-                                //     );
-                                // }
-
-                                // if(aDataKeys.indexOf(sParentKey) === -1){
-                                //     aDataKeys.push(sParentKey);
-                                //     aDummyFilters.push(
-                                //         new Filter({ path : "evaluation_article_code", operator : "EQ", value1 : sParentKey })
-                                //     );
-                                // }
                             });
                             
                             aTableFilter = [
@@ -503,7 +477,7 @@ sap.ui.define([
                                 path : "/EvalItemListView",
                                 filters : aTableFilter,
                                 sorter : [
-                                    new Sorter("evaluation_article_path_sequence")
+                                    new Sorter("hierarchy_rank")
                                 ],
                                 parameters : {
                                     countMode: 'Inline',

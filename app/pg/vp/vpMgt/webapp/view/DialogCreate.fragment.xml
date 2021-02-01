@@ -34,7 +34,7 @@
                         <!-- 팝업 영역 -->
                         <VBox>
                             <Label text="{I18N>/OPERATION_ORG}" labelFor="search_Operation_ORG" required="true"></Label>
-                            <ComboBox id="tpop_Operation_ORG" width="100%" items="{
+                            <ComboBox id="tpop_Operation_ORG"  items="{
                                 path: '/VpOperationOrg',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
@@ -200,7 +200,7 @@
                     singleContainerFullSize="false" >
                     <form:content>
                         <!-- 팝업 영역 -->
-                        <core:Title text="Category Info" />                        
+                        <core:Title text="{I18N>/CATEGORY_INFO}" />                        
                         <VBox>
                             <Label text = "{I18N>/HIGHER_LEVEL}" design="Bold"/> 
                                 <Text id="pop_higher_level_path" text=""/>
@@ -239,14 +239,14 @@
                             </layoutData> 
                         </VBox> 
                         <!-- <VBox id="v_pop_detail_info"> -->
-                        <core:Title id="pop_detail_info" text="Detail Info" />  
+                        <core:Title id="pop_detail_info" text="{I18N>/DETAIL_INFORMATION}" />  
                         <!-- </VBox> -->
                     
                                 <VBox id="v_pop_repr_department_code">
-                                    <Label text = "{I18N>/DEPARTMENT}" design="Bold"/> 
+                                    <Label text = "{I18N>/DEPARTMENT}" design="Bold" required="true"/> 
                                         <lib-m:CodePicker id="pop_repr_department_code"
                                         placeholder="Enter a department name"
-                                        keyField="department_id"
+                                        keyField="department_code"
                                         textField="department_local_name"
                                         suggestionItems="{
                                             path: '/',
@@ -320,7 +320,7 @@
                                 </VBox>
                                 
                                 <VBox id="v_pop_regular_evaluation_flag">
-                                    <Label text = "{I18N>/EVALUATION}" design="Bold"/> 
+                                    <Label text = "{I18N>/EVALUATION}" design="Bold" required="true"/> 
                                         <Switch id="pop_regular_evaluation_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
@@ -331,7 +331,7 @@
                                     </layoutData> 
                                 </VBox> 
                                 <VBox id="v_pop_sd_exception_flag">
-                                    <Label text = "{I18N>/SD_FLAG}" design="Bold"/> 
+                                    <Label text = "{I18N>/SD_FLAG}" design="Bold" required="true"/> 
                                         <Switch id="pop_sd_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
@@ -341,26 +341,26 @@
                                         <layout:GridData span="XL1 L1 M1 S12" />
                                     </layoutData> 
                                 </VBox>                         
-                                <VBox id="v_pop_maker_material_code_mngt_flag">
-                                    <Label text = "Maker P/N" design="Bold"/> 
+                                <VBox id="v_pop_maker_material_code_mngt_flag" >
+                                    <Label text = "Maker P/N" design="Bold" required="true" width="8rem"/> 
                                         <Switch id="pop_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
                                             </layoutData>
                                         </Switch> 
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                        <layout:GridData span="XL1 L1 M1 S12"  />
                                     </layoutData> 
                                 </VBox> 
                                 <VBox id="v_pop_vendor_pool_apply_exception_flag">
-                                    <Label text = "{I18N>/VP_EXCEPTION_FLAG}" width="8rem" design="Bold"/> 
+                                    <Label text = "{I18N>/VP_EXCEPTION_FLAG}" required="true" width="8rem" design="Bold"/> 
                                         <Switch id="pop_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
                                             </layoutData>
                                         </Switch> 
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                        <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData> 
                                 </VBox>                                                                       
                                 <VBox id = "v_review_grade" >

@@ -39,11 +39,6 @@ service BasePriceAprlService {
         inner join Dept dept
             on emp.tenant_id = dept.tenant_id
             and emp.department_id = dept.department_id
-        left outer join codeLng as cd01
-            on cd01.tenant_id = sup.tenant_id
-            and cd01.group_code = 'SP_VI_APPROVAL_TYPE'
-            and cd01.code = sup.approval_type_code
-            and cd01.language_cd = 'KO'
         left outer join codeLng as cd02
             on cd02.tenant_id = sup.tenant_id
             and cd02.group_code = 'CM_APPROVE_STATUS'
@@ -62,8 +57,6 @@ service BasePriceAprlService {
                 sup.org_type_code,
                 sup.org_code,
                 sup.chain_code,
-                sup.approval_type_code,
-                cd01.code_name as approval_type_code_nm   : String(240),
                 sup.approval_title,
                 sup.approval_contents,
                 sup.approve_status_code,

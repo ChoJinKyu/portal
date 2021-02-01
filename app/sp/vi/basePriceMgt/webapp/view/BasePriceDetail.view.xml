@@ -30,9 +30,9 @@
                         <Title text="{I18N>/NEW_BASE_PRICE}" wrapping="true"/>
                     </HBox>
 				</uxap:expandedHeading>
-                <!-- <uxap:navigationActions>
-					<OverflowToolbarButton icon="sap-icon://decline" text="{I18N>/BACK}" press=".onBack" />
-                </uxap:navigationActions> -->
+                <uxap:navigationActions>
+					<!-- <OverflowToolbarButton icon="sap-icon://decline" text="{I18N>/BACK}" press=".onBack" /> -->
+                </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
@@ -41,8 +41,9 @@
                 <!-- base Info 시작 -->
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
                     <ObjectStatus title="{I18N>/APPROVAL_NO}" text="{detailModel>/approval_number}"/>
-                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/approval_requestor_empno_fk/user_local_name}"/>
+                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/create_user_id}"/>
                     <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/>
+                    <ObjectStatus title="사번본부" text="{detailModel>/corp}"/>
                 </layout:VerticalLayout>
                 <!-- base Info 끝 -->
 

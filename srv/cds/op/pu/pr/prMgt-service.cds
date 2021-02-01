@@ -3,11 +3,8 @@ namespace op;
 using {op.Pu_Pr_Mst as prMst} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_MST-model';
 using {op.Pu_Pr_Mst_View as prMstView} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_MST_VIEW-model';
 using {op.Pu_Pr_Dtl as prDtl} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL-model';
-using {op.Pu_Pr_Template_Mst as prTMst} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_MST-model';
 using {op.Pu_Pr_Template_Map as prTMap} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_MAP-model';
 using {op.Pu_Pr_Template_Lng as prTLng}         from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_LNG-model';
-using {op.Pu_Pr_Template_Ett as prTEtt}    from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_ETT-model';
-using {op.Pu_Pr_Template_Txn as prTXtn}    from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_TXN-model';
 using {cm.Code_Lng as cdLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 
 
@@ -106,12 +103,8 @@ service PrMgtService {
         from prMstView mst;
 
 
-    entity Pr_TMst    as projection on op.Pu_Pr_Template_Mst;
     entity Pr_TDtl    as projection on op.Pu_Pr_Template_Dtl;
     entity Pr_TLng    as projection on op.Pu_Pr_Template_Lng;
-    entity Pr_TMap    as projection on op.Pu_Pr_Template_Map;
-   
-
 
     // 간단한 View 생성
     view Pr_TMapView as

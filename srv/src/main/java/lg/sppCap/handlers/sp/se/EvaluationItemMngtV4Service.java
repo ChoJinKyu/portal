@@ -161,7 +161,7 @@ public class EvaluationItemMngtV4Service implements EventHandler {
         v_sql_createTableItem.append("EVALUATION_ARTICLE_TYPE_CODE NVARCHAR(30),");
         v_sql_createTableItem.append("EVALUATION_DISTRB_SCR_TYPE_CD NVARCHAR(30),");
         v_sql_createTableItem.append("EVALUATION_RESULT_INPUT_TYPE_CD NVARCHAR(30),");
-        v_sql_createTableItem.append("QTTIVE_ITEM_UOM_CODE NVARCHAR(3),");
+        v_sql_createTableItem.append("QTTIVE_ITEM_UOM_CODE NVARCHAR(30),");
         v_sql_createTableItem.append("QTTIVE_EVAL_ARTICLE_CALC_FORMULA NVARCHAR(1000),");
         v_sql_createTableItem.append("EVALUATION_ARTICLE_DESC NVARCHAR(3000),");
         v_sql_createTableItem.append("SORT_SEQUENCE DECIMAL)");         

@@ -1,18 +1,26 @@
 view EP_GET_UC_APPROVAL_DTL_VIEW as
 select
-     dtl.ep_item_code	                --설비공사용품목코드
-    ,dtl.item_desc                      --품목명
-    ,dtl.spec_desc	                    --규격설명
-    ,dtl.unit	                        --단위
-    ,dtl.material_net_price	            --자재단가
-    ,dtl.labor_net_price	            --노무단가
-    ,mst.net_price_contract_title	    --단가계약제목
-    ,mst.net_price_contract_start_date	--단가계약시작일자
-    ,mst.net_price_contract_end_date	--단가계약종료일자
+     dtl.ep_item_code	                                            --설비공사용품목코드
+    ,dtl.item_desc                                                  --품목명
+    ,dtl.spec_desc	                                                --규격설명
+    ,dtl.unit	                                                    --단위
+    ,coalesce(dtl.material_net_price, 0) as material_net_price	    --자재단가
+    ,coalesce(dtl.labor_net_price, 0) as labor_net_price 	        --노무단가
+    ,mst.net_price_contract_title	                                --단가계약제목
+    ,mst.net_price_contract_start_date	                            --단가계약시작일자
+    ,mst.net_price_contract_end_date	                            --단가계약종료일자
+    ,mst.net_price_contract_start_date ||' ~ '|| mst.net_price_contract_end_date as net_price_contract_date --계약기간
+    ,coalesce(dtl.currency_code, '') as currency_code               --통화코드
+    ,dtl.currency_code as currency_name                             --통화
+    ,dtl.material_apply_flag                                        --자재적용여부
+    ,dtl.labor_apply_flag                                           --노무적용여부
+    --,dtl.net_price_change_allow_flag                                --단가변경허용여부
     ,dtl.tenant_id
     ,dtl.company_code
-    ,dtl.net_price_contract_document_no
-    ,dtl.net_price_contract_degree
+    ,dtl.net_price_contract_document_no                             --단가계약그룹번호
+    ,dtl.net_price_contract_degree                                  --단가계약차수
+    ,dtl.net_price_contract_item_number                             --단가계약품목번호
+    --,dtl.supplier_item_create_flag                                  --공급업체품목생성여부
     ,dtl.local_create_dtm
     ,dtl.local_update_dtm
     ,dtl.create_user_id

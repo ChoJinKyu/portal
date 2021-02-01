@@ -246,7 +246,7 @@ sap.ui.define([
                         }else{
                             $.ajax({
                             //new ODataXhrService.ajax({ 
-                                url: "pg/md/mdCategory/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdNewCategoryItemCode(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='"+this._sOrg_code+"')/Set", 
+                                url: "pg/md/mdCategory/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdNewCategoryItemCode(tenant_id='L2100',company_code='"+this._sCompany_code+"',org_type_code='"+this._sOrg_type_code+"',org_code='"+this._sOrg_code+"')/Set", 
                                 type: "GET", 
                                 contentType: "application/json", 
                                 success: function(data){ 
@@ -333,6 +333,9 @@ sap.ui.define([
                 oView.setBusy(true);
                 oMasterModel.setTransactionModel(this.getModel());
                 oMasterModel.read(sObjectPath, {
+                    urlParameters: {
+                        "$expand": "org_infos"
+                    },
                     success: function(oData){
                         oView.setBusy(false);
                     }
@@ -446,6 +449,9 @@ sap.ui.define([
                 oView.setBusy(true);
                 oMasterModel.setTransactionModel(this.getModel());
                 oMasterModel.read(sObjectPath, {
+                    urlParameters: {
+                        "$expand": "org_infos"
+                    },
                     success: function(oData){
                         oView.setBusy(false);
                     }

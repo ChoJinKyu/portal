@@ -177,7 +177,7 @@ sap.ui.define([
                             new Filter("tenant_id", FilterOperator.EQ, "L2100")
                         ]
                     },
-                    getValue: this.byId("searchMultiMaterialOrgFromDialog").getValue()
+                    orgCode: this.byId("searchMultiMaterialOrgFromDialog").getValue()
                 });
                 this.oSearchMultiMaterialOrgDialog.attachEvent("apply", function(oEvent){
                     this.byId("searchMultiMaterialOrgFromDialog").setTokens(oEvent.getSource().getTokens());

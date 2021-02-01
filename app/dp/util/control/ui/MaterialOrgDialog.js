@@ -22,7 +22,8 @@ sap.ui.define([
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "70em"},
                 keyField: { type: "string", group: "Misc", defaultValue: "material_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "material_desc" }
+                textField: { type: "string", group: "Misc", defaultValue: "material_desc" },
+                orgCode: { type: "string", group: "Misc"}
             }
         },
 
@@ -197,7 +198,7 @@ sap.ui.define([
         loadData: function(){
             var sTenantId = "L2100";
 
-            var oParam = this.getProperty("getValue");
+            var oParam = this.getProperty("orgCode");
             var sOrg;
             var sOrgCode = false;
             if(oParam != "" ) {
@@ -207,6 +208,7 @@ sap.ui.define([
                 sOrg = this.oSearchOrg.getSelectedKey();
                 this.oSearchOrg.setEnabled(true);
             } else {
+                this.oSearchOrg.setEnabled(true);
                 sOrg = this.oSearchOrg.getSelectedKey();
             }
 
@@ -221,7 +223,7 @@ sap.ui.define([
                               
             if(sOrg){
                 sOrgCode=true;
-                var oParam = this.getProperty("getValue");
+                var oParam = this.getProperty("orgCode");
                 if(oParam != "") {
                     aFilters.push(new Filter("org_code", FilterOperator.EQ, oParam));
                 } else {
@@ -270,7 +272,7 @@ sap.ui.define([
         },
         
         beforeOpen: function() {
-            // this.oTenantId.setValue("L2100");
+            
         }
 
 

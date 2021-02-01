@@ -513,6 +513,7 @@
                         <table:template>
                             <Select   id="mold_production_type_code" width="8em"
                                 selectedKey="{list>mold_production_type_code}"
+                                forceSelection="false"
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
@@ -532,6 +533,7 @@
                         <table:template>
                             <Select   id="mold_item_type_code"
                                 selectedKey="{list>mold_item_type_code}"
+                                forceSelection="false"
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
@@ -540,7 +542,7 @@
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
-                                required="true" change=".inputFieldChange"
+                                required="true" change=".onSelectChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
@@ -549,7 +551,7 @@
                     <table:Column id="moldTypeColumn" width="10em" hAlign="Center">
                         <Label text="Mold Type" required="true" wrapping="true"/>
                         <table:template><!--{path : 'parent_code', operator : 'EQ', value1 : ${list>mold_item_type_code}}-->
-                            <Select id="mold_type_code" width="10em"
+                            <!--<Select id="mold_type_code" width="10em"
                                 selectedKey="{list>mold_type_code}"
                                 items="{
                                             path : 'util>/Code',
@@ -562,7 +564,14 @@
                                 required="true" change=".inputFieldChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </Select>
+                            </Select>-->
+                            <Input id="mold_type_name"
+                                placeholder="Mold Type"
+                                value="{list>mold_type_name}"
+                                required="true" change=".inputFieldChange"
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
+                                showValueHelp="true" valueHelpRequest=".onCmInputWithCodeValuePress">
+                            </Input>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldEDTypeColumn" width="8em" hAlign="Center">
@@ -570,6 +579,7 @@
                         <table:template>
                             <Select   id="mold_location_type_code"
                                 selectedKey="{list>mold_location_type_code}"
+                                forceSelection="false"
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
@@ -589,6 +599,7 @@
                         <table:template>
                             <Select   id="mold_cost_analysis_type_code"    
                                 selectedKey="{list>mold_cost_analysis_type_code}"
+                                forceSelection="false"
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
@@ -622,6 +633,7 @@
                             
                             <Select   id="mold_purchasing_type_code"    
                                 selectedKey="{list>mold_purchasing_type_code}"
+                                forceSelection="false"
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
@@ -639,7 +651,7 @@
                     <table:Column id="moldStructureColumn" width="9em" hAlign="Center">
                         <Label text="Mold Structure" required="true" wrapping="true"/>
                         <table:template>
-                            <Select   id="die_form" width="9em"
+                            <!--<Select   id="die_form" width="9em"
                                 selectedKey="{list>die_form}"
                                 items="{
                                             path : 'util>/Code',
@@ -652,7 +664,14 @@
                                 change="inputFieldChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </Select>
+                            </Select>-->
+                            <Input id="die_form_name"
+                                placeholder="Mold Structure"
+                                value="{list>die_form_name}"
+                                required="true" change=".inputFieldChange"
+                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
+                                showValueHelp="true" valueHelpRequest=".onCmInputWithCodeValuePress">
+                            </Input>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldSizeColumn" width="8em" hAlign="Center">
@@ -660,6 +679,7 @@
                         <table:template>
                             <Select   id="mold_size"    
                                 selectedKey="{list>mold_size}"
+                                forceSelection="false"
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
@@ -748,6 +768,18 @@
                         <Label text="Mold Developer"/>
                         <table:template>
                             <Text text="{list>mold_developer_empno}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column visible="false">
+                        <Label text="Mold Type Code"/>
+                        <table:template>
+                            <Text text="{list>mold_type_code}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column visible="false">
+                        <Label text="Mold Structure"/>
+                        <table:template>
+                            <Text text="{list>die_form}"/>
                         </table:template>
                     </table:Column>
                 </table:columns>

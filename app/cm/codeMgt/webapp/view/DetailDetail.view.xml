@@ -26,7 +26,7 @@
         <headerTitle>
             <ObjectPageDynamicHeaderTitle>
                 <heading>
-                    <m:HBox alignItems="End">
+                    <m:HBox alignItems="Center">
                         <m:OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press="handleClose"  tooltip="Close column"/>
                         <m:Title text="Code Detail" wrapping="true" class="sapUiSmallMarginEnd" />
                     </m:HBox>
@@ -294,7 +294,7 @@
                                                     <m:items>
                                                         <core:ListItem 
                                                             key="{viewModel>code}" 
-                                                            text="{viewModel>code_description}" 
+                                                            text="{viewModel>code_name}" 
                                                             additionalText="{viewModel>code}"/>
                                                     </m:items>
                                                 </m:ComboBox>

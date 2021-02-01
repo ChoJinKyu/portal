@@ -130,8 +130,7 @@ sap.ui.define([
             var oContext = oTable.getContextByIndex(nSelIdx);
             var sPath = oContext.getPath();
             var oData = oTable.getBinding().getModel().getProperty(sPath);
-            var level = oData.level_path.trim().split(">");
-
+            var level = oData.level_path; //oData.level_path.trim().split(">");
             if(oData.drill_state != "leaf"){
                 MessageToast.show("leaf node를 선택해주세요.");
                 return;
@@ -149,15 +148,13 @@ sap.ui.define([
                 });
             }
 
-            var level1 = (level[0] ? level[0].trim() : "");
-            var level2 = (level[1] ? level[1].trim() : "");
-            var level3 = (level[2] ? level[2].trim() : "");
+            // var level1 = (level[0] ? level[0].trim() : "");
+            // var level2 = (level[1] ? level[1].trim() : "");
+            // var level3 = (level[2] ? level[2].trim() : "");
             
             this.pDialog.then(function (oDialog) {
                 oDialog.open();
-                that.onDialogMappingSearch(level1,
-                                        level2,
-                                        level3,
+                that.onDialogMappingSearch(level,
                                         oData.vendor_pool_code);
             });
         },
@@ -173,7 +170,7 @@ sap.ui.define([
                 sDeptCode = this.getView().byId("search_Dept").getSelectedKey(),
 			    sStatusflag = this.getView().byId("search_statusflag").getSelectedKey();
             var aSearchFilters = [];
-            // debugger;
+
             if (tenant_combo.length == 0) {
                 MessageToast.show("테넌트를 설정해주세요.");
                 return;
@@ -209,8 +206,7 @@ sap.ui.define([
                 type: "GET",
                 sorters: [new Sorter("hierarchy_rank")],
                 success: function(oData){ 
-                    this.byId("title").setText("Vendor Pool별 관리특성 List ("+oData.value.length+")");
-                    // debugger;
+                    this.byId("title").setText(this.getModel("I18N").getText("/LIST") +" ("+oData.value.length+")");
                     this.setItemList(oData);
 
                 }.bind(this)   
@@ -392,25 +388,25 @@ sap.ui.define([
         /////////////////////////////////Popup - Item Mapping///////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        onDialogMappingSearch: function (vpName1,vpName2,vpName3,vpCode3) {
+        onDialogMappingSearch: function (vpPath,vpCode) {
 
-            this.getView().byId("vpCode1").setText(vpName1);
-            this.getView().byId("vpCode2").setText(vpName2);
-            this.getView().byId("vpCode3").setText(vpName3+" ("+vpCode3+")");
+            this.getView().byId("vpCode1").setText(vpPath);
+            // this.getView().byId("vpCode2").setText(vpName2);
+            this.getView().byId("vpCode3").setText(vpCode);
 
             jQuery.ajax({
                 url: "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdItemListConditionView(language_code='KO')/Set", 
                 contentType: "application/json",
                 success: function(oData){ 
-                    // debugger;
+
                     this.getModel("tblModel").setProperty("/left",oData.value);
                     
                     jQuery.ajax({
-                        url: "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemIngView(language_code='EN')/Set?$orderby=spmd_category_sort_sequence asc,spmd_character_sort_seq asc&$filter=trim(vendor_pool_code) eq '"+vpCode3+"'", 
+                        url: "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemIngView(language_code='EN')/Set?$orderby=spmd_category_sort_sequence asc,spmd_character_sort_seq asc&$filter=trim(vendor_pool_code) eq '"+vpCode+"'", 
                         contentType: "application/json",
                         success: function(oData2){ 
                             this.getModel("tblModel").setProperty("/right",oData2.value);
-                            this.vendor_pool_code = vpCode3;
+                            this.vendor_pool_code = vpCode;
                             //setTimeout(this.onSetColor(), 3000); 
                         }.bind(this)                        
                     });
@@ -429,7 +425,7 @@ sap.ui.define([
 
             var selectedItems = this.getModel("tblModel").getProperty("/right");
             //this.byId("table").getSelectedContextPaths();
-            debugger;
+
             if(selectedItems.length > 0 ){
                 var param = {};
                 var items = [];
@@ -443,7 +439,7 @@ sap.ui.define([
                         spmd_category_code: selectedItems[i].spmd_category_code,
                         spmd_character_code: selectedItems[i].spmd_character_code,
                         spmd_character_serial_no: Number(selectedItems[i].spmd_character_serial_no),
-                        vendor_pool_code: this.vendor_pool_code  // TODO:Mapping 페이지에 선택 되어있는 VendorPool Lavel3 코드값 으로 셋팅바람.
+                        vendor_pool_code: this.vendor_pool_code  
                     });
 
                 }

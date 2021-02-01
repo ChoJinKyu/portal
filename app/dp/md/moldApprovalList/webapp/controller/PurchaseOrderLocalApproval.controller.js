@@ -518,7 +518,7 @@ sap.ui.define([
                 var splitPayTypeCode = payments[0].split_pay_type_code;
 
                 for(var idx = 0; idx < payments.length; idx++){
-                    if(splitPayTypeCode === 'A'){
+                    if(splitPayTypeCode === 'A'){console.log(Number(payments[idx].pay_price));
                         total = total + Number(payments[idx].pay_price);
                     }else{
                         total = total + Number(payments[idx].pay_rate);

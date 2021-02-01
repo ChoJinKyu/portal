@@ -47,19 +47,19 @@ BEGIN
             END IF;
         END FOR;
     ELSEIF (:I_TABLE.SPLIT_PAY_TYPE_CODE[1] = 'A') THEN
-        IF (V_SUM_PURCHASING_AMOUNT != V_SUM_PAY_PRICE) THEN
-            FOR V_IDX IN 1 .. RECORD_COUNT(:I_TABLE)
-            DO
+        FOR V_IDX IN 1 .. RECORD_COUNT(:I_TABLE)
+        DO
+            IF (V_SUM_PURCHASING_AMOUNT != V_SUM_PAY_PRICE) THEN
                 IF (V_IDX = RECORD_COUNT(:I_TABLE)) THEN
                     I_TABLE.PAY_PRICE[V_IDX] = V_SUM_PURCHASING_AMOUNT - V_PAY_PRICE;
                 ELSE
                     V_PAY_PRICE = V_PAY_PRICE + :I_TABLE.PAY_PRICE[V_IDX];
                 END IF;
-
-                I_TABLE.PAY_RATE[V_IDX] = null;
-            END FOR;
-        END IF;
+            END IF;
+            I_TABLE.PAY_RATE[V_IDX] = NULL;
+        END FOR;
     ELSE
+        I_TABLE.PAY_SEQUENCE[1] = '1';
         I_TABLE.SPLIT_PAY_TYPE_CODE[1] = 'A';
         I_TABLE.PAY_RATE[1] = 100;
         I_TABLE.PAY_PRICE[1] = V_SUM_PURCHASING_AMOUNT;

@@ -48,6 +48,10 @@ BEGIN
 	FROM :I_DTL_DATA
 	;
     
+    /***********************************************
+	최종 에러처리
+	***********************************************/
+    --DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 	
 	
 	-----------------------------------------------데이터 커서
@@ -68,9 +72,10 @@ BEGIN
 								'NG' AS RESULT_CODE
 								,'VALID_ERR' AS ERR_TYPE
 								,::SQL_ERROR_CODE AS ERR_CODE
-								,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
-								,:V_MST_SEQ AS RTN_INVESTMENT_PLAN_SEQUENCE 
+								,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+								,V_MST_SEQ AS RTN_INVESTMENT_PLAN_SEQUENCE 
 							FROM DUMMY;
+                RESIGNAL;
 			END;
 			
 			-------------------------------------------------------------------------------[넘어온 데이터가 있는지 체크]
@@ -91,16 +96,17 @@ BEGIN
 								'NG' AS RESULT_CODE
 								,'SAVE_ERR' AS ERR_TYPE
 								,::SQL_ERROR_CODE AS ERR_CODE
-								,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
-								,:V_MST_SEQ AS RTN_INVESTMENT_PLAN_SEQUENCE 
+								,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+								,V_MST_SEQ AS RTN_INVESTMENT_PLAN_SEQUENCE 
 							FROM DUMMY;
+                RESIGNAL;
 			END;
 		
 			-------------------------------------------------------------------------------[투자계획 상세 테이블 삭제]
 			DELETE FROM SP_SF_FUNDING_INVEST_PLAN_DTL
-			WHERE FUNDING_APPL_NUMBER  = :V_FUNDING_APPL_NUMBER
-			AND INVESTMENT_PLAN_SEQUENCE  = :V_MST_SEQ
-			AND INVESTMENT_PLAN_ITEM_SEQUENCE = :V_DTL_SEQ
+			WHERE FUNDING_APPL_NUMBER  = V_FUNDING_APPL_NUMBER
+			AND INVESTMENT_PLAN_SEQUENCE  = V_MST_SEQ
+			AND INVESTMENT_PLAN_ITEM_SEQUENCE = V_DTL_SEQ
 			;
 			    
 		END;
@@ -114,8 +120,8 @@ BEGIN
 					'OK' AS RESULT_CODE
 					,'' AS ERR_TYPE
 					,'' AS ERR_CODE
-					,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
-					,:V_MST_SEQ AS RTN_INVESTMENT_PLAN_SEQUENCE 
+					,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+					,V_MST_SEQ AS RTN_INVESTMENT_PLAN_SEQUENCE 
 				FROM DUMMY;
 
 END;
