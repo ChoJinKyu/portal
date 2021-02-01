@@ -154,6 +154,8 @@
                 <Title text="Request List {= ${listModel>/}.length > 0 ? '(' + ${listModel>/}.length + ')' : ''}" level="H2"/>
                 <ToolbarSpacer/>
                 
+                <ToolbarSpacer/>
+                <Button id="mainTableAddButton" text="Create" type="Transparent" press=".onMainTableAddButtonPress" />
                 <ToolbarSeparator/>
                 <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                     <layoutData>

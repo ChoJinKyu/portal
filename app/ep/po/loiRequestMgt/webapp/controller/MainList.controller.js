@@ -132,6 +132,21 @@ sap.ui.define([
         },
 
         /**
+		 * Event handler when a table add button pressed
+		 * @param {sap.ui.base.Event} oEvent
+		 * @public
+		 */
+        onMainTableAddButtonPress: function () {
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+            this.getRouter().navTo("requestPage", {
+                //layout: oNextUIState.layout,
+                tenantId: "new",
+                companyCode: "new",
+                loiWriteNumber: "new"
+            });
+        },
+
+        /**
          * Cell 클릭 후 상세화면으로 이동
          */
         onCellClickPress: function(oEvent) {
