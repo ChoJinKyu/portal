@@ -67,8 +67,5 @@ function (DynamicPageTitleRenderer) {
 		oDynamicPageTitleState.fixedContent.forEach(oRm.renderControl, oRm);
 		oRm.close("div");
 	};
-   
-
     return CustomDynamicPageTitleRenderer;
-
 });

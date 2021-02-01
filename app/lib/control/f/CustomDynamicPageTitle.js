@@ -9,57 +9,38 @@ sap.ui.define([
     "use strict";
 
     // shortcut for sap.f.DynamicPageTitleArea
-	var DynamicPageTitleArea = library.DynamicPageTitleArea,
-		ToolbarStyle = mobileLibrary.ToolbarStyle,
-		InvisibleMessageMode = CoreLibrary.InvisibleMessageMode;
-	var oCore = sap.ui.getCore();
+	var DynamicPageTitleArea = library.DynamicPageTitleArea
     
     var CustomDynamicPageTitle = Parent.extend("ext.lib.control.f.CustomDynamicPageTitle", {
 
         renderer: Renderer,
 
         metadata: {
-			library: "sap.f",
+            library: "sap.f",
+            
 			properties: {
 				
-				primaryArea : {type: "sap.f.DynamicPageTitleArea", group: "Appearance", defaultValue: DynamicPageTitleArea.Begin},
-				
+				primaryArea : {type: "sap.f.DynamicPageTitleArea", group: "Appearance", defaultValue: DynamicPageTitleArea.Begin},				
 				areaShrinkRatio : {type: "sap.f.DynamicPageTitleShrinkRatio", group: "Appearance", defaultValue: "1:1.6:1.6"},
-
 				backgroundDesign : {type: "sap.m.BackgroundDesign", group: "Appearance"}
-			},
+            },
+            
 			aggregations: {
-
 				heading: {type: "sap.ui.core.Control", multiple: false, defaultValue: null},
-
 				snappedHeading: {type: "sap.ui.core.Control", multiple: false, defaultValue: null},
-
 				expandedHeading: {type: "sap.ui.core.Control", multiple: false, defaultValue: null},
-
 				actions: {type: "sap.ui.core.Control", multiple: true, singularName: "action"},
-
 				navigationActions: {type: "sap.m.Button", multiple: true, singularName: "navigationAction"},
-
                 content: {type: "sap.ui.core.Control", multiple: true},
-                
 				fixedContent: {type: "sap.ui.core.Control", multiple: true},
-
 				snappedContent: {type: "sap.ui.core.Control", multiple: true},
-
 				expandedContent: {type: "sap.ui.core.Control", multiple: true},
-
 				snappedTitleOnMobile: {type: "sap.m.Title", multiple: false},
-
 				breadcrumbs: {type: "sap.m.IBreadcrumbs", multiple: false},
-
 				_actionsToolbar: {type: "sap.m.OverflowToolbar", multiple: false, visibility: "hidden"},
-
 				_navActionsToolbar: {type: "sap.m.Toolbar", multiple: false, visibility: "hidden"},
-
 				_navActionsToolbarSeparator: {type: "sap.m.ToolbarSeparator", multiple: false, visibility: "hidden"},
-
 				_expandButton: {type: "sap.m.Button", multiple: false,  visibility: "hidden"},
-
 				_snappedTitleOnMobileIcon: {type: "sap.ui.core.Icon", multiple: false,  visibility: "hidden"}
             },
             
@@ -75,25 +56,10 @@ sap.ui.define([
 				}
 			},
 			designtime: "sap/f/designtime/DynamicPageTitle.designtime"
-		}
-        
+		}    
     });
-
-    function exists(vObject) {
-		if (arguments.length === 1) {
-			// Check if vObject is an Array or jQuery empty object,
-			// by looking for the inherited property "length" via the "in" operator.
-			// If yes - check if the "length" is positive.
-			// If not - cast the vObject to Boolean.
-			return vObject && ("length" in vObject) ? vObject.length > 0 : !!vObject;
-		}
-
-		return Array.prototype.slice.call(arguments).every(function (oObject) {
-			return exists(oObject);
-		});
-    }
     
-    	/**
+    /**
 	* Determines the <code>DynamicPageTitle</code> state.
 	* @returns {Object}
 	* @private
