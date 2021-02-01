@@ -678,9 +678,9 @@ sap.ui.define([
                 var vIndex = e.oSource.oParent.getIndex();
                 
                 var oPath = e.oSource.oParent.oParent.getContextByIndex(vIndex).sPath;
-                var oRow = this.getView().getModel().getProperty(oPath);
+                var oRow = this.getView().getModel("main").getProperty(oPath);
                 var oRow_HeaderPath = '/' + oRow.Header.__ref;
-                var oRow_Header = this.getView().getModel().getProperty(oRow_HeaderPath);
+                var oRow_Header = oRow.Header;//this.getView().getModel("main").getProperty(oRow_HeaderPath);
                 console.log("row Item ========",oRow);
                 console.log("oRow_Header ========",oRow_Header);
                 
@@ -743,7 +743,7 @@ sap.ui.define([
                 
                 var vIndex = e.getParameters().rowIndex;
                 var oPath = e.oSource.getContextByIndex(vIndex).sPath;
-                var oRow = this.getView().getModel().getProperty(oPath);
+                var oRow = this.getView().getModel("main").getProperty(oPath);
 
                 var pNegoTypeCode,
                     pOutcome,

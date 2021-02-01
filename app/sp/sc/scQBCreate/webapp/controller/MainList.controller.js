@@ -18,7 +18,7 @@ sap.ui.define([
 
 		return Controller.extend("sp.sc.scQBCreate.controller.MainList", {
             oServiceModel: new ODataModel({
-                serviceUrl: "srv-api/odata/v4/sp.negoHeadersService/",
+                serviceUrl: "srv-api/odata/v4/sp.sourcingV4Service/",
                 // defaultBindingMode: "OneWay",
                 // defaultCountMode: "Inline",
                 // refreshAfterChange: false,
@@ -64,7 +64,9 @@ sap.ui.define([
                 jQuery.ajax({
                     async: false,
                     // url: "sp/sc/scQBCreate/webapp/srv-api/odata/v4/sp.negoHeadersService/Sc_Nego_Type_Code?&$orderby=evaluation_type/sort_no,sort_no&$select=tenant_id,nego_type_code,nego_type_name,evaluation_type&$expand=nego_parent_type($select=nego_parent_type_name),evaluation_type($select=evaluation_type_name),Outcomes($select=outcome_name)", 
-                    url: "sp/sc/scQBCreate/webapp/srv-api/odata/v4/sp.negoHeadersService/Sc_Nego_Type_Code?&$orderby=evaluation_type/sort_no,sort_no&$select=tenant_id,nego_type_code,nego_type_name,evaluation_type&$expand=nego_parent_type($select=nego_parent_type_name),evaluation_type($select=evaluation_type_name),Outcomes($orderby=sort_no;$select=outcome_name)", 
+                    // url: "sp/sc/scQBCreate/webapp/srv-api/odata/v4/sp.sourcingV4Service/Sc_Nego_Type_Code?&$orderby=evaluation_type/sort_no,sort_no&$select=tenant_id,nego_type_code,nego_type_name,evaluation_type&$expand=nego_parent_type($select=nego_parent_type_name),evaluation_type($select=evaluation_type_name),Outcomes($orderby=sort_no;$select=outcome_name)", 
+                    url: "sp/sc/scQBCreate/webapp/srv-api/odata/v4/sp.sourcingV4Service/Sc_Nego_Type_Code?&$orderby=nego_supeval_type/sort_no,sort_no&$select=tenant_id,nego_type_code,nego_type_name,nego_supeval_type&$expand=nego_parent_type($select=nego_parent_type_name),nego_supeval_type($select=nego_supeval_type_name),Outcomes($orderby=sort_no;$select=outcome_name)", 
+
                     contentType: "application/json",
                     success: function(oData2){ 
                         debugger;
@@ -91,7 +93,7 @@ sap.ui.define([
                 // Outcome Radio Button Text
                 var oRbg = [];
                 var temp = {
-                    "evaluation_type": { OP : "", PNP : ""  },
+                    "nego_supeval_type": { OP : "", PNP : ""  },
                     "RFQ": { nego_name : "", outcome: [] }, 
                     "CPB": { nego_name : "", outcome: [] }, 
                     "RFP": { nego_name : "", outcome: [] }, 
@@ -101,7 +103,7 @@ sap.ui.define([
                     var oNegoRow = oNego[i];
                     if(oNegoRow.nego_type_code == "RFQ"){    //견적
                         temp.RFQ.nego_name =  oNegoRow.nego_type_name;
-                        temp.evaluation_type.OP = oNegoRow.evaluation_type.evaluation_type_name ;   //가격 Text
+                        temp.nego_supeval_type.OP = oNegoRow.nego_supeval_type.nego_supeval_type_name ;   //가격 Text
                         for(var j=0; j<oNegoRow.Outcomes.length; j++){
                             var outcome = oNegoRow.Outcomes[j];
                             temp.RFQ.outcome.push({ name : outcome.outcome_name});
@@ -114,7 +116,7 @@ sap.ui.define([
                         }
                     }else if(oNegoRow.nego_type_code == "RFP"){    //견적
                         temp.RFP.nego_name =  oNegoRow.nego_type_name;
-                        temp.evaluation_type.PNP = oNegoRow.evaluation_type.evaluation_type_name ;   //가격 + 비가격 Text
+                        temp.nego_supeval_type.PNP = oNegoRow.nego_supeval_type.nego_supeval_type_name ;   //가격 + 비가격 Text
                         for(var j=0; j<oNegoRow.Outcomes.length; j++){
                             var outcome = oNegoRow.Outcomes[j];
                             temp.RFP.outcome.push({ name : outcome.outcome_name});
