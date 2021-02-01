@@ -62,81 +62,82 @@ sap.ui.define([
                 var a = _read(oModel);
                 var that = this;
                 
-                a.then(function(data){
-                    console.log("data ===================================",data);
-                    // this.getView().bindElement(
-                    //     {
-                    //         path: "/NegoItemPrices",
-                    //         parameters: {expand: '/NegoHeaders'}
-                    //     }
-                    // );
-                    // var tab = this.byId("sTable1");
-                    // tab.bindElement(
-                    //     {
-                    //         path: "/NegoItemPrices",
-                    //         parameters: {select : "nego_document_number"}
-                    //     }
-                    // )
+                // a.then(function(data){
+                //     console.log("data ===================================",data);
+                //     debugger;
+                //     this.getView().bindElement(
+                //         {
+                //             path: "Header",
+                //             parameters: {expand: 'nego_progress_status', select:"*,nego_progress_status/nego_progress_status_name"}
+                //         }
+                //     );
+                //     var tab = this.byId("sTable1").getItems()[1];
+                //     // tab.bindElement(
+                //     //     {
+                //     //         path: "/NegoItemPrices",
+                //     //         parameters: {select : "nego_document_number"}
+                //     //     }
+                //     // )
 
-                    // tab.bindItems({
-                    //     path : "NegoHeaders",
-                    //     parameters: { select : "nego_document_number"}
-                    // });
-                    var sTable = this.getView().byId("sTable1");
+                //     tab.bindElement({
+                //         path : "Header/nego_progress_status",
+                //         parameters: { select : "nego_progress_status/nego_progress_status_name"}
+                //     });
+                //     // var sTable = this.getView().byId("sTable1");
                     
-                    // this.mBindingParams.parameters["expand"] = "NegoHeaders(tenant_id='L2100',nego_header_id=4L)";
-                    debugger;
-                }.bind(this));
+                //     // this.mBindingParams.parameters["expand"] = "NegoHeaders(tenant_id='L2100',nego_header_id=4L)";
+                     
+                // }.bind(this));
             },
-            remaining_hours_formatter:function(closing_date){
-                if(closing_date){
+            // remaining_hours_formatter:function(closing_date){
+            //     if(closing_date){
 
                 
-                    var newDate = new Date();
-                    var dDate= closing_date;
-                    var a = newDate.getTime();
-                    var b = dDate.getTime();
-                    var c = b - a ;
-                    var result = c / 1000 / 60 / 60;
-                    result = Math.floor(result);
-                    // debugger;
-                    // var result = closing_date - newDate ;
+            //         var newDate = new Date();
+            //         var dDate= closing_date;
+            //         var a = newDate.getTime();
+            //         var b = dDate.getTime();
+            //         var c = b - a ;
+            //         var result = c / 1000 / 60 / 60;
+            //         result = Math.floor(result);
+            //         //  
+            //         // var result = closing_date - newDate ;
 
-                    return result+" 시간";
-                }else{
-                    return " "
-                }
+            //         return result+" 시간";
+            //     }else{
+            //         return " "
+            //     }
                 
-            },
-            nego_progress_status_code_formatter: function(pCode){
+            // },
+            // nego_progress_status_code_formatter: function(pCode){
                 
-                var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/Sc_Nego_Prog_Status_Code_View";
-                if( !this._NegoStatusCode ){
-                    var ak = $.ajax({
-                        url: url,
-                        type: "GET",
-                        async: false,
-                        contentType: "application/json",
-                        success: function(data){
-                            // this.oRead = data.value;
+            //     var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/Sc_Nego_Prog_Status_Code_View";
+            //     if( !this._NegoStatusCode ){
+            //         var ak = $.ajax({
+            //             url: url,
+            //             type: "GET",
+            //             async: false,
+            //             contentType: "application/json",
+            //             success: function(data){
+            //                 // this.oRead = data.value;
                             
-                                this._NegoStatusCode = data.value;
+            //                     this._NegoStatusCode = data.value;
                             
-                            return data.value;
-                        },
-                        error: function(e){
+            //                 return data.value;
+            //             },
+            //             error: function(e){
                             
-                        }
-                    }, this);
-                }
+            //             }
+            //         }, this);
+            //     }
 
-                for(var i=0; i<this._NegoStatusCode.length; i++){
-                    var oNegoS = this._NegoStatusCode[i];
-                    if(oNegoS.nego_progress_status_code == pCode){
-                        return oNegoS.nego_progress_status_name;
-                    }
-                }
-            },
+            //     for(var i=0; i<this._NegoStatusCode.length; i++){
+            //         var oNegoS = this._NegoStatusCode[i];
+            //         if(oNegoS.nego_progress_status_code == pCode){
+            //             return oNegoS.nego_progress_status_name;
+            //         }
+            //     }
+            // },
 			onInit: function () {
                 
                 console.log("onInit");
@@ -151,6 +152,20 @@ sap.ui.define([
                 var tempJModel = new JSON();
                 var tempData = { NegoHeaders : [] };
                 var oView = this.getView();
+
+                jQuery.getScript("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js");
+
+			oMultilingual.attachEvent("ready", function(oEvent){
+				var oi18nModel = oEvent.getParameter("model");
+				this.addHistoryEntry({
+					title: oi18nModel.getText("/MIPRICE_TITLE"),
+					icon: "sap-icon://table-view",
+					intent: "#Template-display"
+                }, true);
+                
+            }.bind(this));
+
+            this.getView().byId("smartFilterBar")._oSearchButton.setText("조회");
 
 
                 
@@ -191,7 +206,7 @@ sap.ui.define([
                 //     }
                 //     tempJModel.setData(tempData);
                 //     oView.setModel(tempJModel, "viewModel");
-                //     debugger;
+                //      
                 // });
 
                 
@@ -286,7 +301,7 @@ sap.ui.define([
                 //     type: "GET",
                 //     contentType: "application/json",
                 //     success: function(data){
-                //         // debugger;
+                //         //  
                 //         // var viewM = oView.getModel();
                 //         // // viewM.oData.NegoHeaders = data.value[0];
                 //         console.log("data : ", data.value);
@@ -298,11 +313,11 @@ sap.ui.define([
                 //         // // oView.byId("testTable").setModel("viewModel");
                 //         // oView.getModel("viewModel").updateBindings(true);   
                         
-                //         // debugger;
+                //         //  
                 //         var v_viewHeaderModel = oView.getModel("viewModel").getData();
                 //         v_viewHeaderModel.NegoHeaders = data.value;
                 //         oView.getModel("viewModel").updateBindings(true);
-                //         debugger;
+                //          
                         
                         
 
@@ -310,7 +325,7 @@ sap.ui.define([
                         
 
                 //         // oView.byId("inputNegotiationNo").setValue(data.value[0].nego_document_number);
-                //         // debugger;
+                //         //  
                 //         // var oVerticalLayout = oView.byId('vLayout');
                 //         // oVerticalLayout.bindElement("viewModel>/NegoHeaders");
                 //     },
@@ -441,43 +456,71 @@ sap.ui.define([
 
             },
             beforeRebindTable:function(e){
+                // test 시작
+                var oView = this.getView();
+                var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.sourcingV4Service/NegoItemPrices?&$expand=Header($expand=nego_progress_status,award_progress_status)";
+                if( !this._NegoStatusCode ){
+                    var ak = $.ajax({
+                        url: url,
+                        type: "GET",
+                        async: false,
+                        contentType: "application/json",
+                        success: function(data){
+                            // this.oRead = data.value;
+                            var temp = { Items:[  ]  };
 
-                var oBinding = e.getParameters().bindingParams;
-                var filterTitle = this.byId("inputFilterTitle").getValue();
-                var filterNegoNo =this.byId("inputFilterNegoNo").getValue();
-                var oFilters = [];
-                var oFilter = new Filter("Header/nego_document_title", "Contains", filterTitle);
-                oFilters.push(oFilter);
-                oFilters.push(new Filter("Header/nego_document_number", "Contains", filterNegoNo));
-
-                var dateTypePath = "Header/";
-                var dateTypeKey = this.byId("selectFilterDateType").getSelectedKey();
-                if(dateTypeKey == "1"){                                 //open date
-                    dateTypePath = dateTypePath + "open_date";
-                }else if(dateTypeKey == "2"){                           //close date
-                    dateTypePath = dateTypePath + "closing_date";
-                }if(dateTypeKey == "3"){                                //create date
-                    dateTypePath = "local_create_dtm";
+                                this._NegoStatusCode = data.value;
+                                temp.Items = data.value;
+                                oView.setModel(new JSON(temp), "main");
+                                debugger;
+                            return data.value;
+                        },
+                        error: function(e){
+                            
+                        }
+                    }, this);
                 }
-                var dateRang = this.byId("daterangFilterDate");
-                var dateFrom = dateRang.getFrom();
-                var dateTo = dateRang.getTo();
 
-                if(dateFrom != null){
-                    oFilters.push(new Filter(dateTypePath, "BT", dateFrom, dateTo));
-                }
+                var oSmtFilter = this.getView().byId("smartFilterBar");             //smart filter
+                var oMi_material_code = oSmtFilter.getControlByKey("main>Header/nego_type_code").getSelectedKeys();
+                debugger;
+                // var oModel = oView.getModel("AA");
+                // this.byId("sTable1").getItems()[1].setModel(oModel);
+                // this.byId("sTable1").getItems()[1].getModel().refresh(true);
+                // debugger;
+
+                // text끝
+
+                // var oBinding = e.getParameters().bindingParams;
+                // var filterTitle = this.byId("inputFilterTitle").getValue();
+                // var filterNegoNo =this.byId("inputFilterNegoNo").getValue();
+                // var oFilters = [];
+                // var oFilter = new Filter("Header/nego_document_title", "Contains", filterTitle);
+                // oFilters.push(oFilter);
+                // oFilters.push(new Filter("Header/nego_document_number", "Contains", filterNegoNo));
+
+                // var dateTypePath = "Header/";
+                // var dateTypeKey = this.byId("selectFilterDateType").getSelectedKey();
+                // if(dateTypeKey == "1"){                                 //open date
+                //     dateTypePath = dateTypePath + "open_date";
+                // }else if(dateTypeKey == "2"){                           //close date
+                //     dateTypePath = dateTypePath + "closing_date";
+                // }if(dateTypeKey == "3"){                                //create date
+                //     dateTypePath = "local_create_dtm";
+                // }
+                // var dateRang = this.byId("daterangFilterDate");
+                // var dateFrom = dateRang.getFrom();
+                // var dateTo = dateRang.getTo();
+
+                // if(dateFrom != null){
+                //     oFilters.push(new Filter(dateTypePath, "BT", dateFrom, dateTo));
+                // }
 
                 
 
 
-
-
-                // alert(dateRang.getFrom());
-                debugger;
-
-                // , sap.ui.model.FilterType.Application
-                oBinding.filters = oFilters;
-                debugger;
+                // oBinding.filters = oFilters;
+                 
                 // this.mBindingParams = e.getParameter("bindingParams");
                 // var oModel = this.getView().getModel();
                 // async function _read(oModel){
@@ -486,7 +529,7 @@ sap.ui.define([
                 //         success: function(data){
                 //             promise.resolve(data.results);
                 //             console.log("item+header ========================= ",data.results);
-                //             debugger;
+                //              
                 //         }.bind(this),						
                 //         error: function(data){						
                 //             alert("error");						
@@ -515,7 +558,7 @@ sap.ui.define([
 
                 // var b = _read2(oModel);
                 // b.then(function(data){
-                //     // debugger;
+                //     //  
                 // }.bind(this));
 
                 // var a = _read(oModel);
@@ -545,7 +588,7 @@ sap.ui.define([
 
                     
                 //     // this.mBindingParams.parameters["select"] = "nego_document_number";
-                //     debugger;
+                //      
                     
                 // }.bind(this, e));
                 //  /===============================================================
@@ -556,11 +599,29 @@ sap.ui.define([
                 
             },
             onBeforeExport: function (oEvt) {
+                debugger;
                 var mExcelSettings = oEvt.getParameter("exportSettings");
                 // GW export
                 if (mExcelSettings.url) {
                     return;
                 }
+
+                // Sample customization
+                if (mExcelSettings.workbook && mExcelSettings.workbook.columns) {
+                    mExcelSettings.workbook.columns.some(function (oColumnConfiguration) {
+                        // Customize output for Dmbtr column to match the text on the UI, instead of showing the currency
+                        if (oColumnConfiguration.property === "Header/nego_document_number") {
+                            // oColumnConfiguration.unitProperty = "Hwaer"; // Decimal handling
+                            oColumnConfiguration.textAlign = "Left";
+                            oColumnConfiguration.displayUnit = false;
+                            // oColumnConfiguration.type = "currency"; // Change type of column
+                            oColumnConfiguration.width = 20; // Set desired width
+                            return true;
+                        }
+                    }.bind(this));
+                }
+
+
                 // For UI5 Client Export --> The settings contains sap.ui.export.SpreadSheet relevant settings that be used to modify the output of excel
 
                 // Disable Worker as Mockserver is used in Demokit sample --> Do not use this for real applications!
@@ -591,11 +652,11 @@ sap.ui.define([
                 }
                  this.getView().byId("multiStatus").setSelectedKeys( oSelect );
 
-                debugger;
+                 
             },
             rowSelection: function(e){
                 
-                debugger;
+                 
             },
             onPressManagerAdd: function () {
                 if (!this._isAddPersonalPopup) {
@@ -648,7 +709,7 @@ sap.ui.define([
                 var sComponent = "sp.sc.scQBPages",
                     sUrl = "../sp/sc/scQBPages/webapp";
 
-                debugger;
+                 
                     
                 // 생성 구분 코드(NC : Negotiation Create, NW : Negotiation Workbench) / Negotiation Type / outcome / Header Id
                 var changeHash = "NW/" + pNegoTypeCode + "/" + pOutcome + "/" + pHeader_id;   
@@ -751,7 +812,7 @@ sap.ui.define([
                 this._ManagerDialog.close();
             },
             onPressManagerDialogSave: function (oEvent) {
-                debugger;
+                 
             
             },
             _onProductMatched: function (e) {
