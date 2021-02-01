@@ -1,0 +1,30 @@
+view EP_UC_QUOTATION_DTL_VIEW as
+select
+    mst.tenant_id,
+    mst.company_code,
+    mst.const_quotation_number,
+    dtl.item_sequence,
+    dtl.ep_item_code,
+    dtl.item_desc,
+    dtl.spec_desc,
+    dtl.quotation_quantity,
+    dtl.extra_rate,
+    dtl.unit,
+    dtl.material_net_price,
+    dtl.material_amount,
+    dtl.labor_net_price,
+    dtl.labor_amount,
+    dtl.sum_amount,
+    dtl.remark,
+    dtl.local_create_dtm,
+    dtl.local_update_dtm,
+    dtl.create_user_id,
+    dtl.update_user_id,
+    dtl.system_create_dtm,
+    dtl.system_update_dtm
+from ep_uc_quotation_dtl as dtl
+left outer join ep_uc_quotation_mst as mst
+on dtl.tenant_id = mst.tenant_id
+and dtl.company_code = mst.company_code
+and dtl.const_quotation_number = mst.const_quotation_number
+;
