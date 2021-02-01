@@ -353,6 +353,13 @@
                     ]
                 },
                 {
+                    "pattern": "rrcrReport/{company_code}/{plant_code}/{approval_type_code}/{approval_number}",
+                    "name": "rrcrReport",
+                    "target": [
+                        "rrcrReport"
+                    ]
+                },
+                {
                     "pattern": "PssaObject",
                     "name": "pssaObject",
                     "target": [
@@ -406,6 +413,12 @@
                 "pssaObject": {
                     "viewName": "PssaObject",
                     "viewId": "pssaObject",
+                    "viewLevel": 2,
+                    "title": "{i18n>viewObjectTitle3}"
+                },
+                "rrcrReport": {
+                    "viewName": "RrcrReport",
+                    "viewId": "rrcrReport",
                     "viewLevel": 2,
                     "title": "{i18n>viewObjectTitle3}"
                 },

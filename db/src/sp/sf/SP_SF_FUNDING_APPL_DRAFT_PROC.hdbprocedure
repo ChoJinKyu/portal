@@ -40,9 +40,11 @@ PROCEDURE SP_SF_FUNDING_APPL_DRAFT_PROC(
 )
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
-
 AS
 BEGIN
+    
+    --DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+    
 
 	/***********************************************
 	변수 정의
@@ -53,10 +55,7 @@ BEGIN
     
 	--자금지원 신청번호 추출
 	V_FUNDING_APPL_NUMBER := :I_FUNDING_APPL_NUMBER;
-	
-
-
-    --DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+	   
 	
 	BEGIN
 		/************************************************
@@ -68,7 +67,7 @@ BEGIN
 							'NG' AS RESULT_CODE
 							,'VALID_ERR' AS ERR_TYPE
 							,::SQL_ERROR_CODE AS ERR_CODE
-							,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+							,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
 						FROM DUMMY;
             RESIGNAL;
 		END;
@@ -90,7 +89,7 @@ BEGIN
                         'NG' AS RESULT_CODE
                         ,'SAVE_ERR' AS ERR_TYPE
                         ,::SQL_ERROR_CODE AS ERR_CODE
-                        ,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+                        ,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
                     FROM DUMMY;
             RESIGNAL;
 		END;
@@ -100,7 +99,7 @@ BEGIN
 		 - 신청번호가 없으면 신규채번후 INSERT
 		 - 신청번호가 있으면 UPDATE
 		**********************************************/
-		IF (COALESCE(:V_FUNDING_APPL_NUMBER,'') = '') THEN
+		IF (COALESCE(V_FUNDING_APPL_NUMBER,'') = '') THEN
             
 			/************************************************
 			자금지원 신청번호 신규 채번
@@ -145,7 +144,7 @@ BEGIN
 				,SYSTEM_CREATE_DTM
 				,SYSTEM_UPDATE_DTM
 			) VALUES (
-				 :V_FUNDING_APPL_NUMBER					--자금지원신청번호
+				 V_FUNDING_APPL_NUMBER					--자금지원신청번호
 				,:I_FUNDING_NOTIFY_NUMBER         --자금지원공고번호
 				,:I_SUPPLIER_CODE                 --공급업체코드
 				,:I_TENANT_ID                     --테넌트ID
@@ -207,13 +206,15 @@ BEGIN
 				,UPDATE_USER_ID					= :I_USER_ID
 				,SYSTEM_CREATE_DTM				= CURRENT_TIMESTAMP
 				,SYSTEM_UPDATE_DTM				= CURRENT_TIMESTAMP
-			WHERE FUNDING_APPL_NUMBER = :V_FUNDING_APPL_NUMBER
+			WHERE FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
 			;         
 			
 		END IF;
     END;
     
 	
+    COMMIT;
+
 	/***********************************************
 	저장처리 끝
 	**********************************************/
@@ -221,7 +222,7 @@ BEGIN
 					'OK' AS RESULT_CODE
 					,'' AS ERR_TYPE
 					,'' AS ERR_CODE
-					,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+					,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
 				FROM DUMMY;
 
 END;
