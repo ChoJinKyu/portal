@@ -443,7 +443,11 @@ sap.ui.define([
 		 */
         onPageCancelButtonPress: function () {
             this.validator.clearValueState(this.byId("midObjectForm"));
-            this._toShowMode();
+            if (this._sIdeaNumber !== "new"){
+                this._toShowMode();
+            }else{
+                this.getRouter().navTo("mainPage", {}, true);
+            }
         },
 
 		/**
