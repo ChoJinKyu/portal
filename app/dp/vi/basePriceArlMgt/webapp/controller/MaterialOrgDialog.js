@@ -136,7 +136,7 @@ sap.ui.define([
             
             aFiltersControl.push(new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/DP_VI_AP_PUR_ORG")}),  //조직코드
+                        new Label({ text: this.getModel("I18N").getText("/VI_APPROVE_ORG_CODEODE")}),  //조직코드
                         this.oSearchOrg
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
@@ -195,7 +195,7 @@ sap.ui.define([
             aColumnsControl.push(new Column({
                     width: "15%",
                     hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/DP_VI_AP_PUR_ORG")}),
+                    label: new Label({text: this.getModel("I18N").getText("/VI_APPROVE_ORG_CODE")}),
                     template: new Text({text: "[{org_code}]{org_name}"})
                 }));
             aColumnsControl.push(new Column({
