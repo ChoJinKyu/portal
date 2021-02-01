@@ -62,29 +62,36 @@ xmlns:flex="sap.f"
                                                     <Input  id="opCodeInput" 
                                                             width="100%" 
                                                             placeholder="OPERATION_UNIT_CODE"
-                                                            value="{DetailView>/evaluation_operation_unit_code}"
+                                                            value="{DetailView>/OperationUnitMst/evaluation_operation_unit_code}"
                                                             editable="{=${DetailView>/isCreateMode}}"
                                                             />
                                                             
                                                     <!-- 배점설계여부 -->
                                                     <Label text="{I18N>/DISTRB_SCOR_ENG_FLAG}"/>
                                                     <SegmentedButton
-                                                            selectedKey="{=${DetailView>/distrb_score_eng_flag} === true? 'Yes' : 'No'}"
-                                                            enabled="{DetailView>/isEditMode}">                                                            
+                                                            selectedKey="{
+                                                            path : 'DetailView>/OperationUnitMst/distrb_score_eng_flag',
+                                                            type: 'sap.ui.model.type.Boolean'                                                       
+                                                            }"
+                                                            enabled="{DetailView>/isEditMode}"
+                                                            >                                                            
                                                             <items>
-                                                                <SegmentedButtonItem text="Yes" key="Yes" />
-                                                                <SegmentedButtonItem text="No" key="No" />
+                                                                <SegmentedButtonItem text="Yes" key="true" />
+                                                                <SegmentedButtonItem text="No" key="false" />
                                                             </items>
                                                     </SegmentedButton>
 
                                                     <!-- 운영 전략 수립 여부 -->
                                                     <Label text="{I18N>/OPERATION_PLAN_FLAG}"/> 
                                                     <SegmentedButton 
-                                                            selectedKey="{=${DetailView>/operation_plan_flag} === true? 'Yes' : 'No'}"
+                                                            selectedKey="{
+                                                            path : 'DetailView>/OperationUnitMst/operation_plan_flag',
+                                                            type: 'sap.ui.model.type.Boolean'
+                                                        }"
                                                             enabled="{DetailView>/isEditMode}">                                                       
                                                             <items>
-                                                                <SegmentedButtonItem text="Yes" key="Yes" />
-                                                                <SegmentedButtonItem text="No" key="No" />
+                                                                <SegmentedButtonItem text="Yes" key="true" />
+                                                                <SegmentedButtonItem text="No" key="false" />
                                                             </items>
                                                     </SegmentedButton>
 
@@ -97,10 +104,12 @@ xmlns:flex="sap.f"
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                                                 {path: 'group_code', operator: 'EQ', value1: 'SP_SM_SUPPLIER_TYPE'}
                                                             ]
-                                                            }" editable="{=${DetailView>/isEditMode}}"
+                                                            }" 
+                                                            editable="{=${DetailView>/isEditMode}}"
                                                             selectedKeys="{=
-                                                                ${DetailView>/vendor_pool_operation_unit_code}.split(',')
-                                                            }">
+                                                                ${DetailView>/vpOperationUnit/vendor_pool_operation_unit_code}.split(',')
+                                                            }"                  
+                                                            >
                                                         <items>
                                                             <core:ListItem key="{common>code}" text="{common>code_name}" additionalText="{common>code}"/>
                                                         </items>
@@ -129,7 +138,7 @@ xmlns:flex="sap.f"
                                                     <Input  id="opCodeName" 
                                                         width="100%" 
                                                         placeholder="OPERATION_UNIT_NAME"
-                                                        value="{DetailView>/evaluation_operation_unit_name}"
+                                                        value="{DetailView>/OperationUnitMst/evaluation_operation_unit_name}"
                                                         editable="{=${DetailView>/isEditMode}}"
                                                         />
 
@@ -154,29 +163,35 @@ xmlns:flex="sap.f"
                                                     <!-- 발의 품의 여부 -->
                                                     <Label text="{I18N>/EVAL_REQUEST_APPROVAL_FLAG}"/> 
                                                         <SegmentedButton  
-                                                        selectedKey="{=${DetailView>/evaluation_request_approval_flag} === true? 'Yes' : 'No'}"
+                                                        selectedKey="{
+                                                            path : 'DetailView>/OperationUnitMst/evaluation_request_approval_flag',
+                                                            type: 'sap.ui.model.type.Boolean'
+                                                        }"
                                                         enabled="{DetailView>/isEditMode}">
                                                             <items>
-                                                                <SegmentedButtonItem text="Yes" key="Yes" />
-                                                                <SegmentedButtonItem text="No" key="No" />
+                                                                <SegmentedButtonItem text="Yes" key="true" />
+                                                                <SegmentedButtonItem text="No" key="false" />
                                                             </items>
                                                         </SegmentedButton>
 
                                                     <!-- 사용 여부 -->
                                                     <Label text="{I18N>/USE_FLAG}"/> 
                                                         <SegmentedButton  
-                                                        selectedKey="{=${DetailView>/use_flag} === true? 'Yes' : 'No'}"
+                                                        selectedKey="{
+                                                            path : 'DetailView>/OperationUnitMst/use_flag',
+                                                            type: 'sap.ui.model.type.Boolean'
+                                                        }"
                                                         enabled="{DetailView>/isEditMode}" >
                                                             <items>
-                                                                <SegmentedButtonItem text="Yes" key="Yes" />
-                                                                <SegmentedButtonItem text="No" key="No" />
+                                                                <SegmentedButtonItem text="Yes" key="true" />
+                                                                <SegmentedButtonItem text="No" key="false" />
                                                             </items>
                                                         </SegmentedButton>
 
                                                     <!-- 평가 대상 V/P 레벨 -->
                                                     <Label text="{I18N>/EVAL_APPLY_VENDOR_POOL_LVL_NO}"/> 
                                                         <SegmentedButton
-                                                        selectedKey="{=${DetailView>/eval_apply_vendor_pool_lvl_no}}"
+                                                        selectedKey="{DetailView>/OperationUnitMst/eval_apply_vendor_pool_lvl_no}"
                                                         enabled="{DetailView>/isEditMode}">
                                                             <items>
                                                                 <SegmentedButtonItem text="1레벨" key="1"/>
@@ -241,12 +256,11 @@ xmlns:flex="sap.f"
                                                     <cells>
                                                         <core:Icon 
                                                             src="{=
-                                                                ${DetailView>crudFlg} === 'D' ? 'sap-icon://delete' : ${DetailView>crudFlg} === 'I' ? 'sap-icon://add' : 'sap-icon://edit'
+                                                                ${DetailView>transaction_code} === 'I' ? 'sap-icon://add': ${DetailView>transaction_code} === 'D' ? 'sap-icon://delete': ${DetailView>transaction_code} === 'U'? 'sap-icon://edit': '' 
                                                             }"
                                                             visible="{=
-                                                                !${DetailView>crudFlg}
-                                                            }"
-                                                        />
+                                                                !${DetailView>transaction_code}
+                                                            }"/>
                                                         <ComboBox selectedKey="{DetailView>evaluation_execute_role_code}" width="100%" items="{
                                                             path: 'common>/Code',
                                                             filters: [
@@ -263,11 +277,11 @@ xmlns:flex="sap.f"
                                                                 width="100%"
                                                                 showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress"
                                                                 value="{DetailView>user_local_name}"
-                                                                enabled="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}" 
+                                                                enabled="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>transaction_code} === 'I' ? true : false}" 
                                                                 
                                                                 required="true"
                                                                 >
-                                                            </Input>
+                                                        </Input>
                                                           <Text text="{DetailView>department_local_name}"  required="true" />                      
                                                     </cells>
                                                 </ColumnListItem>
@@ -295,10 +309,10 @@ xmlns:flex="sap.f"
                                                     <table:template>
                                                         <core:Icon 
                                                             src="{=
-                                                                ${DetailView>crudFlg} === 'D' ? 'sap-icon://delete' : ${DetailView>crudFlg} === 'I' ? 'sap-icon://add' : 'sap-icon://edit'
+                                                                ${DetailView>transaction_code} === 'D' ? 'sap-icon://delete' : ${DetailView>transaction_code} === 'I' ? 'sap-icon://add' : 'sap-icon://edit'
                                                             }"
                                                             visible="{=
-                                                                !${DetailView>crudFlg}
+                                                                !${DetailView>transaction_code}
                                                             }"
                                                         />
                                                     </table:template>
@@ -330,7 +344,7 @@ xmlns:flex="sap.f"
                                                             width="100%"
                                                             showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress"
                                                             value="{DetailView>user_local_name}"
-                                                            enabled="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}" 
+                                                            enabled="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>transaction_code} === 'I' ? true : false}" 
                                                             
                                                             required="true"
                                                             >
@@ -435,7 +449,8 @@ xmlns:flex="sap.f"
                                         items="{
                                             path: 'DetailView>/quantitative'
                                             }"
-                                        mode="MultiSelect"    
+                                        mode="MultiSelect"
+                                        selectionChange="onSelectQunItem"    
                                             >
                                             <headerToolbar>
                                                 <Toolbar>
@@ -474,31 +489,43 @@ xmlns:flex="sap.f"
                                                     <cells>
                                                         <core:Icon 
                                                             src="{=
-                                                                ${DetailView>crudFlg} === 'D' ? 'sap-icon://delete' : ${DetailView>crudFlg} === 'I' ? 'sap-icon://add' : 'sap-icon://edit'
+                                                                ${DetailView>transaction_code} === 'D' ? 
+                                                                'sap-icon://delete' : 
+                                                                (${DetailView>transaction_code} === 'I' ? 'sap-icon://add' : 'sap-icon://edit')
                                                             }"
                                                             visible="{=
-                                                                !${DetailView>crudFlg}
+                                                                !!${DetailView>transaction_code}
                                                             }"
                                                         />
                                                         <Input   
                                                             width="100%" 
                                                             placeholder="OPERATION_UNIT_CODE"
                                                             value="{DetailView>qttive_item_code}"
-                                                            editable="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}"
+                                                            editable="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>transaction_code} === 'I' ? true : false}"
                                                             />
                                                         <Input   
                                                             width="100%" 
                                                             placeholder="QUANTITATIVE_ITEM_NAME"
                                                             value="{DetailView>qttive_item_name}"
-                                                            editable="{=${DetailView>/isEditMode}}"
+                                                            editable="{=
+                                                                ${DetailView>/isEditMode}  &amp;&amp;
+                                                                !!${DetailView>rowEditable}
+                                                            }"
                                                             />
+
+                                                            
                                                         <ComboBox selectedKey="{DetailView>qttive_item_uom_code}" width="100%" items="{
                                                             path: 'common>/Code',
                                                             filters: [
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                                                 {path: 'group_code', operator: 'EQ', value1: 'SP_SE_QTTIVE_UOM_CODE'}
                                                             ]
-                                                            }" editable="{DetailView>/isEditMode}" required="true">
+                                                            }"
+                                                            editable="{=
+                                                                ${DetailView>/isEditMode}  &amp;&amp;
+                                                                !!${DetailView>rowEditable}
+                                                            }"
+                                                            required="true">
                                                             <items>
                                                                 <core:Item key="{common>code}" text="{common>code_name}" />
                                                             </items>
@@ -509,7 +536,12 @@ xmlns:flex="sap.f"
                                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                                                     {path: 'group_code', operator: 'EQ', value1: 'SP_SE_MEASURE_MODE_CODE'}
                                                                 ]
-                                                                }" editable="{DetailView>/isEditMode}" required="true">
+                                                                }" 
+                                                                editable="{=
+                                                                ${DetailView>/isEditMode}  &amp;&amp;
+                                                                !!${DetailView>rowEditable}
+                                                                }" 
+                                                                required="true">
                                                             <items>
                                                                 <core:Item key="{common>code}" text="{common>code_name}" />
                                                             </items>
@@ -518,13 +550,19 @@ xmlns:flex="sap.f"
                                                             width="100%" 
                                                             placeholder="QUANTITATIVE_ITEM_DESC"
                                                             value="{DetailView>qttive_item_desc}"
-                                                            editable="{DetailView>/isEditMode}"
+                                                            editable="{=
+                                                                ${DetailView>/isEditMode}  &amp;&amp;
+                                                                !!${DetailView>rowEditable}
+                                                            }"
                                                             />     
                                                         <Input   
                                                             width="100%" 
                                                             placeholder="SORT_NUMBER"
                                                             value="{DetailView>sort_sequence}"
-                                                            editable="{DetailView>/isEditMode}"
+                                                            editable="{=
+                                                                ${DetailView>/isEditMode}  &amp;&amp;
+                                                                !!${DetailView>rowEditable}
+                                                            }"
                                                         />             
                                                     </cells>
                                                 </ColumnListItem>
@@ -551,10 +589,10 @@ xmlns:flex="sap.f"
                                                     <table:template>
                                                         <core:Icon 
                                                             src="{=
-                                                                ${DetailView>crudFlg} === 'D' ? 'sap-icon://delete' : 'sap-icon://edit'
+                                                                ${DetailView>transaction_code} === 'D' ? 'sap-icon://delete' : 'sap-icon://edit'
                                                             }"
                                                             visible="{=
-                                                                !!${DetailView>crudFlg}
+                                                                !!${DetailView>transaction_code}
                                                             }"
                                                         />
                                                     </table:template>
@@ -566,7 +604,7 @@ xmlns:flex="sap.f"
                                                             width="100%" 
                                                             placeholder="OPERATION_UNIT_CODE"
                                                             value="{DetailView>qttive_item_code}"
-                                                            editable="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}"
+                                                            editable="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>transaction_code} === 'I' ? true : false}"
                                                             />
                                                     </table:template>
                                                 </table:Column>      
