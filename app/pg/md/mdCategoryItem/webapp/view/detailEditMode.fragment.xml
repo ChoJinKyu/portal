@@ -6,9 +6,9 @@
 	<form:SimpleForm id="midObjectForm1Edit" editable="false" >
 		
 		<!-- <core:Title text="Normal" /> -->	
-        <Label text="특성코드"/>
+        <Label text="{I18N>/SPMD_CHARACTER_CODE}"/>
         <Text text="{master>/spmd_character_code}"/>
-        <Label text="특성코드명" required="true"/>
+        <Label text="{I18N>/SPMD_CHARACTER_CODE_NAME}" required="true"/>
         <Input value="{
                 path: 'master>/spmd_character_code_name',
                 type: 'sap.ui.model.type.String',
@@ -16,7 +16,7 @@
                     maxLength: 50
                 }
             }" required="true"></Input>       
-        <Label text="특성설명"/>
+        <Label text="{I18N>/SPMD_CHARACTER_DESC}"/>
         <Input value="{
                 path: 'master>/spmd_character_desc',
                 type: 'sap.ui.model.type.String',

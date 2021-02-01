@@ -18,7 +18,7 @@
       <f:title>
         <f:DynamicPageTitle>
           <f:heading>
-            <Title text="{i18n>appTitle}" />
+            <Title text="{I18N>/MATERIAL_MANAGEMENT_CHAR_CONFIG}" />
           </f:heading>
           <!-- 조회 -->
           <f:actions>
@@ -36,7 +36,7 @@
             <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                 <form:content>
                     <VBox>
-                        <Label text="테넌트" labelFor="searchTenantCombo" required="true"></Label>
+                        <Label text="{I18N>/TENANT}" labelFor="searchTenantCombo" required="true"></Label>
                         <ComboBox id="searchTenantCombo" width="100%" items="{
                                 path: 'org>/Org_Tenant',
                                 filters: []
@@ -68,7 +68,7 @@
                         </layoutData> 
                     </VBox>
                     <VBox>
-                        <Label text="범주" labelFor="searchCategory" required="true"></Label>
+                        <Label text="{I18N>/SPMD_CATEGORY}" labelFor="searchCategory" required="true"></Label>
                         <ComboBox id="searchCategory" width="100%" placeholder="All" selectedKey="" >
                         <!-- <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" items="{
                                 path: 'org>/Org_Unit',
@@ -112,7 +112,7 @@
                 width="auto">
             <headerToolbar>
             <OverflowToolbar class="sapFDynamicPageAlignContent">
-            <Title id="title2" text="SPMD Character List ({= ${list>/MdCategoryItem}.length})" level="H2"/>
+            <Title id="title2" text="{I18N>/LIST} ({= ${list>/MdCategoryItem}.length})" level="H2"/>
             <VBox>
                 <!-- <ObjectStatus title="범주코드" id="textCategoryCode" text=""/>
                 <ObjectStatus title="범주명" id="textCategoryName" text="{list>spmd_category_code}"/> -->
@@ -138,40 +138,40 @@
                     <Text text="" />
                 </Column>
                 <Column  hAlign="Center" mergeDuplicates="false" width="3em" >
-                    <Text text="No." />
+                    <Text text="{I18N>/SPMD_CHARACTER_SORT_SEQ}" />
                 </Column>
                 <Column  hAlign="Center" mergeDuplicates="false" width="8em" >
-                    <Text text="사업본부코드" />
+                    <Text text="{I18N>/BIZUNIT_CODE}" />
                 </Column>
                 <Column  hAlign="Center" mergeDuplicates="false" width="12em" >
-                    <Text text="사업본부명" />
+                    <Text text="{I18N>/BIZUNIT_NAME}" />
                 </Column>
                 <Column  hAlign="Center" mergeDuplicates="false" width="8em" >
-                    <Text text="범주코드" />
+                    <Text text="{I18N>/SPMD_CATEGORY_CODE}" />
                 </Column>
                 <Column  hAlign="Center" mergeDuplicates="false" width="12em" >
-                    <Text text="범주명" />
+                    <Text text="{I18N>/SPMD_CATEGORY_CODE_NAME}" />
                 </Column>
                 <Column  hAlign="Center" mergeDuplicates="false" width="8em" >
-                    <Text text="특성코드" />
+                    <Text text="{I18N>/SPMD_CHARACTER_CODE}" />
                 </Column>
                 <Column  hAlign="Center" width="12em" >
-                    <Text text="특성코드명" />
+                    <Text text="{I18N>/SPMD_CHARACTER_CODE_NAME}" />
                 </Column>
                 <Column  hAlign="Center" width="20em" >
-                    <Text text="특성설명" />
+                    <Text text="{I18N>/SPMD_CHARACTER_DESC}" />
                 </Column>
                 <Column  hAlign="Center" width="10em" >
-                    <Text text="생성자" />
+                    <Text text="{I18N>/CREATE_USER_ID}" />
                 </Column>
                 <Column  hAlign="Center" width="10em" >
-                    <Text text="수정자" />
+                    <Text text="{I18N>/UPDATE_USER_ID}" />
                 </Column>
                 <Column  hAlign="Center" width="10em" >
-                    <Text text="생성 시간" />
+                    <Text text="{I18N>/LOCAL_CREATE_DTM}" />
                 </Column>
                 <Column  hAlign="Center" width="10em" >
-                    <Text text="수정 시간" />
+                    <Text text="{I18N>/LOCAL_CHANGE_DTM}" />
                 </Column>
             </columns>
             

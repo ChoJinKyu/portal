@@ -6,17 +6,17 @@
 	<form:SimpleForm id="midObjectForm1Edit" editable="false" >
 		
 		<!-- <core:Title text="Normal" /> -->	
-        <Label text="범주코드"/>
+        <Label text="{I18N>/SPMD_CATEGORY_CODE}" />
         <Text text="{master>/spmd_category_code}"/>
-        <Label text="범주명" required="true"/>
+        <Label text="{I18N>/SPMD_CATEGORY_CODE_NAME}" required="true"/>
         <Input value="{
                 path: 'master>/spmd_category_code_name',
                 type: 'sap.ui.model.type.String',
                 constraints: {
                     maxLength: 50
                 }
-            }" required="true"></Input>       
-        <Label text="RGB글꼴색상코드"/>
+            }" required="true"></Input>  
+        <Label text="{I18N>/FONT_RGB_CODE}"/>
         <Input value="{
                 path: 'master>/rgb_font_color_code',
                 type: 'sap.ui.model.type.String',
@@ -24,7 +24,7 @@
                     maxLength: 50
                 }
             }" ></Input>	     
-        <Label text="RGB셀색상코드"/>
+        <Label text="{I18N>/CELL_RGB_CODE}"/>
         <Input value="{
                 path: 'master>/rgb_cell_clolor_code',
                 type: 'sap.ui.model.type.String',

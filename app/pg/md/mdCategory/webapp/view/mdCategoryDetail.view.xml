@@ -22,10 +22,10 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="Category Detail" wrapping="true" />
+					<Title text="{I18N>/SPMD_CATEGORY_DETAIL}" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="Category Detail" wrapping="true" />
+					<Title text="{I18N>/SPMD_CATEGORY_DETAIL}" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:snappedTitleOnMobile>
 					<Title text="{I18N>/MASTER_INFO}" />
@@ -68,7 +68,7 @@
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
-									<Title text="Level and Values" level="H2"/>
+									<Title text="{I18N>/LIST}" level="H2"/>
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
 									<Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMidTableAddButtonPress" enabled="false"/>
@@ -80,13 +80,13 @@
 							</headerToolbar>
 							<columns>
 								<Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
-									<Text text="S" />
+									<Text text="" />
 								</Column>
 								<Column id="midColumnLevelCode" minScreenWidth="Tablet" hAlign="Center" importance="High">
 									<Text text="{I18N>/LANGUAGE}" />
 								</Column>
 								<Column id="midColumnLevelValue" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="범주명" />
+									<Text text="{I18N>/SPMD_CATEGORY_CODE_NAME}" />
 								</Column>
 							</columns>
 							<items>
