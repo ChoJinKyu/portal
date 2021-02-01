@@ -141,7 +141,7 @@ sap.ui.define([
                 ];
                 var oItemTemplate = new sap.ui.core.ListItem({
                     key : "{util>code}",
-                    text : "{util>code_description}",
+                    text : "{util>code_name}",
                     additionalText : "{util>code}"
                 });
 

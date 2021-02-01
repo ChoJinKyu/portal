@@ -127,7 +127,7 @@ service marketIntelligenceSacDService {
     view PgMaterialCodeView @(title : '시황자재코드 View') as
         select
             key mc.tenant_id            as  TENANT_ID
-           ,key mc.category_code||'_'||mc.mi_material_code  as  ID : String 
+           ,key mc.mi_material_code     as  ID : String 
         //    ,key mc.company_code||'_'||mc.org_type_code_code||'_'||mc.org_code||'_'||mc.category_code||'_'||mc.mi_material_code  as  ID : String
                ,mc.mi_material_code     as  MI_MATERIAL_CODE
                ,ml.mi_material_name     as  Description
