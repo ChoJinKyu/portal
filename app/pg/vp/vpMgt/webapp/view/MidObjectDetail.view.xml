@@ -32,7 +32,7 @@
 
 				</uxap:actions>
                 <uxap:navigationActions>
-					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+					<!-- <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/> -->
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -40,7 +40,7 @@
 		<uxap:sections id="testFrag">
 			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="General Info">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection id="generalInfo">
+					<uxap:ObjectPageSubSection id="{I18N>/GENERAL_INFO}">
                         <form:SimpleForm
                             editable="true"
                             layout="ResponsiveGridLayout"
@@ -59,16 +59,16 @@
                             singleContainerFullSize="false" >
                             <form:content>
                                 <!-- 팝업 영역 -->
-                                <core:Title text="Category Info" />                        
+                                <core:Title text="{I18N>/CATEGORY_INFO}" />                        
                                 <VBox>
-                                    <Label text="Higher Level" design="Bold"/> 
+                                    <Label text="{I18N>/HIGHER_LEVEL}" design="Bold"/> 
                                     <Text id="general_higher_level_path" text="" />
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
                                 </VBox>
                                 <VBox>
-                                    <Label text="Operation Unit" design="Bold" required="true"/> 
+                                    <Label text="{I18N>/OPERATION_UNIT}" design="Bold" required="true"/> 
                                     <Text id="general_operation_unit_name" text="" /> 
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
@@ -88,12 +88,12 @@
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
                                 </VBox>
-                                <core:Title text="Detail Info" />                        
+                                <core:Title text="{I18N>/DETAIL_INFORMATION}" />                        
                                 <VBox>
-                                    <Label text="Department" design="Bold"/>
+                                    <Label text="{I18N>/DEPARTMENT}" design="Bold"/>
                                         <lib-m:CodePicker id="general_repr_department_code"
                                             placeholder="Enter a department name"
-                                            keyField="department_id"
+                                            keyField="department_code"
                                             textField="department_local_name"
                                             suggestionItems="{
                                                 path: '/',
@@ -111,7 +111,7 @@
                                     </layoutData> 
                                 </VBox>
                                 <VBox>
-                                    <Label text="Industrial Classification" design="Bold"/> 
+                                    <Label text="{I18N>/INDUSTRIAL_CLASS}" design="Bold"/> 
                                         <ComboBox   id="general_industry_class_code"
                                                     items="{
                                                                 path : 'util>/Code',
@@ -127,9 +127,10 @@
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
                                 </VBox> 
-                                <VBox>
-                                    <Label text="Mtl. Attribute/Planning Base" class="sapUiTinyMarginEnd" design="Bold"/> 
-                                        <HBox>
+                                <VBox id="v_general_inp_type_code">
+                                    <HBox>
+                                        <VBox>
+                                            <Label text = "{I18N>/MTL_ATTRIBUTE}" class="sapUiTinyMarginEnd" design="Bold"/> 
                                             <ComboBox   id="general_inp_type_code" class="sapUiTinyMarginEnd"
                                                         items="{
                                                                     path : 'util>/Code',
@@ -138,9 +139,14 @@
                                                                         {path : 'group_code', operator : 'EQ', value1 : 'PG_VP_INP_TYPE_CODE'}                                
                                                                     ]
                                                                 }"
+                                                        change=".handlemtlChang"
                                             >
                                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                                            </ComboBox>                                       
+                                            </ComboBox>                                      
+                                            
+                                        </VBox>
+                                        <VBox id="v_general_plan_base" >
+                                            <Label text = "{I18N>/PLANNING_BASE}" class="sapUiTinyMarginEnd" design="Bold"/>
                                             <ComboBox   id="general_plan_base"
                                                         items="{
                                                                     path : 'util>/Code',
@@ -152,13 +158,15 @@
                                             >
                                                 <core:Item key="{util>code}" text="{util>code_name}" />
                                             </ComboBox>                                       
-                                        </HBox>                               
+                                        </VBox> 
+                                    </HBox>                              
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
-                                </VBox>
+                                </VBox>                                
+                                
                                 <VBox>
-                                    <Label text="Evaluation" design="Bold"/> 
+                                    <Label text="{I18N>/EVALUATION}" design="Bold"/> 
                                         <Switch id="general_regular_evaluation_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
@@ -169,7 +177,7 @@
                                     </layoutData> 
                                 </VBox>
                                 <VBox>
-                                    <Label text="Maker Flag" design="Bold"/> 
+                                    <Label text="Maker P/N" design="Bold"/> 
                                         <Switch id="general_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
@@ -180,7 +188,7 @@
                                     </layoutData> 
                                 </VBox>                                  
                                 <VBox>
-                                    <Label text="SD Flag" design="Bold"/> 
+                                    <Label text="{I18N>/SD_FLAG}" design="Bold"/> 
                                         <Switch id="general_sd_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
@@ -191,7 +199,7 @@
                                     </layoutData> 
                                 </VBox> 
                                 <VBox>
-                                    <Label text="V/P Exception" design="Bold"/> 
+                                    <Label text="{I18N>/VP_EXCEPTION_FLAG}" design="Bold"/> 
                                         <Switch id="general_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
@@ -202,7 +210,7 @@
                                     </layoutData> 
                                 </VBox>                                                                       
                                 <VBox>
-                                    <Label text="Review Grade" design="Bold"/> 
+                                    <Label text="{I18N>/REVIEW_GRADE}" design="Bold"/> 
                                         <HBox>
                                             <ComboBox id="general_equipment_grade_code"
                                                         items="{
@@ -222,7 +230,7 @@
                                     </layoutData> 
                                 </VBox>
                                 <VBox>
-                                    <Label text="Equipment Type" design="Bold"/> 
+                                    <Label text="{I18N>/EQUIPMENT_TYPE}" design="Bold"/> 
                                         <HBox>
                                             <ComboBox id="general_equipment_type_code"
                                                         items="{
@@ -242,7 +250,7 @@
                                 </VBox>
 
                                 <VBox>
-                                    <Label text = "Site Internal Rate" design="Bold"/> 
+                                    <Label text = "{I18N>/OVERSEA_NET_PRICE_DIFF_RATE}" design="Bold"/> 
                                     <HBox>
                                         <Input id="general_dom_oversea_netprice_diff_rate"></Input>
                                         <Label class ="sapUiTinyMarginTop" text=" % " design="Bold" />
@@ -254,7 +262,7 @@
 
 
                                 <VBox>
-                                    <Label text="Site External Rate" design="Bold"/> 
+                                    <Label text="{I18N>/DOMESTIC_NET_PRICE_DIFF_RATE}" design="Bold"/> 
                                     <HBox>
                                         <Input id="general_domestic_net_price_diff_rate"></Input>
                                         <Label class ="sapUiTinyMarginTop" text="%" design="Bold"/>
@@ -264,7 +272,7 @@
                                     </layoutData> 
                                 </VBox>   
                                 <VBox>      
-                                    <Label text="Description" design="Bold"/>
+                                    <Label text="{I18N>/DESCRIPTION}" design="Bold"/>
                                     <TextArea id="general_vendor_pool_desc" row="5" width="100%" />
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
@@ -276,7 +284,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Supplier List">
+			<uxap:ObjectPageSection titleUppercase="false" title="Supplier List ({= ${suplist>/VpSupplierDtlView}.length || 0})">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection2">
                     <!--20201223 : table start -->
@@ -290,8 +298,8 @@
                                 <OverflowToolbar>
                                     <Title text="List ({= ${suplist>/VpSupplierDtlView}.length || 0})" level="H2"/>
                                     <ToolbarSpacer/>
-                                    <Button id="sppListAdd"     type="Emphasized" text="Add"        press=".supplierAddRow"   enabled="{mode>/viewFlag}" />
-                                    <Button id="sppListDel"     type="Emphasized" text="Delete"     press=".supplierDelRow"   enabled="{mode>/viewFlag}" />
+                                    <Button id="sppListAdd"     type="Emphasized" text="{I18N>/ADDITION}"        press=".supplierAddRow"   enabled="{mode>/viewFlag}" />
+                                    <Button id="sppListDel"     type="Emphasized" text="{I18N>/DELETE}"     press=".supplierDelRow"   enabled="{mode>/viewFlag}" />
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>
@@ -432,7 +440,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Material list">
+			<uxap:ObjectPageSection titleUppercase="false" title="Material list  ({= ${matlist>/vpMaterialDtlView}.length || 0})">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection3">
                         <!--20201223 : table start -->
@@ -444,8 +452,8 @@
                                 <OverflowToolbar>
                                     <Title text="List ({= ${matlist>/vpMaterialDtlView}.length || 0})" level="H2"/>
                                     <ToolbarSpacer/>
-                                    <Button id="metListtAdd"    type="Emphasized" text="Add"        press=".materialAddRow"   enabled="{mode>/viewFlag}" />
-                                    <Button id="metListDel"     type="Emphasized" text="Delete"     press=".materialDelRow"   enabled="{mode>/viewFlag}" />                                    
+                                    <Button id="metListtAdd"    type="Emphasized" text="{I18N>/ADDITION}"        press=".materialAddRow"   enabled="{mode>/viewFlag}" />
+                                    <Button id="metListDel"     type="Emphasized" text="{I18N>/DELETE}"     press=".materialDelRow"   enabled="{mode>/viewFlag}" />                                    
                                     <ToolbarSeparator/>
                                 </OverflowToolbar>
                             </table:extension>
@@ -517,7 +525,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false"  title="Manager list">
+			<uxap:ObjectPageSection titleUppercase="false"  title="Manager list  ({= ${manlist>/vPSearchMngListView}.length || 0})">
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection id="pageSubSection4">
                         <!--20201223 : table start -->
@@ -530,8 +538,8 @@
                                 <OverflowToolbar>
                                     <Title text="List ({= ${manlist>/vPSearchMngListView}.length || 0})" level="H2"/>
                                     <ToolbarSpacer/>
-                                    <Button id="mngListtAdd"    type="Emphasized" text="Add"        press=".managerAddRow"   enabled="{mode>/viewFlag}" />
-                                    <Button id="mngListDel"     type="Emphasized" text="Delete"     press=".managerDelRow"   enabled="{mode>/viewFlag}" />                                    
+                                    <Button id="mngListtAdd"    type="Emphasized" text="{I18N>/ADDITION}"        press=".managerAddRow"   enabled="{mode>/viewFlag}" />
+                                    <Button id="mngListDel"     type="Emphasized" text="{I18N>/DELETE}"     press=".managerDelRow"   enabled="{mode>/viewFlag}" />                                    
                                     <!-- <Button id="mngListDel"     type="Emphasized" text="Delete"     press=".managerDelRow"   enabled="{mode>/viewFlag}" />                                     -->
                                     <!-- <Button id="mngListtAdd"    type="Emphasized" text="Add"        press=".onMngListAddButtonPress"   enabled="{mode>/viewFlag}" />
                                     <Button id="mngListDel"     type="Emphasized" text="Delete"     press=".onDetailSaveButtonPress"   enabled="{mode>/viewFlag}" /> -->
@@ -627,7 +635,7 @@
 			<OverflowToolbar>
 				<ToolbarSpacer />
 				<Button type="Emphasized" text="Save" press=".onDetailSaveButtonPress" />
-				<Button type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
+				<Button type="Transparent" text="Cancel" press=".onPageNavBackButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
 
