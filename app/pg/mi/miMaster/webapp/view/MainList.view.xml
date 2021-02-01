@@ -45,6 +45,7 @@
                     <smartFilterBar:SmartFilterBar id="smartFilterBar" 
                     entitySet="MIMatListView" 
                     considerSelectionVariants="false" 
+                    useToolbar="false"
                     enableBasicSearch="false" >
                         <smartFilterBar:controlConfiguration>
 
@@ -131,7 +132,7 @@
                     showTablePersonalisation="false"
                     header="시황자재 Master List"
                     showRowCount="true"
-                    editable="true"                    
+                    editable="false"                    
                     persistencyKey="SmartTableAnalytical_Explored"
                     enableAutoBinding="true"                     
                     class="sapUiResponsiveContentPadding"                    
