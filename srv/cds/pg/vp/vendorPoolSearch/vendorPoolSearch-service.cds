@@ -59,6 +59,7 @@ service VpSearchService {
                 repr_department_code,
                 repr_department_name,
                 managers_name,
+                managers_id,
                 hierarchy_rank,
                 vendor_pool_path_code,
                 vendor_pool_path_name

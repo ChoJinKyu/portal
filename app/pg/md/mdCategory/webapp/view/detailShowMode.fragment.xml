@@ -5,13 +5,13 @@
 	xmlns:core="sap.ui.core">
 	<form:SimpleForm id="midObjectForm1Show" editable="false">		
         
-        <Label text="범주코드" />
+        <Label text="{I18N>/SPMD_CATEGORY_CODE}" />
         <Text text="{master>/spmd_category_code}"/>
-        <Label text="범주명"/>
+        <Label text="{I18N>/SPMD_CATEGORY_CODE_NAME}"/>
         <Text text="{master>/spmd_category_code_name}"/>
-        <Label text="RGB글꼴색상코드"/>
+        <Label text="{I18N>/FONT_RGB_CODE}"/>
         <Text text="{master>/rgb_font_color_code}"/>
-        <Label text="RGB셀색상코드"/>
+        <Label text="{I18N>/CELL_RGB_CODE}"/>
         <Text text="{master>/rgb_cell_clolor_code}"/>
 
 	</form:SimpleForm>

@@ -171,7 +171,7 @@
                             </table:extension>          
 
                             <table:columns>
-                                <table:Column  width="5em" hAlign="Center">
+                                <table:Column  width="5em" hAlign="Center" >
                                     <Label text="{I18N>/ITEM_NUMBER}"/>
                                     <table:template>
                                         <Text id="t_model" text="{detailModel>pr_item_number}"/>
@@ -183,7 +183,11 @@
                                         <Text text="{detailModel>org_code}" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="8em" hAlign="Center">
+                                <table:Column width="8em" hAlign="Center" visible="{
+                                            path: 'OPUI>/DTL-MATERIAL_CODE',
+                                            type: 'sap.ui.model.type.Bool',
+                                            formatter: '.uiControlSet.toColumnVisible'
+                                            }">
                                     <Label text="{I18N>/MATERIAL_CODE}" />           
                                     <table:template>
                                         <Text  text="{detailModel>material_code}" />
@@ -359,10 +363,10 @@
 				<ToolbarSpacer />
 			    <Button type="Emphasized" id="Btn_Cancel"  text="{I18N>/CLOSE}"   press=".onNavigationBackPress" />
 				<Button type="Transparent"  id="Btn_PageEdit"  
-                    visible="{= ${detailModel>/mst/pr_create_status_code}==='10'?true:false }"  text="{I18N>/EDIT}"     press=".onPageEditButtonPress"/>
+                    visible="{= ${detailModel>/PrCreateStatusCode}==='10'?true:false }"  text="{I18N>/EDIT}"     press=".onPageEditButtonPress"/>
                 <Button type="Transparent" id="Btn_Copy"  text="{I18N>/COPY}"   press=".onPageCopyButtonPress" />
                 <Button type="Transparent"  id="Btn_PageDelete"  
-                    visible="{= ${detailModel>/mst/pr_create_status_code}==='10'?true:false }"  text="{I18N>/DELETE}"     press=".onPageDeleteButtonPress"/>    
+                    visible="{= ${detailModel>/PrCreateStatusCode}==='10'?true:false }"  text="{I18N>/DELETE}"     press=".onPageDeleteButtonPress"/>    
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

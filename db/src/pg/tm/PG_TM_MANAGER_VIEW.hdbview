@@ -7,7 +7,7 @@ view Pg_Tm_Manager_View as
         emp.job_title											as job_title,
         emp.email_id                                            as email_id,
 		emp.mobile_phone_number									as mobile_phone_number,
-        emp.department_id										as department_id,
+        emp.department_code										as department_code,
         department.department_local_name                        as department_local_name,
 	    department.department_korean_name                       as department_korean_name,
 	    department.department_english_name                      as department_english_name,
@@ -18,7 +18,7 @@ view Pg_Tm_Manager_View as
         and	manager.monitoring_manager_empno    = emp.employee_number
     left join cm_hr_department as department
         on  emp.tenant_id       = department.tenant_id
-        and emp.department_id   = department.department_id
+        and emp.department_code = department.department_code
     order by 
         manager.tenant_id,
 		manager.monitoring_manager_empno;

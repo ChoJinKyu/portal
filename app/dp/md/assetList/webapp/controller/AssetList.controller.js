@@ -47,7 +47,7 @@ sap.ui.define([
         /* =========================================================== */
 
 		/**
-		 * Called when the developmentReceipt controller is instantiated.
+		 * Called when the assetList controller is instantiated.
 		 * @public
 		 */
         onInit: function () {
@@ -56,30 +56,35 @@ sap.ui.define([
 
             // Model used to manipulate control states
             oViewModel = new JSONModel({
-                developmentReceiptTableTitle: oResourceBundle.getText("developmentReceiptTableTitle"),
+                assetListTableTitle: oResourceBundle.getText("assetListTableTitle"),
                 tableNoDataText: oResourceBundle.getText("tableNoDataText")
             });
-            this.setModel(oViewModel, "developmentReceiptView");
+            this.setModel(oViewModel, "assetListView");
 
-            // Add the developmentReceipt page to the flp routing history
+            // Add the assetList page to the flp routing history
             this.addHistoryEntry({
-                title: oResourceBundle.getText("developmentReceiptViewTitle"),
+                title: oResourceBundle.getText("assetListViewTitle"),
                 icon: "sap-icon://table-view",
                 intent: "#Template-display"
             }, true);
 
-            this._doInitSearch();
+            //this._doInitSearch();
             //this._doInitTablePerso();
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedListModel(), "SegmentedItem");
+
+            
 
             this._oTPC = new TablePersoController({
-                customDataKey: "developmentReceipt",
+                customDataKey: "assetList",
                 persoService: AssetListPersoService
             }).setTable(this.byId("moldMstTable"));
             //console.log(this.byId("moldMstTable"));
+            
+            this.getRouter().getRoute("assetList").attachPatternMatched(this._onRoutedThisPage, this);
         },
 
         onMainTablePersoButtonPressed: function (event) {
@@ -155,6 +160,42 @@ sap.ui.define([
             this.getView().byId("searchDivisionE").bindItems(bindItemInfo);
         },
 
+        _onRoutedThisPage : function(){
+            this._segmentSrch();
+        },
+
+        _segmentSrch : function (){
+             
+            var oView = this.getView(),
+                oModel = this.getModel("SegmentedItem") ,
+                codeName = this.getModel('I18N').getText("/ALL")
+                ;
+            
+             var aSearchFilters = [];
+                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600'));
+                aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'DP_MD_ASSET_STATUS'));
+
+
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("util"));
+            console.log(oModel);
+            oModel.read("/Code", {
+                filters: aSearchFilters,
+                success: function (oData) {     
+                    oModel.addRecord({
+                        code: ""
+                      ,  code_name: codeName   
+                      ,  group_code: "DP_MD_ASSET_STATUS"
+                      ,  parent_code: null
+                      ,  parent_group_code: null
+                      ,  sort_no: "0"
+                    },"/Code",0);
+                    oView.setBusy(false);
+                    
+                }
+            });
+        } ,
+
         /* =========================================================== */
         /* event handlers                                              */
         /* =========================================================== */
@@ -169,18 +210,18 @@ sap.ui.define([
 		 * @public
 		 */
         onMoldMstTableUpdateFinished: function (oEvent) {
-            // update the developmentReceipt's object counter after the table update
+            // update the assetList's object counter after the table update
             var sTitle,
                 oTable = oEvent.getSource(),
                 iTotalItems = oEvent.getParameter("total");
             // only update the counter if the length is final and
             // the table is not empty
             if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-                sTitle = this.getResourceBundle().getText("developmentReceiptTableTitleCount", [iTotalItems]);
+                sTitle = this.getResourceBundle().getText("assetListTableTitleCount", [iTotalItems]);
             } else {
-                sTitle = this.getResourceBundle().getText("developmentReceiptTableTitle");
+                sTitle = this.getResourceBundle().getText("assetListTableTitle");
             }
-            this.getModel("developmentReceiptView").setProperty("/developmentReceiptTableTitle", sTitle);
+            this.getModel("assetListView").setProperty("/assetListTableTitle", sTitle);
         },
 
 		/**
@@ -198,7 +239,7 @@ sap.ui.define([
 		 * @public
 		 */
         onMoldMstTablePersoRefresh: function () {
-            DevelopmentReceiptPersoService.resetPersData();
+            AssetListPersoService.resetPersData();
             this._oTPC.refresh();
         },
 
@@ -412,7 +453,7 @@ sap.ui.define([
                 input = {},
                 moldViews = [];
 
-            var url = "dp/md/assetList/webapp/srv-api/odata/v4/dp.DevelopmentReceiptV4Service/BindDevelopmentReceipt";
+            var url = "dp/md/assetList/webapp/srv-api/odata/v4/dp.AssetListV4Service/BindAssetList";
 
             for (var idx = 0; idx < viewData.length; idx++) {
                 if(viewData[idx].chk){
@@ -507,7 +548,7 @@ sap.ui.define([
                 input = {},
                 moldViews = [];
 
-            var url = "dp/md/assetList/webapp/srv-api/odata/v4/dp.DevelopmentReceiptV4Service/CancelBindDevelopmentReceipt";
+            var url = "dp/md/assetList/webapp/srv-api/odata/v4/dp.AssetListV4Service/CancelBindAssetList";
 
             for (var idx = 0; idx < viewData.length; idx++) {
                 if(viewData[idx].chk){
@@ -755,7 +796,7 @@ sap.ui.define([
             var oData = oTable.getModel('list').getProperty("/MoldMstView");
             
             ExcelUtil.fnExportExcel({
-                fileName: "MoldDevelopmentReceipt",
+                fileName: "MoldAssetList",
                 table: oTable,
                 data: oData
             });*/
@@ -1409,8 +1450,8 @@ sap.ui.define([
             // init and activate controller
             this._oTPC = new TablePersoController({
                 table: this.byId("moldMstTable"),
-                componentName: "developmentReceipt",
-                persoService: DevelopmentReceiptPersoService,
+                componentName: "assetList",
+                persoService: AssetListPersoService,
                 hasGrouping: true
             }).activate();
         }

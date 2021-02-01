@@ -6,31 +6,31 @@ sap.ui.define(["jquery.sap.global"],
 
         var _columns = [
             {
-                id: "developmentReceipt-moldMstTable-moldFamilyFlagColumn",
+                id: "assetList-moldMstTable-moldFamilyFlagColumn",
                 order: 7,
                 text: "Family Y/N",
                 visible: true
             },
             {
-                id: "container-developmentReceipt---developmentReceipt--moldProductionTypeColumn",
+                id: "container-assetList---assetList--moldProductionTypeColumn",
                 order: 8,
                 text: "Production Type",
                 visible: true
             },
             {
-                id: "container-developmentReceipt---developmentReceipt--moldMstTable_hdr9",
+                id: "container-assetList---assetList--moldMstTable_hdr9",
                 order: 9,
                 text: "Item Type",
                 visible: true
             },
             {
-                id: "container-developmentReceipt---developmentReceipt--moldMoldTypeColumn",
+                id: "container-assetList---assetList--moldMoldTypeColumn",
                 order: 10,
                 text: "Mold Type",
                 visible: true
             },
             {
-                id: "developmentReceipt-moldMstTable-moldEDTypeColumn",
+                id: "assetList-moldMstTable-moldEDTypeColumn",
                 order: 11,
                 text: "Export/Domestic Type",
                 visible: true
@@ -38,7 +38,7 @@ sap.ui.define(["jquery.sap.global"],
         ];
         // Very simple page-context personalization
         // persistence service, not for productive use!
-        var developmentReceiptPersoService = {
+        var assetListPersoService = {
 
             oData: {
                 _persoSchemaVersion: "1.0",
@@ -102,7 +102,7 @@ sap.ui.define(["jquery.sap.global"],
             }
         };
 
-        developmentReceiptPersoService.delPersData = developmentReceiptPersoService.resetPersData;
-        return developmentReceiptPersoService;
+        assetListPersoService.delPersData = assetListPersoService.resetPersData;
+        return assetListPersoService;
 
     });
