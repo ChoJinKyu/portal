@@ -14,10 +14,10 @@
     <f:DynamicPage 
         id="page"
         toggleHeaderOnTitleClick="true"
-        headerExpanded="{=
-            ${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'
-        }"
     >
+        <!-- headerExpanded="{=
+            ${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'
+        }" -->
         
         <f:title>
             <f:DynamicPageTitle>
@@ -38,20 +38,20 @@
                     <!-- <Title text="{I18N>/EVAL_ITEM} {I18N>/DISPLAY}" /> -->
                 <!-- </f:snappedHeading> -->
                 <f:snappedContent>
-                    <form:SimpleForm 
+                    <!-- <form:SimpleForm 
                         layout="ResponsiveGridLayout"
-                    >
+                    > -->
                         <VBox>
                             <!-- 평가항목명 -->
                             <Label text="{I18N>/EVAL_ITEM_NM}" />
                             <Input 
                                 value="{viewModel>/cond/Contains/evaluation_article_name}"
                             />
-                            <layoutData>
+                            <!-- <layoutData>
                                 <layout:GridData span="L2 M6 S12" />
-                            </layoutData>
+                            </layoutData> -->
                         </VBox>
-                    </form:SimpleForm>
+                    <!-- </form:SimpleForm> -->
                 </f:snappedContent>
                 
                 <f:actions>

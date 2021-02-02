@@ -64,6 +64,8 @@ sap.ui.define([
                 );
 
                 oViewModel.setProperty("/App/layout", "OneColumn");
+
+                this.byId("page").setHeaderExpanded(true);
             }
             /***
              * 평가조직 (orgCode) 콤보박스 아이템 바인딩

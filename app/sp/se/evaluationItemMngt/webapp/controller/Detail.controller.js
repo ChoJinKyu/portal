@@ -111,6 +111,11 @@ sap.ui.define([
                 oViewModel = oComponent.getModel("viewModel");
                 oView = this.getView();
 
+                oMasterPage = oComponent.byId("Master");
+                if(oMasterPage){
+                    oDynamicPage = oMasterPage.byId("page");
+                }
+
                 oViewModel.setProperty("/Args", oArgs);
                 oDetailData = oViewModel.getProperty("/Detail");
                 if(!oDetailData){
@@ -125,6 +130,10 @@ sap.ui.define([
                         oDetailData.NewHeader = {};
                     }
                     oViewModel.setProperty("/Detail", oDetailData);
+
+                    if(oDynamicPage){
+                        oDynamicPage.setHeaderExpanded(true);
+                    }
                     return;
                 }
 
@@ -135,6 +144,8 @@ sap.ui.define([
                 oDetailData.Header = {};
                 oViewModel.setProperty("/Detail", oDetailData);
                 oViewModel.setProperty("/App/layout", "TwoColumnsMidExpanded");
+                
+                var oMasterPage, oDynamicPage;
 
                 this._readHeader();
                 
@@ -162,8 +173,10 @@ sap.ui.define([
                 oViewModel.setProperty("/App/EditMode", false);
                 this._clearValueState(aControls);
 
-                oView.setBusyIndicatorDelay(0);
-                oView.setBusy(true);
+                var oAppView;
+                oAppView = oComponent.byId("app");
+                oAppView.setBusyIndicatorDelay(0);
+                oAppView.setBusy(true);
                 oODataModel.read("/EvalItemListView",{
                     filters : aFilters,
                     success : function(oData){
@@ -199,12 +212,16 @@ sap.ui.define([
                             ]
                         });
 
+                        var oMasterPage = oComponent.byId("Master");
+                        if(oMasterPage){
+                            oMasterPage.byId("page").setHeaderExpanded(false);
+                        }
                         oViewModel.setProperty("/Detail/Header", oResult);
-                        oView.setBusy(false);
+                        oAppView.setBusy(false);
                         this._readItem();
                     }.bind(this),
                     error : function(){
-                        oView.setBusy(false);
+                        oAppView.setBusy(false);
                     }
                 });
             }
@@ -229,10 +246,12 @@ sap.ui.define([
                     new Filter({ path:"evaluation_article_code", operator:"EQ", value1 : oHeader.evaluation_article_code })
                 ];
 
+                var oAppView;
+                oAppView = oComponent.byId("app");
+                oAppView.setBusyIndicatorDelay(0);
+                oAppView.setBusy(true);
 
                 oViewModel.setProperty("/Detail/Item", []);
-                oView.setBusyIndicatorDelay(0);
-                oView.setBusy(true);
                 oODataModel.read("/EvalItemScle",{
                     filters : aFilters,
                     sorters : [
@@ -245,10 +264,10 @@ sap.ui.define([
                                 return oRowData;
                             })
                         );
-                        oView.setBusy(false);
+                        oAppView.setBusy(false);
                     },
                     error : function(){
-                        oView.setBusy(false);
+                        oAppView.setBusy(false);
                     }
                 });
             }
