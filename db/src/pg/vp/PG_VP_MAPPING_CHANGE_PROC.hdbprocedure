@@ -120,6 +120,13 @@ BEGIN
 	DECLARE V_SUCESS_LOOP_PARAM NVARCHAR(5000) :=  'NPG00023';
 	DECLARE V_ERROR_PARAM NVARCHAR(500);
 	
+	/*****************************************************
+	Return Success Info
+	*****************************************************/
+	DECLARE V_RETURN_VENDOR_POOL_CODE NVARCHAR(30);
+	DECLARE V_RETURN_LEAF_YN CHAR(1);
+	DECLARE V_RETURN_CHILD_LEAF_YN CHAR(1);
+	
 	--CUD 건수 체크를 위한 변수
     DECLARE V_CUD_COUNT INT := 0;
     
@@ -402,6 +409,9 @@ BEGIN
                 --The number of data corresponding to the inquiry condition cannot exceed 1.
                 SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00010'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
 			END IF;
+			
+			--신규가 아닌 경우 PARAM VENDOR POOL 코드가 RETURN VENDOR POOL 코드가 됨
+			V_RETURN_VENDOR_POOL_CODE := loop_mst.VENDOR_POOL_CODE;
 	    END IF;
 	    
 	    SELECT COUNT(*)
@@ -438,6 +448,8 @@ BEGIN
                 SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00028'||'-'||V_ERROR_PARAM||'-@-'||'Master Error(Vendor Pool Code Create Error).'||V_MSG_LOOP_PARAM;
 		    END IF;
 		    
+		    V_RETURN_VENDOR_POOL_CODE := V_NEW_VENDOR_POOL_CODE;
+		    
 		    IF IFNULL( loop_mst.VENDOR_POOL_LOCAL_NAME, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_LOCAL_NAME ) = '' THEN
 	            --Level Name (Local) is a required value.
 	            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00029'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
@@ -449,28 +461,38 @@ BEGIN
 		    END IF;
 		    
 		    IF IFNULL( loop_mst.REPR_DEPARTMENT_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.REPR_DEPARTMENT_CODE ) = '' THEN
-	            --Department Code is a required value.
-	            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00034'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+	            IF loop_mst.LEAF_FLAG = true then
+	            	--Department Code is a required value.
+	            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00034'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+	            END IF;
 		    END IF;
 		    
 		    IF IFNULL( loop_mst.REGULAR_EVALUATION_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.REGULAR_EVALUATION_FLAG ) = '' THEN
-	            --Department Code is a required value.
-	            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00035'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+	            IF loop_mst.LEAF_FLAG = true then
+	            	--Department Code is a required value.
+	            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00035'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+	            END IF;
 		    END IF;
 		    
 		    IF IFNULL( loop_mst.SD_EXCEPTION_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.SD_EXCEPTION_FLAG ) = '' THEN
-	            --Department Code is a required value.
-	            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00036'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+	            IF loop_mst.LEAF_FLAG = true then
+	            	--Department Code is a required value.
+	            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00036'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+	            END IF;
 		    END IF;
 		    
 		    IF IFNULL( loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG ) = '' THEN
-	            --Department Code is a required value.
-	            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00037'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+	            IF loop_mst.LEAF_FLAG = true then
+	            	--Department Code is a required value.
+	            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00037'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+	            END IF;
 		    END IF;
 		    
 		    IF IFNULL( loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG ) = '' THEN
-	            --Department Code is a required value.
-	            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00038'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+	            IF loop_mst.LEAF_FLAG = true then
+	            	--Department Code is a required value.
+	            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00038'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+	            END IF;
 		    END IF;
 		    
 		    /****************************************************
@@ -586,28 +608,38 @@ BEGIN
 				    END IF;
 				    
 				    IF IFNULL( loop_mst.REPR_DEPARTMENT_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.REPR_DEPARTMENT_CODE ) = '' THEN
-			            --Department Code is a required value.
-			            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00034'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+			            IF loop_mst.LEAF_FLAG = true then
+			            	--Department Code is a required value.
+			            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00034'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+			            END IF;
 				    END IF;
 				    
 				    IF IFNULL( loop_mst.REGULAR_EVALUATION_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.REGULAR_EVALUATION_FLAG ) = '' THEN
-			            --Department Code is a required value.
-			            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00035'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+			            IF loop_mst.LEAF_FLAG = true then
+				            --Department Code is a required value.
+				            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00035'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+				        END IF;
 				    END IF;
 				    
 				    IF IFNULL( loop_mst.SD_EXCEPTION_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.SD_EXCEPTION_FLAG ) = '' THEN
-			            --Department Code is a required value.
-			            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00036'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+			            IF loop_mst.LEAF_FLAG = true then
+			            	--Department Code is a required value.
+			            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00036'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+			            END IF;
 				    END IF;
 				    
 				    IF IFNULL( loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG ) = '' THEN
-			            --Department Code is a required value.
-			            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00037'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+			            IF loop_mst.LEAF_FLAG = true then
+			            	--Department Code is a required value.
+			            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00037'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+			            END IF;
 				    END IF;
 				    
 				    IF IFNULL( loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG ) = '' THEN
-			            --Department Code is a required value.
-			            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00038'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+			            IF loop_mst.LEAF_FLAG = true then
+			            	--Department Code is a required value.
+			            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00038'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+			            END IF;
 				    END IF;
 					
 					/****************************************************
@@ -1531,6 +1563,10 @@ BEGIN
     IF V_MSG_LOOP_PARAM IS NULL THEN
     	V_MSG_LOOP_PARAM := '99999';
     END IF;
+    
+    --DECLARE V_RETURN_LEAF_YN CHAR(1);
+	--DECLARE V_RETURN_CHILD_LEAF_YN CHAR(1);
+	--V_RETURN_VENDOR_POOL_CODE := IFNULL(V_NEW_VENDOR_POOL_CODE)
     
     V_SUCESS_LOOP_PARAM := V_SUCESS_LOOP_PARAM||'-'||V_MSG_LOOP_PARAM;
     
