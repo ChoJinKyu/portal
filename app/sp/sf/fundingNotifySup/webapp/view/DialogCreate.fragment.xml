@@ -51,7 +51,7 @@
                             <Label text="투자 유형 :" required="true"/>
                             <ComboBox id="investmentType"
                                 width="100%"
-                                fieldGroupIds="newRequired"
+                                fieldGroupIds="newInvestmentPlan"
                                 required="true"
                                 items="{
                                             path : 'util>/Code',
@@ -73,13 +73,13 @@
                         <VBox>
                             <Label text="과제명 :" required="true"/>
                             <Input 
-                                fieldGroupIds="newRequired"
+                                fieldGroupIds="newInvestmentPlan"
                                 required="true"
                                 value="{
                                     path: 'applicationSup>/popUpInvestPlanMst/investment_project_name',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
-                                        maxLength: 30
+                                        maxLength: 200
                                     }
                                 }"/>
                             <layoutData>
@@ -98,42 +98,64 @@
                         </VBox>
                         <VBox>
                             <Label text="신청금액(원) :" required="true"/>
-                            <Input type="Number" value="{path: 'applicationSup>/popUpInvestPlanMst/appl_amount', type: 'sap.ui.model.type.Integer'}"/>
+                            <Input 
+                                fieldGroupIds="newInvestmentPlan"
+                                required="true"
+                                type="Number" 
+                                value="{
+                                    path: 'applicationSup>/popUpInvestPlanMst/appl_amount', 
+                                    type: 'sap.ui.model.type.Integer'
+                                }"
+                            />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="투자 배경 및 목적 :" required="true"/>
-                            <Input 
+                            <Input
+                                fieldGroupIds="newInvestmentPlan"
+                                required="true"
                                 value="{
                                     path: 'applicationSup>/popUpInvestPlanMst/investment_purpose',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
-                                        maxLength: 300
+                                        maxLength: 500
                                     }
-                                }"/>
+                                }"
+                            />
                             <layoutData>
                                 <layout:GridData span="XL6 L6 M6 S12" linebreak="true" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="적용모델 :" required="true"/>
-                            <Input 
+                            <Input
+                                fieldGroupIds="newInvestmentPlan"
+                                required="true"
                                 value="{
                                     path: 'applicationSup>/popUpInvestPlanMst/apply_model_name',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
-                                        maxLength: 300
+                                        maxLength: 200
                                     }
-                                }"/>
+                                }"
+                            />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="년간 예상물동 :" required="true"/>
-                            <Input type="Number" value="{path: 'applicationSup>/popUpInvestPlanMst/annual_mtlmob_quantity', type: 'sap.ui.model.type.Integer'}"/>
+                            <Input 
+                                fieldGroupIds="newInvestmentPlan"
+                                required="true"
+                                type="Number" 
+                                value="{
+                                    path: 'applicationSup>/popUpInvestPlanMst/annual_mtlmob_quantity', 
+                                    type: 'sap.ui.model.type.Integer'
+                                }"
+                            />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S12" />
                             </layoutData>
@@ -141,11 +163,13 @@
                         <VBox>
                             <Label text="투자내역 :" required="true"/>
                             <Input 
+                                fieldGroupIds="newInvestmentPlan"
+                                required="true"
                                 value="{
                                     path: 'applicationSup>/popUpInvestPlanMst/investment_desc',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
-                                        maxLength: 300
+                                        maxLength: 500
                                     }
                                 }"/>
                             <layoutData>
@@ -166,13 +190,16 @@
                         <VBox>
                             <Label text="투자효과 :" required="true"/>
                             <Input 
+                                fieldGroupIds="newInvestmentPlan"
+                                required="true"
                                 value="{
                                     path: 'applicationSup>/popUpInvestPlanMst/investment_effect',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
-                                        maxLength: 300
+                                        maxLength: 500
                                     }
-                                }"/>
+                                }"
+                            />
                             <layoutData>
                                 <layout:GridData span="XL9 L9 M9 S12" linebreak="true" />
                             </layoutData>
@@ -181,13 +208,16 @@
                         <VBox>
                             <Label text="투자장소 :" required="true"/>
                             <Input 
+                                fieldGroupIds="newInvestmentPlan"
+                                required="true"
                                 value="{
                                     path: 'applicationSup>/popUpInvestPlanMst/investment_place',
                                     type: 'sap.ui.model.type.String',
                                     constraints: {
-                                        maxLength: 300
+                                        maxLength: 500
                                     }
-                                }"/>
+                                }"
+                            />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S12" />
                             </layoutData>

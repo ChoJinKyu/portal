@@ -41,9 +41,9 @@ import cds.gen.sp.fundingapplicationv4service.RtnObjInvDtl;
 @ServiceName("sp.FundingApplicationV4Service")
 public class FundingApplicationServiceV4 implements EventHandler {
 
-    /*
-    
     private static final Logger log = LogManager.getLogger();
+
+
     // Code Master
     @Autowired
     JdbcTemplate jdbc;
@@ -125,14 +125,14 @@ public class FundingApplicationServiceV4 implements EventHandler {
                 RtnObj v_row = RtnObj.create();
                 v_row.setResultCode(v_rs.getString("result_code"));
                 v_row.setErrType(v_rs.getString("err_type"));
-                //v_row.setErrCode(v_rs.getString("err_code"));
                 v_row.setSqlErrCode(v_rs.getString("sql_err_code"));
                 v_row.setDefErrCode(v_rs.getString("def_err_code"));
                 v_row.setRtnFundingApplNumber(v_rs.getString("rtn_funding_appl_number"));
 
                 log.info(v_rs.getString("result_code"));
                 log.info(v_rs.getString("err_type"));
-                log.info(v_rs.getString("err_code"));
+                log.info(v_rs.getString("sql_err_code"));
+                log.info(v_rs.getString("def_err_code"));
                 log.info(v_rs.getString("rtn_funding_appl_number"));
 
                 if ("NG".equals(v_rs.getString("result_code"))) {
@@ -263,14 +263,14 @@ public class FundingApplicationServiceV4 implements EventHandler {
                 RtnObj v_row = RtnObj.create();
                 v_row.setResultCode(v_rs.getString("result_code"));
                 v_row.setErrType(v_rs.getString("err_type"));
-                //v_row.setErrCode(v_rs.getString("err_code"));
                 v_row.setSqlErrCode(v_rs.getString("sql_err_code"));
                 v_row.setDefErrCode(v_rs.getString("def_err_code"));
                 v_row.setRtnFundingApplNumber(v_rs.getString("rtn_funding_appl_number"));
 
                 log.info(v_rs.getString("result_code"));
                 log.info(v_rs.getString("err_type"));
-                log.info(v_rs.getString("err_code"));
+                log.info(v_rs.getString("sql_err_code"));
+                log.info(v_rs.getString("def_err_code"));
                 log.info(v_rs.getString("rtn_funding_appl_number"));
 
                 if ("NG".equals(v_rs.getString("result_code"))) {
@@ -377,7 +377,7 @@ public class FundingApplicationServiceV4 implements EventHandler {
 
         Collection<InvPlanDtlType> v_inDtl = context.getDtlType();
 
-        Collection<RtnObjInvDtl> v_result = new ArrayList<>();
+        Collection<RtnObj> v_result = new ArrayList<>();
 
         log.info("### Proc Start ###"); 
 
@@ -391,11 +391,7 @@ public class FundingApplicationServiceV4 implements EventHandler {
         List<Object[]> batchMst = new ArrayList<Object[]>();
         if(!v_inDtl.isEmpty() && v_inDtl.size() > 0){
             for(InvPlanDtlType v_inRow : v_inDtl){
-                Object[] values = new Object[] {                        
-                    // v_inRow.get("tenant_id"),
-                    // v_inRow.get("company_code"),
-                    // v_inRow.get("org_type_code"),
-                    // v_inRow.get("org_code"),
+                Object[] values = new Object[] {
                     v_inRow.get("crud_type"),
                     v_inRow.get("funding_appl_number"),
                     v_inRow.get("investment_plan_sequence"),
@@ -433,20 +429,20 @@ public class FundingApplicationServiceV4 implements EventHandler {
         paramList.add(new SqlParameter("I_USER_ID", Types.VARCHAR));
 
 
-        SqlReturnResultSet oReturn = new SqlReturnResultSet("O_RESULT", new RowMapper<RtnObjInvDtl>() {
+        SqlReturnResultSet oReturn = new SqlReturnResultSet("O_RESULT", new RowMapper<RtnObj>() {
             @Override
-            public RtnObjInvDtl mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                RtnObjInvDtl v_row = RtnObjInvDtl.create();
+            public RtnObj mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                RtnObj v_row = RtnObj.create();
                 v_row.setResultCode(v_rs.getString("result_code"));
                 v_row.setErrType(v_rs.getString("err_type"));
-                //v_row.setErrCode(v_rs.getString("err_code"));
                 v_row.setSqlErrCode(v_rs.getString("sql_err_code"));
                 v_row.setDefErrCode(v_rs.getString("def_err_code"));
                 v_row.setRtnFundingApplNumber(v_rs.getString("rtn_funding_appl_number"));
 
                 log.info(v_rs.getString("result_code"));
                 log.info(v_rs.getString("err_type"));
-                log.info(v_rs.getString("err_code"));
+                log.info(v_rs.getString("sql_err_code"));
+                log.info(v_rs.getString("def_err_code"));
                 log.info(v_rs.getString("rtn_funding_appl_number"));
 
                 if ("NG".equals(v_rs.getString("result_code"))) {
@@ -526,7 +522,7 @@ public class FundingApplicationServiceV4 implements EventHandler {
 
         Collection<InvPlanMstDelType> v_inMst = context.getMstType();
 
-        Collection<RtnObjInvDtl> v_result = new ArrayList<>();
+        Collection<RtnObj> v_result = new ArrayList<>();
 
         log.info("### Proc Start ###"); 
 
@@ -557,13 +553,12 @@ public class FundingApplicationServiceV4 implements EventHandler {
         List<SqlParameter> paramList = new ArrayList<SqlParameter>();
         paramList.add(new SqlParameter("I_USER_ID", Types.VARCHAR));
 
-        SqlReturnResultSet oReturn = new SqlReturnResultSet("O_RESULT", new RowMapper<RtnObjInvDtl>() {
+        SqlReturnResultSet oReturn = new SqlReturnResultSet("O_RESULT", new RowMapper<RtnObj>() {
             @Override
-            public RtnObjInvDtl mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                RtnObjInvDtl v_row = RtnObjInvDtl.create();
+            public RtnObj mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                RtnObj v_row = RtnObj.create();
                 v_row.setResultCode(v_rs.getString("result_code"));
                 v_row.setErrType(v_rs.getString("err_type"));
-                //v_row.setErrCode(v_rs.getString("err_code"));
                 v_row.setSqlErrCode(v_rs.getString("sql_err_code"));
                 v_row.setDefErrCode(v_rs.getString("def_err_code"));
                 v_row.setRtnFundingApplNumber(v_rs.getString("rtn_funding_appl_number"));
@@ -572,6 +567,7 @@ public class FundingApplicationServiceV4 implements EventHandler {
                 log.info(v_rs.getString("err_type"));
                 log.info(v_rs.getString("err_code"));
                 log.info(v_rs.getString("rtn_funding_appl_number"));
+                log.info(v_rs.getString("rtn_investment_plan_sequence"));
 
                 if ("NG".equals(v_rs.getString("result_code"))) {
                     log.info("### Call Proc Error!!  ###");
@@ -637,7 +633,7 @@ public class FundingApplicationServiceV4 implements EventHandler {
 
         Collection<InvPlanDtlDelType> v_inDtl = context.getDtlType();
 
-        Collection<RtnObj> v_result = new ArrayList<>();
+        Collection<RtnObjInvDtl> v_result = new ArrayList<>();
 
         log.info("### Proc Start ###"); 
 
@@ -670,20 +666,20 @@ public class FundingApplicationServiceV4 implements EventHandler {
         paramList.add(new SqlParameter("I_USER_ID", Types.VARCHAR));
 
 
-        SqlReturnResultSet oReturn = new SqlReturnResultSet("O_RESULT", new RowMapper<RtnObj>() {
+        SqlReturnResultSet oReturn = new SqlReturnResultSet("O_RESULT", new RowMapper<RtnObjInvDtl>() {
             @Override
-            public RtnObj mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                RtnObj v_row = RtnObj.create();
+            public RtnObjInvDtl mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                RtnObjInvDtl v_row = RtnObjInvDtl.create();
                 v_row.setResultCode(v_rs.getString("result_code"));
                 v_row.setErrType(v_rs.getString("err_type"));
-                //v_row.setErrCode(v_rs.getString("err_code"));
                 v_row.setSqlErrCode(v_rs.getString("sql_err_code"));
                 v_row.setDefErrCode(v_rs.getString("def_err_code"));
                 v_row.setRtnFundingApplNumber(v_rs.getString("rtn_funding_appl_number"));
 
                 log.info(v_rs.getString("result_code"));
                 log.info(v_rs.getString("err_type"));
-                log.info(v_rs.getString("err_code"));
+                log.info(v_rs.getString("sql_err_code"));
+                log.info(v_rs.getString("def_err_code"));
                 log.info(v_rs.getString("rtn_funding_appl_number"));
 
                 if ("NG".equals(v_rs.getString("result_code"))) {
@@ -717,9 +713,5 @@ public class FundingApplicationServiceV4 implements EventHandler {
         context.setCompleted();
 
     }
-
-
-    */
-
 
 }
