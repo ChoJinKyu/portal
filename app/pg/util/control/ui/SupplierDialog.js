@@ -55,7 +55,7 @@ sap.ui.define([
         createSearchFilters: function () {
             that = this;
 
-            this.oCompany = new Input({ placeholder: this.getModel("I18N").getText("/COMPANY_CODE") });
+            this.oCompany = new Input({ editable: false, placeholder: this.getModel("I18N").getText("/COMPANY_CODE")});
 
             this.oOperationOrgComb = new ComboBox({
                 id: "operationOrgSp",
@@ -289,21 +289,21 @@ sap.ui.define([
         return [
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/COMPANY_CODE") }),
+                        new Label({ text: this.getModel("I18N").getText("/COMPANY_CODE") , required: true}),
                         this.oCompany
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M4 S12" })
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/OPERATION_ORG") }),
+                        new Label({ text: this.getModel("I18N").getText("/OPERATION_ORG"), required: true}),
                         this.oOperationOrgComb
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M4 S12" })
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT") }),
+                        new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT"), required: true }),
                         this.oOperationUnitComb
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M4 S12" })
@@ -385,39 +385,66 @@ sap.ui.define([
             ]
         },
 
+        // 조회결과 테이블 화면
         createTableColumns: function () {
             return [
                 new Column({
                     width: "20%",
-                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") }),
-                    template: new Text({ text: "{vendor_pool_code}" })
+                    label: new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT") }),
+                    template: new Text({ text: "{supplier_type_name}" })
                 }),
+                // new Column({
+                //     width: "25%",
+                //     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") }),
+                //     template: new Text({ text: "{supplier_code}" })
+                // }),
+                // new Column({
+                //     width: "auto",
+                //     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") }),
+                //     template: new Text({ text: "{supplier_local_name}" })
+                // }),
                 new Column({
-                    width: "25%",
+                    width: "auto",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
                     template: new Text({ text: "{supplier_code}" })
                 }),
                 new Column({
-                    width: "55%",
+                    width: "30%",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME") }),
                     template: new Text({ text: "{supplier_local_name}" })
+                }),
+                
+                new Column({
+                    width: "auto",
+                    label: new Label({ text: this.getModel("I18N").getText("/REGISTER_STATUS") }),
+                    template: new Text({ text: "{supplier_register_status_name}" })
+                }),
+                new Column({
+                    width: "auto",
+                    label: new Label({ text: this.getModel("I18N").getText("/FLAG") }),
+                    template: new Text({ text: "{supplier_flag}" })
+                }),
+                new Column({
+                    width: "auto",
+                    label: new Label({ text: this.getModel("I18N").getText("/MAKER_FLAG") }),
+                    template: new Text({ text: "{maker_flag}" })
+                }),
+                new Column({
+                    width: "auto",
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_SELECTION_STATUS") }),
+                    template: new Text({ text: "{inactive_status_name}" })
                 })
             ];
         },
 
+        // 회사코드 load
         loadTenantCode: function() {
             if (this.oSearchObj.tanentId) {
-                that.oCompany.setValue(this.oSearchObj.tanentId);
+                that.oCompany.setValue(this.oSearchObj.companyCode);
             }
         },
 
-
-        loadOperationChange: function() {
-            if (that.oOperationOrgComb.getSelectedKey() && that.oOperationUnitComb.getSelectedKey()) {
-                that.loadoVendorPoolLvlData();
-            }
-        },
-
+        // 운영조직 load
         loadOperationOrgData: function () {
             var aFilters = [];
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
@@ -440,6 +467,7 @@ sap.ui.define([
             });
         },
 
+        // 운영단위 load
         loadOperationUnitData: function () {
             var aFilters = [];
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
@@ -460,6 +488,14 @@ sap.ui.define([
             });
         },
 
+        // 운영조직 필드에 따른 vp level 설정
+        loadOperationChange: function() {
+            if (that.oOperationOrgComb.getSelectedKey() && that.oOperationUnitComb.getSelectedKey()) {
+                that.loadoVendorPoolLvlData();
+            }
+        },
+
+        // 부서 load
         loadDepartmentData: function () {
             var aFilters = [];
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
@@ -479,6 +515,7 @@ sap.ui.define([
             });
         },
 
+        // 관리자 load
         loadManagerData: function () {
             var aFilters = [];
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
@@ -498,6 +535,7 @@ sap.ui.define([
             });
         },
 
+        // Data 조회
         loadData: function () {
             var sSupplierCode;
             if (!!this.oSupplierCode.getValue()) {
@@ -507,6 +545,7 @@ sap.ui.define([
             var aFilters = [];
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
             aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.language));
+            aFilters.push(new Filter("company_code", FilterOperator.EQ, this.oSearchObj.companyCode));
             
             if (this.oSearchObj.vendorPoolCode) {
                 aFilters.push(new Filter("vendor_pool_code", FilterOperator.Contains, this.oSearchObj.vendorPoolCode));
@@ -516,7 +555,7 @@ sap.ui.define([
                 aFilters.push(new Filter("supplier_code", FilterOperator.Contains, "'" + sSupplierCode.toUpperCase() + "'"));
             }
             
-            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/VpSupplierDtlView", {
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/VpSupplierMstView", {
                 filters: aFilters,
                 sorters: [
                     new Sorter("supplier_code", true)
@@ -687,6 +726,11 @@ sap.ui.define([
                 return;
             }
                 
+            that.oVendorPoolLvl2.oParent.setVisible(false);
+            that.oVendorPoolLvl3.oParent.setVisible(false);
+            that.oVendorPoolLvl4.oParent.setVisible(false);
+            that.oVendorPoolLvl5.oParent.setVisible(false)
+
             if (!!this.oSearchObj.supplierCode) {
                 this.oSupplierCode.setValue(null);
                 this.oSupplierCode.setValue(this.oSearchObj.supplierCode);
