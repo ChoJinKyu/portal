@@ -17,6 +17,8 @@
                     <Title text="Function 조회" level="H2"/>
                     <ToolbarSpacer/>
                     <Button id="btnSearch" text="Search" press="onSearch"></Button>
+                    <Button id="btnTest" text="Test" press="onTest"></Button>
+                    <Text text="{USER_SESSION>/USER_ID}"></Text>
                 </content>
             </OverflowToolbar>
         </headerToolbar>
