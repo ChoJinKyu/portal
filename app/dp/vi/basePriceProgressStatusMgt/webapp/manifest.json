@@ -217,21 +217,12 @@
           "pattern": "",
           "name": "basePriceList",
           "target": "basePriceList"
-        },
-        {
-          "pattern": "basePriceDetail",
-          "name": "basePriceDetail",
-          "target": "basePriceDetail"
         }
       ],
       "targets": {
         "basePriceList": {
           "viewId": "basePriceList",
           "viewName": "BasePriceList"
-        },
-        "basePriceDetail": {
-          "viewId": "basePriceDetail",
-          "viewName": "BasePriceDetail"
         }
       }
     }

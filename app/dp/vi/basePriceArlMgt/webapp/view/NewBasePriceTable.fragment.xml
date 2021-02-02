@@ -391,13 +391,16 @@
                     <Label text="{I18N>/MATERIAL_CODE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <Input
-                        value="{detailModel>family_material_code}"
-                        editable="{detailViewModel>/viewMode}"
-                        visible="{= ${detailModel>base_price_ground_code} === ${detailViewModel>/familyMaterialCodeShowCode} &amp;&amp; ${detailViewModel>/viewMode} ? true : false }"
-                        showValueHelp="true"
-                        valueHelpRequest=".onOpenFamilyMaterialCodeDialog" >
-                    </Input>
+                    <VBox>
+                        <Input
+                            value="{detailModel>family_material_code}"
+                            editable="{detailViewModel>/viewMode}"
+                            visible="{= ${detailModel>base_price_ground_code} === ${detailViewModel>/familyMaterialCodeShowCode} &amp;&amp; ${detailViewModel>/viewMode} ? true : false }"
+                            showValueHelp="true"
+                            valueHelpRequest=".onOpenFamilyMaterialCodeDialog" >
+                        </Input>
+                        <Text text="{detailModel>family_material_code}" visible="{= !(${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode}) ? true : false }" textAlign="Center" width="100%" />
+                    </VBox>
                 </t:template>
                 </t:Column>
             <t:Column width="12rem">

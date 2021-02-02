@@ -10,6 +10,8 @@
     displayBlock="true">
 	
 	<Dialog title="Family Material Code"
+            draggable="true"
+            resizable="true"
             contentWidth="90%"
             contentHeight="60%">
 		<content>

@@ -136,26 +136,32 @@
                                         textAlign="Left"
                                         labelFor="input"
                                         required="true"/>
-                                    <Input
-                                        width="20rem"
-                                        placeholder=""
-                                        editable="{detailViewModel>/viewMode}"
-                                        value="{detailModel>/approval_title}">
-                                    </Input>
+                                    <VBox>
+                                        <Input
+                                            width="20rem"
+                                            placeholder=""
+                                            visible="{detailViewModel>/viewMode}"
+                                            value="{detailModel>/approval_title}">
+                                        </Input>
+                                        <Text text="{detailModel>/approval_title}" visible="{= !${detailViewModel>/viewMode}}" />
+                                    </VBox>
                                 </HBox>
                                 <VBox>
                                     <Label text="{I18N>/DESCRIPTION}" required="true"/>
-                                    <!-- Text Editor 시작 -->
-                                    <rte:RichTextEditor 
-                                        width="100%" 
-                                        height="200px" 
-                                        value="{detailModel>/approval_contents}" 
-                                        customToolbar="true" 
-                                        showGroupFont="true" 
-                                        showGroupLink="true" 
-                                        showGroupInsert="true"
-                                        editable="{detailViewModel>/viewMode}" />
-                                    <!-- Text Editor 끝 -->
+                                    <VBox>
+                                        <!-- Text Editor 시작 -->
+                                        <rte:RichTextEditor 
+                                            width="100%" 
+                                            height="200px" 
+                                            value="{detailModel>/approval_contents}" 
+                                            customToolbar="true" 
+                                            showGroupFont="true" 
+                                            showGroupLink="true" 
+                                            showGroupInsert="true"
+                                            visible="{detailViewModel>/viewMode}" />
+                                        <!-- Text Editor 끝 -->
+                                        <FormattedText height="200px" htmlText="{= ${detailModel>/approval_contents} ? ${detailModel>/approval_contents} : '' }" visible="{= !${detailViewModel>/viewMode}}"/>
+                                    </VBox>
                                 </VBox>
                             </VBox>
 						</uxap:blocks>
