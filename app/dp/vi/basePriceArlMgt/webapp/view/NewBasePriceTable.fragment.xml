@@ -42,7 +42,7 @@
                             <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                         </items>
                     </ComboBox> -->
-                    <Text text="{detailModel>company_code}" />
+                    <Text text="{detailModel>company_name}" />
                 </t:template>
             </t:Column>
             <!-- <t:Column hAlign="Center" width="6rem"> -->
@@ -370,12 +370,12 @@
             </t:Column>
             <!--EXPORT(market_code 1) 끝 -->
 
-            <t:Column width="12rem">
+            <!-- <t:Column width="12rem">
                 <Label text="{I18N>/BASE_PRICE_TYPE}" textAlign="Center" width="100%" />
                 <t:template>
                     <Text text="{detailModel>base_price_type}" />
                 </t:template>
-            </t:Column>
+            </t:Column> -->
             <!-- <t:Column headerSpan="4" width="6rem">
                 <t:multiLabels>
                     <Label text="{I18N>/FAMILY_MATERIAL_CODE}" textAlign="Center" width="100%" />

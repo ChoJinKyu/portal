@@ -17,6 +17,8 @@
                     <Title text="Function 조회" level="H2"/>
                     <ToolbarSpacer/>
                     <Button id="btnSearch" text="Search" press="onSearch"></Button>
+                    <Button id="btnTest" text="Test" press="onTest"></Button>
+                    <Text text="{USER_SESSION>/USER_ID}"></Text>
                 </content>
             </OverflowToolbar>
         </headerToolbar>
@@ -110,6 +112,42 @@
                     <Text text="{session>CURRENCY_CODE}"/>
                     <Text text="{session>EMAIL}"/>
                     <Text text="{session>ROLES}"/>
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+
+
+<Table
+        id="userValue"
+        growing="true"
+        growingThreshold="30"
+        items="{path : 'sessionTest>/UserValue'}" 
+        width="auto"
+    >
+        <columns>
+            <Column hAlign="Center">
+                <header>
+                    <Label text="USER"/>
+                </header>
+            </Column>
+            <Column hAlign="Center">
+                <header>
+                    <Label text="USER_ID"/>
+                </header>
+            </Column>
+            <Column hAlign="Center">
+                <header>
+                    <Label text="USER_LOCALE"/>
+                </header>
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Text text="{sessionTest>USER}"/>
+                    <Text text="{sessionTest>USER_ID}"/>
+                    <Text text="{sessionTest>USER_LOCALE}"/>
                 </cells>
             </ColumnListItem>
         </items>

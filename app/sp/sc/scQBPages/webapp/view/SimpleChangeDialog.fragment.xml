@@ -4,13 +4,13 @@
                     xmlns:form="sap.ui.layout.form"
                     class="sapUiSizeCompact"  
                     displayBlock="true"  >
-	<Dialog id="dialog_manager" title="Simple Change" resizable="false" draggable="true" contentWidth="30rem" contentHeight="40rem">
+	<Dialog title="Simple Change" resizable="false" draggable="true" contentWidth="30rem" contentHeight="40rem">
         <IconTabBar
 		id="idIconTabBarFiori2"
 		class="sapUiResponsiveContentPadding">
 		<items>
 			<IconTabFilter text="Basic Info" >
-                <Table sticky="HeaderToolbar,InfoToolbar,ColumnHeaders" mode="MultiSelect" class="sapUiSmallMarginTop" > 
+                <Table id="simpleChangeTable" sticky="HeaderToolbar,InfoToolbar,ColumnHeaders" mode="MultiSelect" class="sapUiSmallMarginTop" > 
 
                     <columns>
                         <Column width="12em">
@@ -24,43 +24,43 @@
                         <ColumnListItem >
                             <cells>
                                 <Text text="Specification"/>
-                                <ComboBox value="" ></ComboBox>
+                                <ComboBox id="comboBoxSpecification" value="" ></ComboBox>
                             </cells>
                         </ColumnListItem>
                         <ColumnListItem >
                             <cells>
                                 <Text text="Quantity"/>
-                                <Input value="" ></Input>
+                                <Input id="inputQuantity" value="" type="Number" textAlign="Right"></Input>
                             </cells>
                         </ColumnListItem>
                         <ColumnListItem >
                             <cells>
                                 <Text text="Currency"/>
-                                <ComboBox value="" ></ComboBox>
+                                <ComboBox id="comboBoxCurrency" value="" ></ComboBox>
                             </cells>
                         </ColumnListItem>
                         <ColumnListItem >
                             <cells>
                                 <Text text="Start Price"/>
-                                <Input value="" ></Input>
+                                <Input id="inputStartPrice" value="" type="Number" textAlign="Right"></Input>
                             </cells>
                         </ColumnListItem>
                         <ColumnListItem >
                             <cells>
                                 <Text text="Target Price"/>
-                                <Input value="" ></Input>
+                                <Input id="inputTargetPrice" value="" type="Number" textAlign="Right"></Input>
                             </cells>
                         </ColumnListItem>
                         <ColumnListItem >
                             <cells>
                                 <Text text="Display to Supplier"/>
-                                <ToggleButton text="YES" pressed="true"  />
+                                <ToggleButton id="toggleBtnDisplay" text="NO" pressed="false"  press="onPress_toggleDisplay"/>
                             </cells>
                         </ColumnListItem>
-                        <ColumnListItem >
+                        <ColumnListItem visible="{= ${propInfo>/outCome} === 'view' }">
                             <cells>
                                 <Text text="납기 요청일"/>
-                                <DatePicker 
+                                <DatePicker id="datePickerMaturitydate"
                                     valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd" 
                                     value="{path: 'NegoHeaders>/maturity_date', type: 'sap.ui.model.odata.type.Date', 
                                             formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" />
@@ -69,7 +69,7 @@
                         <ColumnListItem >
                             <cells>
                                 <Text text="Current Price"/>
-                                <Input value="" ></Input>
+                                <Input id="inputCurrentPrice" value="" type="Number" textAlign="Right"></Input>
                             </cells>
                         </ColumnListItem>
                     </items>
@@ -145,10 +145,10 @@
         
 
         <beginButton>
-			<Button text="{I18N>/CANCEL}" press=".onPressManagerDialogClose"/>
+			<Button text="{I18N>/CANCEL}" press=".onPressSimpleChangeDialogClose"/>
 	    </beginButton>
         <endButton>
-        <Button text="{I18N>/APPLY}" id="managerSaveBtn" type="Emphasized" press=".onPressManagerDialogSave" />
+            <Button text="{I18N>/APPLY}" type="Emphasized" press=".onPressSimpleChangeDialogSave" />
         </endButton>
 	</Dialog>
 </core:FragmentDefinition>

@@ -99,7 +99,7 @@ BEGIN
     END;
     
     
-    --Delete Part(CRUD_TYPE_CODE=D)
+    --Update Or Insert Part(CRUD_TYPE_CODE<>D)
     BEGIN
 	    DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -109,7 +109,7 @@ BEGIN
         MERGE
          INTO DP_TC_MCST_PROJECT_PART_LIST ppl
         USING :I_TABLE it
-           ON 'D' != it.CRUD_TYPE_CODE
+           ON 'D' <> it.CRUD_TYPE_CODE
 		  AND ppl.TENANT_ID = it.TENANT_ID
 	      AND ppl.PROJECT_CODE = it.PROJECT_CODE
 	      AND ppl.MODEL_CODE = it.MODEL_CODE

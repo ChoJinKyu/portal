@@ -29,6 +29,14 @@ service BasePriceArlService {
         left outer join materialMst as mtr
             on pm.tenant_id = mtr.tenant_id
             and pm.material_code = mtr.material_code
+        left join org as porg
+            on porg.tenant_id = pm.tenant_id
+            and porg.company_code = pm.company_code
+            and porg.org_type_code = pm.org_type_code
+            and porg.org_code = pm.org_code
+        left outer join comp as comp
+            on pm.tenant_id = comp.tenant_id
+            and pm.company_code = comp.company_code
         left outer join supplierMst as sup
             on pm.tenant_id = sup.tenant_id
             and pm.supplier_code = sup.supplier_code
@@ -56,6 +64,8 @@ service BasePriceArlService {
             key pm.supplier_code,
             key pm.market_code,
             key pm.base_date,
+                comp.company_name,
+                porg.org_name,
                 cd01.code_name as market_code_nm : String(240),
                 mtr.material_desc,
                 mtr.material_spec,

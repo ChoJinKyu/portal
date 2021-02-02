@@ -26,10 +26,7 @@ using {
     sp.Sc_Nego_Prog_Status_Code_View,
     sp.Sc_Award_Prog_Status_Code_View,
     sp.Sc_Award_Type_Code_View,
-    sp.Sc_Award_Method_Code_View,
-    sp.Sc_Market_Code_View,
-    sp.Sc_Payment_Terms_View,
-    sp.Sc_Incoterms_View
+    sp.Sc_Award_Method_Code_View
 } from '../../sp/sc/SP_SC_REFERENCE_COMMON.model';
 
 
@@ -40,7 +37,7 @@ type CurrencyT   : String(5)      @title: '{i18n>currency}';
 type AmountT     : Decimal(28,2);
 type PriceAmountT: Decimal(28,5);
 type UnitT       : String(3)      @title: '{i18n>quantityUnit}';
-type QuantityT   : Decimal(28,3) @(title: '{i18n>quantity}', Measures.Unit: Units.Quantity );
+type QuantityT   : Decimal(28,3)  @(title: '{i18n>quantity}', Measures.Unit: Units.Quantity );
 /***********************************************************************************/
 
 

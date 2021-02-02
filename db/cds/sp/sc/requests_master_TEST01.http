@@ -10,6 +10,8 @@
 @serviceUrlV2 = http://localhost:8080/odata/v2
 # Local PC : mvn spring-boot:run : v4
 @serviceUrl = http://localhost:8080/odata/v4
+# Cloud App Server : v4
+@serviceUrl = https://biztech-partners-co---ltd-lg-common-dev-dev-po-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4
 
 #################################################
 # OData Service Configuration
@@ -19,7 +21,7 @@
 # Odata v2 service
 @reviews-serviceV2 = {{serviceUrlV2}}/sp.sourcingService
 # Odata v4 service
-@reviews-service = {{serviceUrl}}/sp.sourcingTest01V4Service
+@reviews-service = {{serviceUrl}}/sp.sourcingV4Service
 
 #################################################
 # OData Service Configuration
@@ -60,6 +62,47 @@ GET {{reviews-service}}/ScLanguage?
 Cookie: {{cookie}}
 
 
+### Show System Variable
+GET {{reviews-service}}/NegoHeadersView?
+&$skip=0&$top=1
+&$select=open_date
+# &$expand=*
+Cookie: {{cookie}}
+Accept-Language: ko-KR
+# Accept-Language: en-US
+
+
+### Test Performance Expand Header Restricted
+GET https://biztech-partners-co---ltd-lg-common-dev-dev-po-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4/sp.sourcingV4Service/NegoItemPrices?&$select=tenant_id,nego_header_id&$expand=Header($select=nego_progress_status_code,award_progress_status_code;$expand=nego_type,nego_progress_status($select=nego_progress_status_name),award_progress_status($select=award_progress_status_name))
+
+### Test Performacne Expand Header All
+GET https://biztech-partners-co---ltd-lg-common-dev-dev-po-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4/sp.sourcingV4Service/NegoItemPrices?&$select=tenant_id,nego_header_id&$expand=Header($select=*;$expand=nego_progress_status($select=*),award_progress_status($select=*))
+Accept: application/json
+Accept-Encoding: gzip
+
+### Multi Select | Default
+GET {{reviews-service}}/NegoItemPrices?
+&$expand=Header
+&$select=pr_approve_number
+Accept-Type: application/json; odata.metadata=minimal
+Accept: application/json; odata.metadata=minimal
+Accept-Encoding: gzip
+
+### Multi Select | Default
+GET {{reviews-service}}/NegoItemPrices?
+# &$top=5
+&$expand=Header($select=nego_document_number,nego_document_round,nego_progress_status_code,award_progress_status_code,reply_times;$expand=nego_progress_status($select=nego_progress_status_name),award_progress_status($select=award_progress_status_name))
+&$select=pr_approve_number
+Accept-Type: application/json; odata.metadata=minimal
+Accept: application/json; odata.metadata=minimal
+Accept-Encoding: gzip
+
+### Multi Select | Default
+GET {{reviews-service}}/NegoItemPricesStatusView?
+# &$top=5
+# &$expand=*
+&$select=*
+
 ### Multi Select | Default
 GET {{reviews-service}}/ScOutcomeCode?
 &$expand=*
@@ -73,6 +116,7 @@ GET {{reviews-service}}/Nego_Type_Code?
 &$expand=texts,localized
 Cookie: {{cookie}}
 Accept-Language: ko
+
 ### Multi Select | Expand All[Texts,Localized]
 GET {{reviews-service}}/Nego_Type_Code?
 &$expand=texts,localized

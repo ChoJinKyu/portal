@@ -66,8 +66,10 @@ ORDER BY OBJECT_NAME
 ;
 -- @block Bookmarked query
 -- @group SP_SC
--- @name TABLES - 설명
-SELECT TOP 50 * FROM DUMMY WHERE 1=1 
+-- @name TABLES - Test Performance Expand Header ALL
+select *,
+HEADER.*
+from SP_SOURCINGV4SERVICE_NEGOITEMPRICES
 -- AND FIELD = "VALUE"
 ;
 -- @block Bookmarked query

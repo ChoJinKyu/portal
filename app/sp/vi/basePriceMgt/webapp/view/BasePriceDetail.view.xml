@@ -182,13 +182,13 @@
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Left" width="8rem">
-                                            <Label text="{I18N>/BASE} {I18N>/YEAR}" textAlign="Center" width="100%"/>
+                                            <Label text="{I18N>/BASE}{I18N>/YEAR}" textAlign="Center" width="100%"/>
                                             <t:template>
                                                 <Text text="{detailModel>base_year}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Left" width="8rem">
-                                            <Label text="{I18N>/APPLY_START_DATE}" textAlign="Center" width="100%"/>
+                                            <Label text="{I18N>/SP_APPLY_START_DATA_YYYYMM}" textAlign="Center" width="100%"/>
                                             <t:template>
                                                 <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" required="true"
                                                             displayFormat="y-MM" class="sapUiSmallMarginBottom" 
@@ -196,7 +196,7 @@
                                             </t:template>
                                         </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/APPLY_END_DATE}" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/SP_APPLY_END_DATE_YYYYMM}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" required="true"
                                                         displayFormat="y-MM" class="sapUiSmallMarginBottom" 
@@ -365,7 +365,7 @@
 			<OverflowToolbar visible="true">
 				<ToolbarSpacer />
                 <Button type="Emphasized" text="{I18N>/TEMP_SAVE}" visible="true" press=".onSave" />
-                <Button type="Emphasized" text="{I18N>/DRAFT}" visible="true" press=".onDraft" />
+                <Button type="Emphasized" text="{I18N>/REQUEST}" visible="true" press=".onDraft" />
 			</OverflowToolbar>
 		</uxap:footer>
         <!-- footer 끝 -->

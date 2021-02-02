@@ -7,7 +7,7 @@ entity Vi_Base_Price_Aprl_Dtl {
   key approval_number                : String(50)  not null;	
   key item_sequence                  : Decimal  not null;	
   key metal_type_code                : String(30)  not null;	
-      metal_net_price                : Decimal  ;	
+      metal_net_price                : Decimal(19,4)  ;	
 
 };
 

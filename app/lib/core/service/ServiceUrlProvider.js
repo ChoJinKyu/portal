@@ -5,7 +5,8 @@ sap.ui.define([
     var map = {
             "cm.util.CommonService": "srv-api/odata/v2/cm.util.CommonService/",
             "cm.util.OrgService": "srv-api/odata/v2/cm.util.OrgService/",
-            "cm.util.HrService": "srv-api/odata/v2/cm.util.HrService/"
+            "cm.util.HrService": "srv-api/odata/v2/cm.util.HrService/",
+            "cm.util.SppUserSessionService": "srv-api/odata/v2/cm.util.SppUserSessionService/"
         };
     
     return {

@@ -231,32 +231,38 @@ sap.ui.define([
         * @see 사용처 create 팝업에서 select 버튼 press시 Object로 이동
         */
         handleConfirm: function (oEvent) {
+            debugger;
+
             var id = toggleButtonId.split('--')[2];
             var approvalTarget = "";
             var oRootModel = this.getModel("rootModel");           
 
             
             
-            if( !id ){       
-                MessageBox.error("품의서 유형을 선택해주세요");
-                return;
-            }else{
-                if(id.indexOf("General") > -1){
-                    this.getRouter().navTo("basePriceDetail");
+             if( !id ){       
+                 MessageBox.error("품의서 유형을 선택해주세요");
+                 return;
+             }else{
+                this.getRouter().navTo("basePriceDetail");
+             }
+             
+            //     if(id.indexOf("General") > -1){
+            //         MessageBox.show("test");
+            //         this.getRouter().navTo("basePriceDetail");
 
-                }else if(id.indexOf("InternalTrading") > -1){
-                    approvalTarget = "ChangeBasePriceTable";
+            //     }else if(id.indexOf("InternalTrading") > -1){
+            //         approvalTarget = "ChangeBasePriceTable";
 
-                }else if(id.indexOf("ProcessingCost") > -1){
-                    approvalTarget = "ChangeBasePriceTable";
+            //     }else if(id.indexOf("ProcessingCost") > -1){
+            //         approvalTarget = "ChangeBasePriceTable";
 
-                }else if(id.indexOf("Sulphate") > -1){
-                    approvalTarget = "ChangeBasePriceTable";
+            //     }else if(id.indexOf("Sulphate") > -1){
+            //         approvalTarget = "ChangeBasePriceTable";
 
-                }else if(id.indexOf("Anode") > -1){
-                    approvalTarget = "ChangeBasePriceTable";
-                }
-            }    
+            //     }else if(id.indexOf("Anode") > -1){
+            //         approvalTarget = "ChangeBasePriceTable";
+            //     }
+            // }    
         }
 
 
@@ -264,8 +270,7 @@ sap.ui.define([
          * 상세 페이지로 이동
          */
         , onGoDetail: function (oEvent) {
-            debugger;
-            MessageBox.show("준비중입니다.");
+            //MessageBox.show("준비중입니다.");
             return;
 
             // var oListModel = this.getModel("listModel");

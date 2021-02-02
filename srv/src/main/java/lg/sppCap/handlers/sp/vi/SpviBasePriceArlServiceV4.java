@@ -235,7 +235,7 @@ public class SpviBasePriceArlServiceV4 implements EventHandler {
         v_sql_createTableItem.append("CURRENCY_CODE          NVARCHAR(3),");
         v_sql_createTableItem.append("MATERIAL_PRICE_UNIT    DECIMAL(34),");
         v_sql_createTableItem.append("BUYER_EMPNO            NVARCHAR(30),");
-        v_sql_createTableItem.append("BASE_PRICE             DECIMAL(34),");
+        v_sql_createTableItem.append("BASE_PRICE             DECIMAL(19, 4),");
         v_sql_createTableItem.append("PCST                   DECIMAL(34),");
         v_sql_createTableItem.append("METAL_NET_PRICE        DECIMAL(34),");
         v_sql_createTableItem.append("COATING_MAT_NET_PRICE  DECIMAL(34),");
@@ -253,7 +253,7 @@ public class SpviBasePriceArlServiceV4 implements EventHandler {
         v_sql_createTableDtl.append("APPROVAL_NUMBER       NVARCHAR(30),");
         v_sql_createTableDtl.append("ITEM_SEQUENCE         DECIMAL(34,0),");
         v_sql_createTableDtl.append("METAL_TYPE_CODE       NVARCHAR(30),");
-        v_sql_createTableDtl.append("METAL_NET_PRICE       DECIMAL(34),");
+        v_sql_createTableDtl.append("METAL_NET_PRICE       DECIMAL(19, 4),");
         v_sql_createTableDtl.append("LOCAL_CREATE_DTM      SECONDDATE,");
         v_sql_createTableDtl.append("LOCAL_UPDATE_DTM      SECONDDATE,");
         v_sql_createTableDtl.append("CREATE_USER_ID        NVARCHAR(255),");

@@ -70,6 +70,60 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
 					</uxap:ObjectPageSubSection>
+                    <uxap:ObjectPageSubSection>
+                        <form:SimpleForm editable="false">
+                            <core:Title text="Boundry" />
+                            <Label text="Site"/>
+                            <lib-m:EditModeVBox editableValue="{master>/__metadata/_row_editable_}">
+                                <Text text="{path: 'master>/site_flag', formatter: '.viewFormatter.toYesNo'}"></Text>
+                                <Switch state="{master>/site_flag}" customTextOn="Yes" customTextOff="No">
+                                    <layoutData>
+                                        <FlexItemData growFactor="1" />
+                                    </layoutData>
+                                </Switch>
+                            </lib-m:EditModeVBox>
+
+                            <Label text="Company"/>
+                            <lib-m:EditModeVBox editableValue="{master>/__metadata/_row_editable_}">
+                                <Text text="{path: 'master>/company_flag', formatter: '.viewFormatter.toYesNo'}"></Text>
+                                <Switch state="{master>/company_flag}" customTextOn="Yes" customTextOff="No">
+                                    <layoutData>
+                                        <FlexItemData growFactor="1" />
+                                    </layoutData>
+                                </Switch>
+                            </lib-m:EditModeVBox>
+
+                            <Label text="Role"/>
+                            <lib-m:EditModeVBox editableValue="{master>/__metadata/_row_editable_}">
+                                <Text text="{path: 'master>/role_flag', formatter: '.viewFormatter.toYesNo'}"></Text>
+                                <Switch state="{master>/role_flag}" customTextOn="Yes" customTextOff="No">
+                                    <layoutData>
+                                        <FlexItemData growFactor="1" />
+                                    </layoutData>
+                                </Switch>
+                            </lib-m:EditModeVBox>
+
+                            <Label text="Organization"/>
+                            <lib-m:EditModeVBox editableValue="{master>/__metadata/_row_editable_}">
+                                <Text text="{path: 'master>/organization_flag', formatter: '.viewFormatter.toYesNo'}"></Text>
+                                <Switch state="{master>/organization_flag}" customTextOn="Yes" customTextOff="No">
+                                    <layoutData>
+                                        <FlexItemData growFactor="1" />
+                                    </layoutData>
+                                </Switch>
+                            </lib-m:EditModeVBox>
+
+                            <Label text="User"/>
+                            <lib-m:EditModeVBox editableValue="{master>/__metadata/_row_editable_}">
+                                <Text text="{path: 'master>/user_flag', formatter: '.viewFormatter.toYesNo'}"></Text>
+                                <Switch state="{master>/user_flag}" customTextOn="Yes" customTextOff="No">
+                                    <layoutData>
+                                        <FlexItemData growFactor="1" />
+                                    </layoutData>
+                                </Switch>
+                            </lib-m:EditModeVBox>
+                        </form:SimpleForm>
+					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
@@ -166,7 +220,7 @@
                     ariaHasPopup="Dialog"
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
-				<lib-m:EditModeButton type="Transparent" id="pageEditButton" editPress=".onPageEditButtonPress" cancelPress=".onPageCancelEditButtonPress" />
+				<lib-m:EditModeButton type="Transparent" id="pageEditButton" press=".onPageEditButtonPress" />
 				<Button type="Transparent" id="pageDeleteButton" text="Delete" press=".onPageDeleteButtonPress" />
 				<Button type="Emphasized" id="pageSaveButton" text="Save" press=".onPageSaveButtonPress" />
 			</OverflowToolbar>

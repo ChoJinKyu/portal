@@ -21,9 +21,6 @@
                 </f:snappedContent>
                 <f:expandedContent>
                 </f:expandedContent>
-                <f:actions>
-                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
-                </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
                 </f:navigationActions>
@@ -32,7 +29,7 @@
         <!-- DynamicPage Header -->
         <f:header>
             <f:DynamicPageHeader pinnable="true">
-                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2" class="searchBox">
                     <form:content>
                         <VBox>
                             <Label text="{I18N>/CHAIN}:" labelFor="searchChain" required="true"></Label>
@@ -74,6 +71,23 @@
                                 <layout:GridData span="XL6 L6 M12 S12" />
                             </layoutData>
                         </VBox>
+                        <VBox>
+                            <Label text="CM Input with Dialog (Code): " labelFor="cmInputWithCodeDialog"></Label>
+                            <Input id="cmInputWithCodeDialog"
+                                placeholder="Choose a code from the ValueHelp"
+                                value=""
+                                showValueHelp="true" valueHelpRequest=".onCmInputWithCodeValuePress">
+                            </Input>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S10" />
+                            </layoutData>
+                        </VBox>
+                        <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
+                            <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData>
+                        </FlexBox>
                     </form:content>
                 </form:SimpleForm>
             </f:DynamicPageHeader>
@@ -92,7 +106,7 @@
                         width="auto">
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="Control Options ({= ${list>/}.length || 0})" level="H2"/>
+                            <Title text="Control Options ({= ${list>/ControlOptionMasters}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
                             <ToolbarSeparator/>

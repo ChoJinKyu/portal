@@ -255,7 +255,7 @@
                 <Button
                     type="Emphasized"
                     text="{I18N>/REQUEST}"
-                    enabled="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
+                    enabled="{= ${detailViewModel>/viewMode}}"
                     press=".onRequest" />
 			</OverflowToolbar>
 		</uxap:footer>

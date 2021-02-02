@@ -26,7 +26,7 @@
             <t:Column width="18rem">
                 <Label text="{I18N>/COMPANY}" textAlign="Center" width="100%" />
                 <t:template>
-                    <Text text="{detailModel>company_code}" />
+                    <Text text="{detailModel>company_name}" />
                 </t:template>
             </t:Column>
             <!-- <t:Column hAlign="Center" width="6rem"> -->
@@ -730,23 +730,22 @@
                     <Text text="{detailModel>family_supplier_name}" />
                 </t:template>
             </t:Column>
-            <t:Column width="12rem">
+            <!-- <t:Column width="12rem">
                 <Label text="{I18N>/CHANGE_REASON_CODE}" textAlign="Center" width="100%" />
                 <t:template>
                     <ComboBox
                         visible="{detailViewModel>/viewMode}"
-                        editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
                         items="{
-                            path: 'detailViewModel>/currency',
+                            path: 'detailViewModel>/changeReason',
                             templateShareable:false}"
-                        selectedKey="{detailModel>prices/3/first_pur_netprice_curr_cd}">
+                        selectedKey="{detailModel>prices/3/change_reason_code}">
                         <items>
                             <core:Item key="{detailViewModel>currency_code}" text="{detailViewModel>currency_code}" />
                         </items>
                     </ComboBox>
-                    <Text text="{detailModel>prices/3/base_price_currency_code}" visible="{= !${detailViewModel>/viewMode}}" textAlign="Center" width="100%" />
+                    <Text text="{detailModel>prices/3/change_reason_nm}" visible="{= !${detailViewModel>/viewMode}}" />
                 </t:template>
-            </t:Column>
+            </t:Column> -->
         </t:columns>
     </t:Table>
 </core:FragmentDefinition>

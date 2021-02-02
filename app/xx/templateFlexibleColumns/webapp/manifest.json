@@ -110,7 +110,8 @@
         ]
     },
     "resourceRoots": {
-      "ext.lib": "../../../lib"
+      "ext.lib": "../../../lib",
+      "cm.util": "../../../cm/util"
     },
     "routing": {
       "config": {

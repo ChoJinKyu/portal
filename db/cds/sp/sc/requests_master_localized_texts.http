@@ -72,7 +72,12 @@ GET {{reviews-service}}/Sc_Nego_Parent_Type_Code?$orderby=sort_no
 # &$filter=((IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null) and (nego_header_id eq 2 or nego_header_id eq 3))
 # &$select=tenant_id,nego_header_id,nego_document_round,HasActiveEntity,IsActiveEntity,SiblingEntity,DraftAdministrativeData
 # &$expand=SiblingEntity,DraftAdministrativeData
+# OData-Version: 4
+# OData-MaxVersion: 4.1
 Cookie: {{cookie}}
+Content-Type: application/json; odata.metadata=max
+Accept-Type: application/json; odata.metadata=max
+# accept: application/atom+xml,application/atomsvc+xml,application/xml
 
 ### Multi Select | Default | ko
 GET {{reviews-service}}/Sc_Nego_Parent_Type_Code?$orderby=sort_no
