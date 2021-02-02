@@ -93,12 +93,9 @@
         <f:content>
             <t:Table id="mainTable"
             selectionMode="None"
+            sort="sequence"
             rows="{
-                path: 'list>/PdPartBaseActivityView',
-                sorter: { 
-                    path: 'local_update_dtm',
-                    descending: true 
-                }                   
+                path: 'list>/PdPartBaseActivityView'                                 
             }"
             cellClick=".onCellClickPress"
             rowSelectionChange=".onCheck"
