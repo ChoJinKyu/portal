@@ -21,12 +21,12 @@ entity VI_Base_Price_Aprl_Item {
          vendor_pool_code               : String(20)  not null;
          currency_code                  : String(3)   not null;
          material_price_unit            : Decimal(5,0)        ;		
-         base_price                     : Decimal             ;	
+         base_price                     : Decimal(19,4)       ;	
          buyer_empno                    : String(30)          ;	
-         pcst                           : Decimal             ;	
-         metal_net_price                : Decimal             ;	
-         coating_mat_net_price          : Decimal             ;	
-         fabric_net_price               : Decimal             ;	        
+         pcst                           : Decimal(19,4)             ;	
+         metal_net_price                : Decimal(19,4)             ;	
+         coating_mat_net_price          : Decimal(19,4)             ;	
+         fabric_net_price               : Decimal(19,4)             ;	        
 };
 
 extend VI_Base_Price_Aprl_Item with util.Managed;

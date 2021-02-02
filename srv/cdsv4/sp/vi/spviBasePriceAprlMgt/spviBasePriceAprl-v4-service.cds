@@ -79,11 +79,11 @@ service spviBasePriceArlV4Service {
         currency_code	          : String(3)    ;
         material_price_unit 	  : Decimal	     ;
         buyer_empno	              : String(30)   ;
-        base_price	              : Decimal	     ;
-        pcst	                  : Decimal	     ;
-        metal_net_price	          : Decimal	     ;
-        coating_mat_net_price	  : Decimal	     ;
-        fabric_net_price	      : Decimal	     ;
+        base_price	              : Decimal(19,4)    ;
+        pcst	                  : Decimal(19,4)    ;
+        metal_net_price	          : Decimal(19,4)    ;
+        coating_mat_net_price	  : Decimal(19,4)    ;
+        fabric_net_price	      : Decimal(19,4)    ;
 
         local_create_dtm       : DateTime;
         local_update_dtm       : DateTime;
