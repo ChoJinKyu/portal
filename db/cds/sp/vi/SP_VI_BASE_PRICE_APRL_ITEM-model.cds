@@ -14,19 +14,19 @@ entity VI_Base_Price_Aprl_Item {
          apply_end_yyyymm               : String(6)  not null ;	
          bizdivision_code               : String(10) not null ;	
          plant_code                     : String(10) not null ;	
-         supply_plant_code              : String(10)  ;	
+         supply_plant_code              : String(10)          ;	
          supplier_code                  : String(10)  not null;	
          material_code                  : String(40)  not null;	
-         material_name                  : String(240) ;
+         material_name                  : String(240)         ;
          vendor_pool_code               : String(20)  not null;
          currency_code                  : String(3)   not null;
-         material_price_unit            : Decimal(5,0)  ;		
-         base_price                     : Decimal     ;	
-         buyer_empno                    : String(30)  ;	
-         pcst                           : Decimal     ;	
-         metal_net_price                : Decimal     ;	
-         coating_mat_net_price          : Decimal     ;	
-         fabric_net_price               : Decimal     ;	        
+         material_price_unit            : Decimal(5,0)        ;		
+         base_price                     : Decimal             ;	
+         buyer_empno                    : String(30)          ;	
+         pcst                           : Decimal             ;	
+         metal_net_price                : Decimal             ;	
+         coating_mat_net_price          : Decimal             ;	
+         fabric_net_price               : Decimal             ;	        
 };
 
 extend VI_Base_Price_Aprl_Item with util.Managed;
