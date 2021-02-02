@@ -6,44 +6,59 @@
     xmlns:richtexteditor="sap.ui.richtexteditor"
 	xmlns:core="sap.ui.core">
 
-    <VBox id="publishEditBox">
+    <VBox id="editBox">
 
-        <form:SimpleForm id="publishForm1Edit" editable="true"> 
+        <form:SimpleForm id="form1Edit" editable="true"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label text="* 품의명" required="true" design="Bold" class="sapMLabelNoText"/>
+                <Label text="* 계약명" required="true" design="Bold" class="sapMLabelNoText"/>
                 <Input value="{
-                    path: 'master>/loi_publish_title',
+                    path: 'mst>/net_price_contract_title',
                     type: 'sap.ui.model.type.String',
                     constraints: {
                         maxLength: 50
                     }
-                }" required="true" editable="true" width="100%"/>
+                }" required="true" width="100%"/>
             </VBox>
         </form:SimpleForm>
 
-        <form:SimpleForm id="publishForm2Edit" editable="true">
-
+        <form:SimpleForm id="form2Edit" editable="true">
+            
             <VBox alignContent="Center">
-                <Label text="* 협력사명" design="Bold" class="sapMLabelNoText" />
-                <Input value="{
-                        path: 'master>/supplier_code',
-                        type: 'sap.ui.model.type.String',
-                        constraints: {
-                            maxLength: 50
-                        }
-                    }" required="true" editable="true" width="100%"/>
+                <Label text="* 운영단위(플랜트)" required="true" design="Bold" class="sapMLabelNoText" />
+                <Input id="savePlantName" required="true" placeholder="플랜트" showValueHelp="true" valueHelpRequest=".openPlantPopup" width="100%" />
+                <Input id="savePlantCode" visible="false" />
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>    
-            </VBox>        
+            </VBox>   
 
             <VBox alignContent="Center">
-                <Label text="* 계약서식" design="Bold" class="sapMLabelNoText"/>
-                <Select selectedKey="{master>/contract_format_id}">
-                    <items>
-                        <core:Item key="K" text="구매의향서(국문)" />
-                        <core:Item key="E" text="구매의향서(영문)" />
-                    </items>
+                <Label text="* 계약기간" design="Bold" class="sapMLabelNoText"/>
+                <HBox>
+                <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyyMMdd" value="{mst>/net_price_contract_start_date}" placeholder="Date" width="100%"/>
+                <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyyMMdd" value="{mst>/net_price_contract_end_date}" placeholder="Date" width="100%"/>
+                </HBox>
+                <layoutData>
+                    <layout:GridData span="XL6 L6 M6 S12" />
+                </layoutData>     
+            </VBox>                  
+
+            <VBox alignContent="Center">
+                <Label text="* 대분류" design="Bold" class="sapMLabelNoText"/>
+                <Select selectedKey="{mst>/ep_item_class_code}"  width="100%"
+                        items="{
+                                path: '/UcItemClass',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                    {path: 'company_code', operator: 'EQ', value1: 'LGCKR'}
+                                ],
+                                sorter: { path: 'display_sequence'}
+                            }">
+                    <!-- <items>
+                        <core:Item key="{mst>ep_item_class_code}" text="{mst>ep_item_class_code}: {mst>ep_item_class_code}" />
+                    </items> -->
+                    <core:Item key="{ep_item_class_code}" text="{ep_item_class_name}" />
                 </Select>            
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
@@ -51,21 +66,11 @@
             </VBox> 
 
             <VBox alignContent="Center">
-                <Label text="* 계약일자" design="Bold" class="sapMLabelNoText"/>
-                <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyyMMdd" value="{master>/contract_date}" placeholder="Date"/>   
-                <layoutData>
-                    <layout:GridData span="XL6 L6 M6 S12" />
-                </layoutData>     
-            </VBox> 
-
-            <VBox alignContent="Center">
-                <Label text="* 서명방식" design="Bold" required="true" class="sapMLabelNoText"/>
-                <SegmentedButton class="sapUiSmallMarginBottom" selectedKey="{master>/offline_flag}" width="100%">                                            
-                    <items>
-                        <SegmentedButtonItem text="온라인" key="false" />
-                        <SegmentedButtonItem text="오프라인" key="true" />
-                    </items>
-                </SegmentedButton>   
+                <Label text="* 구매담당자" design="Bold" required="true" class="sapMLabelNoText"/>
+                <Input id="saveBuyerName"
+                placeholder="" required="true" 
+                showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress" />
+                <Input id="saveBuyerEmpno" visible="false" />
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>     
@@ -73,31 +78,34 @@
                                
         </form:SimpleForm>
 
-        <form:SimpleForm id="publishForm3Edit" editable="true"> 
+        <form:SimpleForm id="form3Edit" editable="true"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label  text="* 부대조건" 
+                <Label text="* 견적참조정보" required="true" design="Bold" class="sapMLabelNoText"/>
+                <Input value="{
+                    path: 'mst>/quotation_reference_info',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 50
+                    }
+                }" required="true" width="100%"/>
+            </VBox>
+        </form:SimpleForm>        
+
+        <form:SimpleForm id="form4Edit" editable="true"> 
+            <VBox alignContent="Center" alignItems="Stretch"> 
+                <Label  text="* 비고" 
                             design="Bold" 
                             class="sapUiSmallMarginBottom"/>
-                <TextArea value="{master>/additional_condition_desc}" rows="8" width="100%" />            
+                <TextArea value="{mst>/remark}" rows="4" width="100%" />            
             </VBox>
         </form:SimpleForm>
 
-        <form:SimpleForm id="publishForm4Edit" editable="true"> 
+        <form:SimpleForm id="form5Edit" editable="true" visible="{= ${mst>/net_price_contract_chg_type_cd} === 'D' ? true : false }"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label  text="* 특기사항" 
+                <Label  text="* 계약종료사유" 
                             design="Bold" 
                             class="sapUiSmallMarginBottom"/>
-                <richtexteditor:RichTextEditor
-                    editorType="TinyMCE4"
-                    width="100%"
-                    height="200px"
-                    editable="true"
-                    customToolbar="true"
-                    showGroupFont="true"
-                    showGroupLink="true"
-                    showGroupInsert="true"
-                    value="{master>/special_note}">
-                </richtexteditor:RichTextEditor> 
+                <TextArea value="{mst>/delete_reason}" rows="4" width="100%" /> 
             </VBox>
         </form:SimpleForm>        
 
