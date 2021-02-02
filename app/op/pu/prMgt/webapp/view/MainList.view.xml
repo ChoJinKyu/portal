@@ -105,23 +105,13 @@
                                 <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
                               </items>
                             </MultiComboBox>
-                            <Label text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" labelFor="searchRequestDepartmentS"></Label>
-                                <!-- <Input id="searchRequestDepartment" placeholder="Input data"></Input> -->
-                                <lib-m:CodePicker id="searchRequestDepartmentS"
-                                    placeholder="Enter a department name"
-                                    keyField="department_id"
-                                    textField="department_local_name"
-                                    suggestionItems="{
-                                        path: '/',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                        ],
-                                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                        entityName: 'Department'
-                                    }">
-                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
-                                        keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
-                                </lib-m:CodePicker>
+                            <Label text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" labelFor="multiInputWithDepartmentValueHelp"></Label>
+                            <MultiInput id="multiInputWithDepartmentValueHelp"
+                                placeholder="Choose Departments from the ValueHelp"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputWithDepartmentValuePress">
+                            </MultiInput> 
+
+
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -212,40 +202,40 @@
                         <!-- <Column id="mainColumnCHK" width="2.5em" minScreenWidth="Desktop" >
                             <CheckBox selected="false" select=".onColumnChecBox"/>
                         </Column> -->
-                        <Column id="mainColumnPR_NUMBER"   hAlign="Center" width="auto">
+                        <Column id="mainColumnPR_NUMBER"   hAlign="Center" width="8em">
                             <Text text="{I18N>/PR_NUMBER}" />
                         </Column>
-                        <Column id="mainColumnERP_PR_NUMBER"   minScreenWidth="Desktop" hAlign="Center" width="auto">
+                        <Column id="mainColumnERP_PR_NUMBER"   minScreenWidth="Desktop" hAlign="Center" width="9.5em">
                             <Text text="{I18N>/ERP_PR_NUMBER}" />
                         </Column>        
-                        <Column id="mainColumnPR_DESC"  demandPopin="true" minScreenWidth="Desktop" popinDisplay="Inline" hAlign="Center" width="auto"> 
+                        <Column id="mainColumnPR_DESC"  demandPopin="true" minScreenWidth="Desktop" popinDisplay="Inline" hAlign="Center"  width="25em"> 
                             <Text text="{I18N>/PR_DESC}" />
                         </Column>                       
-                        <Column id="mainColumnPR_TYPE_CODE" minScreenWidth="Desktop" hAlign="Center"  width="auto">
+                        <Column id="mainColumnPR_TYPE_CODE" minScreenWidth="Desktop" hAlign="Center"  width="8em">
                             <Text text="{I18N>/PR_TYPE_CODE}" />
                         </Column>
-                        <Column id="mainColumnPR_TYPE_CODE_2" minScreenWidth="Desktop" hAlign="Center"  width="auto">
+                        <Column id="mainColumnPR_TYPE_CODE_2" minScreenWidth="Desktop" hAlign="Center"  width="6em">
                             <Text text="{I18N>/PR_TYPE_CODE_2}" />
                         </Column>
-                        <Column id="mainColumnPR_TYPE_CODE_3" minScreenWidth="Desktop" hAlign="Center" width="5em">
+                        <Column id="mainColumnPR_TYPE_CODE_3" minScreenWidth="Desktop" hAlign="Center" width="6em">
                             <Text text="{I18N>/PR_TYPE_CODE_3}" />
                         </Column>
-                        <Column id="mainColumnPR_TEMPLATE_NUMBER" minScreenWidth="Desktop" hAlign="Center" width="12em">
+                        <Column id="mainColumnPR_TEMPLATE_NUMBER" minScreenWidth="Desktop" hAlign="Center" width="14em">
                             <Text text="{I18N>/PR_TEMPLATE_NUMBER}" />
                         </Column>
-                        <Column id="mainColumnREQUESTOR_DEPARTMENT_NAME" minScreenWidth="Desktop" hAlign="Center" width="auto">
+                        <Column id="mainColumnREQUESTOR_DEPARTMENT_NAME" minScreenWidth="Desktop" hAlign="Center" width="6.5em">
                             <Text text="{I18N>/REQUESTOR_DEPARTMENT_NAME}" />
                         </Column>
-                        <Column id="mainColumnREQUESTOR_NAME" minScreenWidth="Desktop" hAlign="Center" width="auto">
+                        <Column id="mainColumnREQUESTOR_NAME" minScreenWidth="Desktop" hAlign="Center" width="5em">
                             <Text text="{I18N>/REQUESTOR_NAME}" />
-                        </Column>                        
-                        <Column id="mainColumnREQUEST_DATET" minScreenWidth="Desktop" hAlign="Center"  width="auto">
-                            <Text text="{I18N>/PR_REQUEST_DATE}" />
                         </Column>
-                        <Column id="mainColumnPR_COUNT"  hAlign="Center"  width="auto">
+                        <Column id="mainColumnREQUEST_DATE" minScreenWidth="Desktop" hAlign="Center"    width="7.5em">
+                            <Text text="{I18N>/PR_REQUEST_DATE}" />
+                        </Column> 
+                        <Column id="mainColumnPR_COUNT"  hAlign="Center"  width="7.5em" >
                             <Text text="{I18N>/PR_COUNT}" />
                         </Column>
-                        <Column id="mainColumnPR_CREATE_STATUS_CODE"  hAlign="Center"  width="auto">
+                        <Column id="mainColumnPR_CREATE_STATUS_CODE"  hAlign="Center"  width="6em">
                             <Text text="{I18N>/PR_CREATE_STATUS_CODE}" />
                         </Column>
                        
@@ -254,16 +244,25 @@
                         <ColumnListItem type="Navigation" press=".onMainTableItemPress">
                             <cells>             
                                 <!-- <CheckBox fieldGroupIds="{= ${list>pr_create_status_code}==='DR'? 'checkBoxs':''}"  visible="{= ${list>pr_create_status_code}==='DR'? true:false }" select=".onCheck" />   -->
-                                <Text text="{list>pr_number}" vAlign="Left" />
+                                <Text text="{list>pr_number}" width="7em"  />
                                 <Text text="{list>erp_pr_number}"/>
-                                <Text text="{list>pr_desc}" textAlign="Left"/>
-                                <Text text="{list>pr_type_name}"/>
-                                <Text text="{list>pr_type_name_2}"/>
-                                <Text text="{list>pr_type_name_3}"/>
-                                <Text text="{list>pr_template_name}"/>                                
+                                <Text text="{list>pr_desc}"  hAlign="Begin" width="25em"/>
+                                <Text text="{list>pr_type_name}"    />
+                                <Text text="{list>pr_type_name_2}"  />
+                                <Text text="{list>pr_type_name_3}"      />
+                                <Text text="{list>pr_template_name}"  />                                
                                 <Text text="{list>requestor_department_name}"/> 
-                                <Text text="{list>requestor_name}"/>                                                                                                
-                                <Text text="{list>request_dateT}"/>
+                                <Text text="{list>requestor_name}"/>     
+                                <Text text="{list>request_dateT}"/>     
+                                <!-- <DatePicker dateValue="{path : 'list>request_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/> -->
+                                <!-- <Text text="{
+                                                    path:'list>request_date',
+                                                    type:'sap.ui.model.odata.type.DateTime',
+                                                    formatOptions: {
+                                                        UTC: true,
+                                                        pattern: 'yyyy-MM-dd'
+                                                    }
+                                                }" /> -->
                                 <Text text="{list>pr_progress_status_cnt_txt}"/>
                                 <Text text="{list>pr_create_status_name}"/>
                             </cells>
