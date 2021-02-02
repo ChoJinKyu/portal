@@ -157,7 +157,7 @@
             <t:Table id="mainTable"
             selectionMode="MultiToggle"
             rows="{
-                path: 'list>/'        
+                path: 'viewModel>/list'        
             }"
             cellClick=".onCellClick"
             rowSelectionChange=".onCheck"
@@ -167,9 +167,9 @@
             width="100%">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
-                <Title text="공사단가계약 {= ${list>/}.length > 0 ? '(' + ${list>/}.length + ')' : ''}" level="H2"/>
+                <Title text="공사단가계약 {= ${viewModel>/list}.length > 0 ? '(' + ${viewModel>/list}.length + ')' : ''}" level="H2"/>
                 <ToolbarSpacer/>
-                <Button text="신규작성" id="RfqButton" press=".onRfqButtonPress" type="Transparent"/>
+                <Button text="신규작성" id="RfqButton" press=".onAddButtonPress" type="Transparent"/>
                 <Button text="계약변경" id="supplierSelectionButton" press=".onSupplierSelectionButtonPress" type="Transparent"/>
                 <Button text="계약종료" id="publishButton" press=".onContractEndButtonPress"   type="Transparent"/>
                 <ToolbarSeparator/>
@@ -186,38 +186,38 @@
                 <t:Column id="mainDocumentNo" width="10rem" hAlign="Center">
                 <Label text="단기계약그룹번호" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="11{list>net_price_contract_document_no}"/>
+                    <Text text="{viewModel>net_price_contract_document_no}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainDegree" width="4rem" hAlign="Center">
                 <Label text="차수" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>net_price_contract_degree}"/>
+                    <Text text="{viewModel>net_price_contract_degree}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainTitle" width="15rem">
                 <Label text="계약명" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>net_price_contract_title}" />
+                    <Text text="{viewModel>net_price_contract_title}" />
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainItemClass" width="8rem">
                 <Label text="대분류(공종)" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>ep_item_class_name}"/>
+                    <Text text="{viewModel>ep_item_class_name}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainSupplierName" width="12rem">
                 <Label text="협력사명" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>supplier_name}"/>
+                    <Text text="{viewModel>supplier_name}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainStartDate" width="8rem" hAlign="Center">
                 <Label text="계약시작일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
-                                path: 'list>net_price_contract_start_date',
+                                path: 'viewModel>net_price_contract_start_date',
                                 formatter: '.dateFormatter.toUTCDateString'
                             }"/>
                 </t:template>
@@ -226,7 +226,7 @@
                 <Label text="계약종료일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
-                                path: 'list>net_price_contract_end_date',
+                                path: 'viewModel>net_price_contract_end_date',
                                 formatter: '.dateFormatter.toUTCDateString'
                             }"/>
                 </t:template>
@@ -234,19 +234,19 @@
                 <t:Column id="mainStatusCode" width="7rem" hAlign="Center">
                 <Label text="계약진행상태" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>net_price_contract_status_name}"/>
+                    <Link text="{viewModel>net_price_contract_status_name}" press="onTableItemPress" enabled="{= ${viewModel>net_price_contract_status_name} !== '' ? true : false }" />
                 </t:template>
                 </t:Column>
                 <t:Column id="mainEffectiveStatusName" width="7rem" hAlign="Center">
                 <Label text="계약유효상태" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>effective_status_name}"/>
+                    <Text text="{viewModel>effective_status_name}"/>
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainDayCount" width="6rem" hAlign="Right">
                 <Label text="계약일수" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>net_price_contract_day_count}"/>
+                    <Text text="{viewModel>net_price_contract_day_count}"/>
                     <!-- <Text  text="{
                                 path: 'list>net_price_contract_day_count',
                                 formatter: '.numberFormatter.toNumberString'

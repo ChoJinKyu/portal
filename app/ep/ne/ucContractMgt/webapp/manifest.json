@@ -111,7 +111,19 @@
                 "refreshAfterChange": false,
                 "useBatch": true
                 }
-            }            
+            },
+            "viewModel": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {
+                    "defaultBindingMode": "TwoWay"
+                }
+            },               
+            "viewSet": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {
+                    "defaultBindingMode": "TwoWay"
+                }
+            }                         
         },
         "resources": {
             "css": [
@@ -123,7 +135,8 @@
         "resourceRoots": {
             "ext.lib": "../../../../lib",
             "cm.util": "../../../../cm/util",
-            "sp.util": "../../../../sp/util"
+            "sp.util": "../../../../sp/util",
+            "ep.util": "../../../../ep/util"
         },
         "routing": {
             "config": {
@@ -148,7 +161,7 @@
                     ]
                 },
                 {
-                    "pattern": "detailObject/{tenantId}/{companyCode}/{loiWriteNumber}/{loiItemNumber}/{loiSelectionNumber}/{loiNumber}/{quotationNumber}/{quotationItemNumber}",
+                    "pattern": "detailObject/{tenantId}/{companyCode}/{netPriceContractDocumentNo}/{netPriceContractDegree}",
                     "name": "detailPage",
                     "target": [
                         "detailObject"
@@ -161,7 +174,7 @@
                     "viewId": "mainPage",
                     "viewLevel": 1
                 },
-                "selectionObject": {
+                "detailObject": {
                     "viewName": "UcContractDetail",
                     "viewId": "detailPage",
                     "viewLevel": 2

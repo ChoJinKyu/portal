@@ -1,8 +1,5 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
-    "ext/lib/util/Multilingual",
-    "ext/lib/model/TransactionManager",
-    "ext/lib/model/ManagedListModel",
     "ext/lib/util/Validator",
     "sap/ui/model/json/JSONModel",
     "ext/lib/formatter/DateFormatter",
@@ -24,13 +21,11 @@ sap.ui.define([
     "sap/m/Input",
     "sap/m/VBox",
     "cm/util/control/ui/CmDialogHelp",
-    "sp/util/control/ui/SupplierDialog"
-], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
-    TablePersoController, UcContractListPersoService, Fragment, NumberFormatter, Sorter,
-    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox, CmDialogHelp, SupplierDialog) {
+    "sp/util/control/ui/SupplierDialog",
+    "ep/util/controller/EpBaseController"
+], function (BaseController, Validator, JSONModel, DateFormatter, TablePersoController, UcContractListPersoService, Fragment, NumberFormatter, Sorter,
+    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox, CmDialogHelp, SupplierDialog, EpBaseController) {
     "use strict";
-
-    var oTransactionManager;
 
     return BaseController.extend("ep.ne.ucContractMgt.controller.UcContractList", {
 
@@ -47,8 +42,7 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            this.setModel(new JSONModel(), "list");
-            this.setModel(new JSONModel(), "contractEnd");
+
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._oTPC = new TablePersoController({
@@ -57,6 +51,8 @@ sap.ui.define([
             }).setTable(this.byId("mainTable"));
 
             this.enableMessagePopover();
+
+            //console.log("aaaaaaaaaaaa==", epBaseController.test1());
 
             var today = new Date();
             this.getView().byId("searchEndDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
@@ -130,6 +126,35 @@ sap.ui.define([
             this.byId("pageSearchButton").firePress();
         },
 
+        /**
+     * Event handler when a table add button pressed
+     * @param {sap.ui.base.Event} oEvent
+     * @public
+     */
+        onAddButtonPress: function () {
+            this.getRouter().navTo("detailPage", {
+                tenantId: "new",
+                companyCode: "new",
+                netPriceContractDocumentNo: "new",
+                netPriceContractDegree: "new"
+            });
+        },
+
+        onTableItemPress: function (oEvent) {
+
+            // var oViewModel = this.getModel('viewModel');
+            // var sPath = oEvent.getSource().getBindingContextPath();
+            // console.log("sPath=", oEvent.getSource().getBindingContextPath());
+            // var oRecord = oViewModel.getProperty(sPath);
+
+            // this.getRouter().navTo("detailPage", {
+            //     tenantId: oRecord.tenant_id,
+            //     companyCode: oRecord.company_code,
+            //     netPriceContractDocumentNo: oRecord.net_price_contract_document_no,
+            //     netPriceContractDegree: oRecord.net_price_contract_degree,
+            // }, true);
+        },
+
 		/**
 		 * Event handler for saving page changes
 		 * @public
@@ -139,9 +164,9 @@ sap.ui.define([
             var oView = this.getView(),
                 that = this;
 
-            var contractEndModel = this.getModel("contractEnd");
+            var contractEndModel = this.getModel("viewModel").getProperty("/contractEnd");
 
-            contractEndModel.getData()["inputData"].map(d => {
+            contractEndModel["inputData"].map.map(d => {
                 d["delete_reason"] = oView.byId("saveDeleteReason").getValue();
                 return d;
             });
@@ -165,7 +190,7 @@ sap.ui.define([
                         $.ajax({
                             url: url,
                             type: "POST",
-                            data: JSON.stringify(contractEndModel.getData()),
+                            data: JSON.stringify(contractEndModel),
                             contentType: "application/json",
                             success: function (data) {
                                 console.log("#########Success#####", data.value);
@@ -201,8 +226,11 @@ sap.ui.define([
             var canSelect = true;
 
             var oTable = this.byId("mainTable"),
-                oModel = this.getView().getModel("list"),
+                oViewModel = this.getModel("viewModel"),
+                oViewData = oViewModel.getProperty("/list"),
                 oSelected = oTable.getSelectedIndices();
+
+                console.log("oViewData=", oViewData);
 
             var loiNumberArr = [];
 
@@ -212,11 +240,11 @@ sap.ui.define([
                     /*
                         향후 견적테이블이 생성되면 1번로직 주석 2번 로직 주석해제
                     */
-                    console.log("net_price_contract_document_no========", oModel.getData()[chkIdx].net_price_contract_document_no);
-                    console.log("net_price_contract_degree========", oModel.getData()[chkIdx].net_price_contract_degree);
-                    console.log("net_price_contract_chg_type_cd========", oModel.getData()[chkIdx].net_price_contract_chg_type_cd);
+                    console.log("net_price_contract_document_no========", oViewData[chkIdx].net_price_contract_document_no);
+                    console.log("net_price_contract_degree========", oViewData[chkIdx].net_price_contract_degree);
+                    console.log("net_price_contract_chg_type_cd========", oViewData[chkIdx].net_price_contract_chg_type_cd);
 
-                    if (oModel.getData()[chkIdx].net_price_contract_chg_type_cd == "D") {
+                    if (oViewData[chkIdx].net_price_contract_chg_type_cd == "D") {
                         MessageToast.show("계약종료건이 있습니다.");
                         canSelect = false;
                         return true;
@@ -238,11 +266,11 @@ sap.ui.define([
 
                 if (oSelected.length > 0) {
                     oSelected.forEach(function (chkIdx) {
-                        var tenantId = oModel.getData()[chkIdx].tenant_id;
-                        var companyCode = oModel.getData()[chkIdx].company_code;
-                        var netPriceContractDocumentNo = oModel.getData()[chkIdx].net_price_contract_document_no;
-                        var netPriceContractDegree = oModel.getData()[chkIdx].net_price_contract_degree;
-                        deleteReason = oModel.getData()[chkIdx].delete_reason;
+                        var tenantId = oViewData[chkIdx].tenant_id;
+                        var companyCode = oViewData[chkIdx].company_code;
+                        var netPriceContractDocumentNo = oViewData[chkIdx].net_price_contract_document_no;
+                        var netPriceContractDegree = oViewData[chkIdx].net_price_contract_degree;
+                        deleteReason = oViewData[chkIdx].delete_reason;
 
 
                         console.log("####tenant_id====", tenantId);
@@ -266,8 +294,8 @@ sap.ui.define([
                 console.log("####saveContractEnd====", saveContractEnd);
 
                 input.inputData = saveContractEnd;
-                this.getModel("contractEnd").setData(input);
-                console.log("####contractEnd====", this.getModel("contractEnd").getData());
+                oViewModel.setProperty("/contractEnd", input);
+                console.log("####contractEnd====", oViewModel.getProperty("/contractEnd"));
 
                 var oView = this.getView();
                 if (!this._contractEndDialog) {
@@ -298,7 +326,7 @@ sap.ui.define([
         _applySearch: function (aSearchFilters, aSorter) {
             var oView = this.getView(),
                 oRootModel = this.getModel(),
-                that = this;
+                oViewModel = this.getModel("viewModel");
 
             oView.setBusy(true);
             oRootModel.read("/UcApprovalMstView", {
@@ -306,8 +334,9 @@ sap.ui.define([
                 sorters: aSorter,
                 success: function (oData) {
                     console.log("oData111====", oData);
-                    oView.getModel("list").setData(oData.results);
-                    console.log("list====333", oView.getModel("list").getData());
+                    //oView.getModel("list").setData(oData.results);
+                    oViewModel.setProperty("/list", oData.results);
+                    console.log("list====333", oViewModel.getProperty("/list"));
                     //oView.getModel("list").updateBindings(true);
                     oView.setBusy(false);
                 }.bind(this),
@@ -346,7 +375,7 @@ sap.ui.define([
             var found2 = searchSupplierName.match(/\((.*?)\)/);
             if (found2) {
                 searchSupplierName = found2[1];
-            }            
+            }
 
             console.log("searchOrgCode==", searchOrgCode);
             console.log("searchTitle==", searchTitle);

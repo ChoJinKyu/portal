@@ -12,6 +12,7 @@ using {ep as approvalMstDetailView} from '../../../../db/cds/ep/ne/EP_UC_APPROVA
 using {ep as approvalDtlDetailView} from '../../../../db/cds/ep/ne/EP_UC_APPROVAL_DTL_DETAIL_VIEW-model';
 using {ep as approvalSupplierDetailView} from '../../../../db/cds/ep/ne/EP_UC_APPROVAL_SUPPLIER_DETAIL_VIEW-model';
 using {ep as approvalExtraDetailView} from '../../../../db/cds/ep/ne/EP_UC_APPROVAL_EXTRA_DETAIL_VIEW-model';
+using {ep as itemView} from '../../../../db/cds/ep/ne/EP_UC_ITEM_VIEW-model';
 
 namespace ep;
 
@@ -31,5 +32,6 @@ service UcContractMgtService {
     entity UcApprovalDtlDetailView  as projection on approvalDtlDetailView.Uc_Approval_Dtl_Detail_View;
     entity UcApprovalSupplierDetailView  as projection on approvalSupplierDetailView.Uc_Approval_Supplier_Detail_View;
     entity UcApprovalExtraDetailView  as projection on approvalExtraDetailView.Uc_Approval_Extra_Detail_View;
+    entity UcItemView  as projection on itemView.Uc_Item_View;
 
 }
