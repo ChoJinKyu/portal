@@ -149,7 +149,7 @@
         title="직원 검색"
         items="{
             filters: [
-                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
             ]
         }"
         apply=".onEmployeeDialogApplyPress"
