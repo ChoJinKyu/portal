@@ -165,7 +165,7 @@ sap.ui.define([
 		 */
         onColumnListItemPress: function () {
 
-            var [ event, model ] = arguments,
+            var [ event, type, model, ...args ] = arguments,
                 layout = this.getOwnerComponent()
                             .getHelper()
                             .getNextUIState(1)
@@ -185,8 +185,8 @@ sap.ui.define([
                 .setProperty("/headerExpanded", layout !== "TwoColumnsMidExpanded"); 
         },
         onButtonPress: function () {
-            var [ event, action, ...args ] = arguments;
-            var { tId, service, entry } = args[args.length-1];
+            var [ event, ...args ] = arguments;
+            var { action, service, entry, tId } = args[args.length-1];
             var message, value;
             var table = this.byId(tId);
             var items = table
@@ -249,14 +249,14 @@ sap.ui.define([
                                         this.setModel(new JSONModel({
                                             "reason": {
                                                 action: action,
-                                                buyer_empno: "",
+                                                buyerEmpno: "",
                                                 processedReason: ""
                                             }
                                         }), "fragment");
                                     }).bind(this),
                                     onCommit: function() {
                                         var [event, action, value, ...args] = arguments;
-                                        if (value.action == 'CHANGE' && !value.buyer_empno) {
+                                        if (value.action == 'CHANGE' && !value.buyerEmpno) {
                                             MessageBox.alert("(미정)구매담당자를 선택하세요.");
                                             return false;
                                         }
@@ -327,13 +327,6 @@ sap.ui.define([
                     }).bind(this)
                 });
             }).call(this);
-        },
-        
-        // Excel Download - 추가 화일명이 필요한 경우, arguments 뒤에 인자로 붙인다.
-        // 어쩔 수 없음, Binding Expression 에서 함수 Parsing 해결이 되면, 다시 재작성
-        onExcelDownload: function () {
-
-            return BaseController.prototype["onExcel"].call(this, arguments);
         }
     });
 });

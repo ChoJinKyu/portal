@@ -28,7 +28,7 @@ sap.ui.define([
             // 다국어
             this.setModel(new Multilingual().getModel(), "I18N");
             // 기능추가
-            Aop.addFuncForButton(this);
+            Aop.addFuncForButtonPress(this);
             Aop.addFuncForNavigation(this);
         },
         /////////////////////////////////////////////////////////////
@@ -90,6 +90,10 @@ sap.ui.define([
         // Fragment
         fragment: function(id, properties, handlers, context) {
 
+            // 저장 (strict mode)
+            var key = (new Date()).getTime().toString();
+            this.fragment[key] = this.byId(id);
+
             // Promise
             var mDeferred = $.Deferred();
             
@@ -131,6 +135,7 @@ sap.ui.define([
                         settled && setTimeout(() => {
                             that.byId(id).close();
                             that.byId(id).destroy();
+                            that.fragment[key] && delete that.fragment[key];
                             Object
                                 .keys(handlers)
                                 .forEach(h => that[id][h] = undefined);
@@ -232,24 +237,28 @@ sap.ui.define([
         /////////////////////////////////////////////////////////////
         // Event Handler - 지우지 말 것
         /////////////////////////////////////////////////////////////
-        // 네비게이션
-        onNavigationActions: function () {},
+        onOverflowToolbarButtonPress: function () {},
         onButtonPress: function () {},
-
-        // Excel
         onExcel: function () {
-            var [event, action, items, ...args] = arguments[0];
+            var [event, action, items, ...args] = arguments;
             if (action == "Download") {
+                var today = new Date();
+                var stamp = [
+                    today.getFullYear(), 
+                    ((today.getMonth()+1)+"").length == 1 ? "0" + (today.getMonth()+1) : today.getMonth()+1, 
+                    ((today.getDay())+"").length == 1 ? "0" + (today.getDay()) : today.getDay(), 
+                ].join("");
                 return ExcelUtil.fnExportExcel({
-                    fileName: arguments[1] || args[args.length-1]["fileName"],
+                    fileName: (args[args.length-1]["fileName"] || (function(args){
+                        var [payload, ...items] = args;
+                        return items.reverse().join("_");
+                    })(args.slice().reverse())) + "_" + stamp,
                     table: this.byId(args[args.length-1]["tId"]),
                     data: items
                 });
             }
-        },
-
-        // 개인화
-        // I/F : 
-        onPersonalize: function () {},
+            else /*if (action == "Upload")*/ {
+            }
+        }
 	});
 });
