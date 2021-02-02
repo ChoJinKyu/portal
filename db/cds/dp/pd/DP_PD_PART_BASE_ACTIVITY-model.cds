@@ -23,7 +23,7 @@ entity Pd_Part_Base_Activity {
 extend Pd_Part_Base_Activity with util.Managed;	
 
 @cds.persistence.exists
-entity Pd_Part_Base_Activity_View {
+entity Dp_Pd_Part_Base_Activity_View {
     key tenant_id             : String;
     key activity_code         : String;
         activity_name         : String;

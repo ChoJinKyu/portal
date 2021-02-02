@@ -8,7 +8,7 @@ namespace dp;
 @path : '/dp.partBaseActivityService'
 
 service PartBaseActivityService {
-    entity PdPartBaseActivityView as projection on PartBaseActivity.Pd_Part_Base_Activity_View;
+    entity PdPartBaseActivityView as projection on PartBaseActivity.Dp_Pd_Part_Base_Activity_View;
     entity PdPartBaseActivity as projection on PartBaseActivity.Pd_Part_Base_Activity;
     entity PdPartBaseActivityLng as projection on PartBaseActivityLng.Pd_Part_Base_Activity_Lng;
     entity PdPartBaseActivityCategory as projection on PartBaseActivityCategory.Pd_Part_Base_Activity_Category;
