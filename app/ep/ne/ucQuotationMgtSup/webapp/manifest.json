@@ -94,7 +94,19 @@
                     "refreshAfterChange": true,
                     "useBatch": true
                 }
-            }
+            },
+            "contModel": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {
+                "defaultBindingMode": "TwoWay"
+                }
+            },
+            "viewModel": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {
+                "defaultBindingMode": "TwoWay"
+                }
+            }     
         },
         "resources": {
             "css": [

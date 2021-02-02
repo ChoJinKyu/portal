@@ -838,20 +838,20 @@ var tenantId = oMasterModel.getData().tenant_id;
             }
 
 
-            if (!this._vosDialog) {
-                this._vosDialog = Fragment.load({
+            if (!this._contractItemDialog) {
+                this._contractItemDialog = Fragment.load({
                     id: oView.getId(),
-                    name: "ep.ne.ucQuotationMgtSup.view.Vos",
+                    name: "ep.ne.ucQuotationMgtSup.view.ContractItem",
                     controller: this
-                }).then(function (vosDialog) {
-                    oView.addDependent(vosDialog);
-                    return vosDialog;
+                }).then(function (contractItemDialog) {
+                    oView.addDependent(contractItemDialog);
+                    return contractItemDialog;
                 }.bind(this));
             }
 
-            //this._vosDialog.then(function (vosDialog) {
-            this._vosDialog.then((function (vosDialog) {
-                vosDialog.open();
+            //this._contractItemDialog.then(function (contractItemDialog) {
+            this._contractItemDialog.then((function (contractItemDialog) {
+                contractItemDialog.open();
 
 
 
@@ -907,11 +907,11 @@ var tenantId = oMasterModel.getData().tenant_id;
             console.log("input========", input);
             oView.getModel("details").setData(input);
 
-            this.byId("dialogVos").close();
+            this.byId("dialogContractItem").close();
         },
 
         onExitContractItem: function () {
-            this.byId("dialogVos").close();
+            this.byId("dialogContractItem").close();
         },
 
         _checkNumber : function (oEvent) {
