@@ -5,13 +5,15 @@ sap.ui.define([
     "ext/lib/formatter/NumberFormatter",
     "ext/lib/util/ExcelUtil",
 
+    "sap/m/MessageBox",
+
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/core/Fragment",
 
     "op/util/library/Aop",
-], function (Controller, Multilingual, DateFormatter, NumberFormatter, ExcelUtil, JSONModel, Filter, FilterOperator, Fragment, Aop) {
+], function (Controller, Multilingual, DateFormatter, NumberFormatter, ExcelUtil, MessageBox, JSONModel, Filter, FilterOperator, Fragment, Aop) {
     "use strict";
 	return Controller.extend("op.util.controller.BaseController", {
         /////////////////////////////////////////////////////////////
@@ -19,10 +21,13 @@ sap.ui.define([
         /////////////////////////////////////////////////////////////
         "op.init": function() {
             // Session
+            // 김구매 / 100000 / 50013558 / 석유화학.구매.원재료구매1팀 - 원재료
+            // 최구매 / 200000 / 58636557 / 첨단소재.구매2.공사구매팀 - 공사
             this.setModel(new JSONModel({
                 tenant_id: "L2100",
                 company_code: "LGCKR",
-                employee_number: null
+                employee_number: "100000",
+                department_code: "50013558"
             }), "session");
             this.$session = this.getModel("session").getData();
             // 다국어
@@ -184,16 +189,36 @@ sap.ui.define([
         procedure: function(service, entry, input) {
 
             var mDeferred = $.Deferred();
-
-            $.ajax({
-                url: ["/op/pu/prReviewMgt/webapp/srv-api/odata/v4/", service, "/", entry].join(""),
-                type: "POST",
-                data: JSON.stringify(input),
-                contentType: "application/json",
-                success: mDeferred.resolve,
-                error: mDeferred.reject
-            });
-
+            (function(){
+                var oDeferred = $.Deferred();
+                $.ajax({
+                    //url: ["/op/pu/prReviewMgt/webapp/srv-api/odata/v4/", service, "/", entry].join(""),
+                    url: [
+                        "/", this.getMetadata().getNamespace().split(".controller")[0].replace(/\./g, "/"), 
+                        "/webapp/srv-api/odata/v4/", service, "/", entry
+                    ].join(""),
+                    type: "POST",
+                    data: JSON.stringify(input),
+                    contentType: "application/json",
+                    success: oDeferred.resolve,
+                    error: oDeferred.reject
+                });
+                return oDeferred.promise();
+            }).call(this)
+            .done(function(r) {
+                // Message
+                MessageBox.alert(r.return_msg);
+                // Settled
+                return (
+                    r.return_code == "NG" 
+                    ? mDeferred.reject(r) 
+                    : mDeferred.resolve(r)
+                );
+            })
+            .fail(function(e) {
+                MessageBox.alert(e.responseText);
+                mDeferred.reject(e);
+            })
             return mDeferred.promise();
         },
 

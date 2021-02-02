@@ -36,6 +36,7 @@ sap.ui.define([
         onInit: function () {
             // call the base controller's init function
             BaseController.prototype["op.init"].apply(this, arguments);
+
             // today
             var lToday = new Date();
             var uToday = new Date(Date.UTC(lToday.getFullYear(), lToday.getMonth(), lToday.getDate()));
@@ -239,7 +240,6 @@ sap.ui.define([
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: (function (sButton) {
                         if (sButton === MessageBox.Action.OK) {
-
                             if (action == 'CLOSING' || action == 'CHANGE' || action == 'REWRITE') {
                                 // 사유입력
                                 this.fragment("reason", {
@@ -270,7 +270,8 @@ sap.ui.define([
                                         var [event, action, ...args] = arguments;
                                         return ;
                                     }
-                                }, this).done(result => {
+                                }, this)
+                                .done(result => {
                                     var { buyerEmpno, buyerDepartmentCode, processedReason } = result;
                                     console.log(">>>>>>>>>>>>> done", result);
                                     this.procedure(service, entry, {
@@ -288,14 +289,12 @@ sap.ui.define([
                                             buyerEmpno: buyerEmpno,
                                             buyerDepartmentCode: buyerDepartmentCode,
                                             processedReason: processedReason,
-                                            userId: this.$session.user_id
+                                            employeeNumber: this.$session.employee_number
                                         }
                                     })
-                                    .done((function(result) {
-                                        console.log(">>>>>>>>> Success", result);
+                                    .done((function(r) {
                                         this.search("jSearch", "list", "Pr_ReviewListView");
-                                    }).bind(this))
-                                    .fail(e => console.log(">>>>>>>>> failure", e));
+                                    }).bind(this));
                                 });
                             }
                             else {
@@ -314,14 +313,12 @@ sap.ui.define([
                                         buyerEmpno: "",
                                         buyerDepartmentCode: "",
                                         processedReason: "",
-                                        userId: ""
+                                        employeeNumber: this.$session.employee_number
                                     }
                                 })
-                                .done((function(result) {
-                                    console.log(">>>>>>>>> Success", result);
+                                .done((function(r) {
                                     this.search("jSearch", "list", "Pr_ReviewListView");
                                 }).bind(this))
-                                .fail(e => console.log(">>>>>>>>> failure", e));
                             }
                         }
                     }).bind(this)

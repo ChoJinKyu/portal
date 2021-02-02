@@ -113,14 +113,12 @@ sap.ui.define([
                                             buyerEmpno: buyerEmpno,
                                             buyerDepartmentCode: buyerDepartmentCode,
                                             processedReason: processedReason,
-                                            userId: this.$session.user_id
+                                            employeeNumber: this.$session.employee_number
                                         }
                                     })
-                                    .done((function(result) {
-                                        console.log(">>>>>>>>> Success", result);
+                                    .done((function(r) {
                                         this.search("jSearch", "list", "Pr_ReviewListView");
-                                    }).bind(this))
-                                    .fail(e => console.log(">>>>>>>>> failure", e));
+                                    }).bind(this));
                                 });
                             }
                             else {
