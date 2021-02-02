@@ -20,31 +20,58 @@ SQL SECURITY INVOKER
 
 AS
 BEGIN
+    DECLARE V_TENANT_ID NVARCHAR(5);
+    DECLARE V_PRODUCT_ACTIVITY_CODE NVARCHAR(40);
+    DECLARE V_SEQUENCE DECIMAL;
+    DECLARE V_ORG_SEQUENCE DECIMAL;
 
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		ROLLBACK;
 		O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
-	END;
+    END;
+    
+    SELECT TENANT_ID, PRODUCT_ACTIVITY_CODE, SEQUENCE
+    INTO   V_TENANT_ID, V_PRODUCT_ACTIVITY_CODE, V_SEQUENCE
+    FROM   :I_M
+    ;   
 
-/*  CRUD_TYPE_CODE가 'D' 인 Data 삭제 */
+    IF :CRUD_TYPE IN ('D', 'U') THEN
+
+        SELECT SEQUENCE 
+        INTO   V_ORG_SEQUENCE 
+        FROM   DP_PD_PRODUCT_ACTIVITY_TEMPLATE 
+        WHERE  TENANT_ID = V_TENANT_ID
+        AND    PRODUCT_ACTIVITY_CODE = V_PRODUCT_ACTIVITY_CODE
+        ;
+   
+    END IF;
+
+    /*  CRUD_TYPE가 'D' 인 Data 삭제 */
     IF :CRUD_TYPE = 'D' THEN
         DELETE FROM DP_PD_PRODUCT_ACTIVITY_TEMPLATE_LNG D
-        WHERE (D.TENANT_ID, D.PRODUCT_ACTIVITY_CODE ) IN
-            ( SELECT TENANT_ID, PRODUCT_ACTIVITY_CODE FROM :I_M )
+        WHERE  D.TENANT_ID = V_TENANT_ID
+        AND    D.PRODUCT_ACTIVITY_CODE = V_PRODUCT_ACTIVITY_CODE
+        ;
+ 
+        DELETE FROM DP_PD_PRODUCT_ACTIVITY_TEMPLATE M
+        WHERE  M.TENANT_ID = V_TENANT_ID
+        AND    M.PRODUCT_ACTIVITY_CODE = V_PRODUCT_ACTIVITY_CODE
         ;
 
-        DELETE FROM DP_PD_PRODUCT_ACTIVITY_TEMPLATE M
-        WHERE (M.TENANT_ID, M.PRODUCT_ACTIVITY_CODE ) IN
-            ( SELECT TENANT_ID, PRODUCT_ACTIVITY_CODE FROM :I_M )
-        ;
+        UPDATE DP_PD_PRODUCT_ACTIVITY_TEMPLATE
+        SET    SEQUENCE = SEQUENCE - 1
+        WHERE  TENANT_ID = V_TENANT_ID
+        AND    SEQUENCE > V_ORG_SEQUENCE
+        ; 
 
     ELSE
 
         IF :CRUD_TYPE = 'U' THEN
+
             UPDATE DP_PD_PRODUCT_ACTIVITY_TEMPLATE M
-               SET (M.DESCRIPTION, M.ACTIVE_FLAG, M.LOCAL_UPDATE_DTM, M.UPDATE_USER_ID, M.SYSTEM_UPDATE_DTM) =
-                   ( SELECT DESCRIPTION, ACTIVE_FLAG, NOW(), UPDATE_USER_ID, NOW()
+               SET (M.SEQUENCE, M.DESCRIPTION, M.ACTIVE_FLAG, M.LOCAL_UPDATE_DTM, M.UPDATE_USER_ID, M.SYSTEM_UPDATE_DTM) =
+                   ( SELECT SEQUENCE, DESCRIPTION, ACTIVE_FLAG, NOW(), UPDATE_USER_ID, NOW()
                        FROM :I_M
                       WHERE TENANT_ID = M.TENANT_ID 
                         AND PRODUCT_ACTIVITY_CODE = M.PRODUCT_ACTIVITY_CODE
@@ -52,10 +79,32 @@ BEGIN
             WHERE   (M.TENANT_ID, M.PRODUCT_ACTIVITY_CODE ) IN
                     ( SELECT TENANT_ID, PRODUCT_ACTIVITY_CODE FROM :I_M )
             ;
+
+            IF V_ORG_SEQUENCE > V_SEQUENCE THEN
+
+                UPDATE DP_PD_PRODUCT_ACTIVITY_TEMPLATE
+                SET    SEQUENCE = SEQUENCE + 1
+                WHERE  TENANT_ID = V_TENANT_ID
+                AND    SEQUENCE >= V_SEQUENCE
+                AND    SEQUENCE < V_ORG_SEQUENCE
+                ;
+
+            ELSEIF V_ORG_SEQUENCE < V_SEQUENCE THEN
+
+                UPDATE DP_PD_PRODUCT_ACTIVITY_TEMPLATE
+                SET    SEQUENCE = SEQUENCE - 1
+                WHERE  TENANT_ID = V_TENANT_ID
+                AND    SEQUENCE <= V_SEQUENCE
+                AND    SEQUENCE > V_ORG_SEQUENCE
+                ;
+
+            END IF;
+            
         ELSE
             INSERT INTO DP_PD_PRODUCT_ACTIVITY_TEMPLATE M
                       ( TENANT_ID
                         ,PRODUCT_ACTIVITY_CODE
+                        ,SEQUENCE
                         ,DESCRIPTION
                         ,ACTIVE_FLAG
                         ,LOCAL_CREATE_DTM
@@ -65,17 +114,18 @@ BEGIN
                         ,SYSTEM_CREATE_DTM
                         ,SYSTEM_UPDATE_DTM
                       )
-                 SELECT TENANT_ID
-                        ,PRODUCT_ACTIVITY_CODE
-                        ,DESCRIPTION
-                        ,ACTIVE_FLAG
+                 SELECT M.TENANT_ID
+                        ,M.PRODUCT_ACTIVITY_CODE
+                        ,(SELECT COALESCE(MAX(SEQUENCE), 0) + 1 FROM DP_PD_PRODUCT_ACTIVITY_TEMPLATE WHERE TENANT_ID = M.TENANT_ID)
+                        ,M.DESCRIPTION
+                        ,M.ACTIVE_FLAG
                         ,NOW()
                         ,NOW()
-                        ,UPDATE_USER_ID
-                        ,UPDATE_USER_ID
+                        ,M.UPDATE_USER_ID
+                        ,M.UPDATE_USER_ID
                         ,NOW()
                         ,NOW()
-                FROM :I_M 
+                FROM :I_M M
             ;                
 
         END IF;
