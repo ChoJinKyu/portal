@@ -1,0 +1,214 @@
+<!-- 
+   * @description Remodel & Repair Completion Report / 개조 & 수리 완료 보고
+   * @date 2021.02.01
+   * @author jinseon.lee 
+-->
+<core:FragmentDefinition
+	xmlns="sap.m" 
+        xmlns:uxap="sap.uxap" 
+        xmlns:form="sap.ui.layout.form" 
+        xmlns:core="sap.ui.core" 
+        xmlns:layout="sap.ui.layout" 
+        xmlns:tnt="sap.tnt" 
+        xmlns:co="sap.suite.ui.commons" 
+        xmlns:si="sap.suite.ui.commons.statusindicator" 
+        xmlns:u="sap.ui.unified" 
+        xmlns:table="sap.ui.table"
+        core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
+         >
+    <VBox class="sapUiSmallMargin">
+
+    <form:SimpleForm editable="true" 
+                         layout="ResponsiveGridLayout" 
+                         labelSpanXL="2" 
+                         labelSpanL="2" 
+                         labelSpanM="2" 
+                         labelSpanS="2" 
+                         adjustLabelSpan="false" 
+                         emptySpanXL="0" 
+                         emptySpanL="0" 
+                         emptySpanM="0" 
+                         emptySpanS="0" 
+                         columnsXL="2" 
+                         columnsL="1" 
+                         columnsM="1" 
+                         width="70%"
+                         singleContainerFullSize="true">
+			        <form:content>
+                   
+				<HBox>
+					<VBox class="sapUiSmallMargin">
+						<Label text="{I18N>/COMPANY}"/>
+						<ObjectStatus text="[{company>/company_code}] {company>/company_name}" state="Error"/>
+					</VBox>
+					<VBox class="sapUiSmallMargin">
+						<Label text="{I18N>/PLANT}"/>
+						<ObjectStatus text="[{plant>/org_code}] {plant>/org_name}" state="Error"/>
+					</VBox>
+				</HBox>
+                </form:content>
+		        </form:SimpleForm>
+                 <form:SimpleForm editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                     <!-- budgetExecutionTable Table -->
+                    <table:Table id="budgetExecutionTable" 
+                            selectionMode="{=${mode>/editFlag}?'MultiToggle':'None'}" 
+                            fixedColumnCount="6"  
+                            visibleRowCountMode="Auto" 
+                            rows="{path:'mdItemMaster>/ItemBudgetExecution'}">
+					<table:extension>
+						<OverflowToolbar>
+							<ToolbarSpacer/>
+							    <!-- Add the Personalization button -->
+							    <Button visible="{mode>/editFlag}" type="Transparent" text="{I18N>/ROW_ADD}" press=".onBudgetExecutionAddPress">
+								<!-- Add -->
+								<customData>
+									<core:CustomData key="multi" value="true"/>
+								</customData>
+							</Button>
+							<Button visible="{mode>/editFlag}" type="Transparent" text="{I18N>/ROW_DELETE}" press=".onBudgetExecutionDelRow"/>
+						</OverflowToolbar>
+					</table:extension>
+					<table:columns>
+						<table:Column width="8em" hAlign="Center">
+							<Label text="{path:'I18N>/REQUEST_NUMBER', formatter:'I18NFormatter'}"/>
+							<table:template>
+								<Text text="{}"/>
+							</table:template>
+						</table:Column>
+						<table:Column  width="8em" hAlign="Center">
+							<Label text="{path:'I18N>/MODEL', formatter:'I18NFormatter'}" />
+							<table:template>
+								<Text text=""/>
+							</table:template>
+						</table:Column>
+						<table:Column width="8em" hAlign="Center">
+							<HBox>
+                                <Label text="PDM"/>
+                                <Label text="{path:'I18N>/REQUEST_NUMBER', formatter:'I18NFormatter'}"/>
+                            </HBox>
+							<table:template>
+								<Text text=""/>
+							</table:template>
+						</table:Column>
+						<table:Column width="12em" hAlign="Center">
+                            <!-- Asset No -->
+							<Label text="{path:'I18N>/ASSET_NO', formatter:'I18NFormatter'}" />
+							<table:template>
+								<Text text=""/>
+							</table:template>
+						</table:Column>
+						<table:Column width="10em" hAlign="Center">
+                            <!-- Part No -->
+							<Label text="{path:'I18N>/PART_NO', formatter:'I18NFormatter'}" />
+							<table:template>
+								<Text text="{mdItemMaster>mold_sequence}" textAlign="Center"/>
+							</table:template>
+						</table:Column>
+						<table:Column width="4em" hAlign="Center">
+                            <!-- Seq -->
+							<Label text="{path:'I18N>/SEQUENCE', formatter:'I18NFormatter'}" />
+							<table:template>
+								<Text text="" textAlign="Center"/>
+							</table:template>
+						</table:Column>
+						<table:Column width="10em" hAlign="Center">
+                            <!-- Spare Part -->
+							<Label text="{path:'I18N>/SPARE_PART', formatter:'I18NFormatter'}"/>
+							<table:template>
+								<Text text=""/>
+							</table:template>
+						</table:Column>
+						<table:Column width="10em" hAlign="Center">
+                            <!-- Item Name -->
+							<Label text="{path:'I18N>/ITEM_NAME', formatter:'I18NFormatter'}"/>
+							<table:template>
+								<Text text=""/>
+							</table:template>
+						</table:Column>
+						<table:Column width="10em" hAlign="Center">
+                            <!-- Family Part No -->
+							<Label text="{path:'I18N>/FAMILY_PART_NUMBER', formatter:'I18NFormatter'}"/>
+							<table:template>
+								<Text text=""/>
+							</table:template>
+						</table:Column>
+						<table:Column width="10em" hAlign="Center">
+                            <!-- Item Type -->
+							<Label text="{path:'I18N>/MOLD_ITEM_TYPE', formatter:'I18NFormatter'}"/>
+							<table:template>
+								<Text text=""/>
+							</table:template>
+						</table:Column>
+						<table:Column width="10em" hAlign="Center">
+                            <!-- Repair Vendor -->
+							<Label text="{path:'I18N>/REPAIR_VENDOR', formatter:'I18NFormatter'}"/>
+							<table:template>
+								<Text text=""/>
+							</table:template>
+						</table:Column>
+						<table:Column width="10em" hAlign="Center">
+                            <!-- Order Supplier -->
+							<Label text="{path:'I18N>/ORDER_SUPPLIER', formatter:'I18NFormatter'}"/>
+							<table:template>
+								<Text text=""/>
+							</table:template>
+						</table:Column>
+						<table:Column width="10em" hAlign="Center">
+                            <!-- Prod Supplier -->
+							<Label text="{path:'I18N>/PROD_SUPPLIER', formatter:'I18NFormatter'}"/>
+							<table:template>
+								<Text text=""/>
+							</table:template>
+						</table:Column>
+						<table:Column width="10em" hAlign="Center">
+                            <!-- Reason -->
+							<Label text="{path:'I18N>/REASON', formatter:'I18NFormatter'}"/>
+							<table:template>
+								<Text text=""/>
+							</table:template>
+						</table:Column>
+						<table:Column width="10em" hAlign="Center">
+                            <!-- Currency -->
+							<Label text="{path:'I18N>/CURRENCY', formatter:'I18NFormatter'}"/>
+							<table:template>
+								<Text text=""/>
+							</table:template>
+						</table:Column>
+						<table:Column width="10em" hAlign="Center">
+                            <!-- Amount -->
+							<Label text="{path:'I18N>/AMOUNT', formatter:'I18NFormatter'}"/>
+							<table:template>
+								<Text text=""/>
+							</table:template>
+						</table:Column>
+						<table:Column width="10em" hAlign="Center">
+                            <!-- Repair Type -->
+							<Label text="{path:'I18N>/REPAIR_TYPE', formatter:'I18NFormatter'}"/>
+							<table:template>
+								<Text text=""/>
+							</table:template>
+						</table:Column>
+						<table:Column width="10em" hAlign="Center">
+                            <!-- Request Date -->
+							<Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}"/>
+							<table:template>
+								<Text text=""/>
+							</table:template>
+						</table:Column>
+						
+					</table:columns>
+				</table:Table>
+                     </form:content>
+                 </form:SimpleForm>
+
+
+
+    </VBox>
+
+
+
+
+       
+	
+</core:FragmentDefinition>

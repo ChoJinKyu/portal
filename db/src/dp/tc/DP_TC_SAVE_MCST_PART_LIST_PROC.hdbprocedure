@@ -7,7 +7,6 @@ PROCEDURE DP_TC_SAVE_MCST_PART_LIST_PROC (IN I_TABLE TABLE(TENANT_ID NVARCHAR(5)
 					                                      ,UOM_CODE NVARCHAR(3)
 					                                      ,MATERIAL_REQM_QUANTITY DECIMAL
 					                                      ,BUYER_EMPNO NVARCHAR(30)
-					                                      ,DIRECT_REGISTER_FLAG BOOLEAN
 					                                      ,MAPPING_ID INTEGER
 					                                      ,CRUD_TYPE_CODE NVARCHAR(1)
 					                                      )

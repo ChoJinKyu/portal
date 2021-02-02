@@ -245,29 +245,29 @@
                                 </OverflowToolbar>
                             </headerToolbar>
                             <columns>
-                                <Column>
+                                <Column hAlign="Left">
                                     <Text text="과제명" />
                                 </Column>
-                                <Column>
+                                <Column hAlign="Left">
                                     <Text text="투자 내역" />
                                 </Column>
-                                <Column>
+                                <Column hAlign="Left">
                                     <Text text="집행시기" />
                                 </Column>
-                                <Column>
+                                <Column hAlign="Right">
                                     <Text text="신청금액(원)" />
                                 </Column>
-                                <Column>
+                                <Column hAlign="Left">
                                     <Text text="적용모델" />
                                 </Column>
-                                <Column>
+                                <Column hAlign="Left">
                                     <Text text="투자장소" />
                                 </Column>
                             </columns>
                             <items>
                                 <ColumnListItem>
                                     <cells>
-                                        <Link text="{applicationSup>investment_project_name}" press=".onOpenInvestmentDtl" />
+                                        <Link text="{applicationSup>investment_project_name}" press=".onOpenInvestmentDtl"/>
                                         <Text text="{applicationSup>investment_desc}"/>
                                         <Text text="{applicationSup>execution_yyyymm}"/>
                                         <Text text="{applicationSup>appl_amount}"/>

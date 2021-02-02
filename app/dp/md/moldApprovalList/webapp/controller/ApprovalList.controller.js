@@ -777,6 +777,9 @@ sap.ui.define([
                     appTypeCode = "I"
                 }else if(id.indexOf("export") > -1){
                     appTypeCode ="X"  
+                }else if(id.indexOf("repModCompletion") > -1){ // 7. 개조 & 수리 완료 보고
+                    approvalTarget ="rrcrReport"
+                    appTypeCode ="C"
                 }
             }
             

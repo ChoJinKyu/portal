@@ -22,11 +22,13 @@ sap.ui.define([
     "dp/md/util/controller/MoldItemSelection",
     'sap/m/SearchField',
     "sap/m/Token",
-    "dp/md/util/controller/DeptSelection",
+    "dp/md/util/controller/DeptSelection", 
+    "dp/md/util/controller/ProcessUI", 
+
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
-    , ApprovalBaseController, MoldItemSelection , SearchField , Token , DeptSelection
+    , ApprovalBaseController, MoldItemSelection , SearchField , Token , DeptSelection , ProcessUI
 ) {
     "use strict";
     /**
@@ -46,7 +48,7 @@ sap.ui.define([
         moldItemPop: new MoldItemSelection(),
 
         deptSelection : new DeptSelection(),
-
+        process : new ProcessUI(), 
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -78,7 +80,8 @@ sap.ui.define([
         /* =========================================================== */
         /* internal methods                                            */
         /* =========================================================== */
-        _onApprovalPage : function () {
+        _onApprovalPage : function () { 
+           this.process.open_Type1(this, "test"); 
             this.getView().setModel(new ManagedListModel(), "mdRecepit");
 
             // console.log(" mode "  ,  this.getView().getModel("mode"));

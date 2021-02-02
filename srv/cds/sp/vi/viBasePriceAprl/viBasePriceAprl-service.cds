@@ -27,9 +27,6 @@ service BasePriceAprlService {
 
     entity Base_Price_Aprl_Master        as
         select from arlMasterSuper sup
-        inner join arlItem sub
-            on sup.tenant_id = sub.tenant_id
-            and sup.approval_number = sub.approval_number
         inner join arlTyp typ 
             on sup.tenant_id = typ.tenant_id
             and sup.approval_number = typ.approval_number    

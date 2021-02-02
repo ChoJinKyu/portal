@@ -52,6 +52,22 @@ service makerViewService {
             sort_no
         ;
 
+    //Maker Status View
+    @readonly
+    view MakerRegistrationRequestProgressTypeView @(title : '제조사 등록 신청 진행 유형 View') as
+        select from mkMstView.Sm_Master_Cal_View as makerView {
+            key makerView.tenant_id,
+            key makerView.code,
+                makerView.sort_no,
+                makerView.code_name
+        }
+        where
+            trim(group_code) = 'SP_SM_APPROVAL_TYPE'
+        order by
+            tenant_id,
+            sort_no
+        ;
+
     //Business Partner Master View
     //Business Partner Role Code View
     @readonly
