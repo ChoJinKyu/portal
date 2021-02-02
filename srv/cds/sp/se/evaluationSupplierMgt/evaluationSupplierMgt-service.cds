@@ -11,12 +11,12 @@ service EvalSupplierService {
 
     //List View
     view ListView as
-    select s.tenant_id,
-           s.company_code,
+    select Key s.tenant_id,
+           Key s.company_code,
            sm.company_name,
            sm.supplier_type_code,
            sm.supplier_type_name,
-           s.supplier_code,
+           Key s.supplier_code,
            sm.supplier_local_name,
            sm.supplier_english_name,
            s.supplier_group_code,
@@ -36,8 +36,8 @@ service EvalSupplierService {
 
     //Supplier Group Code 조회 Popup
     view SupplierGroupListView as
-    select tenant_id,
-           supplier_group_code,
+    select Key tenant_id,
+           Key supplier_group_code,
            supplier_group_name
     from   eSupplier
     where  supplier_group_code is not null
