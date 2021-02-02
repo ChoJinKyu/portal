@@ -264,8 +264,7 @@ sap.ui.define([
          * 상세 페이지로 이동
          */
         , onGoDetail: function (oEvent) {
-            debugger;
-            MessageBox.show("준비중입니다.");
+            //MessageBox.show("준비중입니다.");
             return;
 
             // var oListModel = this.getModel("listModel");
