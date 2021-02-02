@@ -156,14 +156,28 @@ using { sp.Sc_Pur_Operation_Org } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model
             ; 
 */
 
-// using { dp as MtlMst } from './DP_MM_MATERIAL_MST-model';
-// entity Sc_Mm_Material_Mst as select from Mm_Material_Mst mixin 
-// {
-//     localized: association to Mm_Material_Desc_Lng on 
-// }
-// into 
-// {
-//     *
-// };
-
 // Mm_Material_Desc_Lng
+using {dp.Mm_Material_Mst} from '../../dp/mm/DP_MM_MATERIAL_MST-model';
+using {dp.Mm_Material_Desc_Lng} from '../../dp/mm/DP_MM_MATERIAL_DESC_LNG-model.cds';
+// using { dp as MtlMst } from './DP_MM_MATERIAL_MST-model';
+entity Sc_Mm_Material_Mst      as
+    select from Mm_Material_Mst
+    mixin {
+    localized: association to Mm_Material_Desc_Lng 
+                       on (    localized.tenant_id = $projection.tenant_id
+                           and localized.material_code = $projection.material_code )
+                       and lower( localized.language_code ) = substring( $user.locale, 1, 2 )
+                       ;
+    }
+    into {
+        *,
+        localized
+    }
+    excluding {
+        local_create_dtm,
+        local_update_dtm,
+        create_user_id,
+        update_user_id,
+        system_create_dtm,
+        system_update_dtm
+    };

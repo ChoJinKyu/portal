@@ -4,6 +4,7 @@ using util from '../../cm/util/util-model';
 using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
 using {sp as negoSuppliers} from '../../sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 
+
 // using {sp as negoItemPrices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 
 /* 
