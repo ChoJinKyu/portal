@@ -222,6 +222,8 @@ sap.ui.define([
 
             var aSearchFilters = [];
 
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.tenant_id));
+
             if (searchPartBaseKeyword != "") {                
                 aSearchFilters.push(new Filter("tolower(activity_name)", FilterOperator.Contains, "'"+searchPartBaseKeyword.toLowerCase().replace("'","''")+"'"));
             }

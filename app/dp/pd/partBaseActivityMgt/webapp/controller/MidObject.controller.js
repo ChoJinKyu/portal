@@ -181,13 +181,18 @@ sap.ui.define([
 		 * Event handler for saving page changes
 		 * @public
 		 */
-        onPageSaveButtonPress: function(CUDType){            
+        onPageSaveButtonPress: function(CUDType){
            
             var oView = this.getView();
             var oMasterModel = this.getModel("master");
             var oLanguagesModel = this.getModel("languages");
             // var oCategoryModel = this.getModel("category");
             var v_this = this;
+
+            if(!oMasterModel.isChanged() && !oLanguagesModel.isChanged()) {
+                    MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+                    return;
+            }
                 
             var oMasterData = oMasterModel.oData;
             var oLngData = oLanguagesModel.oData;
@@ -210,7 +215,7 @@ sap.ui.define([
             
             var activeFlg = "false";
 
-            if (oMasterData.active_flag) {
+            if (oMasterData.active_flag === "true") {
                 activeFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
             }            
 
