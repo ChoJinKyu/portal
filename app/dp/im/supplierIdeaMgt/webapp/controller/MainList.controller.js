@@ -295,15 +295,17 @@ sap.ui.define([
             return aSorter;
         },
 
+
         onStatusColor: function (sStautsCodeParam) {
 
+            if(sStautsCodeParam==null ||sStautsCodeParam=="")sStautsCodeParam=5;
+            return parseInt(sStautsCodeParam);
 /* 할당안된 상태값
 [REQUEST TD] 기술자료요청
 [ASSIGN COACH] Idea 담당자 지정
 [TRANSFER PD] 부품개발 이관
 [TRANSFER ECN] ECN 이관
 [FINAL COMPLETE] 최종완료
-*/
             var sReturnValue = 5;
             //색상 정의 필요
             if( sStautsCodeParam === "DRAFT" || sStautsCodeParam === "SUBMIT" ) {
@@ -319,12 +321,11 @@ sap.ui.define([
             }else if( sStautsCodeParam === "DROP"  ) {
                 sReturnValue = 8;
             }else if( sStautsCodeParam === "REQUEST REWRITING"  ) {
-                sReturnValue = 8;
+                sReturnValue = 3;
             }
 
-            //return sReturnValue;
-            if(sStautsCodeParam==null ||sStautsCodeParam=="")sStautsCodeParam=5;
-            return parseInt(sStautsCodeParam);
+            return sReturnValue;
+*/
         },
 
 

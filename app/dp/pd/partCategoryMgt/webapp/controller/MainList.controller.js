@@ -25,56 +25,26 @@ sap.ui.define([
              * @public
              */
 
-            onInit: function () {
+            onInit: function () {                
                 this.setModel((new Multilingual()).getModel(), "I18N");
+
+                //로그인 세션 작업완료시 수정
+                this.loginUserId = "TestUser";
+                this.tenantId = "L2101";
+                this.categoryGroupCode = "CO";
+                this.language_cd = "KO";
+
+                this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
             },
+
             onAfterRendering: function() {
                 this.onSearch();
             },
+
             onSelectionChange: function(event) {
                 this.onSearch();
             },
-            onAdd: function () {
-                var [flag] = arguments;
-                var oTable = this.getView().byId("menuTreeTable");
-                var row =
-                    (this.getView().getModel("tree").getProperty("/Menu_haa").nodes || []).length > 0
-                        ? oTable.getSelectedIndex() >= 0 
-                          &&
-                          this.getView().getModel("tree").getObject(
-                            oTable.getContextByIndex(oTable.getSelectedIndex()).sPath
-                          )
-                        : {};
-                this.getRouter().navTo("midPage", {
-                    layout: this.getOwnerComponent().getHelper().getNextUIState(1).layout,
-                    "?query": {
-                        menuCode: "",
-                        menuName: "",
-                        parentMenuCode: (
-                            flag == 'S'
-                                ? row.parent_menu_code
-                                : row.menu_code
-                        ) || "",
-                        chainCode: row.chain_code || ""
-                    }
-                });
-            },
-            onRowSelectionChange: function (event) {
-                // Tree 부분 클릭시에는 return 처리한다.
-                if (!event.getParameters().rowContext) return ;
-                // event 객체를 통해 레코드(ROW)를 가져온다. ()
-                var row = this.getView().getModel("tree").getObject(event.getParameters().rowContext.sPath);
-                // 라우팅 한다.
-                this.getRouter().navTo("midPage", {
-                    layout: LayoutType.TwoColumnsBeginExpanded,//this.getOwnerComponent().getHelper().getNextUIState(1).layout,
-                    "?query": {
-                        menuCode: row.menu_code,
-                        menuName: "",//row.menu_name.replaceAll("#", "^"),
-                        parentMenuCode: row.parent_menu_code,
-                        chainCode: row.chain_code || ""
-                    }
-                });
-            },
+
             onSearch: function (event) {
                 var predicates = [];
                 if (!!this.byId("searchCategoryCombo").getSelectedKey()) {
@@ -116,6 +86,14 @@ sap.ui.define([
 
             onMainTablecollapseAll: function(e){
                 this.getView().byId("treeTable").collapseAll();
+            },
+
+            onMainTableCreate2ButtonPress: function(e){
+                this.getRouter().navTo("selectionPage", {
+                    tenantId: this.tenantId,
+                    categoryGroupCode: this.categoryGroupCode,
+                    requestNumber: "new"
+                }, true);
             }
 
         });

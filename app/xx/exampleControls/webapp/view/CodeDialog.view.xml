@@ -84,6 +84,17 @@
                         </VBox>
 
                         <VBox>
+                            <Label text="Input with Department Dialog (cm.util.control.ui.DepartmentDialog): " labelFor="inputWithDepartmentValueHelp"></Label>
+                            <Input id="inputWithDepartmentValueHelp"
+                                placeholder="Choose a Department from the ValueHelp"
+                                showValueHelp="true" valueHelpRequest=".onInputWithDepartmentValuePress">
+                            </Input>
+                            <layoutData>
+                                <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>
+
+                        <VBox>
                             <Label text="Input with Employee Dialog (cm.util.control.ui.EmployeeDialog): " labelFor="inputWithEmployeeValueHelp"></Label>
                             <Input id="inputWithEmployeeValueHelp"
                                 placeholder="Choose a employee from the ValueHelp"
@@ -325,6 +336,16 @@
                 ]
             }"
             apply=".onEmployeeDialogApplyPress"
+        />
+        
+        <cm-ui:DepartmentDialog id="departmentDialog" 
+            title="부서 검색"
+            closeWhenApplied="true"
+            items="{
+                filters: [
+                ]
+            }"
+            apply=".onDepartmentDialogApplyPress"
         />
 
          <cm-ui:CompanyDetailDialog id="CompanyDetailDialog" 

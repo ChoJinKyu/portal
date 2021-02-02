@@ -1,0 +1,437 @@
+<mvc:View controllerName="dp.md.remodelRepairEstimation.controller.remodelRepairEstimation" 
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core" 
+    xmlns:table="sap.ui.table" 
+    xmlns:sc="sap.suite.ui.commons" 
+    xmlns:microchart="sap.suite.ui.microchart" 
+    xmlns:lib-m="ext.lib.m"
+    core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
+    height="100%">
+
+    <f:DynamicPage id="page"
+        headerExpanded="false" 
+        toggleHeaderOnTitleClick="true">
+        <!-- DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="{i18n>appTitle}" />
+                </f:heading>
+                <f:snappedContent>
+                    <HBox>
+                        <Text text=""/>
+                    </HBox>
+                    <HBox>
+                        <Title text="Process"/>
+                    </HBox>
+                    <HBox>
+                        <sc:MicroProcessFlow>
+                            <sc:content>
+                                <sc:MicroProcessFlowItem >
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="5rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="Repair entry" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+    
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="5rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="On Approval" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="5rem">
+                                            <core:Icon src="sap-icon://busy" color="#F94B50"/>
+                                            <Text text="Requesting estimation" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="5rem">
+                                            <core:Icon src="sap-icon://circle-task" color="#BEC9D4"/>
+                                            <Text text="LGE Review req." textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="5rem">
+                                            <core:Icon src="sap-icon://circle-task" color="#BEC9D4"/>
+                                            <Text text="Supplier Agree req." textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="5rem">
+                                            <core:Icon src="sap-icon://circle-task" color="#BEC9D4"/>
+                                            <Text text="Repair Complete" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                            </sc:content>
+                        </sc:MicroProcessFlow>
+                    </HBox>
+                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="{I18N>/COMPANY}" labelFor="searchCompanyS" required="true"></Label>
+                                <!--<MultiInput id="searchCompanyS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>-->
+                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" required="true"
+                                                items="{
+                                                    path: 'org>/Company',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                                    ],
+                                                    sorter: { path: 'company_code'}
+                                                }"
+                                selectionFinish="handleSelectionFinishComp">
+                                    <items>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/PLANT}" labelFor="searchDivisionS" required="true"></Label>
+                                <MultiComboBox  id="searchDivisionS" width="100%" selectedKey="" required="true"
+                                                items="{
+                                                    path: '/Divisions',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                                    ],
+                                                    sorter: { path: 'org_code'}
+                                                }"
+                                selectionFinish="handleSelectionFinishDiv" >
+                                    <items>
+                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchCreationDateS"></Label>
+                                <DateRangeSelection id="searchCreationDateS" width="100%" change="creationDateChange"  displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{path:'I18N>/STATUS', formatter:'I18NFormatter'}" ></Label>
+                                <SegmentedButton id="searchStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
+                                    <items>
+                                        <SegmentedButtonItem text="All" key="ALL" width="auto"/>
+                                        <SegmentedButtonItem text="Save" key="" width="auto"/>
+                                        <SegmentedButtonItem text="Approval Req." key="" width="auto"/>
+                                        <SegmentedButtonItem text="Approved" key="" width="auto"/>
+                                        <SegmentedButtonItem text="Reject" key="" width="auto"/>
+                                    </items>
+                                </SegmentedButton>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </f:snappedContent>
+                <f:expandedContent>
+                    <HBox>
+                        <Text text=""/>
+                    </HBox>
+                    <HBox>
+                        <Title text="Process"/>
+                    </HBox>
+                    <HBox>
+                        <sc:MicroProcessFlow>
+                            <sc:content>
+                                <sc:MicroProcessFlowItem >
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="5rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="Repair entry" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+    
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="5rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="On Approval" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="5rem">
+                                            <core:Icon src="sap-icon://busy" color="#F94B50"/>
+                                            <Text text="Requesting estimation" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="5rem">
+                                            <core:Icon src="sap-icon://circle-task" color="#BEC9D4"/>
+                                            <Text text="LGE Review req." textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="5rem">
+                                            <core:Icon src="sap-icon://circle-task" color="#BEC9D4"/>
+                                            <Text text="Supplier Agree req." textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="5rem">
+                                            <core:Icon src="sap-icon://circle-task" color="#BEC9D4"/>
+                                            <Text text="Repair Complete" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+                            </sc:content>
+                        </sc:MicroProcessFlow>
+                    </HBox>
+                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="{I18N>/COMPANY}" labelFor="searchCompanyE" required="true"></Label>
+                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" required="true"
+                                                items="{
+                                                    path: 'org>/Company',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                                    ],
+                                                    sorter: { path: 'company_code'}
+                                                }"
+                                selectionFinish="handleSelectionFinishComp">
+                                    <items>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/PLANT}" labelFor="searchDivisionE" required="true"></Label>
+                                <MultiComboBox  id="searchDivisionE" width="100%" selectedKey="" required="true"
+                                                items="{
+                                                    path: '/Divisions',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                                    ],
+                                                    sorter: { path: 'org_code'}
+                                                }"
+                                selectionFinish="handleSelectionFinishDiv" >
+                                    <items>
+                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchCreationDateE"></Label>
+                                    <DateRangeSelection id="searchCreationDateE" width="100%" change="creationDateChange"  displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{path:'I18N>/STATUS', formatter:'I18NFormatter'}" ></Label>
+                                <SegmentedButton id="searchStatusE" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
+                                    <items>
+                                        <SegmentedButtonItem text="All" key="ALL" width="auto"/>
+                                        <SegmentedButtonItem text="Save" key="" width="auto"/>
+                                        <SegmentedButtonItem text="Approval Req." key="" width="auto"/>
+                                        <SegmentedButtonItem text="Approved" key="" width="auto"/>
+                                        <SegmentedButtonItem text="Reject" key="" width="auto"/>
+                                    </items>
+                                </SegmentedButton>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </f:expandedContent>
+                <f:actions>
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                </f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <!-- DynamicPage Header -->
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                        
+                        <VBox>
+                            <Label text="{I18N>/MODEL}" labelFor="searchModel"></Label>
+                            <Input id="searchModel" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: '/Models',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                        ],
+                                        sorter: { path: 'model' }
+                            }">
+                                <core:Item key="{model}" text="{model}" />
+                            </Input>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}" labelFor="searchMoldNo"></Label>
+                            <Input id="searchMoldNo" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: '/PartNumbers',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                        ],
+                                        sorter: { path: 'mold_number' }
+                            }">
+                                <core:Item key="{mold_number}" text="{mold_number}" />
+                            </Input>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="{path:'I18N>/ASSET_NUMBER', formatter:'I18NFormatter'}" labelFor="searchAssetNo"></Label>
+                            <Input id="searchAssetNo" width="100%"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                    </form:content>
+                </form:SimpleForm>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <Table id="mainTable" 
+                    sticky="HeaderToolbar,ColumnHeaders" 
+                    inset="false" 
+                    growing="true"
+                    growingThreshold="10"
+                    class="sapFDynamicPageAlignContent" 
+                    mode="SingleSelectMaster"
+                    itemPress="onItemPress"
+                    updateFinished=".onMainTableUpdateFinished"
+                    items="{list>/MoldMasterSpec}"
+                    width="auto">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <Title text="{I18N>/LIST} ({= ${list>/MoldMasterSpec}.length || 0})" level="H2"/>
+                        <ToolbarSpacer/>
+                        <!-- <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress" />
+                        <ToolbarSeparator/> -->
+                        <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                            <layoutData>
+                                <OverflowToolbarLayoutData priority="NeverOverflow" />
+                            </layoutData>
+                        </Button>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column id="mainVendorReqNo" >
+                        <Text text="{path:'I18N>/VENDOR_REQ_NO', formatter:'I18NFormatter'}" />
+                    </Column>
+                    <Column id="mainRequestDate" >
+                        <Text text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}"/>
+                    </Column>
+                    <Column id="mainSubject" >
+                        <Text text="{path:'I18N>/SUBJECT', formatter:'I18NFormatter'}" />
+                    </Column>
+                    <Column id="mainStatus" >
+                        <Text text="{path:'I18N>/STATUS', formatter:'I18NFormatter'}" />
+                    </Column>
+                    <Column id="mainLGDivision" >
+                        <Text text="{path:'I18N>/LG_DIVISION', formatter:'I18NFormatter'}" />
+                    </Column>
+                    <Column id="mainModel">
+                        <Text text="{path:'I18N>/MODEL', formatter:'I18NFormatter'}" />
+                    </Column>
+                    <Column id="mainMoldNumber">
+                        <Text text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}" />
+                    </Column>
+                    <Column id="mainSeq">
+                        <Text text="{path:'I18N>/SEQ', formatter:'I18NFormatter'}" />
+                    </Column>
+                    <Column id="mainDescription">
+                        <Text text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" />
+                    </Column>
+                    <Column id="mainProdVendorName">
+                        <Text text="{path:'I18N>/PROD_VENDOR_NAME', formatter:'I18NFormatter'}" />
+                    </Column>
+                    <Column id="mainAssetNumber">
+                        <Text text="{path:'I18N>/ASSET_NUMBER', formatter:'I18NFormatter'}" />
+                    </Column>
+                    <Column id="mainLGERemark">
+                        <Text text="{path:'I18N>/LGE_REMARK', formatter:'I18NFormatter'}" />
+                    </Column>
+                    <Column id="mainRemark">
+                        <Text text="{path:'I18N>/REMARK', formatter:'I18NFormatter'}" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem type="Navigation" >
+                        <cells>
+                            <ObjectIdentifier text="{list>company_name}" />
+                            <ObjectIdentifier text="{list>org_name}" />
+                            <ObjectIdentifier text="{list>model}" />
+                            <ObjectIdentifier text="{list>mold_number}" />
+                            <ObjectIdentifier text="{list>mold_sequence}" />
+                            <ObjectIdentifier text="{list>spec_name}" />
+                            <ObjectIdentifier text="{list>mold_spec_status_name}" />
+                            <ObjectIdentifier text="{list>mold_item_type_name}" />
+                            <ObjectIdentifier text="{list>create_user}" />
+                            <ObjectIdentifier text="{list>mold_spec_register_date}"/>
+                            <ObjectIdentifier text="{list>family_part_numbers}" />
+                            <ObjectIdentifier text="{list>family_part_numbers}" />
+                            <ObjectIdentifier text="{list>family_part_numbers}" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </f:content>
+    </f:DynamicPage>
+</mvc:View>

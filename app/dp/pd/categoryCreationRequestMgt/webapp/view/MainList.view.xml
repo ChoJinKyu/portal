@@ -10,6 +10,7 @@
     xmlns:u="sap.ui.unified"
     xmlns:tnt="sap.tnt"
     xmlns:co="sap.suite.ui.commons"
+    core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
     height="100%">
 
     <f:DynamicPage id="page2"
@@ -34,6 +35,7 @@
         <f:header>
             <f:DynamicPageHeader pinnable="true">
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                <!-- <form:SimpleForm id="pageSearchForm" editable="true" layout="ResponsiveGridLayout"  > -->
                     <form:content>
                         <VBox>
                             <Label text="{I18N>/CATEGORY_GROUP}: "></Label>
@@ -79,7 +81,7 @@
 
         <f:content>
             <t:Table id="mainTable"
-            selectionMode="MultiSelect"
+            selectionMode="None"
             rows="{
                 path: 'list>/pdPartCategoryCreationRequestView',
                 sorter: { 
@@ -91,6 +93,7 @@
             >
             <!-- 
             selectionMode="None"
+            selectionMode="MultiSelect"
             fixedColumnCount="3"
             cellClick=".onCellClickPress"
             columnResize="onColumnResize" 
@@ -160,13 +163,13 @@
                     </t:template>
                 </t:Column>
                 <t:Column id="create_category_name" width="10rem">
-                    <Label text="{I18N>/CREATE_CATEGORY_NAME}" textAlign="Center" width="100%"/>
+                    <Label text="{path:'I18N>/CREATE_CATEGORY_NAME', formatter:'I18NFormatter'}" textAlign="Center" width="100%"/>
                     <t:template>
                         <Text text="{list>create_category_name}" />
                     </t:template>
                 </t:Column>
                 <t:Column id="creator_empno" width="10rem">
-                    <Label text="{I18N>/CATEGORY_CREATOR}" textAlign="Center" width="100%"/>
+                    <Label text="{path:'I18N>/CATEGORY_CREATOR', formatter:'I18NFormatter'}" textAlign="Center" width="100%"/>
                     <t:template>
                         <Text text="{list>category_creator}({list>creator_empno})" />
                     </t:template>

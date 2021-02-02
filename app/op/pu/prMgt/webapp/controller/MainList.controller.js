@@ -5,11 +5,12 @@ sap.ui.define([
     "ext/lib/model/ManagedListModel",
     "sap/ui/model/json/JSONModel",
     "ext/lib/formatter/DateFormatter",
-    "cm/util/control/ui/EmployeeDialog",    
-    "op/util/control/ui/OrderDialog", 
-    "op/util/control/ui/AssetDialog", 
-    "op/util/control/ui/AccountDialog", 
-    "op/util/control/ui/CctrDialog", 
+    "cm/util/control/ui/EmployeeDialog",  
+    "cm/util/control/ui/DepartmentDialog",    
+    // "op/util/control/ui/OrderDialog", 
+    // "op/util/control/ui/AssetDialog", 
+    // "op/util/control/ui/AccountDialog", 
+    // "op/util/control/ui/CctrDialog", 
     "ext/lib/util/Validator",
     "sap/m/TablePersoController",
     "./MainListPersoService",
@@ -20,7 +21,7 @@ sap.ui.define([
     "sap/ui/core/Fragment",
     "ext/lib/util/ExcelUtil"
 ], function (BaseController, OPUi, Multilingual, ManagedListModel, JSONModel, DateFormatter, 
-    EmployeeDialog, OrderDialog, AssetDialog, AccountDialog, CctrDialog,
+    EmployeeDialog, DepartmentDialog, //OrderDialog, AssetDialog, AccountDialog, CctrDialog,
     Validator, TablePersoController, MainListPersoService,
     Filter, FilterOperator, MessageBox, MessageToast, Fragment, ExcelUtil) {
     "use strict";
@@ -613,8 +614,8 @@ sap.ui.define([
             var sPR_TEMPLATE_NUMBER = this.getView().byId("searchPR_TEMPLATE_NUMBER").getSelectedKeys();
             var sPrNumber = this.getView().byId("searchPrNumber").getValue();
             var sPr_create_status = this.getView().byId("SearchPr_create_status").getSelectedKeys();
-            var sDepartment = this.getView().byId("searchRequestDepartmentS").getValue();
-
+            //var sDepartment = this.getView().byId("searchRequestDepartmentS").getValue();
+            var sDepartment = this.getView().byId("multiInputWithDepartmentValueHelp").getTokens();
             var sRequestor = this.getView().byId("multiInputWithEmployeeValueHelp").getTokens();
 
             var sPr_desc = this.getView().byId("searchPr_desc").getValue();
@@ -697,7 +698,7 @@ sap.ui.define([
             }
 
 
-            if (sDepartment) {
+            if (sDepartment.length) {
                 _tempFilters = [];
                 _tempFilters.push(new Filter("requestor_department_code", FilterOperator.EQ, sDepartment));
                 aSearchFilters.push(
@@ -744,7 +745,7 @@ sap.ui.define([
             this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
         },
         
-         onMultiInputWithEmployeeValuePress: function(){
+        onMultiInputWithEmployeeValuePress: function(){
             if(!this.oEmployeeMultiSelectionValueHelp){
                 this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
                     title: "Choose Employees",
@@ -761,6 +762,25 @@ sap.ui.define([
             }
             this.oEmployeeMultiSelectionValueHelp.open();
             this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("multiInputWithEmployeeValueHelp").getTokens());
+        },
+
+        onMultiInputWithDepartmentValuePress: function(){
+            if(!this.oDepartmentMultiSelectionValueHelp){
+                this.oDepartmentMultiSelectionValueHelp = new DepartmentDialog({
+                    title: "Choose Departments",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                        ]
+                    }
+                });
+                this.oDepartmentMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    this.byId("multiInputWithDepartmentValueHelp").setTokens(oEvent.getSource().getTokens());
+                }.bind(this));
+            }
+            this.oDepartmentMultiSelectionValueHelp.open();
+            this.oDepartmentMultiSelectionValueHelp.setTokens(this.byId("multiInputWithDepartmentValueHelp").getTokens());
         },
 
 

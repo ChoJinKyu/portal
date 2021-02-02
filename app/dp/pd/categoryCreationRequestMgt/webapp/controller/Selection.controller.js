@@ -357,7 +357,7 @@ sap.ui.define([
                             data: JSON.stringify(inputData),
                             contentType: "application/json",
                             success: function (rst) {
-                                console.log(rst);
+                                // console.log(rst);
                                 if(rst.return_code =="S"){
                                     sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     if( flag == "D"){
@@ -366,13 +366,13 @@ sap.ui.define([
                                         v_this.onPageNavBackButtonPress();
                                     }
                                 }else{
-                                    console.log(rst);
+                                    // console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
                                 }
                             },
                             error: function (rst) {
-                                    console.log("eeeeee");
-                                    console.log(rst);
+                                    // console.log("eeeeee");
+                                    // console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
                                     v_this.onSearch(rst.return_msg );
                             }
@@ -435,7 +435,11 @@ sap.ui.define([
 		 */
         onPageCancelButtonPress: function () {
             this.validator.clearValueState(this.byId("midObjectForm"));
-            this._toShowMode();
+            if (this._sIdeaNumber !== "new"){
+                this._toShowMode();
+            }else{
+                this.getRouter().navTo("mainPage", {}, true);
+            }
         },
 
 		/**

@@ -119,7 +119,7 @@ sap.ui.define([
 /*
             var filter = new Filter({
                 filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2101'),
                     new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                     new Filter("company_code", FilterOperator.EQ, companyCode)
                 ],
@@ -136,7 +136,7 @@ sap.ui.define([
 */
             var filter = new Filter({
                 filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2101'),
                     new Filter("company_code", FilterOperator.EQ, companyCode)
                 ],
                 and: true
@@ -598,40 +598,40 @@ sap.ui.define([
             var oData = oTable.getModel('list').getProperty("/MoldMstView");//binded Data
 
             //CM_YN code list
-            var aCtxtMoldFamilyFlag = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='CM_YN')").getProperty("/"));
-            var aMoldFamilyFlag = aCtxtMoldFamilyFlag.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='CM_YN')").getModel().getProperty("/"+sCtxt));
+            var aCtxtMoldFamilyFlag = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='CM_YN')").getProperty("/"));
+            var aMoldFamilyFlag = aCtxtMoldFamilyFlag.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='CM_YN')").getModel().getProperty("/"+sCtxt));
 
             //DP_MD_PROD_TYPE code list
-            var aCtxtMoldProductionTypeCode = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_PROD_TYPE')").getProperty("/"));
-            var aMoldProductionTypeCode = aCtxtMoldProductionTypeCode.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_PROD_TYPE')").getModel().getProperty("/"+sCtxt));
+            var aCtxtMoldProductionTypeCode = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_PROD_TYPE')").getProperty("/"));
+            var aMoldProductionTypeCode = aCtxtMoldProductionTypeCode.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_PROD_TYPE')").getModel().getProperty("/"+sCtxt));
 
             //DP_MD_ITEM_TYPE code List
-            var aCtxtMoldItemTypeCode = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_ITEM_TYPE')").getProperty("/"));
-            var aMoldItemTypeCode = aCtxtMoldItemTypeCode.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_ITEM_TYPE')").getModel().getProperty("/"+sCtxt));
+            var aCtxtMoldItemTypeCode = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_ITEM_TYPE')").getProperty("/"));
+            var aMoldItemTypeCode = aCtxtMoldItemTypeCode.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_ITEM_TYPE')").getModel().getProperty("/"+sCtxt));
 
             //DP_MD_MOLD_TYPE code List
-            var aCtxtMoldTypeCode = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_MOLD_TYPE')").getProperty("/"));
-            var aMoldTypeCode = aCtxtMoldTypeCode.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_MOLD_TYPE')").getModel().getProperty("/"+sCtxt));
+            var aCtxtMoldTypeCode = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_MOLD_TYPE')").getProperty("/"));
+            var aMoldTypeCode = aCtxtMoldTypeCode.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_MOLD_TYPE')").getModel().getProperty("/"+sCtxt));
 
             //DP_MD_ED_TYPE code List
-            var aCtxtMoldLocationTypeCode = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_ED_TYPE')").getProperty("/"));
-            var aMoldLocationTypeCode = aCtxtMoldLocationTypeCode.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_ED_TYPE')").getModel().getProperty("/"+sCtxt));
+            var aCtxtMoldLocationTypeCode = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_ED_TYPE')").getProperty("/"));
+            var aMoldLocationTypeCode = aCtxtMoldLocationTypeCode.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_ED_TYPE')").getModel().getProperty("/"+sCtxt));
 
             //DP_MD_COST_ANALYSIS_TYPE code List
-            var aCtxtMoldCostAnalysisCode = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_COST_ANALYSIS_TYPE')").getProperty("/"));
-            var aMoldCostAnalysisCode = aCtxtMoldCostAnalysisCode.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_COST_ANALYSIS_TYPE')").getModel().getProperty("/"+sCtxt));
+            var aCtxtMoldCostAnalysisCode = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_COST_ANALYSIS_TYPE')").getProperty("/"));
+            var aMoldCostAnalysisCode = aCtxtMoldCostAnalysisCode.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_COST_ANALYSIS_TYPE')").getModel().getProperty("/"+sCtxt));
 
             //DP_MD_PURCHASE_TYPE code List
-            var aCtxtMoldPurchasingTypeCode = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_PURCHASE_TYPE')").getProperty("/"));
-            var aMoldPurchasingTypeCode = aCtxtMoldPurchasingTypeCode.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_PURCHASE_TYPE')").getModel().getProperty("/"+sCtxt));
+            var aCtxtMoldPurchasingTypeCode = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_PURCHASE_TYPE')").getProperty("/"));
+            var aMoldPurchasingTypeCode = aCtxtMoldPurchasingTypeCode.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_PURCHASE_TYPE')").getModel().getProperty("/"+sCtxt));
 
             //DP_MD_MOLD_STRUCTURE code List
-            var aCtxtMoldStructure = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_MOLD_STRUCTURE')").getProperty("/"));
-            var aMoldStructure = aCtxtMoldStructure.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_MOLD_STRUCTURE')").getModel().getProperty("/"+sCtxt));
+            var aCtxtMoldStructure = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_MOLD_STRUCTURE')").getProperty("/"));
+            var aMoldStructure = aCtxtMoldStructure.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_MOLD_STRUCTURE')").getModel().getProperty("/"+sCtxt));
 
             //DP_MD_MOLD_SIZE code List
-            var aCtxtMoldSize = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_MOLD_SIZE')").getProperty("/"));
-            var aMoldSize = aCtxtMoldSize.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2600,group_id='DP_MD_MOLD_SIZE')").getModel().getProperty("/"+sCtxt));
+            var aCtxtMoldSize = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_MOLD_SIZE')").getProperty("/"));
+            var aMoldSize = aCtxtMoldSize.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_MOLD_SIZE')").getModel().getProperty("/"+sCtxt));
 
             //optional object param
             //aListItem - 코드목록, sBindName - Table 칼럼에 바인딩한 property, sKeyName - 코드목록의 key, sTextName - 코드목록의 text
@@ -762,7 +762,7 @@ sap.ui.define([
                 combo.bindItems({
                     path: 'util>/Code',
                     filters: [
-                        new Filter('tenant_id', FilterOperator.EQ, 'L2600'),
+                        new Filter('tenant_id', FilterOperator.EQ, 'L2101'),
                         new Filter("group_code", FilterOperator.EQ, 'DP_MD_MOLD_TYPE'),
                         new Filter("parent_code", FilterOperator.EQ, key)
                     ],
@@ -776,7 +776,7 @@ sap.ui.define([
                 combo.bindItems({
                     path: 'util>/Code',
                     filters: [
-                        new Filter('tenant_id', FilterOperator.EQ, 'L2600'),
+                        new Filter('tenant_id', FilterOperator.EQ, 'L2101'),
                         new Filter("group_code", FilterOperator.EQ, 'DP_MD_MOLD_STRUCTURE'),
                         new Filter("parent_code", FilterOperator.EQ, key)
                     ],
@@ -798,6 +798,11 @@ sap.ui.define([
                 groupCode = "DP_MD_MOLD_TYPE",
                 parentCode = oModel.getProperty(oEvent.getSource().getBindingContext("list").getPath()).mold_item_type_code;
 
+            if(parentCode === null || parentCode === ""){
+                MessageToast.show("Item Type을 먼저 선택해 주세요.");
+                return;
+            }
+            
             if(colName === "die_form_name"){
                 popupTitle = "Mold Structure";
                 groupCode = "DP_MD_MOLD_STRUCTURE";
@@ -814,7 +819,7 @@ sap.ui.define([
                 textField : "code_name",
                 items: {
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, "L2600"),
+                        new Filter("tenant_id", FilterOperator.EQ, "L2101"),
                         new Filter("group_code", FilterOperator.EQ, groupCode),
                         new Filter("parent_code", FilterOperator.EQ, parentCode)
                     ],
@@ -1119,7 +1124,7 @@ sap.ui.define([
 
                     divisionFilters.push(new Filter({
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
+                            new Filter("tenant_id", FilterOperator.EQ, 'L2101'),
                             new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
@@ -1128,7 +1133,7 @@ sap.ui.define([
                 });
             } else {
                 divisionFilters.push(
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2101'),
                     new Filter("org_type_code", FilterOperator.EQ, 'AU')
                 );
             }
@@ -1183,7 +1188,7 @@ sap.ui.define([
             this.getView().addDependent(this._oValueHelpDialog);
 
             this._oValueHelpDialog.getTableAsync().then(function (oTable) {
-                var _filter = new Filter("tenant_id", FilterOperator.EQ, "L2600");
+                var _filter = new Filter("tenant_id", FilterOperator.EQ, "L2101");
 
                 oTable.setModel(this.getOwnerComponent().getModel(this.modelName));
                 oTable.setModel(this.oColModel, "columns");
@@ -1330,7 +1335,7 @@ sap.ui.define([
 				and: false
             }));
             
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600' ));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101' ));
 
 			this._filterTable(new Filter({
 				filters: aFilters,

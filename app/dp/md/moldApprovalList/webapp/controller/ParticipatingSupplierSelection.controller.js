@@ -88,10 +88,10 @@ sap.ui.define([
            // } else {
                 
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 ];            
                 schFilter2 = [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
                         new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
                         new Filter("language_cd", FilterOperator.EQ, 'KO' )
                 ]; 
@@ -283,7 +283,7 @@ sap.ui.define([
             ;
             var schFilter2 = [];
             schFilter2 = [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
                     new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
                     new Filter("language_cd", FilterOperator.EQ, 'KO' ),
                     new Filter("org_code", FilterOperator.EQ, data.company_code)
@@ -294,7 +294,7 @@ sap.ui.define([
             var approval_number = mstModel.approval_number;
             oModel.addRecord({
                 "approval_number": approval_number,
-                "tenant_id": "L2600",
+                "tenant_id": "L2101",
                 "mold_id": String(data.mold_id),
                 "model": data.model,
                 "mold_number": data.mold_number,
@@ -356,7 +356,7 @@ sap.ui.define([
             var model = this.getModel('participatingSupplierSelectionView');
             if(this.getModel('appMaster').getData().approve_status_code == 'AP'){ // 승인이면 
                 var schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 ];        
                 this._pssCancelSearch(schFilter, function(item){  
                     //console.log("item>>>> " , item);

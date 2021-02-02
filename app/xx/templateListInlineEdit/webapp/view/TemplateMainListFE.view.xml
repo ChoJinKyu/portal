@@ -133,7 +133,7 @@
                     <t:Column hAlign="Center" width="10em" >
                         <Label text="{I18N>/LANGUAGE}" textAlign="Center" width="100%" required="true" />
                         <t:template>
-                            <lib-m:FlexibleEditBox editableValue="{list>_row_editable_}">
+                            <lib-m:EditModeVBox editableValue="{list>_row_editable_}">
                                 <Text text="{list>language_code}" />
                                 <lib-m:CodeComboBox selectedKey="{list>language_code}" width="100%" showSecondaryValues="true"
                                     items="{
@@ -146,13 +146,13 @@
                                     }"
                                     editable="{= ${list>_row_state_} === 'C' }" required="true">
                                 </lib-m:CodeComboBox>
-                            </lib-m:FlexibleEditBox>
+                            </lib-m:EditModeVBox>
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Left" width="18em" >
                         <Label text="{I18N>/CODE}" textAlign="Center" width="100%" required="true" />
                         <t:template>
-                            <lib-m:FlexibleEditBox editableValue="{list>_row_editable_}">
+                            <lib-m:EditModeVBox editableValue="{list>_row_editable_}">
                                 <Text text="{list>message_code}" />
                                 <Input value="{
                                         path: 'list>message_code',
@@ -161,22 +161,22 @@
                                             maxLength: 30
                                         }
                                     }" editable="{= ${list>_row_state_} === 'C' }" required="true" ></Input>
-                            </lib-m:FlexibleEditBox>
+                            </lib-m:EditModeVBox>
 						</t:template>
                     </t:Column>
                     <t:Column minWidth="30rem">
                         <Label text="{I18N>/CONTENTS}" textAlign="Center" width="100%" required="true" />
                         <t:template>
-                            <lib-m:FlexibleEditBox editableValue="{list>_row_editable_}">
+                            <lib-m:EditModeVBox editableValue="{list>_row_editable_}">
                                 <Text text="{list>message_contents}" textAlign="Left" />
 							    <Input value="{list>message_contents}" required="true" />
-                            </lib-m:FlexibleEditBox>
+                            </lib-m:EditModeVBox>
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="10em" >
                         <Label text="{I18N>/TYPE}" textAlign="Center" width="100%" required="true" />
                         <t:template>
-                            <lib-m:FlexibleEditBox editableValue="{list>_row_editable_}">
+                            <lib-m:EditModeVBox editableValue="{list>_row_editable_}">
                                 <Text text="{list>message_type_code}" />
                                 <lib-m:CodeComboBox selectedKey="{list>message_type_code}" width="100%"
                                     items="{
@@ -189,13 +189,13 @@
                                     }"
                                     required="true" >
                                 </lib-m:CodeComboBox>
-                            </lib-m:FlexibleEditBox>
+                            </lib-m:EditModeVBox>
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="10em" >
                         <Label text="{I18N>/CHAIN}" textAlign="Center" width="100%" required="true" />
                         <t:template>
-                            <lib-m:FlexibleEditBox editableValue="{list>_row_editable_}">
+                            <lib-m:EditModeVBox editableValue="{list>_row_editable_}">
                                 <Text text="{list>message_type_code}" />
                                 <lib-m:CodeComboBox selectedKey="{list>chain_code}" width="100%" showSecondaryValues="true"
                                     items="{
@@ -208,7 +208,7 @@
                                     }"
                                     editable="{= ${list>_row_state_} === 'C' }" required="true">
                                 </lib-m:CodeComboBox>
-                            </lib-m:FlexibleEditBox>
+                            </lib-m:EditModeVBox>
 						</t:template>
                     </t:Column>
                 </t:columns>

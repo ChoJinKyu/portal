@@ -1,0 +1,23 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+app:
+  dms:
+    rootFolderId : f7cedad00094b894552c9df5
+    endpoint : https://api-sdm-di.cfapps.jp10.hana.ondemand.com
+    repositoryId: 71edc6c7-d9a0-450d-a9ce-9a19d5922bbe
+    globalPolicy:
+      allowFileExt : ppt,pptx,jpg,doc,docx,xls,xlsx,png,txt,pdf,zip,csv
+      maxFileSize : 10MB # MB형태로입력
+
+logging:
+  level:
+    org:
+      springframework:
+        jdbc:
+          core: TRACE
+
+
+

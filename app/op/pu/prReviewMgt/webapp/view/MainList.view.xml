@@ -119,7 +119,6 @@
                                     formatOptions: { UTC: true, format: 'yMd' }
                                 }" 
                                 placeholder="YYYY-MM-DD - YYYY-MM-DD"
-                                change=".onDateRangeSelectionChange($event)"
                             />
                             <!-- 구매요청 유형 -->
                             <Label text="{I18N>/PR_TYPE_CODE}"/>
@@ -282,7 +281,6 @@
                     mode="MultiSelect"
                     growingThreshold="10"
                     class="sapFDynamicPageAlignContent" 
-                    updateFinished=".onUpdateFinished($event)"
                     items="{
                         path : 'list>/Pr_ReviewListView',
                         sorter: {
@@ -292,26 +290,72 @@
                     }"                        
                     width="auto"
                 >
-                    <!-- mode="MultiSelect"  -->
                     <headerToolbar>
                         <OverflowToolbar>
                             <Title text="{i18n>appTitle} ({= ${list>/Pr_ReviewListView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button text="(미정)RFQ작성" type="Transparent" press=".onButtonPress($event, 'RFQ', { tId: 'mainTable', service: 'op.prReviewMgtV4Service', entry: 'CallPrReviewWriteProc' })" />
-                            <Button text="(미정)입찰작성" type="Transparent" press=".onButtonPress($event, 'BIDDING', { tId: 'mainTable', service: 'op.prReviewMgtV4Service', entry: 'CallPrReviewWriteProc' })" />
-                            <!-- <Button text="(미정)소액공사품의 작성" type="Transparent" press=".onButtonPress($event, 'REPORT', { tId: 'mainTable', service: 'op.prReviewMgtV4Service', entry: 'CallPrReviewWriteProc' })" />
-                            <Button text="(미정)PO작성" type="Transparent" press=".onButtonPress($event, 'PO_WRITE', { tId: 'mainTable', service: 'op.prReviewMgtV4Service', entry: 'CallPrReviewWriteProc' })" /> -->
-                            
-                            <Button text="(미정)재작성요청" type="Transparent" press=".onButtonPress($event, 'REWRITE', { tId: 'mainTable', service: 'op.prReviewMgtV4Service', entry: 'CallPrReviewSaveProc' })" />
-                            <Button text="(미정)마감" type="Transparent" press=".onButtonPress($event, 'CLOSING', { tId: 'mainTable', service: 'op.prReviewMgtV4Service', entry: 'CallPrReviewSaveProc' })" />
-                            <Button text="(미정)구매담당자변경" type="Transparent" press=".onButtonPress($event, 'CHANGE', { tId: 'mainTable', service: 'op.prReviewMgtV4Service', entry: 'CallPrReviewSaveProc' })" />
+                            <Button 
+                                text="(미정)RFQ작성"
+                                type="Transparent"
+                                press=".onButtonPress($event, 'service', {
+                                    action: 'RFQ',
+                                    service: 'op.prReviewMgtV4Service',
+                                    entry: 'CallPrReviewSaveProc',
+                                    tId: 'mainTable'
+                                })"
+                            />
+                            <Button 
+                                text="(미정)입찰작성"
+                                type="Transparent"
+                                press=".onButtonPress($event, 'service', {
+                                    action: 'BIDDING',
+                                    service: 'op.prReviewMgtV4Service',
+                                    entry: 'CallPrReviewSaveProc',
+                                    tId: 'mainTable'
+                                })"
+                            />
+                            <Button 
+                                text="(미정)재작성요청"
+                                type="Transparent"
+                                press=".onButtonPress($event, 'service', {
+                                    action: 'REWRITE',
+                                    service: 'op.prReviewMgtV4Service',
+                                    entry: 'CallPrReviewSaveProc',
+                                    tId: 'mainTable'
+                                })"
+                            />
+                            <Button 
+                                text="(미정)마감"
+                                type="Transparent"
+                                press=".onButtonPress($event, 'service', {
+                                    action: 'CLOSING',
+                                    service: 'op.prReviewMgtV4Service',
+                                    entry: 'CallPrReviewSaveProc',
+                                    tId: 'mainTable'
+                                })"
+                            />
+                            <Button 
+                                text="(미정)구매담당자변경"
+                                type="Transparent"
+                                press=".onButtonPress($event, 'service', {
+                                    action: 'CHANGE',
+                                    service: 'op.prReviewMgtV4Service',
+                                    entry: 'CallPrReviewSaveProc',
+                                    tId: 'mainTable'
+                                })"
+                            />
                             <ToolbarSeparator/>
-                            <Button icon="sap-icon://excel-attachment" press="onExcelDownload($event, 'Download', ${list>/Pr_ReviewListView}, {fileName: 'PR Review List', tId: 'mainTable' })">
+                            <Button 
+                                icon="sap-icon://excel-attachment" 
+                                press="onExcel($event, 'Download', ${list>/Pr_ReviewListView}, 'PR Review List', ${session>/tenant_id}, {
+                                    tId: 'mainTable'
+                                })"
+                            >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
                             </Button>
-                            <Button icon="sap-icon://action-settings" press=".onPersonalize($event)" >
+                            <Button icon="sap-icon://action-settings" press=".onButtonPress($event, 'personalize', {})">
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
@@ -381,7 +425,7 @@
                         </Column>
                     </columns>
                     <items>
-                        <ColumnListItem type="Navigation" press=".onColumnListItemPress($event, 'list')">
+                        <ColumnListItem type="Navigation" press=".onColumnListItemPress($event, 'navigation', 'list', {})">
                             <cells>
                                 <!-- 구매요청 번호 -->
                                 <Text text="{list>pr_number}"/>

@@ -140,14 +140,14 @@ sap.ui.define([
 
                 new VBox({
                     items: [
-                        new Label({ text: "BP Code" }),
+                        new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_CODE")}),
                         this.oBPCode
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M5 S10" })
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: "BP Name" }),
+                        new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_NAME") }),
                         this.oBPName
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M5 S10" })
@@ -203,7 +203,7 @@ sap.ui.define([
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: "Register Status" }),
+                        new Label({ text: this.getModel("I18N").getText("/REGISTER_STATUS") }),
                         this.oRegisterStatus
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M5 S10", linebreak: true })
@@ -244,27 +244,31 @@ sap.ui.define([
                 new Column({
                     hAlign: "Center",
                     width: "8rem",
-                    label: new Label({ text: "BP Code" }),
+                    label: new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_CODE") }),
                     template: new Text({ text: "{business_partner_code}" })
                 }),
                 new Column({
+                    hAlign: "Center",
                     width: "8rem",
-                    label: new Label({ text: "BP Local Name" }),
+                    label: new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_LOCAL_NAME")  }),
                     template: new Text({ text: "{business_partner_local_name}", wrapping: false })
                 }),
                 new Column({
+                    hAlign: "Center",
                     width: "8rem",
-                    label: new Label({ text: "BP English Name" }),
+                    label: new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_ENGLISH_NAME")}),
                     template: new Text({ text: "{business_partner_english_name}", wrapping: false })
                 }),
                 new Column({
                     hAlign: "Center",
-                    label: new Label({ text: "Supplier Role" }),
+                    width: "6rem",
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_ROLE") }),
                     template: new Text({ text: "{supplier_role}" })
                 }),
                 new Column({
                     hAlign: "Center",
-                    label: new Label({ text: "Maker Role"}),
+                    width: "6rem",
+                    label: new Label({ text: this.getModel("I18N").getText("/MAKER_ROLE") }),
                     template: new Text({ text: "{maker_role}" })
                 }),
                 new Column({
@@ -274,11 +278,13 @@ sap.ui.define([
                     template: new Text({ text: "{tax_id}" })
                 }),
                 new Column({
+                    hAlign: "Center",
                     width: "8rem",
                     label: new Label({ text: this.getModel("I18N").getText("/OLD_SUPPLIER_CODE") }),
                     template: new Text({ text: "{old_supplier_code}" })
                 }),
                 new Column({
+                    hAlign: "Center",
                     width: "8rem",
                     label: new Label({ text: this.getModel("I18N").getText("/OLD_MAKER_CODE") }),
                     template: new Text({ text: "{old_maker_code}" })
@@ -286,7 +292,7 @@ sap.ui.define([
                 new Column({
                     hAlign: "Center",
                     width: "9rem",
-                    label: new Label({ text: "Register Status" }),
+                    label: new Label({ text: this.getModel("I18N").getText("/REGISTER_STATUS") }),
                     template: new sap.tnt.InfoLabel(
                         { text: "{business_partner_register_status_name}", displayOnly: true }
                     ).bindProperty("colorScheme", {
@@ -434,17 +440,13 @@ sap.ui.define([
                 aFilters.push(new Filter("old_maker_code", FilterOperator.Contains, sOldMakerCode));
             }
             if (sRole === "100001") {
-                aFilters.push(new Filter("supplier_role", FilterOperator.Contains, "Y"));
+                aFilters.push(new Filter("supplier_role", FilterOperator.EQ, "Y"));
             } else if (sRole === "100006") {
-                aFilters.push(new Filter("maker_role", FilterOperator.Contains, "Y"));
-            } 
-            // else if (sRole === "") {
-            //     aFilters.push(new Filter("supplier_role", FilterOperator.Contains, ""));
-            //     aFilters.push(new Filter("maker_role", FilterOperator.Contains, ""));
-            // }
-            if (sRegisterStatus === "QUALIFICATION" ) {
+                aFilters.push(new Filter("maker_role", FilterOperator.EQ, "Y"));
+            }
+            if (sRegisterStatus === "QUALIFICATION") {
                 aFilters.push(new Filter("business_partner_register_status_code", FilterOperator.EQ, "QUAA"));
-            }else if (sRegisterStatus === "REGISTRATION") {
+            } else if (sRegisterStatus === "REGISTRATION") {
                 aFilters.push(new Filter("business_partner_register_status_code", FilterOperator.EQ, "REGA"));
             }
 

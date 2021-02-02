@@ -5,6 +5,7 @@ sap.ui.define([
 	"sap/m/MessageToast",
 	"cm/util/control/ui/CodeDialog",
     "cm/util/control/ui/EmployeeDialog",
+    "cm/util/control/ui/DepartmentDialog",
     "cm/util/control/ui/CompanyDetailDialog",
     "cm/util/control/ui/CmDialogHelp",
     "op/util/control/ui/OrderDialog", 
@@ -20,7 +21,7 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
     "dp/util/control/ui/MaterialOrgDialog"
-], function (Controller, JSONModel, MessageBox, MessageToast, CodeDialog, EmployeeDialog, CompanyDetailDialog, CmDialogHelp,
+], function (Controller, JSONModel, MessageBox, MessageToast, CodeDialog, EmployeeDialog, DepartmentDialog, CompanyDetailDialog, CmDialogHelp,
              OrderDialog, AssetDialog, AccountDialog, CctrDialog, WbsDialog,
              SupplierDialog, SupplierWithOrgDialog, MakerDialog, BPDialog,
              Filter, FilterOperator, Sorter, MaterialOrgDialog) {
@@ -141,6 +142,14 @@ sap.ui.define([
             }
             this.oCompanyDetailMultiSelectionValueHelp.open();
             this.oCompanyDetailMultiSelectionValueHelp.setTokens(this.byId("multiInputWithCompanyDetailValueHelp").getTokens());
+        },
+
+        onInputWithDepartmentValuePress: function(){
+            this.byId("departmentDialog").open();
+        },
+
+        onDepartmentDialogApplyPress: function(oEvent){
+            this.byId("inputWithDepartmentValueHelp").setValue(oEvent.getParameter("item").department_local_name);
         },
 
         onInputWithEmployeeValuePress: function(){
@@ -401,7 +410,7 @@ sap.ui.define([
                     });
 
                     this.oBPSelectionValueHelp.attachEvent("apply", function (oEvent) {
-                        this.byId("input_bp_code").setValue(oEvent.getParameter("item").supplier_code);
+                        this.byId("input_bp_code").setValue(oEvent.getParameter("item").business_partner_code);
                     }.bind(this));
                 }
                 this.oBPSelectionValueHelp.open();

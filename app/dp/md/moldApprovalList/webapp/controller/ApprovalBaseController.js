@@ -27,11 +27,12 @@ sap.ui.define([
 	"sap/ui/core/dnd/DropInfo",
 	"sap/ui/core/dnd/DropPosition",
 	"sap/ui/core/dnd/DropLayout",
-	"sap/f/dnd/GridDropInfo",
+    "sap/f/dnd/GridDropInfo", 
+    "dp/md/util/controller/ProcessUI", 
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator, EmployeeDeptDialog, 
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList,
-    Sorter, Token, DragInfo , DropInfo ,DropPosition, DropLayout, GridDropInfo 
+    Sorter, Token, DragInfo , DropInfo ,DropPosition, DropLayout, GridDropInfo , ProcessUI
 ) {
     "use strict";
 
@@ -41,7 +42,10 @@ sap.ui.define([
 
         validator: new Validator(),
 
-        approvalList: new ApprovalList(),
+        approvalList: new ApprovalList(), 
+
+        process : new ProcessUI(),
+
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -183,7 +187,7 @@ sap.ui.define([
 
             // console.log("args>>>>> " , args);
 
-            this.tenant_id = "L2600";
+            this.tenant_id = "L2101";
             this.approval_number = args.approval_number;
             this.approval_type_code = args.approval_type_code;
             this.company_code = args.company_code;
@@ -478,7 +482,7 @@ sap.ui.define([
                     multiSelection: true,
                     items: {
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2600")
+                            new Filter("tenant_id", FilterOperator.EQ, "L2101")
                         ]
                     }
                 });

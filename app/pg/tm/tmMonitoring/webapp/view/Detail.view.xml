@@ -52,37 +52,37 @@
 																</OverflowToolbar>
 															</headerToolbar>
 															<columns>
-																<Column hAlign="Center" width="5rem" visible="{=${DetailView>/isEditMode}}">
+																<Column width="5rem" visible="{=${DetailView>/isEditMode}}">
 																	<header>
 																		<Label text="{I18N>/STATUS}"/>
 																	</header>
 																</Column>
-																<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+																<Column minScreenWidth="Tablet" demandPopin="true">
 																	<header>
 																		<Label text="{I18N>/EMPNO}"/>
 																	</header>
 																</Column>
-																<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+																<Column minScreenWidth="Tablet" demandPopin="true">
 																	<header>
 																		<Label text="{I18N>/MANAGER}"/>
 																	</header>
 																</Column>
-																<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+																<Column minScreenWidth="Tablet" demandPopin="true">
 																	<header>
 																		<Label text="{I18N>/EMAIL}"/>
 																	</header>
 																</Column>
-																<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+																<Column minScreenWidth="Tablet" demandPopin="true">
 																	<header>
 																		<Label text="{I18N>/DEPARTMENT}"/>
 																	</header>
 																</Column>
-																<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+																<Column minScreenWidth="Tablet" demandPopin="true">
 																	<header>
 																		<Label text="{I18N>/USER_POSITION}"/>
 																	</header>
 																</Column>
-																<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+																<Column minScreenWidth="Tablet" demandPopin="true">
 																	<header>
 																		<Label text="{I18N>/SUPER_AUTHORITY_FLAG}"/>
 																	</header>
@@ -215,35 +215,35 @@
 												</OverflowToolbar>
 											</headerToolbar>
 											<columns>
-												<Column hAlign="Center" width="5rem">
+												<Column width="5rem">
 													<header>
 														<Label text="{I18N>/STATUS}"/>
 													</header>
 												</Column>
-												<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+												<Column minScreenWidth="Tablet" demandPopin="true">
 													<header>
 														<Label text="{I18N>/INDICATOR}"/>
 													</header>
 												</Column>
-												<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+												<Column minScreenWidth="Tablet" demandPopin="true">
 													<header>
 														<Label text="{I18N>/CONDITION}"/>
 													</header>
 												</Column>
-												<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+												<Column  minScreenWidth="Tablet" demandPopin="true">
 													<Text text="{I18N>/INDICATOR_FIRST_VALUE}"/>
 												</Column>
-												<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+												<Column minScreenWidth="Tablet" demandPopin="true">
 													<header>
 														<Label text="{I18N>/INDICATOR_LAST_VALUE}"/>
 													</header>
 												</Column>
-												<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+												<Column minScreenWidth="Tablet" demandPopin="true">
 													<header>
 														<Label text="{I18N>/GRADE}"/>
 													</header>
 												</Column>
-												<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+												<Column minScreenWidth="Tablet" demandPopin="true">
 													<header>
 														<Label text="{I18N>/UNIT}"/>
 													</header>

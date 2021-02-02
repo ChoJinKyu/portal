@@ -296,6 +296,7 @@ sap.ui.define([
 				oView.setBusy(true);
 				this.getModel().read("/Department", {
                     urlParameters: {
+                        "$top": 20,
                         "$expand": "parent,children"
                     },
 					filters: [
@@ -312,32 +313,32 @@ sap.ui.define([
 		},
 
 		_toEditMode: function(){
-			var FALSE = false;
+			var VIEW_MODE = false;
             this._showFormFragment('TemplateMidObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("pageDeleteButton").setEnabled(FALSE);
-			this.byId("pageSaveButton").setEnabled(!FALSE);
-			this.byId("pageNavBackButton").setEnabled(FALSE);
+			// this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
+			// this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
+			this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
 
-			this.byId("midTableAddButton").setEnabled(!FALSE);
-			this.byId("midTableDeleteButton").setEnabled(!FALSE);
+			// this.byId("midTableAddButton").setEnabled(!VIEW_MODE);
+			// this.byId("midTableDeleteButton").setEnabled(!VIEW_MODE);
 			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
-			// this.byId("midTable").getColumns()[0].setVisible(!FALSE);
+			// this.byId("midTable").getColumns()[0].setVisible(!VIEW_MODE);
 			this._bindMidTable(this.oEditableTemplate, "Edit");
 		},
 
 		_toShowMode: function(){
-			var TRUE = true;
+			var VIEW_MODE = true;
 			this._showFormFragment('TemplateMidObject_Show');
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("pageDeleteButton").setEnabled(TRUE);
-			this.byId("pageSaveButton").setEnabled(!TRUE);
-			this.byId("pageNavBackButton").setEnabled(TRUE);
+			// this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
+			// this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
+			this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
 
-			this.byId("midTableAddButton").setEnabled(!TRUE);
-			this.byId("midTableDeleteButton").setEnabled(!TRUE);
+			// this.byId("midTableAddButton").setEnabled(!VIEW_MODE);
+			// this.byId("midTableDeleteButton").setEnabled(!VIEW_MODE);
 			this.byId("midTable").setMode(sap.m.ListMode.None);
-			// this.byId("midTable").getColumns()[0].setVisible(!TRUE);
+			// this.byId("midTable").getColumns()[0].setVisible(!VIEW_MODE);
 			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
 		},
 
@@ -399,12 +400,12 @@ sap.ui.define([
         },
         
         onMidObjectTableItemPress: function(oEvent){
-			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2),
-				sPath = oEvent.getSource().getBindingContext("department").getPath(),
-				oRecord = this.getModel("department").getProperty(sPath);
-
+			// var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2),
+			var sPath = oEvent.getSource().getBindingContext("department").getPath(),
+                oRecord = this.getModel("department").getProperty(sPath);
+                
 			this.getRouter().navTo("endPage", {
-				layout: oNextUIState.layout, 
+				layout: sap.f.LayoutType.ThreeColumnsEndExpanded, 
 				tenantId: oRecord.tenant_id,
 				companyCode: this._sCompanyCode,
                 departmentCode: oRecord.department_code

@@ -128,7 +128,7 @@
 			"routes": [
                 {
                     "name": "Detail",
-                    "pattern": "Detail/{new}/:level:/:leaf:/:evaluArticleCode:",
+                    "pattern": "Detail/{new}/:level:/:leaf:/:refKey:",
                     "target": ["Master", "Detail"]
                 },
                 {

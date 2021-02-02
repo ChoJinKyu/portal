@@ -135,8 +135,8 @@
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
         "viewPath": "dp.pd.partCategoryMgt.view",
-        "controlId": "fcl",
-		"transition": "slide",
+        "controlId": "app",
+		"controlAggregation": "pages",
         "bypassed": {
           "target": [
             "notFound"
@@ -146,32 +146,46 @@
       },
       "routes": [
           {
-              "pattern": ":layout:",
+              "pattern": "",
               "name": "mainPage",
               "target": [
                   "mainObject"
               ]
           },
           {
-              "pattern": "midObject/{layout}/{tenantId}/{uomCode}",
-              "name": "midPage",
+              "pattern": "selectionObject/{tenantId}/{categoryGroupCode}/{requestNumber}",
+              "name": "selectionPage",
               "target": [
-                  "mainObject",
-                  "midObject"
+                  "selectionObject"
+              ]
+          },
+          {
+              "pattern": "publishObject/{tenantId}/{categoryGroupCode}/{requestNumber}",
+              "name": "publishPage",
+              "target": [
+                  "publishObject"
               ]
           }
       ],
       "targets": {
           "mainObject": {
               "viewName": "MainList",
-              "controlAggregation": "beginColumnPages"
+              "viewId": "mainPage",
+              "viewLevel": 1
           },
-          "midObject": {
-              "viewName": "MidObject",
-              "controlAggregation": "midColumnPages"
-          },
+        "selectionObject": {
+            "viewName": "Selection",
+            "viewId": "selectionPage",
+            "viewLevel": 2
+        },
+        "publishObject": {
+            "viewName": "Publish",
+            "viewId": "publishPage",
+            "viewLevel": 2
+        },
           "notFound": {
-            "viewName": "MidObjectNotFound",
+            "viewName": "NotFound",
+            "viewPath": "ext.lib.view",
             "viewId": "notFound"
           }
       }

@@ -14,7 +14,7 @@
                 <lib-m:CodePicker 
                     visible="{= ${fragment>/reason/action} === 'CHANGE'}"
                     placeholder="(미정)구매담당자를 입력하세요"
-                    selectedKey="{fragment>/reason/buyer_empno}"
+                    selectedKey="{fragment>/reason/buyerEmpno}"
                     keyField="employee_number"
                     textField="user_local_name"
                     suggestionItems="{

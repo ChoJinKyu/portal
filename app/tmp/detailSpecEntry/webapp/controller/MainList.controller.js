@@ -65,6 +65,18 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "orgMap");
             this.setModel(new ManagedListModel(), "division");
 
+            /*
+                화면 변경
+            */
+            Fragment.load({
+                    id: this.getView().getId(),
+					name: "tmp.detailSpecEntry.view.L2101_Retrieve_DP0401-501_SCTG001_Grid",
+					controller: this          
+            }).then(function(oFragment){
+                      var oPageSubSection = this.getView().byId("page");
+                          oPageSubSection.setContent(oFragment);
+                 }.bind(this));
+                 
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
 			this._doInitTablePerso();
@@ -106,7 +118,7 @@ sap.ui.define([
             
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
                                     new Filter("company_code", FilterOperator.EQ, companyCode)
                                 ],
                                 and: true
@@ -218,8 +230,8 @@ sap.ui.define([
             var oSelectedItem = oEvent.getParameter("listItem");
 
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-				sPath = oSelectedItem.getBindingContext("list").getPath(),
-				oRecord = this.getModel("list").getProperty(sPath);
+				sPath = oSelectedItem.getBindingContext("dpMdMstSpecViewG").getPath(),
+				oRecord = this.getModel("dpMdMstSpecViewG").getProperty(sPath);
 
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
@@ -257,17 +269,7 @@ sap.ui.define([
             //alert("Hello");
 
 
-            /*
-                화면 변경
-            */
-              Fragment.load({
-                    id: this.getView().getId(),
-					name: "tmp.detailSpecEntry.view.L2600_Retrieve_DP0401-501_SCTG001_Grid",
-					controller: this          
-            }).then(function(oFragment){
-                      var oPageSubSection = this.getView().byId("page");
-                          oPageSubSection.setContent(oFragment);
-			 	}.bind(this));
+            
 
             // oModel.read("/Pur_Org_Type_Mapping", {
             //     filters: [
@@ -427,14 +429,14 @@ sap.ui.define([
 
                     divisionFilters.push(new Filter({
                                 filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
                                     new Filter("company_code", FilterOperator.EQ, item.getKey() )
                                 ],
                                 and: true
                             }));
                 });
             }else{
-                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600' ));
+                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101' ));
             }
 
             var filter = new Filter({
@@ -541,7 +543,7 @@ sap.ui.define([
 
             this._oValueHelpDialog.getTableAsync().then(function (oTable) {
 
-                var _filter = new Filter("tenant_id", FilterOperator.EQ, 'L2600' );
+                var _filter = new Filter("tenant_id", FilterOperator.EQ, 'L2101' );
                 
                 oTable.setModel(this.getOwnerComponent().getModel());
                 oTable.setModel(this.oColModel, "columns");
@@ -625,7 +627,7 @@ sap.ui.define([
 				and: false
             }));
             
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600' ));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101' ));
 
 			this._filterTable(new Filter({
 				filters: aFilters,

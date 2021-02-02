@@ -413,10 +413,10 @@ sap.ui.define([
             //richTextEditorValue reset
             this.removeRichTextEditorValue();
             this.removeFormattedTextValue();
+            //refresh
+            this.getView().getModel().refresh();
             //담당자 테이블
             this.byId("managerListTable").getBinding("items").filter(new Filter("employee_number", FilterOperator.Contains, " "));
-            //refresh model
-            this.getView().getModel().refresh(true);
             //tokens remove
             this.byId("combo_purchasing_type").removeAllSelectedItems();
             this.byId("company_edit_combo").removeAllSelectedItems();
@@ -1149,7 +1149,7 @@ sap.ui.define([
                     "sourceOperation": operationDataArr
                 }
             };
-            console.log(inputInfo);
+            // console.log(inputInfo);
 
             $.ajax({
                 url: urlInfo,
@@ -1160,12 +1160,12 @@ sap.ui.define([
                     sap.m.MessageToast.show(i18nModel.getText("/NCM01001"));
                     that.getRouter().navTo("main", {}, true);
                     that._resetView();
-                    console.log('data:', data);
+                    // console.log('data:', data);
                 },
                 error: function (e) {
                     sap.m.MessageToast.show(i18nModel.getText("/EPG00003"));
                     var v_returnModel = oView.getModel("returnModel").getData().data;
-                    console.log('v_returnModel_e:', v_returnModel);
+                    // console.log('v_returnModel_e:', v_returnModel);
                 }
             });
         }

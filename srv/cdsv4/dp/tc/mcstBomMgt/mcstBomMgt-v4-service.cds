@@ -70,7 +70,6 @@ service McstBomMgtV4Service {
         uom_code               : String(3);
         material_reqm_quantity : Decimal;
         buyer_empno            : String(30);
-        direct_register_flag   : Boolean;
         mapping_id             : Integer;
         crud_type_code         : String(1);
     }

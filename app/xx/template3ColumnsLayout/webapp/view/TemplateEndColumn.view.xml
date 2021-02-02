@@ -84,21 +84,37 @@
                         <form:SimpleForm editable="false">
                             <core:Title text="Normal" />
                             <Label text="{I18N>/CODE}"/>
-                            <Text text="{department>/department_code}"/>
-                            <Label text="{I18N>/NAME}"/>
-                            <Text text="{department>/department_name}"/>
-                            <Label text="Used"/>
-                            <Text text="{
-                                    path: 'department>/use_flag',
-                                    formatter: '.viewFormatter.toYesNo'
-                                }"/>
-                            <core:Title text="Settings" />
+                            <lib-m:EditModeVBox editableValue="{department>/__metadata/_row_editable_}">
+                                <Text text="{department>/department_code}"/>
+                                <Input value="{department>/department_code}"/>
+                            </lib-m:EditModeVBox>
+                            <Label text="Korean Name"/>
+                            <lib-m:EditModeVBox editableValue="{department>/__metadata/_row_editable_}">
+                                <Text text="{department>/department_korean_name}"/>
+                                <Input value="{department>/department_korean_name}"/>
+                            </lib-m:EditModeVBox>
+                            <Label text="English Name"/>
+                            <lib-m:EditModeVBox editableValue="{department>/__metadata/_row_editable_}">
+                                <Text text="{department>/department_english_name}"/>
+                                <Input value="{department>/department_english_name}"/>
+                            </lib-m:EditModeVBox>
                             <Label text="Leader Employee No."/>
-                            <Text text="{department>/department_leader_empno}" />
+                            <lib-m:EditModeVBox editableValue="{department>/__metadata/_row_editable_}">
+                                <Text text="{department>/department_leader_empno}" />
+                            </lib-m:EditModeVBox>
+
+                            <core:Title text="Settings" />
                             <Label text="Department Type"/>
-                            <Text text="{department>/department_type_code}" />
+                            <lib-m:EditModeVBox editableValue="{department>/__metadata/_row_editable_}">
+                                <Text text="{department>/department_type_code}" />
+                            </lib-m:EditModeVBox>
                             <Label text="Used"/>
-                            <Text text="{department>/use_flag}" />
+                            <lib-m:EditModeVBox editableValue="{department>/__metadata/_row_editable_}">
+                                <Text text="{
+                                        path: 'department>/use_flag',
+                                        formatter: '.viewFormatter.toYesNo'
+                                    }"/>
+                            </lib-m:EditModeVBox>
                         </form:SimpleForm>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
@@ -142,7 +158,7 @@
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
-                                    <Title text="Employees who member of the department  ({= ${employee>/}.length || 0})" level="H2"/>
+                                    <Title text="Employees who member of department  ({= ${employee>/}.length || 0})" level="H2"/>
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
 									<Button id="endTableAddButton" text="Add" type="Transparent" press=".onEndTableAddButtonPress" />

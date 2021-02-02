@@ -67,12 +67,12 @@ BEGIN
 	***********************************************/
     --DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 	
+
+    /*
 	BEGIN
 	
-		/************************************************
-		VALIDATION
-		************************************************/
-		DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
 		BEGIN
 			O_RESULT =  SELECT 
 							'NG' AS RESULT_CODE
@@ -82,7 +82,9 @@ BEGIN
 						FROM DUMMY;
             RESIGNAL;           
 		END;
+        
 		
+        
 		-------------------------------------------------------------------------------[필수체크]	
 		--거래사업부(조직코드) 필수 체크
 		IF (COALESCE(:I_ORG_CODE,'') = '') THEN
@@ -172,14 +174,17 @@ BEGIN
 		IF (V_INV_DTL_CNT < 1) THEN
 			SIGNAL SQL_ERROR_CODE 11014 SET MESSAGE_TEXT = 'Please add invest plan detail data.';
 		END IF;
+        
 	
 	END;
+    */
 	
 	
 	/***********************************************
 	저장처리 시작
 	**********************************************/
 	BEGIN
+        /*
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
 		BEGIN
 			O_RESULT =  SELECT 
@@ -190,6 +195,7 @@ BEGIN
 						FROM DUMMY;
             RESIGNAL;
 		END;
+        */
 	
 		
 
@@ -218,10 +224,8 @@ BEGIN
         최초 제출한 일자를 세팅
         **********************************/
         IF (:I_FUNDING_STATUS_CODE = '110') THEN
-            V_FUNDING_APPL_DATE = CURRENT_TIMESTAMP;
+            V_FUNDING_APPL_DATE := CURRENT_TIMESTAMP;
         END IF;
-
-		
 		
 		-------------------------------------------------------------------------------[자금지원 신청 테이블 UPDATE]
 		UPDATE SP_SF_FUNDING_APPLICATION
@@ -257,6 +261,7 @@ BEGIN
 			
 	END;
 		
+    COMMIT;
 	
 	/***********************************************
 	처리 끝

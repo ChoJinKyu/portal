@@ -22,61 +22,62 @@ sap.ui.define([
     return {
         ...Aop,
         
-        // Button Action
-        addFuncForButton: function(context, type) {
+        // Button Action - press
+        addFuncForButtonPress: function(context) {
 
-            !type
-            &&
             Aop.around("^onButtonPress", (function(f) {
-                var [event, action, ...args] = f.arguments = Array.prototype.slice.call(f.arguments);
-                var subAction = "";
-                // Default 버튼인 경우 기본 처리 적용
-                action == "default"
+
+                var [event, type, ...args] = f.arguments = Array.prototype.slice.call(f.arguments);
+                var action = "";
+
+                type == "navigation"
                 &&
-                (subAction = (function(arg) {
+                !action && (action = (function(arg) {
                     if (arg["action"] != "NavBack") return false;
-                    //debugger;
                     this.getModel("fcl").setProperty("/layout", LayoutType.OneColumn);
                     return "NavBack";
                 }).call(context || this, args[args.length-1]||{}))
                
-                return Aop.next.call(this, f);
+                return (type == "navigation" || type == "personalize")
+                    ? "" 
+                    : Aop.next.call(this, f);
 
             }).bind(context || this), context || this, true);
-
         },
-        // Navigation Action
-        addFuncForNavigation: function(context, type) {
 
-            !type
-            &&
-            Aop.around("^onNavigationActions", (function(f) {
-                var [event, action, ...args] = f.arguments = Array.prototype.slice.call(f.arguments);
-                var subAction = "";
-                // Default 버튼인 경우 기본 처리 적용
-                action == "default"
+        // Navigation Action
+        addFuncForNavigation: function(context) {
+
+            Aop.around("^onOverflowToolbarButtonPress", (function(f) {
+
+                var [event, type, ...args] = f.arguments = Array.prototype.slice.call(f.arguments);
+                var action = "";
+
+                type == "navigation"
                 &&
-                (subAction = (function(arg) {
+                !action && (action = (function(arg) {
                     if (arg["action"] != "NavBack") return false;
                     this.getModel("fcl").setProperty("/layout", LayoutType.OneColumn);
                     return "NavBack";
                 }).call(context || this, args[args.length-1]||{}))
                 ||
-                !subAction && (subAction = (function(arg) {
+                !action && (action = (function(arg) {
                     if (arg["action"] != "Full") return false;
                     this.getModel("fcl").setProperty("/layout", LayoutType.MidColumnFullScreen);
                     return "Full";
                 }).call(context || this, args[args.length-1]||{}))
                 ||
-                !subAction && (subAction = (function(arg) {
+                !action && (action = (function(arg) {
                     if (arg["action"] != "Exit") return false;
                     this.getModel("fcl").setProperty("/layout", LayoutType.TwoColumnsMidExpanded);
                     return "Exit";
                 }).call(context || this, args[args.length-1]||{}))
-                return Aop.next.call(this, f);
+
+                return (type == "navigation")
+                    ? "" 
+                    : Aop.next.call(this, f);
 
             }).bind(context || this), context || this, true);
-
         },
         // 바인딩 정보를 해석하여 적절한 데이터를 반환한다.
         // 정규식도 지원
