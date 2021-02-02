@@ -398,13 +398,15 @@ sap.ui.define([
             }
 
             var oView = this.getView();
-
+            var p = this.process;
             if (!this._oDialogPrev) {
                 this._oDialogPrev = Fragment.load({
                     id: oView.getId(),
                     name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView",
                     controller: this
-                }).then(function (oDialog) {
+                }).then(function (oDialog) { 
+                    p.setDrawProcessUI(this, "BudgetExecutionPressPrev" , "A", 1);
+
                     oView.addDependent(oDialog);
                     return oDialog;
                 }.bind(this));
