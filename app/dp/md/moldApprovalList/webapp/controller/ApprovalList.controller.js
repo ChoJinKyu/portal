@@ -1120,7 +1120,7 @@ sap.ui.define([
             }
 
             
-            //aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2101"));
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2101"));
             return aSearchFilters;
         },
 
