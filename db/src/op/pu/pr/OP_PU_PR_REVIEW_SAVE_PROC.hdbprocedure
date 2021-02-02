@@ -139,7 +139,7 @@ BEGIN
         AND    PD.BUYER_EMPNO    = :I_EMPLOYEE_NUMBER
         ;
 
-        IF v_sql_rowcnt = 0 AND (:I_JOB_TYPE != 'CHANGE' OR :I_JOB_TYPE != 'RFQ' OR :I_JOB_TYPE != 'BIDDING') THEN
+        IF v_sql_rowcnt = 0 AND (:I_JOB_TYPE != 'CHANGE' AND :I_JOB_TYPE != 'RFQ' AND :I_JOB_TYPE != 'BIDDING') THEN
             SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please check ownership.(You can only proceed with your own purchase.)';
         END IF;
 
