@@ -206,60 +206,149 @@ sap.ui.define([
                 oDetailsModel = this.getModel("details"),
                 that = this;
 
-            console.log("details===", oDetailsModel);    
-
-            // '122010'	'RFQ진행중'
-            // '122020'	'RFQ완료'
-            // '122030'	'작성중'
-            // '122040'	'결재진행중'
-            // '122050'	'결재반려'
-            // '122060'	'업체선정완료' 
-            var statusCode = "122030";
-            var statusName = "작성중";
-            if (flag == "R") {
-                statusCode = "122040";
-                statusName = "결재진행중";
-            } else if (flag == "B") {
-                statusCode = "122060";
-                statusName = "업체선정완료";
-            } else {
-                statusCode = "122030";
-                statusName = "작성중";
-            }
+            console.log("details===", oDetailsModel.getData());    
 
             var input = {};
             var inputData = {};
-            var detailData = this._sLoiDtlArr;
-            var tenantId = oMasterModel.getData().tenant_id;
-            if (tenantId.indexOf(",") > -1) {
-                tenantId = tenantId.split(",")[0];
-            }
-            var companyCode = oMasterModel.getData().company_code;
-            if (companyCode.indexOf(",") > -1) {
-                companyCode = companyCode.split(",")[0];
-            }
+            var details = [];
 
-            inputData = {
-                "tenant_id": tenantId,
-                "company_code": companyCode,
-                "loi_selection_number": oMasterModel.getData().loi_selection_number,
-                "loi_selection_title": oMasterModel.getData().loi_selection_title,
-                "loi_selection_status_code": statusCode,
-                "special_note": oMasterModel.getData().special_note,
-                "attch_group_number": oMasterModel.getData().attch_group_number,
-                "approval_number": oMasterModel.getData().approval_number,
-                "buyer_empno": oMasterModel.getData().buyer_empno,
-                "purchasing_department_code": oMasterModel.getData().purchasing_department_code,
-                // "buyer_empno": '9586',
-                // "purchasing_department_code": '50008948',
-                "remark": oMasterModel.getData().remark,
-                "org_type_code": oMasterModel.getData().org_type_code,
-                "org_code": oMasterModel.getData().org_code,
-                "user_id": '9586',
-                "details": detailData
-            }
 
-            input.inputData = inputData;
+            // return;
+
+            // // '221010'	'BM등록요청'
+            // // '221020'	'물량확정요청'
+            // // '221030'	'물량수정요청'
+            // // '221040'	'물량확정'
+ 
+            // var statusCode = "221010";
+            // var statusName = "BM등록요청";
+            // // if (flag == "R") {
+            // //     statusCode = "221020";
+            // //     statusName = "물량확정요청";
+            // // } else if (flag == "B") {
+            // //     statusCode = "221030";
+            // //     statusName = "물량수정요청";
+            // // } else {
+            // //     statusCode = "221040";
+            // //     statusName = "물량확정";
+            // // }
+
+            // var input = {};
+            // var inputData = {};
+            // //var detailData = this._sLoiDtlArr;
+            // var tenantId = oMasterModel.getData().tenant_id;
+            // if (tenantId.indexOf(",") > -1) {
+            //     tenantId = tenantId.split(",")[0];
+            // }
+            // var companyCode = oMasterModel.getData().company_code;
+            // if (companyCode.indexOf(",") > -1) {
+            //     companyCode = companyCode.split(",")[0];
+            // }
+
+
+            oDetailsModel.getData().map(r => {
+                
+                //console.log("net_price_contract_start_date ---> " , that.getFormatDate(r["net_price_contract_start_date"]));
+                //console.log("net_price_contract_end_date ---> " , that.getFormatDate(r["net_price_contract_end_date"]));
+
+
+                console.log("show.... ---> " , (r["const_quotation_number"] == undefined ? '' : r["const_quotation_number"]));
+
+                console.log("tenant_id ---> " , r["tenant_id"]);
+                console.log("company_code ---> " , r["company_code"]);
+
+                
+
+                console.log("const_quotation_number ---> " , r["const_quotation_number"] == "undefined" ? 0 : r["const_quotation_number"]);
+                console.log("const_quotation_item_number ---> " , r["const_quotation_item_number"]);
+                console.log("item_sequence ---> " , r["item_sequence"]);
+                console.log("ep_item_code ---> " , r["ep_item_code"]);
+                console.log("item_desc ---> " , r["item_desc"]);
+                console.log("spec_desc ---> " , r["spec_desc"]);
+                console.log("quotation_quantity ---> " , r["quotation_quantity"]);
+                console.log("unit ---> " , r["unit"]);
+                console.log("material_apply_flag ---> " , r["material_apply_flag"]);
+                console.log("labor_apply_flag ---> " , r["labor_apply_flag"]);
+                console.log("net_price_change_allow_flag ---> " , r["net_price_change_allow_flag"]);
+                console.log("base_material_net_price ---> " , r["base_material_net_price"]);
+                console.log("material_net_price ---> " , r["material_net_price"]);
+                console.log("material_amount ---> " , r["material_amount"]);
+                console.log("labor_net_price ---> " , r["labor_net_price"]);
+                console.log("labor_amount ---> " , r["labor_amount"]);
+                console.log("sum_amount ---> " , r["sum_amount"]);
+                console.log("currency_code ---> " , r["currency_code"]);
+                console.log("extra_rate ---> " , r["extra_rate"]);
+                console.log("net_price_contract_document_no ---> " , r["net_price_contract_document_no"]);
+                console.log("net_price_contract_degree ---> " , r["net_price_contract_degree"]);
+                console.log("net_price_contract_item_number ---> " , r["net_price_contract_item_number"]);
+                console.log("supplier_item_create_flag ---> " , r["supplier_item_create_flag"]);
+                console.log("remark ---> " , r["remark"]);
+                
+                details.push({
+                        tenant_id: r["tenant_id"],
+                        company_code: r["company_code"],
+                        const_quotation_number: '0000871814',//(r["const_quotation_number"] == undefined ? '' : r["const_quotation_number"]),
+                        //const_quotation_item_number: (r["const_quotation_item_number"] == undefined ? '' : r["const_quotation_item_number"]),
+                        item_sequence: (r["item_sequence"] == undefined ? 10 : r["item_sequence"]),
+                        ep_item_code: r["ep_item_code"],
+                        item_desc: r["item_desc"],
+                        spec_desc: r["spec_desc"],
+                        quotation_quantity: (r["quotation_quantity"] == undefined ? 0 : r["quotation_quantity"]),
+                        unit: r["unit"],
+                        material_apply_flag: r["material_apply_flag"],
+                        labor_apply_flag: r["labor_apply_flag"],
+                        net_price_change_allow_flag: (r["net_price_change_allow_flag"] == null ? false : r["net_price_change_allow_flag"]),
+                        base_material_net_price: (r["base_material_net_price"] == undefined ? 0 : r["base_material_net_price"]),
+                        base_labor_net_price: (r["base_labor_net_price"] == undefined ? 0 : r["base_labor_net_price"]),
+                        material_net_price: (r["material_net_price"] == undefined ? 0 : Number(r["material_net_price"])),
+                        material_amount: (r["material_amount"] == undefined ? 0 : r["material_amount"]),
+                        labor_net_price: (r["labor_net_price"] == undefined ? 0 : Number(r["labor_net_price"])),
+                        labor_amount: (r["labor_amount"] == undefined ? 0 : r["labor_amount"]),
+                        sum_amount: (r["sum_amount"] == undefined ? 0: r["sum_amount"]),
+                        currency_code: r["currency_code"],
+                        extra_rate: (r["extra_rate"] == undefined ? 0 : r["extra_rate"]),
+                        net_price_contract_document_no: r["net_price_contract_document_no"],
+                        net_price_contract_degree: (r["net_price_contract_degree"] == undefined ? 0 : Number(r["net_price_contract_degree"])),
+                        net_price_contract_item_number: r["net_price_contract_item_number"],
+                        supplier_item_create_flag: (r["supplier_item_create_flag"] == undefined ? false : r["supplier_item_create_flag"]),
+                        remark:  (r["remark"] == null ? '' : r["remark"])
+
+                        //delivery_request_date: that.getFormatDate(r["delivery_request_date"]),
+
+                        
+                    });
+
+                    console.log("details ---> " , details);
+            });
+
+
+
+            // inputData = {
+            //     "tenant_id": tenantId,
+            //     "company_code": companyCode,
+            //     "const_quotation_number": oMasterModel.getData().const_quotation_number,
+            //     "const_name": oMasterModel.getData().const_name,
+
+
+            //     "ep_item_code": oMasterModel.getData().ep_item_code,
+            //     "const_start_date": oMasterModel.getData().const_start_date,
+            //     "const_end_date": oMasterModel.getData().const_end_date,
+            //     "currency_code": oMasterModel.getData().currency_code,
+                
+            //     "const_person_empno": oMasterModel.getData().const_person_empno,
+
+            //     "purchasing_department_code": oMasterModel.getData().purchasing_department_code,
+            //     "buyer_empno": oMasterModel.getData().buyer_empno,
+
+            //     "remark": oMasterModel.getData().remark,
+            //     "attch_group_number": oMasterModel.getData().attch_group_number,
+            //     "user_id": '9586',
+            //     //"details": detailData
+            // }
+
+            console.log("input====", JSON.stringify(details));
+
+            input.inputData = details;
 
             console.log("input====", JSON.stringify(input));
 
@@ -270,7 +359,7 @@ sap.ui.define([
 
             if (this.validator.validate(this.byId("midObjectForm")) !== true) return;
 
-            var url = "ep/po/loiPublishMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiSupplySelectionProc";
+            var url = "ep/ne/ucQuotationMgtSup/webapp/srv-api/odata/v4/ep.UcQuotationMgtV4Service/SaveUcQuotationDtlProc";
 
             MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
                 title: this.getModel("I18N").getText("/SAVE"),
@@ -288,15 +377,16 @@ sap.ui.define([
                                 //console.log("#########Success#####", data.value[0].savedkey);
                                 oView.setBusy(false);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
-                                that.validator.clearValueState(that.byId("midObjectForm"));
+          //                      that.validator.clearValueState(that.byId("midObjectForm"));
 
-                                var sObjectPath = "/LOISupplySelectionView(tenant_id='" + tenantId + "',company_code='" + companyCode + "',loi_selection_number='" + data.value[0].savedkey + "')";
-                                var oMasterModel = that.getModel("master");
+
+                                var sObjectPath = "/UcQuotationDtlView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',const_quotation_number='" + this._sConstQuotationNumber + "')";
+                                var oMasterModel = that.getModel("details");
                                 oView.setBusy(true);
                                 oMasterModel.setTransactionModel(that.getModel());
                                 oMasterModel.read(sObjectPath, {
                                     success: function (oData) {
-                                        oView.setBusy(false);
+                                        oView.setBusy(details);
                                         oView.getModel("master").updateBindings(true);
                                         that._toShowMode();
                                     }
@@ -524,8 +614,8 @@ sap.ui.define([
                     ],
                     success: function (oData) {
                         console.log(" UcQuotationDtlView ::: ", oData.results);
-                        // oView.getModel("details").setData(oData.results[0]);
-                        // oView.setBusy(false);
+                        oView.getModel("details").setData(oData.results);
+                        oView.setBusy(false);
                         // loi_status = oData.quotation_status_code;
                         // that._toShowMode();
                     }
@@ -534,10 +624,16 @@ sap.ui.define([
             }
         },
 
+        // '221010'	'BM등록요청'
+        // '221020'	'물량확정요청'
+        // '221030'	'물량수정요청'
+        // '221040'	'물량확정'
+
+
         _toEditMode: function () {
             this.getModel("midObjectViewModel").setProperty("/isEditMode", true);
             var oMasterModel = this.getModel("master")
-            var statusCode = oMasterModel.getData().loi_selection_status_code;
+            var statusCode = oMasterModel.getData().quotation_status_code;
             this._showFormFragment('UcQuotationSup_Edit');
             // this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);
@@ -547,22 +643,24 @@ sap.ui.define([
             this.byId("pageSaveButton").setVisible(true);
             this.byId("pageByPassButton").setVisible(true);
             this.byId("pageRequestButton").setVisible(true);
-            if (statusCode === "122030" || statusCode === "122050") {
+            if (statusCode === "221010") { //BM등록요청
                 this.byId("pageSaveButton").setEnabled(true);
             } else {
                 this.byId("pageSaveButton").setEnabled(false);
             }
-            if (statusCode === "122060") {
+            if (statusCode === "221020" ) {
                 this.byId("pageByPassButton").setEnabled(false);
             } else {
                 this.byId("pageByPassButton").setEnabled(true);
             }
-            if (statusCode === "122040" || statusCode === "122060") {
+            if (statusCode === "221020") {
                 this.byId("pageRequestButton").setEnabled(false);
             } else {
                 this.byId("pageRequestButton").setEnabled(true);
             }
             this.byId("pageCancelButton").setEnabled(true);
+            this.byId("midTableAddButton").setEnabled(true);
+            this.byId("midTableDeleteButton").setEnabled(true);
             // this.byId("midTableAddButton").setEnabled(!FALSE);
             // this.byId("midTableDeleteButton").setEnabled(!FALSE);
             // this.byId("midTableSearchField").setEnabled(FALSE);
@@ -580,7 +678,7 @@ sap.ui.define([
             this.getModel("midObjectViewModel").setProperty("/isEditMode", false);
             this._showFormFragment('UcQuotationSup_Show');
             // this.byId("page").setSelectedSection("pageSectionMain");
-            if (statusCode == "122060") {
+            if (statusCode == "221040") {
                 this.byId("page").setProperty("showFooter", false);
             } else {
                 this.byId("page").setProperty("showFooter", true);
@@ -601,6 +699,8 @@ sap.ui.define([
             this.byId("pageRequestButton").setVisible(false);
 
             this.byId("pageCancelButton").setEnabled(true);
+            this.byId("midTableAddButton").setEnabled(false);
+            this.byId("midTableDeleteButton").setEnabled(false);
             // this.byId("midTableAddButton").setEnabled(!TRUE);
             // this.byId("midTableDeleteButton").setEnabled(!TRUE);
             // this.byId("midTableSearchField").setEnabled(TRUE);
@@ -699,9 +799,16 @@ sap.ui.define([
 
         
 
-        onVosButtonPress: function (oEvent) {
+        onMidTableAddButtonPress: function () {
 
-            console.log("onVosButtonPress  ----> " ,oEvent);
+            var [tId, mName] = arguments;
+            var table = this.byId(tId);
+            var model = this.getView().getModel(mName);
+
+
+
+            console.log("onMidTableAddButtonPress  model----> " ,model.oData.tenant_id);
+            console.log("onMidTableAddButtonPress  model----> " ,model.oData.ep_item_code);
             // var sPath = oEvent.getSource().getBindingContext("listModel").getPath(),
             //     oRecord = this.getModel("listModel").getProperty(sPath);
 
@@ -772,8 +879,12 @@ var tenantId = oMasterModel.getData().tenant_id;
 
 
 
-                //oView.byId("saveSupplierOpinion").setValue(oRecord.supplier_opinion);
+                oView.byId("searchPopEpItemCode").setSelectedKey(model.oData.ep_item_code);
+                oView.byId("searchTenantId").setText(model.oData.org_code);
                 //console.log("#saveSupplierOpinion=", oView.byId("saveSupplierOpinion").getValue());
+  //              this.getModel("contModel").setProperty('/ep_item_code', model.oData.ep_item_code);
+                 //oMasterModel.setProperty("/master/"+index+"/material_net_price", this.numberFormatter.toNumberString(sum_val));
+
             }).bind(this));
 
         },

@@ -65,7 +65,7 @@
                     <ObjectStatus
                         id="createDepartment"
                         title="단가운영단위(플랜트) "
-                        text="{master>/tenant_id}"/>
+                        text="{master>/org_code}"/>
                     </layout:VerticalLayout>
 
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -144,7 +144,7 @@
                         <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin"> 
                             
                             <t:Table id="mainTable"
-                            selectionMode="None"
+                            selectionMode="MultiToggle"
                             rows="{
                                 path: 'details>/',
                                 sorter: { 
@@ -160,9 +160,9 @@
                                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                                 <!-- <Title text="업체선정결과 {= ${details>/}.length > 0 ? '(' + ${details>/}.length + ')' : ''}" level="H2"/> -->
                                 <ToolbarSpacer/>
-                                <Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
-                                <Button text="exam"  press=".onVosButtonPress" />
-								<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress('midTable', 'details', 'LOIRequestDetailView')" />
+                                <Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress('mainTable', 'master')" />
+                                <!-- <Button text="exam"  press=".onVosButtonPress" /> -->
+								<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress('mainTable', 'details', 'LOIRequestDetailView')" />
                                 </OverflowToolbar>
                             </t:extension>
     
@@ -197,6 +197,7 @@
                                     <Text text="{details>unit}"/>
                                 </t:template>
                                 </t:Column>
+                                
                                 <t:Column id="mainQuotationQuantity" width="4rem" hAlign="Center">
                                 <Label text="수량" textAlign="Center" width="100%"/>
                                 <t:template>

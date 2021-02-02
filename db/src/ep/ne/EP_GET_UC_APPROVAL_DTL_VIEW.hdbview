@@ -9,12 +9,14 @@ select
     ,mst.net_price_contract_title	                                --단가계약제목
     ,mst.net_price_contract_start_date	                            --단가계약시작일자
     ,mst.net_price_contract_end_date	                            --단가계약종료일자
-    ,mst.net_price_contract_start_date ||' ~ '|| mst.net_price_contract_end_date as net_price_contract_date --계약기간
+    ,mst.net_price_contract_start_date ||' ~ '|| mst.net_price_contract_end_date as net_price_contract_period --계약기간
     ,coalesce(dtl.currency_code, '') as currency_code               --통화코드
     ,dtl.currency_code as currency_name                             --통화
     ,dtl.material_apply_flag                                        --자재적용여부
     ,dtl.labor_apply_flag                                           --노무적용여부
-    --,dtl.net_price_change_allow_flag                                --단가변경허용여부
+    ,dtl.net_price_change_allow_flag                                --단가변경허용여부
+    ,dtl.remark                                                     --비고
+    --,dtl.expiration_flag                                            --만료여부
     ,dtl.tenant_id
     ,dtl.company_code
     ,dtl.net_price_contract_document_no                             --단가계약그룹번호
@@ -28,9 +30,15 @@ select
     ,dtl.system_create_dtm
     ,dtl.system_update_dtm
 from ep_uc_approval_dtl as dtl
-left outer join ep_uc_approval_mst as mst
+join ep_uc_approval_mst as mst
 on dtl.tenant_id = mst.tenant_id
 and dtl.company_code = mst.company_code
 and dtl.net_price_contract_document_no = mst.net_price_contract_document_no
 and dtl.net_price_contract_degree = mst.net_price_contract_degree
+and mst.USE_FLAG = true 
+and dtl.USE_FLAG = true
+and ifnull(mst.NET_PRICE_CONTRACT_CHG_TYPE_CD ,'C') <> 'D'
+and ifnull(dtl.NET_PRICE_CONTRACT_CHG_TYPE_CD ,'C') <> 'D'
+--and mst.current_contract_flag = true
+and mst.net_price_contract_start_date < CURRENT_DATE
 ;

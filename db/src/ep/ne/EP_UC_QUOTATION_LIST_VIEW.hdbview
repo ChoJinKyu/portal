@@ -3,6 +3,8 @@ select
     mst.tenant_id,
     mst.company_code,
     mst.const_quotation_number,
+    mst.org_code,
+    mst.org_code as org_name,
     mst.const_name,
     mst.ep_item_code,
     mst.const_start_date,
