@@ -20,10 +20,11 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
     "dp/md/util/controller/MoldItemSelection",
-    "dp/md/util/controller/SupplierSelection"
+    "dp/md/util/controller/SupplierSelection",
+    "dp/md/util/controller/ProcessUI", 
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, MoldItemSelection, SupplierSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, MoldItemSelection, SupplierSelection, ProcessUI
 ) {
     "use strict";
 
@@ -45,6 +46,7 @@ sap.ui.define([
 
         supplierSelection: new SupplierSelection(),
 
+        process : new ProcessUI(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -64,6 +66,8 @@ sap.ui.define([
             });
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
+
+            this.process.setDrawProcessUI(this, "assetDetailProcess" , "C", 0);
 
         },
 

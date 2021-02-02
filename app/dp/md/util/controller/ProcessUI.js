@@ -23,7 +23,7 @@ sap.ui.define([
                 pThis.setModel(new ManagedListModel(), pId);
                  var w = "4rem"; 
                 if (pTypeGubunCode == "B") { 
-                    w = "4rem"; 
+                    w = ""; 
                     var model = pThis.getModel(pId);
                     model.addRecord({ name: "Remodel & Repair\nEntry" }, "/process");
                     model.addRecord({ name: "On Approval" }, "/process");
@@ -33,7 +33,7 @@ sap.ui.define([
                     model.addRecord({ name: "Repair Fee\nCompleted" }, "/process");
                     model.addRecord({ name: "PO" }, "/process");
                     model.addRecord({ name: "Invoice" }, "/process");
-                } else {
+                } else if(pTypeGubunCode == "A") {
                     w = "3.6rem"; 
                     var model = pThis.getModel(pId);
                     model.addRecord({ name: "PR" }, "/process");
@@ -45,7 +45,16 @@ sap.ui.define([
                     model.addRecord({ name: "RCV" }, "/process");
                     model.addRecord({ name: "Lease\nContract" }, "/process");
                     model.addRecord({ name: "Invoice" }, "/process");
-                }
+                } else if(pTypeGubunCode == "C") {
+                    w = ""; 
+                    var model = pThis.getModel(pId);
+                    model.addRecord({ name: "Repair\nentry" }, "/process");
+                    model.addRecord({ name: "On\nApproval" }, "/process");
+                    model.addRecord({ name: "Requesting\nestimation" }, "/process");
+                    model.addRecord({ name: "LGE Review\nreq." }, "/process");
+                    model.addRecord({ name: "Supplier\nAgree req." }, "/process");
+                    model.addRecord({ name: "Repair\nComplate" }, "/process");
+                } 
 
                 var model = pThis.getModel(pId);
                 var oProcess = new MicroProcessFlow({});
