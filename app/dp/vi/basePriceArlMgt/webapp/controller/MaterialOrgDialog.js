@@ -135,7 +135,7 @@ sap.ui.define([
             
             aFiltersControl.push(new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/VI_APPROVE_ORG_CODEODE")}),  //조직코드
+                        new Label({ text: this.getModel("I18N").getText("/VI_APPROVE_ORG_CODE")}),  //조직코드
                         this.oSearchOrg
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})

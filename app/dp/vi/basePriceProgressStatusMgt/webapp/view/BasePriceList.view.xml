@@ -230,17 +230,6 @@
                             <Text text="{listModel>material_spec}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Center" width="12rem">
-                        <Label text="{I18N>/STATUS}" />
-                        <t:template>
-                            <tnt:InfoLabel 
-                                text="{listModel>approve_status_code_nm}" 
-                                colorScheme="{
-                                    path: 'listModel>approve_status_code',
-                                    formatter: '.onStatusColor'
-                                }" />
-                        </t:template>
-                    </t:Column>
                     <t:Column headerSpan="2" width="7rem" visible="{= ${rootModel>/config/DP_VI_SUPPLY_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                             <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
@@ -401,6 +390,17 @@
                         <t:template>
                             <Text text="{listModel>requestor_local_nm} {listModel>requestor_job_title}" 
                                 tooltip="{listModel>requestor_local_nm} {listModel>requestor_job_title}"  />
+                        </t:template>
+                    </t:Column>
+                    <t:Column hAlign="Center" width="12rem">
+                        <Label text="{I18N>/STATUS}" />
+                        <t:template>
+                            <tnt:InfoLabel 
+                                text="{listModel>approve_status_code_nm}" 
+                                colorScheme="{
+                                    path: 'listModel>approve_status_code',
+                                    formatter: '.onStatusColor'
+                                }" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="2rem">
