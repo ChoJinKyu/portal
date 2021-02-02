@@ -16,7 +16,7 @@
                 adjustLabelSpan="false"
                 singleContainerFullSize="false" >                    
                     <form:content >
-                            <Label text = "{I18N>/PROJECT_CODE}" class="sapUiLargeMarginEnd">
+                            <Label text = "{I18N>/PROJECT_CODE}" class="">
                                 <layoutData>
                                     <layout:GridData span="XL2 L2 M2 S12" />
                                 </layoutData>

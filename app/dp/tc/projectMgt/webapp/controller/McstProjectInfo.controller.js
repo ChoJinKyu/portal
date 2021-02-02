@@ -323,11 +323,11 @@ sap.ui.define([
 
 
         /**
-         * BlockPrice Controller
+         * pivot data
          */
         , _pivottingData: function() {
             var oDetailData = this.getOwnerComponent().getModel("detailModel").getData();
-            console.log("BlockPrice.Controller", oDetailData);
+            console.log("pivotted data", oDetailData);
             //Grid Table 별로 
             var oEvents = oDetailData.mcst_events ? oDetailData.mcst_events.results : [];//개발일정
 

@@ -1,0 +1,185 @@
+<!-- 
+   description : BOM Mapping  버튼 클릭
+-->
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core" 
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout"
+    xmlns:cm-ui="cm.util.control.ui">
+    <Dialog id="diaBomMapping" class="sapUiSmallMargin sapUiSizeCompact" title="BOM Mapping" contentWidth="70%" contentHeight="60%" >
+        <content>
+        <VBox class="sapUiSmallMargin">
+            <form:SimpleForm 
+                title="To-be Manager"
+                editable="true" 
+                layout="ResponsiveGridLayout"
+                adjustLabelSpan="false">
+                <VBox>
+                    <HBox>
+                        <Label text="{I18N>/DEPARTMENT}" />
+                    </HBox>
+                    <HBox>
+                        <ComboBox
+                            id="cbxBomMapDept"
+                            width="100%"
+                            selectedKey="{bomMappingModel>/department_type_code}"
+                            items="{
+                                path: 'util>/Code',
+                                filters: [
+                                    {path: 'group_code', operator: 'EQ', value1: 'DP_TC_CI_DEPT_CODE'}
+                                ],
+                                sorter: { path: 'sort_no'}
+                            }">
+                            <items>
+                                <core:Item key="{util>code}" text="{util>code_name}" />
+                            </items>
+                        </ComboBox>
+                    </HBox>
+                    <layoutData>
+                        <layout:GridData span="XL3 L3 M3 S12" />
+                    </layoutData>
+                </VBox>
+                <VBox>
+                    <HBox>
+                        <Label text="{I18N>/PERSON}" />
+                    </HBox>
+                    <HBox>
+                        <Input id="inputWithEmployeeValueHelp" value="{bomMappingModel>/creator_empno}"
+                            showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
+                        </Input>
+                    </HBox>
+                    <layoutData>
+                        <layout:GridData span="XL3 L3 M3 S12" />
+                    </layoutData>
+                </VBox>                    
+                <VBox>
+                    <HBox>
+                        <Label text="ECO/ECR No." />
+                    </HBox>
+                    <HBox>
+                        <Input value="{bomMappingModel>/eng_change_number}" />
+                    </HBox>
+                    <layoutData>
+                        <layout:GridData span="XL3 L3 M3 S12" />
+                    </layoutData>
+                </VBox>
+                <VBox>
+                    <HBox>
+                        <Label text="{I18N>/REASON}" />
+                    </HBox>
+                    <HBox>
+                        <Input width="100%" value="{bomMappingModel>/change_reason}" >
+                            <layoutData>
+                                <FlexItemData growFactor="1"/>
+                            </layoutData>
+                        </Input>
+                    </HBox>
+                    <layoutData>
+                        <layout:GridData span="XL3 L3 M3 S12" />
+                    </layoutData>
+                </VBox>                
+            </form:SimpleForm>
+            <!-- </Panel> -->
+
+            <HBox>
+                <VBox width="40%">
+                    <Table  id="tblAsisMatInfo" width="100%"
+                            items="{
+                                path: 'bomMappingModel>/Asis',
+                                sorter: {
+                                    path: 'Name'
+                                }
+                            }">
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <content>
+                                    <Title text="As-is 자재코드" level="H2"/>
+                                </content>
+                            </OverflowToolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column hAlign="Begin" width="30%">
+                                <Text text="자재코드" />
+                            </Column>
+                            <Column hAlign="Begin" width="70%">
+                                <Text text="자재설명" />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{bomMappingModel>material_code}"/>
+                                    <Text text="{bomMappingModel>material_desc}"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </VBox>
+                <VBox width="3rem" alignItems="Center" justifyContent="Center">
+                    <Avatar
+                        src="sap-icon://combine"
+                        displaySize="Custom"
+                        customDisplaySize="2rem"
+                        displayShape="Square"
+                        showBorder="true"/>
+                </VBox>
+                <VBox width="55%">
+                    <Table  id="tblTobeMatInfo" width="100%"
+                            items="{
+                                path: 'bomMappingModel>/Tobe',
+                                sorter: {
+                                    path: 'Name'
+                                }
+                            }">
+                        <headerToolbar>
+                            <OverflowToolbar>
+                                <content>
+                                    <Title text="To-be Information" level="H2"/>
+                                </content>
+                            </OverflowToolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column hAlign="Begin" width="20%">
+                                <Text text="자재코드" />
+                            </Column>
+                            <Column hAlign="Begin" width="30%">
+                                <Text text="자재설명" />
+                            </Column>
+                            <Column hAlign="Begin" width="50%">
+                                <Text text="Reason" />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{bomMappingModel>material_code}"/>
+                                    <Text text="{bomMappingModel>material_desc}"/>
+                                    <Input value="{bomMappingModel>change_reason}"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </VBox>
+            </HBox>
+
+        </VBox>       
+        </content>
+        <buttons>
+            <Button text="{I18N>/CLOSE}" class="sapUiSmallMarginEnd" press=".onBomMappingExit"/>
+            <Button text="{I18N>/DELETE}" class="sapUiSmallMarginEnd" press=".onBomMappingDeletePress" visible="{= ${bomMappingModel>/mapping_id} ? true : false }"/>
+            <Button text="{I18N>/SAVE}" class="sapUiSmallMarginEnd" type="Emphasized" press=".onBomMappingSavePress" />
+        </buttons>
+        <cm-ui:EmployeeDialog id="employeeDialog" 
+            title="직원 검색"
+            closeWhenApplied="true"
+            items="{
+                filters: [
+                ]
+            }"
+            apply=".onEmployeeDialogApplyPress"
+        />
+
+    </Dialog>
+</core:FragmentDefinition>
