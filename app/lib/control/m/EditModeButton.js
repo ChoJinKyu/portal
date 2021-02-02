@@ -21,8 +21,8 @@ sap.ui.define([
             }
         },
 
-        init: function () {
-            Parent.prototype.init.call(this);
+        constructor: function () {
+            Parent.prototype.constructor.apply(this, arguments);
             this.attachPress(this._onPress);
 
 			new Multilingual().attachEvent("ready", function(oEvent){
@@ -39,18 +39,28 @@ sap.ui.define([
             }.bind(this));
         },
 
-        _onPress: function(){
+        _onPress: function(oEvent){
             if(this.getProperty("pressed") === true){
-                this.setProperty("text", this.getProperty("textDefault"));
-                this.setProperty("pressed", false);
-                this.fireEvent("cancelPress");
+                this.setPressed(false);
             }else{
+                this.setPressed(true);
+            }
+        },
+
+        setPressed: function(pressed){
+            if(pressed){
                 this.setProperty("text", this.getProperty("textPressed"));
-                this.setProperty("pressed", true);
+                this.setProperty("pressed", pressed);
                 this.fireEvent("editPress");
+            }else{
+                var result = this.fireEvent("cancelPress", true);
+                if(result){
+                    this.setProperty("text", this.getProperty("textDefault"));
+                    this.setProperty("pressed", pressed);
+                }
             }
         }
-        
+
     });
 
     return EditModeButton;
