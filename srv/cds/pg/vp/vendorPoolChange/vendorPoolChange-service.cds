@@ -30,10 +30,7 @@ service VpChangeService {
     entity VpChangeList as projection on vpChangeList.Vp_Vendor_Pool_supplier_Change_List_View;
 
     view VpEmpView as
-    select key changer_empno,  
-               changer_name 
-    from vpChangeList.Vp_Vendor_Pool_supplier_Change_List_View
-    where changer_empno is not null
-    group by changer_empno,  
-             changer_name; 
+    select distinct key changer_empno,  
+                        changer_name 
+    from vpChangeList.Vp_Vendor_Pool_supplier_Change_List_View; 
 }

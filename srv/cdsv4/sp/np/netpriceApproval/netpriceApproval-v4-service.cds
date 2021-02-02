@@ -29,17 +29,32 @@ namespace sp;
 service NpApprovalV4Service {
 
 
+    /*
+    PROCEDURE SP_NP_NET_PRICE_APPROVAL_SAVE_PROC (
+        IN   APPROVAL_NUMBER   NVARCHAR(20)
+        ,IN   I_DTL				TABLE (
+                                    DTL_SEQ         NVARCHAR(20)
+                                )
+                                
+        ,IN   I_USER_ID 		NVARCHAR(255)
+        ,OUT  O_MSG				TABLE (
+                                    RETURN_CODE     NVARCHAR(2)
+                                    ,RETURN_MSG      NVARCHAR(1000)
+                                )
+    */
+
+
     /* */
     type DetailType : {
-        dtl_seq                 : String(20);
+        dtlSeq                 : String(20);
     };
 
     /* */
     type ParamType : {
-        approval_number  : String(20);
-        details          : array of DetailType;
-        user_id          : String(255);
-        user_no          : String(255)
+        approvalNumber  : String(20);
+        details         : array of DetailType;
+        userId          : String(255);
+        userNo          : String(255)
     }
 
     /**
@@ -51,6 +66,6 @@ service NpApprovalV4Service {
     };
 
 
-    action ApprovalSaveProc( param : ParamType ) returns ResultType;
+    action ApprovalSaveProc( param : ParamType ) returns array of ResultType;
 
 }

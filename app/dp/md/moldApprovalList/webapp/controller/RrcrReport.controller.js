@@ -81,7 +81,7 @@ sap.ui.define([
         /* internal methods                                            */
         /* =========================================================== */
         _onApprovalPage : function () { 
-            this.process.setDrawProcessUI(this, "processFlow" , "B" , 6); 
+           this.process.open_Type1(this, "test"); 
             this.getView().setModel(new ManagedListModel(), "mdRecepit");
 
             // console.log(" mode "  ,  this.getView().getModel("mode"));
