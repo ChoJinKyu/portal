@@ -55,7 +55,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
                                         ],
                                         sorter: { path: 'sort_no'}
@@ -116,7 +116,7 @@
                             items="{
                                         path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
                                         ],
                                         sorter: { path: 'sort_no'}
