@@ -94,7 +94,7 @@ sap.ui.define([
              aSorters.push(new Sorter("asset_number", false));
            
             this.oDialog.setBusy(true);
-            ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.pu.MstService/").read("/Asset_Mst", {
+            ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.pu.mstService/").read("/Asset_Mst", {
                 fetchAll: true,  //TODL: please disable fetchAll option for performance
                 filters: aFilters,
                 sorters: aSorters,

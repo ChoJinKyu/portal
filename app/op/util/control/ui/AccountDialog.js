@@ -114,7 +114,7 @@ sap.ui.define([
 
            
             this.oDialog.setBusy(true);
-            ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.pu.MstService/").read("/Account_Mst", {
+            ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.pu.mstService/").read("/Account_Mst", {
                 fetchAll: true,  //TODL: please disable fetchAll option for performance
                 filters: aFilters,
                 sorters: aSorters,
