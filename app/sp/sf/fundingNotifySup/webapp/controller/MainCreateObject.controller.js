@@ -278,6 +278,48 @@ sap.ui.define([
 
         },
 
+        //투자계획마스터 삭제
+        onInvestmentPlanDeleteButtonPress : function(oEvent){
+            var checkRow = this.byId("idProductsTable").getSelectedItems(),
+                invPlanDtl = [],
+                invDtlData = {},
+                that=this,
+                bFilters=[],
+                oModel = this.getModel("fundingApp"),
+                oPramMstDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanMst");
+
+            for(var i = 0; i < checkRow.length; i++){
+                invPlanDtl.push({
+                    funding_appl_number: this.getModel("applicationSup").getProperty("/funding_appl_number")//자금지원신청번호	
+                    , investment_plan_sequence: parseInt(checkRow[i].getBindingContext("applicationSup").getObject().investment_plan_sequence)//투자계획품목순번	
+                });
+            };
+            
+            invDtlData.mstType =invPlanDtl;
+
+            jQuery.ajax({
+                url: "srv-api/odata/v4/sp.FundingApplicationV4Service/ProcDelInvPlan",
+                type: "POST",
+                data: JSON.stringify(invDtlData),
+                contentType: "application/json",
+                success: function (oData) {
+                    MessageToast.show("Success to save.");
+                    
+                    bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, that.getModel("applicationSup").getProperty("/funding_appl_number")));
+
+                    //투자계획 마스터 리스트 조회
+                    oModel.read("/InvestPlanMstListView", {
+                        //Filter : 신청번호
+                        filters: bFilters,
+                        success: function (oRetrievedResult) {
+                            that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
+                        }
+                    }); 
+                }
+            });
+            
+        },
+
         //투자 계획 상세 목록 삭제
         onInvestmentDtlDeleteButtonPress : function(oEvent){
             var checkRow = this.byId("investmentDtl").getSelectedItems(),
