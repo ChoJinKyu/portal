@@ -18,7 +18,8 @@ sap.ui.define([
            
 
             var obj = pThis.byId(pId);
-            if (obj.getItems().length > 0) { return } else {
+            if (obj.getItems().length > 0) { return 
+            } else {
                 pThis.setModel(new ManagedListModel(), pId);
                  var w = "4rem"; 
                 if (pTypeGubunCode == "B") { 
@@ -49,39 +50,22 @@ sap.ui.define([
                 var model = pThis.getModel(pId);
                 var oProcess = new MicroProcessFlow({});
 
-               
+               var progressDisplayData = {
+                    done: {icon: "sap-icon://message-success", color: "#04B395"},
+                    inprogress: {icon: "sap-icon://message-success", color: "#F94B50"},
+                    scheduled: {icon: "sap-icon://appear-offline", color: "#BEC9D4"}
+                }
 
-                for (var i = 0; i < model.getData().process.length; i++) {
-                    var type;
-                    if (i == pIndex) {
-                        type = new VBox({
-                            items: [
-                                new Icon({ src: "sap-icon://message-success", color: "#F94B50" })
-                                , new Text({ text: model.getData().process[i].name, textAlign: "Center" })
-                            ]
-                            , alignItems: "Center"
-                            , width: w
-                        });
-                    } else if (i < pIndex) {
-                        type = new VBox({
-                            items: [
-                                new Icon({ src: "sap-icon://message-success", color: "#04B395" })
-                                , new Text({ text: model.getData().process[i].name, textAlign: "Center" })
-                            ]
-                            , alignItems: "Center"
-                            , width: w
-                        });
-                    } else {
-                        type = new VBox({
-                            items: [
-                                new Icon({ src: "sap-icon://appear-offline", color: "#BEC9D4" })
-                                , new Text({ text: model.getData().process[i].name, textAlign: "Center" })
-                            ]
-                            , alignItems: "Center"
-                            , width: w
-                        });
-                    }
-
+                for (var i = 0; i <  model.getData().process.length; i++) {
+                    var status = (i == pIndex?"inprogress":(i <  pIndex?"done":"scheduled"));
+                    var type = new VBox({
+                                    items: [
+                                        new Icon({ src: progressDisplayData[status].icon, color: progressDisplayData[status].color })
+                                        , new Text({ text: model.getData().process[i].name, textAlign: "Center" })
+                                    ]
+                                    , alignItems: "Center"
+                                    , width: w
+                                });
                     var flowItem = new MicroProcessFlowItem({
                           alignItems: "Center"
                         , stepWidth: "2rem"
