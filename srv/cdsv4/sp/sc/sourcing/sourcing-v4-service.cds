@@ -1,9 +1,9 @@
 //cds-service sourcing-v4-service.cds
 using {sp.Sc_Nego_Headers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
-using {sp.Sc_Nego_Headers_View as Sc_Nego_Headers_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
-using {sp.Sc_Nego_Item_Prices as Sc_Nego_Item_Prices} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
-using {sp.Sc_Nego_Suppliers as Sc_Nego_Suppliers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
-using {sp.Sc_Nego_Headers_New_Record_View as Sc_Nego_Headers_New_Record_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW-model';
+using {sp.Sc_Nego_Headers_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
+using {sp.Sc_Nego_Item_Prices} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
+using {sp.Sc_Nego_Suppliers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
+using {sp.Sc_Nego_Headers_New_Record_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW-model';
 /* using {
     sp.Sc_Outcome_Code as scOutcomeCode,
     sp.Sc_Nego_Type_Code as scNegoTypeCode,
@@ -104,14 +104,14 @@ service SourcingV4Service {
         detail_net_price             : type of Sc_Nego_Item_Prices : detail_net_price;
         recommend_info               : type of Sc_Nego_Item_Prices : recommend_info;
         group_id                     : type of Sc_Nego_Item_Prices : group_id;
-        sparts_supply_type           : type of Sc_Nego_Item_Prices : sparts_supply_type;
+        // sparts_supply_type           : type of Sc_Nego_Item_Prices : sparts_supply_type;
         location                     : type of Sc_Nego_Item_Prices : location;
         purpose                      : type of Sc_Nego_Item_Prices : purpose;
         reason                       : type of Sc_Nego_Item_Prices : reason;
         request_date                 : type of Sc_Nego_Item_Prices : request_date;
         attch_code                   : type of Sc_Nego_Item_Prices : attch_code;
         supplier_provide_info        : type of Sc_Nego_Item_Prices : supplier_provide_info;
-        incoterms                    : type of Sc_Nego_Item_Prices : incoterms;
+        incoterms_code               : type of Sc_Nego_Item_Prices : incoterms_code;
         excl_flag                    : type of Sc_Nego_Item_Prices : excl_flag;
         specific_supplier_count      : type of Sc_Nego_Item_Prices : specific_supplier_count;
         vendor_pool_code             : type of Sc_Nego_Item_Prices : vendor_pool_code;

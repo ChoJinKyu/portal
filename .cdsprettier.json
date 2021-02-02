@@ -1,4 +1,5 @@
 {
   "alignCompositionStructToRight": false,
-  "alignExpressionsAndConditions": false
+  "alignExpressionsAndConditions": false,
+  "alignExprAndCondWithinBlock": false
 }

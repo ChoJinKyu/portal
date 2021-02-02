@@ -24,10 +24,10 @@ using {cm.Org_Company} from '../../cm/CM_ORG_COMPANY-model';
 define entity Sc_Employee_View as select from Hr_Employee as he
     left outer join Hr_Department as hd
     on he.tenant_id = hd.tenant_id 
-      and he.department_id = hd.department_id
+      and he.department_code = hd.department_code
     left outer join Org_Company as oc
     on hd.tenant_id = oc.tenant_id 
-      and hd.company_id = oc.company_code
+      and hd.company_code = oc.company_code
     {
         key he.tenant_id,
         key he.employee_number,
@@ -35,18 +35,49 @@ define entity Sc_Employee_View as select from Hr_Employee as he
                             ,'en',he.user_english_name
                             , he.user_local_name)
                     as employee_name : Hr_Employee: user_local_name,
-            he.department_id as department_code: Hr_Department: department_id,
+            he.department_code as department_code: Hr_Department: department_code,
             map($user.locale,'ko',hd.department_korean_name
                             ,'en',hd.department_english_name
                             , hd.department_local_name)
                     as department_name : Hr_Department: department_local_name,
-            coalesce(nullif(hd.company_id,''),'LGCKR') as company_code : Org_Company: company_code,
+            coalesce(nullif(hd.company_code,''),'LGCKR') as company_code : Org_Company: company_code,
             map($user.locale,'en',hd.company_english_name
                             // ,'ko',hd.company_korean_name
                             , hd.company_local_name)
                     as company_name : Org_Company: company_name
     };
     // Cannot Extend with View or Projection, Use view mixin {} into {}
+
+
+@cds.autoexpose
+entity Sc_Hr_Department as select from Hr_Department as hd mixin {
+        org_company       : Association to Org_Company
+                                on org_company.tenant_id = $projection.tenant_id
+                                and org_company.company_code = $projection.company_code;
+        parent_department : Association to many Hr_Department
+                                on parent_department.tenant_id = $projection.tenant_id
+                                and parent_department.department_code = $projection.parent_department_code;
+    }
+    into {
+        key tenant_id,
+        key department_code,
+            map(
+                $user.locale, 'ko', hd.department_korean_name, 'en', hd.department_english_name, hd.department_local_name
+            ) as department_name : Hr_Department : department_local_name,
+            //임시로직: 현재 Hr_Department-company_code 빈값임 --폐기예정
+            coalesce(nullif(hd.company_code, ''), 'LGCKR') as company_code    : Org_Company : company_code,  
+            org_company,
+            parent_department_code,
+            parent_department
+    }
+    excluding {
+        local_create_dtm,
+        local_update_dtm,
+        create_user_id,
+        update_user_id,
+        system_create_dtm,
+        system_update_dtm
+    };
 
 /***********************************************************************************/
 /******************* For NegoHeaders-operation_unit_code ***************************/
@@ -88,7 +119,7 @@ entity Sc_Pur_Operation_Org as
     mixin {
         org_type : Association to Code_Lng
                        on (    org_type.tenant_id = $projection.tenant_id
-                           and org_type.code = $projection.org_type_code )
+                           and org_type.code = $projection.operation_org_type_code )
                        and org_type.group_code = 'CM_ORG_TYPE_CODE'
                        and lower( org_type.language_cd ) = substring( $user.locale, 1, 2 )
                        ;
@@ -98,7 +129,7 @@ entity Sc_Pur_Operation_Org as
         key POO.company_code,
         key POO.org_code as operation_org_code,
             POO.org_name as operation_org_name,
-            POO.org_type_code,
+            POO.org_type_code as operation_org_type_code,
             org_type,
             POO.purchase_org_code,
             POO.plant_code,
@@ -146,20 +177,20 @@ AND    OPERATION_ORG_CODE NOT IN ('BIZ00000')
 /***********************************************************************************/
 /******************* For NegoItemPrices-material_code ******************************/
 /* Material Master - Entity Model Relationship 적용되면 폐기예정
-// #Sc_Pur_Operation_Org == Pur_Org_Type_Mapping[process_type_code='SP03:견적입찰'] = Pur_Operation_Org =+ Code_Lng[group_code='CM_ORG_TYPE_CODE']
+// #Sc_Mm_Material_Mst == Mm_Material_Mst =+ Mm_Material_Desc_Lng[language_code=$user.locale]
 // #How to use : as association
-using { sp.Sc_Pur_Operation_Org } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
-        operation_org : association to Sc_Pur_Operation_Org 
-            on operation_org.tenant_id = $projection.tenant_id
-            and operation_org.company_code = $projection.company_code
-            and operation_org.operation_org_code = $projection.operation_unit_code
+using { sp.Sc_Mm_Material_Mst } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+        material : association to Sc_Mm_Material_Mst 
+            on material.tenant_id = $projection.tenant_id
+            and material.material_code = $projection.material_code
             ; 
 */
 
 // Mm_Material_Desc_Lng
 using {dp.Mm_Material_Mst} from '../../dp/mm/DP_MM_MATERIAL_MST-model';
 using {dp.Mm_Material_Desc_Lng} from '../../dp/mm/DP_MM_MATERIAL_DESC_LNG-model.cds';
-// using { dp as MtlMst } from './DP_MM_MATERIAL_MST-model';
+
+@cds.autoexpose
 entity Sc_Mm_Material_Mst      as
     select from Mm_Material_Mst
     mixin {
@@ -181,3 +212,55 @@ entity Sc_Mm_Material_Mst      as
         system_create_dtm,
         system_update_dtm
     };
+
+/***********************************************************************************/
+/******************* For NegoItemPrices-pr_number **********************************/
+/* Purchase Requisition - Entity Model Relationship 적용되면 폐기예정
+// #Sc_Pu_Pr_Mst == Pu_Pr_Mst =+ Pu_Pr_Dtl
+// #How to use : as association
+using {sp.Sc_Pu_Pr_Mst} from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+        purchase_requisition         : Association to Sc_Pu_Pr_Mst
+                                           on purchase_requisition.tenant_id = $self.tenant_id
+                                           and purchase_requisition.company_code = $self.company_code
+                                           and purchase_requisition.pr_number = $self.pr_number
+                                           ;
+ */
+using { op.Pu_Pr_Mst } from '../../op/pu/pr/OP_PU_PR_MST-model';
+// using { op.Pu_Pr_Dtl } from '../../op/pu/pr/OP_PU_PR_DTL-model';
+
+@cds.autoexpose
+entity Sc_Pu_Pr_Mst as projection on Pu_Pr_Mst
+    excluding {
+        local_create_dtm,
+        local_update_dtm,
+        create_user_id,
+        update_user_id,
+        system_create_dtm,
+        system_update_dtm
+    };
+
+
+/***********************************************************************************/
+/******************* For NegoItemPrices-pr_approve_number **********************************/
+/* Approval - Entity Model Relationship - Restricted 
+// #Sc_Approval_Mst == Approval_Mst =+ Approver,Referer
+// #How to use : as association
+using {sp.Sc_Approval_Mst} from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+        approval         : Association to Sc_Approval_Mst
+                                           on approval.tenant_id = $self.tenant_id
+                                           and approval.approval_number = $self.approval_number
+                                           ;
+ */
+using { cm.Approval_Mst } from '../../cm/CM_APPROVAL_MST-model';
+
+@cds.autoexpose
+entity Sc_Approval_Mst as projection on Approval_Mst
+    excluding {
+        local_create_dtm,
+        local_update_dtm,
+        create_user_id,
+        update_user_id,
+        system_create_dtm,
+        system_update_dtm
+    };
+
