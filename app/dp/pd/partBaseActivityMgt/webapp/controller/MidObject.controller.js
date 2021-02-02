@@ -226,23 +226,26 @@ sap.ui.define([
             // var oCateTable = this.byId("cateTable");
            
             var CUType = "C";            
-                var inputData = {
-                    inputdata : {}
-                };
+            
             if (this._sActivityCode !== "new"){
                 CUType = "U";                
+            }
+            
+            var activeFlg = "false";
+
+            if (oMasterData.active_flag) {
+                activeFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
             }
 
             var pdMstVal = {
 					tenant_id       : oMasterData.tenant_id,
                     activity_code   : oMasterData.activity_code,
                     description     : oMasterData.description,
-                    active_flag     : oMasterData.active_flag,
+                    active_flag     : activeFlg,
                     update_user_id  : this.loginUserId,
                     crud_type_code  : CUType
-				};
+				};           
             
-            var pdDtlVal = [];
 
             var input = {
                 inputData : {
@@ -251,7 +254,7 @@ sap.ui.define([
                     pdDtl: []
                 }
             };
-            
+
             var pdDtlVal = [];
             
             for (var i = 0; i <  oLngTable.getItems().length; i++) {
@@ -264,6 +267,7 @@ sap.ui.define([
                     crud_type_code: oLngData.PdPartBaseActivityLng[i]._row_state_
                 });
             }
+
             input.inputData.pdDtl = pdDtlVal;
 
             // if(oLngData.vi_amount==null){
@@ -294,17 +298,15 @@ sap.ui.define([
                         $.ajax({
                             url: url,
                             type: "POST",
-                            data: JSON.stringify(inputData),
+                            data: JSON.stringify(input),
                             contentType: "application/json",
                             success: function (rst) {
                                 console.log(rst);
-                                if(rst.return_code =="S"){
+                                if(rst.return_code =="OK"){
                                     sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
-                                    // if( flag == "D"){
-                                    //     v_this.onSearch(rst.return_msg );
-                                    // }else if( flag == "R"){
-                                    //     v_this.onPageNavBackButtonPress();
-                                    // }
+                                    v_this._toShowMode();                                
+                                    v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                    
                                 }else{
                                     console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
