@@ -15,7 +15,7 @@ entity Mi_Sac_Mi_Bom_Mapping_View {
     key supplier                    : String(10)    @title : '공급업체코드';
         source_currency             : String(1)     @title : '통화코드';
         uom                         : String(1)     @title : '단위코드';
-        mi_material                 : String(1)     @title : '시황자재코드';
+        mi_material                 : String(40)    @title : '시황자재코드';
         mi_incoterms                : String(1)     @title : '인도조건코드';
         exchange                    : String(1)     @title : '거래소코드';
         net_price_confirmed_type    : String(1)     @title : '단가결정시점유형';
