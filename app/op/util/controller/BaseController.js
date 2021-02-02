@@ -27,7 +27,10 @@ sap.ui.define([
                 tenant_id: "L2100",
                 company_code: "LGCKR",
                 employee_number: "100000",
-                department_code: "50013558"
+                employee_name: "김구매",
+                department_code: "50013558",
+                // experimental
+                department_name: "석유화학.구매.원재료구매1팀 - 원재료"
             }), "session");
             this.$session = this.getModel("session").getData();
             // 다국어
@@ -42,7 +45,6 @@ sap.ui.define([
         // Formatter
         dateFormatter: DateFormatter,
         numberFormatter: NumberFormatter,
-
         // Filter
         generateFilters: function(model, filters) {
             // model Object
@@ -192,7 +194,6 @@ sap.ui.define([
             (function(){
                 var oDeferred = $.Deferred();
                 $.ajax({
-                    //url: ["/op/pu/prReviewMgt/webapp/srv-api/odata/v4/", service, "/", entry].join(""),
                     url: [
                         "/", this.getMetadata().getNamespace().split(".controller")[0].replace(/\./g, "/"), 
                         "/webapp/srv-api/odata/v4/", service, "/", entry
@@ -206,6 +207,10 @@ sap.ui.define([
                 return oDeferred.promise();
             }).call(this)
             .done(function(r) {
+                // Array
+                r.value instanceof Array
+                && 
+                (r = r.value[0]);
                 // Message
                 MessageBox.alert(r.return_msg);
                 // Settled
