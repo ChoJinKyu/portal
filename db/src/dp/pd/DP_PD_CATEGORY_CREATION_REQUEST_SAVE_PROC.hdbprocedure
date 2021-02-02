@@ -33,6 +33,8 @@ SQL SECURITY INVOKER
 
 AS
 BEGIN
+    DECLARE V_D_CNT INT;
+    DECLARE CREATE_CATEGORY_CODE NVARCHAR(40);
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 		ROLLBACK;
 
@@ -146,63 +148,66 @@ BEGIN
         END IF;
 
         /*  I_D Table의 Data 일괄 삭제 */
-        DELETE FROM DP_PD_PART_CATEGORY_APPROVAL D
-        WHERE (D.TENANT_ID, D.REQUEST_NUMBER, D.APPROVE_SEQUENCE ) IN
-            ( SELECT TENANT_ID, REQUEST_NUMBER, APPROVE_SEQUENCE
-                FROM :I_D id
-               WHERE id.CRUD_TYPE = 'D'
-            )
-        ;
+        SELECT COUNT(1) INTO V_D_CNT FROM :I_D;
 
-        /*  I_D Table의 Data 일괄 추가,수정 */
-        MERGE INTO DP_PD_PART_CATEGORY_APPROVAL D
-            USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE IN ('C','U')  ) id
-            ON ( D.TENANT_ID = id.TENANT_ID
-                AND D.REQUEST_NUMBER = id.REQUEST_NUMBER
-                AND D.APPROVE_SEQUENCE = id.APPROVE_SEQUENCE
-                AND id.CRUD_TYPE IN ('C','U') )
-        WHEN MATCHED THEN
-            UPDATE
-            SET  D.APPROVAL_NUMBER = id.APPROVAL_NUMBER
-                ,D.REQUESTOR_EMPNO = id.REQUESTOR_EMPNO
-                ,D.TF_FLAG = id.TF_FLAG
-                ,D.APPROVAL_COMMENT = id.APPROVAL_COMMENT
-                ,D.APPROVE_DATE_TIME = id.APPROVE_DATE_TIME
-                ,D.LOCAL_UPDATE_DTM = NOW()
-                ,D.UPDATE_USER_ID = id.UPDATE_USER_ID
-        WHEN NOT MATCHED THEN
-            INSERT ( TENANT_ID
-                    ,REQUEST_NUMBER
-                    ,APPROVE_SEQUENCE
-                    ,APPROVAL_NUMBER
-                    ,REQUESTOR_EMPNO
-                    ,TF_FLAG
-                    ,APPROVAL_COMMENT
-                    ,APPROVE_DATE_TIME
-                    ,LOCAL_CREATE_DTM
-                    ,LOCAL_UPDATE_DTM
-                    ,CREATE_USER_ID
-                    ,UPDATE_USER_ID
-                    ,SYSTEM_CREATE_DTM
-                    ,SYSTEM_UPDATE_DTM
+        IF V_D_CNT > 0 THEN
+            DELETE FROM DP_PD_PART_CATEGORY_APPROVAL D
+            WHERE (D.TENANT_ID, D.REQUEST_NUMBER, D.APPROVE_SEQUENCE ) IN
+                ( SELECT TENANT_ID, REQUEST_NUMBER, APPROVE_SEQUENCE
+                    FROM :I_D id
+                WHERE id.CRUD_TYPE = 'D'
                 )
-            VALUES ( id.TENANT_ID
-                    ,id.REQUEST_NUMBER
-                    ,id.APPROVE_SEQUENCE
-                    ,id.APPROVAL_NUMBER
-                    ,id.REQUESTOR_EMPNO
-                    ,id.TF_FLAG
-                    ,id.APPROVAL_COMMENT
-                    ,id.APPROVE_DATE_TIME
-                    ,NOW()
-                    ,NOW()
-                    ,id.UPDATE_USER_ID
-                    ,id.UPDATE_USER_ID
-                    ,NOW()
-                    ,NOW()
-                )
-        ;
+            ;
 
+            /*  I_D Table의 Data 일괄 추가,수정 */
+            MERGE INTO DP_PD_PART_CATEGORY_APPROVAL D
+                USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE IN ('C','U')  ) id
+                ON ( D.TENANT_ID = id.TENANT_ID
+                    AND D.REQUEST_NUMBER = id.REQUEST_NUMBER
+                    AND D.APPROVE_SEQUENCE = id.APPROVE_SEQUENCE
+                    AND id.CRUD_TYPE IN ('C','U') )
+            WHEN MATCHED THEN
+                UPDATE
+                SET  D.APPROVAL_NUMBER = id.APPROVAL_NUMBER
+                    ,D.REQUESTOR_EMPNO = id.REQUESTOR_EMPNO
+                    ,D.TF_FLAG = id.TF_FLAG
+                    ,D.APPROVAL_COMMENT = id.APPROVAL_COMMENT
+                    ,D.APPROVE_DATE_TIME = id.APPROVE_DATE_TIME
+                    ,D.LOCAL_UPDATE_DTM = NOW()
+                    ,D.UPDATE_USER_ID = id.UPDATE_USER_ID
+            WHEN NOT MATCHED THEN
+                INSERT ( TENANT_ID
+                        ,REQUEST_NUMBER
+                        ,APPROVE_SEQUENCE
+                        ,APPROVAL_NUMBER
+                        ,REQUESTOR_EMPNO
+                        ,TF_FLAG
+                        ,APPROVAL_COMMENT
+                        ,APPROVE_DATE_TIME
+                        ,LOCAL_CREATE_DTM
+                        ,LOCAL_UPDATE_DTM
+                        ,CREATE_USER_ID
+                        ,UPDATE_USER_ID
+                        ,SYSTEM_CREATE_DTM
+                        ,SYSTEM_UPDATE_DTM
+                    )
+                VALUES ( id.TENANT_ID
+                        ,id.REQUEST_NUMBER
+                        ,id.APPROVE_SEQUENCE
+                        ,id.APPROVAL_NUMBER
+                        ,id.REQUESTOR_EMPNO
+                        ,id.TF_FLAG
+                        ,id.APPROVAL_COMMENT
+                        ,id.APPROVE_DATE_TIME
+                        ,NOW()
+                        ,NOW()
+                        ,id.UPDATE_USER_ID
+                        ,id.UPDATE_USER_ID
+                        ,NOW()
+                        ,NOW()
+                    )
+            ;
+        END IF;
     END IF;
     
     COMMIT;
