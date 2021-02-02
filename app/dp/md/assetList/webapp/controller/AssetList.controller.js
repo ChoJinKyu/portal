@@ -995,6 +995,20 @@ sap.ui.define([
             });
         },
 
+        /**
+		 * Shows the selected item on the object page
+		 * On phones a additional history entry is created
+		 * @param {sap.m.ObjectListItem} oItem selected Item
+		 * @private
+		 */
+        showAssetDetail: function (oItem) {
+            var that = this;
+            that.getRouter().navTo("assetDetail", {
+              
+            });
+           
+        },
+
 		/**
 		 * Internal helper method to apply both filter and search state together on the list binding
 		 * @param {sap.ui.model.Filter[]} aTableSearchState An array of filters for the search
