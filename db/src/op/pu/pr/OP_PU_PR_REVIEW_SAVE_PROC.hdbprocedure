@@ -237,7 +237,8 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review statusError.(Items in progress cannot be closed.)';
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review statusError.(Items in progress cannot be closed.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review statusError.(진행중인 구매요청건은 마감을 못한다.)';
                     END IF;
 
                     BEGIN
