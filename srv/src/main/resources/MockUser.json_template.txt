@@ -9,7 +9,7 @@
     "EMPLOYEE_STATUS_CODE": "C",
     "LANGUAGE_CODE": "KO",
     "TIMEZONE_CODE": "AS054",
-    "DATE_FORMAT_TYPE": "YYYY-MM-DD",
+    "DATE_FORMAT_TYPE": "yyyy-MM-dd",
     "DIGITS_FORMAT_TYPE": "1,000.00",
     "CURRENCY_CODE": "KRW",
     "EMAIL": "test@lgcns.com",
