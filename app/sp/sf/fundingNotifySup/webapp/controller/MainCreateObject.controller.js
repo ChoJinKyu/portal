@@ -62,12 +62,10 @@ sap.ui.define([
         //투자계획 상세 list 추가
         onInvestmentDtlAddButtonPress: function () {
 
-            // var oTable = this.byId("investmentDtl");
             var oModel = this.getModel("applicationSup"),
                 dtlModel = oModel.getProperty("/popUpInvestPlanDtl"),
                 oTableModel = {};
-            // oTableModel = oModel.getProperty("/items");
-
+            
             oTableModel = {
                 investment_item_name: "",
                 investment_item_purchasing_price: "",
@@ -80,16 +78,15 @@ sap.ui.define([
             oModel.setProperty("/popUpInvestPlanDtl", dtlModel);
         },
 
-        //신청서 작성
+        //신청서 임시저장
         onPageSaveButtonPress: function (oEvent) {
-
             var procSaveTemp = {},
+                oPramCheackValue=[],
                 that=this,
                 urlPram = this.getModel("contModel").getProperty("/oArgs"),
                 oPramDataModel = this.getModel("applicationSup"),
-                oPramCheackValue=[],
                 oPramCheack = this.getModel("contModel").getProperty("/detail/checkModel"),
-                aFilters = [];
+                ofunding_status_code=oPramDataModel.getProperty("/funding_status_code");
 
             for(var i = 0; i<oPramCheack.length; i++){
                 if(oPramCheack[i]){
@@ -111,7 +108,7 @@ sap.ui.define([
                 , pyear_sales_amount: parseInt(oPramDataModel.getProperty("/pyear_sales_amount"))
                 , main_bank_name: oPramDataModel.getProperty("/main_bank_name")
                 , funding_appl_amount: parseInt(oPramDataModel.getProperty("/funding_appl_amount"))
-                , funding_hope_yyyymm: String(oPramDataModel.getProperty("/funding_hope_yyyymm")).replace("-", "")
+                , funding_hope_yyyymm: String(oPramDataModel.getProperty("/funding_hope_yyyymm")).replace("-", "")//null로 변경 필요
                 , repayment_method_code: "A"
                 , appl_user_name: oPramDataModel.getProperty("/appl_user_name")
                 , appl_user_tel_number: oPramDataModel.getProperty("/appl_user_tel_number")
@@ -122,30 +119,25 @@ sap.ui.define([
                 , collateral_attch_group_number: ""
             };
 
-            MessageBox.confirm("Are you sure ?", {
-                title: "Comfirmation",
-                initialFocus: sap.m.MessageBox.Action.CANCEL,
-                onClose: function (sButton) {
-                    if (sButton === MessageBox.Action.OK) {
-                        jQuery.ajax({
-                            url: "srv-api/odata/v4/sp.FundingApplicationV4Service/ProcSaveTemp",
-                            type: "POST",
-                            data: JSON.stringify(procSaveTemp),
-                            contentType: "application/json",
-                            success: function (oData) {
-                                aFilters.push(new Filter("supplier_code", FilterOperator.EQ, urlPram.supplierCode));
-                                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, urlPram.tenantId));
-                                aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, urlPram.fundingNotifyNumber));
-                                
-                                that._onObjectRead(aFilters);
-                                MessageToast.show("Success to save.");
-                            }
-                        });
-                    };
-                }
-            });
+            if(!ofunding_status_code || ofunding_status_code=="110"){
+                this._ajaxCall("ProcSaveTemp", procSaveTemp);    
+            }else{
+                alert("지금 진행 상태에서는 임시저장이 불가 합니다.");
+            }
+            
+        },
 
+        //임시 저장 성공 후
+        onAfterProcSaveTemp: function(results){
+            var urlPram = this.getModel("contModel").getProperty("/oArgs"),
+                aFilters =[];
 
+            aFilters.push(new Filter("supplier_code", FilterOperator.EQ, urlPram.supplierCode));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, urlPram.tenantId));
+            aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, urlPram.fundingNotifyNumber));
+            
+            this._onObjectRead(aFilters);
+            MessageToast.show("Success to save.");
         },
 
         //신청서 제출
@@ -154,7 +146,8 @@ sap.ui.define([
             var procSaveTemp = {},
                 urlPram = this.getModel("contModel").getProperty("/oArgs"),
                 oPramDataModel = this.getModel("applicationSup"),
-                oPramCheack = this.getModel("contModel").getProperty("/detail/checkModel");
+                oPramCheack = this.getModel("contModel").getProperty("/detail/checkModel"),
+                ofunding_status_code = oPramDataModel.getProperty("/funding_status_code");
 
             procSaveTemp = {
                 funding_appl_number: oPramDataModel.getProperty("/funding_appl_number")
@@ -177,39 +170,33 @@ sap.ui.define([
                 , collateral_type_code: oPramDataModel.getProperty("/collateral_type_code")
                 , collateral_amount: parseInt(oPramDataModel.getProperty("/collateral_amount"))
                 , collateral_attch_group_number: ""
+                , funding_status_code : ofunding_status_code
             };
 
-            MessageBox.confirm("Are you sure ?", {
-                title: "Comfirmation",
-                initialFocus: sap.m.MessageBox.Action.CANCEL,
-                onClose: function (sButton) {
-                    if (sButton === MessageBox.Action.OK) {
-                        jQuery.ajax({
-                            url: "srv-api/odata/v4/sp.FundingApplicationV4Service/ProcRequest",
-                            type: "POST",
-                            data: JSON.stringify(procSaveTemp),
-                            contentType: "application/json",
-                            success: function (oData) {
-                                MessageToast.show("Success to save.");
-                            }
-                        });
-                    };
-                }
-            });
+            if(!ofunding_status_code || ofunding_status_code=="110"|| ofunding_status_code=="120"|| ofunding_status_code=="230"){
+                this._ajaxCall("ProcRequest", procSaveTemp);
+            }else{
+                alert("지금 진행 상태에서는 제출이 불가 합니다.");
+            }
+
+        },
+
+        //신청서 제출 성공 후
+        onAfterProcRequest: function(){
+            MessageToast.show("제출 성공하였습니다.");
         },
 
         //투자계획 팝업 저장
         onCreatePopupSave: function (oEvent) {
             var procSaveInvPlan = {},
                 invPlanDtl = [],
+                that=this,
+                oInvestment_plan_sequence=0,
+                oView= this.byId("investmentPlanDetails"),
                 oPramMstDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanMst"),
                 oPramDtlDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanDtl"),
-                oInvestment_plan_sequence=0,
-                that=this,
-                oView= this.byId("investmentPlanDetails");
-            
-                var aControls = oView.getControlsByFieldGroupId("newRequired");
-                var bValid = this._isValidControl(aControls);
+                aControls = oView.getControlsByFieldGroupId("newRequired"),
+                bValid = this._isValidControl(aControls);
 
             if(!bValid){
                 return;
@@ -218,14 +205,13 @@ sap.ui.define([
             if(!oPramMstDataModel.investment_plan_sequence){
                 oInvestment_plan_sequence=0;
             }else{
-                oInvestment_plan_sequence=oPramMstDataModel.investment_plan_sequence;
+                oInvestment_plan_sequence=parseInt(oPramMstDataModel.investment_plan_sequence);
             };
-
 
             procSaveInvPlan = {
                 crud_type: "C"
                 , funding_appl_number: this.getModel("applicationSup").getProperty("/funding_appl_number")
-                , investment_plan_sequence: parseInt(oInvestment_plan_sequence)
+                , investment_plan_sequence: oInvestment_plan_sequence
                 , investment_type_code: oPramMstDataModel.investment_type_code
                 , investment_project_name: oPramMstDataModel.investment_project_name
                 , investment_yyyymm: String(oPramMstDataModel.investment_yyyymm).replace("-", "")
@@ -246,7 +232,7 @@ sap.ui.define([
                 invPlanDtl.push({
                      crud_type: "C"//C:신규/R:읽기/U:수정/D:삭제
                     , funding_appl_number: this.getModel("applicationSup").getProperty("/funding_appl_number")//자금지원신청번호	
-                    , investment_plan_sequence: parseInt(oInvestment_plan_sequence)//투자계획순번
+                    , investment_plan_sequence: oInvestment_plan_sequence//투자계획순번
                     , investment_plan_item_sequence: parseInt(oPramDtlDataModel[i].investment_plan_item_sequence)//투자계획품목순번	
                     , investment_item_name: oPramDtlDataModel[i].investment_item_name//투자품목명	
                     , investment_item_purchasing_price: parseInt(oPramDtlDataModel[i].investment_item_purchasing_price)//투자품목구매가격	
@@ -257,36 +243,24 @@ sap.ui.define([
 
             procSaveInvPlan.dtlType=invPlanDtl;
             
-            MessageBox.confirm("Are you sure ?", {
-                title: "Comfirmation",
-                initialFocus: sap.m.MessageBox.Action.CANCEL,
-                onClose: function (sButton) {
-                    if (sButton === MessageBox.Action.OK) {
-                        jQuery.ajax({
-                            url: "srv-api/odata/v4/sp.FundingApplicationV4Service/ProcSaveInvPlan",
-                            type: "POST",
-                            data: JSON.stringify(procSaveInvPlan),
-                            contentType: "application/json",
-                            success: function (oData) {
-                                that.onCreatePopupClose();
-                                MessageToast.show("Success to save.");
-                            }
-                        });
-                    };
-                }
-            });
+            this._ajaxCall("ProcSaveInvPlan", procSaveInvPlan);
 
+        },
+
+        //투자계획 저장 성공 후
+        onAfterProcSaveInvPlan : function(oEvent){
+            this.onCreatePopupClose();
+            MessageToast.show("Success to save.");
         },
 
         //투자계획마스터 삭제
         onInvestmentPlanDeleteButtonPress : function(oEvent){
             var checkRow = this.byId("idProductsTable").getSelectedItems(),
+                oPramMstDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanMst"),    
                 invPlanDtl = [],
                 invDtlData = {},
                 that=this,
-                bFilters=[],
-                oModel = this.getModel("fundingApp"),
-                oPramMstDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanMst");
+                bFilters=[];
 
             for(var i = 0; i < checkRow.length; i++){
                 invPlanDtl.push({
@@ -297,40 +271,23 @@ sap.ui.define([
             
             invDtlData.mstType =invPlanDtl;
 
-            jQuery.ajax({
-                url: "srv-api/odata/v4/sp.FundingApplicationV4Service/ProcDelInvPlan",
-                type: "POST",
-                data: JSON.stringify(invDtlData),
-                contentType: "application/json",
-                success: function (oData) {
-                    MessageToast.show("Success to save.");
-                    
-                    bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, that.getModel("applicationSup").getProperty("/funding_appl_number")));
+            this._ajaxCall("ProcDelInvPlan", invDtlData);
 
-                    //투자계획 마스터 리스트 조회
-                    oModel.read("/InvestPlanMstListView", {
-                        //Filter : 신청번호
-                        filters: bFilters,
-                        success: function (oRetrievedResult) {
-                            that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
-                        }
-                    }); 
-                }
-            });
-            
         },
 
-        //투자 계획 상세 목록 삭제
-        onInvestmentDtlDeleteButtonPress : function(oEvent){
-            var checkRow = this.byId("investmentDtl").getSelectedItems(),
-                invPlanDtl = [],
-                invDtlData = {},
-                dtlType={},
-                that=this,
-                oPramMstDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanMst"),
-                oPramDtlDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanDtl");
+        //투자계획마스터 삭제 성공 후
+        onAfterProcDelInvPlan : function(oEvent){
+            MessageToast.show("삭제 성공.");
+		    this._fnInvestmentPlanTableReflash();
+        },
 
-            
+        //투자계획상세 목록 삭제
+        onInvestmentDtlDeleteButtonPress : function(oEvent){
+            var invPlanDtl = [],
+                invDtlData = {},
+                checkRow = this.byId("investmentDtl").getSelectedItems(),
+                oPramMstDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanMst");
+
             for(var i = 0; i < checkRow.length; i++){
                 invPlanDtl.push({
                     funding_appl_number: this.getModel("applicationSup").getProperty("/funding_appl_number")//자금지원신청번호	
@@ -341,16 +298,13 @@ sap.ui.define([
 
             invDtlData.dtlType =invPlanDtl;
 
-            jQuery.ajax({
-                url: "srv-api/odata/v4/sp.FundingApplicationV4Service/ProcDelInvPlanDtl",
-                type: "POST",
-                data: JSON.stringify(invDtlData),
-                contentType: "application/json",
-                success: function (oData) {
-                    that.onCreatePopupClose();
-                    MessageToast.show("Success to save.");
-                }
-            });
+            this._ajaxCall("ProcDelInvPlanDtl", invDtlData);            
+        },
+
+        //투자계획상세 삭제 성공 후
+        onAfterProcDelInvPlanDtl : function(oEvent){
+            MessageToast.show("삭제 성공.");
+		    this.onOpenInvestmentDtl();
         },
 
         //투자계획 팝업
@@ -447,25 +401,7 @@ sap.ui.define([
 
         //투자계획 팝업 닫기
         onCreatePopupClose: function () {
-            var oModel = this.getModel("fundingApp"),
-                bFilters = [],
-                that = this;
-
-            this.byId("investmentPlanDetails").close();
-
-            bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, this.getModel("applicationSup").getProperty("/funding_appl_number")));
-
-            //투자계획 마스터 리스트 조회
-            oModel.read("/InvestPlanMstListView", {
-                //Filter : 신청번호
-                filters: bFilters,
-                success: function (oRetrievedResult) {
-                    that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
-                },
-                error: function (oError) {
-
-                }
-            });
+            this._fnInvestmentPlanTableReflash();
         },
 
         //투자계획 상세 계산
@@ -552,7 +488,6 @@ sap.ui.define([
         _onRoutedThisPage: function (oEvent) {
             this._fnInitControlModel();
 
-            // this.onSelectObject(oEvent);
             var oArgs = oEvent.getParameter("arguments");
 
             this._sTenantId = oArgs.tenantId;
@@ -619,8 +554,63 @@ sap.ui.define([
             });
         },
 
+        //odataV4 호출
+        _ajaxCall : function(procUrl, parmData) {
+            var that = this;
+
+            MessageBox.confirm("Are you sure ?", {
+            title: "Comfirmation",
+            initialFocus: sap.m.MessageBox.Action.CANCEL,
+            onClose: function (sButton) {
+                if (sButton === MessageBox.Action.OK) {
+                    jQuery.ajax({
+                        url: "srv-api/odata/v4/sp.FundingApplicationV4Service/"+procUrl,
+                        type: "POST",
+                        data: JSON.stringify(parmData),
+                        contentType: "application/json",
+                        success: function (oData) {
+                            if(procUrl=="ProcSaveTemp"){
+                                that.onAfterProcSaveTemp(oData);
+                            };
+                            if(procUrl=="ProcRequest"){
+                                that.onAfterProcRequest(oData);
+                            };
+                            if(procUrl=="ProcSaveInvPlan"){
+                                that.onAfterProcSaveInvPlan(oData);
+                            };
+                        },
+                        error: function(oData){
+                            debugger;
+
+                        }
+                    });
+                };
+            }
+        });
+        },
+
+        //투자계획 Table reflash
+        _fnInvestmentPlanTableReflash : function(){
+            var oModel = this.getModel("fundingApp"),
+                bFilters = [],
+                that = this;
+
+            this.byId("investmentPlanDetails").close();
+
+            bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, this.getModel("applicationSup").getProperty("/funding_appl_number")));
+
+            //투자계획 마스터 리스트 조회
+            oModel.read("/InvestPlanMstListView", {
+                //Filter : 신청번호
+                filters: bFilters,
+                success: function (oRetrievedResult) {
+                    that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
+                }
+            });
+        },
+        
         //모델초기화
-        _fnInitControlModel: function () {
+        _fnInitControlModel: function (){
             var oData = {
                 createMode: null,
                 editMode: null
