@@ -20,10 +20,11 @@ sap.ui.define([
     "sap/ui/richtexteditor/RichTextEditor",
     "./ApprovalBaseController",
     "dp/md/util/controller/MoldItemSelection",
-    "dp/md/util/controller/SupplierSelection"
+    "dp/md/util/controller/SupplierSelection",
+    "dp/md/util/controller/ProcessUI", 
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalBaseController, MoldItemSelection, SupplierSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalBaseController, MoldItemSelection, SupplierSelection, ProcessUI
 ) {
     "use strict";
 
@@ -40,6 +41,8 @@ sap.ui.define([
         moldItemPop: new MoldItemSelection(),
 
         supplierSelection: new SupplierSelection(),
+
+        process : new ProcessUI(),
         
 
         /* =========================================================== */
@@ -63,7 +66,7 @@ sap.ui.define([
             
             this.setModel(oViewModel, "participatingSupplierSelectionView");//change
             this.getRouter().getRoute("participatingSupplierSelection").attachPatternMatched(this._onObjectMatched, this);//change
-            
+            this.process.setDrawProcessUI(this, "participatingSupplierProcess" , "E", "2");
         },
 
         /* =========================================================== */

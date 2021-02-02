@@ -86,7 +86,7 @@ sap.ui.define([
 
             if (this.approval_number == "New") {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.getView().getModel('Cancellation').getProperty("/approvalNumber"))
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 ];
 
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
@@ -95,7 +95,7 @@ sap.ui.define([
 
             } else {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 ];
 
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {

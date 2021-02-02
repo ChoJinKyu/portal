@@ -12,6 +12,7 @@
     xmlns:table="sap.ui.table" 
     xmlns="sap.m"
     xmlns:cm-ui="cm.util.control.ui"
+    xmlns:dnd="sap.ui.core.dnd"
     core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
 	height="100%">
 
@@ -25,12 +26,12 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
                 <uxap:expandedHeading>
-					<Title text="Participating Supplier Selection Cancel Approval" wrapping="true" />
+					<!-- <Title text="Participating Supplier Selection Cancel Approval" wrapping="true" /> -->
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
                     <FlexBox fitContainer="true" alignItems="Center">
-						<Title text="Participating Supplier Selection Cancel Approval" wrapping="true"/>
+						<!-- <Title text="Participating Supplier Selection Cancel Approval" wrapping="true"/> -->
 					</FlexBox>
 				</uxap:snappedHeading>
 
@@ -75,9 +76,13 @@
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<HBox><Label text="{I18N>/STATUS}" /> <Label text=" :"/></HBox>
-                    <ObjectStatus
+                    <!-- <ObjectStatus
                         class="sapMObjectStatusLarge"
                         text="{= ${appMaster>/approval_number} === undefined ?'New':''}{appMaster>/approve_status_code_nm}"
+                        state="Error" /> -->
+                        <ObjectStatus
+                        class="sapMObjectStatusLarge"
+                        text="New"
                         state="Error" />
 				</layout:VerticalLayout>
 
@@ -226,9 +231,10 @@
                                     width="100%"
                                     singleContainerFullSize="true">
                                 <form:content>
+                                   
                                     <VBox height="6em">
                                         <Label
-                                            text="{path:'I18N>/SUBJECT', formatter:'I18NFormatter'}"
+                                            text="{path:'I18N>/MODEL', formatter:'I18NFormatter'}"
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"
                                             labelFor="input"
@@ -240,7 +246,7 @@
                                     </VBox>
                                     <VBox height="6em">
                                         <Label
-                                            text="{path:'I18N>/SUBJECT', formatter:'I18NFormatter'}"
+                                            text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}"
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"
                                             labelFor="input"
@@ -252,7 +258,7 @@
                                     </VBox>
                                     <VBox height="6em">
                                         <Label
-                                            text="{path:'I18N>/SUBJECT', formatter:'I18NFormatter'}"
+                                            text="{path:'I18N>/SEQUENCE', formatter:'I18NFormatter'}"
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"
                                             labelFor="input"
@@ -262,8 +268,110 @@
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
 					                    </layoutData>
                                     </VBox>
-                                  
-                                    
+                                    <VBox height="6em">
+                                        <Label
+                                            text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}"
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            required="true"/>
+                                        <Text text="테스트"/>
+                                        <layoutData>
+						                    <layout:GridData span="XL4 L4 M6 S6"/>
+					                    </layoutData>
+                                    </VBox>
+                                    <VBox height="6em">
+                                        <Label
+                                            text="{path:'I18N>/PRODUCTION_TYPE', formatter:'I18NFormatter'}"
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            required="true"/>
+                                        <Text text="테스트"/>
+                                        <layoutData>
+						                    <layout:GridData span="XL4 L4 M6 S6"/>
+					                    </layoutData>
+                                    </VBox>
+                                    <VBox height="6em">
+                                        <Label
+                                            text="{path:'I18N>/TOOL_TYPE', formatter:'I18NFormatter'}"
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            required="true"/>
+                                        <Text text="테스트"/>
+                                        <layoutData>
+						                    <layout:GridData span="XL4 L4 M6 S6"/>
+					                    </layoutData>
+                                    </VBox>
+                                    <VBox height="6em">
+                                        <Label
+                                            text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}"
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            required="true"/>
+                                        <Input
+                                            value="{appMaster>/approval_title}"
+                                            width="10em"
+                                            placeholder="Input data" required="true">
+                                        </Input>
+                                        <layoutData>
+						                    <layout:GridData span="XL4 L4 M6 S6"/>
+					                    </layoutData>
+                                    </VBox>
+                                    <VBox height="6em">
+                                        <Label
+                                            text="{path:'I18N>/ORDER_SUPPLIER', formatter:'I18NFormatter'}"
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            required="true"/>
+                                        <Text text="테스트"/>
+                                        <layoutData>
+						                    <layout:GridData span="XL4 L4 M6 S6"/>
+					                    </layoutData>
+                                    </VBox>
+                                    <VBox height="6em">
+                                        <Label
+                                            text="{path:'I18N>/PRODUCTION_SUPPLIER', formatter:'I18NFormatter'}"
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            required="true"/>
+                                        <Text text="테스트"/>
+                                        <layoutData>
+						                    <layout:GridData span="XL4 L4 M6 S6"/>
+					                    </layoutData>
+                                    </VBox>
+                                    <Table id="scheduleTable1E"
+                                            mode="None"
+                                            sticky="HeaderToolbar,ColumnHeaders"
+                                            inset="false"
+                                            class="sapFDynamicPageAlignContent"
+                                            width="auto"
+                                            >
+                                        <columns>
+                                            <Column>
+                                                <Label text="Type" wrapping="true" />
+                                            </Column>
+                                            <Column>
+                                                <Label text="Move" wrapping="true" />
+                                            </Column>
+                                            <Column>
+                                                <Label text="Complete" wrapping="true" />
+                                            </Column>
+                                        </columns>
+                                        <items>
+                                            <ColumnListItem>
+                                                <cells>
+                                                    <Text text="Plan Date"  />
+                                                    <DatePicker valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                                    <DatePicker valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
+                                                </cells>
+                                            </ColumnListItem>
+                                        </items>
+                                    </Table>
                                 </form:content>
                             </form:SimpleForm>
                         </VBox>
@@ -273,25 +381,94 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <uxap:ObjectPageSection titleUppercase="false" title="Participating Supplier">
-				<uxap:subSections>
-                   
-                    <uxap:ObjectPageSubSection id="pageItemSection">
-                        
-                    </uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection>
-
 			<uxap:ObjectPageSection titleUppercase="false" title="Attachments">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageAttachmentsSection" >
+                        <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">
+                            <UploadCollection
+                                id="UploadCollection"
+                                maximumFilenameLength="55"
+                                maximumFileSize="10"
+                                multiple="true"
+                                sameFilenameAllowed="true"
+                                instantUpload="false"
+                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                change="onChange"
+                                fileDeleted="onFileDeleted"
+                                filenameLengthExceed="onFilenameLengthExceed"
+                                fileSizeExceed="onFileSizeExceed"
+                                typeMissmatch="onTypeMissmatch"
+                                uploadComplete="onUploadComplete"
+                                beforeUploadStarts="onBeforeUploadStarts" />
+                                
+                            <Button id="Button" text="Upload Now" press="onStartUpload" />
+                        </layout:VerticalLayout>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Approval Line">
+			<uxap:ObjectPageSection titleUppercase="false" title="Recipt Line">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageApprovalLineSection" >
+                        <VBox class="sapUiSmallMargin">
+                            <form:SimpleForm editable="true" 
+                                            layout="ResponsiveGridLayout" 
+                                            labelSpanXL="2" 
+                                            labelSpanL="2" 
+                                            labelSpanM="2" 
+                                            labelSpanS="2" 
+                                            adjustLabelSpan="false" 
+                                            emptySpanXL="0" 
+                                            emptySpanL="0" 
+                                            emptySpanM="0" 
+                                            emptySpanS="0" 
+                                            columnsXL="2" 
+                                            columnsL="1" 
+                                            columnsM="1" 
+                                            singleContainerFullSize="true">
+                                <form:content>
+                                    <VBox class="sapUiSmallMarginBegin">
+                                        <Toolbar>
+                                        <Label text="Recipients Line" />
+                                        <ToolbarSpacer/>
+                                        <HBox alignItems="End" justifyContent="End" >
+                                            <Label text="Adress Book" class=""/>
+                                            <core:Icon 
+                                                src="sap-icon://address-book"
+                                                class="size2 sapUiSmallMarginBeginEnd" 
+                                                >
+                                            </core:Icon>
+                                        </HBox>
+                                        </Toolbar>
+                                        <layout:VerticalLayout class="sapUiContentPadding" width="100%"> 
+                                            <MultiInput id="referMulti"
+                                                    placeholder="Choose codes from the ValueHelp"
+                                                    showValueHelp="true" 
+                                                    valueHelpRequest=".onMultiInputWithEmployeeValuePress"
+                                                    editable="{mode>/editFlag}"
+                                                    >
+                                            </MultiInput>
+                                            <!-- <MultiComboBox
+                                                selectionChange="handleSelectionChangeReferer"
+                                                selectionFinish="handleSelectionFinishReferer"
+                                                width="100%" 
+                                                selectedKeys="{refererMultiCB>/refer}"
+                                                items="{ path: '/RefererSearch',
+                                                            filters: [
+                                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                                            ]
+                                                        }"
+                                                editable="{mode>/editFlag}">
+                                                <core:Item key="{employee_number}" text="{s_referer_name}" />
+                                            </MultiComboBox> -->
+                                        </layout:VerticalLayout>
+                                        <layoutData>
+                                            <layout:GridData span="XL12 L12 M12 S12" />
+                                        </layoutData> 
+                                    </VBox>
+                                </form:content>
+                            </form:SimpleForm>
+                        </VBox>
                     </uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
@@ -313,7 +490,7 @@
         title="직원 검색"
         items="{
             filters: [
-                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
             ]
         }"
         apply=".onEmployeeDialogApplyPress"

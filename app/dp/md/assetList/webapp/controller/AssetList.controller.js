@@ -103,11 +103,17 @@ sap.ui.define([
          * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
          */
         _doInitSearch: function () {
-            //this.getView().setModel(this.getOwnerComponent().getModel());
+            
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
 
+            this.getView().setModel(this.getOwnerComponent().getModel());
+            //this.getView().setModel(this.getOwnerComponent().getModel());
+             this.setPlant('LGESL');
             //접속자 법인 사업부로 바꿔줘야함
-            this.getView().byId("searchDivisionS").setSelectedKeys(['A040']);//CCZ', 'DHZ', 'PGZ
-            this.getView().byId("searchDivisionE").setSelectedKeys(['A040']);
+            this.getView().byId("searchCompanyS").setSelectedKeys(['LGESL']);
+            this.getView().byId("searchCompanyE").setSelectedKeys(['LGESL']);
+            this.getView().byId("searchPlantS").setSelectedKeys(['A040']);
+            this.getView().byId("searchPlantE").setSelectedKeys(['A040']);
         },
 
         
@@ -124,7 +130,7 @@ sap.ui.define([
                 ;
             console.log("codeName >>>>", this.getModel('I18N'));
              var aSearchFilters = [];
-                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600'));
+                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101'));
                 aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'DP_MD_ASSET_STATUS'));
 
 
@@ -147,6 +153,29 @@ sap.ui.define([
                 }
             });
         } ,
+
+        setPlant: function(companyCode){
+            
+            var filter = new Filter({
+                            filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
+                                    new Filter("company_code", FilterOperator.EQ, companyCode)
+                                ],
+                                and: true
+                        });
+
+            var bindItemInfo = {
+                    path: '/Divisions',
+                    filters: filter,
+                    template: new Item({
+                        key: "{org_code}", text: "[{org_code}] {org_name}"
+                    })
+                };
+
+            console.log(bindItemInfo);
+            this.getView().byId("searchPlantS").bindItems(bindItemInfo);
+            this.getView().byId("searchPlantE").bindItems(bindItemInfo);
+        },
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -835,7 +864,7 @@ sap.ui.define([
                 combo.bindItems({
                     path: 'util>/Code',
                     filters: [
-                        new Filter('tenant_id', FilterOperator.EQ, 'L2600'),
+                        new Filter('tenant_id', FilterOperator.EQ, 'L2101'),
                         new Filter("group_code", FilterOperator.EQ, 'DP_MD_MOLD_TYPE'),
                         new Filter("parent_code", FilterOperator.EQ, key)
                     ],
@@ -849,7 +878,7 @@ sap.ui.define([
                 combo.bindItems({
                     path: 'util>/Code',
                     filters: [
-                        new Filter('tenant_id', FilterOperator.EQ, 'L2600'),
+                        new Filter('tenant_id', FilterOperator.EQ, 'L2101'),
                         new Filter("group_code", FilterOperator.EQ, 'DP_MD_MOLD_STRUCTURE'),
                         new Filter("parent_code", FilterOperator.EQ, key)
                     ],
@@ -1084,61 +1113,79 @@ sap.ui.define([
             return aTableSearchState;
         },
 
+        /**
+        * @private 
+        * @see (멀티박스)Company와 Plant 부분 연관성 포함함
+        */
         handleSelectionFinishComp: function (oEvent) {
 
             this.copyMultiSelected(oEvent);
 
             var params = oEvent.getParameters();
-            var divisionFilters = [];
+            var plantFilters = [];
 
             if (params.selectedItems.length > 0) {
 
                 params.selectedItems.forEach(function (item, idx, arr) {
 
-                    divisionFilters.push(new Filter({
+                    plantFilters.push(new Filter({
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
-                            new Filter("org_type_code", FilterOperator.EQ, 'AU'),
+                            new Filter("tenant_id", FilterOperator.EQ, 'L2101'),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
                         and: true
                     }));
                 });
             } else {
-                divisionFilters.push(
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
-                    new Filter("org_type_code", FilterOperator.EQ, 'AU')
+                plantFilters.push(
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 );
             }
-
+ 
             var filter = new Filter({
-                filters: divisionFilters,
-                and: params.selectedItems.length == 1 ? true : false
+                filters: plantFilters,
+                and: false
             });
 
-            this.getView().byId("searchDivisionS").getBinding("items").filter(filter, "Application");
-            this.getView().byId("searchDivisionE").getBinding("items").filter(filter, "Application");
+            var bindInfo = {
+                    path: '/Divisions',
+                    filters: filter,
+                    template: new Item({
+                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                    })
+                };
+            
+            this.getView().byId("searchPlantS").bindItems(bindInfo);
+            this.getView().byId("searchPlantE").bindItems(bindInfo);
+
+            // this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
+            // this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
         },
+
 
         handleSelectionFinishDiv: function (oEvent) {
             this.copyMultiSelected(oEvent);
         },
 
         copyMultiSelected: function (oEvent) {
-            var source = oEvent.getSource(),
-                params = oEvent.getParameters();
+            var source = oEvent.getSource();
+            var params = oEvent.getParameters();
 
-            var sIds = source.sId.split('--'),
-                id = sIds[sIds.length-1],
-                idPreFix = id.substr(0, id.length - 1),
-                selectedKeys = [];
+            var sIds =source.sId.split('--');
+            var id = sIds[sIds.length-1];
+           
+            var idPreFix = id.substr(0, id.length - 1);
+            var selectedKeys = [];
+
+
 
             params.selectedItems.forEach(function (item, idx, arr) {
+
                 selectedKeys.push(item.getKey());
             });
-
-            this.getView().byId(idPreFix + 'S').setSelectedKeys(selectedKeys);
-            this.getView().byId(idPreFix + 'E').setSelectedKeys(selectedKeys);
+         
+            this.getView().byId(idPreFix + "E").setSelectedKeys(selectedKeys);
+            this.getView().byId(idPreFix + "S").setSelectedKeys(selectedKeys);
         },
 
         onValueHelpRequested: function (oEvent) {
@@ -1308,7 +1355,7 @@ sap.ui.define([
 				and: false
             }));
             
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600' ));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101' ));
 
 			this._filterTable(new Filter({
 				filters: aFilters,
