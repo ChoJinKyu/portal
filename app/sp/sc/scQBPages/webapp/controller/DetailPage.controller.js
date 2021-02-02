@@ -10,18 +10,19 @@ sap.ui.define([
         "../controller/SupplierSelection",
         "ext/lib/formatter/Formatter",
         "../controller/MaterialMasterDialog",
-        "sp/util/control/ui/SupplierWithOrgDialog",
+        "sp/util/control/ui/BPDialog",
         "sap/ui/core/Component",
         "sap/ui/core/routing/HashChanger",
         "sap/ui/core/ComponentContainer",
         "../controller/SimpleChangeDialog",
+        "sap/m/Text",
         //"../controller/NonPriceInf"
         // "sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType" , RTE, EditorType
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (BaseController, Filter, FilterOperator,MessageBox,MessageToast, Multilingual, JSONModel,SupplierSelection,Formatter,MaterialMasterDialog,SupplierWithOrgDialog,Component, HashChanger, ComponentContainer, SimpleChangeDialog) {
+	function (BaseController, Filter, FilterOperator,MessageBox,MessageToast, Multilingual, JSONModel,SupplierSelection,Formatter,MaterialMasterDialog,BPDialog,Component, HashChanger, ComponentContainer, SimpleChangeDialog, Text) {
         "use strict";
         
 		return BaseController.extend("sp.sc.scQBPages.controller.DetailPage", {
@@ -193,7 +194,31 @@ sap.ui.define([
 
                 return result;
             },
-            _onRouteMatched: function (e) {
+            _onRouteMatched: function (e) 
+            {
+                var that = this;
+                var oView = this.getView();
+
+                var masterUrl = this.srvUrl+"Sc_Nego_Award_Method_Code?&$expand=nego_parent_type,award_type&$filter=nego_parent_type/nego_parent_type_code%20eq%20%27QP%27&orderby=sort_no";
+                $.ajax({
+                    url: masterUrl,
+                    type: "GET",
+                    contentType: "application/json",
+                    success: function(data){
+                        // debugger;
+                        oView.setModel(new JSONModel( data.value ), "master") ;
+
+                         // this.getView().byId("tableLines").getVisibleRowCount();
+                        
+
+                        // data.value[0].Items.lengt
+                        // oView.byId("table1")
+
+                    },
+                    error: function(e){
+                        console.log( "error :: " + e.responseText);
+                    }
+                });
 
                 var outcome = e.getParameter("arguments").outcome;
                 console.log("_onRouteMatched " + e.getParameter("arguments").mode);
@@ -221,8 +246,7 @@ sap.ui.define([
                 this._type = e.getParameter("arguments").type;
                 this._header_id = e.getParameter("arguments").header_id;
 
-                var that = this;
-                var oView = this.getView();
+
                 // var url = "xx/sampleMgr/webapp/srv-api/odata/v4/xx.SampleMgrV4Service/MasterFunc('A')/Set"
                 //(tenant_id='L2100',nego_header_id=1)?
                 // &$format=json
@@ -253,7 +277,9 @@ sap.ui.define([
                     // NegoHeaders(tenant_id='L2100',nego_header_id=119)?&$format=json&$select=*&$expand=Items($expand=Suppliers)
                     // var url = this.srvUrl+"NegoHeaders?&$format=json&$select=*,Items&$expand=Items&$filter=nego_document_number eq '" + this._header_id + "'";
                     // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers)&$filter=nego_document_number eq '" + this._header_id + "'";
-                    var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=*&$filter=nego_document_number eq '" + this._header_id + "'";
+                    // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=*&$filter=nego_document_number eq '" + this._header_id + "'";
+                    // NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers),nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,negotiation_style,award_type,award_method,award_method_map,award_method_map2,operation_org&$filter=nego_document_number
+                    var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers),nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,negotiation_style,award_type,award_method,award_method_map,award_method_map2,operation_org&$filter=nego_document_number eq '" + this._header_id + "'";
                     $.ajax({
                         url: url,
                         type: "GET",
@@ -533,18 +559,47 @@ sap.ui.define([
 
                         for( var a = 0; a < selectedIndices.length ; a++ ) {
                             var objTemp = oItems[a];
+                            objTemp.Suppliers = [];
 
                             for( var i = 0 ; i < pToken.length ; i++ ) {
 
-                                if( pToken[i].supplier_code != "" ) {
+                                if( pToken[i].business_partner_code != "" ) {
+
+                                    // business_partner_code: "VN01970300"
+                                    // business_partner_english_name: "KB ENG Company Limitted"
+                                    // business_partner_local_name: "KB ENG Company Limitted"
+                                    // business_partner_register_progress_code: "QUALIFICATION"
+                                    // business_partner_register_progress_name: "적격"
+                                    // business_partner_register_status_code: "QUAA"
+                                    // business_partner_register_status_name: "Qualification↵  Approved"
+                                    // business_partner_status_code: "A"
+                                    // business_partner_status_name: "Active"
+                                    // company_code: "LGDVN"
+                                    // maker_role: "N"
+                                    // old_maker_code: null
+                                    // old_supplier_code: "VN019703"
+                                    // org_code: "BIZ00200"
+                                    // org_name: "첨단소재"
+                                    // supplier_role: "Y"
+                                    // tax_id: null
+                                    // tenant_id: "L2100"
+                                    // type_code: "RAW_MATERIAL"
+                                    // type_name: "원자재"
 
                                     // var indexTemp = Number(seqTemp) + i;
         
                                     // objTemp.item_supplier_sequence = "0000";
         
-                                    objTemp.supplier_code = pToken[i].supplier_code;
-                                    objTemp.supplier_name = pToken[i].supplier_local_name;
-                                    objTemp.supplier_type_code = "RAW MATERIAL";
+                                    objTemp.supplier_code = pToken[i].business_partner_code;
+                                    objTemp.supplier_name = pToken[i].business_partner_local_name;
+                                    objTemp.supplier_type_code = pToken[i].type_code;
+                                    objTemp.supplier_type_name = pToken[i].type_name;
+                                    objTemp.evaluation_type_code = pToken[i].business_partner_register_status_code;
+                                    objTemp.evaluation_type_name = pToken[i].business_partner_register_status_name;
+
+                                    console.log( pToken[i].supplier_role + " : " +pToken[i].maker_role  )
+
+                                    objTemp.only_maker_flag = (pToken[i].supplier_role == "N" && pToken[i].maker_role == "Y") ? "Y" : " N";
         
                                     var supplierItem_S = this.getSupplierItem(objTemp);
         
@@ -558,7 +613,7 @@ sap.ui.define([
                             
                             objTemp.specific_supplier_count = objTemp.Suppliers.length;
 
-                            this.getView().getModel("NegoItemPrices").refresh();
+                            this.getView().getModel("NegoHeaders").refresh();
                         }
 
                         // var bLength = this.getView().byId("table_Specific").getItems().length;
@@ -572,6 +627,7 @@ sap.ui.define([
 
                     if(this._oIndex != null){
                         var objTemp = this._selectedLineItem;
+                        objTemp.Suppliers = [];
 
                         var lengthTemp = 0;//this.getView().byId("table_Specific").getItems().length-1;
                         var seqTemp = "00001";//this.getView().byId("table_Specific").getItems()[lengthTemp].getCells()[0].getCustomData()[0].getValue();
@@ -585,30 +641,43 @@ sap.ui.define([
 
                         for( var i = 0 ; i < pToken.length ; i++ ) {
 
-                            if( pToken[i].supplier_code != "" ) {
+                            if( pToken[i].business_partner_code != "" ) {
 
-                                // var indexTemp = Number(seqTemp) + i;
-    
-                                // objTemp.item_supplier_sequence = "0000"+indexTemp;
-
-                                // company_code: "LGCKR"
-                                // old_supplier_code: "US040420"
-                                // org_code: "BIZ00100"
-                                // org_name: "석유화학"
-                                // supplier_code: "US04042000"
-                                // supplier_english_name: "CREE FAYETTEVILLE,INC."
-                                // supplier_local_name: "CREE FAYETTEVILLE,INC."
-                                // supplier_status_code: "A"
-                                // supplier_status_name: "Active"
+                                // business_partner_code: "VN01970300"
+                                // business_partner_english_name: "KB ENG Company Limitted"
+                                // business_partner_local_name: "KB ENG Company Limitted"
+                                // business_partner_register_progress_code: "QUALIFICATION"
+                                // business_partner_register_progress_name: "적격"
+                                // business_partner_register_status_code: "QUAA"
+                                // business_partner_register_status_name: "Qualification↵  Approved"
+                                // business_partner_status_code: "A"
+                                // business_partner_status_name: "Active"
+                                // company_code: "LGDVN"
+                                // maker_role: "N"
+                                // old_maker_code: null
+                                // old_supplier_code: "VN019703"
+                                // org_code: "BIZ00200"
+                                // org_name: "첨단소재"
+                                // supplier_role: "Y"
                                 // tax_id: null
                                 // tenant_id: "L2100"
                                 // type_code: "RAW_MATERIAL"
                                 // type_name: "원자재"
-   
-                                // objTemp.item_supplier_sequence = "0000"+indexTemp;
-                                objTemp.supplier_code = pToken[i].supplier_code;
-                                objTemp.supplier_name = pToken[i].supplier_local_name;
-                                objTemp.supplier_type_code = "RAW MATERIAL";
+
+                                // var indexTemp = Number(seqTemp) + i;
+    
+                                // objTemp.item_supplier_sequence = "0000";
+    
+                                objTemp.supplier_code = pToken[i].business_partner_code;
+                                objTemp.supplier_name = pToken[i].business_partner_local_name;
+                                objTemp.supplier_type_code = pToken[i].type_code;
+                                objTemp.supplier_type_name = pToken[i].type_name;
+                                objTemp.evaluation_type_code = pToken[i].business_partner_register_status_code;
+                                objTemp.evaluation_type_name = pToken[i].business_partner_register_status_name;
+
+                                console.log( pToken[i].supplier_role + " : " +pToken[i].maker_role  )
+
+                                objTemp.only_maker_flag = (pToken[i].supplier_role == "N" && pToken[i].maker_role == "Y") ? "Y" : " N";
     
                                 var supplierItem_S = this.getSupplierItem(objTemp);
     
@@ -661,15 +730,17 @@ sap.ui.define([
                     "operation_org_code": oObj.operation_org_code,
                     "operation_unit_code": oObj.operation_unit_code,
                     "nego_supplier_register_type_code": "S",
-                    "evaluation_type_code": null,
+                    "evaluation_type_code": oObj.evaluation_type_code,
+                    "evaluation_type_name" : oObj.evaluation_type_name,
                     "supplier_code": oObj.supplier_code,
                     "supplier_name": oObj.supplier_name,
                     "supplier_type_code": oObj.supplier_type_code,
+                    "supplier_type_name": oObj.supplier_type_name,
                     "excl_flag": null,
                     "excl_reason_desc": null,
                     "include_flag": null,
                     "nego_target_include_reason_desc": null,
-                    "only_maker_flat": null,
+                    "only_maker_flag": oObj.only_maker_flag,
                     "contact": null,
                     "note_content": null,
                     // "local_create_dtm": "2021-01-12T10:30:26Z",
@@ -683,30 +754,44 @@ sap.ui.define([
             },
             
             onMultiInputSupplierWithOrgValuePress: function(oTokens){
-                if(!this.oSupplierWithOrgMultiValueHelp){
-                    this.oSupplierWithOrgMultiValueHelp = new SupplierWithOrgDialog({
-                        multiSelection: true,
-                    });
+                // if(!this.oSupplierWithOrgMultiValueHelp){
+                //     this.oSupplierWithOrgMultiValueHelp = new SupplierWithOrgDialog({
+                //         multiSelection: true,
+                //     });
                     
-                    this.oSupplierWithOrgMultiValueHelp.attachEvent("apply", function(oEvent){
-                        // var resultTokens = this.byId("multiinput_supplierwithorg_code").setTokens(oEvent.getSource().getTokens());
+                //     this.oSupplierWithOrgMultiValueHelp.attachEvent("apply", function(oEvent){
+                //         // var resultTokens = this.byId("multiinput_supplierwithorg_code").setTokens(oEvent.getSource().getTokens());
+                //         var resultTokens = oEvent.getParameter("items");
+                //         this.onSupplierResult(resultTokens);
+
+                //     }.bind(this));
+                // }
+
+                if (!this.oBPMultiSelectionValueHelp) {
+                    this.oBPMultiSelectionValueHelp = new BPDialog({
+                        multiSelection: true
+                    });
+
+                    this.oBPMultiSelectionValueHelp.attachEvent("apply", function (oEvent) {
+                        // this.byId("multiinput_bp_code").setTokens(oEvent.getSource().getTokens());
                         var resultTokens = oEvent.getParameter("items");
                         this.onSupplierResult(resultTokens);
-
                     }.bind(this));
                 }
+                this.oBPMultiSelectionValueHelp.open();
+                // this.oBPMultiSelectionValueHelp.setTokens(this.byId("multiinput_bp_code").getTokens());
 
-                this.oSupplierWithOrgMultiValueHelp.open();
                 if( oTokens ) {
 
                     console.log( " =--- onMultiInputSupplierWithOrgValuePress ");
                     console.log( oTokens );
 
-                    this.oSupplierWithOrgMultiValueHelp.setTokens( oTokens );
+                    this.oBPMultiSelectionValueHelp.setTokens( oTokens );
                 }else {
-                    this.oSupplierWithOrgMultiValueHelp.setTokens( null );
+                    this.oBPMultiSelectionValueHelp.setTokens( null );
                 }
                 // this.oSupplierWithOrgMultiValueHelp.setTokens(this.byId("multiinput_supplierwithorg_code").getTokens());
+                this.oBPMultiSelectionValueHelp.open();
             },
 
             onSupplierLoadPopup: function () {
@@ -1592,38 +1677,123 @@ sap.ui.define([
 
             /** Simple Change Start  **/
             onSimpleChangePress: function() {
-                 if (!this._SimpleChangeDialog) {
-                    this._SimpleChangeDialog = sap.ui.xmlfragment("SimpleChangeDialog", "sp.sc.scQBPages.view.SimpleChangeDialog", this);
-                    // var NPInfPopupUtil = new JSONModel({ type: "1" });
-                    // this.getView().setModel(NPInfPopupUtil, "NPInfPopupUtil");
+                 var selectedIndices = this.getView().byId("tableLines").getSelectedIndices();
+                if( selectedIndices.length > 0 ) {
+                    if (!this._SimpleChangeDialog) {
+                        var fragmentId = this.getView().createId("SimpleChangeDialog");
+                        this._SimpleChangeDialog = sap.ui.xmlfragment( fragmentId , "sp.sc.scQBPages.view.SimpleChangeDialog", this);
+                        // var NPInfPopupUtil = new JSONModel({ type: "1" });
+                        // this.getView().setModel(NPInfPopupUtil, "NPInfPopupUtil");
 
+                        
+                        this.getView().addDependent(this._SimpleChangeDialog);
+                        // Fragment required from "sap/ui/core/Fragment"
+                        this._SimpleChangeTable = sap.ui.core.Fragment.byId(fragmentId, "simpleChangeTable");
+                        // var tab =this.byId("SimpleChangeDialog", "simpleChangeTable");
 
-                    this.getView().addDependent(this._SimpleChangeDialog);
-                    // this._isAddPersonalPopup = true;
+                        // this._isAddPersonalPopup = true;
+                    }
+
+                    this._SimpleChangeDialog.attachEvent("apply", function(oEvent){
+                        console.log("SIMPLE CHANGE!!!");
+                    })
+                    
+                    this._SimpleChangeDialog.open();
+                }else {
+
+                    MessageBox.confirm( "추가할 항목을 선택하세요." , {
+                        // @ts-ignore
+                        // title : textModel.getText("/CONFIRM"),//that.getModel("I18N").getText("/SAVE"),
+                        initialFocus : sap.m.MessageBox.Action.CANCEL,
+                        onClose : function(sButton) {
+                            
+                        }
+                    });
                 }
                 
-                this._SimpleChangeDialog.open();
-                // if(!this.oSimpleChangeDialog){
-                //     this.oSimpleChangeDialog = new SimpleChangeDialog({
-                //         title: "Choose MaterialMaster",
-                //         MultiSelection: true,
-                //         items: {
-                //             filters: [
-                //                 new Filter("tenant_id", "EQ", "L1100")
-                //             ]
-                //         }
-                //     });
-                //     // this.oSimpleChangeDialog.attachEvent("apply", function(oEvent){
-                //     //     materialItem = oEvent.mParameters.item;
+            },
+            onPressSimpleChangeDialogClose: function() {
+                 this._SimpleChangeDialog.close();
+            },
 
-                //     //     this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[5].getAggregation("items")[0].setValue(materialItem.material_code);
-                //     //     this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[6].getAggregation("items")[0].setValue(materialItem.material_desc);
-                //     //     console.log("materialItem : ", materialItem);
+            onPressSimpleChangeDialogSave: function() {
 
-                //     // }.bind(this));
+                var oSelectedItems = this._SimpleChangeTable.getSelectedItems();
 
-                // }
-                // this.oSimpleChangeDialog.open();
+                console.log( " - -- - - onPressSimpleChangeDialogSave - - - - ")
+                console.log( oSelectedItems )
+
+                if( oSelectedItems ) 
+                {
+                    var selectedIndices = this.getView().byId("tableLines").getSelectedIndices();
+                    if( selectedIndices.length > 0 ) {
+                        var oItems = this.getView().getModel("NegoHeaders").getData().Items;
+
+                        for( var a = 0; a < selectedIndices.length ; a++ ) {
+                            var objTemp = oItems[a];
+
+                            var oObj = {};
+                            oSelectedItems.forEach(element => {
+                                console.log( element );
+                                console.log( element.getAggregation("cells") );
+                                element.getAggregation("cells").forEach(cell =>{
+                                    console.log( cell.getId() );
+                                    // comboBoxSpecification
+                                    // inputQuantity
+                                    // comboBoxCurrency
+                                    // inputStartPrice
+                                    // inputTargetPrice
+                                    // toggleBtnDisplay
+                                    // datePickerMaturitydate
+                                    // inputCurrentPrice
+                                    if( cell.getId().indexOf("comboBoxSpecification") != -1 ) { 
+                                        objTemp.specification = cell.getSelectedKey();
+                                    }
+                                    if( cell.getId().indexOf("inputQuantity") != -1 ) { 
+                                        objTemp.request_quantity = Number(cell.getValue());
+                                    }
+                                    if( cell.getId().indexOf("comboBoxCurrency") != -1 ) { 
+                                        objTemp.currency_code = cell.getSelectedKey();
+                                    }
+                                    if( cell.getId().indexOf("inputStartPrice") != -1 ) { 
+                                        objTemp.bidding_start_net_price = Number(cell.getValue());
+                                    }
+                                    if( cell.getId().indexOf("inputTargetPrice") != -1 ) { 
+                                        objTemp.bidding_target_net_price = Number(cell.getValue());
+                                    }
+                                    if( cell.getId().indexOf("toggleBtnDisplay") != -1 ) { 
+                                        objTemp.bidding_start_net_price_flag = cell.getPressed() ? "Y" : "N" ;
+                                    }
+                                    if( cell.getId().indexOf("datePickerMaturitydate") != -1 ) { 
+                                        objTemp.maturity_date = cell.getDateValue();
+                                    }
+                                    if( cell.getId().indexOf("inputCurrentPrice") != -1 ) { 
+                                        objTemp.current_price = Number(cell.getValue());
+                                    }
+                                });
+                            });
+                            this.getView().getModel("NegoHeaders").refresh();
+                                // console.log( oObj );
+                        }
+                        this._SimpleChangeDialog.close();
+
+
+
+                            // this.getView().getModel("NegoHeaders").refresh();
+                    }
+
+                        // var bLength = this.getView().byId("table_Specific").getItems().length;
+                        // this.getView().byId("tableLines").getRows()[this._oIndex].getCells()[14].getAggregation("items")[0].setValue(bLength );
+                        // console.log( " bLength :: " + bLength);
+                }
+
+
+
+                   
+            },
+            onPress_toggleDisplay: function (e) {
+                // e.getSource()
+                e.getSource().setProperty("text" , (e.getParameter("pressed") ? "YES" : "NO")) ;
             },
 
             /** Simple Change End  **/

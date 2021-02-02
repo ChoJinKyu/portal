@@ -296,9 +296,17 @@
                                                         columnsL="2"
                                                         columnsXL="4">
                                             <Label  text="Award Type"  /> 
-                                            <Select placeholder="Award by Total Amount" selectedKey="{NegoHeaders>/award_type_code}" >
-                                                <core:Item key="Award By Lines" text="Award by Lines"/>
-                                                <core:Item key="Award by Total Amount" text="Award by Total Amount"/>
+                                            <Select selectedKey="{NegoHeaders>/award_type_code}" 
+                                                items="{path: 'master>/'}">
+                                                <!-- items="{
+                                                    path: '/Sc_Nego_Award_Method_Code',
+                                                    sorter: { path: 'sort_no' },
+                                                    parameters: {
+                                                        'expand': 'nego_parent_type,award_type'
+                                                    }
+                                                }" -->
+                                                <core:Item key="{path: 'master>/award_type/award_type_code'}" text="{path: 'master>/award_type/award_type_name'}"/>
+                                                <!-- <core:Item key="Award by Total Amount" text="Award by Total Amount"/> -->
                                             </Select> 
                                             <Label  text="Target Total Amount" visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
                                             <Input value="{NegoHeaders>/target_amount}" type="Number"  textAlign="Right" visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
@@ -986,22 +994,22 @@
                                                                 <!-- <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
                                                                     <Text text="Seq" />
                                                                 </Column> -->
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true" width="15%">
                                                                     <Text text="Supplier Code" />
                                                                 </Column>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true" width="35%">
                                                                     <Text text="Supplier Name" />
                                                                 </Column>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true" width="15%">
                                                                     <Text text="Evaluate Type" />
                                                                 </Column>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true" width="15%">
                                                                     <Text text="Supplier Type" />
                                                                 </Column>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true" width="10%">
                                                                     <Text text="Only Maker Flag" />
                                                                 </Column>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true" width="10%">
                                                                     <Text text="Contact" />
                                                                 </Column>
                                                                 <!-- <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
@@ -1016,11 +1024,11 @@
                                                                                 <core:CustomData key="item_supplier_sequence" value='{NegoItemPrices>item_supplier_sequence}'/>
                                                                             </customData>
                                                                         </Text> -->
-                                                                        <Text text="{NegoItemPrices>supplier_code}"/>
-                                                                        <Text text="{NegoItemPrices>supplier_name}"/>
-                                                                        <Text text="{NegoItemPrices>evaluation_type_code}"/>
-                                                                        <Text text="{NegoItemPrices>supplier_type_code}"/>
-                                                                        <Text text=""/>
+                                                                        <Label text="{NegoItemPrices>supplier_code}"/>
+                                                                        <Label text="{NegoItemPrices>supplier_name}"/>
+                                                                        <Label text="{NegoItemPrices>evaluation_type_name}"/>
+                                                                        <Label text="{NegoItemPrices>supplier_type_name}"/>
+                                                                        <Label text="{NegoItemPrices>only_maker_flag}"/>
                                                                         <Button icon="sap-icon://value-help" />
                                                                         <!-- <Text text=""/> -->
                                                                     </cells>
