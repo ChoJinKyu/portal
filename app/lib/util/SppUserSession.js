@@ -23,14 +23,10 @@ sap.ui.define([
         },
 
         constructor: function(position){
-            // getEventingParent
-            console.log("############## SppUserSession constructor ####################");
-            console.log(position);
             
             this.oModel = sap.ui.getCore().getModel(USER_MODEL_NAME);
             if(this.oModel == null){
-                
-                console.log("############## null #################### ");
+
                 this.oModel = new SppUserSessionModel();
                 var oXhr = ServiceProvider.getService("cm.util.SppUserSessionService");
                 var oQuery = {};
@@ -52,7 +48,6 @@ sap.ui.define([
 
                 }.bind(this));
             }else{
-                console.log("############## re use #################### ");
 
                 if(this.oModel.isReady()){
                     setTimeout(function(){

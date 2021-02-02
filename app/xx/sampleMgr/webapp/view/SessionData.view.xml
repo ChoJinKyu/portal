@@ -117,4 +117,40 @@
         </items>
     </Table>
 
+
+<Table
+        id="userValue"
+        growing="true"
+        growingThreshold="30"
+        items="{path : 'sessionTest>/UserValue'}" 
+        width="auto"
+    >
+        <columns>
+            <Column hAlign="Center">
+                <header>
+                    <Label text="USER"/>
+                </header>
+            </Column>
+            <Column hAlign="Center">
+                <header>
+                    <Label text="USER_ID"/>
+                </header>
+            </Column>
+            <Column hAlign="Center">
+                <header>
+                    <Label text="USER_LOCALE"/>
+                </header>
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <Text text="{sessionTest>USER}"/>
+                    <Text text="{sessionTest>USER_ID}"/>
+                    <Text text="{sessionTest>USER_LOCALE}"/>
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+
 </mvc:View>

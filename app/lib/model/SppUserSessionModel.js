@@ -32,6 +32,10 @@ sap.ui.define([
         setData: function(oData){
             if(oData.length == 1){
                 Parent.prototype.setData.call(this, oData[0]);
+
+                //sap.ui.getCore().getConfiguration().setLanguage('en');
+                //sap.ui.getCore().getConfiguration().getFormatSettings().setNumberSymbol("decimal",",");
+                //sap.ui.getCore().getConfiguration().getFormatSettings().setNumberSymbol("group"  ,".");
             }
         },
 

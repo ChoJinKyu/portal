@@ -30,6 +30,13 @@
                     "odataVersion": "4.0"
                 }
             },
+            "sessionTest": {
+                "uri": "srv-api/odata/v2/xx.SampleSessionService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
             "session": {
                 "uri": "srv-api/odata/v2/cm.util.SppUserSessionService/",
                 "type": "OData",
@@ -107,6 +114,15 @@
             },
             "session": {
                 "dataSource": "session",
+                "preload": false,
+                "settings": {
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": false
+                }
+            },
+            "sessionTest": {
+                "dataSource": "sessionTest",
                 "preload": false,
                 "settings": {
                     "synchronizationMode": "None",

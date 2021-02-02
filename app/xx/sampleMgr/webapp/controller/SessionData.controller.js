@@ -18,6 +18,8 @@ sap.ui.define([
             
             onInit: function () {
                 this.setModel(new ManagedListModel(), "sessionList");
+                this.setModel(new ManagedListModel(), "userValue");
+
                 var oSppUserSession = new SppUserSession("controller");
                 this.setModel(oSppUserSession.getModel(), "USER_SESSION");
 
@@ -25,7 +27,8 @@ sap.ui.define([
 
             },
 
-            onSearch: function() {                
+            onSearch: function() {     
+                /*           
                 var oView = this.getView();
                 var oModel = this.getModel("sessionList");
                 oView.setBusy(true);
@@ -35,6 +38,18 @@ sap.ui.define([
                         oView.setBusy(false);
                     }
                 });
+                */
+
+                /*
+                oModel = this.getModel("userValue");
+                oModel.setBusy(true);
+                oModel.setTransactionModel(this.getModel());
+                oModel.read("/UserValue", {
+                    success: function(oData){
+                        oView.setBusy(false);
+                    }
+                });
+                */
             },
 
             onTest: function() {
