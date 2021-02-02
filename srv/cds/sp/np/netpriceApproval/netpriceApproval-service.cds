@@ -90,7 +90,7 @@ service NpApprovalService {
                  WHERE cd.tenant_id   = cam.tenant_id
                    AND cd.group_code  = 'SP_SC_OUTCOME'
                    AND cd.language_cd = clc.language_code
-               	   AND cd.code        = cam.outcome_code
+               	   AND cd.code        = pam.outcome_code
 			   )  AS outcome_name : String
              , cam.request_date                 /* request date */
              , pam.nego_number                  /* ??? negotiation no ??? */
