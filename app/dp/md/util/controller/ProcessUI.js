@@ -1,59 +1,104 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller" 
-    , "sap/ui/core/Fragment" 
+    "sap/ui/core/mvc/Controller"
+    , "sap/ui/core/Fragment"
     , "sap/suite/ui/commons/MicroProcessFlow"
     , "sap/suite/ui/commons/MicroProcessFlowItem"
     , "sap/suite/ui/commons/ChartContainerContent"
-   , "sap/m/Text"
-   , "sap/m/VBox"
-], function(Controller,Fragment, MicroProcessFlow, MicroProcessFlowItem, ChartContainerContent, Text, VBox) { 
-  "use strict";
+    , "sap/m/Text"
+    , "sap/m/VBox"
+    , "sap/ui/core/Icon"
+    , "ext/lib/model/ManagedListModel"
+], function (Controller, Fragment, MicroProcessFlow, MicroProcessFlowItem, ChartContainerContent, Text, VBox, Icon, ManagedListModel) {
+    "use strict";
 
-    return Controller.extend("dp.md.util.controller.ProcessUI",{  
-
-        open_Type1 : function(pThis , pId){ 
-          var obj = pThis.byId(pId);
-          var test =  new VBox({ 
-                                items : [
-                                    new Text({ text : '하하하하하'})
-                                ]
-                            })
+    return Controller.extend("dp.md.util.controller.ProcessUI", {
 
 
+        setDrawProcessUI: function (pThis, pId, pTypeGubunCode, pIndex) { 
+           
 
-           var oProcess = new MicroProcessFlow({
-                items : [
-                    new ChartContainerContent({
-                        items : [
-                            new VBox({ 
-                                items : [
-                                    new Text({ text : '하하하하하'})
-                                ]
-                            })
+            var obj = pThis.byId(pId);
+             if (obj.getItems().length > 0 ){return}else{
+
+
+                pThis.setModel(new ManagedListModel(), pId);
+
+            if (pTypeGubunCode == "B") {
+                var model = pThis.getModel(pId);
+                model.addRecord({ name: "Remodel & Repair\nEntry" }, "/process");
+                model.addRecord({ name: "On Approval" }, "/process");
+                model.addRecord({ name: "Request\nEstimation" }, "/process");
+                model.addRecord({ name: "LG Review\nRequest" }, "/process");
+                model.addRecord({ name: "Supplier\nAgree Request" }, "/process");
+                model.addRecord({ name: "Repair Fee\nCompleted" }, "/process");
+                model.addRecord({ name: "PO" }, "/process");
+                model.addRecord({ name: "Invoice" }, "/process");
+            } else {
+                var model = pThis.getModel(pId);
+                model.addRecord({ name: "PR" }, "/process");
+                model.addRecord({ name: "Budget" }, "/process");
+                model.addRecord({ name: "RFQ" }, "/process");
+                model.addRecord({ name: "Mold\nSpec" }, "/process");
+                model.addRecord({ name: "Purchase\nContract" }, "/process");
+                model.addRecord({ name: "PO" }, "/process");
+                model.addRecord({ name: "RCV" }, "/process");
+                model.addRecord({ name: "Lease\nContract" }, "/process");
+                model.addRecord({ name: "Invoice" }, "/process");
+            }
+
+            var model = pThis.getModel(pId);
+
+            var oProcess = new MicroProcessFlow({});
+            for (var i = 0; i < model.getData().process.length; i++) {
+                var type;
+                if (i == pIndex) {
+                    type = new VBox({
+                        items: [
+                            new Icon({ src: "sap-icon://message-success", color: "#F94B50" })
+                            , new Text({ text: model.getData().process[i].name, textAlign: "Center" })
                         ]
-                    })
-                ]
+                        , alignItems: "Center"
+                        , width: "5rem"
+                    });
+                } else if (i < pIndex) {
+                    type = new VBox({
+                        items: [
+                            new Icon({ src: "sap-icon://message-success", color: "#04B395" })
+                            , new Text({ text: model.getData().process[i].name, textAlign: "Center" })
+                        ]
+                        , alignItems: "Center"
+                        , width: "5rem"
+                    });
+                } else {
+                    type = new VBox({
+                        items: [
+                            new Icon({ src: "sap-icon://appear-offline", color: "#BEC9D4" })
+                            , new Text({ text: model.getData().process[i].name, textAlign: "Center" })
+                        ]
+                        , alignItems: "Center"
+                        , width: "5rem"
+                    });
+                }
 
-           });
+                var flowItem = new MicroProcessFlowItem({
+                    alignItems: "Center"
+                    , stepWidth: "2rem"
+                });
 
-        obj.addItem(test);
+                flowItem.setCustomControl(type);
+                oProcess.addContent(flowItem);
+            }
 
+            console.log('obj.getItems()' , obj.getItems());
 
+            if (obj.getItems().length == 0 || obj.getItems() == null) {
+                obj.addItem(oProcess);
+            }
+
+             }
+
+            
         }
-
-       , getVbox : function(){
-             new VBox({
-                    items: [
-                        new Label({ text: this.getModel("I18N").getText("/BIZDIVISION_CODE") +" or "+ this.getModel("I18N").getText("/BIZDIVISION_NAME")}),
-                        this.oSearchKeyword
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                })
-        }
-
-
-
-        
     });
 
 

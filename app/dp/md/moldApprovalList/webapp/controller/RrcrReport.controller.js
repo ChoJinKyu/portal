@@ -48,6 +48,7 @@ sap.ui.define([
         moldItemPop: new MoldItemSelection(),
 
         deptSelection : new DeptSelection(),
+
         process : new ProcessUI(), 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -70,7 +71,7 @@ sap.ui.define([
 
             this.setModel(oViewModel, "rrcrReportView"); //change
             this.getRouter().getRoute("rrcrReport").attachPatternMatched(this._onObjectMatched, this);//change
-           
+            this.process.setDrawProcessUI(this, "RrcrReportProcess" , "B", 6); 
         },
     
         /* =========================================================== */
@@ -81,8 +82,8 @@ sap.ui.define([
         /* internal methods                                            */
         /* =========================================================== */
         _onApprovalPage : function () { 
-           this.process.open_Type1(this, "test"); 
-            this.getView().setModel(new ManagedListModel(), "mdRecepit");
+          
+           this.getView().setModel(new ManagedListModel(), "mdRecepit");
 
             // console.log(" mode "  ,  this.getView().getModel("mode"));
             var schFilter = [];
