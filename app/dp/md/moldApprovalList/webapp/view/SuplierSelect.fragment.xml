@@ -26,7 +26,7 @@
                                 items="{
                                         path: 'org>/Org_Company',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'company_code'}
                                     }"
@@ -53,7 +53,7 @@
                            <m:ComboBox width="100%" selectedKey="{pssaCreateObjectView>/plant}" enabled="false" items="{
                                     path: 'purOrg>/Pur_Operation_Org',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'},
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
                                         {path: 'org_type_code', operator: 'EQ', value1: 'AU'},
                                         {path: 'company_code', operator: 'EQ', value1: 'LGEIL'}
                                     ]

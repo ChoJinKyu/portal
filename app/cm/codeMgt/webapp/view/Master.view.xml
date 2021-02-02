@@ -4,7 +4,7 @@
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
     xmlns:f="sap.f"
-    xmlns:lib_f="ext.lib.control.f"
+    xmlns:lib-f="ext.lib.control.f"
     xmlns:tnt="sap.tnt"
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout"
@@ -12,14 +12,14 @@
     <f:DynamicPage id="dynamicPageId1" headerExpanded="true" toggleHeaderOnTitleClick="{/titleClickable}">
         <!-- DynamicPage Title -->
         <f:title>
-            <lib_f:CustomDynamicPageTitle>
-                <lib_f:heading>
+            <lib-f:CustomDynamicPageTitle>
+                <lib-f:heading>
                     <HBox alignItems="Center">
                         <Button icon="sap-icon://unfavorite" type="Transparent" />
                         <Title text="{I18N>/CODE_MANAGEMENT}"/>
                     </HBox>
-                </lib_f:heading>
-                <lib_f:fixedContent>
+                </lib-f:heading>
+                <lib-f:fixedContent>
                     <form:SimpleForm class="searchBox"
                     maxContainerCols="2"
                     editable="true"
@@ -51,8 +51,8 @@
                             </FlexBox>
                         </form:content>
                     </form:SimpleForm>
-                </lib_f:fixedContent>
-            </lib_f:CustomDynamicPageTitle>
+                </lib-f:fixedContent>
+            </lib-f:CustomDynamicPageTitle>
         </f:title>
         <!-- DynamicPage Header -->
         <f:header>
