@@ -17,7 +17,7 @@
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 
-		showFooter="true">
+		showFooter="false">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
@@ -127,7 +127,7 @@
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
 									<Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
-									<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" />
+									<!-- <Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" /> -->
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
@@ -151,20 +151,5 @@
 
 		</uxap:sections>
 		
-		<uxap:footer>
-			<OverflowToolbar>
-                <Button
-                    icon="sap-icon://alert"
-                    type="Emphasized"
-                    text="{= ${message>/}.length }"
-                    visible="{= ${message>/}.length > 0 }"
-                    ariaHasPopup="Dialog"
-                    press=".onMessagePopoverPress" />
-				<ToolbarSpacer />
-				<lib-m:EditModeButton type="Transparent" id="pageEditButton" editPress=".onPageEditButtonPress" cancelPress=".onPageCancelEditButtonPress" />
-				<Button type="Transparent" id="pageDeleteButton" text="Delete" press=".onPageDeleteButtonPress" />
-				<Button type="Emphasized" id="pageSaveButton" text="Save" press=".onPageSaveButtonPress" />
-			</OverflowToolbar>
-		</uxap:footer>
 	</uxap:ObjectPageLayout>
 </mvc:View>

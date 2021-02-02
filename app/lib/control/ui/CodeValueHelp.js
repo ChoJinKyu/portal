@@ -21,6 +21,7 @@ sap.ui.define([
         metadata: {
             properties: {
                 title: { type: "string", group: "Appearance" },
+                loadWhenOpen: { type: "boolean", group: "Misc", defaultValue: true },
                 closeWhenApplied: { type: "boolean", group: "Misc", defaultValue: true },
                 multiSelection: { type: "boolean", group: "Misc", defaultValue: false },
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "35em"},
@@ -208,7 +209,9 @@ sap.ui.define([
                 this.openWasRequested = true;
                 return;
             }
-            this.loadData();
+            if(this.getProperty("loadWhenOpen") === true){
+                this.loadData();
+            }
             if(this.beforeOpen)
                 this.beforeOpen.call(this);
             this.oDialog.open();

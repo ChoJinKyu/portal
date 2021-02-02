@@ -112,7 +112,38 @@ sap.ui.define([
 		 */
 		onPageEditButtonPress: function(){
 			this._toEditMode();
-		},
+        },
+        
+		/**
+		 * Event handler for cancel page editing
+		 * @public
+		 */
+        onPageCancelEditButtonPress: function(){
+            var oView = this.getView(),
+                oDepartmentModel = this.getModel("department"),
+                oDepartmentModel = this.getModel("employee"),
+				cancelEdit = function(){
+					if(this.getModel("endPageViewModel").getProperty("/isAddedMode") == true){
+						this.onPageNavBackButtonPress.call(this);
+					}else{
+						this.validator.clearValueState(this.byId("page"));
+						this._toViewMode();
+					}
+				}.bind(this);
+				
+			// if(oDepartmentModel.isChanged() || oDepartmentModel.isChanged()) {
+			// 	MessageBox.confirm(this.getModel("I18N").getText("/NCM00007"), {
+			// 		title : "Comfirmation",
+			// 		initialFocus : sap.m.MessageBox.Action.CANCEL,
+			// 		onClose : function(sButton) {
+			// 			cancelEdit();
+			// 		}
+			// 	});
+            // }else{
+				cancelEdit();
+			// }
+
+        },
 		
 		/**
 		 * Event handler for delete page entity
@@ -120,7 +151,7 @@ sap.ui.define([
 		 */
         onPageDeleteButtonPress: function(){
 			var oView = this.getView(),
-				oMasterModel = this.getModel("department"),
+				oDepartmentModel = this.getModel("department"),
 				that = this;
 			MessageBox.confirm("Are you sure to delete this control option and employee?", {
 				title : "Comfirmation",
@@ -128,8 +159,8 @@ sap.ui.define([
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
 						oView.setBusy(true);
-						oMasterModel.removeData();
-						oMasterModel.submitChanges({
+						oDepartmentModel.removeData();
+						oDepartmentModel.submitChanges({
 							success: function(ok){
 								oView.setBusy(false);
 								that.onPageNavBackButtonPress.call(that);
@@ -177,14 +208,14 @@ sap.ui.define([
 		 */
         onPageSaveButtonPress: function(){
             var oView = this.getView(),
-                oMasterModel = this.getModel("department"),
+                oDepartmentModel = this.getModel("department"),
                 oDepartmentModel = this.getModel("employee"),
                 that = this;
                 
-			if(!oMasterModel.isChanged() && !oDepartmentModel.isChanged()) {
-				MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-				return;
-            }
+			// if(!oDepartmentModel.isChanged() && !oDepartmentModel.isChanged()) {
+			// 	MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+			// 	return;
+            // }
 
             if(this.validator.validate(this.byId("page")) !== true) return;
 
@@ -196,7 +227,7 @@ sap.ui.define([
 						oView.setBusy(true);
 						// oTransactionManager.submit({
 						// 	success: function(ok){
-						// 		that._toShowMode();
+						// 		that._toViewMode();
 						// 		oView.setBusy(false);
                         //         that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
 						// 		MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
@@ -208,36 +239,6 @@ sap.ui.define([
 
 		},
 		
-		/**
-		 * Event handler for cancel page editing
-		 * @public
-		 */
-        onPageCancelEditButtonPress: function(){
-            var oView = this.getView(),
-                oMasterModel = this.getModel("department"),
-                oDepartmentModel = this.getModel("employee"),
-				cancelEdit = function(){
-					if(this.getModel("endPageViewModel").getProperty("/isAddedMode") == true){
-						this.onPageNavBackButtonPress.call(this);
-					}else{
-						this.validator.clearValueState(this.byId("page"));
-						this._toShowMode();
-					}
-				}.bind(this);
-				
-			if(oMasterModel.isChanged() || oDepartmentModel.isChanged()) {
-				MessageBox.confirm(this.getModel("I18N").getText("/NCM00007"), {
-					title : "Comfirmation",
-					initialFocus : sap.m.MessageBox.Action.CANCEL,
-					onClose : function(sButton) {
-						cancelEdit();
-					}
-				});
-            }else{
-				cancelEdit();
-			}
-
-        },
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -245,10 +246,10 @@ sap.ui.define([
 
 		_onMasterDataChanged: function(oEvent){
 			if(this.getModel("endPageViewModel").getProperty("/isAddedMode") == true){
-				var oMasterModel = this.getModel("department");
+				var oDepartmentModel = this.getModel("department");
 				var oDepartmentModel = this.getModel("employee");
-				var sTenantId = oMasterModel.getProperty("/tenant_id");
-				var sControlOPtionCode = oMasterModel.getProperty("/department_code");
+				var sTenantId = oDepartmentModel.getProperty("/tenant_id");
+				var sControlOPtionCode = oDepartmentModel.getProperty("/department_code");
 				var oDetailsData = oDepartmentModel.getData();
 				oDetailsData.forEach(function(oItem, nIndex){
 					oDepartmentModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
@@ -274,8 +275,8 @@ sap.ui.define([
 				//It comes Add button pressed from the before page.
 				this.getModel("endPageViewModel").setProperty("/isAddedMode", true);
 
-				var oMasterModel = this.getModel("department");
-				oMasterModel.setData({
+				var oDepartmentModel = this.getModel("department");
+				oDepartmentModel.setData({
 					"tenant_id": "L2100",
 					"use_flag": true
 				}, "/Company");
@@ -303,6 +304,7 @@ sap.ui.define([
 				oView.setBusy(true);
 				this.getModel().read("/Employee", {
                     urlParameters: {
+                        "$top": 30,
                         "$expand": "department"
                     },
 					filters: [
@@ -314,36 +316,38 @@ sap.ui.define([
 						oView.setBusy(false);
 					}.bind(this)
 				});
-				this._toShowMode();
+				this._toViewMode();
 			}
 		},
 
-		_toEditMode: function(){
-			var FALSE = false;
+		_toViewMode: function(){
+            var VIEW_MODE = true;
+            this.getModel("department").setProperty("/__metadata/_row_editable_", !VIEW_MODE);
 			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("pageDeleteButton").setEnabled(FALSE);
-			this.byId("pageSaveButton").setEnabled(!FALSE);
-			this.byId("pageNavBackButton").setEnabled(FALSE);
+			this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
+			this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
+			this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
 
-			this.byId("endTableAddButton").setEnabled(!FALSE);
-			this.byId("endTableDeleteButton").setEnabled(!FALSE);
-			this.byId("endTable").setMode(sap.m.ListMode.SingleSelectLeft);
-			// this.byId("endTable").getColumns()[0].setVisible(!FALSE);
-			this._bindTable(this.oEditableTemplate, "Edit");
-		},
-
-		_toShowMode: function(){
-			var TRUE = true;
-			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("pageDeleteButton").setEnabled(TRUE);
-			this.byId("pageSaveButton").setEnabled(!TRUE);
-			this.byId("pageNavBackButton").setEnabled(TRUE);
-
-			this.byId("endTableAddButton").setEnabled(!TRUE);
-			this.byId("endTableDeleteButton").setEnabled(!TRUE);
+			this.byId("endTableAddButton").setEnabled(!VIEW_MODE);
+			this.byId("endTableDeleteButton").setEnabled(!VIEW_MODE);
 			this.byId("endTable").setMode(sap.m.ListMode.None);
-			// this.byId("endTable").getColumns()[0].setVisible(!TRUE);
+			// this.byId("endTable").getColumns()[0].setVisible(!VIEW_MODE);
 			this._bindTable(this.oReadOnlyTemplate, "Navigation");
+        },
+        
+		_toEditMode: function(){
+			var VIEW_MODE = false;
+            this.getModel("department").setProperty("/__metadata/_row_editable_", !VIEW_MODE);
+			this.byId("page").setSelectedSection("pageSectionMain");
+			this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
+			this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
+			this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
+
+			this.byId("endTableAddButton").setEnabled(!VIEW_MODE);
+			this.byId("endTableDeleteButton").setEnabled(!VIEW_MODE);
+			this.byId("endTable").setMode(sap.m.ListMode.SingleSelectLeft);
+			// this.byId("endTable").getColumns()[0].setVisible(!VIEW_MODE);
+			this._bindTable(this.oEditableTemplate, "Edit");
 		},
 
 		_initTableTemplates: function(){

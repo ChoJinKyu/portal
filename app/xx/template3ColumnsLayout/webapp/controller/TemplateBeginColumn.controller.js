@@ -139,7 +139,7 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(){
-			this.getModel("beginPageViewModel").setProperty("/headerExpanded", true);
+			this.getModel("beginPageViewModel").setProperty("/headerExpanded", false);
 			this.byId("pageSearchButton").firePress();
 		},
 

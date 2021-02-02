@@ -6,7 +6,7 @@ sap.ui.define([
 ], function (Parent, Renderer, Input, Text) {
     "use strict";
     
-    var FlexibleEditBox = Parent.extend("ext.lib.control.m.FlexibleEditBox", {
+    var EditModeVBox = Parent.extend("ext.lib.control.m.EditModeVBox", {
 
         metadata: {
             properties: {
@@ -31,7 +31,7 @@ sap.ui.define([
         },
 
         setEditableValue: function(bEditableValue){
-            this.setProperty("editableValue", bEditableValue);
+            this.setProperty("editableValue", bEditableValue||false);
             if(!this.oEditor) return;
             if(bEditableValue === true){
                 this.oEditor.setVisible(true);
@@ -46,7 +46,7 @@ sap.ui.define([
         
     });
 
-    FlexibleEditBox.onTableRowSelectionChange = function(oEvent, fClear, fApply){
+    EditModeVBox.onTableRowSelectionChange = function(oEvent, fClear, fApply){
         var aRowIndices = oEvent.getParameter("rowIndices"),
             nEditorIndex = oEvent.getParameter("rowIndex");
         if(aRowIndices.length > 1 || nEditorIndex == -1){
@@ -55,6 +55,6 @@ sap.ui.define([
         fApply(nEditorIndex);
     }
 
-    return FlexibleEditBox;
+    return EditModeVBox;
 
 });
