@@ -24,7 +24,7 @@ sap.ui.define([
         dateFormatter: DateFormatter,
         validator: new Validator(),
         supplierSelection: new SupplierSelection(),
-        tenantId: 'L2600',
+        tenantId: 'L2101',
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
