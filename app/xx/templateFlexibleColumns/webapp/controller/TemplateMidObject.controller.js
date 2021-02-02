@@ -19,10 +19,11 @@ sap.ui.define([
 	"sap/m/Text",
 	"sap/m/Input",
 	"ext/lib/control/m/CodeComboBox",
-	"sap/ui/core/Item",
+    "sap/ui/core/Item",
+    "sap/ui/thirdparty/jquery"
 ], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, Formatter, DateFormatter, 
         Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-        ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, CodeComboBox, Item) {
+        ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, CodeComboBox, Item, jQuery) {
 	"use strict";
 
 	var oTransactionManager;
@@ -62,7 +63,7 @@ sap.ui.define([
 
             this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
             
-			this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
+            this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
 			this._initTableTemplates();
             this.enableMessagePopover();
@@ -109,13 +110,60 @@ sap.ui.define([
 		 * Event handler for page edit button press
 		 * @public
 		 */
-		onPageEditButtonPress: function(){
-            //Clone the data
-            this._oCloneMasterModelData = Object.assign({}, this.getModel("master").getData());  
-            var sDetailModelEntityName = this.getModel("details").getProperty("/entityName");
-            this._oCloneDetailsModelData = Object.assign({}, this.getModel("details").getProperty("/"+sDetailModelEntityName));  
-            
-			this._toEditMode();
+		onPageEditButtonPress: function(oEvent){
+            debugger;
+            //편집취소 클릭
+            if(oEvent.getSource().getPressed()){
+                var oView = this.getView(),
+                oMasterModel = this.getModel("master"),
+                oDetailsModel = this.getModel("details"),
+				cancelEdit = function(){
+					if(this.getModel("midObjectViewModel").getProperty("/isAddedMode") == true){
+						this.onPageNavBackButtonPress.call(this);
+					}else{
+                        this.validator.clearValueState(this.byId("page"));
+                        //View모드
+                        this._toShowMode();
+                        //EditButton버튼 전환
+                        this.getView().byId('pageEditButton').setEditMode(false);
+                        
+                        //데이터 복원
+                        if(oMasterModel.isChanged()){
+                            var temp = jQuery.extend(true, {}, this._oCloneMasterModelData);  
+                            oMasterModel.setData(temp);
+                        }
+                        if(oDetailsModel.isChanged()){
+                            var temp = jQuery.extend(true, [], this._oCloneDetailsModelData);  
+                            var sDetailModelEntityName = this.getModel("details").getProperty("/entityName");
+                            oDetailsModel.setProperty("/"+sDetailModelEntityName, temp);
+                        }
+					}
+                }.bind(this);
+                if(oMasterModel.isChanged() || oDetailsModel.isChanged()) {
+                    var oEventParent = oEvent;
+                    MessageBox.confirm(this.getModel("I18N").getText("/NCM00007"), {
+                        title : "Comfirmation",
+                        initialFocus : sap.m.MessageBox.Action.CANCEL,
+                        onClose : function(sButton) {
+                            if(sButton == MessageBox.Action.OK){
+                                cancelEdit();
+                            }
+                        }.bind(this)
+                    });
+                }else{
+                    cancelEdit();
+                }
+            //편집클릭
+            }else{
+                //데이터 복사
+                this._oCloneMasterModelData = jQuery.extend(true, {}, this.getModel("master").getData());  
+                var sDetailModelEntityName = this.getModel("details").getProperty("/entityName");
+                this._oCloneDetailsModelData = jQuery.extend(true, [], this.getModel("details").getProperty("/"+sDetailModelEntityName));
+                //Edit모드
+                this._toEditMode();
+                //EditButton버튼 전환
+                oEvent.getSource().setEditMode(true);
+            }
 		},
 		
 		/**
@@ -136,8 +184,10 @@ sap.ui.define([
 						oMasterModel.setTransactionModel(that.getModel());
 						oMasterModel.submitChanges({
 							success: function(ok){
-								oView.setBusy(false);
-								that.onPageNavBackButtonPress.call(that);
+                                oView.setBusy(false);
+                                //삭제 완료시 메인페이지 조회버튼 클릭
+                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                that.onPageNavBackButtonPress.call(that);
 								MessageToast.show("Success to delete.");
 							}
 						});
@@ -157,7 +207,7 @@ sap.ui.define([
 				"control_option_val": "",
 				"local_create_dtm": new Date(),
 				"local_update_dtm": new Date()
-			}, "/ControlOptionMasters");
+			}, "/ControlOptionDetails");
             this.validator.clearValueState(this.byId("midTable"));
 		},
 
@@ -203,10 +253,15 @@ sap.ui.define([
 						oView.setBusy(true);
 						oTransactionManager.submit({
 							success: function(ok){
-								that._toShowMode();
+                                //midTable 리프레쉬
+                                //이유 : __entity에 부가정보들이 부족(Update, Delete시 Error나옴.).
+                                //that._refreshMidTable();
+
+                                that.getView().byId('pageEditButton').setPressed(false);
+
 								oView.setBusy(false);
                                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-								MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
+								MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
 							}
 						});
 					};
@@ -219,36 +274,8 @@ sap.ui.define([
 		 * Event handler for cancel page editing
 		 * @public
 		 */
-        onPageCancelEditButtonPress: function(){
-            var oView = this.getView(),
-                oMasterModel = this.getModel("master"),
-                oDetailsModel = this.getModel("details"),
-				cancelEdit = function(){
-					if(this.getModel("midObjectViewModel").getProperty("/isAddedMode") == true){
-						this.onPageNavBackButtonPress.call(this);
-					}else{
-                        //Restore the data
-                        oMasterModel.setData(this._oCloneMasterModelData);
-                        
-                        //var sDetailModelEntityName = this.getModel("details").getProperty("/entityName");
-                        //oDetailsModel.setProperty("/"+sDetailModelEntityName, this._oCloneDetailsModelData);
-
-						this.validator.clearValueState(this.byId("page"));
-						this._toShowMode();
-					}
-				}.bind(this);
-				
-			if(oMasterModel.isChanged() || oDetailsModel.isChanged()) {
-				MessageBox.confirm(this.getModel("I18N").getText("/NCM00007"), {
-					title : "Comfirmation",
-					initialFocus : sap.m.MessageBox.Action.CANCEL,
-					onClose : function(sButton) {
-						cancelEdit();
-					}
-				});
-            }else{
-				cancelEdit();
-			}
+        onPageCancelEditButtonPress: function(oEvent){
+            
 
         },
 
@@ -261,7 +288,10 @@ sap.ui.define([
 				var oMasterModel = this.getModel("master");
 				var oDetailsModel = this.getModel("details");
 				var sTenantId = oMasterModel.getProperty("/tenant_id");
-				var sControlOPtionCode = oMasterModel.getProperty("/control_option_code");
+                var sControlOPtionCode = oMasterModel.getProperty("/control_option_code");
+
+                this._sTenantId = sTenantId;
+                this._sControlOptionCode = sControlOPtionCode;
                 
                 var sEntityName = oDetailsModel.getProperty("/entityName");
                 var oDetailsData = oDetailsModel.getProperty("/"+sEntityName);
@@ -279,9 +309,11 @@ sap.ui.define([
 		 */
 		_onRoutedThisPage: function(oEvent){
 			var oArgs = oEvent.getParameter("arguments"),
-				oView = this.getView();
+                oView = this.getView(),
+                beforeLayout = oArgs.beforeLayout;
 			this._sTenantId = oArgs.tenantId;
-			this._sControlOptionCode = oArgs.controlOptionCode;
+            this._sControlOptionCode = oArgs.controlOptionCode;
+            
 
 			if(oArgs.tenantId == "new" && oArgs.controlOptionCode == "code"){
 				//It comes Add button pressed from the before page.
@@ -313,12 +345,14 @@ sap.ui.define([
 					"local_create_dtm": new Date(),
 					"local_update_dtm": new Date()
 				}, "/ControlOptionDetails");
-				this._toEditMode();
+                this._toEditMode();
+                //편집버튼 비활성화
+                this.byId("pageEditButton").setEnabled(false);
 			}else{
 				this.getModel("midObjectViewModel").setProperty("/isAddedMode", false);
 				
 				var sObjectPath = "/ControlOptionMasters(tenant_id='" + this._sTenantId + "',control_option_code='" + this._sControlOptionCode + "')";
-				var oMasterModel = this.getModel("master");
+                var oMasterModel = this.getModel("master");
 				oView.setBusy(true);
 				oMasterModel.setTransactionModel(this.getModel());
 				oMasterModel.read(sObjectPath, {
@@ -339,40 +373,48 @@ sap.ui.define([
 						oView.setBusy(false);
 					}
 				});
-				this._toShowMode();
+                this._toShowMode();
+                //this.getView().byId('pageEditButton').setPressed(false);
+                //편집버튼 활성화
+                this.byId("pageEditButton").setEnabled(true);
 			}
-			oTransactionManager.setServiceModel(this.getModel());
+            oTransactionManager.setServiceModel(this.getModel());
+            this.getView().byId('pageEditButton').setEditMode(false);
 		},
 
 		_toEditMode: function(){
-			var FALSE = false;
+            var VIEW_MODE = false;
             this._showFormFragment('TemplateMidObject_Edit');
-			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("pageDeleteButton").setEnabled(FALSE);
-			this.byId("pageSaveButton").setEnabled(!FALSE);
-			this.byId("pageNavBackButton").setEnabled(FALSE);
+			//this.byId("page").setSelectedSection("pageSectionMain");
+			this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
+			this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
+            this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
+            
+            this.getModel("master").setProperty("/__metadata/_row_editable_", !VIEW_MODE);
 
-			this.byId("midTableAddButton").setEnabled(!FALSE);
-			this.byId("midTableDeleteButton").setEnabled(!FALSE);
-			this.byId("midTableSearchField").setEnabled(FALSE);
+			this.byId("midTableAddButton").setEnabled(!VIEW_MODE);
+			this.byId("midTableDeleteButton").setEnabled(!VIEW_MODE);
+			this.byId("midTableSearchField").setEnabled(VIEW_MODE);
 			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
-			this.byId("midTable").getColumns()[0].setVisible(!FALSE);
+			this.byId("midTable").getColumns()[0].setVisible(!VIEW_MODE);
 			this._bindMidTable(this.oEditableTemplate, "Edit");
 		},
 
 		_toShowMode: function(){
-			var TRUE = true;
+			var VIEW_MODE = true;
 			this._showFormFragment('TemplateMidObject_Show');
-			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("pageDeleteButton").setEnabled(TRUE);
-			this.byId("pageSaveButton").setEnabled(!TRUE);
-			this.byId("pageNavBackButton").setEnabled(TRUE);
+			//this.byId("page").setSelectedSection("pageSectionMain");
+			this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
+			this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
+            this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
+            
+            this.getModel("master").setProperty("/__metadata/_row_editable_", VIEW_MODE);
 
-			this.byId("midTableAddButton").setEnabled(!TRUE);
-			this.byId("midTableDeleteButton").setEnabled(!TRUE);
-			this.byId("midTableSearchField").setEnabled(TRUE);
+			this.byId("midTableAddButton").setEnabled(!VIEW_MODE);
+			this.byId("midTableDeleteButton").setEnabled(!VIEW_MODE);
+			this.byId("midTableSearchField").setEnabled(VIEW_MODE);
 			this.byId("midTable").setMode(sap.m.ListMode.None);
-			this.byId("midTable").getColumns()[0].setVisible(!TRUE);
+			this.byId("midTable").getColumns()[0].setVisible(!VIEW_MODE);
 			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
 		},
 
@@ -445,6 +487,23 @@ sap.ui.define([
 						required: true
 					})
 				]
+            });
+        },
+        
+        _refreshMidTable: function() {
+            var oView = this.getView();
+			
+            oView.setBusy(true);
+            var oDetailsModel = this.getModel("details");
+            oDetailsModel.setTransactionModel(this.getModel());
+            oDetailsModel.read("/ControlOptionDetails", {
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                    new Filter("control_option_code", FilterOperator.EQ, this._sControlOptionCode),
+                ],
+                success: function(oData){
+                    oView.setBusy(false);
+                }
             });
 		},
 

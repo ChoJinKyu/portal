@@ -9,10 +9,12 @@ sap.ui.define([
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
-    "sap/m/MessageToast"
+    "sap/m/MessageToast",
+    "sap/ui/model/Sorter",
+    "cm/util/control/ui/CmDialogHelp"
 ], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter, 
         TablePersoController, MainListPersoService, 
-        Filter, FilterOperator, MessageBox, MessageToast) {
+        Filter, FilterOperator, MessageBox, MessageToast, Sorter, CmDialogHelp) {
 	"use strict";
 
 	return BaseController.extend("xx.templateFlexibleColumns.controller.TemplateMainList", {
@@ -144,7 +146,7 @@ sap.ui.define([
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenantId: oRecord.tenant_id,
-				controlOptionCode: oRecord.control_option_code
+                controlOptionCode: oRecord.control_option_code
 			});
 
             if(oNextUIState.layout === "TwoColumnsMidExpanded"){
@@ -156,7 +158,30 @@ sap.ui.define([
 			var oParent = oItem.getParent();
 			// store index of the item clicked, which can be used later in the columnResize event
 			this.iIndex = oParent.indexOfItem(oItem);
-		},
+        },
+        
+        onCmInputWithCodeValuePress: function(){
+            if(!this.oCmDialogHelp){
+                this.oCmDialogHelp = new CmDialogHelp({
+                    title: "{I18N>/PLANT_NAME}",
+                    keyFieldLabel : "{I18N>/PLANT_CODE}",
+                    textFieldLabel : "{I18N>/PLANT_NAME}",
+                    keyField : "bizdivision_code",
+                    textField : "bizdivision_name",
+                    items: {
+                        sorters: [
+                            new Sorter("bizdivision_name", false)
+                        ],
+                        serviceName: "cm.util.OrgService",
+                        entityName: "Division"
+                    }
+                });
+                this.oCmDialogHelp.attachEvent("apply", function(oEvent){
+                    this.byId("cmInputWithCodeDialog").setValue(oEvent.getParameter("item").bizdivision_code);
+                }.bind(this));
+            }
+            this.oCmDialogHelp.open();
+        },
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -179,7 +204,8 @@ sap.ui.define([
 		_applySearch: function(aSearchFilters) {
 			var oView = this.getView(),
 				oModel = this.getModel("list");
-			oView.setBusy(true);
+            oView.setBusy(true);
+            
 			oModel.setTransactionModel(this.getModel());
 			oModel.read("/ControlOptionMasters", {
 				filters: aSearchFilters,

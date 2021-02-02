@@ -14,16 +14,11 @@ sap.ui.define([
                 textDefault: { type: "string", group: "Appearance" },
                 textPressed: { type: "string", group: "Appearance" },
                 pressed: { type: "boolean", group: "Misc", defaultValue: false },
-            },
-            events: {
-                editPress: {},
-                cancelPress: {},
             }
         },
 
         constructor: function () {
             Parent.prototype.constructor.apply(this, arguments);
-            this.attachPress(this._onPress);
 
 			new Multilingual().attachEvent("ready", function(oEvent){
 				var oi18nModel = oEvent.getParameter("model");
@@ -39,26 +34,15 @@ sap.ui.define([
             }.bind(this));
         },
 
-        _onPress: function(oEvent){
-            if(this.getProperty("pressed") === true){
-                this.setPressed(false);
-            }else{
-                this.setPressed(true);
-            }
-        },
-
-        setPressed: function(pressed){
+        setEditMode: function(pressed){
             if(pressed){
                 this.setProperty("text", this.getProperty("textPressed"));
                 this.setProperty("pressed", pressed);
-                this.fireEvent("editPress");
             }else{
-                var result = this.fireEvent("cancelPress", true);
-                if(result){
-                    this.setProperty("text", this.getProperty("textDefault"));
-                    this.setProperty("pressed", pressed);
-                }
+                this.setProperty("text", this.getProperty("textDefault"));
+                this.setProperty("pressed", pressed);
             }
+            
         }
 
     });
