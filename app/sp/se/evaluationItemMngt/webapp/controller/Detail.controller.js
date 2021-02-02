@@ -182,7 +182,7 @@ sap.ui.define([
                     success : function(oData){
                         var oResult = oData.results[0];
                         if(!oResult){
-                            oView.setBusy(false);
+                            oAppView.setBusy(false);
                             return;
                         }
 
