@@ -21,9 +21,6 @@ namespace sp;
 @path : '/sp.makerViewService'
 service makerViewService {
 
-    //Table
-    // entity MakerCountryManagement @(title : '제조사 국가관리') as projection on mkCntry.Sm_Country_Mst;
-
     // View
     @readonly
     view MakerView @(title : '제조사 View') as select from mkCalView.Sm_Maker_Cal_View;
@@ -33,6 +30,9 @@ service makerViewService {
 
     @readonly
     view MakerRegistrationRequestView @(title : '제조사 등록 신청 View') as select from mkRegReqCalView.Sm_Maker_Reg_Req_Cal_View;
+
+    @readonly
+    view MakerCountryManagement @(title : '제조사 국가관리') as select from mkCntry.Sm_Country_Mst;
 
     //Maker Master View
     //Maker Status View
