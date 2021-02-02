@@ -42,6 +42,7 @@ sap.ui.define([
     var pOrg_code  = "";
     var pOperation_unit_code = "";
     var pTempType = "";
+    var pDrillState ="";
     var oTransactionManager;
     var that;
 	return BaseController.extend("pg.vp.vpMgt.controller.MidObject", {
@@ -219,7 +220,7 @@ sap.ui.define([
             var p_operation_unit_code = row.operation_unit_code;
             var p_tenat_id = row.tenant_id;
             var p_temp_type = row.temp_type;
-
+            var p_drill_state = row.drill_state;
 
             
 
@@ -232,6 +233,7 @@ sap.ui.define([
             pOrg_code  = p_org_code;
             pOperation_unit_code = p_operation_unit_code;
             pTempType = p_temp_type;
+            pDrillState = p_drill_state;
 
             // alert( "pVendorPool   : " + pVendorPool + 
             //        "pTenantId     : " + pTenantId);
@@ -256,6 +258,7 @@ sap.ui.define([
                 orgCode: pOrg_code,
                 operationUnitCode: pOperation_unit_code,
                 temptype : pTempType,
+                drill: pDrillState,
                 target : "NEXT"
             });    
 
@@ -314,6 +317,7 @@ sap.ui.define([
             this._sOrgCode = oArgs.orgCode;
             this._sOperationUnitCode = oArgs.operationUnitCode;
             this._sTempType = oArgs.temptype;
+            this._sDrillState = oArgs.drill;
             
 
             // alert("_sTenantId : " + this._sTenantId + 
@@ -360,6 +364,7 @@ sap.ui.define([
                 orgCode: this._sOrgCode,
                 operationUnitCode: this._sOperationUnitCode,
                 temptype : this._sTempType,
+                drill : this._sDrillState,
                 target : "NEXT"
             });                  
 			// if(oArgs.tenantId == "new" && oArgs.moldId == "code"){

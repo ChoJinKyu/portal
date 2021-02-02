@@ -95,8 +95,8 @@
                                         <layout:GridData span="XL12 L12 M12 S12" />
                                     </layoutData>                                                                                                                              
                                 </VBox> 
-                                <core:Title text="{I18N>/DETAIL_INFORMATION}" />                        
-                                <VBox>
+                                <core:Title text="{I18N>/DETAIL_INFORMATION}" id="v_derail_information" />                        
+                                <VBox id="v_general_repr_department_code">
                                     <Label text="{I18N>/DEPARTMENT}" design="Bold" required="true"/>
                                         <lib-m:CodePicker id="general_repr_department_code"
                                             placeholder="Enter a department name"
@@ -117,7 +117,7 @@
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
                                 </VBox>
-                                <VBox>
+                                <VBox id="v_general_industry_class_code">
                                     <Label text="{I18N>/INDUSTRIAL_CLASS}" design="Bold"/> 
                                         <ComboBox   id="general_industry_class_code"
                                                     items="{
@@ -172,7 +172,7 @@
                                     </layoutData> 
                                 </VBox>                                
                                 
-                                <VBox>
+                                <VBox id="v_general_regular_evaluation_flag">
                                     <Label text="{I18N>/EVALUATION}" design="Bold" required="true"/> 
                                         <Switch id="general_regular_evaluation_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
@@ -183,7 +183,7 @@
                                         <layout:GridData span="XL1 L1 M1 S12" />
                                     </layoutData> 
                                 </VBox>
-                                <VBox>
+                                <VBox id="v_general_maker_material_code_mngt_flag">
                                     <Label text="Maker P/N" design="Bold" required="true" width="8rem"/> 
                                         <Switch id="general_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
@@ -194,7 +194,7 @@
                                         <layout:GridData span="XL1 L1 M1 S12" />
                                     </layoutData> 
                                 </VBox>                                  
-                                <VBox>
+                                <VBox id="v_general_sd_exception_flag">
                                     <Label text="{I18N>/SD_FLAG}" design="Bold" required="true"/> 
                                         <Switch id="general_sd_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
@@ -205,7 +205,7 @@
                                         <layout:GridData span="XL1 L1 M1 S12" />
                                     </layoutData> 
                                 </VBox> 
-                                <VBox>
+                                <VBox id="v_general_vendor_pool_apply_exception_flag">
                                     <Label text="{I18N>/VP_EXCEPTION_FLAG}" design="Bold" required="true" width="8rem"/> 
                                         <Switch id="general_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
@@ -216,7 +216,7 @@
                                         <layout:GridData span="XL1 L1 M1 S12" />
                                     </layoutData> 
                                 </VBox>                                                                       
-                                <VBox>
+                                <VBox id="v_general_equipment_grade_code">
                                     <Label text="{I18N>/REVIEW_GRADE}" design="Bold"/> 
                                         <HBox>
                                             <ComboBox id="general_equipment_grade_code"
@@ -236,7 +236,7 @@
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
                                 </VBox>
-                                <VBox>
+                                <VBox id="v_general_equipment_type_code">
                                     <Label text="{I18N>/EQUIPMENT_TYPE}" design="Bold"/> 
                                         <HBox>
                                             <ComboBox id="general_equipment_type_code"
@@ -256,7 +256,7 @@
                                     </layoutData> 
                                 </VBox>
 
-                                <VBox>
+                                <VBox id="v_general_dom_oversea_netprice_diff_rate">
                                     <Label text = "{I18N>/OVERSEA_NET_PRICE_DIFF_RATE}" design="Bold"/> 
                                     <HBox>
                                         <Input id="general_dom_oversea_netprice_diff_rate"></Input>
@@ -268,7 +268,7 @@
                                 </VBox>
 
 
-                                <VBox>
+                                <VBox id="v_general_domestic_net_price_diff_rate">
                                     <Label text="{I18N>/DOMESTIC_NET_PRICE_DIFF_RATE}" design="Bold"/> 
                                     <HBox>
                                         <Input id="general_domestic_net_price_diff_rate"></Input>
@@ -287,7 +287,7 @@
 
 			<uxap:ObjectPageSection titleUppercase="false" title="Supplier List ({= ${suplist>/VpSupplierDtlView}.length || 0})">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection id="pageSubSection2">
+					<uxap:ObjectPageSubSection id="pageSubSection2" >
                     <!--20201223 : table start -->
                     <VBox>
                         <table:Table id="sppListTbl" selectionMode="MultiToggle"
@@ -529,7 +529,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false"  title="Manager list  ({= ${manlist>/vPSearchMngListView}.length || 0})">
+			<uxap:ObjectPageSection titleUppercase="false"  title="Manager list  ({= ${manlist>/vpManagerDtlView}.length || 0})">
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection id="pageSubSection4">
                         <!--20201223 : table start -->
@@ -540,7 +540,7 @@
 
                             <table:extension>
                                 <OverflowToolbar>
-                                    <Title text="{I18N>/LIST} ({= ${manlist>/vPSearchMngListView}.length || 0})" level="H2"/>
+                                    <Title text="{I18N>/LIST} ({= ${manlist>/vpManagerDtlView}.length || 0})" level="H2"/>
                                     <ToolbarSpacer/>
                                     <Button id="mngListtAdd"    type="Emphasized" text="{I18N>/ADDITION}"        press=".managerAddRow"   enabled="{mode>/viewFlag}" />
                                     <Button id="mngListDel"     type="Emphasized" text="{I18N>/DELETE}"     press=".managerDelRow"   enabled="{mode>/viewFlag}" />                                    
