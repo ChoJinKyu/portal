@@ -26,7 +26,7 @@ service PrReviewMgtV4Service {
         buyerEmpno : String(30);
         buyerDepartmentCode : String(30);
         processedReason : String(1000);
-        userId : String(255);
+        employeeNumber : String(30);
     };
 
     /* PR Review 재작성 요청 및 마감, 구매담당자 변경 */
