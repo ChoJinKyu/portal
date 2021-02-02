@@ -35,7 +35,6 @@ BEGIN
 	DECLARE v_buyer_department_code NVARCHAR(50);
     DECLARE v_remain_quantity DECIMAL := 0;
 
-
     -- Cursor 선언
     DECLARE CURSOR c_pr_item FOR
         SELECT *
@@ -122,7 +121,7 @@ BEGIN
         WHERE  PM.TENANT_ID      = l_pr_item.TENANT_ID
         AND    PM.COMPANY_CODE   = l_pr_item.COMPANY_CODE
         AND    PM.PR_NUMBER      = l_pr_item.PR_NUMBER
-        AND    PM.PR_CREATE_STATUS_CODE NOT IN ('30', '50')
+        AND    PM.PR_CREATE_STATUS_CODE NOT IN ('30', '50') 
         ;
 
         IF v_sql_rowcnt > 0 THEN
@@ -461,6 +460,6 @@ BEGIN
     /**** Business Logic - End ****/
 
     --COMMIT;
-    O_MSG_TBL = SELECT 'OK' RETURN_CODE, 'Successfully Saved.' RETURN_MSG FROM DUMMY;
+    O_MSG_TBL = SELECT 'OK' RETURN_CODE, 'It has been processed successfully.' RETURN_MSG FROM DUMMY;
 
 END;
