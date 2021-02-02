@@ -90,6 +90,8 @@ sap.ui.define([
                 });
             }
 
+            this._onChangeCompany();
+
             this.oSearchUIT = new CodeComboBox({
                 showSecondaryValues:true,
                 useEmpty:true,
@@ -147,13 +149,13 @@ sap.ui.define([
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 }));
-            aFiltersControl.push(new VBox({
-                    items: [
-                        new Label({ text: this.getModel("I18N").getText("/UIT") }),  //UIT
-                        this.oSearchUIT
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                }));
+            // aFiltersControl.push(new VBox({
+            //         items: [
+            //             new Label({ text: this.getModel("I18N").getText("/UIT") }),  //UIT
+            //             this.oSearchUIT
+            //         ],
+            //         layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+            //     }));
             // aFiltersControl.push(new VBox({
             //         items: [
             //             new Label({ text: this.getModel("I18N").getText("/MATERIAL_DESC")}),    // 자재내역
@@ -244,7 +246,7 @@ sap.ui.define([
         },
 
         _onChangeCompany: function (oEvent) {
-            var sSelectedCompany = oEvent.getSource().getSelectedKey();
+            var sSelectedCompany = oEvent ? oEvent.getSource().getSelectedKey() : this.getProperty("companyCode");
             var aPurOrg = _oPurOrg[sSelectedCompany];
             //var oPlantComboBox = this.getParent().getParent().getAggregation("fields")[1].getAggregation("items")[1];
             var oPlantComboBox = _that.oSearchOrg;

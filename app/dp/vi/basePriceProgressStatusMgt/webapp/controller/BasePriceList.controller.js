@@ -249,6 +249,17 @@ sap.ui.define([
                             }
                         }
 
+                        // approval_number 로 desc 
+                        aList.sort(function(a, b) {
+                            if( a.approval_number < b.approval_number) {
+                                return 1;
+                            };
+                            if( a.approval_number > b.approval_number) {
+                                return -1;
+                            };
+                            return 0;
+                        })
+
                         oListModel.setData(aList);
                         oView.setBusy(false);
                     });

@@ -40,7 +40,7 @@
                 <!-- Requester 시작 -->
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
                     <ObjectStatus title="{I18N>/APPROVAL_NUMBER}" text="{detailModel>/approval_number}"/>
-                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/requestor_local_nm}"/>
+                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/requestor_local_nm} {detailModel>/requestor_job_title} / {detailModel>/requestor_dept_local_nm}"/>
                     <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/request_date', formatter: '.onChangeDateFormat'}"/>
                 </layout:VerticalLayout>
                 <!-- Requester 끝 -->
@@ -54,11 +54,13 @@
 
                 <!-- Process 시작 -->
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
-					<Label text="{I18N>/PROCESS} : "/>
+                    <HBox>
+					    <Label text="{I18N>/PROCESS} : "/>
+                    </HBox>
                     <HBox>
                         <co:MicroProcessFlow>
                             <co:content>
-                                <co:MicroProcessFlowItem 
+                               <!--  <co:MicroProcessFlowItem 
                                     state="{detailViewModel>/processFlowStates/0}" 
                                     stepWidth="5rem" 
                                     icon="{detailViewModel>/processFlowIcons/0}" />
@@ -73,16 +75,48 @@
                                 <co:MicroProcessFlowItem 
                                     state="{detailViewModel>/processFlowStates/3}"
                                     stepWidth="5rem"
-                                    icon="{detailViewModel>/processFlowIcons/3}" />
+                                    icon="{detailViewModel>/processFlowIcons/3}" /> -->
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/0}" color="{detailViewModel>/processFlowColors/0}"/>
+                                            <Text text="{rootModel>/processList/0/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/1}" color="{detailViewModel>/processFlowColors/1}"/>
+                                            <Text text="{rootModel>/processList/1/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/2}" color="{detailViewModel>/processFlowColors/2}"/>
+                                            <Text text="{rootModel>/processList/2/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/3}" color="{detailViewModel>/processFlowColors/3}"/>
+                                            <Text text="{rootModel>/processList/3/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
                             </co:content>
                         </co:MicroProcessFlow>
                     </HBox>
-                    <HBox>
+                    <!-- <HBox>
                         <Text text="{rootModel>/processList/0/code_name}" width="4rem" />
                         <Text text="{rootModel>/processList/1/code_name}" width="6rem" textAlign="Center" />
                         <Text text="{rootModel>/processList/2/code_name}" width="7rem" textAlign="Center" />
                         <Text text="{rootModel>/processList/3/code_name}" width="4rem" textAlign="Center" />
-                    </HBox>
+                    </HBox> -->
 				</layout:VerticalLayout>
                 <!-- Process 시작 -->
 			</FlexBox>
