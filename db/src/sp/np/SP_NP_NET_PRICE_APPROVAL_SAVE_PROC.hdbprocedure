@@ -1,26 +1,43 @@
 PROCEDURE SP_NP_NET_PRICE_APPROVAL_SAVE_PROC (
-	 IN   APPROVAL_NUMBER   NVARCHAR(20)
+	 IN   I_APPROVAL_NUMBER NVARCHAR(20)
     ,IN   I_DTL				TABLE (
     							 DTL_SEQ         NVARCHAR(20)
                             )
                             
 	,IN   I_USER_ID 		NVARCHAR(255)
-    ,OUT  O_MSG				TABLE (
-    							 RETURN_CODE     NVARCHAR(2)
-                            	,RETURN_MSG      NVARCHAR(1000)
-                            )
+    ,OUT  O_RETURN_CODE     NVARCHAR(5)
+    ,OUT  O_RETURN_MSG      NVARCHAR(1000)
 )
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 AS
 BEGIN
+
+    /* 사용자 정의 Exception */
+    DECLARE V_USER_EXCEPTION CONDITION FOR SQL_ERROR_CODE 19999;
+
+    /* 사용자 정의 Exception시, 종료 처리 : 이전 Exception Catch 부분에서 결과 메시지 등록 됨. */
+    DECLARE EXIT HANDLER FOR V_USER_EXCEPTION
+    BEGIN
+    	
+    END;
+
+    /* 사용자 정의 이외 Exception 발생시 처리 : 발생될 가능성 낮음. */
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-    	:O_MSG.INSERT(('NG', '단가품의 저장 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')'), 1);
+        O_RETURN_CODE = 'NG999';
+        O_RETURN_MSG  = '정의되지 않은 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
     END;
     
     BEGIN
-        DECLARE EXIT HANDLER FOR SQLEXCEPTION RESIGNAL SET MESSAGE_TEXT = '공통 결재 마스터 등록 오류';	-- 결재 마스터 등록하면서, 오류 발생 함.
+
+        /* 해당 Block에서 Exception 발생시, 사용자 정의 Exception 발생 시킴. */
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            O_RETURN_CODE = 'NG001';
+            O_RETURN_MSG  = '단가품의 저장 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
+            SIGNAL V_USER_EXCEPTION;
+        END;
 
 		INSERT INTO CM_APPROVAL_MST A(
 			  A.TENANT_ID
@@ -44,19 +61,19 @@ BEGIN
 			, A.SYSTEM_CREATE_DTM
 			, A.SYSTEM_UPDATE_DTM
 		) VALUES (
-			  'L2100'     -- A.TENANT_ID
-			, '100990'    -- A.APPROVAL_NUMBER
-			, NULL        -- A.LEGACY_APPROVAL_NUMBER
+			  'L2100'               -- A.TENANT_ID
+			, :I_APPROVAL_NUMBER    -- A.APPROVAL_NUMBER
+			, NULL                  -- A.LEGACY_APPROVAL_NUMBER
 			, 'LGCKR'     -- A.COMPANY_CODE
 			, 'PL'        -- A.ORG_TYPE_CODE
 			, '1000'      -- A.ORG_CODE
-			, 'NULL'      -- A.CHAIN_CODE
+			, 'SP'        -- A.CHAIN_CODE
 			, 'NPA01'    -- A.APPROVAL_TYPE_CODE
 			, 'Procedure Test'    -- A.APPROVAL_TITLE
 			, 'Procedure Test....'    -- A.APPROVAL_CONTENTS
-			, 'S01'    -- A.APPROVE_STATUS_CODE
+			, 'DR'    -- A.APPROVE_STATUS_CODE
 			, :I_USER_ID    -- A.REQUESTOR_EMPNO
-			, NOW()  -- A.REQUEST_DATE
+			, TO_CHAR(NOW(),'YYYYMMDD')  -- A.REQUEST_DATE
 			, NULL    -- A.ATTCH_GROUP_NUMBER
             , NOW()
             , NOW()
@@ -68,7 +85,13 @@ BEGIN
     END;
 
     BEGIN
-        DECLARE EXIT HANDLER FOR SQLEXCEPTION RESIGNAL SET MESSAGE_TEXT = '단가품의 마스터 등록 오류';	-- 결재 마스터 등록하면서, 오류 발생 함.
+
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            O_RETURN_CODE = 'NG002';
+            O_RETURN_MSG  = '단가품의 마스터 등록 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
+            SIGNAL V_USER_EXCEPTION;
+        END;
 
 		INSERT INTO SP_NP_NET_PRICE_APPROVAL_MST A(
 			A.TENANT_ID
@@ -98,7 +121,7 @@ BEGIN
 			, 'LGCKR'     -- A.COMPANY_CODE
 			, 'PL'        -- A.ORG_TYPE_CODE
 			, '1000'      -- A.ORG_CODE
-			, '100990'    -- A.APPROVAL_NUMBER
+			, :I_APPROVAL_NUMBER    -- A.APPROVAL_NUMBER
 			, NULL        -- A.NET_PRICE_DOCUMENT_TYPE_CODE
 			, NULL        -- A.NET_PRICE_SOURCE_CODE
 			, NULL        -- A.QUOTATION_NUMBER
@@ -119,14 +142,13 @@ BEGIN
 		);
     END;
     
-    
-    
-    
     BEGIN
+
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
-            :O_MSG.INSERT(('NG', '단가품의 상세 등록 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')'), 1);
-            RESIGNAL;
+            O_RETURN_CODE = 'NG003';
+            O_RETURN_MSG  = '단가품의 상세 등록 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
+            SIGNAL V_USER_EXCEPTION;
         END;
        
         INSERT INTO SP_NP_NET_PRICE_APPROVAL_DTL A (
@@ -148,7 +170,7 @@ BEGIN
 			  , 'LGCKR'     -- A.COMPANY_CODE
 			  , 'PL'        -- A.ORG_TYPE_CODE
 			  , '1000'      -- A.ORG_CODE
-			  , '100990'    -- A.APPROVAL_NUMBER
+			  , :I_APPROVAL_NUMBER   -- A.APPROVAL_NUMBER
 		      , DTL.DTL_SEQ
               , NOW()
               , NOW()
@@ -159,7 +181,8 @@ BEGIN
           FROM :I_DTL  DTL
         ;
     END;
-   
-    :O_MSG.INSERT(('OK', 'Successfully Saved.'), 1);
+
+    O_RETURN_CODE = 'OK';
+    O_RETURN_MSG  = 'Successfully Saved.';
     	    	                                
 END;
