@@ -66,6 +66,7 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "assetTypeCodeList"); // Asset Type
             this.setModel(oViewModel, "budgetExecutionApprovalView"); //change
             this.getRouter().getRoute("budgetExecutionApproval").attachPatternMatched(this._onObjectMatched, this);//change  
+            this.process.setDrawProcessUI(this, "BudgetExecutionPress" , "A", 1);
         },
 
         /* =========================================================== */

@@ -23,12 +23,12 @@ sap.ui.define([
     'sap/m/SearchField',
     "sap/m/Token",
     "dp/md/util/controller/DeptSelection", 
-    "dp/md/util/controller/ProcessUI", 
+
 
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
-    , ApprovalBaseController, MoldItemSelection , SearchField , Token , DeptSelection , ProcessUI
+    , ApprovalBaseController, MoldItemSelection , SearchField , Token , DeptSelection 
 ) {
     "use strict";
     /**
@@ -49,7 +49,6 @@ sap.ui.define([
 
         deptSelection : new DeptSelection(),
 
-        process : new ProcessUI(), 
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */

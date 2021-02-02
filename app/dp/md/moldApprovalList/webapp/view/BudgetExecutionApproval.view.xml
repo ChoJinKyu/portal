@@ -90,8 +90,8 @@
                       <HBox>
                         <Title text="{I18N>/PROCESS}"/>
                     </HBox>
-                   <HBox>
-                        <sc:MicroProcessFlow>
+                   <HBox id="BudgetExecutionPress" >
+                        <!-- <sc:MicroProcessFlow>
 	                        <sc:content>
                                 <sc:MicroProcessFlowItem stepWidth="2rem" >
                                     <sc:customControl>
@@ -166,7 +166,7 @@
                                     </sc:customControl>
                                 </sc:MicroProcessFlowItem>
                             </sc:content>
-                        </sc:MicroProcessFlow>
+                        </sc:MicroProcessFlow> -->
                     </HBox>
                 </layout:VerticalLayout>
 			</FlexBox>
