@@ -120,7 +120,7 @@ song scrolltoload growingScrollToLoad growing sticky growingThreshold inset
                         </Column>    
                         <Column hAlign="Center" >
                             <header>
-                                <Label text="{I18N>/AMOUNT}"/>                            
+                                <Label text="{I18N>/PRICE}"/>                            
                             </header>
                         </Column>                                                                                                 
                     </columns>
@@ -138,7 +138,7 @@ song scrolltoload growingScrollToLoad growing sticky growingThreshold inset
                                             pattern: 'yyyy/MM/dd'
                                         }                                        
                                     }"/> 
-                                <Text text="{mIMaterialCostInformationView>amount}"/>
+                                <Text text="{mIMaterialCostInformationView>price}"/>
                             </cells>
                         </ColumnListItem>
                     </items>
