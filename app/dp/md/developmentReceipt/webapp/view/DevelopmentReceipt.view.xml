@@ -21,6 +21,103 @@
                 <f:heading>
                     <Title text="{i18n>appTitle}" />
                 </f:heading>
+                <f:expandedContent>
+                    <HBox>
+                        <Text text=""/>
+                    </HBox>
+                    <HBox>
+                        <Title text="Process"/>
+                    </HBox>
+                    <HBox>
+                        <sc:MicroProcessFlow>
+                            <sc:content>
+                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                            </sc:content>
+                        </sc:MicroProcessFlow>
+                    </HBox>
+                    <HBox>
+                        <Text text=" PR" renderWhitespace="true" />
+                        <Text text="Budget" width="6em" textAlign="Right" />
+                        <Text text="RFQ" width="6em" textAlign="Center" />
+                        <Text text="   Mold&#10;   Spec" renderWhitespace="true" />
+                        <Text text="Purchase&#10; Contract" width="8em" textAlign="Center" />
+                        <Text text="PO" renderWhitespace="true" />
+                        <Text text="RCV" width="5em" textAlign="Right" />
+                        <Text text="Lease&#10;Contract" width="7.5em" textAlign="Center" />
+                        <Text text="Invoice" />
+                    </HBox>
+                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="{I18N>/COMPANY}" labelFor="searchCompanyE" required="true"></Label>
+                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey=""
+                                        items="{
+                                            path: 'org>/Company',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                            ],
+                                            sorter: { path: 'company_code'}
+                                        }"
+                                        selectionFinish="handleSelectionFinishComp" required="true">
+                                    <items>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/PLANT}" labelFor="searchDivisionE" required="true"></Label>
+                                <MultiComboBox  id="searchDivisionE" width="100%" selectedKey="" 
+                                        items="{
+                                            path: 'purOrg>/Pur_Operation_Org',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
+                                                {path: 'org_type_code', operator: 'EQ', value1: 'AU'}
+                                            ],
+                                            sorter: { path: 'org_code'}
+                                        }"
+                                        selectionFinish="handleSelectionFinishDiv" required="true">
+                                    <items>
+                                        <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}] {purOrg>org_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Creation {I18N>/DATE}" labelFor="searchCreationDateE" required="true"></Label>
+                                    <DateRangeSelection id="searchCreationDateE" width="100%" change="creationDateChange" required="true"/>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/STATUS}"></Label>
+                                <SegmentedButton id="searchStatusE" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
+                                    <items>
+                                        <SegmentedButtonItem text="All" key="" />
+                                        <SegmentedButtonItem text="Received" key="DEV_RCV" width="5em" />
+                                        <SegmentedButtonItem text="Unreceived" key="DEV_REQ" width="7em" />
+                                    </items>
+                                </SegmentedButton>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </f:expandedContent>
                 <f:snappedContent>
                     <HBox>
                         <Text text=""/>
@@ -171,103 +268,6 @@
                         </form:content>
                     </form:SimpleForm>
                 </f:snappedContent>
-                <f:expandedContent>
-                    <HBox>
-                        <Text text=""/>
-                    </HBox>
-                    <HBox>
-                        <Title text="Process"/>
-                    </HBox>
-                    <HBox>
-                        <sc:MicroProcessFlow>
-                            <sc:content>
-                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                            </sc:content>
-                        </sc:MicroProcessFlow>
-                    </HBox>
-                    <HBox>
-                        <Text text=" PR" renderWhitespace="true" />
-                        <Text text="Budget" width="6em" textAlign="Right" />
-                        <Text text="RFQ" width="6em" textAlign="Center" />
-                        <Text text="   Mold&#10;   Spec" renderWhitespace="true" />
-                        <Text text="Purchase&#10; Contract" width="8em" textAlign="Center" />
-                        <Text text="PO" renderWhitespace="true" />
-                        <Text text="RCV" width="5em" textAlign="Right" />
-                        <Text text="Lease&#10;Contract" width="7.5em" textAlign="Center" />
-                        <Text text="Invoice" />
-                    </HBox>
-                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                        <form:content>
-                            <VBox>
-                                <Label text="{I18N>/COMPANY}" labelFor="searchCompanyE" required="true"></Label>
-                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey=""
-                                        items="{
-                                            path: 'org>/Company',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
-                                            ],
-                                            sorter: { path: 'company_code'}
-                                        }"
-                                        selectionFinish="handleSelectionFinishComp" required="true">
-                                    <items>
-                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
-                                    </items>
-                                </MultiComboBox>
-                                <layoutData>
-                                    <layout:GridData span="XL3 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="{I18N>/PLANT}" labelFor="searchDivisionE" required="true"></Label>
-                                <MultiComboBox  id="searchDivisionE" width="100%" selectedKey="" 
-                                        items="{
-                                            path: 'purOrg>/Pur_Operation_Org',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
-                                                {path: 'org_type_code', operator: 'EQ', value1: 'AU'}
-                                            ],
-                                            sorter: { path: 'org_code'}
-                                        }"
-                                        selectionFinish="handleSelectionFinishDiv" required="true">
-                                    <items>
-                                        <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}] {purOrg>org_name}" />
-                                    </items>
-                                </MultiComboBox>
-                                <layoutData>
-                                    <layout:GridData span="XL3 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="Creation {I18N>/DATE}" labelFor="searchCreationDateE" required="true"></Label>
-                                    <DateRangeSelection id="searchCreationDateE" width="100%" change="creationDateChange" required="true"/>
-                                <layoutData>
-                                    <layout:GridData span="XL3 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="{I18N>/STATUS}"></Label>
-                                <SegmentedButton id="searchStatusE" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
-                                    <items>
-                                        <SegmentedButtonItem text="All" key="" />
-                                        <SegmentedButtonItem text="Received" key="DEV_RCV" width="5em" />
-                                        <SegmentedButtonItem text="Unreceived" key="DEV_REQ" width="7em" />
-                                    </items>
-                                </SegmentedButton>
-                                <layoutData>
-                                    <layout:GridData span="XL3 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                        </form:content>
-                    </form:SimpleForm>
-                </f:expandedContent>
                 <f:actions>
                     <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
