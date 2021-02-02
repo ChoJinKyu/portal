@@ -7,6 +7,7 @@ sap.ui.define([
     "sap/ui/model/Sorter",
     "sap/ui/layout/GridData",
     "sap/m/VBox",
+    "sap/m/HBox",
     "sap/ui/table/Column",
     "sap/m/Label",
     "sap/m/Text",
@@ -24,7 +25,8 @@ sap.ui.define([
         FilterOperator, 
         Sorter, 
         GridData, 
-        VBox, 
+        VBox,
+        HBox, 
         Column, 
         Label, 
         Text, 
@@ -42,17 +44,19 @@ sap.ui.define([
         metadata: {
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "60em" },
-                keyField: { type: "string", group: "Misc", defaultValue: "idea_manager_empno" },
-                textField: { type: "string", group: "Misc", defaultValue: "idea_manager_name" }
+                keyField: { type: "string", group: "Misc", defaultValue: "supplier_code" },
+                textField: { type: "string", group: "Misc", defaultValue: "supplier_local_name" }
             }
         },
 
         renderer: Renderer,
-
+        
+        // 검색조건 필터 화면
         createSearchFilters: function () {
             that = this;
 
             this.oCompany = new Input({ placeholder: this.getModel("I18N").getText("/COMPANY_CODE") });
+
             this.oOperationOrgComb = new ComboBox({
                 id: "operationOrgSp",
                 items: {
@@ -64,13 +68,12 @@ sap.ui.define([
                 },
                 width : "100%",
                 change: function(oEvent) {
-                    console.log("oOperationOrgComb change!!");
                     that.loadOperationChange();
                 }
             });
 
             this.oOperationUnitComb = new ComboBox({
-                id: "operationUintSp",
+                id: "operationUnitSp",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -80,7 +83,6 @@ sap.ui.define([
                 },
                 width : "100%",
                 change: function(oEvent) {
-                    console.log("oOperationUnitComb change!!");
                     that.loadOperationChange();
                 }
             });
@@ -95,11 +97,10 @@ sap.ui.define([
                     })
                 },
                 selectionChange: function (oEvent) {
-                    console.log("1 level!!!");
-                    //parent_vendor_pool_code
                     that.loadoVendorPoolLvlData("2");
                 }.bind(this)
             });
+            
             this.oVendorPoolLvl2 = new ComboBox({
                 id: "vendorPoolLvl2Sp",
                 items: {
@@ -110,11 +111,10 @@ sap.ui.define([
                     })
                 },
                 selectionChange: function (oEvent) {
-                    console.log("2 level!!!");
-                    //parent_vendor_pool_code
                     that.loadoVendorPoolLvlData("3");
                 }.bind(this)
             });
+
             this.oVendorPoolLvl3 = new ComboBox({
                 id: "vendorPoolLvl3Sp",
                 items: {
@@ -125,11 +125,10 @@ sap.ui.define([
                     })
                 },
                 selectionChange: function (oEvent) {
-                    console.log("2 level!!!");
-                    //parent_vendor_pool_code
                     that.loadoVendorPoolLvlData("4");
                 }.bind(this)
             });
+
             this.oVendorPoolLvl4 = new ComboBox({
                 id: "vendorPoolLvl4Sp",
                 items: {
@@ -140,11 +139,10 @@ sap.ui.define([
                     })
                 },
                 selectionChange: function (oEvent) {
-                    console.log("2 level!!!");
-                    //parent_vendor_pool_code
                     that.loadoVendorPoolLvlData("5");
                 }.bind(this)
             });
+
             this.oVendorPoolLvl5 = new ComboBox({
                 id: "vendorPoolLvl5Sp",
                 items: {
@@ -159,7 +157,7 @@ sap.ui.define([
             this.oSupplierCode = new Input({
                 placeholder : this.getModel("I18N").getText("/SUPPLIER_CODE"),
                 showValueHelp : true,
-                valueHelpOnly : true,
+                valueHelpOnly : false,
                 valueHelpRequest: function (oEvent) {
                     this.oSupplierDialogPop = new SupplierDialogPop({
                         multiSelection: false,
@@ -210,7 +208,7 @@ sap.ui.define([
                 //placeholder : this.getModel("I18N").getText("/MATRIAL_CODE"),
                 placeholder : "Part No",
                 showValueHelp : true,
-                valueHelpOnly : true,
+                valueHelpOnly : false,
                 valueHelpRequest: function (oEvent) {
                     this.oMatrialDialogPop = new MatrialDialogPop({
                         multiSelection: false,
@@ -243,8 +241,9 @@ sap.ui.define([
                     this.oMatrialDialogPop.setContentWidth("300px");
                     var sSearchObj = {};
                     sSearchObj.tanentId = "L2100";
-                    //sSearchObj.languageCd = "KO";
+                    sSearchObj.languageCd = "KO";
                     sSearchObj.companyCode = "LGCKR";
+                    sSearchObj.matrialCode = that.oMatrialCode.getValue();
                     sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey()
                     sSearchObj.orgUnitCode = that.oOperationUnitComb.getSelectedKey()
 
@@ -268,9 +267,8 @@ sap.ui.define([
                 },
                 width : "100%",
                 change: function(oEvent) {
-                    console.log("oManagerComb change!!");
-                    that.loadOperationChange();
-                }
+
+                }.bind(this)
             });
 
             this.oDepartmentComb = new ComboBox({
@@ -284,9 +282,8 @@ sap.ui.define([
                 },
                 width : "100%",
                 change: function(oEvent) {
-                    console.log("oDepartmentComb change!!");
-                    that.loadOperationChange();
-                }
+
+                }.bind(this)
             });
 
         return [
@@ -311,42 +308,48 @@ sap.ui.define([
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M4 S12" })
                 }),
-                new VBox({
+                new HBox({
                     items: [
-                        new Label({ text: "level1" }),
-                        this.oVendorPoolLvl1
+                        new VBox({
+                            items: [
+                                new Label({ text: "level1" }),
+                                this.oVendorPoolLvl1
+                            ],
+                            layoutData: new GridData({ span: "XL2 L2 M2 S12" })
+                        }),
+                        new VBox({
+                            items: [
+                                new Label({ text: "level2" }),
+                                this.oVendorPoolLvl2
+                            ],
+                            layoutData: new GridData({ span: "XL2 L2 M2 S12" })
+                        }),
+                        new VBox({
+                            items: [
+                                new Label({ text: "level3" }),
+                                this.oVendorPoolLvl3
+                            ],
+                            layoutData: new GridData({ span: "XL2 L2 M2 S12" })
+                        }),
+                        new VBox({
+                            items: [
+                                new Label({ text: "level4" }),
+                                this.oVendorPoolLvl4
+                            ],
+                            layoutData: new GridData({ span: "XL2 L2 M2 S12" })
+                        }),
+                        new VBox({
+                            items: [
+                                new Label({ text: "level5" }),
+                                this.oVendorPoolLvl5
+                            ],
+                            layoutData: new GridData({ span: "XL2 L2 M2 S12" })
+                        })
                     ],
-                    layoutData: new GridData({ span: "XL2 L2 M2 S12" })
+                    layoutData: new GridData({ span: "XL12 L12 M12 S12" })
+
                 }),
-                new VBox({
-                    items: [
-                        new Label({ text: "level2" }),
-                        this.oVendorPoolLvl2
-                    ],
-                    layoutData: new GridData({ span: "XL2 L2 M2 S12" })
-                }),
-                new VBox({
-                    items: [
-                        new Label({ text: "level3" }),
-                        this.oVendorPoolLvl3
-                    ],
-                    layoutData: new GridData({ span: "XL2 L2 M2 S12" })
-                }),
-                new VBox({
-                    items: [
-                        new Label({ text: "level4" }),
-                        this.oVendorPoolLvl4
-                    ],
-                    layoutData: new GridData({ span: "XL2 L2 M2 S12" })
-                }),
-                new VBox({
-                    items: [
-                        new Label({ text: "level5" }),
-                        this.oVendorPoolLvl5
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M2 S12" })
-                }),
-                
+               
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
@@ -364,7 +367,7 @@ sap.ui.define([
                     layoutData: new GridData({ span: "XL4 L4 M4 S12" })
                 }),
 
-                 new VBox({
+                new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/MANAGER") }),
                         this.oManagerComb
@@ -378,7 +381,7 @@ sap.ui.define([
                         this.oDepartmentComb
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M4 S12" })
-                }),
+                })
             ]
         },
 
@@ -402,16 +405,22 @@ sap.ui.define([
             ];
         },
 
+        loadTenantCode: function() {
+            if (this.oSearchObj.tanentId) {
+                that.oCompany.setValue(this.oSearchObj.tanentId);
+            }
+        },
+
+
         loadOperationChange: function() {
             if (that.oOperationOrgComb.getSelectedKey() && that.oOperationUnitComb.getSelectedKey()) {
-                //console.log("stisfy!!!!", that.oOperationOrgComb.getSelectedKey(), that.oOperationUnitComb.getSelectedKey());
                 that.loadoVendorPoolLvlData();
             }
         },
 
         loadOperationOrgData: function () {
             var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
 
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolSearchService/").read("/VpOperationOrg", {
                 filters: aFilters,
@@ -433,7 +442,7 @@ sap.ui.define([
 
         loadOperationUnitData: function () {
             var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
             aFilters.push(new Filter("group_code", FilterOperator.EQ, "SP_SM_SUPPLIER_TYPE"));
 
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/xx.util.CommonService/").read("/Code", {
@@ -453,7 +462,7 @@ sap.ui.define([
 
         loadDepartmentData: function () {
             var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
             
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/cm.util.HrService/").read("/Department", {
                 filters: aFilters,
@@ -465,14 +474,14 @@ sap.ui.define([
                     that.oDepartmentComb.setModel(oModel);
                     //that.oSearchObj.operationUnit 넘겨 받은 값에 있을 경우 셋팅 해주고 
                     //임시로 셋팅 해둔다
-                    that.oDepartmentComb.setSelectedKey("DEPARTMENT").fireChange();
+                    //that.oDepartmentComb.setSelectedKey("11510001").fireChange();
                 }.bind(this)
             });
         },
 
         loadManagerData: function () {
             var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
             
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/cm.util.HrService/").read("/Employee", {
                 filters: aFilters,
@@ -484,32 +493,27 @@ sap.ui.define([
                     that.oManagerComb.setModel(oModel);
                     //that.oSearchObj.operationUnit 넘겨 받은 값에 있을 경우 셋팅 해주고 
                     //임시로 셋팅 해둔다
-                    that.oManagerComb.setSelectedKey("EMPLOYEE").fireChange();
+                    //that.oManagerComb.setSelectedKey("10010").fireChange();
                 }.bind(this)
             });
         },
 
         loadData: function () {
-            // if (this.oSearchObj.supplier_code) {
-            //     this.oSupplierCode.setValue(this.oSearchObj.supplier_code);
-            // }
-            // var sSupplierCode = this.oSupplierCode.getValue();
+            var sSupplierCode;
+            if (!!this.oSupplierCode.getValue()) {
+                sSupplierCode = this.oSupplierCode.getValue();
+            }
 
             var aFilters = [];
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
+            aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.language));
+            
             if (this.oSearchObj.vendorPoolCode) {
                 aFilters.push(new Filter("vendor_pool_code", FilterOperator.Contains, this.oSearchObj.vendorPoolCode));
             }
-
+            
             if (sSupplierCode) {
-                aFilters.push(
-                    new Filter({
-                        filters: [
-                            new Filter("supplier_code", FilterOperator.Contains, "'" + sSupplierCode.toUpperCase() + "'")
-                        ],
-                        and: false
-                    })
-                );
+                aFilters.push(new Filter("supplier_code", FilterOperator.Contains, "'" + sSupplierCode.toUpperCase() + "'"));
             }
             
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/VpSupplierDtlView", {
@@ -524,59 +528,60 @@ sap.ui.define([
             });
         },
 
-        loadVpData: function (level) {
+        // loadVpData: function (level) {
 
-            this.oVendorPoolCode.setValue(null);
-            this.oDialog.oMultiInput.setTokens(null)
+        //     this.oVendorPoolCode.setValue(null);
+        //     this.oDialog.oMultiInput.setTokens(null)
 
-            this.oDialog.oTable.clearSelection();
-            if (this.oSearchObj.vendorPoolCode) {
-                this.oVendorPoolCode.setValue(this.oSearchObj.vendorPoolCode);
-            }
-            var sVendorPoolCode = this.oVendorPoolCode.getValue();
-            var aFilters = [];
+        //     this.oDialog.oTable.clearSelection();
+        //     if (this.oSearchObj.vendorPoolCode) {
+        //         this.oVendorPoolCode.setValue(this.oSearchObj.vendorPoolCode);
+        //     }
+        //     var sVendorPoolCode = this.oVendorPoolCode.getValue();
+        //     var aFilters = [];
           
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
+        //     aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
 
-            if (level === undefined) {
-                level = "1";
-                aFilters.push(new Filter("vendor_pool_level", FilterOperator.EQ, level));
-            }
+        //     if (level === undefined) {
+        //         level = "1";
+        //         aFilters.push(new Filter("vendor_pool_level", FilterOperator.EQ, level));
+        //     }
 
-            switch (level) {
-                case "2" : aFilters.push(new Filter("parent_code", FilterOperator.EQ, this.oVendorPoolLvl1.getSelectedKey())); break;
-                case "3" : aFilters.push(new Filter("parent_code", FilterOperator.EQ, this.oVendorPoolLvl2.getSelectedKey())); break;
-                case "4" : aFilters.push(new Filter("parent_code", FilterOperator.EQ, this.oVendorPoolLvl3.getSelectedKey())); break;
-                case "5" : aFilters.push(new Filter("parent_code", FilterOperator.EQ, this.oVendorPoolLvl4.getSelectedKey())); break;
-            }
+        //     switch (level) {
+        //         case "2" : aFilters.push(new Filter("parent_code", FilterOperator.EQ, this.oVendorPoolLvl1.getSelectedKey())); break;
+        //         case "3" : aFilters.push(new Filter("parent_code", FilterOperator.EQ, this.oVendorPoolLvl2.getSelectedKey())); break;
+        //         case "4" : aFilters.push(new Filter("parent_code", FilterOperator.EQ, this.oVendorPoolLvl3.getSelectedKey())); break;
+        //         case "5" : aFilters.push(new Filter("parent_code", FilterOperator.EQ, this.oVendorPoolLvl4.getSelectedKey())); break;
+        //     }
 
-            if (sVendorPoolCode) {
-                aFilters.push(
-                    new Filter({
-                        filters: [
-                            new Filter("vendor_pool_path_code", FilterOperator.Contains, "'" + sVendorPoolCode.toUpperCase() + "'")
-                        ],
-                        and: false
-                    })
-                );
-            }
+        //     if (sVendorPoolCode) {
+        //         aFilters.push(
+        //             new Filter({
+        //                 filters: [
+        //                     new Filter("vendor_pool_path_code", FilterOperator.Contains, "'" + sVendorPoolCode.toUpperCase() + "'")
+        //                 ],
+        //                 and: false
+        //             })
+        //         );
+        //     }
 
-            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/vpInfoDrillAllView", {
-                filters: aFilters,
-                sorters: [
-                    new Sorter("vendor_pool_code", true)
-                ],
-                success: function (oData) {
-                    var aRecords = oData.results;
-                    that.oDialog.setData(aRecords, false);
-                    this.oDialog.oTable.setBusy(false);
-                }.bind(this)
-            });
-        },
+        //     ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/vpInfoDrillAllView", {
+        //         filters: aFilters,
+        //         sorters: [
+        //             new Sorter("vendor_pool_code", true)
+        //         ],
+        //         success: function (oData) {
+        //             var aRecords = oData.results;
+        //             that.oDialog.setData(aRecords, false);
+        //             this.oDialog.oTable.setBusy(false);
+        //         }.bind(this)
+        //     });
+        // },
 
         loadoVendorPoolLvlData: function (level) {
+            
             var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2100"));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
             if (level === undefined) {
                 level = "1";
             }
@@ -609,36 +614,86 @@ sap.ui.define([
                             that.oVendorPoolLvl3.setModel(null);
                             that.oVendorPoolLvl4.setModel(null);
                             that.oVendorPoolLvl5.setModel(null);
+                            
+                            that.oVendorPoolLvl2.oParent.setVisible(false);
+                            that.oVendorPoolLvl3.oParent.setVisible(false);
+                            that.oVendorPoolLvl4.oParent.setVisible(false);
+                            that.oVendorPoolLvl5.oParent.setVisible(false);
                             break;
+
                         case "2" : 
                             that.oVendorPoolLvl2.setModel(oModel); 
                             that.oVendorPoolLvl3.setModel(null); 
                             that.oVendorPoolLvl4.setModel(null);
                             that.oVendorPoolLvl5.setModel(null);
+
+                            if(oModel.oData.items.length > 0) {
+                                that.oVendorPoolLvl2.oParent.setVisible(true);
+                            } else {
+                                that.oVendorPoolLvl2.oParent.setVisible(false);
+                            }
+                            that.oVendorPoolLvl3.oParent.setVisible(false);
+                            that.oVendorPoolLvl4.oParent.setVisible(false);
+                            that.oVendorPoolLvl5.oParent.setVisible(false);
                             break;
+
                         case "3" : 
                             that.oVendorPoolLvl3.setModel(oModel); 
                             that.oVendorPoolLvl4.setModel(null); 
                             that.oVendorPoolLvl5.setModel(null);
+                            
+                            if(oModel.oData.items.length > 0) {
+                                that.oVendorPoolLvl3.oParent.setVisible(true);
+                            } else {
+                                that.oVendorPoolLvl3.oParent.setVisible(false);
+                            }
+                            that.oVendorPoolLvl4.oParent.setVisible(false);
+                            that.oVendorPoolLvl5.oParent.setVisible(false);
                             break;
+
                         case "4" : 
                             that.oVendorPoolLvl4.setModel(oModel); 
                             that.oVendorPoolLvl5.setModel(null); 
+                            
+                            if(oModel.oData.items.length > 0) {
+                                that.oVendorPoolLvl4.oParent.setVisible(true);
+                            } else {
+                                that.oVendorPoolLvl4.oParent.setVisible(false);
+                            }
+                            that.oVendorPoolLvl5.oParent.setVisible(false);
                             break;
-                    }
-                    
+
+                        case "5" : 
+                            that.oVendorPoolLvl4.setModel(oModel); 
+                            that.oVendorPoolLvl5.setModel(null); 
+                            
+                            if(oModel.oData.items.length > 0) {
+                                that.oVendorPoolLvl5.oParent.setVisible(true);
+                            } else {
+                                that.oVendorPoolLvl5.oParent.setVisible(false);
+                            }
+                            break;
+                    }    
                 }.bind(this)
             });
         },
 
         open: function(sSearchObj){
+            
             this.oSearchObj = sSearchObj;
             console.log("sSearchObj:" + sSearchObj);
             if(!this.oDialog) {
                 this.openWasRequested = true;
                 return;
             }
+                
+            if (!!this.oSearchObj.supplierCode) {
+                this.oSupplierCode.setValue(null);
+                this.oSupplierCode.setValue(this.oSearchObj.supplierCode);
+            }
+
             //this.loadData();
+            this.loadTenantCode();
             this.loadOperationOrgData();
             this.loadOperationUnitData();
             this.loadDepartmentData();
