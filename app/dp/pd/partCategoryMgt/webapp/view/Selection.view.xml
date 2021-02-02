@@ -1,0 +1,215 @@
+<mvc:View controllerName="dp.pd.partCategoryMgt.controller.Selection" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns="sap.m" 
+	xmlns:uxap="sap.uxap" 
+	xmlns:layout="sap.ui.layout" 
+    xmlns:form="sap.ui.layout.form"
+    xmlns:sc="sap.suite.ui.commons"
+	xmlns:core="sap.ui.core"
+    xmlns:table="sap.ui.table"
+    xmlns:richtexteditor="sap.ui.richtexteditor"
+	height="100%">
+
+	<uxap:ObjectPageLayout id="page"
+		toggleHeaderOnTitleClick="true"
+		alwaysShowContentHeader = "true"
+		preserveHeaderStateOnScroll="false"
+		headerContentPinnable="true"
+		isChildPage="true"
+		upperCaseAnchorBar="false"
+		showTitleInHeaderContent="true"
+		showEditHeaderButton="true" 
+		showFooter="false">
+		<uxap:headerTitle>
+			<uxap:ObjectPageDynamicHeaderTitle>
+				<uxap:expandedHeading>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton
+                            id="pageNavBackButton"
+                            type="Transparent"
+                            icon="sap-icon://nav-back"
+                            tooltip="back to the list"
+                            press=".onPageNavBackButtonPress"
+                            visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+					    <Title text="Part Category Creation Request" wrapping="true" />
+                    </HBox>
+				</uxap:expandedHeading>
+				<uxap:snappedHeading>
+					<Title text="Part Category Creation Request" wrapping="true" />
+				</uxap:snappedHeading>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+			<FlexBox wrap="Wrap" visible="false" width="100%">
+                
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <Label text="요청번호 :"/>
+                    <ObjectStatus text="1234567-1234568"/>
+                    <Label text="요청자 :"/>
+                    <ObjectStatus text="손흥민"/>
+                </layout:VerticalLayout>
+                
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<Label text="진행상태 :"/>
+                    <ObjectStatus class="sapMObjectStatusLarge" text="NEW" state="Error" />
+				</layout:VerticalLayout>
+
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <Label text="{I18N>/PROGRESS}{I18N>/STATUS} : " labelFor="searchIdeaManager"></Label>
+                    <sc:MicroProcessFlow>
+                        <sc:content>
+                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="5em"/>
+                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="5em"/>
+                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="5em"/>
+                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="5em"/>
+                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="5em"/>
+                        </sc:content>
+                    </sc:MicroProcessFlow>
+                    <layout:HorizontalLayout>
+                        <Text text="A" width="5em" textAlign="Center"/>
+                        <Text text="B" width="5em" textAlign="Center"/>
+                        <Text text="C" width="5em" textAlign="Center"/>
+                        <Text text="D" width="5em" textAlign="Center"/>
+                        <Text text="E" width="5em" textAlign="Center"/>
+                    </layout:HorizontalLayout>
+                </layout:VerticalLayout>
+                
+			</FlexBox>
+		</uxap:headerContent>
+
+		<uxap:sections>
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/BASIC_INFO}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSection1">
+                    <form:SimpleForm id="midObjectForm" editable="{midObjectViewModel>/isEditMode}">
+                        <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
+                            <layout:Grid containerQuery="true" defaultSpan="XL12 L12 M12 S12">
+                                <VBox>
+                                    <Label text="카테고리 그룹: " labelFor="categoryGroupCode" required="true" />
+                                    <ComboBox
+                                        visible="{viewModel>/editMode}"
+                                        id="categoryGroupCodeCombo"
+                                        width="50%"
+                                        selectedKey="{master>/category_group_code}"
+                                        items="{
+                                            path: 'util>/Code',
+                                            filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
+                                                {path: 'group_code', operator: 'EQ', value1: 'DP_PD_CATEGORY_GROUP'}
+                                            ]
+                                        }">
+                                        <items>
+                                            <core:Item key="{util>code}" text="[{util>code}] {util>code_name}" />
+                                        </items>
+                                    </ComboBox>
+                                    <Text id="categoryGroupCodeTx" text="{master>/category_group_code}" visible="{viewModel>/showMode}" width="50%"/>
+                                </VBox>
+                            </layout:Grid>
+                            <layout:Grid containerQuery="true" defaultSpan="XL12 L12 M12 S12">
+                                <VBox>
+                                    <Label text="요청 명: " labelFor="requestTitle"  required="true" />
+                                    <Input id="requestTitle" value="{master>/request_title}" visible="{viewModel>/editMode}" width="50%"/>
+                                    <Text id="requestTitleTx" text="{master>/request_title}" visible="{viewModel>/showMode}" width="50%"/>
+                                </VBox>
+                            </layout:Grid>
+                            <layout:Grid containerQuery="true" defaultSpan="XL12 L12 M12 S12">
+                                <VBox>
+                                    <Label text="요청 카테고리 명: " labelFor="requestCategoryName" required="true" />
+                                    <Input id="requestCategoryName" value="{master>/request_category_name}" visible="{viewModel>/editMode}" width="50%"/>
+                                    <Text id="requestCategoryNameTx" text="{master>/request_category_name}" visible="{viewModel>/showMode}" width="50%"/>
+                                </VBox>
+                            </layout:Grid>
+                            <layout:Grid containerQuery="true" defaultSpan="XL12 L12 M12 S12">
+                                <VBox>
+                                    <Label text="유사 카테고리: " labelFor="similarCategoryCodeCombo" required="true"></Label>
+                                    <SearchField id="searchField" search=".onSearchPartCategory" width="50%"/>
+                                    <Input id="similarCategoryCode" placeholder="Input data" visible ="false" width="50%" />
+                                </VBox>
+                            </layout:Grid>
+                            <layout:Grid containerQuery="true" defaultSpan="XL12 L12 M12 S12">
+                                <VBox>
+                                    <Label text="설명: " labelFor="requestDesc" required="true"></Label>
+                                    <richtexteditor:RichTextEditor
+                                        editorType="TinyMCE4"
+                                        width="100%"
+                                        height="400px"
+                                        editable="true"
+                                        customToolbar="true"
+                                        showGroupFont="true"
+                                        showGroupLink="true"
+                                        showGroupInsert="true"
+                                        value="{master>/request_desc}">
+                                    </richtexteditor:RichTextEditor> 
+                                </VBox>
+                            </layout:Grid>
+
+                        </VBox>
+                        </form:SimpleForm>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+            <!-- 첨부파일 시작 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/Attachments}" visible="true" id="attachBlock">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <!-- File Upload 시작-->
+                            <UploadCollection
+                                id="UploadCollection"
+                                maximumFilenameLength="55"
+                                maximumFileSize="10"
+                                multiple="true"
+                                sameFilenameAllowed="true"
+                                instantUpload="false"
+                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                change="onChange"
+                                fileDeleted="onFileDeleted"
+                                filenameLengthExceed="onFilenameLengthExceed"
+                                fileSizeExceed="onFileSizeExceed"
+                                typeMissmatch="onTypeMissmatch"
+                                uploadComplete="onUploadComplete"
+                                beforeUploadStarts="onBeforeUploadStarts" />
+                            <!-- File Upload 끝-->
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- 첨부파일 끝 -->
+
+
+            <!-- 결재라인 시작 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="결재라인">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <uxap:blocks>
+                            
+                        </uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- 결재라인 끝 -->
+
+		</uxap:sections>
+		
+		<uxap:footer>
+			<OverflowToolbar>
+                <Button
+                    icon="sap-icon://alert"
+                    type="Emphasized"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                    press=".onMessagePopoverPress" />
+				<ToolbarSpacer />
+                
+                <Button id="pageEditButton" type="Transparent" text="{I18N>/EDIT}" press=".onPageEditButtonPress" />
+				<Button id="pageSaveButton" type="Transparent" text="{I18N>/TEMP_SAVE}" press=".onPageSaveButtonPress('D')" />
+				<Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButtonPress"/>
+				<Button id="pageListButton" type="Transparent" text="{I18N>/LIST}" press=".onPageListButtonPress"/>
+                <Button id="pageSubmitButton" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSaveButtonPress('R')" />
+			</OverflowToolbar>
+		</uxap:footer>
+	</uxap:ObjectPageLayout>
+</mvc:View>
