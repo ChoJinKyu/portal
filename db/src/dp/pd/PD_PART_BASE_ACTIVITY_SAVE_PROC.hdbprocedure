@@ -6,13 +6,13 @@ PROCEDURE DP_PD_PART_BASE_ACTIVITY_SAVE_PROC (
                     DESCRIPTION NVARCHAR(240), 
                     ACTIVE_FLAG BOOLEAN,
                     UPDATE_USER_ID NVARCHAR(255),
-                    CRUD_TYPE NVARCHAR(1) ),
+                    CRUD_TYPE_CODE NVARCHAR(1) ),
     IN  I_D TABLE ( TENANT_ID NVARCHAR(5), 
                     ACTIVITY_CODE NVARCHAR(40), 
                     LANGUAGE_CD NVARCHAR(30), 
                     CODE_NAME NVARCHAR(240),
                     UPDATE_USER_ID NVARCHAR(255),
-                    CRUD_TYPE NVARCHAR(1) ),
+                    CRUD_TYPE_CODE NVARCHAR(1) ),
     OUT O_MSG TABLE(RETURN_CODE NVARCHAR(2), RETURN_MSG NVARCHAR(5000) )
 )
 LANGUAGE SQLSCRIPT		
@@ -85,17 +85,17 @@ BEGIN
         WHERE ( D.TENANT_ID,D.ACTIVITY_CODE,D.LANGUAGE_CD ) IN
             ( SELECT id.TENANT_ID, id.ACTIVITY_CODE, id.LANGUAGE_CD
                 FROM :I_D id
-               WHERE id.CRUD_TYPE = 'D'
+               WHERE id.CRUD_TYPE_CODE = 'D'
             )
         ;
 
         /*  I_D Table의 Data 일괄 추가,수정 */
         MERGE INTO DP_PD_PART_BASE_ACTIVITY_LNG D
-            USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE IN ('C','U')  ) id
+            USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE_CODE IN ('C','U')  ) id
             ON ( D.TENANT_ID = id.TENANT_ID
                 AND D.ACTIVITY_CODE = id.ACTIVITY_CODE
                 AND D.LANGUAGE_CD = id.LANGUAGE_CD
-                AND id.CRUD_TYPE IN ('C','U') )
+                AND id.CRUD_TYPE_CODE IN ('C','U') )
 
         WHEN MATCHED THEN
             UPDATE
