@@ -51,7 +51,7 @@ sap.ui.define([
 
         renderer: Renderer,
         
-        // 검색조건 필터 화면
+        // 검색조건 필터 화면, 각 모델은 load 함수 내에서 모델에 바인딩된다
         createSearchFilters: function () {
             that = this;
 
@@ -154,6 +154,7 @@ sap.ui.define([
                 }
             });
 
+            //Supplier 내부 팝업
             this.oSupplierCode = new Input({
                 placeholder : this.getModel("I18N").getText("/SUPPLIER_CODE"),
                 showValueHelp : true,
@@ -187,6 +188,7 @@ sap.ui.define([
                         ]
                     });
 
+                    // Pop 내부에 값을 올려주기 위해 구성
                     this.oSupplierDialogPop.setContentWidth("300px");
                     var sSearchObj = {};
                     sSearchObj.tanentId = "L2100";
@@ -195,6 +197,7 @@ sap.ui.define([
                     sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey()
                     sSearchObj.orgUnitCode = that.oOperationUnitComb.getSelectedKey()
 
+                    // Pop의 open에 sSearchObj를 인자로 호출 
                     this.oSupplierDialogPop.open(sSearchObj);
                     this.oSupplierDialogPop.attachEvent("apply", function (oEvent) {
                         //console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
@@ -204,6 +207,7 @@ sap.ui.define([
                 }
             });
 
+            // material 내부팝업
             this.oMatrialCode = new Input({
                 //placeholder : this.getModel("I18N").getText("/MATRIAL_CODE"),
                 placeholder : "Part No",
@@ -389,48 +393,53 @@ sap.ui.define([
         createTableColumns: function () {
             return [
                 new Column({
-                    width: "20%",
+                    width: "15%",
                     label: new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT") }),
-                    template: new Text({ text: "{supplier_type_name}" })
+                    template: new Text({ text: ""})
                 }),
-                // new Column({
-                //     width: "25%",
-                //     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") }),
-                //     template: new Text({ text: "{supplier_code}" })
-                // }),
-                // new Column({
-                //     width: "auto",
-                //     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") }),
-                //     template: new Text({ text: "{supplier_local_name}" })
-                // }),
                 new Column({
-                    width: "auto",
+                    width: "15%",
+                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "1" }),
+                    template: new Text({ text: "{vendor_pool_level1_code}" })
+                }),
+                new Column({
+                    width: "15%",
+                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "2" }),
+                    template: new Text({ text: "{vendor_pool_level2_code}" })
+                }),
+                new Column({
+                    width: "15%",
+                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "3" }),
+                    template: new Text({ text: "{vendor_pool_level3_code}" })
+                }),
+                new Column({
+                    width: "17%",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
                     template: new Text({ text: "{supplier_code}" })
                 }),
                 new Column({
-                    width: "30%",
+                    width: "25%",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME") }),
                     template: new Text({ text: "{supplier_local_name}" })
                 }),
                 
                 new Column({
-                    width: "auto",
+                    width: "10%",
                     label: new Label({ text: this.getModel("I18N").getText("/REGISTER_STATUS") }),
                     template: new Text({ text: "{supplier_register_status_name}" })
                 }),
                 new Column({
-                    width: "auto",
+                    width: "10%",
                     label: new Label({ text: this.getModel("I18N").getText("/FLAG") }),
                     template: new Text({ text: "{supplier_flag}" })
                 }),
                 new Column({
-                    width: "auto",
+                    width: "10%",
                     label: new Label({ text: this.getModel("I18N").getText("/MAKER_FLAG") }),
                     template: new Text({ text: "{maker_flag}" })
                 }),
                 new Column({
-                    width: "auto",
+                    width: "10%",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_SELECTION_STATUS") }),
                     template: new Text({ text: "{inactive_status_name}" })
                 })
@@ -537,25 +546,46 @@ sap.ui.define([
 
         // Data 조회
         loadData: function () {
+
+            var aFilters = [];
             var sSupplierCode;
+            
+            // 세션에서 받아오는 필터 value
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
+            aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.language));
+            aFilters.push(new Filter("supplier_company_code", FilterOperator.EQ, this.oSearchObj.companyCode));
+
+            
+          
             if (!!this.oSupplierCode.getValue()) {
                 sSupplierCode = this.oSupplierCode.getValue();
             }
 
-            var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
-            aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.language));
-            aFilters.push(new Filter("company_code", FilterOperator.EQ, this.oSearchObj.companyCode));
-            
-            if (this.oSearchObj.vendorPoolCode) {
-                aFilters.push(new Filter("vendor_pool_code", FilterOperator.Contains, this.oSearchObj.vendorPoolCode));
+            if(this.oVendorPoolLvl1.getSelectedKey()){
+                aFilters.push(new Filter("vendor_pool_level1_code", FilterOperator.EQ, this.oVendorPoolLvl1.getSelectedKey()));
+            }
+
+            if(this.oVendorPoolLvl2.getSelectedKey()){
+                aFilters.push(new Filter("vendor_pool_level2_code", FilterOperator.EQ, this.oVendorPoolLvl2.getSelectedKey()));
+            }
+
+            if(this.oVendorPoolLvl3.getSelectedKey()){
+                aFilters.push(new Filter("vendor_pool_level3_code", FilterOperator.EQ, this.oVendorPoolLvl3.getSelectedKey()));
+            }
+
+            if(this.oVendorPoolLvl4.getSelectedKey()){
+                aFilters.push(new Filter("vendor_pool_level4_code", FilterOperator.EQ, this.oVendorPoolLvl4.getSelectedKey()));
+            }
+
+            if(this.oVendorPoolLvl5.getSelectedKey()){
+                aFilters.push(new Filter("vendor_pool_level5_code", FilterOperator.EQ, this.oVendorPoolLvl5.getSelectedKey()));
             }
             
             if (sSupplierCode) {
                 aFilters.push(new Filter("supplier_code", FilterOperator.Contains, "'" + sSupplierCode.toUpperCase() + "'"));
             }
             
-            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/VpSupplierMstView", {
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/vpSupplierPopupDtlView", {
                 filters: aFilters,
                 sorters: [
                     new Sorter("supplier_code", true)
@@ -566,56 +596,6 @@ sap.ui.define([
                 }.bind(this)
             });
         },
-
-        // loadVpData: function (level) {
-
-        //     this.oVendorPoolCode.setValue(null);
-        //     this.oDialog.oMultiInput.setTokens(null)
-
-        //     this.oDialog.oTable.clearSelection();
-        //     if (this.oSearchObj.vendorPoolCode) {
-        //         this.oVendorPoolCode.setValue(this.oSearchObj.vendorPoolCode);
-        //     }
-        //     var sVendorPoolCode = this.oVendorPoolCode.getValue();
-        //     var aFilters = [];
-          
-        //     aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
-
-        //     if (level === undefined) {
-        //         level = "1";
-        //         aFilters.push(new Filter("vendor_pool_level", FilterOperator.EQ, level));
-        //     }
-
-        //     switch (level) {
-        //         case "2" : aFilters.push(new Filter("parent_code", FilterOperator.EQ, this.oVendorPoolLvl1.getSelectedKey())); break;
-        //         case "3" : aFilters.push(new Filter("parent_code", FilterOperator.EQ, this.oVendorPoolLvl2.getSelectedKey())); break;
-        //         case "4" : aFilters.push(new Filter("parent_code", FilterOperator.EQ, this.oVendorPoolLvl3.getSelectedKey())); break;
-        //         case "5" : aFilters.push(new Filter("parent_code", FilterOperator.EQ, this.oVendorPoolLvl4.getSelectedKey())); break;
-        //     }
-
-        //     if (sVendorPoolCode) {
-        //         aFilters.push(
-        //             new Filter({
-        //                 filters: [
-        //                     new Filter("vendor_pool_path_code", FilterOperator.Contains, "'" + sVendorPoolCode.toUpperCase() + "'")
-        //                 ],
-        //                 and: false
-        //             })
-        //         );
-        //     }
-
-        //     ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/vpInfoDrillAllView", {
-        //         filters: aFilters,
-        //         sorters: [
-        //             new Sorter("vendor_pool_code", true)
-        //         ],
-        //         success: function (oData) {
-        //             var aRecords = oData.results;
-        //             that.oDialog.setData(aRecords, false);
-        //             this.oDialog.oTable.setBusy(false);
-        //         }.bind(this)
-        //     });
-        // },
 
         loadoVendorPoolLvlData: function (level) {
             
@@ -703,8 +683,7 @@ sap.ui.define([
                             break;
 
                         case "5" : 
-                            that.oVendorPoolLvl4.setModel(oModel); 
-                            that.oVendorPoolLvl5.setModel(null); 
+                            that.oVendorPoolLvl5.setModel(oModel);
                             
                             if(oModel.oData.items.length > 0) {
                                 that.oVendorPoolLvl5.oParent.setVisible(true);
@@ -719,23 +698,27 @@ sap.ui.define([
 
         open: function(sSearchObj){
             
+            // dialog가 호출될 때 넘어오는 인자
             this.oSearchObj = sSearchObj;
             console.log("sSearchObj:" + sSearchObj);
             if(!this.oDialog) {
                 this.openWasRequested = true;
                 return;
             }
-                
+            
+            // 초기화면 안정화를 위한 초기설정
             that.oVendorPoolLvl2.oParent.setVisible(false);
             that.oVendorPoolLvl3.oParent.setVisible(false);
             that.oVendorPoolLvl4.oParent.setVisible(false);
             that.oVendorPoolLvl5.oParent.setVisible(false)
 
+            // 앞 화면에서 넘어온 supplierCode가 있는 경우 화면에 넘김
             if (!!this.oSearchObj.supplierCode) {
                 this.oSupplierCode.setValue(null);
                 this.oSupplierCode.setValue(this.oSearchObj.supplierCode);
             }
 
+            // 데이터 load
             //this.loadData();
             this.loadTenantCode();
             this.loadOperationOrgData();

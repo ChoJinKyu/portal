@@ -85,8 +85,16 @@ sap.ui.define([
                 that=this,
                 urlPram = this.getModel("contModel").getProperty("/oArgs"),
                 oPramDataModel = this.getModel("applicationSup"),
+                hopeYyyyMm = oPramDataModel.getProperty("/funding_hope_yyyymm"),
                 oPramCheack = this.getModel("contModel").getProperty("/detail/checkModel"),
-                ofunding_status_code=oPramDataModel.getProperty("/funding_status_code");
+                ofunding_status_code=oPramDataModel.getProperty("/funding_status_code"),
+                aControls = this.getView().getControlsByFieldGroupId("newAppl"),
+                bValid = this._isValidControl(aControls);//
+
+
+            if(!bValid){
+                return;
+            };
 
             for(var i = 0; i<oPramCheack.length; i++){
                 if(oPramCheack[i]){
@@ -96,6 +104,13 @@ sap.ui.define([
                 }
             }
 
+            
+            if(!hopeYyyyMm || hopeYyyyMm==""){
+                hopeYyyyMm = null;
+            }else{
+                hopeYyyyMm = String(hopeYyyyMm).replace("-", "");
+            }
+            
             procSaveTemp = {
                 funding_appl_number: oPramDataModel.getProperty("/funding_appl_number")
                 , funding_notify_number: urlPram.fundingNotifyNumber
@@ -108,7 +123,7 @@ sap.ui.define([
                 , pyear_sales_amount: parseInt(oPramDataModel.getProperty("/pyear_sales_amount"))
                 , main_bank_name: oPramDataModel.getProperty("/main_bank_name")
                 , funding_appl_amount: parseInt(oPramDataModel.getProperty("/funding_appl_amount"))
-                , funding_hope_yyyymm: String(oPramDataModel.getProperty("/funding_hope_yyyymm")).replace("-", "")//null로 변경 필요
+                , funding_hope_yyyymm: hopeYyyyMm//null로 변경 필요
                 , repayment_method_code: "A"
                 , appl_user_name: oPramDataModel.getProperty("/appl_user_name")
                 , appl_user_tel_number: oPramDataModel.getProperty("/appl_user_tel_number")
@@ -143,13 +158,19 @@ sap.ui.define([
         //신청서 제출
         onPageSubmissionButtonPress: function (oEvent) {
 
-            var procSaveTemp = {},
+            var procRequest = {},
                 urlPram = this.getModel("contModel").getProperty("/oArgs"),
                 oPramDataModel = this.getModel("applicationSup"),
                 oPramCheack = this.getModel("contModel").getProperty("/detail/checkModel"),
-                ofunding_status_code = oPramDataModel.getProperty("/funding_status_code");
+                ofunding_status_code = oPramDataModel.getProperty("/funding_status_code"),
+                aControls = this.getView().getControlsByFieldGroupId("newRequest"),
+                bValid = this._isValidControl(aControls);//newRequest
 
-            procSaveTemp = {
+            if(!bValid){
+                return;
+            };
+
+            procRequest = {
                 funding_appl_number: oPramDataModel.getProperty("/funding_appl_number")
                 , funding_notify_number: urlPram.fundingNotifyNumber
                 , supplier_code: urlPram.supplierCode
@@ -174,9 +195,9 @@ sap.ui.define([
             };
 
             if(!ofunding_status_code || ofunding_status_code=="110"|| ofunding_status_code=="120"|| ofunding_status_code=="230"){
-                this._ajaxCall("ProcRequest", procSaveTemp);
+                this._ajaxCall("ProcRequest", procRequest);
             }else{
-                alert("지금 진행 상태에서는 제출이 불가 합니다.");
+                MessageBox.alert("지금 진행 상태에서는 제출이 불가 합니다.");
             }
 
         },
@@ -195,7 +216,7 @@ sap.ui.define([
                 oView= this.byId("investmentPlanDetails"),
                 oPramMstDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanMst"),
                 oPramDtlDataModel = this.getModel("applicationSup").getProperty("/popUpInvestPlanDtl"),
-                aControls = oView.getControlsByFieldGroupId("newRequired"),
+                aControls = oView.getControlsByFieldGroupId("newInvestmentPlan"),
                 bValid = this._isValidControl(aControls);
 
             if(!bValid){
@@ -242,6 +263,7 @@ sap.ui.define([
             };
 
             procSaveInvPlan.dtlType=invPlanDtl;
+            
             
             this._ajaxCall("ProcSaveInvPlan", procSaveInvPlan);
 
@@ -372,7 +394,7 @@ sap.ui.define([
                 that = this;
 
             if (!checkNum) {
-                MessageBox.alert("저장하고 입력 하세요.");
+                MessageBox.alert("임시저장 후 추가할 수 있습니다.");
             } else {
                 if (!this.pDialog) {
                     this.pDialog = Fragment.load({
@@ -390,7 +412,7 @@ sap.ui.define([
                     oDialog.open();
                     that.byId("investmentDtl").removeSelections();
 
-                    var aControls = that.byId("investmentPlanDetails").getControlsByFieldGroupId("newRequired");
+                    var aControls = that.byId("investmentPlanDetails").getControlsByFieldGroupId("newInvestmentPlan");
                 
                     that._clearValueState(aControls);
                     that.getModel("applicationSup").setProperty("/popUpInvestPlanMst", {});
@@ -488,13 +510,13 @@ sap.ui.define([
         _onRoutedThisPage: function (oEvent) {
             this._fnInitControlModel();
 
-            var oArgs = oEvent.getParameter("arguments");
+            var oArgs = oEvent.getParameter("arguments"),
+                aFilters = [],
+                aControls = this.getView().getControlsByFieldGroupId("newAppl");
 
             this._sTenantId = oArgs.tenantId;
             this._sFundingNotifyNumber = oArgs.fundingNotifyNumber;
             this._sSupplierCode = oArgs.supplierCode;
-
-            var aFilters = [];
 
             this.getModel("contModel").setProperty("/oArgs", oArgs);
 
@@ -502,6 +524,8 @@ sap.ui.define([
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId));
             aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, this._sFundingNotifyNumber));
 
+            
+            this._clearValueState(aControls);
             this._onObjectRead(aFilters);
         },
 
@@ -518,8 +542,21 @@ sap.ui.define([
                 success: function (oRetrievedResult) {
                     var aArr = [];
                     var aCheckedData = that.getModel("contModel").getProperty("/detail/checkModel") || [];
+                    that.byId("search_repayment_method_code").setSelectedKey("A");
                     if (!!oRetrievedResult.results[0]) {
                         that.getModel("applicationSup").setData(oRetrievedResult.results[0]);
+                        var statusCode = that.getModel("applicationSup").getProperty("/funding_status_code")
+
+                        if(statusCode=="110" || statusCode=="120" || statusCode=="230"){
+                            that.byId("productsTableToolbar").setVisible(true);
+                            that.byId("pageSubmissionButton").setEnabled(true);
+                        }
+                        if( !statusCode || statusCode=="110"){
+                            that.byId("pageSaveButton").setEnabled(true);
+                        }else{
+                            that.byId("pageSaveButton").setEnabled(false);
+                        }
+                        
                         var aChecked = oRetrievedResult.results[0].funding_reason_code.split(",");
                         //var aChecked = test.split(",");
                         aChecked.forEach(function (item) {
@@ -532,13 +569,20 @@ sap.ui.define([
                             filters: bFilters,
                             success: function (oRetrievedResult) {
                                 that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
+                                
                             },
                             error: function (oError) {
-
+                                MessageBox.alert("에러 입니다.");
                             }
                         });
 
                     } else {
+                        that.byId("productsTableToolbar").setVisible(false);
+                        that.byId("pageSubmissionButton").setEnabled(false);
+                        that.byId("pageSaveButton").setEnabled(true);
+                        
+                        that.byId("pageSaveButton").setProperty("type", "Emphasized");
+                        that.byId("pageSubmissionButton").setProperty("type", "Transparent");
                         aArr = aCheckedData.map(function (item) {
                             return false;
                         });
@@ -578,10 +622,15 @@ sap.ui.define([
                             if(procUrl=="ProcSaveInvPlan"){
                                 that.onAfterProcSaveInvPlan(oData);
                             };
+                            if(procUrl=="ProcDelInvPlan"){
+                                that.onAfterProcDelInvPlan(oData);
+                            };
+                            if(procUrl=="ProcDelInvPlanDtl"){
+                                that.onAfterProcDelInvPlanDtl(oData);
+                            };
                         },
-                        error: function(oData){
-                            debugger;
-
+                        error: function(oError){
+                            MessageBox.alert("error가 발생 하였습니다.");
                         }
                     });
                 };
@@ -620,32 +669,6 @@ sap.ui.define([
             oContModel.setProperty("/detail", oData);
 
             this.getModel("applicationSup").setData([]);
-        },
-
-
-        _fnSetEditMode: function () {
-            this._fnSetMode("edit");
-        },
-
-        _fnSetCreateMode: function () {
-            this._fnSetMode("create");
-        },
-
-        _fnSetMode: function (mode) {
-            var bCreate = null,
-                bEdit = null;
-
-            if (mode === "edit") {
-                bCreate = false;
-                bEdit = true;
-            } else if (mode === "create") {
-                bCreate = true;
-                bEdit = false;
-            }
-
-            var oContModel = this.getModel("contModel");
-            oContModel.setProperty("/detail/createMode", bCreate);
-            oContModel.setProperty("/detail/editMode", bEdit);
         },
 
         _onCheckEmail: function (str) {

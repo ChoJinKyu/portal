@@ -165,7 +165,7 @@
               ]
           },
           {
-              "pattern": "midObject/{layout}/{tenantId}/{orgCode}/{operationUnitCode}/{vendorPool}/{temptype}/{target}",
+              "pattern": "midObject/{layout}/{tenantId}/{orgCode}/{operationUnitCode}/{vendorPool}/{temptype}/{drill}/{target}",
               "name": "midPage",
               "target":[ 
                   "midTreeObject"
@@ -173,7 +173,7 @@
                   
           },
           {
-              "pattern": "midObjectDetail/{layout}/{tenantId}/{orgCode}/{operationUnitCode}/{vendorPool}/{temptype}/{target}",
+              "pattern": "midObjectDetail/{layout}/{tenantId}/{orgCode}/{operationUnitCode}/{vendorPool}/{temptype}/{drill}/{target}",
               "name": "midPageDetail",
               "target":[ 
                   "midTreeObject",
