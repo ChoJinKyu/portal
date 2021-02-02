@@ -401,7 +401,7 @@ sap.ui.define([
                     });
 
                     this.oBPSelectionValueHelp.attachEvent("apply", function (oEvent) {
-                        this.byId("input_bp_code").setValue(oEvent.getParameter("item").supplier_code);
+                        this.byId("input_bp_code").setValue(oEvent.getParameter("item").business_partner_code);
                     }.bind(this));
                 }
                 this.oBPSelectionValueHelp.open();
