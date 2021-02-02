@@ -142,7 +142,6 @@ AND    LF.CODE_NAME   = M.HIERARCHY_LEVEL
 WHERE  IFNULL(SM.LANGUAGE_CD, LNG.CODE) = LNG.CODE
 AND    IFNULL(EMP.USER_STATUS_CODE, 'C') = 'C'
 AND    M.VENDOR_POOL_USE_FLAG = true
-/*
 AND    'leaf' = IFNULL((SELECT 'leaf'
 		       	       FROM   CM_ORG_CODE_LNG CD
 		       	       WHERE  CD.TENANT_ID = M.TENANT_ID
@@ -151,7 +150,6 @@ AND    'leaf' = IFNULL((SELECT 'leaf'
 		       	       AND    CD.LANGUAGE_CD = 'EN'
 		       	       AND    CD.CODE = M.OPERATION_UNIT_CODE
                           AND    CD.CODE_NAME = M.HIERARCHY_LEVEL), 'expanded') 
-*/
 GROUP BY M.TENANT_ID,
        M.COMPANY_CODE,
        M.ORG_TYPE_CODE,
