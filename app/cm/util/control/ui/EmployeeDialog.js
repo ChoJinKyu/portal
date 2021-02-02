@@ -18,6 +18,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
+                loadWhenOpen: { type: "boolean", group: "Misc", defaultValue: false },
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "70em"},
                 keyField: { type: "string", group: "Misc", defaultValue: "employee_number" },
                 textField: { type: "string", group: "Misc", defaultValue: "user_local_name" }
@@ -132,13 +133,13 @@ sap.ui.define([
             aSorters.push(new Sorter("user_local_name", false));
             this.oDialog.setBusy(true);
             ODataV2ServiceProvider.getService("cm.util.HrService").read("/Employee", {
-                // thers: false,  //TODL: please disable fetchOthers option for performance
+                fetchOthers: true,
                 filters: aFilters,
                 sorters: aSorters,
                 success: function(oData, bHasMore){
                     this.oDialog.setData(oData.results, false);
                     if(!bHasMore) this.oDialog.setBusy(false);
-                }.bind(this)/*,
+                }.bind(this),
                 fetchOthersSuccess: function(aDatas){
                     var aDialogData = this.oDialog.getData();
                     aDatas.forEach(function(oData){
@@ -146,7 +147,7 @@ sap.ui.define([
                     }.bind(this));
                     this.oDialog.setData(aDialogData);
                     this.oDialog.setBusy(false);
-                }.bind(this)*/
+                }.bind(this)
             });
         },
 

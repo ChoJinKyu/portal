@@ -18,6 +18,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
+                loadWhenOpen: { type: "boolean", group: "Misc", defaultValue: false },
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "department_id" },
                 textField: { type: "string", group: "Misc", defaultValue: "department_local_name" },
@@ -74,12 +75,20 @@ sap.ui.define([
                 );
             }
             ODataV2ServiceProvider.getService("cm.util.HrService").read("/Department", {
-                
+                fetchOthers: true,
                 filters: aFilters,
                 sorters: aSorters,
                 success: function(oData){
                     var aRecords = oData.results;
                     this.oDialog.setData(aRecords, false);
+                }.bind(this),
+                fetchOthersSuccess: function(aDatas){
+                    var aDialogData = this.oDialog.getData();
+                    aDatas.forEach(function(oData){
+                        aDialogData = aDialogData.concat(oData.results);
+                    }.bind(this));
+                    this.oDialog.setData(aDialogData);
+                    this.oDialog.setBusy(false);
                 }.bind(this)
             });
         }
