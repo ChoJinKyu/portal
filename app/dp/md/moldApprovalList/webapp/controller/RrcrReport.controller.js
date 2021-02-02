@@ -19,16 +19,14 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
     "./ApprovalBaseController",
-    "dp/md/util/controller/MoldItemSelection",
     'sap/m/SearchField',
     "sap/m/Token",
-    "dp/md/util/controller/DeptSelection", 
-
+    "dp/md/util/controller/ReModelRepairItemDialog",
 
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
-    , ApprovalBaseController, MoldItemSelection , SearchField , Token , DeptSelection 
+    , ApprovalBaseController,  SearchField , Token , ReModelRepairItemDialog 
 ) {
     "use strict";
     /**
@@ -45,9 +43,8 @@ sap.ui.define([
 
         validator: new Validator(),
 
-        moldItemPop: new MoldItemSelection(),
-
-        deptSelection : new DeptSelection(),
+        rrItem : new ReModelRepairItemDialog(), 
+ 
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -147,39 +144,25 @@ sap.ui.define([
          *       , oEvent : 이벤트 
          * ,     , oArges : company_code , org_code (필수)
 		 */
-        onMoldRecepitAddPress: function (oEvent) {
-            // console.log("oEvent>>>>");
-            var oModel = this.getModel("mdRecepit");
-
-            // console.log(" mdRecepit >>>> ", oModel);
-
-            var mIdArr = [];
-            if (oModel.oData.MoldRecepit != undefined && oModel.oData.MoldRecepit.length > 0) {
-                oModel.oData.MoldRecepit.forEach(function (item) {
-                    mIdArr.push(item.mold_id);
+        onItemAddPress : function (oEvent) {
+            if(!this.oReModelRepairItemDialog){
+               this.oReModelRepairItemDialog = new ReModelRepairItemDialog({
+                    title: "Item Add",
+                    multiSelection: true,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2101")
+                        ]
+                    }
                 });
+                // this.oReModelRepairItemDialog.attachEvent("apply", function(oEvent){
+                //    // this.byId("referMulti").setTokens(oEvent.getSource().getTokens());
+                 
+                // }.bind(this));
             }
-            // MOLD_PROGRESS_STATUS_CODE = 'RCV_CNF' 
-            // MOLD_PURCHASING_TYPE_CODE = 'L'  
-            var oArgs = { 
-                approval_type_code : "I",
-                company_code: this.company_code ,
-                org_code: this.plant_code,
-                mold_progress_status_code : ['RCV_CNF'] , 
-                mold_purchasing_type_code : 'L' ,
-                mold_id_arr: mIdArr  // 화면에 추가된 mold_id 는 조회에서 제외 
-            }
-
-            var that = this;
-
-            this.moldItemPop.openMoldItemSelectionPop(this, oEvent, oArgs, function (oDataMold) {
-                // console.log("selected data list >>>> ", oDataMold);
-                if (oDataMold.length > 0) {
-                    oDataMold.forEach(function (item) {
-                        that._addMoldItemTable(item);
-                    })
-                }
-            });
+            this.oReModelRepairItemDialog.open();
+           // this.oReModelRepairItemDialog.setTokens(this.byId("referMulti").getTokens());
+        
         },
 
         /**
@@ -305,30 +288,7 @@ sap.ui.define([
 
           //    this.byId("moldRecepitPreview").close();
         },
-        onValueHelpRequestedDept : function(mold_id){ 
-            // console.log('oEvent>>>> ' , mold_id);
-            var that = this;
-            this.deptSelection.openDeptSelectionPop(this, function(data){
-                // console.log("data " , data[0]);
-                that.setDept(mold_id, data[0].oData);
-            });
-        } ,
-        setDept : function (mold_id, data){
-            var oModel = this.getModel("mdRecepit").getData();
-          
-            for(var i = 0 ; i < oModel.MoldRecepit.length ; i++){ 
-                // console.log("============= setDept  =============  ");
-                // console.log("oModel " , oModel.MoldRecepit[i]);
-
-                if(String(oModel.MoldRecepit[i].mold_id) == String(mold_id)){ 
-                    // console.log(" =============  " , data);
-                    oModel.MoldRecepit[i].acq_department_code = data['department_id'];
-                    oModel.MoldRecepit[i].acq_department_code_nm =  data['department_local_name'];
-                }
-            }
-             this.getModel("mdRecepit").refresh(true); 
-          
-        },
+      
 
         onPageRequestButtonPress : function (){
             this.getModel("appMaster").setProperty("/approve_status_code", "AR"); // 결제요청 

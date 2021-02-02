@@ -25,7 +25,7 @@ sap.ui.define([
             useBatch: true
         });
 
-    var EmployeeDialog = Parent.extend("dp.md.util.controller.ui.EmployeeDialog", {
+    var EmployeeDialog = Parent.extend("dp.md.util.controller.EmployeeDeptDialog", {
 
         
         metadata: {
