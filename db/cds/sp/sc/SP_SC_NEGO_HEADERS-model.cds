@@ -14,7 +14,7 @@ using {
     sp.Sc_Nego_Award_Method_Code,
     sp.Sc_Nego_Award_Method_Map,
     sp.Sc_Negotiation_Style_Map,
-} from '../../sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
+} from '../../sp/sc/SP_SC_NEGO_MASTERS-model';
 
 /** 타스크럼 재정의[Redefined, Restricted, Materialized 등] */
 using { 
@@ -53,7 +53,8 @@ entity Sc_Nego_Headers {
                                               and Items.nego_header_id = $self.nego_header_id;
         reference_nego_header_id        : type of nego_header_id @title : '참조협상헤더ID';
         previous_nego_header_id         : Integer64          @title : '이존협상헤더ID';
-        operation_unit_code             : String(10)         @title : '운영단위코드';
+        operation_org_code              : String(10)         @title : '운영조직코드';
+        operation_unit_code             : String(10)         @title : '운영단위코드--폐기예정';
         reference_nego_document_number  : Integer            @title : '참조협상문서번호';
         nego_document_round             : Integer            @title : '협상문서회차';
         nego_document_number            : String(50)         @title : '협상문서번호';
@@ -196,7 +197,7 @@ entity Sc_Nego_Headers_View as
         operation_org : association to Sc_Pur_Operation_Org 
             on operation_org.tenant_id = $projection.tenant_id
             and operation_org.company_code = $projection.company_code
-            and operation_org.org_code = $projection.operation_unit_code
+            and operation_org.operation_org_code = $projection.operation_org_code
             ;
         award_method_map2 : association to Sc_Nego_Award_Method_Code 
             on award_method_map2.tenant_id = $projection.tenant_id
@@ -244,14 +245,12 @@ entity Sc_Nego_Headers_View2 as
         operation_org : association to Sc_Pur_Operation_Org 
             on operation_org.tenant_id = $projection.tenant_id
             and operation_org.company_code = $projection.company_code
-            and operation_org.org_code = $projection.operation_unit_code
+            and operation_org.operation_org_code = $projection.operation_unit_code
             ;
     } into {
         *,
         operation_org //[가능]명시적으로 포함 시켜야 실제 디자인타임에 Association으로 적용됨
     };
-
-
 
 entity Sc_Nego_Headers_View_Ext as projection on Sc_Nego_Headers_View;
 

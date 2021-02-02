@@ -6,9 +6,18 @@ using {sp as negoSuppliers} from '../../sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 
 // using {sp as negoItemPrices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 
-// Operating Org	N	( PUR_ORG_TYPE_MAPPING-PROCESS_TYPE_CODE  & ORG_TYPE_CODE )
-// PUR_OPERATION_ORG-ORG_CODE
-// PUR_OPERATION_ORG- ORG_NAME	 //COMPANY_CODE가 필요하다.
+/* 
+// #Sc_Pur_Operation_Org == Pur_Org_Type_Mapping[process_type_code='SP03:견적입찰'] = Pur_Operation_Org =+ Code_Lng[group_code='CM_ORG_TYPE_CODE']
+// #How to use : as association
+using { sp.Sc_Pur_Operation_Org } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+        operation_org : association to Sc_Pur_Operation_Org 
+            on operation_org.tenant_id = $projection.tenant_id
+            and operation_org.company_code = $projection.company_code
+            and operation_org.operation_org_code = $projection.operation_unit_code
+            ; 
+*/
+
+
 // Requisition No	N	OP_PU_PR_MST-PR_NUMBER	구매요청번호 - 구매요청번호
 // Submission No	N	CM_APPROVAL_MST - 품의서번호	구매요청번호 - 승인된 품의서번호
 // Part No	N	MM_MATERIAL_MST-MATERIAL_CODE	
