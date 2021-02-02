@@ -13,6 +13,7 @@ service partBaseActivityV4Service {
     type PdpartBaseActivityType : {
         tenant_id : String;
         activity_code : String;
+        sequence : String;
         description : String;
         active_flag : String;
         update_user_id : String;
