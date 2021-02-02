@@ -13,7 +13,7 @@ sap.ui.define([
 
     var sSelectedPath, sTenantId, oDialogInfo, toggleButtonId = "";
 
-    return BaseController.extend("sp.vi.basePriceMgt.controller.BasePriceList", {
+    return BaseController.extend("sp.vi.basePriceMgt.controller.ViBasePriceList", {
         dateFormatter: DateFormatter,
 
         onStatusColor: function (sStautsCodeParam) {
@@ -264,16 +264,20 @@ sap.ui.define([
          * 상세 페이지로 이동
          */
         , onGoDetail: function (oEvent) {
-            var oListModel = this.getModel("listModel");
-            var oBindingContext = oEvent.getSource().getBindingContext("listModel");
+            debugger;
+            MessageBox.show("준비중입니다.");
+            return;
 
-            if( oBindingContext ) {
-                var sPath = oBindingContext.getPath();
-                var oRootModel = this.getModel("rootModel");
-                oRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
-            }
+            // var oListModel = this.getModel("listModel");
+            // var oBindingContext = oEvent.getSource().getBindingContext("listModel");
 
-            this.getRouter().navTo("basePriceDetail");
+            // if( oBindingContext ) {
+            //     var sPath = oBindingContext.getPath();
+            //     var oRootModel = this.getModel("rootModel");
+            //     oRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
+            // }
+
+            // this.getRouter().navTo("basePriceDetail");
         },
 
         createPopupClose: function (oEvent) {

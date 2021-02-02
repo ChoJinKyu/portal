@@ -1,4 +1,4 @@
-<mvc:View controllerName="sp.vi.basePriceMgt.controller.BasePriceList"
+<mvc:View controllerName="sp.vi.basePriceMgt.controller.ViBasePriceList"
   xmlns:mvc="sap.ui.core.mvc"
   xmlns="sap.m"
   xmlns:f="sap.f"
@@ -165,6 +165,7 @@
         <t:Table id="listTable"
             selectionMode="None"
             rows="{listModel>/results}"
+            cellClick=".onGoDetail"
             visibleRowCountMode="Auto">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
@@ -172,18 +173,15 @@
                     <ToolbarSpacer />
                     <Button text="{I18N>/CREATE}" press=".onOpenCreateDialog" />
                     <ToolbarSeparator/>
-                    <Button icon="sap-icon://excel-attachment" press=".onExcelExport" >
-                        <layoutData>
-                            <OverflowToolbarLayoutData priority="NeverOverflow" />
-                        </layoutData>
-                    </Button>
+                    <Button icon="sap-icon://excel-attachment" press=".onExcelExport" />
                 </OverflowToolbar>
             </t:extension>
             <t:columns>
                 <t:Column hAlign="Center" width="10rem">
                     <Label text="{I18N>/APPROVAL_NUMBER}" textAlign="Center" />
                     <t:template>
-                        <Link text="{listModel>approval_number}" press=".onGoDetail" />
+                        <!-- <Link text="{listModel>approval_number}" press="onGoDetail" /> -->
+                        <Text text="{listModel>approval_number}" />
                     </t:template>
                 </t:Column>
                 <t:Column>
@@ -226,6 +224,12 @@
                     <Label text="{I18N>/REQUESTOR}" />
                     <t:template>
                         <Text text="{listModel>requestor_local_nm}" />
+                    </t:template>
+                </t:Column>
+                <t:Column hAlign="Center" width="2rem">
+                    <Label text="" />
+                    <t:template>
+                        <ObjectStatus icon="sap-icon://feeder-arrow" />
                     </t:template>
                 </t:Column>
             </t:columns>

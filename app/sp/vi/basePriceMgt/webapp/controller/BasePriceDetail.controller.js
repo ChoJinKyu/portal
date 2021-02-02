@@ -202,6 +202,7 @@ sap.ui.define([
          * 체크된 detail 데이터 삭제
          */
         , onListRowDelete : function (oEvent) {
+            debugger;
             var oDetailModel = this.getModel("detailModel"),
                 aDetails = oDetailModel.getProperty("/details"),
                 oDetailTable = oEvent.getSource().getParent().getParent();
@@ -212,8 +213,81 @@ sap.ui.define([
                 }
             }
 
+            for( var i=0; i<=aDetails.length-1; i++ ) {
+                aDetails[i].line_no = i+1;
+            }
+            line_no = aDetails.length + 1;
+
             oDetailModel.refresh();
             oDetailTable.clearSelection();
+        }
+
+        /**
+         * detail 선택 데이터 체크
+         */
+        , onRowSelectionChange : function (oEvent) {
+            var oDetailModel = this.getModel("detailModel"),
+                oParameters = oEvent.getParameters(),
+                bSelectAll = !!oParameters.selectAll;
+
+            // 전체 선택일 경우
+            if( bSelectAll || oParameters.rowIndex === -1 ) {
+                var aDetails = oDetailModel.getProperty("/details");
+                aDetails.forEach(function(oDetail) {
+                    oDetail.checked = bSelectAll;
+                });
+            }
+            // 단독 선택일 경우
+            else {
+                var oDetail = oDetailModel.getProperty(oParameters.rowContext.getPath());
+                oDetail.checked = !oDetail.checked;
+            }
+        }
+
+        /**
+         * 체크된 Approval 데이터 삭제
+         */
+        , onApprtRowDelete : function (oEvent) {
+            debugger;
+            var oDetailModel = this.getModel("approverModel"),
+                aDetails = oDetailModel.getProperty("/details"),
+                oDetailTable = oEvent.getSource().getParent().getParent();
+
+            for( var i=aDetails.length-1; 0<=i; i-- ) {
+                if( aDetails[i].checked ) {
+                    aDetails.splice(i, 1);
+                }
+            }
+
+            for( var i=0; i<=aDetails.length-1; i++ ) {
+                aDetails[i].appr_sequence = i+1;
+            }
+            appr_sequence = aDetails.length + 1;
+
+            oDetailModel.refresh();
+            oDetailTable.clearSelection();
+        }
+
+        /**
+         * Approval 선택 데이터 체크
+         */
+        , onApprRowSelectionChange : function (oEvent) {
+            var oDetailModel = this.getModel("approverModel"),
+                oParameters = oEvent.getParameters(),
+                bSelectAll = !!oParameters.selectAll;
+
+            // 전체 선택일 경우
+            if( bSelectAll || oParameters.rowIndex === -1 ) {
+                var aDetails = oDetailModel.getProperty("/details");
+                aDetails.forEach(function(oDetail) {
+                    oDetail.checked = bSelectAll;
+                });
+            }
+            // 단독 선택일 경우
+            else {
+                var oDetail = oDetailModel.getProperty(oParameters.rowContext.getPath());
+                oDetail.checked = !oDetail.checked;
+            }
         }
         
         /**
@@ -222,6 +296,7 @@ sap.ui.define([
         , onChangeCorporation : function (oEvent) {
             var oDetailModel = this.getModel("detailModel");
             var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
+            var rootData = oDetailModel.getProperty(sSelectedPath);
             oDetailModel.setProperty(sSelectedPath+"/org_Plant",this.getModel("rootModel").getProperty("/org_Plant"));
             
             oDetailModel.setProperty(sSelectedPath+"/org_Plant", this.getModel("rootModel").getProperty("/org_Plant/"+oDetailModel.getProperty(sSelectedPath+"/corporation")));
@@ -280,10 +355,14 @@ sap.ui.define([
                 });
 
                 this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
+                    debugger;
                     //자매 코드 추가시 자재, 협력사,수량 자동세팅                    
                     var oSelectedDialogItem = oEvent.getParameter("item");
                     this._oDetail.material_code = oSelectedDialogItem.material_code;
                     this._oDetail.material = oSelectedDialogItem.material_desc;
+                    
+                    //material Code 기준으로 조회하여 추가데이터 제공 
+                    //this.getMaterialSearch(this._oDetail.material_code);
 
                     var material = this.getModel("rootModel").getProperty("/material_code/"+this._oDetail.material_code);
 
@@ -296,14 +375,66 @@ sap.ui.define([
                     }
                     this._oDetail.vendor_pool = material[0].vendor_pool_local_name;
                     this._oDetail.basePriceUnit = material[0].material_price_unit;
+                    this._oDetail.vendor_pool_code = material[0].vendor_pool_code;
                     oDetailModel.refresh();
                 }.bind(this));
             }
             this.oSearchMultiMaterialMasterDialog.open();
-
-             
-
         }
+
+        //자재 조회
+        // , getMaterialSearch : function(material_code){
+        //     debugger;
+        //     var oBasePriceArlModel = this.getModel("basePriceArl");
+        //     var aOrgMetalFilter = [];
+        //         aOrgMetalFilter.push(new Filter("material_code", FilterOperator.EQ, material_code));
+
+        //     this._getListSearch(aOrgMetalFilter);
+        // }
+
+        // , _getListSearch : function(aOrgMetalFilter){
+        //     debugger;
+        //     var oView = this.getView();
+        //     var oModel = this.getModel("basePriceArl");
+            
+        //     oModel.read("/Base_Price_Aprl_Material", {
+        //         filters : aOrgMetalFilter,
+        //         success : function(data){
+        //             debugger;
+        //             console.log(data);
+        //             if( data && data.results ) {
+        //                 var aResults = data.results;
+        //                 var aCompoany = [];
+        //                 var oPurOrg = {};
+
+        //                 for( var i=0; i<aResults.length; i++ ) {
+        //                     var oResult = aResults[i];
+        //                     if( -1===aCompoany.indexOf(oResult.material_code) ) {
+        //                         aCompoany.push(oResult.material_code);
+        //                         oPurOrg[oResult.material_code] = [];
+        //                     }
+
+        //                     oPurOrg[oResult.material_code].push({material_code: oResult.material_code
+        //                                                         ,material_desc: oResult.material_desc
+        //                                                         ,material_price_unit : oResult.material_price_unit
+        //                                                         ,vendor_pool_code : oResult.vendor_pool_code
+        //                                                         ,vendor_pool_local_name : oResult.vendor_pool_local_name
+        //                                                         });
+        //                 }
+
+        //                 this.getModel("rootModel").setProperty("/material_code", oPurOrg);
+        //                 debugger;
+        //                 // this._oDetail.vendor_pool = material[0].vendor_pool_local_name;
+        //             // this._oDetail.basePriceUnit = material[0].material_price_unit;
+        //             // this._oDetail.vendor_pool_code = material[0].vendor_pool_code;
+
+        //             }
+        //         },
+        //         error : function(data){
+        //             console.log("error", data);
+        //         }
+        //     });
+        //}
 
         /**
          * 구매 담당자 Dialog 창
@@ -337,28 +468,6 @@ sap.ui.define([
         }
 
         /**
-         * detail 선택 데이터 체크
-         */
-        , onRowSelectionChange : function (oEvent) {
-            var oDetailModel = this.getModel("detailModel"),
-                oParameters = oEvent.getParameters(),
-                bSelectAll = !!oParameters.selectAll;
-
-            // 전체 선택일 경우
-            if( bSelectAll || oParameters.rowIndex === -1 ) {
-                var aDetails = oDetailModel.getProperty("/details");
-                aDetails.forEach(function(oDetail) {
-                    oDetail.checked = bSelectAll;
-                });
-            }
-            // 단독 선택일 경우
-            else {
-                var oDetail = oDetailModel.getProperty(oParameters.rowContext.getPath());
-                oDetail.checked = !oDetail.checked;
-            }
-        }
-
-        /**
          * 날짜 포맷변경 (YYYYMMDD)
          */
         ,getFormatDate : function (date){
@@ -383,7 +492,7 @@ sap.ui.define([
         }
 
         /**
-         * 임시 저장
+         * 임시 저장(DR)
          */
         , onSave: function (oEvent) {
             var approval_status_code = "DR";
@@ -400,7 +509,7 @@ sap.ui.define([
         }
 
         /**
-         * 임시 저장
+         * 임시 저장(AR)
          */
         , onDraft: function (oEvent) {
             var approval_status_code = "AR";
@@ -416,7 +525,9 @@ sap.ui.define([
             
         }
 
-        , _SendDataModel : function(approval_status_code){       
+        , _SendDataModel : function(approval_status_code){    
+            debugger;
+            
             var oDetailModel = this.getModel("detailModel");
             var oData = oDetailModel.getData();
             var date = new Date();
@@ -444,6 +555,16 @@ sap.ui.define([
                     update_user_id          : oData.create_user_id
                 };            
             var aViMst = [oViMst];
+
+            if (!oViMst.approval_title){
+                    MessageBox.show("품의서 제목은 필수입니다.");
+                    return;
+            }
+
+            if (!oViMst.approval_contents){
+                    MessageBox.show("품의서 설명은 필수입니다.");
+                    return;
+            }
 
 
             /**
@@ -507,8 +628,10 @@ sap.ui.define([
             /**
              * SP_VI_BASE_PRICE_APRL_INSERT_PROC -> SP_VI_BASE_PRICE_APRL_ITEM_TYPE
              */
+            debugger;
             var aPriceResult = [];
             var aPriceData = oData.details;
+            var oRootModel = this.getModel("rootModel");
             aPriceData.forEach(function(oPrice, idx) {
                 var strArray = aPriceData[idx].apply_start_date.replace(" ","");
                     strArray = strArray.split('.');
@@ -523,20 +646,20 @@ sap.ui.define([
                     oNewPriceObj['tenant_id'] = oData.tenant_id;
                     oNewPriceObj['approval_number'] = null;                       //핸들러에서 부여
                     oNewPriceObj['item_sequence'] = null;                         //임시  핸들러에서 부여
-                    oNewPriceObj['company_code'] = oData.company_code;
+                    oNewPriceObj['company_code'] = aPriceData[idx].corporation;
                     oNewPriceObj['bizunit_code'] = oData.bizunit_code;          //세션 본부 코드 
                     oNewPriceObj['management_mprice_code'] = aPriceData[idx].management;
                     oNewPriceObj['base_year'] = String(aPriceData[idx].base_year);
                     oNewPriceObj['apply_start_yyyymm'] = String(apply_start_yyyymm);
-                    oNewPriceObj['apply_end_yyyymm'] = apply_end_yyyymm;
-                    oNewPriceObj['bizdivision_code'] = aPriceData[idx].bizdivision_code;
+                    oNewPriceObj['apply_end_yyyymm'] = String(apply_end_yyyymm);
+                    oNewPriceObj['bizdivision_code'] = aPriceData[idx].business_division;
                     oNewPriceObj['plant_code'] = aPriceData[idx].plant;
                     oNewPriceObj['supply_plant_code'] = null;
                     oNewPriceObj['supplier_code'] = aPriceData[idx].supplier_code;
                     oNewPriceObj['material_code'] = aPriceData[idx].material_code;
                     oNewPriceObj['material_name'] = aPriceData[idx].material;
-                    oNewPriceObj['vendor_pool_code'] = aPriceData[idx].vendor_pool;
-                    oNewPriceObj['currency_code'] = aPriceData[idx].currency;
+                    oNewPriceObj['vendor_pool_code'] = aPriceData[idx].vendor_pool_code;
+                    oNewPriceObj['currency_code'] = aPriceData[idx].currency_code;
                     oNewPriceObj['material_price_unit'] = Number(aPriceData[idx].basePriceUnit);
                     oNewPriceObj['buyer_empno'] = aPriceData[idx].buyer;
                     oNewPriceObj['base_price'] = Number(aPriceData[idx].base_price);
@@ -550,6 +673,65 @@ sap.ui.define([
                     oNewPriceObj['update_user_id'] = oData.create_user_id;                    
                 aPriceResult.push(oNewPriceObj);
             });
+            debugger;
+
+             for (var i=0; i<=aPriceResult.length-1; i++){
+                if (!aPriceResult[i].bizdivision_code){
+                    MessageBox.show("사업부코드는 필수입니다.");
+                    return;
+                }
+
+                if (!aPriceResult[i].material_code){
+                    MessageBox.show("자재코드는 필수입니다.");
+                    return;
+                }
+
+                if (!aPriceResult[i].company_code){
+                    MessageBox.show("컴퍼니코드는 필수입니다");
+                    return;
+                }
+
+                if (!aPriceResult[i].currency_code){
+                    MessageBox.show("통화코드는 필수입니다. ");
+                    return;
+                }
+
+                if (!aPriceResult[i].plant_code){
+                    MessageBox.show("플랜트코드는 필수입니다. ");
+                    return;
+                }
+
+                if (!aPriceResult[i].supplier_code){
+                    MessageBox.show("공급업체코드는 필수입니다. ");
+                    return;
+                }
+            
+                if (aPriceResult[i].apply_start_yyyymm < String(date).substring(0,6) ){
+                    MessageBox.show("적용시작일자가 현재월보다 이전월입니다.");
+                    return;
+                }
+
+                if (aPriceResult[i].apply_end_yyyymm < aPriceResult[i].apply_start_yyyymm ){
+                    MessageBox.show("적용종료일자가가 적용시작일자보다 적습니다.");
+                    return;
+                }
+
+                // if (!aPriceResult[i].vendor_pool_code){
+                //     MessageBox.show("협력사풀은 필수입니다. ");
+                //     return;
+                // }
+
+                // if (!aPriceResult[i].base_price){
+                //     MessageBox.show("base_price 필수 ");
+                //     return;
+                // }
+
+                // if (!aPriceResult[i].bizunit_code){
+                //     MessageBox.show("bizunit_code 필수 ");
+                //     return;
+                // }
+                    
+            }
 
             /**
              * SP_VI_BASE_PRICE_APRL_INSERT_PROC -> SP_VI_BASE_PRICE_APRL_DTL_TYPE
@@ -585,6 +767,12 @@ sap.ui.define([
             };
             console.log("SendData");
             console.log(oSendData);
+
+            // aao
+            debugger;
+
+
+
             this._SendDataSave(oSendData);
         }
 
@@ -602,6 +790,8 @@ sap.ui.define([
                     console.log("_sendSaveData", data);
                     if(data) {
                         MessageBox.show("저장되었습니다.", {at: "Center Center"});
+                        this.getRouter().navTo("basePriceList");
+
                     } else {
                         MessageBox.show("저장 실패 하였습니다.", {at: "Center Center"});
                     }
