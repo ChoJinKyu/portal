@@ -272,14 +272,15 @@ sap.ui.define([
         //     this.getModel("refererPreview").setProperty("/refArr", rArr);
 
             var oView = this.getView();
-
+             var p = this.process;
             if (!this._oDialogPrev) {
                 this._oDialogPrev = Fragment.load({
                     id: oView.getId(),
                     name: "dp.md.moldApprovalList.view.MoldRecepitApprovalPreView",
                     controller: this
                 }).then(function (oDialog) {
-                    oView.addDependent(oDialog);
+                    oView.addDependent(oDialog); 
+                     p.setDrawProcessUI(this, "MoldRecepitProcessPrev" , "A", 6);
                     return oDialog;
                 }.bind(this));
             }

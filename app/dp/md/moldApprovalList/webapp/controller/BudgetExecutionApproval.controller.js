@@ -405,9 +405,8 @@ sap.ui.define([
                     name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView",
                     controller: this
                 }).then(function (oDialog) { 
-                    p.setDrawProcessUI(this, "BudgetExecutionPressPrev" , "A", 1);
-
                     oView.addDependent(oDialog);
+                    p.setDrawProcessUI(this, "BudgetExecutionPressPrev" , "A", 1);
                     return oDialog;
                 }.bind(this));
             }
