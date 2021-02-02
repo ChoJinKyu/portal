@@ -42,14 +42,14 @@ public class PrReviewMgtV4Service implements EventHandler {
     @On(event = CallPrReviewSaveProcContext.CDS_NAME)
     public void onCallPrReviewSaveProc(CallPrReviewSaveProcContext context) {
 
-        log.info("##### onCallPrReviewSaveProc Start ");
+        log.info("#### onCallPrReviewSaveProc Start ");
 
         // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
         String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
 
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
         StringBuffer v_sql_createTable = new StringBuffer();
-        v_sql_createTable.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_PR_REVIEW ( ")
+        v_sql_createTable.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_PR_REVIEW (")
                          .append("TRANSACTION_CODE NVARCHAR(1), ")
                          .append("TENANT_ID NVARCHAR(5), ")
                          .append("COMPANY_CODE NVARCHAR(10), ")
@@ -60,24 +60,25 @@ public class PrReviewMgtV4Service implements EventHandler {
         String v_sql_dropTable = "DROP TABLE #LOCAL_TEMP_PR_REVIEW";
         String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_PR_REVIEW VALUES (?, ?, ?, ?, ?)";
 
-        log.info("### LOCAL_TEMP Table Create Success ###");
+        log.info("#### LOCAL_TEMP Table Create Success ####");
 
         StringBuffer v_sql_callProc = new StringBuffer();
-        v_sql_callProc.append("CALL OP_PU_PR_REVIEW_SAVE_PROC ( ")
-                       .append("I_JOB_TYPE => ?, ")
-                       .append("I_PR_ITEM_TBL => #LOCAL_TEMP_PR_REVIEW, ")
-                       .append("I_BUYER_EMPNO => ?, ")
-                       .append("I_BUYER_DEPARTMENT_CODE => ?, ")
-                       .append("I_PROCESSED_REASON => ?, ")
-                       .append("I_USER_ID => ?, ")
-                       .append("O_MSG_TBL => ? ").append(")");
+        v_sql_callProc.append("CALL OP_PU_PR_REVIEW_SAVE_PROC (")
+                      .append("I_JOB_TYPE => ?, ")
+                      .append("I_PR_ITEM_TBL => #LOCAL_TEMP_PR_REVIEW, ")
+                      .append("I_BUYER_EMPNO => ?, ")
+                      .append("I_BUYER_DEPARTMENT_CODE => ?, ")
+                      .append("I_PROCESSED_REASON => ?, ")
+                      .append("I_USER_ID => ?, ")
+                      .append("O_MSG_TBL => ? ")
+                      .append(")");
 
-        log.info("### DB Connect Start ###");
+        log.info("#### DB Connect Start ####");
         ProcInputType v_inData = context.getInputData();
         Collection<PrItemType> v_inPrItemTbl = v_inData.getPrItemTbl();
         Collection<OutType> v_result = new ArrayList<>();
 
-        log.info("### Proc Start ###");
+        log.info("#### Proc Start ####");
 
         // Commit Option
         jdbc.execute(v_sql_commitOption);
@@ -86,20 +87,43 @@ public class PrReviewMgtV4Service implements EventHandler {
         jdbc.execute(v_sql_createTable.toString());
 
         // Local Temp Table에 insert
-        List<Object[]> batchTbl = new ArrayList<Object[]>();
+        List<Object[]> batch_prItemTbl = new ArrayList<Object[]>();
         if (!v_inPrItemTbl.isEmpty() && v_inPrItemTbl.size() > 0) {
             for (PrItemType v_inRow : v_inPrItemTbl) {
-                Object[] values = new Object[] { v_inRow.get("transaction_code"), v_inRow.get("tenant_id"),
-                        v_inRow.get("company_code"), v_inRow.get("pr_number"), v_inRow.get("pr_item_number") };
-                log.info("### PR Number : " + v_inRow.get("pr_number") + "    ,PR Item Number : "
-                        + v_inRow.get("pr_item_number"));
-                batchTbl.add(values);
+                Object[] values = new Object[] {
+                                                 v_inRow.get("transaction_code")
+                                                ,v_inRow.get("tenant_id")
+                                                ,v_inRow.get("company_code")
+                                                ,v_inRow.get("pr_number")
+                                                ,v_inRow.get("pr_item_number")
+                                                };
+                log.info("====> PR Number : " + v_inRow.get("pr_number") + ", PR Item Number : " + v_inRow.get("pr_item_number"));
+                batch_prItemTbl.add(values);
             }
         }
 
-        int[] updateCountsTbl = jdbc.batchUpdate(v_sql_insertTable, batchTbl);
+        int[] updateCounts = jdbc.batchUpdate(v_sql_insertTable, batch_prItemTbl);
 
-        log.info("### LOCAL_TEMP Data Insert Success ###");
+        log.info("#### LOCAL_TEMP Data Insert Success ####");
+
+        SqlReturnResultSet oReturn = new SqlReturnResultSet("O_MSG_TBL", new RowMapper<OutType>() {
+            @Override
+            public OutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                log.info("====> return_code : " + v_rs.getString("return_code"));
+                log.info("====> return_msg  : " + v_rs.getString("return_msg"));
+                OutType v_row = OutType.create();
+                v_row.setReturnCode(v_rs.getString("return_code"));
+                v_row.setReturnMsg(v_rs.getString("return_msg"));
+
+                if ("NG".equals(v_rs.getString("return_code"))) {
+                    log.info("#### Call Proc Error!!  ####");
+                    throw new ServiceException(ErrorStatuses.BAD_REQUEST, v_rs.getString("return_msg"));
+                }
+
+                v_result.add(v_row);
+                return v_row;
+            }
+        });
 
         // Procedure Call
         List<SqlParameter> paramList = new ArrayList<SqlParameter>();
@@ -108,42 +132,30 @@ public class PrReviewMgtV4Service implements EventHandler {
         paramList.add(new SqlParameter("I_BUYER_DEPARTMENT_CODE", Types.VARCHAR));
         paramList.add(new SqlParameter("I_PROCESSED_REASON", Types.VARCHAR));
         paramList.add(new SqlParameter("I_USER_ID", Types.VARCHAR));
-
-        SqlReturnResultSet oReturn = new SqlReturnResultSet("O_MSG_TBL", new RowMapper<OutType>() {
-            @Override
-            public OutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                log.info("##### return_code: " + v_rs.getString("return_code") + " ### return_msg: "
-                        + v_rs.getString("return_msg"));
-                OutType v_row = OutType.create();
-                v_row.setReturnCode(v_rs.getString("return_code"));
-                v_row.setReturnMsg(v_rs.getString("return_msg"));
-
-                if ("NG".equals(v_rs.getString("return_code"))) {
-                    log.info("### Call Proc Error!!  ###");
-                    throw new ServiceException(ErrorStatuses.BAD_REQUEST, v_rs.getString("return_msg"));
-                }
-                v_result.add(v_row);
-                return v_row;
-            }
-        });
         paramList.add(oReturn);
 
         Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
             @Override
             public CallableStatement createCallableStatement(Connection con) throws SQLException {
                 CallableStatement stmt = con.prepareCall(v_sql_callProc.toString());
-                stmt.setObject(1, v_inData.get("jobType"));
-                stmt.setObject(2, v_inData.get("buyerEmpno"));
-                stmt.setObject(3, v_inData.get("buyerDepartmentCode"));
-                stmt.setObject(3, v_inData.get("processedReason"));
-                stmt.setObject(4, v_inData.get("userId"));
+
+                log.info("====> I_JOB_TYPE              : "+v_inData.getJobType());
+                log.info("====> I_BUYER_EMPNO           : "+v_inData.getBuyerEmpno());
+                log.info("====> I_BUYER_DEPARTMENT_CODE : "+v_inData.getBuyerDepartmentCode());
+                log.info("====> I_PROCESSED_REASON      : "+v_inData.getProcessedReason());
+                log.info("====> I_USER_ID               : "+v_inData.getUserId());
+
+                stmt.setString("I_JOB_TYPE", v_inData.getJobType());
+                stmt.setString("I_BUYER_EMPNO", v_inData.getBuyerEmpno());
+                stmt.setString("I_BUYER_DEPARTMENT_CODE", v_inData.getBuyerDepartmentCode());
+                stmt.setString("I_PROCESSED_REASON", v_inData.getProcessedReason());
+                stmt.setString("I_USER_ID", v_inData.getUserId());
+
                 return stmt;
             }
         }, paramList);
 
-        log.info("### callProc Success ###");
-
-        log.info("### callProc Success ###");
+        log.info("#### callProc Success ####");
 
         // Local Temp Table DROP
         jdbc.execute(v_sql_dropTable);
@@ -151,7 +163,7 @@ public class PrReviewMgtV4Service implements EventHandler {
         context.setResult(v_result);
         context.setCompleted();
 
-        log.info("##### onCallPrReviewSaveProc End");
+        log.info("#### onCallPrReviewSaveProc End");
 
     }
 
