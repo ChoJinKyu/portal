@@ -5,7 +5,7 @@
 -->
 <mvc:View controllerName="dp.md.moldApprovalList.controller.RrcrReport" 
   xmlns:mvc="sap.ui.core.mvc"
-    xmlns:uxap="sap.uxap"
+    xmlns:uxap="sap.uxap" 
     xmlns:form="sap.ui.layout.form" 
     xmlns:core="sap.ui.core" 
     xmlns:layout="sap.ui.layout"
@@ -15,7 +15,7 @@
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
     xmlns="sap.m"
-    xmlns:cm-ui="cm.util.control.ui"
+    xmlns:cm-ui="cm.util.control.ui" 
 	height="100%">
 
 	<uxap:ObjectPageLayout 
@@ -28,12 +28,12 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
                 <uxap:expandedHeading>
-					<Title text="Mold Recepit Approval" wrapping="true" />
+					<Title text="Remodel &amp; Repair Completion Report" wrapping="true" />
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
                     <FlexBox fitContainer="true" alignItems="Center">
-						<Title text="Mold Recepit Approval" wrapping="true"/>
+						<Title text="Remodel &amp; Repair Completion Report" wrapping="true"/>
 					</FlexBox>
 				</uxap:snappedHeading>
 
@@ -88,18 +88,21 @@
                       <HBox>
                         <Title text="{I18N>/PROCESS}"/>
                     </HBox>
+                   <HBox  id="test">
+                      
+                   </HBox>
                     <HBox>
                         <sc:MicroProcessFlow>
 	                        <sc:content>
-                                <sc:MicroProcessFlowItem stepWidth="2rem" >
+                                <sc:MicroProcessFlowItem >
                                     <sc:customControl>
                                         <VBox alignItems="Center">
                                             <core:Icon src="sap-icon://message-success" color="#04B395"/>
-                                            <Text text="PR" class=""/>
+                                            <Text text="Remodel &amp; Repair&#10;Entry" textAlign="Center" class=""/>
                                         </VBox>
                                     </sc:customControl>
                                 </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
+                                <sc:MicroProcessFlowItem>
                                     <sc:customControl>
                                         <VBox alignItems="Center">
                                             <core:Icon src="sap-icon://message-success" color="#04B395"/>
@@ -107,7 +110,7 @@
                                         </VBox>
                                     </sc:customControl>
                                 </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
+                                <sc:MicroProcessFlowItem  >
                                     <sc:customControl>
                                         <VBox alignItems="Center">
                                             <core:Icon src="sap-icon://message-success" color="#04B395"/>
@@ -115,7 +118,7 @@
                                         </VBox>
                                     </sc:customControl>
                                 </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
+                                <sc:MicroProcessFlowItem   >
                                     <sc:customControl>
                                         <VBox alignItems="Center">
                                             <core:Icon src="sap-icon://message-success" color="#04B395" />
@@ -123,7 +126,7 @@
                                         </VBox>
                                     </sc:customControl>
                                 </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
+                                <sc:MicroProcessFlowItem  >
                                     <sc:customControl>
                                         <VBox alignItems="Center">
                                             <core:Icon src="sap-icon://message-success" color="#04B395"/>
@@ -131,7 +134,7 @@
                                         </VBox>
                                     </sc:customControl>
                                 </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
+                                <sc:MicroProcessFlowItem  >
                                     <sc:customControl>
                                         <VBox alignItems="Center">
                                             <core:Icon src="sap-icon://message-success" color="#04B395" />
@@ -139,7 +142,7 @@
                                         </VBox>
                                     </sc:customControl>
                                 </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
+                                <sc:MicroProcessFlowItem  >
                                     <sc:customControl>
                                         <VBox alignItems="Center">
                                             <core:Icon src="sap-icon://message-success" color="#F94B50"/>
@@ -147,7 +150,7 @@
                                         </VBox>
                                     </sc:customControl>
                                 </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
+                                <sc:MicroProcessFlowItem  >
                                     <sc:customControl>
                                         <VBox alignItems="Center">
                                             <core:Icon src="sap-icon://appear-offline" color="#BEC9D4"/>
@@ -175,11 +178,15 @@
 			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="General Info">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageGeneralInfoSection">
+           
 					</uxap:ObjectPageSubSection>
+                    <uxap:ObjectPageSubSection>
+                    
+                  	</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-            <uxap:ObjectPageSection titleUppercase="false" title="Receipt Item">
+            <uxap:ObjectPageSection titleUppercase="false" title="Order Parts">
 				<uxap:subSections>
                 <uxap:ObjectPageSubSection id="pageItemSection">
                         <!-- 바뀌는 영역 -->
@@ -220,7 +227,7 @@
         title="직원 검색"
         items="{
             filters: [
-                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
             ]
         }"
         apply=".onEmployeeDialogApplyPress"

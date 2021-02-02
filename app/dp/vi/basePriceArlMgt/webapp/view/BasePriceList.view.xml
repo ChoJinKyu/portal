@@ -35,15 +35,16 @@
                 <form:content>
                     <!-- Type 시작 -->
                     <VBox>
-                        <Label text="{I18N>/APPROVAL_TYPE_CODE} "></Label>
-                        <ComboBox
+                        <Label text="{I18N>/APPROVAL_TYPE_CODE}"></Label>
+                        <MultiComboBox
                             width="100%"
-                            selectedKey="{filterModel>/type}"
+                            selectedKeys="{filterModel>/type}"
+                            placeholder="{I18N>/ALL}"
                             items="{filterModel>/type_list}">
                             <items>
                             <core:Item key="{filterModel>code}" text="{filterModel>code_name}" />
                             </items>
-                        </ComboBox>
+                        </MultiComboBox>
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
@@ -104,14 +105,15 @@
                     <!-- Status 시작 -->
                     <VBox>
                         <Label text="{I18N>/STATUS} "></Label>
-                        <ComboBox
+                        <MultiComboBox
                             width="100%"
-                            selectedKey="{filterModel>/status}"
+                            selectedKeys="{filterModel>/status}"
+                            placeholder="{I18N>/ALL}"
                             items="{rootModel>/processList}">
                             <items>
                             <core:Item key="{rootModel>code}" text="{rootModel>code_name}" />
                             </items>
-                        </ComboBox>
+                        </MultiComboBox>
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>

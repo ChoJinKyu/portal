@@ -109,7 +109,7 @@ sap.ui.define([
         _getSearchMoldSelection: function () {
             var aSearchFilters = [];
             // tenant_id  
-            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600'));
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101'));
             var company = oThis.byId('moldItemPopCompany').mProperties.selectedKey;
             var plant = oThis.byId('moldItemPopPlant').mProperties.selectedKey;
             var model = oThis.byId('moldItemPopModel').getValue().trim();
@@ -200,7 +200,7 @@ sap.ui.define([
 
             oModel.setTransactionModel(oServiceModel);
             oModel.read("/moldIdView", {
-                filters: [new Filter("tenant_id", FilterOperator.EQ, 'L2600') 
+                filters: [new Filter("tenant_id", FilterOperator.EQ, 'L2101') 
                         , new Filter("approval_type_code", FilterOperator.EQ, oArges.approval_type_code) 
                         ],
                 success: function (oData) {
@@ -240,7 +240,7 @@ sap.ui.define([
             oView.setBusy(true);
             companyModel.setTransactionModel(oServiceModel2);
             companyModel.read("/Org_Company", {
-                filters: [new Filter("tenant_id", FilterOperator.EQ, 'L2600')],
+                filters: [new Filter("tenant_id", FilterOperator.EQ, 'L2101')],
                 success: function (oData) {
                     console.log(" company >>>>  ", oData);
                     oView.setBusy(false);
@@ -251,7 +251,7 @@ sap.ui.define([
             plantModel.setTransactionModel(oServiceModel3);
             plantModel.read("/Pur_Operation_Org", {
                 filters: [
-                      new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                      new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                     , new Filter("org_type_code", FilterOperator.EQ, 'PL')
                     , new Filter("company_code", FilterOperator.EQ, oThis.getModel('moldItemPop').oData.company_code)
                 ],

@@ -80,8 +80,8 @@ sap.ui.define([
             var oFilterModel = this.getModel("filterModel");
             var oFilterModelData = oFilterModel.getData();
             var aFilters = [];
-            var sType = oFilterModelData.type;
-            var sStatus = oFilterModelData.status;
+            var aType = oFilterModelData.type || [];
+            var aStatus = oFilterModelData.status || [];
             var sApprovalNumber = oFilterModelData.approvalNumber;
             var sApprovalTitle = oFilterModelData.approvalTitle;
             var sRequestBy = oFilterModelData.requestBy;
@@ -90,13 +90,31 @@ sap.ui.define([
             var aRequestors = this.byId("multiInputWithEmployeeValueHelp").getTokens();
 
             // 품의유형이 있는 경우
-            if( sType ) {
-                aFilters.push(new Filter("approval_type_code", FilterOperator.EQ, sType));
+            if( 0<aType.length ) {
+                var aTypeFilter = [];
+                
+                aType.forEach(function (sType) {
+                    aTypeFilter.push(new Filter("approval_type_code", FilterOperator.EQ, sType));
+                });
+
+                aFilters.push(new Filter({
+                    filters: aTypeFilter,
+                    and: false
+                }));
             }
 
             // Status가 있는 경우
-            if( sStatus ) {
-                aFilters.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
+            if( 0<aStatus.length ) {
+                var aStatusFilter = [];
+                
+                aStatus.forEach(function (sStatus) {
+                    aStatusFilter.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
+                });
+
+                aFilters.push(new Filter({
+                    filters: aStatusFilter,
+                    and: false
+                }));
             }
 
             // Approval Number가 있는 경우
@@ -163,22 +181,19 @@ sap.ui.define([
 
             // 테이블 Row를 클릭했을 경우
             if( oBindingContext ) {
-                var approvalTarget = "";
                 var sPath = oBindingContext.getPath();
                 var oRootModel = this.getModel("rootModel");
                 var oSelectedData = oListModel.getProperty(sPath);
                 oRootModel.setProperty("/selectedData", oSelectedData);
 
-                if( oSelectedData.approval_type_code === "VI10" ) {
-                    approvalTarget = "NewBasePriceTable";
-                }else {
-                    approvalTarget = "ChangeBasePriceTable";
-                }
-
-                this.getModel("rootModel").setProperty("/selectedApprovalType", approvalTarget);
+                this.getModel("rootModel").setProperty("/selectedApprovalType", oSelectedData.approval_type_code);
             }
             // 생성버튼 클릭했을 경우
             else {
+                if( oEvent.getId() === "cellClick" ) {
+                  return;
+                }
+
                 this.getModel("rootModel").setProperty("/selectedData", {});
             }
 
@@ -277,9 +292,9 @@ sap.ui.define([
             }
             else{
                 if(toggleButtonId.indexOf("newVI") > -1){
-                    approvalTarget = "NewBasePriceTable";
+                    approvalTarget = "VI10";
                 }else if(toggleButtonId.indexOf("changeVI") > -1){
-                    approvalTarget = "ChangeBasePriceTable";
+                    approvalTarget = "VI20";
                 }
             }
             

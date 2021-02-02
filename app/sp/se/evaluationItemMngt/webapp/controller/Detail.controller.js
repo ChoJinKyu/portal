@@ -103,57 +103,110 @@ sap.ui.define([
              * Detail PatternMatched
              */
             , _onPatternMatched: function (e) {
-                var oArgs, oComponent, oViewModel, oHeader,
-                    oView, aControls, oTable;
+                var oArgs, oComponent, oViewModel,
+                    oView, aControls, oTable, oDetailData;
 
                 oArgs = e.getParameter("arguments");
                 oComponent = this.getOwnerComponent();
                 oViewModel = oComponent.getModel("viewModel");
-                oHeader = oViewModel.getProperty("/Detail/Header");
-                oTable = this.byId("tblEvalItemScle");
                 oView = this.getView();
 
+                oViewModel.setProperty("/Args", oArgs);
+                oDetailData = oViewModel.getProperty("/Detail");
+                if(!oDetailData){
+                    oDetailData = {};
+                }
                 if( oArgs.new === "Y" ){
                     // 신규건인지 확인
                     oViewModel.setProperty("/App/layout", "TwoColumnsBeginExpanded");
                     aControls = oView.getControlsByFieldGroupId("newRequired");
                     this._clearValueState(aControls);
-
-                }else{
-                    oViewModel.setProperty("/App/layout", "TwoColumnsMidExpanded");
-                    oViewModel.setProperty("/App/EditMode", false);
+                    if(!oDetailData.NewHeader){
+                        oDetailData.NewHeader = {};
+                    }
+                    oViewModel.setProperty("/Detail", oDetailData);
+                    return;
                 }
-                
-                oTable.removeSelections(true);
-                oViewModel.setProperty("/Args", oArgs);
 
-                if(!oHeader){
+                if(!oArgs.refKey){
                     // 잘못된 접근
                     return;
                 }
-                /***
-                 * 계산식 변수들 바인딩
-                 * 조회조건 evaluation_operation_unit_code 에따라 다름
-                 * 
-                 */
-                var oCalculationBuilder;
-                oCalculationBuilder = this.byId("calculationBuilder");
-                oCalculationBuilder.bindAggregation("variables",{
-                    path : "/QttiveItemCode",
-                    template : new CalculationBuilderVariable({ key : "{qttive_item_code}", label : "{qttive_item_name}" }),
-                    filters : [
-                        new Filter("tenant_id", "EQ", oHeader.tenant_id),
-                        new Filter("company_code", "EQ", oHeader.company_code),
-                        new Filter("org_type_code", "EQ", oHeader.org_type_code),
-                        new Filter("org_code", "EQ", oHeader.org_code),
-                        new Filter("evaluation_operation_unit_code", "EQ", oHeader.evaluation_operation_unit_code)
-                    ],
-                    sorter : [
-                        new Sorter("sort_sequence")
-                    ]
-                });
+                oDetailData.Header = {};
+                oViewModel.setProperty("/Detail", oDetailData);
+                oViewModel.setProperty("/App/layout", "TwoColumnsMidExpanded");
 
-                this._readItem();
+                this._readHeader();
+                
+            }
+            /**
+             * scale 데이터 조회
+             */
+            , _readHeader : function(){
+                var oComponent, oView, oViewModel, oODataModel, aFilters, oHeader,
+                    oArgs, oTable, aControls;
+                
+                oComponent = this.getOwnerComponent();
+                oView = this.getView();
+                oViewModel = oComponent.getModel("viewModel");
+                oODataModel = oComponent.getModel();
+                oArgs = oViewModel.getProperty("/Args");
+                oTable = this.byId("tblEvalItemScle");
+                aControls = oView.getControlsByFieldGroupId("detailRequired");
+                aFilters = [
+                    new Filter({ path:"ref_key", operator:"EQ", value1 : oArgs.refKey }),
+                ];
+
+                oTable.removeSelections(true);
+                oViewModel.setProperty("/Detail/Header", {});
+                oViewModel.setProperty("/App/EditMode", false);
+                this._clearValueState(aControls);
+
+                oView.setBusyIndicatorDelay(0);
+                oView.setBusy(true);
+                oODataModel.read("/EvalItemListView",{
+                    filters : aFilters,
+                    success : function(oData){
+                        var oResult = oData.results[0];
+                        if(!oResult){
+                            oView.setBusy(false);
+                            return;
+                        }
+
+                        oResult.evaluation_execute_mode_code = oResult.evaluation_execute_mode_code || "QLTVE_EVAL";
+                        oResult.evaluation_article_type_code = oResult.evaluation_article_type_code || "QLTVE_EVAL";
+                        oResult.qttive_eval_article_calc_formula = oResult.qttive_eval_article_calc_formula || "";
+
+                        /***
+                         * 계산식 변수들 바인딩
+                         * 조회조건 evaluation_operation_unit_code 에따라 다름
+                         * 
+                         */
+                        var oCalculationBuilder;
+                        oCalculationBuilder = this.byId("calculationBuilder");
+                        oCalculationBuilder.bindAggregation("variables",{
+                            path : "/QttiveItemCode",
+                            template : new CalculationBuilderVariable({ key : "{qttive_item_code}", label : "{qttive_item_name}" }),
+                            filters : [
+                                new Filter("tenant_id", "EQ", oResult.tenant_id),
+                                new Filter("company_code", "EQ", oResult.company_code),
+                                new Filter("org_type_code", "EQ", oResult.org_type_code),
+                                new Filter("org_code", "EQ", oResult.org_code),
+                                new Filter("evaluation_operation_unit_code", "EQ", oResult.evaluation_operation_unit_code)
+                            ],
+                            sorter : [
+                                new Sorter("sort_sequence")
+                            ]
+                        });
+
+                        oViewModel.setProperty("/Detail/Header", oResult);
+                        oView.setBusy(false);
+                        this._readItem();
+                    }.bind(this),
+                    error : function(){
+                        oView.setBusy(false);
+                    }
+                });
             }
             /**
              * scale 데이터 조회
@@ -204,20 +257,47 @@ sap.ui.define([
              */
             , onSelectTableItem : function(oEvent){
                 var sEvaluResultInType, oHeader, oView, oViewModel, oSelectItem,
-                    oBindContxtPath, oRowData, bSeletFlg, bEditMode;
+                    oBindContxtPath, oRowData, bSeletFlg, bEditMode, oParameters,
+                    bAllSeletFlg, sTablePath, oTable, aListData;
 
                 oView = this.getView();
                 oViewModel = oView.getModel("viewModel");
                 bEditMode = oViewModel.getProperty("/App/EditMode");
-
+                
                 if(!bEditMode){
                     return;
                 }
-
-                oSelectItem = oEvent.getParameter("listItem");
+                
+                oParameters = oEvent.getParameters();
+                oSelectItem = oParameters.listItem;
                 oBindContxtPath = oSelectItem.getBindingContextPath();
                 oRowData = oViewModel.getProperty(oBindContxtPath);
-                bSeletFlg = oEvent.getParameter("selected");
+                bSeletFlg = oParameters.selected;
+                bAllSeletFlg = oParameters.selectAll;
+
+                if(
+                    (bAllSeletFlg && bSeletFlg) || (!bAllSeletFlg && !bSeletFlg)
+                ){
+                    oTable = oEvent.getSource();
+                    sTablePath = oTable.getBindingPath("items");
+                    aListData = oViewModel.getProperty(sTablePath);
+
+                    oViewModel.setProperty(sTablePath, aListData.map(function(item){
+
+                        if(item.crudFlg === "D"){
+                            return item;
+                        }else if(item.crudFlg === "C"){
+                            item.rowEditable = bSeletFlg;
+                            return item;
+                        }
+
+                        item.rowEditable = bSeletFlg;
+                        item.crudFlg = "U";
+                        item.transaction_code = "U";
+                        return item;
+                    }));
+                    return;
+                }
 
                 if(oRowData.crudFlg === "D"){
                     return;
@@ -359,6 +439,9 @@ sap.ui.define([
                         }
                         
                         oSaveData = this._getSaveData("D");
+                        if(!oSaveData){
+                            return;
+                        }
                         oView.setBusy(true);
                         $.ajax({
                             url: sURLPath,
@@ -426,6 +509,9 @@ sap.ui.define([
                         }
                         
                         oSaveData = this._getSaveData("U");
+                        if(!oSaveData){
+                            return;
+                        }
                         oView.setBusy(true);
                         $.ajax({
                             url: sURLPath,
@@ -436,12 +522,16 @@ sap.ui.define([
                                 MessageBox.success(oI18NModel.getProperty("/NCM01001"), {
                                     onClose : function (sAction) {
                                         oView.setBusy(false);
-                                        oComponent.getRouter().navTo("Master",{
-                                            search : true
-                                        });
-                                    }
+                                        if(oArgs.new === "Y"){
+                                            oComponent.getRouter().navTo("Master",{
+                                                search : true
+                                            });
+                                            return;
+                                        }
+                                        this._readHeader();
+                                    }.bind(this)
                                 });
-                            },
+                            }.bind(this),
                             error: function (e) {
                                 var sDetails;
 
@@ -493,7 +583,8 @@ sap.ui.define([
             , _getSaveData : function(sTransactionCode){
                 var oSaveData, oUserInfo, oView, oViewModel,
                     aItemFields, aScleFields, oHeader, oItemType,
-                    sHeadField, aScleItem, oNewHeader, sLevel, oArgs;
+                    sHeadField, aScleItem, oNewHeader, sLevel, oArgs,
+                    oI18NModel;
 
                 oUserInfo = this._getUserSession();
                 oView = this.getView();
@@ -502,6 +593,11 @@ sap.ui.define([
                 oArgs = oViewModel.getProperty("/Args");
                 
                 if(oArgs.new === "Y"){
+                    if(!oHeader){
+                        oI18NModel = oView.getModel("I18N");
+                        MessageBox.warning(oI18NModel.getProperty("/NPG00016"));
+                        return null;
+                    }
                     //신규 건일때
                     oNewHeader = oViewModel.getProperty("/Detail/NewHeader");
                     sLevel = oArgs.level;
@@ -617,19 +713,19 @@ sap.ui.define([
                                 return;
                             }
 
-                            oComponent = this.getOwnerComponent();
-                            oMasterPage = oComponent.byId("Master");
+                            // oComponent = this.getOwnerComponent();
+                            // oMasterPage = oComponent.byId("Master");
                             
-                            if(oMasterPage){
-                                oTreeTable = oMasterPage.byId("treeTable");
-                                aSelectedIdices = oTreeTable.getSelectedIndices();
-                                oContext = oTreeTable.getContextByIndex(aSelectedIdices[0]);
-                                oRowData = this._deepCopy( oContext.getObject() );
+                            // if(oMasterPage){
+                            //     oTreeTable = oMasterPage.byId("treeTable");
+                            //     aSelectedIdices = oTreeTable.getSelectedIndices();
+                            //     oContext = oTreeTable.getContextByIndex(aSelectedIdices[0]);
+                            //     oRowData = this._deepCopy( oContext.getObject() );
         
-                                oViewModel.setProperty("/Detail/Header", oRowData);
-                            }
-                            oViewModel.setProperty("/App/EditMode", !bEditFlg);
-                            this._readItem();
+                            //     oViewModel.setProperty("/Detail/Header", oRowData);
+                            // }
+
+                            this._readHeader();
                         }.bind(this)
                     });
                 }else{

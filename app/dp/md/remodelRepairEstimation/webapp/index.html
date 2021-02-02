@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Mold Development Receipt</title>
+
+    <style>
+        .readonlyField>div{
+            border: 0;
+            background: none !important;
+        }
+        .readonlyField>div>input{
+            padding-left: 0 !important;
+        }
+        * {
+            outline: none !important;
+        }
+
+    </style>
+
+	<script id="sap-ui-bootstrap"
+			src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+			data-sap-ui-theme="sap_fiori_3"
+			data-sap-ui-resourceroots='{
+				"dp.md.remodelRepairEstimation": "./"
+			}'
+			data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
+			data-sap-ui-compatVersion="edge"
+			data-sap-ui-async="true"
+			data-sap-ui-frameOptions="trusted">
+	</script>
+
+</head>
+
+<body class="sapUiBody">
+	<div data-sap-ui-component data-name="dp.md.remodelRepairEstimation" data-id="container" data-settings='{"id" : "remodelRepairEstimation"}'></div>
+</body>
+</html>

@@ -159,7 +159,7 @@ sap.ui.define([
             
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
                                     new Filter("company_code", FilterOperator.EQ, companyCode)
                                 ],
                                 and: true
@@ -323,7 +323,7 @@ sap.ui.define([
 
                     plantFilters.push(new Filter({
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
+                            new Filter("tenant_id", FilterOperator.EQ, 'L2101'),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
                         and: true
@@ -331,7 +331,7 @@ sap.ui.define([
                 });
             } else {
                 plantFilters.push(
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 );
             }
  
@@ -390,7 +390,7 @@ sap.ui.define([
 
             //var path = '';
 
-            // var schFilter = [new Filter("tenant_id", FilterOperator.EQ, 'L2600')];
+            // var schFilter = [new Filter("tenant_id", FilterOperator.EQ, 'L2101')];
             //     this._bindView("/Requestors", "requestors", schFilter, function(oData){
                     
             //     });
@@ -655,7 +655,7 @@ sap.ui.define([
 
             plantFilter.push(new Filter({
                 filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2101'),
                     new Filter("company_code", FilterOperator.EQ, source.getSelectedKey())
                 ],
                 and: true
@@ -777,6 +777,9 @@ sap.ui.define([
                     appTypeCode = "I"
                 }else if(id.indexOf("export") > -1){
                     appTypeCode ="X"  
+                }else if(id.indexOf("repModCompletion") > -1){ // 7. 개조 & 수리 완료 보고
+                    approvalTarget ="rrcrReport"
+                    appTypeCode ="C"
                 }
             }
             
@@ -964,7 +967,7 @@ sap.ui.define([
                 ;
             
              var aSearchFilters = [];
-                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600'));
+                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101'));
                 aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'CM_APPROVE_STATUS'));
 
 
@@ -1117,7 +1120,7 @@ sap.ui.define([
             }
 
             
-            //aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2600"));
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2101"));
             return aSearchFilters;
         },
 

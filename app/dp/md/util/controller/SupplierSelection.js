@@ -166,7 +166,7 @@ sap.ui.define([
                         
             var filter = new Filter({
                             filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                                new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
                                 tmpFilter
                             ],
                             and: true

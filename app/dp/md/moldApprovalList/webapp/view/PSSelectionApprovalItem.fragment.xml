@@ -97,7 +97,7 @@
                                         items="{ 
                                                 path : 'util>/Code',
                                                 filters : [
-                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                     {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                                 ]
                                         }">
@@ -136,7 +136,7 @@
                                     items="{ 
                                         path : 'psOrgCode>/OrgCodeLanguages',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_LOCAL_CURRENCY'},
                                             {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
                                         ]

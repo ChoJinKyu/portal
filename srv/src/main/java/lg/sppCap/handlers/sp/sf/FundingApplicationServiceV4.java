@@ -26,7 +26,11 @@ import org.springframework.jdbc.core.SqlReturnResultSet;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import cds.gen.sp.fundingapplicationv4service.InvPlanDtlDelType;
 import cds.gen.sp.fundingapplicationv4service.InvPlanDtlType;
+import cds.gen.sp.fundingapplicationv4service.InvPlanMstDelType;
+import cds.gen.sp.fundingapplicationv4service.ProcDelInvPlanContext;
+import cds.gen.sp.fundingapplicationv4service.ProcDelInvPlanDtlContext;
 import cds.gen.sp.fundingapplicationv4service.ProcRequestContext;
 import cds.gen.sp.fundingapplicationv4service.ProcSaveInvPlanContext;
 import cds.gen.sp.fundingapplicationv4service.ProcSaveTempContext;
@@ -185,9 +189,6 @@ public class FundingApplicationServiceV4 implements EventHandler {
 
         log.info("### onProcRequest 1 [On] ###");
 
-        // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
-        //String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
-
         StringBuffer v_sql_callProc = new StringBuffer();
         v_sql_callProc.append("CALL SP_SF_FUNDING_APPL_REQUEST_PROC(");
         v_sql_callProc.append("I_FUNDING_APPL_NUMBER => ?,");
@@ -327,15 +328,14 @@ public class FundingApplicationServiceV4 implements EventHandler {
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함        
         StringBuffer v_sql_createTableDtl = new StringBuffer();
         v_sql_createTableDtl.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_DTL (");
-
-        v_sql_createTableDtl.append("CRUD_TYPE NVARCHAR(1),");
-        v_sql_createTableDtl.append("FUNDING_APPL_NUMBER NVARCHAR(10),");
-        v_sql_createTableDtl.append("INVESTMENT_PLAN_SEQUENCE DECIMAL,");
-        v_sql_createTableDtl.append("INVESTMENT_PLAN_ITEM_SEQUENCE DECIMAL,");
-        v_sql_createTableDtl.append("INVESTMENT_ITEM_NAME NVARCHAR(500),");
-        v_sql_createTableDtl.append("INVESTMENT_ITEM_PURCHASING_PRICE DECIMAL ,");
-        v_sql_createTableDtl.append("INVESTMENT_ITEM_PURCHASING_QTY DECIMAL ,");
-        v_sql_createTableDtl.append("INVESTMENT_ITEM_PURCHASING_AMT DECIMAL");    
+            v_sql_createTableDtl.append("CRUD_TYPE NVARCHAR(1),");
+            v_sql_createTableDtl.append("FUNDING_APPL_NUMBER NVARCHAR(10),");
+            v_sql_createTableDtl.append("INVESTMENT_PLAN_SEQUENCE DECIMAL,");
+            v_sql_createTableDtl.append("INVESTMENT_PLAN_ITEM_SEQUENCE DECIMAL,");
+            v_sql_createTableDtl.append("INVESTMENT_ITEM_NAME NVARCHAR(500),");
+            v_sql_createTableDtl.append("INVESTMENT_ITEM_PURCHASING_PRICE DECIMAL ,");
+            v_sql_createTableDtl.append("INVESTMENT_ITEM_PURCHASING_QTY DECIMAL ,");
+            v_sql_createTableDtl.append("INVESTMENT_ITEM_PURCHASING_AMT DECIMAL)");    
         
         String v_sql_dropTableDtl = "DROP TABLE #LOCAL_TEMP_DTL";
 
@@ -345,7 +345,7 @@ public class FundingApplicationServiceV4 implements EventHandler {
 
         StringBuffer v_sql_callProc = new StringBuffer();
 
-        v_sql_callProc.append("CALL SP_SF_INVEST_PLAN_SAVE_PROC(");        
+        v_sql_callProc.append("CALL SP_SF_INVEST_PLAN_SAVE_PROC(");
             v_sql_callProc.append("I_CRUD_TYPE => ?,");
             v_sql_callProc.append("I_FUNDING_APPL_NUMBER => ?,");
             v_sql_callProc.append("I_INVESTMENT_PLAN_SEQUENCE => ?,");
@@ -485,6 +485,219 @@ public class FundingApplicationServiceV4 implements EventHandler {
         context.setCompleted();
     }
 
+    @Transactional(rollbackFor = SQLException.class)
+    @On(event = ProcDelInvPlanDtlContext.CDS_NAME)
+    public void onProcDelInvPlanDtl(ProcDelInvPlanDtlContext context) {
+        log.info("### onProcDelInvPlanDtl ###");
+
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
+        
+        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함        
+        StringBuffer v_sql_createTableDtl = new StringBuffer();
+        v_sql_createTableDtl.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_DTL (");
+            v_sql_createTableDtl.append("FUNDING_APPL_NUMBER NVARCHAR(10),");
+            v_sql_createTableDtl.append("INVESTMENT_PLAN_SEQUENCE DECIMAL,");
+            v_sql_createTableDtl.append("INVESTMENT_PLAN_ITEM_SEQUENCE DECIMAL)");
+        
+        String v_sql_dropTableDtl = "DROP TABLE #LOCAL_TEMP_DTL";
+
+        String v_sql_insertTableDtl = "INSERT INTO #LOCAL_TEMP_DTL VALUES (?, ?, ?)";
+
+        log.info("### LOCAL_TEMP Success ###");
+
+        StringBuffer v_sql_callProc = new StringBuffer();
+        v_sql_callProc.append("CALL SP_SF_INVEST_PLAN_DTL_DEL_PROC(");
+            v_sql_callProc.append("I_DTL_DATA => #LOCAL_TEMP_DTL,");  
+            v_sql_callProc.append("I_USER_ID => ?,");
+            v_sql_callProc.append("O_RESULT => ?)");
+
+        log.info("### DB Connect Start ###");
+
+        Collection<InvPlanDtlDelType> v_inDtl = context.getDtlType();
+
+        Collection<RtnObj> v_result = new ArrayList<>();
+
+        log.info("### Proc Start ###"); 
+
+        // Commit Option
+        jdbc.execute(v_sql_commitOption);
+        
+        // Vendor Pool Mst Local Temp Table 생성            
+        jdbc.execute(v_sql_createTableDtl.toString());
+
+        // Vendor Pool Mst Local Temp Table에 insert                        
+        List<Object[]> batchMst = new ArrayList<Object[]>();
+        if(!v_inDtl.isEmpty() && v_inDtl.size() > 0){
+            for(InvPlanDtlDelType v_inRow : v_inDtl){
+                Object[] values = new Object[] {
+                    v_inRow.get("funding_appl_number"),
+                    v_inRow.get("investment_plan_sequence"),
+                    v_inRow.get("investment_plan_item_sequence")
+                };
+                    
+                batchMst.add(values);
+            }
+        }
+        
+        int[] updateCountsDtl = jdbc.batchUpdate(v_sql_insertTableDtl, batchMst);                        
+
+        log.info("### insertItem Success ###");
+
+        // Procedure Call
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+        paramList.add(new SqlParameter("I_USER_ID", Types.VARCHAR));
 
 
+        SqlReturnResultSet oReturn = new SqlReturnResultSet("O_RESULT", new RowMapper<RtnObj>() {
+            @Override
+            public RtnObj mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                RtnObj v_row = RtnObj.create();
+                v_row.setResultCode(v_rs.getString("result_code"));
+                v_row.setErrType(v_rs.getString("err_type"));
+                v_row.setErrCode(v_rs.getString("err_code"));
+                v_row.setRtnFundingApplNumber(v_rs.getString("rtn_funding_appl_number"));
+
+                log.info(v_rs.getString("result_code"));
+                log.info(v_rs.getString("err_type"));
+                log.info(v_rs.getString("err_code"));
+                log.info(v_rs.getString("rtn_funding_appl_number"));
+
+                if ("NG".equals(v_rs.getString("result_code"))) {
+                    log.info("### Call Proc Error!!  ###");
+                    throw new ServiceException(ErrorStatuses.BAD_REQUEST, v_rs.getString("result_code"));
+                }
+                v_result.add(v_row);
+                return v_row;
+            }
+        });
+
+        paramList.add(oReturn);
+
+        jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+                CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
+                callableStatement.setString("I_USER_ID", "admin");
+               
+                return callableStatement;
+            }
+        }, paramList);
+
+        
+        log.info("### callProc Success ###");
+
+        // Local Temp Table DROP
+        jdbc.execute(v_sql_dropTableDtl);
+
+        context.setResult(v_result);
+        context.setCompleted();
+
+    }
+
+    @Transactional(rollbackFor = SQLException.class)
+    @On(event = ProcDelInvPlanContext.CDS_NAME)
+    public void onProcDelInvPlan(ProcDelInvPlanContext context) {
+        log.info("### onProcDelInvPlan ###");
+
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
+        
+        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함        
+        StringBuffer v_sql_createTableMst = new StringBuffer();
+        v_sql_createTableMst.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_MST (");
+            v_sql_createTableMst.append("FUNDING_APPL_NUMBER NVARCHAR(10),");
+            v_sql_createTableMst.append("INVESTMENT_PLAN_SEQUENCE DECIMAL)");
+        
+        String v_sql_dropTableMst = "DROP TABLE #LOCAL_TEMP_MST";
+
+        String v_sql_insertTableMst = "INSERT INTO #LOCAL_TEMP_MST VALUES (?, ?)";
+
+        log.info("### LOCAL_TEMP Success ###");
+
+        StringBuffer v_sql_callProc = new StringBuffer();
+        v_sql_callProc.append("CALL SP_SF_INVEST_PLAN_DEL_PROC(");
+            v_sql_callProc.append("I_MST_DATA => #LOCAL_TEMP_MST,");  
+            v_sql_callProc.append("I_USER_ID => ?,");
+            v_sql_callProc.append("O_RESULT => ?)");
+
+        log.info("### DB Connect Start ###");
+
+        Collection<InvPlanMstDelType> v_inMst = context.getMstType();
+
+        Collection<RtnObjInvDtl> v_result = new ArrayList<>();
+
+        log.info("### Proc Start ###"); 
+
+        // Commit Option
+        jdbc.execute(v_sql_commitOption);
+        
+        // Vendor Pool Mst Local Temp Table 생성            
+        jdbc.execute(v_sql_createTableMst.toString());
+
+        // Vendor Pool Mst Local Temp Table에 insert                        
+        List<Object[]> batchMst = new ArrayList<Object[]>();
+        if(!v_inMst.isEmpty() && v_inMst.size() > 0){
+            for(InvPlanMstDelType v_inRow : v_inMst){
+                Object[] values = new Object[] {
+                    v_inRow.get("funding_appl_number"),
+                    v_inRow.get("investment_plan_sequence")
+                };
+                    
+                batchMst.add(values);
+            }
+        }
+        
+        int[] updateCountsDtl = jdbc.batchUpdate(v_sql_insertTableMst, batchMst);                        
+
+        log.info("### insertItem Success ###");
+
+        // Procedure Call
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+        paramList.add(new SqlParameter("I_USER_ID", Types.VARCHAR));
+
+        SqlReturnResultSet oReturn = new SqlReturnResultSet("O_RESULT", new RowMapper<RtnObjInvDtl>() {
+            @Override
+            public RtnObjInvDtl mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                RtnObjInvDtl v_row = RtnObjInvDtl.create();
+                v_row.setResultCode(v_rs.getString("result_code"));
+                v_row.setErrType(v_rs.getString("err_type"));
+                v_row.setErrCode(v_rs.getString("err_code"));
+                v_row.setRtnFundingApplNumber(v_rs.getString("rtn_funding_appl_number"));
+
+                log.info(v_rs.getString("result_code"));
+                log.info(v_rs.getString("err_type"));
+                log.info(v_rs.getString("err_code"));
+                log.info(v_rs.getString("rtn_funding_appl_number"));
+
+                if ("NG".equals(v_rs.getString("result_code"))) {
+                    log.info("### Call Proc Error!!  ###");
+                    throw new ServiceException(ErrorStatuses.BAD_REQUEST, v_rs.getString("result_code"));
+                }
+
+                v_result.add(v_row);
+                return v_row;
+            }
+        });
+
+        paramList.add(oReturn);
+
+        jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+                CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
+                callableStatement.setString("I_USER_ID", "admin");
+               
+                return callableStatement;
+            }
+        }, paramList);
+
+        
+        log.info("### callProc Success ###");
+
+        // Local Temp Table DROP
+        jdbc.execute(v_sql_dropTableMst);
+
+        context.setResult(v_result);
+        context.setCompleted();
+
+    }
 }

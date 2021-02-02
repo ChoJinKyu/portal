@@ -115,7 +115,7 @@
                                         items="{
                                             path: 'org>/Company',
                                             filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                             ],
                                             sorter: { path: 'company_code'}
                                         }"
@@ -134,7 +134,7 @@
                                         items="{
                                             path: 'purOrg>/Pur_Operation_Org',
                                             filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'},
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
                                                 {path: 'org_type_code', operator: 'EQ', value1: 'AU'}
                                             ],
                                             sorter: { path: 'org_code'}
@@ -212,7 +212,7 @@
                                         items="{
                                             path: 'org>/Company',
                                             filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                             ],
                                             sorter: { path: 'company_code'}
                                         }"
@@ -231,7 +231,7 @@
                                         items="{
                                             path: 'purOrg>/Pur_Operation_Org',
                                             filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'},
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
                                                 {path: 'org_type_code', operator: 'EQ', value1: 'AU'}
                                             ],
                                             sorter: { path: 'org_code'}
@@ -288,7 +288,7 @@
                                         items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -307,7 +307,7 @@
                                         items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -333,7 +333,7 @@
                                         items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -354,7 +354,7 @@
                                     suggestionItems="{
                                         path: '/Models',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'model' }
                             }">
@@ -372,7 +372,7 @@
                                     suggestionItems="{
                                         path: '/PartNumbers',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'mold_number' }
                             }">
@@ -472,7 +472,7 @@
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROGRESS_STATUS_LOCAL'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -517,7 +517,7 @@
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -537,7 +537,7 @@
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -556,7 +556,7 @@
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -583,7 +583,7 @@
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -603,7 +603,7 @@
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_COST_ANALYSIS_TYPE'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -637,7 +637,7 @@
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PURCHASE_TYPE'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -656,7 +656,7 @@
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -683,7 +683,7 @@
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -790,7 +790,7 @@
         title="직원 검색"
         items="{
             filters: [
-                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
             ]
         }"
         apply=".onEmployeeDialogApplyPress"

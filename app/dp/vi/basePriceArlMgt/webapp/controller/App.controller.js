@@ -28,14 +28,7 @@ sap.ui.define([
             var approvalTarget = "";
             var oRootModel = this.getOwnerComponent().getModel("rootModel");
             oRootModel.setProperty("/selectedData", {tenant_id: aHash[2], approval_number: aHash[3]});
-
-            if( aHash[4] === "VI10" ) {
-                approvalTarget = "NewBasePriceTable";
-            }else {
-                approvalTarget = "ChangeBasePriceTable";
-            }
-
-            oRootModel.setProperty("/selectedApprovalType", approvalTarget);
+            oRootModel.setProperty("/selectedApprovalType", aHash[4]);
 
             this.getRouter().navTo(routeName);
         }

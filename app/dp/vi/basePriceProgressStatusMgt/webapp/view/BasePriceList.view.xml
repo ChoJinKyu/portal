@@ -35,14 +35,15 @@
                         <!-- Type 시작 -->
                         <VBox>
                             <Label text="{I18N>/APPROVAL_TYPE_CODE}"></Label>
-                            <ComboBox
+                            <MultiComboBox
                                 width="100%"
-                                selectedKey="{filterModel>/type}"
+                                selectedKeys="{filterModel>/type}"
+                                placeholder="{I18N>/ALL}"
                                 items="{filterModel>/type_list}">
                                 <items>
                                 <core:Item key="{filterModel>code}" text="{filterModel>code_name}" />
                                 </items>
-                            </ComboBox>
+                            </MultiComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
@@ -149,14 +150,15 @@
                         </VBox> -->
                         <VBox>
                             <Label text="{I18N>/STATUS} "></Label>
-                            <ComboBox
+                            <MultiComboBox
                                 width="100%"
-                                selectedKey="{filterModel>/status}"
+                                selectedKeys="{filterModel>/status}"
+                                placeholder="{I18N>/ALL}"
                                 items="{rootModel>/processList}">
                                 <items>
                                 <core:Item key="{rootModel>code}" text="{rootModel>code_name}" />
                                 </items>
-                            </ComboBox>
+                            </MultiComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
@@ -226,17 +228,6 @@
                         <Label text="{I18N>/SPEC_DESC}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>material_spec}" />
-                        </t:template>
-                    </t:Column>
-                    <t:Column hAlign="Center" width="12rem">
-                        <Label text="{I18N>/STATUS}" />
-                        <t:template>
-                            <tnt:InfoLabel 
-                                text="{listModel>approve_status_code_nm}" 
-                                colorScheme="{
-                                    path: 'listModel>approve_status_code',
-                                    formatter: '.onStatusColor'
-                                }" />
                         </t:template>
                     </t:Column>
                     <t:Column headerSpan="2" width="7rem" visible="{= ${rootModel>/config/DP_VI_SUPPLY_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -399,6 +390,17 @@
                         <t:template>
                             <Text text="{listModel>requestor_local_nm} {listModel>requestor_job_title}" 
                                 tooltip="{listModel>requestor_local_nm} {listModel>requestor_job_title}"  />
+                        </t:template>
+                    </t:Column>
+                    <t:Column hAlign="Center" width="12rem">
+                        <Label text="{I18N>/STATUS}" />
+                        <t:template>
+                            <tnt:InfoLabel 
+                                text="{listModel>approve_status_code_nm}" 
+                                colorScheme="{
+                                    path: 'listModel>approve_status_code',
+                                    formatter: '.onStatusColor'
+                                }" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="2rem">

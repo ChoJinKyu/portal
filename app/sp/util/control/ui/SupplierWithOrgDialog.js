@@ -189,7 +189,7 @@ sap.ui.define([
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/STATUS_CODE")}),
+                        new Label({ text: this.getModel("I18N").getText("/STATUS")}),
                         this.oStatus
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M5 S10"})
@@ -242,7 +242,7 @@ sap.ui.define([
                 }),
                 new Column({
                     hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/STATUS_CODE")}),
+                    label: new Label({text: this.getModel("I18N").getText("/STATUS")}),
                     template: new sap.tnt.InfoLabel(
                                 {text: "{supplier_status_name}", displayOnly:true}
                             ).bindProperty("colorScheme", {

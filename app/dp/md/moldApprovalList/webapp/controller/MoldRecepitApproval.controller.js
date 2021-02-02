@@ -23,10 +23,11 @@ sap.ui.define([
     'sap/m/SearchField',
     "sap/m/Token",
     "dp/md/util/controller/DeptSelection",
+    "dp/md/util/controller/ProcessUI", 
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
-    , ApprovalBaseController, MoldItemSelection , SearchField , Token , DeptSelection
+    , ApprovalBaseController, MoldItemSelection , SearchField , Token , DeptSelection , ProcessUI
 ) {
     "use strict";
     /**
@@ -88,7 +89,7 @@ sap.ui.define([
      
           //  } else {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 ];
                 this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) {
                     // console.log("data>>>> ", oData);
@@ -191,7 +192,7 @@ sap.ui.define([
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */  
             var approval_number = mstModel.oData.approval_number;
             oModel.addRecord({
-                "tenant_id": "L2600",
+                "tenant_id": "L2101",
                 "mold_id": String(data.mold_id),
                 "approval_number": approval_number,
                 "model": data.model,

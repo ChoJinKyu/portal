@@ -51,6 +51,8 @@
                             <Label text="투자 유형 :" required="true"/>
                             <ComboBox id="investmentType"
                                 width="100%"
+                                fieldGroupIds="newRequired"
+                                required="true"
                                 items="{
                                             path : 'util>/Code',
                                             filters : [
@@ -71,6 +73,8 @@
                         <VBox>
                             <Label text="과제명 :" required="true"/>
                             <Input 
+                                fieldGroupIds="newRequired"
+                                required="true"
                                 value="{
                                     path: 'applicationSup>/popUpInvestPlanMst/investment_project_name',
                                     type: 'sap.ui.model.type.String',
@@ -208,17 +212,17 @@
                             </OverflowToolbar>
                         </headerToolbar>
                         <columns>
-                            <Column>
-                                <Text text="품목" />
+                            <Column hAlign="Left">
+                                <Label text="품목" required="true"/>
                             </Column>
-                            <Column>
-                                <Text text="구입단가(원)" required="true" />
+                            <Column hAlign="Right">
+                                <Label text="구입단가(원)" required="true"/>
                             </Column>
-                            <Column>
-                                <Text text="구입대수"  />
+                            <Column hAlign="Right">
+                                <Label text="구입대수" required="true"/>
                             </Column>
-                            <Column>
-                                <Text text="구입금액(원)" />
+                            <Column hAlign="Right">
+                                <Label text="구입금액(원)" required="true"/>
                             </Column>
                         </columns>
                         <items>
@@ -235,7 +239,7 @@
                 </HBox>
                 <HBox class="investmentItemPurchasingAmtSum" alignItems="Center" justifyContent="End">
                     <Label text="총 구입금액 : "/>
-                    <Text id ="investment_item_purchasing_amt_sum" class="inputPurchasingAmt" />
+                    <Text id ="investment_item_purchasing_amt_sum" text="{applicationSup>/popUpInvestPlanMst/sum_item_pur_amt}" class="inputPurchasingAmt" />
                 </HBox>
             </VBox>
         </content>
