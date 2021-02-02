@@ -48,8 +48,7 @@ namespace sp;
 service NpApprovalDetailService {
 
     /*---------------------------------------------------------------------------------------------------------------------*/
-    /* 단가품의 마스터조회 View */
-    view NpApprovalDetailMasterView as
+    view NpApprovalDetailMasterView @(title : '단가품의 마스터조회 View') as
         SELECT
                key pam.tenant_id
              , key pam.company_code
@@ -119,8 +118,7 @@ service NpApprovalDetailService {
     ;
 
     /*---------------------------------------------------------------------------------------------------------------------*/
-    /* 단가품의 상세 General 조회 View */
-    view NpApprovalDetailGeneralView as
+    view NpApprovalDetailGeneralView @(title : '단가품의 상세 General 조회 View') as
         SELECT
                 key pad.tenant_id		                /*	테넌트ID	*/
             ,	key pad.company_code		            /*	회사코드	*/
@@ -141,19 +139,17 @@ service NpApprovalDetailService {
             ,	pad.material_desc		                /*	자재내역	*/
 
             ,	pad.supplier_code		                /*	공급업체코드	*/
-            ,   CASE WHEN clc.language_code = 'EN' THEN sm.supplier_english_name
-			         WHEN clc.language_code = 'KO' THEN sm.supplier_local_name
-				     ELSE sm.supplier_english_name
-			    END AS supplier_name : String           /*  공급업체명 확인필요 */
+            ,   sm.supplier_local_name
+            ,   sm.supplier_english_name                /*  공급업체명 확인필요 */
+           
 
             /*  SD-Mapping */
             /*  SD-File */
 
             ,	pad.vendor_pool_code		            /*	협력사풀코드	*/
-            ,   CASE WHEN clc.language_code = 'EN' THEN vpm.vendor_pool_english_name
-			         WHEN clc.language_code = 'KO' THEN vpm.vendor_pool_local_name
-				     ELSE vpm.vendor_pool_english_name
-			    END AS vendor_pool_name : String        /*  협력사풀 명 확인필요 */
+            ,   vpm.vendor_pool_local_name              /*  협력사풀 명 확인필요 */
+            ,   vpm.vendor_pool_english_name
+            
 
             ,	pad.net_price_approval_reason_code		/*	단가품의사유코드	*/
             ,	pad.market_code		                    /*	납선코드	*/
@@ -238,13 +234,6 @@ service NpApprovalDetailService {
             ,	pad.fta_code		                    /*	FTA코드	*/
 
         FROM SP_NP_NET_PRICE_APPROVAL_DTL   pad
-               
-        JOIN    (SELECT a.tenant_id 
-					       ,a.code AS language_code
-                       FROM CM_CODE_DTL a
-                      WHERE a.group_code = 'CM_LANG_CODE'
-                ) clc  /* 공통코드 언어코드(EN,KO) */
-			    ON pad.tenant_id         = clc.tenant_id
 
         LEFT OUTER JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
                 ON pad.tenant_id     = sm.tenant_id
@@ -261,8 +250,7 @@ service NpApprovalDetailService {
 
 
     /*---------------------------------------------------------------------------------------------------------------------*/
-    /* 단가품의 상세 BasePriceInfo 조회 View */
-    view NpApprovalDetailBasePriceInfoView as
+    view NpApprovalDetailBasePriceInfoView @(title : '단가품의 상세 BasePriceInfo 조회 View') as
         SELECT
                 key pad.tenant_id		                        /*	테넌트ID	*/
             ,	key pad.company_code		                    /*	회사코드	*/
@@ -275,10 +263,8 @@ service NpApprovalDetailService {
             ,	pad.material_desc		                        /*	자재내역	*/
 
             ,	pad.supplier_code		                        /*	공급업체코드	*/
-            ,   CASE WHEN clc.language_code = 'EN' THEN sm.supplier_english_name
-			         WHEN clc.language_code = 'KO' THEN sm.supplier_local_name
-				     ELSE sm.supplier_english_name
-			    END AS supplier_name : String                   /*  공급업체명 확인필요 */
+            ,   sm.supplier_local_name
+            ,   sm.supplier_english_name                        /*  공급업체명 확인필요 */              
 
             ,	pad.currency_code		                        /*	통화코드	*/
             ,	pad.net_price		                            /*	단가	*/
@@ -293,23 +279,14 @@ service NpApprovalDetailService {
             ,	pad.quarter_base_price		                    /*	분기기준단가	*/
             ,	pad.quarter_ci_rate		                        /*	분기CI비율	*/
 
-            ,	pad.vendor_pool_code		    /*	협력사풀코드	*/
-            ,   CASE WHEN clc.language_code = 'EN' THEN vpm.vendor_pool_english_name
-			         WHEN clc.language_code = 'KO' THEN vpm.vendor_pool_local_name
-				     ELSE vpm.vendor_pool_english_name
-			    END AS vendor_pool_name : String   /*  협력사풀 명 확인필요 */
+            ,	pad.vendor_pool_code		                    /*	협력사풀코드	*/
+            ,   vpm.vendor_pool_local_name
+            ,   vpm.vendor_pool_english_name                    /*  협력사풀 명 확인필요 */
 
-            ,	pad.net_price_approval_reason_code		/*	단가품의사유코드	*/
+            ,	pad.net_price_approval_reason_code		        /*	단가품의사유코드	*/
             
 
         FROM SP_NP_NET_PRICE_APPROVAL_DTL   pad
-               
-        JOIN (SELECT a.tenant_id 
-					       ,a.code AS language_code
-                       FROM CM_CODE_DTL a
-                      WHERE a.group_code = 'CM_LANG_CODE'
-                     ) clc  /* 공통코드 언어코드(EN,KO) */
-			    ON pad.tenant_id        = clc.tenant_id
 
         LEFT OUTER JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
                 ON pad.tenant_id        = sm.tenant_id
@@ -327,8 +304,7 @@ service NpApprovalDetailService {
 
 
     /*---------------------------------------------------------------------------------------------------------------------*/
-    /* 단가품의 상세 Nego History Info 조회 View */
-    view NpApprovalDetailNegoHistoryInfoView as
+    view NpApprovalDetailNegoHistoryInfoView @(title : '단가품의 상세 Nego History Info 조회 View') as
         SELECT
                 key pad.tenant_id		        /*	테넌트ID	*/
             ,	key pad.company_code		    /*	회사코드	*/
@@ -349,37 +325,25 @@ service NpApprovalDetailService {
             ,	pad.material_desc		        /*	자재내역	*/
 
             ,	pad.supplier_code		        /*	공급업체코드	*/
-            ,   CASE WHEN clc.language_code = 'EN' THEN sm.supplier_english_name
-			         WHEN clc.language_code = 'KO' THEN sm.supplier_local_name
-				     ELSE sm.supplier_english_name
-			    END AS supplier_name : String   /*  공급업체명 확인필요 */
-
+            ,   sm.supplier_local_name
+            ,   sm.supplier_english_name        /*  공급업체명 확인필요 */
+           
             /*  SD-Mapping */
             /*  SD-File */
 
             ,	pad.vendor_pool_code		    /*	협력사풀코드	*/
-            ,   CASE WHEN clc.language_code = 'EN' THEN vpm.vendor_pool_english_name
-			         WHEN clc.language_code = 'KO' THEN vpm.vendor_pool_local_name
-				     ELSE vpm.vendor_pool_english_name
-			    END AS vendor_pool_name : String   /*  협력사풀 명 확인필요 */
-
+            ,   vpm.vendor_pool_local_name 
+            ,   vpm.vendor_pool_english_name    /*  협력사풀 명 확인필요 */
+            
             ,	pad.net_price_approval_reason_code		/*	단가품의사유코드	*/
             
-
         FROM SP_NP_NET_PRICE_APPROVAL_DTL   pad
-               
-        INNER JOIN (SELECT a.tenant_id 
-					       ,a.code AS language_code
-                       FROM CM_CODE_DTL a
-                      WHERE a.group_code = 'CM_LANG_CODE'
-                     ) clc  /* 공통코드 언어코드(EN,KO) */
-			    ON clc.tenant_id         = pad.tenant_id
 
-        LEFT JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
+        LEFT OUTER JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
                 ON sm.tenant_id     = pad.tenant_id
                AND sm.supplier_code  = pad.supplier_code
 
-        LEFT JOIN PG_VP_VENDOR_POOL_MST vpm
+        LEFT OUTER JOIN PG_VP_VENDOR_POOL_MST vpm
                 ON vpm.tenant_id        = pad.tenant_id
                AND vpm.company_code     = pad.company_code
                AND vpm.org_type_code    = pad.org_type_code
