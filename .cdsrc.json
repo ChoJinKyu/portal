@@ -65,6 +65,7 @@
             "db/cds/sp/sm",
             "db/cds/sp/se",
             "db/cds/sp/vi",
+            "db/cds/sp/np",
             "db/cds/mc",
             "db/cds/tmp",
             "db/cds/tmp/tmp1Mgr",
