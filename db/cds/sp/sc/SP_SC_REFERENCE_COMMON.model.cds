@@ -6,7 +6,7 @@ using {cm as codeDtl} from '../../cm/CM_CODE_DTL-model';
 using {cm as codeLng} from '../../cm/CM_CODE_LNG-model';
 using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model';
 
-// using {sp as ScOutcomeCodeView} from '../../sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
+// using {sp as ScOutcomeCodeView} from '../../sp/sc/SP_SC_NEGO_MASTERS-model';
 
 
 //// 할일 목록

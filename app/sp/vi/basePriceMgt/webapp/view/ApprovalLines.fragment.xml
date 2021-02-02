@@ -31,9 +31,8 @@
                          singleContainerFullSize="true">
 			<form:content>
 				<!-- Approval Line --> 
-                <t:Table id="ApproverTable" selectionMode="Single" width="auto" class="sapFDynamicPageAlignContent" 
-                                 visibleRowCountMode="Fixed" visibleRowCount="3"
-                                  rows="{approverModel>/details}">
+                <t:Table id="ApproverTable" selectionMode="MultiToggle" rowSelectionChange=".onApprRowSelectionChange" 
+                                 fixedColumnCount="3" visibleRowCount="5" rows="{approverModel>/details}" >
                      <t:extension>
                         <OverflowToolbar class="sapFDynamicPageAlignContent">
                             <Title text="Approval Line" level="H2"/>

@@ -58,6 +58,7 @@ sap.ui.define([
             this.getRouter().getRoute("purchaseOrderLocalApproval").attachPatternMatched(this._onObjectMatched, this);//change
 
             //this.getView().setModel(new ManagedListModel(), "moldMaster");
+            this.process.setDrawProcessUI(this, "purchaseOrderLocalApprovalProcess" , "A", 5);
         },
 
         /* =========================================================== */
@@ -412,11 +413,13 @@ sap.ui.define([
 
             if (!this._oDialogPrev) {
                 this._oDialogPrev = Fragment.load({
-                    id: this.getView().getId(),
+                    id: oView.getId(),
                     name: "dp.md.moldApprovalList.view.PurchaseOrderLocalPreview",
                     controller: this
                 }).then(function (oDialog) {
-                    this.getView().addDependent(oDialog);
+                    this.process.setDrawProcessUI(this, "purchaseOrderLocalPreviewProcess" , "A", 5);
+
+                    oView.addDependent(oDialog);
                     return oDialog;
                 }.bind(this));
             }

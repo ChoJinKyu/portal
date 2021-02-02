@@ -13,21 +13,74 @@
             contentWidth="90%"
             contentHeight="60%">
 		<content>
+            <form:SimpleForm
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    adjustLabelSpan="false">
+                <form:content>
+                    <!-- Company 시작 -->
+                    <VBox>
+                        <Label text="{I18N>/COMPANY}"></Label>
+                        <ComboBox width="100%" 
+                            selectedKey="{dialogModel>/company_code}" 
+                            items="{rootModel>/company}"
+                            change=".onChangeCompanyFmailyMaterialCodeDialog">
+                            <items>
+                                <core:Item key="{rootModel>company_code}" text="[{rootModel>company_code}] {rootModel>company_name}" />
+                            </items>
+                        </ComboBox>
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- Company 끝 -->
+
+                    <!-- Plant 시작 -->
+                    <VBox>
+                        <Label text="{I18N>/VI_APPROVE_ORG_CODE}"></Label>
+                        <ComboBox width="100%" 
+                            selectedKey="{dialogModel>/org_code}" 
+                            items="{dialogModel>/selectedPurOrg}">
+                            <items>
+                                <core:Item key="{dialogModel>org_code}" text="[{dialogModel>org_code}]{dialogModel>org_name}" />
+                            </items>
+                        </ComboBox>
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- Plant 끝 -->
+
+                    <!-- Material Code 시작 -->
+                    <VBox>
+                        <Label text="{I18N>/MATERIAL_CODE}" />
+                        <Input 
+                            value="{dialogModel>/material_code}"
+                            change=".onSearchFamilyMaterialCode"  >
+                        </Input>
+                        <layoutData>
+                            <layout:GridData span="XL2 L4 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- Material Code 끝 -->
+                </form:content>
+            </form:SimpleForm>
+
             <table:Table   
                 id="familyMaterialCodeTable"
-                selectionMode="None"
+                selectionMode="Single"
                 rows="{dialogModel>/familyMaterialCode}"
-                cellClick=".onSelectFamilyMaterialCode"
+                selectionBehavior="Row"
+                rowSelectionChange=".onSelectFamilyMaterialCode"
                 fixedColumnCount="3">
                 <table:extension>
                     <OverflowToolbar>
-                        <Title text="Material Code" level="H2" />
                         <ToolbarSpacer />
-                        <SearchField search="" width="15rem">
-                            <customData>
-                                <core:CustomData key="dialog" value="familyMaterialCode" />
-                            </customData>
-                        </SearchField>
+                        <Button
+                            class="sapUiSmallMarginEnd"
+                            type="Emphasized"
+                            text="{I18N>/SEARCH}"
+                            press=".onSearchFamilyMaterialCode" />
                     </OverflowToolbar>
                 </table:extension>
                 <table:columns>
@@ -416,7 +469,7 @@
             </table:Table>
 		</content>
         <beginButton>
-            <Button text="Close" press=".onFamilyMaterialDialogClose" />
+            <Button text="{I18N>/CANCEL}" press=".onFamilyMaterialDialogClose" />
         </beginButton>
 	</Dialog>
 </core:FragmentDefinition>

@@ -7,6 +7,7 @@ sap.ui.define([
     "ext/lib/util/ExcelUtil",
     "cm/util/control/ui/EmployeeDialog",
     "cm/util/control/ui/CmDialogHelp",
+    "dp/md/util/controller/ProcessUI", 
     "./DevelopmentReceiptPersoService",
     "sap/ui/base/ManagedObject",
     "sap/ui/core/routing/History",
@@ -29,7 +30,7 @@ sap.ui.define([
     'sap/m/SearchField',
     "sap/m/Text",
     "sap/m/Token"
-], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, ExcelUtil, EmployeeDialog, CmDialogHelp, DevelopmentReceiptPersoService,
+], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, ExcelUtil, EmployeeDialog, CmDialogHelp, ProcessUI, DevelopmentReceiptPersoService,
     ManagedObject, History, Element, Fragment, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item,
     ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token) {
     "use strict";
@@ -39,6 +40,8 @@ sap.ui.define([
         dateFormatter: DateFormatter,
 
         validator: new Validator(),
+
+        process : new ProcessUI(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -78,6 +81,9 @@ sap.ui.define([
                 persoService: DevelopmentReceiptPersoService
             }).setTable(this.byId("moldMstTable"));
             //console.log(this.byId("moldMstTable"));
+
+            this.process.setDrawProcessUI(this, "developmentReceiptProcessE", "A", 0);
+            this.process.setDrawProcessUI(this, "developmentReceiptProcessS", "A", 0);
         },
 
         onMainTablePersoButtonPressed: function (event) {

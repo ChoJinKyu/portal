@@ -5,6 +5,7 @@ using {cm.Org_Plant as Org_Plant} from '../../../../db/cds/cm/CM_ORG_PLANT-model
 using {cm.Org_Division as Org_Division} from '../../../../db/cds/cm/CM_ORG_DIVISION-model';
 using {cm.Org_Unit as Org_Unit} from '../../../../db/cds/cm/CM_ORG_UNIT-model';
 using {cm.Pur_Operation_Org as Pur_Operation_Org} from '../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
+using {cm.Pur_Org_Type_Mapping as Pur_Org_Type_Map} from '../../../../db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model';
 
 namespace cm.util;
 
@@ -31,5 +32,21 @@ service OrgService {
 
     @readonly
     entity Pur_Operation as projection on Pur_Operation_Org;
+
+    @readonly
+    view Pur_Operation_Mapping as
+        select
+            key map.tenant_id,
+            key map.company_code,
+            key map.process_type_code,
+            key map.org_type_code,
+                map.use_flag, 
+            key org.org_code,
+                org.org_name,
+                org.purchase_org_code
+        from Pur_Org_Type_Map as map 
+        left join Pur_Operation_Org as org
+            on map.tenant_id = org.tenant_id
+            and map.company_code = org.company_code;
 
 }

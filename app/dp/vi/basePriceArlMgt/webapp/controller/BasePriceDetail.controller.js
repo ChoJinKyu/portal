@@ -61,7 +61,7 @@ sap.ui.define([
          * Process Flow State & Icon 세팅
          */
         onSetProcessFlowStateAndIcon: function (oDetailViewModelParam, sApproveStatusCodeParam) {
-            var aProcessFlowState = [];
+            var aProcessFlowColors = [];
             var aProcessFlowIcon = [];
             var iSatus = 1;
 
@@ -77,15 +77,20 @@ sap.ui.define([
                     break;
             }
 
-            for( var i=1; i<iSatus; i++ ) {
-                aProcessFlowState.push("None");
-                aProcessFlowIcon.push("sap-icon://complete");
+            for( var i=1; i<5; i++ ) {
+                if( i<iSatus ) {
+                    aProcessFlowColors.push("#04B395");
+                    aProcessFlowIcon.push("sap-icon://message-success");
+                }else if( i === iSatus ) {
+                    aProcessFlowColors.push("#F94B50");
+                    aProcessFlowIcon.push("sap-icon://message-success");
+                }else if( iSatus<i ) {
+                    aProcessFlowColors.push("#BEC9D4");
+                    aProcessFlowIcon.push("sap-icon://appear-offline");
+                }
             }
 
-            aProcessFlowState.push("Error");
-            aProcessFlowIcon.push("sap-icon://circle-task");
-
-            oDetailViewModelParam.setProperty("/processFlowStates", aProcessFlowState);
+            oDetailViewModelParam.setProperty("/processFlowColors", aProcessFlowColors);
             oDetailViewModelParam.setProperty("/processFlowIcons", aProcessFlowIcon);
         },
 
@@ -404,19 +409,31 @@ sap.ui.define([
         },
         
         /**
+         * family material code dialog compnay 변경 시 플랜트 리스트 변경
+         */
+        onChangeCompanyFmailyMaterialCodeDialog: function (oEvent) {
+            var oDialogModel = this.getModel("dialogModel");
+            oDialogModel.setProperty("/selectedPurOrg", this.getModel("rootModel").getProperty("/purOrg/"+oDialogModel.getProperty("/company_code")));
+        },
+        
+        /**
          * Basie 변경 시 FMC일 경우 신규기준단가 및 통화코드 데이터 리셋
          */
         onChangeBasis: function (oEvent) {
             var sSelectedKey = oEvent.getSource().getSelectedKey();
+            var oDetailModel = this.getModel("detailModel");
+            var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
 
+            // FMC일 경우
             if( sSelectedKey === this.getModel("detailViewModel").getProperty("/familyMaterialCodeShowCode") ) {
-                var oDetailModel = this.getModel("detailModel");
-                var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
-    
                 for( var i=0; i<3; i++ ) {
                     oDetailModel.setProperty(sSelectedPath+"/prices/" + i + "/new_base_price", null);
                     oDetailModel.setProperty(sSelectedPath+"/prices/" + i + "/new_base_price_currency_code", null);
                 }
+            }else {
+                oDetailModel.setProperty(sSelectedPath+"/family_material_code", null);
+                oDetailModel.setProperty(sSelectedPath+"/family_supplier_code", null);
+                oDetailModel.setProperty(sSelectedPath+"/family_supplier_name", null);
             }
         },
 
@@ -779,24 +796,57 @@ sap.ui.define([
                 });
             }
 
+            var oDialogModel = this.getModel("dialogModel");
+            var oSelectedDetail = this.getModel("detailModel").getProperty(_sSelectedDialogPath);
+            oDialogModel.setProperty("/selectedPurOrg", this.getModel("rootModel").getProperty("/purOrg/"+oSelectedDetail.company_code));
+            oDialogModel.setProperty("/company_code", oSelectedDetail.company_code);
+
             this._oFamilyMaterialDialog.then(function(oDialog) {
                 oDialog.open();
-                this._getFamilyMaterialCodeDialogData();
+                this._getFamilyMaterialCodeDialogData([new Filter("company_code", FilterOperator.EQ, oSelectedDetail.company_code)]);
                 //this.byId("familyMaterialCodeTable").(sQueryParam);
             }.bind(this));
+        },
+
+        onSearchFamilyMaterialCode: function () {
+            var aFilters = [];
+            var oDialogData = this.getModel("dialogModel").getData();
+
+            if( oDialogData.company_code ) {
+                aFilters.push(new Filter("company_code", FilterOperator.EQ, oDialogData.company_code));
+            }
+            if( oDialogData.org_code ) {
+                aFilters.push(new Filter("org_code", FilterOperator.EQ, oDialogData.org_code));
+            }
+            if( oDialogData.material_code ) {
+                aFilters.push(new Filter("material_code", FilterOperator.Contains, oDialogData.material_code));
+            }
+
+            this._getFamilyMaterialCodeDialogData(aFilters);
         },
         
          /**
          * Family Material Code Dialog data 조회
          */
-        _getFamilyMaterialCodeDialogData: function (oEvent) {
+        _getFamilyMaterialCodeDialogData: function (aFiltersParam) {
             var oModel = this.getModel();
-            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, _sTenantId)];
-            // var sQuery = oEvent.getSource().getValue();
+            var aFilters = aFiltersParam || [];
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, _sTenantId));
 
-            // if( sQuery ) {
-            //     aFilters.push(new Filter("material_code", FilterOperator.Contains, sQuery));
-            // }
+            var oFamilyMaterialCodeTable = this.byId("familyMaterialCodeTable");
+            oFamilyMaterialCodeTable.clearSelection();
+
+            var aDependents = this.getView().getDependents();
+            var oDialog = null;
+
+            for( var i=0; i<aDependents.length; i++ ) {
+                if( -1<aDependents[i].getProperty("title").indexOf("Family") ) {
+                    oDialog = aDependents[i];
+                    break;
+                }
+            }
+
+            oDialog.setBusy(true);
 
             oModel.read("/Base_Price_Mst", {
                 filters : aFilters,
@@ -834,10 +884,13 @@ sap.ui.define([
                         oReMakeFmailyMaterialCode.prices.push(oPrice);
                     });
 
+                    var oDialogModel = this.getModel("dialogModel");
+                    oDialogModel.setProperty("/familyMaterialCode", aReMakeFmailyMaterialCodes);
 
-                    this.getModel("dialogModel").setProperty("/familyMaterialCode", aReMakeFmailyMaterialCodes);
+                    oDialog.setBusy(false);
                 }.bind(this),
                 error: function(data){
+                    oDialog.setBusy(false);
                     console.log('error', data);
                     MessageBox.error(JSON.parse(data.responseText).error.message);
                 }
@@ -845,7 +898,10 @@ sap.ui.define([
         },
 
         onSelectFamilyMaterialCode: function (oEvent) {
-            var sPath = oEvent.getParameter("rowBindingContext").getPath();
+            if( !oEvent || oEvent.getParameter("userInteraction") !== true ) {
+                return;
+            }
+            var sPath = oEvent.getParameter("rowContext").getPath();
             var oSelectedData = this.getModel("dialogModel").getProperty(sPath);
             var oDetailModel = this.getModel("detailModel");
             var oDetail = oDetailModel.getProperty(_sSelectedDialogPath);

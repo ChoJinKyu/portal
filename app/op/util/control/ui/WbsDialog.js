@@ -73,27 +73,6 @@ sap.ui.define([
                 oParam = this.getServiceParameters(),
                 aFilters = oParam.filters || [],
                 aSorters = oParam.sorters || [];
-            // if(sKeyword){
-            //     aFilters.push(
-            //         new Filter({
-            //             filters: [
-            //                 new Filter({
-            //                     path: this.getProperty("keyField"),
-            //                     operator: FilterOperator.Contains,
-            //                     value1: sKeyword,
-            //                     caseSensitive: false
-            //                 }),
-            //                 new Filter({
-            //                     path: this.getProperty("textField"),
-            //                     operator: FilterOperator.Contains,
-            //                     value1: sKeyword,
-            //                     caseSensitive: false
-            //                 })
-            //             ],
-            //             and: false
-            //         })
-            //     );
-            // }
             if(sWbsCode){
                 aFilters.push(new Filter({
                                 path: "wbs_code",

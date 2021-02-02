@@ -1,8 +1,7 @@
 sap.ui.define([
-	"ext/lib/controller/BaseController",
+    "op/util/controller/BaseController",
     "ext/lib/model/ManagedListModel",
     "ext/lib/model/ManagedModel",
-    "ext/lib/util/Multilingual",
     "ext/lib/util/Validator",
 	"ext/lib/formatter/DateFormatter",
 	"ext/lib/formatter/NumberFormatter",
@@ -25,13 +24,16 @@ sap.ui.define([
     "cm/util/control/ui/EmployeeDialog",
     "cm/util/control/ui/PlantDialog",
     "dp/util/control/ui/MaterialOrgDialog",
+    "op/util/control/ui/AccountDialog",
+    "op/util/control/ui/CctrDialog",
+    "op/util/control/ui/CurrencyDialog",
     "op/util/control/ui/UomDialog",
     "op/util/control/ui/WbsDialog",
     "sp/util/control/ui/SupplierDialog"
-], function (BaseController, ManagedListModel, ManagedModel, Multilingual, Validator, DateFormatter, NumberFormatter, CodeValueHelp, 
+], function (BaseController, ManagedListModel, ManagedModel, Validator, DateFormatter, NumberFormatter, CodeValueHelp, 
             JSONModel, History, RichTextEditor, Filter, FilterOperator, Sorter,
             Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label,
-            EmployeeDialog, PlantDialog, MaterialOrgDialog, UomDialog, WbsDialog, SupplierDialog) {
+            EmployeeDialog, PlantDialog, MaterialOrgDialog, AccountDialog, CctrDialog, CurrencyDialog, UomDialog, WbsDialog, SupplierDialog) {
             
     "use strict";
     
@@ -56,38 +58,16 @@ sap.ui.define([
 		 * Called when the mainObject controller is instantiated.
 		 * @public
 		 */
-		onInit : function () { 
-
-			// var oViewModel = new JSONModel({
-			// 		busy : true,
-			// 		delay : 0
-            //     });                
-            // this.setModel(oViewModel, "midCreateObjectView");
-
-            //this.setModel(new JSONModel(), "viewModel");
-
+		onInit : function(){ 
+            // call the base controller's init function
+            BaseController.prototype["op.init"].apply(this, arguments);
 
             // view에서 사용할 메인 Model
             this.setModel(new JSONModel(), "detailModel"); 
-            this.setModel(new JSONModel(), "viewModel");       
-            
-            var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
+            this.setModel(new JSONModel(), "viewModel"); 
 
             this.getRouter().getRoute("midCreate").attachPatternMatched(this._onObjectMatched, this);
             this.getRouter().getRoute("midModify").attachPatternMatched(this._onObjectMatched, this);
-
-            // 텍스트 에디터
-            //this._fnSetRichEditor();
-
-            
-            
-            //this.getRouter().getRoute("midCreate").attachPatternMatched(this._onObjectMatched, this);
-            //this.getView().setModel(new ManagedListModel(),"company");
-            //this.getView().setModel(new ManagedListModel(),"plant");
-            //this.getView().setModel(new ManagedListModel(),"createlist"); // Participating Supplier
-            //this.getView().setModel(new ManagedListModel(),"appList"); // apporval list 
-            //this.getView().setModel(new JSONModel(Device), "device"); // file upload 
         },
         
         onBeforeRendering : function(){            
@@ -948,6 +928,127 @@ sap.ui.define([
             this[sFragmentName].then(function(oDialog) {
                 oDialog.close();
             });
+        },
+
+
+        //==================== OP 공통 Dialog 호출 ====================
+        onValueHelpRequest: function() {
+            var [event, action, ...args] = arguments;
+            var sSelectedPath = event.getSource().getBindingContext("viewModel").getPath();
+            var that=this;
+            var oViewModel = this.getModel("viewModel");
+            var oSelectedData = oViewModel.getProperty(sSelectedPath);
+
+            // 계정코드
+            action == "account_code"
+            &&
+            this.dialog(new AccountDialog({
+                title: "Choose a account code",
+                MultiSelection: false,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", "EQ", this.$session.tenant_id)
+                    ]
+                }
+            }), function(result) {
+                var oItemData = result.getParameter("item");
+                //var oViewModel = that.getModel("viewModel");
+                //var oSelectedData = oViewModel.getProperty(sSelectedPath);
+
+                if(oItemData.account_code && oItemData.account_code !== ""){
+                    oSelectedData.account_code = oItemData.account_code;                    
+                    oViewModel.refresh();
+                }                
+            });
+
+            // 비용부서코드
+            action == "cctr_code"
+            &&
+            this.dialog(new CctrDialog({
+                title: "Choose a cost center",
+                MultiSelection: false,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", "EQ", this.$session.tenant_id)
+                    ]
+                }
+            }), function(result) {
+                var oItemData = result.getParameter("item");
+                if(oItemData.cctr_code && oItemData.cctr_code !== ""){
+                    oSelectedData.cctr_code = oItemData.cctr_code;                    
+                    oViewModel.refresh();
+                }
+            });
+
+            // 자재코드
+            action == "material_code"
+            &&
+            this.dialog(new MaterialOrgDialog({
+                title: "Choose a material code",
+                MultiSelection: false,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", "EQ", this.$session.tenant_id)
+                    ],
+                    sorters: [
+                        new Sorter("material_code")
+                    ]
+                },
+                orgCode: ""
+            }), function(result) {
+                var oItemData = result.getParameter("item");
+                oSelectedData.org_code = (oItemData.org_code && oItemData.org_code !== "") ? oItemData.org_code:"";
+                oSelectedData.material_code = oItemData.material_code;
+                oSelectedData.pr_desc = (oItemData.material_desc && oItemData.material_desc !== "") ? oItemData.material_desc:"";
+                oSelectedData.pr_unit = (oItemData.base_uom_code && oItemData.base_uom_code !== "") ? oItemData.base_uom_code:"";
+                oSelectedData.buyer_empno = (oItemData.buyer_empno && oItemData.buyer_empno !== "") ? oItemData.buyer_empno:"";
+                oSelectedData.purchasing_group_code = (oItemData.purchasing_group_code && oItemData.purchasing_group_code !== "") ? oItemData.purchasing_group_code:"";                    
+                oSelectedData.material_group_code = oItemData.material_group_code; 
+                oViewModel.refresh();
+            });
+
+            // 조직코드
+            action == "org_code"
+            &&
+            this.dialog(new PlantDialog({
+                title: "Choose a organization code",
+                MultiSelection: false,
+                items: {
+                    filters: [
+                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code)
+                    ],
+                    sorters: [
+                        new Sorter("plant_name")
+                    ]
+                },
+                orgCode: ""
+            }), function(result) {
+                var oItemData = result.getParameter("item");
+                if(oItemData.plant_code && oItemData.plant_code !== ""){
+                    oSelectedData.org_code = oItemData.plant_code;                    
+                    oViewModel.refresh();
+                }
+            });
+
+            // 통화코드
+            action == "currency_code"
+            &&
+            this.dialog(new CurrencyDialog({
+                title: "Choose a Currency code",
+                MultiSelection: false,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", "EQ", this.$session.tenant_id)
+                    ]
+                }
+            }), function(result) {
+                var oItemData = result.getParameter("item");
+                if(oItemData.currency_code && oItemData.currency_code !== ""){
+                    oSelectedData.currency_code = oItemData.currency_code;                    
+                    oViewModel.refresh();
+                }
+            });
+
         },
 
         //==================== 자재코드 Material Code Dialog 시작 ==================== 

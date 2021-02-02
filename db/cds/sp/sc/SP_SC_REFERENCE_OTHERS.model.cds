@@ -58,7 +58,7 @@ using { sp.Sc_Pur_Operation_Org } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model
         operation_org : association to Sc_Pur_Operation_Org 
             on operation_org.tenant_id = $projection.tenant_id
             and operation_org.company_code = $projection.company_code
-            and operation_org.org_code = $projection.operation_unit_code
+            and operation_org.operation_org_code = $projection.operation_unit_code
             ; 
 */
 
@@ -66,25 +66,25 @@ using {cm.Pur_Org_Type_View} from '../../cm/CM_PUR_ORG_TYPE_VIEW-model';
 using {cm.Pur_Org_Type_Mapping} from '../../cm/CM_PUR_ORG_TYPE_MAPPING-model';
 using {cm.Pur_Operation_Org} from '../../cm/CM_PUR_OPERATION_ORG-model';
 
-entity Sc_Pur_Org_Type_Mapping as select from Pur_Org_Type_Mapping distinct {
-    process_type_code,
-    company_code,
-    org_type_code
-} where process_type_code = 'SP03'
-;
+// entity Sc_Pur_Org_Type_Mapping as select from Pur_Org_Type_Mapping distinct {
+//     key tenant_id,
+//     key map(company_code,'*','%',company_code) as company_code : Pur_Org_Type_Mapping:company_code,
+//     key org_type_code
+// } where process_type_code = 'SP03' and use_flag = TRUE;
 
 @cds.autoexpose  // Sc_Pur_Operation_Org = Pur_Org_Type_View[process_type_code='SP03:견적입찰'] + Pur_Operation_Org + Code_Lng[group_code='CM_ORG_TYPE_CODE']
 entity Sc_Pur_Operation_Org as
     select from Pur_Org_Type_Mapping as POTM
     inner join Pur_Operation_Org as POO
-        on(
-            POTM.tenant_id = POO.tenant_id
-            and POTM.company_code = POO.company_code
+        on ( POTM.tenant_id = POO.tenant_id
+            // and POO.company_code like map(POTM.company_code,'*','%',POTM.company_code)            //10,000,000,000 9021 ms
+            // and map(POTM.company_code,'*',POO.company_code,POTM.company_code) = POO.company_code  //10,000,000,000 8992 ms
+            and map(POTM.company_code,'*','*',POO.company_code) = POTM.company_code                  //10,000,000,000 8951 ms
             and POTM.org_type_code = POO.org_type_code
-        )
-        and POTM.process_type_code = 'SP03'
-        and POTM.use_flag = TRUE
-        and POO.use_flag = TRUE
+            ) 
+            and POO.use_flag = TRUE
+            and POTM.use_flag = TRUE
+            and POTM.process_type_code = 'SP03'
     mixin {
         org_type : Association to Code_Lng
                        on (    org_type.tenant_id = $projection.tenant_id
@@ -96,8 +96,8 @@ entity Sc_Pur_Operation_Org as
     into {
         key POO.tenant_id,
         key POO.company_code,
-        key POO.org_code,
-            POO.org_name,
+        key POO.org_code as operation_org_code,
+            POO.org_name as operation_org_name,
             POO.org_type_code,
             org_type,
             POO.purchase_org_code,
@@ -140,3 +140,30 @@ AND    OPERATION_ORG_CODE NOT IN ('BIZ00000')
 ;
 */
 
+
+
+
+/***********************************************************************************/
+/******************* For NegoItemPrices-material_code ******************************/
+/* Material Master - Entity Model Relationship 적용되면 폐기예정
+// #Sc_Pur_Operation_Org == Pur_Org_Type_Mapping[process_type_code='SP03:견적입찰'] = Pur_Operation_Org =+ Code_Lng[group_code='CM_ORG_TYPE_CODE']
+// #How to use : as association
+using { sp.Sc_Pur_Operation_Org } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+        operation_org : association to Sc_Pur_Operation_Org 
+            on operation_org.tenant_id = $projection.tenant_id
+            and operation_org.company_code = $projection.company_code
+            and operation_org.operation_org_code = $projection.operation_unit_code
+            ; 
+*/
+
+// using { dp as MtlMst } from './DP_MM_MATERIAL_MST-model';
+// entity Sc_Mm_Material_Mst as select from Mm_Material_Mst mixin 
+// {
+//     localized: association to Mm_Material_Desc_Lng on 
+// }
+// into 
+// {
+//     *
+// };
+
+// Mm_Material_Desc_Lng

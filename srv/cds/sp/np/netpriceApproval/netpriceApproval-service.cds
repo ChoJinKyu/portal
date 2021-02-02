@@ -84,11 +84,20 @@ service NpApprovalService {
 					ELSE che.user_english_name
 			   END AS requestor_teamnm : String         /* requestor team */
 
-                                                /* ??? outcome ??? */
+             , pam.outcome_code                  /* ??? outcome ??? */
+             , (SELECT cd.code_name
+                  FROM CM_CODE_LNG AS cd
+                 WHERE cd.tenant_id   = cam.tenant_id
+                   AND cd.group_code  = 'SP_SC_OUTCOME'
+                   AND cd.language_cd = clc.language_code
+               	   AND cd.code        = pam.outcome_code
+			   )  AS outcome_name : String
              , cam.request_date                 /* request date */
-                                                /* ??? negotiation no ??? */
+             , pam.nego_number                  /* ??? negotiation no ??? */
  
              , pam.local_create_dtm AS creation_date   /* creation date */
+
+             , pam.detailes
 
           FROM SP_NP_NET_PRICE_APPROVAL_MST   pam
          INNER JOIN (SELECT a.tenant_id 

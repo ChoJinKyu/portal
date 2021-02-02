@@ -10,7 +10,7 @@ using {sp.Sc_Nego_Headers_New_Record_View as negoHeadersNewRecordView} from '../
     sp.Sc_Nego_Parent_Type_Code as scNegoParentTypeCode,
     sp.Sc_Award_Type_Code_View as scAwardTypeCodeView,
     sp.Sc_Nego_Prog_Status_Code_View as scNegoProgStatusCodeView,
-} from '../../../../../db/cds/sp/sc/SP_SC_OUTCOME_CODE_VIEW-model'; */
+} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_MASTERS-model'; */
 
 namespace sp;
 

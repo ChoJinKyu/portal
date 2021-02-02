@@ -20,10 +20,11 @@ sap.ui.define([
     "sap/ui/richtexteditor/RichTextEditor",
     "./ApprovalBaseController",
     "dp/md/util/controller/MoldItemSelection",
-    "dp/md/util/controller/SupplierSelection"
+    "dp/md/util/controller/SupplierSelection",
+  
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalBaseController, MoldItemSelection, SupplierSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalBaseController, MoldItemSelection, SupplierSelection 
 ) {
     "use strict";
 
@@ -40,7 +41,8 @@ sap.ui.define([
         moldItemPop: new MoldItemSelection(),
 
         supplierSelection: new SupplierSelection(),
-        
+
+
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -63,7 +65,7 @@ sap.ui.define([
             
             this.setModel(oViewModel, "participatingSupplierSelectionView");//change
             this.getRouter().getRoute("participatingSupplierSelection").attachPatternMatched(this._onObjectMatched, this);//change
-            
+            this.process.setDrawProcessUI(this, "participatingSupplierProcess" , "A", 2);
         },
 
         /* =========================================================== */
@@ -374,62 +376,45 @@ sap.ui.define([
         onPagePreviewButtonPress : function(){
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
-            if(this.getModel("approver").getData().Approvers != undefined){ 
+           
+            if (this.getModel("approver").getData().Approvers != undefined) {
                 var ap = this.getModel("approver").getData().Approvers;
-                var len = 0; 
 
-                if(this.getView().getModel("mode").getProperty("/viewFlag")){
-                    len = ap.length;
-                }else{
-                    len =  ap.length -1;
-                }
-               
-                for(var i = 0 ; i < len ; i++){
-                    this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
+                for (var i = 0; i < ap.length; i++) {
+                    this.getModel("approverPreview").addRecord(ap[i], "/Approvers");
                 }
             }
-            
-            //console.log("approverPreview " , this.getModel("approverPreview").getData());
-
-            // var ref = this.getModel("referer");
-            // this.getView().setModel(new ManagedModel(), "refererPreview");
-
-            // var rArr = [];
-            // if(ref.getData().Referers != undefined && ref.getData().Referers.length >0){
-            //     ref.getData().Referers.forEach(function(item){
-            //         rArr.push(item.referer_empno); 
-            //     });
-            // }
-            // this.getModel("refererPreview").setProperty("/refArr", rArr);
 
             var oView = this.getView();
-
-            if (!this._oDialogPreview) {
-                this._oDialogPreview = Fragment.load({
+            var p = this.process;
+            if (!this._oDialogPrev) {
+                this._oDialogPrev = Fragment.load({
                     id: oView.getId(),
                     name: "dp.md.moldApprovalList.view.ParticipatingSupplierSelectionPreView",
                     controller: this
-                }).then(function (oDialog) {
+                }).then(function (oDialog) { 
                     oView.addDependent(oDialog);
+                    p.setDrawProcessUI(this, "partcipatingSupplierPrevProcess" , "A", 2);
+
                     return oDialog;
                 }.bind(this));
             }
 
-            this._oDialogPreview.then(function (oDialog) {
-                oDialog.open();
-                oView.byId('referMultiPrev').setTokens(oView.byId("referMulti").getTokens()); // 미리보기 레퍼러 
+            this._oDialogPrev.then(function (oDialog) {
+                oDialog.open(); 
+                oView.byId('referMultiPrev').setTokens(oView.byId("referMulti").getTokens()); // 
             });
 
         },
         onPrvClosePress : function(){ 
              var oView = this.getView();
-             if (this._oDialogPreview) {
-                this._oDialogPreview.then(function (oDialog) {
+             if (this._oDialogPrev) {
+                this._oDialogPrev.then(function (oDialog) {
                     oView.byId('referMulti').setTokens(oView.byId("referMultiPrev").getTokens()); // 이거 안하면 본화면에 표시가 안됨 
                     oDialog.close();
                     oDialog.destroy();
                 });
-                this._oDialogPreview = undefined;
+                this._oDialogPrev = undefined;
             }
         },
         

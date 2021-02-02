@@ -193,7 +193,7 @@
                                     showMeasure: false
                                 }
                             }" 
-                        visible="{detailViewModel>/viewMode}"
+                        visible="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode}  ? true : false }"
                         editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
                         textAlign="End" />
                     <Text text="{
@@ -206,7 +206,7 @@
                                     showMeasure: false
                                 }
                             }" 
-                        visible="{= !${detailViewModel>/viewMode}}" textAlign="End" width="100%" />
+                        visible="{= !(${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode}) ? true : false }" textAlign="End" width="100%" />
                     </VBox>
                 </t:template>
             </t:Column>
@@ -215,7 +215,7 @@
                 <t:template>
                     <VBox>
                     <ComboBox
-                        visible="{detailViewModel>/viewMode}"
+                        visible="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode}  ? true : false }"
                         editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
                         items="{
                             path: 'detailViewModel>/currency',
@@ -225,7 +225,7 @@
                             <core:Item key="{detailViewModel>currency_code}" text="{detailViewModel>currency_code}" />
                         </items>
                     </ComboBox>
-                    <Text text="{detailModel>prices/0/new_base_price_currency_code}" visible="{= !${detailViewModel>/viewMode}}" textAlign="Center" width="100%" />
+                    <Text text="{detailModel>prices/0/new_base_price_currency_code}" visible="{= !(${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode}) ? true : false }" textAlign="Center" width="100%" />
                     </VBox>
                 </t:template>
             </t:Column>
@@ -379,7 +379,7 @@
                                     showMeasure: false
                                 }
                             }" 
-                        visible="{detailViewModel>/viewMode}"
+                        visible="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode}  ? true : false }"
                         editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
                         textAlign="End" />
                     <Text text="{
@@ -392,7 +392,7 @@
                                     showMeasure: false
                                 }
                             }" 
-                        visible="{= !${detailViewModel>/viewMode}}" textAlign="End" width="100%" />
+                        visible="{= !(${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode}) ? true : false }" textAlign="End" width="100%" />
                     </VBox>
                 </t:template>
             </t:Column>
@@ -404,7 +404,7 @@
                 <t:template>
                     <VBox>
                     <ComboBox
-                        visible="{detailViewModel>/viewMode}"
+                        visible="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode}  ? true : false }"
                         editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
                         items="{
                             path: 'detailViewModel>/currency',
@@ -414,7 +414,7 @@
                             <core:Item key="{detailViewModel>currency_code}" text="{detailViewModel>currency_code}" />
                         </items>
                     </ComboBox>
-                    <Text text="{detailModel>prices/2/new_base_price_currency_code}" visible="{= !${detailViewModel>/viewMode}}" textAlign="Center" width="100%" />
+                    <Text text="{detailModel>prices/2/new_base_price_currency_code}" visible="{= !(${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode}) ? true : false }" textAlign="Center" width="100%" />
                     </VBox>
                 </t:template>
             </t:Column>
@@ -575,7 +575,7 @@
                                     showMeasure: false
                                 }
                             }" 
-                        visible="{detailViewModel>/viewMode}"
+                        visible="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode}  ? true : false }"
                         editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
                         textAlign="End" />
                     <Text text="{
@@ -588,7 +588,7 @@
                                     showMeasure: false
                                 }
                             }" 
-                        visible="{= !${detailViewModel>/viewMode}}" textAlign="End" width="100%" />
+                        visible="{= !(${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode}) ? true : false }" textAlign="End" width="100%" />
                     </VBox>
                 </t:template>
             </t:Column>
@@ -600,7 +600,7 @@
                 <t:template>
                     <VBox>
                     <ComboBox
-                        visible="{detailViewModel>/viewMode}"
+                        visible="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode}  ? true : false }"
                         editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
                         items="{
                             path: 'detailViewModel>/currency',
@@ -610,7 +610,7 @@
                             <core:Item key="{detailViewModel>currency_code}" text="{detailViewModel>currency_code}" />
                         </items>
                     </ComboBox>
-                    <Text text="{detailModel>prices/1/new_base_price_currency_code}" visible="{= !${detailViewModel>/viewMode}}" textAlign="Center" width="100%" />
+                    <Text text="{detailModel>prices/1/new_base_price_currency_code}" visible="{= !(${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode}) ? true : false }" textAlign="Center" width="100%" />
                     </VBox>
                 </t:template>
             </t:Column>

@@ -69,7 +69,7 @@ public class PrReviewMgtV4Service implements EventHandler {
                       .append("I_BUYER_EMPNO => ?, ")
                       .append("I_BUYER_DEPARTMENT_CODE => ?, ")
                       .append("I_PROCESSED_REASON => ?, ")
-                      .append("I_USER_ID => ?, ")
+                      .append("I_EMPLOYEE_NUMBER => ?, ")
                       .append("O_MSG_TBL => ? ")
                       .append(")");
 
@@ -111,6 +111,7 @@ public class PrReviewMgtV4Service implements EventHandler {
             public OutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
                 log.info("====> return_code : " + v_rs.getString("return_code"));
                 log.info("====> return_msg  : " + v_rs.getString("return_msg"));
+
                 OutType v_row = OutType.create();
                 v_row.setReturnCode(v_rs.getString("return_code"));
                 v_row.setReturnMsg(v_rs.getString("return_msg"));
@@ -131,7 +132,7 @@ public class PrReviewMgtV4Service implements EventHandler {
         paramList.add(new SqlParameter("I_BUYER_EMPNO", Types.VARCHAR));
         paramList.add(new SqlParameter("I_BUYER_DEPARTMENT_CODE", Types.VARCHAR));
         paramList.add(new SqlParameter("I_PROCESSED_REASON", Types.VARCHAR));
-        paramList.add(new SqlParameter("I_USER_ID", Types.VARCHAR));
+        paramList.add(new SqlParameter("I_EMPLOYEE_NUMBER", Types.VARCHAR));
         paramList.add(oReturn);
 
         Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
@@ -143,13 +144,13 @@ public class PrReviewMgtV4Service implements EventHandler {
                 log.info("====> I_BUYER_EMPNO           : "+v_inData.getBuyerEmpno());
                 log.info("====> I_BUYER_DEPARTMENT_CODE : "+v_inData.getBuyerDepartmentCode());
                 log.info("====> I_PROCESSED_REASON      : "+v_inData.getProcessedReason());
-                log.info("====> I_USER_ID               : "+v_inData.getUserId());
+                log.info("====> I_EMPLOYEE_NUMBER       : "+v_inData.getEmployeeNumber());
 
                 stmt.setString("I_JOB_TYPE", v_inData.getJobType());
                 stmt.setString("I_BUYER_EMPNO", v_inData.getBuyerEmpno());
                 stmt.setString("I_BUYER_DEPARTMENT_CODE", v_inData.getBuyerDepartmentCode());
                 stmt.setString("I_PROCESSED_REASON", v_inData.getProcessedReason());
-                stmt.setString("I_USER_ID", v_inData.getUserId());
+                stmt.setString("I_EMPLOYEE_NUMBER", v_inData.getEmployeeNumber());
 
                 return stmt;
             }

@@ -160,6 +160,9 @@ sap.ui.define([
 
             oModel.read("/Base_Price_Arl_Master", {
                 filters : filtersParam,
+                urlParameters: {
+                    "$orderby": "approval_number desc, request_date desc"
+                },
                 success : function(data){
                     oView.setBusy(false);
 

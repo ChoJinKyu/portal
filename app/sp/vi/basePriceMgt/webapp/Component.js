@@ -17,7 +17,7 @@ sap.ui.define([
             // call the base component's init function
             UIComponent.prototype.init.apply(this, arguments);
 
-            var oBasePriceArlMgtRootData = {tenantId: "L2100", number: {symbol: "", currency: "KRW"}};
+            var oBasePriceArlMgtRootData = {tenantId: "L2100", company_code : "LGCKR", number: {symbol: "", currency: "KRW"}};
 
             this.setModel(new JSONModel(oBasePriceArlMgtRootData), "rootModel");
             this.setModel(new Multilingual().getModel(), "I18N");
@@ -80,12 +80,12 @@ sap.ui.define([
                     console.log("error", data);
                 }
             });
-
-            // 자재 조회
+            //자재 조회
             var oBasePriceArlModel = this.getModel("basePriceArl");
-            var aBasePriceArlFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
+            var aOrgMetalFilter = [];
+                aOrgMetalFilter.push(new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId")));
             oBasePriceArlModel.read("/Base_Price_Aprl_Material", {
-                filters : aBasePriceArlFilter,
+                filters : aOrgMetalFilter,
                 success : function(data){
                     if( data && data.results ) {
                         var aResults = data.results;

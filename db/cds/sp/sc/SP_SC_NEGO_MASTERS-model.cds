@@ -13,7 +13,7 @@ using {
 
 
 
-// using {sp as ScOutcomeCodeView} from '../../sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
+// using {sp as ScOutcomeCodeView} from '../../sp/sc/SP_SC_NEGO_MASTERS-model';
 
 
 //// 할일 목록
@@ -93,6 +93,8 @@ entity Sc_Nego_Parent_Type_Code {
     key nego_parent_type_code : String(30) not null                      @title : '협상상위유형코드';
         sort_no               : Decimal not null                         @title : '정렬번호';
         nego_parent_type_name : localized String(240)                    @title : '협상상위유형이름';
+        // nego_parent_type_temp : localized Integer                        @title : 'TEST01'; 
+        //생성가능//서비스로는 해당필드가 Expose되지 않는 것 같음
         nego_types             : Composition of many Sc_Nego_Type_Code
                                     on nego_types.tenant_id = $self.tenant_id
                                     and nego_types.nego_parent_type_code = $self.nego_parent_type_code

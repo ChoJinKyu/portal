@@ -66,6 +66,7 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "assetTypeCodeList"); // Asset Type
             this.setModel(oViewModel, "budgetExecutionApprovalView"); //change
             this.getRouter().getRoute("budgetExecutionApproval").attachPatternMatched(this._onObjectMatched, this);//change  
+            this.process.setDrawProcessUI(this, "BudgetExecutionPress" , "A", 1);
         },
 
         /* =========================================================== */
@@ -397,14 +398,15 @@ sap.ui.define([
             }
 
             var oView = this.getView();
-
+            var p = this.process;
             if (!this._oDialogPrev) {
                 this._oDialogPrev = Fragment.load({
                     id: oView.getId(),
                     name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView",
                     controller: this
-                }).then(function (oDialog) {
+                }).then(function (oDialog) { 
                     oView.addDependent(oDialog);
+                    p.setDrawProcessUI(this, "BudgetExecutionPressPrev" , "A", 1);
                     return oDialog;
                 }.bind(this));
             }

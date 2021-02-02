@@ -55,7 +55,7 @@ service NpApprovalDetailService {
              , key pam.company_code
              , key pam.org_type_code
              , key pam.org_code	                    /* operating org */
-             , key pam.approval_number
+             , key pam.approval_number              /* Approval No. */
 
              , (SELECT org.org_name
                   FROM CM_PUR_OPERATION_ORG  org
@@ -63,10 +63,14 @@ service NpApprovalDetailService {
                    AND org.company_code  = pam.company_code
                    AND org.org_type_code = pam.org_type_code
                    AND org.org_code      = pam.org_code
-			   ) AS org_name : String
+			   ) AS org_name : String               /* org */
 
-             , cam.approval_title                   /* title */
-             , cam.approve_status_code              /* status */
+            ,   cam.approval_title                   /* title !!! */
+            ,   cam.approve_status_code              /* status !!! */
+
+            ,   pam.net_price_document_type_code    /* 단가문서유형코드 */
+            ,   pam.net_price_source_code           /* 견적번호??? */
+
              , (SELECT cd.code_name
                   FROM CM_CODE_LNG AS cd
                  WHERE cd.tenant_id   = cam.tenant_id
@@ -75,7 +79,7 @@ service NpApprovalDetailService {
                	   AND cd.code        = cam.approve_status_code
 			   )  AS approve_status_name : String
 
-             , cam.requestor_empno             /* requestor */
+             , cam.requestor_empno                      /* requestor !!! */
 			 , CASE WHEN clc.language_code = 'EN' THEN che.user_english_name
 			        WHEN clc.language_code = 'KO' THEN che.user_local_name
 					ELSE che.user_english_name
@@ -87,7 +91,7 @@ service NpApprovalDetailService {
 			   END AS requestor_teamnm : String         /* requestor team */
 
                                                         /* ??? outcome ??? */
-             , cam.request_date                         /* request date */
+             , cam.request_date                         /* request date !!!! */
                                                         /* ??? negotiation no ??? */
  
              , pam.local_create_dtm AS creation_date    /* creation date */
@@ -125,13 +129,13 @@ service NpApprovalDetailService {
             ,	key pad.approval_number		            /*	품의번호	*/
             ,	key pad.item_sequence		            /*	품목순번	*/
 
-            , (SELECT org.org_name
-                  FROM CM_PUR_OPERATION_ORG  org
-                 WHERE org.tenant_id     = pad.tenant_id
-                   AND org.company_code  = pad.company_code
-                   AND org.org_type_code = pad.org_type_code
-                   AND org.org_code      = pad.org_code
-			   ) AS org_name : String                   /*	구매운영조직코드 명	*/
+            ,   (SELECT org.org_name
+                   FROM CM_PUR_OPERATION_ORG  org
+                  WHERE org.tenant_id     = pad.tenant_id
+                    AND org.company_code  = pad.company_code
+                    AND org.org_type_code = pad.org_type_code
+                    AND org.org_code      = pad.org_code
+			    ) AS org_name : String                   /*	구매운영조직코드 명	*/
 
             ,	pad.material_code		                /*	자재코드	*/
             ,	pad.material_desc		                /*	자재내역	*/
@@ -212,15 +216,8 @@ service NpApprovalDetailService {
             ,	pad.agent_code		                    /*	대행사코드	*/
             ,	pad.net_price_agreement_sign_flag		/*	단가합의서명여부	*/
             ,	pad.net_price_agreement_status_code		/*	단가합의상태코드	*/
-            ,	pad.pyear_july_base_currency_code		/*	전년7월기준통화코드	*/
-            ,	pad.pyear_july_base_price		        /*	전년7월기준단가	*/
-            ,	pad.pyear_july_ci_rate		            /*	전년7월CI비율	*/
-            ,	pad.pyear_dec_base_currency_code		/*	전년12월기준통화코드	*/
-            ,	pad.pyear_dec_base_price		        /*	전년12월기준단가	*/
-            ,	pad.pyear_dec_ci_rate		            /*	전년12월CI비율	*/
-            ,	pad.quarter_base_currency_code		    /*	분기기준통화코드	*/
-            ,	pad.quarter_base_price		            /*	분기기준단가	*/
-            ,	pad.quarter_ci_rate		                /*	분기CI비율	*/
+            
+
             ,	pad.base_price_type_code		        /*	기준단가유형코드	*/
             ,	pad.quality_certi_flag		            /*	품질인증여부	*/
             ,	pad.exrate_type_code		            /*	환율유형코드	*/
@@ -242,23 +239,23 @@ service NpApprovalDetailService {
 
         FROM SP_NP_NET_PRICE_APPROVAL_DTL   pad
                
-        INNER JOIN (SELECT a.tenant_id 
+        JOIN    (SELECT a.tenant_id 
 					       ,a.code AS language_code
                        FROM CM_CODE_DTL a
                       WHERE a.group_code = 'CM_LANG_CODE'
-                     ) clc  /* 공통코드 언어코드(EN,KO) */
-			    ON clc.tenant_id         = pad.tenant_id
+                ) clc  /* 공통코드 언어코드(EN,KO) */
+			    ON pad.tenant_id         = clc.tenant_id
 
-        LEFT JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
-                ON sm.tenant_id     = pad.tenant_id
-               AND sm.supplier_code  = pad.supplier_code
+        LEFT OUTER JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
+                ON pad.tenant_id     = sm.tenant_id
+               AND pad.supplier_code  = sm.supplier_code
 
-        LEFT JOIN PG_VP_VENDOR_POOL_MST vpm
-                ON vpm.tenant_id        = pad.tenant_id
-               AND vpm.company_code     = pad.company_code
-               AND vpm.org_type_code    = pad.org_type_code
-               AND vpm.org_code         = pad.org_code
-               AND vpm.vendor_pool_code = pad.vendor_pool_code
+        LEFT OUTER JOIN PG_VP_VENDOR_POOL_MST vpm
+                ON pad.tenant_id        = vpm.tenant_id
+               AND pad.company_code     = vpm.company_code
+               AND pad.org_type_code    = vpm.org_type_code
+               AND pad.org_code         = vpm.org_code
+               AND pad.vendor_pool_code = vpm.vendor_pool_code
 
     ;
 
@@ -267,32 +264,34 @@ service NpApprovalDetailService {
     /* 단가품의 상세 BasePriceInfo 조회 View */
     view NpApprovalDetailBasePriceInfoView as
         SELECT
-                key pad.tenant_id		        /*	테넌트ID	*/
-            ,	key pad.company_code		    /*	회사코드	*/
-            ,	key pad.org_type_code		    /*	구매운영조직유형	*/
-            ,	key pad.org_code		        /*	구매운영조직코드	*/
-            ,	key pad.approval_number		    /*	품의번호	*/
-            ,	key pad.item_sequence		    /*	품목순번	*/
+                key pad.tenant_id		                        /*	테넌트ID	*/
+            ,	key pad.company_code		                    /*	회사코드	*/
+            ,	key pad.org_type_code		                    /*	구매운영조직유형	*/
+            ,	key pad.org_code		                        /*	구매운영조직코드	*/
+            ,	key pad.approval_number		                    /*	품의번호	*/
+            ,	key pad.item_sequence		                    /*	품목순번	*/
 
-            , (SELECT org.org_name
-                  FROM CM_PUR_OPERATION_ORG  org
-                 WHERE org.tenant_id     = pad.tenant_id
-                   AND org.company_code  = pad.company_code
-                   AND org.org_type_code = pad.org_type_code
-                   AND org.org_code      = pad.org_code
-			   ) AS org_name : String           /*	구매운영조직코드 명	*/
+            ,	pad.material_code		                        /*	자재코드	*/
+            ,	pad.material_desc		                        /*	자재내역	*/
 
-            ,	pad.material_code		        /*	자재코드	*/
-            ,	pad.material_desc		        /*	자재내역	*/
-
-            ,	pad.supplier_code		        /*	공급업체코드	*/
+            ,	pad.supplier_code		                        /*	공급업체코드	*/
             ,   CASE WHEN clc.language_code = 'EN' THEN sm.supplier_english_name
 			         WHEN clc.language_code = 'KO' THEN sm.supplier_local_name
 				     ELSE sm.supplier_english_name
-			    END AS supplier_name : String   /*  공급업체명 확인필요 */
+			    END AS supplier_name : String                   /*  공급업체명 확인필요 */
 
-            /*  SD-Mapping */
-            /*  SD-File */
+            ,	pad.currency_code		                        /*	통화코드	*/
+            ,	pad.net_price		                            /*	단가	*/
+
+            ,   pad.base_price_type_code                        /*  기준단가유형코드 */
+
+            ,   pad.pyear_dec_base_currency_code                /*  전년12월기준통화코드 */
+            ,   pad.pyear_dec_base_price                        /*  전년12월기준단가 */	
+            ,   pad.pyear_dec_ci_rate                           /*  전년12월CI비율' */	
+
+            ,	pad.quarter_base_currency_code		            /*	분기기준통화코드	*/
+            ,	pad.quarter_base_price		                    /*	분기기준단가	*/
+            ,	pad.quarter_ci_rate		                        /*	분기CI비율	*/
 
             ,	pad.vendor_pool_code		    /*	협력사풀코드	*/
             ,   CASE WHEN clc.language_code = 'EN' THEN vpm.vendor_pool_english_name
@@ -305,23 +304,23 @@ service NpApprovalDetailService {
 
         FROM SP_NP_NET_PRICE_APPROVAL_DTL   pad
                
-        INNER JOIN (SELECT a.tenant_id 
+        JOIN (SELECT a.tenant_id 
 					       ,a.code AS language_code
                        FROM CM_CODE_DTL a
                       WHERE a.group_code = 'CM_LANG_CODE'
                      ) clc  /* 공통코드 언어코드(EN,KO) */
-			    ON clc.tenant_id         = pad.tenant_id
+			    ON pad.tenant_id        = clc.tenant_id
 
-        LEFT JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
-                ON sm.tenant_id     = pad.tenant_id
-               AND sm.supplier_code  = pad.supplier_code
+        LEFT OUTER JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
+                ON pad.tenant_id        = sm.tenant_id
+               AND pad.supplier_code    = sm.supplier_code
 
-        LEFT JOIN PG_VP_VENDOR_POOL_MST vpm
-                ON vpm.tenant_id        = pad.tenant_id
-               AND vpm.company_code     = pad.company_code
-               AND vpm.org_type_code    = pad.org_type_code
-               AND vpm.org_code         = pad.org_code
-               AND vpm.vendor_pool_code = pad.vendor_pool_code
+        LEFT OUTER JOIN PG_VP_VENDOR_POOL_MST vpm
+                ON pad.tenant_id        = vpm.tenant_id
+               AND pad.company_code     = vpm.company_code
+               AND pad.org_type_code    = vpm.org_type_code
+               AND pad.org_code         = vpm.org_code
+               AND pad.vendor_pool_code = vpm.vendor_pool_code
 
     ;
 

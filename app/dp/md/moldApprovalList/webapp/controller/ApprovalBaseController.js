@@ -27,11 +27,12 @@ sap.ui.define([
 	"sap/ui/core/dnd/DropInfo",
 	"sap/ui/core/dnd/DropPosition",
 	"sap/ui/core/dnd/DropLayout",
-	"sap/f/dnd/GridDropInfo",
+    "sap/f/dnd/GridDropInfo", 
+    "dp/md/util/controller/ProcessUI", 
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator, EmployeeDeptDialog, 
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalList,
-    Sorter, Token, DragInfo , DropInfo ,DropPosition, DropLayout, GridDropInfo 
+    Sorter, Token, DragInfo , DropInfo ,DropPosition, DropLayout, GridDropInfo , ProcessUI
 ) {
     "use strict";
 
@@ -41,7 +42,10 @@ sap.ui.define([
 
         validator: new Validator(),
 
-        approvalList: new ApprovalList(),
+        approvalList: new ApprovalList(), 
+
+        process : new ProcessUI(),
+
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */

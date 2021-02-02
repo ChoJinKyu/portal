@@ -125,12 +125,11 @@
                         </table:Column>
                         <table:Column id="c_currency" width="10em" hAlign="Center">
                             <VBox>
-                                <Label text="Currency"/>
+                                <Label text="Currency" required="true"/>
                             </VBox>
                             <table:template>
                                 <ComboBox 
                                     id="currency"
-                                    
                                     editable="{mode>/editFlag}"
                                     selectedKey="{mdItemMaster>currency_code}" 
                                     items="{ 
@@ -145,10 +144,9 @@
                                 </ComboBox>
                             </table:template>
                         </table:Column>
-                        <table:Column id="c_target_amount" width="10em" hAlign="Center">
+                        <table:Column id="c_target_amount" width="10em" hAlign="Center" >
                             <VBox>
-                                <Label text="Target"/>
-                                <Label text="Amount"/>
+                                <Label text="Target Amount" required="true"/>
                             </VBox>
                             <table:template>
                                 <Input id="target_amount" textAlign="End" editable="{mode>/editFlag}" value="{mdItemMaster>target_amount}"/>

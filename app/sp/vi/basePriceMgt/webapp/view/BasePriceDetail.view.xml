@@ -132,9 +132,8 @@
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
                             <VBox>
-                            <t:Table id="BasePriceDetailTable" selectionMode="MultiToggle" width="auto" class="sapFDynamicPageAlignContent" 
-                                visibleRowCountMode="Auto"
-                                rows="{detailModel>/details}"/>
+                            <t:Table id="BasePriceDetailTable" selectionMode="MultiToggle" rowSelectionChange=".onRowSelectionChange" 
+                                 fixedColumnCount="3" visibleRowCount="5" rows="{detailModel>/details}" >
                                     <t:extension>
                                         <OverflowToolbar class="sapFDynamicPageAlignContent">
                                             <Title text="{I18N>/BASE_PRICE_LIST}({= ${detailModel>/details}.length || 0}) " level="H2"/>
@@ -276,13 +275,13 @@
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/VENDOR_POOL}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>vendor_pool}"/>
+                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>vendor_pool}[{detailModel>vendor_pool_code}]"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <ComboBox selectedKey="" editable="{= ${detailModel>row_state} === 'edit' }"
+                                            <ComboBox selectedKey="{detailModel>currency_code}" editable="{= ${detailModel>row_state} === 'edit' }"
                                                     items="{ path: 'currencyODataModel>/Currency' }">
                                             <items>
                                                 <core:Item key="{currencyODataModel>currency_code}" text="{currencyODataModel>currency_code}" />
@@ -291,7 +290,7 @@
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/QUANTITY}" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/BASE_PRICE_UNIT}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>basePriceUnit}"/>
                                         </t:template>

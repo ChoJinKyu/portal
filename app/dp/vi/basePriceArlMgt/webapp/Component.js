@@ -48,6 +48,22 @@ sap.ui.define([
             });
             // DB에서 Config값을 읽어와서 세팅(view에 사용할 visible, text 값등) 끝
 
+            // 회사 조회 시작
+            var oOrgModel = this.getModel("org");
+            var aOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
+            oOrgModel.read("/Company", {
+                filters : aOrgFilter,
+                success : function(data){
+                    if( data && data.results ) {
+                        oRootModel.setProperty("/company", data.results);
+                    }
+                },
+                error : function(data){
+                    console.log("error", data);
+                }
+            });
+            // 회사 조회 끝
+
             // 플랜트 조회 시작
             var oPurOrgModel = this.getModel("purOrg");
             var aPurOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];

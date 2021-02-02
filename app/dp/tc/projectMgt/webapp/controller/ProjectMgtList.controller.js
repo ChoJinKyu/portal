@@ -42,7 +42,8 @@ sap.ui.define([
             
             this.setModel(new JSONModel(oFilterModel), "filterModel");
             this.setModel(new JSONModel(), "updateModel");
-
+            let oGlobalData = {tenant_id : "L2100", user_id : "A60262"};
+            this.getOwnerComponent().getModel("globalModel").setData(oGlobalData);
             //this.getRouter().getRoute("ProjectMgtList").attachPatternMatched(this._getProjectMgtList, this);
         }
 
@@ -211,7 +212,7 @@ sap.ui.define([
             var iIdx = _oTable.getSelectedIndex();
             
             if(iIdx < 0) {
-                MessageBox.alert("데이터가 선택되지 않았습니다.");
+                MessageToast.show("데이터가 선택되지 않았습니다.", {at: "center center"});
                 return -1;
             }
             return iIdx;
@@ -531,10 +532,9 @@ sap.ui.define([
         }
 
         , onExcludeCalSavePress: function() {
-            //MessageToast.show("Update Service", {at: "Center Center"});
             var oApplyData = this.getModel("updateModel").getProperty("/");
             if(oApplyData.mcst_excl_flag && !oApplyData.mcst_excl_reason) {
-                MessageBox.alert("제외 사유를 입력하세요.", {at: "Center Center"});
+                MessageToast.show("제외 사유를 입력하세요.", {at: "center center"});
                 return;
             }
             

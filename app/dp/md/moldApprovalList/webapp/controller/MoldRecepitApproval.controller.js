@@ -23,11 +23,11 @@ sap.ui.define([
     'sap/m/SearchField',
     "sap/m/Token",
     "dp/md/util/controller/DeptSelection",
-    "dp/md/util/controller/ProcessUI", 
+
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
-    , ApprovalBaseController, MoldItemSelection , SearchField , Token , DeptSelection , ProcessUI
+    , ApprovalBaseController, MoldItemSelection , SearchField , Token , DeptSelection 
 ) {
     "use strict";
     /**
@@ -48,7 +48,6 @@ sap.ui.define([
 
         deptSelection : new DeptSelection(),
 
-        process : new ProcessUI(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -273,14 +272,15 @@ sap.ui.define([
         //     this.getModel("refererPreview").setProperty("/refArr", rArr);
 
             var oView = this.getView();
-
+             var p = this.process;
             if (!this._oDialogPrev) {
                 this._oDialogPrev = Fragment.load({
                     id: oView.getId(),
                     name: "dp.md.moldApprovalList.view.MoldRecepitApprovalPreView",
                     controller: this
                 }).then(function (oDialog) {
-                    oView.addDependent(oDialog);
+                    oView.addDependent(oDialog); 
+                     p.setDrawProcessUI(this, "MoldRecepitProcessPrev" , "A", 6);
                     return oDialog;
                 }.bind(this));
             }

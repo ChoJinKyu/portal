@@ -35,7 +35,8 @@ entity Md_Vp_Mapping_Item_View(language_code : String) {
         hierarchy_root_rank          : Integer64;
         drill_state                  : String      @title : 'expanded/leaf';
         language_cd                  : String(2)   @title : '언어코드';
-        confirmed_status_code        : String(3)   @title : '확정상태코드';
+        confirmed_status_code        : String(30)   @title : '확정상태코드';
+        confirmed_status_name        : String(100)   @title : '확정상태명';
         max_mapping_cnt              : Integer64   @title : '협력사전체Mapping최대Count';
         vendor_pool_item_mapping_cnt : Integer64   @title : '협력사Item매핑총Count';
         

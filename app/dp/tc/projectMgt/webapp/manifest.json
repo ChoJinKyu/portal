@@ -169,6 +169,12 @@
                 "useBatch": true
                 }
             },
+            "globalModel": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {
+                    "defaultBindingMode": "TwoWay"
+                }
+            },
             "listModel": {
                 "type": "sap.ui.model.json.JSONModel",
                 "settings": {
@@ -219,12 +225,6 @@
                     "autoExpandSelect": true
                 }
             },
-            "partListModel": {
-                "type": "sap.ui.model.json.JSONModel",
-                "settings": {
-                    "defaultBindingMode": "TwoWay"
-                }
-            },
             "popupListModel": {
                 "type": "sap.ui.model.json.JSONModel",
                 "settings": {
@@ -240,7 +240,9 @@
             ]
         },
         "resourceRoots": {
-            "ext.lib": "../../../../lib"
+            "ext.lib": "../../../../lib",
+            "cm.util": "../../../../cm/util",
+            "dp.util": "../../../../dp/util"
         },
         "routing": {
             "config": {

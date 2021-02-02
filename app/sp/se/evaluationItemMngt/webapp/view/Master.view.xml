@@ -137,7 +137,9 @@
             <t:TreeTable 
                 id="treeTable"
                 enableSelectAll="false"
-                visibleRowCount="11"
+                visibleRowCount="{=
+                    ${viewModel>/App/layout} !== 'TwoColumnsMidExpanded' ? 13 : 16
+                }"
                 enableColumnReordering="false"
                 class="sapFDynamicPageAlignContent" 
                 rowSelectionChange="onRowSelectionChange"

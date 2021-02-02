@@ -67,7 +67,8 @@ sap.ui.define([
             this.setModel(oViewModel, "pssCancelApprovalView");//change
             this.getRouter().getRoute("pssCancelApproval").attachPatternMatched(this._onObjectMatched, this);//change
             this.getView().setModel(new ManagedListModel(), "mdItemMaster");
-
+// PssCancelProcess 
+             this.process.setDrawProcessUI(this, "PssCancelProcess" , "A", 2);   
         },
 
         /* =========================================================== */

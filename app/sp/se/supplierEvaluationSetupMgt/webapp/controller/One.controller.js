@@ -17,12 +17,15 @@ sap.ui.define([
     "ext/lib/util/Multilingual",
     "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
-    "sap/ui/core/Item"
+    "sap/ui/core/Item",
+    "sap/ui/core/ValueState",
+    "sap/ui/core/message/Message",
+    "sap/ui/core/MessageType",
 
     // @ts-ignore
 ], function (BaseController, History, MessageBox, MessageToast, Filter, FilterOperator, FilterType, Sorter, JSONModel, ColumnListItem,
     Fragment, TransactionManager, Formatter, Validator, Multilingual, ManagedModel, ManagedListModel,
-    Item
+    Item, ValueState, Message, MessageType
     ) {
     "use strict";
 
@@ -68,11 +71,10 @@ sap.ui.define([
             this.loginUserId = "TestUser" ;
             this.tenant_id = "L2100";
             this.company_code = "LGCKR";  
-
+            
             this.language_cd ="KO"; 
             this.orgTypeCode = "BU";
             this.orgCode = "BIZ00100";
-            this.evalPersonEmpno = "5706";
 
             // 자주쓸것같은 Filter
             var aSearchFilters = [];                
@@ -91,19 +93,23 @@ sap.ui.define([
         onManagerAdd : function(oEvent){
             var oView = this.getView().getModel("DetailView");            
             var oModel = oView.getProperty("/manager");
-			oModel.unshift({
-	           "tenant_id": this.tenant_id,
-                "company_code": this.company_code,
-                "org_type_code":  this.org_type_code,
-                "org_code":this.org_code,
-                "evaluation_operation_unit_code": this.evaluation_operation_unit_code,
-                "evaluation_op_unt_person_empno": "",
-                "user_local_name": "",
-                "department_local_name": "",
-                "evaluation_execute_role_code": "",
-                "transaction_code" : "I"
-            });
-           oView.setProperty("/manager",oModel);
+
+                oModel.unshift({
+                "tenant_id": this.tenant_id,
+                    "company_code": this.company_code,
+                    "org_type_code":  this.org_type_code,
+                    "org_code":this.org_code,
+                    "evaluation_operation_unit_code": this.evaluation_operation_unit_code,
+                    "evaluation_op_unt_person_empno": "",
+                    "user_local_name": "",
+                    "department_local_name": "",
+                    "evaluation_execute_role_code": "",
+                    "transaction_code" : "I",
+                    "rowEditable":true
+                });
+         
+                oView.setProperty("/manager",oModel);
+
                 
             // // "ext/lib/model/ManagedListModel" 쓸떄
             // 	var oModel = this.getModel("supEvalSetupModel");
@@ -124,38 +130,60 @@ sap.ui.define([
 
         onManagerDelete : function(oEvent){
 
-            var oTable = this.byId("managerTable"),                
-                oView = this.getView(),
-                oModel = this.getModel("DetailView"),
-                aItems = oTable.getSelectedItems(),
-                aIndices = [];
-
-            if (aItems.length > 0) {
-                MessageBox.confirm(i18nModel.getText("/NCM00003"), {
-                    title: "Comfirmation",
-                    initialFocus: sap.m.MessageBox.Action.CANCEL,
-                    onClose: function (sButton) {
-                       if (sButton === MessageBox.Action.OK) {
-                        aItems.forEach(function(oItem){
-                            aIndices.push(oModel.getProperty("/manager").indexOf(oItem.getBindingContext("DetailView").getObject()));
-                        });
-                        aIndices.sort().reverse();
-                        //aIndices = aItems.sort(function(a, b){return b-a;});
-                        aIndices.forEach(function(nIndex){     
-                            oModel.getProperty("/manager").splice(nIndex,1);     
-                        });
-
-                        oModel.setProperty("/manager",oModel.getProperty("/manager"));
-                        oView.byId("managerTable").removeSelections(true);                        
-
-                        }
-                        
+            var oTable, oView, oViewModel, aSelectedItems, aContxtPath, aManagerListData;
+                
+                oView = this.getView();
+                oViewModel = oView.getModel("DetailView");
+                oTable = this.byId("managerTable");
+                aManagerListData = oViewModel.getProperty("/manager");
+                aSelectedItems = oTable.getSelectedItems();
+                aContxtPath = oTable.getSelectedContextPaths();
+                for(var i = aContxtPath.length - 1; i >= 0; i--){
+                    var idx = aContxtPath[i].split("/")[2];
+                    
+                    if( aManagerListData[idx].transaction_code === "I" ){
+                        aManagerListData.splice(idx, 1);
+                    }else{
+                        aManagerListData[idx].transaction_code = "D"
+                        aManagerListData[idx].rowEditable = false;
                     }
-                });
+                }
 
-            } else {
-                MessageBox.error("선택된 데이터가 없습니다.");
-            }           
+                oTable.removeSelections(true);
+                oViewModel.setProperty("/manager", aManagerListData);
+
+            // var oTable = this.byId("managerTable"),                
+            //     oView = this.getView(),
+            //     oModel = this.getModel("DetailView"),
+            //     aItems = oTable.getSelectedItems(),
+            //     aIndices = [];
+
+            // if (aItems.length > 0) {
+            //     MessageBox.confirm(i18nModel.getText("/NCM00003"), {
+            //         title: "Comfirmation",
+            //         initialFocus: sap.m.MessageBox.Action.CANCEL,
+            //         onClose: function (sButton) {
+            //            if (sButton === MessageBox.Action.OK) {
+            //             aItems.forEach(function(oItem){
+            //                 aIndices.push(oModel.getProperty("/manager").indexOf(oItem.getBindingContext("DetailView").getObject()));
+            //             });
+            //             aIndices.sort().reverse();
+            //             //aIndices = aItems.sort(function(a, b){return b-a;});
+            //             aIndices.forEach(function(nIndex){     
+            //                 oModel.getProperty("/manager").splice(nIndex,1);     
+            //             });
+
+            //             oModel.setProperty("/manager",oModel.getProperty("/manager"));
+            //             oView.byId("managerTable").removeSelections(true);                        
+
+            //             }
+                        
+            //         }
+            //     });
+
+            // } else {
+            //     MessageBox.error("선택된 데이터가 없습니다.");
+            // }           
 
         },
         _getSaveData : function(sTransactionCode){
@@ -167,7 +195,8 @@ sap.ui.define([
                 oManagerItem, oManagerFields, oManagerType,
                 oQunatityItem, oQunatityFields, oQunatityType;
                 
-                
+                var scenario_number = this.scenario_number;
+
                 //oUserInfo = this._getUserSession();
                 oView = this.getView();
                 oViewModel = oView.getModel("DetailView");
@@ -272,36 +301,47 @@ sap.ui.define([
                                 oHeader[sHeadField]
                             ){
                                 oMstType[sHeadField] = oHeader[sHeadField];
+                            }else if(
+                                 typeof oHeader[sHeadField] === "boolean"
+                            ){
+                                oMstType[sHeadField] = false;
                             }
                         }
-                        
+                        var evaluation_operation_unit_code = oMstType.evaluation_operation_unit_code;
                         oMstType.eval_apply_vendor_pool_lvl_no = parseInt(oMstType.eval_apply_vendor_pool_lvl_no);                    
                         oSaveData.OperationUnitMst.push(oMstType);
-
 
                         var oView = this.getView();
                         var oModel = oView.getModel("DetailView");
 
                         var oKeys = oView.byId("searchMultiComboCode").getSelectedKeys();
-                        var sCustomkeys = oKeys.join(",");
                         
-                        oModel.setProperty("/vpOperationUnit/vendor_pool_operation_unit_code",sCustomkeys);
+                        // var sCustomkeys = oKeys.join(",");
+                        
+                        // oModel.setProperty("/vpOperationUnit",
+                            
+                        // );
                         
 
-                        oVpItem = oViewModel.getProperty("/vpOperationUnit");                        
-                        oVpType = {};
-                        for(sHeadField in oVpItem){
-                            if( 
-                                oVpItem.hasOwnProperty(sHeadField) && 
-                                oVpFields.indexOf(sHeadField) > -1 && 
-                                oVpItem[sHeadField]
-                            ){
-                                oVpType[sHeadField] = oVpItem[sHeadField];
-                            }
-                        }
+                        // oVpItem = oViewModel.getProperty("/vpOperationUnit");                        
+                        // oVpType = {};
+                        // for(sHeadField in oVpItem){
+                        //     if( 
+                        //         oVpItem.hasOwnProperty(sHeadField) && 
+                        //         oVpFields.indexOf(sHeadField) > -1 && 
+                        //         oVpItem[sHeadField]
+                        //     ){
+                        //         oVpType[sHeadField] = oVpItem[sHeadField];
+                        //     }
+                        // }
 
                       
-                        oSaveData.VpOperationUnit.push(oVpType);
+                        oSaveData.VpOperationUnit = oKeys.map(function(unitCode){
+                                var obj ={};
+                                obj.vendor_pool_operation_unit_code = unitCode;
+                                return obj;
+                        });
+
 
                         oManagerItem = oViewModel.getProperty("/manager");  
                         oManagerItem.forEach(function(oRowData){
@@ -321,10 +361,11 @@ sap.ui.define([
                                         oNewRowData[sManagerField] = oRowData[sManagerField];
                                     }
                                 }
-
+                                if(scenario_number === "New")
+                                oNewRowData.evaluation_operation_unit_code = evaluation_operation_unit_code;
                                 oSaveData.Mangers.push(oNewRowData);
                             });
-
+                        
                         oQunatityItem = oViewModel.getProperty("/quantitative");  
                         oQunatityItem.forEach(function(oRowData){
 
@@ -343,6 +384,9 @@ sap.ui.define([
                                         oNewQunaRowData[sQunatityField] = oRowData[sQunatityField];
                                     }
                                 }
+                                if(scenario_number === "New")
+                                oNewQunaRowData.evaluation_operation_unit_code = evaluation_operation_unit_code;
+
                                 oNewQunaRowData.sort_sequence = parseInt(oNewQunaRowData.sort_sequence);                    
                                 oSaveData.Quantitative.push(oNewQunaRowData);
                             });
@@ -369,15 +413,22 @@ sap.ui.define([
             // var oRequest = oModel.getProperty("/");
             var sURLPath = "srv-api/odata/v4/sp.supEvalSetupV4Service/SaveEvaluationSetup1Proc";
             var oSaveData;
+            var oComponent = this.getOwnerComponent();
 
 
-            MessageBox.confirm("수정하십니까?",{
+            MessageBox.confirm(i18nModel.getProperty("/NCM00001"),{
                 onClose: function (sAction) {
                     if(sAction === MessageBox.Action.CANCEL){
                         return;
                     }
-                    
+                    if(!this._checkValidation()){
+                        return;
+                    }
+                    if(this.scenario_number === "New")
+                    oSaveData = this._getSaveData("I");
+                    else
                     oSaveData = this._getSaveData("U");
+
                     oView.setBusy(true);
                     $.ajax({
                         url: sURLPath,
@@ -386,13 +437,38 @@ sap.ui.define([
                         contentType: "application/json",
                         success: function (data) {
                             
-                            debugger;
-                            
-                            
+                            if(this.scenario_number==="New"){
+
+                              this.getRouter().navTo("main");
+                              
+                            }else{
+                                this._readOperationUnitMst();
+                                this._readManagerListView();
+                                this._readEvalTypeListView();
+                                this._readQttiveItemListView();    
+                                this.getModel("DetailView").setProperty("/isEditMode", false);
+                            }
+
                             oView.setBusy(false);
-                        },
+                        }.bind(this),
                         error: function (e) {
-                            debugger;
+                                var sDetails;
+
+                                sDetails = "";
+                                try{
+                                    sDetails += "<p><strong>" + e.responseJSON.error.code + "</strong></p>\n" +
+                                    "<ul>" +
+                                        "<li>" + e.responseJSON.error.message + "</li>" +
+                                    "</ul>";
+                                }catch(error){
+                                    
+                                }
+
+                                MessageBox.error(e.status + " - " + e.statusText,{
+                                    title: "Error",
+                                    details : sDetails
+                                })
+
                             oView.setBusy(false);
                         }
                     });
@@ -403,6 +479,79 @@ sap.ui.define([
 
 
 
+        },
+        /**
+         * 저장시 Validation 필수값 확인
+         * 
+         */
+         _checkValidation : function(){
+            var bValid, oView, oViewModel, oArgs, aControls;
+            
+            oView = this.getView();
+            oViewModel = oView.getModel("DetailView");
+            // oArgs = oViewModel.getProperty("/Args");
+            bValid = false;
+
+            // if(this.scenario_number === "New"){
+            //     aControls = oView.getControlsByFieldGroupId("newRequired");
+            //     bValid = this._isValidControl(aControls);
+            // }else{
+                aControls = oView.getControlsByFieldGroupId("required");
+                bValid = this._isValidControl(aControls);
+            // }
+
+            return bValid;
+        },
+
+         /***
+         * Control 유형에 따른 필수 값 확인
+         */
+        _isValidControl : function(aControls){
+            var oMessageManager = sap.ui.getCore().getMessageManager(),
+                bAllValid = false;
+                // oI18n = this.getView().getModel("I18N");
+                
+            oMessageManager.removeAllMessages();
+            bAllValid = aControls.every(function(oControl){
+                var sEleName = oControl.getMetadata().getElementName(),
+                    sValue;
+                
+                switch(sEleName){
+                    case "sap.m.Input":
+                    case "sap.m.TextArea":
+                        sValue = oControl.getValue();
+                        break;
+                    case "sap.m.ComboBox":
+                        sValue = oControl.getSelectedKey();
+                        break;
+                    case "sap.m.MultiComboBox":
+                        sValue = oControl.getSelectedKeys().length;
+                        break;
+                    default:
+                        return true;
+                }
+                
+                // if(!oControl.getProperty('enabled')) return true;
+                if(!oControl.getProperty('editable')) return true;
+                if(oControl.getProperty('required')){
+                    if(!sValue){
+                        oControl.setValueState(ValueState.Error);
+                        oControl.setValueStateText(i18nModel.getText("/ECM01002"));
+                        oMessageManager.addMessages(new Message({
+                            message: i18nModel.getText("/ECM01002"),
+                            type: MessageType.Error
+                        }));
+                        bAllValid = false;
+                        oControl.focus();
+                        return false;
+                    }else{
+                        oControl.setValueState(ValueState.None);
+                    }
+                }
+                return true;
+            });
+
+            return bAllValid;
         },
 
 
@@ -501,22 +650,24 @@ sap.ui.define([
         onQunAdd : function(oEvent){
             var oView = this.getView().getModel("DetailView");            
             var oModel = oView.getProperty("/quantitative");
-			oModel.unshift({
-	           "tenant_id": this.tenant_id,
-                "company_code": this.company_code,
-                "org_type_code":  this.org_type_code,
-                "org_code":this.org_code,  
-                "evaluation_operation_unit_code": this.evaluation_operation_unit_code,
-                "qttive_item_code": "",
-                "qttive_item_name": "",
-                "qttive_item_uom_code": "",
-                "qttive_item_measure_mode_code": "",
-                "qttive_item_desc": "",
-                "sort_sequence": "",
-                "transaction_code":"I",
-                "rowEditable":false
-            });
-           oView.setProperty("/quantitative",oModel);
+
+                oModel.unshift({
+                "tenant_id": this.tenant_id,
+                    "company_code": this.company_code,
+                    "org_type_code":  this.org_type_code,
+                    "org_code":this.org_code,  
+                    "evaluation_operation_unit_code": this.evaluation_operation_unit_code,
+                    "qttive_item_code": "",
+                    "qttive_item_name": "",
+                    "qttive_item_uom_code": "",
+                    "qttive_item_measure_mode_code": "",
+                    "qttive_item_desc": "",
+                    "sort_sequence": "",
+                    "transaction_code":"I",
+                    "rowEditable":true
+                });
+          
+                oView.setProperty("/quantitative",oModel);
 
             },
             
@@ -542,7 +693,7 @@ sap.ui.define([
                     }
                 }
 
-                oTable.removeSelections();
+                oTable.removeSelections(true);
                 oViewModel.setProperty("/quantitative", aQunListData);
 
             // var oTable = this.byId("quantitativeTable"),                
@@ -580,6 +731,68 @@ sap.ui.define([
             // }           
 
         },
+        onSelectQunItem : function(oEvent){
+
+                var oView, oViewModel, oSelectItem,
+                oBindContxtPath, oRowData, bSeletFlg, bEditMode, aSelectAll;
+
+                oView = this.getView();
+                oViewModel = oView.getModel("DetailView");
+                bEditMode = oViewModel.getProperty("/isEditMode");
+
+                if(!bEditMode){
+                    return;
+                }
+
+                oSelectItem = oEvent.getParameter("listItem");
+                oBindContxtPath = oSelectItem.getBindingContextPath();
+                oRowData = oViewModel.getProperty(oBindContxtPath);
+                bSeletFlg = oEvent.getParameter("selected");
+
+                if(oEvent.getParameters().selectAll===true){
+                    
+                    oEvent.getParameters("selected");
+
+                    aSelectAll = oEvent.getSource().getSelectedItems();
+
+                    aSelectAll.forEach(function(index){
+             
+                        oBindContxtPath = index.getBindingContextPath();
+                        oRowData = oViewModel.getProperty(oBindContxtPath);
+
+                        if(oRowData.transaction_code === "D"){
+                        return;
+                        }else if(oRowData.transaction_code === "I"){
+                        oRowData.rowEditable = bSeletFlg;
+                        oViewModel.setProperty(oBindContxtPath, oRowData);
+                        return;
+                        }
+
+                        oRowData.rowEditable = bSeletFlg;
+                        oRowData.transaction_code = "U";
+
+                        oViewModel.setProperty(oBindContxtPath, oRowData);
+
+
+                        return;
+                    });
+
+                }else if(oRowData.transaction_code === "D"){
+                    return;
+                }else if(oRowData.transaction_code === "I"){
+                    oRowData.rowEditable = bSeletFlg;
+                    oViewModel.setProperty(oBindContxtPath, oRowData);
+                    return;
+                }
+
+                oRowData.rowEditable = bSeletFlg;
+                oRowData.transaction_code = "U";
+
+                oViewModel.setProperty(oBindContxtPath, oRowData);
+           
+
+        },
+        
         onSelectQunItem : function(oEvent){
 
                 var oView, oViewModel, oSelectItem,
@@ -908,10 +1121,11 @@ sap.ui.define([
                                 manager : [],
                                 evaluationType1 : [],
                                 quantitative : [],
-                                vpOperationUnit : { vendor_pool_operation_unit_code : []}
+                                vpOperationUnit : { vendor_pool_operation_unit_code : [] }
                             });
-            this.getView().byId("managerTable").removeSelections();
-            this.getView().byId("quantitativeTable").removeSelections();
+                            // vpOperationUnit : { vendor_pool_operation_unit_code : [] }
+            this.getView().byId("managerTable").removeSelections(true);
+            this.getView().byId("quantitativeTable").removeSelections(true);
 
             // oView.getModel().refresh(true);
             // oView.getModel("DetailView").refresh(true);
@@ -930,7 +1144,23 @@ sap.ui.define([
             if (this.scenario_number === "New") {
                 this.getModel("DetailView").setProperty("/isEditMode", true);
                 this.getModel("DetailView").setProperty("/isCreateMode", true);
-                this.getModel("DetailView").setProperty("/transaction_code", "C");
+                this.getModel("DetailView").setProperty("/transaction_code", "I");
+
+                this.getModel("DetailView").setProperty("/OperationUnitMst", {
+                "tenant_id":this.tenant_id,
+                "company_code":this.company_code,
+                "org_type_code":this.org_type_code,
+                "org_code":this.org_code,
+                "use_flag" : false,
+                "distrb_score_eng_flag" : false,
+                "operation_plan_flag" : false,
+                "evaluation_request_approval_flag" : false                   
+                });
+                
+                // this.getModel("DetailView").setProperty("/OperationUnitMst/tenant_id", this.tenant_id);
+                // this.getModel("DetailView").setProperty("/OperationUnitMst/company_code", this.company_code);
+
+                
 
             } else { // Detail 일때
                 this.getModel("DetailView").setProperty("/isEditMode", false);
@@ -943,8 +1173,88 @@ sap.ui.define([
                 //     tenant_id : this.tenant_id,
                 //     ...
                 // })
+                this._readOperationUnitMst();
+                this._readManagerListView();
+                this._readEvalTypeListView();
+                this._readQttiveItemListView();
+             }
+             
+             oView.setBusy(false);
+         },
+         _readManagerListView : function(){
 
-                // 키값 이외에 임의의 필터를 줄때                
+            var oView = this.getView();
+
+            //Manager Table read
+            var oManagerListFilters = [];      
+            oManagerListFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
+            oManagerListFilters.push(new Filter("company_code", 'EQ', this.company_code));     
+            oManagerListFilters.push(new Filter("org_type_code", 'EQ', this.org_type_code));
+            oManagerListFilters.push(new Filter("org_code", 'EQ', this.org_code));     
+            oManagerListFilters.push(new Filter("evaluation_operation_unit_code", 'EQ', this.evaluation_operation_unit_code));
+
+            oView.getModel().read("/managerListView", {
+            filters: oManagerListFilters,
+            success: function (oData) {
+
+                oView.getModel("DetailView").setProperty("/manager",oData.results);                    
+                //this.getView().getModel("DetailView").setData(oManager);                
+
+                }.bind(this),
+                error: function () {}
+                });
+
+            
+        },
+        _readEvalTypeListView : function(){
+
+            var oView = this.getView();
+
+            //$evaluationType1 table read
+            var EvalTypeListFilters = [];      
+            EvalTypeListFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
+            EvalTypeListFilters.push(new Filter("company_code", 'EQ', this.company_code));     
+            EvalTypeListFilters.push(new Filter("org_type_code", 'EQ', this.org_type_code));
+            EvalTypeListFilters.push(new Filter("org_code", 'EQ', this.org_code));     
+            EvalTypeListFilters.push(new Filter("evaluation_operation_unit_code", 'EQ', this.evaluation_operation_unit_code));
+
+
+            oView.getModel().read("/evalTypeListView", {
+            filters: EvalTypeListFilters,
+            success: function (oData) {
+                    oView.getModel("DetailView").setProperty("/evaluationType1",oData.results);                    
+
+                }.bind(this),
+                error: function () {}
+                });
+            },
+            _readQttiveItemListView : function(){            
+              //$quantitative table read
+              var oView = this.getView();
+
+              var QttiveItemListFilters = [];      
+              QttiveItemListFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
+              QttiveItemListFilters.push(new Filter("company_code", 'EQ', this.company_code));     
+              QttiveItemListFilters.push(new Filter("org_type_code", 'EQ', this.org_type_code));
+              QttiveItemListFilters.push(new Filter("org_code", 'EQ', this.org_code));     
+              QttiveItemListFilters.push(new Filter("evaluation_operation_unit_code", 'EQ', this.evaluation_operation_unit_code));
+
+                oView.getModel().read("/QttiveItem", {
+                filters: QttiveItemListFilters,
+                success: function (oData) {
+                        oView.getModel("DetailView").setProperty("/quantitative",oData.results);
+                        
+
+                    }.bind(this),
+                    error: function () {}
+                    });              
+                
+                
+            },
+                
+        _readOperationUnitMst : function(){
+                var oView = this.getView();
+
                 var OpUnitViewFilters = [];      
                 OpUnitViewFilters.push(new Filter("language_cd", 'EQ', this.language_cd));
                 OpUnitViewFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
@@ -954,7 +1264,7 @@ sap.ui.define([
                 OpUnitViewFilters.push(new Filter("evaluation_operation_unit_code", 'EQ', this.evaluation_operation_unit_code));
 
                 if(!this.getModel("DetailView").getProperty("/isEditMode")){
-                oView.getModel().read("/OpUnitView", {
+                    oView.getModel().read("/OpUnitView", {
                     filters: OpUnitViewFilters,
                     success: function (oData) {
                         // 단건이면 oData가 Object , 다건이면 Array -> oData.value or oData.results[i].value
@@ -964,103 +1274,22 @@ sap.ui.define([
                         var oValues = oData.results[0];
                         // var oOperationUnit2 =  this.getModel("DetailView");
                         
-                            oView.getModel("DetailView").setProperty("/OperationUnitMst",oValues);
-
-                        // //운영단위코드 evaluation_operation_unit_code
-                        // oOperationUnit2.setProperty("/evaluation_operation_unit_code", oValues.evaluation_operation_unit_code);
-
-                        // //운영단위명 evaluation_operation_unit_name
-                        // oOperationUnit2.setProperty("/evaluation_operation_unit_name", oValues.evaluation_operation_unit_name);
-
-                        // //배점설계여부 distrb_score_eng_flag
-                        // oOperationUnit2.setProperty("/distrb_score_eng_flag", oValues.distrb_score_eng_flag);
-
-                        // //발의품의여부 evaluation_request_approval_flag
-                        // oOperationUnit2.setProperty("/evaluation_request_approval_flag", oValues.evaluation_request_approval_flag);
-                        
-                        // //운영전략수립여부 operation_plan_flag
-                        // oOperationUnit2.setProperty("/operation_plan_flag", oValues.operation_plan_flag);
-
-                        // //사용여부 use_flag
-                        // oOperationUnit2.setProperty("/use_flag", oValues.use_flag);  
-                    
-                        // //평가대상 V/P레벨 eval_apply_vendor_pool_lvl_no
-                        // oOperationUnit2.setProperty("/eval_apply_vendor_pool_lvl_no", oValues.eval_apply_vendor_pool_lvl_no);
-
-                        // V/P운영단위 vendor_pool_operation_unit_code 
-                         oView.getModel("DetailView").setProperty("/vpOperationUnit/vendor_pool_operation_unit_code", oValues.vendor_pool_operation_unit_code);
+                        oView.getModel("DetailView").setProperty("/OperationUnitMst",oValues);                        
+                        oView.getModel("DetailView").setProperty("/vpOperationUnit/vendor_pool_operation_unit_code", oValues.vendor_pool_operation_unit_code.split(","));
                         
                         // var oVPCombo = this.byId("searchMultiComboCode");
                         // var sKey = this.getModel("DetailView").getProperty("/vpOperationUnit/vendor_pool_operation_unit_code").split(",");                        
                         // oVPCombo.setSelectedKeys(sKey);
 
-                            
-                         //Manager Table read
-                        var oManagerListFilters = [];      
-                        oManagerListFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
-                        oManagerListFilters.push(new Filter("company_code", 'EQ', this.company_code));     
-                        oManagerListFilters.push(new Filter("org_type_code", 'EQ', this.org_type_code));
-                        oManagerListFilters.push(new Filter("org_code", 'EQ', this.org_code));     
-                        oManagerListFilters.push(new Filter("evaluation_operation_unit_code", 'EQ', this.evaluation_operation_unit_code));
+                            };
 
-                        oView.getModel().read("/managerListView", {
-                        filters: oManagerListFilters,
-                        success: function (oData) {
-                                oView.getModel("DetailView").setProperty("/manager",oData.results);
-                                
-                                //this.getView().getModel("DetailView").setData(oManager);
-                            
-
-                            }.bind(this),
-                            error: function () {
-
-                             }
-                          });
-
-                        //$evaluationType1 table read
-
-                        oView.getModel().read("/evalTypeListView", {
-                        filters: oManagerListFilters,
-                        success: function (oData) {
-                                oView.getModel("DetailView").setProperty("/evaluationType1",oData.results);
-                                
-
-                            }.bind(this),
-                            error: function () {
-
-                             }
-                          });
-
-                        //$quantitative table read
-
-                        oView.getModel().read("/QttiveItem", {
-                        filters: oManagerListFilters,
-                        success: function (oData) {
-                                oView.getModel("DetailView").setProperty("/quantitative",oData.results);
-                                
-
-                            }.bind(this),
-                            error: function () {
-
-                             }
-                          });                              
-                             }
                         }.bind(this),
-                    error: function () {
-                    }
-
-                   
-
-                });
-
-                }
-
-             }
-             
-             oView.setBusy(false);
-         },
-
-         /**
+                       error: function () {}
+                    });
+            };
+        },
+         
+            /**
              * footer Edit 버튼 기능
              * Edit모드로 변경
              * @public
