@@ -47,7 +47,7 @@ service PrReviewMgtService {
             ,dtl.pr_desc  // 구매요청내역
             ,dtl.pr_unit  // 구매요청단위
             ,dtl.pr_quantity  // 구매요청수량
-            ,case when dtl.closing_flag = true then 0 else dtl.pr_quantity end as remain_quantity : Decimal(20,2)  // 잔여수량
+            ,case when dtl.closing_flag = true then 0 else dtl.pr_quantity end as remain_quantity : Decimal(30, 10)  // 잔여수량
             ,dtl.delivery_request_date  // 납품요청일자
             ,dtl.buyer_empno  // 구매담당자사번
             ,cm_get_emp_name_func(dtl.tenant_id, dtl.buyer_empno) as buyer_name : String(240)  // 구매담당자명
@@ -173,7 +173,7 @@ service PrReviewMgtService {
 
             ,dtl.pr_quantity  // 구매요청수량
             ,dtl.pr_unit  // 구매요청단위
-            ,case when dtl.closing_flag = true then 0 else dtl.pr_quantity end as remain_quantity : Decimal(20,2)  // 잔여수량  -- by dokim
+            ,case when dtl.closing_flag = true then 0 else dtl.pr_quantity end as remain_quantity : Decimal(30, 10)  // 잔여수량  -- by dokim
 
             ,dtl.estimated_price  // 단가예산
             ,dtl.currency_code  // 통화코드
