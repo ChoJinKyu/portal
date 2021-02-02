@@ -3,7 +3,9 @@
 <form:SimpleForm editable="false" layout="ResponsiveGridLayout">
 <form:content>
 	<VBox height="3.5rem"><Label text="USE MATERIAL VALUE"/>
-		<Input value="{tmpCcDpMdSpec>/use_material_value}"/>
+		<Input value="{tmpCcDpMdSpec>/use_material_value}" showValueHelp="true"
+                                    valueHelpOnly="true"
+                                    valueHelpRequest=".onSuppValueHelpRequested" />
 		<layoutData>
 			<l:GridData span="XL4 L4 M4 S6" />
 		</layoutData>
