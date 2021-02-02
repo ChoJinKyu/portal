@@ -69,17 +69,6 @@ BEGIN
 
         IF :CRUD_TYPE = 'U' THEN
 
-            UPDATE DP_PD_PART_BASE_ACTIVITY M
-               SET (M.SEQUENCE, M.DESCRIPTION, M.ACTIVE_FLAG, M.LOCAL_UPDATE_DTM, M.UPDATE_USER_ID, M.SYSTEM_UPDATE_DTM) =
-                   ( SELECT SEQUENCE, DESCRIPTION, ACTIVE_FLAG, NOW(), UPDATE_USER_ID, NOW()
-                       FROM :I_M
-                      WHERE TENANT_ID = M.TENANT_ID 
-                        AND ACTIVITY_CODE = M.ACTIVITY_CODE
-                   )
-            WHERE   (M.TENANT_ID, M.ACTIVITY_CODE ) IN
-                    ( SELECT TENANT_ID, ACTIVITY_CODE FROM :I_M )
-            ;
-
             IF V_ORG_SEQUENCE > V_SEQUENCE THEN
 
                 UPDATE DP_PD_PART_BASE_ACTIVITY
@@ -100,7 +89,18 @@ BEGIN
 
             END IF;
             
-        ELSE
+            UPDATE DP_PD_PART_BASE_ACTIVITY M
+               SET (M.SEQUENCE, M.DESCRIPTION, M.ACTIVE_FLAG, M.LOCAL_UPDATE_DTM, M.UPDATE_USER_ID, M.SYSTEM_UPDATE_DTM) =
+                   ( SELECT SEQUENCE, DESCRIPTION, ACTIVE_FLAG, NOW(), UPDATE_USER_ID, NOW()
+                       FROM :I_M
+                      WHERE TENANT_ID = M.TENANT_ID 
+                        AND ACTIVITY_CODE = M.ACTIVITY_CODE
+                   )
+            WHERE   (M.TENANT_ID, M.ACTIVITY_CODE ) IN
+                    ( SELECT TENANT_ID, ACTIVITY_CODE FROM :I_M )
+            ;
+
+            ELSE
             INSERT INTO DP_PD_PART_BASE_ACTIVITY M
                       ( TENANT_ID
                         ,ACTIVITY_CODE

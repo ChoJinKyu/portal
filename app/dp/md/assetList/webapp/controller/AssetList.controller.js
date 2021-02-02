@@ -253,33 +253,6 @@ sap.ui.define([
         },
 
 
-        /* =========================================================== */
-        /* event handlers                                              */
-        /* =========================================================== */
-
-		/**
-		 * Triggered by the table's 'updateFinished' event: after new table
-		 * data is available, this handler method updates the table counter.
-		 * This should only happen if the update was successful, which is
-		 * why this handler is attached to 'updateFinished' and not to the
-		 * table's list binding's 'dataReceived' method.
-		 * @param {sap.ui.base.Event} oEvent the update finished event
-		 * @public
-		 */
-        onMoldMstTableUpdateFinished: function (oEvent) {
-            // update the assetList's object counter after the table update
-            var sTitle,
-                oTable = oEvent.getSource(),
-                iTotalItems = oEvent.getParameter("total");
-            // only update the counter if the length is final and
-            // the table is not empty
-            if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-                sTitle = this.getResourceBundle().getText("assetListTableTitleCount", [iTotalItems]);
-            } else {
-                sTitle = this.getResourceBundle().getText("assetListTableTitle");
-            }
-            this.getModel("assetListView").setProperty("/assetListTableTitle", sTitle);
-        },
 
 		/**
 		 * Event handler when a table item gets pressed
@@ -300,16 +273,7 @@ sap.ui.define([
             this._oTPC.refresh();
         },
 
-		/**
-		 * Event handler when a table item gets pressed
-		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
-		 * @public
-		 */
-        onMoldMstTableItemPress: function (oEvent) {
-            // The source is the list item that got pressed
-            this._showMainObject(oEvent.getSource());
-        },
-
+		
 		/**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
@@ -334,7 +298,8 @@ sap.ui.define([
         showAssetDetail: function (oItem) {
             var that = this;
             that.getRouter().navTo("assetDetail", {
-              
+                tenantId:'new',
+                moldId:'code'
             });
            
         },

@@ -36,15 +36,7 @@ sap.ui.define([
         
         tenant_id: new String,
         loginUserId: new String,
-        loginUserName: new String,
-
-		formatter: (function(){
-			return {
-				toYesNo: function(oData){
-					return oData === true ? "YES" : "NO"
-				},
-			}
-		})(),
+        loginUserName: new String,		
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -154,29 +146,8 @@ sap.ui.define([
 		 * Event handler for delete page entity
 		 * @public
 		 */
-        onPageDeleteButtonPress: function(){
-			var oView = this.getView(),
-				oMasterModel = this.getModel("master"),
-				that = this;
-			MessageBox.confirm("Are you sure to delete?", {
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
-						oMasterModel.removeData();
-						oMasterModel.setTransactionModel(that.getModel());
-						oMasterModel.submitChanges({
-							success: function(ok){
-								oView.setBusy(false);
-                                that.onPageNavBackButtonPress.call(that);
-                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-								MessageToast.show("Success to delete.");
-							}
-						});
-					};
-				}
-			});
+        onPageDeleteEditButtonPress: function(){
+			this.onPageSaveButtonPress("D");
 		},
 
 		onLngTableAddButtonPress: function(){
@@ -210,7 +181,7 @@ sap.ui.define([
 		 * Event handler for saving page changes
 		 * @public
 		 */
-        onPageSaveButtonPress: function(){            
+        onPageSaveButtonPress: function(CUDType){            
            
             var oView = this.getView();
             var oMasterModel = this.getModel("master");
@@ -225,26 +196,37 @@ sap.ui.define([
             var oLngTable = this.byId("lngTable");
             // var oCateTable = this.byId("cateTable");
            
-            var CUType = "C";            
-            
-            if (this._sActivityCode !== "new"){
-                CUType = "U";                
-            }
+            var CUType = CUDType;
+
+            if(CUType !== "D") {
+                if(this._sActivityCode !== "new"){
+                    CUType = "U";                
+                } else {
+                    CUType = "C";
+                }
+            }  
+
+            console.log(CUType);
             
             var activeFlg = "false";
 
             if (oMasterData.active_flag) {
                 activeFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-            }
+            }            
+
+            // if(oMasterData.sequence=="" ||  oMasterData.sequence==null || parseInt(oMasterData.sequence) == undefined || parseInt(oMasterData.sequence) == NaN){
+            //     oMasterData.sequence = "0";
+            // }
 
             var pdMstVal = {
 					tenant_id       : oMasterData.tenant_id,
                     activity_code   : oMasterData.activity_code,
                     description     : oMasterData.description,
+                    sequence        : oMasterData.sequence,
                     active_flag     : activeFlg,
                     update_user_id  : this.loginUserId,
                     crud_type_code  : CUType
-				};           
+            };           
             
 
             var input = {
@@ -270,9 +252,7 @@ sap.ui.define([
 
             input.inputData.pdDtl = pdDtlVal;
 
-            // if(oLngData.vi_amount==null){
-            //     oLngData.vi_amount = "0";
-            // }
+            
             // if(oLngData.monthly_mtlmob_quantity==null){
             //     oLngData.monthly_mtlmob_quantity = "0";
             // }
@@ -303,9 +283,22 @@ sap.ui.define([
                             success: function (rst) {
                                 console.log(rst);
                                 if(rst.return_code =="OK"){
-                                    sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
-                                    v_this._toShowMode();                                
-                                    v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                    if(CUType === "D") {
+                                        v_this.handleClose.call(v_this);
+                                        v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                        MessageToast.show(v_this.getModel("I18N").getText("/NCM01002"));                                       
+                                    } else if(CUType === "C"){
+                                        v_this.handleClose.call(v_this);
+                                        v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                        MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                    }else {
+                                        MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                        v_this._toShowMode();                                
+                                        v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                    }
+                                    // sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                    // v_this._toShowMode();                                
+                                    // v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                     
                                 }else{
                                     console.log(rst);

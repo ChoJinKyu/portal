@@ -139,7 +139,7 @@ BEGIN
         AND    PD.BUYER_EMPNO    = :I_EMPLOYEE_NUMBER
         ;
 
-        IF v_sql_rowcnt = 0 AND (:I_JOB_TYPE != 'CHANGE' OR :I_JOB_TYPE != 'RFQ' OR :I_JOB_TYPE != 'BIDDING') THEN
+        IF v_sql_rowcnt = 0 AND (:I_JOB_TYPE != 'CHANGE' AND :I_JOB_TYPE != 'RFQ' AND :I_JOB_TYPE != 'BIDDING') THEN
             SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please check ownership.(You can only proceed with your own purchase.)';
         END IF;
 
@@ -237,7 +237,8 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review statusError.(Items in progress cannot be closed.)';
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review statusError.(Items in progress cannot be closed.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review statusError.(진행중인 구매요청건은 마감을 못한다.)';
                     END IF;
 
                     BEGIN

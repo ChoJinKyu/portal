@@ -35,7 +35,7 @@ entity Pu_Pr_Dtl {
             material_code   : String(40)        @title: '자재코드' ;	
             material_group_code : String(10)    @title: '자재그룹코드' ;	
             pr_desc         : String(100)       @title: '구매요청내역' ;	
-            pr_quantity     : Decimal           @title: '구매요청수량' ;	
+            pr_quantity     : Decimal(30,10)    @title: '구매요청수량' ;	
             pr_unit         : String(3)         @title: '구매요청단위' ;	
             requestor_empno : String(30)        @title: '요청자사번' ;	
             requestor_name  : String(50)        @title: '요청자명' ;	
@@ -45,7 +45,7 @@ entity Pu_Pr_Dtl {
             buyer_empno     : String(30)        @title: '구매담당자사번' ;	
             buyer_department_code : String(30)  @title: '구매부서코드' ;
             purchasing_group_code : String(3)   @title: '구매그룹코드' ;	
-            estimated_price : Decimal           @title: '예상가격' ;	
+            estimated_price : Decimal(30,10)    @title: '예상가격' ;	
             currency_code   : String(3)         @title: '통화코드' ;	
             price_unit      : Decimal(5,0)        @title: '가격단위' ;	
             pr_progress_status_code : String(30)        @title: '구매요청진행상태코드' ;	

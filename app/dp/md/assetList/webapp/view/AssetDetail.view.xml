@@ -26,12 +26,12 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
                 <uxap:expandedHeading>
-					<!-- <Title text="Participating Supplier Selection Cancel Approval" wrapping="true" /> -->
+					<Title text="Input Title" wrapping="true" />
 				</uxap:expandedHeading>
 
 				<uxap:snappedHeading>
                     <FlexBox fitContainer="true" alignItems="Center">
-						<!-- <Title text="Participating Supplier Selection Cancel Approval" wrapping="true"/> -->
+						<Title text="Input Title" wrapping="true"/>
 					</FlexBox>
 				</uxap:snappedHeading>
 
@@ -91,82 +91,7 @@
                          <Title text="{I18N>/PROCESS}"/>
                     </HBox>
                       <HBox id="assetDetailProcess">
-                        <!-- <sc:MicroProcessFlow>
-	                        <sc:content>
-                                <sc:MicroProcessFlowItem stepWidth="2rem" >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://message-success" color="#04B395"/>
-                                            <Text text="PR" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://message-success" color="#04B395"/>
-                                            <Text text="Budget" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://message-success" color="#F94B50"/>
-                                            <Text text="RFQ" textAlign="Center" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://appear-offline" color="#BEC9D4"/>
-                                            <Text text="Mold&#10;Spec" textAlign="Center" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://appear-offline"  color="#BEC9D4"/>
-                                            <Text text="Purchase&#10;Contract" textAlign="Center" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://appear-offline" color="#BEC9D4"/>
-                                            <Text text="PO" textAlign="Center" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://appear-offline" color="#BEC9D4"/>
-                                            <Text text="RCV" textAlign="Center" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://appear-offline" color="#BEC9D4"/>
-                                            <Text text="Lease&#10;Contract" textAlign="Center"  class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://appear-offline" color="#BEC9D4"/>
-                                            <Text text="Invoice" textAlign="Center" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                            </sc:content>
-                        </sc:MicroProcessFlow> -->
+                       
                     </HBox>
                 </layout:VerticalLayout>
 			</FlexBox>
@@ -350,6 +275,13 @@
                                             inset="false"
                                             class="sapFDynamicPageAlignContent"
                                             width="auto"
+                                            items="{
+                                                    path : 'util>/Code',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_DEV_DATE_TYPE'}
+                                                    ]
+                                                }"
                                             >
                                         <columns>
                                             <Column>
@@ -365,7 +297,22 @@
                                         <items>
                                             <ColumnListItem>
                                                 <cells>
-                                                    <Text text="Plan Date"  />
+                                                    <Select 
+                                                            width="100%"
+                                                            forceSelection="false"
+                                                            selectedKey="{schedule>mold_develope_date_type_code}"
+                                                            items="{
+                                                                        path : 'util>/Code',
+                                                                        filters : [
+                                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
+                                                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_DEV_DATE_TYPE'}
+                                                                        ]
+                                                                    }"
+                                                            editable="false"
+                                                            class="readonlyField"
+                                                    >
+                                                        <core:Item key="{util>code}" text="{util>code_name}" />
+                                                    </Select>
                                                     <DatePicker valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                                                     <DatePicker valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
                                                 </cells>
@@ -477,11 +424,11 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-                <Button type="Transparent" text="{I18N>/EDIT}"      press=".onPageEditButtonPress" visible="{mode>/btnEditFlag}"/>
-                <Button type="Transparent" text="{I18N>/CANCEL}"    press=".onPageCancelEditButtonPress" visible="{mode>/btnCancelFlag}" />
+                <!-- <Button type="Transparent" text="{I18N>/EDIT}"      press=".onPageEditButtonPress" visible="{mode>/btnEditFlag}"/>
+                <Button type="Transparent" text="{I18N>/CANCEL}"    press=".onPageCancelEditButtonPress" visible="{mode>/btnCancelFlag}" /> -->
 				<Button type="Transparent" text="{I18N>/DRAFT}"     press=".onPageDraftButtonPress"   visible="{mode>/btnDraftFlag}" />
-                <Button type="Transparent" text="Request Cancel"  press=".onPageRequestCancelButtonPress"  visible="{mode>/btnRequestCancelFlag}"/>
-				<Button type="Transparent" text="{I18N>/PREVIEW}"   press=".onPagePreviewButtonPress"  />
+                <!-- <Button type="Transparent" text="Request Cancel"  press=".onPageRequestCancelButtonPress"  visible="{mode>/btnRequestCancelFlag}"/>
+				<Button type="Transparent" text="{I18N>/PREVIEW}"   press=".onPagePreviewButtonPress"  /> -->
 				<Button type="Emphasized"  text="{I18N>/REQUEST}"   press=".onPageRequestButtonPress" visible="{mode>/btnRequestFlag}"/>
 			</OverflowToolbar>
 		</uxap:footer>

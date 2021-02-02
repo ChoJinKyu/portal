@@ -64,14 +64,25 @@ sap.ui.define([
                 busy: true,
                 delay: 0
             });
+            //this.getRouter().getRoute("assetDetail").attachPatternMatched(this._onRoutedThisPage, this);
+
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
+            this.setModel(new ManagedListModel(), "schedule");
+
+            oTransactionManager = new TransactionManager();
+            oTransactionManager.aDataModels.length = 0;
+
+            oTransactionManager.addDataModel(this.getModel("schedule"));
 
             this.process.setDrawProcessUI(this, "assetDetailProcess" , "C", 0);
 
         },
 
-       
+        onPageNavBackButtonPress: function () {
+            this.getRouter().navTo("assetList", {}, true); 
+        },
+
 
     });
 });

@@ -92,8 +92,7 @@
 
         <f:content>
             <t:Table id="mainTable"
-            selectionMode="None"
-            sort="sequence"
+            selectionMode="None"            
             rows="{
                 path: 'list>/PdPartBaseActivityView'                                 
             }"

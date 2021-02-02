@@ -165,7 +165,7 @@
           ]
         },
         {
-            "pattern": "assetDetail",
+            "pattern": "assetDetail/{tenantId}/{moldId}",
             "name": "assetDetail",
             "target": [
                 "assetDetail"

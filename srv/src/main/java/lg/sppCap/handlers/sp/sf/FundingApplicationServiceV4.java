@@ -41,6 +41,8 @@ import cds.gen.sp.fundingapplicationv4service.RtnObjInvDtl;
 @ServiceName("sp.FundingApplicationV4Service")
 public class FundingApplicationServiceV4 implements EventHandler {
 
+    /*
+    
     private static final Logger log = LogManager.getLogger();
     // Code Master
     @Autowired
@@ -123,7 +125,9 @@ public class FundingApplicationServiceV4 implements EventHandler {
                 RtnObj v_row = RtnObj.create();
                 v_row.setResultCode(v_rs.getString("result_code"));
                 v_row.setErrType(v_rs.getString("err_type"));
-                v_row.setErrCode(v_rs.getString("err_code"));
+                //v_row.setErrCode(v_rs.getString("err_code"));
+                v_row.setSqlErrCode(v_rs.getString("sql_err_code"));
+                v_row.setDefErrCode(v_rs.getString("def_err_code"));
                 v_row.setRtnFundingApplNumber(v_rs.getString("rtn_funding_appl_number"));
 
                 log.info(v_rs.getString("result_code"));
@@ -259,7 +263,9 @@ public class FundingApplicationServiceV4 implements EventHandler {
                 RtnObj v_row = RtnObj.create();
                 v_row.setResultCode(v_rs.getString("result_code"));
                 v_row.setErrType(v_rs.getString("err_type"));
-                v_row.setErrCode(v_rs.getString("err_code"));
+                //v_row.setErrCode(v_rs.getString("err_code"));
+                v_row.setSqlErrCode(v_rs.getString("sql_err_code"));
+                v_row.setDefErrCode(v_rs.getString("def_err_code"));
                 v_row.setRtnFundingApplNumber(v_rs.getString("rtn_funding_appl_number"));
 
                 log.info(v_rs.getString("result_code"));
@@ -433,7 +439,9 @@ public class FundingApplicationServiceV4 implements EventHandler {
                 RtnObjInvDtl v_row = RtnObjInvDtl.create();
                 v_row.setResultCode(v_rs.getString("result_code"));
                 v_row.setErrType(v_rs.getString("err_type"));
-                v_row.setErrCode(v_rs.getString("err_code"));
+                //v_row.setErrCode(v_rs.getString("err_code"));
+                v_row.setSqlErrCode(v_rs.getString("sql_err_code"));
+                v_row.setDefErrCode(v_rs.getString("def_err_code"));
                 v_row.setRtnFundingApplNumber(v_rs.getString("rtn_funding_appl_number"));
 
                 log.info(v_rs.getString("result_code"));
@@ -555,7 +563,9 @@ public class FundingApplicationServiceV4 implements EventHandler {
                 RtnObjInvDtl v_row = RtnObjInvDtl.create();
                 v_row.setResultCode(v_rs.getString("result_code"));
                 v_row.setErrType(v_rs.getString("err_type"));
-                v_row.setErrCode(v_rs.getString("err_code"));
+                //v_row.setErrCode(v_rs.getString("err_code"));
+                v_row.setSqlErrCode(v_rs.getString("sql_err_code"));
+                v_row.setDefErrCode(v_rs.getString("def_err_code"));
                 v_row.setRtnFundingApplNumber(v_rs.getString("rtn_funding_appl_number"));
 
                 log.info(v_rs.getString("result_code"));
@@ -666,7 +676,9 @@ public class FundingApplicationServiceV4 implements EventHandler {
                 RtnObj v_row = RtnObj.create();
                 v_row.setResultCode(v_rs.getString("result_code"));
                 v_row.setErrType(v_rs.getString("err_type"));
-                v_row.setErrCode(v_rs.getString("err_code"));
+                //v_row.setErrCode(v_rs.getString("err_code"));
+                v_row.setSqlErrCode(v_rs.getString("sql_err_code"));
+                v_row.setDefErrCode(v_rs.getString("def_err_code"));
                 v_row.setRtnFundingApplNumber(v_rs.getString("rtn_funding_appl_number"));
 
                 log.info(v_rs.getString("result_code"));
@@ -705,4 +717,9 @@ public class FundingApplicationServiceV4 implements EventHandler {
         context.setCompleted();
 
     }
+
+
+    */
+
+
 }
