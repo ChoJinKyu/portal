@@ -32,9 +32,10 @@ PROCEDURE SP_SF_FUNDING_APPL_DRAFT_PROC(
 	,IN I_FUNDING_STEP_CODE              NVARCHAR(30)   --자금지원단계코드
 	,IN I_FUNDING_STATUS_CODE            NVARCHAR(30)   --자금지원상태코드
 	,IN I_USER_ID NVARCHAR(30)
-	,OUT O_RESULT TABLE(RESULT_CODE NVARCHAR(2)
-					   ,ERR_TYPE NVARCHAR(20)
-					   ,ERR_CODE NVARCHAR(20)
+	,OUT O_RESULT TABLE(RESULT_CODE NVARCHAR(2)         --성공/실패 여부(OK/NG)
+					   ,ERR_TYPE NVARCHAR(30)           --에러유형(VALIDATION에러/저장중 에러/알수없는 에러)
+					   ,SQL_ERR_CODE NVARCHAR(30)           --에러코드(DB 에러코드)
+                       ,DEF_ERR_CODE NVARCHAR(30)       --사용자정의 에러코드()
 					   ,RTN_FUNDING_APPL_NUMBER NVARCHAR(10)
 					 )
 )
@@ -43,38 +44,65 @@ SQL SECURITY INVOKER
 AS
 BEGIN
     
-    --DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
-    
-
-	/***********************************************
+    /***********************************************
 	변수 정의
 	***********************************************/
-	--자금지원 신청번호
-    DECLARE V_FUNDING_APPL_NUMBER NVARCHAR(10);
+    DECLARE V_FUNDING_APPL_NUMBER NVARCHAR(10);     --자금지원 신청번호
     
-    
-	--자금지원 신청번호 추출
-	V_FUNDING_APPL_NUMBER := :I_FUNDING_APPL_NUMBER;
-	   
-	
-	BEGIN
-		/************************************************
-		VALIDATION
-		************************************************/
-		DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
+    --에러처리 관련 CONDITION 변수
+    DECLARE V_ERR_VALID CONDITION FOR SQL_ERROR_CODE 10000;     --INPUT PARAM ERROR
+    DECLARE V_ERR_SAVE CONDITION FOR SQL_ERROR_CODE 10100;      --INSERT, UPDATE CONDITION ERROR
+    DECLARE V_CUD_COUNT INT := 0;                               --CUD 처리확인 변수
+
+
+    /***********************************************
+    Exception 종류별 처리 
+    ***********************************************/
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ----------------VALIDATION 오류----------------
+        IF ::SQL_ERROR_CODE = 10000 THEN
             O_RESULT =  SELECT 
 							'NG' AS RESULT_CODE
-							,'VALID_ERR' AS ERR_TYPE
-							,::SQL_ERROR_CODE AS ERR_CODE
+							,'ERR_VALID' AS ERR_TYPE
+							,::SQL_ERROR_CODE AS SQL_ERR_CODE
+                            ,::SQL_ERROR_MESSAGE AS DEF_ERR_CODE
 							,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
 						FROM DUMMY;
-            RESIGNAL;
-		END;
-			
+        ----------------저장처리 오류----------------
+        ELSEIF ::SQL_ERROR_CODE = 10100 THEN
+            O_RESULT =  SELECT 
+                            'NG' AS RESULT_CODE
+                            ,'ERR_SAVE' AS ERR_TYPE
+                            ,::SQL_ERROR_CODE AS SQL_ERR_CODE
+                            ,'' AS DEF_ERR_CODE
+                            ,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+                        FROM DUMMY;
+        ----------------알수없는 오류----------------
+        ELSE
+            O_RESULT =  SELECT 
+                            'NG' AS RESULT_CODE
+                            ,'ERR_UNKNOWN' AS ERR_TYPE
+                            ,::SQL_ERROR_CODE AS SQL_ERR_CODE
+                            ,'' AS DEF_ERR_CODE
+                            ,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+                        FROM DUMMY;
+        END IF;
+    END;
+
+
+
+    --자금지원 신청번호 추출
+	V_FUNDING_APPL_NUMBER := :I_FUNDING_APPL_NUMBER;
+
+
+	BEGIN
+    	/************************************************
+		VALIDATION
+		************************************************/
 		--조직코드 필수 체크1
 		IF (COALESCE(:I_ORG_CODE,'') = '') THEN
-			SIGNAL SQL_ERROR_CODE 10000 SET MESSAGE_TEXT = 'Not selected org.';  
+			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_01';
 		END IF;
 	END;	
 		
@@ -83,17 +111,7 @@ BEGIN
 	저장처리 시작
 	**********************************************/
 	BEGIN
-        DECLARE EXIT HANDLER FOR SQLEXCEPTION
-		BEGIN
-            O_RESULT =  SELECT 
-                        'NG' AS RESULT_CODE
-                        ,'SAVE_ERR' AS ERR_TYPE
-                        ,::SQL_ERROR_CODE AS ERR_CODE
-                        ,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
-                    FROM DUMMY;
-            RESIGNAL;
-		END;
-	
+        
 		/***********************************************
 		자금지원 신청번호가 있는지 체크
 		 - 신청번호가 없으면 신규채번후 INSERT
@@ -121,7 +139,6 @@ BEGIN
 				,COMPANY_CODE                       --회사코드
 				,ORG_TYPE_CODE                      --조직유형코드
 				,ORG_CODE                           --조직코드
-				--,FUNDING_APPL_DATE                	--자금지원신청일자
 				,PURCHASING_DEPARTMENT_NAME         --구매부서명
 				,PYEAR_SALES_AMOUNT               	--전년매출금액
 				,MAIN_BANK_NAME                     --주요은행명
@@ -144,14 +161,13 @@ BEGIN
 				,SYSTEM_CREATE_DTM
 				,SYSTEM_UPDATE_DTM
 			) VALUES (
-				 V_FUNDING_APPL_NUMBER					--자금지원신청번호
+				 V_FUNDING_APPL_NUMBER			  --자금지원신청번호
 				,:I_FUNDING_NOTIFY_NUMBER         --자금지원공고번호
 				,:I_SUPPLIER_CODE                 --공급업체코드
 				,:I_TENANT_ID                     --테넌트ID
 				,:I_COMPANY_CODE                  --회사코드
 				,:I_ORG_TYPE_CODE                 --조직유형코드
 				,:I_ORG_CODE                      --조직코드
-				--,CURRENT_TIMESTAMP              		--자금지원신청일자
 				,:I_PURCHASING_DEPARTMENT_NAME    --구매부서명
 				,:I_PYEAR_SALES_AMOUNT            --전년매출금액
 				,:I_MAIN_BANK_NAME                --주요은행명
@@ -184,9 +200,6 @@ BEGIN
 			UPDATE SP_SF_FUNDING_APPLICATION
 			SET 
 				 ORG_CODE						= :I_ORG_CODE						--조직코드
-				,TENANT_ID						= :I_TENANT_ID                    	--테넌트ID
-				,COMPANY_CODE                   = :I_COMPANY_CODE    				--회사코드
-				,ORG_TYPE_CODE                  = :I_ORG_TYPE_CODE    				--조직유형코드
 				,PURCHASING_DEPARTMENT_NAME		= :I_PURCHASING_DEPARTMENT_NAME		--구매부서명
 				,PYEAR_SALES_AMOUNT				= :I_PYEAR_SALES_AMOUNT				--전년매출금액
 				,MAIN_BANK_NAME					= :I_MAIN_BANK_NAME					--주요은행명
@@ -210,6 +223,16 @@ BEGIN
 			;         
 			
 		END IF;
+
+
+        /***********************************************
+        정상적으로 저장처리 되었는지 확인
+        **********************************************/
+        SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;	    
+        IF V_CUD_COUNT != 1 THEN
+            SIGNAL V_ERR_SAVE SET MESSAGE_TEXT = '';
+        END IF;
+
     END;
     
 	
@@ -221,7 +244,8 @@ BEGIN
     O_RESULT =  SELECT 
 					'OK' AS RESULT_CODE
 					,'' AS ERR_TYPE
-					,'' AS ERR_CODE
+					,'' AS SQL_ERR_CODE
+                    ,'' AS DEF_ERR_CODE
 					,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
 				FROM DUMMY;
 

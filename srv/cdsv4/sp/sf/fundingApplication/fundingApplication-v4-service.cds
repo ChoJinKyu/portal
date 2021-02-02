@@ -42,17 +42,19 @@ service FundingApplicationV4Service {
     //************************************************
     //리턴타입: 프로시저 저장 후 리턴 값
     type RtnObj : {
-        result_code: String(2);
- 	    err_type: String(20);
-        err_code: String(20);
-        rtn_funding_appl_number: String(10);
+        result_code: String(2);                 //저장 성공여부(OK:성공/NG:실패)
+ 	    err_type: String(30);                   //에러타입(ERR_VALID:VALIDATION 오류/ ERR_SAVE:저장중 오류/ ERR_UNKNOWN:알수없는 오류)
+        sql_err_code: String(30);               //에러코드(DB 에러코드)
+        def_err_code: String(30);               //사용자정의 에러코드
+        rtn_funding_appl_number: String(10);    //자금지원 신청번호
     } 
 
-    //리턴타입: 투자계획서 상세 작업후 리턴값
+    //리턴타입: 투자계획서 상세 삭제후 리턴값
     type RtnObjInvDtl : {
         result_code: String(2);
- 	    err_type: String(20);
-        err_code: String(20);
+ 	    err_type: String(30);
+        sql_err_code: String(30);
+        def_err_code: String(30);
         rtn_funding_appl_number: String(10);
         rtn_investment_plan_sequence: Integer;
     } 
@@ -156,17 +158,17 @@ service FundingApplicationV4Service {
                             ,investment_place : String(500)         //투자장소
                             ,dtlType: array of InvPlanDtlType       //상세 데이터 타입
                             ,user_id : String(30)                   //작성자id
-    ) returns array of RtnObjInvDtl;
+    ) returns array of RtnObj;
 
     //------------------투자계획서 마스터 삭제
     action ProcDelInvPlan (mstType: array of InvPlanMstDelType      //마스터 삭제 데이터 타입
                             ,user_id : String(30)                   //작성자id
-    ) returns array of RtnObjInvDtl;
+    ) returns array of RtnObj;
 
     //------------------투자계획서 상세 삭제
     action ProcDelInvPlanDtl (dtlType: array of InvPlanDtlDelType   //상세 삭제 데이터 타입
                             ,user_id : String(30)                   //작성자id
-    ) returns array of RtnObj;
+    ) returns array of RtnObjInvDtl;
 
     
 }
