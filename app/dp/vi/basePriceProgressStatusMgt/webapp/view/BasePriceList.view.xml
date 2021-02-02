@@ -333,15 +333,15 @@
                             <Text text="{listModel>prices/1/new_base_price_currency_code}" textAlign="Center" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Center" width="12rem">
+                    <!-- <t:Column hAlign="Center" width="12rem">
                         <t:multiLabels>
                             <Label text="{I18N>/BASE_PRICE_TYPE}" textAlign="Center" width="100%" />
                         </t:multiLabels>
                         <t:template>
                             <Text text="{listModel>supplier_name}" />
                         </t:template>
-                    </t:Column>
-                    <t:Column headerSpan="4" width="6rem">
+                    </t:Column> -->
+                    <!-- <t:Column headerSpan="4" width="6rem">
                         <t:multiLabels>
                             <Label text="{I18N>/FAMILY_MATERIAL_CODE}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%" />
@@ -349,8 +349,8 @@
                         <t:template>
                             <Text text="{listModel>div}" textAlign="Center" width="100%" />
                         </t:template>
-                        </t:Column>
-                    <t:Column hAlign="Center" width="12rem">
+                    </t:Column> -->
+                    <t:Column headerSpan="3" hAlign="Center" width="12rem">
                         <t:multiLabels>
                             <Label text="{I18N>/FAMILY_MATERIAL_CODE}"/>
                             <Label text="{I18N>/MATERIAL_CODE}" /> 

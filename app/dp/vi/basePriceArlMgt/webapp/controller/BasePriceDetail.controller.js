@@ -143,6 +143,20 @@ sap.ui.define([
             });
             // Basis 데이터 조회 끝
 
+            // 변경사유 데이터 조회 시작
+            oCommonODataModel.read("/Code", {
+                filters : [new Filter("group_code", FilterOperator.EQ, "DP_VI_CHANGE_REASON_CODE")],
+                success : function(data){
+                    if( data && data.results ) {
+                        oDetailViewModel.setProperty("/changeReason", data.results);
+                    }
+                },
+                error : function(data){
+                    console.log("error", data);
+                }
+            });
+            // 변경사유 데이터 조회 끝
+
             // 해당 View(BasePriceDetail)에서 사용할 메인 Model 생성
             this.setModel(new JSONModel(), "detailModel");
 
@@ -636,6 +650,7 @@ sap.ui.define([
          */
         _checkValidation: function (sCheckTypeParam) {
             var oDetail = this.getModel("detailModel").getData();
+            var bReturnValue = true;
 
             if( !oDetail.approval_title ) {
                 MessageBox.error("품의제목은(는) 필수 입력값 입니다. 품의제목을(를) 입력하세요.");
@@ -646,16 +661,35 @@ sap.ui.define([
                 return false;
             }
 
+            // 기준단가목록이 한건이라도 없으면 상신 불가
+            var aBacePriceDetails = oDetail.details;
+            if( 0<aBacePriceDetails.length ) {
+                for( var i=0; i<aBacePriceDetails.length; i++ ) {
+                    if( !aBacePriceDetails[i].material_code ) {
+                        bReturnValue = false;
+                        break;
+                    }
+                }
+            }else {
+                bReturnValue = false;
+            }
+
+            if( !bReturnValue ) {
+                MessageBox.error("자재코드는 필수입니다.");
+                return bReturnValue;
+            }
+
             if( sCheckTypeParam === "approval" ) {
                 // 결재라인에 한명이라도 없으면 상신 불가
                 var aApprovers = this.getModel("approver").getData().Approvers;
                 if( !aApprovers || 0 === aApprovers.length || !aApprovers[0].approver_empno ) {
-                    MessageBox.error(this.getModel("I18N").getText("/EDP30001", this.getModel("I18N").getText("/APPROVER"), this.getModel("I18N").getText("/APPROVER")));
+                    MessageBox.error("결재자은(는) 필수 입력값 입니다. 결재자을(를) 입력하세요.");
+                    //MessageBox.error(this.getModel("I18N").getText("/EDP30001", this.getModel("I18N").getText("/APPROVER"), this.getModel("I18N").getText("/APPROVER")));
                     return false;
                 }
             }
 
-            return true;
+            return bReturnValue;
         },
 
         /**
