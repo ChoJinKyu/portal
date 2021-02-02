@@ -82,45 +82,66 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                         <form:SimpleForm editable="false">
+
                             <core:Title text="Normal" />
                             <Label text="{I18N>/CODE}"/>
-                            <lib-m:EditModeVBox editableValue="{department>/__metadata/_row_editable_}">
+                            <lib-m:EditModeVBox mode="{department>/__metadata/_editMode_}" editable="{endPageViewModel>/isAddedMode}">
                                 <Text text="{department>/department_code}"/>
                                 <Input value="{department>/department_code}"/>
                             </lib-m:EditModeVBox>
                             <Label text="Korean Name"/>
-                            <lib-m:EditModeVBox editableValue="{department>/__metadata/_row_editable_}">
+                            <lib-m:EditModeVBox mode="{department>/__metadata/_editMode_}">
                                 <Text text="{department>/department_korean_name}"/>
                                 <Input value="{department>/department_korean_name}"/>
                             </lib-m:EditModeVBox>
                             <Label text="English Name"/>
-                            <lib-m:EditModeVBox editableValue="{department>/__metadata/_row_editable_}">
+                            <lib-m:EditModeVBox mode="{department>/__metadata/_editMode_}">
                                 <Text text="{department>/department_english_name}"/>
                                 <Input value="{department>/department_english_name}"/>
                             </lib-m:EditModeVBox>
                             <Label text="Leader Employee No."/>
-                            <lib-m:EditModeVBox editableValue="{department>/__metadata/_row_editable_}">
+                            <lib-m:EditModeVBox mode="{department>/__metadata/_editMode_}">
                                 <Text text="{department>/department_leader_empno}" />
+                                <Input value="{department>/department_leader_empno}"
+                                    showValueHelp="true" valueHelpRequest=".onDepartmentLeaderEmployeeValueHelpPress"/>
                             </lib-m:EditModeVBox>
 
                             <core:Title text="Settings" />
                             <Label text="Department Type"/>
-                            <lib-m:EditModeVBox editableValue="{department>/__metadata/_row_editable_}">
+                            <lib-m:EditModeVBox mode="{department>/__metadata/_editMode_}">
                                 <Text text="{department>/department_type_code}" />
+                                <lib-m:CodeComboBox width="100%" showSecondaryValues="true" 
+                                    useEmpty="true" selectedKey="{department>/department_type_code}"
+                                    items="{
+                                        path: '/',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_CHAIN_CD'}
+                                        ],
+                                        serviceName: 'cm.util.CommonService',
+                                        entityName: 'Code'
+                                    }">
+                                </lib-m:CodeComboBox>
                             </lib-m:EditModeVBox>
                             <Label text="Used"/>
-                            <lib-m:EditModeVBox editableValue="{department>/__metadata/_row_editable_}">
+                            <lib-m:EditModeVBox mode="{department>/__metadata/_editMode_}">
                                 <Text text="{
                                         path: 'department>/use_flag',
                                         formatter: '.viewFormatter.toYesNo'
                                     }"/>
+                                <SegmentedButton selectedKey="{department>/use_flag}">
+                                    <items>
+                                        <SegmentedButtonItem text="Yes" key="true"/>
+                                        <SegmentedButtonItem text="No" key="false"/>
+                                    </items>
+                                </SegmentedButton>
                             </lib-m:EditModeVBox>
                         </form:SimpleForm>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="History" visible="{= !${midObjectViewModel>/isAddedMode}}">
+			<uxap:ObjectPageSection titleUppercase="false" title="History" visible="{= !${endPageViewModel>/isAddedMode}}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<form:SimpleForm editable="false" >

@@ -10,7 +10,8 @@ sap.ui.define([
 
         metadata: {
             properties: {
-                editableValue: { type: "boolean", group: "Data", defaultValue: true, bindable: "bindable" }
+                mode: { type: "boolean", group: "Data", defaultValue: true, bindable: "bindable" },
+                editable: { type: "boolean", group: "Data", defaultValue: true, bindable: "bindable" }
             }
         },
         
@@ -19,30 +20,31 @@ sap.ui.define([
         constructor: function(){
             Parent.prototype.constructor.apply(this, arguments);
             this.aItems = this.getAggregation("items");
-            // var bEditableValue = this.getProperty("editableValue");
             if(this.aItems && this.aItems.length > 0){
                 this.oViewer = this.aItems[0];
-                // this.oViewer.setVisible(!bEditableValue);
+                this.oViewer.setVisible(false);
                 if(this.aItems[1]){
                     this.oEditor = this.aItems[1];
-                    // this.oEditor.setVisible(bEditableValue);
+                    this.oEditor.setVisible(false);
                 }
             }
         },
 
-        setEditableValue: function(bEditableValue){
-            this.setProperty("editableValue", bEditableValue||false);
+        setMode: function(bMode){
+            bMode = !!bMode;
+            this.setProperty("mode", bMode);
             if(!this.oEditor) return;
-            if(bEditableValue === true){
-                this.oEditor.setVisible(true);
-                this.oViewer.setVisible(false);
-            }else{
-                this.oEditor.setVisible(false);
-                this.oViewer.setVisible(true);
-            }
+            this.oEditor.setVisible(bMode);
+            if(!this.oViewer) return;
+            this.oViewer.setVisible(!bMode);
+        },
 
+        setEditable: function(bEditable){
+            bEditable = !!bEditable;
+            this.setProperty("editable", bEditable||true);
+            if(!this.oEditor) return;
+            this.oEditor.setEditable(bEditable);
         }
-        
         
     });
 

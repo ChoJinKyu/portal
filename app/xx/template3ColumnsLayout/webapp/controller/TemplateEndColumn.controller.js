@@ -18,10 +18,11 @@ sap.ui.define([
 	"sap/m/Text",
 	"sap/m/Input",
 	"ext/lib/control/m/CodeComboBox",
+	"cm/util/control/ui/EmployeeDialog",
 	"sap/ui/core/Item",
 ], function (BaseController, Multilingual, ManagedModel, ManagedListModel, JSONModel, Validator, Formatter, DateFormatter, 
         Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-        ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, CodeComboBox, Item) {
+        ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, CodeComboBox, EmployeeDialog, Item) {
 	"use strict";
 
 	return BaseController.extend("xx.template3ColumnsLayout.controller.TemplateEndColumn", {
@@ -119,10 +120,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function(){
-            var oView = this.getView(),
-                oDepartmentModel = this.getModel("department"),
-                oDepartmentModel = this.getModel("employee"),
-				cancelEdit = function(){
+			var cancelEdit = function(){
 					if(this.getModel("endPageViewModel").getProperty("/isAddedMode") == true){
 						this.onPageNavBackButtonPress.call(this);
 					}else{
@@ -131,18 +129,34 @@ sap.ui.define([
 					}
 				}.bind(this);
 				
-			// if(oDepartmentModel.isChanged() || oDepartmentModel.isChanged()) {
-			// 	MessageBox.confirm(this.getModel("I18N").getText("/NCM00007"), {
-			// 		title : "Comfirmation",
-			// 		initialFocus : sap.m.MessageBox.Action.CANCEL,
-			// 		onClose : function(sButton) {
-			// 			cancelEdit();
-			// 		}
-			// 	});
-            // }else{
-				cancelEdit();
-			// }
+            MessageBox.confirm(this.getModel("I18N").getText("/NCM00007"), {
+                title : "Comfirmation",
+                initialFocus : sap.m.MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    cancelEdit();
+                }
+            });
+        },
 
+        onDepartmentLeaderEmployeeValueHelpPress: function(oEvent){
+            var oInput = oEvent.getSource();
+            if(!this.oDepartmentLeaderEmployeeValueHelp){
+                this.oDepartmentLeaderEmployeeValueHelp = new EmployeeDialog({
+                    title: "Choose Employees",
+                    closeWhenApplied: false,
+                    multiSelection: false,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                        ]
+                    }
+                });
+                this.oDepartmentLeaderEmployeeValueHelp.attachEvent("apply", function(oDialogEvent){
+                    oInput.setValue(oDialogEvent.getParameter("item").employee_number);
+                    oDialogEvent.getSource().close();
+                }.bind(this));
+            }
+            this.oDepartmentLeaderEmployeeValueHelp.open();
         },
 		
 		/**
@@ -322,7 +336,7 @@ sap.ui.define([
 
 		_toViewMode: function(){
             var VIEW_MODE = true;
-            this.getModel("department").setProperty("/__metadata/_row_editable_", !VIEW_MODE);
+            this.getModel("department").setProperty("/__metadata/_editMode_", !VIEW_MODE);
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
 			this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
@@ -337,7 +351,7 @@ sap.ui.define([
         
 		_toEditMode: function(){
 			var VIEW_MODE = false;
-            this.getModel("department").setProperty("/__metadata/_row_editable_", !VIEW_MODE);
+            this.getModel("department").setProperty("/__metadata/_editMode_", !VIEW_MODE);
 			this.byId("page").setSelectedSection("pageSectionMain");
 			this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
 			this.byId("pageSaveButton").setEnabled(!VIEW_MODE);

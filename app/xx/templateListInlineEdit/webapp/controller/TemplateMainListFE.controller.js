@@ -55,7 +55,7 @@ sap.ui.define([
 		/* =========================================================== */
 
 		onMainTableRowSelectionChange: function(oEvent){
-			var EDITABLE_COL = "_row_editable_",
+			var EDITABLE_COL = "_editMode_",
 				sEntity = "/Message",
 				oModel = this.getModel("list");
 			FlexibleEditBox.onTableRowSelectionChange(oEvent, function(){
@@ -76,15 +76,15 @@ sap.ui.define([
 			if(aRowIndices.length > 1 || nEditorIndex == -1){
 				// nViewerIndex = aRowIndices.indexOf(nEditorIndex) == 1 ? 0 : 1;
 				// nViewerIndex = aRowIndices[nViewerIndex];
-				// this.getModel("list").setProperty("/Message/" + nViewerIndex + "/_row_editable_", false);
+				// this.getModel("list").setProperty("/Message/" + nViewerIndex + "/_editMode_", false);
 				var oItems = this.getModel("list").getProperty("/Message");
 				oItems.forEach(function(oItem){
-					oItem["_row_editable_"] = false;
-					delete oItem["_row_editable_"];
+					oItem["_editMode_"] = false;
+					delete oItem["_editMode_"];
 				})
 				this.getModel("list").setProperty("/Message", oItems);
 			}
-			this.getModel("list").setProperty("/Message/" + nEditorIndex + "/_row_editable_", true);
+			this.getModel("list").setProperty("/Message/" + nEditorIndex + "/_editMode_", true);
 		},
 
 		/**

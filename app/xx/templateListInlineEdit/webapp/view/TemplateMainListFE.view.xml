@@ -133,7 +133,7 @@
                     <t:Column hAlign="Center" width="10em" >
                         <Label text="{I18N>/LANGUAGE}" textAlign="Center" width="100%" required="true" />
                         <t:template>
-                            <lib-m:EditModeVBox editableValue="{list>_row_editable_}">
+                            <lib-m:EditModeVBox mode="{list>_editMode_}">
                                 <Text text="{list>language_code}" />
                                 <lib-m:CodeComboBox selectedKey="{list>language_code}" width="100%" showSecondaryValues="true"
                                     items="{
@@ -152,7 +152,7 @@
                     <t:Column hAlign="Left" width="18em" >
                         <Label text="{I18N>/CODE}" textAlign="Center" width="100%" required="true" />
                         <t:template>
-                            <lib-m:EditModeVBox editableValue="{list>_row_editable_}">
+                            <lib-m:EditModeVBox mode="{list>_editMode_}">
                                 <Text text="{list>message_code}" />
                                 <Input value="{
                                         path: 'list>message_code',
@@ -167,7 +167,7 @@
                     <t:Column minWidth="30rem">
                         <Label text="{I18N>/CONTENTS}" textAlign="Center" width="100%" required="true" />
                         <t:template>
-                            <lib-m:EditModeVBox editableValue="{list>_row_editable_}">
+                            <lib-m:EditModeVBox mode="{list>_editMode_}">
                                 <Text text="{list>message_contents}" textAlign="Left" />
 							    <Input value="{list>message_contents}" required="true" />
                             </lib-m:EditModeVBox>
@@ -176,7 +176,7 @@
                     <t:Column hAlign="Center" width="10em" >
                         <Label text="{I18N>/TYPE}" textAlign="Center" width="100%" required="true" />
                         <t:template>
-                            <lib-m:EditModeVBox editableValue="{list>_row_editable_}">
+                            <lib-m:EditModeVBox mode="{list>_editMode_}">
                                 <Text text="{list>message_type_code}" />
                                 <lib-m:CodeComboBox selectedKey="{list>message_type_code}" width="100%"
                                     items="{
@@ -195,7 +195,7 @@
                     <t:Column hAlign="Center" width="10em" >
                         <Label text="{I18N>/CHAIN}" textAlign="Center" width="100%" required="true" />
                         <t:template>
-                            <lib-m:EditModeVBox editableValue="{list>_row_editable_}">
+                            <lib-m:EditModeVBox mode="{list>_editMode_}">
                                 <Text text="{list>message_type_code}" />
                                 <lib-m:CodeComboBox selectedKey="{list>chain_code}" width="100%" showSecondaryValues="true"
                                     items="{
