@@ -114,7 +114,7 @@ service ProjectMgtService {
             , tp.project_create_date        /*프로젝트생성일자*/
             , tp.massprod_start_date        /*양산시작일자*/
             , tp.massprod_end_date          /*양산종료일자*/
-            , tp.mcst_excl_flag             /*재료비제외여부*/
+            , ifnull(tp.mcst_excl_flag, false) AS  mcst_excl_flag: Boolean            /*재료비제외여부*/
             , tp.mcst_excl_reason           /*재료비제외사유*/
             , tp.direct_register_flag       /*직접등록여부*/
             , tp.develope_event_code     
