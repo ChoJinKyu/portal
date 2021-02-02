@@ -52,19 +52,7 @@ sap.ui.define([
 				};
 
 			return FlexibleColumnLayoutSemanticHelper.getInstanceFor(oFCL, oSettings);
-		},
-
-		/**
-		 * The component is destroyed by UI5 automatically.
-		 * In this method, the ErrorHandler is destroyed.
-		 * @public
-		 * @override
-		 */
-		destroy : function () {
-			this._oErrorHandler.destroy();
-			// call the base component's destroy function
-			UIComponent.prototype.destroy.apply(this, arguments);
-		},
+		},		
 
 		/**
 		 * This method can be called to determine whether the sapUiSizeCompact or sapUiSizeCozy
