@@ -31,7 +31,7 @@
                                         items="{
                                             path: 'purOrg>/Pur_Operation_Org',
                                             filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                             ],
                                             sorter: { path: 'org_code'}
                                         }"
@@ -90,7 +90,7 @@
                                         items="{
                                             path: 'purOrg>/Pur_Operation_Org',
                                             filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                             ],
                                             sorter: { path: 'org_code'}
                                         }"
@@ -143,6 +143,7 @@
                 </f:expandedContent>
                 <f:actions>
                     <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <Button text="DETAIL" type="Emphasized" press=".showAssetDetail" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -223,7 +224,7 @@
                         </Button>
                     </OverflowToolbar>
                 </table:extension>                             
-                <table:columns>
+                <table:columns >
                     
                     <table:Column id="assetDivisionColumn" width="4.5em" hAlign="Center">
                         <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" wrapping="true"/>
