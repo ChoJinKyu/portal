@@ -1,0 +1,67 @@
+<core:FragmentDefinition xmlns="sap.m"  xmlns:l="sap.ui.layout" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:uxap="sap.uxap" >
+	<VBox>
+		<Table id="mainTable" 
+			sticky="HeaderToolbar,ColumnHeaders" 
+			inset="false" 
+			growing="true"
+			mode="SingleSelectMaster"
+			growingThreshold="10"
+			class="sapFDynamicPageAlignContent" 
+			updateFinished=".onMainTableUpdateFinished"
+			itemPress="onItemPress"
+			items="{tmpCcDpMdSpecG>/MoldMasterSpec}"
+			width="auto">
+			<headerToolbar>
+				<OverflowToolbar>
+					<Title text="{I18N>/LIST} ({= ${tmpCcDpMdSpec>/MoldMasterSpec}.length || 0})" level="H2"/>
+					<ToolbarSpacer/>
+					<Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow" />
+						</layoutData>
+					</Button>
+				</OverflowToolbar>
+			</headerToolbar>
+		<columns>
+			<Column>
+				<Text text="USE MATERIAL VALUE" />
+			</Column>
+			<Column>
+				<Text text="INSPECTION FLAG" />
+			</Column>
+			<Column>
+				<Text text="ASSEMBLY APPROVAL FLAG" />
+			</Column>
+			<Column>
+				<Text text="REQUEST LIFE SHOT COUNT" />
+			</Column>
+			<Column>
+				<Text text="CAVITY PROCESS QTY" />
+			</Column>
+			<Column>
+				<Text text="DIE FORM" />
+			</Column>
+			<Column>
+				<Text text="MOLD HOT RUNNER QTY" />
+			</Column>
+			<Column>
+				<Text text="MOLD SIZE" />
+			</Column>
+		</columns>
+		<items>
+			<ColumnListItem type="Navigation">
+				<cells>
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>use_material_value}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>inspection_flag}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>assembly_approval_flag}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>request_life_shot_count}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>cavity_process_qty}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>die_form}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>mold_hot_runner_qty}" />
+					<ObjectIdentifier text="{tmpCcDpMdSpecG>mold_size}" />
+				</cells>
+			</ColumnListItem>
+		</items>
+		</Table>
+	</VBox>
+</core:FragmentDefinition>

@@ -163,7 +163,14 @@
           "target": [
             "assetList"
           ]
-        }
+        },
+        {
+            "pattern": "assetDetail",
+            "name": "assetDetail",
+            "target": [
+                "assetDetail"
+            ]
+         }
       ],
       "targets": {
         "assetList": {
@@ -171,6 +178,12 @@
           "viewId": "assetList",
           "viewLevel": 1,
           "title": "{i18n>assetListViewTitle}"
+        },
+        "assetDetail": {
+            "viewName": "AssetDetail",
+            "viewId": "assetDetail",
+            "viewLevel": 2,
+            "title": "{i18n>mainObjectViewTitle}"
         },
         "notFound": {
           "viewName": "NotFound",

@@ -247,11 +247,11 @@
                                 <Text text="{list>pr_number}" width="7em"  />
                                 <Text text="{list>erp_pr_number}"/>
                                 <Text text="{list>pr_desc}"  hAlign="Begin" width="25em"/>
-                                <Text text="{list>pr_type_name}"    />
-                                <Text text="{list>pr_type_name_2}"  />
-                                <Text text="{list>pr_type_name_3}"      />
-                                <Text text="{list>pr_template_name}"  />                                
-                                <Text text="{list>requestor_department_name}"/> 
+                                <Text text="{list>pr_type_name}"     hAlign="Begin" width="8em"/>
+                                <Text text="{list>pr_type_name_2}"   hAlign="Begin" width="6em"/>
+                                <Text text="{list>pr_type_name_3}"   hAlign="Begin" width="6em"  />
+                                <Text text="{list>pr_template_name}" hAlign="Begin" width="14em"/>                                
+                                <Text text="{list>requestor_department_name}" hAlign="Begin" width="6.5em"/> 
                                 <Text text="{list>requestor_name}"/>     
                                 <Text text="{list>request_dateT}"/>     
                                 <!-- <DatePicker dateValue="{path : 'list>request_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/> -->

@@ -64,6 +64,8 @@ sap.ui.define([
                 );
 
                 oViewModel.setProperty("/App/layout", "OneColumn");
+
+                this.byId("page").setHeaderExpanded(true);
             }
             /***
              * 평가조직 (orgCode) 콤보박스 아이템 바인딩
@@ -531,21 +533,20 @@ sap.ui.define([
                 }
 
                 oContext = oTable.getContextByIndex(aSelectedIdx[0]);
-                oRowData = this._deepCopy( oContext.getObject() );
+                oRowData = oContext.getObject();
                 oViewModel = this.getView().getModel("viewModel");
 
-                oNavParam.evaluArticleCode = oRowData.evaluation_article_code;
+                // oNavParam.evaluArticleCode = oRowData.evaluation_article_code;
                 oNavParam.leaf = oRowData.leaf_flag;
+                oNavParam.refKey = oRowData.ref_key;
 
-
-                oRowData.evaluation_execute_mode_code = oRowData.evaluation_execute_mode_code || "QLTVE_EVAL";
-                oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
-                oRowData.qttive_eval_article_calc_formula = oRowData.qttive_eval_article_calc_formula || "";
+                // oRowData.evaluation_execute_mode_code = oRowData.evaluation_execute_mode_code || "QLTVE_EVAL";
+                // oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
+                // oRowData.qttive_eval_article_calc_formula = oRowData.qttive_eval_article_calc_formula || "";
                 
-                
-                oViewModel.setProperty("/Detail", {
-                    Header : oRowData
-                });
+                // oViewModel.setProperty("/Detail", {
+                //     Header : oRowData
+                // });
                 this.getOwnerComponent().getRouter().navTo("Detail", oNavParam);
             }
 

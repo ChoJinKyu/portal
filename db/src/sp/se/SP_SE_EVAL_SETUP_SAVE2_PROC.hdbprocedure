@@ -90,7 +90,11 @@ BEGIN
     BEGIN
     	DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
-            :O_MSG.INSERT(('NG', 'Evaluation grade processing error. (' || ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE || ')'), 1);
+            IF ::SQL_ERROR_CODE = 349 THEN
+                :O_MSG.INSERT(('NG', 'Evaluation grade was duplicated'), 1);
+            ELSE
+                :O_MSG.INSERT(('NG', 'Evaluation grade processing error. (' || ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE || ')'), 1);
+            END IF;
             RESIGNAL;
         END;
         

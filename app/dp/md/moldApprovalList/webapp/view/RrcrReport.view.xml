@@ -85,89 +85,11 @@
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                      <HBox>
+                    <HBox>
                         <Title text="{I18N>/PROCESS}"/>
                     </HBox>
-                   <HBox  id="test">
-                      
-                   </HBox>
-                    <HBox>
-                        <sc:MicroProcessFlow>
-	                        <sc:content>
-                                <sc:MicroProcessFlowItem >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://message-success" color="#04B395"/>
-                                            <Text text="Remodel &amp; Repair&#10;Entry" textAlign="Center" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem>
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://message-success" color="#04B395"/>
-                                            <Text text="Budget" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://message-success" color="#04B395"/>
-                                            <Text text="RFQ" textAlign="Center" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem   >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://message-success" color="#04B395" />
-                                            <Text text="Mold&#10;Spec" textAlign="Center" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://message-success" color="#04B395"/>
-                                            <Text text="Purchase&#10;Contract" textAlign="Center" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://message-success" color="#04B395" />
-                                            <Text text="PO" textAlign="Center" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://message-success" color="#F94B50"/>
-                                            <Text text="RCV" textAlign="Center" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://appear-offline" color="#BEC9D4"/>
-                                            <Text text="Lease&#10;Contract" textAlign="Center"  class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                                <sc:MicroProcessFlowItem  stepWidth="2rem" >
-                                    <sc:customControl>
-                                        <VBox alignItems="Center">
-                                            <core:Icon src="sap-icon://appear-offline" color="#BEC9D4"/>
-                                            <Text text="Invoice" textAlign="Center" class=""/>
-                                        </VBox>
-                                    </sc:customControl>
-                                </sc:MicroProcessFlowItem>
-                            </sc:content>
-                        </sc:MicroProcessFlow>
+                    <HBox id="RrcrReportProcess">
+                        
                     </HBox>
                 </layout:VerticalLayout>
 			</FlexBox>
@@ -227,7 +149,7 @@
         title="직원 검색"
         items="{
             filters: [
-                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
             ]
         }"
         apply=".onEmployeeDialogApplyPress"
