@@ -84,7 +84,7 @@ sap.ui.define([
         _getSearchDeptSelection: function () {
             var aSearchFilters = [];
             // tenant_id  
-            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600'));
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101'));
             var dept = oThis.byId('dept').getValue().trim();
             if (dept != undefined && dept != "" && dept != null) {
                 aSearchFilters.push(new Filter("department_local_name", FilterOperator.Contains, dept))

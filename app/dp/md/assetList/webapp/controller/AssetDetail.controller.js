@@ -1,4 +1,5 @@
 sap.ui.define([
+    "ext/lib/controller/BaseController",
     "ext/lib/formatter/DateFormatter",
     "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
@@ -18,12 +19,11 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
-    "./ApprovalBaseController",
     "dp/md/util/controller/MoldItemSelection",
     "dp/md/util/controller/SupplierSelection"
-], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
+], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalBaseController, MoldItemSelection, SupplierSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, MoldItemSelection, SupplierSelection
 ) {
     "use strict";
 
@@ -31,11 +31,11 @@ sap.ui.define([
     var oRichTextEditor;
     var supplierData = [];
     /**
-     * @description  취소품의 
-     * @author       jinseon.lee
-     * @date         2021.01.14 
+     * @description  AssetDetail 
+     * @author       daun.lee
+     * @date         2021.02.02 
      */
-    return ApprovalBaseController.extend("dp.md.moldApprovalList.controller.PssCancelApproval", {
+    return BaseController.extend("dp.md.assetList.controller.AssetDetail", {
 
         dateFormatter: DateFormatter,
 
@@ -55,7 +55,6 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            ApprovalBaseController.prototype.onInit.call(this);
             // Model used to manipulate control states. The chosen values make sure,
             // detail page shows busy indication immediately so there is no break in
             // between the busy indication for loading the view's meta data
@@ -63,10 +62,12 @@ sap.ui.define([
                 busy: true,
                 delay: 0
             });
-
-            this.setModel(oViewModel, "pssCancelApprovalView");//change
-            this.getRouter().getRoute("pssCancelApproval").attachPatternMatched(this._onObjectMatched, this);//change
-            this.getView().setModel(new ManagedListModel(), "mdItemMaster");
+            console.log("AssetDetail!");
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
+            // this.setModel(oViewModel, "pssCancelApprovalView");//change
+            // this.getRouter().getRoute("pssCancelApproval").attachPatternMatched(this._onObjectMatched, this);//change
+            // this.getView().setModel(new ManagedListModel(), "mdItemMaster");
 
         },
 
@@ -85,7 +86,7 @@ sap.ui.define([
 
             if (this.approval_number == "New") {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.getView().getModel('Cancellation').getProperty("/approvalNumber"))
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                 ];
 
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
@@ -94,7 +95,7 @@ sap.ui.define([
 
             } else {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
                 ];
 
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {

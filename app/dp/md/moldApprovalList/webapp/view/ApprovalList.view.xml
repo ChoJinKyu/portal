@@ -26,7 +26,7 @@
                                 <MultiComboBox id="searchCompanyS" width="100%" items="{
                                        path: 'org>/Company',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'company_code'}
                                     }" 
@@ -45,7 +45,7 @@
                                 <MultiComboBox id="searchPlantS" width="100%" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ]
                                     }"
                                     selectionFinish="handleSelectionFinishDiv" required="true">
@@ -69,7 +69,7 @@
                                 <MultiComboBox id="searchApprovalCategoryS" width="100%" items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -92,7 +92,7 @@
                                 <MultiComboBox id="searchCompanyE" width="100%" selectionFinish="handleSelectionFinishComp" items="{
                                        path: 'org>/Company',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'company_code'}
                                     }" required="true">
@@ -109,7 +109,7 @@
                                 <MultiComboBox id="searchPlantE" width="100%" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ]
                                     }"
                                     selectionFinish="handleSelectionFinishDiv" required="true">
@@ -133,7 +133,7 @@
                                 <MultiComboBox id="searchApprovalCategoryE" width="100%" items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -170,7 +170,7 @@
                                     suggestionItems="{
                                         path: '/Models',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'model' }
                             }">
@@ -189,7 +189,7 @@
                                         suggestionItems="{
                                             path: '/PartNumbers',
                                             filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                             ],
                                             sorter: { path: 'mold_number' }
                                 }">
@@ -223,7 +223,7 @@
                                     suggestionItems="{
                                         path: '/Requestors',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'email_id' }
                             }">

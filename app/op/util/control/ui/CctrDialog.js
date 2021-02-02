@@ -147,7 +147,7 @@ sap.ui.define([
              aSorters.push(new Sorter("cctr_code", false));
            
             this.oDialog.setBusy(true);
-            ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.pu.MstService/").read("/Cctr_Mst", {
+            ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.pu.mstService/").read("/Cctr_Mst", {
                 fetchAll: true,  //TODL: please disable fetchAll option for performance
                 filters: aFilters,
                 sorters: aSorters,

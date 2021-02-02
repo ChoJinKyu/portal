@@ -94,7 +94,7 @@
                                     selectedKey="{approver>approver_type_code}" 
                                     items="{ path : 'util>/Code',
                                                 filters : [
-                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                     {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVER_TYPE'}
                                                 ],
                                                 sorter: { path: 'sort_no'} 
@@ -160,7 +160,7 @@
                             selectedKeys="{refererMultiCB>/refer}"
                             items="{ path: '/RefererSearch',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ]
                                     }"
                             editable="{mode>/editFlag}">
