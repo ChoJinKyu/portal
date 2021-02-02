@@ -40,3 +40,21 @@ entity Pd_Part_Category_View {
         hierarchy_level       : Integer;
         drill_state           : String;
 };
+
+@cds.persistence.exists
+entity Pd_Part_Parent_Category_View {
+    key node_id               : String;
+    key parent_id             : String;
+    key tenant_id             : String;
+    key category_group_code   : String;
+    key category_code         : String;
+        category_name         : String;
+        parent_category_code  : String;
+        sequence              : Decimal;
+        path                  : String;
+        hierarchy_rank        : Integer;
+        hierarchy_tree_size   : Integer;
+        hierarchy_parent_rank : Integer;
+        hierarchy_root_rank   : Integer;
+        hierarchy_level       : Integer;
+};
