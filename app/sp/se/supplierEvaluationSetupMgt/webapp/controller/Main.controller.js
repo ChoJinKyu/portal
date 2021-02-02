@@ -37,6 +37,9 @@ sap.ui.define([
                 this.getView().byId("smartFilterBar")._oSearchButton.setText(i18nModel.getText("/SEARCH"));
 
               //  this.getView().byId("tenant_combo").fireSelectionChange();
+                var oOwnerComponent = this.getOwnerComponent();
+                this.oRouter = oOwnerComponent.getRouter();
+                this.oRouter.getRoute("main").attachPatternMatched(this._onDetailMatched, this);
 
 
               // 로그인 세션 작업완료시 수정
@@ -64,6 +67,17 @@ sap.ui.define([
             //   oTenantCombo.setRequired();
             //   sap.ui.getCore().byId("tenant_combo").setValueState("Error");
 
+
+            },
+            _onDetailMatched: function (oEvent) {
+                
+            if(this.byId("tenant_combo").getSelectedKey()){
+
+
+                var key = this.byId("tenant_combo").getSelectedKey();
+                this.byId("MonitorList").rebindTable()
+            }
+            
 
             },
 
@@ -124,39 +138,19 @@ sap.ui.define([
             onSearchTable: function (oEvent) {
                 this.byId("MonitorListTable").getModel().refresh(true);
                 var mBindingParams = oEvent.getParameter("bindingParams");
+
                 // var oSmtFilter = this.getView().byId("smartFilterBar");
 
                 var tenant_combo = this.getView().byId("tenant_combo"),         //회사 콤보박스
                     tenant_name =  tenant_combo.getSelectedKey(); 
-                //tenant_name = tenant_combo.getValue();
-
-                
-
-                    // company_combo = this.getView().byId("company_combo"),       //법인 콤보박스
-                    // company_name = company_combo.getSelectedItems(),
-                    // bizunit_combo = this.getView().byId("bizunit_combo"),           //사업본부 콤보박스
-                    // bizunit_name = bizunit_combo.getSelectedItems();
+                    //tenant_name = tenant_combo.getValue();
                     
                 var aSearchFilters = [];
                 if (tenant_name.length > 0) {
                     aSearchFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
                     aSearchFilters.push(new Filter("company_code", 'EQ', this.company_code));
                     aSearchFilters.push(new Filter("org_code", 'EQ', tenant_name));    
-                    
                 }
-                // if (company_name.length > 0) {
-                //     for (var i = 0; i < company_name.length; i++) {
-                //         aSearchFilters.push(new Filter("company_name", FilterOperator.Contains, company_name[i].getProperty("text")));
-                //     }
-                // }
-                // if (bizunit_name.length > 0) {
-                //     for (var a = 0; a < bizunit_name.length; a++) {
-                //         aSearchFilters.push(new Filter("bizunit_name", FilterOperator.Contains, bizunit_name[a].getProperty("text")));
-                //     }
-                // }
-                // if (tenant_name.length === 0 && company_name.length === 0 && bizunit_name.length === 0) {
-                //     mBindingParams.filters.push(new Filter([]));
-                // }
 
                 if (tenant_name.length === 0) {
                     mBindingParams.filters.push(new Filter([]));
@@ -164,7 +158,6 @@ sap.ui.define([
 
                 mBindingParams.filters.push(new Filter(aSearchFilters, true));
 
-                console.log(aSearchFilters);
 
 
             },

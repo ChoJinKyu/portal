@@ -64,6 +64,9 @@ xmlns:flex="sap.f"
                                                             placeholder="OPERATION_UNIT_CODE"
                                                             value="{DetailView>/OperationUnitMst/evaluation_operation_unit_code}"
                                                             editable="{=${DetailView>/isCreateMode}}"
+                                                            
+                                                            fieldGroupIds="required"
+                                                            required="true"
                                                             />
                                                             
                                                     <!-- 배점설계여부 -->
@@ -73,7 +76,7 @@ xmlns:flex="sap.f"
                                                             path : 'DetailView>/OperationUnitMst/distrb_score_eng_flag',
                                                             type: 'sap.ui.model.type.Boolean'                                                       
                                                             }"
-                                                            enabled="{DetailView>/isEditMode}"
+                                                            enabled="{DetailView>/isEditMode}"                                                         
                                                             >                                                            
                                                             <items>
                                                                 <SegmentedButtonItem text="Yes" key="true" />
@@ -106,9 +109,9 @@ xmlns:flex="sap.f"
                                                             ]
                                                             }" 
                                                             editable="{=${DetailView>/isEditMode}}"
-                                                            selectedKeys="{=
-                                                                ${DetailView>/vpOperationUnit/vendor_pool_operation_unit_code}.split(',')
-                                                            }"                  
+                                                            selectedKeys="{DetailView>/vpOperationUnit/vendor_pool_operation_unit_code}"
+                                                            fieldGroupIds="required"
+                                                            required="true"                     
                                                             >
                                                         <items>
                                                             <core:ListItem key="{common>code}" text="{common>code_name}" additionalText="{common>code}"/>
@@ -140,6 +143,8 @@ xmlns:flex="sap.f"
                                                         placeholder="OPERATION_UNIT_NAME"
                                                         value="{DetailView>/OperationUnitMst/evaluation_operation_unit_name}"
                                                         editable="{=${DetailView>/isEditMode}}"
+                                                        fieldGroupIds="required"
+                                                        required="true"                                                        
                                                         />
 
                                                                 <!-- <lib-m:CodePicker id="searchCountryPicker"
@@ -226,6 +231,7 @@ xmlns:flex="sap.f"
                                             path: 'DetailView>/manager'
                                             }"
                                         mode="MultiSelect"    
+                                        selectionChange="onSelectQunItem"    
                                             >
                                             <headerToolbar>
                                                 <Toolbar>
@@ -256,31 +262,42 @@ xmlns:flex="sap.f"
                                                     <cells>
                                                         <core:Icon 
                                                             src="{=
-                                                                ${DetailView>transaction_code} === 'I' ? 'sap-icon://add': ${DetailView>transaction_code} === 'D' ? 'sap-icon://delete': ${DetailView>transaction_code} === 'U'? 'sap-icon://edit': '' 
+                                                                ${DetailView>transaction_code} === 'D' ? 
+                                                                'sap-icon://delete' : 
+                                                                (${DetailView>transaction_code} === 'I' ? 'sap-icon://add' : 'sap-icon://edit')
                                                             }"
                                                             visible="{=
-                                                                !${DetailView>transaction_code}
-                                                            }"/>
+                                                                !!${DetailView>transaction_code}
+                                                            }"
+                                                        />
                                                         <ComboBox selectedKey="{DetailView>evaluation_execute_role_code}" width="100%" items="{
                                                             path: 'common>/Code',
                                                             filters: [
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                                                 {path: 'group_code', operator: 'EQ', value1: 'SP_SE_EVAL_EXECUTE_ROLE_CODE'}
                                                             ]
-                                                            }"  enabled="{DetailView>/isEditMode}" required="true">
+                                                            }"
+                                                            enabled="{DetailView>/isEditMode}"
+                                                            editable="{=
+                                                                ${DetailView>/isEditMode}  &amp;&amp;
+                                                                !!${DetailView>rowEditable}
+                                                            }"
+                                                            fieldGroupIds="required"
+                                                            required="true"   
+                                                            >
                                                             <items>
                                                                 <core:Item key="{common>code}" text="{common>code_name}" />
                                                             </items>
                                                         </ComboBox>
                                                         <Input 
-                                                                id="inputWithEmployeeValueHelp"
-                                                                width="100%"
-                                                                showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress"
-                                                                value="{DetailView>user_local_name}"
-                                                                enabled="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>transaction_code} === 'I' ? true : false}" 
-                                                                
-                                                                required="true"
-                                                                >
+                                                            id="inputWithEmployeeValueHelp"
+                                                            width="100%"
+                                                            showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress"
+                                                            value="{DetailView>user_local_name}"
+                                                            enabled="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>transaction_code} === 'I' ? true : false}" 
+                                                            fieldGroupIds="required"
+                                                            required="true"   
+                                                            >
                                                         </Input>
                                                           <Text text="{DetailView>department_local_name}"  required="true" />                      
                                                     </cells>
@@ -502,6 +519,8 @@ xmlns:flex="sap.f"
                                                             placeholder="OPERATION_UNIT_CODE"
                                                             value="{DetailView>qttive_item_code}"
                                                             editable="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>transaction_code} === 'I' ? true : false}"
+                                                            fieldGroupIds="required"
+                                                            required="true"   
                                                             />
                                                         <Input   
                                                             width="100%" 
@@ -511,6 +530,8 @@ xmlns:flex="sap.f"
                                                                 ${DetailView>/isEditMode}  &amp;&amp;
                                                                 !!${DetailView>rowEditable}
                                                             }"
+                                                            fieldGroupIds="required"
+                                                            required="true"
                                                             />
 
                                                             
@@ -525,23 +546,25 @@ xmlns:flex="sap.f"
                                                                 ${DetailView>/isEditMode}  &amp;&amp;
                                                                 !!${DetailView>rowEditable}
                                                             }"
+                                                            fieldGroupIds="required"
                                                             required="true">
                                                             <items>
                                                                 <core:Item key="{common>code}" text="{common>code_name}" />
                                                             </items>
                                                         </ComboBox>  
                                                         <ComboBox selectedKey="{DetailView>qttive_item_measure_mode_code}" width="100%" items="{
-                                                                path: 'common>/Code',
-                                                                filters: [
-                                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                                    {path: 'group_code', operator: 'EQ', value1: 'SP_SE_MEASURE_MODE_CODE'}
-                                                                ]
-                                                                }" 
-                                                                editable="{=
-                                                                ${DetailView>/isEditMode}  &amp;&amp;
-                                                                !!${DetailView>rowEditable}
-                                                                }" 
-                                                                required="true">
+                                                            path: 'common>/Code',
+                                                            filters: [
+                                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                                {path: 'group_code', operator: 'EQ', value1: 'SP_SE_MEASURE_MODE_CODE'}
+                                                            ]
+                                                            }" 
+                                                            editable="{=
+                                                            ${DetailView>/isEditMode}  &amp;&amp;
+                                                            !!${DetailView>rowEditable}
+                                                            }" 
+                                                            fieldGroupIds="required"
+                                                            required="true">
                                                             <items>
                                                                 <core:Item key="{common>code}" text="{common>code_name}" />
                                                             </items>
@@ -554,6 +577,7 @@ xmlns:flex="sap.f"
                                                                 ${DetailView>/isEditMode}  &amp;&amp;
                                                                 !!${DetailView>rowEditable}
                                                             }"
+                                                            
                                                             />     
                                                         <Input   
                                                             width="100%" 
@@ -563,6 +587,8 @@ xmlns:flex="sap.f"
                                                                 ${DetailView>/isEditMode}  &amp;&amp;
                                                                 !!${DetailView>rowEditable}
                                                             }"
+                                                            fieldGroupIds="required"
+                                                            required="true"
                                                         />             
                                                     </cells>
                                                 </ColumnListItem>
