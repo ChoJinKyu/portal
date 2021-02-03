@@ -238,7 +238,10 @@ xmlns:flex="sap.f"
                                                     <ToolbarSpacer/>
                                                     <HBox>
                                                         <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onManagerAdd" enabled="{DetailView>/isEditMode}" />
-                                                        <Button text="{I18N>/DELETE}" type="Transparent" press="onManagerDelete" enabled="{DetailView>/isEditMode}"/>
+                                                        <Button text="{I18N>/DELETE}" type="Transparent" press="onTableDelete" enabled="{DetailView>/isEditMode}"/>
+                                                        <Button text="{I18N>/CANCEL}" type="Transparent" press="onTableCancle" enabled="{=${DetailView>/isEditMode}}"
+                                                            visible="{=!${DetailView>/isCreateMode}}"/>
+                                                        
                                                     </HBox>
                                                 </Toolbar>
                                             </headerToolbar>
@@ -262,12 +265,12 @@ xmlns:flex="sap.f"
                                                     <cells>
                                                         <core:Icon 
                                                             src="{=
-                                                                ${DetailView>transaction_code} === 'D' ? 
+                                                                ${DetailView>crudFlg} === 'D' ? 
                                                                 'sap-icon://delete' : 
-                                                                (${DetailView>transaction_code} === 'I' ? 'sap-icon://add' : 'sap-icon://edit')
+                                                                (${DetailView>crudFlg} === 'I' ? 'sap-icon://add' : 'sap-icon://edit')
                                                             }"
                                                             visible="{=
-                                                                !!${DetailView>transaction_code}
+                                                                !!${DetailView>crudFlg}
                                                             }"
                                                         />
                                                         <ComboBox selectedKey="{DetailView>evaluation_execute_role_code}" width="100%" items="{
@@ -294,12 +297,12 @@ xmlns:flex="sap.f"
                                                             width="100%"
                                                             showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress"
                                                             value="{DetailView>user_local_name}"
-                                                            enabled="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>transaction_code} === 'I' ? true : false}" 
+                                                            enabled="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}" 
                                                             fieldGroupIds="required"
                                                             required="true"   
                                                             >
                                                         </Input>
-                                                          <!-- <Text text="{DetailView>department_local_name}"  required="true" />                       -->
+                                                          <Text text="{DetailView>department_local_name}"  required="true" />                      
                                                     </cells>
                                                 </ColumnListItem>
                                             </items>
@@ -326,10 +329,10 @@ xmlns:flex="sap.f"
                                                     <table:template>
                                                         <core:Icon 
                                                             src="{=
-                                                                ${DetailView>transaction_code} === 'D' ? 'sap-icon://delete' : ${DetailView>transaction_code} === 'I' ? 'sap-icon://add' : 'sap-icon://edit'
+                                                                ${DetailView>crudFlg} === 'D' ? 'sap-icon://delete' : ${DetailView>crudFlg} === 'I' ? 'sap-icon://add' : 'sap-icon://edit'
                                                             }"
                                                             visible="{=
-                                                                !${DetailView>transaction_code}
+                                                                !${DetailView>crudFlg}
                                                             }"
                                                         />
                                                     </table:template>
@@ -361,7 +364,7 @@ xmlns:flex="sap.f"
                                                             width="100%"
                                                             showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress"
                                                             value="{DetailView>user_local_name}"
-                                                            enabled="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>transaction_code} === 'I' ? true : false}" 
+                                                            enabled="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}" 
                                                             
                                                             required="true"
                                                             >
@@ -474,8 +477,10 @@ xmlns:flex="sap.f"
                                                     <ToolbarSpacer/>
                                                     <HBox>
                                                         <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onQunAdd" enabled="{=${DetailView>/isEditMode}}"/>
-                                                        <Button text="{I18N>/DELETE}" type="Transparent" press="onQunDelete" enabled="{=${DetailView>/isEditMode}}"/>
-                                                    </HBox>
+                                                        <Button text="{I18N>/DELETE}" type="Transparent" press="onTableDelete" enabled="{=${DetailView>/isEditMode}}"/>
+                                                        <Button text="{I18N>/CANCEL}" type="Transparent" press="onTableCancle" enabled="{=${DetailView>/isEditMode}}"
+                                                            visible="{=!${DetailView>/isCreateMode}}"/>
+                                                        </HBox>
                                                 </Toolbar>
                                             </headerToolbar>
                                             <columns>
@@ -506,19 +511,19 @@ xmlns:flex="sap.f"
                                                     <cells>
                                                         <core:Icon 
                                                             src="{=
-                                                                ${DetailView>transaction_code} === 'D' ? 
+                                                                ${DetailView>crudFlg} === 'D' ? 
                                                                 'sap-icon://delete' : 
-                                                                (${DetailView>transaction_code} === 'I' ? 'sap-icon://add' : 'sap-icon://edit')
+                                                                (${DetailView>crudFlg} === 'I' ? 'sap-icon://add' : 'sap-icon://edit')
                                                             }"
                                                             visible="{=
-                                                                !!${DetailView>transaction_code}
+                                                                !!${DetailView>crudFlg}
                                                             }"
                                                         />
                                                         <Input   
                                                             width="100%" 
                                                             placeholder="OPERATION_UNIT_CODE"
                                                             value="{DetailView>qttive_item_code}"
-                                                            editable="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>transaction_code} === 'I' ? true : false}"
+                                                            editable="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}"
                                                             fieldGroupIds="required"
                                                             required="true"   
                                                             />
@@ -615,10 +620,10 @@ xmlns:flex="sap.f"
                                                     <table:template>
                                                         <core:Icon 
                                                             src="{=
-                                                                ${DetailView>transaction_code} === 'D' ? 'sap-icon://delete' : 'sap-icon://edit'
+                                                                ${DetailView>crudFlg} === 'D' ? 'sap-icon://delete' : 'sap-icon://edit'
                                                             }"
                                                             visible="{=
-                                                                !!${DetailView>transaction_code}
+                                                                !!${DetailView>crudFlg}
                                                             }"
                                                         />
                                                     </table:template>
@@ -630,7 +635,7 @@ xmlns:flex="sap.f"
                                                             width="100%" 
                                                             placeholder="OPERATION_UNIT_CODE"
                                                             value="{DetailView>qttive_item_code}"
-                                                            editable="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>transaction_code} === 'I' ? true : false}"
+                                                            editable="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}"
                                                             />
                                                     </table:template>
                                                 </table:Column>      

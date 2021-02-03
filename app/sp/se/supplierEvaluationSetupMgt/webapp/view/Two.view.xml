@@ -150,7 +150,9 @@
                                             <HBox>
                                                 <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onScaleAdd" enabled="{=${TwoView>/isEditMode}}"/>
                                                 <Button text="{I18N>/DELETE}" type="Transparent" press="onScaleDelete" enabled="{=${TwoView>/isEditMode}}"/>
-                                            </HBox>
+                                                <Button text="{I18N>/CANCEL}" type="Transparent" press="onTableCancle" enabled="{=${TwoView>/isEditMode}}"
+                                                        visible="{=!${TwoView>/isCreateMode}}"/>
+                                                </HBox>
                                         </Toolbar>
                                     </headerToolbar>
                                     <columns>
@@ -188,12 +190,11 @@
                                                 width="100%" 
                                                 placeholder="EVALUATION_GRADE"
                                                 value="{TwoView>evaluation_grade}"
-                                                editable="{=
-                                                                ${TwoView>/isEditMode}  &amp;&amp;
-                                                                !!${TwoView>rowEditable}
-                                                            }"
+                                                enabled="{= ${TwoView>/isCreateMode} === true ? true : ${TwoView>tansaction_code} === 'I' ? true : false}" 
+                                                
                                                 fieldGroupIds="required"
                                                 required="true"
+                                                
                                                 />
                                                 <Input   
                                                 width="100%" 

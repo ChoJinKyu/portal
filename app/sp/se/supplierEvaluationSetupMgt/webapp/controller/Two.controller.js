@@ -72,6 +72,7 @@ sap.ui.define([
             if (this.scenario_number === "New") {
                 this.getModel("TwoView").setProperty("/isEditMode", true);
                 this.getModel("TwoView").setProperty("/isCreateMode", true);
+                this.getModel("TwoView").setProperty("/tansaction_code", "I");
 
                 this.getModel("TwoView").setProperty("/evaluationType2", {
                 "tenant_id":this.tenant_id,
@@ -85,7 +86,8 @@ sap.ui.define([
 
             } else { // Detail 일때
                 this.getModel("TwoView").setProperty("/isEditMode", false);
-                this.getModel("TwoView").setProperty("/isCreateMode", false);     
+                this.getModel("TwoView").setProperty("/isCreateMode", false);  
+                this.getModel("TwoView").setProperty("/tansaction_code", "R");       
  
              
                 this._readEval2View();                
@@ -196,15 +198,34 @@ sap.ui.define([
                     "evaluation_grade_end_score": "",
                     "inp_apply_code": "",
                     "tansaction_code" : "I",
+                    "crudFlg" : "I",
                     "rowEditable":true,
                 });
                 
                 oView.setProperty("/manager",oModel);
             
         },
+         onTableCancle : function(oEvent){
+                var oView;
+                var oTable = oEvent.getSource().getParent().getParent().getParent();
+                oView = this.getView();
+                MessageBox.warning(i18nModel.getProperty("/NPG00013"),{
+                    actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                    onClose: function (sAction) {
+                        if(sAction === MessageBox.Action.CANCEL){
+                            return;
+                        }
+
+                        this._readScaleView();
+
+                        oTable.removeSelections(true);
+                    }.bind(this)
+                });
+
+            }
+        ,
         onPressSaveBtn : function(oEvent){
-            var oView = this.getView();
-            var oModel = oView.getModel("DetailView");
+            var oView = this.getView();            
             // var oRequest = oModel.getProperty("/");
             var sURLPath = "srv-api/odata/v4/sp.supEvalSetupV4Service/SaveEvaluationSetup2Proc";
             var oSaveData;
@@ -234,21 +255,31 @@ sap.ui.define([
                             
                             if(this.scenario_number==="New"){
 
-                                this.getRouter().navTo("detail", {
-                                    scenario_number: "Detail",
-                                    tenant_id: this.tenant_id,
-                                    company_code: this.company_code,
-                                    org_code: this.org_code,
-                                    org_type_code: this.org_type_code,
-                                    evaluation_operation_unit_code : this.evaluation_operation_unit_code,
-                                    evaluation_operation_unit_name : this.evaluation_operation_unit_name,
-                                    use_flag : this.use_flag
-                                });
+                                this._readEval1View();
+                                // var oView = oOwnerComponent.byId("container-supplierEvaluationSetupMgt---detail--beginView").getController().getView();
+                                // var oModel = oView.getModel("DetailView").getProperty("/evaluationType1");
+                               
+                                var oComponent = this.getOwnerComponent();
+                                var oViewModel = oComponent.getModel("viewModel");
+                                oViewModel.setProperty("/App/layout", "OneColumn");
+
+
+                                // this.getRouter().navTo("detail", {
+                                //     scenario_number: "Detail",
+                                //     tenant_id: this.tenant_id,
+                                //     company_code: this.company_code,
+                                //     org_code: this.org_code,
+                                //     org_type_code: this.org_type_code,
+                                //     evaluation_operation_unit_code : this.evaluation_operation_unit_code,
+                                //     evaluation_operation_unit_name : this.evaluation_operation_unit_name,
+                                //     use_flag : this.use_flag
+                                // });
                               
                             }else{
                                             
                                     this._readEval2View();                
                                     this._readScaleView();
+
                                     this._readEval1View();
 
                                     this.getView().byId("scaleTable").removeSelections(true);
@@ -467,12 +498,14 @@ sap.ui.define([
                 aScaleListData = oViewModel.getProperty("/scale");
                 aSelectedItems = oTable.getSelectedItems();
                 aContxtPath = oTable.getSelectedContextPaths();
+
                 for(var i = aContxtPath.length - 1; i >= 0; i--){
                     var idx = aContxtPath[i].split("/")[2];
                     
-                    if( aScaleListData[idx].tansaction_code === "I" ){
+                    if( aScaleListData[idx].crudFlg === "I" ){
                         aScaleListData.splice(idx, 1);
                     }else{
+                        aScaleListData[idx].crudFlg = "D";
                         aScaleListData[idx].tansaction_code = "D"
                         aScaleListData[idx].rowEditable = false;
                     }
@@ -547,31 +580,32 @@ sap.ui.define([
                     
                     oViewModel.setProperty(sTablePath, aListData.map(function(item){
 
-                    if(item.tansaction_code === "D"){
+                    if(item.crudFlg === "D"){
                         return item;
-                    }else if(item.tansaction_code === "C"){
+                    }else if(item.crudFlg === "I"){
                         item.rowEditable = bSeletFlg;
                         return item;
                     }
 
                     item.rowEditable = bSeletFlg;
+                    item.crudFlg = "U";
                     item.tansaction_code = "U";
-
                     return item;
                     }));
                         return;
                             
                 }
 
-                if(oRowData.tansaction_code === "D"){
+                if(oRowData.crudFlg === "D"){
                     return;
-                }else if(oRowData.tansaction_code === "C"){
+                }else if(oRowData.crudFlg === "I"){
                     oRowData.rowEditable = bSeletFlg;
                     oViewModel.setProperty(oBindContxtPath, oRowData);
                     return;
                 }
 
                 oRowData.rowEditable = bSeletFlg;
+                oRowData.crudFlg = "U";
                 oRowData.tansaction_code = "U";
 
                 oViewModel.setProperty(oBindContxtPath, oRowData);

@@ -81,7 +81,7 @@
                                  <smartTable:SmartTable height="100%" 
                                     id="MonitorList" 
                                     entitySet="SupEvalOpUnitListView"
-                                    initiallyVisibleFields="evaluation_operation_unit_code,evaluation_operation_unit_name" 
+                                    initiallyVisibleFields="evaluation_operation_unit_code,evaluation_operation_unit_name,evaluation_request_mode_code" 
                                     smartFilterId="smartFilterBar"
                                     tableType="ResponsiveTable"
                                     useExportToExcel="false"  
