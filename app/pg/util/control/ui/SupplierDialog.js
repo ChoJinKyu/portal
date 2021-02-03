@@ -12,11 +12,15 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text",
     "sap/m/Input",
+    "sap/m/MultiInput",
     "sap/m/SearchField",
     "sap/m/ComboBox",
     "sap/ui/core/Item",
     "ext/pg/util/control/ui/SupplierDialogPop",
-    "ext/pg/util/control/ui/MatrialDialogPop"
+    "ext/pg/util/control/ui/MatrialDialogPop",
+    "ext/cm/util/control/ui/EmployeeDialog",
+    "ext/cm/util/control/ui/DepartmentDialog"
+
 ], function (
         Parent, 
         Renderer, 
@@ -30,12 +34,15 @@ sap.ui.define([
         Column, 
         Label, 
         Text, 
-        Input, 
+        Input,
+        MultiInput,
         SearchField, 
         ComboBox, 
         Item, 
         SupplierDialogPop,
-        MatrialDialogPop
+        MatrialDialogPop,
+        EmployeeDialog,
+        DepartmentDialog
     ) {
     "use strict";
     var that;
@@ -51,12 +58,14 @@ sap.ui.define([
 
         renderer: Renderer,
         
-        // 검색조건 필터 화면, 각 모델은 load 함수 내에서 모델에 바인딩된다
+        // 검색조건 필터 화면
         createSearchFilters: function () {
             that = this;
 
+            // 회사코드 
             this.oCompany = new Input({ editable: false, placeholder: this.getModel("I18N").getText("/COMPANY_CODE")});
 
+            // 운영조직
             this.oOperationOrgComb = new ComboBox({
                 id: "operationOrgSp",
                 items: {
@@ -72,6 +81,7 @@ sap.ui.define([
                 }
             });
 
+            //운영단위
             this.oOperationUnitComb = new ComboBox({
                 id: "operationUnitSp",
                 items: {
@@ -87,6 +97,7 @@ sap.ui.define([
                 }
             });
 
+            //벤더 레벨1
             this.oVendorPoolLvl1 = new ComboBox({
                 id: "vendorPoolLvl1Sp",
                 items: {
@@ -101,6 +112,7 @@ sap.ui.define([
                 }.bind(this)
             });
             
+            //벤더 레벨2
             this.oVendorPoolLvl2 = new ComboBox({
                 id: "vendorPoolLvl2Sp",
                 items: {
@@ -115,6 +127,7 @@ sap.ui.define([
                 }.bind(this)
             });
 
+            //벤더 레벨3
             this.oVendorPoolLvl3 = new ComboBox({
                 id: "vendorPoolLvl3Sp",
                 items: {
@@ -129,6 +142,7 @@ sap.ui.define([
                 }.bind(this)
             });
 
+            //벤더 레벨4
             this.oVendorPoolLvl4 = new ComboBox({
                 id: "vendorPoolLvl4Sp",
                 items: {
@@ -143,6 +157,7 @@ sap.ui.define([
                 }.bind(this)
             });
 
+            //벤더 레벨5
             this.oVendorPoolLvl5 = new ComboBox({
                 id: "vendorPoolLvl5Sp",
                 items: {
@@ -163,41 +178,20 @@ sap.ui.define([
                     this.oSupplierDialogPop = new SupplierDialogPop({
                         multiSelection: false,
                         keyField: "supplier_code",
-                        textField: "supplier_local_name",
-                        filters: [
-                            new VBox({
-                                items: [
-                                    new Label({ text: this.getModel("I18N").getText("/KEYWORD") }),
-                                    new Input({placeholder : this.getModel("I18N").getText("/SUPPLIER_CODE")})
-                                ],
-                                layoutData: new GridData({ span: "XL2 L3 M5 S10" })
-                            })
-                        ],
-                        columns: [
-                            new Column({
-                                width: "75%",
-                                label: new Label({ text: this.getModel("I18N").getText("/VALUE") }),
-                                template: new Text({ text: "supplier_local_name" })
-                            }),
-                            new Column({
-                                width: "25%",
-                                hAlign: "Center",
-                                label: new Label({ text: this.getModel("I18N").getText("/CODE") }),
-                                template: new Text({ text: "supplier_code" })
-                            })
-                        ]
+                        textField: "supplier_local_name"
                     });
 
                     // Pop 내부에 값을 올려주기 위해 구성
                     this.oSupplierDialogPop.setContentWidth("300px");
                     var sSearchObj = {};
-                    sSearchObj.tanentId = "L2100";
-                    sSearchObj.languageCd = "KO";
+                    sSearchObj.tanentId = "L2100"; // 세션임시값
+                    sSearchObj.languageCd = "KO";  // 세션임시값
+                    sSearchObj.companyCode = that.oCompany.getValue();
                     sSearchObj.supplierCode = that.oSupplierCode.getValue();
-                    sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey()
-                    sSearchObj.orgUnitCode = that.oOperationUnitComb.getSelectedKey()
+                    sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey();
+                    sSearchObj.orgUnitCode = that.oOperationUnitComb.getSelectedKey();
 
-                    // Pop의 open에 sSearchObj를 인자로 호출 
+                    // Pop의 open에 sSearchObj를 인자로 호출 (override in SupplierDialogPop)
                     this.oSupplierDialogPop.open(sSearchObj);
                     this.oSupplierDialogPop.attachEvent("apply", function (oEvent) {
                         //console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
@@ -207,87 +201,97 @@ sap.ui.define([
                 }
             });
 
-            // material 내부팝업
-            this.oMatrialCode = new Input({
-                //placeholder : this.getModel("I18N").getText("/MATRIAL_CODE"),
-                placeholder : "Part No",
+            // Material 내부팝업
+            this.oMaterialCode = new Input({
+                placeholder : this.getModel("I18N").getText("/MATERIAL_CODE"),
                 showValueHelp : true,
                 valueHelpOnly : false,
                 valueHelpRequest: function (oEvent) {
-                    this.oMatrialDialogPop = new MatrialDialogPop({
+                    this.oMaterialDialogPop = new MatrialDialogPop({
                         multiSelection: false,
                         keyField: "material_code",
                         textField: "material_desc",
-                        filters: [
-                            new VBox({
-                                items: [
-                                    new Label({ text: this.getModel("I18N").getText("/KEYWORD") }),
-                                    new Input({placeholder : this.getModel("I18N").getText("/PART")})
-                                ],
-                                layoutData: new GridData({ span: "XL2 L3 M5 S10" })
-                            })
-                        ],
-                        columns: [
-                            new Column({
-                                width: "75%",
-                                label: new Label({ text: this.getModel("I18N").getText("/VALUE") }),
-                                template: new Text({ text: "material_desc" })
-                            }),
-                            new Column({
-                                width: "25%",
-                                hAlign: "Center",
-                                label: new Label({ text: this.getModel("I18N").getText("/CODE") }),
-                                template: new Text({ text: "material_code" })
-                            })
-                        ]
                     });
 
-                    this.oMatrialDialogPop.setContentWidth("300px");
+                    this.oMaterialDialogPop.setContentWidth("300px");
                     var sSearchObj = {};
-                    sSearchObj.tanentId = "L2100";
-                    sSearchObj.languageCd = "KO";
-                    sSearchObj.companyCode = "LGCKR";
-                    sSearchObj.matrialCode = that.oMatrialCode.getValue();
+                    sSearchObj.tanentId = "L2100"; //세션 임시값
+                    sSearchObj.languageCd = "KO";  //세션 임시값
+                    sSearchObj.companyCode = that.oCompany.getValue();
+                    sSearchObj.materialCode = that.oMaterialCode.getValue();
                     sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey()
                     sSearchObj.orgUnitCode = that.oOperationUnitComb.getSelectedKey()
 
-                    this.oMatrialDialogPop.open(sSearchObj);
-                    this.oMatrialDialogPop.attachEvent("apply", function (oEvent) {
-                        //console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
-                        that.oMatrialCode.setValue(null);
-                        that.oMatrialCode.setValue(oEvent.mParameters.item.material_code);
+                    this.oMaterialDialogPop.open(sSearchObj);
+                    this.oMaterialDialogPop.attachEvent("apply", function (oEvent) {
+                        that.oMaterialCode.setValue(null);
+                        that.oMaterialCode.setValue(oEvent.mParameters.item.material_code);
                     }.bind(this));
                 }
             });
 
-            this.oManagerComb = new ComboBox({
-                id: "managerSp",
-                items: {
-                    path: "/items",
-                    template: new sap.ui.core.Item({
-                        key: "{employee_number}",
-                        text: "{user_local_name}"
-                    })
-                },
-                width : "100%",
-                change: function(oEvent) {
+            // 관리자 내부 팝업
+            this.oEmployeeCode = new MultiInput({
+                placeholder : this.getModel("I18N").getText("/EMPLOYEE_NUMBER"),
+                showValueHelp : true,
+                valueHelpOnly : false,
+                valueHelpRequest : function (oEvent) {
+        
+                    this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
+                        title: "Choose Employees",
+                        multiSelection: false,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                            ]
+                        }
+                    });
+                    
+                    this.oEmployeeMultiSelectionValueHelp.open();
 
-                }.bind(this)
+                    // // case : multiSelection: true
+                    // this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    //     that.oEmployeeCode.setValue(oEvent.mParameters.item.user_local_name);
+                    // }.bind(this));
+                    // this.oEmployeeMultiSelectionValueHelp.setTokens(that.oEmployeeCode.getTokens());
+
+                    // case : multiSelection: false
+                    this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                        that.oEmployeeCode.setValue("");
+                        that.oEmployeeCode.setValue(oEvent.mParameters.item.user_local_name);
+                    }.bind(this));
+                }
             });
 
-            this.oDepartmentComb = new ComboBox({
-                id: "departmentSp",
-                items: {
-                    path: "/items",
-                    template: new sap.ui.core.Item({
-                        key: "{department_id}",
-                        text: "{department_local_name}"
-                    })
-                },
-                width : "100%",
-                change: function(oEvent) {
+            // 부서 내부팝업
+            this.oDepartmentCode = new SearchField({
+                placeholder : this.getModel("I18N").getText("/DEPARTMENT_CODE"),
+                showSearchButton : true,
+                search : function (oEvent) {
 
-                }.bind(this)
+                    this.oDepartmentMultiSelectionValueHelp = new DepartmentDialog({
+                        title: "Choose Departments",
+                        multiSelection: false,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                            ]
+                        }
+                    });
+                    this.oDepartmentMultiSelectionValueHelp.open();
+
+                    // // case : multiSelection: true
+                    // this.oDepartmentMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    //     that.oDepartmentCode.setTokens(oEvent.getSource().getTokens());
+                    // }.bind(this));
+                    // this.oDepartmentMultiSelectionValueHelp.setTokens(that.oDepartmentCode.getTokens());
+
+                    //case : multiSelection: false
+                    this.oDepartmentMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                        that.oDepartmentCode.setValue("");
+                        that.oDepartmentCode.setValue(oEvent.mParameters.item.department_id);
+                    }.bind(this));
+                }
             });
 
         return [
@@ -351,40 +355,39 @@ sap.ui.define([
                         })
                     ],
                     layoutData: new GridData({ span: "XL12 L12 M12 S12" })
-
                 }),
-               
+                
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
                         this.oSupplierCode
                     ],
-                    layoutData: new GridData({ span: "XL4 L4 M4 S12" })
+                    layoutData: new GridData({ span: "XL3 L3 M3 S12" }),
                 }),
 
                 new VBox({
                     items: [
                         //new Label({ text: this.getModel("I18N").getText("/MATRIAL_CODE") }),
                         new Label({ text: "Part No" }),
-                        this.oMatrialCode
+                        this.oMaterialCode
                     ],
-                    layoutData: new GridData({ span: "XL4 L4 M4 S12" })
+                    layoutData: new GridData({ span: "XL3 L3 M3 S12" })
                 }),
 
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/MANAGER") }),
-                        this.oManagerComb
+                        this.oEmployeeCode
                     ],
-                    layoutData: new GridData({ span: "XL4 L4 M4 S12" })
+                    layoutData: new GridData({ span: "XL3 L3 M3 S12" })
                 }),
 
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/DEPARTMENT") }),
-                        this.oDepartmentComb
+                        this.oDepartmentCode
                     ],
-                    layoutData: new GridData({ span: "XL4 L4 M4 S12" })
+                    layoutData: new GridData({ span: "XL3 L3 M3 S12" })
                 })
             ]
         },
@@ -393,53 +396,52 @@ sap.ui.define([
         createTableColumns: function () {
             return [
                 new Column({
-                    width: "15%",
+                    width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT") }),
                     template: new Text({ text: ""})
                 }),
                 new Column({
-                    width: "15%",
+                    width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "1" }),
                     template: new Text({ text: "{vendor_pool_level1_code}" })
                 }),
                 new Column({
-                    width: "15%",
+                    width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "2" }),
                     template: new Text({ text: "{vendor_pool_level2_code}" })
                 }),
                 new Column({
-                    width: "15%",
+                    width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "3" }),
                     template: new Text({ text: "{vendor_pool_level3_code}" })
                 }),
                 new Column({
-                    width: "17%",
+                    width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
                     template: new Text({ text: "{supplier_code}" })
                 }),
                 new Column({
-                    width: "25%",
+                    width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME") }),
                     template: new Text({ text: "{supplier_local_name}" })
                 }),
-                
                 new Column({
-                    width: "10%",
+                    width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/REGISTER_STATUS") }),
                     template: new Text({ text: "{supplier_register_status_name}" })
                 }),
                 new Column({
-                    width: "10%",
+                    width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/FLAG") }),
                     template: new Text({ text: "{supplier_flag}" })
                 }),
                 new Column({
-                    width: "10%",
+                    width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/MAKER_FLAG") }),
                     template: new Text({ text: "{maker_flag}" })
                 }),
                 new Column({
-                    width: "10%",
+                    width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_SELECTION_STATUS") }),
                     template: new Text({ text: "{inactive_status_name}" })
                 })
@@ -504,85 +506,63 @@ sap.ui.define([
             }
         },
 
-        // 부서 load
-        loadDepartmentData: function () {
-            var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
-            
-            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/cm.util.HrService/").read("/Department", {
-                filters: aFilters,
-                success: function (oData) {
-                    var mData = {
-                        items : oData.results
-                    };
-                    var oModel = new sap.ui.model.json.JSONModel(mData);
-                    that.oDepartmentComb.setModel(oModel);
-                    //that.oSearchObj.operationUnit 넘겨 받은 값에 있을 경우 셋팅 해주고 
-                    //임시로 셋팅 해둔다
-                    //that.oDepartmentComb.setSelectedKey("11510001").fireChange();
-                }.bind(this)
-            });
-        },
-
-        // 관리자 load
-        loadManagerData: function () {
-            var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
-            
-            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/cm.util.HrService/").read("/Employee", {
-                filters: aFilters,
-                success: function (oData) {
-                    var mData = {
-                        items : oData.results
-                    };
-                    var oModel = new sap.ui.model.json.JSONModel(mData);
-                    that.oManagerComb.setModel(oModel);
-                    //that.oSearchObj.operationUnit 넘겨 받은 값에 있을 경우 셋팅 해주고 
-                    //임시로 셋팅 해둔다
-                    //that.oManagerComb.setSelectedKey("10010").fireChange();
-                }.bind(this)
-            });
-        },
-
         // Data 조회
         loadData: function () {
 
             var aFilters = [];
-            var sSupplierCode;
+            var sSupplierCode,
+                sMaterialCode,
+                sEmployeeCode,
+                sDepartmentCode;
             
             // 세션에서 받아오는 필터 value
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
             aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.language));
             aFilters.push(new Filter("supplier_company_code", FilterOperator.EQ, this.oSearchObj.companyCode));
 
-            
+            // 조회조건에서 가져오는 value
           
             if (!!this.oSupplierCode.getValue()) {
                 sSupplierCode = this.oSupplierCode.getValue();
             }
 
-            if(this.oVendorPoolLvl1.getSelectedKey()){
+            if (sSupplierCode) {
+                aFilters.push(new Filter("supplier_code", FilterOperator.Contains, "'" + sSupplierCode.toUpperCase() + "'"));
+            }
+
+            if(!!this.oVendorPoolLvl1.getSelectedKey()){
                 aFilters.push(new Filter("vendor_pool_level1_code", FilterOperator.EQ, this.oVendorPoolLvl1.getSelectedKey()));
             }
 
-            if(this.oVendorPoolLvl2.getSelectedKey()){
+            if(!!this.oVendorPoolLvl2.getSelectedKey()){
                 aFilters.push(new Filter("vendor_pool_level2_code", FilterOperator.EQ, this.oVendorPoolLvl2.getSelectedKey()));
             }
 
-            if(this.oVendorPoolLvl3.getSelectedKey()){
+            if(!!this.oVendorPoolLvl3.getSelectedKey()){
                 aFilters.push(new Filter("vendor_pool_level3_code", FilterOperator.EQ, this.oVendorPoolLvl3.getSelectedKey()));
             }
 
-            if(this.oVendorPoolLvl4.getSelectedKey()){
+            if(!!this.oVendorPoolLvl4.getSelectedKey()){
                 aFilters.push(new Filter("vendor_pool_level4_code", FilterOperator.EQ, this.oVendorPoolLvl4.getSelectedKey()));
             }
 
-            if(this.oVendorPoolLvl5.getSelectedKey()){
+            if(!!this.oVendorPoolLvl5.getSelectedKey()){
                 aFilters.push(new Filter("vendor_pool_level5_code", FilterOperator.EQ, this.oVendorPoolLvl5.getSelectedKey()));
             }
-            
-            if (sSupplierCode) {
-                aFilters.push(new Filter("supplier_code", FilterOperator.Contains, "'" + sSupplierCode.toUpperCase() + "'"));
+       
+            if (!!this.oMaterialCode.getValue()) {
+                sMaterialCode = this.oMaterialCode.getValue();
+                //aFilters.push(new Filter("material_code", FilterOperator.EQ, sSupplierCode));
+            }
+
+            if(!!this.oEmployeeCode.getValue()) {
+                sEmployeeCode = that.oEmployeeCode.getValue();
+                //aFilters.push(new Filter("employee_code", FilterOperator.EQ, sEmployeeCode));
+            }
+
+            if(!!this.oDepartmentCode.getValue()) {
+                sDepartmentCode = that.oDepartmentCode.getValue();
+                //aFilters.push(new Filter("department_code", FilterOperator.EQ, sDepartmentCode));
             }
             
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/vpSupplierPopupDtlView", {
@@ -723,12 +703,10 @@ sap.ui.define([
             this.loadTenantCode();
             this.loadOperationOrgData();
             this.loadOperationUnitData();
-            this.loadDepartmentData();
-            this.loadManagerData();
             this.oDialog.open();
         }
 
-    });
+    }); 
 
     return supplierDialog;
 }, /* bExport= */ true);

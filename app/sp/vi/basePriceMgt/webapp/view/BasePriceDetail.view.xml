@@ -28,7 +28,7 @@
 				<uxap:expandedHeading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBack" />
-                        <Title text="{I18N>/NEW_BASE_PRICE}" wrapping="true"/>
+                        <Title text="{I18N>/NEW_BASE_PRICE}(일반자재)" wrapping="true"/>
                     </HBox>
 				</uxap:expandedHeading>
                 <uxap:navigationActions>
@@ -281,10 +281,11 @@
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <ComboBox selectedKey="{detailModel>currency_code}" editable="{= ${detailModel>row_state} === 'edit' }"
-                                                    items="{ path: 'currencyODataModel>/Currency' }">
+                                            <ComboBox selectedKey="{detailModel>currency_code}"
+                                                items="{ path: 'currModel>/org_Currency'
+                                                }">
                                             <items>
-                                                <core:Item key="{currencyODataModel>currency_code}" text="{currencyODataModel>currency_code}" />
+                                                <core:Item key="{currModel>currency_code}" text="{currModel>currency_code}" />
                                             </items>
                                             </ComboBox>
                                         </t:template>

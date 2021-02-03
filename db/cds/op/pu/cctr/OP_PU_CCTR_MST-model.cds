@@ -8,7 +8,7 @@ entity Pu_Cctr_Mst {
   key effective_end_date : Date  not null @title: '일자' ;	
   key language_code : String(4)  not null @title: '언어코드' ;	
       effective_start_date : Date  not null @title: '일자' ;	
-    cctr_name : String(100)  not null @title: '이름(100)' ;	
+      cctr_name : String(100)  not null @title: '이름(100)' ;	
 }	
 
 

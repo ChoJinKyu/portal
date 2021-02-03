@@ -22,6 +22,21 @@
 								class="sapUiSmallMargin"/>                               
                         </content>
                     </Panel>
+                    <Panel
+                        headerText="Call Return Obj Proc Test"
+                        class="sapUiResponsiveMargin"
+						width="auto">
+                        <content>
+                            <Button
+                                text="Call VendorPool Mng"
+                                icon="sap-icon://delete"
+                                press=".onCallVendorPoolMngReturnObj"
+                                class="sapUiSmallMarginEnd"/>  
+                            <Text
+								text="Vendor Pool 관리 수정 Proc 실행합니다.(Return Object)"
+								class="sapUiSmallMargin"/>                               
+                        </content>
+                    </Panel>
                 </content>
                 </Page>
             </pages>

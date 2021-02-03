@@ -13,5 +13,5 @@ SELECT pat.tenant_id,
                 from DP_PD_PRODUCT_ACTIVITY_TEMPLATE_LNG 
                 where LANGUAGE_CD='KO') aname
         on aname.product_activity_code = pat.product_activity_code and aname.tenant_id = pat.tenant_id
-  where 1=1
+  where pat.tenant_id = 'L2101'
 ORDER BY pat.sequence;

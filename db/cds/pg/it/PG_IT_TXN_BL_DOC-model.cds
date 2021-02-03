@@ -37,9 +37,9 @@ entity It_Txn_Bl_Doc {
         eta                           : Date                @title : '도착예정일자';
         bef_accpt_indicator           : String(1)           @title : '수입신고수리전반출지시자';
         ata                           : Date                @title : '실제도착일자';
-        remark_2                      : String(100)         @title : '비고2';
-        remark_3                      : String(100)         @title : '비고3';
-        remark                        : String(100)         @title : '비고';
+        remark_2                      : String(3000)        @title : '비고2';
+        remark_3                      : String(3000)        @title : '비고3';
+        remark                        : String(3000)        @title : '비고';
         import_declare_type_code      : String(1)           @title : '수입신고유형코드';
         strategy_purchasing_indicator : String(1)           @title : '전략구매지시자';
         pol_code                      : String(30)          @title : '선적항코드';
@@ -60,11 +60,11 @@ entity It_Txn_Bl_Doc {
         material_code                 : String(40)          @title : '자재코드';
         bl_base_unit_code             : String(3)           @title : 'BL기본단위코드';
         bl_net_price                  : Decimal             @title : 'BL단가';
-        bl_price_unit                 : Decimal(5, 0)       @title : 'BL가격단위';
+        bl_price_unit                 : Decimal             @title : 'BL가격단위';
         bl_quantity                   : Decimal             @title : 'BL수량';
-        bonded_area_code              : String(15)          @title : '보세구역코드';
-        internal_management_code      : String(3)           @title : '내부관리코드';
-        bonded_trans_serial_number    : String(5)           @title : '보세운송일련번호';
+        bonded_area_code              : String(10)          @title : '보세구역코드';
+        bonded_area_internal_code     : String(2)           @title : '보세구역내부코드';
+        bonded_trans_serial_number    : String(10)          @title : '보세운송일련번호';
         entry_date                    : Date                @title : '반입일자';
         invoice_amount                : Decimal             @title : '송장금액';
         invoice_amount_currency_code  : String(3)           @title : '송장금액통화코드';
@@ -73,7 +73,7 @@ entity It_Txn_Bl_Doc {
         commercial_invoice_quantity   : Decimal             @title : '상업송장수량';
         bonded_wh_issue_date          : Date                @title : '보세창고출고일자';
         bonded_wh_issue_quantity      : Decimal             @title : '보세창고출고수량';
-        issue_unit_code               : String(3)           @title : '출고단위';
+        issue_unit                    : String(3)           @title : '출고단위';
 }
 
 extend It_Txn_Bl_Doc with util.Managed;

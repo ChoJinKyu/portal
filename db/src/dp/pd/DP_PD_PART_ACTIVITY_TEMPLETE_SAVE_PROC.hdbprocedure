@@ -16,13 +16,13 @@ PROCEDURE DP_PD_PART_ACTIVITY_TEMPLETE_SAVE_PROC (
                     APPROVE_MANDATORY_FLAG BOOLEAN,
                     ACTIVE_FLAG BOOLEAN,
                     UPDATE_USER_ID NVARCHAR(255),
-                    CRUD_TYPE NVARCHAR(1) ),
+                    CRUD_TYPE_CODE NVARCHAR(1) ),
     IN  I_D TABLE ( TENANT_ID NVARCHAR(5), 
                     ACTIVITY_CODE NVARCHAR(40), 
                     LANGUAGE_CD NVARCHAR(30), 
                     CODE_NAME NVARCHAR(240),
                     UPDATE_USER_ID NVARCHAR(255),
-                    CRUD_TYPE NVARCHAR(1) ),
+                    CRUD_TYPE_CODE NVARCHAR(1) ),
     OUT O_MSG TABLE(RETURN_CODE NVARCHAR(2), RETURN_MSG NVARCHAR(5000) )
 )
 LANGUAGE SQLSCRIPT		
@@ -30,6 +30,14 @@ SQL SECURITY INVOKER
 
 AS
 BEGIN
+    DECLARE V_TENANT_ID NVARCHAR(5);
+    DECLARE V_COMPANY_CODE NVARCHAR(10);
+    DECLARE V_ORG_TYPE_CODE NVARCHAR(2);
+    DECLARE V_ORG_CODE NVARCHAR(10);
+    DECLARE V_PART_PROJECT_TYPE_CODE NVARCHAR(30);
+    DECLARE V_ACTIVITY_CODE NVARCHAR(40);
+    DECLARE V_SEQUENCE DECIMAL;
+    DECLARE V_ORG_SEQUENCE DECIMAL;
 
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
@@ -37,21 +45,84 @@ BEGIN
 		O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
 	END;
 
-/*  CRUD_TYPE_CODE가 'D' 인 Data 삭제 */
-    IF CRUD_TYPE = 'D' THEN
-        DELETE FROM DP_PD_PART_BASE_ACTIVITY_LNG D
-        WHERE (D.TENANT_ID, D.ACTIVITY_CODE ) IN
-            ( SELECT TENANT_ID, ACTIVITY_CODE FROM :I_M )
+    SELECT TENANT_ID, COMPANY_CODE, ORG_TYPE_CODE, ORG_CODE, PART_PROJECT_TYPE_CODE, ACTIVITY_CODE, SEQUENCE
+    INTO   V_TENANT_ID, V_COMPANY_CODE, V_ORG_TYPE_CODE, V_ORG_CODE, V_PART_PROJECT_TYPE_CODE, V_ACTIVITY_CODE, V_SEQUENCE
+    FROM   :I_M
+    ;   
+    
+     IF :CRUD_TYPE IN ('D', 'U') THEN
+
+        SELECT SEQUENCE 
+        INTO   V_ORG_SEQUENCE 
+        FROM   DP_PD_PART_ACTIVITY_TEMPLATE 
+        WHERE  TENANT_ID = V_TENANT_ID
+        AND    COMPANY_CODE = V_COMPANY_CODE
+        AND    ORG_TYPE_CODE = V_ORG_TYPE_CODE
+        AND    ORG_CODE = V_ORG_CODE
+        AND    PART_PROJECT_TYPE_CODE = V_PART_PROJECT_TYPE_CODE
+        AND    ACTIVITY_CODE = V_ACTIVITY_CODE
         ;
+   
+    END IF;
+
+   /*  CRUD_TYPE_CODE가 'D' 인 Data 삭제 */
+    IF :CRUD_TYPE = 'D' THEN
+        DELETE FROM DP_PD_PART_BASE_ACTIVITY_LNG D
+        WHERE  D.TENANT_ID = V_TENANT_ID
+        AND    D.ACTIVITY_CODE = V_ACTIVITY_CODE
+       ;
 
         DELETE FROM DP_PD_PART_ACTIVITY_TEMPLATE M
-        WHERE (M.TENANT_ID, M.ACTIVITY_CODE ) IN
-            ( SELECT TENANT_ID, ACTIVITY_CODE FROM :I_M )
+        WHERE  M.TENANT_ID = V_TENANT_ID
+        AND    M.COMPANY_CODE = V_COMPANY_CODE
+        AND    M.ORG_TYPE_CODE = V_ORG_TYPE_CODE
+        AND    M.ORG_CODE = V_ORG_CODE
+        AND    M.PART_PROJECT_TYPE_CODE = V_PART_PROJECT_TYPE_CODE
+        AND    M.ACTIVITY_CODE = V_ACTIVITY_CODE
+        ;
+
+        UPDATE DP_PD_PART_ACTIVITY_TEMPLATE
+        SET    SEQUENCE = SEQUENCE - 1
+        WHERE  TENANT_ID = V_TENANT_ID
+        AND    COMPANY_CODE = V_COMPANY_CODE
+        AND    ORG_TYPE_CODE = V_ORG_TYPE_CODE
+        AND    ORG_CODE = V_ORG_CODE
+        AND    PART_PROJECT_TYPE_CODE = V_PART_PROJECT_TYPE_CODE
+        AND    SEQUENCE > V_ORG_SEQUENCE
         ;
 
     ELSE
 
-        IF CRUD_TYPE = 'U' THEN
+        IF :CRUD_TYPE = 'U' THEN
+
+            IF V_ORG_SEQUENCE > V_SEQUENCE THEN
+
+                UPDATE DP_PD_PART_ACTIVITY_TEMPLATE
+                SET    SEQUENCE = SEQUENCE + 1
+                WHERE  TENANT_ID = V_TENANT_ID
+                AND    COMPANY_CODE = V_COMPANY_CODE
+                AND    ORG_TYPE_CODE = V_ORG_TYPE_CODE
+                AND    ORG_CODE = V_ORG_CODE
+                AND    PART_PROJECT_TYPE_CODE = V_PART_PROJECT_TYPE_CODE
+                AND    SEQUENCE >= V_SEQUENCE
+                AND    SEQUENCE < V_ORG_SEQUENCE
+                ;
+
+            ELSEIF V_ORG_SEQUENCE < V_SEQUENCE THEN
+
+                UPDATE DP_PD_PART_ACTIVITY_TEMPLATE
+                SET    SEQUENCE = SEQUENCE - 1
+                WHERE  TENANT_ID = V_TENANT_ID
+                AND    COMPANY_CODE = V_COMPANY_CODE
+                AND    ORG_TYPE_CODE = V_ORG_TYPE_CODE
+                AND    ORG_CODE = V_ORG_CODE
+                AND    PART_PROJECT_TYPE_CODE = V_PART_PROJECT_TYPE_CODE
+                AND    SEQUENCE <= V_SEQUENCE
+                AND    SEQUENCE > V_ORG_SEQUENCE
+                ;
+
+            END IF;
+
             UPDATE DP_PD_PART_ACTIVITY_TEMPLATE M
                SET ( M.SEQUENCE
                     ,M.DEVELOPE_EVENT_CODE
@@ -73,11 +144,20 @@ BEGIN
                             ,NOW(), UPDATE_USER_ID
                        FROM :I_M
                       WHERE TENANT_ID = M.TENANT_ID 
+                        AND COMPANY_CODE = M.COMPANY_CODE
+                        AND ORG_TYPE_CODE = M.ORG_TYPE_CODE
+                        AND ORG_CODE = M.ORG_CODE
+                        AND PART_PROJECT_TYPE_CODE = M.PART_PROJECT_TYPE_CODE
                         AND ACTIVITY_CODE = M.ACTIVITY_CODE
                    )
-            WHERE   (M.TENANT_ID, M.ACTIVITY_CODE ) IN
-                    ( SELECT TENANT_ID, ACTIVITY_CODE FROM :I_M )
+                WHERE  M.TENANT_ID = V_TENANT_ID
+                AND    M.COMPANY_CODE = V_COMPANY_CODE
+                AND    M.ORG_TYPE_CODE = V_ORG_TYPE_CODE
+                AND    M.ORG_CODE = V_ORG_CODE
+                AND    M.PART_PROJECT_TYPE_CODE = V_PART_PROJECT_TYPE_CODE
+                AND    M.ACTIVITY_CODE = V_ACTIVITY_CODE
             ;
+
         ELSE
             INSERT INTO DP_PD_PART_ACTIVITY_TEMPLATE M
                       ( TENANT_ID
@@ -109,8 +189,15 @@ BEGIN
                         ,PART_PROJECT_TYPE_CODE
                         ,ACTIVITY_CODE
                         ,CATEGORY_GROUP_CODE
-                        ,SEQUENCE
-                        ,DEVELOPE_EVENT_CODE
+                         ,(SELECT COALESCE(MAX(SEQUENCE), 0) + 1 
+                             FROM DP_PD_PART_ACTIVITY_TEMPLATE
+                            WHERE TENANT_ID = M.TENANT_ID
+                              AND COMPANY_CODE = M.COMPANY_CODE
+                              AND ORG_TYPE_CODE = M.ORG_TYPE_CODE
+                              AND ORG_CODE = M.ORG_CODE
+                              AND PART_PROJECT_TYPE_CODE = M.PART_PROJECT_TYPE_CODE
+                            )
+                       ,DEVELOPE_EVENT_CODE
                         ,ACTUAL_ROLE_CODE
                         ,ACTIVITY_COMPLETE_TYPE_CODE
                         ,JOB_TYPE_CODE
@@ -123,7 +210,7 @@ BEGIN
                         ,UPDATE_USER_ID
                         ,NOW()
                         ,NOW()
-                FROM :I_M 
+                FROM :I_M M
             ;                
 
         END IF;
@@ -133,17 +220,16 @@ BEGIN
         WHERE ( D.TENANT_ID,D.ACTIVITY_CODE,D.LANGUAGE_CD ) IN
             ( SELECT id.TENANT_ID, id.ACTIVITY_CODE, id.LANGUAGE_CD
                 FROM :I_D id
-               WHERE id.CRUD_TYPE = 'D'
+               WHERE id.CRUD_TYPE_CODE = 'D'
             )
         ;
 
         /*  I_D Table의 Data 일괄 추가,수정 */
         MERGE INTO DP_PD_PART_BASE_ACTIVITY_LNG D
-            USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE IN ('C','U')  ) id
+            USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE_CODE IN ('C','U')  ) id
             ON ( D.TENANT_ID = id.TENANT_ID
                 AND D.ACTIVITY_CODE = id.ACTIVITY_CODE
-                AND D.LANGUAGE_CD = id.LANGUAGE_CD
-                AND id.CRUD_TYPE IN ('C','U') )
+                AND D.LANGUAGE_CD = id.LANGUAGE_CD )
 
         WHEN MATCHED THEN
             UPDATE

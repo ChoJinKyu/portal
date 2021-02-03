@@ -27,7 +27,7 @@ SELECT
         where   tenant_id = OP_PU_PR_MST.tenant_id 
             and company_code = OP_PU_PR_MST.company_code 
             and pr_number = OP_PU_PR_MST.pr_number 
-            and pr_progress_status_code = 'A') as pr_progress_status_cnt ,
+            and pr_progress_status_code = 'RUN') as pr_progress_status_cnt ,
 
     ( select count(*) as cnt From OP_PU_PR_DTL
         where   tenant_id = OP_PU_PR_MST.tenant_id 

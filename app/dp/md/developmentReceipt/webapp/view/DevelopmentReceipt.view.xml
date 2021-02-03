@@ -52,8 +52,8 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="{I18N>/PLANT}" labelFor="searchDivisionE" required="true"></Label>
-                                <MultiComboBox  id="searchDivisionE" width="100%" selectedKey="" 
+                                <Label text="{I18N>/PLANT}" labelFor="searchPlantE" required="true"></Label>
+                                <MultiComboBox  id="searchPlantE" width="100%" selectedKey="" 
                                         items="{
                                             path: 'purOrg>/Pur_Operation_Org',
                                             filters: [
@@ -126,8 +126,8 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="{I18N>/PLANT}" labelFor="searchDivisionS" required="true"></Label>
-                                <MultiComboBox  id="searchDivisionS" width="100%" selectedKey="" 
+                                <Label text="{I18N>/PLANT}" labelFor="searchPlantS" required="true"></Label>
+                                <MultiComboBox  id="searchPlantS" width="100%" selectedKey="" 
                                         items="{
                                             path: 'purOrg>/Pur_Operation_Org',
                                             filters: [
@@ -346,7 +346,7 @@
                             <Text id="model" text="{list>model}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMoldNoColumn" width="12em">
+                    <table:Column id="moldNoColumn" width="12em">
                         <Label text="Mold No" wrapping="true"/>
                         <table:template>
                             <Text id="mold_number" text="{list>mold_number}"/>

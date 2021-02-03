@@ -33,26 +33,43 @@ sap.ui.define([
              * 콤보박스, 버튼들에 공통코드 바인딩
              */
             , _setBindComboNBtnItems : function(){
-                var oUserInfo, aFilters;
-                oUserInfo = this._getUserSession();
+                // var oUserInfo, aFilters;
+                // oUserInfo = this._getUserSession();
 
-                this._setBindItems({
+                // this._setBindItems({
+                //     id : "btnEvaluExeMode",
+                //     path : "common>/Code",
+                //     template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
+                //     sorter : [
+                //         new Sorter("sort_no")
+                //     ],
+                //     filters : [
+                //         new Filter("tenant_id", "EQ", oUserInfo.tenantId),
+                //         new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE")
+                //     ]
+                // });
+                // this._setBindItems({
+                //     id : "btnEvaluArtType",
+                //     path : "common>/Code",
+                //     template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
+                //     sorter : [
+                //         new Sorter("sort_no")
+                //     ],
+                //     filters : [
+                //         new Filter("tenant_id", "EQ", oUserInfo.tenantId),
+                //         new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE")
+                //     ]
+                // });
+                
+                this._setBindCommonItems({
                     id : "btnEvaluExeMode",
-                    path : "common>/Code",
-                    template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
-                    filters : [
-                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                        new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE")
-                    ]
+                    groupCode : "SP_SE_EVAL_ARTICLE_TYPE_CODE",
+                    template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" })
                 });
-                this._setBindItems({
+                this._setBindCommonItems({
                     id : "btnEvaluArtType",
-                    path : "common>/Code",
-                    template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
-                    filters : [
-                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                        new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE")
-                    ]
+                    groupCode : "SP_SE_EVAL_ARTICLE_TYPE_CODE",
+                    template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" })
                 });
 
                 this._setBindCommonItems({
@@ -81,22 +98,30 @@ sap.ui.define([
              * 
              * @param id            컨트롤 아이디
              * @param groupCode     호출할 공통 그룹 코드
+             * @param template      item 의 구성 control
              */
             , _setBindCommonItems : function(oParam){
-                var oUserInfo, aFilters;
+                var oUserInfo, aFilters, oTemplate;
                 oUserInfo = this._getUserSession();
                 aFilters = [];
 
                 aFilters = [
                     new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                    new Filter("group_code", "EQ", oParam.groupCode)
+                    new Filter("group_code", "EQ", oParam.groupCode),
+                    new Filter("language_cd", "EQ", "KO")
                 ];
+                oTemplate = oParam.template ? oParam.template :
+                    new ListItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" });
 
                 this._setBindItems({
                     id : oParam.id,
                     path : "common>/Code",
-                    template : new ListItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
+                    template : oTemplate,
+                    sorter : [
+                        new Sorter("sort_no")
+                    ],
                     filters : aFilters
+                    
                 });
             }
             /**
@@ -295,7 +320,8 @@ sap.ui.define([
                 bAllSeletFlg = oParameters.selectAll;
 
                 if(
-                    (bAllSeletFlg && bSeletFlg) || (!bAllSeletFlg && !bSeletFlg)
+                    (bAllSeletFlg && bSeletFlg) || 
+                    (!bAllSeletFlg && !bSeletFlg && oParameters.listItems.length > 1)
                 ){
                     oTable = oEvent.getSource();
                     sTablePath = oTable.getBindingPath("items");
@@ -403,7 +429,7 @@ sap.ui.define([
                     }
                 });
                 
-                aItems.unshift(oNewData);
+                aItems.push(oNewData);
                 oViewModel.setProperty("/Detail/Item", aItems);
             }
             /***

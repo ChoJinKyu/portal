@@ -35,7 +35,7 @@ entity Vp_Vendor_Pool_Export_Mst_View {
     register_reason: String(50) @title: '등록사유';
     approval_number: String(50) @title: '품의번호';
     info_change_status: String(20) @title: '공급업체변경작업상태';
-    vendor_pool_path_sequence: Integer64 @title: '협력사풀경로순번';
+    vendor_pool_path_sequence: String(3000) @title: '협력사풀경로순번';
     vendor_pool_path_code: String(100) @title: '협력사풀경로코드';
     vendor_pool_path_name: String(500) @title: '협력사풀경로명';
     higher_level_path_name: String @title: '상위경로명';

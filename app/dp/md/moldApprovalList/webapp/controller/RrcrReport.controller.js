@@ -145,24 +145,14 @@ sap.ui.define([
          * ,     , oArges : company_code , org_code (필수)
 		 */
         onItemAddPress : function (oEvent) {
-            if(!this.oReModelRepairItemDialog){
-               this.oReModelRepairItemDialog = new ReModelRepairItemDialog({
-                    title: "Item Add",
-                    multiSelection: true,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2101")
-                        ]
-                    }
-                });
-                // this.oReModelRepairItemDialog.attachEvent("apply", function(oEvent){
-                //    // this.byId("referMulti").setTokens(oEvent.getSource().getTokens());
-                 
-                // }.bind(this));
+            var oArgs = {
+                company_code: this.company_code,
+                org_code: this.plant_code,
             }
-            this.oReModelRepairItemDialog.open();
-           // this.oReModelRepairItemDialog.setTokens(this.byId("referMulti").getTokens());
-        
+           this.rrItem.openPop(this, oArgs, function(item){
+                console.log("item>>>> " , item);
+           });
+
         },
 
         /**

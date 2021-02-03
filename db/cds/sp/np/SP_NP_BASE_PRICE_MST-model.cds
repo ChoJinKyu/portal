@@ -7,8 +7,8 @@ entity Np_Base_Price_Mst {
   key org_type_code         : String(2)      not null    @title: '구매운영조직유형' ;	
   key org_code              : String(10)     not null    @title: '구매운영조직코드' ;	
   key base_price_id         : Integer64      not null    @title: '기준단가ID' ;	
-      supplier_code         : String(15)     not null    @title: '공급업체코드' ;	
-      material_code         : String(40)     not null    @title: '자재코드' ;	
+      material_code         : String(40)     not null    @title: '자재코드' ;
+      supplier_code         : String(15)     not null    @title: '공급업체코드' ;
       market_code           : String(30)     not null    @title: '납선코드' ;	
       currency_code         : String(3)      not null    @title: '통화코드' ;	
       base_date             : String(8)                  @title: '기준일자' ;	

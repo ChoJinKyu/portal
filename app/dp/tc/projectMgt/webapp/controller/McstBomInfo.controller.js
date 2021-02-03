@@ -160,7 +160,11 @@ sap.ui.define([
 				"material_reqm_quantity": "",
 				"change_info_text": "",
                 "material_reqm_diff_quantity": "",
-                "eng_change_number": ""
+                "eng_change_number": "",
+                "tenant_id": this.getModel("detailModel").getProperty("/tenant_id"),
+                "model_code": this.getModel("detailModel").getProperty("/model_code"),
+                "project_code": this.getModel("detailModel").getProperty("/project_code"),
+                "version_number": this.getModel("detailModel").getProperty("/version_number")
             }, "/partListModel", 0);
             this.byId("tblPartListTable").clearSelection();
 		},
@@ -174,6 +178,24 @@ sap.ui.define([
                 return; 
             } // skip
             
+            //Mapping 된 데이터가 있는지 checking
+            //var aList = this.getModel("partListModel").getProperty("/PartListView");
+            var aSelIndics = oTable.getSelectedIndices();
+            var validFlag = true;
+            $.each(aSelIndics, function(nIdx, nRowIdx) {
+                let oCnxt = oTable.getContextByIndex(nRowIdx);
+                let sPath = oCnxt.getPath();
+                let oRow = oTable.getModel("partListModel").getProperty(sPath);
+                if(oRow.mapping_id) {
+                    MessageToast.show("맵핑된 데이터가 있습니다. 맵핑 삭제 후 데이터 삭제가 가능합니다.", {at: "center center"});
+                    validFlag = false;
+                    return false;
+                }
+            }.bind(this));
+            if(!validFlag) {
+                return;
+            }
+
             oTable.getSelectedIndices().reverse().forEach(function (idx) {
                 model.markRemoved(idx);
             });
@@ -189,7 +211,7 @@ sap.ui.define([
             });
             if(!this.oSearchMatDialog) {
                 this.oSearchMatDialog = new TcMaterialMasterDialog({
-                    title: "BOM Mapping",
+                    title: this.I18N.getText("/MATERIAL_CODE"),
                     multiSelection: false,
                     tenantId: this.getModel("detailModel").getProperty("/tenant_id"),
                     searchCode: (oInputCntl && oInputCntl.getValue() || "") || "",
@@ -211,7 +233,7 @@ sap.ui.define([
                         _row_state_ : "C",
                         material_code : rtData.material_code,
                         material_desc : rtData.material_desc,
-                        uom_name : rtData.base_uom_code,
+                        uom_code : rtData.base_uom_code,
                         company_code : this.getModel("detailModel").getProperty("/company_code"),
                         buyer_empno : this.getModel("detailModel").getProperty("/buyer_empno")
                     });
@@ -231,6 +253,10 @@ sap.ui.define([
         },
 
         onBomInfoMappingPress: function(oEvent) {
+            if(this.getModel("bomMappingModel")) {
+                this.getModel("bomMappingModel").setData({});
+            }
+            
             var oTable = this.byId("tblPartListTable");
             var aSelIndics = oTable.getSelectedIndices();
 
@@ -258,7 +284,10 @@ sap.ui.define([
                     oBomMppingModel.setProperty("/version_number", oRow.version_number);
                     oBomMppingModel.setProperty("/mapping_id", oRow.mapping_id);
                     oBomMppingModel.setProperty("/department_type_code", oRow.department_type_code);
-                    oBomMppingModel.setProperty("/creator_empno", oRow.creator_empno);
+                    //oBomMppingModel.setProperty("/creator_empno", oRow.creator_empno);
+                    oBomMppingModel.setProperty("/creator_empno", oRow.creator_empno || "100000");//추후 세션정보로 셋팅
+                    oBomMppingModel.setProperty("/creator_local_name", "김구매");//추후 세션정보로 셋팅
+
                     oBomMppingModel.setProperty("/eng_change_number", oRow.eng_change_number);
                     oBomMppingModel.setProperty("/change_reason", oRow.change_reason);
                 }
@@ -270,6 +299,9 @@ sap.ui.define([
         },
 
         onChangeNumberLinkPress: function(oEvent) {
+            if(this.getModel("bomMappingModel")) {
+                this.getModel("bomMappingModel").setData({});
+            }
             var sNum = oEvent.getSource().getText();
             var oCnxt = oEvent.getSource().getParent().getRowBindingContext();
             if(!sNum) {
@@ -279,34 +311,36 @@ sap.ui.define([
             var oTable = this.byId("tblPartListTable");
             oTable.setBusy(true);
             let oDataModel = this.getModel("mcstBomMgtModel");//McstBomMgtService V2 OData Service
-            oDataModel.read("/mcstProjectPartMapMst", {
+            let oKey = {tenant_id : oCnxt.getObject("tenant_id"), mapping_id : oCnxt.getObject("mapping_id")};
+            let sReadPath = oDataModel.createKey("/mcstProjectPartMapMst", oKey);
+            oDataModel.read(sReadPath, {
                 //filters : aFilters,
-                urlParameters : { "$expand" : "mappping_dtl" },
+                urlParameters : { "$expand" : "mappping_dtl,creator_person_info" },
                 success : function(data){
                     oTable.setBusy(false);
                     console.log("mcstProjectPartMapMst", data);
 
-                    if( data && data.results && 0<data.results.length ) {
+                    if( data.hasOwnProperty("mapping_id") ) {
                         //this._openBomMappingDialog(oBomMappingModel);
-                        let oRow = data.results[0];
                         this.setModel(new JSONModel, "bomMappingModel");
                         let oBomMppingModel = this.getModel("bomMappingModel");
-                        oBomMppingModel.setProperty("/tenant_id", oRow.tenant_id);
+                        oBomMppingModel.setProperty("/tenant_id", data.tenant_id);
 
                         oBomMppingModel.setProperty("/project_code", oCnxt.getProperty("project_code"));
                         oBomMppingModel.setProperty("/model_code", oCnxt.getProperty("model_code"));
                         oBomMppingModel.setProperty("/version_number", oCnxt.getProperty("version_number"));
 
-                        oBomMppingModel.setProperty("/mapping_id", oRow.mapping_id);
-                        oBomMppingModel.setProperty("/department_type_code", oRow.department_type_code);
-                        oBomMppingModel.setProperty("/creator_empno", oRow.creator_empno);
-                        oBomMppingModel.setProperty("/eng_change_number", oRow.eng_change_number);
-                        oBomMppingModel.setProperty("/change_reason", oRow.change_reason);
+                        oBomMppingModel.setProperty("/mapping_id", data.mapping_id);
+                        oBomMppingModel.setProperty("/department_type_code", data.department_type_code);
+                        oBomMppingModel.setProperty("/creator_empno", data.creator_empno);
+                        oBomMppingModel.setProperty("/creator_local_name", data.creator_person_info.user_local_name);
+                        oBomMppingModel.setProperty("/eng_change_number", data.eng_change_number);
+                        oBomMppingModel.setProperty("/change_reason", data.change_reason);
 
                         var aAsisData = [];
                         var aTobeData = [];
-                        if(oRow.mappping_dtl) {
-                            oRow.mappping_dtl.results.forEach(function(oDtl) {
+                        if(data.mappping_dtl) {
+                            data.mappping_dtl.results.forEach(function(oDtl) {
                                 if(oDtl.change_info_code === "Old") {
                                     aAsisData.push({material_code : oDtl.material_code});
                                 } else if(oDtl.change_info_code === "New") {
@@ -335,7 +369,7 @@ sap.ui.define([
         },
 
         onBomMappingDeletePress : function() {
-            MessageBox.confirm("삭제 하시겠습니까?", {
+            MessageBox.confirm(this.I18N.getText("/NCM00003"), {//삭제 하시겠습니까?
                 title : "Delete",
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
@@ -359,7 +393,6 @@ sap.ui.define([
                     user_id              : this.oUerInfo.user_id
                 }
             }
-
             var targetName = "TcDeleteMcstBomProc";
             var url = "/dp/tc/projectMgt/webapp/srv-api/odata/v4/dp.McstBomMgtV4Service/" + targetName;
             $.ajax({
@@ -369,7 +402,7 @@ sap.ui.define([
                 contentType: "application/json",
                 success: function(data){
                     console.log("create Proc callback Data", data);
-                    MessageToast.show("삭제되었습니다.", {at: "center center"});
+                    MessageToast.show(this.I18N.getText("/NCM01002"), {at: "center center"});//삭제하였습니다.
                     if(data.return_code === "OK") {
                         this.onBomMappingExit();
                         this._getPartList();
@@ -379,13 +412,42 @@ sap.ui.define([
                 }.bind(this),
                 error: function(e){
                     console.log("error", e);
+                    let failMsg = this.I18N.getText("/EPG00001");//삭제 실패 하였습니다.
                     let eMessage = JSON.parse(e.responseText).error.message;
-                    MessageBox.show("삭제 실패 하였습니다.\n\n" + "["+eMessage+"]", {at: "Center Center"});
-                }
+                    MessageBox.show(failMsg+"\n\n" + "["+eMessage+"]", {at: "Center Center"});
+                }.bind(this)
             });
         },
 
         onBomMappingSavePress: function() {
+            var oBomMappingModel = this.getModel("bomMappingModel");
+            var oBomMappData = oBomMappingModel.getData();
+            let sItem = "";
+            if(!oBomMappData.department_type_code) {
+                sItem = this.I18N.getText("/DEPARTMENT");
+                //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
+                MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
+                return;
+            }
+            if(!oBomMappData.creator_empno) {
+                sItem = this.I18N.getText("/PERSON");
+                //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
+                MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
+                return;
+            }
+            if(!oBomMappData.eng_change_number) {
+                sItem = "ECO/ECR No.";
+                //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
+                MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
+                return;
+            }
+            if(!oBomMappData.change_reason) {
+                sItem = this.I18N.getText("/REASON");
+                //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
+                MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
+                return;
+            }
+
             MessageBox.confirm("저장 하시겠습니까?", {
                 title : "Save",
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -408,9 +470,9 @@ sap.ui.define([
             var oInputData = {
                 inputData : {
                     tenant_id            : oBomMappData.tenant_id,
-                    project_code         : oBomMappData.project_code,
-                    model_code           : oBomMappData.model_code,
-                    version_number       : oBomMappData.version_number,
+                    //project_code         : oBomMappData.project_code,
+                    //model_code           : oBomMappData.model_code,
+                    //version_number       : oBomMappData.version_number,
                     user_id              : this.oUerInfo.user_id,
                     //old_tbl              : aOldData,
                     new_tbl              : aNewData,
@@ -425,33 +487,11 @@ sap.ui.define([
                 oInputData.inputData.mapping_id = oBomMappData.mapping_id;
             } else {//create
                 oInputData.inputData.old_tbl = aOldData;
+                oInputData.inputData.project_code = oBomMappData.project_code;
+                oInputData.inputData.model_code = oBomMappData.model_code;
+                oInputData.inputData.version_number = oBomMappData.version_number;
             }
-            let sItem = "";
-            if(!oInputData.inputData.department_type_code) {
-                sItem = this.I18N.getText("/DEPARTMENT");
-                //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
-                MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
-                return;
-            }
-            if(!oInputData.inputData.creator_empno) {
-                sItem = this.I18N.getText("/PERSON");
-                //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
-                MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
-                return;
-            }
-            if(!oInputData.inputData.eng_change_number) {
-                sItem = "ECO/ECR No.";
-                //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
-                MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
-                return;
-            }
-            if(!oInputData.inputData.change_reason) {
-                sItem = this.I18N.getText("/REASON");
-                //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
-                MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
-                return;
-            }
-
+            
             var targetName = oInputData.inputData.mapping_id ? "TcUpdateMcstBomProc" : "TcCreateMcstBomProc";
             var url = "/dp/tc/projectMgt/webapp/srv-api/odata/v4/dp.McstBomMgtV4Service/" + targetName;
             $.ajax({
@@ -462,6 +502,7 @@ sap.ui.define([
                 success: function(data){
                     console.log("create Proc callback Data", data);
                     if(data.return_code === "OK") {
+                        MessageToast.show(this.I18N.getText("/NCM01001"), {at: "center center"});//저장하였습니다.
                         this.onBomMappingExit();
                         this._getPartList();
                     } else {
@@ -471,7 +512,7 @@ sap.ui.define([
                 error: function(e){
                     console.log("error", e);
                     let eMessage = JSON.parse(e.responseText).error.message;
-                    MessageBox.show("맵핑 실패 하였습니다.\n\n" + "["+eMessage+"]", {at: "Center Center"});
+                    MessageBox.show("Mapping failed.\n\n" + "["+eMessage+"]", {at: "Center Center"});
                 }
             });
         },
@@ -504,14 +545,14 @@ sap.ui.define([
             aList.forEach(function(oRow) {
                 if(oRow._row_state_) {
                     let oObj = {
-                        tenant_id : oRow.tenant_id,
-                        project_code : oRow.project_code,
-                        model_code : oRow.model_code,
-                        version_number : oRow.version_number,
+                        tenant_id : this.getModel("detailModel").getProperty("/tenant_id"),
+                        project_code : this.getModel("detailModel").getProperty("/project_code"),
+                        model_code : this.getModel("detailModel").getProperty("/model_code"),
+                        version_number : this.getModel("detailModel").getProperty("/version_number"),
                         material_code : oRow.material_code,
                         commodity_code : oRow.commodity_code,
                         uom_code : oRow.uom_code,
-                        material_reqm_quantity : oRow.material_reqm_quantity,
+                        material_reqm_quantity : parseFloat(oRow.material_reqm_quantity),
                         buyer_empno : oRow.buyer_empno,
                         mapping_id : oRow.mapping_id,
                         crud_type_code : oRow._row_state_
@@ -525,7 +566,6 @@ sap.ui.define([
                             user_id : this.oUerInfo.user_id
                     }
                 };
-            debugger;
             var targetName = "TcSaveMcstPartListProc";
             var url = "/dp/tc/projectMgt/webapp/srv-api/odata/v4/dp.McstBomMgtV4Service/" + targetName;
             $.ajax({
@@ -534,9 +574,9 @@ sap.ui.define([
                 data : JSON.stringify(oInputData),
                 contentType: "application/json",
                 success: function(data){
-                    debugger;
                     console.log("draft Proc callback Data", data);
                     if(data.return_code === "OK") {
+                        MessageToast.show(this.I18N.getText("/NCM01001"), {at: "center center"});//저장하였습니다.
                         this._getPartList();
                     } else {
                         MessageToast.show(data.return_msg, {at: "Center Center"});
@@ -545,7 +585,7 @@ sap.ui.define([
                 error: function(e){
                     console.log("error", e);
                     let eMessage = JSON.parse(e.responseText).error.message;
-                    MessageBox.show("Draft 실패 하였습니다.\n\n" + "["+eMessage+"]", {at: "Center Center"});
+                    MessageBox.show("Draft failed.\n\n" + "["+eMessage+"]", {at: "Center Center"});
                 }
             });
 
@@ -554,13 +594,33 @@ sap.ui.define([
         onConfirmNext: function() {
             MessageToast.show("준비중", {at: "center center"});            
         },
+        
+        onInputWithEmployeeValuePress: function(oEvent){
+            //let oDialog = this.byId("employeeDialogBomMapping");
+            let oDialog = sap.ui.core.Fragment.byId("fragmentBomMapping","employeeDialogBomMapping")
+            let sModelName = oEvent.getSource().data("modelName");
+            let sCodePath = oEvent.getSource().data("codePath");
+            let sTextPath = oEvent.getSource().data("textPath");
+            let oModelNameTemplate = new sap.ui.core.CustomData({key:"modelName"});
+                oModelNameTemplate.setValue(sModelName);
+            let oCodePathTemplate = new sap.ui.core.CustomData({key:"codePath"});
+                oCodePathTemplate.setValue(sCodePath);
+            let oTextPathTemplate = new sap.ui.core.CustomData({key:"textPath"});
+                oTextPathTemplate.setValue(sTextPath);
 
-        onInputWithEmployeeValuePress: function(oEvent) {
-            sap.ui.core.Fragment.byId("fragmentBomMapping", "employeeDialog").open();
+            oDialog.addCustomData(oModelNameTemplate);
+            oDialog.addCustomData(oCodePathTemplate);
+            oDialog.addCustomData(oTextPathTemplate);
+            oDialog.open();
         },
 
         onEmployeeDialogApplyPress: function(oEvent){
-            sap.ui.core.Fragment.byId("fragmentBomMapping", "inputWithEmployeeValueHelp", ).setValue(oEvent.getParameter("item").user_local_name);
+            //debugger;
+            let sModelName  = oEvent.getSource().data("modelName");
+            let sCodePath = oEvent.getSource().data("codePath");
+            let sTextPath = oEvent.getSource().data("textPath");
+            this.getModel(sModelName).setProperty(sCodePath, oEvent.getParameter("item").employee_number);
+            this.getModel(sModelName).setProperty(sTextPath, oEvent.getParameter("item").user_local_name);
         },
 
         _openBomMappingDialog : function(bomMappingModel) {
@@ -634,15 +694,15 @@ sap.ui.define([
             var rs = true;
             $.each(aList, function(nIdx, oRow) {
                 if(!oRow.material_code) {
-                    MessageToast.show(this.I18N.getText("/MATERIAL_CODE") + "는(은) 필수 입력값 입니다.", {at : "center center"});
+                    MessageToast.show(this.I18N.getText("/MATERIAL_CODE") + " 는(은) 필수 입력값 입니다.", {at : "center center"});
                     rs = false;
                     return false;
                 } else if(!oRow.uom_code) {
-                    MessageToast.show(this.I18N.getText("/UNIT") + "는(은) 필수 입력값 입니다.", {at : "center center"});
+                    MessageToast.show(this.I18N.getText("/UNIT") + " 는(은) 필수 입력값 입니다.", {at : "center center"});
                     rs = false;
                     return false;
                 } else if(!oRow.material_reqm_quantity) {
-                    MessageToast.show(this.I18N.getText("/REQ_QTY") + "는(은) 필수 입력값 입니다.", {at : "center center"});
+                    MessageToast.show(this.I18N.getText("/REQ_QTY") + " 는(은) 필수 입력값 입니다.", {at : "center center"});
                     rs = false;
                     return false;
                 }

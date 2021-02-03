@@ -64,7 +64,8 @@
 								items="{details>/MdCategoryLng}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
-								mode="SingleSelectLeft" 
+								mode="SingleSelectLeft"
+                                autoPopinMode="true" 
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>

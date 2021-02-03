@@ -1,0 +1,223 @@
+{
+    "_version": "1.12.0",
+    "sap.app": {
+        "id": "sp.np.netPriceMgt",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "ach": "ach",
+        "sourceTemplate": {
+            "id": "html5moduletemplates.basicSAPUI5ApplicationProjectModule",
+            "version": "1.40.12"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "srv-api/odata/v2/sp.netpriceApprovalService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "localUri": "localService/metadata.xml"
+                }
+            },
+            "detailService": {
+                "uri": "srv-api/odata/v2/sp.netpriceApprovalDetailService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "localUri": "localService/metadata.xml"
+                }
+            },
+            "vendorPoolService": {
+                "uri": "srv-api/odata/v2/pg.vendorPoolSearchService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "localUri": "localService/metadata.xml"
+                }
+            },
+            "commonService": {
+                "uri": "srv-api/odata/v2/cm.util.CommonService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "localUri": "localService/metadata.xml"
+                }
+            },
+            "negoHeaderService": {
+                "uri": "srv-api/odata/v2/sp.negoHeadersService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "sourcingService": {
+                "uri": "srv-api/odata/v2/sp.sourcingV4Service/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            }
+        }
+    },
+    "sap.cloud": {
+        "public": true,
+        "service": "sppCap_ui_dev"
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": false,
+        "rootView": {
+            "viewName": "sp.np.netPriceMgt.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "app"
+        },
+        "dependencies": {
+            "minUI5Version": "1.60.1",
+            "libs": {
+                "sap.ui.core": {},
+                "sap.m": {},
+                "sap.ui.layout": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "sp.np.netPriceMgt.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
+            "detail": {
+                "dataSource": "detailService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
+            "vendorPool": {
+                "dataSource": "vendorPoolService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
+            "util": {
+                "dataSource": "commonService",
+                "preload": true,
+                "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": false,
+                "useBatch": true
+                }
+            },
+            "negoHeder": {
+                "dataSource": "negoHeaderService",
+                "preload": true,
+                "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": false,
+                "useBatch": true
+                }
+            },
+            "sourcing": {
+                "dataSource": "sourcingService",
+                "preload": true,
+                "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": false,
+                "useBatch": true
+                }
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "resourceRoots": {
+            "ext.lib": "../../../../lib",
+            "dp": "../../../../dp",
+            "cm": "../../../../cm",
+            "ext.pg": "../../../../pg"
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "async": true,
+                "viewPath": "sp.np.netPriceMgt.view",
+                "controlAggregation": "pages",
+                "controlId": "app",
+                "clearControlAggregation": false,
+                "transition": "slip"
+            },
+            "routes": [
+                {
+                    "pattern": "",
+                    "name": "NetPriceMgtList",
+                    "target": "NetPriceMgtList"
+                },
+                {
+                    "pattern": "NetPriceMgtDetail/{pMode}",
+                    "name": "NetPriceMgtDetail",
+                    "target": "NetPriceMgtDetail"
+                }
+            ],
+            "targets": {
+                "NetPriceMgtList": {
+                    "viewId": "NetPriceMgtList",
+                    "viewName": "NetPriceMgtList"
+                },
+                "NetPriceMgtDetail": {
+                    "viewId": "NetPriceMgtDetail",
+                    "viewName": "NetPriceMgtDetail"
+                }
+            }
+        }
+    }
+}

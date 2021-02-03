@@ -95,6 +95,14 @@ sap.ui.define([
             }
         }
 
+        , onInputWithEmployeeValuePress: function(){
+            this.byId("employeeDialog").open();
+        }
+
+        , onEmployeeDialogApplyPress: function(oEvent){
+            this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
+        }
+
         , onExcelExportPress: function() {
             MessageToast.show("준비중", {at: "Center Center"});
             return;

@@ -90,6 +90,7 @@
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
 								mode="SingleSelectLeft" 
+                                autoPopinMode="true" 
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>

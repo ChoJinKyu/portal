@@ -44,8 +44,7 @@
         "uri": "srv-api/odata/v2/cm.CurrencyMgtService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "2.0",
-          "localUri": "localService/metadata.xml"
+          "odataVersion": "2.0"
         }
       },
         "orgCodeMgtService": {
@@ -161,7 +160,7 @@
         "settings": {
           "defaultBindingMode": "TwoWay",
           "defaultCountMode": "Inline",
-          "refreshAfterChange": false,
+          "refreshAfterChange": true,
           "useBatch": true
         }
       }, 
@@ -233,6 +232,11 @@
           "pattern": "basePriceDetail",
           "name": "basePriceDetail",
           "target": "basePriceDetail"
+        },
+        {
+          "pattern": "internalPriceDetail",
+          "name": "internalPriceDetail",
+          "target": "internalPriceDetail"
         }
       ],
       "targets": {
@@ -243,6 +247,10 @@
         "basePriceDetail": {
           "viewId": "basePriceDetail",
           "viewName": "BasePriceDetail"
+        },
+        "internalPriceDetail": {
+          "viewId": "internalPriceDetail",
+          "viewName": "internalPriceDetail"
         }
       }
     }

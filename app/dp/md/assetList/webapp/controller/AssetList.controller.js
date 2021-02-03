@@ -55,18 +55,18 @@ sap.ui.define([
                 oResourceBundle = this.getResourceBundle();
 
             // Model used to manipulate control states
-            oViewModel = new JSONModel({
-                assetListTableTitle: oResourceBundle.getText("assetListTableTitle"),
-                tableNoDataText: oResourceBundle.getText("tableNoDataText")
-            });
-            this.setModel(oViewModel, "assetListView");
+            // oViewModel = new JSONModel({
+            //     assetListTableTitle: oResourceBundle.getText("assetListTableTitle"),
+            //     tableNoDataText: oResourceBundle.getText("tableNoDataText")
+            // });
+            // this.setModel(oViewModel, "assetListView");
 
-            // Add the assetList page to the flp routing history
-            this.addHistoryEntry({
-                title: oResourceBundle.getText("assetListViewTitle"),
-                icon: "sap-icon://table-view",
-                intent: "#Template-display"
-            }, true);
+            // // Add the assetList page to the flp routing history
+            // this.addHistoryEntry({
+            //     title: oResourceBundle.getText("assetListViewTitle"),
+            //     icon: "sap-icon://table-view",
+            //     intent: "#Template-display"
+            // }, true);
 
             this._doInitSearch();
             //this._doInitTablePerso();
@@ -82,7 +82,6 @@ sap.ui.define([
                 customDataKey: "assetList",
                 persoService: AssetListPersoService
             }).setTable(this.byId("moldMstTable"));
-            //console.log(this.byId("moldMstTable"));
             
             this.getRouter().getRoute("assetList").attachPatternMatched(this._onRoutedThisPage, this);
         },
@@ -92,11 +91,11 @@ sap.ui.define([
 
         },
 
-        // onAfterRendering: function () {
-        //     //this.getModel().setDeferredGroups(["bindReceipt", "cancelBind", "delete", "receipt"]);
-        //     this.byId("pageSearchButton").firePress();
-        //     return;
-        // },
+        onAfterRendering: function () {
+            //this.getModel().setDeferredGroups(["bindReceipt", "cancelBind", "delete", "receipt"]);
+            this.byId("pageSearchButton").firePress();
+            return;
+        },
 
         /**
          * @private
@@ -105,20 +104,21 @@ sap.ui.define([
         _doInitSearch: function () {
             
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
-
+            
             this.getView().setModel(this.getOwnerComponent().getModel());
-            //this.getView().setModel(this.getOwnerComponent().getModel());
-             this.setPlant('LGESL');
+            this.setPlant('LGESL');
             //접속자 법인 사업부로 바꿔줘야함
             this.getView().byId("searchCompanyS").setSelectedKeys(['LGESL']);
             this.getView().byId("searchCompanyE").setSelectedKeys(['LGESL']);
             this.getView().byId("searchPlantS").setSelectedKeys(['A040']);
             this.getView().byId("searchPlantE").setSelectedKeys(['A040']);
+            
         },
 
         
 
         _onRoutedThisPage : function(){
+            this.getModel("assetListView").setProperty("/headerExpanded", true);
             this._segmentSrch();
         },
 
@@ -128,7 +128,7 @@ sap.ui.define([
                 oModel = this.getModel("SegmentedItem") ,
                 codeName = this.getModel('I18N').getText("/ALL")
                 ;
-            console.log("codeName >>>>", this.getModel('I18N'));
+            console.log("codeName >>>>", codeName);
              var aSearchFilters = [];
                 aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101'));
                 aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'DP_MD_ASSET_STATUS'));
@@ -156,13 +156,14 @@ sap.ui.define([
 
         setPlant: function(companyCode){
             
+
             var filter = new Filter({
-                            filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
-                                    new Filter("company_code", FilterOperator.EQ, companyCode)
-                                ],
-                                and: true
-                        });
+                    filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
+                            new Filter("company_code", FilterOperator.EQ, companyCode)
+                        ],
+                        and: true
+                });
 
             var bindItemInfo = {
                     path: '/Divisions',
@@ -172,7 +173,7 @@ sap.ui.define([
                     })
                 };
 
-            console.log(bindItemInfo);
+
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
             this.getView().byId("searchPlantE").bindItems(bindItemInfo);
         },
@@ -247,7 +248,6 @@ sap.ui.define([
 
                 selectedKeys.push(item.getKey());
             });
-         
             this.getView().byId(idPreFix + "E").setSelectedKeys(selectedKeys);
             this.getView().byId(idPreFix + "S").setSelectedKeys(selectedKeys);
         },

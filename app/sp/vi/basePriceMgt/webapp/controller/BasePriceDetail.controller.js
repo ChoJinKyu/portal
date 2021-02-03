@@ -54,13 +54,43 @@ sap.ui.define([
             this.getModel("approverModel").setProperty("/appr_type",[{code : "10", text:"승인자"},{code : "20", text:"합의자"}]);
             this.getModel("approverModel").setProperty("/details",[]);
     
- 
+            this.setModel(new JSONModel(), "currModel");
+            
+            this.getCurrSearch();
 
             // Router설정. Detail 화면이 호출될 때마다 _getBasePriceDetail 함수 호출
             this.oRouter = this.getOwnerComponent().getRouter();
             this.oRouter.getRoute("basePriceDetail").attachPatternMatched(this._getBasePriceDetail, this);
 
         }
+
+        , getCurrSearch : function (){
+            var oView = this.getView();
+            var oRootModel = this.getOwnerComponent().getModel("rootModel");
+            var oCurrModel =this.getModel("currModel");
+            oCurrModel.setSizeLimit(1000);
+            oView.setBusy(true);
+            debugger;
+
+            // 통화 조회
+            var oCurryModel =  this.getOwnerComponent().getModel("currencyODataModel");
+            var aOrgCompFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
+            oCurryModel.read("/Currency", {
+                filters : [aOrgCompFilter],
+                success : function(data){
+                    oView.setBusy(false);
+                    if( data && data.results ) {
+                        
+                        oCurrModel.setProperty("/org_Currency", data.results);    
+                    }
+                },
+                error : function(data){
+                    console.log("error", data);
+                }
+            });
+
+        }
+
 
         , onRowSelectadd : function (selected){
             var management = null;
@@ -113,7 +143,6 @@ sap.ui.define([
          * 체크된 detail 데이터 삭제
          */
         , onListRowDelete : function (oEvent) {
-            debugger;
             var oDetailModel = this.getModel("detailModel"),
                 aDetails = oDetailModel.getProperty("/details"),
                 oDetailTable = oEvent.getSource().getParent().getParent();
@@ -435,6 +464,7 @@ sap.ui.define([
         }
 
         , _SendDataModel : function(approval_status_code){    
+            debugger;
 
             var oDetailModel = this.getModel("detailModel");
             var oData = oDetailModel.getData();
@@ -555,9 +585,6 @@ sap.ui.define([
                     management = "MPRICE"
                 }
                 
-                
-                
-
                 var oNewPriceObj = {};
                     oNewPriceObj['tenant_id'] = oData.tenant_id;
                     oNewPriceObj['approval_number'] = null;                       //핸들러에서 부여
@@ -589,7 +616,6 @@ sap.ui.define([
                     oNewPriceObj['update_user_id'] = oData.create_user_id;                    
                 aPriceResult.push(oNewPriceObj);
             });
-            debugger;
 
              for (var i=0; i<=aPriceResult.length-1; i++){
                 if (!aPriceResult[i].bizdivision_code){
@@ -621,6 +647,11 @@ sap.ui.define([
                     MessageBox.show("공급업체코드는 필수입니다. ");
                     return;
                 }
+
+                if (!aPriceData[i].basePriceUnit){
+                    MessageBox.show("가격단위는 필수입니다. ");
+                    return;
+                }
             
                 if (aPriceResult[i].apply_start_yyyymm < String(date).substring(0,6) ){
                     MessageBox.show("적용시작일자가 현재월보다 이전월입니다.");
@@ -631,6 +662,7 @@ sap.ui.define([
                     MessageBox.show("적용종료일자가가 적용시작일자보다 적습니다.");
                     return;
                 }
+                
 
                 var t = String(aPriceResult[i].base_price);
                 if(t.indexOf('.') != -1){
@@ -790,7 +822,7 @@ sap.ui.define([
                 //oDetailViewModel.setProperty("/detailsLength", 0);
                 //oDetailViewModel.setProperty("/viewMode", true);
 
-                this._setTableFragment(oRootModel.getProperty("/selectedApprovalType"));
+                //this._setTableFragment(oRootModel.getProperty("/selectedApprovalType"));
             }
 
             //this.setRichEditor();
@@ -839,7 +871,6 @@ sap.ui.define([
           * Base Price 라인 추가
           */
         , onApprRowdd: function () {
-            debugger;
             
             var oView = this.getView();
             var oModel = this.getModel("approverModel");
@@ -883,7 +914,6 @@ sap.ui.define([
                 });
 
                 this.oApprEmployeeDialog.attachEvent("apply", function(oEvent){
-                    debugger;
                     var oSelectedDialogItem = oEvent.getParameter("item");
                     this._oDetail.empNo = oSelectedDialogItem.employee_number;
                     this._oDetail.empNM = oSelectedDialogItem.user_local_name;
@@ -946,7 +976,6 @@ sap.ui.define([
         }
 
         , fPointCheck : function (val){  //f 는 객체, val은 변수값, point는 소수점 자리수
-            debugger;
             var t = val;
             var point = 4;
             if(t.indexOf('.') != -1){

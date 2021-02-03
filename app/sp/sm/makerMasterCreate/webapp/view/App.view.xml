@@ -1,0 +1,16 @@
+<mvc:View
+	controllerName="sp.sm.makerMasterCreate.controller.App"
+	displayBlock="true"
+	xmlns="sap.m"
+	xmlns:f="sap.f"
+	xmlns:mvc="sap.ui.core.mvc">
+	<App id="app">
+		<f:FlexibleColumnLayout
+			id="fcl"
+			autoFocus="false"
+			restoreFocusOnBackNavigation="true"
+			columnResize="onColumnResize"
+			stateChange="onStateChanged"
+			backgroundDesign="Translucent"/>
+	</App>
+</mvc:View>

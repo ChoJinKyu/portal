@@ -748,7 +748,6 @@ sap.ui.define([
 
             var sId = toggleButtonId.split('--');
             var id = sId[sId.length-1];
-            console.log(id);
             var page = ""
             var appTypeCode = "";
             var company_code = this.byId("searchCompanyF").getSelectedKey();
@@ -758,30 +757,25 @@ sap.ui.define([
                 return;
             } 
             
-            if(id == undefined){       
-                MessageBox.error("품의서 유형을 선택해주세요");
-                return;
+            if(id.indexOf("localBudget") > -1){
+                approvalTarget = "budgetExecutionApproval"
+                appTypeCode = "B"
+            }else if(id.indexOf("supplierSelection") > -1){
+                approvalTarget = "participatingSupplierSelection"
+                appTypeCode = "E"
+            }else if(id.indexOf("localOrder") > -1){
+                approvalTarget = "purchaseOrderLocalApproval"
+                appTypeCode = "V"
+            }else if(id.indexOf("receipt") > -1){
+                approvalTarget ="moldRecepitApproval"
+                appTypeCode = "I"
+            }else if(id.indexOf("export") > -1){
+                appTypeCode ="X"  
+            }else if(id.indexOf("repModCompletion") > -1){ // 7. 개조 & 수리 완료 보고
+                approvalTarget ="rrcrReport"
+                appTypeCode ="C"
             }
-            else{
-                if(id.indexOf("localBudget") > -1){
-                    approvalTarget = "budgetExecutionApproval"
-                    appTypeCode = "B"
-                }else if(id.indexOf("supplierSelection") > -1){
-                    approvalTarget = "participatingSupplierSelection"
-                    appTypeCode = "E"
-                }else if(id.indexOf("localOrder") > -1){
-                    approvalTarget = "purchaseOrderLocalApproval"
-                    appTypeCode = "V"
-                }else if(id.indexOf("receipt") > -1){
-                    approvalTarget ="moldRecepitApproval"
-                    appTypeCode = "I"
-                }else if(id.indexOf("export") > -1){
-                    appTypeCode ="X"  
-                }else if(id.indexOf("repModCompletion") > -1){ // 7. 개조 & 수리 완료 보고
-                    approvalTarget ="rrcrReport"
-                    appTypeCode ="C"
-                }
-            }
+            
             
 
             // else if(id.indexOf("importBudget") > -1){
@@ -802,20 +796,27 @@ sap.ui.define([
             //     appTypeCode ="E"
             // }
            
-            
-
-            
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
+            var apprSelection = 0;
             for (var i = 0; i < groupId.length; i++) {
                 if (groupId[i].getPressed() == true) {
-                    this.getRouter().navTo(approvalTarget, {
-                        company_code: company_code
-                        , plant_code: plant_code
-                        , approval_type_code: appTypeCode
-                        , approval_number: "New"
-                    });
+                    apprSelection = apprSelection+1;
                 }
             }
+            
+            if(apprSelection > 0){
+                this.getRouter().navTo(approvalTarget, {
+                    company_code: company_code
+                    , plant_code: plant_code
+                    , approval_type_code: appTypeCode
+                    , approval_number: "New"
+                });
+            }else{
+                MessageBox.error("품의서 유형을 선택해주세요");
+                return;
+            }
+                
+            
         },
 
         createPopupClose: function (oEvent) {

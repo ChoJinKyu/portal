@@ -1,7 +1,5 @@
 /* PR 신규생성 */
 PROCEDURE OP_PU_PR_CREATE_SAVE_PROC (
-        IN I_TENANT_ID NVARCHAR(5),        
-        IN I_COMPANY_CODE NVARCHAR(10),
         IN I_PR_NUMBER NVARCHAR(50), 
         IN I_M_TABLE TABLE( TENANT_ID NVARCHAR(5), 
 							COMPANY_CODE NVARCHAR(10), 
@@ -22,23 +20,20 @@ PROCEDURE OP_PU_PR_CREATE_SAVE_PROC (
                             APPROVAL_CONTENTS NCLOB,
 							UPDATE_USER_ID NVARCHAR(255)
         ),
-        IN I_D_TABLE TABLE( TENANT_ID NVARCHAR(5), 
-							COMPANY_CODE NVARCHAR(10), 
-							PR_NUMBER NVARCHAR(50), 
-							PR_ITEM_NUMBER NVARCHAR(10), 
+        IN I_D_TABLE TABLE( PR_ITEM_NUMBER NVARCHAR(10), 
 							ORG_TYPE_CODE NVARCHAR(2), 
 							ORG_CODE NVARCHAR(10), 
 							MATERIAL_CODE NVARCHAR(40), 
 							MATERIAL_GROUP_CODE NVARCHAR(10),
 							PR_DESC NVARCHAR(100),
-							PR_QUANTITY NVARCHAR(34),
+							PR_QUANTITY NVARCHAR(40),
 							PR_UNIT NVARCHAR(3),
                             REQUESTOR_EMPNO NVARCHAR(30),
                             REQUESTOR_NAME NVARCHAR(50),
                             DELIVERY_REQUEST_DATE NVARCHAR(10), 
                             BUYER_EMPNO NVARCHAR(30),
                             PURCHASING_GROUP_CODE NVARCHAR(3),
-                            ESTIMATED_PRICE DECIMAL(34),
+                            ESTIMATED_PRICE DECIMAL(30,10),
                             CURRENCY_CODE NVARCHAR(3),
                             PRICE_UNIT NVARCHAR(5),
                             PR_PROGRESS_STATUS_CODE NVARCHAR(30),
@@ -67,16 +62,14 @@ BEGIN
     DECLARE V_IDX INT := 0;
     
 	DECLARE V_TENANT_ID NVARCHAR(5);
+	DECLARE V_COMPANY_CODE NVARCHAR(10);
 	DECLARE V_PR_NUMBER NVARCHAR(50);
     DECLARE V_PR_NUMBER_SEQNO BIGINT;    
     DECLARE V_REQUEST_DATE DATE;
 
     /* 상세자료 cursor */
     DECLARE CURSOR curDtlList FOR
-        SELECT 	TENANT_ID  ,
-				COMPANY_CODE,
-				PR_NUMBER ,
-				PR_ITEM_NUMBER ,
+        SELECT 	PR_ITEM_NUMBER ,
 				ORG_TYPE_CODE ,
 				ORG_CODE ,
 				MATERIAL_CODE,
@@ -114,10 +107,10 @@ BEGIN
 		ROLLBACK;
 		O_RTN_MSG = SELECT ::SQL_ERROR_CODE RETURN_CODE, ::SQL_ERROR_MESSAGE RETURN_MSG FROM DUMMY;
     END;
-    
-    
-    
+        
+    /* PR Key value setting */
     V_TENANT_ID = :I_M_TABLE.TENANT_ID[1];
+    V_COMPANY_CODE = :I_M_TABLE.COMPANY_CODE[1];
     V_REQUEST_DATE = TO_DATE(:I_M_TABLE.REQUEST_DATE[1]);
 
 	
@@ -247,21 +240,21 @@ BEGIN
 
 	/* 품목 삭제 */
 	DELETE FROM OP_PU_PR_DTL
-	WHERE 	TENANT_ID 		= :I_TENANT_ID
-	AND		COMPANY_CODE	= :I_COMPANY_CODE
-	AND		PR_NUMBER		= :I_PR_NUMBER
+	WHERE 	TENANT_ID 		= :V_TENANT_ID
+	AND		COMPANY_CODE	= :V_COMPANY_CODE
+	AND		PR_NUMBER		= :V_PR_NUMBER
     ;
 
 	DELETE FROM OP_PU_PR_ACCOUNT
-	WHERE 	TENANT_ID 		= :I_TENANT_ID
-	AND		COMPANY_CODE	= :I_COMPANY_CODE
-	AND		PR_NUMBER		= :I_PR_NUMBER
+	WHERE 	TENANT_ID 		= :V_TENANT_ID
+	AND		COMPANY_CODE	= :V_COMPANY_CODE
+	AND		PR_NUMBER		= :V_PR_NUMBER
     ;
 
     DELETE FROM OP_PU_PR_SERVICE
-	WHERE 	TENANT_ID 		= :I_TENANT_ID
-	AND		COMPANY_CODE	= :I_COMPANY_CODE
-	AND		PR_NUMBER		= :I_PR_NUMBER
+	WHERE 	TENANT_ID 		= :V_TENANT_ID
+	AND		COMPANY_CODE	= :V_COMPANY_CODE
+	AND		PR_NUMBER		= :V_PR_NUMBER
     ;
     
 	
@@ -304,8 +297,8 @@ BEGIN
             SYSTEM_CREATE_DTM,
             SYSTEM_UPDATE_DTM
 		) VALUES (
-			curDtl.TENANT_ID , 
-			curDtl.COMPANY_CODE,
+			:V_TENANT_ID , 
+			:V_COMPANY_CODE,
 			:V_PR_NUMBER ,
 			curDtl.PR_ITEM_NUMBER,
 			curDtl.ORG_TYPE_CODE ,
@@ -362,8 +355,8 @@ BEGIN
                 SYSTEM_CREATE_DTM,
                 SYSTEM_UPDATE_DTM
             ) VALUES (
-                curDtl.TENANT_ID , 
-                curDtl.COMPANY_CODE,
+                :V_TENANT_ID , 
+                :V_COMPANY_CODE,
                 :V_PR_NUMBER ,
                 curDtl.PR_ITEM_NUMBER,
                 1 ,
@@ -404,8 +397,8 @@ BEGIN
                 SYSTEM_CREATE_DTM,
                 SYSTEM_UPDATE_DTM
             ) VALUES (
-                curDtl.TENANT_ID , 
-                curDtl.COMPANY_CODE,
+                :V_TENANT_ID , 
+                :V_COMPANY_CODE,
                 :V_PR_NUMBER ,
                 curDtl.PR_ITEM_NUMBER,
                 1 ,

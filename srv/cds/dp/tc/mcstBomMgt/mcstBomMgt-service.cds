@@ -38,6 +38,7 @@ service McstBomMgtService {
              , msi.material_desc
              , msi.material_spec
              , msi.base_uom_code
+             , uom.uom_name
              , msi.material_group_code
              , msi.purchasing_uom_code
              , msi.variable_po_unit_indicator
@@ -50,9 +51,15 @@ service McstBomMgtService {
              , msi.delete_mark
              , mmo.buyer_empno
           from mtlMst.Mm_Material_Mst msi
-     left join mtlOrg.Mm_Material_Org mmo
+          left join mtlOrg.Mm_Material_Org mmo
             on msi.tenant_id = mmo.tenant_id
-           and msi.material_code = mmo.material_code;
+           and msi.material_code = mmo.material_code
+          left outer join unitOfMeasure.Mm_Unit_Of_Measure uom
+            on msi.tenant_id = uom.tenant_id
+           and msi.base_uom_code = uom.uom_code
+           and uom.uom_class_code = 'AAAADL'
+           and uom.uom_desc is not null
+           and uom.disable_date is null;
 
     view PartListView as
         select key ppl.tenant_id
