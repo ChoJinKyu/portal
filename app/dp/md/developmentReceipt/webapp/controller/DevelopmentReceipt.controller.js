@@ -109,8 +109,8 @@ sap.ui.define([
             //접속자 법인 사업부로 바꿔줘야함
             this.getView().byId("searchCompanyS").setSelectedKeys(['LGESL']);
             this.getView().byId("searchCompanyE").setSelectedKeys(['LGESL']);
-            this.getView().byId("searchDivisionS").setSelectedKeys(['A040']);//CCZ', 'DHZ', 'PGZ
-            this.getView().byId("searchDivisionE").setSelectedKeys(['A040']);
+            this.getView().byId("searchPlantS").setSelectedKeys(['A040']);//CCZ', 'DHZ', 'PGZ
+            this.getView().byId("searchPlantE").setSelectedKeys(['A040']);
 
             /** Create Date */
             var today = new Date();
@@ -155,8 +155,8 @@ sap.ui.define([
                     key: "{org_code}", text: "[{org_code}] {org_name}"
                 })
             };
-            this.getView().byId("searchDivisionS").bindItems(bindItemInfo);
-            this.getView().byId("searchDivisionE").bindItems(bindItemInfo);
+            this.getView().byId("searchPlantS").bindItems(bindItemInfo);
+            this.getView().byId("searchPlantE").bindItems(bindItemInfo);
         },
 
         /* =========================================================== */
@@ -1006,7 +1006,7 @@ sap.ui.define([
         _getSearchStates: function () {
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
                 company = this.getView().byId("searchCompany" + sSurffix).getSelectedKeys(),
-                division = this.getView().byId("searchDivision" + sSurffix).getSelectedKeys(),
+                division = this.getView().byId("searchPlant" + sSurffix).getSelectedKeys(),
                 status = this.getView().byId("searchStatus" + sSurffix).getSelectedKey(),
                 //status = Element.registry.get(statusSelectedItemId).getText(),
                 receiptFromDate = this.getView().byId("searchCreationDate" + sSurffix).getDateValue(),
@@ -1122,35 +1122,41 @@ sap.ui.define([
             this.copyMultiSelected(oEvent);
 
             var params = oEvent.getParameters();
-            var divisionFilters = [];
+            var plantFilters = [];
 
             if (params.selectedItems.length > 0) {
 
                 params.selectedItems.forEach(function (item, idx, arr) {
 
-                    divisionFilters.push(new Filter({
+                    plantFilters.push(new Filter({
                         filters: [
                             new Filter("tenant_id", FilterOperator.EQ, 'L2101'),
-                            new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
                         and: true
                     }));
                 });
             } else {
-                divisionFilters.push(
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2101'),
-                    new Filter("org_type_code", FilterOperator.EQ, 'AU')
+                plantFilters.push(
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 );
             }
 
             var filter = new Filter({
-                filters: divisionFilters,
-                and: params.selectedItems.length == 1 ? true : false
+                filters: plantFilters,
+                and: false
             });
 
-            this.getView().byId("searchDivisionS").getBinding("items").filter(filter, "Application");
-            this.getView().byId("searchDivisionE").getBinding("items").filter(filter, "Application");
+            var bindInfo = {
+                    path: '/Divisions',
+                    filters: filter,
+                    template: new Item({
+                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                    })
+                };
+
+            this.getView().byId("searchPlantS").bindItems(bindInfo);
+            this.getView().byId("searchPlantE").bindItems(bindInfo);
         },
 
         handleSelectionFinishDiv: function (oEvent) {
