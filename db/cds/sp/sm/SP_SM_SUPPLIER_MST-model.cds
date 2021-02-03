@@ -34,6 +34,8 @@ entity Sm_Supplier_Mst {
         duns_number_4                       : String(4)  	        @title: 'DUNS 번호4' ;
         country_code                        : String(2)  	        @title: '국가코드' ;
         country_name                        : String(30)  	        @title: '국가명' ;
+        region_code                         : String(20)            @title: '지역코드' ;
+        region_name                         : String(50)            @title: '지역명' ;
         zip_code                            : String(20)  	        @title: '우편번호' ;
         local_address_1                     : String(240)  	        @title: '로컬주소1' ;
         local_address_2                     : String(240)  	        @title: '로컬주소2' ;
