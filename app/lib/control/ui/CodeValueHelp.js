@@ -21,6 +21,7 @@ sap.ui.define([
         metadata: {
             properties: {
                 title: { type: "string", group: "Appearance" },
+                draggable: {type: "boolean", group: "Behavior", defaultValue: true },
                 loadWhenOpen: { type: "boolean", group: "Misc", defaultValue: true },
                 closeWhenApplied: { type: "boolean", group: "Misc", defaultValue: true },
                 multiSelection: { type: "boolean", group: "Misc", defaultValue: false },
@@ -61,6 +62,7 @@ sap.ui.define([
             this.oSearchKeyword.attachEvent("change", this.loadData.bind(this));
 
             this.oDialog = new ValueHelpDialog({
+                draggable: this.getProperty("draggable"),
                 closeWhenApplied: this.getProperty("closeWhenApplied"),
                 multiSelection: this.getProperty("multiSelection"),
                 visibleRowCount: this.getProperty("visibleRowCount"),

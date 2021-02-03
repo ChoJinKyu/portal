@@ -31,7 +31,8 @@ sap.ui.define([
                 closeWhenApplied: { type: "boolean", group: "Misc", defaultValue: true },
                 multiSelection: { type: "boolean", group: "Misc", defaultValue: false },
                 keyField: { type: "string", group: "Misc", defaultValue: "key" },
-                textField: { type: "string", group: "Misc", defaultValue: "text" }
+                textField: { type: "string", group: "Misc", defaultValue: "text" },
+                tableOptions: { type: "object", group: "Misc" },
             },
             aggregations: {
                 filters: {
@@ -130,7 +131,8 @@ sap.ui.define([
             oSearchButton.addStyleClass("searchBoxButtonArea");
             oForm.addContent(oSearchButton);
 
-            var oTable = new Table({
+            var oTableOptions = this.getProperty("tableOptions") || {};
+            var oTable = new Table(jQuery.extend(true, {}, oTableOptions, {
                 noDataText: this.getModel("I18N").getText("/NCM01004"),
                 mode: isMultiSelection ? "MultiSelect" : "None",
                 columns: this.getAggregation("columns"),
@@ -143,7 +145,7 @@ sap.ui.define([
                     })
                 },
                 selectionChange: this._onTableItemSelect.bind(this)
-            });
+            }));
             oLayout.addItem(oTable);
             this.oTable = oTable;
 

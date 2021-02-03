@@ -131,13 +131,13 @@ sap.ui.define([
             var oTable = new Table(jQuery.extend(true, {}, oTableOptions, {
                 noData: this.getModel("I18N").getText("/NCM01004"),
                 selectionMode: isMultiSelection ? "MultiToggle" : "Single",
+                selectionBehavior: isMultiSelection ? "Row" : "RowOnly",
                 columns: this.getAggregation("columns"),
                 rows: {
                     path: "/"
                 },
                 visibleRowCountMode: "Fixed",
                 visibleRowCount: this.getProperty("visibleRowCount"),
-                selectionBehavior: "Row",
                 rowSelectionChange: this._onTableItemSelect.bind(this)
             }));
             oLayout.addItem(oTable);
