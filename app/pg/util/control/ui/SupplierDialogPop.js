@@ -81,11 +81,26 @@ sap.ui.define([
             var aFilters = [];
             var sSupplierCodePop = this.oSupplierCodePop.getValue();
             var sSupplierNamePop = this.oSupplierNamePop.getValue();
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
-            aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.languageCd));
-            aFilters.push(new Filter("company_code", FilterOperator.EQ, this.oSearchObj.companyCode)); 
-            aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oSearchObj.orgCode));
-            aFilters.push(new Filter("supplier_type_code", FilterOperator.EQ, this.oSearchObj.orgUnitCode));
+
+            if (!!this.oSearchObj.tanentId) {
+                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
+            }
+
+            if (!!this.oSearchObj.languageCd) {
+                aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.languageCd));
+            }
+
+            if (!!this.oSearchObj.companyCode) {
+                aFilters.push(new Filter("company_code", FilterOperator.EQ, this.oSearchObj.companyCode)); 
+            }
+
+            if (!!this.oSearchObj.orgCode) {
+                aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oSearchObj.orgCode));
+            }
+
+            if (!!this.oSearchObj.orgUnitCode) {
+                aFilters.push(new Filter("supplier_type_code", FilterOperator.EQ, this.oSearchObj.orgUnitCode));
+            }
 
             if (!!sSupplierCodePop) {
                 aFilters.push(new Filter("supplier_code", FilterOperator.Contains, "'" + sSupplierCodePop.toUpperCase() + "'"));
