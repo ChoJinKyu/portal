@@ -29,6 +29,13 @@
                 "settings": {
                     "odataVersion": "2.0"
                 }
+            },
+            "currency": {
+                "uri": "srv-api/odata/v2/cm.CurrencyMgtService/",
+                "type": "OData",
+                "settings": {
+                "odataVersion": "2.0"
+                }
             }
            
         }
@@ -96,6 +103,13 @@
                     "odataVersion": "2.0"
                 },
                 "dataSource": "buyer"
+            },
+            "currency": {
+                "type": "sap.ui.model.odata.v2.ODataModel",
+                "settings": {
+                    "odataVersion": "2.0"
+                },
+                "dataSource": "currency"
             }
 		},
 		"resources": {
@@ -106,7 +120,9 @@
         "resourceRoots": {
             "ext.lib": "../../../../lib",
             "dp.util": "../../../../dp/util",
-            "sp.util": "../../../util"
+            "sp.util": "../../../util",
+            "cm.util": "../../../../cm/util"
+
         },
 		"routing": {
 			"config": {

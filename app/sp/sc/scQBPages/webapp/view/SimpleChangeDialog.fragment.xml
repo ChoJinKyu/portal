@@ -4,7 +4,7 @@
                     xmlns:form="sap.ui.layout.form"
                     class="sapUiSizeCompact"  
                     displayBlock="true"  >
-	<Dialog title="Simple Change" resizable="false" draggable="true" contentWidth="30rem" contentHeight="40rem">
+	<Dialog title="{I18N>/SIMPLE_CHANGE}" resizable="false" draggable="true" contentWidth="30rem" contentHeight="40rem">
         <IconTabBar
 		id="idIconTabBarFiori2"
 		class="sapUiResponsiveContentPadding">

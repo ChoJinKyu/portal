@@ -15,21 +15,21 @@ sap.ui.define([
 ], function (Parent, Renderer, ODataModel, ManagedModel, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
-     var oServiceModel = new ODataModel({
-            serviceUrl: "srv-api/odata/v2/sp.supplierViewService/",
-            defaultBindingMode: "OneWay",
-            defaultCountMode: "Inline",
-            refreshAfterChange: false,
-            useBatch: true
-        }); 
+    //  var oServiceModel = new ODataModel({
+    //         serviceUrl: "srv-api/odata/v2/sp.supplierViewService/",
+    //         defaultBindingMode: "OneWay",
+    //         defaultCountMode: "Inline",
+    //         refreshAfterChange: false,
+    //         useBatch: true
+    //     }); 
 
     var SimpleChangeDialog = Parent.extend("sp.sc.scQBPages.webapp.controller.SimpleChangeDialog", {
 
         metadata: {
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "70em"},
-                keyField: { type: "string", group: "Misc", defaultValue: "supplier_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "supplier_code" },
+                // keyField: { type: "string", group: "Misc", defaultValue: "supplier_code" },
+                // textField: { type: "string", group: "Misc", defaultValue: "supplier_code" },
                 items: { type: "sap.ui.core.Control"}
             }
         },
@@ -38,7 +38,7 @@ sap.ui.define([
 
         createSearchFilters: function(){
 
-            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/SELECT_SUPPLIER"));
+            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/SIMPLE_CHANGE"));
 
             //this.oSearchField = new sap.m.SearchField({ placeholder: "검색"});
             this.oSupplierCode = new Input({submit : this.loadData.bind(this), placeholder:"Search"});
@@ -46,16 +46,16 @@ sap.ui.define([
             this.oSupplierName = new Input({submit : this.loadData.bind(this), placeholder:"Search"});
             this.oTaxId = new Input({submit : this.loadData.bind(this), placeholder:"Search"});
             this.oOldSupplierCode = new Input({submit : this.loadData.bind(this), placeholder:"Search"});
-            this.oStatus = new sap.m.SegmentedButton({
-                 items : {
-                    path : "SUPPLIERVIEW>/supplierStatus",
-                    template: new sap.m.SegmentedButtonItem({
-                        key :"{SUPPLIERVIEW>code}",
-                        text :"{SUPPLIERVIEW>code_name}"
-                    })
-                }, 
-                selectionChange : this.loadData.bind(this)
-            });
+            // this.oStatus = new sap.m.SegmentedButton({
+            //      items : {
+            //         path : "SUPPLIERVIEW>/supplierStatus",
+            //         template: new sap.m.SegmentedButtonItem({
+            //             key :"{SUPPLIERVIEW>code}",
+            //             text :"{SUPPLIERVIEW>code_name}"
+            //         })
+            //     }, 
+            //     selectionChange : this.loadData.bind(this)
+            // });
 
             return [
 
@@ -152,15 +152,15 @@ sap.ui.define([
             that.oDialog.setModel(new ManagedModel(), "SUPPLIERVIEW");
 
             //if(!that.getModel("SUPPLIERVIEW").getProperty("/supplierStatus")){
-                oServiceModel.read("/supplierStatusView", {
-                    filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
-                    sorters: [new Sorter("code", true)],
-                    success: function(oData){
-                        var aRecords = oData.results;
-                        aRecords.unshift({code:"", code_name: that.getModel("I18N").getText("/ALL")});
-                        that.oDialog.getModel("SUPPLIERVIEW").setProperty("/supplierStatus", aRecords);
-                    }.bind(this)
-                })
+                // oServiceModel.read("/supplierStatusView", {
+                //     filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
+                //     sorters: [new Sorter("code", true)],
+                //     success: function(oData){
+                //         var aRecords = oData.results;
+                //         aRecords.unshift({code:"", code_name: that.getModel("I18N").getText("/ALL")});
+                //         that.oDialog.getModel("SUPPLIERVIEW").setProperty("/supplierStatus", aRecords);
+                //     }.bind(this)
+                // })
             //}
 
             
@@ -204,19 +204,19 @@ sap.ui.define([
 
             this.oDialog.setBusy(true);
 
-            oServiceModel.read("/supplierView", {
-                filters: aFilters,
-                sorters: aSorters,
-                success: function(oData){
-                    var aRecords = oData.results;
-                    this.oDialog.setData(aRecords, false);
-                    this.oDialog.setBusy(false);
-                    if(!this.oDialog.getModel("SUPPLIERVIEW")){
-                        this.oDialog.setBusy(true);
-                        this.loadSupplierData(this);
-                    }
-                }.bind(this)
-            });
+            // oServiceModel.read("/supplierView", {
+            //     filters: aFilters,
+            //     sorters: aSorters,
+            //     success: function(oData){
+            //         var aRecords = oData.results;
+            //         this.oDialog.setData(aRecords, false);
+            //         this.oDialog.setBusy(false);
+            //         if(!this.oDialog.getModel("SUPPLIERVIEW")){
+            //             this.oDialog.setBusy(true);
+            //             this.loadSupplierData(this);
+            //         }
+            //     }.bind(this)
+            // });
         }
 
     });

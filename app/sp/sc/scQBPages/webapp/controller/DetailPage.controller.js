@@ -16,13 +16,14 @@ sap.ui.define([
         "sap/ui/core/ComponentContainer",
         "../controller/SimpleChangeDialog",
         "sap/m/Text",
+        "cm/util/control/ui/PurOperationOrgDialog"
         //"../controller/NonPriceInf"
         // "sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType" , RTE, EditorType
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (BaseController, Filter, FilterOperator,MessageBox,MessageToast, Multilingual, JSONModel,SupplierSelection,Formatter,MaterialMasterDialog,BPDialog,Component, HashChanger, ComponentContainer, SimpleChangeDialog, Text) {
+	function (BaseController, Filter, FilterOperator,MessageBox,MessageToast, Multilingual, JSONModel,SupplierSelection,Formatter,MaterialMasterDialog,BPDialog,Component, HashChanger, ComponentContainer, SimpleChangeDialog, Text,PurOperationOrgDialog) {
         "use strict";
         
 		return BaseController.extend("sp.sc.scQBPages.controller.DetailPage", {
@@ -35,6 +36,16 @@ sap.ui.define([
                 // I18N 모델 SET
                 var oMultilingual = new Multilingual();
                 this.getView().setModel(oMultilingual.getModel(), "I18N");
+
+                oMultilingual.attachEvent("ready", function(oEvent){
+                    var oi18nModel = oEvent.getParameter("model");
+                    this.addHistoryEntry({
+                        title: oi18nModel.getText("/MIPRICE_TITLE"),
+                        icon: "sap-icon://table-view",
+                        intent: "#Template-display"
+                    }, true);
+                    
+                }.bind(this));
 
                 this.srvUrl = "sp/sc/scQBPages/webapp/srv-api/odata/v4/sp.sourcingV4Service/";
                 
@@ -362,35 +373,7 @@ sap.ui.define([
                 // this.onNavBack();
             },
             onPageDeleteButtonPress: function() {
-                // var oView = this.getView();//.getModel();
-                // var sPath = oView.getModel().createKey("/NegoHeaders", {
-                //         tenant_id:          oView.getModel("NegoHeaders").getProperty("/tenant_id"),
-                //         nego_header_id:   oView.getModel("NegoHeaders").getProperty("/nego_header_id")
-                //     });
-                
-
-                // console.log( "delete :: " + sPath);
-                // oView.getModel().remove(sPath,{
-                  
-                //     // method: "PUT",
-                //     success: function (oData) {
-
-
-                //         MessageToast.show(" success !! ");
-
-                //         // this.onPageCancelButtonPress();
-
-                //         this.onNavBack();
- 
-                //     }.bind(this),
-                //     error: function (aa, bb){
-                //         console.log( "error!!!!");
-                //         console.log(  aa  );
-                //         MessageToast.show(" error !! ");
-                //         // MessageToast.show(that.getModel("I18N").getText("/EPG00002")); 
-                        
-                //     }
-                // });
+                // this._CallDeleteProc();
             },
             onPageEditButtonPress: function() {
                 this.getView().getModel("propInfo").setProperty("/isEditMode", true );
@@ -1802,7 +1785,148 @@ sap.ui.define([
                 
                 MessageBox.confirm( "Sprint#3 에 적용됩니다." , {});
             },
+
+            onOperationOrgPress: function(e){
+                // debugger;
+                // this._addSupplierType = "sigle";
+                this._oIndex = e.oSource.getParent().getParent().getIndex();
+
+                var sPath = e.getSource().getParent().getBindingContext("NegoHeaders").getPath();
+
+                this._selectedLineItem = this.getView().getModel("NegoHeaders").getProperty(sPath);
+                this.getView().getModel("NegoItemPrices").setData(this._selectedLineItem);
+
+                // this.getView().byId("table_Specific").setSelectedIndex(this._oIndex);
+
+                // this.onSupplierLoadPopup();
+
+                this.onMultiInputPurOpertaionOrgValuePress();
+                
+            },
+
+            onMultiInputPurOpertaionOrgValuePress: function(){
+
+
+                if (!this.oPurOperationOrgMultiSelectionValueHelp) {
+                    this.oPurOperationOrgMultiSelectionValueHelp = new PurOperationOrgDialog({
+                        multiSelection: false
+                    });
+
+                    this.oPurOperationOrgMultiSelectionValueHelp.attachEvent("apply", function (oEvent) {
+                        this.byId("multiinput_purOperationOrg_code").setTokens(oEvent.getSource().getTokens());
+                        var resultTokens = oEvent.getParameter("item");
+
+                        // company_code: "*"
+                        // org_code: "L110040000"
+                        // org_name: "Vehicle Solution"
+                        // org_type_code: "PL"
+                        // process_type_code: "DP01"
+                        // purchase_org_code: null
+                        // tenant_id: "L1100"
+                        // use_flag: true
+                        var oItem = this.getView().getModel("NegoHeaders").getData().Items[this._oIndex];
+                        oItem.operation_unit_code = resultTokens.org_code;
+
+                        this.getView().getModel("NegoHeaders").refresh();
+
+                        console.log(resultTokens);
+                        console.log(oEvent.getSource().getTokens());
+                        // this.onSupplierResult(resultTokens);
+                    }.bind(this));
+                }
+                this.oPurOperationOrgMultiSelectionValueHelp.open();
+                // this.oBPMultiSelectionValueHelp.setTokens(this.byId("multiinput_bp_code").getTokens());
+
+                // if( oTokens ) {
+
+                //     console.log( " =--- onMultiInputSupplierWithOrgValuePress ");
+                //     console.log( oTokens );
+
+                //     this.oBPMultiSelectionValueHelp.setTokens( oTokens );
+                // }else {
+                //     this.oBPMultiSelectionValueHelp.setTokens( null );
+                // }
+                // this.oSupplierWithOrgMultiValueHelp.setTokens(this.byId("multiinput_supplierwithorg_code").getTokens());
+                // this.oPurOperationOrgMultiSelectionValueHelp.open();
+            },
+
+            //Insert 프로시저 호출
+            _CallInsertProc: function () {
+                //return model
+                var that = this;
+                var oModel = this.getView().getModel("NegoHeaders");
+                var oView = this.getView(),
+                    v_returnModel,
+                    urlInfo = "srv-api/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader"; // delete
+                var inputInfo =
+                {
+                    "negoheaders": [
+                        { "tenant_id": oModel.getProperty("/tenant_id"), "nego_header_id":  oModel.getProperty("/nego_header_id") }
+                    ],
+                    "negoitemprices" : [],
+                    "negosuppliers" : []
+                };
+                // console.log(inputInfo);
+                $.ajax({
+                    url: urlInfo,
+                    type: "POST",
+                    data: JSON.stringify(inputInfo),
+                    contentType: "application/json",
+                    success: function (data) {
+                        // sap.m.MessageToast.show(i18nModel.getText("/NCM01002"));
+                        // that.getRouter().navTo("main", {}, true);
+                        // that._resetView();
+                        //refresh
+                        oModel.refresh(true);
+                        // console.log('data:', data);
+                    },
+                    error: function (e) {
+                        // sap.m.MessageToast.show(i18nModel.getText("/EPG00001"));
+                        // v_returnModel = oView.getModel("returnModel").getData().data;
+                        console.log('v_returnModel_e:', e);
+                    }
+                });
+
+            },
             
+            //Delete 프로시저 호출
+            _CallDeleteProc: function () {
+                //return model
+                var that = this;
+                var oModel = this.getView().getModel("NegoHeaders");
+                var oView = this.getView(),
+                    v_returnModel,
+                    urlInfo = "srv-api/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader"; // delete
+                var inputInfo =
+                {
+                    "negoheaders": [
+                        { "tenant_id": oModel.getProperty("/tenant_id"), "nego_header_id":  oModel.getProperty("/nego_header_id") }
+                    ],
+                    "negoitemprices" : [],
+                    "negosuppliers" : []
+                };
+                // console.log(inputInfo);
+                $.ajax({
+                    url: urlInfo,
+                    type: "POST",
+                    data: JSON.stringify(inputInfo),
+                    contentType: "application/json",
+                    success: function (data) {
+                        // sap.m.MessageToast.show(i18nModel.getText("/NCM01002"));
+                        // that.getRouter().navTo("main", {}, true);
+                        // that._resetView();
+                        //refresh
+                        oModel.refresh(true);
+                        // console.log('data:', data);
+                    },
+                    error: function (e) {
+                        // sap.m.MessageToast.show(i18nModel.getText("/EPG00001"));
+                        // v_returnModel = oView.getModel("returnModel").getData().data;
+                        console.log('v_returnModel_e:', e);
+                    }
+                });
+
+            }
             
 		});
 	});
