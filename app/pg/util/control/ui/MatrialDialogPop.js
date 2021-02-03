@@ -137,7 +137,7 @@ sap.ui.define([
                 this.oMatrialCodePop.setValue(null);
                 this.oMatrialCodePop.setValue(this.oSearchObj.matrialCode);
             }
-            this.loadData();
+            //this.loadData();
             this.oDialog.open();
         }
     });                          
