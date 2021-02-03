@@ -9,6 +9,7 @@ namespace dp;
 
 service PartBaseActivityService {
     entity PdPartBaseActivityView as projection on PartBaseActivityView.Pd_Part_Base_Activity_View;
+    entity PdPartBaseActivityCategoryPopView as projection on PartBaseActivity.Pd_Part_Base_Activity_Category_Pop_View;
     entity PdPartBaseActivity as projection on PartBaseActivity.Pd_Part_Base_Activity;
     entity PdPartBaseActivityLng as projection on PartBaseActivityLng.Pd_Part_Base_Activity_Lng;
     entity PdPartBaseActivityCategory as projection on PartBaseActivityCategory.Pd_Part_Base_Activity_Category;
