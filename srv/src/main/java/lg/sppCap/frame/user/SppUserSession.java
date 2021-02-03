@@ -126,6 +126,10 @@ public class SppUserSession {
         return this.getSppUserAttributeList(ATTR_ROLES);
     }
 
+    public Boolean hasRole(String role) {
+        return this.getRolesList().contains(role);
+    }
+
     public Map<String, String> getUserSessionInfo(){
         return this.getXsuaaUserMap();
     }

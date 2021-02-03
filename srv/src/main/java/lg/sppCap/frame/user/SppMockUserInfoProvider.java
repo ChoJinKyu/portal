@@ -12,6 +12,7 @@ import com.sap.cds.services.request.ModifiableUserInfo;
 import com.sap.cds.services.request.UserInfo;
 import com.sap.cds.services.runtime.UserInfoProvider;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -45,7 +46,20 @@ public class SppMockUserInfoProvider implements UserInfoProvider {
             Object obj = parser.parse(inputStreamReader);
             JSONObject jsonUserInfo = (JSONObject) obj;
             for (Object key : jsonUserInfo.keySet()) {
-                attributes.put((String) key, new ArrayList<>(Arrays.asList((String) jsonUserInfo.get(key))));
+
+                if(jsonUserInfo.get(key).getClass() == JSONArray.class){
+                    JSONArray jsonArray = (JSONArray) jsonUserInfo.get(key);
+                    List<String> arrayValue = new ArrayList<String>();
+                    for(int i = 0; i < jsonArray.size(); i++){
+                        arrayValue.add(i, (String) jsonArray.get(i));                        
+                    }
+
+                    attributes.put((String) key, arrayValue);
+
+                }else{
+                    attributes.put((String) key, new ArrayList<>(Arrays.asList((String) jsonUserInfo.get(key))));
+                }                
+
             }
 
             userName = (String) jsonUserInfo.get("USER_ID");
