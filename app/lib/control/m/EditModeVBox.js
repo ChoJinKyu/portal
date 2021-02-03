@@ -10,7 +10,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
-                mode: { type: "boolean", group: "Data", defaultValue: true, bindable: "bindable" },
+                editMode: { type: "boolean", group: "Data", defaultValue: true, bindable: "bindable" },
                 editable: { type: "boolean", group: "Data", defaultValue: true, bindable: "bindable" }
             }
         },
@@ -30,13 +30,13 @@ sap.ui.define([
             }
         },
 
-        setMode: function(bMode){
-            bMode = !!bMode;
-            this.setProperty("mode", bMode);
+        setEditMode: function(bEditMode){
+            bEditMode = !!bEditMode;
+            this.setProperty("editMode", bEditMode);
             if(!this.oEditor) return;
-            this.oEditor.setVisible(bMode);
+            this.oEditor.setVisible(bEditMode);
             if(!this.oViewer) return;
-            this.oViewer.setVisible(!bMode);
+            this.oViewer.setVisible(!bEditMode);
         },
 
         setEditable: function(bEditable){

@@ -42,7 +42,7 @@ sap.ui.define([
             delete mParameters.urlParameters;
             if(this._listExpected(sPath))
                 urlParameters["$inlinecount"] = "allpages";
-            Parent.prototype.read.call(this, sPath, jQuery.extend(true, {}, mParameters, {
+            return Parent.prototype.read.call(this, sPath, jQuery.extend(true, {}, mParameters, {
                 urlParameters: urlParameters,
                 success: function (oData) {
                     if(oData.results){
