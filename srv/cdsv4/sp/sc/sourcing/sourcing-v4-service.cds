@@ -47,6 +47,24 @@ service SourcingV4Service {
 
     // view NegoHeadersView as select from Sc_Nego_Headers_View;
 
+    type tyNegoHeaderKey {
+        tenant_id                       : type of Sc_Nego_Headers : tenant_id;
+        nego_header_id                  : type of Sc_Nego_Headers : nego_header_id;
+    };
+
+    type tyNegoItemPriceKey {
+        tenant_id                    : type of Sc_Nego_Item_Prices : tenant_id;
+        nego_header_id               : type of Sc_Nego_Item_Prices : nego_header_id;
+        nego_item_number             : type of Sc_Nego_Item_Prices : nego_item_number;
+    };
+
+    type tyNegoSupplierKey {
+        tenant_id                        : type of Sc_Nego_Suppliers : tenant_id;
+        nego_header_id                   : type of Sc_Nego_Suppliers : nego_header_id;
+        nego_item_number                 : type of Sc_Nego_Suppliers : nego_item_number;
+        item_supplier_sequence           : type of Sc_Nego_Suppliers : item_supplier_sequence;
+    };
+
     type tyNegoHeader {
         tenant_id                       : type of Sc_Nego_Headers : tenant_id;
         nego_header_id                  : type of Sc_Nego_Headers : nego_header_id;
@@ -87,7 +105,7 @@ service SourcingV4Service {
         supplier_participation_flag     : type of Sc_Nego_Headers : supplier_participation_flag;
         partial_allow_flag              : type of Sc_Nego_Headers : partial_allow_flag;
         bidding_result_open_status_code : type of Sc_Nego_Headers : bidding_result_open_status_code;
-    }
+    };
 
     type tyNegoItemPrice {
         tenant_id                    : type of Sc_Nego_Item_Prices : tenant_id;
@@ -138,7 +156,7 @@ service SourcingV4Service {
         requestor_empno              : type of Sc_Nego_Item_Prices : requestor_empno;
         budget_department_code       : type of Sc_Nego_Item_Prices : budget_department_code;
         request_department_code      : type of Sc_Nego_Item_Prices : request_department_code;
-    }
+    };
 
     type tyNegoSupplier {
         tenant_id                        : type of Sc_Nego_Suppliers : tenant_id;
@@ -160,20 +178,42 @@ service SourcingV4Service {
         only_maker_flat                  : type of Sc_Nego_Suppliers : only_maker_flat;
         contact                          : type of Sc_Nego_Suppliers : contact;
         note_content                     : type of Sc_Nego_Suppliers : note_content;
-    }
+    };
 
-    type OutputData : {
-        return_code : String(20);
-        return_msg  : String(5000);
+    type ReturnMsg : {
+        code     : Integer;
+        // CODE_STRING     : String(256);
+        message  : String(2000);
+    };
+
+    type tyDeepInsertNegoheader {
+        negoheaders: array of tyNegoHeader;
+        negoitemprices : array of tyNegoItemPrice;
+        negosuppliers  : array of tyNegoSupplier;
+    };
+
+    type tyDeepDeleteNegoheader {
+        negoheaders: array of tyNegoHeaderKey;
+        negoitemprices : array of tyNegoItemPriceKey;
+        negosuppliers  : array of tyNegoSupplierKey;
     };
 
     entity NegoHeadersView as projection on Sc_Nego_Headers_View { *,
         Items : redirected to NegoItemPrices
-    } actions {
-        action deepInsertNegoHeader(  negoheader     : array of tyNegoHeader
-                                    , negoitemprices : array of tyNegoItemPrice
-                                    , negosuppliers  : array of tyNegoSupplier  ) returns array of OutputData;
-    };
+    }
+    //  actions {
+    //     action deepInsertNegoHeader(  negoheader     : array of tyNegoHeader
+    //                                 , negoitemprices : array of tyNegoItemPrice
+    //                                 , negosuppliers  : array of tyNegoSupplier  ) returns array of OutputData;
+    // }
+    ;
+
+    // action deepInsertNegoHeader(  negoheader     : tyNegoHeader
+    //                             , negoitemprices : array of tyNegoItemPrice
+    //                             , negosuppliers  : array of tyNegoSupplier  ) returns array of OutputData;
+
+    action deepInsertNegoHeader(  deepinsertnegoheader : tyDeepInsertNegoheader  ) returns array of ReturnMsg;
+    action deepDeleteNegoHeader(  deepdeletenegoheader : tyDeepDeleteNegoheader  ) returns array of ReturnMsg;
     // @odata.draft.enabled
 
     /* 마스터 @cds.autoexpose entity //> master association 생략 가능
