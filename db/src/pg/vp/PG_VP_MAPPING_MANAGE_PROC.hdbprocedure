@@ -1,4 +1,4 @@
-PROCEDURE PG_VP_MAPPING_CHANGE_PROC (
+PROCEDURE PG_VP_MAPPING_MANAGE_PROC (
    IN I_MST PG_VP_VENDOR_POOL_MST_TYPE
  ,IN I_SUP PG_VP_VENDOR_POOL_SUPPLIER_TYPE
  ,IN I_ITM PG_VP_VENDOR_POOL_ITEM_TYPE
@@ -11,7 +11,7 @@ PROCEDURE PG_VP_MAPPING_CHANGE_PROC (
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 /*******************************************************************************************************************************************************
-"Procedures" 프로시저명: PG_VP_MAPPING_CHANGE_PROC
+"Procedures" 프로시저명: PG_VP_MAPPING_MANAGE_PROC
  작성자:     이주원
  작성일자:   2020-12-29
  수정일자:   2021-01-04
@@ -120,7 +120,7 @@ BEGIN
 	DECLARE V_MSG_LOOP_PARAM NVARCHAR(5000) := 'PARAM MSG';
 	DECLARE V_SUCESS_LOOP_PARAM NVARCHAR(5000) :=  'NPG00023';
 	DECLARE V_ERROR_PARAM NVARCHAR(500);
-	DECLARE V_PROC_NAME NVARCHAR(50) := 'PG_VP_MAPPING_CHANGE_PROC';
+	DECLARE V_PROC_NAME NVARCHAR(50) := 'PG_VP_MAPPING_MANAGE_PROC';
 	
 	/*****************************************************
 	Return Success Info
