@@ -33,6 +33,7 @@ using { cm as cmEmployeeMst } from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-mode
 using { cm as cmDeptMst } from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 using { pg as vpSupplierMst } from '../../../../../db/cds/pg/vp/PG_VP_SUPPLIER_MST_VIEW-model';
 using { pg as vpTreeDrillType } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_LEAF_INFO_VIEW-model';
+using { cm as sppUserSession} from '../../../../../db/cds/cm/util/CM_SPP_USER_SESSION_VIEW-model';
 
 namespace pg; 
 @path : '/pg.vendorPoolMappingService'
@@ -60,13 +61,17 @@ service VpMappingService {
                md.approval_number,
                md.local_update_dtm,
                md.update_user_id
-        from   vpMaterialDtl.Vp_Vendor_Pool_Item_Dtl md,
-               vpMaterialMst.Vp_Material_Mst_View mv
-        where  md.tenant_id = mv.tenant_id
-        and    map(md.company_code, '*', mv.company_code, md.company_code) = mv.company_code
-        and    md.org_code = mv.bizunit_code
-        and    md.material_code = mv.material_code
-        and    ifnull(md.vendor_pool_mapping_use_flag, true) = true
+        from   vpMaterialDtl.Vp_Vendor_Pool_Item_Dtl md
+                join vpMaterialMst.Vp_Material_Mst_View mv
+                on     md.tenant_id     = mv.tenant_id
+                and    map(md.company_code, '*', mv.company_code, md.company_code) = mv.company_code
+                and    md.org_code      = mv.bizunit_code
+                and    md.material_code = mv.material_code
+                join sppUserSession.Spp_User_Session_View ssn
+                on     md.tenant_id    = ssn.TENANT_ID
+                and    md.company_code = ssn.COMPANY_CODE                
+                and    mv.language_cd  = ssn.LANGUAGE_CODE
+        where   ifnull(md.vendor_pool_mapping_use_flag, true) = true
         group by mv.language_cd,
                  md.tenant_id,
                  md.company_code,
@@ -99,42 +104,17 @@ service VpMappingService {
                md.vendor_pool_mapping_use_flag,
                md.local_update_dtm,
                md.update_user_id
-        from   vpManagerDtl.Vp_Vendor_Pool_Manager_Dtl md,
-               cmEmployeeMst.Hr_Employee he,
-               cmDeptMst.Hr_Department hd
-        where  md.tenant_id = he.tenant_id
-        and    md.vendor_pool_person_empno = he.employee_number
-        and    he.tenant_id = hd.tenant_id
-        and    he.department_code = hd.department_code
-        and    ifnull(md.vendor_pool_mapping_use_flag, true) = true;
-
-        view vpManagerDtlParamView @(title : 'Vendor Pool Manager Mapping Parm View') (sTenant_id: String,sVendor_pool_code: String ) as
-        select key md.tenant_id,
-               md.company_code,
-               md.org_type_code,
-               md.org_code,
-               md.vendor_pool_code,
-               md.vendor_pool_person_empno,
-               he.user_local_name,               
-               he.user_english_name,
-               he.job_title,
-               hd.department_local_name,
-               hd.department_english_name,
-               he.user_status_code,
-               md.vendor_pool_person_role_text,
-               md.vendor_pool_mapping_use_flag,
-               md.local_update_dtm,
-               md.update_user_id
-        from   vpManagerDtl.Vp_Vendor_Pool_Manager_Dtl md,
-               cmEmployeeMst.Hr_Employee he,
-               cmDeptMst.Hr_Department hd
-        where  md.tenant_id = he.tenant_id
-        and    md.vendor_pool_person_empno = he.employee_number
-        and    he.tenant_id = hd.tenant_id
-        and    he.department_code = hd.department_code
-        and    ifnull(md.vendor_pool_mapping_use_flag, true) = true
-        and    he.tenant_id = :sTenant_id
-        and    md.vendor_pool_code = :sVendor_pool_code;
+        from   vpManagerDtl.Vp_Vendor_Pool_Manager_Dtl md
+                join cmEmployeeMst.Hr_Employee he
+                on     md.tenant_id                = he.tenant_id
+                and    md.vendor_pool_person_empno = he.employee_number               
+                join cmDeptMst.Hr_Department hd
+                on     he.tenant_id       = hd.tenant_id
+                and    he.department_code = hd.department_code
+                join sppUserSession.Spp_User_Session_View ssn
+                on     md.tenant_id    = ssn.TENANT_ID
+                and    md.company_code = ssn.COMPANY_CODE                                
+        where  ifnull(md.vendor_pool_mapping_use_flag, true) = true;        
 
         entity VpSupplierMstView @(title : '공급업체마스터 View') as projection on vpSupplierMst.Vp_Supplier_Mst_View;
 
@@ -174,7 +154,10 @@ service VpMappingService {
                 mst.info_change_status,
                 mst.maker_material_code_mngt_flag
         from   vpDetailView.Vp_Vendor_Pool_Detail_View mst
-        where  mst.language_cd = 'EN'
+                join sppUserSession.Spp_User_Session_View ssn
+                on     mst.tenant_id    = ssn.TENANT_ID
+                and    mst.company_code = ssn.COMPANY_CODE                
+                and    mst.language_cd  = ssn.LANGUAGE_CODE        
         ;  
 
     view vpTreeLngView @(title : 'Vendor Pool Tree Language View') as
