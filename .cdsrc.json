@@ -48,6 +48,7 @@
             "db/cds/ep/cm",
             "db/cds/ep/po",
             "db/cds/op",
+            "db/cds/op/pu/pr",
             "db/cds/pg",
             "db/cds/pg/if",
             "db/cds/pg/it",
