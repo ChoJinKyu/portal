@@ -21,7 +21,7 @@ SELECT pca.tenant_id,
   FROM DP_PD_PART_CATEGORY_ACTIVITY pca, 
        DP_PD_ACTIVITY_CODE_LNG aname,
        DP_PD_PART_CATEGORY_LNG cname, 
-	(select code, code_name, tenant_id from CM_CODE_LNG where group_code='DP_PART_PJT_TYPE' and LANGUAGE_CD='KO') a
+    (select code, code_name, tenant_id from CM_CODE_LNG where group_code='DP_PART_PJT_TYPE' and LANGUAGE_CD='KO') a
  WHERE cname.category_group_code = pca.category_group_code
    and cname.category_code = pca.category_code
    and aname.LANGUAGE_CD='KO'
