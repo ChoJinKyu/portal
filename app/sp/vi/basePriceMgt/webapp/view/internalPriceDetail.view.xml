@@ -190,16 +190,14 @@
                                         <t:Column hAlign="Left" width="8rem">
                                             <Label text="{I18N>/SP_APPLY_START_DATA_YYYYMM}" textAlign="Center" width="100%"/>
                                             <t:template>
-                                                <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" required="true"
-                                                            displayFormat="y-MM" class="sapUiSmallMarginBottom" 
+                                                <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" displayFormat="y-MM" 
                                                             value="{ path: 'detailModel>apply_start_date'}" />
                                             </t:template>
                                         </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/SP_APPLY_END_DATE_YYYYMM}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" required="true"
-                                                        displayFormat="y-MM" class="sapUiSmallMarginBottom" 
+                                            <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" displayFormat="y-MM"
                                                         value="{ path: 'detailModel>apply_end_date' }" />
                                         </t:template>
                                     </t:Column>
@@ -273,7 +271,7 @@
                                             <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>material}"/>
                                         </t:template>
                                     </t:Column>
-                                    <t:Column hAlign="Left" width="8rem">
+                                    <t:Column hAlign="Left" width="13rem">
                                         <Label text="{I18N>/VENDOR_POOL}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>vendor_pool}[{detailModel>vendor_pool_code}]"/>

@@ -48,7 +48,9 @@
 				</HBox>
                 </form:content>
 		        </form:SimpleForm>
-                 <form:SimpleForm editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                 <form:SimpleForm editable="true" layout="ResponsiveGridLayout" 
+                    adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0"
+                     emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                      <!-- budgetExecutionTable Table -->
                     <table:Table id="rrcrReportItemTable" 
@@ -60,12 +62,13 @@
 						<OverflowToolbar>
 							<ToolbarSpacer/>
 							    <!-- Add the Personalization button -->
-							    <Button visible="{mode>/editFlag}" type="Transparent" text="{I18N>/ROW_ADD}" press=".onItemAddPress">
+							    <Button type="Transparent" text="{I18N>/ROW_ADD}" press=".onItemAddPress" >
+							    <!-- <Button visible="{mode>/editFlag}" type="Transparent" text="{I18N>/ROW_ADD}" press=".onItemAddPress" /> -->
 								<!-- Add -->
-								<customData>
-									<core:CustomData key="multi" value="true"/>
-								</customData>
-							</Button>
+                                    <customData>
+                                        <core:CustomData key="multi" value="true"/>
+                                    </customData>
+							    </Button>
 							<Button visible="{mode>/editFlag}" type="Transparent" text="{I18N>/ROW_DELETE}" press=".onItemDeletePress"/>
 						</OverflowToolbar>
 					</table:extension>
