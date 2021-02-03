@@ -22,7 +22,7 @@ sap.ui.define([
             }
         },
 
-        constructor: function(position){
+        constructor: function(){
             
             this.oModel = sap.ui.getCore().getModel(USER_MODEL_NAME);
             if(this.oModel == null){

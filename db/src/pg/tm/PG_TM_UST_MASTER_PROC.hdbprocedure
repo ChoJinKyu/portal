@@ -117,9 +117,7 @@ begin
     declare lv_sourcepurchasingtype_count   integer default 0;
     declare lv_sourcetypecode_count         integer default 0;
     declare lv_sourcemanager_count          integer default 0;
-    declare lv_sourcemanager_rowcount       integer default 0;
     declare lv_sourceoperation_count        integer default 0;
-    declare lv_sourceoperation_rowcount     integer default 0;
 
     declare lv_tenant_id                    nvarchar(5) default '';
     declare lv_scenario_number              integer default 0;
@@ -183,7 +181,7 @@ begin
     where   tenant_id is not null
     ;
 
-    if	lv_sourcemaster_count <= 0 then
+    if :lv_sourcemaster_count <= 0 then
         rollback;
 	else
 		merge into	pg_tm_master	as t_master_tab
@@ -260,8 +258,8 @@ begin
                 scenario_number,
                 language_code
         from    pg_tm_scenario_number_lng
-        where   tenant_id       = lv_tenant_id
-        and     scenario_number = lv_scenario_number
+        where   tenant_id       = :lv_tenant_id
+        and     scenario_number = :lv_scenario_number
     ;
 
     v_table_scenario =
@@ -288,7 +286,7 @@ begin
     where   tenant_id is not null
     ;
 
-    if	lv_sourcescenario_count <= 0 then
+    if :lv_sourcescenario_count <= 0 then
         rollback;
     else
 
@@ -370,8 +368,8 @@ begin
                 scenario_number,
                 company_code
         from    pg_tm_comp_code
-        where   tenant_id       = lv_tenant_id
-        and     scenario_number = lv_scenario_number
+        where   tenant_id       = :lv_tenant_id
+        and     scenario_number = :lv_scenario_number
     ;
 
     v_table_company =
@@ -398,7 +396,7 @@ begin
     where   tenant_id is not null
     ;
 
-    if	lv_sourcecompany_count <= 0 then
+    if :lv_sourcecompany_count <= 0 then
         rollback;
     else
 
@@ -407,9 +405,9 @@ begin
 			for lv_loop_table_company in 1..record_count(:v_table_company) do
 
 				delete from pg_tm_comp_code
-				where       tenant_id       = (select distinct tenant_id from :v_table_company)
-				and         scenario_number = (select distinct scenario_number from :v_table_company)
-				and         company_code	= (select company_code from :v_table_company where row_num = :lv_loop_table_company)
+				where       tenant_id           = (select distinct tenant_id from :v_table_company)
+				and         scenario_number     = (select distinct scenario_number from :v_table_company)
+				and         trim(company_code)  = (select company_code from :v_table_company where row_num = :lv_loop_table_company)
 				;
 
 			end for;
@@ -477,8 +475,8 @@ begin
                 scenario_number,
                 bizunit_code
         from    pg_tm_bizunit_code
-        where   tenant_id       = lv_tenant_id
-        and     scenario_number = lv_scenario_number
+        where   tenant_id       = :lv_tenant_id
+        and     scenario_number = :lv_scenario_number
     ;
 
     v_table_bizunit =
@@ -505,7 +503,7 @@ begin
     where   tenant_id is not null
     ;
 
-    if	lv_sourcebizunit_count <= 0 then
+    if :lv_sourcebizunit_count <= 0 then
         rollback;
     else
 
@@ -514,9 +512,9 @@ begin
 			for lv_loop_table_bizunit in 1..record_count(:v_table_bizunit) do
 
 				delete from pg_tm_bizunit_code
-				where       tenant_id       = (select distinct tenant_id from :v_table_bizunit)
-				and         scenario_number = (select distinct scenario_number from :v_table_bizunit)
-				and         bizunit_code    = (select bizunit_code from :v_table_bizunit where row_num = :lv_loop_table_bizunit)
+				where       tenant_id           = (select distinct tenant_id from :v_table_bizunit)
+				and         scenario_number     = (select distinct scenario_number from :v_table_bizunit)
+				and         trim(bizunit_code)  = (select bizunit_code from :v_table_bizunit where row_num = :lv_loop_table_bizunit)
 				;
 
 			end for;
@@ -587,8 +585,8 @@ begin
                 monitoring_purchasing_type_code,
                 language_code
         from    pg_tm_purchasing_type_code_lng
-        where   tenant_id       = lv_tenant_id
-        and     scenario_number = lv_scenario_number
+        where   tenant_id       = :lv_tenant_id
+        and     scenario_number = :lv_scenario_number
     ;
 
     v_table_purchasing_type =
@@ -618,7 +616,7 @@ begin
     where   tenant_id is not null
     ;
 
-    if	lv_sourcepurchasingtype_count <= 0 then
+    if :lv_sourcepurchasingtype_count <= 0 then
         rollback;
     else
 
@@ -627,9 +625,9 @@ begin
 			for lv_loop_table_purchasing_type in 1..record_count(:v_table_purchasing_type) do
 
 				delete from pg_tm_purchasing_type_code_lng
-				where       tenant_id       				= (select distinct tenant_id from :v_table_purchasing_type)
-				and         scenario_number 				= (select distinct scenario_number from :v_table_purchasing_type)
-				and         monitoring_purchasing_type_code	= (select monitoring_purchasing_type_code from :v_table_purchasing_type where row_num = :lv_loop_table_purchasing_type)
+				where       tenant_id       				        = (select distinct tenant_id from :v_table_purchasing_type)
+				and         scenario_number 				        = (select distinct scenario_number from :v_table_purchasing_type)
+				and         trim(monitoring_purchasing_type_code)	= (select monitoring_purchasing_type_code from :v_table_purchasing_type where row_num = :lv_loop_table_purchasing_type)
 				;
 
 			end for;
@@ -706,8 +704,8 @@ begin
                 monitoring_type_code,
                 language_code
         from    pg_tm_type_code_lng
-        where   tenant_id       = lv_tenant_id
-        and     scenario_number = lv_scenario_number
+        where   tenant_id       = :lv_tenant_id
+        and     scenario_number = :lv_scenario_number
     ;
 
     v_table_type =
@@ -732,7 +730,7 @@ begin
     where   tenant_id is not null
     ;
 
-    if	lv_sourcetypecode_count <= 0 then
+    if :lv_sourcetypecode_count <= 0 then
         rollback;
     else
 
@@ -741,9 +739,9 @@ begin
 			for lv_loop_table_type in 1..record_count(:v_table_type) do
 
 				delete from pg_tm_type_code_lng
-				where       tenant_id       		= (select distinct tenant_id from :v_table_type)
-				and         scenario_number 		= (select distinct scenario_number from :v_table_type)
-				and         monitoring_type_code	= (select monitoring_type_code from :v_table_type where row_num = :lv_loop_table_type)
+				where       tenant_id       		    = (select distinct tenant_id from :v_table_type)
+				and         scenario_number 		    = (select distinct scenario_number from :v_table_type)
+				and         trim(monitoring_type_code)  = (select monitoring_type_code from :v_table_type where row_num = :lv_loop_table_type)
 				;
 
 			end for;
@@ -818,8 +816,8 @@ begin
                 scenario_number,
                 monitoring_manager_empno
         from    pg_tm_manager_dtl
-        where   tenant_id       = lv_tenant_id
-        and     scenario_number = lv_scenario_number
+        where   tenant_id       = :lv_tenant_id
+        and     scenario_number = :lv_scenario_number
     ;
 
     v_table_manager =
@@ -849,21 +847,21 @@ begin
     if record_count(:i_table_manager) = 0 then
 
         delete from pg_tm_manager_dtl
-        where       tenant_id       = lv_tenant_id
-        and         scenario_number = lv_scenario_number
+        where       tenant_id       = :lv_tenant_id
+        and         scenario_number = :lv_scenario_number
         ;
 
-    elseif lv_sourcemanager_count <= 0 then
+    elseif :lv_sourcemanager_count <= 0 then
     else
 
         if record_count(:v_table_manager) <> 0 then
 
-			for lv_loop_table_manager in 1..record_count(:v_table_scenario) do
+			for lv_loop_table_manager in 1..record_count(:v_table_manager) do
 
 				delete from pg_tm_manager_dtl
-				where       tenant_id       		    = (select distinct tenant_id from :v_table_manager)
-				and         scenario_number 		    = (select distinct scenario_number from :v_table_manager)
-				and         monitoring_manager_empno	= (select monitoring_manager_empno from :v_table_manager where row_num = :lv_loop_table_manager)
+				where       tenant_id       		        = (select distinct tenant_id from :v_table_manager)
+				and         scenario_number 		        = (select distinct scenario_number from :v_table_manager)
+				and         trim(monitoring_manager_empno)  = (select monitoring_manager_empno from :v_table_manager where row_num = :lv_loop_table_manager)
 				;
 
 			end for;
@@ -938,8 +936,8 @@ begin
                 monitoring_operation_mode_code,
                 language_code
         from    pg_tm_operation_mode_code_lng
-        where   tenant_id       = lv_tenant_id
-        and     scenario_number = lv_scenario_number
+        where   tenant_id       = :lv_tenant_id
+        and     scenario_number = :lv_scenario_number
     ;
 
     v_table_operation =
@@ -972,11 +970,11 @@ begin
     if record_count(:i_table_operation) = 0 then
 
         delete from pg_tm_operation_mode_code_lng
-        where       tenant_id       = lv_tenant_id
-        and         scenario_number = lv_scenario_number
+        where       tenant_id       = :lv_tenant_id
+        and         scenario_number = :lv_scenario_number
         ;
 
-    elseif	lv_sourceoperation_count <= 0 then
+    elseif :lv_sourceoperation_count <= 0 then
     else
 
         if	record_count(:v_table_operation) <> 0 then
@@ -984,9 +982,9 @@ begin
 			for lv_loop_table_operation in 1..record_count(:v_table_operation) do
 
 				delete from pg_tm_operation_mode_code_lng
-				where       tenant_id       				= (select distinct tenant_id from :v_table_operation)
-				and         scenario_number 				= (select distinct scenario_number from :v_table_operation)
-				and         monitoring_operation_mode_code	= (select monitoring_operation_mode_code from :v_table_operation where row_num = :lv_loop_table_operation)
+				where       tenant_id       				        = (select distinct tenant_id from :v_table_operation)
+				and         scenario_number 				        = (select distinct scenario_number from :v_table_operation)
+				and         trim(monitoring_operation_mode_code)    = (select monitoring_operation_mode_code from :v_table_operation where row_num = :lv_loop_table_operation)
 				;
 
 			end for;

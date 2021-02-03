@@ -90,7 +90,7 @@ sap.ui.define([
 
                     if( data && data.results && 0<data.results.length ) {
                         oView.getModel("detailModel").setData(data.results[0]);
-                        if(oParam.hasOwnProperty("view_mode") && oParam.view_mode === "EDIT") {
+                        if(oParam && oParam.hasOwnProperty("view_mode") && oParam.view_mode === "EDIT") {
                             oView.getModel("detailModel").setProperty("/mode", {readMode : false, editMode : true});
                         } else {
                             oView.getModel("detailModel").setProperty("/mode", {readMode : true, editMode : false});

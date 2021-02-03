@@ -12,7 +12,8 @@ SELECT X.NODE_ID
       ,X.active_flag
       ,X.update_user_id
       ,X.local_update_dtm
-      ,SUBSTR(X.PATH, 3) AS PATH
+--      ,SUBSTR(IFNULL(X.PATH,'-- '), 3) AS PATH
+      ,X.PATH
       ,X.HIERARCHY_RANK
       ,X.HIERARCHY_TREE_SIZE
       ,X.HIERARCHY_PARENT_RANK
@@ -46,6 +47,6 @@ SELECT X.NODE_ID
     SIBLING ORDER BY PARENT_ID, SEQUENCE
   )
   MEASURES (
-	STRING_AGG(PARENT_CATEGORY_NAME, ' > ') AS PATH
+	STRING_AGG(NODE_ID, '|') AS PATH
   )
  ) X;
