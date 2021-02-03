@@ -182,7 +182,7 @@ public class TmpMgr implements EventHandler {
         // path 변경 필요. 전달 받거나 템플릿 전용 디렉토리 지정
         String path = "/home/user/projects/sppcap/app/tmp/detailSpecEntry/webapp/view/";
         //String content = "<core:FragmentDefinitionxmlns=\"sap.m\"xmlns:l=\"sap.ui.layout\"xmlns:form=\"sap.ui.layout.form\"xmlns:core=\"sap.ui.core\"xmlns:uxap=\"sap.uxap\" ><VBox class=\"sapUiSmallMargin\"><form:SimpleForm editable=\"false\" layout=\"ResponsiveGridLayout\" content=\"{";
-        String content ="<core:FragmentDefinition xmlns=\"sap.m\"  xmlns:l=\"sap.ui.layout\" xmlns:form=\"sap.ui.layout.form\" xmlns:core=\"sap.ui.core\" xmlns:uxap=\"sap.uxap\" >";
+        String content ="<core:FragmentDefinition xmlns=\"sap.m\" xmlns:f=\"sap.f\" xmlns:l=\"sap.ui.layout\" xmlns:form=\"sap.ui.layout.form\" xmlns:core=\"sap.ui.core\" xmlns:uxap=\"sap.uxap\" >";
         //BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(content.getBytes()));
         
         if("G".equals(params.get("formType"))){
@@ -246,6 +246,9 @@ public class TmpMgr implements EventHandler {
         return content;
     }
     private String writeGrid(List<Row> result, Map<String, Object> params){
+        if(result.size() == 0){
+            return "";
+        }
         //FORM_TYPE
         String content = "\n\t<VBox>";
         content += "\n\t\t<Table id=\"mainTable\" ";
@@ -304,7 +307,7 @@ public class TmpMgr implements EventHandler {
         
         for(Row row : result){
             content += "\n\t\t\t\t\t<VBox>";
-            content += "\n\t\t\t\t\t\t<Label text=\"" + row.get("COL_ID").toString().replaceAll("_", " ") + "\"" + ("Y".equals(row.get("SCR_COL_REQUIRE_YN")) ? " required=\"true\"" : "") + " labelFor=\"searchCompanyS\"/>";
+            content += "\n\t\t\t\t\t\t<Label text=\"" + row.get("SCR_COL_NAME") + "\"" + ("Y".equals(row.get("SCR_COL_REQUIRE_YN")) ? " required=\"true\"" : "") + " labelFor=\"searchCompanyS\"/>";
             switch((String)row.get("SCR_COL_DP_TYPE")){
                 case "MC" :
                     //임시로 추가 옵션 그대로 출력
@@ -321,7 +324,7 @@ public class TmpMgr implements EventHandler {
         content += "\n\t\t\t\t</form:content id=\"transition\">";
         content += "\n\t\t\t</form:SimpleForm>";
         content += "\n\t\t</f:snappedContent>";
-        content += "\n\t<f:DynamicPageTitle>";
+        content += "\n\t</f:DynamicPageTitle>";
         return content;
     }
 
