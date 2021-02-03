@@ -5,7 +5,7 @@ sap.ui.define([
     "use strict";
 
     var SppUserSessionUtil = {
-        SppUserSession : new SppUserSession("Util"),
+        SppUserSession : new SppUserSession(),
 
         getUserInfo: function(){
             return this.SppUserSession.getModel().getData();

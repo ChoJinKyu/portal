@@ -24,38 +24,38 @@ service SampleSessionService {
 
     view SampleSessionView2 as select from Sample_Session_View;
 
-    // view SampleSessionView3 @(restrict: [
-    //     { grant: 'READ', where: 'language_cd = $user.LANGUAGE_CODE and tenant_id = $user.TENANT_ID' }
-    // ])  as
-    //     select
-    //         key a.tenant_id     as tenant_id,
-    //         key a.group_code    as group_code,
-    //         key a.language_cd   as language_cd,
-    //         key a.code          as code,
-    //         a.code_name         as code_name,
-    //         a.parent_group_code as parent_group_code,
-    //         a.parent_code       as parent_code,
-    //         a.sort_no           as sort_no
-    //     from cm_Code a
-    //     where a.group_code = 'CM_APPROVER_TYPE'
-    // ;
+    view SampleSessionView3 @(restrict: [
+        { grant: 'READ', where: 'language_cd = $user.LANGUAGE_CODE and tenant_id = $user.TENANT_ID' }
+    ])  as
+        select
+            key a.tenant_id     as tenant_id,
+            key a.group_code    as group_code,
+            key a.language_cd   as language_cd,
+            key a.code          as code,
+            a.code_name         as code_name,
+            a.parent_group_code as parent_group_code,
+            a.parent_code       as parent_code,
+            a.sort_no           as sort_no
+        from cm_Code a
+        where a.group_code = 'CM_APPROVER_TYPE'
+    ;
 
-    // view SampleSessionView3 @(restrict: [
-    //     { grant: 'READ', where: 'language_cd = $user.LANGUAGE_CODE' },
-    //     { grant: 'READ', where: 'tenant_id = $user.TENANT_ID' }
-    // ])  as
-    //     select
-    //         key a.tenant_id     as tenant_id,
-    //         key a.group_code    as group_code,
-    //         key a.language_cd   as language_cd,
-    //         key a.code          as code,
-    //         a.code_name         as code_name,
-    //         a.parent_group_code as parent_group_code,
-    //         a.parent_code       as parent_code,
-    //         a.sort_no           as sort_no
-    //     from cm_Code a
-    //     where a.group_code = 'CM_APPROVER_TYPE'
-    // ;
+    view SampleSessionView4 @(restrict: [
+        { grant: 'READ', where: 'language_cd = $user.LANGUAGE_CODE' },
+        { grant: 'READ', where: 'tenant_id = $user.TENANT_ID' }
+    ])  as
+        select
+            key a.tenant_id     as tenant_id,
+            key a.group_code    as group_code,
+            key a.language_cd   as language_cd,
+            key a.code          as code,
+            a.code_name         as code_name,
+            a.parent_group_code as parent_group_code,
+            a.parent_code       as parent_code,
+            a.sort_no           as sort_no
+        from cm_Code a
+        where a.group_code = 'CM_APPROVER_TYPE'
+    ;
 
     view UserValue as 
     select 
