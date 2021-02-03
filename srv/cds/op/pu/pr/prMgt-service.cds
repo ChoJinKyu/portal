@@ -124,12 +124,12 @@ service PrMgtService {
             key pr_number		, //: String(50)    not null	@title: '구매요청번호';
             key pr_item_number  , //: Integer64     not null    @title: '구매요청품목번호' ;               
                 org_type_code  , /// : String(2)         @title: '조직유형코드' ;	
-                org_code      ,   ///: String(10)        @title: '조직코드' ;	
-                 ( Select plant_name 
+                IFNULL( org_code, '') as  org_code :String(10)       ,   ///: String(10)        @title: '조직코드' ;	
+                IFNULL( ( Select plant_name 
                     From Org_Plant
                     Where  tenant_id = prDtl.tenant_id 
                        And company_code = prDtl.company_code
-                       And plant_code = prDtl.org_code ) as org_name : String(240),
+                       And plant_code = IFNULL( prDtl.org_code, '') ), '' ) as plant_name : String(240),
                 material_code  , // : String(40)        @title: '자재코드' ;	
                 material_group_code , //: String(10)    @title: '자재그룹코드' ;	
                 pr_desc         , //: String(100)       @title: '구매요청내역' ;	
@@ -140,11 +140,11 @@ service PrMgtService {
                 request_date    , //: Date              @title: '요청일자' ;	
                 delivery_request_date , //: Date        @title: '납품요청일자' ;	
                 approval_date           , //: Date      @title: '결재일자' ;
-                buyer_empno     , //: String(30)        @title: '구매담당자사번' ;	
-                ( Select user_local_name
+                IFNULL(buyer_empno, '') as buyer_empno :String(30)     , //: String(30)        @title: '구매담당자사번' ;	
+                IFNULL( ( Select user_local_name
                     From employee
                     Where  tenant_id = prDtl.tenant_id                       
-                       And employee_number = prDtl.buyer_empno ) as buyer_empname : String(240),
+                       And employee_number = IFNULL( prDtl.buyer_empno, '')  ), '' ) as user_local_name : String(240),
                 buyer_department_code , //: String(30)  @title: '구매부서코드' ;
                 purchasing_group_code , //: String(3)   @title: '구매그룹코드' ;	
                 estimated_price , //: Decimal           @title: '예상가격' ;	
@@ -158,11 +158,11 @@ service PrMgtService {
                 item_category_code , //: String(2)               @title: '품목범주코드' ;	
                 account_assignment_category_code , //: String(2) @title: '계정지정범주코드' ;	
                 sloc_code       , //: String(4)                  @title: '저장위치코드' ;	
-                supplier_code,    //: String(10)                 @title: '공급업체코드' ;	
-                 ( Select supplier_local_name
+                IFNULL( supplier_code, '') as supplier_code :String(10) ,   //: String(10)                 @title: '공급업체코드' ;	
+                IFNULL( ( Select supplier_local_name
                     From spWoOrgCalView
                     Where  tenant_id = prDtl.tenant_id                       
-                       And supplier_code = prDtl.supplier_code ) as supplier_name : String(240)            
+                       And supplier_code = IFNULL( prDtl.supplier_code, '')  ), '' ) as supplier_local_name :String(240)            
         from prDtl;
 
     entity Pr_TDtl    as projection on op.Pu_Pr_Template_Dtl;

@@ -31,7 +31,7 @@ sap.ui.define([
     let line_no = 1;
     let appr_sequence = 1;
 
-    return BaseController.extend("sp.vi.basePriceMgt.controller.BasePriceDetail", {
+    return BaseController.extend("sp.vi.basePriceMgt.controller.InternalPriceDetail", {
         dateFormatter: DateFormatter,
 
         onInit: function () {
@@ -53,12 +53,15 @@ sap.ui.define([
 
             this.getModel("approverModel").setProperty("/appr_type",[{code : "10", text:"승인자"},{code : "20", text:"합의자"}]);
             this.getModel("approverModel").setProperty("/details",[]);
+
+            this.getModel("detailModel").setProperty("/tenant_id",[]);
+            this.getModel("detailModel").setProperty("/details",[]);
     
  
 
             // Router설정. Detail 화면이 호출될 때마다 _getBasePriceDetail 함수 호출
             this.oRouter = this.getOwnerComponent().getRouter();
-            this.oRouter.getRoute("basePriceDetail").attachPatternMatched(this._getBasePriceDetail, this);
+            this.oRouter.getRoute("internalPriceDetail").attachPatternMatched(this._getBasePriceDetail, this);
 
         }
 
@@ -94,8 +97,7 @@ sap.ui.define([
                         business_division : "",
                         corporation : "",
                         plant : "",
-                        supplier_code : "",
-                        supplier : "",
+                        supply_plant : "",
                         material_code : "",
                         material : "",
                         vendor_pool : "",
@@ -434,14 +436,13 @@ sap.ui.define([
         }
 
         , _SendDataModel : function(approval_status_code){    
-            debugger;
 
             var oDetailModel = this.getModel("detailModel");
             var oData = oDetailModel.getData();
             var date = new Date();
             var today = new Date();
             date = this.getFormatDate(date);
-            var type_code = "NPT01";
+            var type_code = "NPT05";
 
             /**
              * SP_VI_BASE_PRICE_APRL_INSERT_PROC -> SP_VI_BASE_PRICE_APRL_MST_TYPE
@@ -567,8 +568,8 @@ sap.ui.define([
                     oNewPriceObj['apply_end_yyyymm'] = String(apply_end_yyyymm);
                     oNewPriceObj['bizdivision_code'] = aPriceData[idx].business_division;
                     oNewPriceObj['plant_code'] = aPriceData[idx].plant;
-                    oNewPriceObj['supply_plant_code'] = null;
-                    oNewPriceObj['supplier_code'] = aPriceData[idx].supplier_code;
+                    oNewPriceObj['supply_plant_code'] = aPriceData[idx].supply_plant;
+                    oNewPriceObj['supplier_code'] = "";
                     oNewPriceObj['material_code'] = aPriceData[idx].material_code;
                     oNewPriceObj['material_name'] = aPriceData[idx].material;
                     oNewPriceObj['vendor_pool_code'] = aPriceData[idx].vendor_pool_code;
@@ -613,13 +614,8 @@ sap.ui.define([
                     return;
                 }
 
-                if (!aPriceResult[i].supplier_code){
+                if (!aPriceData[i].supply_plant){
                     MessageBox.show("공급업체코드는 필수입니다. ");
-                    return;
-                }
-
-                if (!aPriceData[i].basePriceUnit){
-                    MessageBox.show("가격단위는 필수입니다. ");
                     return;
                 }
             
@@ -632,7 +628,6 @@ sap.ui.define([
                     MessageBox.show("적용종료일자가가 적용시작일자보다 적습니다.");
                     return;
                 }
-                
 
                 var t = String(aPriceResult[i].base_price);
                 if(t.indexOf('.') != -1){
@@ -641,23 +636,7 @@ sap.ui.define([
                         MessageBox.show('소수 네자리까지만 입력됩니다.');
                         return;
                     }
-                }
-
-                // if (!aPriceResult[i].vendor_pool_code){
-                //     MessageBox.show("협력사풀은 필수입니다. ");
-                //     return;
-                // }
-
-                // if (!aPriceResult[i].base_price){
-                //     MessageBox.show("base_price 필수 ");
-                //     return;
-                // }
-
-                // if (!aPriceResult[i].bizunit_code){
-                //     MessageBox.show("bizunit_code 필수 ");
-                //     return;
-                // }
-                    
+                }                    
             }
 
             /**
@@ -689,7 +668,7 @@ sap.ui.define([
                     BasePriceAprlTypeType     :  aViType,
                     BasePriceAprlItemType     :  aPriceResult,
                     BasePriceAprlDtlType      :  aViMetalDetailType,
-                    type_code                 :  "NPT01"
+                    type_code                 :  type_code
                 }
             };
             console.log("SendData");
@@ -787,15 +766,7 @@ sap.ui.define([
                 var oNewApproverData = {"details" : []};
                 oApprModel.setData(oNewApproverData);
                 this.getModel("approverModel").setProperty("/appr_type",[{code : "10", text:"승인자"},{code : "20", text:"합의자"}]);
-
-            
-                //oDetailViewModel.setProperty("/detailsLength", 0);
-                //oDetailViewModel.setProperty("/viewMode", true);
-
-                //this._setTableFragment(oRootModel.getProperty("/selectedApprovalType"));
             }
-
-            //this.setRichEditor();
         }
 
         /**
@@ -936,27 +907,11 @@ sap.ui.define([
          */
        , onBack: function () {
             var oRootModel = this.getModel("rootModel");
-            //oRootModel.setProperty("/selectedData", null);
-            //var oApprover = this.getModel("")
 
             line_no = 1;
             appr_sequence = 1;
             
             this.getRouter().navTo("basePriceList");
         }
-
-        , fPointCheck : function (val){  //f 는 객체, val은 변수값, point는 소수점 자리수
-            var t = val;
-            var point = 4;
-            if(t.indexOf('.') != -1){
-                var t_length = t.substring(t.indexOf('.') + 1);
-                if(t_length.length > 5){
-                    alert('소수 첫째자리까지만 입력됩니다.');
-                    return false;
-                }
-                return true;
-            }
-        }
-
   });
 });

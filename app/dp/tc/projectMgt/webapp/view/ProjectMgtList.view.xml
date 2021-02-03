@@ -8,6 +8,7 @@
   xmlns:layout="sap.ui.layout"
   xmlns:tnt="sap.tnt"
   xmlns:lib-m="ext.lib.control.m"
+  xmlns:cm-ui="cm.util.control.ui"
   class="sapUiSizeCompact"
   displayBlock="true"
   height="100%">
@@ -217,11 +218,11 @@
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
                         </Label>
-                        <SearchField value="{filterModel>/model_code/value}" >
+                        <Input value="{filterModel>/model_code/value}" submit="onSearch">
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S2" />
                             </layoutData>
-                        </SearchField>
+                        </Input>
 
                         <Label text="{I18N>/PRODUCT_GROUP}">
                             <layoutData>
@@ -336,22 +337,20 @@
                         </SearchField>
                         -->
                         <VBox>
-                            <lib-m:CodePicker
-                                placeholder="Enter a Employee name"
-                                selectedKey="{filterModel>/buyer_name/value}"
-                                keyField="employee_number"
-                                textField="user_local_name"
-                                suggestionItems="{
-                                    path: '/',
+                            
+                            <Input id="inputWithEmployeeValueHelp" value="{filterModel>/buyer_name/value}"
+                                showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
+                            </Input>
+                            <cm-ui:EmployeeDialog id="employeeDialog" 
+                                title="{I18N>/EMPLOYEE} {I18N>/FIND}"
+                                closeWhenApplied="true"
+                                items="{
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                    ],
-                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                    entityName: 'Employee'
-                                }">
-                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
-                                    keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
-                            </lib-m:CodePicker>
+                                    ]
+                                }"
+                                apply=".onEmployeeDialogApplyPress"
+                            />
+
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M3 S12" />
                             </layoutData>
@@ -382,6 +381,7 @@
             <!--Part No List 시작-->
             <t:Table id="mainTable"
                 selectionMode="Single"
+                selectionBehavior="RowOnly"
                 cellClick=".onCellClickPress"
                 rowSelectionChange="onSelectionChange"
                 rowActionCount="1"

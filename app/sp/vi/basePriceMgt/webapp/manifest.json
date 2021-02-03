@@ -233,6 +233,11 @@
           "pattern": "basePriceDetail",
           "name": "basePriceDetail",
           "target": "basePriceDetail"
+        },
+        {
+          "pattern": "internalPriceDetail",
+          "name": "internalPriceDetail",
+          "target": "internalPriceDetail"
         }
       ],
       "targets": {
@@ -243,6 +248,10 @@
         "basePriceDetail": {
           "viewId": "basePriceDetail",
           "viewName": "BasePriceDetail"
+        },
+        "internalPriceDetail": {
+          "viewId": "internalPriceDetail",
+          "viewName": "internalPriceDetail"
         }
       }
     }

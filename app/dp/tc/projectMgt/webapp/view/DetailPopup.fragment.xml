@@ -15,6 +15,7 @@
                 <t:Table 
                     id="detailPopupTable"
                     selectionMode="Single"
+                    selectionBehavior="RowOnly"
                     rowSelectionChange="onSelectDialogChange"
                     rowActionCount="1"
                     rows="{popupListModel>/results}"
