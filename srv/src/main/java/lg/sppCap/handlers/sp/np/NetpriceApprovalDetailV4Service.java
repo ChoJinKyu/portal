@@ -65,6 +65,7 @@ public class NetpriceApprovalDetailV4Service implements EventHandler {
         this.setTransactionAutoCommitDdlOff();
         
         ParamType vParam = context.getParam();
+        MasterType master = vParam.getMaster();
         Collection<DetailType> vDetails = vParam.getDetails();
 
         String detailTableName = null;
@@ -76,30 +77,62 @@ public class NetpriceApprovalDetailV4Service implements EventHandler {
             detailTableName = this.createTempTableDtl( vDetails );
 
             // Procedure Call
-            List<SqlParameter> paramList = new ArrayList<SqlParameter>();
-            paramList.add(new SqlParameter("I_TENANT_ID"        , Types.VARCHAR));       
-            paramList.add(new SqlParameter("I_APPROVAL_NUMBER"  , Types.VARCHAR));       
-            paramList.add(new SqlParameter("I_USER_ID"          , Types.VARCHAR));
-            paramList.add(new SqlOutParameter("O_RETURN_CODE"   , Types.VARCHAR));
-            paramList.add(new SqlOutParameter("O_RETURN_MSG"    , Types.VARCHAR));
-            
-
             StringBuffer sqlCallProc = new StringBuffer();
             sqlCallProc.append("CALL SP_NP_NET_PRICE_APPROVAL_SAVE_PROC(")       
                         .append(" I_TENANT_ID => ?")
+                        .append(" I_COMPANY_CODE => ?")
+                        .append(" I_ORG_TYPE_CODE => ?")
+                        .append(" I_ORG_CODE => ?")
                         .append(" I_APPROVAL_NUMBER => ?")
+                        .append(" I_APPROVAL_TITLE => ?")
+                        .append(" I_APPROVAL_CONTENTS => ?")
+                        .append(" I_ATTCH_GROUP_NUMBER => ?")
+                        .append(" I_NET_PRICE_DOCUMENT_TYPE_CODE => ?")
+                        .append(" I_NET_PRICE_SOURCE_CODE => ?")
+                        .append(" I_BUYER_EMPNO => ?")
+                        .append(" I_TENTPRC_FLAG => ?")
+                        .append(" I_OUTCOME_CODE => ?")
                         .append(",I_DTL => ").append( detailTableName )
                         .append(",I_USER_ID => ?")
                         .append(",O_RETURN_CODE => ?")
                         .append(",O_RETURN_MSG => ?")
                         .append(")");
 
+            List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+            paramList.add(new SqlParameter("I_TENANT_ID"                    , Types.VARCHAR));       
+            paramList.add(new SqlParameter("I_COMPANY_CODE"                 , Types.VARCHAR));       
+            paramList.add(new SqlParameter("I_ORG_TYPE_CODE"                , Types.VARCHAR));       
+            paramList.add(new SqlParameter("I_ORG_CODE"                     , Types.VARCHAR));
+            paramList.add(new SqlParameter("I_APPROVAL_NUMBER"              , Types.VARCHAR));
+            paramList.add(new SqlParameter("I_APPROVAL_TITLE"               , Types.VARCHAR));
+            paramList.add(new SqlParameter("I_APPROVAL_CONTENTS"            , Types.NCLOB));  
+            paramList.add(new SqlParameter("I_ATTCH_GROUP_NUMBER"           , Types.VARCHAR));  
+            paramList.add(new SqlParameter("I_NET_PRICE_DOCUMENT_TYPE_CODE" , Types.VARCHAR));       
+            paramList.add(new SqlParameter("I_NET_PRICE_SOURCE_CODE"        , Types.VARCHAR));
+            paramList.add(new SqlParameter("I_BUYER_EMPNO"                  , Types.VARCHAR));       
+            paramList.add(new SqlParameter("I_TENTPRC_FLAG"                 , Types.VARCHAR));       
+            paramList.add(new SqlParameter("I_OUTCOME_CODE"                 , Types.VARCHAR));       
+            //paramList.add(new SqlParameter("I_DETAILS"                      , Types.VARCHAR));       
+            paramList.add(new SqlParameter("I_USER_ID"                      , Types.VARCHAR));
+            paramList.add(new SqlOutParameter("O_RETURN_CODE"               , Types.VARCHAR));
+            paramList.add(new SqlOutParameter("O_RETURN_MSG"                , Types.VARCHAR));
 
             Map<String, Object> resultMap = jdbc.call((Connection connection) -> {
                 CallableStatement callableStatement = connection.prepareCall(sqlCallProc.toString());
-                callableStatement.setString("I_TENANT_ID"       , vParam.getTenantId()) ;
-                callableStatement.setString("I_APPROVAL_NUMBER" , vParam.getApprovalNumber()) ;
-                callableStatement.setString("I_USER_ID"         , vParam.getUserId());
+                callableStatement.setString("I_TENANT_ID"                    , master.getTenantId() );
+                callableStatement.setString("I_COMPANY_CODE"                 , master.getCompanyCode() );
+                callableStatement.setString("I_ORG_TYPE_CODE"                , master.getOrgTypeCode() );
+                callableStatement.setString("I_ORG_CODE"                     , master.getOrgCode() );
+                callableStatement.setString("I_APPROVAL_NUMBER"              , master.getApprovalNumber() );
+                callableStatement.setString("I_APPROVAL_TITLE"               , master.getApprovalTitle() );
+                callableStatement.setString("I_APPROVAL_CONTENTS"            , master.getApprovalContents() );
+                callableStatement.setString("I_ATTCH_GROUP_NUMBER"           , master.getAttchGroupNumber() );
+                callableStatement.setString("I_NET_PRICE_DOCUMENT_TYPE_CODE" , master.getNetPriceDocumentTypeCode() );
+                callableStatement.setString("I_NET_PRICE_SOURCE_CODE"        , master.getNetPriceSourceCode() );
+                callableStatement.setString("I_BUYER_EMPNO"                  , master.getBuyerEmpno() );
+                callableStatement.setBoolean("I_TENTPRC_FLAG"                , master.getTentprcFlag() );
+                callableStatement.setString("I_OUTCOME_CODE"                 , master.getOutcomeCode() );
+                callableStatement.setString("I_USER_ID"                      , vParam.getUserId() );
                 return callableStatement;
             }, paramList);
 
@@ -141,7 +174,21 @@ public class NetpriceApprovalDetailV4Service implements EventHandler {
 
         jdbc.execute(new StringBuffer()
                     .append("CREATE local TEMPORARY column TABLE ").append(tableName).append(" (")
-                    .append("DTL_SEQ NVARCHAR(20) ")  
+                    .append(" ITEM_SEQUENCE                      NVARCHAR(20)")
+                    .append(",LINE_TYPE_CODE                     NVARCHAR(30)")
+                    .append(",MATERIAL_CODE                      NVARCHAR(40)")
+                    .append(",PAYTERMS_CODE                      NVARCHAR(30)")
+                    .append(",SUPPLIER_CODE                      NVARCHAR(10)")
+                    .append(",EFFECTIVE_START_DATE               DATE        ")
+                    .append(",EFFECTIVE_END_DATE                 DATE        ")
+                    .append(",SURROGATE_TYPE_CODE                NVARCHAR(30)")
+                    .append(",CURRENCY_CODE                      NVARCHAR(3) ")
+                    .append(",NET_PRICE                          DECIMAL     ")
+                    .append(",VENDOR_POOL_CODE                   NVARCHAR(20)")
+                    .append(",MARKET_CODE                        NVARCHAR(30)")
+                    .append(",NET_PRICE_APPROVAL_REASON_CODE     NVARCHAR(30)")
+                    .append(",MAKER_CODE                         NVARCHAR(10)")
+                    .append(",INCOTERMS                          NVARCHAR(3) ")
                     .append(")")
                     .toString()
                     );
@@ -153,7 +200,21 @@ public class NetpriceApprovalDetailV4Service implements EventHandler {
         if(vDetails != null && !vDetails.isEmpty() ){
             for(DetailType vRow : vDetails){
                 batchDtl.add( new Object[] {                        
-                    vRow.get("dtl_seq")
+                     vRow.get("item_sequence")                   // '품목순번'	
+                    ,vRow.get("line_type_code")                  // '라인유형코드'
+                    ,vRow.get("material_code")                   // '자재코드'	
+                    ,vRow.get("payterms_code")                   // '지불조건코드'	
+                    ,vRow.get("supplier_code")                   // '공급업체코드'	
+                    ,vRow.get("effective_start_date")            // '유효시작일자'	
+                    ,vRow.get("effective_end_date")              // '유효종료일자'	
+                    ,vRow.get("surrogate_type_code")             // '대리견적유형코드'	
+                    ,vRow.get("currency_code")                   // '통화코드'	
+                    ,vRow.get("net_price")                       // '단가'		
+                    ,vRow.get("vendor_pool_code")                // '협력사풀코드'	
+                    ,vRow.get("market_code")                     // '납선코드'	
+                    ,vRow.get("net_price_approval_reason_code")  // '단가품의사유코드'	
+                    ,vRow.get("maker_code")                      // '제조사코드'		
+                    ,vRow.get("incoterms")                       // '인코텀즈'
                 });
             }
         }
