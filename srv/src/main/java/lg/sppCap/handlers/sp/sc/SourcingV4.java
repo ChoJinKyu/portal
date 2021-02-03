@@ -345,15 +345,15 @@ public class SourcingV4 implements EventHandler {
 
         // create temp table: local_temp_negoheaders
         StringBuffer v_sql_createTable_negoheaders = new StringBuffer();
-		v_sql_createTable_negoheaders.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOHEADERS AS ( SELECT * FROM SP_SC_NEGO_HEADERS )");
+		v_sql_createTable_negoheaders.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOHEADERS AS ( SELECT TENANT_ID, NEGO_HEADER_ID FROM SP_SC_NEGO_HEADERS )");
 
 		// create temp table: local_temp_negoitemprices
         StringBuffer v_sql_createTable_negoitemprices = new StringBuffer();
-		v_sql_createTable_negoitemprices.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOITEMPRICES AS ( SELECT * FROM SP_SC_NEGO_ITEM_PRICES )");
-
+        v_sql_createTable_negoitemprices.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOITEMPRICES AS ( SELECT tenant_id, nego_header_id, nego_item_number FROM SP_SC_NEGO_ITEM_PRICES )");
+        
 		// create temp table: local_temp_negosuppliers
         StringBuffer v_sql_createTable_negosuppliers = new StringBuffer();
-		v_sql_createTable_negosuppliers.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOSUPPLIERS AS ( SELECT * FROM SP_SC_NEGO_SUPPLIERS )");
+		v_sql_createTable_negosuppliers.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOSUPPLIERS AS ( SELECT tenant_id, nego_header_id, nego_item_number, item_supplier_sequence FROM SP_SC_NEGO_SUPPLIERS )");
 
         // // drop temp table:
         String v_sql_dropTable_negoheaders =          "drop table #local_temp_negoheaders";

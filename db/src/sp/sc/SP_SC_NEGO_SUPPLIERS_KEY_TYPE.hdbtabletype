@@ -2,5 +2,5 @@ TYPE "SP_SC_NEGO_SUPPLIERS_KEY_TYPE" AS TABLE(
   tenant_id NVARCHAR(5) NOT NULL,
   nego_header_id BIGINT NOT NULL,
   nego_item_number NVARCHAR(10) NOT NULL,
-  item_supplier_SEQUENCE NVARCHAR(10) NOT NULL
+  item_supplier_sequence NVARCHAR(10) NOT NULL
 );

@@ -1,6 +1,49 @@
 /** https://vscode-sqltools.mteixeira.dev/features/codelens */
 -- @conn sppDb_hdi_dev_RT
 
+/********************************************************************************************************/
+-- SP_SC_NEGO_HEADERS - 백업
+/********************************************************************************************************/
+-- @block Bookmarked query
+-- @group SP_SC
+-- @name TABLES - 설명
+SELECT 'SP_SC_NEGO_HEADERS' as TABLE_NAME, count(*) cnt FROM SP_SC_NEGO_HEADERS NH WHERE 1=1 UNION ALL
+SELECT 'SP_SC_NEGO_ITEM_PRICES' as TABLE_NAME, count(*) cnt FROM SP_SC_NEGO_ITEM_PRICES NI WHERE 1=1 UNION ALL
+SELECT 'SP_SC_NEGO_SUPPLIERS' as TABLE_NAME, count(*) cnt FROM SP_SC_NEGO_SUPPLIERS NS WHERE 1=1 UNION ALL
+SELECT 'NONE' as TABLE_NAME, count(*) cnt FROM SP_SC_NEGO_HEADERS NH WHERE 1=0
+-- AND FIELD = "VALUE"
+;
+
+-- @block Bookmarked query
+-- @group SP_SC
+-- @name TABLES - 설명
+SELECT TOP 5000 * 
+FROM SP_SC_NEGO_HEADERS NH 
+WHERE 1=1 
+-- AND FIELD = "VALUE"
+;
+-- @block Bookmarked query
+-- @group SP_SC
+-- @name TABLES - 설명
+SELECT TOP 5000 * 
+FROM SP_SC_NEGO_ITEM_PRICES NH 
+WHERE 1=1 
+-- AND FIELD = "VALUE"
+;
+-- @block Bookmarked query
+-- @group SP_SC
+-- @name TABLES - 설명
+SELECT TOP 5000 * 
+FROM SP_SC_NEGO_SUPPLIERS NH 
+WHERE 1=1 
+-- AND FIELD = "VALUE"
+;
+
+
+
+/********************************************************************************************************/
+-- AREA - TEST #1
+/********************************************************************************************************/
 -- @block Bookmarked query
 -- @group SP_SC
 -- @name TABLES - 설명
