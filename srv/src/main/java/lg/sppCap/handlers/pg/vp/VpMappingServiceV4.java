@@ -827,7 +827,9 @@ public class VpMappingServiceV4 implements EventHandler {
         
         v_result.setReturnCode(v_resultHash.getReturnCode());   
         v_result.setReturnMsg(v_resultHash.getReturnMsg());   
-        v_result.setReturnVpObj(v_resultTable);
+        if(!"NG".equals(v_result.getReturnCode())){            
+            v_result.setReturnVpObj(v_resultTable);
+        } 
         v_resultArr.add(v_result);
         context.setResult(v_resultArr);
         context.setCompleted();            		
