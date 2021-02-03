@@ -263,6 +263,11 @@ service BasePriceArlService {
             and cd01.group_code = 'DP_VI_BASE_PRICE_GROUND_CODE'
             and cd01.code = dtl.base_price_ground_code
             and cd01.language_cd = 'KO'
+        left outer join codeLng as cd02
+            on cd02.tenant_id = dtl.tenant_id
+            and cd02.group_code = 'DP_VI_CHANGE_REASON_CODE'
+            and cd02.code = dtl.change_reason_code
+            and cd02.language_cd = 'KO'
         {
             key dtl.tenant_id,
             key dtl.approval_number,
@@ -294,6 +299,8 @@ service BasePriceArlService {
                 dtl.base_date,
                 dtl.base_price_ground_code,
                 cd01.code_name as base_price_ground_code_nm : String(240),
+                dtl.change_reason_code,
+                cd02.code_name as change_reason_nm : String(240),
                 dtl.local_create_dtm,
                 dtl.local_update_dtm,
                 dtl.create_user_id,
@@ -313,11 +320,11 @@ service BasePriceArlService {
             and cd01.group_code = 'DP_VI_MARKET_CODE'
             and cd01.code = prc.market_code
             and cd01.language_cd = 'KO'
-        left outer join codeLng as cd02
-            on cd02.tenant_id = prc.tenant_id
-            and cd02.group_code = 'DP_VI_CHANGE_REASON_CODE'
-            and cd02.code = prc.change_reason_code
-            and cd02.language_cd = 'KO'
+        // left outer join codeLng as cd02
+        //     on cd02.tenant_id = prc.tenant_id
+        //     and cd02.group_code = 'DP_VI_CHANGE_REASON_CODE'
+        //     and cd02.code = prc.change_reason_code
+        //     and cd02.language_cd = 'KO'
         {
             key prc.tenant_id,
             key prc.approval_number,
@@ -331,8 +338,8 @@ service BasePriceArlService {
                 prc.first_purchasing_net_price,
                 prc.first_pur_netprice_curr_cd,
                 prc.first_pur_netprice_str_dt,
-                prc.change_reason_code,
-                cd02.code_name as change_reason_nm : String(240),
+                // prc.change_reason_code,
+                // cd02.code_name as change_reason_nm : String(240),
                 prc.local_create_dtm,
                 prc.local_update_dtm,
                 prc.create_user_id,

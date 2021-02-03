@@ -102,12 +102,12 @@ curl -X POST http://localhost:8080/odata/v4/dp.BasePriceArlV4Service/DpViBasePri
                 ],
                 "details": [
                     { 
-                        "company_code": "LGCKR", "org_type_code": "PU", "org_code": "1000", "material_code": "1000211", "base_uom_code": "KG", "supplier_code": "KR00002600", "base_date": "2020-12-10", "base_price_ground_code": "10" 
+                        "company_code": "LGCKR", "org_type_code": "PU", "org_code": "1000", "material_code": "1000211", "base_uom_code": "KG", "supplier_code": "KR00002600", "base_date": "2020-12-10", "base_price_ground_code": "10", "change_reason_code" : "AI"
                          , "prices" : [
                             { "market_code": "1", "new_base_price": 120.04, "new_base_price_currency_code": "KRW", "current_base_price" : 120.04, "current_base_price_currency_code": "KRW", 
-                              "first_purchasing_net_price" : 120.04, "first_pur_netprice_curr_cd": "KRW", "first_pur_netprice_str_dt": "2020-12-10", "change_reason_code" : "AI" },
+                              "first_purchasing_net_price" : 120.04, "first_pur_netprice_curr_cd": "KRW", "first_pur_netprice_str_dt": "2020-12-10" },
                             { "market_code": "2", "new_base_price": 91.01, "new_base_price_currency_code": "EUR", "current_base_price" : 91.01, "current_base_price_currency_code": "EUR", 
-                              "first_purchasing_net_price" : 91.01, "first_pur_netprice_curr_cd": "EUR", "first_pur_netprice_str_dt": "2020-12-10", "change_reason_code" : "BJ" }
+                              "first_purchasing_net_price" : 91.01, "first_pur_netprice_curr_cd": "EUR", "first_pur_netprice_str_dt": "2020-12-10" }
                         ]
                     }
                 ]
@@ -137,12 +137,12 @@ curl -X POST http://localhost:8080/odata/v4/dp.BasePriceArlV4Service/DpViBasePri
                 ],
                 "details": [
                     { 
-                        "company_code": "LGCKR", "org_type_code": "PU", "org_code": "1000", "material_code": "1000211", "base_uom_code": "KG", "supplier_code": "KR00002600", "base_date": "2020-12-10", "base_price_ground_code": "10" 
+                        "company_code": "LGCKR", "org_type_code": "PU", "org_code": "1000", "material_code": "1000211", "base_uom_code": "KG", "supplier_code": "KR00002600", "base_date": "2020-12-10", "base_price_ground_code": "10", "change_reason_code" : "AI" 
                          , "prices" : [
                             { "market_code": "1", "new_base_price": 123.04, "new_base_price_currency_code": "KRW", "current_base_price" : 119.04, "current_base_price_currency_code": "KRW", 
-                              "first_purchasing_net_price" : 120.04, "first_pur_netprice_curr_cd": "KRW", "first_pur_netprice_str_dt": "2020-12-10", "change_reason_code" : "AI" },
+                              "first_purchasing_net_price" : 120.04, "first_pur_netprice_curr_cd": "KRW", "first_pur_netprice_str_dt": "2020-12-10" },
                             { "market_code": "2", "new_base_price": 91.01, "new_base_price_currency_code": "EUR", "current_base_price" : 91.01, "current_base_price_currency_code": "EUR", 
-                              "first_purchasing_net_price" : 92.01, "first_pur_netprice_curr_cd": "EUR", "first_pur_netprice_str_dt": "2020-12-13", "change_reason_code" : "BJ" }
+                              "first_purchasing_net_price" : 92.01, "first_pur_netprice_curr_cd": "EUR", "first_pur_netprice_str_dt": "2020-12-13" }
                         ]
                     }
                 ]
