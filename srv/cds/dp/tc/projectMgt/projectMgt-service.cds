@@ -61,7 +61,7 @@ service ProjectMgtService {
      left join purOperOrg.Pur_Operation_Org cpo
             on cod.tenant_id = cpo.tenant_id
            and cod.bizdivision_code = cpo.bizdivision_code
-         where cpo.bizdivision_code is not null;
+           and cpo.bizdivision_code is not null;
 
     @readonly
     entity MM_UOM                as
