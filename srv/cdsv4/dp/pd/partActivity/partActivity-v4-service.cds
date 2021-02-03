@@ -18,14 +18,14 @@ service partActivityV4Service {
         part_project_type_code : String;
         activity_code : String;
         category_group_code : String;
-        sequence : Decimal;
+        sequence : String;
         develope_event_code : String;
         actual_role_code : String;
         activity_complete_type_code : String;
         job_type_code : String;
-        attachment_mandatory_flag : Boolean;
-        approve_mandatory_flag : Boolean;
-        active_flag : Boolean;
+        attachment_mandatory_flag : String;
+        approve_mandatory_flag : String;
+        active_flag : String;
         update_user_id : String;
         crud_type_code : String;
     };
