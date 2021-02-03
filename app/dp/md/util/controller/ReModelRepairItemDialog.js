@@ -141,7 +141,7 @@ sap.ui.define([
         },
         onValueHelpRequested: function (oEvent) {
             var path = "";
-            this._oValueHelp2Dialog = sap.ui.xmlfragment("dp.md.util.view.ValueHelpDialogApproval", this);
+            this._oValueHelp2Dialog = sap.ui.xmlfragment("dp.md.util.view.ValueHelpDialog", this);
             this._oBasicSearchField = new SearchField({
                 showSearchButton: false
             });
@@ -153,7 +153,6 @@ sap.ui.define([
             if (oFilterBar) {
                 oFilterBar.variantsInitialized();
             }
-
 
             if (oEvent.getSource().sId.indexOf("searchModel") > -1) {
                 //model
@@ -204,8 +203,6 @@ sap.ui.define([
 
             var aCols = this.oColModel.getData().cols;
 
-
-
             oThis.getView().addDependent(this._oValueHelp2Dialog);
 
             this._oValueHelp2Dialog.getTableAsync().then(function (oTable) {
@@ -240,8 +237,13 @@ sap.ui.define([
 
         },
         onValueHelpOkPress: function (oEvent) {
+            console.log(" onValueHelpOkPress ", oEvent);
+            console.log(" this._oInputModel2 ", this._oInputModel2);
+            
             var aTokens = oEvent.getParameter("tokens");
-            this._oInputModel2.setSelectedKey(aTokens[0].getKey());
+            console.log(" aTokens[0].   getKey() ", aTokens[0].getKey());
+            this._oInputModel2.setValue(aTokens[0].getKey());
+           // this._oInputModel2.setSelectedKey(aTokens[0].getKey());
             this._oValueHelp2Dialog.close();
         },
 

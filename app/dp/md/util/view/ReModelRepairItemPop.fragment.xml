@@ -41,19 +41,7 @@
                         </VBox>
                        <VBox>
                             <Label text = "Part No"/> 
-                             <Input id="searchMoldNo" 
-                                        showValueHelp="true"  
-                                        valueHelpRequest=".onValueHelpRequested"
-                                        suggestionItems="{
-                                            path: '/PartNumbers',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
-                                            ],
-                                            sorter: { path: 'mold_number' }
-                                }">
-                                    <core:Item key="{mold_number}" text="{mold_number}" />
-                                </Input>
-
+                             <Input id="searchMoldNo"  showValueHelp="true"  valueHelpRequest=".onValueHelpRequested"  />
                              <layoutData>
                                 <layout:GridData span="XL5 L5 M5 S5" />
                             </layoutData> 
@@ -67,35 +55,14 @@
                         </VBox>
                         <VBox>
                             <Label text="{path:'I18N>/MODEL', formatter:'I18NFormatter'}" labelFor="searchModel"></Label>
-                            <Input id="searchModel" 
-                                    showValueHelp="true"  
-                                    valueHelpRequest=".onValueHelpRequested"
-                                    suggestionItems="{
-                                        path: '/Models',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
-                                        ],
-                                        sorter: { path: 'model' }
-                            }">
-                                <core:Item key="{model}" text="{model}" />
-                            </Input>
+                            <Input id="searchModel"  showValueHelp="true"   valueHelpRequest=".onValueHelpRequested" />
                             <layoutData>
                                 <layout:GridData span="XL5 L5 M5 S5" />
                             </layoutData> 
                         </VBox>
                         <VBox>
-                            <Label text="Vendor Name" labelFor="searchModel"></Label>
-                            <Input  showValueHelp="true"  
-                                    valueHelpRequest=".onValueHelpRequested"
-                                    suggestionItems="{
-                                        path: '/Models',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
-                                        ],
-                                        sorter: { path: 'model' }
-                            }">
-                                <core:Item key="{model}" text="{model}" />
-                            </Input>
+                            <Label text="Vendor Name" labelFor=""></Label>
+                            <Input showValueHelp="true"  valueHelpRequest=".onValueHelpRequested" />
                             <layoutData>
                                 <layout:GridData span="XL5 L5 M5 S5" />
                             </layoutData> 
