@@ -333,7 +333,7 @@
         <f:content>
 			<smartTable:SmartTable id="sTable1" entitySet="main>/Items" tableBindingPath="main>/Items"
                 smartFilterId="smartFilterBar" tableType="Table" 
-                            useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true" 
+                            useExportToExcel="false" beforeExport="onBeforeExport" useVariantManagement="true" 
                             useTablePersonalisation="true" header="Negotiation Workbench List" showRowCount="true" 
                             enableAutoBinding="true" 
                             class="sapUiResponsiveContentPadding sapUiSmallMarginBottom"
@@ -345,6 +345,7 @@
                             <Button text="{I18N>/ARIBA}" type="Transparent" enabled="true" press="test1" />
                             <OverflowToolbarButton icon="sap-icon://sort" tooltip="Sort" text="Sort" press="onSort"/>
                             <OverflowToolbarButton icon="sap-icon://filter" tooltip="Filter" text="Filter" press="onFilter"/>
+                            <OverflowToolbarButton icon="sap-icon://excel-attachment" tooltip="Excel Export" text="Filter" press="onExcelExport"/>
                         </OverflowToolbar>
                     </smartTable:customToolbar>
                     <!-- <t:Table 
@@ -364,13 +365,13 @@
                         enableColumnFreeze="true"
                         visibleRowCount="13"
                         rows="{main>/Items}">
-                        <t:columns>
-                            <t:Column width="10rem" hAlign="Center" sortProperty="main>Header/nego_document_number" filterProperty="main>Header/nego_document_number">
+                        <t:columns >
+                            <t:Column width="10rem" hAlign="Center" sortProperty="main>Header/nego_document_number" filterProperty="main>Header/nego_document_number" id="abc">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "main>Header/nego_document_number", "leadingProperty": "main>Header/nego_document_number", "sortProperty": "main>Header/nego_document_number", "filterProperty": "main>Header/nego_document_number"}'/>
                                 </t:customData>
                                 <Label text="Negotiation No" design="Bold"/>
-                                <t:template>
+                                <t:template >
                                     <ObjectStatus text="{main>Header/nego_document_number}" active="true" press="onNegoNumberPress" class="AlignL" />
                                 </t:template>
                             </t:Column> 
@@ -408,22 +409,22 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "main>Header/reply_times", "leadingProperty": "main>Header/reply_times", "sortProperty": "main>Header/reply_times", "filterProperty": "main>Header/reply_times"}'/>
                                 </t:customData>
-                                <Label text="회신횟수" design="Bold"/>
+                                <Label text="회신횟수" textAlign="Center" design="Bold"/>
                                 <t:template>
                                     <Text text="{main>Header/reply_times}" wrapping="false" class="AlignR" />
                                 </t:template> 
                             </t:Column> 
 
-                            <t:Column width="6rem" hAlign="Center" sortProperty="main>Header/supplier_count" filterProperty="main>Header/supplier_count">
+                            <t:Column width="6rem" sortProperty="main>Header/supplier_count" filterProperty="main>Header/supplier_count">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "main>Header/supplier_count", "leadingProperty": "main>Header/supplier_count", "sortProperty": "main>Header/supplier_count", "filterProperty": "main>Header/supplier_count"}'/>
                                 </t:customData>
-                                <Label text="협력사수" design="Bold"/>
+                                <Label text="협력사수" design="Bold" class="AlignC" width="100%"/>
                                 <t:template>
-                                    <Text text="{main>Header/supplier_count}" wrapping="false" class="AlignR" />
+                                    <Text text="{main>Header/supplier_count}" wrapping="false" class="AlignC" width="100%" />
                                 </t:template>
                             </t:Column>
-                            <t:Column width="7rem" hAlign="Center" sortProperty="main>Header/supplier_participation_flag" filterProperty="main>Header/supplier_participation_flag">
+                            <t:Column width="7rem" sortProperty="main>Header/supplier_participation_flag" filterProperty="main>Header/supplier_participation_flag">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "main>Header/supplier_participation_flag", "leadingProperty": "main>Header/supplier_participation_flag", "sortProperty": "main>Header/supplier_participation_flag", "filterProperty": "main>Header/supplier_participation_flag"}'/>
                                 </t:customData>
@@ -446,13 +447,13 @@
                                                 formatter: '.remaining_hours_formatter'}" wrapping="false" /> -->
                                 </t:template> 
                             </t:Column>
-                            <t:Column width="18rem" hAlign="Center" sortProperty="main>Header/nego_document_title" filterProperty="main>Header/nego_document_title">
+                            <t:Column width="18rem" sortProperty="main>Header/nego_document_title" filterProperty="main>Header/nego_document_title">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "main>Header/nego_document_title", "leadingProperty": "main>Header/nego_document_title", "sortProperty": "main>Header/nego_document_title", "filterProperty": "main>Header/nego_document_title"}'/>
                                 </t:customData>
-                                <Label text="Title" design="Bold" />
+                                <Label text="Title" design="Bold" class="AlignC" width="100%" />
                                 <t:template>
-                                    <Text text="{main>Header/nego_document_title}" wrapping="false" class="AlignL" />
+                                    <Text text="{main>Header/nego_document_title}" wrapping="false" class="AlignL" width="100%" />
                                 </t:template>  
                             </t:Column> 
                             <t:Column width="5rem" hAlign="Center" sortProperty="main>Header/items_count" filterProperty="main>Header/items_count">
@@ -513,7 +514,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "main>req_submission_status", "leadingProperty": "main>req_submission_status", "sortProperty": "main>req_submission_status", "filterProperty": "main>req_submission_status"}'/>
                                 </t:customData>
-                                <Label text="Submission Status" design="Bold"/>
+                                <Label text="Req Submission Status" design="Bold"/>
                                 <t:template>
                                     <Text text="{main>req_submission_status}" wrapping="false" />
                                 </t:template>   
@@ -536,13 +537,13 @@
                                     <Text text="{main>material_code}" wrapping="false" class="AlignL" />
                                 </t:template> 
                             </t:Column>
-                            <t:Column width="20rem" hAlign="Center" sortProperty="main>material_desc" filterProperty="main>material_desc">
+                            <t:Column width="20rem" sortProperty="main>material_desc" filterProperty="main>material_desc">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "main>material_desc", "leadingProperty": "main>material_desc", "sortProperty": "main>material_desc", "filterProperty": "main>material_desc"}'/>
                                 </t:customData>
-                                <Label text="Description" design="Bold"/>
+                                <Label text="Description" design="Bold" class="AlignC" width="100%"/>
                                 <t:template>
-                                    <Text text="{main>material_desc}" wrapping="false" />
+                                    <Text text="{main>material_desc}" wrapping="false" class="AlignL" width="100%"/>
                                 </t:template> 
                             </t:Column>
                             <t:Column width="8rem" hAlign="Center" sortProperty="main>requestor_empno" filterProperty="main>requestor_empno">
@@ -580,7 +581,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "main>Header/buyer_empno", "leadingProperty": "main>Header/buyer_empno", "sortProperty": "main>Header/buyer_empno", "filterProperty": "main>Header/buyer_empno"}'/>
                                 </t:customData>
-                                <Label text="구매담당자" design="Bold" />
+                                <Label text="Buyer" design="Bold" />
                                 <t:template>
                                     <Text text="{main>Header/buyer_empno}" wrapping="false" />
                                 </t:template>  
@@ -590,7 +591,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "main>Header/buyer_department_code", "leadingProperty": "main>Header/buyer_department_code", "sortProperty": "main>Header/buyer_department_code", "filterProperty": "main>Header/buyer_department_code"}'/>
                                 </t:customData>
-                                <Label text="구매팀" design="Bold"/>
+                                <Label text="Department" design="Bold"/>
                                 <t:template>
                                     <Text text="{main>Header/buyer_department_code}" wrapping="false" />
                                 </t:template>  
