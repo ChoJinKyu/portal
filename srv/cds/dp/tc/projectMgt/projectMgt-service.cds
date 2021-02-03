@@ -168,13 +168,13 @@ service ProjectMgtService {
             , DP_TC_GET_MCST_PROJECT_STATUS_INFO_FUNC (tp.tenant_id
                                                 ,tp.project_code
                                                 ,tp.model_code
-                                                ,'TARGET'  /*목표*/
+                                                ,'TARGETS'  /*목표*/
                                                 ,'KO'
                                                 ) AS target_status_name: String(30)
             , DP_TC_GET_MCST_PROJECT_STATUS_CODE_FUNC (tp.tenant_id
                                                     ,tp.project_code
                                                     ,tp.model_code
-                                                    ,'TARGET'  /*목표*/
+                                                    ,'TARGETS'  /*목표*/
                                                     ) AS target_status_code: String(30)
             , DP_TC_GET_MCST_PROJECT_STATUS_INFO_FUNC (tp.tenant_id
                                                 ,tp.project_code
