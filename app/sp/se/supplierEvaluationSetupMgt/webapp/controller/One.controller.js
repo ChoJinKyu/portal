@@ -94,7 +94,7 @@ sap.ui.define([
             var oView = this.getView().getModel("DetailView");            
             var oModel = oView.getProperty("/manager");
 
-                oModel.unshift({
+                oModel.push({
                 "tenant_id": this.tenant_id,
                     "company_code": this.company_code,
                     "org_type_code":  this.org_type_code,
@@ -386,7 +386,7 @@ sap.ui.define([
                                 }
                                 if(scenario_number === "New")
                                 oNewQunaRowData.evaluation_operation_unit_code = evaluation_operation_unit_code;
-
+                                    
                                 oNewQunaRowData.sort_sequence = parseInt(oNewQunaRowData.sort_sequence);                    
                                 oSaveData.Quantitative.push(oNewQunaRowData);
                             });
@@ -445,8 +445,13 @@ sap.ui.define([
                                 this._readOperationUnitMst();
                                 this._readManagerListView();
                                 this._readEvalTypeListView();
-                                this._readQttiveItemListView();    
+                                this._readQttiveItemListView(); 
+
+                                this.getView().byId("managerTable").removeSelections(true);
+                                this.getView().byId("quantitativeTable").removeSelections(true);
                                 this.getModel("DetailView").setProperty("/isEditMode", false);
+                            
+                            
                             }
 
                             oView.setBusy(false);
@@ -651,7 +656,7 @@ sap.ui.define([
             var oView = this.getView().getModel("DetailView");            
             var oModel = oView.getProperty("/quantitative");
 
-                oModel.unshift({
+                oModel.push({
                 "tenant_id": this.tenant_id,
                     "company_code": this.company_code,
                     "org_type_code":  this.org_type_code,
@@ -731,10 +736,11 @@ sap.ui.define([
             // }           
 
         },
-        onSelectQunItem : function(oEvent){
+        onSelectItem : function(oEvent){
 
                 var oView, oViewModel, oSelectItem,
-                oBindContxtPath, oRowData, bSeletFlg, bEditMode, aSelectAll;
+                oBindContxtPath, oRowData, bSeletFlg, bEditMode, aSelectAll,
+                oParameters, bAllSeletFlg, sTablePath, oTable, aListData;
 
                 oView = this.getView();
                 oViewModel = oView.getModel("DetailView");
@@ -744,42 +750,42 @@ sap.ui.define([
                     return;
                 }
 
-                oSelectItem = oEvent.getParameter("listItem");
+                oParameters = oEvent.getParameters();
+                oSelectItem = oParameters.listItem;
                 oBindContxtPath = oSelectItem.getBindingContextPath();
                 oRowData = oViewModel.getProperty(oBindContxtPath);
-                bSeletFlg = oEvent.getParameter("selected");
+                bSeletFlg = oParameters.selected;
+                bAllSeletFlg = oParameters.selectAll;
 
-                if(oEvent.getParameters().selectAll===true){
+                if(
+                   (bAllSeletFlg && bSeletFlg) || 
+                    (!bAllSeletFlg && !bSeletFlg && oParameters.listItems.length > 1)
+                ){
+                    oTable = oEvent.getSource();
+                    sTablePath = oTable.getBindingPath("items");
+                    aListData = oViewModel.getProperty(sTablePath);
                     
-                    oEvent.getParameters("selected");
+                    oViewModel.setProperty(sTablePath, aListData.map(function(item){
 
-                    aSelectAll = oEvent.getSource().getSelectedItems();
+                    if(item.transaction_code === "D"){
+                        return item;
+                    }else if(item.transaction_code === "C"){
+                        item.rowEditable = bSeletFlg;
+                        return item;
+                    }
 
-                    aSelectAll.forEach(function(index){
-             
-                        oBindContxtPath = index.getBindingContextPath();
-                        oRowData = oViewModel.getProperty(oBindContxtPath);
+                    item.rowEditable = bSeletFlg;
+                    item.transaction_code = "U";
 
-                        if(oRowData.transaction_code === "D"){
+                    return item;
+                    }));
                         return;
-                        }else if(oRowData.transaction_code === "I"){
-                        oRowData.rowEditable = bSeletFlg;
-                        oViewModel.setProperty(oBindContxtPath, oRowData);
-                        return;
-                        }
+                            
+                }
 
-                        oRowData.rowEditable = bSeletFlg;
-                        oRowData.transaction_code = "U";
-
-                        oViewModel.setProperty(oBindContxtPath, oRowData);
-
-
-                        return;
-                    });
-
-                }else if(oRowData.transaction_code === "D"){
+                if(oRowData.transaction_code === "D"){
                     return;
-                }else if(oRowData.transaction_code === "I"){
+                }else if(oRowData.transaction_code === "C"){
                     oRowData.rowEditable = bSeletFlg;
                     oViewModel.setProperty(oBindContxtPath, oRowData);
                     return;
@@ -791,68 +797,7 @@ sap.ui.define([
                 oViewModel.setProperty(oBindContxtPath, oRowData);
            
 
-        },
-        
-        onSelectQunItem : function(oEvent){
-
-                var oView, oViewModel, oSelectItem,
-                oBindContxtPath, oRowData, bSeletFlg, bEditMode, aSelectAll;
-
-                oView = this.getView();
-                oViewModel = oView.getModel("DetailView");
-                bEditMode = oViewModel.getProperty("/isEditMode");
-
-                if(!bEditMode){
-                    return;
-                }
-
-                oSelectItem = oEvent.getParameter("listItem");
-                oBindContxtPath = oSelectItem.getBindingContextPath();
-                oRowData = oViewModel.getProperty(oBindContxtPath);
-                bSeletFlg = oEvent.getParameter("selected");
-
-                if(oEvent.getParameters().selectAll===true){
-                    
-                    oEvent.getParameters("selected");
-
-                    aSelectAll = oEvent.getSource().getSelectedItems();
-
-                    aSelectAll.forEach(function(index){
-             
-                        oBindContxtPath = index.getBindingContextPath();
-                        oRowData = oViewModel.getProperty(oBindContxtPath);
-
-                        if(oRowData.transaction_code === "D"){
-                        return;
-                        }else if(oRowData.transaction_code === "I"){
-                        oRowData.rowEditable = bSeletFlg;
-                        oViewModel.setProperty(oBindContxtPath, oRowData);
-                        return;
-                        }
-
-                        oRowData.rowEditable = bSeletFlg;
-                        oRowData.transaction_code = "U";
-
-                        oViewModel.setProperty(oBindContxtPath, oRowData);
-
-
-                        return;
-                    });
-
-                }else if(oRowData.transaction_code === "D"){
-                    return;
-                }else if(oRowData.transaction_code === "I"){
-                    oRowData.rowEditable = bSeletFlg;
-                    oViewModel.setProperty(oBindContxtPath, oRowData);
-                    return;
-                }
-
-                oRowData.rowEditable = bSeletFlg;
-                oRowData.transaction_code = "U";
-
-                oViewModel.setProperty(oBindContxtPath, oRowData);
-           
-
+            
         },
         /**
         * quantitativeTable Section 행 삭제
@@ -953,7 +898,7 @@ sap.ui.define([
             if (that.getModel("DetailView").getProperty("/isEditMode") === false) {
                 if (sPreviousHash !== undefined) {
                     // eslint-disable-next-line sap-no-history-manipulation
-                    history.go(-1);
+                    that.getRouter().navTo("main", {}, true);
                 } else {
                     that.getRouter().navTo("main", {}, true);
                 }
@@ -967,7 +912,7 @@ sap.ui.define([
 
                             if (sPreviousHash !== undefined) {
                                 // eslint-disable-next-line sap-no-history-manipulation
-                                history.go(-1);
+                                that.getRouter().navTo("main", {}, true);
                             } else {
                                 that.getRouter().navTo("main", {}, true);
                             }                             
@@ -993,6 +938,7 @@ sap.ui.define([
                      org_type_code = oItem.org_type_code,                     
                      evaluation_operation_unit_code = oItem.evaluation_operation_unit_code,
                      evaluation_type_code = oItem.evaluation_type_code
+                     
                 
                     this.getRouter().navTo("two", {
                         scenario_number: "Detail",
@@ -1001,7 +947,9 @@ sap.ui.define([
                         org_code: org_code,
                         org_type_code: org_type_code,
                         evaluation_operation_unit_code : evaluation_operation_unit_code,
-                        evaluation_type_code : evaluation_type_code
+                        evaluation_operation_unit_name : this.evaluation_operation_unit_name,
+                        evaluation_type_code : evaluation_type_code,
+                        use_flag : this.use_flag
                     });
 
             },
@@ -1015,7 +963,10 @@ sap.ui.define([
                         org_code: this.org_code,
                         org_type_code: this.org_type_code,
                         evaluation_operation_unit_code : this.evaluation_operation_unit_code,
-                        evaluation_type_code :" "
+                        evaluation_operation_unit_name : this.evaluation_operation_unit_name,
+                        evaluation_type_code :" ",
+                        use_flag : this.use_flag
+                        
                     });
                     
                 },
@@ -1107,6 +1058,8 @@ sap.ui.define([
         },
         
         _onDetailMatched: function (oEvent) {
+
+            
             var oView = this.getView();
 
             var oArgs, oComponent, oViewModel;
@@ -1115,6 +1068,23 @@ sap.ui.define([
                 oComponent = this.getOwnerComponent();
                 oViewModel = oComponent.getModel("viewModel");
                 oViewModel.setProperty("/App/layout", "OneColumn");
+
+            oView.setBusy(true);
+
+            this.scenario_number = oEvent.getParameter("arguments")["scenario_number"],
+            this.tenant_id = oEvent.getParameter("arguments")["tenant_id"],
+            this.company_code = oEvent.getParameter("arguments")["company_code"],            
+            this.org_code = oEvent.getParameter("arguments")["org_code"];
+            this.org_type_code = oEvent.getParameter("arguments")["org_type_code"];
+            this.evaluation_operation_unit_code = oEvent.getParameter("arguments")["evaluation_operation_unit_code"];
+            this.evaluation_operation_unit_name = oEvent.getParameter("arguments")["evaluation_operation_unit_name"],            
+            this.use_flag = oEvent.getParameter("arguments")["use_flag"];                                     
+                       
+            if (this.scenario_number === "Before") {
+                oView.setBusy(false);
+                return;
+            }
+
                 
             this.getView().getModel("DetailView").setProperty("/",{
                                 OperationUnitMst : [],                                
@@ -1129,17 +1099,8 @@ sap.ui.define([
 
             // oView.getModel().refresh(true);
             // oView.getModel("DetailView").refresh(true);
-            oView.setBusy(true);
+            
 
-            this.scenario_number = oEvent.getParameter("arguments")["scenario_number"],
-            this.tenant_id = oEvent.getParameter("arguments")["tenant_id"],
-            this.company_code = oEvent.getParameter("arguments")["company_code"],            
-            this.org_code = oEvent.getParameter("arguments")["org_code"];
-            this.org_type_code = oEvent.getParameter("arguments")["org_type_code"];
-            this.evaluation_operation_unit_code = oEvent.getParameter("arguments")["evaluation_operation_unit_code"];
-            this.evaluation_operation_unit_name = oEvent.getParameter("arguments")["evaluation_operation_unit_name"],            
-            this.use_flag = oEvent.getParameter("arguments")["use_flag"];                                     
-                       
             // Create 버튼 눌렀을때
             if (this.scenario_number === "New") {
                 this.getModel("DetailView").setProperty("/isEditMode", true);
@@ -1162,7 +1123,7 @@ sap.ui.define([
 
                 
 
-            } else { // Detail 일때
+            } else{ // Detail 일때
                 this.getModel("DetailView").setProperty("/isEditMode", false);
                 this.getModel("DetailView").setProperty("/isCreateMode", false); 
                 this.getModel("DetailView").setProperty("/transaction_code", "R");        

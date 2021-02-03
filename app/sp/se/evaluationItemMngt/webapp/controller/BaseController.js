@@ -1,5 +1,5 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller",
+    "ext/lib/controller/BaseController",
     "sap/m/MessageBox",
 	"sap/ui/core/message/Message",
     "sap/ui/core/MessageType",
@@ -176,6 +176,7 @@ sap.ui.define([
             this.byId(oParam.id).bindItems({
                 path : oParam.path,
                 filters : oParam.filters,
+                sorter : oParam.sorter,
                 template : oParam.template
             });
         }

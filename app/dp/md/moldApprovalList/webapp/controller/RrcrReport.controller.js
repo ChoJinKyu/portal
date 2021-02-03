@@ -145,19 +145,14 @@ sap.ui.define([
          * ,     , oArges : company_code , org_code (필수)
 		 */
         onItemAddPress : function (oEvent) {
-
             var oArgs = {
                 company_code: this.company_code,
                 org_code: this.plant_code,
             }
-
-
            this.rrItem.openPop(this, oArgs, function(item){
                 console.log("item>>>> " , item);
            });
-            
-           // this.oReModelRepairItemDialog.setTokens(this.byId("referMulti").getTokens());
-        
+
         },
 
         /**

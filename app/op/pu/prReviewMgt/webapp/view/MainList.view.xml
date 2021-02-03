@@ -139,7 +139,7 @@
                             </MultiComboBox>
                             <!-- 구매요청자 부서 -->
                             <Label text="{I18N>/REQUESTOR_DEPARTMENT}"/>
-                            <lib-m:CodePicker 
+                            <!-- <lib-m:CodePicker 
                                 placeholder="(미정)부서명을 입력하세요"
                                 selectedKey="{jSearch>/requestor_department_code}"
                                 keyField="department_id"
@@ -158,7 +158,12 @@
                                     keyFieldHeaderText="{I18N>/PR_DEPARTMENT_CODE}" 
                                     textFieldHeaderText="{I18N>/PR_DEPARTMENT_NAME}"
                                 />
-                            </lib-m:CodePicker>
+                            </lib-m:CodePicker> -->
+                            <MultiInput 
+                                id="requestorDepartmentCode"
+                                showValueHelp="true" 
+                                valueHelpRequest=".onValueHelpRequest($event, 'requestor_department_code', 'jSearch', {})" 
+                            />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -227,7 +232,7 @@
                             <!-- <MultiInput
                                 placeholder="(미정)조직을 선택하세요."
                                 showValueHelp="true" 
-                                valueHelpRequest=".onValueHelpRequest($event, 'org', {})" 
+                                valueHelpRequest=".onValueHelpRequest($event, 'org_code', 'jSearch', {})" 
                             />
                             <layoutData>
                                 <layout:GridData span="XL10 L10 M10 S10" />
@@ -238,11 +243,11 @@
                                 value="{jSearch>/material_code}"
                                 placeholder="(미정)자재를 선택하세요"
                                 showValueHelp="true"
-                                valueHelpRequest=".onValueHelpRequest($event, 'material', 'jSearch>/material_code', {})" 
+                                valueHelpRequest=".onValueHelpRequest($event, 'material_code', 'jSearch', {})" 
                             />
                             <!-- 구매담당자 부서 -->
                             <Label text="{I18N>/BUYER_DEPARTMENT}" labelFor="searchRequestDepartmentS"/>
-                            <lib-m:CodePicker 
+                            <!-- <lib-m:CodePicker 
                                 placeholder="(미정)구매담당자 부서명을 입력하세요"
                                 selectedKey="{jSearch>/buyer_department_code}"
                                 keyField="department_id"
@@ -261,7 +266,12 @@
                                     keyFieldHeaderText="{I18N>/BUYER_DEPARTMENT_CODE}" 
                                     textFieldHeaderText="{I18N>/BUYER_DEPARTMENT_CODE}"
                                 />
-                            </lib-m:CodePicker>
+                            </lib-m:CodePicker> -->
+                            <MultiInput 
+                                id="buyerDepartmentCode"
+                                showValueHelp="true"
+                                valueHelpRequest=".onValueHelpRequest($event, 'buyer_department_code', 'jSearch', {})" 
+                            />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>

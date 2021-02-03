@@ -72,9 +72,7 @@ sap.ui.define([
             _onDetailMatched: function (oEvent) {
                 
             if(this.byId("tenant_combo").getSelectedKey()){
-
-
-                var key = this.byId("tenant_combo").getSelectedKey();
+                 var key = this.byId("tenant_combo").getSelectedKey();
                 this.byId("MonitorList").rebindTable()
             }
             

@@ -106,7 +106,7 @@
                             selectedKey="{viewModel>/cond/EQ/evaluation_type_code}"
                         />
                         <layoutData>
-                            <layout:GridData span="L2 M6 S12" />
+                            <layout:GridData span="L8 M6 S12" />
                         </layoutData>
                     </VBox>
                     <VBox>

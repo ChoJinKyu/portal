@@ -49,7 +49,7 @@ sap.ui.define([
 		onInit : function () {
 
             //로그인 세션 작업완료시 수정
-            this.tenant_id = "L2100";
+            this.tenant_id = "L2101";
             this.loginUserId = "TestUser";
             this.loginUserName = "TestUser";            
 
@@ -187,12 +187,7 @@ sap.ui.define([
             var oMasterModel = this.getModel("master");
             var oLanguagesModel = this.getModel("languages");
             // var oCategoryModel = this.getModel("category");
-            var v_this = this;
-
-            if(!oMasterModel.isChanged() && !oLanguagesModel.isChanged()) {
-                    MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-                    return;
-            }
+            var v_this = this;            
                 
             var oMasterData = oMasterModel.oData;
             var oLngData = oLanguagesModel.oData;
@@ -202,6 +197,13 @@ sap.ui.define([
             // var oCateTable = this.byId("cateTable");
            
             var CUType = CUDType;
+
+            if(CUType !== "D" ){
+                if(!oMasterModel.isChanged() && !oLanguagesModel.isChanged()) {
+                        MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+                        return;
+                }
+            }
 
             if(CUType !== "D") {
                 if(this._sActivityCode !== "new"){

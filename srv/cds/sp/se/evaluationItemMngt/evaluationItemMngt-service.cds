@@ -48,7 +48,8 @@ service EvaluationItemMngtService {
     AND    mng.company_code = org.company_code
     AND    mng.org_type_code = org.org_type_code
     AND    mng.org_code = org.org_code
-    AND    mng.evaluation_operation_unit_code = org.evaluation_operation_unit_code;
+    AND    mng.evaluation_operation_unit_code = org.evaluation_operation_unit_code
+    AND    org.use_flag = true;
 
     /* User's Operation Unit */
     entity UserOperationUnit as projection on opUnitMst;

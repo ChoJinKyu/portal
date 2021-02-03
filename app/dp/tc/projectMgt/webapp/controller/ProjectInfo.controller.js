@@ -545,7 +545,7 @@ sap.ui.define([
                                     } else {
                                         return new sap.m.Input({value: {
                                             path: sModelName + ">" + column.name
-                                        }, textAlign: 'End'});
+                                        }, textAlign: 'End', type: 'Number'});
                                     }
                                     
                                 }

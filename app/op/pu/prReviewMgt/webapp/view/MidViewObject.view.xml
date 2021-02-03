@@ -29,21 +29,23 @@
 
                 <uxap:navigationActions>
                     <!-- 전체화면 -->
-                    <!-- visible="{= ${midObjectView>/screen} !== 'Full' }"
+                    <!-- visible="{= ${midObjectView>/screen} !== 'Full' }" -->
                     <OverflowToolbarButton 
                         icon="sap-icon://full-screen" 
                         type="Transparent"
-                        tooltip="Enter Full Screen Mode" 
-                        press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Full' })"
-                    />  -->
+                        tooltip="Enter Full Screen Mode"
+                        visible="true"
+                        press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Full', column: 'two' })"
+                    /> 
                     <!-- 전체화면해제 -->
-                    <!-- visible="{= ${midObjectView>/screen} === 'Full' }"
+                    <!-- visible="{= ${midObjectView>/screen} === 'Full' }" -->
                     <OverflowToolbarButton 
                         icon="sap-icon://exit-full-screen" 
                         type="Transparent"
                         tooltip="Exit Full Screen Mode" 
-                        press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Exit' })"
-                    />  -->
+                        visible="true"
+                        press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Exit', column: 'two' })"
+                    /> 
                     <!-- 뒤로가기 -->
                     <!-- visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }" -->
                     <OverflowToolbarButton 
@@ -51,7 +53,7 @@
                         type="Transparent"
                         text="back" 
                         tooltip="Back to the list" 
-                        press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'NavBack' })"
+                        press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'NavBack', column: 'two' })"
                     />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
@@ -416,7 +418,7 @@
                 <ToolbarSpacer/>
                 <Button 
                     text="(미정)마감취소"
-                    type="Transparent"
+                    type="Emphasized"
                     press=".onButtonPress($event, 'service', ${detail>/Pr_ReviewDtlView}, {
                         action: 'CLOSING_CANCEL',
                         service: 'op.prReviewMgtV4Service',
@@ -424,11 +426,47 @@
                     })"
                     visible="{detail>/Pr_ReviewDtlView/closing_flag}"
                 />
-                <Button text="(미정)공사물량" type="Transparent" press=".onButtonPress($event, 'service', { action: 'builds' })" />
-                <Button text="(미정)변경이력" type="Transparent" press=".onButtonPress($event, 'service', { action: 'changed' })" />
-                <Button text="(미정)발주이력" type="Transparent" press=".onButtonPress($event, 'service', { action: 'ordered' })" />
-                <Button text="(미정)사용실적" type="Transparent" press=".onButtonPress($event, 'service', { action: 'results' })" />
-			    <Button text="{I18N>/CLOSE}" type="Emphasized"  press=".onButtonPress($event, 'navigation', { action: 'NavBack' })" />
+                <Button 
+                    text="(미정)공사물량"
+                    type="Transparent"
+                    press=".onButtonPress($event, 'service', ${detail>/Pr_ReviewDtlView}, {
+                        action: 'XXXXX',
+                        service: 'op.prReviewMgtV4Service',
+                        entry: 'CallPrReviewSaveProc'
+                    })"
+                    visible="true"
+                />
+                <Button 
+                    text="(미정)변경이력"
+                    type="Transparent"
+                    press=".onButtonPress($event, 'service', ${detail>/Pr_ReviewDtlView}, {
+                        action: 'XXXXX',
+                        service: 'op.prReviewMgtV4Service',
+                        entry: 'CallPrReviewSaveProc'
+                    })"
+                    visible="true"
+                />
+                <Button 
+                    text="(미정)발주이력"
+                    type="Transparent"
+                    press=".onButtonPress($event, 'service', ${detail>/Pr_ReviewDtlView}, {
+                        action: 'XXXXX',
+                        service: 'op.prReviewMgtV4Service',
+                        entry: 'CallPrReviewSaveProc'
+                    })"
+                    visible="true"
+                />
+                <Button 
+                    text="(미정)사용실적"
+                    type="Transparent"
+                    press=".onButtonPress($event, 'service', ${detail>/Pr_ReviewDtlView}, {
+                        action: 'XXXXX',
+                        service: 'op.prReviewMgtV4Service',
+                        entry: 'CallPrReviewSaveProc'
+                    })"
+                    visible="true"
+                />
+			    <Button text="{I18N>/CLOSE}" type="Transparent"  press=".onButtonPress($event, 'navigation', { action: 'NavBack' })" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

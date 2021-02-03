@@ -35,6 +35,7 @@ sap.ui.define([
                 .getRoute("midView")
                 .attachPatternMatched(function(event) {
                     var { tenant_id, company_code, pr_number, pr_item_number } = event.getParameter("arguments")["?query"];
+                    this.key = { tenant_id, company_code, pr_number, pr_item_number };
                     // 상세
                     this.search(new JSONModel({ 
                         tenant_id, 
@@ -117,7 +118,24 @@ sap.ui.define([
                                         }
                                     })
                                     .done((function(r) {
-                                        this.search("jSearch", "list", "Pr_ReviewListView");
+                                        // 재조회 - MainList
+                                        this.get("$MainList")
+                                            .search("jSearch", "list", "Pr_ReviewListView");
+                                        // 재조회 - 상세
+                                        var { tenant_id, company_code, pr_number, pr_item_number } = this.key;
+                                        this.search(new JSONModel({ 
+                                            tenant_id, 
+                                            company_code, 
+                                            pr_number, 
+                                            pr_item_number 
+                                        }), "detail", "Pr_ReviewDtlView", true);
+                                        // 재조회 - 계정지정정보
+                                        this.search(new JSONModel({ 
+                                            tenant_id, 
+                                            company_code, 
+                                            pr_number, 
+                                            pr_item_number 
+                                        }), "accounts", "Pr_ReviewDtlAcctView");
                                     }).bind(this));
                                 });
                             }
@@ -127,6 +145,10 @@ sap.ui.define([
                     }).bind(this)
                 });
             }).call(this);
+
+            action != 'CLOSING_CANCEL'
+            &&
+            MessageBox.alert("준비중 입니다");
         }
 	});
 });

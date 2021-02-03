@@ -13,6 +13,18 @@ PROCEDURE DP_PD_PART_BASE_ACTIVITY_SAVE_PROC (
                     CODE_NAME NVARCHAR(240),
                     UPDATE_USER_ID NVARCHAR(255),
                     CRUD_TYPE_CODE NVARCHAR(1) ),
+    IN  I_C TABLE ( TENANT_ID NVARCHAR(5), 
+                    ACTIVITY_CODE NVARCHAR(40),
+                    CATEGORY_GROUP_CODE NVARCHAR(30),
+                    CATEGORY_CODE NVARCHAR(40),
+                    S_GRADE_STANDARD_DAYS INTEGER,	
+                    A_GRADE_STANDARD_DAYS INTEGER,	
+                    B_GRADE_STANDARD_DAYS INTEGER,	
+                    C_GRADE_STANDARD_DAYS INTEGER,	
+                    D_GRADE_STANDARD_DAYS INTEGER,	
+                    ACTIVE_FLAG BOOLEAN,
+                    UPDATE_USER_ID NVARCHAR(255),
+                    CRUD_TYPE_CODE NVARCHAR(1) ),
     OUT O_MSG TABLE(RETURN_CODE NVARCHAR(2), RETURN_MSG NVARCHAR(5000) )
 )
 LANGUAGE SQLSCRIPT
@@ -96,8 +108,8 @@ BEGIN
                       WHERE TENANT_ID = M.TENANT_ID 
                         AND ACTIVITY_CODE = M.ACTIVITY_CODE
                    )
-            WHERE   (M.TENANT_ID, M.ACTIVITY_CODE ) IN
-                    ( SELECT TENANT_ID, ACTIVITY_CODE FROM :I_M )
+            WHERE  M.TENANT_ID = V_TENANT_ID
+            AND    M.ACTIVITY_CODE = V_ACTIVITY_CODE
             ;
 
             ELSE
@@ -144,8 +156,7 @@ BEGIN
             USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE_CODE IN ('C','U')  ) id
             ON ( D.TENANT_ID = id.TENANT_ID
                 AND D.ACTIVITY_CODE = id.ACTIVITY_CODE
-                AND D.LANGUAGE_CD = id.LANGUAGE_CD
-                AND id.CRUD_TYPE_CODE IN ('C','U') )
+                AND D.LANGUAGE_CD = id.LANGUAGE_CD )
 
         WHEN MATCHED THEN
             UPDATE
@@ -173,6 +184,71 @@ BEGIN
                     ,NOW()
                     ,id.UPDATE_USER_ID
                     ,id.UPDATE_USER_ID
+                    ,NOW()
+                    ,NOW()
+                )
+        ;
+
+        /*  I_C Table의 Data 일괄 삭제 */
+        DELETE FROM DP_PD_PART_BASE_ACTIVITY_CATEGORY C
+        WHERE ( C.TENANT_ID,C.ACTIVITY_CODE,C.CATEGORY_GROUP_CODE,C.CATEGORY_CODE ) IN
+            ( SELECT ic.TENANT_ID, ic.ACTIVITY_CODE, ic.CATEGORY_GROUP_CODE, ic.CATEGORY_CODE
+                FROM :I_C ic
+               WHERE ic.CRUD_TYPE_CODE = 'D'
+            )
+        ;
+
+        /*  I_C Table의 Data 일괄 추가,수정 */
+        MERGE INTO DP_PD_PART_BASE_ACTIVITY_CATEGORY C
+            USING ( SELECT * FROM :I_C WHERE :I_C.CRUD_TYPE_CODE IN ('C','U')  ) ic
+            ON ( C.TENANT_ID = ic.TENANT_ID
+                AND C.ACTIVITY_CODE = ic.ACTIVITY_CODE
+                AND C.CATEGORY_GROUP_CODE = ic.CATEGORY_GROUP_CODE
+                AND C.CATEGORY_CODE = ic.CATEGORY_CODE )
+
+        WHEN MATCHED THEN
+            UPDATE
+            SET  C.S_GRADE_STANDARD_DAYS = ic.S_GRADE_STANDARD_DAYS
+                ,C.A_GRADE_STANDARD_DAYS = ic.A_GRADE_STANDARD_DAYS	
+                ,C.B_GRADE_STANDARD_DAYS = ic.B_GRADE_STANDARD_DAYS	
+                ,C.C_GRADE_STANDARD_DAYS = ic.C_GRADE_STANDARD_DAYS	
+                ,C.D_GRADE_STANDARD_DAYS = ic.D_GRADE_STANDARD_DAYS	
+                ,C.ACTIVE_FLAG = ic.ACTIVE_FLAG	
+                ,C.LOCAL_UPDATE_DTM = NOW()
+                ,C.UPDATE_USER_ID = ic.UPDATE_USER_ID
+                ,C.SYSTEM_UPDATE_DTM = NOW()
+        WHEN NOT MATCHED THEN
+            INSERT ( TENANT_ID
+                    ,ACTIVITY_CODE
+                    ,CATEGORY_GROUP_CODE
+                    ,CATEGORY_CODE
+                    ,S_GRADE_STANDARD_DAYS	
+                    ,A_GRADE_STANDARD_DAYS	
+                    ,B_GRADE_STANDARD_DAYS	
+                    ,C_GRADE_STANDARD_DAYS	
+                    ,D_GRADE_STANDARD_DAYS	
+                    ,ACTIVE_FLAG
+                    ,LOCAL_CREATE_DTM
+                    ,LOCAL_UPDATE_DTM
+                    ,CREATE_USER_ID
+                    ,UPDATE_USER_ID
+                    ,SYSTEM_CREATE_DTM
+                    ,SYSTEM_UPDATE_DTM
+                )
+            VALUES ( ic.TENANT_ID
+                    ,ic.ACTIVITY_CODE
+                    ,ic.CATEGORY_GROUP_CODE
+                    ,ic.CATEGORY_CODE
+                    ,ic.S_GRADE_STANDARD_DAYS	
+                    ,ic.A_GRADE_STANDARD_DAYS	
+                    ,ic.B_GRADE_STANDARD_DAYS	
+                    ,ic.C_GRADE_STANDARD_DAYS	
+                    ,ic.D_GRADE_STANDARD_DAYS	
+                    ,ic.ACTIVE_FLAG
+                    ,NOW()
+                    ,NOW()
+                    ,ic.UPDATE_USER_ID
+                    ,ic.UPDATE_USER_ID
                     ,NOW()
                     ,NOW()
                 )

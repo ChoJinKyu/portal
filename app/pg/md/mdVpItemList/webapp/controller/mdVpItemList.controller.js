@@ -62,7 +62,7 @@ sap.ui.define([
             var aFiltersComboBox = [];
             aFiltersComboBox.push( new Filter("tenant_id", "EQ", oSelectedkey));
             // oBindingComboBox.filter(aFiltersComboBox);          //sort Ascending
-            var businessSorter = new sap.ui.model.Sorter("bizunit_name", false);        //sort Ascending
+            var businessSorter = new sap.ui.model.Sorter("bizunit_code", false);        //sort Ascending
             
             business_combo.bindAggregation("items", {
                 path: "org>/Org_Unit",
@@ -90,7 +90,7 @@ sap.ui.define([
             var aFiltersComboBox = [];
             aFiltersComboBox.push( new Filter("tenant_id", "EQ", oSelectedkey));
             // oBindingComboBox.filter(aFiltersComboBox);          //sort Ascending
-            var businessSorter = new sap.ui.model.Sorter("bizunit_name", false);        //sort Ascending
+            var businessSorter = new sap.ui.model.Sorter("bizunit_code", false);        //sort Ascending
             
             business_combo.bindAggregation("items", {
                 path: "org>/Org_Unit",
@@ -119,10 +119,10 @@ sap.ui.define([
             var oView = this.getView(),
                 oTable = this.byId("treeTable"),         
                 that = this;
-
+                
             var items = oTable.getSelectedIndices();
-            if(items.length>1){
-                MessageToast.show("한 건만 선택해주세요.");
+            if(items.length>1 || items.length<1){
+                MessageToast.show("한 건 선택해주세요.");
                 return;
             }
 

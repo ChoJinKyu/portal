@@ -536,6 +536,7 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
             v_sql_createTable_BasePriceArlDetail.append("  SUPPLIER_CODE           NVARCHAR(10),");
             v_sql_createTable_BasePriceArlDetail.append("  BASE_DATE               DATE,");
             v_sql_createTable_BasePriceArlDetail.append("  BASE_PRICE_GROUND_CODE  NVARCHAR(30),");
+            v_sql_createTable_BasePriceArlDetail.append("  CHANGE_REASON_CODE      NVARCHAR(30),");
             v_sql_createTable_BasePriceArlDetail.append("  LOCAL_CREATE_DTM        SECONDDATE,");
             v_sql_createTable_BasePriceArlDetail.append("  LOCAL_UPDATE_DTM        SECONDDATE,");
             v_sql_createTable_BasePriceArlDetail.append("  CREATE_USER_ID          NVARCHAR(255),");
@@ -557,7 +558,6 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
             v_sql_createTable_BasePriceArlPrice.append("  FIRST_PURCHASING_NET_PRICE        DECIMAL(19,4),");
             v_sql_createTable_BasePriceArlPrice.append("  FIRST_PUR_NETPRICE_CURR_CD        NVARCHAR(3),");
             v_sql_createTable_BasePriceArlPrice.append("  FIRST_PUR_NETPRICE_STR_DT         DATE,");
-            v_sql_createTable_BasePriceArlPrice.append("  CHANGE_REASON_CODE                NVARCHAR(30),");
             v_sql_createTable_BasePriceArlPrice.append("  LOCAL_CREATE_DTM                  SECONDDATE,");
             v_sql_createTable_BasePriceArlPrice.append("  LOCAL_UPDATE_DTM                  SECONDDATE,");
             v_sql_createTable_BasePriceArlPrice.append("  CREATE_USER_ID                    NVARCHAR(255),");
@@ -608,8 +608,8 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         String v_sql_insert_BasePriceArlMaster   = "INSERT INTO #LOCAL_TEMP_MASTER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insert_BasePriceArlApprover = "INSERT INTO #LOCAL_TEMP_APPROVER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insert_BasePriceArlReferer  = "INSERT INTO #LOCAL_TEMP_REFERER VALUES (?, ?, ?, ?, ?, ?, ?)";
-        String v_sql_insert_BasePriceArlDetail   = "INSERT INTO #LOCAL_TEMP_DETAIL VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        String v_sql_insert_BasePriceArlPrice    = "INSERT INTO #LOCAL_TEMP_PRICE VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insert_BasePriceArlDetail   = "INSERT INTO #LOCAL_TEMP_DETAIL VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insert_BasePriceArlPrice    = "INSERT INTO #LOCAL_TEMP_PRICE VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         List<Object[]> v_batchInsert_BasePriceArlMaster   = new ArrayList<Object[]>();
         List<Object[]> v_batchInsert_BasePriceArlApprover = new ArrayList<Object[]>();
@@ -716,6 +716,7 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
                         basePriceArlDetail.get("supplier_code"),
                         basePriceArlDetail.get("base_date"),
                         basePriceArlDetail.get("base_price_ground_code"),
+                        basePriceArlDetail.get("change_reason_code"),
                         basePriceArlDetail.get("local_create_dtm"),
                         basePriceArlDetail.get("local_update_dtm"),
                         basePriceArlDetail.get("create_user_id"),
@@ -747,7 +748,6 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
                                 basePriceArlPrice.get("first_purchasing_net_price"),
                                 basePriceArlPrice.get("first_pur_netprice_curr_cd"),
                                 basePriceArlPrice.get("first_pur_netprice_str_dt"),
-                                basePriceArlPrice.get("change_reason_code"),
                                 basePriceArlPrice.get("local_create_dtm"),
                                 basePriceArlPrice.get("local_update_dtm"),
                                 basePriceArlPrice.get("create_user_id"),

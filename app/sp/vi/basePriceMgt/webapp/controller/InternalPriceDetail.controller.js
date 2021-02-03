@@ -56,12 +56,42 @@ sap.ui.define([
 
             this.getModel("detailModel").setProperty("/tenant_id",[]);
             this.getModel("detailModel").setProperty("/details",[]);
-    
- 
+
+            this.setModel(new JSONModel(), "currModel");
+            this.getCurrSearch();
+            
 
             // Router설정. Detail 화면이 호출될 때마다 _getBasePriceDetail 함수 호출
             this.oRouter = this.getOwnerComponent().getRouter();
             this.oRouter.getRoute("internalPriceDetail").attachPatternMatched(this._getBasePriceDetail, this);
+
+        }
+
+
+        , getCurrSearch : function (){
+            var oView = this.getView();
+            var oRootModel = this.getOwnerComponent().getModel("rootModel");
+            var oCurrModel =this.getModel("currModel");
+            oCurrModel.setSizeLimit(1000);
+            oView.setBusy(true);
+            debugger;
+
+            // 통화 조회
+            var oCurryModel =  this.getOwnerComponent().getModel("currencyODataModel");
+            var aOrgCompFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
+            oCurryModel.read("/Currency", {
+                filters : [aOrgCompFilter],
+                success : function(data){
+                    oView.setBusy(false);
+                    if( data && data.results ) {
+                        
+                        oCurrModel.setProperty("/org_Currency", data.results);    
+                    }
+                },
+                error : function(data){
+                    console.log("error", data);
+                }
+            });
 
         }
 

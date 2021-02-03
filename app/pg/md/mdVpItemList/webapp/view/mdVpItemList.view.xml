@@ -9,22 +9,88 @@
     xmlns:layout="sap.ui.layout" 
     xmlns:core="sap.ui.core" 
     xmlns:lib-m="ext.lib.control.m"
+    xmlns:lib-f="ext.lib.control.f"
     height="100%">
 
-<f:DynamicPage id="page" 
-    toggleHeaderOnTitleClick="ture" 
-    headerExpanded="true" 
-    fitContent="true">
+
+<f:DynamicPage id="dynamicPageId1" headerExpanded="true" toggleHeaderOnTitleClick="{/titleClickable}">
       <!--DynamicPage Title -->
       <f:title>
-        <f:DynamicPageTitle>
-          <f:heading>
-            <Title text="{I18N>/MATERIAL_MANAGEMENT_CHAR_MNGT}" />
-          </f:heading>  
-        <f:snappedContent>
-        </f:snappedContent>        
-        <f:expandedContent>
-            <form:SimpleForm id="pageSearchForm" 
+            <lib-f:CustomDynamicPageTitle>
+                <lib-f:heading>
+                    <HBox alignItems="Center">
+                        <!-- <Button icon="sap-icon://unfavorite" type="Transparent" /> -->
+                        <Title text="{I18N>/MATERIAL_MANAGEMENT_CHAR_MNGT}"/>
+                    </HBox>
+                </lib-f:heading>
+                <lib-f:fixedContent>
+                    <form:SimpleForm class="searchBox"
+                    maxContainerCols="2"
+                    editable="true"
+                    layout="ResponsiveGridLayout"
+                    adjustLabelSpan="false"
+                    labelSpanL="4"
+                    labelSpanM="4"
+                    emptySpanL="0"
+                    emptySpanM="0"
+                    columnsL="2"
+                    columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="{I18N>/TENANT}" labelFor="searchTenantCombo" required="true"></Label>
+                            <ComboBox id="searchTenantCombo" width="100%" items="{
+                                    path: 'org>/Org_Tenant',
+                                    filters: []
+                                }"
+                                selectionChange="onChangeTenant">
+                                <items>
+                                    <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
+                                </items>
+                            </ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>   
+                            <Label text="{I18N>/BUSINESS_UNIT}" labelFor="searchChain" required="true"></Label>
+                            <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" >
+                                <items>
+                                    <core:Item key="{org>bizunit_code}" text="{org>bizunit_code}: {org>bizunit_name}" />
+                                </items>
+                            </ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData> 
+                        </VBox>
+                        <VBox>
+                            <Label text= "{I18N>/VENDOR_POOL}" labelFor="search_Vp_Name"></Label>
+                            <HBox>
+                                <SearchField id="search_Vp_Name"
+                                            search=".onDialogTreeCreate" 
+
+                                            />
+                                <Input id="search_Vp_Code" placeholder="Input data" visible ="false"></Input>
+                            </HBox>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                            
+                        <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
+                            <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch" />
+                            <layoutData>
+                                <layout:GridData span="XL12 L12 M12 S12" />
+                            </layoutData>
+                        </FlexBox>
+                    </form:content>
+                    </form:SimpleForm>
+                </lib-f:fixedContent>
+            </lib-f:CustomDynamicPageTitle>
+      </f:title>
+
+      <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm 
                             maxContainerCols="2" 
                             editable="true" 
                             layout="ResponsiveGridLayout" 
@@ -37,6 +103,49 @@
                             columnsM="2">
                 <form:content>
                     <VBox>
+                        <Label text="{I18N>/REPR_DEPARTMENT_CODE}"></Label>
+                        <lib-m:CodePicker id="search_Dept"
+                            placeholder="Enter a department name"
+                            keyField="department_id"
+                            textField="department_local_name"
+                            suggestionItems="{
+                                path: '/',
+                                filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                ],
+                                serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                entityName: 'Department'
+                            }">
+                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
+                                keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
+                        </lib-m:CodePicker>
+                        <layoutData>
+                            <layout:GridData span="XL2 L3 M5 S10" />
+                        </layoutData> 
+                    </VBox>
+
+                    <VBox>
+                        <Label
+                            text="{I18N>/STATUS}"
+                            labelFor="search_codeGroupStatusflag">
+                        </Label>
+                        <SegmentedButton 
+                            id="search_statusflag"
+                            selectedKey="" 
+                            width="100%">
+                            <items>
+                                <SegmentedButtonItem text="{I18N>/ALL}" width="4em"/>
+                                <SegmentedButtonItem text="{I18N>/NEW}" width="4em" key="100"/>
+                                <SegmentedButtonItem text="{I18N>/TEMP_SAVE}" width="5em" key="200"/>
+                                <SegmentedButtonItem text="{I18N>/CONFIRMED}" width="4em" key="300"/>
+                            </items>
+                        </SegmentedButton>
+                        <layoutData>
+                            <layout:GridData
+                                span="XL2 L3 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <!-- <VBox>
                         <Label text="{I18N>/TENANT}" labelFor="searchTenantCombo" required="true"></Label>
                         <ComboBox id="searchTenantCombo" width="100%" items="{
                                 path: 'org>/Org_Tenant',
@@ -54,12 +163,6 @@
                     <VBox>   
                         <Label text="{I18N>/BUSINESS_UNIT}" labelFor="searchChain" required="true"></Label>
                         <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" >
-                        <!-- <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" items="{
-                                path: 'org>/Org_Unit',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                ]
-                            }"> -->
                             <items>
                                 <core:Item key="{org>bizunit_code}" text="{org>bizunit_code}: {org>bizunit_name}" />
                             </items>
@@ -80,24 +183,14 @@
                         <layoutData>
                             <layout:GridData span="XL2 L3 M6 S12" />
                         </layoutData>
-                    </VBox>                              
+                    </VBox>                               -->
 
-                    </form:content>
+                <!-- </form:content>
                 </form:SimpleForm>
-            </f:expandedContent>
-          <!-- 조회 -->
-          <!-- <f:actions>
-            <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch" visible="false"/>
-          </f:actions> -->
-        </f:DynamicPageTitle>
-      </f:title>
+                <form:SimpleForm class="searchBox" id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content> -->
 
-      <f:header>
-            <f:DynamicPageHeader pinnable="true">
-                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                        <form:content>
-
-                        <VBox>
+                        <!-- <VBox>
                             <Label text="{I18N>/REPR_DEPARTMENT_CODE}"></Label>
                             <lib-m:CodePicker id="search_Dept"
                                 placeholder="Enter a department name"
@@ -139,14 +232,14 @@
                                 <layout:GridData
                                     span="XL2 L3 M6 S12" />
                             </layoutData>
-                        </VBox>
-
-                        <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
+                        </VBox> -->
+<!-- 
+                        <FlexBox alignItems="End" justifyContent="End" >
                             <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch" />
                             <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />
                             </layoutData>
-                        </FlexBox>
+                        </FlexBox> -->
 
                     </form:content>
                 </form:SimpleForm>                       
@@ -190,7 +283,7 @@
                         </MenuButton>
                         <ToolbarSeparator/>
                         <Button id="mainTableItemMappingButton" text="{I18N>/MANAGEMENT_CHARACTER_MAP}" type="Transparent" press=".onMainTableItemMappingButtonPress"  />
-                        <Button id="mainTableDeleteButton" text="{I18N>/CONFIRMED}" type="Emphasized" press=".onMainTableDeleteButtonPress"/>
+                        <Button id="mainTableConfirmButton" text="{I18N>/CONFIRMED}" type="Emphasized" press=".onMainTableDeleteButtonPress"/>
                         
                     </OverflowToolbar>
                 </t:extension>

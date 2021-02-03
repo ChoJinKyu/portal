@@ -174,7 +174,8 @@ sap.ui.define([
                     new Filter("tenant_id", "EQ", oUserInfo.tenantId),
                     new Filter("company_code", "EQ", oUserInfo.companyCode),
                     new Filter("evaluation_operation_unit_code", "EQ", sEvaluOperationUnitCode),
-                    new Filter("org_code", "EQ", sOrgCode)
+                    new Filter("org_code", "EQ", sOrgCode),
+                    new Filter("use_flag", "EQ", true)
                 ];
 
                 oBtnEavluType.bindItems({
@@ -219,12 +220,16 @@ sap.ui.define([
                 oUserInfo = this._getUserSession();
                 aFilters = [
                     new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                    new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE")
+                    new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE"),
+                    new Filter("language_cd", "EQ", "KO")
                 ];
 
                 oBtnEvaluExecuteMode.destroyItems();
                 this.getOwnerComponent().getModel("common").read("/Code",{
                     filters : aFilters,
+                    sorters : [
+                        new Sorter("sort_no")
+                    ],
                     success : function(oData){
                         var aResults, sOrgCode;
 
@@ -313,7 +318,7 @@ sap.ui.define([
                 oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
                 oRowData.qttive_eval_article_calc_formula = oRowData.qttive_eval_article_calc_formula || "";
 
-                if(oRowData.leaf_flag === "N"){
+                if(oRowData.leaf_flag === "Y"){
                     oI18NModel = oView.getModel("I18N");
                     MessageBox.warning(oI18NModel.getProperty("/ESP00001"));
                     return;

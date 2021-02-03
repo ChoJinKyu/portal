@@ -6,7 +6,8 @@ sap.ui.define([
     "ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
-	"ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/NumberFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
@@ -15,7 +16,7 @@ sap.ui.define([
     "ext/lib/util/Validator",
     "op/util/controller/OPUi",
     "op/util/controller/UiControlSet",
-], function (BaseController, Multilingual, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
+], function (BaseController, Multilingual, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, NumberFormatter,
                 Filter, FilterOperator, Fragment, MessageBox, MessageToast, Validator, OPUi, UiControlSet) {
      "use strict";
     
@@ -29,6 +30,7 @@ sap.ui.define([
 	return BaseController.extend("op.pu.prMgt.controller.MidViewObject", {
 
         dateFormatter: DateFormatter,
+        numberFormatter: NumberFormatter,
         uiControlSet: UiControlSet,
         
         
@@ -147,11 +149,34 @@ sap.ui.define([
                     }
                 });
 
-                oServiceModel.read("/Pr_Dtl",{
+                oServiceModel.read("/Pr_DtlView",{
                     filters : aFilters,
                     success : function(data){
                         //oDetailModel.setProperty(data.results[0], "detailModel"); 
                         oDetailModel.setProperty("/dtl" , data.results);    
+                        //oCodeMasterTable.setBusy(false);
+                    },
+                    error : function(data){
+                        //oCodeMasterTable.setBusy(false);
+                    }
+                });
+
+                oServiceModel.read("/Pr_AccountView",{
+                    filters : aFilters,
+                    success : function(data){
+                        oDetailModel.setProperty("/account" , data.results);    
+                        //oCodeMasterTable.setBusy(false);
+                    },
+                    error : function(data){
+                        //oCodeMasterTable.setBusy(false);
+                    }
+                });
+
+
+                oServiceModel.read("/Pr_Service",{
+                    filters : aFilters,
+                    success : function(data){
+                        oDetailModel.setProperty("/service" , data.results);    
                         //oCodeMasterTable.setBusy(false);
                     },
                     error : function(data){

@@ -13,12 +13,14 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/ui/core/Fragment",
 
+    "cm/util/control/ui/DepartmentDialog",
     "cm/util/control/ui/EmployeeDialog",    
     "dp/util/control/ui/MaterialOrgDialog",
     "cm/util/control/ui/PlantDialog",
 ], function (BaseController, JSONModel, Validator,
     TablePersoController, MainListPersoService,
     Filter, FilterOperator, Sorter, MessageBox, MessageToast, Fragment, 
+    DepartmentDialog,
     EmployeeDialog,
     MaterialOrgDialog, 
     PlantDialog) {
@@ -36,7 +38,6 @@ sap.ui.define([
         onInit: function () {
             // call the base controller's init function
             BaseController.prototype["op.init"].apply(this, arguments);
-
             // today
             var lToday = new Date();
             var uToday = new Date(Date.UTC(lToday.getFullYear(), lToday.getMonth(), lToday.getDate()));
@@ -75,6 +76,11 @@ sap.ui.define([
                 },
                 // 구매요청 생성자
                 requestor_empno: null,
+                // 요청자부서
+                requestor_department_code: {
+                    FilterOperator: FilterOperator.Any,
+                    values: []
+                },
                 // 구매요청 생성일자
                 request_date: {
                     FilterOperator: FilterOperator.BT,
@@ -82,6 +88,11 @@ sap.ui.define([
                 },
                 // 구매담당자 
                 buyer_empno: this.$session.employee_number,
+                // 구매담당자부서
+                buyer_department_code: {
+                    FilterOperator: FilterOperator.Any,
+                    values: []
+                },
                 // 구매요청생성상태코드
                 pr_create_status_code: {
                     FilterOperator: FilterOperator.Any,
@@ -89,6 +100,15 @@ sap.ui.define([
                     values: ["30", "50"]
                 }
             }), "jSearch");
+
+            // middleware - token 처리
+            this.before("search", "jSearch", "list", "Pr_ReviewListView", function() {
+                [
+                    ["requestor_department_code", this.byId("requestorDepartmentCode")], 
+                    ["buyer_department_code", this.byId("buyerDepartmentCode")], 
+                ]
+                .forEach(e => this.convTokenToBind("jSearch", ["/", e[0], "/values"].join(""), e[1].getTokens()), this);
+            });
 
             // 화면 호출 될 때마다 실행
             this.getRouter()
@@ -98,20 +118,18 @@ sap.ui.define([
                         .setProperty("/headerExpanded", true);
                 }, this);
         },
-        // 화면호출시실행
-        onRenderedFirst: function () {
-            return this.search("jSearch", "list", "Pr_ReviewListView");
-        },
         /* =========================================================== */
         /* event handlers                                              */
         /* =========================================================== */
         // 공통 다이얼로그 호출
         onValueHelpRequest: function() {
 
-            var [event, action, ...args] = arguments;
+            var [event, type, model, ...args] = arguments;
+            var control = event.getSource();
+            console.log(">>>> arguments", arguments);
 
             // 자재코드
-            action == "material"
+            type == "material_code"
             &&
             this.dialog(new MaterialOrgDialog({
                 title: "Choose Material Code",
@@ -130,7 +148,7 @@ sap.ui.define([
             });
 
             // 조직코드
-            action == "org"
+            type == "org_code"
             &&
             this.dialog(new PlantDialog({
                 title: "(미정)조직을 선택하세요.)",
@@ -145,14 +163,28 @@ sap.ui.define([
                 }
             }), 
             function(result) {
-                //debugger;
-                // result.getSource().getTokens()[0].getKey()
-                // selectedKeys="{jSearch>/org_code/values}"
-                // this.getModel("jSearch").setProperty(
-                //     "/material_code", 
-                //     result.mParameters.item["/material_code".split("/")["/material_code".split("/").length-1]]
-                // );
             });
+
+            (
+                // 요청자부서
+                type == "requestor_department_code"
+                ||
+                // 구매담당자부서
+                type == "buyer_department_code"
+            )
+            &&
+            this.dialog(new DepartmentDialog({
+                title: "(미정)부서를 선택하세요",
+                multiSelection: true,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
+                    ]
+                }
+            }), function(r) {
+                // Set Token
+                control.setTokens(r.getSource().getTokens());
+            }, control);
         },
         // 조회
         onSearch: function (event) {
@@ -188,7 +220,7 @@ sap.ui.define([
         onButtonPress: function () {
             var [ event, ...args ] = arguments;
             var { action, service, entry, tId } = args[args.length-1];
-            var message, value;
+            var message = "", value;
             var table = this.byId(tId);
             var items = table
                         .getSelectedContexts()
@@ -207,8 +239,9 @@ sap.ui.define([
                 return ;
             }
             // 구매담당자가 본인이 아닐 경우 Confirm 메시지 띄움.
-            if (items.filter(e => !(e.buyer_empno != this.$session.employee_number)).length > 0) {
-                message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다.\n확인시 자동으로 본인 담당으로 변경됩니다.\nRFQ작성을 진행하시겠습니까?";
+            if (items.filter(e => (e.buyer_empno != this.$session.employee_number)).length > 0) {
+                //message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다.\n확인시 자동으로 본인 담당으로 변경됩니다.\nRFQ작성을 진행하시겠습니까?";
+                message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다.\n확인시 자동으로 본인 담당으로 변경됩니다.\n";
             }
             // 잔량이 없는 PR은 선택이 불가능하다 = 요청수량 0
             // if (items.filter(e => (+e.pr_quantity) <= 0 || !e).length > 0) {
@@ -228,10 +261,10 @@ sap.ui.define([
                 (action == 'CLOSING' && (message = "(메세지)마감을 진행하시겠습니까?"))
                 ||
                 // RFQ작성
-                (action == 'RFQ' && (message = message || "(메세지)RFQ작성을 진행하시겠습니까?"))
+                (action == 'RFQ' && (message = message + "(메세지)RFQ작성을 진행하시겠습니까?"))
                 ||
                 // 입찰작성
-                (action == 'BIDDING' && (message = "(메세지)입찰작성을 진행하시겠습니까?"))
+                (action == 'BIDDING' && (message = message + "(메세지)입찰작성을 진행하시겠습니까?"))
             )
             &&
             (function() {
@@ -318,7 +351,7 @@ sap.ui.define([
                                 })
                                 .done((function(r) {
                                     this.search("jSearch", "list", "Pr_ReviewListView");
-                                }).bind(this))
+                                }).bind(this));
                             }
                         }
                     }).bind(this)

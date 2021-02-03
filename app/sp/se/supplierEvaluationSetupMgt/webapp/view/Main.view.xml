@@ -52,7 +52,7 @@
                                                 <smartFilterBar:customControl>
                                                 
                                                      <ComboBox id="tenant_combo" 
-                                                     selectedKey="BIZ00100" 
+                                                     selectedKey="one" 
                                                      />
                                                                                   
                                                     <!-- <ComboBox id="tenant_combo" 

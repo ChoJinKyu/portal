@@ -28,14 +28,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 
+
+import cds.gen.sp.supevalsetupv4service.SaveEvaluationSetup1ProcContext;
 import cds.gen.sp.supevalsetupv4service.SupEvalSetupV4Service_;
+
 import cds.gen.sp.supevalsetupv4service.OperationUnitMst;
 import cds.gen.sp.supevalsetupv4service.Mangers;
 import cds.gen.sp.supevalsetupv4service.VpOperationUnit;
 import cds.gen.sp.supevalsetupv4service.Quantitative;
 
-import cds.gen.sp.supevalsetupv4service.SaveEvaluationSetup1ProcContext;
+
 import cds.gen.sp.supevalsetupv4service.SaveEvaluationSetup2ProcContext;
+import cds.gen.sp.supevalsetupv4service.EvalGrade;
+import cds.gen.sp.supevalsetupv4service.EvalType;
 
 import cds.gen.sp.supevalsetupv4service.RtnMsg;
 
@@ -392,6 +397,180 @@ public class SupEvalSetupV4Service implements EventHandler { // import cds.gen.s
         jdbc.execute(v_sql_dropTableVPOP);        
         jdbc.execute(v_sql_dropTableMGR);        
         jdbc.execute(v_sql_dropTableQTT);
+
+
+        context.setResult(v_result);
+        context.setCompleted();     
+        
+    }
+
+    @Transactional(rollbackFor = SQLException.class)
+    @On(event=SaveEvaluationSetup2ProcContext.CDS_NAME)
+    public void onSaveEvaluationSetup2Proc(SaveEvaluationSetup2ProcContext context) { //import cds.gen.sp.supevalsetupv4service.SaveEvaluationSetup2ProcContext;
+
+        log.info("### onSaveEvaluationSetup2Proc 1건 처리 [On] ###");
+
+        // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
+
+        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함        
+        StringBuffer v_sql_createTableETYPE = new StringBuffer();
+        v_sql_createTableETYPE.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_ETYPE (");      
+        v_sql_createTableETYPE.append("TENANT_ID NVARCHAR(10),");
+        v_sql_createTableETYPE.append("COMPANY_CODE NVARCHAR(10),");
+        v_sql_createTableETYPE.append("ORG_TYPE_CODE NVARCHAR(2),");
+        v_sql_createTableETYPE.append("ORG_CODE NVARCHAR(10),");
+        v_sql_createTableETYPE.append("EVALUATION_OPERATION_UNIT_CODE NVARCHAR(30),");
+        v_sql_createTableETYPE.append("EVALUATION_TYPE_CODE NVARCHAR(30),");
+        v_sql_createTableETYPE.append("EVALUATION_TYPE_NAME NVARCHAR(50),");
+        v_sql_createTableETYPE.append("EVALUATION_TYPE_DISTRB_SCORE_RATE DECIMAL,");
+        v_sql_createTableETYPE.append("USE_FLAG BOOLEAN)");
+
+        String v_sql_dropTableETYPE = "DROP TABLE #LOCAL_TEMP_ETYPE";   
+        
+        
+
+
+        StringBuffer v_sql_createTableEGRAD = new StringBuffer();
+        v_sql_createTableEGRAD.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_EGRAD (");
+        v_sql_createTableEGRAD.append("TRANSACTION_CODE NVARCHAR(1),");
+        v_sql_createTableEGRAD.append("TENANT_ID NVARCHAR(10),");
+        v_sql_createTableEGRAD.append("COMPANY_CODE NVARCHAR(10),");
+        v_sql_createTableEGRAD.append("ORG_TYPE_CODE NVARCHAR(2),");
+        v_sql_createTableEGRAD.append("ORG_CODE NVARCHAR(10),");
+        v_sql_createTableEGRAD.append("EVALUATION_OPERATION_UNIT_CODE NVARCHAR(30),");
+        v_sql_createTableEGRAD.append("EVALUATION_TYPE_CODE NVARCHAR(30),");
+        v_sql_createTableEGRAD.append("EVALUATION_GRADE NVARCHAR(10),");
+        v_sql_createTableEGRAD.append("EVALUATION_GRADE_START_SCORE DECIMAL(5,2),");
+        v_sql_createTableEGRAD.append("EVALUATION_GRADE_END_SCORE DECIMAL(5,2),");
+        v_sql_createTableEGRAD.append("INP_APPLY_CODE NVARCHAR(30))");
+        
+        String v_sql_dropTableEGRAD = "DROP TABLE #LOCAL_TEMP_EGRAD"; 
+
+
+
+        String v_sql_insertTableETYPE = "INSERT INTO #LOCAL_TEMP_ETYPE VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insertTableEGRAD = "INSERT INTO #LOCAL_TEMP_EGRAD VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+
+
+        log.info("### LOCAL_TEMP Success ###");
+
+        StringBuffer v_sql_callProc = new StringBuffer();
+        v_sql_callProc.append("CALL SP_SE_EVAL_SETUP_SAVE2_PROC(");        
+            v_sql_callProc.append("I_ETYPE => #LOCAL_TEMP_ETYPE,");        
+            v_sql_callProc.append("I_EGRAD => #LOCAL_TEMP_EGRAD,");     
+
+            v_sql_callProc.append("I_USER_ID => ?,");        
+            v_sql_callProc.append("O_MSG => ?)");   
+
+        log.info("### DB Connect Start ###");
+
+        Collection<EvalType> v_inETYPE = context.getEvalType();
+        Collection<EvalGrade> v_inEGRAD = context.getEvalGrade();
+
+        Collection<RtnMsg> v_result = new ArrayList<>();
+        		            
+        log.info("### Proc Start ###");            
+
+        // Commit Option
+        jdbc.execute(v_sql_commitOption);
+        
+        // Vendor Pool Item Local Temp Table 생성            
+        jdbc.execute(v_sql_createTableETYPE.toString());
+
+        // Vendor Pool Item Local Temp Table에 insert                        
+        List<Object[]> batchETYPE = new ArrayList<Object[]>();
+        if(!v_inETYPE.isEmpty() && v_inETYPE.size() > 0){
+            for(EvalType v_inRow : v_inETYPE){
+                Object[] values = new Object[] {    
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("company_code"),
+                    v_inRow.get("org_type_code"),
+                    v_inRow.get("org_code"),
+                    v_inRow.get("evaluation_operation_unit_code"),
+                    v_inRow.get("evaluation_type_code"),
+                    v_inRow.get("evaluation_type_name"),
+                    v_inRow.get("evaluation_type_distrb_score_rate"),
+                    v_inRow.get("use_flag")
+                };
+                    
+                batchETYPE.add(values);
+            }
+        }
+
+        int[] updateCountsMst = jdbc.batchUpdate(v_sql_insertTableETYPE, batchETYPE);  
+        log.info("### insert v_inETYPE Success ###");      
+        
+
+        // Vendor Pool Item Local Temp Table 생성           
+        jdbc.execute(v_sql_createTableEGRAD.toString());
+
+        // Vendor Pool Item Local Temp Table에 insert                        
+        List<Object[]> batchEGRAD = new ArrayList<Object[]>();
+        if(!v_inEGRAD.isEmpty() && v_inEGRAD.size() > 0){
+            for(EvalGrade v_inRow : v_inEGRAD){
+                Object[] values = new Object[] {    
+
+                v_inRow.get("tansaction_code"),
+                v_inRow.get("tenant_id"),
+                v_inRow.get("company_code"),
+                v_inRow.get("org_type_code"),
+                v_inRow.get("org_code"),
+                v_inRow.get("evaluation_operation_unit_code"),
+                v_inRow.get("evaluation_type_code"),
+                v_inRow.get("evaluation_grade"),
+                v_inRow.get("evaluation_grade_start_score"),
+                v_inRow.get("evaluation_grade_end_score"),
+                v_inRow.get("inp_apply_code")
+
+                };      
+
+                batchEGRAD.add(values);
+            }
+        }
+
+        int[] updateCountsEGRAD = jdbc.batchUpdate(v_sql_insertTableEGRAD, batchEGRAD);  
+
+        log.info("### insert EGRAD Success ###");
+
+        
+        // Procedure Call
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+        paramList.add(new SqlParameter("I_USER_ID", Types.VARCHAR));
+        
+        SqlReturnResultSet oReturn = new SqlReturnResultSet("O_MSG", new RowMapper<RtnMsg>(){
+            @Override
+            public RtnMsg mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                RtnMsg v_row = RtnMsg.create();
+                v_row.setReturnCode(v_rs.getString("return_code"));
+                v_row.setReturnMsg(v_rs.getString("return_msg"));
+                log.info(v_rs.getString("return_code"));
+                log.info(v_rs.getString("return_msg"));  
+                if("NG".equals(v_rs.getString("return_code"))){
+                    log.info("### Call Proc Error!!  ###");
+                    throw new ServiceException(ErrorStatuses.BAD_REQUEST, v_rs.getString("return_msg"));
+                }              
+                v_result.add(v_row);
+                return v_row;
+            }
+        });
+        paramList.add(oReturn);       
+
+        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+                CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
+                callableStatement.setString("I_USER_ID", context.getUserId());
+                return callableStatement;
+            }
+        }, paramList);
+
+        log.info("### callProc Success ###");
+
+        // Local Temp Table DROP
+        jdbc.execute(v_sql_dropTableETYPE);
+        jdbc.execute(v_sql_dropTableEGRAD);   
 
 
         context.setResult(v_result);

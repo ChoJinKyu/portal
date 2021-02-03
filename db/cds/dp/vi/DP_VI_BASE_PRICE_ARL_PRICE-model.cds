@@ -17,7 +17,7 @@ entity VI_Base_Price_Arl_Price {
         first_purchasing_net_price       : Decimal(19, 4);
         first_pur_netprice_curr_cd       : String(3);
         first_pur_netprice_str_dt        : Date;
-        change_reason_code               : String(30);
+        // change_reason_code               : String(30);
 
         // item_sequence_fk                 : Association to detail
         //                                        on  item_sequence_fk.tenant_id       = tenant_id
@@ -45,5 +45,5 @@ annotate VI_Base_Price_Arl_Price with {
     first_purchasing_net_price       @title : '최초구매단가'  @description     : '최초구매단가';
     first_pur_netprice_curr_cd       @title : '최초구매단가통화코드'  @description : '최초구매단가통화코드';
     first_pur_netprice_str_dt        @title : '최초구매시작일자'  @description   : '최초구매시작일자';
-    change_reason_code               @title : '변경사유코드'  @description   : '공통코드(CM_CODE_DTL, DP_VI_CHANGE_REASON_CODE)';
+    // change_reason_code               @title : '변경사유코드'  @description   : '공통코드(CM_CODE_DTL, DP_VI_CHANGE_REASON_CODE)';
 };

@@ -16,8 +16,6 @@
         <Text text="{master>/spmd_category_code_name}"/>
         <Label text="{I18N>/FONT_RGB_CODE}"/>
         <Text text="{master>/rgb_font_color_code}"/>
-        <Label text="{I18N>/CELL_RGB_CODE}"/>
-        <Text text="{master>/rgb_cell_clolor_code}"/>
 
 	</form:SimpleForm>
 </core:FragmentDefinition>

@@ -3,9 +3,17 @@ namespace op;
 //using {op.Pu_Pr_Mst as prMst}                       from '../../../../../db/cds/op/pu/pr/OP_PU_PR_MST-model';
 using {op.Pu_Pr_Mst_View as prMstView}              from '../../../../../db/cds/op/pu/pr/OP_PU_PR_MST_VIEW-model';
 using {op.Pu_Pr_Dtl as prDtl}                       from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL-model';
+using {op.Pu_Pr_Account as prAccounts }             from '../../../../../db/cds/op/pu/pr/OP_PU_PR_ACCOUNT-model';
+using {op.Pu_Pr_Service as prServices }             from '../../../../../db/cds/op/pu/pr/OP_PU_PR_SERVICE-model';
 using {op.Pu_Pr_Template_Map as prTMap}             from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_MAP-model';
 using {op.Pu_Pr_Template_Lng as prTLng}             from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_LNG-model';
 using {cm.Code_Lng as cdLng}                        from '../../../../../db/cds/cm/CM_CODE_LNG-model';
+
+using {op.Pu_Account_Mst as AccountMst}             from '../../../../../db/cds/op/pu/account/OP_PU_ACCOUNT_MST-model';
+using {op.Pu_Asset_Mst as AssetMst}                 from '../../../../../db/cds/op/pu/asset/OP_PU_ASSET_MST-model';
+using {op.Pu_Cctr_Mst as CctrMst}                   from '../../../../../db/cds/op/pu/cctr/OP_PU_CCTR_MST-model';
+using {op.Pu_Order_Mst as OrderMst}                 from '../../../../../db/cds/op/pu/order/OP_PU_ORDER_MST-model';
+using {op.Pu_Wbs_Mst as WbsMst}                     from '../../../../../db/cds/op/pu/wbs/OP_PU_WBS_MST-model';
 
 using {cm.Org_Plant as Org_Plant}                   from '../../../../../db/cds/cm/CM_ORG_PLANT-model';
 using {cm.Hr_Employee as employee}                  from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
@@ -164,6 +172,63 @@ service PrMgtService {
                     Where  tenant_id = prDtl.tenant_id                       
                        And supplier_code = IFNULL( prDtl.supplier_code, '')  ), '' ) as supplier_local_name :String(240)            
         from prDtl;
+
+
+
+    view Pr_AccountView as
+        select
+            key tenant_id	,			//: String(5)     not null	 @title: '테넌트id';
+            key company_code,			//: String(10)    not null	 @title: '회사코드';
+            key pr_number	,			//: String(50)    not null	 @title: '구매요청번호';
+            key pr_item_number ,         //: Integer64     not null     @title: '구매요청품목번호' ;
+            key account_sequence,		//: Integer64		not null	 @title: '계정순번';
+                service_sequence ,       //: Integer64           @title: '서비스순번' ;	
+                IFNULL(account_code, '') as account_code :String(40)     ,  //   : String(40)  not null  @title: '계정코드' ;	
+                IFNULL( ( Select account_name
+                    From AccountMst
+                    Where  tenant_id = prAccounts.tenant_id                       
+                        And company_code = prAccounts.company_code
+                        And language_code = 'KO'
+                        And account_code = IFNULL(prAccounts.account_code, '')  ), '' ) as account_name : String(100),
+
+                IFNULL(cctr_code, '') as cctr_code: String(10),            //@title: '비용부서코드' ;	
+                IFNULL( ( Select cctr_name
+                    From CctrMst
+                    Where  tenant_id = prAccounts.tenant_id                       
+                        And company_code = prAccounts.company_code
+                        And language_code = 'KO'
+                        And cctr_code = IFNULL(prAccounts.cctr_code, '')  ), '' ) as cctr_name : String(100),
+                
+                IFNULL(asset_number, '') as asset_number: String(30)  , //          @title: '자산번호' ;	
+                IFNULL( ( Select asset_name
+                    From AssetMst
+                    Where  tenant_id = prAccounts.tenant_id                       
+                        And company_code = prAccounts.company_code
+                        And asset_number = IFNULL(prAccounts.asset_number, '')  ), '' ) as asset_name : String(100),
+            
+                IFNULL(wbs_code, '') as wbs_code : String(30)    ,   //        @title: 'WBS코드' ;	
+                IFNULL( ( Select wbs_name
+                    From WbsMst
+                    Where  tenant_id = prAccounts.tenant_id                       
+                        And company_code = prAccounts.company_code
+                        And wbs_code = IFNULL(prAccounts.wbs_code, '')  ), '' ) as wbs_name : String(100),
+
+                IFNULL(order_number, '') as order_number : String(30)  ,   //          @title: '오더번호' ;	
+                IFNULL( ( Select order_name
+                    From OrderMst
+                    Where  tenant_id = prAccounts.tenant_id                       
+                        And company_code = prAccounts.company_code
+                        And order_number = IFNULL(prAccounts.order_number, '')  ), '' ) as order_name : String(100),
+
+                pr_quantity ,            //: Decimal(30,10)        @title: '구매요청수량' ;	
+                distrb_rate             //: Decimal(30,10)        @title: '배분율' ;	
+                    
+            from prAccounts;
+
+
+
+
+
 
     entity Pr_TDtl    as projection on op.Pu_Pr_Template_Dtl;
     entity Pr_TLng    as projection on op.Pu_Pr_Template_Lng;

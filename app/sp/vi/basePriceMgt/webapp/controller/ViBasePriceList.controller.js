@@ -49,12 +49,12 @@ sap.ui.define([
                                         type_list:[{code:"1", text:"양산VI품의"}]}), "filterModel");
 
             this.getRouter().getRoute("basePriceList").attachPatternMatched(this.onSearch, this);
-        },
+        }
 
         /**
          * Search 버튼 클릭(Filter 추출)
          */
-        onSearch: function (oEvent) {
+        , onSearch: function (oEvent) {
             var oFilterModel = this.getModel("filterModel"),
                 oFilterModelData = oFilterModel.getData(),
                 aFilters = [],
@@ -248,12 +248,15 @@ sap.ui.define([
                     this.getRouter().navTo("internalPriceDetail");
 
                 }else if(id.indexOf("ProcessingCost") > -1){
+                    MessageBox.show("가공비자재-SRS 준비중입니다.",{at: "Center Center"});
                     approvalTarget = "ChangeBasePriceTable";
 
                 }else if(id.indexOf("Sulphate") > -1){
+                    MessageBox.show("가공비자재-알박/동박/Sulphate 준비중입니다.",{at: "Center Center"});
                     approvalTarget = "ChangeBasePriceTable";
 
                 }else if(id.indexOf("Anode") > -1){
+                    MessageBox.show("가공비자재-양극체/전구체 준비중입니다.",{at: "Center Center"});
                     approvalTarget = "ChangeBasePriceTable";
                 }
             }    
