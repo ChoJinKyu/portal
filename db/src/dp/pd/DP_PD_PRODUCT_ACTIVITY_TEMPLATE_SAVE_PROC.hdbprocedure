@@ -96,8 +96,8 @@ BEGIN
                       WHERE TENANT_ID = M.TENANT_ID 
                         AND PRODUCT_ACTIVITY_CODE = M.PRODUCT_ACTIVITY_CODE
                    )
-            WHERE   (M.TENANT_ID, M.PRODUCT_ACTIVITY_CODE ) IN
-                    ( SELECT TENANT_ID, PRODUCT_ACTIVITY_CODE FROM :I_M )
+            WHERE  M.TENANT_ID = V_TENANT_ID
+            AND    M.PRODUCT_ACTIVITY_CODE = V_PRODUCT_ACTIVITY_CODE
             ;
 
         ELSE
