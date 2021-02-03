@@ -22,7 +22,6 @@ import org.springframework.jdbc.core.SqlReturnResultSet;
 import org.springframework.jdbc.core.CallableStatementCreator;
 
 import cds.gen.dp.partbaseactivityv4service.*;
-import cds.gen.dp.partbaseactivityservice.*;
 
 @Component
 @ServiceName(PartBaseActivityV4Service_.CDS_NAME)
