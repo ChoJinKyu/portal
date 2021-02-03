@@ -29,7 +29,7 @@ sap.ui.define([
 
     var oTransactionManager;
     var oRichTextEditor;
-    var supplierData =[];
+    var supplierData = [];
     /**
      * @description  취소품의 
      * @author       jinseon.lee
@@ -44,7 +44,7 @@ sap.ui.define([
         moldItemPop: new MoldItemSelection(),
 
         supplierSelection: new SupplierSelection(),
-        
+
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -67,25 +67,26 @@ sap.ui.define([
             this.setModel(oViewModel, "pssCancelApprovalView");//change
             this.getRouter().getRoute("pssCancelApproval").attachPatternMatched(this._onObjectMatched, this);//change
             this.getView().setModel(new ManagedListModel(), "mdItemMaster");
-            
+// PssCancelProcess 
+             this.process.setDrawProcessUI(this, "PssCancelProcess" , "A", 2);   
         },
 
         /* =========================================================== */
         /* event handlers                                              */
         /* =========================================================== */
-		
+
         /* =========================================================== */
         /* internal methods                                            */
         /* =========================================================== */
-        _onApprovalPage : function () {
-  
+        _onApprovalPage: function () {
+
             // console.log(" this.approval_number "  ,  this.approval_number);
             // console.log(" Cancellation "  ,  this.getView().getModel('Cancellation'));
             var schFilter = [];
 
             if (this.approval_number == "New") {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.getView().getModel('Cancellation').getProperty("/approvalNumber"))
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 ];
 
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
@@ -94,17 +95,17 @@ sap.ui.define([
 
             } else {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 ];
 
                 this._bindViewParticipating("/ParticipatingSupplier", "mdItemMaster", schFilter, function (oData) {
                     // console.log("ParticipatingSupplier Edit >>>>>>", oData);
                 });
-  
-            }  
+
+            }
         },
 
-        _bindViewParticipating : function (sObjectPath, sModel, aFilter, callback) { 
+        _bindViewParticipating: function (sObjectPath, sModel, aFilter, callback) {
             var oView = this.getView(),
                 oModel = this.getModel(sModel);
             oView.setBusy(true);
@@ -128,10 +129,10 @@ sap.ui.define([
             // console.log(" psTable.getRows().length " , psTable);
 
             if (oSelected.length > 0) {
-                if(detailModel.getData().ParticipatingSupplier.length <= oSelected.length){
+                if (detailModel.getData().ParticipatingSupplier.length <= oSelected.length) {
                     MessageBox.error("취소할 품의대상이 하나이상이어야 합니다.");
                     return;
-                }else{
+                } else {
                     oSelected.forEach(function (idx) {
                         detailModel.removeRecord(idx)
                         //  detailModel.markRemoved(idx)
@@ -142,18 +143,18 @@ sap.ui.define([
             } else {
                 MessageBox.error("삭제할 목록을 선택해주세요.");
             }
-        } ,
+        },
 
         onPageCancelButtonPress: function () {
             this._viewMode();
         },
 
-        _toEditModeEachApproval : function(){ 
-             // console.log(" PssCancelApproval  _toEditModeEachApproval ");
-         } ,
-        _toShowModeEachApproval : function(){ 
-             // console.log(" PssCancelApproval  _toShowModeEachApproval "); 
-         } ,
+        _toEditModeEachApproval: function () {
+            // console.log(" PssCancelApproval  _toEditModeEachApproval ");
+        },
+        _toShowModeEachApproval: function () {
+            // console.log(" PssCancelApproval  _toShowModeEachApproval "); 
+        },
         /*
         _participatingEditFragment : function(){
             // console.log("_participatingEditFragment");
@@ -170,16 +171,16 @@ sap.ui.define([
             this._loadFragment("ParticipatingSupplierSelectionTableView", function (oFragment) {
                 oPageSection.addBlock(oFragment);
             }.bind(this));
-        }, */ 
+        }, */
 
-        onPagePreviewButtonPress : function(){ // 협력사 선정품의랑 같은거 사용 
+        onPagePreviewButtonPress: function () { // 협력사 선정품의랑 같은거 사용 
 
-            this.getView().setModel(new ManagedListModel(), "approverPreview"); 
+            this.getView().setModel(new ManagedListModel(), "approverPreview");
 
-            if(this.getModel("approver").getData().Approvers != undefined){ 
+            if (this.getModel("approver").getData().Approvers != undefined) {
                 var ap = this.getModel("approver").getData().Approvers;
-                for(var i = 0 ; i < ap.length ; i++){
-                    this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
+                for (var i = 0; i < ap.length; i++) {
+                    this.getModel("approverPreview").addRecord(ap[i], "/Approvers");
                 }
             }
 
@@ -202,9 +203,9 @@ sap.ui.define([
             });
 
         },
-        onPrvClosePress : function(){ 
-             var oView = this.getView();
-             if (this._oDialogPreview) {
+        onPrvClosePress: function () {
+            var oView = this.getView();
+            if (this._oDialogPreview) {
                 this._oDialogPreview.then(function (oDialog) {
                     oView.byId('referMulti').setTokens(oView.byId("referMultiPrev").getTokens()); // 이거 안하면 본화면에 표시가 안됨 
                     oDialog.close();
@@ -212,46 +213,66 @@ sap.ui.define([
                 });
                 this._oDialogPreview = undefined;
             }
-           // this.byId("participatingSupplierSelectionPreview").close();
+            // this.byId("participatingSupplierSelectionPreview").close();
         },
-        
+
         onChangePayment: function (oEvent) {
             var oModel = this.getModel("moldMaster");
         },
 
         // 승인요청  
-        onPageRequestButtonPress : function (){
-             this.getModel("appMaster").setProperty("/approve_status_code", "AR"); 
-             this._sumbitDataSettingAndSend();
+        onPageRequestButtonPress: function () {
+            this.getModel("appMaster").setProperty("/approve_status_code", "AR");
+            this._sumbitDataSettingAndSend();
         },
 
         // 임시저장 
-        onPageDraftButtonPress : function () { 
+        onPageDraftButtonPress: function () {
             this.getModel("appMaster").setProperty("/approve_status_code", "DR");
             this._sumbitDataSettingAndSend();
         },
 
-        onPageRequestCancelButtonPress : function () { 
-            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 요청취소  
-            this._sumbitDataSettingAndSend();
+        onPageRequestCancelButtonPress: function () {
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 요청취소   
+            this.approvalRequestCancel(); 
+          //  this._sumbitDataSettingAndSend();
         },
 
-        _sumbitDataSettingAndSend : function (){
+        _sumbitDataSettingAndSend: function () {
             this.approval_type_code = "A";
             var bModel = this.getModel("mdItemMaster");
-            this.approvalDetails_data = [] ;
-            this.moldMaster_data = [] ;
+            this.approvalDetails_data = [];
+            this.moldMaster_data = [];
             this.quotation_data = [];
             var qtnArr = [];
-            var that = this; 
+            var that = this;
 
-            if(this.validator.validate(this.byId("generalInfoLayout") ) !== true){
-                MessageToast.show( this.getModel('I18N').getText('/ECM01002') ); 
-                this.getModel("appMaster").setProperty("/approve_status_code", this.firstStatusCode); 
+            if (this.validator.validate(this.byId("generalInfoLayout")) !== true) {
+                MessageToast.show(this.getModel('I18N').getText('/ECM01002'));
+                this.getModel("appMaster").setProperty("/approve_status_code", this.firstStatusCode);
                 return;
             }
 
-           // // console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
+
+            if (bModel._aRemovedRows.length > 0) {
+                bModel._aRemovedRows.forEach(function (item) {
+                    that.approvalDetails_data.push({
+                        tenant_id: that.tenant_id
+                        , approval_number: that.approval_number
+                        , mold_id: item.mold_id
+                        , _row_state_: "D"
+                    });
+                    that.moldMaster_data.push({
+                        tenant_id: that.tenant_id
+                        , mold_id: item.mold_id
+                        , currency_code: item.currency_code
+                        , target_amount: item.target_amount
+                        , _row_state_: "D"
+                    });
+                });
+            }
+
+            // // console.log("bModel.getData().length " , bModel.getData().ItemBudgetExecution.length);
             if (bModel.getData().ParticipatingSupplier != undefined && bModel.getData().ParticipatingSupplier.length > 0) {
 
                 bModel.getData().ParticipatingSupplier.forEach(function (item) {
@@ -364,13 +385,13 @@ sap.ui.define([
                         })
                     }
 
-                   var state = that.approval_number == "New"?"C":"U";
+                    var state = that.approval_number == "New" ? "C" : "U";
 
                     that.approvalDetails_data.push({
                         tenant_id: that.tenant_id
                         , approval_number: that.approval_number
                         , mold_id: item.mold_id
-                        , _row_state_: state 
+                        , _row_state_: state
                     });
                     that.moldMaster_data.push({
                         tenant_id: that.tenant_id
@@ -382,23 +403,7 @@ sap.ui.define([
                 });
             }
 
-            if (bModel._aRemovedRows.length > 0) {
-                bModel._aRemovedRows.forEach(function (item) {
-                    that.approvalDetails_data.push({
-                        tenant_id: that.tenant_id
-                        , approval_number: that.approval_number
-                        , mold_id: item.mold_id
-                        , _row_state_: "D"
-                    });
-                    that.moldMaster_data.push({
-                        tenant_id: that.tenant_id
-                        , mold_id: item.mold_id
-                        , currency_code: item.currency_code
-                        , target_amount: item.target_amount
-                        , _row_state_: "D"
-                    });
-                });
-            }
+
 
             this._commonDataSettingAndSubmit();
         }

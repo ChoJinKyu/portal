@@ -10,21 +10,21 @@
     xmlns:u="sap.ui.unified"
     height="100%">
 
-    <f:DynamicPage id="page"
-        headerExpanded="{mainListView>/headerExpanded}" 
-        toggleHeaderOnTitleClick="true">
+    <f:DynamicPage id="page2"
+        headerExpanded="true" 
+        toggleHeaderOnTitleClick="true">        
         <!-- DynamicPage Title -->
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{i18n>appTitle}" />
+                    <Title text="LOI 발행요청 현황" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
                 <f:expandedContent>
                 </f:expandedContent>
                 <f:actions>
-                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                    <!-- <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" /> -->
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -34,8 +34,7 @@
         <!-- DynamicPage Header -->
         <f:header>
             <f:DynamicPageHeader>
-                <!-- <f:snappedContent> -->
-                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
                                 <Label text="LOI 번호" labelFor="searchLoiNumberS" ></Label>
@@ -104,7 +103,7 @@
                                         keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
                                 </lib-m:CodePicker>
                                 <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
+                                    <layout:GridData span="XL2 L3 M6 S12" />                                   
                                 </layoutData>
                             </VBox>
                             <VBox>
@@ -122,102 +121,114 @@
                                     <layout:GridData span="XL6 L6 M12 S12" />
                                 </layoutData>
                             </VBox>
+
+                            <FlexBox
+                                alignItems="Start"
+                                justifyContent="End">
+                                
+                                <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                                <layoutData>
+                                    <!-- <layout:GridData
+                                        span="XL4 L6 M12 S12" /> -->
+                                        <layout:GridData span="XL6 L6 M12 S12" />
+                                </layoutData>
+                            </FlexBox>      
                         </form:content>
                     </form:SimpleForm>
-                <!-- </f:snappedContent> -->
-              
+                            
             </f:DynamicPageHeader>
         </f:header>
+
         <f:content>
-            <VBox>
-                <Table id="mainTable" 
-                        sticky="HeaderToolbar,ColumnHeaders" 
-                        inset="false" 
-                        growing="true"
-                        growingThreshold="10"
-                        class="sapFDynamicPageAlignContent" 
-                        updateFinished=".onMainTableUpdateFinished"
-                        items="{list>/LOIRequestListView}"
-                        mode="None" 
-                        width="auto">
-                    <headerToolbar>
-                        <OverflowToolbar>
-                            <Title text="Request List ({= (${list>/LOIRequestListView})?${list>/LOIRequestListView}.length:0})" level="H2"/>
-                            <ToolbarSpacer/>
-                            <Button id="mainTableAddButton" text="Create" type="Transparent" press=".onMainTableAddButtonPress" />
-                            <ToolbarSeparator/>
-                            <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
-                                <layoutData>
-                                    <OverflowToolbarLayoutData priority="NeverOverflow" />
-                                </layoutData>
-                            </Button>
-                        </OverflowToolbar>
-                    </headerToolbar>
-                    <columns>
-                        <Column id="mainLoiNumber" minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="LOI번호"/>
-                        </Column>
-                        <Column id="mainRequestDepartmentCode" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="요청부서" />
-                        </Column>
-                        <Column id="mainRequestorEmpno" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="요청자" />
-                        </Column>
-                        <Column id="mainRequestDate" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="요청일자" />
-                        </Column>
-                        <Column id="mainLoiRequestTitle" minScreenWidth="Tablet" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader" width="300px">
-                            <Text text="요청명" />
-                        </Column>
-                        <Column id="mainLoiRequestStatusCode" minScreenWidth="Tablet" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader" width="100px">
-                            <Text text="진행상태" />
-                        </Column>
-                        <!-- <Column id="mainInvestmentReviewFlag" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="투자심의여부" />
-                        </Column> -->
-                        <Column id="mainBuyerEmpno" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="구매담당자" /> 
-                        </Column>
-                        <Column id="mainPublishDate" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="발행일자" /> 
-                        </Column>
-                        <Column id="mainVendorPoolCode" minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="협력사" /> 
-                        </Column>
-                    </columns>
-                    <items>
-                        <ColumnListItem type="Navigation" press=".onMainTableItemPress">
-                            <cells>
-                                <ObjectIdentifier text="{list>loi_number}"/>
-                                <ObjectIdentifier text="{list>request_department_name}" />
-                                <ObjectIdentifier text="{list>requestor_name}" />
-                                <ObjectIdentifier text="{
-                                        path: 'list>request_date',
-                                        formatter: '.dateFormatter.toDateString'
-                                    }"/>
-                                <ObjectIdentifier text="{list>loi_request_title}" />
-                                <ObjectIdentifier text="{list>loi_request_status_name}" />
-                                <!-- <ObjectIdentifier text="{list>investment_review_flag}" /> -->
-                                <ObjectIdentifier text="{list>buyer_name}" />
-                                <ObjectIdentifier text="{
-                                        path: 'list>publish_date',
-                                        formatter: '.dateFormatter.toDateString'
-                                    }"/>
-                                <ObjectIdentifier text="{list>supplier_code}" />
-                                
-                            </cells>
-                        </ColumnListItem>
-                    </items>
-                </Table>
-            </VBox>
+            <t:Table id="mainTable"
+            selectionMode="None"
+            
+            rows="{listModel>/}"
+            cellClick=".onCellClickPress"
+            rowSelectionChange=".onCheck"
+            visibleRowCountMode="Auto"
+            columnResize="onColumnResize">
+            <t:extension>
+                <OverflowToolbar class="sapFDynamicPageAlignContent">
+                <!-- <Title text="Request List {= ${listModel>/LOIRequestListView}.length > 0 ? '(' + ${listModel>/LOIRequestListView}.length + ')' : ''}" level="H2"/> -->
+                <Title text="Request List {= ${listModel>/}.length > 0 ? '(' + ${listModel>/}.length + ')' : ''}" level="H2"/>
+                <ToolbarSpacer/>
+
+                <Button id="mainTableAddButton" text="Create" type="Transparent" press=".onMainTableAddButtonPress" />
+                <ToolbarSeparator/>
+                <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                    <layoutData>
+                        <OverflowToolbarLayoutData priority="NeverOverflow" />
+                    </layoutData>
+                </Button>
+                </OverflowToolbar>
+            </t:extension>
+            <t:rowSettingsTemplate>
+            </t:rowSettingsTemplate>
+            <t:columns>
+                <t:Column id="mainLoiNumber" width="10rem">
+                <Label text="LOI번호" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{listModel>loi_number}"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="mainRequestDepartmentCode" width="15rem">
+                <Label text="요청부서" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{listModel>request_department_name}"/>
+                </t:template>
+                </t:Column>
+
+                <t:Column id="mainRequestorEmpno" width="6rem">
+                <Label text="요청자" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{listModel>requestor_name}"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="mainRequestDate" width="8rem" hAlign="Center">
+                <Label text="요청일자" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{
+                                path: 'listModel>request_date',
+                                formatter: '.dateFormatter.toDateString'
+                            }"/>
+                </t:template>
+                </t:Column>  
+                <t:Column id="mainLoiRequestTitle" width="20rem">
+                <Label text="요청명" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{listModel>loi_request_title}"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="mainLoiRequestStatusCode" width="10rem">
+                <Label text="진행상태" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{listModel>loi_request_status_name}"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="mainBuyerEmpno" width="6rem">
+                <Label text="구매담당자" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{listModel>buyer_name}"/>
+                </t:template>
+                </t:Column>    
+                <t:Column id="mainPublishDate" width="8rem">
+                <Label text="발행일자" textAlign="Center" width="100%"/>
+                <t:template>
+                     <Text text="{
+                                path: 'listModel>publish_date',
+                                formatter: '.dateFormatter.toDateString'
+                            }"/>
+                </t:template>
+                </t:Column>   
+                <t:Column id="mainVendorPoolCode" width="12rem">
+                <Label text="협력사" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{listModel>supplier_code}"/>
+                </t:template>
+                </t:Column>                                                                                                                    
+            </t:columns>
+            </t:Table>
         </f:content>
-        <!-- DynamicPage Footer -->
-        <f:footer>
-            <OverflowToolbar>
-                <ToolbarSpacer />
-				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
-				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
-            </OverflowToolbar>
-        </f:footer>
     </f:DynamicPage>
 </mvc:View>

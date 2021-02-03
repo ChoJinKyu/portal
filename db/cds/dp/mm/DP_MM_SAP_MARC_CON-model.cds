@@ -23,7 +23,7 @@ using util from '../../cm/util/util-model';
 entity Mm_Sap_Marc_Con {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	
   key interface_id : Integer64  not null @title: '인터페이스ID' ;	
-    batch_id : Integer64  not null @title: '그룹ID' ;	
+  key batch_id : Integer64  not null @title: '그룹ID' ;	
     conv_prog_status_code : String(30)  not null @title: '컨버전진행상태코드' ;	
     conv_error_desc : String(500)   @title: '컨버전오류설명' ;	
     source_system_code : String(30)   @title: '소스시스템코드' ;	
@@ -38,7 +38,7 @@ entity Mm_Sap_Marc_Con {
     maabc : String(10)   @title: 'ABC 지시자' ;	
     kzkri : String(10)   @title: '지시자:중요 부품' ;	
     ekgrp : String(10)   @title: '구매 그룹' ;	
-    ausme : Decimal(3,0)   @title: '출고 단위' ;	
+    ausme : String(3)   @title: '출고 단위' ;	
     dispr : String(10)   @title: '자재:MRP 프로파일' ;	
     dismm : String(10)   @title: 'MRP 유형' ;	
     dispo : String(10)   @title: 'MRP 관리자' ;	
@@ -77,7 +77,7 @@ entity Mm_Sap_Marc_Con {
     basmg : Decimal(13,3)   @title: '기준수량' ;	
     dzeit : Decimal(3,0)   @title: '내부 생산 시간' ;	
     maxlz : Decimal(5,0)   @title: '최대저장기간' ;	
-    lzeih : Decimal(3,0)   @title: '최대 저장기간에 대한 단위' ;	
+    lzeih : String(3)   @title: '최대 저장기간에 대한 단위' ;	
     kzpro : String(10)   @title: '지시자:생산Bin에서 재고 출고' ;	
     gpmkz : String(10)   @title: '지시자:개략 계획에 포함된 자재' ;	
     ueeto : Decimal(3,1)   @title: '초과 납품 허용 한도' ;	
@@ -113,7 +113,7 @@ entity Mm_Sap_Marc_Con {
     stawn : String(30)   @title: '해외 무역에 대한 상품 코드/수입 코드 번호' ;	
     herkl : String(10)   @title: '자재 원산국' ;	
     herkr : String(10)   @title: '자재의 원산지(특혜관세없는 오리진)' ;	
-    expme : Decimal(3,0)   @title: '상품 코드 단위(해외무역)' ;	
+    expme : String(3)   @title: '상품 코드 단위(해외무역)' ;	
     mtver : String(10)   @title: '수출/수입 자재그룹' ;	
     prctr : String(10)   @title: '손익 센터' ;	
     trame : Decimal(13,3)   @title: '운송 중 재고' ;	
@@ -130,7 +130,7 @@ entity Mm_Sap_Marc_Con {
     aplal : String(10)   @title: '그룹 카운터' ;	
     losgr : Decimal(13,3)   @title: '제품 원가계산 로트 크기' ;	
     sobsk : String(10)   @title: '원가계산을 위한 특별 조달 유형' ;	
-    frtme : Decimal(3,0)   @title: '생산단위' ;	
+    frtme : String(3)   @title: '생산단위' ;	
     lgpro : String(10)   @title: '출고저장위치' ;	
     disgr : String(10)   @title: 'MRP 그룹' ;	
     kausf : Decimal(5,2)   @title: '퍼센트로 나타낸 구성부품스크랩' ;	

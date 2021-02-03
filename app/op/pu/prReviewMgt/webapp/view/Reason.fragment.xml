@@ -1,0 +1,55 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core" 
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout"
+    xmlns:lib-m="ext.lib.control.m"
+    xmlns:cm-ui="cm.util.control.ui"
+>
+    <Dialog id="reason" class="sapUiSmallMargin" title="(미정)마감사유"  afterOpen=".onAfterOpen($event, 'default', {})">
+        <VBox class="sapUiSmallMargin" >
+            <form:SimpleForm>
+                <Label text="{I18N>/BUYER}" visible="{= ${fragment>/reason/action} === 'CHANGE'}"/>
+                <lib-m:CodePicker 
+                    visible="{= ${fragment>/reason/action} === 'CHANGE'}"
+                    placeholder="(미정)구매담당자를 입력하세요"
+                    selectedKey="{fragment>/reason/buyerEmpno}"
+                    keyField="employee_number"
+                    textField="user_local_name"
+                    suggestionItems="{
+                        path: '/',
+                        filters: [
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                        ],
+                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                        entityName: 'Employee'
+                    }">
+                    <lib-m:CodePickerValueHelp 
+                        title="(미정)구매담당자를 선택하세요"
+                        contentWidth="500px"
+                        keyFieldHeaderText="{I18N>/BUYER_EMPNO}" 
+                        textFieldHeaderText="{I18N>/BUYER_NAME}"
+                    />
+                </lib-m:CodePicker>
+                <Label text="(미정)사유"/>
+                <TextArea value="{fragment>/reason/processedReason}" rows="3" />
+            </form:SimpleForm>
+        </VBox>
+        <ToolbarSpacer/>
+        <VBox>
+            <HBox alignItems="End" justifyContent="End" >
+                <Button text="Cancel" class="sapUiSmallMarginEnd" 
+                    press=".onCancel($event, 'default', {
+                        settled: 'reject'
+                    })"
+                />
+                <Button text="Apply" class="sapUiSmallMarginEnd" type="Emphasized" 
+                    press=".onCommit($event, 'default', ${fragment>/reason}, {
+                        settled: 'resolve'
+                    })"
+                />
+            </HBox>
+        </VBox>
+    </Dialog>
+</core:FragmentDefinition>

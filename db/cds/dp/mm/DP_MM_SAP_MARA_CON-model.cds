@@ -23,7 +23,7 @@ using util from '../../cm/util/util-model';
 entity Mm_Sap_Mara_Con {	
   key tenant_id : String(5)  not null @title: '테넌트ID' ;	
   key interface_id : Integer64  not null @title: '인터페이스ID' ;	
-    batch_id : Integer64  not null @title: '그룹ID' ;	
+  key batch_id : Integer64  not null @title: '그룹ID' ;	
     conv_prog_status_code : String(30)  not null @title: '컨버전진행상태코드' ;	
     conv_error_desc : String(500)   @title: '컨버전오류설명' ;	
     source_system_code : String(30)   @title: '소스시스템코드' ;	
@@ -39,8 +39,8 @@ entity Mm_Sap_Mara_Con {
     mbrsh : String(10)   @title: '산업부문' ;	
     matkl : String(10)   @title: '자재그룹' ;	
     bismt : String(30)   @title: '기존자재번호' ;	
-    meins : String(10)   @title: '기본단위' ;	
-    bstme : String(10)   @title: '구매오더단위' ;	
+    meins : String(3)   @title: '기본단위' ;	
+    bstme : String(3)   @title: '구매오더단위' ;	
     zeinr : String(30)   @title: '문서번호' ;	
     zeiar : String(10)   @title: '문서유형' ;	
     zeivr : String(10)   @title: '문서버전' ;	
@@ -57,9 +57,9 @@ entity Mm_Sap_Mara_Con {
     ekwsl : String(10)   @title: '구매 값 키' ;	
     brgew : Decimal(13,3)   @title: '총중량' ;	
     ntgew : Decimal(13,3)   @title: '순중량' ;	
-    gewei : Decimal(3,0)   @title: '중량단위' ;	
+    gewei : String(3)   @title: '중량단위' ;	
     volum : Decimal(13,3)   @title: '볼륨' ;	
-    voleh : Decimal(3,0)   @title: '부피단위' ;	
+    voleh : String(3)   @title: '부피단위' ;	
     behvo : String(10)   @title: '컨테이너 소요량' ;	
     raube : String(10)   @title: '저장조건' ;	
     tempb : String(10)   @title: '온도조건 지시자' ;	
@@ -80,15 +80,15 @@ entity Mm_Sap_Mara_Con {
     laeng : Decimal(13,3)   @title: '길이' ;	
     breit : Decimal(13,3)   @title: '너비' ;	
     hoehe : Decimal(13,3)   @title: '높이' ;	
-    meabm : Decimal(3,0)   @title: '길이/너비/높이에 대한 치수 단위' ;	
+    meabm : String(3)   @title: '길이/너비/높이에 대한 치수 단위' ;	
     prdha : String(30)   @title: '제품 계층 구조' ;	
     aeklk : String(10)   @title: '재고 이전 순 변경 원가계산' ;	
     cadkz : String(10)   @title: 'CAD 지시자' ;	
     qmpur : String(10)   @title: '조달에서 QM이 활성상태임' ;	
     ergew : Decimal(13,3)   @title: '허용한 포장중량' ;	
-    ergei : Decimal(3,0)   @title: '중량단위(허용한 포장중량)' ;	
+    ergei : String(3)   @title: '중량단위(허용한 포장중량)' ;	
     ervol : Decimal(13,3)   @title: '허용한 포장부피' ;	
-    ervoe : Decimal(3,0)   @title: '용량단위(허용된 포장용량)' ;	
+    ervoe : String(3)   @title: '용량단위(허용된 포장용량)' ;	
     gewto : Decimal(3,1)   @title: '조정단위 초과중량 허용치' ;	
     volto : Decimal(3,1)   @title: '조정단위의 초과용량 허용치' ;	
     vabme : String(10)   @title: '가변 구매오더 단위 활성' ;	
@@ -120,7 +120,7 @@ entity Mm_Sap_Mara_Con {
     mhdrz : Decimal(4,0)   @title: '최저 잔존 휴효 기간' ;	
     mhdhb : Decimal(4,0)   @title: '총저장수명' ;	
     mhdlp : Decimal(3,0)   @title: '저장백분율' ;	
-    inhme : Decimal(3,0)   @title: '내용단위' ;	
+    inhme : String(3)   @title: '내용단위' ;	
     inhal : Decimal(13,3)   @title: '순 내용' ;	
     vpreh : Decimal(5,0)   @title: '비교 가격 단위' ;	
     inhbr : Decimal(13,3)   @title: '총 내용' ;	
@@ -171,21 +171,21 @@ entity Mm_Sap_Mara_Con {
     maxl : Decimal(15,3)   @title: '포장재의 최대 포장 길이' ;	
     maxb : Decimal(15,3)   @title: '포장재의 최대 포장 너비' ;	
     maxh : Decimal(15,3)   @title: '포장재의 최대 포장 높이' ;	
-    maxdim_uom : Decimal(3,0)   @title: '최대 포장 길이/너비/높이 단위' ;	
+    maxdim_uom : String(3)   @title: '최대 포장 길이/너비/높이 단위' ;	
     herkl : String(10)   @title: '자재 원산국' ;	
     mfrgr : String(10)   @title: '자재 운임 그룹' ;	
     qqtime : Decimal(3,0)   @title: '검역 정선 기간' ;	
-    qqtimeuom : Decimal(3,0)   @title: '검역 정선 기간에 대한 시간 단위' ;	
+    qqtimeuom : String(3)   @title: '검역 정선 기간에 대한 시간 단위' ;	
     qgrp : String(10)   @title: '품질 검사 그룹' ;	
     serial : String(10)   @title: '일련번호 프로파일' ;	
     ps_smartform : String(30)   @title: '서식 이름' ;	
-    logunit : Decimal(3,0)   @title: 'EWM CW:물류 단위' ;	
+    logunit : String(3)   @title: 'EWM CW:물류 단위' ;	
     cwqrel : String(10)   @title: 'EWM CW:복수 단위 자재임' ;	
     cwqproc : String(10)   @title: 'EWM CW:CW 수량 입력을 위한 복수 단위 프로파일' ;	
     cwqtolgr : String(10)   @title: 'EWM CW:EWM의 복수 단위 허용 한도 그룹' ;	
-    material_spec : String(1000)   @title: '자재규격' ;	
-    class : String(30) @title: '자재클래스코드';
-    
+    material_spec : String(1000)   @title: '자재SPEC' ;	
+    class_code : String(30)   @title: '클래스코드' ;	
+   
 }
 
 

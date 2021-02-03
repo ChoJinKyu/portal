@@ -37,13 +37,13 @@ entity Vi_Expected_Price {
     key tenant_id          : String(5) not null  @title : '테넌트ID';
     key plant_code         : String(10) not null @title : '플랜트코드';
     key material_code      : String(40) not null @title : '자재코드';
-    key material_type_code : String(10) not null @title : '자재유형코드';
     key txn_yyyymm         : String(6) not null  @title : '트랜잭션년월';
     key supplier_code      : String(10) not null @title : '공급업체코드';
         receipt_yyyymm     : String(6)           @title : '입고년월';
         net_price          : Decimal             @title : '단위가격';
         currency_code      : String(3)           @title : '통화코드';
         market_code        : String(1)           @title : '납선코드';
+        
 }
 
 extend Vi_Expected_Price with util.Managed;

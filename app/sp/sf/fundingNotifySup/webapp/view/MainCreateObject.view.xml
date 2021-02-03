@@ -73,8 +73,9 @@
                                     <Label text="거래사업부 :" required="true"/>
                                     <ComboBox 
                                         id="transactionDivision" 
-                                        selectedKey="{applicationSup>/org_code}"
+                                        fieldGroupIds="newAppl"
                                         required="true" 
+                                        selectedKey="{applicationSup>/org_code}"
                                         items="{transactionDivision>/}" width="100%">
                                         <items>
                                             <core:Item key="{transactionDivision>org_code}" text="{transactionDivision>org_code} :  {transactionDivision>org_name}" />
@@ -87,12 +88,15 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="LG 구매팀 :" required="true"/>
-                                    <Input id="purchasingDepartmentName" editable="{midObjectView>/editMode}"
+                                    <Input 
+                                        id="purchasingDepartmentName" 
+                                        fieldGroupIds="newRequest"
+                                        required="true" 
                                         value="{
                                             path: 'applicationSup>/purchasing_department_name',
                                             type: 'sap.ui.model.type.String',
                                             constraints: {
-                                                maxLength: 30
+                                                maxLength: 100
                                             }
                                         }"/>
                                     <layoutData>
@@ -101,16 +105,24 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="전년도매출액(백만원) :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
-                                        value="{applicationSup>/pyear_sales_amount}"
-                                        type="Number"/>
+                                    <Input 
+                                        type="Number"
+                                        fieldGroupIds="newRequest"
+                                        required="true" 
+                                        value="{
+                                            path: 'applicationSup>/pyear_sales_amount', 
+                                            type: 'sap.ui.model.type.Integer'
+                                        }"
+                                    />
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label text="주거래은행 :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
+                                    <Input 
+                                        fieldGroupIds="newRequest"
+                                        required="true"
                                         value="{
                                             path: 'applicationSup>/main_bank_name',
                                             type: 'sap.ui.model.type.String',
@@ -124,9 +136,14 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="신청금액(원) :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
-                                        value="{applicationSup>/funding_appl_amount}"
-                                        type="Number"/>
+                                    <Input 
+                                        type="Number"
+                                        fieldGroupIds="newRequest"
+                                        required="true"
+                                        value="{
+                                            path: 'applicationSup>/funding_appl_amount', 
+                                            type: 'sap.ui.model.type.Integer'
+                                        }" />
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" linebreak="true" />
                                     </layoutData>
@@ -144,7 +161,9 @@
                                 <VBox>
                                     <Label text="상환방법 :" required="true"/>
                                     <!-- selectedKey="{applicationSup>/repayment_method_code}" -->
-                                    <ComboBox id="search_repayment_method_code" editable="false"
+                                    <ComboBox 
+                                        id="search_repayment_method_code" 
+                                        editable="false"
                                         width="100%"
                                         items="{
                                                     path : 'util>/Code',
@@ -154,7 +173,7 @@
                                                     ]
                                                 }"
 
-                                        selectedKey="A"
+                                        selectedKey="{applicationSup>/repayment_method_code}"
                                     >
                                         <core:Item key="{util>code}" text="{util>code_name}" />
                                     </ComboBox>
@@ -164,7 +183,9 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="신청자 :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
+                                    <Input
+                                        fieldGroupIds="newRequest"
+                                        required="true"
                                         value="{
                                             path: 'applicationSup>/appl_user_name',
                                             type: 'sap.ui.model.type.String',
@@ -178,7 +199,9 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="전화번호 :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
+                                    <Input
+                                        fieldGroupIds="newRequest"
+                                        required="true"
                                         value="{
                                             path: 'applicationSup>/appl_user_tel_number',
                                             type: 'sap.ui.model.type.String',
@@ -193,7 +216,9 @@
                                 
                                 <VBox>
                                     <Label text="Mail Address :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
+                                    <Input
+                                        fieldGroupIds="newRequest"
+                                        required="true"
                                         value="{
                                             path: 'applicationSup>/appl_user_email_address',
                                             type: 'sap.ui.model.type.String',
@@ -216,6 +241,7 @@
 					<uxap:ObjectPageSubSection>
 						<form:SimpleForm>
                             <VBox id="checkBoxContent">
+                                <Label text="지원사유 :" required="true"/>
                                 <layoutData>
                                     <layout:GridData span="XL12 L12 M12 S12" />
                                 </layoutData>
@@ -237,36 +263,36 @@
                             items="{applicationSup>/investPlanMst}"
                             width="auto">
                             <headerToolbar>
-                                <OverflowToolbar>
+                                <OverflowToolbar id="productsTableToolbar" visible="false">
                                     <ToolbarSpacer/>
                                     <Button id="addRow" text="추가" type="Transparent" press=".onInvestmentPlanAddButtonPress" />
                                     <Button id="deleteRow" text="삭제" type="Transparent" press=".onInvestmentPlanDeleteButtonPress" />
                                 </OverflowToolbar>
                             </headerToolbar>
                             <columns>
-                                <Column>
+                                <Column hAlign="Left">
                                     <Text text="과제명" />
                                 </Column>
-                                <Column>
+                                <Column hAlign="Left">
                                     <Text text="투자 내역" />
                                 </Column>
-                                <Column>
+                                <Column hAlign="Left">
                                     <Text text="집행시기" />
                                 </Column>
-                                <Column>
+                                <Column hAlign="Right">
                                     <Text text="신청금액(원)" />
                                 </Column>
-                                <Column>
+                                <Column hAlign="Left">
                                     <Text text="적용모델" />
                                 </Column>
-                                <Column>
+                                <Column hAlign="Left">
                                     <Text text="투자장소" />
                                 </Column>
                             </columns>
                             <items>
                                 <ColumnListItem>
                                     <cells>
-                                        <Link text="{applicationSup>investment_project_name}" press=".onOpenInvestmentDtl" />
+                                        <Link text="{applicationSup>investment_project_name}" press=".onOpenInvestmentDtl"/>
                                         <Text text="{applicationSup>investment_desc}"/>
                                         <Text text="{applicationSup>execution_yyyymm}"/>
                                         <Text text="{applicationSup>appl_amount}"/>
@@ -290,7 +316,10 @@
                             <form:content>
                                 <VBox>
                                     <Label text="담보물 :" required="true"/>
-                                    <ComboBox id="search_collateral_type_code"
+                                    <ComboBox 
+                                        id="search_collateral_type_code"
+                                        fieldGroupIds="newRequest"
+                                        required="true"
                                         width="100%"
                                         items="{
                                                     path : 'util>/Code',
@@ -310,9 +339,15 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="담보금액(원) :" required="true"/>
-                                    <Input editable="{midObjectView>/editMode}"
-                                        value="{applicationSup>/collateral_amount}"
-                                        type="Number"/>
+                                    <Input 
+                                        type="Number"
+                                        fieldGroupIds="newRequest"
+                                        required="true"
+                                        value="{
+                                            path: 'applicationSup>/collateral_amount', 
+                                            type: 'sap.ui.model.type.Integer'
+                                        }" 
+                                    />
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M12 S12" />
                                     </layoutData>
@@ -356,8 +391,8 @@
                     press=".onMessagePopoverPress" /> -->
 				<ToolbarSpacer />
                 <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageNavBackButtonPress"/>
-                <Button id="pageSaveButton" type="Transparent" text="{I18N>/TEMP_SAVE}" press=".onPageSaveButtonPress" />
-                <Button id="pageSubmissionButton" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSubmissionButtonPress" />
+                <Button id="pageSaveButton" enabled="false" type="Transparent" text="{I18N>/TEMP_SAVE}" press=".onPageSaveButtonPress" />
+                <Button id="pageSubmissionButton" enabled="false" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSubmissionButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

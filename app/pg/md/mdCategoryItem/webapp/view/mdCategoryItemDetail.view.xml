@@ -22,19 +22,19 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="Category Item Detail" wrapping="true" />
+					<Title text="{I18N>/SPMD_CHARACTER_DETAIL}" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="Category Item Detail" wrapping="true" />
+					<Title text="{I18N>/SPMD_CHARACTER_DETAIL}" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:expandedContent>
-					<Text text="Details for Category Item : {master>/spmd_character_code}" />
+					<Text text="{I18N>/SPMD_CHARACTER_CODE} : {master>/spmd_character_code}" />
 				</uxap:expandedContent>
 				<uxap:snappedContent>
-					<Text text="Details for Category Item : {master>/spmd_character_code}" />
+					<Text text="{I18N>/SPMD_CHARACTER_CODE} : {master>/spmd_character_code}" />
 				</uxap:snappedContent>
 				<uxap:snappedTitleOnMobile>
-					<Title text="Control Option Details" />
+					<Title text="{I18N>/MASTER}" />
 				</uxap:snappedTitleOnMobile>
 				<!-- <uxap:actions>
 					<Button id="pageEditButton" text="{I18N>/UPDATE}" type="Emphasized" press=".onPageEditButtonPress" />
@@ -60,7 +60,7 @@
 		</uxap:headerContent>
 
 		<uxap:sections>
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="Control Option Details">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/MASTER}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
 					</uxap:ObjectPageSubSection>
@@ -80,7 +80,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection> -->
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Langauage">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/LANGUAGE}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<Table id="midTable" 
@@ -90,6 +90,7 @@
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
 								mode="SingleSelectLeft" 
+                                autoPopinMode="true" 
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
@@ -105,16 +106,16 @@
 							</headerToolbar>
 							<columns>
 								<Column id="mainColumnState" minScreenWidth="Tablet" hAlign="Center" width="40px" >
-									<Text text="S" />
+									<Text text="" />
 								</Column>
 								<Column id="midColumnLevelCode" minScreenWidth="Tablet" hAlign="Center" importance="High">
 									<Text text="{I18N>/LANGUAGE}" />
 								</Column>
 								<Column id="midColumnLevelValue" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="특성코드명" />
+									<Text text="{I18N>/SPMD_CHARACTER_CODE_NAME}" />
 								</Column>
 								<Column id="midColumnValue" minScreenWidth="Tablet" hAlign="Center" >
-									<Text text="특성코드설명" />
+									<Text text="{I18N>/SPMD_CHARACTER_DESC}" />
 								</Column>
 							</columns>
 							<items>

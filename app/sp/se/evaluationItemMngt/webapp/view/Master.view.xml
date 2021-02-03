@@ -14,10 +14,10 @@
     <f:DynamicPage 
         id="page"
         toggleHeaderOnTitleClick="true"
-        headerExpanded="{=
-            ${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'
-        }"
     >
+        <!-- headerExpanded="{=
+            ${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'
+        }" -->
         
         <f:title>
             <f:DynamicPageTitle>
@@ -38,20 +38,20 @@
                     <!-- <Title text="{I18N>/EVAL_ITEM} {I18N>/DISPLAY}" /> -->
                 <!-- </f:snappedHeading> -->
                 <f:snappedContent>
-                    <form:SimpleForm 
+                    <!-- <form:SimpleForm 
                         layout="ResponsiveGridLayout"
-                    >
+                    > -->
                         <VBox>
                             <!-- 평가항목명 -->
                             <Label text="{I18N>/EVAL_ITEM_NM}" />
                             <Input 
                                 value="{viewModel>/cond/Contains/evaluation_article_name}"
                             />
-                            <layoutData>
+                            <!-- <layoutData>
                                 <layout:GridData span="L2 M6 S12" />
-                            </layoutData>
+                            </layoutData> -->
                         </VBox>
-                    </form:SimpleForm>
+                    <!-- </form:SimpleForm> -->
                 </f:snappedContent>
                 
                 <f:actions>
@@ -106,7 +106,7 @@
                             selectedKey="{viewModel>/cond/EQ/evaluation_type_code}"
                         />
                         <layoutData>
-                            <layout:GridData span="L2 M6 S12" />
+                            <layout:GridData span="L8 M6 S12" />
                         </layoutData>
                     </VBox>
                     <VBox>
@@ -136,9 +136,10 @@
         <f:content>
             <t:TreeTable 
                 id="treeTable"
-                visibleRowCountMode="Auto"
                 enableSelectAll="false"
-                minAutoRowCount="16"
+                visibleRowCount="{=
+                    ${viewModel>/App/layout} !== 'TwoColumnsMidExpanded' ? 13 : 16
+                }"
                 enableColumnReordering="false"
                 class="sapFDynamicPageAlignContent" 
                 rowSelectionChange="onRowSelectionChange"
@@ -152,24 +153,29 @@
                         <Title id="title" text="{I18N>/EVAL_ITEM}" level="H2"/> 
                         <ToolbarSeparator/>
                         <ToolbarSpacer/>
-                        <Button text="{I18N>/EXPAND}" type="Transparent" press="onPressExpandAll" />
-                        <Button text="{I18N>/COLLAPSE}" type="Transparent" press="onPressCollapseAll" />
-                        <Button text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press="onPressCreate($event, 'SameLevel')" />
-                        <Button text="{I18N>/CREATE_LOWER_LEVEL}" type="Transparent" press="onPressCreate($event, 'LowLevel')" />
-                        <Button icon="sap-icon://action-settings" type="Transparent" press="onMainTablePersoButtonPressed"/>
-                        <Button icon="sap-icon://excel-attachment" type="Transparent" press="onExcelExport" />
-                        <!-- <MenuButton 
-                            defaultAction="onExcelExport" 
-                            buttonMode="Split"
-                            icon="sap-icon://excel-attachment"
+                        <Button 
+                            text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press="onPressCreate($event, 'SameLevel')" 
+                            visible="{=${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'}"
+                        />
+                        <Button 
+                            text="{I18N>/CREATE_LOWER_LEVEL}" type="Transparent" press="onPressCreate($event, 'LowLevel')" 
+                            visible="{=${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'}"
+                        />
+                        <MenuButton 
+                            icon="sap-icon://create-form"
+                            visible="{=${viewModel>/App/layout} === 'TwoColumnsMidExpanded'}"
                         >
                             <menu>
                                 <Menu>
-                                    <MenuItem text="엑스포트" />
-                                    <MenuItem text="다른 이름으로 엑스포트" />
+                                    <MenuItem text="{I18N>/CREATE_SAME_LEVEL}" press="onPressCreate($event, 'SameLevel')"/>
+                                    <MenuItem text="{I18N>/CREATE_LOWER_LEVEL}" press="onPressCreate($event, 'LowLevel')"/>
                                 </Menu>
                             </menu>
-                        </MenuButton> -->
+                        </MenuButton>
+                        <Button icon="sap-icon://expand-all" tooltip="{I18N>/EXPAND}" type="Transparent" press="onPressExpandAll" />
+                        <Button icon="sap-icon://collapse-all" tooltip="{I18N>/COLLAPSE}" type="Transparent" press="onPressCollapseAll" />
+                        <Button icon="sap-icon://excel-attachment" type="Transparent" press="onExcelExport" />
+                        <Button icon="sap-icon://action-settings" type="Transparent" press="onMainTablePersoButtonPressed"/>
                     </OverflowToolbar>
                 </t:extension>
                 
@@ -181,37 +187,37 @@
                         </t:template>
                     </t:Column>
                     <!-- 평가운영단위 -->
-                    <t:Column label="{I18N>/EVAL_OP_UNT}" width="7em">    
+                    <t:Column label="{I18N>/EVAL_OP_UNT}" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{evaluation_operation_unit_name}" tooltip="{evaluation_operation_unit_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 평가유형명 -->
-                    <t:Column label="{I18N>/EVALUATION_TYPE_NAME}" width="7em">    
+                    <t:Column label="{I18N>/EVALUATION_TYPE_NAME}" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{evaluation_type_name}" tooltip="{evaluation_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 평가수행방식 -->
-                    <t:Column label="{I18N>/EVAL_EXEC_MODE}" width="7em">    
+                    <t:Column label="{I18N>/EVAL_EXEC_MODE}" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{evaluation_execute_mode_name}" tooltip="{evaluation_execute_mode_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 평가항목구분-->
-                    <t:Column label="{I18N>/EVAL_ITEM_TYPE}" width="7em">    
+                    <t:Column label="{I18N>/EVAL_ITEM_TYPE}" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{evaluation_article_type_name}" tooltip="{evaluation_article_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 배점유형 -->
-                    <t:Column label="{I18N>/DISTRB_SCOR_TYPE}" width="7em">    
+                    <t:Column label="{I18N>/DISTRB_SCOR_TYPE}" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{evaluation_distrb_scr_type_name}" tooltip="{evaluation_distrb_scr_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- Scale유형 -->
-                    <t:Column label="{I18N>/SCLE_TYPE}" width="7em">    
+                    <t:Column label="{I18N>/SCLE_TYPE}" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{evaluation_result_input_type_name}" tooltip="{evaluation_result_input_type_name}" wrapping="false" />
                         </t:template>
@@ -223,19 +229,19 @@
                         </t:template>
                     </t:Column>
                     <!-- 정렬 -->
-                    <t:Column label="{I18N>/SORT}" width="5em">    
+                    <t:Column label="{I18N>/SORT}" width="5em" hAlign="Center">    
                         <t:template>
                             <Text text="{sort_sequence}" tooltip="{sort_sequence}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 작성자 -->
-                    <t:Column label="{I18N>/WRITER}" width="8em">    
+                    <t:Column label="{I18N>/WRITER}" width="8em" hAlign="Center">    
                         <t:template>
                             <Text text="{writer}" tooltip="{writer}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 작성일자 -->
-                    <t:Column label="{I18N>/WRITE_DATE}" width="8em">    
+                    <t:Column label="{I18N>/WRITE_DATE}" width="8em" hAlign="Center">    
                         <t:template>
                             <Text text="{
                                 path:'write_tm',

@@ -5,6 +5,7 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout"
     xmlns:cm-ui="cm.util.control.ui"
+    xmlns:op-ui="op.util.control.ui"
     height="100%">
 
     <Page id="page" 
@@ -83,6 +84,17 @@
                         </VBox>
 
                         <VBox>
+                            <Label text="Input with Department Dialog (cm.util.control.ui.DepartmentDialog): " labelFor="inputWithDepartmentValueHelp"></Label>
+                            <Input id="inputWithDepartmentValueHelp"
+                                placeholder="Choose a Department from the ValueHelp"
+                                showValueHelp="true" valueHelpRequest=".onInputWithDepartmentValuePress">
+                            </Input>
+                            <layoutData>
+                                <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>
+
+                        <VBox>
                             <Label text="Input with Employee Dialog (cm.util.control.ui.EmployeeDialog): " labelFor="inputWithEmployeeValueHelp"></Label>
                             <Input id="inputWithEmployeeValueHelp"
                                 placeholder="Choose a employee from the ValueHelp"
@@ -114,6 +126,152 @@
                                  <layout:GridData span="XL10 L10 M10 S10" />
                             </layoutData>
                         </VBox>
+
+                        <!-- OP-->
+
+                        <VBox>
+                            <Label text="Account (op.util.control.ui.AccountDialog): " labelFor="multiInputWithAccountValueHelp"></Label>
+                             <MultiInput id="multiInputWithAccountValueHelp"
+                                placeholder="Choose Accounts"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputWithAccountPress">
+                            </MultiInput> 
+                            <layoutData>
+                                 <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>
+
+
+                        <VBox>
+                            <Label text="Asset (op.util.control.ui.AssetDialog): " labelFor="multiInputWithAssetValueHelp"></Label>
+                             <MultiInput id="multiInputWithAssetValueHelp"
+                                placeholder="Choose Assets"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputWithAssetPress">
+                            </MultiInput> 
+                            <layoutData>
+                                 <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>
+
+                        <VBox>
+                            <Label text="Cost Center (op.util.control.ui.CctrDialog): " labelFor="multiInputWithCctrValueHelp"></Label>
+                             <MultiInput id="multiInputWithCctrValueHelp"
+                                placeholder="Choose Cctrs"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputWithCctrPress">
+                            </MultiInput> 
+                            <layoutData>
+                                 <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>
+
+                        <VBox>
+                            <Label text="Order (op.util.control.ui.OrderDialog): " labelFor="multiInputWithOrderValueHelp"></Label>
+                             <MultiInput id="multiInputWithOrderValueHelp"
+                                placeholder="Choose Orders"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputWithOrderPress">
+                            </MultiInput> 
+                            <layoutData>
+                                 <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>
+
+                       
+
+                         <VBox>
+                            <Label text="Account (cm.util.control.ui.WbsDialog): " labelFor="multiInputWithWbsValueHelp"></Label>
+                             <MultiInput id="multiInputWithWbsValueHelp"
+                                placeholder="Choose WBS"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputWithWbsPress">
+                            </MultiInput> 
+                            <layoutData>
+                                 <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>
+
+
+                        <!-- OP End-->
+
+                        <!--SP Start-->
+                        <VBox>
+                            <Label text="Single Supplier With Org" labelFor="input_supplierwithorg_code"></Label>
+                            <Input id="input_supplierwithorg_code"
+                            placeholder="Choose a supplier from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onInputSupplierWithOrgValuePress" />
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Multi Supplier With Org" labelFor="multiinput_supplierwithorg_code"></Label>
+                                <MultiInput id="multiinput_supplierwithorg_code"
+                                placeholder="Choose codes from the ValueHelp"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputSupplierWithOrgValuePress">
+                            </MultiInput>
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Single Supplier" labelFor="input_supplier_code"></Label>
+                            <Input id="input_supplier_code"
+                            placeholder="Choose a supplier from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onInputSupplierValuePress" />
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Multi Supplier" labelFor="multiinput_supplier_code"></Label>
+                                <MultiInput id="multiinput_supplier_code"
+                                placeholder="Choose codes from the ValueHelp"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputSupplierValuePress">
+                            </MultiInput>
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+
+                        
+                        <VBox>
+                            <Label text="Single Maker" labelFor="input_maker_code"></Label>
+                            <Input id="input_maker_code"
+                            placeholder="Choose a maker from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onInputMakerValuePress" />
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Multi Maker" labelFor="multiinput_maker_code"></Label>
+                            <MultiInput id="multiinput_maker_code"
+                            placeholder="Choose a maker from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onMultiInputMakerValuePress">
+                            </MultiInput>
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+
+                        <VBox>
+                            <Label text="Single BP" labelFor="input_bp_code"></Label>
+                            <Input id="input_bp_code"
+                            placeholder="Choose a BP from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onInputBPValuePress" />
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Multi BP" labelFor="multiinput_bp_code"></Label>
+                            <MultiInput id="multiinput_bp_code"
+                            placeholder="Choose a BP from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onMultiInputBPValuePress">
+                            </MultiInput>
+                            <layoutData>
+                                <layout:GridData span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+                        <!-- SP End-->
+
 
                         <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
                             <Button text="Open Employee Dialog" type="Transparent" press=".onInputWithCompanyDetailValuePress"/>
@@ -178,6 +336,16 @@
                 ]
             }"
             apply=".onEmployeeDialogApplyPress"
+        />
+        
+        <cm-ui:DepartmentDialog id="departmentDialog" 
+            title="부서 검색"
+            closeWhenApplied="true"
+            items="{
+                filters: [
+                ]
+            }"
+            apply=".onDepartmentDialogApplyPress"
         />
 
          <cm-ui:CompanyDetailDialog id="CompanyDetailDialog" 

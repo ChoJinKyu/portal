@@ -78,31 +78,7 @@
                       <HBox>
                         <Title text="Process"/>
                     </HBox>
-                    <HBox>
-                        <sc:MicroProcessFlow>
-                            <sc:content>
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                            </sc:content>
-                        </sc:MicroProcessFlow>
-                    </HBox>
-                    <HBox>
-                        <Text text=" PR" renderWhitespace="true" />
-                        <Text text="Budget" width="6em" textAlign="Right" />
-                        <Text text="RFQ" width="6em" textAlign="Center" />
-                        <Text text="   Mold&#10;   Spec" renderWhitespace="true" />
-                        <Text text="Purchase&#10; Contract" width="8em" textAlign="Center" />
-                        <Text text="PO" renderWhitespace="true" />
-                        <Text text="RCV" width="5em" textAlign="Right" />
-                        <Text text="Lease&#10;Contract" width="7.5em" textAlign="Center" />
-                        <Text text="Invoice" />
+                    <HBox id="purchaseOrderLocalPreviewProcess">
                     </HBox>
                 </layout:VerticalLayout>
 			</FlexBox>
@@ -154,7 +130,7 @@
                             >
                             <table:extension>
                                 <OverflowToolbar>
-                                    <Title text="Total PO Amount : {path: 'payment>/purchasing_amount', formatter: '.numberFormatter.toNumberString'} [{payment>/currency_code}]" level="H2"/>
+                                    <Title text="Total PO Amount : {path: 'amount>/purchasing_amount', formatter: '.numberFormatter.toNumberString'} [{amount>/currency_code}]" level="H2"/>
                                 </OverflowToolbar>
                             </table:extension>                             
                             <table:columns>
@@ -192,7 +168,7 @@
                                                     items="{
                                                                 path : 'util>/Code',
                                                                 filters : [
-                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                                     {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                                                 ]
                                                             }"
@@ -271,7 +247,7 @@
                                                     items="{
                                                                 path : 'util>/Code',
                                                                 filters : [
-                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                                     {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                                                 ]
                                                             }"
@@ -319,46 +295,54 @@
                     <uxap:ObjectPageSubSection>
                         <form:SimpleForm editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                             <form:content>
-                                <VBox>
-                                    <CheckBox text="Partial Payment" editable="false"
-                                        selected="{payment>/partial_payment}" />
-                                    <layoutData>
-                                        <layout:GridData span="XL6 L6 M6 S12" />
-                                    </layoutData>
-                                </VBox>
-                                <VBox>
-                                    <SegmentedButton selectedKey="{payment>/split_pay_type_code}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onChangePayment"
-                                        enabled="false" >
-                                        <items>
-                                            <SegmentedButtonItem text="Rate (%)" key="R" width="6em" />
-                                            <SegmentedButtonItem text="Amount" key="A" width="6em" />
-                                        </items>
-                                    </SegmentedButton>
-                                    <layoutData>
-                                        <layout:GridData span="XL6 L6 M6 S12" />
-                                    </layoutData>
-                                </VBox>
-                                <VBox>
-                                    <Label text="Advanced"/>
-                                    <Input value="{payment>/prepay_rate}" textAlign="End" change=".onChangePayment" editable="false"  />
-                                    <layoutData>
-                                        <layout:GridData span="XL2 L3 M6 S12" />
-                                    </layoutData>
-                                </VBox>
-                                <VBox>
-                                    <Label text="Part"/>
-                                    <Input value="{payment>/progresspay_rate}" textAlign="End" change=".onChangePayment" editable="false"  />
-                                    <layoutData>
-                                        <layout:GridData span="XL2 L3 M6 S12" />
-                                    </layoutData>
-                                </VBox>
-                                <VBox>
-                                    <Label text="Residual"/>
-                                    <Input value="{payment>/rpay_rate}" textAlign="End" change=".onChangePayment" editable="false"  />
-                                    <layoutData>
-                                        <layout:GridData span="XL2 L3 M6 S12" />
-                                    </layoutData>
-                                </VBox>
+                                <!-- Payment Table -->
+                                <Table 
+                                        sticky="HeaderToolbar,ColumnHeaders" 
+                                        class="sapFDynamicPageAlignContent" 
+                                        inset="false"
+                                        mode="MultiSelect" 
+                                        width="auto"
+                                        items="{payment>/Payments}" 
+                                        >
+                                    <columns>
+                                        <Column minScreenWidth="Tablet" hAlign="Center"  width="3.5em" >
+                                            <Text text="{I18N>/SEQUENCE}" />
+                                        </Column>
+                                        <Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
+                                            <Text text="{I18N>/TYPE}" />
+                                        </Column>
+                                        <Column minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                            <Text text="비율" />
+                                        </Column>
+                                        <Column minScreenWidth="Tablet" hAlign="Center" width="12em" >
+                                            <Text text="금액" />
+                                        </Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem type="Active" press=".onItemApprovalPress">
+                                            <cells>
+                                                <Text text="{payment>pay_sequence}" />
+                                                <Select width="100%"
+                                                    selectedKey="{payment>split_pay_type_code}" 
+                                                    items="{ path : 'util>/Code',
+                                                                filters : [
+                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
+                                                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_SPLIT_PAY_TYPE'}
+                                                                ],
+                                                                sorter: { path: 'sort_no'} 
+                                                            }"
+                                                    editable="false" >  
+                                                    <core:Item key="{util>code}" text="{util>code_name}" />
+                                                </Select>
+                                                <Text text="{payment>pay_rate}" />
+                                                <ObjectNumber emphasized="false"
+                                                    number="{parts:[{path:'payment>pay_price'},{path:'purOrderItem>book_currency_code'}],
+                                                            type: 'sap.ui.model.type.Currency',
+                                                            formatOptions: {showMeasure: false}}" />
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
                             </form:content>
                         </form:SimpleForm>
                     </uxap:ObjectPageSubSection>

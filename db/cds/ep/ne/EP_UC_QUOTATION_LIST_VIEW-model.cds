@@ -8,7 +8,10 @@ entity Uc_Quotation_List_View {
     key tenant_id                  : String(5) not null     @title : '테넌트ID';
     key company_code               : String(10) not null    @title : '회사코드';
     key const_quotation_number     : String(30) not null    @title : '공사견적번호';
+        org_code                   : String(10)             @title : '조직코드';
+        org_name                   : String(10)             @title : '조직';
         const_name                 : String(200)            @title : '공사명';
+        ep_item_code               : String(200)            @title : '대분류(공종)';
         const_start_date           : Date                   @title : '공사시작일자';
         const_end_date             : Date                   @title : '공사종료일자';
         quotation_status_code      : String(30)             @title : '견적상태코드';
@@ -18,9 +21,14 @@ entity Uc_Quotation_List_View {
         buyer_name                 : String(30)             @title : '구매담당자';
         const_person_empno         : String(30)             @title : '공사담당자사번';
         const_person_name          : String(30)             @title : '공사담당자';
+        purchasing_department_code : String(50)             @title : '구매부서코드';
+        purchasing_department_name : String(50)             @title : '구매부서';
         pr_number                  : String(50)             @title : '구매요청번호'; 
         quotation_write_date       : Date                   @title : '견적작성일자';
         remark                     : String(3000)           @title : '비고';
+        currency_code              : String(15)             @title : '통화코드';
+        attch_group_number         : String(100)            @title : '첨부파일그룹번호';
+        supplier_write_flag        : Boolean                @title : '공급업체작성여부';
 }
 
 extend Uc_Quotation_List_View with util.Managed;

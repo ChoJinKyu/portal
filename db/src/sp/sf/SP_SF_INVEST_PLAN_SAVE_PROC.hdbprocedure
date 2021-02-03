@@ -23,6 +23,7 @@ PROCEDURE SP_SF_INVEST_PLAN_SAVE_PROC(
 	,IN	I_EXECUTION_YYYYMM NVARCHAR(6) 				--집행년월
 	,IN	I_INVESTMENT_EFFECT NVARCHAR(500) 			--투자효과
 	,IN	I_INVESTMENT_PLACE NVARCHAR(500) 			--투자장소
+    ,IN I_USER_ID NVARCHAR(30)                      --사용자ID
 	,IN I_DTL_DATA TABLE( 
 		 CRUD_TYPE NVARCHAR(1) 						--CRUD 구분
 		,FUNDING_APPL_NUMBER NVARCHAR(10) 			--자금지원신청번호
@@ -33,11 +34,12 @@ PROCEDURE SP_SF_INVEST_PLAN_SAVE_PROC(
 		,INVESTMENT_ITEM_PURCHASING_QTY DECIMAL 	--투자품목구매수량
 		,INVESTMENT_ITEM_PURCHASING_AMT DECIMAL 	--투자품목구매금액
 	)
-	,IN I_USER_ID NVARCHAR(30)
-	,OUT O_RESULT TABLE(RESULT_CODE NVARCHAR(2),
-					 ERR_TYPE NVARCHAR(20),
-					 ERR_CODE NVARCHAR(20),
-					 RTN_FUNDING_APPL_NUMBER NVARCHAR(10)
+	,OUT O_RESULT TABLE(
+                      RESULT_CODE NVARCHAR(2)
+					 ,ERR_TYPE NVARCHAR(30)
+					 ,SQL_ERR_CODE NVARCHAR(30)
+                     ,DEF_ERR_CODE NVARCHAR(30)
+					 ,RTN_FUNDING_APPL_NUMBER NVARCHAR(10)
 					 )
 )
 LANGUAGE SQLSCRIPT
@@ -57,99 +59,127 @@ BEGIN
 	DECLARE V_INV_DTL_CNT INT := 0;				--투자계획서 상세 건수
 	DECLARE V_MST_CRUD_TYPE NVARCHAR(1);		--마스터 CRUD 타입
 	DECLARE V_DTL_CRUD_TYPE NVARCHAR(1);		--상세 CRUD 타입
-	
-	
-	--상세 데이터 커서
+
+    --에러처리 관련 CONDITION 변수
+    DECLARE V_ERR_VALID CONDITION FOR SQL_ERROR_CODE 10000;     --INPUT PARAM ERROR
+    DECLARE V_ERR_SAVE CONDITION FOR SQL_ERROR_CODE 10100;      --INSERT, UPDATE CONDITION ERROR
+    DECLARE V_CUD_COUNT INT := 0;                               --CUD 처리확인 변수
+
+    --상세 데이터 커서
     DECLARE CURSOR CUR_DTL_DATA FOR
     SELECT *
     FROM   :I_DTL_DATA
 	;
 	
-	--투자계획서 상세 건수
+	
+    /***********************************************
+    Exception 종류별 처리 
+    ***********************************************/
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ----------------VALIDATION 오류----------------
+        IF ::SQL_ERROR_CODE = 10000 THEN
+            O_RESULT =  SELECT 
+							'NG' AS RESULT_CODE
+							,'ERR_VALID' AS ERR_TYPE
+							,::SQL_ERROR_CODE AS SQL_ERR_CODE
+                            ,::SQL_ERROR_MESSAGE AS DEF_ERR_CODE
+							,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+						FROM DUMMY;
+        ----------------저장처리 오류----------------
+        ELSEIF ::SQL_ERROR_CODE = 10100 THEN
+            O_RESULT =  SELECT 
+                            'NG' AS RESULT_CODE
+                            ,'ERR_SAVE' AS ERR_TYPE
+                            ,::SQL_ERROR_CODE AS SQL_ERR_CODE
+                            ,'' AS DEF_ERR_CODE
+                            ,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+                        FROM DUMMY;
+        ----------------알수없는 오류----------------
+        ELSE
+            O_RESULT =  SELECT 
+                            'NG' AS RESULT_CODE
+                            ,'ERR_UNKNOWN' AS ERR_TYPE
+                            ,::SQL_ERROR_CODE AS SQL_ERR_CODE
+                            ,'' AS DEF_ERR_CODE
+                            ,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+                        FROM DUMMY;
+        END IF;
+    END;
+	
+	
+
+
+    --투자계획서 상세 건수
 	SELECT COUNT(*) AS INV_DTL_CNT
 	INTO V_INV_DTL_CNT
 	FROM :I_DTL_DATA
 	;
-	
-	
-	V_MST_CRUD_TYPE := :I_CRUD_TYPE;					--CRUD 타입
+
+    V_MST_CRUD_TYPE := :I_CRUD_TYPE;					--CRUD 타입
 	V_FUNDING_APPL_NUMBER := :I_FUNDING_APPL_NUMBER;	--자금지원 신청번호 추출
 	V_MST_SEQ := :I_INVESTMENT_PLAN_SEQUENCE;			--투자계획서 마스터 시퀀스
 	
 	BEGIN
-	
-		/************************************************
-		VALIDATION
-		************************************************/
-		DECLARE EXIT HANDLER FOR SQLEXCEPTION
-		BEGIN
-			O_RESULT =  SELECT 
-							'NG' AS RESULT_CODE
-							,'VALID_ERR' AS ERR_TYPE
-							,::SQL_ERROR_CODE AS ERR_CODE
-							,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
-						FROM DUMMY;
-		END;
-		
-		-------------------------------------------------------------------------------[필수체크]	
+	    -------------------------------------------------------------------------------[필수체크]	
 		--투자유형 필수 체크
 		IF (COALESCE(:I_INVESTMENT_TYPE_CODE ,'') = '') THEN
-			SIGNAL SQL_ERROR_CODE 11000 SET MESSAGE_TEXT = '투자유형을 선택해주세요.';  
+			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_01';
 		END IF;
 		
 		--과제명 필수체크
 		IF (COALESCE(:I_INVESTMENT_PROJECT_NAME ,'') = '') THEN
-			SIGNAL SQL_ERROR_CODE 11001 SET MESSAGE_TEXT = '과제명을 입력해주세요.';  
+			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_02';
 		END IF;
 		
 		--투자기간 필수체크
 		IF (COALESCE(:I_INVESTMENT_YYYYMM ,'') = '') THEN
-			SIGNAL SQL_ERROR_CODE 11002 SET MESSAGE_TEXT = '투자기간을 입력해주세요.';  
+			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_03';
 		END IF;
 		
 		--신청금액 필수체크
 		IF (COALESCE(:I_APPL_AMOUNT ,0) = 0) THEN
-			SIGNAL SQL_ERROR_CODE 11003 SET MESSAGE_TEXT = '신청금액을 입력해주세요.';  
+			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_04';
 		END IF;
 		
 		--투자배경 및 목적 필수체크
 		IF (COALESCE(:I_INVESTMENT_PURPOSE ,'') = '') THEN
-			SIGNAL SQL_ERROR_CODE 11004 SET MESSAGE_TEXT = '투자배경 및 목적을 입력해주세요.';  
+			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_05';
 		END IF;
 		
 		--적용모델 필수체크
 		IF (COALESCE(:I_APPLY_MODEL_NAME ,'') = '') THEN
-			SIGNAL SQL_ERROR_CODE 11005 SET MESSAGE_TEXT = '적용모델명을 입력해주세요.';  
+			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_06';
 		END IF;
 		
 		--연간 예상물동 필수체크
 		IF (COALESCE(:I_ANNUAL_MTLMOB_QUANTITY ,0) = 0) THEN
-			SIGNAL SQL_ERROR_CODE 11006 SET MESSAGE_TEXT = '연간 물동수량을 입력해주세요.';  
+			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_07';
 		END IF;
 		
 		--투자 내역 필수체크
 		IF (COALESCE(:I_INVESTMENT_DESC ,'') = '') THEN
-			SIGNAL SQL_ERROR_CODE 11007 SET MESSAGE_TEXT = '투자내역을 입력해주세요.';  
+			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_08';
 		END IF;
 		
 		--집행년월 필수체크
 		IF (COALESCE(:I_EXECUTION_YYYYMM ,'') = '') THEN
-			SIGNAL SQL_ERROR_CODE 11008 SET MESSAGE_TEXT = '집행년월을 입력해주세요.';  
+			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_09';
 		END IF;
 		
 		--투자효과 필수체크
 		IF (COALESCE(:I_INVESTMENT_EFFECT ,'') = '') THEN
-			SIGNAL SQL_ERROR_CODE 11009 SET MESSAGE_TEXT = '투자효과를 입력해주세요.';
+			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_10';
 		END IF;
 		
 		--투자장소 필수체크
 		IF (COALESCE(:I_INVESTMENT_PLACE ,'') = '') THEN
-			SIGNAL SQL_ERROR_CODE 11010 SET MESSAGE_TEXT = '투자장소를 입력해주세요.';
+			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_11';
 		END IF;
 	
 		-------------------------------------------------------------------------------[투자계획서 상세를 입력했는지 체크]
 		IF V_INV_DTL_CNT < 1 THEN
-			SIGNAL SQL_ERROR_CODE 11011 SET MESSAGE_TEXT = '상세내역을 추가해주세요.';
+			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_21';
 		END IF;
 		
 	END;
@@ -159,31 +189,22 @@ BEGIN
 	저장처리 시작
 	**********************************************/
 	BEGIN
-		DECLARE EXIT HANDLER FOR SQLEXCEPTION
-		BEGIN
-			O_RESULT =  SELECT 
-							'NG' AS RESULT_CODE
-							,'SAVE_ERR' AS ERR_TYPE
-							,::SQL_ERROR_CODE AS ERR_CODE
-							,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
-						FROM DUMMY;
-		END;
-	
-		
 		-------------------------------------------------------------------------------[투자계획 마스터 테이블 INSERT/UPDATE]
-		IF V_MST_CRUD_TYPE = 'C' THEN
+		IF (V_MST_CRUD_TYPE = 'C' OR COALESCE(V_MST_SEQ,0) = 0) THEN
 		
 			--------------------------[투자계획순번 채번]
 			SELECT IFNULL(MAX(INVESTMENT_PLAN_SEQUENCE), 0)+1
 			INTO V_MST_SEQ
 			FROM SP_SF_FUNDING_INVEST_PLAN_MST
-			WHERE FUNDING_APPL_NUMBER = :V_FUNDING_APPL_NUMBER
+			WHERE FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
 			;
 			
 			--------------------------[INSERT]
 			INSERT INTO SP_SF_FUNDING_INVEST_PLAN_MST(
 				 FUNDING_APPL_NUMBER		--
 				,INVESTMENT_PLAN_SEQUENCE	--
+                ,TENANT_ID
+                ,COMPANY_CODE
 				,INVESTMENT_TYPE_CODE		--
 				,INVESTMENT_PROJECT_NAME	--
 				,INVESTMENT_YYYYMM			--
@@ -203,8 +224,10 @@ BEGIN
 				,SYSTEM_UPDATE_DTM			--
 			)
 			SELECT
-				 :V_FUNDING_APPL_NUMBER
-				,:V_MST_SEQ
+				 V_FUNDING_APPL_NUMBER
+				,V_MST_SEQ
+                ,TENANT_ID
+                ,COMPANY_CODE
 				,:I_INVESTMENT_TYPE_CODE
 				,:I_INVESTMENT_PROJECT_NAME
 				,:I_INVESTMENT_YYYYMM
@@ -226,7 +249,7 @@ BEGIN
 			WHERE FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
 			;
 			
-		ELSEIF V_MST_CRUD_TYPE = 'U' THEN
+		ELSE
 			UPDATE SP_SF_FUNDING_INVEST_PLAN_MST
 			SET 
 				 INVESTMENT_TYPE_CODE			= :I_INVESTMENT_TYPE_CODE		--투자유형코드
@@ -246,10 +269,19 @@ BEGIN
 				,UPDATE_USER_ID					= :I_USER_ID
 				,SYSTEM_CREATE_DTM				= CURRENT_TIMESTAMP
 				,SYSTEM_UPDATE_DTM				= CURRENT_TIMESTAMP
-			WHERE FUNDING_APPL_NUMBER = :V_FUNDING_APPL_NUMBER
-			AND INVESTMENT_PLAN_SEQUENCE = :V_MST_SEQ
-			;     
+			WHERE FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
+			AND INVESTMENT_PLAN_SEQUENCE = V_MST_SEQ
+			;  
+
 		END IF;
+
+        /***********************************************
+        정상적으로 저장처리 되었는지 확인
+        **********************************************/
+        SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;	    
+        IF V_CUD_COUNT != 1 THEN
+            SIGNAL V_ERR_SAVE SET MESSAGE_TEXT = '';
+        END IF;
 		
 		
 		-------------------------------------------------------------------------------[디테일 데이터 커서]
@@ -258,14 +290,15 @@ BEGIN
 			V_DTL_CRUD_TYPE := REC_DTL_DATA.CRUD_TYPE;					--CRUD 타입
 			V_DTL_SEQ := REC_DTL_DATA.INVESTMENT_PLAN_ITEM_SEQUENCE;	--투자계획서 상세 시퀀스
 			
-			
 			-------------------------------------------------------------------------------[투자계획 상세 테이블 INSERT/UPDATE]
-			IF V_DTL_CRUD_TYPE = 'C' THEN
+            IF (V_DTL_CRUD_TYPE = 'C' OR COALESCE(V_DTL_SEQ ,0) = 0) THEN
 				--------------------------[INSERT]
 				INSERT INTO SP_SF_FUNDING_INVEST_PLAN_DTL(
 					 FUNDING_APPL_NUMBER
 					,INVESTMENT_PLAN_SEQUENCE
 					,INVESTMENT_PLAN_ITEM_SEQUENCE
+                    ,TENANT_ID
+                    ,COMPANY_CODE
 					,INVESTMENT_ITEM_NAME
 					,INVESTMENT_ITEM_PURCHASING_PRICE
 					,INVESTMENT_ITEM_PURCHASING_QTY
@@ -278,13 +311,15 @@ BEGIN
 					,SYSTEM_UPDATE_DTM					--
 				)
 				SELECT
-					 :V_FUNDING_APPL_NUMBER
-					,:V_MST_SEQ
+					 V_FUNDING_APPL_NUMBER
+					,V_MST_SEQ
 					,(SELECT IFNULL(MAX(INVESTMENT_PLAN_ITEM_SEQUENCE),0)+1 AS NEW_SEQ
 						FROM SP_SF_FUNDING_INVEST_PLAN_DTL
-						WHERE FUNDING_APPL_NUMBER = :V_FUNDING_APPL_NUMBER
-						AND INVESTMENT_PLAN_SEQUENCE = :V_MST_SEQ
+						WHERE FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
+						AND INVESTMENT_PLAN_SEQUENCE = V_MST_SEQ
 					) AS NEW_SEQ
+                    ,TENANT_ID
+                    ,COMPANY_CODE
 					,REC_DTL_DATA.INVESTMENT_ITEM_NAME
 					,REC_DTL_DATA.INVESTMENT_ITEM_PURCHASING_PRICE
 					,REC_DTL_DATA.INVESTMENT_ITEM_PURCHASING_QTY
@@ -296,10 +331,10 @@ BEGIN
 					,CURRENT_TIMESTAMP
 					,CURRENT_TIMESTAMP
 				FROM SP_SF_FUNDING_APPLICATION AP
-				WHERE AP.FUNDING_APPL_NUMBER = :V_FUNDING_APPL_NUMBER
+				WHERE AP.FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
 				;
 				
-			ELSEIF V_DTL_CRUD_TYPE = 'U' THEN
+			ELSE
 				--------------------------[UPDATE]
 				UPDATE SP_SF_FUNDING_INVEST_PLAN_DTL
 				SET
@@ -313,17 +348,28 @@ BEGIN
 					,UPDATE_USER_ID						= :I_USER_ID
 					,SYSTEM_CREATE_DTM					= CURRENT_TIMESTAMP
 					,SYSTEM_UPDATE_DTM					= CURRENT_TIMESTAMP
-				WHERE FUNDING_APPL_NUMBER = :V_FUNDING_APPL_NUMBER
-				AND INVESTMENT_PLAN_SEQUENCE = :V_MST_SEQ
-				AND INVESTMENT_PLAN_ITEM_SEQUENCE = :V_DTL_SEQ
+				WHERE FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
+				AND INVESTMENT_PLAN_SEQUENCE = V_MST_SEQ
+				AND INVESTMENT_PLAN_ITEM_SEQUENCE = V_DTL_SEQ
 				;
 				
 			END IF;
+
+
+            /***********************************************
+            정상적으로 저장처리 되었는지 확인
+            **********************************************/
+            SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;	    
+            IF V_CUD_COUNT != 1 THEN
+                SIGNAL V_ERR_SAVE SET MESSAGE_TEXT = '';
+            END IF;
 			
 		END FOR;
 			
 	END;
-		
+	
+
+    COMMIT;
 	
 	/***********************************************
 	처리 끝
@@ -331,8 +377,9 @@ BEGIN
     O_RESULT =  SELECT 
 					'OK' AS RESULT_CODE
 					,'' AS ERR_TYPE
-					,'' AS ERR_CODE
-					,:V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
+					,'' AS SQL_ERR_CODE
+                    ,'' AS DEF_ERR_CODE
+					,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
 				FROM DUMMY;
 
 END;

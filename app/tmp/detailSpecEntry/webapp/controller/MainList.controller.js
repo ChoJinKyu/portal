@@ -21,7 +21,8 @@ sap.ui.define([
     'sap/m/Token',
     'sap/m/SearchField',
     "ext/lib/util/Validator",
-    "sap/ui/core/Fragment"
+    "sap/ui/core/Fragment",
+    "sap/f/DynamicPageTitle"
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Label, Token, SearchField, Validator, Fragment) {
 	"use strict";
 
@@ -58,14 +59,46 @@ sap.ui.define([
 				intent: "#Template-display"
             }, true);
             
-            this._doInitSearch();
+            
 			
             this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedListModel(), "dpMdMstSpecViewG");
             this.setModel(new ManagedListModel(), "orgMap");
             this.setModel(new ManagedListModel(), "division");
 
+            /*
+                화면 변경
+            */
+           Fragment.load({
+                    id: this.getView().getId() + "12__2",
+					name: "tmp.detailSpecEntry.view.L2101_Retrieve_DP0401-501_SCTT001_title",
+					controller: this          
+            }).then(function(oFragment){
+                      var oPageSubSection = this.getView().byId("page");
+                      oPageSubSection.destroyTitle();    
+                      oPageSubSection.setTitle(oFragment);
+
+
+                    
+                        
+            }.bind(this));
+
+            Fragment.load({
+                    id: this.getView().getId(),
+                    name: "tmp.detailSpecEntry.view.L2101_Retrieve_DP0401-501_SCTG001_Grid",
+                    controller: this          
+            }).then(function(oFragment){
+                    var oPageSubSection = this.getView().byId("page");
+                        oPageSubSection.setContent(oFragment);
+                        this._doInitSearch();
+            }.bind(this));
+            
+
+            
+            
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
+            
 			this._doInitTablePerso();
         },
         
@@ -79,17 +112,18 @@ sap.ui.define([
          * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
          */
 		_doInitSearch: function(){
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E": "S";
+            var companyRole = 'LGESL';
+            var orgRole = 'A040';
 
             this.getView().setModel(this.getOwnerComponent().getModel());
 
-            this.setDivision('LGEKR');
+            this.setDivision(companyRole);
 
             //접속자 법인 사업부로 바꿔줘야함
-            // this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
-            // this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
-            // this.getView().byId("searchDivisionS").setSelectedKeys(['DFZ']);
-            // this.getView().byId("searchDivisionE").setSelectedKeys(['DFZ']);
+            this.getView().byId("searchCompanyS").setSelectedKeys(companyRole);
+            this.getView().byId("searchCompanyE").setSelectedKeys(companyRole);
+            this.getView().byId("searchDivisionS").setSelectedKeys(orgRole);
+            this.getView().byId("searchDivisionE").setSelectedKeys(orgRole);
 
             /** Date */
             var today = new Date();
@@ -104,7 +138,7 @@ sap.ui.define([
             
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
                                     new Filter("company_code", FilterOperator.EQ, companyCode)
                                 ],
                                 and: true
@@ -216,8 +250,8 @@ sap.ui.define([
             var oSelectedItem = oEvent.getParameter("listItem");
 
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-				sPath = oSelectedItem.getBindingContext("list").getPath(),
-				oRecord = this.getModel("list").getProperty(sPath);
+				sPath = oSelectedItem.getBindingContext("dpMdMstSpecViewG").getPath(),
+				oRecord = this.getModel("dpMdMstSpecViewG").getProperty(sPath);
 
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
@@ -255,17 +289,7 @@ sap.ui.define([
             //alert("Hello");
 
 
-            /*
-                화면 변경
-            */
-              Fragment.load({
-                    id: this.getView().getId(),
-					name: "tmp.detailSpecEntry.view.test_grid",
-					controller: this          
-            }).then(function(oFragment){
-                      var oPageSubSection = this.getView().byId("page");
-                          oPageSubSection.setContent(oFragment);
-			 	}.bind(this));
+            
 
             // oModel.read("/Pur_Org_Type_Mapping", {
             //     filters: [
@@ -299,12 +323,13 @@ sap.ui.define([
 		 */
 		_applySearch: function(aSearchFilters) {
 			var oView = this.getView(),
-				oModel = this.getModel("list");
+				oModel = this.getModel("dpMdMstSpecViewG");
 			oView.setBusy(true);
 			oModel.setTransactionModel(this.getModel());
 			oModel.read("/MoldMasterSpec", {
 				filters: aSearchFilters,
 				success: function(oData){
+                    debugger
 					oView.setBusy(false);
 				}
 			});
@@ -424,14 +449,14 @@ sap.ui.define([
 
                     divisionFilters.push(new Filter({
                                 filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
                                     new Filter("company_code", FilterOperator.EQ, item.getKey() )
                                 ],
                                 and: true
                             }));
                 });
             }else{
-                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600' ));
+                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101' ));
             }
 
             var filter = new Filter({
@@ -538,7 +563,7 @@ sap.ui.define([
 
             this._oValueHelpDialog.getTableAsync().then(function (oTable) {
 
-                var _filter = new Filter("tenant_id", FilterOperator.EQ, 'L2600' );
+                var _filter = new Filter("tenant_id", FilterOperator.EQ, 'L2101' );
                 
                 oTable.setModel(this.getOwnerComponent().getModel());
                 oTable.setModel(this.oColModel, "columns");
@@ -622,7 +647,7 @@ sap.ui.define([
 				and: false
             }));
             
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600' ));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101' ));
 
 			this._filterTable(new Filter({
 				filters: aFilters,

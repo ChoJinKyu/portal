@@ -7,6 +7,7 @@
   xmlns:layout="sap.ui.layout"
   xmlns:tnt="sap.tnt"
   xmlns:lib-m="ext.lib.control.m"
+  xmlns:cm-ui="cm.util.control.ui"
   class="sapUiSizeCompact"
   displayBlock="true"
   height="100%">
@@ -463,22 +464,15 @@
                 </layoutData>
             </Label>
             <VBox>
-                <lib-m:CodePicker
-                    placeholder="{detailModel>/project_leader_info/user_local_name} {detailModel>/project_leader_info/job_title}"
-                    selectedKey="{detailModel>/project_leader_info/employee_number}"
-                    keyField="employee_number"
-                    textField="user_local_name"
-                    suggestionItems="{
-                        path: '/',
-                        filters: [
-                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                        ],
-                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                        entityName: 'Employee'
-                    }">
-                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
-                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
-                </lib-m:CodePicker>
+                <Input value="{detailModel>/project_leader_info/user_local_name}"
+                       showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
+                    <customData>
+                        <core:CustomData key="modelName" value="detailModel" />
+                        <core:CustomData key="textPath" value="/project_leader_info/user_local_name" />
+                        <core:CustomData key="codePath" value="/project_leader_empno" />
+                    </customData>
+                </Input>
+                
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -506,6 +500,13 @@
                     <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
                         keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
                 </lib-m:CodePicker>
+                <!-- <Input id="projectLeaderValueHelp" placeholder="{detailModel>/project_leader_info/user_local_name}"
+                       value="{detailModel>/project_leader_info/employee_number}"
+                       showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
+                    <customData>
+                        <core:CustomData key="inputId" value="projectLeaderValueHelp" />
+                    </customData>
+                </Input> -->
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -689,5 +690,14 @@
             </ColumnListItem>
         </items>
     </Table>
+    <cm-ui:EmployeeDialog id="employeeDialog" 
+        title="{I18N>/EMPLOYEE} {I18N>/FIND}"
+        closeWhenApplied="true"
+        items="{
+            filters: [
+            ]
+        }"
+        apply=".onEmployeeDialogApplyPress"
+    />
 </VBox>
 </mvc:View>

@@ -4,9 +4,6 @@ VIEW DP_PD_PART_CATEGORY_VIEW
 SELECT X.NODE_ID
       ,X.PARENT_ID
       ,X.TENANT_ID
-      ,X.company_code
-      ,X.org_type_code
-      ,X.org_code
       ,X.CATEGORY_GROUP_CODE
       ,X.CATEGORY_CODE
       ,X.CATEGORY_NAME
@@ -15,6 +12,7 @@ SELECT X.NODE_ID
       ,X.active_flag
       ,X.update_user_id
       ,X.local_update_dtm
+--      ,SUBSTR(IFNULL(X.PATH,'-- '), 3) AS PATH
       ,X.PATH
       ,X.HIERARCHY_RANK
       ,X.HIERARCHY_TREE_SIZE
@@ -31,6 +29,12 @@ SELECT X.NODE_ID
             ,M.*
             ,L.CODE_NAME AS CATEGORY_NAME
             ,L.LANGUAGE_CD
+            ,(SELECT CODE_NAME 
+                FROM DP_PD_PART_CATEGORY_LNG 
+               WHERE TENANT_ID = M.TENANT_ID 
+            	 AND CATEGORY_CODE = M.PARENT_CATEGORY_CODE 
+            	 AND CATEGORY_GROUP_CODE = M.CATEGORY_GROUP_CODE
+            	 AND LANGUAGE_CD = 'KO') AS PARENT_CATEGORY_NAME
         FROM DP_PD_PART_CATEGORY M, DP_PD_PART_CATEGORY_LNG L
        WHERE M.TENANT_ID = L.TENANT_ID
          AND M.CATEGORY_CODE = L.CATEGORY_CODE

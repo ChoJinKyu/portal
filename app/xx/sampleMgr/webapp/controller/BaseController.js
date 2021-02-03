@@ -62,8 +62,8 @@ sap.ui.define([
             var v_dateNumberInt = parseInt(v_dateNumber);
             var v_date = new Date(v_dateNumberInt);
             var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : this.getView().getModel("userInfoModel").getData().dateDisplayFormat });   
-            var dateFormatted = dateFormat.format(v_date);
-            return dateFormatted;
+            //var dateFormatted = dateFormat.format(v_date);
+            //return dateFormatted;
         }
 
 

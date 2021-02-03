@@ -69,7 +69,8 @@ public class PrCreateV4 implements EventHandler {
 
         log.info("##### onSavePrCreateProc START ");
 
-        Collection<PrCreateSaveType> v_inMultiData = context.getInputData();
+        //Collection<PrCreateSaveType> v_inMultiData = context.getInputData();
+        PrCreateSaveType v_inputData = context.getInputData();
         Collection<OutType> v_result = new ArrayList<>();
         int iRow = 0;
         
@@ -90,7 +91,7 @@ public class PrCreateV4 implements EventHandler {
         .append("REQUESTOR_NAME NVARCHAR(50),")
         .append("REQUESTOR_DEPARTMENT_CODE NVARCHAR(50),")
         .append("REQUESTOR_DEPARTMENT_NAME NVARCHAR(240),")
-        .append("REQUEST_DATE DATE,")
+        .append("REQUEST_DATE NVARCHAR(10),")
         .append("PR_CREATE_STATUS_CODE NVARCHAR(30), ")
         .append("PR_HEADER_TEXT NVARCHAR(200),")
         .append("APPROVAL_CONTENTS NCLOB,")
@@ -98,29 +99,29 @@ public class PrCreateV4 implements EventHandler {
         .append(")");   
         
         StringBuffer v_sql_createTableD = new StringBuffer();
-        v_sql_createTableD.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_D (")    
-        .append("TENANT_ID NVARCHAR(5),")
-        .append("COMPANY_CODE NVARCHAR(10),")
-        .append("PR_NUMBER NVARCHAR(50),")
+        v_sql_createTableD.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_D (")
         .append("PR_ITEM_NUMBER NVARCHAR(10),")
         .append("ORG_TYPE_CODE NVARCHAR(2), ")
 		.append("ORG_CODE NVARCHAR(10), ")
 		.append("MATERIAL_CODE NVARCHAR(40), ")
 		.append("MATERIAL_GROUP_CODE NVARCHAR(10),")
 		.append("PR_DESC NVARCHAR(100),")
-		.append("PR_QUANTITY NVARCHAR(34),")
+        .append("PR_QUANTITY NVARCHAR(40),")        
 		.append("PR_UNIT NVARCHAR(3),")
         .append("REQUESTOR_EMPNO NVARCHAR(30),")
         .append("REQUESTOR_NAME NVARCHAR(50),")
-        .append("DELIVERY_REQUEST_DATE DATE,")
+        .append("DELIVERY_REQUEST_DATE NVARCHAR(10),")
         .append("BUYER_EMPNO NVARCHAR(30),")
         .append("PURCHASING_GROUP_CODE NVARCHAR(3),")
-        .append("ESTIMATED_PRICE DECIMAL(34),")
+        .append("ESTIMATED_PRICE DECIMAL(30,10),")
         .append("CURRENCY_CODE NVARCHAR(3),")
-        .append("PRICE_UNIT NVARCHAR(3),")
+        .append("PRICE_UNIT NVARCHAR(5),")
         .append("PR_PROGRESS_STATUS_CODE NVARCHAR(30),")
         .append("REMARK NVARCHAR(3000),")
         .append("SLOC_CODE NVARCHAR(3),")
+        .append("SUPPLIER_CODE NVARCHAR(10),")
+        .append("ITEM_CATEGORY_CODE NVARCHAR(2),")
+        .append("ACCOUNT_ASSIGNMENT_CATEGORY_CODE NVARCHAR(2),")
         .append("ACCOUNT_CODE NVARCHAR(40),")
         .append("CCTR_CODE NVARCHAR(10),")
         .append("WBS_CODE NVARCHAR(30),")
@@ -138,8 +139,6 @@ public class PrCreateV4 implements EventHandler {
         
         StringBuffer v_sql_callProc = new StringBuffer();
         v_sql_callProc.append("CALL OP_PU_PR_CREATE_SAVE_PROC ( ")
-        .append("I_TENANT_ID => ?, ")
-        .append("I_COMPANY_CODE => ?, ")
         .append("I_PR_NUMBER => ?, ")
         .append("I_M_TABLE => #LOCAL_TEMP_M, ")
         .append("I_D_TABLE => #LOCAL_TEMP_D, ")
@@ -148,8 +147,6 @@ public class PrCreateV4 implements EventHandler {
 
 
         ResultSet v_rs = null;
-        
-        // try {
             
             // Commit Option
             jdbc.execute(v_sql_commitOption);
@@ -160,10 +157,11 @@ public class PrCreateV4 implements EventHandler {
 
             Object[] values = null;
 
-            if(!v_inMultiData.isEmpty() && v_inMultiData.size() > 0){
-                for(PrCreateSaveType v_indata : v_inMultiData) {                    
-                    log.info("###"+v_indata.getTenantId()+"###"+v_indata.getCompanyCode()+"###"+v_indata.getPrNumber()+"###"+v_indata.getPrCreateStatusCode());
-                    log.info("##### ApprovalContents: " + v_indata.getApprovalContents());
+            // if(!v_inMultiData.isEmpty() && v_inMultiData.size() > 0){
+                // for(PrCreateSaveType v_inputData : v_inMultiData) {      
+
+                    log.info("###"+v_inputData.getTenantId()+"###"+v_inputData.getCompanyCode()+"###"+v_inputData.getPrNumber()+"###"+v_inputData.getPrCreateStatusCode());
+                    log.info("##### ApprovalContents: " + v_inputData.getApprovalContents());
 
                     // Master Local Temp Table 생성
                     jdbc.execute(v_sql_createTableM.toString());
@@ -172,36 +170,33 @@ public class PrCreateV4 implements EventHandler {
                     jdbc.execute(v_sql_createTableD.toString());
                     
                     values = new Object[] {
-                        (String)v_indata.get("tenant_id"),
-                        (String)v_indata.get("company_code"),
-                        (String)v_indata.get("pr_number"),
-                        (String)v_indata.get("pr_type_code"),
-                        (String)v_indata.get("pr_type_code_2"),
-                        (String)v_indata.get("pr_type_code_3"),
-                        (String)v_indata.get("pr_template_number"),
-                        (String)v_indata.get("pr_create_system_code"),
-                        v_indata.getPrDesc(),
-                        v_indata.getRequestorEmpno(),
-                        v_indata.getRequestorName(),
-                        v_indata.getRequestorDepartmentCode(),
-                        v_indata.getRequestorDepartmentName(),
-                        v_indata.getRequestDate(),
-                        v_indata.getPrCreateStatusCode(),
-                        v_indata.getPrHeaderText(),
-                        v_indata.getApprovalContents(),
-                        v_indata.getUpdateUserId()
+                        v_inputData.getTenantId(),
+                        v_inputData.getCompanyCode(),
+                        v_inputData.getPrNumber(),
+                        v_inputData.getPrTypeCode(),
+                        v_inputData.getPrTypeCode2(),
+                        v_inputData.getPrTypeCode3(),
+                        v_inputData.getPrTemplateNumber(),
+                        v_inputData.getPrCreateStatusCode(),
+                        v_inputData.getPrDesc(),
+                        v_inputData.getRequestorEmpno(),
+                        v_inputData.getRequestorName(),
+                        v_inputData.getRequestorDepartmentCode(),
+                        v_inputData.getRequestorDepartmentName(),
+                        v_inputData.getRequestDate(),
+                        v_inputData.getPrCreateStatusCode(),
+                        v_inputData.getPrHeaderText(),
+                        v_inputData.getApprovalContents(),
+                        v_inputData.getUpdateUserId()
                     };
                     batchH.add(values);
 
                     // Detail Local Temp Table에 insert     
-                    Collection<SavedDetail> v_inDetails = v_indata.getDetails();               
+                    Collection<SavedDetail> v_inDetails = v_inputData.getDetails();               
                     if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){                        
                         for(SavedDetail v_inRow : v_inDetails){
-                            log.info("###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getPrNumber()+"###"+v_inRow.getPrItemNumber());
+                            log.info("SavedDetail ###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getPrNumber()+"###"+v_inRow.getPrItemNumber());
                             values = new Object[] {
-                                v_inRow.getTenantId(),
-                                v_inRow.getCompanyCode(),
-                                v_inRow.getPrNumber(),
                                 v_inRow.getPrItemNumber(),
                                 v_inRow.getOrgTypeCode(),
                                 v_inRow.getOrgCode(),
@@ -222,34 +217,33 @@ public class PrCreateV4 implements EventHandler {
                                 v_inRow.getPrProgressStatusCode(),
                                 v_inRow.getRemark(),
                                 v_inRow.getSlocCode(),
+                                v_inRow.getSupplierCode(),
+                                v_inRow.getItemCategoryCode(),
+                                v_inRow.getAccountAssignmentCategoryCode(),
                                 v_inRow.getAccountCode(),
                                 v_inRow.getCctrCode(),
                                 v_inRow.getWbsCode(),
                                 v_inRow.getAssetNumber(),
                                 v_inRow.getOrderNumber(),
                                 v_inRow.getServiceDesc(),
-                                v_indata.getUpdateUserId()
+                                v_inputData.getUpdateUserId()
                             };
                             batchD.add(values);
                         }
                     }  
 
-                    log.info("###"+v_indata.getTenantId()+"###"+v_indata.getCompanyCode()+"###"+v_indata.getPrNumber());
-                    
-                    int[] updateCountsH = jdbc.batchUpdate(v_sql_insertTableM, batchH); 
+                    int[] updateCountsH = jdbc.batchUpdate(v_sql_insertTableM, batchH);                     
                     int[] updateCountsD = jdbc.batchUpdate(v_sql_insertTableD, batchD);
 
 
                     // Procedure Call
                     List<SqlParameter> paramList = new ArrayList<SqlParameter>();
-                    paramList.add(new SqlParameter("I_TENANT_ID", Types.VARCHAR));
-                    paramList.add(new SqlParameter("I_COMPANY_CODE", Types.VARCHAR));
                     paramList.add(new SqlParameter("I_PR_NUMBER", Types.VARCHAR));
 
                     SqlReturnResultSet oTable = new SqlReturnResultSet("O_MSG", new RowMapper<OutType>(){
                         @Override
                         public OutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                            log.info("##### return_code: "+v_rs.getString("return_code")+" ### return_msg: "+v_rs.getString("return_msg"));
+                            log.info("##### return_code: "+v_rs.getString("return_code")+" ##### return_msg: "+v_rs.getString("return_msg"));
                             OutType v_row = OutType.create();
                             v_row.setReturnCode(v_rs.getString("return_code"));
                             v_row.setReturnMsg(v_rs.getString("return_msg"));
@@ -263,9 +257,7 @@ public class PrCreateV4 implements EventHandler {
                         @Override
                         public CallableStatement createCallableStatement(Connection connection) throws SQLException {
                             CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
-                            callableStatement.setString("I_TENANT_ID", v_indata.getTenantId());
-                            callableStatement.setString("I_COMPANY_CODE", v_indata.getCompanyCode());
-                            callableStatement.setString("I_PR_NUMBER", v_indata.getPrNumber());
+                            callableStatement.setString("I_PR_NUMBER", v_inputData.getPrNumber());
                             return callableStatement;
                         }
                     }, paramList);
@@ -273,8 +265,8 @@ public class PrCreateV4 implements EventHandler {
                     // Local Temp Table DROP
                     jdbc.execute(v_sql_dropTableM);
                     jdbc.execute(v_sql_dropTableD);
-                }
-            }
+                // }
+            // }
 
             
             context.setResult(v_result);

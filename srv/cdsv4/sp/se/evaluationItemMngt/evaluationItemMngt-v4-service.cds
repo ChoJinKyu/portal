@@ -21,7 +21,7 @@ service EvaluationItemMngtV4Service {
         evaluation_article_type_code: String(30);
         evaluation_distrb_scr_type_cd: String(30);
         evaluation_result_input_type_cd: String(30);
-        qttive_item_uom_code: String(3);
+        qttive_item_uom_code: String(30);
         qttive_eval_article_calc_formula: String(1000);
         evaluation_article_desc: String(3000);
         sort_sequence: Decimal;

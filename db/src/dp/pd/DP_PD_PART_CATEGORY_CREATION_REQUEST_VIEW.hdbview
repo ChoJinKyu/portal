@@ -2,9 +2,6 @@ VIEW DP_PD_PART_CATEGORY_CREATION_REQUEST_VIEW
 /* ( i_tenant_id NVARCHAR(5), i_category_group_code NVARCHAR(30), i_langauge_cd NVARCHAR(30) )  */
  AS
 SELECT pcc.TENANT_ID,
-    pcc.COMPANY_CODE,
-    pcc.ORG_TYPE_CODE,
-    pcc.ORG_CODE,
     pcc.REQUEST_NUMBER,
     pcc.CATEGORY_GROUP_CODE,
     pcc.APPROVAL_NUMBER,

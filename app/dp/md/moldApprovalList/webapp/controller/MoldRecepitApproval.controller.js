@@ -23,10 +23,11 @@ sap.ui.define([
     'sap/m/SearchField',
     "sap/m/Token",
     "dp/md/util/controller/DeptSelection",
+
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
-    , ApprovalBaseController, MoldItemSelection , SearchField , Token , DeptSelection
+    , ApprovalBaseController, MoldItemSelection , SearchField , Token , DeptSelection 
 ) {
     "use strict";
     /**
@@ -68,7 +69,7 @@ sap.ui.define([
 
             this.setModel(oViewModel, "moldRecepitApprovalView"); //change
             this.getRouter().getRoute("moldRecepitApproval").attachPatternMatched(this._onObjectMatched, this);//change
-           
+            this.process.setDrawProcessUI(this, "MoldRecepitProcess" , "A", 6);
         },
     
         /* =========================================================== */
@@ -80,7 +81,7 @@ sap.ui.define([
         /* =========================================================== */
         _onApprovalPage : function () {
             this.getView().setModel(new ManagedListModel(), "mdRecepit");
-
+    
             // console.log(" mode "  ,  this.getView().getModel("mode"));
             var schFilter = [];
             var that = this;
@@ -88,7 +89,7 @@ sap.ui.define([
      
           //  } else {
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 ];
                 this._bindViewRecepit("/MoldRecepit", "mdRecepit", schFilter, function (oData) {
                     // console.log("data>>>> ", oData);
@@ -191,7 +192,7 @@ sap.ui.define([
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */  
             var approval_number = mstModel.oData.approval_number;
             oModel.addRecord({
-                "tenant_id": "L2600",
+                "tenant_id": "L2101",
                 "mold_id": String(data.mold_id),
                 "approval_number": approval_number,
                 "model": data.model,
@@ -271,14 +272,15 @@ sap.ui.define([
         //     this.getModel("refererPreview").setProperty("/refArr", rArr);
 
             var oView = this.getView();
-
+             var p = this.process;
             if (!this._oDialogPrev) {
                 this._oDialogPrev = Fragment.load({
                     id: oView.getId(),
                     name: "dp.md.moldApprovalList.view.MoldRecepitApprovalPreView",
                     controller: this
                 }).then(function (oDialog) {
-                    oView.addDependent(oDialog);
+                    oView.addDependent(oDialog); 
+                     p.setDrawProcessUI(this, "MoldRecepitProcessPrev" , "A", 6);
                     return oDialog;
                 }.bind(this));
             }
@@ -337,7 +339,8 @@ sap.ui.define([
         } , 
         onPageRequestCancelButtonPress : function () { 
             this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 요청취소 
-            this._moldRecepitApprovalDataSetting();
+            this.approvalRequestCancel(); 
+           // this._moldRecepitApprovalDataSetting();
         } , 
 
         _moldRecepitApprovalDataSetting : function () { 
@@ -356,6 +359,28 @@ sap.ui.define([
           
             var that = this;
             
+            // 삭제 row 먼저 추가되어야 데이터가 정상 저장됨 
+            if(bModel._aRemovedRows.length > 0){
+                bModel._aRemovedRows.forEach(function(item){
+                    that.approvalDetails_data.push({
+                        tenant_id : that.tenant_id 
+                        , approval_number : that.approval_number 
+                        , mold_id : item.mold_id 
+                        , _row_state_ : "D"
+                    });
+
+                    that.asset_data.push({
+                        tenant_id : that.tenant_id 
+                        , mold_id : item.mold_id 
+                        , acq_department_code : item.acq_department_code
+                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+                    });
+                });
+            }
+
+
+
+
             if(bModel.getData().MoldRecepit != undefined && bModel.getData().MoldRecepit.length > 0){
 
                 bModel.getData().MoldRecepit.forEach(function(item){
@@ -375,24 +400,6 @@ sap.ui.define([
 
                 });
 
-            }
-
-            if(bModel._aRemovedRows.length > 0){
-                bModel._aRemovedRows.forEach(function(item){
-                    that.approvalDetails_data.push({
-                        tenant_id : that.tenant_id 
-                        , approval_number : that.approval_number 
-                        , mold_id : item.mold_id 
-                        , _row_state_ : "D"
-                    });
-
-                    that.asset_data.push({
-                        tenant_id : that.tenant_id 
-                        , mold_id : item.mold_id 
-                        , acq_department_code : item.acq_department_code
-                        , _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
-                    });
-                });
             }
 
 

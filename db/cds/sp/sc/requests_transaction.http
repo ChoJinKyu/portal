@@ -1,0 +1,86 @@
+#################################################
+# OData Sever Configuration
+#################################################
+###
+# Cloud Container Service : sppCap Workspace
+@serviceUrl = https://lgcommondev-workspaces-ws-ll5cb-app1.jp10.applicationstudio.cloud.sap
+# Cloud Container Service : sppCap
+@serviceUrl = https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com
+# Local PC : mvn spring-boot:run : v2
+@serviceUrlV2 = http://localhost:8080/odata/v2
+# Local PC[DB+AP] : cds serve all --with-mocks --in-memory?
+@serviceUrl = http://localhost:4004
+# Cloud Container Service : sppCap New
+@serviceUrl = https://biztech-partners-co---ltd-lg-common-dev-dev-po-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4
+# Local PC : mvn spring-boot:run : v4
+@serviceUrl = http://localhost:8080/odata/v4
+
+#################################################
+# OData Service Configuration
+#################################################
+# @reviews-service = {{bookshop}}/sp.negoHeadersV4Service
+# Uncomment this when running a separate reviews service
+# Odata v2 service
+@reviews-serviceV2 = {{serviceUrlV2}}/sp.sourcingService
+# Odata v4 service
+@reviews-service = {{serviceUrl}}/sp.sourcingV4Service
+
+#################################################
+# OData Service Configuration
+# Need not a Cookie for credential in local
+#################################################
+# https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/
+@cookie = JTENANTSESSIONID_services=5fZp7Tlz85JCf51p0PLyDiYoWX3fugTkSnF61L2Fb%2BU%3D
+# https://lgcommondev-workspaces-ws-bhnz4-app2.jp10.applicationstudio.cloud.sap/
+@cookie = workspaces-ws-ll5cb_WSR_SESSIONID=l29o4E9wu3PwAfEjhmtMpz70gsMR9MQmJ3RmtUxhKRT2V+Vlwtrw7Tgo1lGyBzodAPxXU52Efga/NZzmtSaoLA==
+# for LG spp Dev Server
+@cookie = 
+
+#################################################
+# OData Ping Test
+#################################################
+### Ping Test : Deployed Server(DEV)
+GET https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4/cm.ControlOptionMgtService/ControlOptionMasters
+Cookie: {{cookie}}
+
+### Ping Test : Localhost
+GET http://localhost:8080/odata/v4/sp.sourcingTest01V4Service/$metadata
+
+### Get Metadata for Service
+GET {{reviews-service}}/$metadata
+
+
+
+#################################################
+# OData Main Test #1
+#   Transaction CRUD
+#################################################
+
+### Multi Select | Default
+GET {{reviews-service}}/NegoHeadersView?$format=json
+&$top=4
+# &$filter=nego_header_id%20eq%204
+# &$filter=open_date le {{$datetime iso8601}}
+# &$filter=open_date eq 2021-01-01T07:30:10Z
+&$filter=open_date eq 2021-01-01T07:30:10Z
+&$expand=*&$select=*
+# &$filter=((IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null) and (nego_header_id eq 2 or nego_header_id eq 3))
+# &$select=tenant_id,nego_header_id,nego_document_round,HasActiveEntity,IsActiveEntity,SiblingEntity,DraftAdministrativeData
+# &$expand=SiblingEntity,DraftAdministrativeData
+Cookie: {{cookie}}
+Accept-Language: en-US
+# Accept-Datetime: 12
+# Accept-Language: ko-KR
+
+
+### Multi Select | Default
+PUT {{reviews-service}}/NegoHeadersView?
+&$top=4&$filter=nego_header_id%20eq%204
+&$expand=*&$select=*
+# &$filter=((IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null) and (nego_header_id eq 2 or nego_header_id eq 3))
+# &$select=tenant_id,nego_header_id,nego_document_round,HasActiveEntity,IsActiveEntity,SiblingEntity,DraftAdministrativeData
+# &$expand=SiblingEntity,DraftAdministrativeData
+Cookie: {{cookie}}
+Accept-Language: en-US
+Accept-Datetime: 366
+# Accept-Language: ko-KR

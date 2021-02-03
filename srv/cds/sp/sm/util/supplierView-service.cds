@@ -1,4 +1,6 @@
 using {sp as supplView} from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_VIEW-model';
+using {sp as supplCalView} from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_CAL_VIEW-model';
+using {sp as supplWoOrgCalView} from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_WO_ORG_CAL_VIEW-model';
 //Common Organization
 using {cm.Org_Company as OrgCompany} from '../../../../../db/cds/cm/CM_ORG_COMPANY-model';
 using {cm.Org_Unit as OrgUnit} from '../../../../../db/cds/cm/CM_ORG_UNIT-model';
@@ -13,7 +15,10 @@ namespace sp;
 service supplierViewService {
 
     @readonly
-    view supplierView @(title : '공급업체 View') as select from supplView.Sm_Supplier_View;
+    view supplierView @(title : '공급업체 View') as select from supplCalView.Sm_Supplier_Cal_View;
+
+    @readonly
+    view supplierWithoutOrgView @(title : '공급업체(조직X) View') as select from supplWoOrgCalView.Sm_Supplier_Wo_Org_Cal_View;
 
     //Organiation View
     @readonly

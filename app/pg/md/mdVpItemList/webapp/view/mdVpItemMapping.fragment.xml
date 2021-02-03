@@ -10,7 +10,7 @@
     xmlns:lib-m="ext.lib.m"
     height="100%">
     
-    <Dialog id="mappingVpItem" class="sapUiSmallMargin" title="관리특성 Mapping" contentWidth="80%" >
+    <Dialog id="mappingVpItem" class="sapUiSmallMargin" title="{I18N>/MATERIAL_MANAGEMENT_CHAR_MAP}" contentWidth="80%" >
       <!--DynamicPage Title -->
       <!-- <f:title>
         <f:DynamicPageTitle>
@@ -27,15 +27,15 @@
         <VBox> 
             <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                    <Label text="VP Level 1" design="Bold"/>
+                    <Label text="{I18N>/VENDOR_POOL_LOCAL_NAME}" design="Bold"/>
                     <Text id="vpCode1"/>       
                 </layout:VerticalLayout>      
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                    <Label text="VP Level 2" design="Bold"/>
-                    <Text id="vpCode2"/>       
+                    <!-- <Label text="VP Level 2" design="Bold"/>
+                    <Text id="vpCode2"/>        -->
                 </layout:VerticalLayout>     
                 <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                    <Label text="VP Level 3" design="Bold"/>
+                    <Label text="{I18N>/VENDOR_POOL_CODE}" design="Bold"/>
                     <Text id="vpCode3"/>       
                 </layout:VerticalLayout>
             </FlexBox> 
@@ -58,8 +58,8 @@
         </content>
         <ToolbarSpacer/>
         <HBox justifyContent="End" >
-            <Button text="Cancel" type="Transparent" press=".mappingPopupClose"/>
-            <Button text="save" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".selectMappingItems"/>
+            <Button text="{I18N>/CANCEL}" type="Transparent" press=".mappingPopupClose"/>
+            <Button text="{I18N>/TEMP_SAVE}" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".selectMappingItems"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>

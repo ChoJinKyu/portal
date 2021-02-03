@@ -64,23 +64,8 @@ sap.ui.define([
                 );
 
                 oViewModel.setProperty("/App/layout", "OneColumn");
-            }
-            /***
-             * 세션 유저정보를 가져온다.
-             */
-            , _getUserSession : function(){
-                var oUserInfo;
-                
-                oUserInfo = {
-                    loginUserId : "TestUser",
-                    tenantId : "L2100",
-                    companyCode : "LGCKR",
-                    orgTypeCode : "BU",
-                    orgCode : "BIZ00100",
-                    evalPersonEmpno : "5706"
-                };
 
-                return oUserInfo;
+                this.byId("page").setHeaderExpanded(true);
             }
             /***
              * 평가조직 (orgCode) 콤보박스 아이템 바인딩
@@ -189,7 +174,8 @@ sap.ui.define([
                     new Filter("tenant_id", "EQ", oUserInfo.tenantId),
                     new Filter("company_code", "EQ", oUserInfo.companyCode),
                     new Filter("evaluation_operation_unit_code", "EQ", sEvaluOperationUnitCode),
-                    new Filter("org_code", "EQ", sOrgCode)
+                    new Filter("org_code", "EQ", sOrgCode),
+                    new Filter("use_flag", "EQ", true)
                 ];
 
                 oBtnEavluType.bindItems({
@@ -234,12 +220,16 @@ sap.ui.define([
                 oUserInfo = this._getUserSession();
                 aFilters = [
                     new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                    new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE")
+                    new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE"),
+                    new Filter("language_cd", "EQ", "KO")
                 ];
 
                 oBtnEvaluExecuteMode.destroyItems();
                 this.getOwnerComponent().getModel("common").read("/Code",{
                     filters : aFilters,
+                    sorters : [
+                        new Sorter("sort_no")
+                    ],
                     success : function(oData){
                         var aResults, sOrgCode;
 
@@ -300,7 +290,8 @@ sap.ui.define([
              * @param sBtnGubun - 버튼 구분자
              */
             , onPressCreate : function(oEvent, sBtnGubun){
-                var oNavParam, oTreeTable, aSelectedIdx, oContext, oRowData, oViewModel;
+                var oNavParam, oTreeTable, aSelectedIdx, oContext, oRowData, oViewModel,
+                    oView, oI18NModel;
 
                 oTreeTable = this.byId("treeTable");
                 aSelectedIdx = oTreeTable.getSelectedIndices();
@@ -320,11 +311,18 @@ sap.ui.define([
                 }
                 oContext = oTreeTable.getContextByIndex(aSelectedIdx[0]);
                 oRowData = this._deepCopy( oContext.getObject() );
-                oViewModel = this.getView().getModel("viewModel");
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
 
                 oRowData.evaluation_execute_mode_code = oRowData.evaluation_execute_mode_code || "QLTVE_EVAL";
                 oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
                 oRowData.qttive_eval_article_calc_formula = oRowData.qttive_eval_article_calc_formula || "";
+
+                if(oRowData.leaf_flag === "Y"){
+                    oI18NModel = oView.getModel("I18N");
+                    MessageBox.warning(oI18NModel.getProperty("/ESP00001"));
+                    return;
+                }
 
                 oViewModel.setProperty("/Detail", {
                     Header : oRowData,
@@ -394,7 +392,7 @@ sap.ui.define([
                         path : "/EvalItemListView",
                         filters : aFilters,
                         sorter : [
-                            new Sorter("evaluation_article_path_sequence")
+                            new Sorter("hierarchy_rank")
                         ],
                         parameters : {
                             countMode: 'Inline',
@@ -454,23 +452,6 @@ sap.ui.define([
                                         );
                                     }
                                 }
-                                
-                                // var sKey, sParentKey;
-                                // sKey = oRowData.evaluation_article_code;
-                                // sParentKey = oRowData.parent_evaluation_article_code;
-                                // if(aDataKeys.indexOf(sKey) === -1){
-                                //     aDataKeys.push(sKey);
-                                //     aDummyFilters.push(
-                                //         new Filter({ path : "evaluation_article_code", operator : "EQ", value1 : sKey })
-                                //     );
-                                // }
-
-                                // if(aDataKeys.indexOf(sParentKey) === -1){
-                                //     aDataKeys.push(sParentKey);
-                                //     aDummyFilters.push(
-                                //         new Filter({ path : "evaluation_article_code", operator : "EQ", value1 : sParentKey })
-                                //     );
-                                // }
                             });
                             
                             aTableFilter = [
@@ -503,7 +484,7 @@ sap.ui.define([
                                 path : "/EvalItemListView",
                                 filters : aTableFilter,
                                 sorter : [
-                                    new Sorter("evaluation_article_path_sequence")
+                                    new Sorter("hierarchy_rank")
                                 ],
                                 parameters : {
                                     countMode: 'Inline',
@@ -557,21 +538,20 @@ sap.ui.define([
                 }
 
                 oContext = oTable.getContextByIndex(aSelectedIdx[0]);
-                oRowData = this._deepCopy( oContext.getObject() );
+                oRowData = oContext.getObject();
                 oViewModel = this.getView().getModel("viewModel");
 
-                oNavParam.evaluArticleCode = oRowData.evaluation_article_code;
+                // oNavParam.evaluArticleCode = oRowData.evaluation_article_code;
                 oNavParam.leaf = oRowData.leaf_flag;
+                oNavParam.refKey = oRowData.ref_key;
 
-
-                oRowData.evaluation_execute_mode_code = oRowData.evaluation_execute_mode_code || "QLTVE_EVAL";
-                oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
-                oRowData.qttive_eval_article_calc_formula = oRowData.qttive_eval_article_calc_formula || "";
+                // oRowData.evaluation_execute_mode_code = oRowData.evaluation_execute_mode_code || "QLTVE_EVAL";
+                // oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
+                // oRowData.qttive_eval_article_calc_formula = oRowData.qttive_eval_article_calc_formula || "";
                 
-                
-                oViewModel.setProperty("/Detail", {
-                    Header : oRowData
-                });
+                // oViewModel.setProperty("/Detail", {
+                //     Header : oRowData
+                // });
                 this.getOwnerComponent().getRouter().navTo("Detail", oNavParam);
             }
 

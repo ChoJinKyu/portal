@@ -20,12 +20,14 @@ sap.ui.define([
             var oBasePriceArlMgtRootData = {tenantId: "L2100",
             number: {symbol: "", currency: "KRW"}};
 
+            // basePriceProgressStatusMgt App 전체에서 사용할 Model 세팅
             this.setModel(new JSONModel(oBasePriceArlMgtRootData), "rootModel");
+            // 다국어 Model 세팅
             this.setModel(new Multilingual().getModel(), "I18N");
 
             var oRootModel = this.getModel("rootModel");
 
-            // DB에서 Config값을 읽어와서 세팅(view에 사용할 visible, text 값등)
+            // DB에서 Config값을 읽어와서 세팅(view에 사용할 visible, text 값등) 시작
             var aConfigFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
             this.getModel().read("/Base_Price_Arl_Config", {
                 filters : aConfigFilter,
@@ -44,8 +46,9 @@ sap.ui.define([
                     console.log("error", data);
                 }
             });
+            // DB에서 Config값을 읽어와서 세팅(view에 사용할 visible, text 값등) 끝
 
-            // 회사 조회
+            // 회사 조회 시작
             var oOrgModel = this.getModel("org");
             var aOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
             oOrgModel.read("/Company", {
@@ -59,8 +62,9 @@ sap.ui.define([
                     console.log("error", data);
                 }
             });
+            // 회사 조회 끝
             
-            // 플랜트 조회
+            // 플랜트 조회 시작
             var oPurOrgModel = this.getModel("purOrg");
             var aPurOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
             oPurOrgModel.read("/Pur_Operation_Org", {
@@ -88,8 +92,9 @@ sap.ui.define([
                     console.log("error", data);
                 }
             });
+            // 플랜트 조회 끝
 
-            // 상태값 조회
+            // 상태값 조회(품의서 진행 상태) 시작
             var aFilters = [];
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId")));
             aFilters.push(new Filter("group_code", FilterOperator.EQ, "CM_APPROVE_STATUS"));
@@ -108,6 +113,7 @@ sap.ui.define([
                     console.log("error", data);
                 }
             });
+            // 상태값 조회(품의서 진행 상태) 끝
         },
 
     });

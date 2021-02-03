@@ -1,0 +1,130 @@
+PROCEDURE EP_UC_QUOTATION_HD_SAVE_PROC 
+(
+    IN I_TABLE TABLE(   TENANT_ID NVARCHAR(5), 
+                        COMPANY_CODE NVARCHAR(10), 
+                        CONST_QUOTATION_NUMBER NVARCHAR(30), 
+                        CONST_QUOTATION_ITEM_NUMBER NVARCHAR(30),
+                        ITEM_SEQUENCE DECIMAL,
+                        EP_ITEM_CODE NVARCHAR(50),
+                        ITEM_DESC NVARCHAR(200),
+                        SPEC_DESC NVARCHAR(1000),
+                        QUOTATION_QUANTITY DECIMAL,
+                        EXTRA_RATE DECIMAL,
+                        UNIT NVARCHAR(3),
+                        CURRENCY_CODE NVARCHAR(15),
+                        MATERIAL_APPLY_FLAG BOOLEAN,
+                        LABOR_APPLY_FLAG BOOLEAN,
+                        NET_PRICE_CHANGE_ALLOW_FLAG BOOLEAN,
+                        BASE_MATERIAL_NET_PRICE DECIMAL,
+                        BASE_LABOR_NET_PRICE DECIMAL,
+                        MATERIAL_NET_PRICE DECIMAL,
+                        MATERIAL_AMOUNT DECIMAL,
+                        LABOR_NET_PRICE DECIMAL,
+                        LABOR_AMOUNT DECIMAL,
+                        SUM_AMOUNT DECIMAL,
+                        REMARK NVARCHAR(3000),
+                        NET_PRICE_CONTRACT_DOCUMENT_NO NVARCHAR(50),
+                        NET_PRICE_CONTRACT_DEGREE DECIMAL,
+                        NET_PRICE_CONTRACT_ITEM_NUMBER NVARCHAR(50),
+                        SUPPLIER_ITEM_CREATE_FLAG BOOLEAN
+    ),
+    OUT O_TABLE_MESSAGE EP_PO_PROC_OUT_TYPE
+)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER 
+
+AS
+BEGIN
+ 
+    MERGE INTO EP_UC_QUOTATION_DTL AS DTL
+        USING :I_TABLE A
+        ON	A.TENANT_ID = DTL.TENANT_ID
+        AND A.COMPANY_CODE = DTL.COMPANY_CODE
+        AND A.CONST_QUOTATION_NUMBER = DTL.CONST_QUOTATION_NUMBER
+        AND A.CONST_QUOTATION_ITEM_NUMBER = DTL.CONST_QUOTATION_ITEM_NUMBER
+
+    WHEN MATCHED THEN
+        UPDATE 
+        SET QUOTATION_QUANTITY          = A.QUOTATION_QUANTITY
+           ,MATERIAL_NET_PRICE          = A.MATERIAL_NET_PRICE
+           ,MATERIAL_AMOUNT             =A.MATERIAL_AMOUNT
+           ,LABOR_NET_PRICE             = A.LABOR_NET_PRICE
+           ,LABOR_AMOUNT                = A.LABOR_AMOUNT
+           ,SUM_AMOUNT                  = A.SUM_AMOUNT
+           ,LOCAL_UPDATE_DTM            = CURRENT_TIMESTAMP
+           ,UPDATE_USER_ID              = 'ADMIN'
+           ,SYSTEM_UPDATE_DTM           = CURRENT_TIMESTAMP
+    WHEN NOT MATCHED THEN
+        INSERT 
+            (TENANT_ID
+            , COMPANY_CODE
+            , CONST_QUOTATION_NUMBER
+            , CONST_QUOTATION_ITEM_NUMBER
+            , ITEM_SEQUENCE
+            , EP_ITEM_CODE
+            , ITEM_DESC
+            , SPEC_DESC
+            , QUOTATION_QUANTITY
+            , EXTRA_RATE
+            , UNIT
+            , CURRENCY_CODE
+            , MATERIAL_APPLY_FLAG
+            , LABOR_APPLY_FLAG
+            , NET_PRICE_CHANGE_ALLOW_FLAG
+            , BASE_MATERIAL_NET_PRICE
+            , BASE_LABOR_NET_PRICE
+            , MATERIAL_NET_PRICE
+            , MATERIAL_AMOUNT
+            , LABOR_NET_PRICE
+            , LABOR_AMOUNT
+            , SUM_AMOUNT
+            , REMARK
+            , NET_PRICE_CONTRACT_DOCUMENT_NO
+            , NET_PRICE_CONTRACT_DEGREE
+            , NET_PRICE_CONTRACT_ITEM_NUMBER
+            , SUPPLIER_ITEM_CREATE_FLAG
+            , LOCAL_CREATE_DTM
+            , LOCAL_UPDATE_DTM
+            , CREATE_USER_ID
+            , UPDATE_USER_ID
+            , SYSTEM_CREATE_DTM
+            , SYSTEM_UPDATE_DTM)
+        VALUES
+            ( A.TENANT_ID
+            , A.COMPANY_CODE
+            , A.CONST_QUOTATION_NUMBER
+            , EP_CONST_QUOTATION_ITEM_NUMBER_SEQ.NEXTVAL
+            , A.ITEM_SEQUENCE
+            , A.EP_ITEM_CODE
+            , A.ITEM_DESC
+            , A.SPEC_DESC
+            , A.QUOTATION_QUANTITY
+            , A.EXTRA_RATE
+            , A.UNIT
+            , A.CURRENCY_CODE
+            , A.MATERIAL_APPLY_FLAG
+            , A.LABOR_APPLY_FLAG
+            , A.NET_PRICE_CHANGE_ALLOW_FLAG
+            , A.BASE_MATERIAL_NET_PRICE
+            , A.BASE_LABOR_NET_PRICE
+            , A.MATERIAL_NET_PRICE
+            , A.MATERIAL_AMOUNT
+            , A.LABOR_NET_PRICE
+            , A.LABOR_AMOUNT
+            , A.SUM_AMOUNT
+            , A.REMARK
+            , A.NET_PRICE_CONTRACT_DOCUMENT_NO
+            , A.NET_PRICE_CONTRACT_DEGREE
+            , A.NET_PRICE_CONTRACT_ITEM_NUMBER
+            , A.SUPPLIER_ITEM_CREATE_FLAG
+            , CURRENT_TIMESTAMP
+            , CURRENT_TIMESTAMP
+            , 'ADMIN'
+            , 'ADMIN'
+            , CURRENT_TIMESTAMP
+            , CURRENT_TIMESTAMP)
+    ;
+
+    O_TABLE_MESSAGE =  select 'OK' as returnCode, 'Success Saved!' as returnMessage, '' as savedKey from dummy;
+
+END

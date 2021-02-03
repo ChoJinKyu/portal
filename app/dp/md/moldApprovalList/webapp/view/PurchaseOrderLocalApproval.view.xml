@@ -76,31 +76,7 @@
                       <HBox>
                         <Title text="{I18N>/PROCESS}"/>
                     </HBox>
-                    <HBox>
-                        <sc:MicroProcessFlow>
-                            <sc:content>
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                            </sc:content>
-                        </sc:MicroProcessFlow>
-                    </HBox>
-                    <HBox>
-                        <Text text=" PR" renderWhitespace="true" />
-                        <Text text="Budget" width="6em" textAlign="Right" />
-                        <Text text="RFQ" width="6em" textAlign="Center" />
-                        <Text text="   Mold&#10;   Spec" renderWhitespace="true" />
-                        <Text text="Purchase&#10; Contract" width="8em" textAlign="Center" />
-                        <Text text="PO" renderWhitespace="true" />
-                        <Text text="RCV" width="5em" textAlign="Right" />
-                        <Text text="Lease&#10;Contract" width="7.5em" textAlign="Center" />
-                        <Text text="Invoice" />
+                    <HBox id="purchaseOrderLocalApprovalProcess">
                     </HBox>
                 </layout:VerticalLayout>
 			</FlexBox>
@@ -154,7 +130,7 @@
         title="직원 검색"
         items="{
             filters: [
-                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
             ]
         }"
         apply=".onEmployeeDialogApplyPress"

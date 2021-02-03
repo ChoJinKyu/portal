@@ -25,10 +25,11 @@ sap.ui.define([
     "sap/m/Input",
     "sap/m/VBox",
     "ext/lib/util/ExcelUtil",
-    "sap/m/SegmentedButtonItem"
+    "sap/m/SegmentedButtonItem",
+    "sap/ui/model/FilterType"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
     TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
-    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox,ExcelUtil,SegmentedButtonItem) {
+    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox,ExcelUtil,SegmentedButtonItem,FilterType) {
     "use strict";
 
     var oTransactionManager;
@@ -67,6 +68,7 @@ sap.ui.define([
             this.tenant_id = "L2101";
             this.companyCode = "LGCKR";
             this.language_cd = "KO";
+            this.categoryGroupCode = "CO";
             this.setModel(new JSONModel(), "visibleTF");
 
             oTransactionManager = new TransactionManager();
@@ -77,27 +79,57 @@ sap.ui.define([
 
             var today = new Date();
             this._setSegmentedItem();
+            
+            //this.setComboFilter();
         },
 
-
+        /**
+         * 세션에서 받은 tenant_id 로 필터 걸어주기
+         */
+        setComboFilter: function () {
+            var that = this;
+            var oModel = this.getOwnerComponent().getModel("common");
+            var categoryComboModel = new JSONModel();
+            var visiBox = this.byId("searchCategoryComboVBox") ;
+            var visiBox2 = this.byId("searchCategoryCombo") ;
+            var visiBox3 = this.byId("searchCategoryComboLayout") ;
+            
+            oModel.read("/Code", {
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, this.tenant_id),
+                    new Filter("group_code", FilterOperator.EQ, "DP_PD_CATEGORY_GROUP")
+                ],
+                success: function (rData, reponse) {
+                    if(rData.results.length>0){
+                        categoryComboModel.setData(reponse.data.results);
+                        that.getView().setModel(categoryComboModel, "categoryComboModel");
+                    }
+                    if(rData.results.length==1){ 
+                        // visiBox.setVisible(false); 
+                        // visiBox2.setVisible(false); 
+                        // visiBox3.setVisible(false); 
+                        // visiBox.setWidth("0%"); 
+                        // visiBox2.setWidth("0%"); 
+                        // visiBox3.setWidth("0%"); 
+                    }
+                }
+            });
+        },
 
         _setSegmentedItem : function(){
             var oBtnSegmentedMode, aFilters, oUserInfo;
-
+            var v_this = this;
             oBtnSegmentedMode = this.byId("searchStatusButton");
             aFilters = [
                 new Filter("tenant_id", "EQ", this.tenant_id),
                 new Filter("group_code", "EQ", "DP_PD_PROGRESS_STATUS"),
                 new Filter("language_cd", "EQ", this.language_cd)
             ];
-
             oBtnSegmentedMode.destroyItems();
             this.getOwnerComponent().getModel("common").read("/Code",{
                 filters : aFilters,
                 success : function(oData){
-                    console.log(oData);
                     var aResults, sOrgCode;
-
                     aResults = oData.results;
                     oBtnSegmentedMode.addItem(
                         new SegmentedButtonItem({ 
@@ -105,9 +137,7 @@ sap.ui.define([
                             key : ""
                         })
                     );
-                    if(!aResults.length){
-                        return;
-                    }
+                    if(!aResults.length){ return;}
                     aResults.forEach(function(item){
                         oBtnSegmentedMode.addItem(
                             new SegmentedButtonItem({ 
@@ -118,8 +148,7 @@ sap.ui.define([
                     });
                     oBtnSegmentedMode.setSelectedKey("");
                 }.bind(this),
-                error : function(){
-                    
+                error : function(){                    
                 }
             });
         },
@@ -175,7 +204,7 @@ sap.ui.define([
             var aSearchFilters = [];
 
             var status = this.getView().byId("searchStatusButton").getSelectedKey();
-            console.log("status::"+status);
+            // console.log("status::"+status);
 			if (status != "") {
 			    aSearchFilters.push(new Filter("progress_status_code", FilterOperator.EQ, status));
             }
@@ -302,8 +331,8 @@ sap.ui.define([
 
             this.getRouter().navTo("selectionPage", {
                 tenantId: this.tenant_id,
-                companyCode: this.companyCode,
-                ideaNumber: 'new'
+                categoryGroupCode: this.categoryGroupCode,
+                requestNumber: "new"
             }, true);
         },
 

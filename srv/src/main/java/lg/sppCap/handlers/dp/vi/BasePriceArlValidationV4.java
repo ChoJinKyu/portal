@@ -211,6 +211,7 @@ public class BasePriceArlValidationV4 {
                     System.out.println("\t# supplier_code : "          + basePriceArlDetail.getSupplierCode());
                     System.out.println("\t# base_date : "              + basePriceArlDetail.getBaseDate());
                     System.out.println("\t# base_price_ground_code : " + basePriceArlDetail.getBasePriceGroundCode());
+                    System.out.println("\t\t# change_reason_code : "   + basePriceArlDetail.getChangeReasonCode());
 
                     System.out.println("\t# local_create_dtm : "       + basePriceArlDetail.getLocalCreateDtm());
                     System.out.println("\t# local_update_dtm : "       + basePriceArlDetail.getLocalUpdateDtm());
@@ -256,7 +257,6 @@ public class BasePriceArlValidationV4 {
                     System.out.println("\t\t# first_purchasing_net_price : "         + basePriceArlPrice.getFirstPurchasingNetPrice());
                     System.out.println("\t\t# first_pur_netprice_curr_cd : "         + basePriceArlPrice.getFirstPurNetpriceCurrCd());
                     System.out.println("\t\t# first_pur_netprice_str_dt : "          + basePriceArlPrice.getFirstPurNetpriceStrDt());
-                    System.out.println("\t\t# change_reason_code : "                 + basePriceArlPrice.getChangeReasonCode());
 
                     System.out.println("\t\t# local_create_dtm : "                   + basePriceArlPrice.getLocalCreateDtm());
                     System.out.println("\t\t# local_update_dtm : "                   + basePriceArlPrice.getLocalUpdateDtm());

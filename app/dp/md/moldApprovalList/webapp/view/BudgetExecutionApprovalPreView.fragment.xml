@@ -80,31 +80,9 @@
                       <HBox>
                          <Title text="{I18N>/PROCESS}"/>
                     </HBox>
-                    <HBox>
-                        <sc:MicroProcessFlow>
-                            <sc:content>
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem"  />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem"  />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem"  />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                            </sc:content>
-                        </sc:MicroProcessFlow>
-                    </HBox>
-                    <HBox>
-                        <Text text=" PR" renderWhitespace="true" />
-                        <Text text="Budget" width="6em" textAlign="Right" />
-                        <Text text="RFQ" width="6em" textAlign="Center" />
-                        <Text text="   Mold&#10;   Spec" renderWhitespace="true" />
-                        <Text text="Purchase&#10; Contract" width="8em" textAlign="Center" />
-                        <Text text="PO" renderWhitespace="true" />
-                        <Text text="RCV" width="5em" textAlign="Right" />
-                        <Text text="Lease&#10;Contract" width="7.5em" textAlign="Center" />
-                        <Text text="Invoice" />
+                    <HBox id="BudgetExecutionPressPrev">
+                       
+                   
                     </HBox>
                 </layout:VerticalLayout>
 			</FlexBox>
@@ -169,7 +147,7 @@
                                      width="100%" 
                                      items="{ path : 'util>/Code',
                                               filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_BUDGET_TYPE'}
                                               ],
                                               sorter: { path: 'sort_no'}
@@ -216,7 +194,7 @@
                               items="{
                                    path: 'org>/Company',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'company_code'}
                               }">
@@ -267,7 +245,7 @@
                               selectedKey="{mdCommon>/account_code}" 
                               items="{ path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ACCOUNT_NEW'}
                                         ]
                                     }">
@@ -371,7 +349,7 @@
                                         selectedKey="{mdItemMaster>mold_production_type_code}" 
                                         items="{ path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                         ]
                                     }">
@@ -387,7 +365,7 @@
                                         
                                         items="{ path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                         ]
                                     }">
@@ -415,7 +393,7 @@
                                         selectedKey="{mdItemMaster>asset_type_code}" 
                                         items="{ path : 'util>/Code',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ASSET_TYPE'}
                                         ]
                                     }">

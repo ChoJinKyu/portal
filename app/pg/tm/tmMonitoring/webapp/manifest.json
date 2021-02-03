@@ -89,7 +89,7 @@
         },
         "resourceRoots": {
             "ext.lib": "../../../../lib",
-            "ext.cm": "../../../../cm"
+            "cm": "../../../../cm"
         },
         "routing": {
             "config": {

@@ -33,6 +33,8 @@ using {sp as invPlanDtl} from './SP_SF_FUNDING_INVEST_PLAN_DTL-model';
 entity Sf_Funding_Invest_Plan_Mst {
     key funding_appl_number      : String(10) not null  @title : '자금지원신청번호';
     key investment_plan_sequence : Integer not null     @title : '투자계획순번';
+        tenant_id                : String(5) not null  @title : '테넌트ID';
+        company_code             : String(10) not null @title : '회사코드';
         investment_type_code     : String(30) not null  @title : '투자유형코드';
         investment_project_name  : String(200) not null @title : '투자과제명';
         investment_yyyymm        : String(6) not null   @title : '투자년월';

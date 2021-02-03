@@ -111,12 +111,23 @@ service FundingApplicationService {
             ,fa.collateral_attch_group_number   //담보 약식확인서 첨부파일 그룹번호
             ,fa.funding_step_code               //자금지원 단계 코드
             ,fa.funding_status_code             //자금지원 상태 코드
+            //------------업체정보------------
+            ,supp.supplier_local_name as supplier_name  //업체명
+			,supp.tax_id                                //사업자번호
+			,supp.local_full_address                    //주소
+			,supp.repre_name                            //대표자명
+			,supp.email_address                         //이메일주소
+			,supp.tel_number                            //전화번호
+            ,supp.mobile_phone_number                   //폰번호
         from sp.Sf_Funding_Application as fa
         left outer join codeView cv_m           //상환방법 공통코드 조인
         on   cv_m.tenant_id  = fa.tenant_id
         and  cv_m.group_code = 'SP_SF_REPAYMENT_METHOD'
         and  cv_m.code       = fa.repayment_method_code
         and  cv_m.language_cd = 'KO'
+        left outer join sp.Sm_Supplier_Mst as supp
+        on fa.tenant_id = supp.tenant_id
+        and fa.supplier_code = supp.supplier_code
         where 1=1
         ;
 
@@ -227,14 +238,17 @@ service FundingApplicationService {
              key appl.funding_appl_number				//신청번호
             ,ntfy.funding_notify_number					//공고번호
             ,ntfy.funding_notify_title				    //공고제목
+            ,appl.tenant_id                             //테넌트ID
+            ,appl.company_code                          //회사코드
+            ,appl.org_type_code                         //조직유형코드
+            ,appl.org_code								//조직코드
+            ,org.org_name as org_name : String			//조직명
             ,appl.supplier_code							//업체코드
             ,supp.supplier_local_name as supplier_name : String	//업체명
             ,appl.funding_step_code						//스텝코드
             ,cvStep.code_name  as funding_step_name : String        //스텝명
             ,appl.funding_status_code					//상태코드
             ,cvStatus.code_name  as funding_status_name : String    //상태명
-            ,appl.org_code								//조직코드
-            ,org.org_name as org_name : String						//조직명
             ,appl.funding_appl_date						//자금지원 신청일자
             ,appl.purchasing_department_name			//부서명
             ,appl.funding_appl_amount					//신청금액

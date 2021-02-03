@@ -19,7 +19,7 @@ sap.ui.define([
 ], function (Parent, Renderer, ODataV2ServiceProvider, JSONModel, Filter, FilterOperator, Sorter, 
             GridData, VBox, Column, Label, Text, Input, ComboBox, Item, CodeComboBox, MessageToast) {
     "use strict";
-    var oPurOrg = {}, oMaterialOrgDialogModel, that;
+    var _oPurOrg = {}, _that;
 
     var MaterialOrgDialog = Parent.extend("dp.vi.basePriceArlMgt.controller.MaterialOrgDialog", {
         
@@ -29,8 +29,8 @@ sap.ui.define([
                 tenantId: { type: "string", group: "Misc", defaultValue: "" },
                 companyCode: { type: "string", group: "Misc", defaultValue: "" },
                 orgCode: { type: "string", group: "Misc", defaultValue: "" },
-                plantLabel: { type: "string", group: "Misc", defaultValue: "" },
                 purOrg: { type: "object", group: "Misc", defaultValue: {} },
+                type: { type: "string", group: "Misc", defaultValue: "" },
                 aggregations: {
                     filters: []
                 }
@@ -40,11 +40,9 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-            that = this;
-            this.setModel(new JSONModel(), "materialOrgDialogModel");
+            _that = this;
 
-            oMaterialOrgDialogModel = this.getModel("materialOrgDialogModel");
-            oPurOrg = this.getProperty("purOrg");
+            _oPurOrg = this.getProperty("purOrg");
             this.tenantId = this.getProperty("tenantId");
             this.oSearchCode = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_CODE") });
             this.oSearchDesc = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_DESC") });
@@ -92,6 +90,8 @@ sap.ui.define([
                 });
             }
 
+            this._onChangeCompany();
+
             this.oSearchUIT = new CodeComboBox({
                 showSecondaryValues:true,
                 useEmpty:true,
@@ -137,7 +137,7 @@ sap.ui.define([
             
             aFiltersControl.push(new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/DP_VI_AP_PUR_ORG")}),  //조직코드
+                        new Label({ text: this.getModel("I18N").getText("/VI_APPROVE_ORG_CODE")}),  //조직코드
                         this.oSearchOrg
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
@@ -149,13 +149,13 @@ sap.ui.define([
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 }));
-            aFiltersControl.push(new VBox({
-                    items: [
-                        new Label({ text: this.getModel("I18N").getText("/UIT") }),  //UIT
-                        this.oSearchUIT
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                }));
+            // aFiltersControl.push(new VBox({
+            //         items: [
+            //             new Label({ text: this.getModel("I18N").getText("/UIT") }),  //UIT
+            //             this.oSearchUIT
+            //         ],
+            //         layoutData: new GridData({ span: "XL2 L3 M5 S10"})
+            //     }));
             // aFiltersControl.push(new VBox({
             //         items: [
             //             new Label({ text: this.getModel("I18N").getText("/MATERIAL_DESC")}),    // 자재내역
@@ -196,7 +196,7 @@ sap.ui.define([
             aColumnsControl.push(new Column({
                     width: "15%",
                     hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/DP_VI_AP_PUR_ORG")}),
+                    label: new Label({text: this.getModel("I18N").getText("/VI_APPROVE_ORG_CODE")}),
                     template: new Text({text: "[{org_code}]{org_name}"})
                 }));
             aColumnsControl.push(new Column({
@@ -246,10 +246,10 @@ sap.ui.define([
         },
 
         _onChangeCompany: function (oEvent) {
-            var sSelectedCompany = oEvent.getSource().getSelectedKey();
-            var aPurOrg = oPurOrg[sSelectedCompany];
+            var sSelectedCompany = oEvent ? oEvent.getSource().getSelectedKey() : this.getProperty("companyCode");
+            var aPurOrg = _oPurOrg[sSelectedCompany];
             //var oPlantComboBox = this.getParent().getParent().getAggregation("fields")[1].getAggregation("items")[1];
-            var oPlantComboBox = that.oSearchOrg;
+            var oPlantComboBox = _that.oSearchOrg;
             oPlantComboBox.removeAllItems();
             oPlantComboBox.setSelectedKey("");
 
@@ -299,7 +299,13 @@ sap.ui.define([
             }
 
              if(true) {
-                ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.BasePriceArlService/").read("/Material_Vw", {
+                var sDetailUrl = "/Material_Vw";
+
+                if( this.getProperty("type") === "Change" ) {
+                    sDetailUrl = "/Base_Price_Mst";
+                }
+
+                ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.BasePriceArlService/").read(sDetailUrl, {
                     filters: aFilters,
                     success: function(oData){
                         var aRecords = oData.results;

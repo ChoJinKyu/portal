@@ -20,10 +20,11 @@ sap.ui.define([
     "sap/ui/richtexteditor/RichTextEditor",
     "./ApprovalBaseController",
     "dp/md/util/controller/MoldItemSelection",
-    "dp/md/util/controller/SupplierSelection"
+    "dp/md/util/controller/SupplierSelection",
+  
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalBaseController, MoldItemSelection, SupplierSelection
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ApprovalBaseController, MoldItemSelection, SupplierSelection 
 ) {
     "use strict";
 
@@ -40,7 +41,8 @@ sap.ui.define([
         moldItemPop: new MoldItemSelection(),
 
         supplierSelection: new SupplierSelection(),
-        
+
+
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -63,7 +65,7 @@ sap.ui.define([
             
             this.setModel(oViewModel, "participatingSupplierSelectionView");//change
             this.getRouter().getRoute("participatingSupplierSelection").attachPatternMatched(this._onObjectMatched, this);//change
-            
+            this.process.setDrawProcessUI(this, "participatingSupplierProcess" , "A", 2);
         },
 
         /* =========================================================== */
@@ -88,10 +90,10 @@ sap.ui.define([
            // } else {
                 
                 schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 ];            
                 schFilter2 = [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
                         new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
                         new Filter("language_cd", FilterOperator.EQ, 'KO' )
                 ]; 
@@ -283,7 +285,7 @@ sap.ui.define([
             ;
             var schFilter2 = [];
             schFilter2 = [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
                     new Filter("group_code", FilterOperator.EQ, 'DP_MD_LOCAL_CURRENCY' ),
                     new Filter("language_cd", FilterOperator.EQ, 'KO' ),
                     new Filter("org_code", FilterOperator.EQ, data.company_code)
@@ -294,7 +296,7 @@ sap.ui.define([
             var approval_number = mstModel.approval_number;
             oModel.addRecord({
                 "approval_number": approval_number,
-                "tenant_id": "L2600",
+                "tenant_id": "L2101",
                 "mold_id": String(data.mold_id),
                 "model": data.model,
                 "mold_number": data.mold_number,
@@ -356,7 +358,7 @@ sap.ui.define([
             var model = this.getModel('participatingSupplierSelectionView');
             if(this.getModel('appMaster').getData().approve_status_code == 'AP'){ // 승인이면 
                 var schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                    , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                    , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 ];        
                 this._pssCancelSearch(schFilter, function(item){  
                     //console.log("item>>>> " , item);
@@ -374,62 +376,45 @@ sap.ui.define([
         onPagePreviewButtonPress : function(){
             this.getView().setModel(new ManagedListModel(), "approverPreview"); 
 
-            if(this.getModel("approver").getData().Approvers != undefined){ 
+           
+            if (this.getModel("approver").getData().Approvers != undefined) {
                 var ap = this.getModel("approver").getData().Approvers;
-                var len = 0; 
 
-                if(this.getView().getModel("mode").getProperty("/viewFlag")){
-                    len = ap.length;
-                }else{
-                    len =  ap.length -1;
-                }
-               
-                for(var i = 0 ; i < len ; i++){
-                    this.getModel("approverPreview").addRecord( ap[i], "/Approvers");
+                for (var i = 0; i < ap.length; i++) {
+                    this.getModel("approverPreview").addRecord(ap[i], "/Approvers");
                 }
             }
-            
-            //console.log("approverPreview " , this.getModel("approverPreview").getData());
-
-            // var ref = this.getModel("referer");
-            // this.getView().setModel(new ManagedModel(), "refererPreview");
-
-            // var rArr = [];
-            // if(ref.getData().Referers != undefined && ref.getData().Referers.length >0){
-            //     ref.getData().Referers.forEach(function(item){
-            //         rArr.push(item.referer_empno); 
-            //     });
-            // }
-            // this.getModel("refererPreview").setProperty("/refArr", rArr);
 
             var oView = this.getView();
-
-            if (!this._oDialogPreview) {
-                this._oDialogPreview = Fragment.load({
+            var p = this.process;
+            if (!this._oDialogPrev) {
+                this._oDialogPrev = Fragment.load({
                     id: oView.getId(),
                     name: "dp.md.moldApprovalList.view.ParticipatingSupplierSelectionPreView",
                     controller: this
-                }).then(function (oDialog) {
+                }).then(function (oDialog) { 
                     oView.addDependent(oDialog);
+                    p.setDrawProcessUI(this, "partcipatingSupplierPrevProcess" , "A", 2);
+
                     return oDialog;
                 }.bind(this));
             }
 
-            this._oDialogPreview.then(function (oDialog) {
-                oDialog.open();
-                oView.byId('referMultiPrev').setTokens(oView.byId("referMulti").getTokens()); // 미리보기 레퍼러 
+            this._oDialogPrev.then(function (oDialog) {
+                oDialog.open(); 
+                oView.byId('referMultiPrev').setTokens(oView.byId("referMulti").getTokens()); // 
             });
 
         },
         onPrvClosePress : function(){ 
              var oView = this.getView();
-             if (this._oDialogPreview) {
-                this._oDialogPreview.then(function (oDialog) {
+             if (this._oDialogPrev) {
+                this._oDialogPrev.then(function (oDialog) {
                     oView.byId('referMulti').setTokens(oView.byId("referMultiPrev").getTokens()); // 이거 안하면 본화면에 표시가 안됨 
                     oDialog.close();
                     oDialog.destroy();
                 });
-                this._oDialogPreview = undefined;
+                this._oDialogPrev = undefined;
             }
         },
         
@@ -485,18 +470,30 @@ sap.ui.define([
             if(bModel.getData().ParticipatingSupplier != undefined && bModel.getData().ParticipatingSupplier.length > 0){
                 var amount_err = 0;
                 var supplier_err = 0;
+                var currency_err = 0;
                 bModel.getData().ParticipatingSupplier.forEach(function(item){
-                    if(item.target_amount > item.provisional_budget_amount){
+                    // if(item.target_amount > item.provisional_budget_amount){
+                    //     amount_err = amount_err+1;
+                    // }
+                    if(item.currency_code == null || item.currency_code == ""){
+                        currency_err = currency_err+1;
+                    }
+                    if(item.target_amount == null || item.target_amount == ""){
                         amount_err = amount_err+1;
                     }
                     if(item.supplier_code_1 == null){
                         supplier_err = amount_err+1;
                     }
                 });
-                // if(amount_err > 0){
-                //     MessageToast.show("목표가가 투자예산 금액을 초과하였습니다.");
-                //     return;
-                // }
+                
+                if(currency_err > 0){
+                    MessageToast.show("통화 정보를 입력하세요");
+                    return;
+                }
+                if(amount_err > 0){
+                    MessageToast.show("투자예산 금액을 입력하세요.");
+                    return;
+                }
                 if(supplier_err > 0){
                     MessageToast.show("협력사를 하나 이상 추가하세요.");
                     return;
@@ -507,6 +504,29 @@ sap.ui.define([
                 MessageToast.show( that.getModel('I18N').getText('/ECM01002') );
                 return;
             }
+
+            // 삭제 row 먼저 추가 되어야 데이터가 정상 저장됨 
+            if(bModel._aRemovedRows.length > 0){
+                bModel._aRemovedRows.forEach(function(item){
+                    that.approvalDetails_data.push({
+                        tenant_id : that.tenant_id 
+                        , approval_number : that.approval_number 
+                        , mold_id : item.mold_id 
+                        , _row_state_ : "D"
+                    });
+                    that.moldMaster_data.push({
+                         tenant_id : that.tenant_id 
+                        , mold_id : item.mold_id 
+                        , mold_item_type_code : item.mold_item_type_code
+                        , book_currency_code : item.book_currency_code
+                        , provisional_budget_amount : item.provisional_budget_amount
+                        , currency_code : item.currency_code
+                        , target_amount : item.target_amount
+                        , _row_state_ : "D"
+                    });
+                });
+            }
+
 
             if(bModel.getData().ParticipatingSupplier != undefined && bModel.getData().ParticipatingSupplier.length > 0){
 
@@ -604,27 +624,7 @@ sap.ui.define([
                 });
             }
 
-            if(bModel._aRemovedRows.length > 0){
-                bModel._aRemovedRows.forEach(function(item){
-                    that.approvalDetails_data.push({
-                        tenant_id : that.tenant_id 
-                        , approval_number : that.approval_number 
-                        , mold_id : item.mold_id 
-                        , _row_state_ : "D"
-                    });
-                    that.moldMaster_data.push({
-                         tenant_id : that.tenant_id 
-                        , mold_id : item.mold_id 
-                        , mold_item_type_code : item.mold_item_type_code
-                        , book_currency_code : item.book_currency_code
-                        , provisional_budget_amount : item.provisional_budget_amount
-                        , currency_code : item.currency_code
-                        , target_amount : item.target_amount
-                        , _row_state_ : "D"
-                    });
-                });
-            }
-
+            
 
             this._commonDataSettingAndSubmit();
 

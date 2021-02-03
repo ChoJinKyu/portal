@@ -1,9 +1,9 @@
-namespace xx;
 
 using from '../../../db/cds/xx/template/XX_MESSAGE-model';
 using {xx as controlOption} from '../../../db/cds/xx/template/XX_CONTROL_OPTION_DTL-model';
 using from '../../../db/cds/xx/template/XX_TENANT-model';
 using from '../../../db/cds/xx/template/XX_COMPANY-model';
+using from '../../../db/cds/xx/template/XX_COMPANY_VIEW-model';
 using from '../../../db/cds/xx/template/XX_PLANT-model';
 using from '../../../db/cds/xx/template/XX_DEPARTMENT-model';
 using from '../../../db/cds/xx/template/XX_EMPLOYEE-model';
@@ -11,6 +11,8 @@ using from '../../../db/cds/xx/template/XX_EMPLOYEE-model';
 using {cm.Currency_View as Currency } from '../../../db/cds/cm/CM_CURRENCY_VIEW-model';
 using {cm.Country_View as Country } from '../../../db/cds/cm/CM_COUNTRY_VIEW-model';
 using {cm.Code_View as Code } from '../../../db/cds/cm/CM_CODE_VIEW-model';
+
+namespace xx;
 
 service TemplateService {
 
@@ -28,6 +30,8 @@ service TemplateService {
     entity Currency_View as projection on Currency;
     entity Country_View as projection on Country;
     entity Code_View as projection on Code;
+
+    entity CompanyView as projection on xx.Company_View;
 
 }
 

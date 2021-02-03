@@ -90,7 +90,7 @@ sap.ui.define([
 
                     if( data && data.results && 0<data.results.length ) {
                         oView.getModel("detailModel").setData(data.results[0]);
-                        if(oParam.hasOwnProperty("view_mode") && oParam.view_mode === "EDIT") {
+                        if(oParam && oParam.hasOwnProperty("view_mode") && oParam.view_mode === "EDIT") {
                             oView.getModel("detailModel").setProperty("/mode", {readMode : false, editMode : true});
                         } else {
                             oView.getModel("detailModel").setProperty("/mode", {readMode : true, editMode : false});
@@ -323,11 +323,11 @@ sap.ui.define([
 
 
         /**
-         * BlockPrice Controller
+         * pivot data
          */
         , _pivottingData: function() {
             var oDetailData = this.getOwnerComponent().getModel("detailModel").getData();
-            console.log("BlockPrice.Controller", oDetailData);
+            console.log("pivotted data", oDetailData);
             //Grid Table 별로 
             var oEvents = oDetailData.mcst_events ? oDetailData.mcst_events.results : [];//개발일정
 
@@ -569,7 +569,7 @@ sap.ui.define([
                                     } else {
                                         return new sap.m.Input({value: {
                                             path: sModelName + ">" + column.name
-                                        }, textAlign: 'End'});
+                                        }, textAlign: 'End', type: 'Number'});
                                     }
                                     
                                 }

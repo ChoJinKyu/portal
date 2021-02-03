@@ -22,11 +22,13 @@ sap.ui.define([
     "sap/ui/richtexteditor/RichTextEditor",
     "sap/ui/model/odata/v2/ODataModel",
     "sap/ui/model/FilterType",
-    "dp/util/control/ui/IdeaManagerDialog",
-    "ext/lib/formatter/NumberFormatter"
+    "ext/lib/formatter/NumberFormatter",
+    "ext/lib/model/TreeListModel",
+    "sap/ui/thirdparty/jquery"
 ], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, DateFormatter,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast, History,
-    ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel,FilterType,IdeaManagerDialog,NumberFormatter) {
+    ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel, FilterType ,NumberFormatter,
+    TreeListModel, jQuery) {
     "use strict";
 
     var oTransactionManager;
@@ -40,11 +42,7 @@ sap.ui.define([
 
         loginUserId: new String,
         loginUserName: new String,
-        supplier_code: new String,
-        supplier_local_name: new String,
         tenant_id: new String,
-        statusGloCode: new String,
-        supplierType: Boolean,
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -56,28 +54,14 @@ sap.ui.define([
 		 */
         onInit: function () {
 
-            //로그인 세션 작업완료시 수정
             this.loginUserId = "TestUser";
             this.loginUserName = "TestUser";
-            this.tenant_id = "L2100";
-            this.supplier_code = "KR01820500";
-            this.supplier_local_name = "공급업체";
-            this.supplierType = true;
-
-            if(!this.supplierType){
-                this.getView().byId('attachBlock').setVisible(true);
-            }
-            
-
-            //법인 필터
-            this.setCompanyFilter();
+            this.tenant_id = "L2101";
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedModel(), "master");
             this.setModel(new ManagedModel(), "details");
-            this.setModel(new ManagedModel(), "supplierPerform");
-            this.setModel(new JSONModel(), "midObjectViewModel");
 
 			var oViewModel = new JSONModel({
                     showMode: true,                    
@@ -85,8 +69,6 @@ sap.ui.define([
 				});
 
             this.setModel(oViewModel, "viewModel");
-            
-
             
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("master"));
@@ -97,91 +79,39 @@ sap.ui.define([
             this.enableMessagePopover();
         },
 
-        /**
-         * 세션에서 받은 tenant_id 로 필터 걸어주기
-         */
-        setCompanyFilter: function () {
-            var oSelect, oBinding, aFilters;
-            oSelect = this.getView().byId('ideaCompany');
-            oBinding = oSelect.getBinding("items");
-            aFilters = [];
-            aFilters.push( new Filter("tenant_id", 'EQ', this.tenant_id) );
-            //oBinding.filter(aFilters, FilterType.Application); 
-        },
-        
-
         _fnInitModel : function(){
-            // console.log("_fnInitModel");
             
-            var date = new Date();
-            var year = date.getFullYear();
-            var month = ("0" + (1 + date.getMonth())).slice(-2);
-            var day = ("0" + date.getDate()).slice(-2);
-            var toDate = year + "/" + month + "/" + day;
-            var toDate2 = year + "-" + month + "-" + day;
-
-            this.getView().byId("ideaDate").setText(toDate);
-            
-
             var oViewModel = this.getView().getModel("master");
-            oViewModel.setData({}, "/IdeaView");
+            oViewModel.setData({}, "/pdPartCategoryCreationRequest");
             oViewModel.setData({
                 "tenant_id": this._sTenantId,
-                "company_code": this._sCompanyCode,
-                "idea_number": "New",
-				"idea_title": "",
-                "idea_date": null,
-				
-				"idea_progress_status_code": "NEW",
-				"idea_progress_status_name": "NEW",
-                "supplier_code": this.supplier_code,
-                "supplier_local_name": this.supplier_local_name,
-                "idea_create_user_id": this.loginUserId,
-				
-				
-                "idea_create_user_local_name": this.loginUserName,
-				"bizunit_code": null,
-				"bizunit_name": null,
-				"idea_product_group_code": null,
-				"idea_product_group_name": null,
+                "request_number": this._sRequestNumber,
+                "category_group_code": this._sCategoryGroupCode,
+                "approval_number": null,
+                "request_title": null,
+                "request_category_name": null,
+                "similar_category_code": null,
+                "requestor_empno": this.loginUserId,
+                "request_date_time": new Date(),
+                "request_desc": null,
+                "attch_group_number": null,
+                "progress_status_code": null,
+                "creator_empno": this.loginUserId,
+                "create_category_code": null
+            }, "/pdPartCategoryCreationRequest");
 
-
-				"idea_type_code": null,
-				"idea_type_name": null,
-				"idea_period_code": null,
-				"idea_period_name": null,
-				"idea_manager_empno": null,
-
-				"idea_manager_local_name": null,
-				"idea_part_desc": null,
-				"current_proposal_contents": null,
-				"change_proposal_contents": null,
-				"idea_contents": null,
-
-                "attch_group_number": null,                
-				"material_code": null,
-				"purchasing_uom_code": null,
-				"currency_code": null,
-                "vi_amount": null,
-                
-				"monthly_mtlmob_quantity": null,
-				"monthly_purchasing_amount": null,
-				"annual_purchasing_amount": null,
-				"perform_contents": null
-
-            }, "/IdeaView");
-            var oViewModel2 = this.getView().getModel("details");
-            oViewModel2.setData({}, "/SupplierIdea");
-            oViewModel2.setData({
-                "tenant_id": this._sTenantId,
-                "company_code": this._sCompanyCode,
-                "idea_number": "New",
-                "supplier_code": this.supplier_code,
-                "idea_progress_status_name": "NEW",
-                "idea_create_user_id": this.loginUserId,
-                "create_user_id": this.loginUserId,
-                "update_user_id": this.loginUserId,
-            }, "/SupplierIdea");
+            // var oViewModel2 = this.getView().getModel("details");
+            // oViewModel2.setData({}, "/approvalLine");
+            // oViewModel2.setData({
+            //     "tenant_id": this._sTenantId,
+            //     "company_code": this._sCompanyCode,
+            //     "idea_number": "New",
+            //     "supplier_code": this.supplier_code,
+            //     "idea_progress_status_name": "NEW",
+            //     "idea_create_user_id": this.loginUserId,
+            //     "create_user_id": this.loginUserId,
+            //     "update_user_id": this.loginUserId,
+            // }, "/approvalLine");
         },
 
 		/**
@@ -192,42 +122,43 @@ sap.ui.define([
         _onRoutedThisPage: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments"),
                 oView = this.getView();
+
             this._sTenantId = oArgs.tenantId;
-            this._sCompanyCode = oArgs.companyCode;
-            this._sIdeaNumber = oArgs.ideaNumber;
+            this._sCategoryGroupCode = oArgs.categoryGroupCode;
+            this._sRequestNumber = oArgs.requestNumber;
+
             var oMasterModel = this.getModel("master");
-            oMasterModel.setProperty("/IdeaView", {});
-            var oDetailModel = this.getModel("details");
-            oDetailModel.setProperty("/SupplierIdea", {});
+            oMasterModel.setProperty("/pdPartCategoryCreationRequest", {});
+
+            // var oDetailModel = this.getModel("details");
+            // oDetailModel.setProperty("/approvalLine", {});
 
             this.validator.clearValueState(this.byId("midObjectForm"));
-            if (oArgs.ideaNumber == "new") {
+            if (oArgs.requestNumber == "new") {
                 
                 // console.log("###신규저장");
                 this._fnInitModel();
                 this._sTenantId = oArgs.tenantId;
-                this._sCompanyCode = oArgs.companyCode;
-                this._sIdeaNumber = "new";
+                this._sCategoryGroupCode = oArgs.categoryGroupCode;
+                this._sRequestNumber = "new";
                 this._toEditMode();
-                oView.byId("ideaCompany").setValue(this._sCompanyCode);
-                oDetailModel.setTransactionModel(this.getModel());
+                //oView.byId("ideaCompany").setValue(this._sCompanyCode);
+                
+                //oDetailModel.setTransactionModel(this.getModel());
             } else {
                 // console.log("###수정");
-                this.onSearch(oArgs.ideaNumber);
+                this.onSearch();
             }
         },
-
-        
-
-        
 
 		/**
 		 * 조회
 		 * @public
 		 */
-        onSearch: function (idea_number) {
+        onSearch: function () {
             var oView = this.getView();
-            var sObjectPath = "/IdeaView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',idea_number='" + idea_number + "')";
+            var sObjectPath = "/pdPartCategoryCreationRequest(tenant_id='" + this._sTenantId + "',category_group_code='"+ this._sCategoryGroupCode + "',request_number='" + this._sRequestNumber + "')";
+            //var sObjectPath = "/IdeaView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',idea_number='" + idea_number + "')";
             var oMasterModel = this.getModel("master");
             var v_this = this;
             this.statusGloCode = "";
@@ -237,24 +168,29 @@ sap.ui.define([
             oMasterModel.setTransactionModel(this.getModel());
             oMasterModel.read(sObjectPath, {
                 success: function (oData) {
-                    oView.byId("ideaCompany").setValue(oData.company_code);
+                    //oView.byId("ideaCompany").setValue(oData.company_code);
                     oView.setBusy(false);
                 }
             });
             
-            var sObjectPath2 = "/SupplierIdea(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',idea_number='" + idea_number+ "')";
-            var oDetailsModel = this.getModel("details");
+            // var sObjectPath2 = "/approvalLine(tenant_id='" + this._sTenantId + "',org_type_code='" + this._sOrgTypeCode + 
+            //                     "',category_group_code'"+ this._sCategoryGroupCode + "',category_code='" + categoryCode + "')";
+            // var oDetailsModel = this.getModel("details");
             
-            oView.setBusy(true);
-            oDetailsModel.setTransactionModel(this.getModel());
-            oDetailsModel.read(sObjectPath2, {
-                success: function (oData) {
-                    v_this.statusGloCode = oData.idea_progress_status_code;
-                    v_this._toShowMode();
-                    oView.setBusy(false);
-                }
-            });
+            //oView.setBusy(true);
+            // oDetailsModel.setTransactionModel(this.getModel());
+            // oDetailsModel.read(sObjectPath2, {
+            //     success: function (oData) {
+            //         //v_this.statusGloCode = oData.idea_progress_status_code;
+            //         v_this._toShowMode();
+            //         oView.setBusy(false);
+            //     }
+            // });
 
+        },
+
+        htmlEncoding: function (value, sId) {
+            return btoa(unescape(encodeURIComponent(value)))
         },
 
 		/**
@@ -264,86 +200,74 @@ sap.ui.define([
         onPageSaveButtonPress: function (flag) {
             
             var oView = this.getView(),
+                oMasterModel = this.getModel("master"),
                 oDetailsModel = this.getModel("details"),
                 v_this = this;
-            var oData = oDetailsModel.oData;
+
+            var oMasterData = oMasterModel.oData;
+            var oDetailsData = oDetailsModel.oData;
+
             var statsCode = "DRAFT";
-            var CUType = "C";            
-                var inputData = {
-                    inputdata : {}
-                };
-            if (this._sIdeaNumber !== "new"){
+            var progressCode = "Draft";
+            var CUType = "C";
+
+            if (this._sRequestNumber !== "new"){
                 CUType = "U";
-                /*
-                    진행상태에 대한 정의가 필요 하며 정의에 따른 진행상태 셋팅 필요
-                    idea_progress_status_code
-                    업체에서 SUBMIT인 경우 정의 필요
-                */
+                
                 if( flag == "D"){
-                    if(!oDetailsModel.isChanged() ) {
+                    if(!oMasterModel.isChanged() ) {
                         MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
                         return;
                     }
                     statsCode = "DRAFT";
+                    progressCode = "A";
                 }else if( flag == "R"){
                     statsCode = "SUBMIT";
+                    progressCode = "B"
                 }
             }
-            if(oData.vi_amount==null){
-                oData.vi_amount = "0";
-            }
-            if(oData.monthly_mtlmob_quantity==null){
-                oData.monthly_mtlmob_quantity = "0";
-            }
-            if(oData.monthly_purchasing_amount==null){
-                oData.monthly_purchasing_amount = "0";
-            }
-            if(oData.annual_purchasing_amount==null){
-                oData.annual_purchasing_amount = "0";
-            }
+           
+            var requestDesc = this.byId("requestDesc").getValue();
+            var pdMstVal = {
+                tenant_id                : oMasterData.tenant_id,
+                request_number           : oMasterData.request_number,
+                category_group_code      : oMasterData.category_group_code,
+                approval_number          : oMasterData.approval_number,
+                request_title            : oMasterData.request_title,
+                request_category_name    : oMasterData.request_category_name,
+                similar_category_code    : oMasterData.similar_category_code,
+                requestor_empno          : oMasterData.requestor_empno,
+                request_date_time        : oMasterData.request_date_time,
+                request_desc             : this.htmlEncoding(requestDesc, this.byId("requestDesc").getId()),
+                attch_group_number       : oMasterData.attch_group_number,
+                progress_status_code     : oMasterData.progress_status_code,
+                creator_empno            : oMasterData.creator_empno,
+                create_category_code     : oMasterData.create_category_code,
+                update_user_id           : this.loginUserId,
+                crud_type_code           : CUType
+            };
 
-            inputData.inputdata = {
-                tenant_id                            : oData.tenant_id                  ,
-                company_code                         : oData.company_code               ,
-                idea_number                          : oData.idea_number                ,
-                idea_title                           : oData.idea_title                 ,
-                idea_progress_status_code            : statsCode                         ,
-
-                supplier_code                        : oData.supplier_code              ,
-                idea_create_user_id                  : this.loginUserId                 ,
-                bizunit_code                         : oData.bizunit_code               ,
-                idea_product_group_code              : oData.idea_product_group_code    ,
-                idea_type_code                       : oData.idea_type_code             ,
-
-                idea_period_code                     : oData.idea_period_code           ,
-                idea_manager_empno                   : oData.idea_manager_empno         ,
-                idea_part_desc                       : oData.idea_part_desc             ,
-                current_proposal_contents            : oData.current_proposal_contents  ,
-                change_proposal_contents             : oData.change_proposal_contents   ,
-                
-                idea_contents                        : oData.idea_contents              ,
-                attch_group_number                   : oData.attch_group_number         ,
-                create_user_id                       : this.loginUserId                 ,
-                update_user_id                       : this.loginUserId                 ,
-                material_code                        : oData.material_code         ,
-                
-                purchasing_uom_code                  : oData.purchasing_uom_code         ,
-                currency_code                        : oData.currency_code         ,
-                vi_amount                            : oData.vi_amount         ,
-
-                monthly_mtlmob_quantity              : oData.monthly_mtlmob_quantity         ,
-                monthly_purchasing_amount            : oData.monthly_purchasing_amount         ,
-                
-                annual_purchasing_amount             : oData.annual_purchasing_amount         ,
-                perform_contents                     : oData.perform_contents         ,
-                crd_type_code                        : CUType
+            var input = {
+                inputData : {
+                    crud_type : CUType,
+                    pdMst : pdMstVal,
+                    pdDtl : []
+                }
+            };
+            
+            var pdDtlVal = [];  // 결재테이블은 나중에
+            
+            for (var i = 0; i <  oDetailsData.getItems().length; i++) {
+                pdDtlVal.push({
+                });
             }
 
+            input.inputData.pdDtl = pdDtlVal;
+            
             if(this.validator.validate(this.byId("midObjectForm")) !== true) return;
 
-            var url = "srv-api/odata/v4/dp.SupplierIdeaMgtV4Service/SaveIdeaProc";
+            var url = "srv-api/odata/v4/dp.creationRequestV4Service/PdCreationRequestSaveProc";
             
-            // console.log(inputData);
 			oTransactionManager.setServiceModel(this.getModel());
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
@@ -354,7 +278,7 @@ sap.ui.define([
                         $.ajax({
                             url: url,
                             type: "POST",
-                            data: JSON.stringify(inputData),
+                            data: JSON.stringify(input),
                             contentType: "application/json",
                             success: function (rst) {
                                 console.log(rst);
@@ -380,8 +304,8 @@ sap.ui.define([
 					};
 				}
             });
+            
             this.validator.clearValueState(this.byId("midObjectForm"));
-
         },
 
         _toShowMode: function () {
@@ -417,8 +341,6 @@ sap.ui.define([
             this.byId("pageListButton").setEnabled(false);
             this.byId("pageSubmitButton").setEnabled(true);
         },
-
-        
 
 		/**
 		 * Event handler for cancel page editing
@@ -456,55 +378,74 @@ sap.ui.define([
             this._toEditMode();
         },
 
+        onSearchPartCategory: function (oEvent) {
+            var oButton = oEvent.getSource(),
+                oView = this.getView();
 
-        processIconStr (obj , obj2){
-            if(obj == obj2){
-                if(obj = "아이디어"){
-                    return "sap-icon://circle-task-2";
-                }
-            }
-            return "";
-        },
-
-
-        
-        /**
-         * function : 아이디어 관리자 팝업 Call 함수
-         * date : 2021/01/14
-         */
-        onIdeaManagerDialogPress : function(){
-            
-            if(!this.oSearchIdeaManagerDialog){
-                this.oSearchIdeaManagerDialog = new IdeaManagerDialog({
-                    title: this.getModel("I18N").getText("/SEARCH_IDEA_MANAGER"),
-                    multiSelection: false,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, this.tenant_id)
-                        ]
-                    }
-                });
-                this.oSearchIdeaManagerDialog.attachEvent("apply", function(oEvent){ 
-                    this.byId("ideaManager").setValue(oEvent.getParameter("item").idea_manager_name);
-                    // this.byId("ideaManager").setValue(oEvent.getParameter("item").idea_manager_name+"("+oEvent.getParameter("item").idea_manager_empno+")");
-                    this.byId("ideaManagerId").setValue(oEvent.getParameter("item").idea_manager_empno);
-                    
+            if (!this.treeDialog) {
+                this.treeDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.pd.categoryCreationRequestMgt.view.PartCategory",
+                    controller: this
+                }).then(function (tDialog) {
+                    oView.addDependent(tDialog);
+                    return tDialog;
                 }.bind(this));
-                }
-            this.oSearchIdeaManagerDialog.open();
+            }
+
+            this.treeDialog.then(function (tDialog) {
+                tDialog.open();
+                this.onDialogTreeSearch();
+            }.bind(this));
+        },
+
+        onDialogTreeSearch: function (oEvent) {
+
+            var treeFilter = [];
+
+            treeFilter.push(new Filter({
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, "L2101"),
+                    new Filter("category_group_code", FilterOperator.EQ, "CO")
+                ],
+                and: false
+            }));
+            
+            this.treeListModel = new TreeListModel(this.getView().getModel());
+            this.treeListModel
+                .read("/pdPartCategoryView", {
+                     filters: treeFilter
+                })
+                // 성공시
+                .then((function (jNodes) {
+                    this.getView().setModel(new JSONModel({
+                        "pdPartCategoryView": {
+                            "nodes": jNodes
+                        }
+                    }), "tree");
+                }).bind(this))
+                // 실패시
+                .catch(function (oError) {
+                })
+                // 모래시계해제
+                .finally((function () {
+                }).bind(this));
 
         },
 
-        
-        /**
-         * 코드 체크
-         */
-        onNameChk : function(e) {
-            // console.log(e);
-            var oView = this.getView();
-            var ideaManagerId = this.getView().byId("ideaManagerId");
-            ideaManagerId.setValue("");
-        }
+        partCategoryPopupClose: function (oEvent) {
+            this.byId("PartCategory").close();
+        },
+
+        selectPartCategoryValue: function (oEvent) {
+            var row = this.getView().getModel("tree").getObject(oEvent.getParameters().rowContext.sPath);
+
+            this.getView().byId("searchField").setValue(row.category_name);
+            this.getView().byId("similarCategoryCode").setValue(row.category_code);
+
+            this.partCategoryPopupClose();
+        },
+
 
     });
 });

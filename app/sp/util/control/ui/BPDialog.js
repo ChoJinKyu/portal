@@ -16,15 +16,15 @@ sap.ui.define([
 ], function (Parent, CodeComboBox, Renderer, ODataV2ServiceProvider, ManagedModel, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
-    var oServiceModel = ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/sp.supplierViewService/");
+    var oServiceModel = ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/sp.makerViewService/");
 
     var BPDialog = Parent.extend("sp.util.control.ui.BPDialog", {
 
         metadata: {
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "70em" },
-                keyField: { type: "string", group: "Misc", defaultValue: "supplier_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "supplier_code" },
+                keyField: { type: "string", group: "Misc", defaultValue: "business_partner_code" },
+                textField: { type: "string", group: "Misc", defaultValue: "business_partner_code" },
                 items: { type: "sap.ui.core.Control" },
                 filters: []
             }
@@ -39,25 +39,24 @@ sap.ui.define([
                 languageCd: new Filter("language_cd", FilterOperator.EQ, "KO")
             };
 
-            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title", this.getModel("I18N").getText("/SELECT_SUPPLIER"));
+            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title", this.getModel("I18N").getText("/SELECT_BP"));
 
             //this.oSearchField = new sap.m.SearchField({ placeholder: "검색"});
-            this.oSupplierCode = new Input({ submit: this.loadData.bind(this), placeholder: "Search" });
+            this.oBPCode = new Input({ submit: this.loadData.bind(this), placeholder: "Search" });
             //this.oSupplierCode.attachEvent("change", this.loadData.bind(this));
-            this.oSupplierName = new Input({ submit: this.loadData.bind(this), placeholder: "Search" });
+            this.oBPName = new Input({ submit: this.loadData.bind(this), placeholder: "Search" });
             this.oTaxId = new Input({ submit: this.loadData.bind(this), placeholder: "Search" });
             this.oCompny = new sap.m.ComboBox({
                 width: "100%",
                 placeholder: this.getModel("I18N").getText("/ALL"),
                 selectionChange: this.loadData.bind(this),
                 items: {
-                    path: "SUPPLIERVIEW>/company",
+                    path: "BPVIEW>/company",
                     template: new sap.ui.core.ListItem({
-                        key: "{SUPPLIERVIEW>company_code}",
-                        text: "[{SUPPLIERVIEW>company_code}] {SUPPLIERVIEW>company_name}"
+                        key: "{BPVIEW>company_code}",
+                        text: "[{BPVIEW>company_code}] {BPVIEW>company_name}"
                     })
-
-                },
+                }
             });
 
             this.oOrg = new sap.m.ComboBox({
@@ -65,10 +64,10 @@ sap.ui.define([
                 placeholder: this.getModel("I18N").getText("/ALL"),
                 selectionChange: this.loadData.bind(this),
                 items: {
-                    path: "SUPPLIERVIEW>/bizUnit",
+                    path: "BPVIEW>/bizUnit",
                     template: new sap.ui.core.ListItem({
-                        key: "{SUPPLIERVIEW>bizunit_code}",
-                        text: "[{SUPPLIERVIEW>bizunit_code}] {SUPPLIERVIEW>bizunit_name}"
+                        key: "{BPVIEW>bizunit_code}",
+                        text: "[{BPVIEW>bizunit_code}] {BPVIEW>bizunit_name}"
                     })
 
                 },
@@ -79,13 +78,13 @@ sap.ui.define([
                 placeholder: this.getModel("I18N").getText("/ALL"),
                 selectionChange: this.loadData.bind(this),
                 items: {
-                    path: "SUPPLIERVIEW>/supplierType",
+                    path: "BPVIEW>/supplierType",
                     template: new sap.ui.core.ListItem({
-                        key: "{SUPPLIERVIEW>code}",
-                        text: "[{SUPPLIERVIEW>code}] {SUPPLIERVIEW>code_name}"
+                        key: "{BPVIEW>code}",
+                        text: "[{BPVIEW>code}] {BPVIEW>code_name}"
                         /* text : { parts:[
-                                    {path: "SUPPLIERVIEW>code" },
-                                    {path: "SUPPLIERVIEW>code_name" }
+                                    {path: "BPVIEW>code" },
+                                    {path: "BPVIEW>code_name" }
                                 ],
                                 formatter: function(code, name){
                                     return code === "" ? name : "["+code+"] "+name;
@@ -95,83 +94,61 @@ sap.ui.define([
                 },
             });
 
-            /*this.oType = new CodeComboBox({
-               width: "100%",
-               showSecondaryValues : true, 
-               emptyText: this.getModel("I18N").getText("/ALL"),
-               keyField:"code",
-               textField:"code_name",
-               useEmpty:true,
-               items : {
-                   path: "/",
-                   serviceUrl: "srv-api/odata/v2/sp.supplierViewService/",
-                   entityName: "supplierTypeView",
-                   filters: [
-                       oFilter.tenantId,
-                       oFilter.languageCd  
-                   ],
-                   sorter: {
-                       path: "code_name",
-                       descending: true
-                   } 
+            this.oOldSupplierCode = new Input({ submit: this.loadData.bind(this), placeholder: "Search" });
+            this.oOldMakerCode = new Input({ submit: this.loadData.bind(this), placeholder: "Search" });
 
-               }
-           
-           }); */
+            this.oRole = new sap.m.SegmentedButton({
+                items: {
+                    path: "BPVIEW>/bpRole",
+                    template: new sap.m.SegmentedButtonItem({
+                        key: "{BPVIEW>code}",
+                        text: "{BPVIEW>code_name}"
+                    })
+                },
+                selectionChange: this.loadData.bind(this)
+            });
+
+            this.oRegisterStatus = new sap.m.SegmentedButton({
+                items: {
+                    path: "BPVIEW>/registerStatus",
+                    template: new sap.m.SegmentedButtonItem({
+                        key: "{BPVIEW>code}",
+                        text: "{BPVIEW>code_name}"
+                    })
+                },
+                selectionChange: this.loadData.bind(this)
+            });
 
             this.oStatus = new sap.m.SegmentedButton({
                 items: {
-                    path: "SUPPLIERVIEW>/supplierStatus",
+                    path: "BPVIEW>/bpStatus",
                     template: new sap.m.SegmentedButtonItem({
-                        key: "{SUPPLIERVIEW>code}",
-                        text: "{SUPPLIERVIEW>code_name}"
-                    })
-                },
-                selectionChange: this.loadData.bind(this)
-            });
-
-            this.oOldSupplierCode = new Input({ submit: this.loadData.bind(this), placeholder: "Search" });
-            this.oOldBPCode = new Input({ submit: this.loadData.bind(this), placeholder: "Search" });
-            this.oStatus1 = new sap.m.SegmentedButton({
-                items: {
-                    path: "SUPPLIERVIEW>/supplierStatus",
-                    template: new sap.m.SegmentedButtonItem({
-                        key: "{SUPPLIERVIEW>code}",
-                        text: "{SUPPLIERVIEW>code_name}"
-                    })
-                },
-                selectionChange: this.loadData.bind(this)
-            });
-            this.oStatus2 = new sap.m.SegmentedButton({
-                items: {
-                    path: "SUPPLIERVIEW>/supplierStatus",
-                    template: new sap.m.SegmentedButtonItem({
-                        key: "{SUPPLIERVIEW>code}",
-                        text: "{SUPPLIERVIEW>code_name}"
+                        key: "{BPVIEW>code}",
+                        text: "{BPVIEW>code_name}"
                     })
                 },
                 selectionChange: this.loadData.bind(this)
             });
 
             /* var oOrgtypeItemTemplate = new sap.m.SegmentedButtonItem({
-                key : "{SUPPLIERVIEW>code}",
-                text : "{SUPPLIERVIEW>code_name}"
+                key : "{BPVIEW>code}",
+                text : "{BPVIEW>code_name}"
             });
-            this.oStatus.bindItems("SUPPLIERVIEW>/supplierStatus", oOrgtypeItemTemplate);  */
+            this.oStatus.bindItems("BPVIEW>/supplierStatus", oOrgtypeItemTemplate);  */
 
             return [
 
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
-                        this.oSupplierCode
+                        new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_CODE")}),
+                        this.oBPCode
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M5 S10" })
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/SUPPLIER_NAME") }),
-                        this.oSupplierName
+                        new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_NAME") }),
+                        this.oBPName
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M5 S10" })
                 }),
@@ -205,36 +182,36 @@ sap.ui.define([
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: "old supplier code" }),
+                        new Label({ text: this.getModel("I18N").getText("/OLD_SUPPLIER_CODE") }),
                         this.oOldSupplierCode
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M5 S10" })
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: "old maker code" }),
-                        this.oOldBPCode
+                        new Label({ text: this.getModel("I18N").getText("/OLD_MAKER_CODE") }),
+                        this.oOldMakerCode
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M5 S10" })
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: "Role" }),
-                        this.oStatus
+                        new Label({ text: this.getModel("I18N").getText("/ROLE") }),
+                        this.oRole
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M5 S10", linebreak: true })
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: "Register Status" }),
-                        this.oStatus1
+                        new Label({ text: this.getModel("I18N").getText("/REGISTER_STATUS") }),
+                        this.oRegisterStatus
                     ],
-                    layoutData: new GridData({ span: "XL4 L4 M5 S10" })
+                    layoutData: new GridData({ span: "XL4 L4 M5 S10", linebreak: true })
                 }),
                 new VBox({
                     items: [
-                        new Label({ text: "Status" }),
-                        this.oStatus2
+                        new Label({ text: this.getModel("I18N").getText("/STATUS") }),
+                        this.oStatus
                     ],
                     layoutData: new GridData({ span: "XL4 L4 M5 S10" })
                 })
@@ -243,46 +220,103 @@ sap.ui.define([
             ]
         },
 
-        createTableColumns: function () {
+        createTableColumns: function (oEvent) {
+            console.log(oEvent);
             return [
                 new Column({
                     hAlign: "Center",
+                    width: "7rem",
                     label: new Label({ text: this.getModel("I18N").getText("/COMPANY") }),
                     template: new Text({ text: "{company_code}" })
                 }),
                 new Column({
                     hAlign: "Center",
+                    width: "8rem",
                     label: new Label({ text: this.getModel("I18N").getText("/ORG") }),
                     template: new Text({ text: "{org_name}" })
                 }),
                 new Column({
                     hAlign: "Center",
-                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_TYPE_CODE") }),
+                    width: "7rem",
+                    label: new Label({ text: this.getModel("I18N").getText("/TYPE") }),
                     template: new Text({ text: "{type_name}" })
                 }),
                 new Column({
                     hAlign: "Center",
-                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
-                    template: new Text({ text: "{supplier_code}" })
-                }),
-                new Column({
-                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME") }),
-                    template: new Text({ text: "{supplier_local_name}" , wrapping: false})
+                    width: "8rem",
+                    label: new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_CODE") }),
+                    template: new Text({ text: "{business_partner_code}" })
                 }),
                 new Column({
                     hAlign: "Center",
+                    width: "8rem",
+                    label: new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_LOCAL_NAME")  }),
+                    template: new Text({ text: "{business_partner_local_name}", wrapping: false })
+                }),
+                new Column({
+                    hAlign: "Center",
+                    width: "8rem",
+                    label: new Label({ text: this.getModel("I18N").getText("/BUSINESS_PARTNER_ENGLISH_NAME")}),
+                    template: new Text({ text: "{business_partner_english_name}", wrapping: false })
+                }),
+                new Column({
+                    hAlign: "Center",
+                    width: "6rem",
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_ROLE") }),
+                    template: new Text({ text: "{supplier_role}" })
+                }),
+                new Column({
+                    hAlign: "Center",
+                    width: "6rem",
+                    label: new Label({ text: this.getModel("I18N").getText("/MAKER_ROLE") }),
+                    template: new Text({ text: "{maker_role}" })
+                }),
+                new Column({
+                    hAlign: "Center",
+                    width: "8rem",
                     label: new Label({ text: this.getModel("I18N").getText("/TAX_ID") }),
                     template: new Text({ text: "{tax_id}" })
                 }),
-
                 new Column({
                     hAlign: "Center",
-                    label: new Label({ text: this.getModel("I18N").getText("/STATUS_CODE") }),
+                    width: "8rem",
+                    label: new Label({ text: this.getModel("I18N").getText("/OLD_SUPPLIER_CODE") }),
+                    template: new Text({ text: "{old_supplier_code}" })
+                }),
+                new Column({
+                    hAlign: "Center",
+                    width: "8rem",
+                    label: new Label({ text: this.getModel("I18N").getText("/OLD_MAKER_CODE") }),
+                    template: new Text({ text: "{old_maker_code}" })
+                }),
+                new Column({
+                    hAlign: "Center",
+                    width: "9rem",
+                    label: new Label({ text: this.getModel("I18N").getText("/REGISTER_STATUS") }),
                     template: new sap.tnt.InfoLabel(
-                        { text: "{supplier_status_name}", displayOnly: true }
+                        { text: "{business_partner_register_status_name}", displayOnly: true }
                     ).bindProperty("colorScheme", {
                         parts: [
-                            { path: "supplier_status_code" }
+                            { path: "business_partner_register_status_code" }
+                        ],
+                        formatter: function (code) {
+                            //sap.tnt.sample.InfoLabelInTable.Formatter.availableState
+                            var oColor = 1;
+                            if (code == "QUAA") oColor = 1;
+                            else oColor = 2;
+                            return oColor;
+                        }
+                    }),
+                }),
+                new Column({
+                    hAlign: "Center",
+                    width: "9rem",
+                    label: new Label({ text: this.getModel("I18N").getText("/STATUS") }),
+                    template: new sap.tnt.InfoLabel(
+                        { text: "{business_partner_status_name}", displayOnly: true }
+                    ).bindProperty("colorScheme", {
+                        parts: [
+                            { path: "business_partner_status_code" }
                         ],
                         formatter: function (code) {
                             //sap.tnt.sample.InfoLabelInTable.Formatter.availableState
@@ -293,116 +327,146 @@ sap.ui.define([
                         }
                     }),
                 }),
-                new Column({
-                    label: new Label({ text: this.getModel("I18N").getText("/OLD_SUPPLIER_CODE") }),
-                    template: new Text({ text: "{old_supplier_code}" })
-                }),
-                new Column({
-                    label: new Label({ text: this.getModel("I18N").getText("/OLD_SUPPLIER_CODE") }),
-                    template: new Text({ text: "{old_supplier_code}" })
-                }),new Column({
-                    label: new Label({ text: this.getModel("I18N").getText("/OLD_SUPPLIER_CODE") }),
-                    template: new Text({ text: "{old_supplier_code}" })
-                })
+
+
             ];
         },
 
-        loadSupplierData: function (oThis) {
+        loadBPData: function (oThis) {
             var that = oThis,
                 cFilters = that.getProperty("items") && that.getProperty("items").filters || [new Filter("tenant_id", FilterOperator.EQ, "L2100")];
-            that.oDialog.setModel(new ManagedModel(), "SUPPLIERVIEW");
+            that.oDialog.setModel(new ManagedModel(), "BPVIEW");
 
-            //if(!that.getModel("SUPPLIERVIEW").getProperty("/company")){
+            //if(!that.getModel("BPVIEW").getProperty("/company")){
             oServiceModel.read("/companyView", {
                 filters: cFilters,
                 sorters: [new Sorter("company_code", true)],
                 success: function (oData) {
                     var aRecords = oData.results;
                     //aRecords.unshift({company_code:"", company_name: that.getModel("I18N").getText("/ALL")});
-                    that.oDialog.getModel("SUPPLIERVIEW").setProperty("/company", aRecords);
+                    that.oDialog.getModel("BPVIEW").setProperty("/company", aRecords);
                 }
             });
             //}
 
-            //if(!that.getModel("SUPPLIERVIEW").getProperty("/bizUnit")){
-            oServiceModel.read("/bizUnitView", {
+            //if(!that.getModel("BPVIEW").getProperty("/bizUnit")){
+            oServiceModel.read("/OrganizationView", {
                 filters: cFilters,
                 sorters: [new Sorter("bizunit_code", true)],
                 success: function (oData) {
                     var aRecords = oData.results;
                     //aRecords.unshift({bizunit_code:"", bizunit_name: that.getModel("I18N").getText("/ALL")});
-                    that.oDialog.getModel("SUPPLIERVIEW").setProperty("/bizUnit", aRecords);
+                    that.oDialog.getModel("BPVIEW").setProperty("/bizUnit", aRecords);
                 }
             });
             //}
 
-            //if(!that.getModel("SUPPLIERVIEW").getProperty("/supplierType")){
-            oServiceModel.read("/supplierTypeView", {
-                filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
+            //if(!that.getModel("BPVIEW").getProperty("/supplierType")){
+            oServiceModel.read("/SupplierTypeView", {
+                // filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
                 sorters: [new Sorter("code", true)],
                 success: function (oData) {
                     var aRecords = oData.results;
                     //aRecords.unshift({code:"", code_name: that.getModel("I18N").getText("/ALL")});
-                    that.oDialog.getModel("SUPPLIERVIEW").setProperty("/supplierType", aRecords);
+                    that.oDialog.getModel("BPVIEW").setProperty("/supplierType", aRecords);
                 }
             });
             //}
 
-            //if(!that.getModel("SUPPLIERVIEW").getProperty("/supplierStatus")){
-            oServiceModel.read("/supplierStatusView", {
-                filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
+            oServiceModel.read("/BusinessPartnerRoleCodeView", {
+                // filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
                 sorters: [new Sorter("code", true)],
                 success: function (oData) {
                     var aRecords = oData.results;
                     aRecords.unshift({ code: "", code_name: that.getModel("I18N").getText("/ALL") });
-                    that.oDialog.getModel("SUPPLIERVIEW").setProperty("/supplierStatus", aRecords);
+                    that.oDialog.getModel("BPVIEW").setProperty("/bpRole", aRecords);
                 }.bind(this)
             })
-            //}
 
+            oServiceModel.read("/BusinessPartnerRegistrationProgressView", {
+                // filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
+                sorters: [new Sorter("code", true)],
+                success: function (oData) {
+                    var aRecords = oData.results;
+                    aRecords.unshift({ code: "", code_name: that.getModel("I18N").getText("/ALL") });
+                    that.oDialog.getModel("BPVIEW").setProperty("/registerStatus", aRecords);
+                }.bind(this)
+            });
+
+            oServiceModel.read("/BusinessPartnerStatusView", {
+                // filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
+                sorters: [new Sorter("code", true)],
+                success: function (oData) {
+                    var aRecords = oData.results;
+                    aRecords.unshift({ code: "", code_name: that.getModel("I18N").getText("/ALL") });
+                    that.oDialog.getModel("BPVIEW").setProperty("/bpStatus", aRecords);
+                }.bind(this)
+            });
 
             that.oDialog.setBusy(false);
 
-
         },
         loadData: function (obj) {
-
             var aFilters = [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
-                aSorters = [new Sorter("supplier_code", true)],
-                sSupplierCode = this.oSupplierCode.getValue(),
-                sSupplierName = this.oSupplierName.getValue(),
+                aSorters = [new Sorter("business_partner_code", true)],
+                sBPCode = this.oBPCode.getValue(),
+                sBPName = this.oBPName.getValue(),
                 sTaxId = this.oTaxId.getValue(),
                 sCompny = this.oCompny.getSelectedKey(),
                 sOrg = this.oOrg.getSelectedKey(),
                 sType = this.oType.getSelectedKey(),
+                sOldSupplierCode = this.oOldSupplierCode.getValue(),
+                sOldMakerCode = this.oOldMakerCode.getValue(),
+                sRole = this.oRole.getSelectedKey(),
+                sRegisterStatus = this.oRegisterStatus.getSelectedKey(),
                 sStatus = this.oStatus.getSelectedKey();
 
-            if (sSupplierCode) {
-                sSupplierCode = sSupplierCode.toUpperCase();
-                this.oSupplierCode.setValue(sSupplierCode);
-                aFilters.push(new Filter("supplier_code", FilterOperator.Contains, sSupplierCode));
+            if (sBPCode) {
+                sBPCode = sBPCode.toUpperCase();
+                this.oBPCode.setValue(sBPCode);
+                aFilters.push(new Filter("business_partner_code", FilterOperator.Contains, sBPCode));
             }
-            if (sSupplierName) aFilters.push(new Filter("supplier_local_name", FilterOperator.Contains, sSupplierName));
+            if (sBPName) aFilters.push(new Filter("business_partner_local_name", FilterOperator.Contains, sBPName));
             if (sTaxId) aFilters.push(new Filter("tax_id", FilterOperator.Contains, sTaxId));
             if (sCompny) aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompny));
             if (sOrg) aFilters.push(new Filter("org_code", FilterOperator.EQ, sOrg));
             if (sType) {
                 aFilters.push(new Filter("type_code", FilterOperator.EQ, sType));
             }
-            if (sStatus) aFilters.push(new Filter("supplier_status_code", FilterOperator.EQ, sStatus));
+            if (sOldSupplierCode) {
+                aFilters.push(new Filter("old_supplier_code", FilterOperator.Contains, sOldSupplierCode));
+            }
+            if (sOldMakerCode) {
+                aFilters.push(new Filter("old_maker_code", FilterOperator.Contains, sOldMakerCode));
+            }
+            if (sRole === "100001") {
+                aFilters.push(new Filter("supplier_role", FilterOperator.EQ, "Y"));
+            } else if (sRole === "100006") {
+                aFilters.push(new Filter("maker_role", FilterOperator.EQ, "Y"));
+            }
+            if (sRegisterStatus === "QUALIFICATION") {
+                aFilters.push(new Filter("business_partner_register_status_code", FilterOperator.EQ, "QUAA"));
+            } else if (sRegisterStatus === "REGISTRATION") {
+                aFilters.push(new Filter("business_partner_register_status_code", FilterOperator.EQ, "REGA"));
+            }
+
+            if (sStatus) aFilters.push(new Filter("business_partner_status_code", FilterOperator.EQ, sStatus));
 
             this.oDialog.setBusy(true);
 
-            oServiceModel.read("/supplierView", {
+            //fixed column 
+            this.oDialog.getAggregation("content")[0].getAggregation("items")[1].setFixedColumnCount(5);
+
+            oServiceModel.read("/BusinessPartnerView", {
                 filters: aFilters,
                 sorters: aSorters,
                 success: function (oData) {
                     var aRecords = oData.results;
-                    this.oDialog.setData(aRecords, "supplierList");
+                    this.oDialog.setData(aRecords, "BPList");
                     this.oDialog.setBusy(false);
-                    if (!this.oDialog.getModel("SUPPLIERVIEW")) {
+                    if (!this.oDialog.getModel("BPVIEW")) {
                         this.oDialog.setBusy(true);
-                        this.loadSupplierData(this);
+                        this.loadBPData(this);
                     }
                 }.bind(this)
             });

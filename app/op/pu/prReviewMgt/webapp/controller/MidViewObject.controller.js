@@ -20,8 +20,7 @@ sap.ui.define([
 	return BaseController.extend("op.pu.prReviewMgt.controller.MidViewObject", {
 
 		/* =========================================================== */
-        /* lifecycle methods                                  
-                 */
+        /* lifecycle methods                                           */
 		/* =========================================================== */
 		/**
 		 * Called when the controller is instantiated.
@@ -36,6 +35,7 @@ sap.ui.define([
                 .getRoute("midView")
                 .attachPatternMatched(function(event) {
                     var { tenant_id, company_code, pr_number, pr_item_number } = event.getParameter("arguments")["?query"];
+                    this.key = { tenant_id, company_code, pr_number, pr_item_number };
                     // 상세
                     this.search(new JSONModel({ 
                         tenant_id, 
@@ -53,40 +53,102 @@ sap.ui.define([
                 }, this);
         },
         onButtonPress: function () {
-            var [event, action, ...args] = arguments;
-            var value;
 
-            // 공사물량
-            action == 'builds'
+            var [ event, type, item, ...args ] = arguments;
+            var { action, service, entry, tId } = args[args.length-1];
+            var message, value;
+            var table = this.byId(tId);
+
+            // Transaction
+            (
+                // 마감취소
+                (action == 'CLOSING_CANCEL' && (message = "(메세지)마감취소를 진행하시겠습니까?"))
+            )
             &&
-            (value = (function() {
-            })());
+            (function() {
+                MessageBox.confirm(message, {
+                    title: "Comfirmation",
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: (function (sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            if (action == 'CLOSING_CANCEL') {
+                                // 사유입력
+                                this.fragment("reason", {
+                                    name: "op.pu.prReviewMgt.view.Reason"
+                                }, {
+                                    onAfterOpen: (function() {
+                                        this.setModel(new JSONModel({
+                                            "reason": {
+                                                action: action,
+                                                buyerEmpno: "",
+                                                processedReason: ""
+                                            }
+                                        }), "fragment");
+                                    }).bind(this),
+                                    onCommit: function() {
+                                        var [event, action, value, ...args] = arguments;
+                                        if (!value.processedReason) {
+                                            MessageBox.alert("(미정)사유를 입력하세요.");
+                                            return false;
+                                        }
+                                        return value;
+                                    },
+                                    onCancel: function() {
+                                        var [event, action, ...args] = arguments;
+                                        return ;
+                                    }
+                                }, this).done(result => {
+                                    var { buyerEmpno, buyerDepartmentCode, processedReason } = result;
+                                    this.procedure(service, entry, {
+                                        inputData: {
+                                            jobType: action,
+                                            prItemTbl: [item].map(function(e) { 
+                                                return { 
+                                                    transaction_code: e.transaction_code, 
+                                                    tenant_id: e.tenant_id, 
+                                                    company_code: e.company_code, 
+                                                    pr_number: e.pr_number, 
+                                                    pr_item_number: e.pr_item_number 
+                                                };
+                                            }),
+                                            buyerEmpno: buyerEmpno,
+                                            buyerDepartmentCode: buyerDepartmentCode,
+                                            processedReason: processedReason,
+                                            employeeNumber: this.$session.employee_number
+                                        }
+                                    })
+                                    .done((function(r) {
+                                        // 재조회 - MainList
+                                        this.get("$MainList")
+                                            .search("jSearch", "list", "Pr_ReviewListView");
+                                        // 재조회 - 상세
+                                        var { tenant_id, company_code, pr_number, pr_item_number } = this.key;
+                                        this.search(new JSONModel({ 
+                                            tenant_id, 
+                                            company_code, 
+                                            pr_number, 
+                                            pr_item_number 
+                                        }), "detail", "Pr_ReviewDtlView", true);
+                                        // 재조회 - 계정지정정보
+                                        this.search(new JSONModel({ 
+                                            tenant_id, 
+                                            company_code, 
+                                            pr_number, 
+                                            pr_item_number 
+                                        }), "accounts", "Pr_ReviewDtlAcctView");
+                                    }).bind(this));
+                                });
+                            }
+                            else {
+                            }
+                        }
+                    }).bind(this)
+                });
+            }).call(this);
 
-            // 변경이력
-            action == 'changed'
+            action != 'CLOSING_CANCEL'
             &&
-            (value = (function() {
-            })());
-
-            // 발주이력
-            action == 'ordered'
-            &&
-            (value = (function() {
-            })());
-
-            // 사용실적
-            action == 'results'
-            &&
-            (value = (function() {
-            })());
-
-            return {action, value};
-        },
-        // Excel Download - 추가 화일명이 필요한 경우, arguments 뒤에 인자로 붙인다.
-        // 어쩔 수 없음, Binding Expression 에서 함수 Parsing 해결이 되면, 다시 재작성
-        onExcelDownload: function () {
-
-            return BaseController.prototype["onExcel"].call(this, arguments);
+            MessageBox.alert("준비중 입니다");
         }
 	});
 });

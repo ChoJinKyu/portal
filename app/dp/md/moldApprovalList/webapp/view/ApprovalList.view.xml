@@ -26,11 +26,12 @@
                                 <MultiComboBox id="searchCompanyS" width="100%" items="{
                                        path: 'org>/Company',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'company_code'}
                                     }" 
-                                    selectionFinish="handleSelectionFinishComp" required="true">
+                                    selectionFinish="handleSelectionFinishComp" 
+                                    required="true">
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
@@ -44,7 +45,7 @@
                                 <MultiComboBox id="searchPlantS" width="100%" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ]
                                     }"
                                     selectionFinish="handleSelectionFinishDiv" required="true">
@@ -68,7 +69,7 @@
                                 <MultiComboBox id="searchApprovalCategoryS" width="100%" items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -91,7 +92,7 @@
                                 <MultiComboBox id="searchCompanyE" width="100%" selectionFinish="handleSelectionFinishComp" items="{
                                        path: 'org>/Company',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'company_code'}
                                     }" required="true">
@@ -108,7 +109,7 @@
                                 <MultiComboBox id="searchPlantE" width="100%" items="{
                                         path: 'purOrg>/Pur_Operation_Org',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ]
                                     }"
                                     selectionFinish="handleSelectionFinishDiv" required="true">
@@ -132,7 +133,7 @@
                                 <MultiComboBox id="searchApprovalCategoryE" width="100%" items="{
                                             path : 'util>/Code',
                                             filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                 {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_APPROVAL_TYPE'}
                                             ],
                                             sorter: { path: 'sort_no'}
@@ -169,7 +170,7 @@
                                     suggestionItems="{
                                         path: '/Models',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'model' }
                             }">
@@ -181,14 +182,14 @@
                         </VBox>
                         <HBox height="4em">
                             <VBox width="87%">
-                                <Label text="몰드 No" labelFor="searchMoldNo"></Label>
+                                <Label text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}" labelFor="searchMoldNo"></Label>
                                 <Input id="searchMoldNo" 
                                         showValueHelp="true"  
                                         valueHelpRequest=".onValueHelpRequested"
                                         suggestionItems="{
                                             path: '/PartNumbers',
                                             filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                             ],
                                             sorter: { path: 'mold_number' }
                                 }">
@@ -222,7 +223,7 @@
                                     suggestionItems="{
                                         path: '/Requestors',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'email_id' }
                             }">
@@ -238,15 +239,12 @@
                                     id="searchStatus" 
                                     selectedKey="" 
                                     width="100%" 
-                                    items="{path : 'util>/Code',
-                                              filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVE_STATUS'}
-                                              ],
+                                    items="{path : 'SegmentedItem>/Code',
+                                             
                                               sorter: {path: 'sort_no'}
                             }">
                                 <items>
-                                    <SegmentedButtonItem width="5em" text="{util>code_name}" key="{util>code}"/>
+                                    <SegmentedButtonItem width="5em" text="{SegmentedItem>code_name}" key="{SegmentedItem>code}"/>
                                     <!-- <SegmentedButtonItem text="All" key="" width=""/>
                                     <SegmentedButtonItem text="Appr-Req" key="AR" width="5em"/>
                                     <SegmentedButtonItem text="Draft" key="DR" width="5em" />

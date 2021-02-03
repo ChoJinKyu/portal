@@ -34,12 +34,11 @@ using util from '../../cm/util/util-model';
 // using {sp as viExpMtl} from '../Sp/SP_VI_EXPECTED_MTL-model';
 
 entity Vi_Expected_Mtl {
-    key tenant_id        : String(5) not null  @title : '테넌트ID';
-    key plant_code       : String(10) not null @title : '플랜트코드';
-    key material_code    : String(40) not null @title : '자재코드';
-    key txn_yyyymm       : String(8) not null  @title : '트랜잭션년월';
-    key txn_type_code    : String(30) not null @title : '거래유형코드';
-    key source_type_code : String(30) not null @title : '출처구분코드';
+    key tenant_id     : String(5) not null  @title : '테넌트ID';
+    key plant_code    : String(10) not null @title : '플랜트코드';
+    key material_code : String(40) not null @title : '자재코드';
+        txn_type_code : String(30)          @title : '거래유형코드';
+        
 }
 
 extend Vi_Expected_Mtl with util.Managed;

@@ -1,262 +1,250 @@
-/* Vendor pool별 Item 매핑처리 */
+/* Vendor pool별 Item Single건 매핑처리 */
 PROCEDURE PG_MD_VENDOR_POOL_MAPPING_ITEM_PROC (
-								IN I_TENANT_ID NVARCHAR(5), 
-								IN I_COMPANY_CODE NVARCHAR(10), 
-								IN I_ORG_TYPE_CODE NVARCHAR(30), 
-								IN I_ORG_CODE NVARCHAR(10), 
-								IN I_SPMD_CATEGORY_CODE NVARCHAR(4),
-								IN I_SPMD_CHARACTER_CODE NVARCHAR(4),
-								IN I_SPMD_CHARACTER_SERIAL_NO BIGINT,
-								IN I_VENDOR_POOL_CODE NVARCHAR(20),
-								IN I_UPDATE_USER_ID NVARCHAR(500),
+										IN I_TENANT_ID NVARCHAR(5), 
+										IN I_COMPANY_CODE NVARCHAR(10), 
+										IN I_ORG_TYPE_CODE NVARCHAR(30), 
+										IN I_ORG_CODE NVARCHAR(10), 
+										IN I_SPMD_CATEGORY_CODE NVARCHAR(4),
+										IN I_SPMD_CHARACTER_CODE NVARCHAR(4),
+										IN I_SPMD_CHARACTER_SERIAL_NO BIGINT,
+										IN I_VENDOR_POOL_CODE NVARCHAR(20),
+										IN I_UPDATE_USER_ID NVARCHAR(500),
 
-								OUT O_RTN_MESG NVARCHAR(4000)
-							)
+										OUT O_TABLE TABLE(
+											  RETURN_CODE NVARCHAR(5)
+											, RETURN_MSG NVARCHAR(4000)
+										)
+)
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 AS
 BEGIN
-	DECLARE V_VENDOR_POOL_LOCAL_NAME VARCHAR(240);
-	DECLARE V_ATTR_COL_NO NVARCHAR(3);
-	DECLARE V_SQL_EXEC_STR NVARCHAR(4000);
-	DECLARE V_ROWCNT BIGINT;
-	
+
+	DECLARE v_vendor_pool_local_name VARCHAR(240);
+	DECLARE v_attr_col_no NVARCHAR(3);
+
+	DECLARE v_tenant_id NVARCHAR(5);
+	DECLARE v_company_code NVARCHAR(10);
+	DECLARE v_org_type_code NVARCHAR(30);
+	DECLARE v_org_code NVARCHAR(10);
+	DECLARE v_spmd_category_code NVARCHAR(4);
+	DECLARE v_spmd_character_code NVARCHAR(4);
+	DECLARE v_spmd_character_serial_no BIGINT;
+	DECLARE v_vendor_pool_code NVARCHAR(20);
+	DECLARE v_update_user_id NVARCHAR(255);
+
+	/* 사용자 정의  Error코드 */
+	DECLARE v_usr_errcd CONDITION FOR SQL_ERROR_CODE 10000;
+
 	/* SQL Error 처리 */
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		ROLLBACK;
-        O_RTN_MESG := ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE;
+
 		--SELECT ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE INTO O_RTN_MESG FROM DUMMY;
+		:O_TABLE.insert((::SQL_ERROR_CODE, 'SQLEXCEPTION-[1]: '||::SQL_ERROR_MESSAGE));
 	END;
-	
-	SELECT 
-		VVPM.VENDOR_POOL_LOCAL_NAME
-		, LPAD(TO_CHAR(:I_SPMD_CHARACTER_SERIAL_NO), 3, '0') 
-		INTO V_VENDOR_POOL_LOCAL_NAME, V_ATTR_COL_NO
-	FROM PG_VP_VENDOR_POOL_MST VVPM
-	WHERE VVPM.TENANT_ID = :I_TENANT_ID
-	AND VVPM.COMPANY_CODE = :I_COMPANY_CODE
-	AND VVPM.ORG_TYPE_CODE = :I_ORG_TYPE_CODE
-	AND VVPM.ORG_CODE = :I_ORG_CODE
-	AND VVPM.VENDOR_POOL_CODE = :I_VENDOR_POOL_CODE
+
+	:O_TABLE.insert(('LOG', 'STEP-1 [Procedure Start]'));
+
+	/* Mapping대상 Item Vendor Pool정보 조회 */
+	v_req_item_mapp_tbl =	SELECT
+								VIM.TENANT_ID
+								, VIM.COMPANY_CODE
+								, VIM.ORG_TYPE_CODE
+								, VIM.ORG_CODE
+								, VIM.VENDOR_POOL_CODE
+								, :I_SPMD_CATEGORY_CODE AS SPMD_CATEGORY_CODE
+								, :I_SPMD_CHARACTER_CODE AS SPMD_CHARACTER_CODE
+								, :I_SPMD_CHARACTER_SERIAL_NO AS SPMD_CHARACTER_SERIAL_NO
+								, LPAD(TO_CHAR(:I_SPMD_CHARACTER_SERIAL_NO), 3, '0') AS ATTR_COL_NO
+								, :I_UPDATE_USER_ID AS UPDATE_USER_ID
+								, VVPM.VENDOR_POOL_LOCAL_NAME
+							FROM PG_MD_VP_ITEM_MAPPING VIM
+							LEFT OUTER JOIN PG_VP_VENDOR_POOL_MST VVPM ON (
+																	VVPM.TENANT_ID = VIM.TENANT_ID
+																	AND VVPM.COMPANY_CODE = VIM.COMPANY_CODE
+																	AND VVPM.ORG_TYPE_CODE = VIM.ORG_TYPE_CODE
+																	AND VVPM.ORG_CODE = VIM.ORG_CODE
+																	AND VVPM.VENDOR_POOL_CODE = VIM.VENDOR_POOL_CODE
+																)
+							WHERE VIM.TENANT_ID = :I_TENANT_ID
+							AND VIM.COMPANY_CODE = :I_COMPANY_CODE
+							AND VIM.ORG_TYPE_CODE = :I_ORG_TYPE_CODE
+							AND VIM.ORG_CODE = :I_ORG_CODE
+							AND VIM.VENDOR_POOL_CODE = :I_VENDOR_POOL_CODE
 	;
 
-	/*
-	-- PG_MD_VP_ITEM_MAPPING 테이블에 정의된 SPMD_ATTR_??? 컬럼을 처리하기 위해 Dynamic SQL로 처리해야함. 
-	MERGE INTO
-			PG_MD_VP_ITEM_MAPPING AS VIM
-		USING DUMMY
-		ON ( 
-			VIM.TENANT_ID = :I_TENANT_ID
-			AND VIM.COMPANY_CODE = :I_COMPANY_CODE
-			AND VIM.ORG_TYPE_CODE = :I_ORG_TYPE_CODE
-			AND VIM.ORG_CODE = :I_ORG_CODE
-			AND VIM.VENDOR_POOL_CODE = :I_VENDOR_POOL_CODE
-		)
-	WHEN MATCHED THEN
-		UPDATE SET 
-			VIM.CONFIRMED_STATUS_CODE = '777'	-- 100:신규, 999:확정
-			, VIM.SPMD_ATTR_001 = 'Y'
-			, VIM.LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP
-			, VIM.UPDATE_USER_ID = :I_UPDATE_USER_ID
-			, VIM.SYSTEM_UPDATE_DTM = CURRENT_TIMESTAMP
-	WHEN NOT MATCHED THEN
-		INSERT (
-			TENANT_ID 
-			, COMPANY_CODE
-			, ORG_TYPE_CODE
-			, ORG_CODE
-			, VENDOR_POOL_CODE 
-			
-			, VENDOR_POOL_LOCAL_NAME
-			, CONFIRMED_STATUS_CODE
-			, SPMD_ATTR_001
-			, LOCAL_CREATE_DTM
-			, LOCAL_UPDATE_DTM
-			, CREATE_USER_ID
-			, UPDATE_USER_ID
-			, SYSTEM_CREATE_DTM
-			, SYSTEM_UPDATE_DTM
-		) VALUES (
-			:I_TENANT_ID
-			, :I_COMPANY_CODE
-			, :I_ORG_TYPE_CODE
-			, :I_ORG_CODE
-			, :I_VENDOR_POOL_CODE
-			
-			, :V_VENDOR_POOL_LOCAL_NAME
-			, '000'
-			, 'Y'
-			, CURRENT_TIMESTAMP
-			, CURRENT_TIMESTAMP
-			, :I_UPDATE_USER_ID
-			, :I_UPDATE_USER_ID
-			, CURRENT_TIMESTAMP
-			, CURRENT_TIMESTAMP
-		)
-	;
-	*/
-	SELECT 
-		COUNT(*) 
-		INTO V_ROWCNT 
-	FROM PG_MD_VP_ITEM_MAPPING VIM
-	WHERE VIM.TENANT_ID = :I_TENANT_ID
-	AND VIM.COMPANY_CODE = :I_COMPANY_CODE
-	AND VIM.ORG_TYPE_CODE = :I_ORG_TYPE_CODE
-	AND VIM.ORG_CODE = :I_ORG_CODE
-	AND VIM.VENDOR_POOL_CODE = :I_VENDOR_POOL_CODE
-	;
-	
-	IF (V_ROWCNT = 0) THEN
-		
-		V_SQL_EXEC_STR := 'INSERT INTO PG_MD_VP_ITEM_MAPPING (';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	TENANT_ID'; 
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, COMPANY_CODE';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, ORG_TYPE_CODE';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, ORG_CODE';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, VENDOR_POOL_CODE';
+	:O_TABLE.insert(('LOG', 'STEP-2 ['||RECORD_COUNT( :v_req_item_mapp_tbl )||']'));
 
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, VENDOR_POOL_LOCAL_NAME';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, CONFIRMED_STATUS_CODE';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, SPMD_ATTR_'||:V_ATTR_COL_NO ;
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, LOCAL_CREATE_DTM';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, LOCAL_UPDATE_DTM';
+	/* VP 기존 Item 매핑 초기화 */
+	IF (NOT IS_EMPTY(:v_req_item_mapp_tbl)) THEN
 
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, CREATE_USER_ID';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, UPDATE_USER_ID';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, SYSTEM_CREATE_DTM';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, SYSTEM_UPDATE_DTM';
+		v_tenant_id := :v_req_item_mapp_tbl.TENANT_ID[1];
+		v_company_code := :v_req_item_mapp_tbl.COMPANY_CODE[1];
+		v_org_type_code := :v_req_item_mapp_tbl.ORG_TYPE_CODE[1];
+		v_org_code := :v_req_item_mapp_tbl.ORG_CODE[1];
+		v_vendor_pool_code := :v_req_item_mapp_tbl.VENDOR_POOL_CODE[1];
 
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||') VALUES (';
+		DELETE FROM PG_MD_VP_ITEM_MAPPING VIM
+		WHERE VIM.TENANT_ID = :v_tenant_id
+		AND VIM.COMPANY_CODE = :v_company_code
+		AND VIM.ORG_TYPE_CODE = :v_org_type_code
+		AND VIM.ORG_CODE = :v_org_code
+		AND VIM.VENDOR_POOL_CODE = :v_vendor_pool_code
+		;
 
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	'''||:I_TENANT_ID||''' ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, '''||:I_COMPANY_CODE||''' ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, '''||:I_ORG_TYPE_CODE||''' ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, '''||:I_ORG_CODE||''' ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, '''||:I_VENDOR_POOL_CODE||''' ';
+		:O_TABLE.insert(('LOG', 'STEP-2-1-1 [Pass]'));
 
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, '''||:V_VENDOR_POOL_LOCAL_NAME||''' ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, ''200'' '; 	-- 100:신규(최초), 200:저장, 300:확정(품위결제)
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, ''Y'' ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, CURRENT_TIMESTAMP';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, CURRENT_TIMESTAMP';
+		DELETE FROM PG_MD_VP_ITEM_MAPPING_ATTR VIMA
+		WHERE VIMA.TENANT_ID = :v_tenant_id
+		AND VIMA.COMPANY_CODE = :v_company_code
+		AND VIMA.ORG_TYPE_CODE = :v_org_type_code
+		AND VIMA.ORG_CODE = :v_org_code
+		AND VIMA.VENDOR_POOL_CODE = :v_vendor_pool_code
+		;
 
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, '''||:I_UPDATE_USER_ID||''' ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, '''||:I_UPDATE_USER_ID||''' ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, CURRENT_TIMESTAMP';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'	, CURRENT_TIMESTAMP';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||')';
-
+		:O_TABLE.insert(('LOG', 'STEP-2-1-2 [Pass]'));
 	ELSE
-
-		V_SQL_EXEC_STR := 'UPDATE PG_MD_VP_ITEM_MAPPING VIM SET';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'		VIM.CONFIRMED_STATUS_CODE = ''200'' ';	-- 100:신규(최초), 200:저장, 300:확정(품위결제)
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'		, VIM.SPMD_ATTR_'||:V_ATTR_COL_NO||' = ''Y'' ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'		, VIM.LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'		, VIM.UPDATE_USER_ID = '''||:I_UPDATE_USER_ID||''' ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'		, VIM.SYSTEM_UPDATE_DTM = CURRENT_TIMESTAMP ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'WHERE VIM.TENANT_ID = '''||:I_TENANT_ID||''' ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'AND VIM.COMPANY_CODE = '''||:I_COMPANY_CODE||''' ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'AND VIM.ORG_TYPE_CODE = '''||:I_ORG_TYPE_CODE||''' ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'AND VIM.ORG_CODE = '''||:I_ORG_CODE||''' ';
-		V_SQL_EXEC_STR := V_SQL_EXEC_STR||'AND VIM.VENDOR_POOL_CODE = '''||:I_VENDOR_POOL_CODE||''' ';
-		
+		:O_TABLE.insert(('LOG', 'STEP-2-2 Data Not Found [Pass]'));
+		-- Skip처리
+		/* SIGNAL v_usr_errcd SET MESSAGE_TEXT = 'Data Error : Data Not Found..'; */
 	END IF;
-			
-	-- Log 확인
-	-- CALL LOG_PROC( :V_SQL_EXEC_STR );
 
-	EXEC V_SQL_EXEC_STR;
-
-    /* MAPPING ATTR 등록 */
-    INSERT INTO PG_MD_VP_ITEM_MAPPING_ATTR (
-        TENANT_ID 
-        , COMPANY_CODE
-        , ORG_TYPE_CODE
-        , ORG_CODE
-        , VENDOR_POOL_CODE
-        , SPMD_CATEGORY_CODE
-        , SPMD_CHARACTER_CODE
-        , SPMD_CHARACTER_SERIAL_NO
-
-        , LOCAL_CREATE_DTM
-        , LOCAL_UPDATE_DTM
-        , CREATE_USER_ID
-        , UPDATE_USER_ID
-        , SYSTEM_CREATE_DTM
-        , SYSTEM_UPDATE_DTM
-    ) VALUES (
-        :I_TENANT_ID
-        , :I_COMPANY_CODE
-        , :I_ORG_TYPE_CODE
-        , :I_ORG_CODE
-        , :I_VENDOR_POOL_CODE
-        , :I_SPMD_CATEGORY_CODE
-        , :I_SPMD_CHARACTER_CODE
-        , :I_SPMD_CHARACTER_SERIAL_NO
-
-        , CURRENT_TIMESTAMP
-        , CURRENT_TIMESTAMP
-        , :I_UPDATE_USER_ID
-        , :I_UPDATE_USER_ID
-        , CURRENT_TIMESTAMP
-        , CURRENT_TIMESTAMP
-    );
-
-    /*
-    -- merge문으로 처리
-	MERGE INTO
-			PG_MD_VP_ITEM_MAPPING_ATTR AS VIM
-		USING DUMMY
-		ON ( 
-			VIM.TENANT_ID = :I_TENANT_ID
-			AND VIM.COMPANY_CODE = :I_COMPANY_CODE
-			AND VIM.ORG_TYPE_CODE = :I_ORG_TYPE_CODE
-			AND VIM.ORG_CODE = :I_ORG_CODE
-			AND VIM.VENDOR_POOL_CODE = :I_VENDOR_POOL_CODE
-			AND VIM.SPMD_CATEGORY_CODE = :I_SPMD_CATEGORY_CODE
-			AND VIM.SPMD_CHARACTER_CODE = :I_SPMD_CHARACTER_CODE
-		)
-	WHEN MATCHED THEN
-		UPDATE SET 
-			VIM.SPMD_CHARACTER_SERIAL_NO = :I_SPMD_CHARACTER_SERIAL_NO
-	WHEN NOT MATCHED THEN
-		INSERT (
-            TENANT_ID 
-            , COMPANY_CODE
-            , ORG_TYPE_CODE
-            , ORG_CODE
-            , VENDOR_POOL_CODE
-            , SPMD_CATEGORY_CODE
-            , SPMD_CHARACTER_CODE
-            , SPMD_CHARACTER_SERIAL_NO
-
-            , LOCAL_CREATE_DTM
-            , LOCAL_UPDATE_DTM
-            , CREATE_USER_ID
-            , UPDATE_USER_ID
-            , SYSTEM_CREATE_DTM
-            , SYSTEM_UPDATE_DTM
-        ) VALUES (
-            :I_TENANT_ID
-            , :I_COMPANY_CODE
-            , :I_ORG_TYPE_CODE
-            , :I_ORG_CODE
-            , :I_VENDOR_POOL_CODE
-            , :I_SPMD_CATEGORY_CODE
-            , :I_SPMD_CHARACTER_CODE
-            , :I_SPMD_CHARACTER_SERIAL_NO
-
-            , CURRENT_TIMESTAMP
-            , CURRENT_TIMESTAMP
-            , :I_UPDATE_USER_ID
-            , :I_UPDATE_USER_ID
-            , CURRENT_TIMESTAMP
-            , CURRENT_TIMESTAMP
-        )
-	;
-    */
+	:O_TABLE.insert(('LOG', 'STEP-3 [Pass]'));
 	
-	COMMIT;
-	O_RTN_MESG := '0000-SUCCESS';
+	-- Mapping 정보 등록 처리
+	EXECUTE IMMEDIATE
+		'
+		MERGE INTO
+				PG_MD_VP_ITEM_MAPPING AS VIM
+			USING DUMMY
+			ON (
+				VIM.TENANT_ID = ?
+				AND VIM.COMPANY_CODE = ?
+				AND VIM.ORG_TYPE_CODE = ?
+				AND VIM.ORG_CODE = ?
+				AND VIM.VENDOR_POOL_CODE = ?
+			)
+		WHEN MATCHED THEN
+
+			UPDATE SET
+					VIM.CONFIRMED_STATUS_CODE = ''200''  	/* 100:신규(최초), 200:저장, 300:확정(품위결제) */
+					, VIM.SPMD_ATTR_'||:v_req_item_mapp_tbl.ATTR_COL_NO[1]||' = ''Y''
+					, VIM.VENDOR_POOL_LOCAL_NAME = ?
+					, VIM.LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP
+					, VIM.UPDATE_USER_ID = ?
+					, VIM.SYSTEM_UPDATE_DTM = CURRENT_TIMESTAMP
+
+		WHEN NOT MATCHED THEN
+
+			INSERT (
+				TENANT_ID
+				, COMPANY_CODE
+				, ORG_TYPE_CODE
+				, ORG_CODE
+				, VENDOR_POOL_CODE
+
+				, VENDOR_POOL_LOCAL_NAME
+				, CONFIRMED_STATUS_CODE
+				, SPMD_ATTR_'||:v_req_item_mapp_tbl.ATTR_COL_NO[1]||'
+				, LOCAL_CREATE_DTM
+				, LOCAL_UPDATE_DTM
+
+				, CREATE_USER_ID
+				, UPDATE_USER_ID
+				, SYSTEM_CREATE_DTM
+				, SYSTEM_UPDATE_DTM
+			) VALUES (
+
+				?
+				, ?
+				, ?
+				, ?
+				, ?
+
+				, ?
+				, ''200''   	/* 100:신규(최초), 200:저장, 300:확정(품위결제) */
+				, ''Y''
+				, CURRENT_TIMESTAMP
+				, CURRENT_TIMESTAMP
+
+				, ?
+				, ?
+				, CURRENT_TIMESTAMP
+				, CURRENT_TIMESTAMP
+			)
+		'
+		USING
+			  :v_req_item_mapp_tbl.TENANT_ID[1]
+			, :v_req_item_mapp_tbl.COMPANY_CODE[1]
+			, :v_req_item_mapp_tbl.ORG_TYPE_CODE[1]
+			, :v_req_item_mapp_tbl.ORG_CODE[1]
+			, :v_req_item_mapp_tbl.VENDOR_POOL_CODE[1]
+			, :v_req_item_mapp_tbl.VENDOR_POOL_LOCAL_NAME[1]
+			, :v_req_item_mapp_tbl.UPDATE_USER_ID[1]
+			, :v_req_item_mapp_tbl.TENANT_ID[1]
+			, :v_req_item_mapp_tbl.COMPANY_CODE[1]
+			, :v_req_item_mapp_tbl.ORG_TYPE_CODE[1]
+			, :v_req_item_mapp_tbl.ORG_CODE[1]
+			, :v_req_item_mapp_tbl.VENDOR_POOL_CODE[1]
+			, :v_req_item_mapp_tbl.VENDOR_POOL_LOCAL_NAME[1]
+			, :v_req_item_mapp_tbl.UPDATE_USER_ID[1]
+			, :v_req_item_mapp_tbl.UPDATE_USER_ID[1]
+	; /* Dynamic Exec End */
+
+	:O_TABLE.insert(('LOG', 'STEP-3 ['||:v_req_item_mapp_tbl.VENDOR_POOL_CODE[1]||'] ['||:v_req_item_mapp_tbl.ATTR_COL_NO[1]||'] ['||:v_req_item_mapp_tbl.VENDOR_POOL_LOCAL_NAME[1]||']'));
+
+	--SIGNAL v_usr_errcd SET MESSAGE_TEXT = 'STEP-3 error User Define Error Description.';
+
+	v_tenant_id := :v_req_item_mapp_tbl.TENANT_ID[1];
+	v_company_code := :v_req_item_mapp_tbl.COMPANY_CODE[1];
+	v_org_type_code := :v_req_item_mapp_tbl.ORG_TYPE_CODE[1];
+	v_org_code := :v_req_item_mapp_tbl.ORG_CODE[1];
+	v_vendor_pool_code := :v_req_item_mapp_tbl.VENDOR_POOL_CODE[1];
+	v_spmd_category_code := :v_req_item_mapp_tbl.SPMD_CATEGORY_CODE[1];
+	v_spmd_character_code := :v_req_item_mapp_tbl.SPMD_CHARACTER_CODE[1];
+	v_spmd_character_serial_no := :v_req_item_mapp_tbl.SPMD_CHARACTER_SERIAL_NO[1];
+	v_update_user_id := :v_req_item_mapp_tbl.UPDATE_USER_ID[1];
+
+	-- MAPPING ATTR 등록
+	INSERT INTO PG_MD_VP_ITEM_MAPPING_ATTR (
+		TENANT_ID
+		, COMPANY_CODE
+		, ORG_TYPE_CODE
+		, ORG_CODE
+		, VENDOR_POOL_CODE
+		, SPMD_CATEGORY_CODE
+		, SPMD_CHARACTER_CODE
+		, SPMD_CHARACTER_SERIAL_NO
+
+		, LOCAL_CREATE_DTM
+		, LOCAL_UPDATE_DTM
+		, CREATE_USER_ID
+		, UPDATE_USER_ID
+		, SYSTEM_CREATE_DTM
+		, SYSTEM_UPDATE_DTM
+	) VALUES (
+		  :v_tenant_id
+		, :v_company_code
+		, :v_org_type_code
+		, :v_org_code
+		, :v_vendor_pool_code
+		, :v_spmd_category_code
+		, :v_spmd_character_code
+		, :v_spmd_character_serial_no
+
+		, CURRENT_TIMESTAMP
+		, CURRENT_TIMESTAMP
+		, :v_update_user_id
+		, :v_update_user_id
+		, CURRENT_TIMESTAMP
+		, CURRENT_TIMESTAMP
+	);
+
+	
+    :O_TABLE.delete();
+    
+	:O_TABLE.insert(('00000', 'Procedure Success...'));
+
 END;

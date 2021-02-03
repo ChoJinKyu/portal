@@ -1,0 +1,94 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout" displayBlock="true"
+    xmlns:richtexteditor="sap.ui.richtexteditor"
+	xmlns:core="sap.ui.core">
+
+    <VBox id="ucUcQuotationSupEditBox">
+
+        <form:SimpleForm id="ucUcQuotationSupForm1Edit" editable="true"> 
+            <VBox alignContent="Center" alignItems="Stretch"> 
+                <Label text="* 공사명" required="true" design="Bold" class="sapMLabelNoText"/>
+                <Input value="{
+                    path: 'master>/const_name',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        maxLength: 200
+                    }
+                }" required="true" editable="true" width="100%"/>
+            </VBox>
+        </form:SimpleForm>
+
+        <form:SimpleForm id="ucUcQuotationSupForm2Edit" editable="true">
+
+            <VBox alignContent="Center">
+                <Label text="* 대분류(공종)" design="Bold" class="sapMLabelNoText" />
+                <ComboBox   
+                                id="searchEpItemCode"
+                                placeholder="All"
+                                showSecondaryValues= "true"
+                                selectionChange=".onTenantChange"
+                                selectedKey="{master>/ep_item_code}"
+                                items="{
+                                    path: '/ItemClassView'
+                                }"
+                            >
+                               <core:ListItem 
+                                    key="{code}" 
+                                    text="{name}"/>
+                            </ComboBox>
+                <layoutData>
+                    <layout:GridData span="XL6 L6 M6 S12" />
+                </layoutData>    
+            </VBox>        
+
+            <VBox alignContent="Center">
+                <Label text="* 공사기간" design="Bold" class="sapMLabelNoText"/>
+                <!-- <DatePicker placeholder="Start Date ..." id="searchFromDatePicker"/> -->
+                <DatePicker placeholder="Date" id="searchFromDatePicker" value="{path: 'master>/const_start_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+
+                <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                <!-- <DatePicker placeholder="End Date ..." id="searchToDatePicker"/>   -->
+                <DatePicker placeholder="Date" id="searchToDatePicker" value="{path: 'master>/const_end_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+                
+                <layoutData>
+                    <layout:GridData span="XL6 L6 M6 S12" />
+                </layoutData>     
+            </VBox> 
+                               
+        </form:SimpleForm>
+
+        <form:SimpleForm id="ucUcQuotationSupForm3Edit" editable="true">
+
+            <VBox alignContent="Center">
+                <Label text="* 물량검토자" design="Bold" class="sapMLabelNoText"/>
+                <Text text="{master>/const_person_empno}" />  
+                <layoutData>
+                    <layout:GridData span="XL6 L6 M6 S12" />
+                </layoutData>     
+            </VBox>
+            
+            <VBox alignContent="Center">
+                <Label text="* 구매담당자" design="Bold" class="sapMLabelNoText"/>
+                <Text text="{master>/const_person_empno}" />  
+                <layoutData>
+                    <layout:GridData span="XL6 L6 M6 S12" />
+                </layoutData>     
+            </VBox>
+                               
+        </form:SimpleForm>
+
+        <form:SimpleForm id="ucUcQuotationSupForm4Edit" editable="true"> 
+            <VBox alignContent="Center" alignItems="Stretch"> 
+                <Label  text="* 비고" 
+                            design="Bold" 
+                            class="sapUiSmallMarginBottom"/>
+                <TextArea value="{master>/remark}" rows="8" width="100%" />            
+            </VBox>
+        </form:SimpleForm>    
+
+    </VBox>
+
+</core:FragmentDefinition>

@@ -1,101 +1,96 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
     "ext/lib/util/Multilingual",
-    "sap/ui/core/routing/History",
-    "sap/ui/model/json/JSONModel",
+    "ext/lib/model/TransactionManager",
     "ext/lib/model/ManagedListModel",
+    "ext/lib/util/Validator",
+    "sap/ui/model/json/JSONModel",
     "ext/lib/formatter/DateFormatter",
-    "sap/m/TablePersoController",
+    "sap/ui/table/TablePersoController",
     "./MainListPersoService",
+    "sap/ui/core/Fragment",
+    "ext/lib/formatter/NumberFormatter",
+    "sap/ui/model/Sorter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    'sap/ui/model/Sorter',
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-    "sap/m/ColumnListItem",
-    "sap/m/ObjectIdentifier",
+    "sap/m/Dialog",
+    "sap/m/DialogType",
+    "sap/m/Button",
+    "sap/m/ButtonType",
     "sap/m/Text",
+    "sap/m/Label",
     "sap/m/Input",
-    "sap/m/ComboBox",
-    "sap/ui/core/Item",
-    'sap/m/Label',
-    'sap/m/Token',
-    'sap/m/SearchField',
-    "ext/lib/util/Validator"
-], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Label, Token, SearchField, Validator) {
+    "sap/m/VBox"
+], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
+    TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
+    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox) {
     "use strict";
+
+    var oTransactionManager;
 
     return BaseController.extend("ep.po.loiRequestMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
-
+        numberFormatter: NumberFormatter,
         validator: new Validator(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
 
-        /**
-         * Called when the mainList controller is instantiated.
-         * @public
-         */
+		/**
+		 * Called when the mainList controller is instantiated.
+		 * @public
+		 */
         onInit: function () {
-
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-            this.setModel(new ManagedListModel(), "list");
-            this.setModel(new JSONModel(), "mainListViewModel");
-             //this.setModel(oViewModel, "mainListView");
+            //this.setModel(new ManagedListModel(), "list");
+            this.setModel(new JSONModel(), "listModel");
+            //this.setModel(new JSONModel(), "mainListViewModel");
 
-            this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+            // this.setModel(new JSONModel(), "listModel");
 
-            // this._oTPC = new TablePersoController({
-            //     customDataKey: "loiRequestMgt",
-            //     persoService: MainListPersoService
-            // }).setTable(this.byId("mainTable"));
+            // this.setModel(new JSONModel(), "loiVos");
+            // this.setModel(new JSONModel(), "loiRfq");
+            // this.setModel(new JSONModel(), "loiRmk");
 
-            this._doInitTablePerso();
+            // oMultilingual.attachEvent("ready", function(oEvent){
+            // 	var oi18nModel = oEvent.getParameter("model");
+            // 	this.addHistoryEntry({
+            // 		title: oi18nModel.getText("/CONTROL_OPTION_MANAGEMENT"),   //제어옵션관리
+            // 		icon: "sap-icon://table-view",
+            // 		intent: "#Template-display"
+            // 	}, true);
+            // }.bind(this));
 
-            /** Date */
+            //this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+            this.getRouter().getRoute("mainPage").attachPatternMatched(this.onSearch, this);
+
+            this._oTPC = new TablePersoController({
+                customDataKey: "loiRequestMgt",
+                persoService: MainListPersoService
+            }).setTable(this.byId("mainTable"));
+
+            this.enableMessagePopover();
+
             var today = new Date();
-            //this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
-            //this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-            //this.getView().byId("searchRequestDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
-            //this.getView().byId("searchRequestDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+
+            // this.getView().byId("searchConstDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
+            // this.getView().byId("searchConstDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+
+        },
+
+        onSearch: function () {
             
+            var aSearchFilters = this._getSearchStates();
+            this._applySearch(aSearchFilters);
         },
 
         onRenderedFirst: function () {
             this.byId("pageSearchButton").firePress();
-        },
-
-
-        /* =========================================================== */
-        /* event handlers                                              */
-        /* =========================================================== */
-
-		/**
-		 * Triggered by the table's 'updateFinished' event: after new table
-		 * data is available, this handler method updates the table counter.
-		 * This should only happen if the update was successful, which is
-		 * why this handler is attached to 'updateFinished' and not to the
-		 * table's list binding's 'dataReceived' method.
-		 * @param {sap.ui.base.Event} oEvent the update finished event
-		 * @public
-		 */
-        onMainTableUpdateFinished: function (oEvent) {
-            // update the mainList's object counter after the table update
-            var sTitle,
-                oTable = oEvent.getSource(),
-                iTotalItems = oEvent.getParameter("total");
-            // only update the counter if the length is final and
-            // the table is not empty
-            if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-                sTitle = this.getResourceBundle().getText("mainListTableTitleCount", [iTotalItems]);
-            } else {
-                sTitle = this.getResourceBundle().getText("mainListTableTitle");
-            }
-            this.getModel("mainListViewModel").setProperty("/mainListTableTitle", sTitle);
         },
 
 		/**
@@ -118,21 +113,6 @@ sap.ui.define([
         },
 
 		/**
-		 * Event handler when a table add button pressed
-		 * @param {sap.ui.base.Event} oEvent
-		 * @public
-		 */
-        onMainTableAddButtonPress: function () {
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-            this.getRouter().navTo("midPage", {
-                layout: oNextUIState.layout,
-                tenantId: "new",
-                companyCode: "new",
-                loiWriteNumber: "new"
-            });
-        },
-
-		/**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
 		 * @public
@@ -145,62 +125,59 @@ sap.ui.define([
                 // refresh the list binding.
                 this.onRefresh();
             } else {
-                //this.validator.validate( this.byId('pageSearchFormE'));
-                //if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
-                
                 var aSearchFilters = this._getSearchStates();
+                //var aSorter = this._getSorter();
                 this._applySearch(aSearchFilters);
             }
         },
 
-		/**
-		 * Event handler when pressed the item of table
+        /**
+		 * Event handler when a table add button pressed
 		 * @param {sap.ui.base.Event} oEvent
 		 * @public
 		 */
-        onMainTableItemPress: function (oEvent) {
-            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-                sPath = oEvent.getSource().getBindingContext("list").getPath(),
-                oRecord = this.getModel("list").getProperty(sPath);
-
-            this.getRouter().navTo("midPage", {
-                layout: oNextUIState.layout,
-                tenantId: oRecord.tenant_id,
-                companyCode: oRecord.company_code,
-                loiWriteNumber: oRecord.loi_write_number
-            });
-
-             if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
-                 this.getView().getModel('mainListViewModel').setProperty("/headerExpandFlag", false);
-             }
-
-            var oItem = oEvent.getSource();
-            oItem.setNavigated(true);
-            var oParent = oItem.getParent();
-            // store index of the item clicked, which can be used later in the columnResize event
-            this.iIndex = oParent.indexOfItem(oItem);
-
+        onMainTableAddButtonPress: function () {
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+            this.getRouter().navTo("requestPage", {
+                //layout: oNextUIState.layout,
+                tenantId: "new",
+                companyCode: "new",
+                loiWriteNumber: "new"
+            });  
         },
+
+        /**
+         * Cell 클릭 후 상세화면으로 이동
+         */
+        onCellClickPress: function(oEvent) {
+            this._goDetailView(oEvent);
+        },
+
+        _goDetailView: function(oEvent){
+
+            var oView = this.getView();
+            var oTable = oView.byId("mainTable"),
+                oModel = this.getView().getModel("list");
+            var rowData = oEvent.getParameter('rowBindingContext').getObject();
+
+            console.log("####rowData====", rowData);
+
+            this.getRouter().navTo("requestPage", {
+                //layout: oNextUIState.layout,
+                tenantId: rowData.tenant_id,
+                companyCode: rowData.company_code,
+                loiWriteNumber: rowData.loi_write_number
+            }, true);
+        },
+
+
+
+
 
         /* =========================================================== */
         /* internal methods                                            */
         /* =========================================================== */
 
-		/**
-		 * When it routed to this page from the other page.
-		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
-		 * @private
-		 */
-        _onRoutedThisPage: function () {
-            console.log("_onRoutedThisPage main");
-            //this.getModel("mainListView").setProperty("/headerExpanded", true);
-            //this.byId("pageSearchButton").firePress();
-
-            this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
-
-            var aSearchFilters = this._getSearchStates();
-            this._applySearch(aSearchFilters);
-        },
 
 		/**
 		 * Internal helper method to apply both filter and search state together on the list binding
@@ -208,11 +185,16 @@ sap.ui.define([
 		 * @private
 		 */
         _applySearch: function (aSearchFilters) {
-            var oView = this.getView(),
-                oModel = this.getModel("list");
-            oView.setBusy(true);
-            oModel.setTransactionModel(this.getModel());
+            // var oView = this.getView(),
+            //     oModel = this.getModel("list"),
+            //     that = this;
 
+            var oView = this.getView();
+            //var oListModel = this.getModel("listModel");
+            var oModel = this.getModel();
+            oView.setBusy(true);
+
+            // Master 조회
             oModel.read("/LOIRequestListView", {
                 filters: aSearchFilters,
                 sorters: [
@@ -220,10 +202,25 @@ sap.ui.define([
                     new Sorter("loi_number", true)
                 ],
                 success: function (oData) {
+                    console.log("oData====", oData);
+                    oView.getModel("listModel").setData(oData.results);
                     oView.setBusy(false);
-
                 }
             });
+            // oView.setBusy(true);
+            // oModel.setTransactionModel(this.getModel());
+            // oModel.read("/UcQuotationListView", {
+            //     filters: aSearchFilters,
+            //     sorters: aSorter,
+            //     success: function (oData) {
+            //         console.log("oData====", oData);
+            //         var oTable = that.byId("mainTable");
+            //         oTable.clearSelection();
+            //         oView.setBusy(false);
+            //     }
+            // });
+            // oModel.setSizeLimit(500);
+            
 
             oView.setBusy(true);
         },
@@ -233,7 +230,7 @@ sap.ui.define([
             //var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
 
 
-             var oFilterModel = this.getModel("list"),
+             var oFilterModel = this.getModel("listModel"),
                 oFilterModelData = oFilterModel.getData();
 
             var loiNumberTokens = this.getView().byId("searchLoiNumberS").getTokens();
@@ -284,51 +281,11 @@ sap.ui.define([
             return aSearchFilters;
         },
 
-
-        onStatusSelectionChange: function (oEvent) {
-            //var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
-            //    seSurffix = sSurffix === "E" ? "S" : "E",
-            var oSearchStatus = this.getView().byId("searchStatus");
-
-            oSearchStatus.setSelectedKey(oEvent.getParameter("item").getKey());
-        },
-
-        _doInitTablePerso: function () {
-            // init and activate controller
-            this._oTPC = new TablePersoController({
-                table: this.byId("mainTable"),
-                componentName: "loiRequestMgt",
-                persoService: MainListPersoService,
-                hasGrouping: true
-            }).activate();
-        },
-
-        creationDateChange: function (oEvent) {
-            // var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
-            //     seSurffix = sSurffix === "E" ? "S" : "E"
-
-            var sFrom = oEvent.getParameter("from");
-            var sTo = oEvent.getParameter("to");
-
-            this.getView().byId("searchRequestDateS").setDateValue(sFrom);
-            this.getView().byId("searchRequestDateS").setSecondDateValue(sTo);
-        },
-
-
-
-
-        getFormatDate : function (date) {
-
-            if(!date){
-                return '';
-            }
-
-            var year = date.getFullYear();              //yyyy
-            var month = (1 + date.getMonth());          //M
-            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
-            var day = date.getDate();                   //d
-            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
-            return  year + '-' + month + '-' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        _getSorter: function () {
+            var aSorter = [];
+            aSorter.push(new Sorter("const_quotation_number", true));
+            //var aSorter = new Sorter("system_create_dtm", true);    
+            return aSorter;
         }
 
     });

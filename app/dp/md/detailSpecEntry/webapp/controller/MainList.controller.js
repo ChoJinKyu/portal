@@ -104,7 +104,7 @@ sap.ui.define([
             
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
                                     new Filter("company_code", FilterOperator.EQ, companyCode)
                                 ],
                                 and: true
@@ -250,30 +250,7 @@ sap.ui.define([
             
             var self = this;
             var oModel = this.getModel('orgMap');
-            oModel.setTransactionModel(this.getModel('purOrg'));
-            // oModel.read("/Pur_Org_Type_Mapping", {
-            //     filters: [
-            //         new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
-            //         new Filter("process_type_code", FilterOperator.EQ, 'DP05') //금형 DP05
-            //     ],
-            //     success: function(oData){
-
-            //         var oModelDiv = self.getModel('division');
-            //         oModelDiv.setTransactionModel(self.getModel('purOrg'));
-            //         oModelDiv.read("/Pur_Operation_Org", {
-            //             filters: [
-            //                 new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
-            //                 new Filter("org_type_code", FilterOperator.EQ, oData.results[0].org_type_code)
-            //             ],
-            //             sorters: [
-            //                 new Sorter("org_code", false)
-            //             ],
-            //             success: function(oData){
-                            
-            //             }
-            //         });
-            //     }
-            // });
+            // oModel.setTransactionModel(this.getModel('purOrg'));
 		},
 
 		/**
@@ -408,14 +385,14 @@ sap.ui.define([
 
                     divisionFilters.push(new Filter({
                                 filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
                                     new Filter("company_code", FilterOperator.EQ, item.getKey() )
                                 ],
                                 and: true
                             }));
                 });
             }else{
-                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600' ));
+                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101' ));
             }
 
             var filter = new Filter({
@@ -523,7 +500,7 @@ sap.ui.define([
 
             this._oValueHelpDialog.getTableAsync().then(function (oTable) {
 
-                var _filter = new Filter("tenant_id", FilterOperator.EQ, 'L2600' );
+                var _filter = new Filter("tenant_id", FilterOperator.EQ, 'L2101' );
                 
                 oTable.setModel(this.getOwnerComponent().getModel());
                 oTable.setModel(this.oColModel, "columns");
@@ -607,7 +584,7 @@ sap.ui.define([
 				and: false
             }));
             
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2600' ));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101' ));
 
 			this._filterTable(new Filter({
 				filters: aFilters,

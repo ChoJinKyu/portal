@@ -66,6 +66,7 @@ sap.ui.define([
             this.getView().setModel(new ManagedListModel(), "assetTypeCodeList"); // Asset Type
             this.setModel(oViewModel, "budgetExecutionApprovalView"); //change
             this.getRouter().getRoute("budgetExecutionApproval").attachPatternMatched(this._onObjectMatched, this);//change  
+            this.process.setDrawProcessUI(this, "BudgetExecutionPress" , "A", 1);
         },
 
         /* =========================================================== */
@@ -90,7 +91,7 @@ sap.ui.define([
             //  } else {
 
             schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
             ];
             // this.getView().setModel(new ManagedModel(), "mdCommon");
             var md = this.getModel('mdCommon');
@@ -161,7 +162,7 @@ sap.ui.define([
         _searchAssetType : function(parent_code,callback){ // 목록의 combo 조회  
 
            var aFilter = [new Filter("group_code", FilterOperator.EQ, 'DP_MD_ASSET_TYPE' )
-                , new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 , new Filter("parent_code", FilterOperator.EQ, parent_code)
             ];
             var oView = this.getView(),
@@ -180,7 +181,7 @@ sap.ui.define([
         },
         _searchImportCompany: function () {
             var nFilter = [
-                new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 , new Filter("company_code", FilterOperator.NE, this.company_code)
             ];
             // console.log("nFilter>>>>> " , nFilter);
@@ -211,7 +212,7 @@ sap.ui.define([
 
         _bindComboPlant: function (company_code) {
             var aFilter = [
-                new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 , new Filter("org_type_code", FilterOperator.EQ, 'PL')
                 , new Filter("company_code", FilterOperator.EQ, company_code)
             ];
@@ -276,7 +277,7 @@ sap.ui.define([
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
             var approval_number = mstModel.oData.approval_number;
             oModel.addRecord({
-                "tenant_id": "L2600",
+                "tenant_id": "L2101",
                 "mold_id": String(data.mold_id),
                 "approval_number": approval_number,
                 "model": data.model,
@@ -397,14 +398,15 @@ sap.ui.define([
             }
 
             var oView = this.getView();
-
+            var p = this.process;
             if (!this._oDialogPrev) {
                 this._oDialogPrev = Fragment.load({
                     id: oView.getId(),
                     name: "dp.md.moldApprovalList.view.BudgetExecutionApprovalPreView",
                     controller: this
-                }).then(function (oDialog) {
+                }).then(function (oDialog) { 
                     oView.addDependent(oDialog);
+                    p.setDrawProcessUI(this, "BudgetExecutionPressPrev" , "A", 1);
                     return oDialog;
                 }.bind(this));
             }
@@ -439,7 +441,8 @@ sap.ui.define([
         },
         onPageRequestCancelButtonPress: function () {
             this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // 요청취소 
-            this._budgetExecutionDataSetting();
+            this.approvalRequestCancel(); 
+          //  this._budgetExecutionDataSetting();
         },
         _budgetExecutionDataSetting: function () {
             this.approval_type_code = "B";
@@ -473,6 +476,42 @@ sap.ui.define([
             }
 
             var that = this;
+
+            // 삭제 row 먼저 추가되어야 데이터가 정상 저장됨 
+            if (bModel._aRemovedRows.length > 0) {
+                bModel._aRemovedRows.forEach(function (item) {
+                    that.approvalDetails_data.push({
+                        tenant_id: that.tenant_id
+                        , approval_number: that.approval_number
+                        , mold_id: item.mold_id
+                        , _row_state_: "D"
+                    });
+                    that.moldMaster_data.push({
+                        tenant_id: that.tenant_id
+                        , mold_id: item.mold_id
+                        , account_code: account_code
+                        , investment_ecst_type_code: investment_ecst_type_code
+                        , acq_department_code: acq_department_code
+                        , accounting_department_code: accounting_department_code
+                        , import_company_code: import_company_code
+                        , project_code: project_code
+                        , import_company_org_code: import_company_org_code
+                        , mold_production_type_code: item.mold_production_type_code
+                        , mold_item_type_code: item.mold_item_type_code
+                        , provisional_budget_amount: item.provisional_budget_amount
+                        , asset_type_code: item.asset_type_code
+                        , _row_state_: "D"
+                    });
+                    that.asset_data.push({
+                        tenant_id: that.tenant_id
+                        , mold_id: item.mold_id
+                        , _row_state_: "D"
+                    });
+                });
+            }
+
+
+
 
             if (bModel.getData().ItemBudgetExecution != undefined && bModel.getData().ItemBudgetExecution.length > 0) {
 
@@ -521,37 +560,7 @@ sap.ui.define([
 
             }
 
-            if (bModel._aRemovedRows.length > 0) {
-                bModel._aRemovedRows.forEach(function (item) {
-                    that.approvalDetails_data.push({
-                        tenant_id: that.tenant_id
-                        , approval_number: that.approval_number
-                        , mold_id: item.mold_id
-                        , _row_state_: "D"
-                    });
-                    that.moldMaster_data.push({
-                        tenant_id: that.tenant_id
-                        , mold_id: item.mold_id
-                        , account_code: account_code
-                        , investment_ecst_type_code: investment_ecst_type_code
-                        , acq_department_code: acq_department_code
-                        , accounting_department_code: accounting_department_code
-                        , import_company_code: import_company_code
-                        , project_code: project_code
-                        , import_company_org_code: import_company_org_code
-                        , mold_production_type_code: item.mold_production_type_code
-                        , mold_item_type_code: item.mold_item_type_code
-                        , provisional_budget_amount: item.provisional_budget_amount
-                        , asset_type_code: item.asset_type_code
-                        , _row_state_: "D"
-                    });
-                    that.asset_data.push({
-                        tenant_id: that.tenant_id
-                        , mold_id: item.mold_id
-                        , _row_state_: "D"
-                    });
-                });
-            }
+           
             this._commonDataSettingAndSubmit();
         }
     });

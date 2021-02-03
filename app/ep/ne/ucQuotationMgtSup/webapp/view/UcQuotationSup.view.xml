@@ -1,0 +1,346 @@
+<mvc:View controllerName="ep.ne.ucQuotationMgtSup.controller.UcQuotationSup" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns="sap.m" 
+	xmlns:uxap="sap.uxap" 
+	xmlns:layout="sap.ui.layout" 
+    xmlns:form="sap.ui.layout.form"
+    xmlns:t="sap.ui.table"
+    xmlns:sc="sap.suite.ui.commons"
+	xmlns:core="sap.ui.core"
+    xmlns:richtexteditor="sap.ui.richtexteditor"
+	height="100%">
+
+	<uxap:ObjectPageLayout id="page"
+		toggleHeaderOnTitleClick="true"
+		alwaysShowContentHeader = "true"
+		preserveHeaderStateOnScroll="false"
+		headerContentPinnable="true"
+		isChildPage="true"
+		upperCaseAnchorBar="false"
+		showTitleInHeaderContent="true"
+		showEditHeaderButton="true" 
+		showFooter="false">
+     
+		<uxap:headerTitle>
+			<uxap:ObjectPageDynamicHeaderTitle>
+                <uxap:heading>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <Title text="[협력사]공사물량상세" wrapping="true" class="" />
+                    </HBox>
+                </uxap:heading>            
+				<!-- <uxap:expandedHeading>
+					<Title text="LOI 업체선정 품의" wrapping="true" />
+				</uxap:expandedHeading>
+				<uxap:snappedHeading>
+					<Title text="LOI 업체선정 품의" wrapping="true" />
+				</uxap:snappedHeading> -->
+                <uxap:navigationActions>
+					<!-- <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/> -->
+                </uxap:navigationActions>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+			<FlexBox wrap="Wrap" visible="true">
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <ObjectStatus
+                        title="견적서번호 "
+                        text="{midObjectViewModel>/viewConstQuotationNumber}"/>
+                    <ObjectStatus
+                        id="createUser"         
+                        title="작성자 "
+                        text="{master>/buyer_name}"/>
+				</layout:VerticalLayout>
+
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <ObjectStatus 
+                        id="createDate"
+                        title="작성일자 "
+                        text="{
+                                path: 'master>/quotation_write_date',
+                                formatter: '.dateFormatter.toUTCDateString'
+                            }" />
+
+                    <ObjectStatus
+                        id="createDepartment"
+                        title="단가운영단위(플랜트) "
+                        text="{master>/org_code}"/>
+                    </layout:VerticalLayout>
+
+                    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                        <Label text="Status :"/>
+                    <ObjectStatus
+                        class="sapMObjectStatusLarge"
+                        text="{master>/quotation_status_name}"
+                        state="Error" />
+                </layout:VerticalLayout>
+
+                <!-- <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <Label text="Process : "/>
+                    <HBox>
+                        <sc:MicroProcessFlow>
+                            <sc:content>
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                            </sc:content>
+                        </sc:MicroProcessFlow>
+                    </HBox>
+                    <HBox>
+                        <Text text="LOI요청"  width="4em" renderWhitespace="true" />
+                        <Text text=" LOI업체&#10; 선정"  width="4em" renderWhitespace="true" />
+                        <Text text="LOI발행" width="6em" textAlign="Center" />
+                        <Text text=" LOI발행&#10; 통보" renderWhitespace="true" />
+                    </HBox>
+                </layout:VerticalLayout>   -->
+
+			</FlexBox>
+		</uxap:headerContent>
+
+		<uxap:sections>
+			
+					
+                    <uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="기본정보">
+                        <uxap:subSections>
+                            <uxap:ObjectPageSubSection id="pageSubSection1">
+                            </uxap:ObjectPageSubSection>
+                        </uxap:subSections>
+                    </uxap:ObjectPageSection>
+
+                    <!-- 첨부파일 시작 -->
+                    <uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
+                        <uxap:subSections>
+                            <uxap:ObjectPageSubSection>
+                                <uxap:blocks>
+                                    <!-- File Upload 시작-->
+                                    <UploadCollection
+                                        id="UploadCollection"
+                                        maximumFilenameLength="55"
+                                        maximumFileSize="10"
+                                        multiple="true"
+                                        sameFilenameAllowed="true"
+                                        instantUpload="false"
+                                        noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                        change="onChange"
+                                        fileDeleted="onFileDeleted"
+                                        filenameLengthExceed="onFilenameLengthExceed"
+                                        fileSizeExceed="onFileSizeExceed"
+                                        typeMissmatch="onTypeMissmatch"
+                                        uploadComplete="onUploadComplete"
+                                        beforeUploadStarts="onBeforeUploadStarts" />
+                                    <!-- File Upload 끝-->
+                                </uxap:blocks>
+                            </uxap:ObjectPageSubSection>
+                        </uxap:subSections>
+                    </uxap:ObjectPageSection>
+                    <!-- 첨부파일 끝 -->
+                    
+                    <uxap:ObjectPageSection id="pageSectionMain2" titleUppercase="false" title="품목정보">
+				        <uxap:subSections>
+                    <uxap:ObjectPageSubSection id="pageSubSection2">
+                    <form:SimpleForm id="midObjectForm" editable="{midObjectViewModel>/isEditMode}">                    
+                        <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin"> 
+                            
+                            <t:Table id="mainTable"
+                            selectionMode="MultiToggle"
+                            rows="{
+                                path: 'details>/',
+                                sorter: { 
+                                    path: 'system_create_dtm',
+                                    descending: true 
+                                }                   
+                            }"
+                            cellClick=".onCellClick"
+                            rowSelectionChange=".onCheck"
+                            visibleRowCountMode="Auto"
+                            columnResize="onColumnResize">
+                            <t:extension>
+                                <OverflowToolbar class="sapFDynamicPageAlignContent">
+                                <!-- <Title text="업체선정결과 {= ${details>/}.length > 0 ? '(' + ${details>/}.length + ')' : ''}" level="H2"/> -->
+                                <ToolbarSpacer/>
+                                <Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress('mainTable', 'master')" />
+                                <!-- <Button text="exam"  press=".onVosButtonPress" /> -->
+								<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress('mainTable', 'details', 'LOIRequestDetailView')" />
+                                </OverflowToolbar>
+                            </t:extension>
+    
+                            <t:columns>
+                                <t:Column id="mainItemSequence" width="6rem" hAlign="Center">
+                                <Label text="품목순번" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>item_sequence}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainEpItemCode" width="8rem" hAlign="Center">
+                                <Label text="품목코드" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>ep_item_code}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainItemDesc" width="20rem"  hAlign="Left">
+                                <Label text="품목명" textAlign="Left" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>item_desc}" />
+                                </t:template>
+                                </t:Column> 
+                                <t:Column id="mainSpecDesc" width="20rem"  hAlign="Left">
+                                <Label text="규격" textAlign="Left" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>spec_desc}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainUnit" width="4rem" hAlign="Center">
+                                <Label text="단위" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>unit}"/>
+                                </t:template>
+                                </t:Column>
+                                
+                                <t:Column id="mainQuotationQuantity" width="4rem" hAlign="Center">
+                                <Label text="수량" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>quotation_quantity}"/>
+                                    <Input value="{
+                                                        path: 'details>quotation_quantity',
+                                                        type: 'sap.ui.model.type.Integer',
+                                                        constraints: {
+                                                            minimum: '0',
+                                                            maximum: '1000000000000'
+                                                        }
+                                                    }" textAlign="Right" 
+                                            liveChange=".onLiveChange"/>  
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainExtraRate" width="4rem" hAlign="Center">
+                                <Label text="할증" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>extra_rate}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainMaterialNetPrice" width="8rem" hAlign="Right">
+                                <Label text="자재단가" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Input value="{
+                                                        path: 'details>material_net_price',
+                                                        type: 'sap.ui.model.type.Integer',
+                                                        constraints: {
+                                                            minimum: '0',
+                                                            maximum: '1000000000000'
+                                                        }
+                                                    }" textAlign="Right" 
+                                            liveChange="._checkNumber"/>   
+                                    
+                                </t:template>
+                                </t:Column>  
+                                <t:Column id="mainMaterialAmount" width="8rem" hAlign="Right">
+                                <Label text="자재금액" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <!-- <Text text="{details>material_amount}"/> -->
+                                    <Text  text="{
+                                                    path: 'details>material_amount',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                }"
+                                                vAlign="Right"/> 
+                                </t:template>
+                                </t:Column>  
+                                <t:Column id="mainLaborNetPrice" width="8rem" hAlign="Right">
+                                <Label text="노무단가" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Input value="{
+                                                        path: 'details>labor_net_price',
+                                                        type: 'sap.ui.model.type.Integer',
+                                                        constraints: {
+                                                            minimum: '0',
+                                                            maximum: '1000000000000'
+                                                        }
+                                                    }" textAlign="Right" 
+                                            liveChange="._checkNumber"/>   
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="mainLaborAmount" width="8rem" hAlign="Right">
+                                <Label text="노무금액" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text  text="{
+                                                    path: 'details>labor_amount',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                }"
+                                                vAlign="Right"/> 
+                                     
+                                </t:template>
+                                </t:Column>  
+                                <t:Column id="mainSumAmount" width="8rem" hAlign="Right">
+                                <Label text="합계금액" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text  text="{
+                                                    path: 'details>sum_amount',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                }"
+                                                vAlign="Right"/> 
+                                </t:template>
+                                </t:Column>  
+                                <t:Column id="mainRemark" width="10rem" hAlign="Left">
+                                <Label text="비고" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{details>remark}"/>          
+                                </t:template>
+                                </t:Column> 
+                                
+                                <t:Column id="mainLoiPublishStatusCode" width="10rem" hAlign="Center">
+                                <Label text="단가계약그룹번호" textAlign="Center" width="100%" tooltip="LOI발행상태"/>
+                                <t:template>
+                                    <Text text="{details>net_price_contract_document_no}"/>
+                                </t:template>
+                                </t:Column> 
+                                
+                            </t:columns>
+                            </t:Table>
+
+                                            
+                        </VBox>
+                        </form:SimpleForm>                    
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+
+            <!-- 결재라인 시작 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="결재라인">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <!-- Approval & Reference 시작 -->
+                            <HBox>
+        
+                            </HBox>
+                            <!-- Approval & Reference 끝 -->
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- 결재라인 끝 -->
+
+		</uxap:sections>
+		
+		<uxap:footer>
+			<OverflowToolbar>
+                <Button
+                    icon="sap-icon://alert"
+                    type="Emphasized"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                    press=".onMessagePopoverPress" />
+				<ToolbarSpacer />
+                <Button id="pageEditButton" type="Transparent" text="Edit" press=".onPageEditButtonPress" />
+                <Button id="pageSaveButton" type="Emphasized" text="Draft" press=".onPageSaveButtonPress('D')" />
+                <Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
+                <Button id="pageDeleteButton" type="Transparent" text="Delete" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>                
+                <Button id="pageRequestButton" type="Emphasized" text="Request" press=".onPageSaveButtonPress('R')" />
+                <Button id="pageByPassButton" type="Emphasized" text="ByPass" press=".onPageSaveButtonPress('B')" />
+				
+			</OverflowToolbar>
+		</uxap:footer>
+	</uxap:ObjectPageLayout>
+</mvc:View>

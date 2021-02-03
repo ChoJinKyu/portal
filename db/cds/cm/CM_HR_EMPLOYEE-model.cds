@@ -20,6 +20,7 @@ entity Hr_Employee {
         nation_code         : String(30);
         locale_code         : String(30);
         department_id       : String(16) not null;
+        department_code     : String(50) not null;
 }
 
 extend Hr_Employee with util.Managed;

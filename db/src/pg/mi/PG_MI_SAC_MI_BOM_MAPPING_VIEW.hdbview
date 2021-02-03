@@ -13,7 +13,7 @@ VIEW PG_MI_SAC_MI_BOM_MAPPING_VIEW AS
             ,A.SUPPLIER_CODE                                                                    AS  SUPPLIER
             ,'#'                                                                                AS  SOURCE_CURRENCY
             ,'#'                                                                                AS  UOM
-            ,'#'                                                                                AS  MI_MATERIAL
+            ,E.MI_MATERIAL_CODE                                                                 AS  MI_MATERIAL
             ,'#'                                                                                AS  MI_INCOTERMS
             ,'#'                                                                                AS  EXCHANGE
             ,'#'                                                                                AS  NET_PRICE_CONFIRMED_TYPE
@@ -58,7 +58,10 @@ VIEW PG_MI_SAC_MI_BOM_MAPPING_VIEW AS
 								AND D1.EFFECTIVE_START_DATE  =  D3.EFFECTIVE_START_DATE
 					WHERE	D1.NET_PRICE_DOCUMENT_TYPE_CODE  =  'I'
                 	)  D
-                ON  A.TENANT_ID  =  D.TENANT_ID
-                AND A.MATERIAL_CODE  =  D.MATERIAL_CODE
-                AND A.SUPPLIER_CODE  =  D.SUPPLIER_CODE
+                	ON  A.TENANT_ID  =  D.TENANT_ID
+	                AND A.MATERIAL_CODE  =  D.MATERIAL_CODE
+	                AND A.SUPPLIER_CODE  =  D.SUPPLIER_CODE
+    			INNER  JOIN  PG_MI_MATERIAL_CODE_BOM_MNGT_ITEM  E
+    				ON	A.TENANT_ID  =  E.TENANT_ID
+    				AND A.MI_BOM_ID  =  E.MI_BOM_ID
     ;

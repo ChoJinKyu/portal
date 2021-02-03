@@ -23,14 +23,12 @@ entity Pd_Part_Base_Activity {
 extend Pd_Part_Base_Activity with util.Managed;	
 
 @cds.persistence.exists
-entity Pd_Part_Base_Activity_View {
+entity Pd_Part_Base_Activity_Category_Pop_View {
     key tenant_id             : String;
-    key activity_code         : String;
-        activity_name         : String;
-        description           : String;
+    key category_group_code   : String;
+    key category_code         : String;
+        category_name         : String;
+        path                  : String;
         sequence              : Decimal;
         active_flag           : Boolean;
-        update_user_id        : String;
-        local_update_dtm      : DateTime;
 }
-

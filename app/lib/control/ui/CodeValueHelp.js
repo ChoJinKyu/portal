@@ -16,18 +16,20 @@ sap.ui.define([
 ], function (Parent, Renderer, Multilingual, ValueHelpDialog, ODataV2ServiceProvider, Filter, FilterOperator, GridData, VBox, Column, Label, Text, Input, jQuery) {
     "use strict";
 
-    //TODO : Localization (Title)
     var CodeValueHelp = Parent.extend("ext.lib.control.ui.CodeValueHelp", {
 
         metadata: {
             properties: {
                 title: { type: "string", group: "Appearance" },
+                draggable: {type: "boolean", group: "Behavior", defaultValue: true },
+                loadWhenOpen: { type: "boolean", group: "Misc", defaultValue: true },
                 closeWhenApplied: { type: "boolean", group: "Misc", defaultValue: true },
                 multiSelection: { type: "boolean", group: "Misc", defaultValue: false },
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "35em"},
                 contentHeight: { type: "string", group: "Appearance" },
                 keyField: { type: "string", group: "Misc", defaultValue: "code" },
-                textField: { type: "string", group: "Misc", defaultValue: "code_name" }
+                textField: { type: "string", group: "Misc", defaultValue: "code_name" },
+                visibleRowCount: { type: "int", group: "Appearance", defaultValue: 7 }
             },
             defaultAggregation: "items",
             aggregations: {
@@ -60,12 +62,15 @@ sap.ui.define([
             this.oSearchKeyword.attachEvent("change", this.loadData.bind(this));
 
             this.oDialog = new ValueHelpDialog({
+                draggable: this.getProperty("draggable"),
                 closeWhenApplied: this.getProperty("closeWhenApplied"),
                 multiSelection: this.getProperty("multiSelection"),
+                visibleRowCount: this.getProperty("visibleRowCount"),
                 keyField: this.getProperty("keyField"),
                 textField: this.getProperty("textField"),
                 filters: this.createSearchFilters(),
-                columns: this.createTableColumns()
+                columns: this.createTableColumns(),
+                tableOptions: this.getTableOptions ? this.getTableOptions() : {}
             });
 
             this.oDialog.setTitle(this.getProperty("title"));
@@ -206,7 +211,9 @@ sap.ui.define([
                 this.openWasRequested = true;
                 return;
             }
-            this.loadData();
+            if(this.getProperty("loadWhenOpen") === true){
+                this.loadData();
+            }
             if(this.beforeOpen)
                 this.beforeOpen.call(this);
             this.oDialog.open();

@@ -12,7 +12,7 @@
     xmlns:block="dp.tc.projectMgt.blocks.mcstproject"
     height="100%">
 
-    <f:DynamicPage id="dpBomInfo" headerExpanded="true" showFooter="true" toggleHeaderOnTitleClick="true">
+    <f:DynamicPage id="dpBomInfo" headerExpanded="true" toggleHeaderOnTitleClick="true" class="sapUiSizeCompact">
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
@@ -174,10 +174,11 @@
 
         <f:content>
             <!--BOM List 시작-->
-            <t:Table id="tblBOMListTable" 
+            <t:Table id="tblPartListTable" 
                     noData="{I18N>/NCM01004}"
-                    rows="{partListModel>/results}"
+                    rows="{partListModel>/PartListView}"
                     selectionMode="MultiToggle"
+                    selectionBehavior="Row"
                     visibleRowCountMode="Auto"
                     columnResize=""
                     cellClick=""
@@ -185,16 +186,16 @@
                     width="auto">
                 <t:extension>
                     <OverflowToolbar>
-                        <Title text="{I18N>/BOM} {I18N>/LIST} {= ${partListModel>/results}.length || 0 }" level="H2"/>
+                        <Title text="{I18N>/BOM} {I18N>/LIST} ({= ${partListModel>/PartListView}.length || 0 })" level="H2"/>
                         <ToolbarSpacer/>
-                        <Button text="Add" type="Transparent" press="" />
-                        <Button text="Delete" type="Transparent" press="" />
-                        <Button text="Compare BOM" type="Transparent" press="" />
-                        <Button text="BOM Mapping" type="Transparent" press="" />
-                        <Button text="BOM Info." type="Transparent" press="" />
-                        <Button text="Draft" type="Transparent" press="" />
+                        <Button text="Add" type="Transparent" press=".onPartListAddButtonPress" />
+                        <Button text="Delete" type="Transparent" press=".onPartListDeleteButtonPress" />
+                        <Button text="Compare BOM" type="Transparent" press=".onCompareBomPress" />
+                        <Button text="BOM Mapping" type="Transparent" press=".onBomInfoMappingPress" />
+                        <Button text="BOM Info." type="Transparent" press=".onBomInfo" />
+                        <Button text="Draft" type="Transparent" press=".onDraftPress" />
                         <ToolbarSeparator/>
-                        <Button text="Search" type="Emphasized" press="" />
+                        <Button text="Search" type="Emphasized" press=".onSearchButtonPress" />
                         <Button text="Confirm &amp; Next" type="Emphasized" press="" />
                         <ToolbarSeparator/>
                         <Button icon="sap-icon://upload" press=""/>
@@ -216,7 +217,14 @@
                     <t:Column hAlign="Center" width="12%" >
                         <Label text="자재코드" required="true" />
                         <t:template>
-							<Text text="{partListModel>material_code}"/>
+                            <HBox justifyContent="Center">
+                                <Text text="{partListModel>material_code}" textAlign="Begin" visible="{= ${partListModel>_row_state_} === 'C' ? false : true }" />
+                                <Input placeholder="Choose codes from the ValueHelp"
+                                            value="{partListModel>material_code}"
+                                            showValueHelp="true"
+                                            valueHelpRequest=".onMaterialCodeValueHelpPress"
+                                            visible="{= ${partListModel>_row_state_} === 'C' ? true : false }" />
+                            </HBox>
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Left" width="auto" >
@@ -228,31 +236,68 @@
                     <t:Column hAlign="Center" width="10em" >
                         <Label text="단위" />
                         <t:template>
-							<Text text="{partListModel>uom_name}"/>
+                            <HBox justifyContent="Center">
+                                <Text text="{partListModel>uom_name}" textAlign="Center" visible="{= ${partListModel>_row_state_} === 'C' ? false : true }"/>
+                                <!-- <Input value="{partListModel>uom_name}" visible="{= ${partListModel>_row_state_} === 'C' ? true : false }"/> -->
+                                <ComboBox
+                                    width="100%"
+                                    selectedKey="{partListModel>uom_code}"
+                                    visible="{= ${partListModel>_row_state_} === 'C' ? true : false }"
+                                    items="{
+                                        path: '/MM_UOM',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        ],
+                                        sorter: { path: 'uom_name'}
+                                    }">
+                                    <items>
+                                        <core:Item key="{uom_code}" text="{uom_name}" />
+                                    </items>
+                                </ComboBox>
+                            </HBox>
 						</t:template>
                     </t:Column>
-                    <t:Column hAlign="Center" width="10em" >
-                        <Label text="소요량" />
+                    <t:Column hAlign="End" width="10em" >
+                        <Label text="소요량" textAlign="Center" width="100%" />
                         <t:template>
-							<Text text="{partListModel>material_reqm_quantity}"/>
+                            <HBox justifyContent="End">
+                                <Text text="{
+                                        path : 'partListModel>material_reqm_quantity',
+                                        formatter : '.numberFormatter.toNumberString'
+                                      }"
+                                    textAlign="End" visible="{= ${partListModel>_row_state_} === 'C' ? false : true }"/>
+                                <Input value="{partListModel>material_reqm_quantity}" visible="{= ${partListModel>_row_state_} === 'C' ? true : false }"/>
+                            </HBox>
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="15em" >
                         <Label text="변경정보" />
                         <t:template>
-                            <Text text="{partListModel>change_info_text}"/>
+                            <tnt:InfoLabel
+                                text="{partListModel>change_info_text}"
+                                visible="{= ${partListModel>change_info_text} ? true : false }"
+                                renderMode = "Narrow"
+                                displayOnly="true"
+                                colorScheme= "{= ${partListModel>change_info_text} === 'New' || ${partListModel>change_info_text} === 'Old' ? 1 :  ${partListModel>change_info_text} === 'Add' ? 9 : 3}"
+                            />
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="10%" >
                         <Label text="소요량 차이&#10;&#13;(목표 比)" />
                         <t:template>
-                            <Text text="{partListModel>material_reqm_diff_quantity}"/>
+                            <HBox>
+                                <Text text="{partListModel>material_reqm_diff_quantity}"/>
+                            </HBox>
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="15%" >
                         <Label text="Mapping Info." />
                         <t:template>
-                            <Text text="{partListModel>change_info_text}"/>
+                            <!-- <Text text="{partListModel>eng_change_number}"/> -->
+                            <Link
+                                text="{partListModel>eng_change_number}"
+                                emphasized="true"
+                                press=".onChangeNumberLinkPress" />
 						</t:template>
                     </t:Column>
                 </t:columns>
@@ -260,14 +305,6 @@
             <!--BOM List 끝-->
         </f:content>
 
-        <f:footer>
-            <OverflowToolbar>
-                <ToolbarSpacer />
-                    <Button type="Transparent" text="{I18N>/CANCEL}" press=".onReadPress" class="sapUiSmallMarginEnd" visible="{detailModel>/mode/editMode}"/>
-                    <Button type="Transparent" text="{I18N>/UPDATE}" press=".onEditPress" class="sapUiSmallMarginEnd" enabled="{detailModel>/mode/readMode}"/>
-                    <Button type="Emphasized"  text="{I18N>/SAVE}"  press=".onSavePress" class="sapUiSmallMarginEnd" visible="{detailModel>/mode/editMode}"/>
-            </OverflowToolbar>
-        </f:footer>
     </f:DynamicPage>
 
 </mvc:View>

@@ -13,4 +13,5 @@ entity CC_CONFIG004
     SCR_COL_DP_TYPE :String(2) not null @title: '화면항목보기유형' ;
     SCR_COL_DP_SIZE :Integer64 null @title: '화면항목보기크기' ;
     SCR_COL_DEFALT :String(50) null @title: '화면항목기본값' ;
+    SCR_COL_ADTNL_OPTNS :String(1000) null @title: '화면항목추가옵션';
 }

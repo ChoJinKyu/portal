@@ -1,0 +1,275 @@
+procedure sp_sm_ust_maker_rgstn_req_proc( 
+    in  i_tenant_id                 nvarchar(5),
+	in	i_table_maker               table (
+											tenant_id                   nvarchar(5),
+											maker_request_sequence      bigint,
+											maker_request_type_code     nvarchar(30),
+											maker_progress_status_code	nvarchar(30),
+											requestor_empno             nvarchar(30),
+											tax_id                      nvarchar(30),
+											supplier_code               nvarchar(10),
+											supplier_local_name         nvarchar(240),
+											supplier_english_name      	nvarchar(240),
+											country_code               	nvarchar(2),
+											country_name               	nvarchar(30),
+											vat_number                 	nvarchar(30),
+											zip_code                   	nvarchar(20),
+											local_address_1            	nvarchar(240),
+											local_address_2            	nvarchar(240),
+											local_address_3            	nvarchar(240),
+											local_full_address         	nvarchar(1000),
+											english_address_1          	nvarchar(240),
+											english_address_2          	nvarchar(240),
+											english_address_3          	nvarchar(240),
+											english_full_address       	nvarchar(1000),
+											affiliate_code             	nvarchar(10),
+											affiliate_code_name        	nvarchar(50),
+											company_class_code         	nvarchar(30),
+											company_class_name         	nvarchar(50),
+											repre_name                 	nvarchar(30),
+											tel_number                 	nvarchar(50),
+											email_address              	nvarchar(240),
+											supplier_status_code       	nvarchar(30),
+											supplier_status_name       	nvarchar(50),
+											biz_certi_attch_number     	nvarchar(100),
+											attch_number_2             	nvarchar(100),
+											attch_number_3             	nvarchar(100),
+											local_create_dtm           	timestamp,
+											local_update_dtm           	timestamp,
+											create_user_id             	nvarchar(255),
+											update_user_id             	nvarchar(255),
+											system_create_dtm          	timestamp,
+											system_update_dtm          	timestamp
+									),
+	out o_table_message				sp_sm_proc_out_type
+)
+   language sqlscript
+   sql security invoker
+--    reads sql data 
+as
+begin
+
+    declare lv_max_seq                      integer default 0;
+
+    declare lv_tenant_id                    nvarchar(5) default '';
+    declare lv_maker_request_sequence       integer default 0;
+
+    declare lv_sourcemaker_rgstn_req_count  integer default 0;
+
+-- rollback message
+	declare exit handler for sqlexception
+		begin
+			rollback;
+			o_table_message = select 'NG' as returncode, ::sql_error_code||'-'||::sql_error_message as returnmessage from dummy;
+        end;
+
+-- Max Sequence
+    select  ifnull(max(maker_request_sequence), 0) + 1 as max_maker_request_sequence
+    into    lv_max_seq
+    from    sp_sm_maker_request
+    where   tenant_id = :i_tenant_id
+    ;
+
+-- tenant_id
+    select  tenant_id
+    into    lv_tenant_id
+    from    :i_table_maker
+    ;
+
+-- maker_request_sequence
+    select  ifnull(maker_request_sequence, 0) as maker_request_sequence
+    into    lv_maker_request_sequence
+    from    :i_table_maker
+    ;
+
+-- maker request table
+	o_table_maker_request =
+		select
+                ifnull(maker_request.tenant_id, '')							as tenant_id,
+				ifnull(maker_request.maker_request_sequence, lv_max_seq)	as maker_request_sequence,
+				ifnull(maker_request.maker_request_type_code, '')			as maker_request_type_code,
+				ifnull(maker_request.maker_progress_status_code, '')		as maker_progress_status_code,
+				ifnull(maker_request.requestor_empno, '')					as requestor_empno,
+				ifnull(maker_request.tax_id, '')							as tax_id,
+				ifnull(maker_request.supplier_code, '')						as supplier_code,
+				ifnull(maker_request.supplier_local_name, '')				as supplier_local_name,
+				ifnull(maker_request.supplier_english_name, '')				as supplier_english_name,
+				ifnull(maker_request.country_code, '')						as country_code,
+				ifnull(maker_request.country_name, '')						as country_name,
+				ifnull(maker_request.vat_number, '')						as vat_number,
+				ifnull(maker_request.zip_code, '')							as zip_code,
+				ifnull(maker_request.local_address_1, '')					as local_address_1,
+				ifnull(maker_request.local_address_2, '')					as local_address_2,
+				ifnull(maker_request.local_address_3, '')					as local_address_3,
+				ifnull(maker_request.local_full_address, '')				as local_full_address,
+				ifnull(maker_request.english_address_1, '')					as english_address_1,
+				ifnull(maker_request.english_address_2, '')					as english_address_2,
+				ifnull(maker_request.english_address_3, '')					as english_address_3,
+				ifnull(maker_request.english_full_address, '')				as english_full_address,
+				ifnull(maker_request.affiliate_code, '')					as affiliate_code,
+				ifnull(maker_request.affiliate_code_name, '')				as affiliate_code_name,
+				ifnull(maker_request.company_class_code, '')				as company_class_code,
+				ifnull(maker_request.company_class_name, '')				as company_class_name,
+				ifnull(maker_request.repre_name, '')						as repre_name,
+				ifnull(maker_request.tel_number, '')						as tel_number,
+				ifnull(maker_request.email_address, '')						as email_address,
+				ifnull(maker_request.supplier_status_code, '')				as supplier_status_code,
+				ifnull(maker_request.supplier_status_name, '')				as supplier_status_name,
+				ifnull(maker_request.biz_certi_attch_number, '')			as biz_certi_attch_number,
+				ifnull(maker_request.attch_number_2, '')					as attch_number_2,
+				ifnull(maker_request.attch_number_3, '')					as attch_number_3,
+				ifnull(maker_request.local_create_dtm, '')					as local_create_dtm,
+				ifnull(maker_request.local_update_dtm, '')					as local_update_dtm,
+				ifnull(maker_request.create_user_id, '')					as create_user_id,
+				ifnull(maker_request.update_user_id, '')					as update_user_id,
+				ifnull(maker_request.system_create_dtm, '')					as system_create_dtm,
+				ifnull(maker_request.system_update_dtm, '')					as system_update_dtm
+        from	:i_table_maker maker_request
+    ;
+
+    select  count(tenant_id)
+    into    lv_sourcemaker_rgstn_req_count
+    from    :i_table_maker
+    where   tenant_id is not null
+    ;
+
+    if :lv_sourcemaker_rgstn_req_count <= 0 then
+        rollback;
+	else
+		merge into	sp_sm_maker_request		as t_maker_tab
+			using	:o_table_maker_request	as s_maker_tab
+			on		t_maker_tab.tenant_id				= s_maker_tab.tenant_id
+			and		t_maker_tab.maker_request_sequence	= s_maker_tab.maker_request_sequence
+
+		when matched then
+			update set
+				t_maker_tab.maker_request_type_code		= s_maker_tab.maker_request_type_code,
+				t_maker_tab.maker_progress_status_code	= s_maker_tab.maker_progress_status_code,
+				t_maker_tab.requestor_empno				= s_maker_tab.requestor_empno,
+				t_maker_tab.tax_id						= s_maker_tab.tax_id,
+				t_maker_tab.supplier_code				= s_maker_tab.supplier_code,
+				t_maker_tab.supplier_local_name			= s_maker_tab.supplier_local_name,
+				t_maker_tab.supplier_english_name		= s_maker_tab.supplier_english_name,
+				t_maker_tab.country_code				= s_maker_tab.country_code,
+				t_maker_tab.country_name				= s_maker_tab.country_name,
+				t_maker_tab.vat_number					= s_maker_tab.vat_number,
+				t_maker_tab.zip_code					= s_maker_tab.zip_code,
+				t_maker_tab.local_address_1				= s_maker_tab.local_address_1,
+				t_maker_tab.local_address_2				= s_maker_tab.local_address_2,
+				t_maker_tab.local_address_3				= s_maker_tab.local_address_3,
+				t_maker_tab.local_full_address			= s_maker_tab.local_full_address,
+				t_maker_tab.english_address_1			= s_maker_tab.english_address_1,
+				t_maker_tab.english_address_2			= s_maker_tab.english_address_2,
+				t_maker_tab.english_address_3			= s_maker_tab.english_address_3,
+				t_maker_tab.english_full_address		= s_maker_tab.english_full_address,
+				t_maker_tab.affiliate_code				= s_maker_tab.affiliate_code,
+				t_maker_tab.affiliate_code_name			= s_maker_tab.affiliate_code_name,
+				t_maker_tab.company_class_code			= s_maker_tab.company_class_code,
+				t_maker_tab.company_class_name			= s_maker_tab.company_class_name,
+				t_maker_tab.repre_name					= s_maker_tab.repre_name,
+				t_maker_tab.tel_number					= s_maker_tab.tel_number,
+				t_maker_tab.email_address				= s_maker_tab.email_address,
+				t_maker_tab.supplier_status_code		= s_maker_tab.supplier_status_code,
+				t_maker_tab.supplier_status_name		= s_maker_tab.supplier_status_name,
+				t_maker_tab.biz_certi_attch_number		= s_maker_tab.biz_certi_attch_number,
+				t_maker_tab.attch_number_2				= s_maker_tab.attch_number_2,
+				t_maker_tab.attch_number_3				= s_maker_tab.attch_number_3,
+				t_maker_tab.local_update_dtm			= current_timestamp,
+				t_maker_tab.update_user_id				= trim(session_context('APPLICATIONUSER')),
+				t_maker_tab.system_update_dtm			= current_timestamp
+
+		when not matched then
+			insert
+			(
+				tenant_id,
+				maker_request_sequence,
+				maker_request_type_code,
+				maker_progress_status_code,
+				requestor_empno,
+				tax_id,
+				supplier_code,
+				supplier_local_name,
+				supplier_english_name,
+				country_code,
+				country_name,
+				vat_number,
+				zip_code,
+				local_address_1,
+				local_address_2,
+				local_address_3,
+				local_full_address,
+				english_address_1,
+				english_address_2,
+				english_address_3,
+				english_full_address,
+				affiliate_code,
+				affiliate_code_name,
+				company_class_code,
+				company_class_name,
+				repre_name,
+				tel_number,
+				email_address,
+				supplier_status_code,
+				supplier_status_name,
+				biz_certi_attch_number,
+				attch_number_2,
+				attch_number_3,
+				local_create_dtm,
+				local_update_dtm,
+				create_user_id,
+				update_user_id,
+				system_create_dtm,
+				system_update_dtm
+			)
+			values
+			(
+                s_maker_tab.tenant_id,
+                s_maker_tab.maker_request_sequence,
+				s_maker_tab.maker_request_type_code,
+                s_maker_tab.maker_progress_status_code,
+                s_maker_tab.requestor_empno,
+                s_maker_tab.tax_id,
+                s_maker_tab.supplier_code,
+                s_maker_tab.supplier_local_name,
+                s_maker_tab.supplier_english_name,
+                s_maker_tab.country_code,
+                s_maker_tab.country_name,
+                s_maker_tab.vat_number,
+                s_maker_tab.zip_code,
+                s_maker_tab.local_address_1,
+                s_maker_tab.local_address_2,
+                s_maker_tab.local_address_3,
+                s_maker_tab.local_full_address,
+                s_maker_tab.english_address_1,
+                s_maker_tab.english_address_2,
+                s_maker_tab.english_address_3,
+                s_maker_tab.english_full_address,
+                s_maker_tab.affiliate_code,
+                s_maker_tab.affiliate_code_name,
+                s_maker_tab.company_class_code,
+                s_maker_tab.company_class_name,
+                s_maker_tab.repre_name,
+                s_maker_tab.tel_number,
+                s_maker_tab.email_address,
+                s_maker_tab.supplier_status_code,
+                s_maker_tab.supplier_status_name,
+                s_maker_tab.biz_certi_attch_number,
+                s_maker_tab.attch_number_2,
+                s_maker_tab.attch_number_3,
+				current_timestamp,
+				current_timestamp,
+				trim(session_context('APPLICATIONUSER')),
+				trim(session_context('APPLICATIONUSER')),
+				current_timestamp,
+				current_timestamp
+            )
+        ;
+	end if;
+
+
+
+-- commit message
+	commit;
+	o_table_message =  select 'OK' as returncode, 'Success Saved!' as returnmessage from dummy;
+
+end;

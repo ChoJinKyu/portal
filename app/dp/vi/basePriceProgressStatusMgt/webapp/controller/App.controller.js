@@ -10,6 +10,9 @@ sap.ui.define([
       this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
     },
 
+    /**
+     * 20200808을 symbol에 맞게 변경. 예) symbol이 fr-ca일 경우 2020-08-08
+     */
     onChangeDateFormat: function (sDatePararmm) {
         var sReturnValue = "";
 

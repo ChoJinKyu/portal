@@ -20,10 +20,12 @@ entity Uc_Quotation_Mst {
         const_department_code         : String(50);
         buyer_empno                   : String(30);
         purchasing_department_code    : String(50);
+        supplier_write_flag           : Boolean;
         supplier_person_id            : String(255);
         quotation_write_date          : Date;
         quotation_confirmed_date      : Date;
         quotation_amount              : Decimal;
+        currency_code                 : String(15);
         attch_group_number            : String(100);
         completion_flag               : Boolean;
         completion_date               : Date;

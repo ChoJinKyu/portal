@@ -17,14 +17,14 @@
 		},
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v2/sp.negoHeadersService/",
+                "uri": "srv-api/odata/v2/sp.sourcingService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
                 }
             },
             "mainV4": {
-                "uri": "srv-api/odata/v4/sp.negoHeadersV4Service/",
+                "uri": "srv-api/odata/v4/sp.sourcingV4Service/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "4.0"

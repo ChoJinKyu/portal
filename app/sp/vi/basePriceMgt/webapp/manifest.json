@@ -17,7 +17,7 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/dp.BasePriceArlService/",
+        "uri": "srv-api/odata/v2/sp.BasePriceArlService/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0",
@@ -44,8 +44,7 @@
         "uri": "srv-api/odata/v2/cm.CurrencyMgtService/",
         "type": "OData",
         "settings": {
-          "odataVersion": "2.0",
-          "localUri": "localService/metadata.xml"
+          "odataVersion": "2.0"
         }
       },
         "orgCodeMgtService": {
@@ -64,6 +63,13 @@
         },
         "basePriceArlService": {
             "uri": "srv-api/odata/v2/sp.BasePriceArlService/",
+            "type": "OData",
+            "settings": {
+                "odataVersion": "2.0"
+            }
+        },
+        "codeMgtService": {
+            "uri": "srv-api/odata/v2/cm.CodeMgtService/",
             "type": "OData",
             "settings": {
                 "odataVersion": "2.0"
@@ -154,12 +160,22 @@
         "settings": {
           "defaultBindingMode": "TwoWay",
           "defaultCountMode": "Inline",
-          "refreshAfterChange": false,
+          "refreshAfterChange": true,
           "useBatch": true
         }
       }, 
        "purOrg": {
            "dataSource": "purOrgMgtService",
+           "preload": true,
+           "settings": {
+               "defaultBindingMode": "TwoWay",
+               "defaultCountMode": "Inline",
+               "refreshAfterChange": false,
+               "useBatch": true
+           }
+       }, 
+       "codeMgt": {
+           "dataSource": "codeMgtService",
            "preload": true,
            "settings": {
                "defaultBindingMode": "TwoWay",
@@ -216,6 +232,11 @@
           "pattern": "basePriceDetail",
           "name": "basePriceDetail",
           "target": "basePriceDetail"
+        },
+        {
+          "pattern": "internalPriceDetail",
+          "name": "internalPriceDetail",
+          "target": "internalPriceDetail"
         }
       ],
       "targets": {
@@ -226,6 +247,10 @@
         "basePriceDetail": {
           "viewId": "basePriceDetail",
           "viewName": "BasePriceDetail"
+        },
+        "internalPriceDetail": {
+          "viewId": "internalPriceDetail",
+          "viewName": "internalPriceDetail"
         }
       }
     }

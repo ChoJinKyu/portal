@@ -22,6 +22,7 @@ entity VI_Base_Price_Arl_Dtl {
         supplier_code             : String(10);
         base_date                 : Date not null;
         base_price_ground_code    : String(30) not null;
+        change_reason_code               : String(30);
 
         // prices                    : Composition of many price
         //                                 on  prices.tenant_id       = tenant_id
@@ -67,4 +68,5 @@ annotate VI_Base_Price_Arl_Dtl with {
     supplier_code          @title : '공급업체코드'  @description   : '공급업체코드';
     base_date              @title : '기준일자'  @description     : '기준일자';
     base_price_ground_code @title : '기준단가근거코드'  @description : '공통코드(CM_CODE_DTL, DP_VI_BASE_PRICE_GROUND_CODE) : COST(Cost Table), RFQ(RFQ), FMC(Family Material Code)';
+    change_reason_code     @title : '변경사유코드'  @description   : '공통코드(CM_CODE_DTL, DP_VI_CHANGE_REASON_CODE)';
 };

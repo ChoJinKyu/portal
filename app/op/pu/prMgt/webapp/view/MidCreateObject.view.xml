@@ -24,7 +24,7 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="{I18N>/PURCHASING} {I18N>/REQUEST} {I18N>/CREATE}" wrapping="true" />
+					<Title text="{path:'I18N>/PURCHASING'} {path:'I18N>/REQUEST'} {path:'I18N>/CREATE'}" wrapping="true" />
 				</uxap:expandedHeading>
 
                 <uxap:navigationActions>
@@ -36,10 +36,19 @@
 		<uxap:headerContent>
 			<FlexBox wrap="Wrap" >
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <Label text="구매요청 번호 :"/>
+                    <Label text="{path:'I18N>/PR_NUMBER'} :"/>
                     <ObjectStatus
                         text="{viewModel>/PrMst/pr_number}"/>
-                    <Label text="구매요청 생성일자 :"/>
+				</layout:VerticalLayout>
+
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <Label text="{path:'I18N>/PR_TEMPLATE_NUMBER'} :"/>
+                    <ObjectStatus
+                        text="{viewModel>/PrMst/pr_template_name}"/>
+				</layout:VerticalLayout>
+
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <Label text="{path:'I18N>/PR_CREATION_DATE'} :"/>
                     <ObjectStatus
                         text="{ path: 'viewModel>/PrMst/request_date',
                                 type: 'sap.ui.model.type.Date',
@@ -49,91 +58,58 @@
                             }"/>
 				</layout:VerticalLayout>
 
-				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <Label text="구매요청 템플릿 :"/>
-                    <ObjectStatus
-                        text="{viewModel>/PrMst/pr_template_name}"/>
-                    <Label text="구매요청 생성자 :"/>
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                    <Label text="{path:'I18N>/PR_CREATOR'} :"/>
                     <ObjectStatus
                         text="{viewModel>/PrMst/requestor_name}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<Label text="구매요청 진행상태 :"/>
+					<Label text="{path:'I18N>/PR_PROGRESS_STATUS'} :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
                         text="New"
                         state="Error" />
 				</layout:VerticalLayout>
-                
-                <!-- Process 시작 -->
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                      <HBox>
-                        <Title text="Process"/>
-                    </HBox>
-                    <HBox>
-                        <co:MicroProcessFlow>
-                            <co:content>
-                                <co:MicroProcessFlowItem state="Error" width="2em" stepWidth="5em" icon="sap-icon://circle-task" />
-                                <co:MicroProcessFlowItem state="None" width="2em" stepWidth="5em" />
-                                <co:MicroProcessFlowItem state="None" width="2em" stepWidth="5em" />
-                                <co:MicroProcessFlowItem state="None" width="2em" stepWidth="5em" />
-                            </co:content>
-                        </co:MicroProcessFlow>
-                    </HBox>
-                    <HBox>
-                        <Text text="구매요청" width="5em" textAlign="Left" renderWhitespace="true" />
-                        <Text text="견적" width="7em" textAlign="Center" />
-                        <Text text="입찰" width="7em" textAlign="Center" />
-                        <Text text="구매오더" width="5em" textAlign="Center" />
-                    </HBox>
-                </layout:VerticalLayout>
 			</FlexBox>
 		</uxap:headerContent>
 
 		<uxap:sections id="pss">
 
-			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="기본 정보">
+			<uxap:ObjectPageSection  id="pageSectionMain" titleUppercase="true" title="{I18N>/BASIC_INFO}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"> 
-                            <HBox alignItems="Center">
-                                <Label text="{I18N>/APPROVAL_TITLE}" class="sapUiTinyMarginEnd" width="5em" textAlign="Left" required="{contModel>/DisplayFlag/OP_PU_PR_MST/PR_HEADER_TEXT/mandatory_column_flag}"/>
-                                <Input width="50em" placeholder="필수" 
-                                    value="{
-                                        path: 'viewModel>/PrMst/pr_header_text',
-                                        type: 'sap.ui.model.type.String',
-                                        constraints: {
-                                            maxLength: 200
-                                        }
-                                    }"
-                                    required="{contModel>/DisplayFlag/OP_PU_PR_MST/PR_HEADER_TEXT/mandatory_column_flag}"/>
-                            </HBox>
-                            <HBox alignItems="Center">
-                                <Label text="{I18N>/APPROVAL_CONTENTS}" class="sapUiTinyMarginEnd" width="5em" textAlign="Left" />
-                                <richtexteditor:RichTextEditor
-                                    editorType="TinyMCE4"
-                                    width="100%"
-                                    height="200px"
-                                    editable="true"
-                                    customToolbar="true"
-                                    showGroupFont="true"
-                                    showGroupLink="true"
-                                    showGroupInsert="true"
-                                    value="{viewModel>/PrMst/approval_contents}">
-                                </richtexteditor:RichTextEditor>
-                            </HBox>                            
+                            
+                                <HBox alignItems="Center">
+                                    <Label text="{I18N>/APPROVAL_TITLE}" class="sapUiTinyMarginEnd" width="5em" textAlign="Left" required="{contModel>/DisplayFlag/OP_PU_PR_MST/PR_HEADER_TEXT/mandatory_column_flag}"/>
+                                    <Input width="60em" class="sapUiContentPadding"
+                                        value="{
+                                            path: 'viewModel>/PrMst/pr_header_text',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 200
+                                            }
+                                        }"
+                                        required="{contModel>/DisplayFlag/OP_PU_PR_MST/PR_HEADER_TEXT/mandatory_column_flag}"/>
+                                </HBox>
+                            
+                            
+                                <HBox alignItems="Center">
+                                    <Label text="{I18N>/APPROVAL_CONTENTS}" class="sapUiTinyMarginEnd" width="5em" textAlign="Left" />
+                                    <layout:VerticalLayout id="idApprovalContentsTextEditor" class="sapUiTinyMarginEnd" width="60em"></layout:VerticalLayout>
+                                </HBox>                         
                         </layout:VerticalLayout> 
-                        <!-- <layout:VerticalLayout id="approvalContentsTextEditor" class="sapUiContentPadding" width="100%"></layout:VerticalLayout> -->						
+                        
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
             <!-- 품목 정보 시작 -->
-            <uxap:ObjectPageSection titleUppercase="false" title="품목 정보">
+            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/ITEM_INFO}">
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection>
-                        <!-- Participating Supplier Table -->
+
                         <table:Table id="pritemTable"
                                 selectionMode="MultiToggle"
                                 fixedColumnCount="1"
@@ -144,17 +120,17 @@
                                 <OverflowToolbar>
                                     <Title text="{I18N>/ITEM} ({= (${viewModel>/Pr_Dtl})?${viewModel>/Pr_Dtl}.length:0})" level="H2"/>
                                     <ToolbarSpacer/>
-                                    <!-- Add the Personalization button -->
-                                    <Button id="btnPsAdd" type="Transparent" text="Add Item" press=".onItemAddRow" />
-                                    <Button id="btnItemCopy"   type="Transparent" text="Copy"  press=".onItemCopyRow" />
+                                    <Button type="Emphasized" text="Add Item" press=".onItemAddRow" />
+                                    <Button type="Transparent" text="Add Multiple Item" press=".onItemAddMultiRow" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag}"/>
+                                    <Button type="Transparent" text="Copy"  press=".onItemCopyRow" />
                                     <!-- <Button id="btnItemEditMulti"   type="Transparent" text="Edit Multiple"  press=".onItemEditMultiRow" /> -->
-                                    <Button id="btnItemDelete"   type="Transparent" text="Delete"  press=".onItemDeleteRow" />
+                                    <Button type="Transparent" text="Delete"  press=".onItemDeleteRow" />
                                 </OverflowToolbar>
                             </table:extension>          
 
                             <table:columns>
                                 <table:Column width="5em" hAlign="Center">
-                                    <Label text="품목번호"/>
+                                    <Label text="{I18N>/ITEM_NUMBER}"/>
                                     <table:template>
                                         <Text text="{viewModel>pr_item_number}"/>
                                     </table:template>
@@ -164,45 +140,54 @@
                                     <table:template>
                                         <Input
                                             value="{viewModel>org_code}"
+                                            maxLength="10"
                                             showValueHelp="true"
-                                            valueHelpRequest=".onOpenOrgcodeDialog" 
+                                            valueHelpOnly="true"
+                                            valueHelpRequest=".onValueHelpRequest($event, 'org_code', {})" 
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ORG_CODE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag}" >
-                                    <Label text="자재코드" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/mandatory_column_flag}"/>           
+                                    <Label text="{I18N>/MATERIAL_CODE}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/mandatory_column_flag}"/>           
                                     <table:template>
-                                        <Input id="i_material_code"
-                                            value="{viewModel>material_code}"
+                                        <Input value="{viewModel>material_code}"
+                                            maxLength="40"
                                             showValueHelp="true"
-                                            valueHelpRequest=".onOpenMaterialDialog" 
+                                            valueHelpOnly="true"
+                                            valueHelpRequest=".onValueHelpRequest($event, 'material_code', {})" 
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="15em" hAlign="Center">
-                                    <Label text="구매요청 품명" required="true"/>           
+                                <table:Column width="18em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_DESC/display_column_flag}">
+                                    <Label text="{I18N>/PR_ITEM_NAME}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_DESC/mandatory_column_flag}"/>           
                                     <table:template>
-                                        <Input textAlign="Begin" value="{viewModel>pr_desc}" required="true"/>
+                                        <Input value="{viewModel>pr_desc}"  textAlign="Begin" maxLength="100" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_DESC/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>       
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="요청수량" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/mandatory_column_flag}"/>
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/display_column_flag}">
+                                    <Label text="{I18N>/REQUEST_QUANTITY}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/mandatory_column_flag}"/>
                                     <table:template>
-                                        <Input textAlign="End" value="{viewModel>pr_quantity}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/mandatory_column_flag}"/>
+                                        <Input 
+                                            value="{path: 'viewModel>pr_quantity', 
+                                                    type : 'sap.ui.model.odata.type.Decimal'}" 
+                                            textAlign="End"
+                                            maxLength="30"
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>                                     
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="단위" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_UNIT/mandatory_column_flag}"/>           
+                                <table:Column width="7em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_UNIT/display_column_flag}">
+                                    <Label text="{I18N>/UNIT}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_UNIT/mandatory_column_flag}"/>           
                                     <table:template>
-                                        <Input maxLength="3" 
-                                            value="{viewModel>pr_unit}"
+                                        <Input value="{viewModel>pr_unit}"
+                                            maxLength="3" 
                                             showValueHelp="true" 
+                                            valueHelpOnly="true"
                                             valueHelpRequest=".onOpenUomDialog" 
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_UNIT/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>   
-                                <table:Column id="c_delivery_request_date" width="10em" hAlign="Center">
-                                    <Label text="납품일"/>    
+                                <table:Column width="9em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/DELIVERY_REQUEST_DATE/display_column_flag}">
+                                    <Label text="{I18N>/DELIVERY_REQUEST_DATE}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/DELIVERY_REQUEST_DATE/mandatory_column_flag}"/> 
                                     <table:template>
                                         <DatePicker id="i_delivery_request_date"
                                                 visible="true"
@@ -213,97 +198,174 @@
                                                         UTC: true,
                                                         pattern: 'yyyy-MM-dd'
                                                     }
-                                                }"/>
+                                                }"
+                                                required="{contModel>/DisplayFlag/OP_PU_PR_DTL/DELIVERY_REQUEST_DATE/mandatory_column_flag}"/>
                                     </table:template>
-                                </table:Column>                                  
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="가격" required="true"/>           
-                                    <table:template>
-                                        <Input
-                                            value="{
-                                                    path:'viewModel>estimated_price',
-                                                    type:'sap.ui.model.type.Currency'
-                                                    }"
-                                            textAlign="End"/>
-                                    </table:template>
-                                </table:Column>                               
-                                <table:Column  width="10em" hAlign="Center">
-                                    <Label text="통화" required="true" labelFor="i_currency"/>           
-                                    <table:template>
-                                        <Input id="i_currency" value="{viewModel>currency_code}"/>
-                                    </table:template>
-                                </table:Column>                                 
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="가격단위" required="true" labelFor="i_price_unit"/>           
-                                    <table:template>
-                                        <Input textAlign="End" value="{viewModel>price_unit}"/>
-                                    </table:template>
-                                </table:Column>                                   
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="구매담당자"/>           
+                                </table:Column>                                      
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/BUYER_EMPNO/display_column_flag}">
+                                    <Label text="{I18N>/BUYER_EMPNO}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/BUYER_EMPNO/mandatory_column_flag}"/>      
                                     <table:template>
                                         <Input
                                             value="{viewModel>buyer_empno}"
                                             showValueHelp="true"
-                                            valueHelpRequest=".onOpenSearchEmpDialog" />
+                                            valueHelpOnly="true"
+                                            valueHelpRequest=".onOpenSearchEmpDialog" 
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/BUYER_EMPNO/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="구매그룹"/>
+                                <table:Column width="7em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/PURCHASING_GROUP_CODE/display_column_flag}">
+                                    <Label text="{I18N>/PURCHASING_GROUP_CODE}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PURCHASING_GROUP_CODE/mandatory_column_flag}"/>
                                     <table:template>
-                                        <Input value="{viewModel>purchasing_group_code}"/>
+                                        <Input value="{viewModel>purchasing_group_code}" 
+                                            maxLength="3" 
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PURCHASING_GROUP_CODE/mandatory_column_flag}"/>
+                                    </table:template>
+                                </table:Column>                              
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/ESTIMATED_PRICE/display_column_flag}">
+                                    <Label text="{path:'I18N>/PRICE'}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ESTIMATED_PRICE/mandatory_column_flag}"/>           
+                                    <table:template>                                        
+                                        <Input 
+                                            value="{
+                                                parts: [
+                                                    {path: 'viewModel>estimated_price'},
+                                                    {path: 'viewModel>currency_code'}
+                                                ],
+                                                type:'sap.ui.model.type.Currency',
+                                                formatOptions:{showMeasure:false}
+                                            }"
+                                            maxLength="30"
+                                            textAlign="End"
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ESTIMATED_PRICE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_GROUP_CODE/display_column_flag}">
-                                    <Label text="자재그룹" required="true" />           
+                                <table:Column  width="7em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/CURRENCY_CODE/display_column_flag}">
+                                    <Label text="{path:'I18N>/CURRENCY_CODE'}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/CURRENCY_CODE/mandatory_column_flag}"/>           
                                     <table:template>
-                                        <Input value="{viewModel>material_group_code}"/>
+                                        <Input value="{viewModel>currency_code}" 
+                                            showValueHelp="true"
+                                            valueHelpOnly="true"
+                                            valueHelpRequest=".onValueHelpRequest($event, 'currency_code', {})"  
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/CURRENCY_CODE/mandatory_column_flag}"/>
+                                    </table:template>
+                                </table:Column>   
+                                <table:Column width="7em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/PRICE_UNIT/display_column_flag}">
+                                    <Label text="{path:'I18N>/PRICE_UNIT'}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PRICE_UNIT/mandatory_column_flag}"/>           
+                                    <table:template>                                        
+                                        <Input 
+                                            value="{
+                                                parts: [
+                                                    {path: 'viewModel>price_unit'},
+                                                    {path: 'viewModel>currency_code'}
+                                                ],
+                                                type:'sap.ui.model.type.Currency',
+                                                formatOptions:{showMeasure:false}
+                                            }"
+                                            maxLength="6"
+                                            textAlign="End"
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PRICE_UNIT/mandatory_column_flag}"/> 
+                                    </table:template>
+                                </table:Column> 
+                                <table:Column width="9em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ACCOUNT_CODE/display_column_flag}">
+                                    <Label text="{I18N>/ACCOUNT_CODE}" required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ACCOUNT_CODE/mandatory_column_flag}"/>
+                                    <table:template>
+                                        <Input value="{viewModel>account_code}"
+                                            textAlign="Begin"
+                                            showValueHelp="true"
+                                            valueHelpOnly="true"
+                                            valueHelpRequest=".onValueHelpRequest($event, 'account_code', {})" 
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ACCOUNT_CODE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/SLOC_CODE/display_column_flag}">
-                                    <Label text="저장위치"/>
+                                <table:Column width="9em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/CCTR_CODE/display_column_flag}">
+                                    <Label text="{I18N>/COST_CENTER}" required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/CCTR_CODE/mandatory_column_flag}"/>
                                     <table:template>
-                                        <Input value="{viewModel>sloc_code}" />
-                                    </table:template>
-                                </table:Column>
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="비고"/>
-                                    <table:template>
-                                        <Input maxLength="2000" value="{viewModel>remark}" />
-                                    </table:template>
-                                </table:Column>
-                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ACCOUNT_CODE/display_column_flag}">
-                                    <Label text="계정코드"/>
-                                    <table:template>
-                                        <Input value="{viewModel>account_code}" />
-                                    </table:template>
-                                </table:Column>
-                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/CCTR_CODE/display_column_flag}">
-                                    <Label text="비용부서코드"/>
-                                    <table:template>
-                                        <Input value="{viewModel>cctr_code}" />
+                                        <Input value="{viewModel>cctr_code}"
+                                            showValueHelp="true"
+                                            valueHelpOnly="true"
+                                            valueHelpRequest=".onValueHelpRequest($event, 'cctr_code', {})" 
+                                            textAlign="Begin"
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/CCTR_CODE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>                                                                 
                                 <table:Column width="13em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/display_column_flag}">
-                                    <Label text="{I18N>/WBS_CODE}"/>           
+                                    <Label text="{I18N>/WBS_CODE}" required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/mandatory_column_flag}"/>           
                                     <table:template>
                                         <Input value="{viewModel>wbs_code}"
-                                            textAlign="Begin"
                                             showValueHelp="true"
+                                            valueHelpOnly="true"
                                             valueHelpRequest=".onOpenSearchWbsDialog"
+                                            textAlign="Begin"
+                                            maxLength="30"
                                             required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ASSET_NUMBER/display_column_flag}">
-                                    <Label text="자산번호"/>
+                                    <Label text="{I18N>/ASSET_NUMBER}" required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ASSET_NUMBER/mandatory_column_flag}"/>
                                     <table:template>
-                                        <Input value="{viewModel>asset_number}" />
+                                        <Input value="{viewModel>asset_number}" maxLength="30" required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ASSET_NUMBER/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ORDER_NUMBER/display_column_flag}">
-                                    <Label text="오더번호"/>
+                                    <Label text="{I18N>/ORDER_NUMBER}" required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ORDER_NUMBER/mandatory_column_flag}"/>
                                     <table:template>
-                                        <Input value="{viewModel>order_number}" />
+                                        <Input value="{viewModel>order_number}" maxLength="30" required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ORDER_NUMBER/mandatory_column_flag}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="7em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_GROUP_CODE/display_column_flag}">
+                                    <Label text="{I18N>/MATERIAL_GROUP_CODE}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_GROUP_CODE/mandatory_column_flag}"/>
+                                    <table:template>
+                                        <Input value="{viewModel>material_group_code}" maxLength="10" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_GROUP_CODE/mandatory_column_flag}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/SLOC_CODE/display_column_flag}">
+                                    <Label text="{I18N>/STORAGE_LOCATION}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/SLOC_CODE/mandatory_column_flag}"/>
+                                    <table:template>
+                                        <Input value="{viewModel>sloc_code}" maxLength="4" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/SLOC_CODE/mandatory_column_flag}"/>
+                                    </table:template>
+                                </table:Column>
+                                
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/SUPPLIER_CODE/display_column_flag}">
+                                    <Label text="{I18N>/SUPPLIER_CODE}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/SUPPLIER_CODE/mandatory_column_flag}"/>
+                                    <table:template>
+                                        <Input value="{viewModel>supplier_code}" 
+                                            maxLength="10"
+                                            showValueHelp="true"
+                                            valueHelpOnly="true"
+                                            valueHelpRequest=".onOpenSearchSupplierDialog"
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/SUPPLIER_CODE/mandatory_column_flag}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/ORG_TYPE_CODE/display_column_flag}">
+                                    <Label text="{I18N>/ORG_TYPE_CODE}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ORG_TYPE_CODE/mandatory_column_flag}" />
+                                    <table:template>
+                                        <Input value="{viewModel>org_type_code}" 
+                                            maxLength="2"
+                                            visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/ORG_TYPE_CODE/input_column_flag}"
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ORG_TYPE_CODE/mandatory_column_flag}" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/REMARK/display_column_flag}">
+                                    <Label text="{I18N>/REMARK}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/REMARK/mandatory_column_flag}"/>
+                                    <table:template>
+                                        <Input value="{viewModel>remark}" 
+                                            maxLength="2000"
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/REMARK/mandatory_column_flag}" />                                            
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/ITEM_CATEGORY_CODE/display_column_flag}">
+                                    <Label text="{I18N>/ITEM_CATEGORY}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ITEM_CATEGORY_CODE/mandatory_column_flag}"/>
+                                    <table:template>
+                                        <Input value="{viewModel>item_category_code}" 
+                                            maxLength="2"
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ITEM_CATEGORY_CODE/mandatory_column_flag}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/ACCOUNT_ASSIGNMENT_CATEGORY_CODE/display_column_flag}">
+                                    <Label text="{I18N>/ACCOUNT_ASSIGNMENT_CATEGORY}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ACCOUNT_ASSIGNMENT_CATEGORY_CODE/mandatory_column_flag}"/>
+                                    <table:template>
+                                        <Input value="{viewModel>account_assignment_category_code}" 
+                                            maxLength="2"
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ACCOUNT_ASSIGNMENT_CATEGORY_CODE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
                             </table:columns>

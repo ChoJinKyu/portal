@@ -16,7 +16,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{I18N>/PURCHASE_REQUISITION} {I18N>/WRITE} {I18N>/CURST}" />
+                    <Title text="(미정)구매요청 검토/접수" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -63,13 +63,13 @@
                             <!-- 구매요청생성상태코드 -->
                             <Label text="{I18N>/PR_CREATE_STATUS_CODE}"/>
                             <MultiComboBox
-                                selectedKeys="{jSearch>/pr_progress_status_code/values}"
+                                selectedKeys="{jSearch>/pr_create_status_code/values}"
                                 showSecondaryValues="false"
                                 width="100%"
                                 items="{
                                     path: 'util>/Code',
                                     filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100' },
                                         {path: 'group_code', operator: 'EQ', value1: 'OP_PR_CREATE_STATUS_CODE'}
                                     ]
                                 }"
@@ -106,8 +106,8 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <!-- 구매요청 접수일자 (미정) -->
-                            <Label text="{I18N>/PR_RECEIPT_DATE}"/>
+                            <!-- 확정일자 (미정) -->
+                            <Label text="(미정)확정일자"/>
                             <DateRangeSelection 
                                 width="100%"
                                 value="{
@@ -119,7 +119,6 @@
                                     formatOptions: { UTC: true, format: 'yMd' }
                                 }" 
                                 placeholder="YYYY-MM-DD - YYYY-MM-DD"
-                                change=".onDateRangeSelectionChange($event)"
                             />
                             <!-- 구매요청 유형 -->
                             <Label text="{I18N>/PR_TYPE_CODE}"/>
@@ -140,7 +139,7 @@
                             </MultiComboBox>
                             <!-- 구매요청자 부서 -->
                             <Label text="{I18N>/REQUESTOR_DEPARTMENT}"/>
-                            <lib-m:CodePicker 
+                            <!-- <lib-m:CodePicker 
                                 placeholder="(미정)부서명을 입력하세요"
                                 selectedKey="{jSearch>/requestor_department_code}"
                                 keyField="department_id"
@@ -159,7 +158,12 @@
                                     keyFieldHeaderText="{I18N>/PR_DEPARTMENT_CODE}" 
                                     textFieldHeaderText="{I18N>/PR_DEPARTMENT_NAME}"
                                 />
-                            </lib-m:CodePicker>
+                            </lib-m:CodePicker> -->
+                            <MultiInput 
+                                id="requestorDepartmentCode"
+                                showValueHelp="true" 
+                                valueHelpRequest=".onValueHelpRequest($event, 'requestor_department_code', 'jSearch', {})" 
+                            />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -222,17 +226,28 @@
                                     <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
                                 </items>
                             </MultiComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                            <!-- <MultiInput
+                                placeholder="(미정)조직을 선택하세요."
+                                showValueHelp="true" 
+                                valueHelpRequest=".onValueHelpRequest($event, 'org_code', 'jSearch', {})" 
+                            />
+                            <layoutData>
+                                <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData> -->
                             <!-- 자재코드 -->
                             <Label text="{I18N>/MATERIAL_CODE}"/>
                             <Input
                                 value="{jSearch>/material_code}"
                                 placeholder="(미정)자재를 선택하세요"
                                 showValueHelp="true"
-                                valueHelpRequest=".onValueHelpRequest($event, 'jSearch>/material_code')" 
+                                valueHelpRequest=".onValueHelpRequest($event, 'material_code', 'jSearch', {})" 
                             />
                             <!-- 구매담당자 부서 -->
                             <Label text="{I18N>/BUYER_DEPARTMENT}" labelFor="searchRequestDepartmentS"/>
-                            <lib-m:CodePicker 
+                            <!-- <lib-m:CodePicker 
                                 placeholder="(미정)구매담당자 부서명을 입력하세요"
                                 selectedKey="{jSearch>/buyer_department_code}"
                                 keyField="department_id"
@@ -251,7 +266,12 @@
                                     keyFieldHeaderText="{I18N>/BUYER_DEPARTMENT_CODE}" 
                                     textFieldHeaderText="{I18N>/BUYER_DEPARTMENT_CODE}"
                                 />
-                            </lib-m:CodePicker>
+                            </lib-m:CodePicker> -->
+                            <MultiInput 
+                                id="buyerDepartmentCode"
+                                showValueHelp="true"
+                                valueHelpRequest=".onValueHelpRequest($event, 'buyer_department_code', 'jSearch', {})" 
+                            />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -271,7 +291,6 @@
                     mode="MultiSelect"
                     growingThreshold="10"
                     class="sapFDynamicPageAlignContent" 
-                    updateFinished=".onUpdateFinished($event)"
                     items="{
                         path : 'list>/Pr_ReviewListView',
                         sorter: {
@@ -281,21 +300,72 @@
                     }"                        
                     width="auto"
                 >
-                    <!-- mode="MultiSelect"  -->
                     <headerToolbar>
                         <OverflowToolbar>
                             <Title text="{i18n>appTitle} ({= ${list>/Pr_ReviewListView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
-                            <Button text="(미정)재작성요청" type="Transparent" press=".onButtonPress($event, 'REWRITE')" />
-                            <Button text="(미정)마감" type="Transparent" press=".onButtonPress($event, 'CLOSING')" />
-                            <Button text="(미정)구매담당자변경" type="Transparent" press=".onButtonPress($event, 'CHANGE')" />
+                            <Button 
+                                text="(미정)RFQ작성"
+                                type="Transparent"
+                                press=".onButtonPress($event, 'service', {
+                                    action: 'RFQ',
+                                    service: 'op.prReviewMgtV4Service',
+                                    entry: 'CallPrReviewSaveProc',
+                                    tId: 'mainTable'
+                                })"
+                            />
+                            <Button 
+                                text="(미정)입찰작성"
+                                type="Transparent"
+                                press=".onButtonPress($event, 'service', {
+                                    action: 'BIDDING',
+                                    service: 'op.prReviewMgtV4Service',
+                                    entry: 'CallPrReviewSaveProc',
+                                    tId: 'mainTable'
+                                })"
+                            />
+                            <Button 
+                                text="(미정)재작성요청"
+                                type="Transparent"
+                                press=".onButtonPress($event, 'service', {
+                                    action: 'REWRITE',
+                                    service: 'op.prReviewMgtV4Service',
+                                    entry: 'CallPrReviewSaveProc',
+                                    tId: 'mainTable'
+                                })"
+                            />
+                            <Button 
+                                text="(미정)마감"
+                                type="Transparent"
+                                press=".onButtonPress($event, 'service', {
+                                    action: 'CLOSING',
+                                    service: 'op.prReviewMgtV4Service',
+                                    entry: 'CallPrReviewSaveProc',
+                                    tId: 'mainTable'
+                                })"
+                            />
+                            <Button 
+                                text="(미정)구매담당자변경"
+                                type="Transparent"
+                                press=".onButtonPress($event, 'service', {
+                                    action: 'CHANGE',
+                                    service: 'op.prReviewMgtV4Service',
+                                    entry: 'CallPrReviewSaveProc',
+                                    tId: 'mainTable'
+                                })"
+                            />
                             <ToolbarSeparator/>
-                            <Button icon="sap-icon://excel-attachment" press="onExcelDownload($event, 'Download', ${list>/Pr_ReviewListView}, {fileName: 'PR Review List', tId: 'mainTable' })">
+                            <Button 
+                                icon="sap-icon://excel-attachment" 
+                                press="onExcel($event, 'Download', ${list>/Pr_ReviewListView}, 'PR Review List', ${session>/tenant_id}, {
+                                    tId: 'mainTable'
+                                })"
+                            >
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
                             </Button>
-                            <Button icon="sap-icon://action-settings" press=".onPersonalize($event)" >
+                            <Button icon="sap-icon://action-settings" press=".onButtonPress($event, 'personalize', {})">
                                 <layoutData>
                                     <OverflowToolbarLayoutData priority="NeverOverflow" />
                                 </layoutData>
@@ -337,7 +407,7 @@
                         </Column>
                         <!-- 잔여수량 -->
                         <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
-                            <Text text="{I18N>/STOCK_QUANTITY}" />
+                            <Text text="{I18N>/REMAIN_QUANTITY}" />
                         </Column>
                         <!-- 납품요청 일자 -->
                         <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
@@ -365,14 +435,14 @@
                         </Column>
                     </columns>
                     <items>
-                        <ColumnListItem type="Navigation" press=".onColumnListItemPress.call(this, $event, '${list>/this}')">
+                        <ColumnListItem type="Navigation" press=".onColumnListItemPress($event, 'navigation', 'list', {})">
                             <cells>
                                 <!-- 구매요청 번호 -->
-                                <Text text="{list>pr_number}" vAlign="Left" />
+                                <Text text="{list>pr_number}"/>
                                 <!-- 구매요청 유형 -->
-                                <Text text="{list>pr_type_name}" vAlign="Left" />
+                                <Text text="{list>pr_type_name}"/>
                                 <!-- 품목 번호 -->
-                                <Text text="{list>pr_item_number}" vAlign="Left"/>
+                                <Text text="{list>pr_item_number}"/>
                                 <!-- 조직코드 -->
                                 <Text text="{list>org_code}"/>
                                 <!-- 자재코드 -->
@@ -385,12 +455,12 @@
                                 <Text text="{
                                     path: 'list>pr_quantity', 
                                     formatter: '.numberFormatter.toNumberString'
-                                }" textAlign="Right"/>
+                                }"/>
                                 <!-- 잔여수량 -->
                                 <Text text="{
                                     path: 'list>remain_quantity', 
                                     formatter: '.numberFormatter.toNumberString'
-                                }" textAlign="Right"/>
+                                }"/>
                                 <!-- 납품요청 일자 -->
                                 <Text text="{
                                     path: 'list>delivery_request_date',
@@ -400,7 +470,7 @@
                                 <Text text="{
                                     path: 'list>estimated_price', 
                                     formatter: '.numberFormatter.toNumberString'
-                                }" textAlign="Right"/>
+                                }"/>
                                 <!-- 통화 -->
                                 <Text text="{list>currency_code}"/>
                                 <!-- 구매담당자 -->
@@ -431,7 +501,7 @@
                     text="{= ${message>/}.length }"
                     visible="{= ${message>/}.length > 0 }"
                     ariaHasPopup="Dialog"
-                    press=".onMessagePopoverPress" />               
+                    press=".onMessagePopoverPress" />
             </OverflowToolbar>
         </f:footer>
     </f:DynamicPage>

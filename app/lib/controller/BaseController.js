@@ -2,8 +2,9 @@ sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/core/UIComponent",
 	"sap/ui/core/Fragment",
-	"sap/m/library"
-], function (Controller, UIComponent, Fragment, mobileLibrary) {
+    "sap/m/library",
+    "ext/lib/util/SppUserSessionUtil"
+], function (Controller, UIComponent, Fragment, mobileLibrary, SppUserSessionUtil) {
 	"use strict";
 
 	// shortcut for sap.m.URLHelper
@@ -156,8 +157,35 @@ sap.ui.define([
             }else{
                 return false;
             }
-        }
+        },
 
+        getSessionUserInfo: function(){
+            return SppUserSessionUtil.getUserInfo();
+        },
+
+        getSessionUserId: function(){
+            return SppUserSessionUtil.getUserId();
+        },
+
+        getSessionLanguageCode: function(){
+            return SppUserSessionUtil.getLanguageCode();
+        },
+
+        getSessionTimezoneCode: function(){
+            return SppUserSessionUtil.getTimezoneCode();
+        },
+
+        getSessionDateFormatType: function(){
+            return SppUserSessionUtil.getDateFormatType();
+        },
+
+        getSessionDigitsFormatType: function(){
+            return SppUserSessionUtil.getDigitsFormatType();
+        },
+
+        getSessionCurrencyCode: function(){
+            return SppUserSessionUtil.getCurrencyCode();
+        }
         
 	});
 });

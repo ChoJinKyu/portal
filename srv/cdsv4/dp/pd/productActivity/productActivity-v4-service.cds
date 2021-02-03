@@ -13,6 +13,7 @@ service ProductActivityV4Service {
     type PdProductActivityTemplateType : {
         tenant_id : String;
         product_activity_code : String;
+        sequence : String;
         description : String;
         active_flag : String;
         update_user_id : String;

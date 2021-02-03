@@ -12,7 +12,7 @@
   height="100%">
     <f:DynamicPage
         headerExpanded="true"
-        showFooter="true"
+        fitContent="true"
         toggleHeaderOnTitleClick="true">
         <f:title>
             <f:DynamicPageTitle>
@@ -35,18 +35,15 @@
                         <!-- Type 시작 -->
                         <VBox>
                             <Label text="{I18N>/APPROVAL_TYPE_CODE}"></Label>
-                            <ComboBox
+                            <MultiComboBox
                                 width="100%"
-                                selectedKey="{filterModel>/type}"
-                                items="{
-                                path: 'filterModel>/type_list',
-                                filters: [
-                                ]
-                                }">
+                                selectedKeys="{filterModel>/type}"
+                                placeholder="{I18N>/ALL}"
+                                items="{filterModel>/type_list}">
                                 <items>
                                 <core:Item key="{filterModel>code}" text="{filterModel>code_name}" />
                                 </items>
-                            </ComboBox>
+                            </MultiComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
@@ -72,7 +69,7 @@
 
                         <!-- Plant 시작 -->
                         <VBox>
-                            <Label text="{rootModel>/plantLabel}"></Label>
+                            <Label text="{I18N>/VI_APPROVE_ORG_CODE}"></Label>
                             <ComboBox width="100%" 
                                 selectedKey="{filterModel>/org_code}" 
                                 items="{filterModel>/selectedPurOrg}">
@@ -87,13 +84,6 @@
                         <!-- Plant 끝 -->
 
                         <!-- Material Code 시작 -->
-                        <!-- <VBox>
-                            <Label text="{I18N>/MATERIAL_CODE}"></Label>
-                            <SearchField value="{filterModel>/materialCode}" search=".onGetMaterialCodeDialogData" />
-                            <layoutData>
-                                <layout:GridData span="XL2 L4 M6 S12" />
-                            </layoutData>
-                        </VBox> -->
                         <VBox>
                             <Label text="{I18N>/MATERIAL_CODE}" />
                             <MultiInput
@@ -133,8 +123,8 @@
                         <VBox height="56px">
                             <Label text="{I18N>/REQUESTOR}"></Label>
                             <MultiInput id="multiInputWithEmployeeValueHelp"
-                            placeholder="Choose employees from the ValueHelp"
-                            showValueHelp="true" valueHelpRequest=".onMultiInputWithEmployeeValuePress">
+                                placeholder="Choose employees from the ValueHelp"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputWithEmployeeValuePress">
                             </MultiInput>
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
@@ -142,18 +132,8 @@
                         </VBox>
                         <!-- Requset By 끝 -->
 
-                        <!-- Agreed By 시작 -->
-                        <!-- <VBox>
-                            <Label text="{I18N>/AGREED_BY}"></Label>
-                            <SearchField value="{filterModel>/agreedBy}" />
-                            <layoutData>
-                                <layout:GridData span="XL2 L4 M6 S12" />
-                            </layoutData>
-                        </VBox> -->
-                        <!-- Agreed By 끝 -->
-
                         <!-- Status 시작 -->
-                        <VBox>
+                        <!-- <VBox>
                             <Label text="{I18N>/STATUS}"></Label>
                             <SegmentedButton id="searchStatusS" selectedKey="{filterModel>/status}" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                                 <items>
@@ -167,33 +147,35 @@
                             <layoutData>
                                 <layout:GridData span="XL4 L4 M6 S12" />
                             </layoutData>
-                        </VBox>
-                        <!-- Status 끝 -->
-
-                        <!-- <VBox>
-                            <Label text="임시 tenant"></Label>
-                            <ComboBox
+                        </VBox> -->
+                        <VBox>
+                            <Label text="{I18N>/STATUS} "></Label>
+                            <MultiComboBox
                                 width="100%"
-                                selectedKey="{basePriceProgressStatusMgtRootModel>/tenantId}"
-                                items="{basePriceProgressStatusMgtRootModel>/tenantList}">
+                                selectedKeys="{filterModel>/status}"
+                                placeholder="{I18N>/ALL}"
+                                items="{rootModel>/processList}">
                                 <items>
-                                <core:Item key="{basePriceProgressStatusMgtRootModel>tenant_id}" text="{basePriceProgressStatusMgtRootModel>tenant_name}" />
+                                <core:Item key="{rootModel>code}" text="{rootModel>code_name}" />
                                 </items>
-                            </ComboBox>
+                            </MultiComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L4 M6 S12" />
                             </layoutData>
-                        </VBox> -->
+                        </VBox>
+                        <!-- Status 끝 -->
                     </form:content>
                 </form:SimpleForm>
                 <!--Filterbar 끝-->
             </f:DynamicPageHeader>
         </f:header>
+        
         <f:content>
             <!--Base Price List 시작-->
             <t:Table id="listTable"
                 selectionMode="None"
                 rows="{listModel>/}"
+                cellClick=".onGoDetail"
                 fixedColumnCount="4"
                 visibleRowCountMode="Auto">
                 <t:extension>
@@ -207,10 +189,15 @@
                 </t:extension>
                 <t:columns>
                     <t:Column hAlign="Center" width="10rem">
+                        <Label text="{I18N>/APPROVAL_TYPE_CODE}" textAlign="Center" />
+                        <t:template>
+                            <Text text="{listModel>approval_type_code_nm}" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column hAlign="Center" width="10rem">
                         <Label text="{I18N>/APPROVAL_NUMBER}" textAlign="Center" />
                         <t:template>
-                            <Link text="{listModel>approval_number}" press=".onGoDetail" />
-                            <!-- <Text text="{listModel>approval_number}" /> -->
+                            <Text text="{listModel>approval_number}" />
                         </t:template>
                     </t:Column>
                     <t:Column width="18rem">
@@ -220,7 +207,7 @@
                         </t:template>
                     </t:Column>
                     <t:Column width="12rem">
-                        <Label text="{rootModel>/plantLabel}" textAlign="Center" width="100%" />
+                        <Label text="{I18N>/VI_APPROVE_ORG_CODE}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>org_name}" />
                         </t:template>
@@ -241,17 +228,6 @@
                         <Label text="{I18N>/SPEC_DESC}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>material_spec}" />
-                        </t:template>
-                    </t:Column>
-                    <t:Column hAlign="Center" width="12rem">
-                        <Label text="{I18N>/STATUS}" />
-                        <t:template>
-                            <tnt:InfoLabel 
-                                text="{listModel>approve_status_code_nm}" 
-                                colorScheme="{
-                                    path: 'listModel>approve_status_code',
-                                    formatter: '.onStatusColor'
-                                }" />
                         </t:template>
                     </t:Column>
                     <t:Column headerSpan="2" width="7rem" visible="{= ${rootModel>/config/DP_VI_SUPPLY_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -357,15 +333,15 @@
                             <Text text="{listModel>prices/1/new_base_price_currency_code}" textAlign="Center" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Center" width="12rem">
+                    <!-- <t:Column hAlign="Center" width="12rem">
                         <t:multiLabels>
                             <Label text="{I18N>/BASE_PRICE_TYPE}" textAlign="Center" width="100%" />
                         </t:multiLabels>
                         <t:template>
                             <Text text="{listModel>supplier_name}" />
                         </t:template>
-                    </t:Column>
-                    <t:Column headerSpan="4" width="6rem">
+                    </t:Column> -->
+                    <!-- <t:Column headerSpan="4" width="6rem">
                         <t:multiLabels>
                             <Label text="{I18N>/FAMILY_MATERIAL_CODE}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%" />
@@ -373,8 +349,8 @@
                         <t:template>
                             <Text text="{listModel>div}" textAlign="Center" width="100%" />
                         </t:template>
-                        </t:Column>
-                    <t:Column hAlign="Center" width="12rem">
+                    </t:Column> -->
+                    <t:Column headerSpan="3" hAlign="Center" width="12rem">
                         <t:multiLabels>
                             <Label text="{I18N>/FAMILY_MATERIAL_CODE}"/>
                             <Label text="{I18N>/MATERIAL_CODE}" /> 
@@ -412,7 +388,25 @@
                     <t:Column hAlign="Center"  width="8rem">
                         <Label text="{I18N>/REQUESTOR}" />
                         <t:template>
-                            <Text text="{listModel>requestor_local_nm}" />
+                            <Text text="{listModel>requestor_local_nm} {listModel>requestor_job_title}" 
+                                tooltip="{listModel>requestor_local_nm} {listModel>requestor_job_title}"  />
+                        </t:template>
+                    </t:Column>
+                    <t:Column hAlign="Center" width="12rem">
+                        <Label text="{I18N>/STATUS}" />
+                        <t:template>
+                            <tnt:InfoLabel 
+                                text="{listModel>approve_status_code_nm}" 
+                                colorScheme="{
+                                    path: 'listModel>approve_status_code',
+                                    formatter: '.onStatusColor'
+                                }" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column hAlign="Center" width="2rem">
+                        <Label text="" />
+                        <t:template>
+                            <ObjectStatus icon="sap-icon://feeder-arrow" />
                         </t:template>
                     </t:Column>
                     <!-- <t:Column hAlign="Center"  width="2rem">

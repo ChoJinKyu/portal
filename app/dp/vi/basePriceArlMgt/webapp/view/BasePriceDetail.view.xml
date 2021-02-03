@@ -25,12 +25,12 @@
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
                     <HBox alignItems="End">
-                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBack" />
-                        <Title text="{I18N>/NEW_BASE_PRICE}" wrapping="true"/>
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onGoToList" />
+                        <Title text="{detailViewModel>/basePriceTitle}" wrapping="true"/>
                     </HBox>
 				</uxap:expandedHeading>
                 <!-- <uxap:navigationActions>
-					<OverflowToolbarButton icon="sap-icon://decline" text="{I18N>/BACK}" press=".onBack" />
+					<OverflowToolbarButton icon="sap-icon://decline" text="{I18N>/BACK}" press=".onGoToList" />
                 </uxap:navigationActions> -->
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -40,7 +40,7 @@
                 <!-- Requester 시작 -->
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
                     <ObjectStatus title="{I18N>/APPROVAL_NUMBER}" text="{detailModel>/approval_number}"/>
-                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/requestor_local_nm}"/>
+                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/requestor_local_nm} {detailModel>/requestor_job_title} / {detailModel>/requestor_dept_local_nm}"/>
                     <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/request_date', formatter: '.onChangeDateFormat'}"/>
                 </layout:VerticalLayout>
                 <!-- Requester 끝 -->
@@ -54,11 +54,13 @@
 
                 <!-- Process 시작 -->
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
-					<Label text="{I18N>/PROCESS} : "/>
+                    <HBox>
+					    <Label text="{I18N>/PROCESS} : "/>
+                    </HBox>
                     <HBox>
                         <co:MicroProcessFlow>
                             <co:content>
-                                <co:MicroProcessFlowItem 
+                               <!--  <co:MicroProcessFlowItem 
                                     state="{detailViewModel>/processFlowStates/0}" 
                                     stepWidth="5rem" 
                                     icon="{detailViewModel>/processFlowIcons/0}" />
@@ -73,16 +75,48 @@
                                 <co:MicroProcessFlowItem 
                                     state="{detailViewModel>/processFlowStates/3}"
                                     stepWidth="5rem"
-                                    icon="{detailViewModel>/processFlowIcons/3}" />
+                                    icon="{detailViewModel>/processFlowIcons/3}" /> -->
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/0}" color="{detailViewModel>/processFlowColors/0}"/>
+                                            <Text text="{rootModel>/processList/0/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/1}" color="{detailViewModel>/processFlowColors/1}"/>
+                                            <Text text="{rootModel>/processList/1/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/2}" color="{detailViewModel>/processFlowColors/2}"/>
+                                            <Text text="{rootModel>/processList/2/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/3}" color="{detailViewModel>/processFlowColors/3}"/>
+                                            <Text text="{rootModel>/processList/3/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
                             </co:content>
                         </co:MicroProcessFlow>
                     </HBox>
-                    <HBox>
+                    <!-- <HBox>
                         <Text text="{rootModel>/processList/0/code_name}" width="4rem" />
                         <Text text="{rootModel>/processList/1/code_name}" width="6rem" textAlign="Center" />
                         <Text text="{rootModel>/processList/2/code_name}" width="7rem" textAlign="Center" />
                         <Text text="{rootModel>/processList/3/code_name}" width="4rem" textAlign="Center" />
-                    </HBox>
+                    </HBox> -->
 				</layout:VerticalLayout>
                 <!-- Process 시작 -->
 			</FlexBox>
@@ -102,28 +136,32 @@
                                         textAlign="Left"
                                         labelFor="input"
                                         required="true"/>
-                                    <Input
-                                        width="20rem"
-                                        placeholder=""
-                                        editable="{detailViewModel>/viewMode}"
-                                        value="{detailModel>/approval_title}">
-                                    </Input>
+                                    <VBox>
+                                        <Input
+                                            width="20rem"
+                                            placeholder=""
+                                            visible="{detailViewModel>/viewMode}"
+                                            value="{detailModel>/approval_title}">
+                                        </Input>
+                                        <Text text="{detailModel>/approval_title}" visible="{= !${detailViewModel>/viewMode}}" />
+                                    </VBox>
                                 </HBox>
                                 <VBox>
                                     <Label text="{I18N>/DESCRIPTION}" required="true"/>
-                                    <!-- Text Editor 시작 -->
-                                    <!-- <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
-                                    </layout:VerticalLayout> -->
-                                    <rte:RichTextEditor 
-                                        width="100%" 
-                                        height="200px" 
-                                        value="{detailModel>/approval_contents}" 
-                                        customToolbar="true" 
-                                        showGroupFont="true" 
-                                        showGroupLink="true" 
-                                        showGroupInsert="true"
-                                        editable="{detailViewModel>/viewMode}" />
-                                    <!-- Text Editor 끝 -->
+                                    <VBox>
+                                        <!-- Text Editor 시작 -->
+                                        <rte:RichTextEditor 
+                                            width="100%" 
+                                            height="200px" 
+                                            value="{detailModel>/approval_contents}" 
+                                            customToolbar="true" 
+                                            showGroupFont="true" 
+                                            showGroupLink="true" 
+                                            showGroupInsert="true"
+                                            visible="{detailViewModel>/viewMode}" />
+                                        <!-- Text Editor 끝 -->
+                                        <FormattedText height="200px" htmlText="{= ${detailModel>/approval_contents} ? ${detailModel>/approval_contents} : '' }" visible="{= !${detailViewModel>/viewMode}}"/>
+                                    </VBox>
                                 </VBox>
                             </VBox>
 						</uxap:blocks>
@@ -176,74 +214,6 @@
 						<uxap:blocks>
                             <!-- Approval & Reference 시작 -->
                             <core:Fragment fragmentName="dp.vi.basePriceArlMgt.view.ApprovalLine" type="XML" />
-                            <!-- <VBox>
-                            <Table id="ApprovalTable"
-                                    growing="true"
-                                    growingThreshold="20"
-                                    class="sapFDynamicPageAlignContent"
-                                    mode="None"
-                                    width="auto"
-                                    items="{appdetailModel>/undefined}"
-                                    >
-                                <headerToolbar>
-                                    <OverflowToolbar>
-                                    <Label text="Approval Line"/>
-                                    </OverflowToolbar>
-                                </headerToolbar>
-                                <columns>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="3rem" >
-                                        <Text text="No." />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="6em" >
-                                        <Text text="Type" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" width="16em" >
-                                        <Text text="Name/Dept" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Comment" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" width="6em" >
-                                        <Text text="Status" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" width="8em" >
-                                        <Text text="Add / Delete" />
-                                    </Column>
-                                </columns>
-                                <items>
-                                    <ColumnListItem>
-                                        <cells>
-                                            <Text text="{appdetailModel>no}" />
-                                            <ComboBox  width="100%"
-                                                selectedKey="{appdetailModel>type}"
-                                                enabled="{appdetailModel>editMode}"
-                                                items="{
-                                                    path: 'org>/Org_Company',
-                                                    filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                    ],
-                                                    sorter: { path: 'company_code'},
-                                                    templateShareable:false
-                                                }"
-                                                >
-                                            <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
-                                            </ComboBox>
-                                            <SearchField enabled="{appdetailModel>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appdetailModel>nameDept}"/>
-                                            <Text text="{appdetailModel>status}" />
-                                            <Text text="{appdetailModel>comment}" />
-                                            <Button icon="{appdetailModel>arrowUp}" press=".onSortUp(${appdetailModel>no})" tooltip="sort" visible="{= ${appdetailModel>arrowUp}===''?false:true }"></Button>
-                                            <Button icon="{appdetailModel>arrowDown}" press=".onSortDown(${appdetailModel>no})"  visible="{= ${appdetailModel>arrowDown}===''?false:true }" tooltip="sort"></Button>
-                                            <Button icon="sap-icon://delete" press=".setApprovalRemoveRow(${appdetailModel>no})" tooltip="삭제" visible="{appdetailModel>trashShow}"></Button>
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>
-                            </Table>
-
-                            <Text text="Referrer" />
-                            <Input value="{detailModel>/abc}"
-                                showValueHelp="true"
-                                valueHelpRequest=".onOpenMaterialCode" />
-                            </VBox> -->
                             <!-- Approval & Reference 끝 -->
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
@@ -258,8 +228,8 @@
 				<ToolbarSpacer />
                 <Button
                     text="{I18N>/CHANGE_DEVELOPER}"
-                    enabled="{= ${detailViewModel>/viewMode}}"
-                    press=".onDeveloping" />
+                    enabled="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
+                    press=".onMultiInputWithEmployeeValuePress($event, 'changeDeveloper')" />
                 <Button
                     text="{I18N>/EDIT}" 
                     enabled="{= !${detailViewModel>/viewMode}}"
@@ -269,7 +239,7 @@
                     enabled="{= ${detailModel>/approve_status_code} === '10' ? true : false}"
                     press=".onPreview" /> -->
                 <!-- <Button
-                    text="{I18N>/CANCEL}" press=".onBack" /> -->
+                    text="{I18N>/CANCEL}" press=".onGoToList" /> -->
 				<Button
                     text="{I18N>/DRAFT}" 
                     enabled="{= ${detailViewModel>/viewMode}}"
@@ -285,7 +255,7 @@
                 <Button
                     type="Emphasized"
                     text="{I18N>/REQUEST}"
-                    enabled="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
+                    enabled="{= ${detailViewModel>/viewMode}}"
                     press=".onRequest" />
 			</OverflowToolbar>
 		</uxap:footer>

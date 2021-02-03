@@ -87,10 +87,11 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "list_temp");
             this.setModel(new ManagedListModel(), "orgMap");
             this.setModel(new ManagedListModel(), "requestors");
+            this.setModel(new ManagedListModel(), "SegmentedItem");
             this.setModel(new JSONModel(), "excelModel");
             this.getView().setModel(this.oServiceModel, 'supplierModel');
             
-            //this.setApproveStatus();
+            
         
             this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -158,7 +159,7 @@ sap.ui.define([
             
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
                                     new Filter("company_code", FilterOperator.EQ, companyCode)
                                 ],
                                 and: true
@@ -176,30 +177,6 @@ sap.ui.define([
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
             this.getView().byId("searchPlantE").bindItems(bindItemInfo);
         },
-
-        setApproveStatus: function(){
-            
-            var filter = new Filter({
-                            filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2600' ),
-                                    new Filter("group_code", FilterOperator.EQ, 'CM_APPROVE_STATUS')
-                                ],
-                                and: true
-                        });
-           
-            var bindItemInfo = 
-                {
-                    path: 'util>/Code',
-                    filters: filter,
-                    template: new SegmentedButtonItem({
-                        width: '5em', key: "{util>code}", text: "{util>code_name}"
-                    })         
-                };
-            this.getView().byId("searchStatus").bindItems(bindItemInfo);
-            console.log(bindItemInfo);
-            // this.getView().byId("searchStatus").addItem()
-        },
-
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -346,7 +323,7 @@ sap.ui.define([
 
                     plantFilters.push(new Filter({
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
+                            new Filter("tenant_id", FilterOperator.EQ, 'L2101'),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
                         and: true
@@ -354,7 +331,7 @@ sap.ui.define([
                 });
             } else {
                 plantFilters.push(
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2600')
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 );
             }
  
@@ -413,7 +390,7 @@ sap.ui.define([
 
             //var path = '';
 
-            // var schFilter = [new Filter("tenant_id", FilterOperator.EQ, 'L2600')];
+            // var schFilter = [new Filter("tenant_id", FilterOperator.EQ, 'L2101')];
             //     this._bindView("/Requestors", "requestors", schFilter, function(oData){
                     
             //     });
@@ -678,7 +655,7 @@ sap.ui.define([
 
             plantFilter.push(new Filter({
                 filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2101'),
                     new Filter("company_code", FilterOperator.EQ, source.getSelectedKey())
                 ],
                 and: true
@@ -771,7 +748,6 @@ sap.ui.define([
 
             var sId = toggleButtonId.split('--');
             var id = sId[sId.length-1];
-            console.log(id);
             var page = ""
             var appTypeCode = "";
             var company_code = this.byId("searchCompanyF").getSelectedKey();
@@ -781,27 +757,25 @@ sap.ui.define([
                 return;
             } 
             
-            if(id == undefined){       
-                MessageBox.error("품의서 유형을 선택해주세요");
-                return;
+            if(id.indexOf("localBudget") > -1){
+                approvalTarget = "budgetExecutionApproval"
+                appTypeCode = "B"
+            }else if(id.indexOf("supplierSelection") > -1){
+                approvalTarget = "participatingSupplierSelection"
+                appTypeCode = "E"
+            }else if(id.indexOf("localOrder") > -1){
+                approvalTarget = "purchaseOrderLocalApproval"
+                appTypeCode = "V"
+            }else if(id.indexOf("receipt") > -1){
+                approvalTarget ="moldRecepitApproval"
+                appTypeCode = "I"
+            }else if(id.indexOf("export") > -1){
+                appTypeCode ="X"  
+            }else if(id.indexOf("repModCompletion") > -1){ // 7. 개조 & 수리 완료 보고
+                approvalTarget ="rrcrReport"
+                appTypeCode ="C"
             }
-            else{
-                if(id.indexOf("localBudget") > -1){
-                    approvalTarget = "budgetExecutionApproval"
-                    appTypeCode = "B"
-                }else if(id.indexOf("supplierSelection") > -1){
-                    approvalTarget = "participatingSupplierSelection"
-                    appTypeCode = "E"
-                }else if(id.indexOf("localOrder") > -1){
-                    approvalTarget = "purchaseOrderLocalApproval"
-                    appTypeCode = "V"
-                }else if(id.indexOf("receipt") > -1){
-                    approvalTarget ="moldRecepitApproval"
-                    appTypeCode = "I"
-                }else if(id.indexOf("export") > -1){
-                    appTypeCode ="X"  
-                }
-            }
+            
             
 
             // else if(id.indexOf("importBudget") > -1){
@@ -822,20 +796,27 @@ sap.ui.define([
             //     appTypeCode ="E"
             // }
            
-            
-
-            
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
+            var apprSelection = 0;
             for (var i = 0; i < groupId.length; i++) {
                 if (groupId[i].getPressed() == true) {
-                    this.getRouter().navTo(approvalTarget, {
-                        company_code: company_code
-                        , plant_code: plant_code
-                        , approval_type_code: appTypeCode
-                        , approval_number: "New"
-                    });
+                    apprSelection = apprSelection+1;
                 }
             }
+            
+            if(apprSelection > 0){
+                this.getRouter().navTo(approvalTarget, {
+                    company_code: company_code
+                    , plant_code: plant_code
+                    , approval_type_code: appTypeCode
+                    , approval_number: "New"
+                });
+            }else{
+                MessageBox.error("품의서 유형을 선택해주세요");
+                return;
+            }
+                
+            
         },
 
         createPopupClose: function (oEvent) {
@@ -973,9 +954,43 @@ sap.ui.define([
 		 */
         _onRoutedThisPage: function () {
             this.getModel("approvalListView").setProperty("/headerExpanded", true);
-            this.setModel(new ManagedListModel(), "orgMap");
+            this.setModel(new ManagedListModel(), "orgMap"); 
+
+            this._segmentSrch();
+
         },
         
+        _segmentSrch : function (){
+             
+            var oView = this.getView(),
+                oModel = this.getModel("SegmentedItem") ,
+                codeName = this.getModel('I18N').getText("/ALL")
+                ;
+            
+             var aSearchFilters = [];
+                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101'));
+                aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'CM_APPROVE_STATUS'));
+
+
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("util"));
+            oModel.read("/Code", {
+                filters: aSearchFilters,
+                success: function (oData) {     
+                    oModel.addRecord({
+                        code: ""
+                      ,  code_name: codeName   
+                      ,  group_code: "CM_APPROVE_STATUS"
+                      ,  parent_code: null
+                      ,  parent_group_code: null
+                      ,  sort_no: "0"
+                    },"/Code",0);
+                    oView.setBusy(false);
+                    
+                }
+            });
+        } ,
+
         /**
 		 * Event handler when a search button pressed
 		 * @param {sap.ui.base.Event} oEvent the button press event
@@ -1106,7 +1121,7 @@ sap.ui.define([
             }
 
             
-            //aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2600"));
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, "L2101"));
             return aSearchFilters;
         },
 
@@ -1154,10 +1169,10 @@ sap.ui.define([
 
 
                     }               
-                    
-                    oView.setBusy(false);
-                    
+                    nModel.refresh(true);
+                    oView.setBusy(false);       
                 }
+                
             });
            
             

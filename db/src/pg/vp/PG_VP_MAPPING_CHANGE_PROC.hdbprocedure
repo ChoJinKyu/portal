@@ -119,6 +119,21 @@ BEGIN
 	DECLARE V_MSG_LOOP_PARAM NVARCHAR(5000) := 'PARAM MSG';
 	DECLARE V_SUCESS_LOOP_PARAM NVARCHAR(5000) :=  'NPG00023';
 	DECLARE V_ERROR_PARAM NVARCHAR(500);
+	DECLARE V_PROC_NAME NVARCHAR(50) := 'PG_VP_MAPPING_CHANGE_PROC';
+	
+	/*****************************************************
+	Return Success Info
+	*****************************************************/
+	DECLARE V_FIRST_TENANT_ID NVARCHAR(5);
+	DECLARE V_FIRST_COMPANY_CODE NVARCHAR(10);
+	DECLARE V_FIRST_ORG_TYPE_CODE NVARCHAR(2);
+	DECLARE V_FIRST_ORG_CODE NVARCHAR(10);
+	
+	DECLARE V_RETURN_VENDOR_POOL_CODE NVARCHAR(30);
+	DECLARE V_RETURN_LEAF_YN CHAR(1);
+	DECLARE V_RETURN_CHILD_LEAF_YN CHAR(1);
+	DECLARE V_RETURN_LEAF_LVL CHAR(1);
+	DECLARE V_RETURN_HIGHER_LEVEL_PATH_NAME NVARCHAR(1000);
 	
 	--CUD 건수 체크를 위한 변수
     DECLARE V_CUD_COUNT INT := 0;
@@ -235,10 +250,13 @@ BEGIN
 		--O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
 		--EXEC (:var_rollback);
 		IF ::SQL_ERROR_CODE < 10000 THEN
-			O_MSG = SELECT  'NG' RETURN_CODE, LPAD(::SQL_ERROR_CODE, 8, '0')||'-[Other Exception]-@-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
+			O_MSG = SELECT  'NG' RETURN_CODE, LPAD(::SQL_ERROR_CODE, 8, '0')||'-[Other Exception]-@-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;			
 		ELSE 
-			O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
-		END IF;
+			O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;			
+        END IF;
+        
+        --INSERT INTO error_log (error_seq, schema_name, prog_name, error_code, error_message)
+    	--VALUES ( error_seq.NEXTVAL, ::CURRENT_OBJECT_SCHEMA, :V_PROC_NAME, ::SQL_ERROR_CODE, ::SQL_ERROR_MESSAGE);
 		
 	END;
 	
@@ -315,6 +333,11 @@ BEGIN
 	***************************************************************************************/
 	FOR loop_mst AS l_mst_cursor DO        
         V_MASTER_LOOP_INDEX := V_MASTER_LOOP_INDEX + 1;
+        
+        V_FIRST_TENANT_ID      := IFNULL(loop_mst.TENANT_ID,' ');
+	    V_FIRST_COMPANY_CODE   := IFNULL(loop_mst.COMPANY_CODE,' ');
+	    V_FIRST_ORG_TYPE_CODE  := IFNULL(loop_mst.ORG_TYPE_CODE,' ');
+	    V_FIRST_ORG_CODE       := IFNULL(loop_mst.ORG_CODE,' ');
 	    
 	    V_ERROR_PARAM := 'VENDOR_POOL_CODE: '||IFNULL(loop_mst.VENDOR_POOL_CODE,' ')
                          ||' ,VENDOR_POOL_LOCAL_NAME: '||IFNULL(loop_mst.VENDOR_POOL_LOCAL_NAME,' ')
@@ -402,6 +425,9 @@ BEGIN
                 --The number of data corresponding to the inquiry condition cannot exceed 1.
                 SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00010'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
 			END IF;
+			
+			--신규가 아닌 경우 PARAM VENDOR POOL 코드가 RETURN VENDOR POOL 코드가 됨
+			V_RETURN_VENDOR_POOL_CODE := loop_mst.VENDOR_POOL_CODE;
 	    END IF;
 	    
 	    SELECT COUNT(*)
@@ -438,6 +464,8 @@ BEGIN
                 SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00028'||'-'||V_ERROR_PARAM||'-@-'||'Master Error(Vendor Pool Code Create Error).'||V_MSG_LOOP_PARAM;
 		    END IF;
 		    
+		    V_RETURN_VENDOR_POOL_CODE := V_NEW_VENDOR_POOL_CODE;
+		    
 		    IF IFNULL( loop_mst.VENDOR_POOL_LOCAL_NAME, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_LOCAL_NAME ) = '' THEN
 	            --Level Name (Local) is a required value.
 	            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00029'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
@@ -446,6 +474,41 @@ BEGIN
 		    IF IFNULL( loop_mst.VENDOR_POOL_ENGLISH_NAME, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_ENGLISH_NAME ) = '' THEN
 	            --Level Name (Eng) is a required value.
 	            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00030'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+		    END IF;
+		    
+		    IF IFNULL( loop_mst.REPR_DEPARTMENT_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.REPR_DEPARTMENT_CODE ) = '' THEN
+	            IF loop_mst.LEAF_FLAG = true then
+	            	--Department Code is a required value.
+	            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00034'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+	            END IF;
+		    END IF;
+		    
+		    IF IFNULL( loop_mst.REGULAR_EVALUATION_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.REGULAR_EVALUATION_FLAG ) = '' THEN
+	            IF loop_mst.LEAF_FLAG = true then
+	            	--Department Code is a required value.
+	            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00035'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+	            END IF;
+		    END IF;
+		    
+		    IF IFNULL( loop_mst.SD_EXCEPTION_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.SD_EXCEPTION_FLAG ) = '' THEN
+	            IF loop_mst.LEAF_FLAG = true then
+	            	--Department Code is a required value.
+	            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00036'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+	            END IF;
+		    END IF;
+		    
+		    IF IFNULL( loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG ) = '' THEN
+	            IF loop_mst.LEAF_FLAG = true then
+	            	--Department Code is a required value.
+	            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00037'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+	            END IF;
+		    END IF;
+		    
+		    IF IFNULL( loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG ) = '' THEN
+	            IF loop_mst.LEAF_FLAG = true then
+	            	--Department Code is a required value.
+	            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00038'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+	            END IF;
 		    END IF;
 		    
 		    /****************************************************
@@ -558,6 +621,41 @@ BEGIN
 				    IF IFNULL( loop_mst.VENDOR_POOL_ENGLISH_NAME, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_ENGLISH_NAME ) = '' THEN
 			            --Level Name (Eng) is a required value.
 			            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00030'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+				    END IF;
+				    
+				    IF IFNULL( loop_mst.REPR_DEPARTMENT_CODE, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.REPR_DEPARTMENT_CODE ) = '' THEN
+			            IF loop_mst.LEAF_FLAG = true then
+			            	--Department Code is a required value.
+			            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00034'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+			            END IF;
+				    END IF;
+				    
+				    IF IFNULL( loop_mst.REGULAR_EVALUATION_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.REGULAR_EVALUATION_FLAG ) = '' THEN
+			            IF loop_mst.LEAF_FLAG = true then
+				            --Department Code is a required value.
+				            SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00035'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+				        END IF;
+				    END IF;
+				    
+				    IF IFNULL( loop_mst.SD_EXCEPTION_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.SD_EXCEPTION_FLAG ) = '' THEN
+			            IF loop_mst.LEAF_FLAG = true then
+			            	--Department Code is a required value.
+			            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00036'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+			            END IF;
+				    END IF;
+				    
+				    IF IFNULL( loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG ) = '' THEN
+			            IF loop_mst.LEAF_FLAG = true then
+			            	--Department Code is a required value.
+			            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00037'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+			            END IF;
+				    END IF;
+				    
+				    IF IFNULL( loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG ) = '' THEN
+			            IF loop_mst.LEAF_FLAG = true then
+			            	--Department Code is a required value.
+			            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00038'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
+			            END IF;
 				    END IF;
 					
 					/****************************************************
@@ -1482,7 +1580,53 @@ BEGIN
     	V_MSG_LOOP_PARAM := '99999';
     END IF;
     
-    V_SUCESS_LOOP_PARAM := V_SUCESS_LOOP_PARAM||'-'||V_MSG_LOOP_PARAM;
+    --DECLARE V_RETURN_LEAF_YN CHAR(1);
+	--DECLARE V_RETURN_CHILD_LEAF_YN CHAR(1);
+	--V_RETURN_VENDOR_POOL_CODE := IFNULL(V_NEW_VENDOR_POOL_CODE)
+	
+	SELECT  CASE WHEN A.LEAF_FLAG = true THEN 'T' ELSE 'F' END LEAF_FLAG
+	       ,CASE WHEN TO_NUMBER(A.HIERARCHY_LEVEL) + 1 = B.CODE_NAME 
+	    		   THEN 'T'
+	    		 WHEN TO_NUMBER(A.HIERARCHY_LEVEL) = B.CODE_NAME 
+	    		   THEN 'T' 
+	    		 ELSE 'F' 
+	    	END CHILD_LEAF_YN
+	       ,A.HIERARCHY_LEVEL 
+	       ,A.HIGHER_LEVEL_PATH_NAME
+	INTO    V_RETURN_LEAF_YN
+	       ,V_RETURN_CHILD_LEAF_YN
+	       ,V_RETURN_LEAF_LVL
+	       ,V_RETURN_HIGHER_LEVEL_PATH_NAME
+	FROM PG_VP_VENDOR_POOL_EXPORT_MST_VIEW A
+	     INNER JOIN CM_ORG_CODE_LNG B
+	    	ON     B.TENANT_ID   = A.TENANT_ID
+			AND    B.GROUP_CODE  = 'VP_VENDOR_POOL_MAX_LEVEL'
+			AND    B.ORG_CODE    = A.ORG_CODE
+			AND    B.LANGUAGE_CD = 'EN'
+			AND    B.CODE        = A.OPERATION_UNIT_CODE
+	WHERE  A.TENANT_ID           = :V_FIRST_TENANT_ID
+	AND    A.COMPANY_CODE        = :V_FIRST_COMPANY_CODE
+	AND    A.ORG_TYPE_CODE       = :V_FIRST_ORG_TYPE_CODE
+	AND    A.ORG_CODE            = :V_FIRST_ORG_CODE
+	AND    A.VENDOR_POOL_CODE    = :V_RETURN_VENDOR_POOL_CODE;
+	
+    IF V_RETURN_LEAF_YN IS NULL THEN
+        V_RETURN_LEAF_YN := 'F';
+    END IF;
+    
+    IF V_RETURN_CHILD_LEAF_YN IS NULL THEN
+        V_RETURN_CHILD_LEAF_YN := 'F';
+    END IF;
+    
+    IF V_RETURN_LEAF_LVL IS NULL THEN
+        V_RETURN_LEAF_LVL := '0';
+    END IF;
+    
+    IF V_RETURN_HIGHER_LEVEL_PATH_NAME IS NULL THEN
+        V_RETURN_HIGHER_LEVEL_PATH_NAME := ' ';
+    END IF;
+    
+    V_SUCESS_LOOP_PARAM := V_SUCESS_LOOP_PARAM||'-'||:V_RETURN_VENDOR_POOL_CODE||:V_RETURN_LEAF_YN||:V_RETURN_CHILD_LEAF_YN||V_RETURN_LEAF_LVL||V_RETURN_HIGHER_LEVEL_PATH_NAME;
     
     O_MSG = SELECT 'OK' RETURN_CODE, :V_SUCESS_LOOP_PARAM RETURN_MSG FROM DUMMY;
 END;

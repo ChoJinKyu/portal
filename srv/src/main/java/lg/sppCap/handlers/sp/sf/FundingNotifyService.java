@@ -21,7 +21,7 @@ import cds.gen.sp.fundingnotifyservice.SfFundingNotify_;
 
 
 @Component
-@ServiceName("sp.fundingNotifyService")
+@ServiceName("sp.FundingNotifyService")
 public class FundingNotifyService implements EventHandler {
     
     private final static Logger log = LoggerFactory.getLogger(FundingNotifyService.class);

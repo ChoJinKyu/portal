@@ -17,16 +17,13 @@ sap.ui.define([
     "ext/lib/util/Multilingual",
     "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
-    "ext/cm/util/control/ui/EmployeeDialog"
-    // @ts-ignore
-    // @ts-ignore
-], function (BaseController, History, MessageBox, MessageToast, Filter, FilterOperator, FilterType, Sorter, JSONModel, ColumnListItem,
-    // @ts-ignore
-    Fragment, TransactionManager, Formatter, Validator, Multilingual, ManagedModel, ManagedListModel, EmployeeDialog) {
+    "cm/util/control/ui/EmployeeDialog",
+
+], function (BaseController, History, MessageBox, MessageToast, Filter, FilterOperator, FilterType, Sorter, JSONModel, ColumnListItem, Fragment, TransactionManager, Formatter, Validator, Multilingual, ManagedModel, ManagedListModel, EmployeeDialog) {
     "use strict";
 
-
     var i18nModel; //i18n 모델
+
     return BaseController.extend("pg.tm.tmMonitoring.controller.Detail", {
 
         formatter: Formatter,
@@ -78,13 +75,6 @@ sap.ui.define([
                 this.manager = oEvent.getParameter("arguments")["manager"],
                 this.manager_local_name = oEvent.getParameter("arguments")["manager_local_name"];
 
-            //senario_number max view
-            oView.getModel().read("/TaskMonitoringMaxScenarioNumberView", {
-                success: function (oData) {
-                    this.senario_number_max = oData.results[0].max_scenario_number;
-                }.bind(this),
-                error: function () { }
-            });
 
             //필수입력항목 검사 결과 초기화
             this.validator.clearValueState(this._oFragments.Detail_Edit);
@@ -290,7 +280,7 @@ sap.ui.define([
                     that.getRouter().navTo("main", {}, true);
 
                 }
-               
+                this.getView().getModel().refresh(true);
             } else {
                 MessageBox.confirm(i18nModel.getText("/NPG00013"), {
                     actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
@@ -423,10 +413,17 @@ sap.ui.define([
             //richTextEditorValue reset
             this.removeRichTextEditorValue();
             this.removeFormattedTextValue();
+            //refresh
+            this.getView().getModel().refresh();
             //담당자 테이블
             this.byId("managerListTable").getBinding("items").filter(new Filter("employee_number", FilterOperator.Contains, " "));
-            //refresh model
-            this.getView().getModel().refresh(true);
+            //tokens remove
+            this.byId("combo_purchasing_type").removeAllSelectedItems();
+            this.byId("company_edit_combo").removeAllSelectedItems();
+            this.byId("bizunit_edit_combo").removeAllSelectedItems();
+            this.byId("multiInputWithEmployeeValueHelp").removeAllTokens();
+            this.byId("multicombo_cycle").removeAllSelectedItems();
+
         },
 
         /**
@@ -1152,7 +1149,7 @@ sap.ui.define([
                     "sourceOperation": operationDataArr
                 }
             };
-            console.log(inputInfo);
+            // console.log(inputInfo);
 
             $.ajax({
                 url: urlInfo,
@@ -1163,12 +1160,12 @@ sap.ui.define([
                     sap.m.MessageToast.show(i18nModel.getText("/NCM01001"));
                     that.getRouter().navTo("main", {}, true);
                     that._resetView();
-                    console.log('data:', data);
+                    // console.log('data:', data);
                 },
                 error: function (e) {
                     sap.m.MessageToast.show(i18nModel.getText("/EPG00003"));
                     var v_returnModel = oView.getModel("returnModel").getData().data;
-                    console.log('v_returnModel_e:', v_returnModel);
+                    // console.log('v_returnModel_e:', v_returnModel);
                 }
             });
         }

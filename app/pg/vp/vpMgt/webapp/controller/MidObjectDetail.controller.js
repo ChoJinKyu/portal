@@ -110,6 +110,18 @@ sap.ui.define([
 		/* event handlers                                              */
 		/* =========================================================== */
 
+        handlemtlChang: function (event) {
+
+            var mtl = this.getView().byId("general_inp_type_code").getSelectedKey();
+            if (mtl == "MBLMOB") {
+                this.byId("v_general_plan_base").setVisible(true);
+
+            } else {
+                this.byId("v_general_plan_base").setVisible(false);
+            }
+
+        },
+
 		/**
 		 * Event handler for Enter Full Screen Button pressed
 		 * @public
@@ -492,6 +504,7 @@ sap.ui.define([
             this._sOrgCode = oArgs.orgCode;
             this._sOperationUnitCode = oArgs.operationUnitCode;
             this._sTempType = oArgs.temptype;
+            this._sDrill = oArgs.drill;
 
             var predicates = [];
             var predicates1 = [];
@@ -532,6 +545,64 @@ sap.ui.define([
             this.sppListTbl = this.byId("sppListTbl");
             this.metListTbl = this.byId("metListTbl");
             this.mngListTbl = this.byId("mngListTbl");
+
+
+            if(this._sDrill == "leaf"){
+                this.byId("pageSubSection2").setVisible(true);
+                this.byId("pageSubSection3").setVisible(true);
+                this.byId("pageSubSection4").setVisible(true);
+
+                // this.byId("v_derail_information").setVisible(true);
+                this.byId("v_general_repr_department_code").setVisible(true);
+                this.byId("v_general_industry_class_code").setVisible(true);
+                this.byId("v_general_inp_type_code").setVisible(true);
+                this.handlemtlChang(event);
+                // this.byId("v_general_plan_base").setVisible(false);
+                this.byId("v_general_regular_evaluation_flag").setVisible(true);
+                this.byId("v_general_maker_material_code_mngt_flag").setVisible(true);
+                this.byId("v_general_sd_exception_flag").setVisible(true);
+                this.byId("v_general_vendor_pool_apply_exception_flag").setVisible(true);
+                this.byId("v_general_equipment_grade_code").setVisible(true);
+                this.byId("v_general_equipment_type_code").setVisible(true);
+                this.byId("v_general_dom_oversea_netprice_diff_rate").setVisible(true);
+                this.byId("v_general_domestic_net_price_diff_rate").setVisible(true);
+
+
+                if (this._sOperationUnitCode == "EQUIPMENT") {
+                    this.byId("v_general_equipment_grade_code").setVisible(true);
+                    this.byId("v_general_equipment_type_code").setVisible(true);
+                    this.byId("v_general_dom_oversea_netprice_diff_rate").setVisible(false);
+                    this.byId("v_general_domestic_net_price_diff_rate").setVisible(false);
+                    // this.byId("equipment_box").setVisible(true);
+                    // this.byId("rate_box").setVisible(false);
+                } else {
+                    this.byId("v_general_equipment_grade_code").setVisible(false);
+                    this.byId("v_general_equipment_type_code").setVisible(false);
+                    this.byId("v_general_dom_oversea_netprice_diff_rate").setVisible(true);
+                    this.byId("v_general_domestic_net_price_diff_rate").setVisible(true);
+                    // this.byId("equipment_box").setVisible(false);
+                    // this.byId("rate_box").setVisible(true);                
+                }
+
+            }else{
+                this.byId("pageSubSection2").setVisible(false);
+                this.byId("pageSubSection3").setVisible(false);
+                this.byId("pageSubSection4").setVisible(false);
+
+                // this.byId("v_derail_information").setVisible(false);
+                this.byId("v_general_repr_department_code").setVisible(false);
+                this.byId("v_general_industry_class_code").setVisible(false);
+                this.byId("v_general_inp_type_code").setVisible(false);
+                this.byId("v_general_regular_evaluation_flag").setVisible(false);
+                this.byId("v_general_maker_material_code_mngt_flag").setVisible(false);
+                this.byId("v_general_sd_exception_flag").setVisible(false);
+                this.byId("v_general_vendor_pool_apply_exception_flag").setVisible(false);
+                this.byId("v_general_equipment_grade_code").setVisible(false);
+                this.byId("v_general_equipment_type_code").setVisible(false);
+                this.byId("v_general_dom_oversea_netprice_diff_rate").setVisible(false);
+                this.byId("v_general_domestic_net_price_diff_rate").setVisible(false);                
+            }
+
         },
 
         //행추가
@@ -776,6 +847,14 @@ sap.ui.define([
                     that.getView().byId("general_repr_department_code").setValue(generaloDataRst.Department);
                     that.getView().byId("general_industry_class_code").setSelectedKey(generaloDataRst.industry_class_code);
                     that.getView().byId("general_inp_type_code").setSelectedKey(generaloDataRst.inp_type_code);
+
+                    if (generaloDataRst.inp_type_code == "MBLMOB") {
+                        that.byId("v_general_plan_base").setVisible(true);
+
+                    } else {
+                        that.byId("v_general_plan_base").setVisible(false);
+                    }
+                    
                     that.getView().byId("general_plan_base").setSelectedKey(generaloDataRst.mtlmob_base_code);
                     that.getView().byId("general_regular_evaluation_flag").setState(generaloDataRst.regular_evaluation_flag);
                     that.getView().byId("general_maker_material_code_mngt_flag").setState(generaloDataRst.maker_material_code_mngt_flag);
@@ -789,7 +868,20 @@ sap.ui.define([
 			});
         },
 
+        chkReplaceChange: function (oEvent) {
+            console.log("livechange!!");
+            //var regex = /[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9]/gi;     // 특수문자 제거 (한글 영어 숫자만)
+            //var regex = /[^a-zA-Z0-9\s ]/gi;                   // 특수문자 제거 (영어 숫자만)
+            var regex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g;  //한글 제거 11/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g%^&*()_+|<
 
+            var newValue = oEvent.getParameter("newValue");
+            //$(this).val(v.replace(regexp,''));
+            if (newValue !== "") {
+                newValue = newValue.replace(regex, "");
+                oEvent.oSource.setValue(null);
+                oEvent.oSource.setValue(newValue);
+            }
+        },
         _supplySearch: function(aFilter) {
 
 

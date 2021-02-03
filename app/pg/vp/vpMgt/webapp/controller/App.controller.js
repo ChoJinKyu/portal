@@ -110,13 +110,16 @@ sap.ui.define([
 			// If there is no layout parameter, query for the default level 0 layout (normally OneColumn)
 			if (!sLayout) {
 				var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0);
-				sLayout = oNextUIState.layout;
+                sLayout = oNextUIState.layout;
+                // this.getView().byId("fcl").removeBeginColumnPage(oMidObjectTreeView);
+                // this.getView().byId("fcl").addBeginColumnPage(oMainListView);
 			}
 
 			// Optional UX improvement:
 			// The app may want to hide the old view early (before the routing hides it)
 			// to prevent the view being temporarily shown aside the next view (during the transition to the next route)
-			// if the views for both routes do not match semantically
+            // if the views for both routes do not match semantically
+            
 			if (this.currentRouteName === "mainPage") { // last viewed route was master
 				var oMainListView = this.oRouter.getView("pg.vp.vpMgt.view.MainList");
                 this.getView().byId("fcl").removeBeginColumnPage(oMainListView);
@@ -134,6 +137,9 @@ sap.ui.define([
                 }
                 else
                 {
+                    var oMidObjectTreeView = this.oRouter.getView("pg.vp.vpMgt.view.MidObjectTree");
+                    this.getView().byId("fcl").removeBeginColumnPage(oMidObjectTreeView);
+                    this.getView().byId("fcl").addBeginColumnPage(oMainListView);
                     // var oMainListView = this.oRouter.getView("pg.vp.vpMgt.view.MainList");
                     // var oMidObjectTreeView = this.oRouter.getView("pg.vp.vpMgt.view.MidObjectTree");
                     // this.getView().byId("fcl").removeBeginColumnPage(oMidObjectTreeView);

@@ -7,7 +7,6 @@ PROCEDURE DP_TC_SAVE_MCST_PART_LIST_PROC (IN I_TABLE TABLE(TENANT_ID NVARCHAR(5)
 					                                      ,UOM_CODE NVARCHAR(3)
 					                                      ,MATERIAL_REQM_QUANTITY DECIMAL
 					                                      ,BUYER_EMPNO NVARCHAR(30)
-					                                      ,DIRECT_REGISTER_FLAG BOOLEAN
 					                                      ,MAPPING_ID INTEGER
 					                                      ,CRUD_TYPE_CODE NVARCHAR(1)
 					                                      )
@@ -100,7 +99,7 @@ BEGIN
     END;
     
     
-    --Delete Part(CRUD_TYPE_CODE=D)
+    --Update Or Insert Part(CRUD_TYPE_CODE<>D)
     BEGIN
 	    DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -109,9 +108,8 @@ BEGIN
         
         MERGE
          INTO DP_TC_MCST_PROJECT_PART_LIST ppl
-        USING :I_TABLE it
-           ON 'D' != it.CRUD_TYPE_CODE
-		  AND ppl.TENANT_ID = it.TENANT_ID
+        USING (select * from :I_TABLE t where t.CRUD_TYPE_CODE <> 'D') it
+		   ON ppl.TENANT_ID = it.TENANT_ID
 	      AND ppl.PROJECT_CODE = it.PROJECT_CODE
 	      AND ppl.MODEL_CODE = it.MODEL_CODE
 	      AND ppl.VERSION_NUMBER = it.VERSION_NUMBER

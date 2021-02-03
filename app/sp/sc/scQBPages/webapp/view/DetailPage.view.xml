@@ -52,14 +52,14 @@
                             
                             <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                                 <ObjectStatus id="objectStatus_nego_document_number" title="Negotiation No" text="{path: 'NegoHeaders>/nego_document_number'}" class="sapUiLargeMarginBegin" />
-                                <ObjectStatus title="Creater" text="{NegoHeaders>/buyer_empno}" class="sapUiLargeMarginBegin" />
+                                <ObjectStatus title="Buyer" text="{NegoHeaders>/buyer_employee/employee_name} [{NegoHeaders>/buyer_employee/department_name}]" class="sapUiLargeMarginBegin" />
                                 <ObjectStatus title="Create Date" text="{path: 'NegoHeaders>/local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', 
                                                                         formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }"  class="sapUiLargeMarginBegin" />
                             </layout:VerticalLayout>
 
                             <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                                 <Label text="Status :"/>
-                                <ObjectStatus class="sapMObjectStatusLarge" text="{path: 'NegoHeaders>/nego_progress_status_code' }" state="Error" />
+                                <ObjectStatus class="sapMObjectStatusLarge" text="{path: 'NegoHeaders>/nego_progress_status/nego_progress_status_name' }" state="Error" />
                             </layout:VerticalLayout>
                             <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                               
@@ -118,9 +118,13 @@
                                                         <VBox  width="100%" height="100%" alignItems="Start" class="sapUiMediumMarginTop" >
                                                     
                                                             <Label  text="Bid Style:" class="nameTitle " />
-                                                            <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="{=${NegoHeaders>/negotiation_style_code}==='Blind' ? 1 : 0 }" visible="{=${propInfo>/isEditMode}}" >
-                                                                <RadioButton text="Sealed (purchaser : X,Supplier :X)" />
-                                                                <RadioButton text="Blind (purchaser : O,Supplier :X)" />
+                                                            <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="{=${NegoHeaders>/negotiation_style_code}==='Blind' ? 1 : 0 }" 
+                                                                visible="{=${propInfo>/isEditMode}}" 
+                                                                >
+                                                                <!-- buttons="{Sc_Negotiation_Style_Map}"
+                                                                <RadioButton text="{negotiation_style_name}" /> -->
+                                                                <RadioButton text="Sealed (Purchaser : X,Supplier :X)" />
+                                                                <RadioButton text="Blind (Purchaser : O,Supplier :X)" />
                                                             </RadioButtonGroup>
                                                             <Text text="{NegoHeaders>/negotiation_style_code}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                                         
@@ -131,7 +135,7 @@
                                                             
                                                                 <Label  text="Period:" width="100px" required="true" class="sapMLabelNoText"/> 
                                                                 <HBox  height="100%" alignItems="Center" >
-                                                                    <CheckBox text="Immediately" selected="{=${NegoHeaders>/immediate_apply_flag}==='Y'}" editable="{=${propInfo>/isEditMode}}"
+                                                                    <CheckBox id="checkbox_Immediately" text="Immediately" selected="{=${NegoHeaders>/immediate_apply_flag}==='Y'}" editable="{=${propInfo>/isEditMode}}"
                                                                         select="selectImmediately" /> 
                                                                     <ToolbarSpacer width="1rem"/> 
                                                                     <FlexBox>
@@ -162,8 +166,6 @@
                                                                         <Input id="inputEP" value="{NegoHeaders>/close_date_ext_enabled_hours}" type="Number" visible="{=${propInfo>/isEditMode}}" class="sapUiTinyMarginEnd" textAlign="Right"/>
                                                                         <Text text="{NegoHeaders>/close_date_ext_enabled_hours}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                                                         <Label  text="Hr"  class="sapUiSmallMarginBegin" />
-
-                                                                        
                                                                     </HBox>
                                                                 </VBox>
 
@@ -188,79 +190,96 @@
                                                             <FormattedText id="formTextNoteToSupplier" htmlText="{NegoHeaders>/note_content}"  visible="{=!${propInfo>/isEditMode}}"/>
                                                         </VBox>
 
-                                                        <Table id="tableAttachments" 
-                                                            sticky="HeaderToolbar,ColumnHeaders" 
-                                                            inset="false" 
-                                                            class="sapFDynamicPageAlignContent sapUiMediumMarginTop" 
-                                                            mode="None" noDataText="파일 없음"
+                                                        <!-- <smartTable:SmartTable tableType="Table"
+                                                            useExportToExcel="false" 
+                                                            useTablePersonalisation="true" 
+                                                            enableAutoBinding="true" 
 
-                                                            width="auto">
-                                                            <headerToolbar>
+                                                            
+                                                            
+                                                            header="Attachments" showRowCount="true" 
+                                                            
+                                                            class="sapUiSmallMarginBottom"
+                                                            >
+                                                            <smartTable:customToolbar>
                                                                 <OverflowToolbar>
-                                                                    <Title text="Attachments ()" level="H2"/>
+                                                                   
                                                                     <ToolbarSpacer/>
                                                                     
                                                                     <Button text="Load Attached file From Requisition" type="Transparent" press=".onMidTableAddButtonPress" visible="{=${propInfo>/isEditMode}}" />
                                                                     <Button text="{I18N>/ROW_ADD}" type="Transparent" press=".onMidTableDeleteButtonPress" visible="{=${propInfo>/isEditMode}}" />
                                                                 
                                                                 </OverflowToolbar>
-                                                            </headerToolbar>
-                                                            <columns>
-                                                                
-                                                                <!-- language_code -->
-                                                                <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
-                                                                    <Text text="Type" />
-                                                                </Column>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center" >
-                                                                    <Text text="File Name" />
-                                                                </Column>
-                                                                <!-- <Column minScreenWidth="Tablet" hAlign="Center"  visible="{= ${util>/flag} === 'S' ?  true : false}" demandPopin="true">
-                                                                    <Text text="File Name" />
-                                                                </Column> -->
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                                                    <Text text="Description" />
-                                                                </Column>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                                                    <Text text="Submission No" />
-                                                                </Column>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                                                    <Text text="Title" />
-                                                                </Column>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                                                    <Text text="Delete" />
-                                                                </Column>
-                                                            </columns>
-                                                            <items>
-                                                                <!-- <ColumnListItem type="Inactive" >
-                                                                    <cells>
-                                                                        <Text text="txt"/>
-                                                                        <Text text="fileName1"/>
-                                                                        <Text text="Timing Controller ** SW0887A, SI"/>
-                                                                        <Text text="2198849-1"/>
-                                                                        <Text text="20109040_미정단가_홍길동"/>
-                                                                        <CheckBox />  
-                                                                    </cells>
-                                                                </ColumnListItem>-->
-                                                                <!-- <ColumnListItem type="Inactive" >
-                                                                    <cells>
-                                                                        <Text text="{viewModel>tenant_id}"/>
-                                                                        <Text text="{viewModel>nego_header_id}"/>
-                                                                        <Text text="{viewModel>nego_document_number}"/>
-                                                                        <Text text="2198865-1"/>
-                                                                        <Text text="20109046_미정단가_홍길동"/>
-                                                                        <CheckBox />  
-                                                                    </cells>
-                                                                </ColumnListItem>  -->
-                                                            </items>
-                                                        </Table>
-                
 
+                                                            </smartTable:customToolbar> -->
+
+                                                            <Table id="tableAttachments" 
+                                                                sticky="HeaderToolbar,ColumnHeaders" 
+                                                                inset="false" 
+                                                                class="sapFDynamicPageAlignContent sapUiMediumMarginTop" 
+                                                                mode="None" noDataText="파일 없음"
+                                                                width="auto">
+                                                                <headerToolbar>
+                                                                    <OverflowToolbar>
+                                                                        <Title text="Attachments (0)" level="H2"/>
+                                                                        <ToolbarSpacer/>
+                                                                        
+                                                                        <Button text="Load Attached file From Requisition" type="Transparent" press=".createConfirmBox" visible="{=${propInfo>/isEditMode}}" />
+                                                                        <Button text="{I18N>/ROW_ADD}" type="Transparent" press=".createConfirmBox" visible="{=${propInfo>/isEditMode}}" />
+                                                                    
+                                                                    </OverflowToolbar>
+                                                                </headerToolbar>
+                                                                <columns>
+                                                                    
+                                                                    <!-- language_code -->
+                                                                    <Column  minScreenWidth="Tablet" hAlign="Center" demandPopin="true" >
+                                                                        <Text text="Type" />
+                                                                    </Column>
+                                                                    <Column minScreenWidth="Tablet" hAlign="Center" >
+                                                                        <Text text="File Name" />
+                                                                    </Column>
+                                                                    <!-- <Column minScreenWidth="Tablet" hAlign="Center"  visible="{= ${util>/flag} === 'S' ?  true : false}" demandPopin="true">
+                                                                        <Text text="File Name" />
+                                                                    </Column> -->
+                                                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                                                        <Text text="Description" />
+                                                                    </Column>
+                                                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                                                        <Text text="Submission No" />
+                                                                    </Column>
+                                                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                                                        <Text text="Title" />
+                                                                    </Column>
+                                                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
+                                                                        <Text text="Delete" />
+                                                                    </Column>
+                                                                </columns>
+                                                                <items>
+                                                                    <!-- <ColumnListItem type="Inactive" >
+                                                                        <cells>
+                                                                            <Text text="txt"/>
+                                                                            <Text text="fileName1"/>
+                                                                            <Text text="Timing Controller ** SW0887A, SI"/>
+                                                                            <Text text="2198849-1"/>
+                                                                            <Text text="20109040_미정단가_홍길동"/>
+                                                                            <CheckBox />  
+                                                                        </cells>
+                                                                    </ColumnListItem>-->
+                                                                    <!-- <ColumnListItem type="Inactive" >
+                                                                        <cells>
+                                                                            <Text text="{viewModel>tenant_id}"/>
+                                                                            <Text text="{viewModel>nego_header_id}"/>
+                                                                            <Text text="{viewModel>nego_document_number}"/>
+                                                                            <Text text="2198865-1"/>
+                                                                            <Text text="20109046_미정단가_홍길동"/>
+                                                                            <CheckBox />  
+                                                                        </cells>
+                                                                    </ColumnListItem>  -->
+                                                                </items>
+                                                            </Table>
+                                                        <!-- </smartTable:SmartTable> -->
                                                     </layout:content>
                                                 </layout:Grid>
-
-
-                                            
-                                                
                                             </content>
                                         </Panel>
                                     </uxap:blocks>
@@ -280,13 +299,24 @@
                                                         columnsM="1"
                                                         columnsL="2"
                                                         columnsXL="4">
-                                            <Label  text="Award Type"  /> 
-                                            <Select placeholder="Award by Total Amount" selectedKey="{NegoHeaders>/award_type_code}" >
-                                                <core:Item key="Award By Lines" text="Award by Lines"/>
-                                                <core:Item key="Award by Total Amount" text="Award by Total Amount"/>
+                                            <Label  text="Award Type"  />
+                                            <Select selectedKey="{NegoHeaders>/award_type_code}" 
+                                                >
+                                                    <!-- items="{
+                                                        path: 'Sc_Nego_Award_Method_Code',
+                                                        sorter: { path: 'award_type_code' },
+                                                        filters : [
+                                                            { path : 'nego_type_code', operator : 'EQ', value1 : 'RFP'}
+                                                        ]
+                                                    }" -->
+                                                <!-- { path : 'nego_parent_type_code', operator : 'EQ', value1 : 'QP'}, -->
+                                                <!-- items="{/Sc_Award_Type_Code_View}" -->
+                                                <!-- <core:Item key="{award_type_code}" text="{award_type_name}"/> -->
+                                                <core:Item key="010" text="Award by Lines"/>
+                                                <core:Item key="020" text="Award by Total Amount"/>
                                             </Select> 
-                                            <Label  text="Target Total Amount"    visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
-                                            <Input value="{NegoHeaders>/target_amount}" visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
+                                            <Label  text="Target Total Amount" visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
+                                            <Input value="{NegoHeaders>/target_amount}" type="Number"  textAlign="Right" visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
                                             <Label text="Partial Response" />
 
                                             <SegmentedButton id="SegmentButtonUsed" selectedKey="{NegoHeaders>/partial_allow_flag}" 
@@ -304,7 +334,7 @@
                                                         columnsL="2"
                                                         columnsXL="4">
                                             <Label  text="Award Type"  /> 
-                                            <Text text="{NegoHeaders>/award_type_code}" />
+                                            <Text text="{NegoHeaders>/award_type/award_type_name}" />
                                             <Label  text="Target Total Amount"    visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
                                             <Text text="{NegoHeaders>/target_amount}" visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/>
                                             <Label text="Partial Response" />
@@ -316,9 +346,9 @@
                         </uxap:ObjectPageSection>
                     </uxap:sections>
                     <!-- Control End -->
-                    <!-- Non Price Start -->
-                    <uxap:sections>
-                        <uxap:ObjectPageSection titleUppercase="false" title="Non Price">
+                    <!-- Non Price Start visible="{=${propInfo>/isNPMode}}"-->
+                    <uxap:sections >
+                        <uxap:ObjectPageSection id="npSection" titleUppercase="false" title="Non Price" visible="{=${propInfo>/isNPMode}}">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
                                     <Panel id="panel_NonPrice" expandable="true" expanded="true" headerText="Non Price Content">
@@ -361,29 +391,29 @@
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width="" hAlign="Center">
-                                                    <Label text="평가속성"  required="true" />
+                                                    <Label text="평가속성" />
                                                     <t:template>
                                                         <!-- <Input id="abc" showValueHelp="true" valueHelpRequest="."></Input> -->
                                                         <Text text="{viewModel>h4}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width=""  hAlign="Center">
-                                                    <Label text="점수 산정 방법"  required="true" />
+                                                    <Label text="점수 산정 방법" />
                                                     <t:template>
                                                         <!-- <Input id="inputPartNo" showValueHelp="true" valueHelpRequest=".onPartNoPress" ></Input> -->
                                                         <Text text="{viewModel>h5}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width=""  hAlign="Center">
-                                                    <Label text="Target Score" required="true" />
+                                                    <Label text="Target Score"/>
                                                     <t:template>
                                                         <Label text="{viewModel>h6}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width="" hAlign="Center">
-                                                    <Label text="상세 설정" required="true" />
+                                                    <Label text="상세 설정" />
                                                     <t:template>
-                                                        <Button text="조회" press="onPressNPSelectButton"/>
+                                                        <Button icon="sap-icon://value-help"  press="onPressNPSelectButton"/>
                                                     </t:template>
                                                 </t:Column>
                                             </t:columns>
@@ -396,7 +426,7 @@
                     <!-- Non Price End -->
                     <!-- Line Start -->
                     <uxap:sections>
-                        <uxap:ObjectPageSection titleUppercase="false" title="Line">
+                        <uxap:ObjectPageSection titleUppercase="false" title="Lines">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
                                     <Panel id="panel_Line" expandable="true" expanded="true" headerText="Line Content">
@@ -425,14 +455,14 @@
                                                         <Button  text="{I18N>/ROW_ADD}" type="Transparent" press=".addLineItemRow" />
                                                         <Button  text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMidTableDeleteButtonPress" />
                                                         
-                                                        <Button text="일괄 Supplier 추가" type="Transparent" press=".onMidTableAddBatchSuppliers"  />
-                                                        <Button text="Exclude Supplier From Vender Pool" type="Transparent" press=".onMidTableDeleteButtonPress" />
+                                                        <Button text="{I18N>/ADD_SUPPLIER_INBULK}" type="Transparent" press=".onMidTableAddBatchSuppliers"  />
+                                                        <Button text="{I18N>/EXCLUDE_SUPPLIER_FROMVP}" type="Transparent" press=".createConfirmBox" />
                                                         
-                                                        <Button  text="Vendor Pool Change" type="Transparent" press=".onMidTableAddButtonPress"  />
-                                                        <Button  text="Simple Change" type="Transparent" press=".onMidTableAddButtonPress"  />
+                                                        <Button  text="{I18N>/VENDOR_POOL} Change" type="Transparent" press=".createConfirmBox"  />
+                                                        <Button  text="{I18N>/SIMPLE_CHANGE}" type="Transparent" press=".onSimpleChangePress"  />
 
 
-                                                        <u:FileUploader uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
+                                                        <u:FileUploader uploadComplete="handleUploadComplete" change=".createConfirmBox" style="Transparent" 
                                                             buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="Upload"  />
                                                         
                                                         <MenuButton buttonMode="Split" useDefaultActionOnly="true" type="Default"
@@ -462,7 +492,7 @@
                                                             </t:template>
                                                         </t:Column>
                                                         <t:Column width="5rem" hAlign="Center" >
-                                                            <Label text="Suppliers" />
+                                                            <Label text="{I18N>SUPPLIERS_TITLE}" />
                                                             <t:template>
                                                                 <Button icon="sap-icon://account" press="onLoadSuppliers" />
                                                             </t:template>
@@ -471,13 +501,20 @@
                                                             <Label text="Operating Org" required="true" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center" >
-                                                                    <Input value="{NegoHeaders>operation_unit_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/>
+                                                                    <MultiInput id="multiinput_purOperationOrg_code" visible="{=${propInfo>/isEditMode}}" 
+                                                                        tokens="{/processTypes}" value="{NegoHeaders>operation_unit_code}"
+                                                                        showValueHelp="true" valueHelpRequest=".onOperationOrgPress" textAlign="Center">
+                                                                        <tokens>
+                                                                            <Token key="{key}" text="{text}" />
+                                                                        </tokens>
+                                                                    </MultiInput>
+                                                                    <!-- <Input value="{NegoHeaders>operation_unit_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/> -->
                                                                     <Text text="{NegoHeaders>operation_unit_code}" visible="{=!${propInfo>/isEditMode}}" textAlign="Center"/>
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
                                                         <t:Column width="11rem" hAlign="Center">
-                                                            <Label text="Requisition No" />
+                                                            <Label text="{I18N>/PR_NUMBER}" />
                                                             <t:template>
                                                                 <Label text="{NegoHeaders>pr_number}" />
                                                             </t:template>
@@ -507,11 +544,15 @@
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
-                                                        <t:Column width="11rem"  hAlign="Center">
+                                                        <t:Column width="20rem"  hAlign="Center">
                                                             <Label text="Description" required="true" />
                                                             <t:template>
                                                                 <FlexBox width="100%" >
-                                                                    <Input value="{NegoHeaders>material_desc}" visible="{=${propInfo>/isEditMode}}" width="100%" />
+                                                                    <Input value="{NegoHeaders>material_desc}" visible="{=${propInfo>/isEditMode}}" width="100%" maxLength="200" placeholder="최대 200 자까지 입력 할 수 있습니다.">
+                                                                        <layoutData>
+                                                                            <FlexItemData growFactor="1"/>
+                                                                        </layoutData>
+                                                                    </Input>
                                                                     <Text text="{NegoHeaders>material_desc}" visible="{=!${propInfo>/isEditMode}}" wrapping="false" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -530,7 +571,7 @@
                                                             <Label text="BPA Price" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
-                                                                    <Input value="{NegoHeaders>bpa_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"/>
+                                                                    <Input value="{NegoHeaders>bpa_price}" visible="{=${propInfo>/isEditMode}}"  type="Number"  textAlign="Right"/>
                                                                     <Text text="{NegoHeaders>bpa_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -576,9 +617,9 @@
                                                             <Label text="Specific Supplier" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
+                                                                        <!-- placeholder="Choose codes from the ValueHelp" -->
                                                                     <MultiInput id="multiinput_supplierwithorg_code" visible="{=${propInfo>/isEditMode}}" 
-                                                                        placeholder="Choose codes from the ValueHelp"
-                                                                        tokens="{/processTypes}" value="{NegoHeaders>specific_supplier_count}"
+                                                                        value="{NegoHeaders>specific_supplier_count}"
                                                                         showValueHelp="true" valueHelpRequest=".onSupplierPress" textAlign="Center">
                                                                         <tokens>
                                                                             <Token key="{key}" text="{text}" />
@@ -590,7 +631,7 @@
                                                             </t:template>
                                                         </t:Column>
                                                         <t:Column width="11rem" hAlign="Center">
-                                                            <Label text="수량" />
+                                                            <Label text="수량" required="true"/>
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
                                                                     <Input value="{NegoHeaders>request_quantity}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/>
@@ -608,10 +649,12 @@
                                                             </t:template>
                                                         </t:Column>
                                                         <t:Column width="11rem" hAlign="Center">
-                                                            <Label text="통화" required="true" />
+                                                            <Label text="통화"  />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <ComboBox value="{NegoHeaders>currency_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"></ComboBox>
+                                                                    <ComboBox value="{NegoHeaders>currency_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center">
+
+                                                                    </ComboBox>
                                                                     <Text text="{NegoHeaders>currency_code}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -641,7 +684,7 @@
                                                             <Label text="Start Price" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
-                                                                    <Input value="{NegoHeaders>bidding_start_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"/>
+                                                                    <Input value="{NegoHeaders>bidding_start_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" />
                                                                     <Text text="{NegoHeaders>bidding_start_net_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -663,7 +706,7 @@
                                                             <Label text="Target Price" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
-                                                                    <Input value="{NegoHeaders>bidding_target_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"/>
+                                                                    <Input value="{NegoHeaders>bidding_target_net_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" />
                                                                     <Text text="{NegoHeaders>bidding_target_net_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -672,7 +715,7 @@
                                                             <Label text="현재 단가" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="End">
-                                                                    <Input value="{NegoHeaders>current_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"/>
+                                                                    <Input value="{NegoHeaders>current_price}" visible="{=${propInfo>/isEditMode}}" textAlign="Right"  type="Number" />
                                                                     <Text text="{NegoHeaders>current_price}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -764,16 +807,24 @@
                                                             <Label text="첨부파일" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <Input value="{NegoHeaders>attch_code}" visible="{=${propInfo>/isEditMode}}"/>
-                                                                    <Text text="{NegoHeaders>attch_code}" visible="{=!${propInfo>/isEditMode}}" />
+                                                                    <u:FileUploader uploadComplete="handleUploadComplete" change=".createConfirmBox" style="Transparent" 
+                                                                    buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="Upload"  />
+                                                                    <!-- <Input value="{NegoHeaders>attch_code}" visible="{=${propInfo>/isEditMode}}"/>
+                                                                    <Text text="{NegoHeaders>attch_code}" visible="{=!${propInfo>/isEditMode}}" /> -->
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
-                                                        <t:Column width="11rem" hAlign="Center">
+                                                        <t:Column width="20rem" hAlign="Center">
                                                             <Label text="협력사 제공정보" />
-                                                            <t:template>
-                                                                <FlexBox justifyContent="Center">
-                                                                    <Input value="{NegoHeaders>supplier_provide_info}" visible="{=${propInfo>/isEditMode}}"/>
+                                                            <t:template >
+                                                                <FlexBox width="100%" >
+                                                                    <!-- You can enter up to 500 characters. -->
+                                                                    <Input value="{NegoHeaders>supplier_provide_info}" visible="{=${propInfo>/isEditMode}}"
+                                                                    placeholder="최대 500 자까지 입력 할 수 있습니다." width="100%" fieldWidth="100%" maxLength="500">
+                                                                        <layoutData>
+                                                                            <FlexItemData growFactor="1"/>
+                                                                        </layoutData>
+                                                                    </Input>
                                                                     <Text text="{NegoHeaders>supplier_provide_info}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -828,7 +879,7 @@
                                                     
                                                     </FlexBox>
                                                     
-                                                    <Panel id="panel_Evaluation" expandable="true" expanded="false" headerText="Evaluation Supplier">
+                                                    <Panel id="panel_Evaluation" expandable="true" expanded="true" headerText="Evaluation Supplier">
                                                         <Table 
                                                             sticky="HeaderToolbar,ColumnHeaders" 
                                                             inset="false" 
@@ -836,9 +887,9 @@
                                                             mode="None"
                                                             width="auto">
                                                             <columns>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                                <!-- <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
                                                                     <Text text="Seq" />
-                                                                </Column>
+                                                                </Column> -->
                                                                 <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
                                                                     <Text text="Supplier Code" />
                                                                 </Column>
@@ -889,7 +940,7 @@
                                                             </items>
                                                         </Table>
                                                     </Panel>
-                                                    <Panel id="panel_Potential" expandable="true" expanded="false" headerText="Potential Supplier">
+                                                    <Panel id="panel_Potential" expandable="true" expanded="true" headerText="Potential Supplier">
                                                         <Table 
                                                             sticky="HeaderToolbar,ColumnHeaders" 
                                                             inset="false" 
@@ -897,9 +948,9 @@
                                                             mode="None"
                                                             width="auto">
                                                             <columns>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                                <!-- <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
                                                                     <Text text="Seq" />
-                                                                </Column>
+                                                                </Column> -->
                                                                 <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
                                                                     <Text text="Supplier Code" />
                                                                 </Column>
@@ -917,7 +968,7 @@
                                                                 </Column>
                                                             </columns>
                                                             <items>
-                                                                <ColumnListItem type="Inactive" >
+                                                                <!-- <ColumnListItem type="Inactive" >
                                                                     <cells>
                                                                         <Text text=""/>
                                                                         <Text text=""/>
@@ -926,7 +977,7 @@
                                                                         <Text text=""/>
                                                                         <Text text=""/>
                                                                     </cells>
-                                                                </ColumnListItem>
+                                                                </ColumnListItem> -->
                                                             </items>
                                                         </Table>
                                                     </Panel>
@@ -951,30 +1002,30 @@
                                                             <headerToolbar>
                                                                 <OverflowToolbar visible="{=${propInfo>/isEditMode}}">
                                                                     <ToolbarSpacer/>
-                                                                    <Button  text="Supplier Add" type="Transparent" press=".onSullpierLoadPopup" />
+                                                                    <Button  text="Supplier Add" type="Transparent" press=".onSupplierLoadPopup" />
                                                                     <Button  text="{I18N>/ROW_DELETE}" type="Transparent" press=".onDeleteSuppliers" />
                                                                 </OverflowToolbar>
                                                             </headerToolbar>
                                                             <columns>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                                <!-- <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
                                                                     <Text text="Seq" />
-                                                                </Column>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                                </Column> -->
+                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true" width="15%">
                                                                     <Text text="Supplier Code" />
                                                                 </Column>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true" width="35%">
                                                                     <Text text="Supplier Name" />
                                                                 </Column>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true" width="15%">
                                                                     <Text text="Evaluate Type" />
                                                                 </Column>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true" width="15%">
                                                                     <Text text="Supplier Type" />
                                                                 </Column>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true" width="10%">
                                                                     <Text text="Only Maker Flag" />
                                                                 </Column>
-                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
+                                                                <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true" width="10%">
                                                                     <Text text="Contact" />
                                                                 </Column>
                                                                 <!-- <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
@@ -984,16 +1035,16 @@
                                                             <items>
                                                                 <ColumnListItem type="Inactive" >
                                                                     <cells>
-                                                                        <Text text="{NegoItemPrices>item_supplier_sequence}">
+                                                                        <!-- <Text text="{NegoItemPrices>item_supplier_sequence}">
                                                                             <customData>
                                                                                 <core:CustomData key="item_supplier_sequence" value='{NegoItemPrices>item_supplier_sequence}'/>
                                                                             </customData>
-                                                                        </Text>
-                                                                        <Text text="{NegoItemPrices>supplier_code}"/>
-                                                                        <Text text="{NegoItemPrices>supplier_name}"/>
-                                                                        <Text text="{NegoItemPrices>evaluation_type_code}"/>
-                                                                        <Text text="{NegoItemPrices>supplier_type_code}"/>
-                                                                        <Text text=""/>
+                                                                        </Text> -->
+                                                                        <Label text="{NegoItemPrices>supplier_code}"/>
+                                                                        <Label text="{NegoItemPrices>supplier_name}"/>
+                                                                        <Label text="{NegoItemPrices>evaluation_type_name}"/>
+                                                                        <Label text="{NegoItemPrices>supplier_type_name}"/>
+                                                                        <Label text="{NegoItemPrices>only_maker_flag}"/>
                                                                         <Button icon="sap-icon://value-help" />
                                                                         <!-- <Text text=""/> -->
                                                                     </cells>
@@ -1013,10 +1064,10 @@
                     <uxap:footer>
                         <OverflowToolbar>
                             <ToolbarSpacer />
+                            <Button text="Draft" type="Emphasized" press=".onPageSaveButtonPress" />
                             <Button text="Cancel" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageCancelButtonPress" />
                             <Button text="{I18N>/DELETE}" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageDeleteButtonPress" />
                             <Button text="Edit" visible="{=!${propInfo>/isEditMode}}" type="Transparent" press=".onPageEditButtonPress" />
-                            <Button text="Save as Draft" type="Emphasized" press=".onPageSaveButtonPress" />
                         </OverflowToolbar>
                     </uxap:footer>
                 </uxap:ObjectPageLayout>

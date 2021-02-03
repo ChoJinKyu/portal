@@ -10,7 +10,7 @@ entity Tm_Manager_View {
         job_title                       : String(100)@title : '직위';
         email_id                        : String(240)@title : 'e-mail';
         mobile_phone_number             : String(50) @title : '휴대폰번호';
-        department_id                   : String(16) @title : '부서';
+        department_code                 : String(50) @title : '부서';
         department_local_name           : String(240)@title : '부서로컬명';
         department_korean_name          : String(240)@title : '부서한글명';
         department_english_name         : String(240)@title : '부서영어명';

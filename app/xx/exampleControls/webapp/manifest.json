@@ -164,7 +164,9 @@
     "resourceRoots": {
       "ext.lib": "../../../lib",
       "cm.util": "../../../cm/util",
-      "dp": "../../../dp"
+      "dp": "../../../dp",
+      "op": "../../../op",
+      "sp": "../../../sp"
     },
     "routing": {
       "config": {

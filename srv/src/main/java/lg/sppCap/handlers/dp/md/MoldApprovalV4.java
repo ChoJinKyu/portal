@@ -18,7 +18,9 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.CallableStatementCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.reflect.CdsModel;
@@ -135,7 +137,7 @@ public class MoldApprovalV4 implements EventHandler {
                 // 각각 타입마다 mold Master에 update 할 내용이 다르므로 분기 처리
                 if(aMaster.getApprovalTypeCode().equals("B")){  // 예산집행품의 
                     this.saveBudgetExecution(data);
-                }else if(aMaster.getApprovalTypeCode().equals("V")){
+                }else if(aMaster.getApprovalTypeCode().equals("V")){ // 발주품의
                     this.savePurchaseOrder(data);
                 }else if(aMaster.getApprovalTypeCode().equals("E")){
                     this.saveParticipatingSelection(data);
@@ -254,7 +256,7 @@ public class MoldApprovalV4 implements EventHandler {
                 // 각각 타입마다 mold Master에 update 할 내용이 다르므로 분기 처리
                 if(aMaster.getApprovalTypeCode().equals("B")){  // 예산집행품의 
                     this.saveBudgetExecution(data);
-                }else if(aMaster.getApprovalTypeCode().equals("V")){
+                }else if(aMaster.getApprovalTypeCode().equals("V")){ // 발주품의
                     this.savePurchaseOrder(data);
                 }else if(aMaster.getApprovalTypeCode().equals("E")){
                     this.saveParticipatingSelection(data);
@@ -595,59 +597,111 @@ public class MoldApprovalV4 implements EventHandler {
 
     // PurchaseOrder 
     private void savePurchaseOrder( Data data ){
-
-        System.out.println(" approvalNumer " + this.APPROVAL_NUMBER);
-
         ApprovalMasterV4 aMaster = data.getApprovalMaster();
-        Collection<MoldMasterV4> mMasterList = data.getMoldMaster();
-    
-        if(!mMasterList.isEmpty() && mMasterList.size() > 0){
-            for(MoldMasterV4 row : mMasterList ){
+        Collection<ApprovalDetailsV4> approvalDetail = data.getApprovalDetails();
+        Collection<PaymentV4> v_inMultiData = data.getPayment();
 
-                System.out.println(" ApprovalMasterV4 " + row);
+        if(!approvalDetail.isEmpty() && approvalDetail.size() > 0){ 
+            StringBuffer v_sql_createTable = new StringBuffer();
+            v_sql_createTable.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP (");
+            v_sql_createTable.append("TENANT_ID NVARCHAR(5),");
+            v_sql_createTable.append("APPROVAL_NUMBER NVARCHAR(50),");
+            v_sql_createTable.append("PAY_SEQUENCE NVARCHAR(10),");
+            v_sql_createTable.append("SPLIT_PAY_TYPE_CODE NVARCHAR(30),");
+            v_sql_createTable.append("PAY_RATE DECIMAL(20, 2),");
+            v_sql_createTable.append("PAY_PRICE DECIMAL(20, 2),");
+            v_sql_createTable.append("UPDATE_USER_ID NVARCHAR(50))");
 
-                MoldMasters mst = MoldMasters.create();
-                mst.setTenantId(row.getTenantId());
-                mst.setMoldId(row.getMoldId());
-                mst.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
-                mst.setUpdateUserId(aMaster.getUpdateUserId()); 
+            String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String v_sql_dropTable = "DROP TABLE #LOCAL_TEMP";
 
-                if(row.getRowState().equals("D") || row.getSplitPayTypeCode() == null || "".equals(row.getSplitPayTypeCode())){ // 삭제일 경우 수정되는 항목에 대한 리셋 
-                    mst.setSplitPayTypeCode(null);
-                    /*mst.setPrepayRate(null);
-                    mst.setProgresspayRate(null);
-                    mst.setRpayRate(null);*/
-                    CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(mst); 
-                    Result rst = moldApprovalService.run(u);
-/*
-                    Payment del = Payment.create();
-                    del.setTenantId(row.getTenantId());
-                    del.setMoldId(row.getMoldId());
-                    Delete d2 = Delete.from(Payment_.CDS_NAME).matching(del); 
-                    Result rst2 = moldApprovalService.run(d2);*/
-                }else{ 
-                    mst.setSplitPayTypeCode(row.getSplitPayTypeCode());
-                    /*mst.setPrepayRate(new BigDecimal((String)((row.getPrepayRate()==null||row.getPrepayRate()=="")?"0":row.getPrepayRate())));
-                    mst.setProgresspayRate(new BigDecimal((String)((row.getProgresspayRate()==null||row.getProgresspayRate()=="")?"0":row.getProgresspayRate())));
-                    mst.setRpayRate(new BigDecimal((String)((row.getRpayRate()==null||row.getRpayRate()=="")?"0":row.getRpayRate())));*/
-                    CqnUpdate u = Update.entity(MoldMasters_.CDS_NAME).data(mst); 
-                    Result rst = moldApprovalService.run(u);
-/*
-                    Payment payment = Payment.create();
-                    payment.setTenantId(row.getTenantId());
-                    payment.setMoldId(row.getMoldId());
-                        payment.setPaySequence(row.getPaySequence());
-                        payment.setPayTypeCode(row.getPayTypeCode());
-                        payment.setPayRate(new BigDecimal((String)((row.getPrepay()==null||row.getPrepay()=="")?"0":row.getPrepay())));
-                    payment.setPayPrice(new BigDecimal((String)((row.getProgresspay()==null||row.getProgresspay()=="")?"0":row.getProgresspay())));
-                    payment.setPayRate(new BigDecimal((String)((row.getRpay()==null||row.getRpay()=="")?"0":row.getRpay())));
-                    payment.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
-                        payment.setUpdateUserId(aMaster.getUpdateUserId()); 
-                        CqnInsert i = Insert.into(Quotation_.CDS_NAME).entry(payment); 
-                        Result rst2 = moldApprovalService.run(i);*/
+            String v_sql_callProc = "CALL DP_MD_PARTIAL_PAYMENT_UPDATE_PROC(I_TABLE => #LOCAL_TEMP)";
+
+            // Local Temp Table 생성
+            jdbc.execute(v_sql_createTable.toString());
+
+            // Local Temp Table에 insert
+            List<Object[]> batch = new ArrayList<Object[]>();
+            if(!v_inMultiData.isEmpty() && v_inMultiData.size() > 0){
+                for(PaymentV4 v_inRow : v_inMultiData){
+                    Object[] valuesM = new Object[] {
+                        v_inRow.get("tenant_id"),
+                        v_inRow.get("approval_number"),
+                        v_inRow.get("pay_sequence"),
+                        v_inRow.get("split_pay_type_code"),
+                        new BigDecimal((String)((v_inRow.get("pay_rate")==null||v_inRow.get("pay_rate")=="")?"0":v_inRow.get("pay_rate"))),
+                        new BigDecimal((String)((v_inRow.get("pay_price")==null||v_inRow.get("pay_price")=="")?"0":v_inRow.get("pay_price"))),
+                        "anonymous"};
+                    batch.add(valuesM);
                 }
+            }else{
+                Object[] valuesM = new Object[] {
+                    aMaster.getTenantId(),
+                    this.APPROVAL_NUMBER,
+                    "",
+                    "",
+                    null,
+                    null,
+                    "anonymous"};
+                batch.add(valuesM);
+            }
 
-            }  
+            int[] updateCounts = jdbc.batchUpdate(v_sql_insertTable, batch);
+
+            List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+
+            // Procedure Call
+            Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+                @Override
+                public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+                    CallableStatement callableStatement = connection.prepareCall(v_sql_callProc);
+                    return callableStatement;
+                }
+            }, paramList);
+
+
+            // Local Temp Table DROP
+            jdbc.execute(v_sql_dropTable);
         }
     }
+
+    // request cancel
+    @On(event = UpdateApproveStatusCodeContext.CDS_NAME)
+    public void updateApprovalStatus(UpdateApproveStatusCodeContext context){
+
+        ApprStatus data = context.getInputData();
+        ApprovalMasterV4 aMaster = data.getApprovalMaster();
+
+        ResultMsg msg = ResultMsg.create();
+        msg.setMessageCode("NCM01001");
+        msg.setResultCode(0);
+        msg.setCompanyCode(aMaster.getCompanyCode());
+        msg.setPlantCode(aMaster.getOrgCode());
+
+        try {
+                msg.setApprovalNumber(aMaster.getApprovalNumber()); 
+                ApprovalMasters master =  ApprovalMasters.create();  
+                master.setTenantId(aMaster.getTenantId());
+                master.setApprovalNumber(aMaster.getApprovalNumber());
+                master.setApproveStatusCode(aMaster.getApproveStatusCode());
+                master.setRequestorEmpno(aMaster.getRequestorEmpno());
+                master.setRequestDate(aMaster.getRequestDate());
+                master.setLocalUpdateDtm(aMaster.getLocalUpdateDtm());
+                master.setUpdateUserId(aMaster.getUpdateUserId());
+                CqnUpdate masterUpdate = Update.entity(ApprovalMasters_.CDS_NAME).data(master);
+                Result resultDetail = moldApprovalService.run(masterUpdate);
+        } catch (Exception e) {
+            msg.setMessageCode("FAILURE");
+            msg.setResultCode(-1);
+            e.printStackTrace();
+        }
+
+        context.setResult(msg);
+        context.setCompleted();
+    
+    } 
+
+
+
+
 }

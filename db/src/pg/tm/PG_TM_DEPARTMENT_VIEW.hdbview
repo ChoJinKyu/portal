@@ -1,7 +1,7 @@
 view Pg_Tm_Department_View as
 select
 	distinct tenant_id,
-	department_id
+	department_code
 from cm_hr_employee
 order by 
-    department_id;
+    department_code;

@@ -1,0 +1,1 @@
+using from './netpriceApproval/netpriceApprovalDetail-v4-service.cds';

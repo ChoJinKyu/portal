@@ -42,39 +42,23 @@ service FundingApplicationV4Service {
     //************************************************
     //리턴타입: 프로시저 저장 후 리턴 값
     type RtnObj : {
-        result_code: String(2);
- 	    err_type: String(20);
-        err_code: String(20);
-        rtn_funding_appl_number: String(10);
+        result_code: String(2);                 //저장 성공여부(OK:성공/NG:실패)
+ 	    err_type: String(30);                   //에러타입(ERR_VALID:VALIDATION 오류/ ERR_SAVE:저장중 오류/ ERR_UNKNOWN:알수없는 오류)
+        sql_err_code: String(30);               //에러코드(DB 에러코드)
+        def_err_code: String(30);               //사용자정의 에러코드
+        rtn_funding_appl_number: String(10);    //자금지원 신청번호
     } 
 
-    //리턴타입: 투자계획서 상세 작업후 리턴값
+    //리턴타입: 투자계획서 상세 삭제후 리턴값
     type RtnObjInvDtl : {
         result_code: String(2);
- 	    err_type: String(20);
-        err_code: String(20);
+ 	    err_type: String(30);
+        sql_err_code: String(30);
+        def_err_code: String(30);
         rtn_funding_appl_number: String(10);
         rtn_investment_plan_sequence: Integer;
     } 
-
-    //저장타입: 투자계획서 마스터
-    type InvPlanMstType : {
-        crud_type : String(1);                  //C:신규/R:읽기/U:수정/D:삭제
-        funding_appl_number : String(10);       //자금지원신청번호
-        investment_plan_sequence : Integer;     //투자계획순번
-        investment_type_code : String(30);      //투자유형코드
-        investment_project_name : String(200);  //투자과제명
-        investment_yyyymm : String(6);          //투자년월
-        appl_amount : Decimal;                  //신청금액
-        investment_purpose : String(500);       //투자목적
-        apply_model_name : String(200);         //적용모델명
-        annual_mtlmob_quantity : Decimal;       //연간물동수량
-        investment_desc : String(500);          //투자 내역
-        execution_yyyymm : String(6);           //집행년월
-        investment_effect : String(500);        //투자효과
-        investment_place : String(500);         //투자장소
-    };
-
+   
     //저장타입: 투자계획서 상세
     type InvPlanDtlType : {
         crud_type : String(1);                      //C:신규/R:읽기/U:수정/D:삭제
@@ -158,20 +142,33 @@ service FundingApplicationV4Service {
     ) returns array of RtnObj;
 
     //------------------투자계획서 저장
-    // action ProcSaveInvPlan (mstType: invPlanMstType //마스터 데이터 타입
-    //                        ,dtlType: array of invPlanDtlType //상세 데이터 타입
-    //                        ,user_id : String(30)    //작성자id
-    // ) returns array of RtnObj;
+    action ProcSaveInvPlan (crud_type : String(1)                   //C:신규/R:읽기/U:수정/D:삭제
+                            ,funding_appl_number : String(10)       //자금지원신청번호
+                            ,investment_plan_sequence : Integer     //투자계획순번
+                            ,investment_type_code : String(30)      //투자유형코드
+                            ,investment_project_name : String(200)  //투자과제명
+                            ,investment_yyyymm : String(6)          //투자년월
+                            ,appl_amount : Decimal                  //신청금액
+                            ,investment_purpose : String(500)       //투자목적
+                            ,apply_model_name : String(200)         //적용모델명
+                            ,annual_mtlmob_quantity : Decimal       //연간물동수량
+                            ,investment_desc : String(500)          //투자 내역
+                            ,execution_yyyymm : String(6)           //집행년월
+                            ,investment_effect : String(500)        //투자효과
+                            ,investment_place : String(500)         //투자장소
+                            ,dtlType: array of InvPlanDtlType       //상세 데이터 타입
+                            ,user_id : String(30)                   //작성자id
+    ) returns array of RtnObj;
 
-    // //------------------투자계획서 마스터 삭제
-    // action procDelInvPlan (mstType: array of invPlanMstDelType  //마스터 삭제 데이터 타입
-    //                        ,user_id : String(30)                //작성자id
-    // ) returns array of RtnObj;
+    //------------------투자계획서 마스터 삭제
+    action ProcDelInvPlan (mstType: array of InvPlanMstDelType      //마스터 삭제 데이터 타입
+                            ,user_id : String(30)                   //작성자id
+    ) returns array of RtnObj;
 
-    // //------------------투자계획서 상세 삭제
-    // action procDelInvPlanDtl (dtlType: array of invPlanDtlType  //상세 삭제 데이터 타입
-    //                        ,user_id : String(30)                //작성자id
-    // ) returns array of RtnObj;
+    //------------------투자계획서 상세 삭제
+    action ProcDelInvPlanDtl (dtlType: array of InvPlanDtlDelType   //상세 삭제 데이터 타입
+                            ,user_id : String(30)                   //작성자id
+    ) returns array of RtnObjInvDtl;
 
     
 }

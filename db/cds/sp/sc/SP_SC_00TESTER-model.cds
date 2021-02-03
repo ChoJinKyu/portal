@@ -236,3 +236,75 @@ entity Sc_Car1 { emails: many { kind:String; address:String; }; }
 entity Sc_Car2 { emails: { kind:String; address:String; }; }
 type Sc_Same_EmailAddresses : many { kind:String; address:String; }
 type Sc_Same_EmailAddress : { kind:String; address:String; }
+
+
+
+
+// https://cap.cloud.sap/docs/advanced/hana#associations-and-compositions
+/**
+ Sc_Nego_Items에서 Sc_Nego_Orders과 맺은 Association(Items:Header=N:1)이
+ Sc_Nego_Items를 원천으로 하는 Projection View Sc_Nego_ItemSelection에 전파 되었고
+ Sc_Nego_Orders과 Sc_Nego_ItemSelection의 Header-Item Association 관계가 맺어 졌다.
+ : Sc_Nego_Orders와 직접 관계를 맺은 Sc_Nego_Items은 HANA Native Object를 차용하였기 때문에
+ CDS에서 맺은 디자인 타임의 Association이 Sc_Nego_Items의 런타임 오브젝트인 HANA Native Object에 반영될 수 없다.
+ 따라서 Sc_Nego_Items의 Projecttion View를 만들어서 Association을 전파 시키고
+ Sc_Nego_Orders는 Sc_Nego_ItemSelection와 Association(Header:Items=1:N)을 맺도록 디자인 되어야 한다.
+ */
+entity Sc_Nego_Orders
+{
+  key id: Integer;
+  orderName: String;
+  items: composition of Sc_Nego_ItemSelection on $self = items.parent; // <--- compose ItemSelection instead Items
+};
+/**
+COLUMN TABLE sp_Sc_Nego_Items (
+  id INTEGER NOT NULL,
+  name NVARCHAR(5000),
+  parent_id INTEGER NOT NULL,
+  PRIMARY KEY(id)
+);
+ */
+@cds.persistence.exists
+entity Sc_Nego_Items
+{
+  key id: Integer;
+  name: String;
+  parent: association to Sc_Nego_Orders;
+};
+
+view Sc_OrdersView as select from Sc_Nego_Orders
+{
+  id,
+  orderName,
+  items.name // <--- is transformable into a valid JOIN expression
+};
+entity Sc_OrdersView2 as select from Sc_OrdersView;
+
+entity Sc_Nego_ItemSelection as projection on Sc_Nego_Items;
+entity Sc_Nego_ItemSelection2 as projection on Sc_Nego_ItemSelection;
+
+
+/********************************************************************/
+// Test : Timezone
+/********************************************************************/
+
+@cds.persistence.exists
+entity Sc_Test_Session_Context {
+    key HOST          : String(64) not null;
+    key PORT          : Integer not null;
+    key CONNECTION_ID : Integer not null;
+    key ELEMENT       : String(5000);
+        VALUE         : String(5000);
+        SECTION       : String(8)
+};
+
+/* CREATE 
+COLUMN TABLE "8BF87896D3244B1B999EDBA857B1C829"."SP_SC_TEST01" (
+  "HOST" NVARCHAR(64) NOT NULL,
+  "PORT" INTEGER NOT NULL,
+  "CONNECTION_ID" INTEGER NOT NULL,
+  "KEY" NVARCHAR(5000),
+  "VALUE" NVARCHAR(5000),
+  "SECTION" NVARCHAR(8)
+) UNLOAD PRIORITY 5 AUTO MERGE
+; */

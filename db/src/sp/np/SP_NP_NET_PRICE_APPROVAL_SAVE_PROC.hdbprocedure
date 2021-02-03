@@ -1,0 +1,278 @@
+PROCEDURE SP_NP_NET_PRICE_APPROVAL_SAVE_PROC (
+     IN   I_TENANT_ID                      NVARCHAR(20)
+    ,IN   I_COMPANY_CODE                   NVARCHAR(10)
+    ,IN   I_ORG_TYPE_CODE                  NVARCHAR(2)
+    ,IN   I_ORG_CODE                       NVARCHAR(10)
+    ,IN   I_APPROVAL_NUMBER                NVARCHAR(20)
+
+    ,IN   I_APPROVAL_TITLE                 NVARCHAR(300)
+    ,IN   I_APPROVAL_CONTENTS              NCLOB
+    ,IN   I_ATTCH_GROUP_NUMBER             NVARCHAR(100)
+
+    ,IN   I_NET_PRICE_DOCUMENT_TYPE_CODE   NVARCHAR(30)
+    ,IN   I_NET_PRICE_SOURCE_CODE          NVARCHAR(30)
+    ,IN   I_BUYER_EMPNO                    NVARCHAR(30)
+
+    ,IN   I_TENTPRC_FLAG                   BOOLEAN
+    ,IN   I_OUTCOME_CODE                   NVARCHAR(30)
+
+    ,IN   I_DETAILS				           TABLE (
+                                               ITEM_SEQUENCE                      NVARCHAR(20)
+                                              ,LINE_TYPE_CODE                     NVARCHAR(30)
+                                              ,MATERIAL_CODE                      NVARCHAR(40)
+                                              ,PAYTERMS_CODE                      NVARCHAR(30)
+                                              ,SUPPLIER_CODE                      NVARCHAR(10)
+                                              ,EFFECTIVE_START_DATE               NVARCHAR(10)
+                                              ,EFFECTIVE_END_DATE                 NVARCHAR(10)
+                                              ,SURROGATE_TYPE_CODE                NVARCHAR(30)
+                                              ,CURRENCY_CODE                      NVARCHAR(3)
+                                              ,NET_PRICE                          DECIMAL
+                                              ,VENDOR_POOL_CODE                   NVARCHAR(20)
+                                              ,MARKET_CODE                        NVARCHAR(30)
+                                              ,NET_PRICE_APPROVAL_REASON_CODE     NVARCHAR(30)
+                                              ,MAKER_CODE                         NVARCHAR(10)
+                                              ,INCOTERMS                          NVARCHAR(3)
+                                              ,_ROW_STATE_                        NVARCHAR(3)
+                                           )
+	,IN   I_USER_ID 		               NVARCHAR(255)
+    ,OUT  O_RETURN_CODE                    NVARCHAR(5)
+    ,OUT  O_RETURN_MSG                     NVARCHAR(1000)
+)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER 
+AS
+BEGIN
+
+    DECLARE V_APPROVAL_NUMBER NVARCHAR(20) = I_APPROVAL_NUMBER;
+
+    /* 사용자 정의 Exception */
+    DECLARE V_USER_EXCEPTION CONDITION FOR SQL_ERROR_CODE 19999;
+
+    /* 사용자 정의 Exception시, 종료 처리 : 이전 Exception Catch 부분에서 결과 메시지 등록 됨. */
+    DECLARE EXIT HANDLER FOR V_USER_EXCEPTION
+    BEGIN
+    	
+    END;
+
+    /* 사용자 정의 이외 Exception 발생시 처리 : 발생될 가능성 낮음. */
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        O_RETURN_CODE = 'NG999';
+        O_RETURN_MSG  = '정의되지 않은 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
+    END;
+    
+    BEGIN
+        /* 해당 Block에서 Exception 발생시, 사용자 정의 Exception 발생 시킴. */
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            O_RETURN_CODE = 'NG000';
+            O_RETURN_MSG  = '단가품의 번호 채번시 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
+            SIGNAL V_USER_EXCEPTION;
+        END;
+
+        IF V_APPROVAL_NUMBER = NULL OR V_APPROVAL_NUMBER = '' THEN
+            SELECT 'N' || TO_CHAR(NOW(), 'YYYYMMDD') || IFNULL(LPAD(RIGHT(MAX(APPROVAL_NUMBER), 4) + 1, 4, 0), '0001')
+              INTO V_APPROVAL_NUMBER
+              FROM CM_APPROVAL_MST 
+             WHERE TENANT_ID          = :I_TENANT_ID
+               AND APPROVAL_NUMBER LIKE 'N' || TO_CHAR(NOW(), 'YYYYMMDD') || '%'
+            ;
+        END IF;
+
+    END;
+
+
+    BEGIN
+
+        /* 해당 Block에서 Exception 발생시, 사용자 정의 Exception 발생 시킴. */
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            O_RETURN_CODE = 'NG001';
+            O_RETURN_MSG  = '단가품의 저장 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
+            SIGNAL V_USER_EXCEPTION;
+        END;
+
+		INSERT INTO CM_APPROVAL_MST (
+			  TENANT_ID
+			, APPROVAL_NUMBER
+			, LEGACY_APPROVAL_NUMBER
+			, COMPANY_CODE
+			, ORG_TYPE_CODE
+			, ORG_CODE
+			, CHAIN_CODE
+			, APPROVAL_TYPE_CODE
+			, APPROVAL_TITLE
+			, APPROVAL_CONTENTS
+			, APPROVE_STATUS_CODE
+			, REQUESTOR_EMPNO
+			, REQUEST_DATE
+			, ATTCH_GROUP_NUMBER
+			, LOCAL_CREATE_DTM
+			, LOCAL_UPDATE_DTM
+			, CREATE_USER_ID
+			, UPDATE_USER_ID
+			, SYSTEM_CREATE_DTM
+			, SYSTEM_UPDATE_DTM
+		) VALUES (
+			  I_TENANT_ID                -- TENANT_ID
+			, V_APPROVAL_NUMBER          -- APPROVAL_NUMBER
+			, NULL                       -- LEGACY_APPROVAL_NUMBER
+			, I_COMPANY_CODE             -- COMPANY_CODE
+			, I_ORG_TYPE_CODE            -- ORG_TYPE_CODE
+			, I_ORG_CODE                 -- ORG_CODE
+            , 'SP'                       -- CHAIN_CODE
+            
+            , 'NPA01'                    -- APPROVAL_TYPE_CODE
+            
+			, I_APPROVAL_TITLE           -- APPROVAL_TITLE
+			, I_APPROVAL_CONTENTS        -- APPROVAL_CONTENTS
+			, 'DR'                       -- APPROVE_STATUS_CODE
+			, :I_USER_ID                 -- REQUESTOR_EMPNO
+			, TO_CHAR(NOW(),'YYYYMMDD')  -- REQUEST_DATE
+			, I_ATTCH_GROUP_NUMBER       -- ATTCH_GROUP_NUMBER
+            , NOW()
+            , NOW()
+            , :I_USER_ID
+            , :I_USER_ID
+            , NOW()
+            , NOW()
+		);
+    END;
+
+    BEGIN
+
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            O_RETURN_CODE = 'NG002';
+            O_RETURN_MSG  = '단가품의 마스터 등록 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
+            SIGNAL V_USER_EXCEPTION;
+        END;
+
+		INSERT INTO SP_NP_NET_PRICE_APPROVAL_MST (
+			   TENANT_ID
+			 , COMPANY_CODE
+			 , ORG_TYPE_CODE
+			 , ORG_CODE
+			 , APPROVAL_NUMBER
+			 -- APPROVE_STATUS_CODE  상태 코드 추가 되어야 함.
+			 , NET_PRICE_DOCUMENT_TYPE_CODE
+			 , NET_PRICE_SOURCE_CODE
+			 , QUOTATION_NUMBER
+			 , QUOTATION_SEQUENCE
+			 , BIDDING_TYPE_CODE
+			 , BUYER_EMPNO
+			 , EFFECTIVE_START_DATE
+			 , EFFECTIVE_END_DATE
+             , TENTPRC_FLAG
+             , OUTCOME_CODE
+			 , BASE_PRICE_INPUT_FLAG
+			 , APPROVAL_EXCL_FLAG
+			 , LOCAL_CREATE_DTM
+			 , LOCAL_UPDATE_DTM
+			 , CREATE_USER_ID
+			 , UPDATE_USER_ID
+			 , SYSTEM_CREATE_DTM
+			 , SYSTEM_UPDATE_DTM
+		) VALUES (
+			   I_TENANT_ID                       -- TENANT_ID
+			 , I_COMPANY_CODE                    -- COMPANY_CODE
+			 , I_ORG_TYPE_CODE                   -- ORG_TYPE_CODE
+			 , I_ORG_CODE                        -- ORG_CODE
+			 , V_APPROVAL_NUMBER                 -- APPROVAL_NUMBER
+			 , I_NET_PRICE_DOCUMENT_TYPE_CODE    -- NET_PRICE_DOCUMENT_TYPE_CODE
+			 , I_NET_PRICE_SOURCE_CODE           -- NET_PRICE_SOURCE_CODE
+			 , NULL                              -- QUOTATION_NUMBER
+			 , NULL                              -- QUOTATION_SEQUENCE
+			 , NULL                              -- BIDDING_TYPE_CODE
+			 , I_BUYER_EMPNO                     -- BUYER_EMPNO
+			 , NULL                              -- EFFECTIVE_START_DATE
+			 , NULL                              -- EFFECTIVE_END_DATE
+             , I_TENTPRC_FLAG                    -- TENTPRC_FLAG
+             , I_OUTCOME_CODE                    -- OUTCOME_CODE
+			 , false                             -- BASE_PRICE_INPUT_FLAG 하위 데이터 
+			 , NULL                              -- APPROVAL_EXCL_FLAG
+             , NOW()
+             , NOW()
+             , :I_USER_ID
+             , :I_USER_ID
+             , NOW()
+             , NOW()
+		);
+    END;
+    
+
+    BEGIN
+
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            O_RETURN_CODE = 'NG003';
+            O_RETURN_MSG  = '단가품의 상세 등록 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
+            SIGNAL V_USER_EXCEPTION;
+        END;
+       
+        INSERT INTO SP_NP_NET_PRICE_APPROVAL_DTL (
+			   TENANT_ID
+			 , COMPANY_CODE
+			 , ORG_TYPE_CODE
+			 , ORG_CODE
+             , APPROVAL_NUMBER
+             
+             , ITEM_SEQUENCE
+             , LINE_TYPE_CODE
+             , MATERIAL_CODE
+             , PAYTERMS_CODE
+             , SUPPLIER_CODE
+             , EFFECTIVE_START_DATE
+             , EFFECTIVE_END_DATE
+             , SURROGATE_TYPE_CODE
+             , CURRENCY_CODE
+             , NET_PRICE
+             , VENDOR_POOL_CODE
+             , MARKET_CODE
+             , NET_PRICE_APPROVAL_REASON_CODE
+             , MAKER_CODE
+             , INCOTERMS
+
+			 , LOCAL_CREATE_DTM
+			 , LOCAL_UPDATE_DTM
+			 , CREATE_USER_ID
+			 , UPDATE_USER_ID
+			 , SYSTEM_CREATE_DTM
+			 , SYSTEM_UPDATE_DTM
+        )
+        SELECT 
+			   I_TENANT_ID                       -- TENANT_ID
+			 , I_COMPANY_CODE                    -- COMPANY_CODE
+			 , I_ORG_TYPE_CODE                   -- ORG_TYPE_CODE
+		  	 , I_ORG_CODE                        -- ORG_CODE
+			 , V_APPROVAL_NUMBER                 -- APPROVAL_NUMBER
+             , DTL.ITEM_SEQUENCE
+             , DTL.LINE_TYPE_CODE
+             , DTL.MATERIAL_CODE
+             , DTL.PAYTERMS_CODE
+             , DTL.SUPPLIER_CODE
+             , DTL.EFFECTIVE_START_DATE
+             , DTL.EFFECTIVE_END_DATE
+             , DTL.SURROGATE_TYPE_CODE
+             , DTL.CURRENCY_CODE
+             , DTL.NET_PRICE
+             , DTL.VENDOR_POOL_CODE
+             , DTL.MARKET_CODE
+             , DTL.NET_PRICE_APPROVAL_REASON_CODE
+             , DTL.MAKER_CODE
+             , DTL.INCOTERMS
+
+             , NOW()
+             , NOW()
+             , :I_USER_ID
+             , :I_USER_ID
+             , NOW()
+             , NOW()
+          FROM :I_DETAILS   DTL
+        ;
+    END;
+
+    O_RETURN_CODE = 'OK';
+    O_RETURN_MSG  = V_APPROVAL_NUMBER;
+    	    	                                
+END;

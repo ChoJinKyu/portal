@@ -69,35 +69,24 @@ public class DevelopmentReceipt implements EventHandler {
 
         List<Map<String, Object>> entries = context.getCqn().entries();
 
+        String statusCode = "DEV_RCV";
         String v_sql_callProc = "CALL DP_MD_SCHEDULE_SAVE_PROC(TENANT_ID => ?, MOLD_ID => ?)";
+        String v_progressSql_callProc = "CALL DP_MD_PROGRESS_STATUS_INSERT_PROC(TENANT_ID => ?, MOLD_ID => ?, PROG_STATUS_CODE => ?, PROG_STATUS_CHANGE_DATE => ?, PROG_STATUS_CHANGER_EMPNO => ?, PROG_STATUS_CHANGER_DEPT_CODE => ?, REMARK => ?)";
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date today = new Date();
         
             for (Map<String, Object> row : entries) {
                 MoldMstView v_result = MoldMstView.create();
                 v_result.setTenantId((String) row.get("tenant_id"));
                 v_result.setMoldId((String) row.get("mold_id"));
-                v_result.setMoldProgressStatusCode("DEV_RCV");
-                
-                v_result.setMoldProductionTypeCode((String) row.get("mold_production_type_code"));
-                v_result.setMoldItemTypeCode((String) row.get("mold_item_type_code"));
-                v_result.setMoldTypeCode((String) row.get("mold_type_code"));
-                v_result.setMoldLocationTypeCode((String) row.get("mold_location_type_code"));
-                v_result.setMoldCostAnalysisTypeCode((String) row.get("mold_cost_analysis_type_code"));
-                v_result.setMoldPurchasingTypeCode((String) row.get("mold_purchasing_type_code"));
-                v_result.setDieForm((String) row.get("die_form"));
-                v_result.setMoldSize((String) row.get("mold_size"));
-                v_result.setMoldDeveloperEmpno((String) row.get("mold_developer_empno"));
-                v_result.setRemark((String) row.get("remark"));
-                v_result.setFamilyPartNumber1((String) row.get("family_part_number_1"));
-                v_result.setFamilyPartNumber2((String) row.get("family_part_number_2"));
-                v_result.setFamilyPartNumber3((String) row.get("family_part_number_3"));
-                v_result.setFamilyPartNumber4((String) row.get("family_part_number_4"));
-                v_result.setFamilyPartNumber5((String) row.get("family_part_number_5"));
+                v_result.setMoldProgressStatusCode(statusCode);
                 
                 if((Boolean) row.get("chk")){
                     MoldMasters master = MoldMasters.create();
                     master.setTenantId((String) row.get("tenant_id"));
                     master.setMoldId((String) row.get("mold_id"));
-                    master.setMoldProgressStatusCode("DEV_RCV");
+                    master.setMoldProgressStatusCode(statusCode);
                     master.setMoldProductionTypeCode((String) row.get("mold_production_type_code"));
                     master.setMoldItemTypeCode((String) row.get("mold_item_type_code"));
                     master.setMoldTypeCode((String) row.get("mold_type_code"));
@@ -129,6 +118,8 @@ public class DevelopmentReceipt implements EventHandler {
 
                     // Procedure Call
                     jdbc.update(v_sql_callProc, row.get("tenant_id"), row.get("mold_id"));
+                    jdbc.update(v_progressSql_callProc, row.get("tenant_id"), row.get("mold_id"), statusCode, sdf.format(today), "anonymous", "anonymous", "");
+                    System.out.println("=============================="+row.get("tenant_id")+row.get("mold_id"));
                 }
 
                 v_results.add(v_result);

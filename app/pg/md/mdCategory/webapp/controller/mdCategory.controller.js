@@ -3,6 +3,7 @@ sap.ui.define([
 	"ext/lib/util/Multilingual",
 	"ext/lib/util/Validator",
 	"ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/Formatter",
 	"sap/ui/core/routing/History",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/model/ManagedListModel",
@@ -15,14 +16,15 @@ sap.ui.define([
 	"sap/m/ObjectIdentifier",
 	"sap/m/Text",
 	"sap/m/Input",
-	"sap/ui/core/Item"
+	"sap/ui/core/Item",
+	"./Utils"
 ],
-  function (BaseController, Multilingual, Validator, DateFormatter, History, JSONModel, ManagedListModel, TablePersoController, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, Item) {
+  function (BaseController, Multilingual, Validator, DateFormatter, Formatter, History, JSONModel, ManagedListModel, TablePersoController, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, Item, Utils) {
     "use strict";
 
     return BaseController.extend("pg.md.mdCategory.controller.mdCategory", {
 
-      //formatter: formatter,
+      formatter: Formatter,
        Validator : new Validator(),
 	   dateFormatter: DateFormatter,
 
@@ -32,7 +34,48 @@ sap.ui.define([
         this.setModel(oMultilingual.getModel(), "I18N");
         this.getView().setModel(new ManagedListModel(), "list");
         this.rowIndex=0;
-        // var oDataLength,oDataArr;
+        
+        var STATE_COL = "_row_state_";
+        ManagedListModel.prototype._executeBatch = function (sGroupId) {
+            var oServiceModel = this._oTransactionModel,
+                sTransactionPath = this._transactionPath,
+                cs = this.getCreatedRecords(),
+                us = this.getUpdatedRecords(),
+                ds = this.getDeletedRecords();
+
+            (cs || []).forEach(function (oItem) {
+                var sPath = oItem.__entity || sTransactionPath;
+                delete oItem[STATE_COL];
+                delete oItem.__entity;
+                oServiceModel.create(sPath, oItem, {
+                    groupId: sGroupId,
+                    success: function (oData) {
+                        oItem.__entity = sPath;
+                    }
+                });
+            });
+            (ds || []).forEach(function (oItem) {
+                //delete oItem[STATE_COL];
+                oServiceModel.remove(oItem.__entity, {
+                    groupId: sGroupId,
+                    success: function () {
+                    }
+                });
+            });
+            (us || []).forEach(function (oItem) {
+                var sEntity = oItem.__entity;
+                delete oItem[STATE_COL];
+                delete oItem.__entity;
+                delete oItem.org_infos;
+
+                oServiceModel.update(sEntity, oItem, {
+                    groupId: sGroupId,
+                    success: function () {
+                        oItem.__entity = sEntity;
+                    }
+                });
+            });
+        },
 
         this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -48,11 +91,11 @@ sap.ui.define([
       },
       // Display row number without changing data
       onAfterRendering: function () {
-        this.onSearch();
+        //this.onSearch();
       },
 
 
-      /** 회사(tenant_id)값으로 법인, 사업본부 combobox item filter 기능
+    /**
     * @public
     */
     onChangeTenant: function (oEvent) {
@@ -64,7 +107,7 @@ sap.ui.define([
         var oFilterComboBox = new sap.ui.model.Filter("tenant_id", "EQ", oSelectedkey);
         aFiltersComboBox.push(oFilterComboBox);
         // oBindingComboBox.filter(aFiltersComboBox);          //sort Ascending
-        var businessSorter = new sap.ui.model.Sorter("bizunit_name", false);        //sort Ascending
+        var businessSorter = new sap.ui.model.Sorter("bizunit_code", false);        //sort Ascending
         
         business_combo.bindAggregation("items", {
             path: "org>/Org_Unit",
@@ -84,7 +127,6 @@ sap.ui.define([
         var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
-        this.byId("buttonMainDeleteRow").setEnabled(false);
         this.getRouter().navTo("midPage", {
             layout: oNextUIState.layout, 
             company_code: oRecord.company_code,
@@ -97,8 +139,17 @@ sap.ui.define([
     },
 
       onSearch: function () {
+            var oTable = this.byId("mainTable");
+            // oTable.setSelected(false);
+
             var tenant_combo = this.getView().byId("searchTenantCombo").getSelectedKey();
-			var sChain = this.getView().byId("searchChain").getSelectedKey();
+            var category_combo = this.getView().byId("searchChain");
+            var sChain = this.getView().byId("searchChain").getSelectedKey();
+            if(sChain == null || category_combo.getValue() == ""){
+                MessageToast.show("사업본부를 설정해주세요.");
+                return;
+            }
+
 			var aSearchFilters = [];
             if (tenant_combo.length > 0) {
                 aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, tenant_combo));
@@ -120,20 +171,7 @@ sap.ui.define([
                     this.getView().setBusy(false);
                     }).bind(this)
                 });
-            var oTable = this.byId("mainTable");
             this.byId("buttonMainAddRow").setEnabled(true);  
-            // this.byId("buttonMainEditRow").setEnabled(true);    
-            // this.byId("buttonMainCancelRow").setEnabled(false);    
-            // var rowIndex = this.rowIndex;
-            
-            // oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[0].setVisible(true);
-            // oTable.getAggregation('items')[rowIndex].getCells()[1].getItems()[1].setVisible(false);  
-            // oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[0].setVisible(true);
-            // oTable.getAggregation('items')[rowIndex].getCells()[2].getItems()[1].setVisible(false);
-            // oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[0].setVisible(true);
-            // oTable.getAggregation('items')[rowIndex].getCells()[3].getItems()[1].setVisible(false);
-            // oTable.getAggregation('items')[rowIndex].getCells()[4].getItems()[0].setVisible(true);
-            // oTable.getAggregation('items')[rowIndex].getCells()[4].getItems()[1].setVisible(false);
         },
       
       onAdd: function () {
@@ -167,72 +205,8 @@ sap.ui.define([
                 spmd_category_code: "new",
                 spmd_category_sort_sequence: ctgrSeq
             });
-
-            // var [tId, mName, sEntity, aCol] = arguments;
-            // //tableId modelName EntityName tenant_id
-            // var oTable = this.byId(tId), //mainTable
-            //     oModel = this.getView().getModel(mName); //list
-            // var oDataArr, oDataLength, lastCtgrSeq, ctgrSeq;
-
-            // if(oModel.oData){
-            //     oDataArr = oModel.getProperty("/MdCategory"); //oModel.oData.MdCategory;
-            //     oDataLength = oDataArr.length;
-            //     lastCtgrSeq = oDataArr[oDataLength-1].spmd_category_sort_sequence;
-            //     ctgrSeq = String(parseInt(lastCtgrSeq)+1);
-            // }
-
-            // oModel.addRecord({
-			// 	"tenant_id": "L2100",
-			// 	"company_code": "*",
-			// 	"org_type_code": "BU",
-			// 	"org_code": "BIZ00200",
-			// 	"spmd_category_code": "",
-			// 	"spmd_category_code_name": "",
-			// 	"rgb_font_color_code": "#000000",
-			// 	"rgb_cell_clolor_code": "#FFFFFF",
-            //     "spmd_category_sort_sequence": ctgrSeq
-            //     // "system_update_dtm": new Date(),
-            //     // "local_create_dtm": new Date(),
-            //     // "local_update_dtm": new Date()
-            // }, "/MdCategory" , 0);  
-
-            // this.rowIndex = 0;
-		    // this.byId("buttonMainAddRow").setEnabled(false);
-            // this.byId("buttonMainEditRow").setEnabled(false); 
-            // this.byId("buttonMainCancelRow").setEnabled(true);    
-            // oTable.getAggregation('items')[0].getCells()[1].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[1].getItems()[1].setVisible(true);
-            // oTable.getAggregation('items')[0].getCells()[2].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[2].getItems()[1].setVisible(true);
-            // oTable.getAggregation('items')[0].getCells()[3].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[3].getItems()[1].setVisible(true);
-            // oTable.getAggregation('items')[0].getCells()[4].getItems()[0].setVisible(false);
-            // oTable.getAggregation('items')[0].getCells()[4].getItems()[1].setVisible(true);
             
         },
-    //   onEdit: function () {
-    //         var [tId, mName, sEntity, aCol] = arguments;
-    //         //tableId modelName EntityName tenant_id
-    //         var oTable = this.byId(tId), //mainTable
-    //             oModel = this.getView().getModel(mName), //list
-    //             oItem = oTable.getSelectedItem();
-
-    //         var idx = oItem.getBindingContextPath().split("/")[2];
-    //         this.rowIndex = idx;
-
-	// 	    this.byId("buttonMainAddRow").setEnabled(false);
-    //         this.byId("buttonMainEditRow").setEnabled(false);
-    //         this.byId("buttonMainCancelRow").setEnabled(true);  
-    //         oTable.getAggregation('items')[idx].getCells()[1].getItems()[0].setVisible(false);
-    //         oTable.getAggregation('items')[idx].getCells()[1].getItems()[1].setVisible(true);
-    //         oTable.getAggregation('items')[idx].getCells()[2].getItems()[0].setVisible(false);
-    //         oTable.getAggregation('items')[idx].getCells()[2].getItems()[1].setVisible(true);
-    //         oTable.getAggregation('items')[idx].getCells()[3].getItems()[0].setVisible(false);
-    //         oTable.getAggregation('items')[idx].getCells()[3].getItems()[1].setVisible(true);
-    //         oTable.getAggregation('items')[idx].getCells()[4].getItems()[0].setVisible(false);
-    //         oTable.getAggregation('items')[idx].getCells()[4].getItems()[1].setVisible(true);
-            
-    //     },
 
       onSave: function () {
         var [tId, mName] = arguments;
@@ -265,6 +239,65 @@ sap.ui.define([
           }).bind(this)
         })
       },
+
+        moveSelectedItem: function(sDirection) {
+            var that = this;       
+            var oSelectedProductsTable = this.byId("mainTable");// 
+            Utils.getSelectedItemContext(oSelectedProductsTable, function(oSelectedItemContext, iSelectedItemIndex) {
+                var oSelectedItem = oSelectedProductsTable.getItems()[iSelectedItemIndex];
+                var iSiblingItemIndex = iSelectedItemIndex + (sDirection === "Up" ? -1 : 1);
+                
+                console.log(iSelectedItemIndex + " / "+iSiblingItemIndex);
+
+                // that._setEditChange(iSelectedItemIndex,"R");  
+                var oSiblingItem = oSelectedProductsTable.getItems()[iSiblingItemIndex];
+                var oSiblingItemContext = oSiblingItem.getBindingContext("list");
+                
+                if (!oSiblingItemContext) {
+                    return;
+                }
+
+                // swap the selected and the siblings rank
+                var oProductsModel = oSelectedProductsTable.getModel("list");
+                var iSiblingItemRank = oSiblingItemContext.getProperty(); //바뀔
+                var iSelectedItemRank = oSelectedItemContext.getProperty(); //선택셀
+
+                var iSeq = oProductsModel.getProperty(oSiblingItem.getBindingContextPath()).spmd_category_sort_sequence
+                var oSeq = oProductsModel.getProperty(oSelectedItem.getBindingContextPath()).spmd_category_sort_sequence //클릭셀
+                var iSeqIdx = "/MdCategory/"+iSiblingItemIndex+"/spmd_category_sort_sequence"
+                var oSeqIdx = "/MdCategory/"+iSelectedItemIndex+"/spmd_category_sort_sequence"
+                
+                oProductsModel.setProperty("", iSiblingItemRank, oSelectedItemContext);//oSelectedItemContext
+                oProductsModel.setProperty("", iSelectedItemRank, oSiblingItemContext);//oSiblingItemContext
+                oProductsModel.setProperty(iSeqIdx,iSeq);//iSeq
+                oProductsModel.setProperty(oSeqIdx,oSeq);//oSeq
+
+                // after move select the sibling
+                oSelectedProductsTable.getItems()[iSiblingItemIndex].setSelected(true);
+                that.rowIndex = iSiblingItemIndex;
+            }); 
+        },
+
+        moveUp: function() {
+            var category_combo = this.getView().byId("searchChain");
+			var sChain = this.getView().byId("searchChain").getSelectedKey();
+            if(sChain == null || category_combo.getValue() == ""){
+                MessageToast.show("사업본부를 설정해주세요.");
+                return;
+            }
+            this.moveSelectedItem("Up");
+        },
+
+        moveDown: function() {
+            var category_combo = this.getView().byId("searchChain");
+			var sChain = this.getView().byId("searchChain").getSelectedKey();
+            if(sChain == null || category_combo.getValue() == ""){
+                MessageToast.show("사업본부를 설정해주세요.");
+                return;
+            }
+            this.moveSelectedItem("Down");
+        },
+        
         /**
          * When it routed to this page from the other page.
          * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'

@@ -73,27 +73,6 @@ sap.ui.define([
                 oParam = this.getServiceParameters(),
                 aFilters = oParam.filters || [],
                 aSorters = oParam.sorters || [];
-            // if(sKeyword){
-            //     aFilters.push(
-            //         new Filter({
-            //             filters: [
-            //                 new Filter({
-            //                     path: this.getProperty("keyField"),
-            //                     operator: FilterOperator.Contains,
-            //                     value1: sKeyword,
-            //                     caseSensitive: false
-            //                 }),
-            //                 new Filter({
-            //                     path: this.getProperty("textField"),
-            //                     operator: FilterOperator.Contains,
-            //                     value1: sKeyword,
-            //                     caseSensitive: false
-            //                 })
-            //             ],
-            //             and: false
-            //         })
-            //     );
-            // }
             if(sWbsCode){
                 aFilters.push(new Filter({
                                 path: "wbs_code",
@@ -113,7 +92,7 @@ sap.ui.define([
             
             aSorters.push(new Sorter("wbs_code", false));
             this.oDialog.setBusy(true);
-            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.pu.MstService/").read("/Wbs_Mst", {
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.util.MstService/").read("/Wbs_Mst", {
                 fetchOthers: true,  //TODO: 가능하면 fetchOthers 옵션을 false 하세요.
                 filters: aFilters,
                 sorters: aSorters,

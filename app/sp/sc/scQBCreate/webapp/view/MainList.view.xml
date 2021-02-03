@@ -57,14 +57,14 @@
                         <HBox height="auto" >
                             <VBox alignContent="Center" alignItems="Center" justifyContent="Center" class="darkgrayBG"
                                 width="10%" height="auto" id= "aaa"  >
-                                <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMarginBeginEnd "
-                                    alignContent="Center" alignItems="Center" justifyContent="Center" >
-                                    <Text text="{rbg>/evaluation_type/OP}" class="mText " textAlign="Right"/>
-                                </VBox>
+                                <!-- <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMarginBeginEnd "
+                                    alignContent="Center" alignItems="Center" justifyContent="Center" > -->
+                                    <Text text="{rbg>/nego_supeval_type/OP}" class="mText " />
+                                <!-- </VBox> -->
                             </VBox>
                             <VBox width="90%" height="100%" class="" >
                                 <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd leftM  mouseP whiteBG" displayInline="true"  id="vboxB1">
-                                    <VBox class=" sapUiSmallMarginBeginEnd">
+                                    <VBox class="sapUiMediumMarginBeginEnd">
                                         <!-- <Text id="text1"  class="sText oMouseP sapMLabelNoText" /> -->
                                         <Text text="{rbg>/RFQ/nego_name}" class="tText mouseP" />
                                         <Text text="{I18N>/NEGOTIATION_DES_01}" class="dText mouseP"/>
@@ -160,7 +160,7 @@
                                 </VBox >
                                 
                                 <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd mouseP whiteBG topM leftM" displayInline="true"  id="vboxB2"  >
-                                    <VBox class="sapUiSmallMarginBeginEnd">
+                                    <VBox class="sapUiMediumMarginBeginEnd">
                                         <!-- <Text id="text2" class="sText oMouseP" /> -->
                                         <Text text="{rbg>/CPB/nego_name}" class="tText mouseP" />
                                         <Text text="{I18N>/NEGOTIATION_DES_02}" class="dText mouseP"/>
@@ -248,14 +248,14 @@
                         <HBox height="auto" >
                             <VBox alignContent="Center" alignItems="Center" justifyContent="Center"  class="darkgrayBG sapUiSmallMarginTop"
                                 width="10%" height="auto"   >
-                                <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMarginBeginEnd  "
-                                    alignContent="Center" alignItems="Center" justifyContent="Center" >
-                                    <Text text="{rbg>/evaluation_type/PNP}" class="mText" />
-                                </VBox>
+                                <!-- <VBox width="100%" height="100%" displayInline="true"  class="sapUiSmallMarginBeginEnd  "
+                                    alignContent="Center" alignItems="Center" justifyContent="Center" > -->
+                                    <Text text="{rbg>/nego_supeval_type/PNP}" class="mText" />
+                                <!-- </VBox> -->
                             </VBox>
                             <VBox width="90%" height="100%" >
                                 <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd sapUiSmallMarginTop mouseP whiteBG leftM" displayInline="true" id="vboxB3" >
-                                    <VBox class="sapUiSmallMarginBottom sapUiSmallMarginBeginEnd">
+                                    <VBox class="sapUiSmallMarginBottom sapUiMediumMarginBeginEnd">
                                         <!-- <Text id="text3" class="sText oMouseP" /> -->
                                         <Text text="{rbg>/RFP/nego_name}" class="tText mouseP" />
                                         <Text text="{I18N>/NEGOTIATION_DES_03}" class="dText mouseP"/>
@@ -335,7 +335,7 @@
                                 </VBox >
 
                                 <VBox width="100%" height="50%" class="sapUiSmallMarginBeginEnd  mouseP whiteBG topM leftM" displayInline="true"  id="vboxB4">
-                                    <VBox class="sapUiSmallMarginBottom sapUiSmallMarginBeginEnd">
+                                    <VBox class="sapUiSmallMarginBottom sapUiMediumMarginBeginEnd">
                                         <!-- <Text id="text4"  class="sText oMouseP"/> -->
                                         <Text text="{rbg>/TSB/nego_name}" class="tText mouseP" />
                                         <Text text="{I18N>/NEGOTIATION_DES_04}" class="dText mouseP"/>

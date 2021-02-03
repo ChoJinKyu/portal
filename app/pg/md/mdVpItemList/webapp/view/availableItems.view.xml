@@ -18,32 +18,35 @@
             width="100%">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
-                    <Title text="SPMD Character List ({= ${tblModel>/left}.length})" level="H2"/>
+                    <Title text="{I18N>/SPMD_CHARACTER_LIST} ({= ${tblModel>/left}.length})" level="H2"/>
                     <ToolbarSpacer/> 
                     <SearchField id="tableSearchField" width="15rem" search=".onTableFilterPress" />	
                 </OverflowToolbar>
             </t:extension>
             <t:columns>
+				<!-- <t:rowSettingsTemplate>
+					<t:RowSettings highlight="{Status}" highlightText="{StatusText}"/>
+				</t:rowSettingsTemplate> -->
                 <t:Column hAlign="Center" width="10rem" id="itemRow">
-                    <Label text="특성코드" textAlign="Center" />
+                    <Label text="{I18N>/SPMD_CHARACTER_CODE}" textAlign="Center" />
                     <t:template>
                         <Text text="{tblModel>spmd_character_code}"/>
                     </t:template>
                 </t:Column>
                 <t:Column>
-                    <Label text="특성코드명" textAlign="Center" width="100%" />
+                    <Label text="{I18N>/SPMD_CHARACTER_CODE_NAME}" textAlign="Center" width="100%" />
                     <t:template>
                         <Text text="{tblModel>spmd_character_code_name}" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="10rem">
-                    <Label text="범주코드" textAlign="Center" />
+                    <Label text="{I18N>/SPMD_CATEGORY_CODE}" textAlign="Center" />
                     <t:template>
                         <Text text="{tblModel>spmd_category_code}"/>
                     </t:template>
                 </t:Column>
                 <t:Column>
-                    <Label text="범주명" textAlign="Center" width="100%" />
+                    <Label text="{I18N>/SPMD_CATEGORY_NAME}" textAlign="Center" width="100%" />
                     <t:template>
                         <Text text="{tblModel>spmd_category_code_name}" />
                     </t:template>

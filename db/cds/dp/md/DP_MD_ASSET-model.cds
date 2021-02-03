@@ -14,6 +14,13 @@ entity Md_Asset {
         acq_date             : String(8)            @title : '취득일자';
         acq_amount           : Decimal(20, 2)       @title : '취득금액';
         scrap_date           : String(8)            @title : '폐기일자';
+        vendor_1             : String(10)           @title : '1차거래선';
+        vendor_2             : String(10)           @title : '2차거래선';	
+        vendor_3             : String(10)           @title : '3차거래선';	
+        description          : String(200)          @title : '품명';	
+        vendor_remark        : String(500)          @title : '벤더 비고';	
+        lg_remark            : String(500)          @title : 'LG 비고';	
+
 }
 
 extend Md_Asset with util.Managed;

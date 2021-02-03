@@ -3,10 +3,7 @@ using util from '../../cm/util/util-model';
 // using {dp as creationRequest} from '../pd/DP_PD_PART_CATEGORY_CREATION_REQUEST-model';	
 	
 entity Pd_Part_Category_Creation_Request {	
-  key tenant_id : String(5)  not null @title: '테넌트ID' ;	
-  key company_code : String(10) default '*' not null @title: '회사코드' ;	
-  key org_type_code : String(2)  not null @title: '조직유형코드' ;	
-  key org_code : String(10)  not null @title: '조직코드' ;	
+  key tenant_id : String(5)  not null @title: '테넌트ID' ;
   key request_number : String(30)  not null @title: '요청번호' ;	
   key category_group_code : String(30)  not null @title: '카테고리 그룹 코드' ;	
     approval_number : String(50)   @title: '품의번호' ;	
@@ -26,9 +23,6 @@ extend Pd_Part_Category_Creation_Request with util.Managed;
 @cds.persistence.exists
 entity Pd_Part_Category_Creation_Request_View {
   key  tenant_id                             : String;
-  key  company_code                          : String;
-  key  org_type_code                         : String;
-  key  org_code                              : String;
   key  request_number                        : String;
   key  category_group_code                   : String;
         approval_number                       : String;

@@ -149,7 +149,7 @@
                         <MultiInput id="referMulti"
                                 placeholder="Choose codes from the ValueHelp"
                                 showValueHelp="true" 
-                                valueHelpRequest=".onMultiInputWithEmployeeValuePress"
+                                valueHelpRequest=".onMultiInputWithEmployeeValuePressReferer($event, 'referMulti')"
                                 editable="true"
                                 >
                         </MultiInput>

@@ -65,7 +65,7 @@ sap.ui.define([
             
             //로그인 세션 작업완료시 수정
             this.loginUserId = "TestUser";
-            this.tenant_id = "L2100";
+            this.tenant_id = "L2101";
             this.companyCode = "LGCKR";            
 
             oTransactionManager = new TransactionManager();
@@ -215,20 +215,34 @@ sap.ui.define([
         _getSearchStates: function () {
 
             var searchPartBaseKeyword = this.getView().byId("searchPartBaseKeyword").getValue();
-            var searchDescKeyword = this.getView().byId("searchDescKeyword").getValue();
+            // var searchDescKeyword = this.getView().byId("searchDescKeyword").getValue();
             var searchUseflag = this.getView().byId("searchUseflag").getSelectedKey();
             // var searchOrg = this.getView().byId("searchOrg").getSelectedKey();
             // var searchPrjType = this.getView().byId("searchPrjType").getSelectedKey();
 
             var aSearchFilters = [];
 
-            if (searchPartBaseKeyword != "") {                
-                aSearchFilters.push(new Filter("tolower(activity_name)", FilterOperator.Contains, "'"+searchPartBaseKeyword.toLowerCase().replace("'","''")+"'"));
+            // aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.tenant_id));
+
+            if (searchPartBaseKeyword != "") {
+                aSearchFilters.push(new Filter({
+                    path: 'keyword', 
+                    filters: [
+                        new Filter("tolower(activity_name)", FilterOperator.Contains, "'" + searchPartBaseKeyword.toLowerCase().replace("'","''") + "'"),                        
+                        new Filter("tolower(activity_code)", FilterOperator.Contains, "'" + searchPartBaseKeyword.toLowerCase().replace("'","''") + "'")
+                    ],
+                    and: false
+                }));
             }
 
-            if (searchDescKeyword != "") {                
-                aSearchFilters.push(new Filter("tolower(description)", FilterOperator.Contains, "'"+searchDescKeyword.toLowerCase().replace("'","''")+"'"));
-            }
+            // if (searchPartBaseKeyword != "") {                
+            //     aSearchFilters.push(new Filter("tolower(activity_name)", FilterOperator.Contains, "'"+searchPartBaseKeyword.toLowerCase().replace("'","''")+"'"));
+            
+            // }
+
+            // if (searchDescKeyword != "") {                
+            //     aSearchFilters.push(new Filter("tolower(description)", FilterOperator.Contains, "'"+searchDescKeyword.toLowerCase().replace("'","''")+"'"));
+            // }
 
             if(!this.isValNull(searchUseflag)){
                     var bUseFlag = (searchUseflag === "true")?true:false;
@@ -257,12 +271,11 @@ sap.ui.define([
          */
         _getPreZero: function (iDataParam) {
             return (iDataParam<10 ? "0"+iDataParam : iDataParam);
-        },
-
+        },       
 
         _getSorter: function () {
             var aSorter = [];
-            // aSorter.push(new Sorter("idea_number", true));
+            aSorter.push(new Sorter("sequence", false));
             return aSorter;
         },
 

@@ -44,6 +44,8 @@ sap.ui.define([
                                     use_flag: true
                                 });
 
+                this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
+
 
             }
 		});

@@ -225,6 +225,12 @@ sap.ui.define([
             if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
             if(this.validator.validate(this.byId("midTable")) !== true) return;
             
+            var tempData = oMasterModel.getData();
+            if(tempData != null){
+                delete tempData.org_infos;
+                oMasterModel.setData(tempData);
+            }
+
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -240,13 +246,15 @@ sap.ui.define([
                                     oView.setBusy(false);
                                     that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                     MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+
+                                    that.onPageNavBackButtonPress(); 
                                 }
                             });
 
                         }else{
                             $.ajax({
                             //new ODataXhrService.ajax({ 
-                                url: "pg/md/mdCategory/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdNewCategoryItemCode(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='"+this._sOrg_code+"')/Set", 
+                                url: "pg/md/mdCategory/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdNewCategoryItemCode(tenant_id='L2100',company_code='"+that._sCompany_code+"',org_type_code='"+that._sOrg_type_code+"',org_code='"+that._sOrg_code+"')/Set", 
                                 type: "GET", 
                                 contentType: "application/json", 
                                 success: function(data){ 
@@ -268,6 +276,8 @@ sap.ui.define([
                                             oView.setBusy(false); 
                                             that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress(); 
                                             MessageToast.show(that.getModel("I18N").getText("/NCM01001")); 
+                                            
+                                            that.onPageNavBackButtonPress(); 
                                         },
                                         error: function(e){
                                         }
@@ -333,6 +343,9 @@ sap.ui.define([
                 oView.setBusy(true);
                 oMasterModel.setTransactionModel(this.getModel());
                 oMasterModel.read(sObjectPath, {
+                    urlParameters: {
+                        "$expand": "org_infos"
+                    },
                     success: function(oData){
                         oView.setBusy(false);
                     }
@@ -446,6 +459,9 @@ sap.ui.define([
                 oView.setBusy(true);
                 oMasterModel.setTransactionModel(this.getModel());
                 oMasterModel.read(sObjectPath, {
+                    urlParameters: {
+                        "$expand": "org_infos"
+                    },
                     success: function(oData){
                         oView.setBusy(false);
                     }
@@ -473,7 +489,12 @@ sap.ui.define([
             }
             this.validator.clearValueState(this.byId("midObjectForm1Edit"));
             this.validator.clearValueState(this.byId("midTable"));
-			oTransactionManager.setServiceModel(this.getModel());
+            oTransactionManager.setServiceModel(this.getModel());
+            
+            //ScrollTop
+            var oObjectPageLayout = this.getView().byId("page");
+            var oFirstSection = oObjectPageLayout.getSections()[0];
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
 		},
 
 

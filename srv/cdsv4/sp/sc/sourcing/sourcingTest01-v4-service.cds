@@ -8,9 +8,9 @@ using {sp.Sc_Outcome_Code as scOutcomeCode,
        sp.Sc_Award_Type_Code_View as scAwardTypeCodeView,
        sp.Sc_Award_Type_Code_View1 as scAwardTypeCodeView1,
        sp.Sc_Nego_Prog_Status_Code_View as scNegoProgStatusCodeView,
-} from '../../../../../db/cds/sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
-// using {sp.Sc_Outcome_Code2 as scOutcomeCode2} from '../../../../../db/cds/sp/sc/SP_SC_OUTCOME_CODE_VIEW-model';
-// using {localized.Sc_Outcome_Code as scOutcomeCodeLocalized} from '../../../../../db/cds/sp/sc/SP_SC_OUTCOME_CODE_VIEW-model'; //작동안함
+} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_MASTERS-model';
+// using {sp.Sc_Outcome_Code2 as scOutcomeCode2} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_MASTERS-model';
+// using {localized.Sc_Outcome_Code as scOutcomeCodeLocalized} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_MASTERS-model'; //작동안함
 
 using {
     sp.Sc_Nego_Outcom as scNegoOutcom,

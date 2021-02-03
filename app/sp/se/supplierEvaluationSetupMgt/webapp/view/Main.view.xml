@@ -52,9 +52,7 @@
                                                 <smartFilterBar:customControl>
                                                 
                                                      <ComboBox id="tenant_combo" 
-                                                     selectedKey="dommy" 
-                                                     value-state="Error"
-                                                     
+                                                     selectedKey="one" 
                                                      />
                                                                                   
                                                     <!-- <ComboBox id="tenant_combo" 
@@ -83,7 +81,7 @@
                                  <smartTable:SmartTable height="100%" 
                                     id="MonitorList" 
                                     entitySet="SupEvalOpUnitListView"
-                                    initiallyVisibleFields="evaluation_operation_unit_code,evaluation_operation_unit_name" 
+                                    initiallyVisibleFields="evaluation_operation_unit_code,evaluation_operation_unit_name,evaluation_request_mode_code" 
                                     smartFilterId="smartFilterBar"
                                     tableType="ResponsiveTable"
                                     useExportToExcel="false"  
@@ -96,7 +94,6 @@
                                     demandPopin="true" 
                                     showFullScreenButton="false"
                                     beforeRebindTable="onSearchTable"
-                                    
                                     >
                          <!-- 자동바인딩 -->
                                     <!-- useExportToExcel : 추가메뉴 활성화 여부 -->

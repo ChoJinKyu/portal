@@ -31,28 +31,88 @@
                     <HBox>
                         <sc:MicroProcessFlow>
                             <sc:content>
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem >
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="PR" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+    
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="Budget" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="RFQ" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="Mold Spec" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="Purchase Contract" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="PO" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://busy" color="#F94B50"/>
+                                            <Text text="RCV" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://circle-task" color="#BEC9D4"/>
+                                            <Text text="Lease Contract" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://circle-task" color="#BEC9D4"/>
+                                            <Text text="Invoice" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
                             </sc:content>
                         </sc:MicroProcessFlow>
-                    </HBox>
-                    <HBox>
-                        <Text text=" PR" renderWhitespace="true" />
-                        <Text text="Budget" width="6em" textAlign="Right" />
-                        <Text text="RFQ" width="6em" textAlign="Center" />
-                        <Text text="   Mold&#10;   Spec" renderWhitespace="true" />
-                        <Text text="Purchase&#10; Contract" width="8em" textAlign="Center" />
-                        <Text text="PO" renderWhitespace="true" />
-                        <Text text="RCV" width="5em" textAlign="Right" />
-                        <Text text="Lease&#10;Contract" width="7.5em" textAlign="Center" />
-                        <Text text="Invoice" />
                     </HBox>
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
@@ -61,9 +121,9 @@
                                 <!--<MultiInput id="searchCompanyS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>-->
                                 <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" required="true"
                                                 items="{
-                                                    path: 'org>/Org_Company',
+                                                    path: 'org>/Company',
                                                     filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                                     ],
                                                     sorter: { path: 'company_code'}
                                                 }"
@@ -82,7 +142,7 @@
                                                 items="{
                                                     path: '/Divisions',
                                                     filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                                     ],
                                                     sorter: { path: 'org_code'}
                                                 }"
@@ -128,28 +188,88 @@
                     <HBox>
                         <sc:MicroProcessFlow>
                             <sc:content>
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" icon="sap-icon://complete" />
-                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
+                                <sc:MicroProcessFlowItem >
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="PR" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+    
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="Budget" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="RFQ" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="Mold Spec" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="Purchase Contract" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://message-success" color="#BEC9D4"/>
+                                            <Text text="PO" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://busy" color="#F94B50"/>
+                                            <Text text="RCV" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://circle-task" color="#BEC9D4"/>
+                                            <Text text="Lease Contract" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
+
+                                <sc:MicroProcessFlowItem>
+                                    <sc:customControl>
+                                        <VBox alignItems="Center" width="3.6rem">
+                                            <core:Icon src="sap-icon://circle-task" color="#BEC9D4"/>
+                                            <Text text="Invoice" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </sc:customControl>
+                                </sc:MicroProcessFlowItem>
                             </sc:content>
                         </sc:MicroProcessFlow>
-                    </HBox>
-                    <HBox>
-                        <Text text=" PR" renderWhitespace="true" />
-                        <Text text="Budget" width="6em" textAlign="Right" />
-                        <Text text="RFQ" width="6em" textAlign="Center" />
-                        <Text text="   Mold&#10;   Spec" renderWhitespace="true" />
-                        <Text text="Purchase&#10; Contract" width="8em" textAlign="Center" />
-                        <Text text="PO" renderWhitespace="true" />
-                        <Text text="RCV" width="5em" textAlign="Right" />
-                        <Text text="Lease&#10;Contract" width="7.5em" textAlign="Center" />
-                        <Text text="Invoice" />
                     </HBox>
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
@@ -157,9 +277,9 @@
                                 <Label text="{I18N>/COMPANY}" labelFor="searchCompanyE" required="true"></Label>
                                 <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" required="true"
                                                 items="{
-                                                    path: 'org>/Org_Company',
+                                                    path: 'org>/Company',
                                                     filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                                     ],
                                                     sorter: { path: 'company_code'}
                                                 }"
@@ -178,7 +298,7 @@
                                                 items="{
                                                     path: '/Divisions',
                                                     filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                                     ],
                                                     sorter: { path: 'org_code'}
                                                 }"
@@ -233,7 +353,7 @@
                                         items="{
                                                     path : 'util>/Code',
                                                     filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                                     ],
                                                     sorter: { path: 'sort_no'}
@@ -252,7 +372,7 @@
                                         items="{
                                                     path : 'util>/Code',
                                                     filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                         {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
                                                     ],
                                                     sorter: { path: 'sort_no'}
@@ -293,7 +413,7 @@
                                     suggestionItems="{
                                         path: '/Models',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'model' }
                             }">
@@ -311,7 +431,7 @@
                                     suggestionItems="{
                                         path: '/PartNumbers',
                                         filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'mold_number' }
                             }">

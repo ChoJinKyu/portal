@@ -45,8 +45,8 @@ service ProjectMgtService {
     @readonly
     entity Hr_Employee             as projection on hrEmployee.Hr_Employee;
 
-    @readonly
-    entity Hr_Department            as projection on hrDept.Hr_Department; 
+    //@readonly
+    //entity Hr_Department            as projection on hrDept.Hr_Department; 
 
     @readonly
     entity Org_Division            as projection on orgDiv.Org_Division;
@@ -61,7 +61,7 @@ service ProjectMgtService {
      left join purOperOrg.Pur_Operation_Org cpo
             on cod.tenant_id = cpo.tenant_id
            and cod.bizdivision_code = cpo.bizdivision_code
-         where cpo.bizdivision_code is not null;
+           and cpo.bizdivision_code is not null;
 
     @readonly
     entity MM_UOM                as
@@ -114,7 +114,7 @@ service ProjectMgtService {
             , tp.project_create_date        /*프로젝트생성일자*/
             , tp.massprod_start_date        /*양산시작일자*/
             , tp.massprod_end_date          /*양산종료일자*/
-            , tp.mcst_excl_flag             /*재료비제외여부*/
+            , ifnull(tp.mcst_excl_flag, false) AS  mcst_excl_flag: Boolean            /*재료비제외여부*/
             , tp.mcst_excl_reason           /*재료비제외사유*/
             , tp.direct_register_flag       /*직접등록여부*/
             , tp.develope_event_code     
@@ -168,13 +168,13 @@ service ProjectMgtService {
             , DP_TC_GET_MCST_PROJECT_STATUS_INFO_FUNC (tp.tenant_id
                                                 ,tp.project_code
                                                 ,tp.model_code
-                                                ,'TARGET'  /*목표*/
+                                                ,'TARGETS'  /*목표*/
                                                 ,'KO'
                                                 ) AS target_status_name: String(30)
             , DP_TC_GET_MCST_PROJECT_STATUS_CODE_FUNC (tp.tenant_id
                                                     ,tp.project_code
                                                     ,tp.model_code
-                                                    ,'TARGET'  /*목표*/
+                                                    ,'TARGETS'  /*목표*/
                                                     ) AS target_status_code: String(30)
             , DP_TC_GET_MCST_PROJECT_STATUS_INFO_FUNC (tp.tenant_id
                                                 ,tp.project_code

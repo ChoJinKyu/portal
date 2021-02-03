@@ -19,10 +19,12 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text",
     "sap/m/Input",
+    'sap/ui/export/library',
+	'sap/ui/export/Spreadsheet',
     "sap/ui/core/util/MockServer",
 ],
   function (BaseController, Multilingual, JSONModel, TreeListModel, TransactionManager, Sorter, Filter, FilterOperator, ManagedListModel, Formatter,
-    TablePersoController, jQuery, Fragment, MessageBox, MessageToast, MenuItem, Column, Label, Text, Input, MockServer) {
+    TablePersoController, jQuery, Fragment, MessageBox, MessageToast, MenuItem, Column, Label, Text, Input, library, Spreadsheet, MockServer) {
     "use strict";
     var oTransactionManager;
 
@@ -68,7 +70,7 @@ sap.ui.define([
             var aFiltersComboBox = [];
             aFiltersComboBox.push( new Filter("tenant_id", "EQ", oSelectedkey));
             // oBindingComboBox.filter(aFiltersComboBox);          //sort Ascending
-            var businessSorter = new sap.ui.model.Sorter("bizunit_name", false);        //sort Ascending
+            var businessSorter = new sap.ui.model.Sorter("bizunit_code", false);        //sort Ascending
             
             business_combo.bindAggregation("items", {
                 path: "org>/Org_Unit",
@@ -96,7 +98,7 @@ sap.ui.define([
             var aFiltersComboBox = [];
             aFiltersComboBox.push( new Filter("tenant_id", "EQ", oSelectedkey));
             // oBindingComboBox.filter(aFiltersComboBox);          //sort Ascending
-            var businessSorter = new sap.ui.model.Sorter("bizunit_name", false);        //sort Ascending
+            var businessSorter = new sap.ui.model.Sorter("bizunit_code", false);        //sort Ascending
             
             business_combo.bindAggregation("items", {
                 path: "org>/Org_Unit",
@@ -149,7 +151,6 @@ sap.ui.define([
                 contentType: "application/json",
                 type: "GET",
                 success: function(oData){ 
-                    // this.byId("title").setText("Vendor Pool별 관리특성 List ("+oData.value.length+")");
                     var v_list = oView.getModel("title").getData();
                     v_list.MdVpMatrial = oData.value;
                     oView.getModel("title").updateBindings(true); 
@@ -190,6 +191,10 @@ sap.ui.define([
                                 dataArrName = "spmd_attr_info_0"+j
                             }
 
+                            if(itemArr == null){
+                                continue;
+                            }
+                            
                             var item = JSON.parse(itemArr);
 
                             dataArr[i][dataArrName+"_cateCode"] = item.cateCode;
@@ -288,7 +293,7 @@ sap.ui.define([
                     contentType: "application/json",
                     type: "GET",
                     success: function(oData2){ 
-                        this.byId("title").setText("List ("+oData2.value.length+")");
+                        this.byId("title").setText(this.getModel("I18N").getText("/LIST") +" ("+oData2.value.length+")");
                         this.setItemList(oData2);
                     }.bind(this)   
                                         
@@ -526,7 +531,81 @@ sap.ui.define([
             }
                 
 
+        },
+        
+
+        
+        createColumnConfig: function() {
+			return [
+				{
+					label: this.getModel("I18N").getText("/VENDOR_POOL_CODE"),
+					property: 'mi_material_code',
+					width: '15'
+				},
+				{
+					label: this.getModel("I18N").getText("/VENDOR_POOL_LOCAL_NAME"),
+					property: 'mi_material_name',
+					width: '25'
+				},
+				{
+					label: this.getModel("I18N").getText("/MATERIAL_CODE"),
+					property: 'category_code',
+					width: '15'
+				},
+				{
+					label: this.getModel("I18N").getText("/MATERIAL_NAME"),
+					property: 'category_name',
+					width: '15'
+                },
+                {
+					label: this.getModel("I18N").getText("/REGISTER_FLAG"),
+					property: 'currency_unit',
+					width: '15'
+                },
+                {
+					label: this.getModel("I18N").getText("/SUPPLIER_CODE"),
+					property: 'quantity_unit',
+					width: '15'
+                },
+                {
+					label: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME"),
+					property: 'exchange_unit',
+					width: '15'
+                },
+                {
+					label: this.getModel("I18N").getText("/REPR_DEPARTMENT_CODE"),
+					property: 'exchange',
+					width: '15'
+                },
+                {
+					label: this.getModel("I18N").getText("/REPR_DEPARTMENT_NAME"),
+					property: 'termsdelv',
+					width: '15'
+                }
+            ];
+		},
+
+        onExport: function() {
+			// var aCols, aProducts, oSettings, oSheet;
+
+			// aCols = this.createColumnConfig();
+			// aProducts = this.getView().getModel("list").getProperty('/MdVpMatrial');
+
+			// oSettings = {
+			// 	workbook: { columns: aCols },
+			// 	dataSource: aProducts,
+			// 	fileName: this.byId("mainTable").getHeader()
+			// };
+
+			// oSheet = new Spreadsheet(oSettings);
+			// oSheet.build()
+			// 	.then( function() {
+			// 		// MessageToast.show('Spreadsheet export has finished');
+			// 	})
+			// 	.finally(oSheet.destroy);
         }
+        
+
     });
   }
 );

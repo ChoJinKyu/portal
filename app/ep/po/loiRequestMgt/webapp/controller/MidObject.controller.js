@@ -9,7 +9,6 @@ sap.ui.define([
     "ext/lib/model/ManagedListModel",
     "sap/ui/model/Sorter",
     "ext/lib/formatter/DateFormatter",
-    "ext/lib/util/ValidatorUtil",
     "ext/lib/formatter/Formatter",
     "ext/lib/util/Validator",
     "sap/ui/model/Filter",
@@ -29,10 +28,12 @@ sap.ui.define([
     "cm/util/control/ui/PlantDialog",
     "cm/util/control/ui/CmDialogHelp",
     //"ext/pg/util/control/ui/SupplierDialog",
+    "sp/util/control/ui/SupplierWithOrgDialog",
+    "sp/util/control/ui/SupplierDialog",
     "sap/m/ObjectStatus"
-], function (BaseController, Multilingual, NumberFormatter, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, Sorter, DateFormatter, ValidatorUtil, Formatter, Validator,
+], function (BaseController, Multilingual, NumberFormatter, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, Sorter, DateFormatter, Formatter, Validator,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast,
-    ColumnListItem, ObjectIdentifier, RichTextEditor, Text, Input, ComboBox, Item, EmployeeDialog, PlantDialog, CmDialogHelp, ObjectStatus) {
+    ColumnListItem, ObjectIdentifier, RichTextEditor, Text, Input, ComboBox, Item, EmployeeDialog, PlantDialog, CmDialogHelp, SupplierDialog, SupplierWithOrgDialog, ObjectStatus) {
 
     "use strict";
 
@@ -82,7 +83,7 @@ sap.ui.define([
             oTransactionManager.addDataModel(this.getModel("master"));
             oTransactionManager.addDataModel(this.getModel("details"));
 
-            this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
+            this.getRouter().getRoute("requestPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             //this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
@@ -101,8 +102,8 @@ sap.ui.define([
 		 */
         onPageEnterFullScreenButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
-            this.getRouter().navTo("midPage", {
-                layout: sNextLayout,
+            this.getRouter().navTo("requestPage", {
+                //layout: sNextLayout,
                 tenantId: this._sTenantId,
                 companyCode: this._sCompanyCode,
                 loiWriteNumber: this._sLoiWriteNumber
@@ -117,8 +118,8 @@ sap.ui.define([
 		 */
         onPageExitFullScreenButtonPress: function () {
             var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
-            this.getRouter().navTo("midPage", {
-                layout: sNextLayout,
+            this.getRouter().navTo("requestPage", {
+                //layout: sNextLayout,
                 tenantId: this._sTenantId,
                 companyCode: this._sCompanyCode,
                 loiWriteNumber: this._sLoiWriteNumber
@@ -822,6 +823,7 @@ sap.ui.define([
             }
             else {
                 this.getModel("midObjectView").setProperty("/isAddedMode", false);
+                //this.getModel("midObjectView").setProperty("/isShowMode", true);
                 var that = this;
 
                 // this._bindView("/LOIRequestListView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',loi_write_number='" + this._sLoiWriteNumber + "')").then(function(){
@@ -1125,6 +1127,8 @@ sap.ui.define([
             console.log(" index obj ----------------->" , index); 
             var oDetailsModel = this.getModel("details");
 
+           
+
             var sum_val = 0;
             this.requestQuantity_ = [];
             this.requestNetPrice_ = [];
@@ -1134,9 +1138,15 @@ sap.ui.define([
             console.log(" this.requestQuantity_[index]  ----------------->" , this.requestQuantity_[index] ); 
             console.log(" this.requestNetPrice_[index] ----------------->" , this.requestNetPrice_[index]); 
 
+            if(this.requestQuantity_[index] > 0 && this.requestNetPrice_[index] === undefined){
+                oDetailsModel.setProperty("/LOIRequestDetailView/"+index+"/request_net_price", 0);
+            }
+
             if(this.requestQuantity_[index] > 0 && this.requestNetPrice_[index] > 0){
                 sum_val = this.requestQuantity_[index] * this.requestNetPrice_[index];
             }
+
+            console.log(" sum_val----------------->" , sum_val); 
 
             oDetailsModel.setProperty("/LOIRequestDetailView/"+index+"/request_quantity", this.numberFormatter.toNumberString(val));
             oDetailsModel.setProperty("/LOIRequestDetailView/"+index+"/request_amount", this.numberFormatter.toNumberString(sum_val));
@@ -1164,6 +1174,10 @@ sap.ui.define([
 
             console.log(" this.requestQuantity_[index]  ----------------->" , this.requestQuantity_[index] ); 
             console.log(" this.requestNetPrice_[index] ----------------->" , this.requestNetPrice_[index]); 
+
+            if(this.requestQuantity_[index] === undefined && this.requestNetPrice_[index] > 0){
+                oDetailsModel.setProperty("/LOIRequestDetailView/"+index+"/request_quantity", 0);
+            }
 
             if(this.requestQuantity_[index] > 0 && this.requestNetPrice_[index] > 0){
                 sum_val = this.requestQuantity_[index] * this.requestNetPrice_[index];
@@ -1199,8 +1213,8 @@ sap.ui.define([
         onInputWithEmployeeValuePress: function(oEvent){
             console.log(" empl abc----------------->", oEvent); 
 
-            var sPath = oEvent.getSource().getBindingContext("details").getPath(),
-            oRecord = this.getModel("details").getProperty(sPath);
+            var sPath = oEvent.getSource().getBindingContext("details").getPath();
+            //oRecord = this.getModel("details").getProperty(sPath);
             var index = sPath.substr(sPath.length-1);
 
             console.log(" index obj ----------------->" , index); 
@@ -1214,7 +1228,7 @@ sap.ui.define([
         onEmployeeDialogApplyPress: function(oEvent){
 
             //this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
-            var sDepNo = oEvent.getParameter("item").employee_number;
+            //var sDepNo = oEvent.getParameter("item").employee_number;
             var oDetailsModel = this.getModel("details");
             var rowIndex = this.onInputWithEmployeeValuePress["row"];
             console.log("row ::: " ,this.onInputWithEmployeeValuePress["row"]);
@@ -1245,7 +1259,7 @@ sap.ui.define([
         onPlantDialogApplyPress: function(oEvent){
 
             //this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
-            var sDepNo = oEvent.getParameter("item").plant_code;
+            //var sDepNo = oEvent.getParameter("item").plant_code;
             var oDetailsModel = this.getModel("details");
             var rowIndex = this.onCmInputWithCodeValuePress["row"];
             console.log("row ::: " ,this.onCmInputWithCodeValuePress["row"]);
@@ -1253,6 +1267,32 @@ sap.ui.define([
             oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/plant_name", oEvent.getParameter("item").plant_name);
             oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/plant_code", oEvent.getParameter("item").plant_code);
                
+        },
+
+        onMultiInputSupplierWithOrgValuePress: function(oEvent){
+            var sPath = oEvent.getSource().getBindingContext("details").getPath();
+            var index = sPath.substr(sPath.length-1);
+
+            console.log(" index obj ----------------->" , index); 
+            this.onMultiInputSupplierWithOrgValuePress["row"] = index;
+
+            this.byId("supplierWithOrgDialog").open();
+
+        },
+
+        onSupplierDialogApplyPress: function(oEvent){
+
+            console.log("onSupplierDialogApplyPress----------------->");
+
+            var oDetailsModel = this.getModel("details");
+            var rowIndex = this.onMultiInputSupplierWithOrgValuePress["row"];
+            console.log("row ::: " ,this.onMultiInputSupplierWithOrgValuePress["row"]);
+
+            console.log("supplier_code ::: " ,oEvent.getParameter("item").supplier_code);
+            console.log("supplier_local_name ::: " ,oEvent.getParameter("item").supplier_local_name);
+
+            oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/supplier_name", oEvent.getParameter("item").supplier_local_name);
+            oDetailsModel.setProperty("/LOIRequestDetailView/"+rowIndex+"/supplier_code", oEvent.getParameter("item").supplier_code);
         },
 
 
@@ -1364,6 +1404,31 @@ sap.ui.define([
 
         //     //this.onPageEnterFullScreenButtonPress();
         // }
+
+
+        openPlantPopup: function () {
+            if (!this.oCmDialogHelp) {
+                this.oCmDialogHelp = new CmDialogHelp({
+                    title: "{I18N>/PLANT_NAME}",
+                    keyFieldLabel: "{I18N>/PLANT_CODE}",
+                    textFieldLabel: "{I18N>/PLANT_NAME}",
+                    keyField: "bizdivision_code",
+                    textField: "bizdivision_name",
+                    items: {
+                        sorters: [
+                            new Sorter("bizdivision_name", false)
+                        ],
+                        serviceName: "cm.util.OrgService",
+                        entityName: "Division"
+                    }
+                });
+                this.oCmDialogHelp.attachEvent("apply", function (oEvent) {
+                    console.log("1111==", oEvent.getParameter("item"));
+                    this.byId("searchOrgCode").setValue("(" + oEvent.getParameter("item").bizdivision_code + ")" + oEvent.getParameter("item").bizdivision_name);
+                }.bind(this));
+            }
+            this.oCmDialogHelp.open();
+        },
 
     });
 });

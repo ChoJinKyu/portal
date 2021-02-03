@@ -29,146 +29,230 @@ sap.ui.define([
                 this.getOwnerComponent().getRouter().getRoute("Detail").attachPatternMatched(this._onPatternMatched, this);
                 
             }
-
             /***
-             * 세션 유저정보를 가져온다.
+             * 콤보박스, 버튼들에 공통코드 바인딩
              */
-            , _getUserSession : function(){
-                var oUserInfo;
-                
-                oUserInfo = {
-                    loginUserId : "TestUser",
-                    tenantId : "L2100",
-                    companyCode : "LGCKR",
-                    orgTypeCode : "BU",
-                    orgCode : "BIZ00100",
-                    evalPersonEmpno : "5706"
-                };
-
-                return oUserInfo;
-            }
             , _setBindComboNBtnItems : function(){
-                var oUserInfo;
-                oUserInfo = this._getUserSession();
+                // var oUserInfo, aFilters;
+                // oUserInfo = this._getUserSession();
 
-                this._setBindItems({
+                // this._setBindItems({
+                //     id : "btnEvaluExeMode",
+                //     path : "common>/Code",
+                //     template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
+                //     sorter : [
+                //         new Sorter("sort_no")
+                //     ],
+                //     filters : [
+                //         new Filter("tenant_id", "EQ", oUserInfo.tenantId),
+                //         new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE")
+                //     ]
+                // });
+                // this._setBindItems({
+                //     id : "btnEvaluArtType",
+                //     path : "common>/Code",
+                //     template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
+                //     sorter : [
+                //         new Sorter("sort_no")
+                //     ],
+                //     filters : [
+                //         new Filter("tenant_id", "EQ", oUserInfo.tenantId),
+                //         new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE")
+                //     ]
+                // });
+                
+                this._setBindCommonItems({
                     id : "btnEvaluExeMode",
-                    path : "common>/Code",
-                    template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}" }),
-                    filters : [
-                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                        new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE")
-                    ]
+                    groupCode : "SP_SE_EVAL_ARTICLE_TYPE_CODE",
+                    template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" })
                 });
-                
-                this._setBindItems({
+                this._setBindCommonItems({
                     id : "btnEvaluArtType",
-                    path : "common>/Code",
-                    template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}" }),
-                    filters : [
-                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                        new Filter("group_code", "EQ", "SP_SE_EVAL_ARTICLE_TYPE_CODE")
-                    ]
+                    groupCode : "SP_SE_EVAL_ARTICLE_TYPE_CODE",
+                    template : new SegmentedButtonItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" })
                 });
-                
-                this._setBindItems({
+
+                this._setBindCommonItems({
                     id : "comboEvaluDisScrType",
-                    path : "common>/Code",
-                    template : new ListItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
-                    filters : [
-                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                        new Filter("group_code", "EQ", "SP_SE_EVAL_DISTRB_SCR_TYPE_CD")
-                    ]
+                    groupCode : "SP_SE_EVAL_DISTRB_SCR_TYPE_CD"
                 });
                 
-                this._setBindItems({
+                this._setBindCommonItems({
                     id : "comboEvaluResultInputType",
-                    path : "common>/Code",
-                    template : new ListItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
-                    filters : [
-                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                        new Filter("group_code", "EQ", "SP_SE_EVAL_SCALE_TYPE_CD")
-                    ]
+                    groupCode : "SP_SE_EVAL_SCALE_TYPE_CD"
                 });
-
-                this._setBindItems({
+                
+                this._setBindCommonItems({
                     id : "comboQttItemUom",
-                    path : "common>/Code",
-                    template : new ListItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
-                    filters : [
-                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                        new Filter("group_code", "EQ", "SP_SE_QTTIVE_UOM_CODE")
-                    ]
+                    groupCode : "SP_SE_QTTIVE_UOM_CODE"
                 });
 
-                this._setBindItems({
+                this._setBindCommonItems({
                     id : "comboNodeType",
-                    path : "common>/Code",
-                    template : new ListItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" }),
-                    filters : [
-                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                        new Filter("group_code", "EQ", "SP_SE_EVAL_NODE_TYPE_CD")
-                    ]
+                    groupCode : "SP_SE_EVAL_NODE_TYPE_CD"
                 });
-
                 
             }
+            /***
+             * 공통 코드 BindItems
+             * 
+             * @param id            컨트롤 아이디
+             * @param groupCode     호출할 공통 그룹 코드
+             * @param template      item 의 구성 control
+             */
+            , _setBindCommonItems : function(oParam){
+                var oUserInfo, aFilters, oTemplate;
+                oUserInfo = this._getUserSession();
+                aFilters = [];
 
-            , _setBindItems : function(oParam){
+                aFilters = [
+                    new Filter("tenant_id", "EQ", oUserInfo.tenantId),
+                    new Filter("group_code", "EQ", oParam.groupCode),
+                    new Filter("language_cd", "EQ", "KO")
+                ];
+                oTemplate = oParam.template ? oParam.template :
+                    new ListItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" });
 
-                this.byId(oParam.id).bindItems({
-                    path : oParam.path,
-                    filters : oParam.filters,
-                    template : oParam.template
+                this._setBindItems({
+                    id : oParam.id,
+                    path : "common>/Code",
+                    template : oTemplate,
+                    sorter : [
+                        new Sorter("sort_no")
+                    ],
+                    filters : aFilters
+                    
                 });
             }
-
+            /**
+             * Detail PatternMatched
+             */
             , _onPatternMatched: function (e) {
-                var oArgs, oComponent, oViewModel, oHeader,
-                    oView, aControls;
+                var oArgs, oComponent, oViewModel,
+                    oView, aControls, oTable, oDetailData;
 
                 oArgs = e.getParameter("arguments");
                 oComponent = this.getOwnerComponent();
                 oViewModel = oComponent.getModel("viewModel");
-                oHeader = oViewModel.getProperty("/Detail/Header");
                 oView = this.getView();
 
-                if( oArgs.new === "Y" ){
-                    oViewModel.setProperty("/App/layout", "TwoColumnsBeginExpanded");
-                    aControls = oView.getControlsByFieldGroupId("newRequired");
-                    this._clearValueState(aControls);
-
-                }else{
-                    oViewModel.setProperty("/App/layout", "TwoColumnsMidExpanded");
-                    oViewModel.setProperty("/App/EditMode", false);
+                oMasterPage = oComponent.byId("Master");
+                if(oMasterPage){
+                    oDynamicPage = oMasterPage.byId("page");
                 }
 
                 oViewModel.setProperty("/Args", oArgs);
+                oDetailData = oViewModel.getProperty("/Detail");
+                if(!oDetailData){
+                    oDetailData = {};
+                }
+                if( oArgs.new === "Y" ){
+                    // 신규건인지 확인
+                    oViewModel.setProperty("/App/layout", "TwoColumnsBeginExpanded");
+                    aControls = oView.getControlsByFieldGroupId("newRequired");
+                    this._clearValueState(aControls);
+                    if(!oDetailData.NewHeader){
+                        oDetailData.NewHeader = {};
+                    }
+                    oViewModel.setProperty("/Detail", oDetailData);
 
-                if(!oHeader){
+                    if(oDynamicPage){
+                        oDynamicPage.setHeaderExpanded(true);
+                    }
                     return;
                 }
+
+                if(!oArgs.refKey){
+                    // 잘못된 접근
+                    return;
+                }
+                oDetailData.Header = {};
+                oViewModel.setProperty("/Detail", oDetailData);
+                oViewModel.setProperty("/App/layout", "TwoColumnsMidExpanded");
                 
-                var oCalculationBuilder;
-                oCalculationBuilder = this.byId("calculationBuilder");
-                oCalculationBuilder.bindAggregation("variables",{
-                    path : "/QttiveItemCode",
-                    template : new CalculationBuilderVariable({ key : "{qttive_item_code}", label : "{qttive_item_name}" }),
-                    filters : [
-                        new Filter("tenant_id", "EQ", oHeader.tenant_id),
-                        new Filter("company_code", "EQ", oHeader.company_code),
-                        new Filter("org_type_code", "EQ", oHeader.org_type_code),
-                        new Filter("org_code", "EQ", oHeader.org_code),
-                        new Filter("evaluation_operation_unit_code", "EQ", oHeader.evaluation_operation_unit_code)
-                    ],
-                    sorter : [
-                        new Sorter("sort_sequence")
-                    ]
-                });
+                var oMasterPage, oDynamicPage;
 
-                this._readItem();
+                this._readHeader();
+                
             }
+            /**
+             * scale 데이터 조회
+             */
+            , _readHeader : function(){
+                var oComponent, oView, oViewModel, oODataModel, aFilters, oHeader,
+                    oArgs, oTable, aControls;
+                
+                oComponent = this.getOwnerComponent();
+                oView = this.getView();
+                oViewModel = oComponent.getModel("viewModel");
+                oODataModel = oComponent.getModel();
+                oArgs = oViewModel.getProperty("/Args");
+                oTable = this.byId("tblEvalItemScle");
+                aControls = oView.getControlsByFieldGroupId("detailRequired");
+                aFilters = [
+                    new Filter({ path:"ref_key", operator:"EQ", value1 : oArgs.refKey }),
+                ];
 
+                oTable.removeSelections(true);
+                oViewModel.setProperty("/Detail/Header", {});
+                oViewModel.setProperty("/App/EditMode", false);
+                this._clearValueState(aControls);
+
+                var oAppView;
+                oAppView = oComponent.byId("app");
+                oAppView.setBusyIndicatorDelay(0);
+                oAppView.setBusy(true);
+                oODataModel.read("/EvalItemListView",{
+                    filters : aFilters,
+                    success : function(oData){
+                        var oResult = oData.results[0];
+                        if(!oResult){
+                            oAppView.setBusy(false);
+                            return;
+                        }
+
+                        oResult.evaluation_execute_mode_code = oResult.evaluation_execute_mode_code || "QLTVE_EVAL";
+                        oResult.evaluation_article_type_code = oResult.evaluation_article_type_code || "QLTVE_EVAL";
+                        oResult.qttive_eval_article_calc_formula = oResult.qttive_eval_article_calc_formula || "";
+
+                        /***
+                         * 계산식 변수들 바인딩
+                         * 조회조건 evaluation_operation_unit_code 에따라 다름
+                         * 
+                         */
+                        var oCalculationBuilder;
+                        oCalculationBuilder = this.byId("calculationBuilder");
+                        oCalculationBuilder.bindAggregation("variables",{
+                            path : "/QttiveItemCode",
+                            template : new CalculationBuilderVariable({ key : "{qttive_item_code}", label : "{qttive_item_name}" }),
+                            filters : [
+                                new Filter("tenant_id", "EQ", oResult.tenant_id),
+                                new Filter("company_code", "EQ", oResult.company_code),
+                                new Filter("org_type_code", "EQ", oResult.org_type_code),
+                                new Filter("org_code", "EQ", oResult.org_code),
+                                new Filter("evaluation_operation_unit_code", "EQ", oResult.evaluation_operation_unit_code)
+                            ],
+                            sorter : [
+                                new Sorter("sort_sequence")
+                            ]
+                        });
+
+                        var oMasterPage = oComponent.byId("Master");
+                        if(oMasterPage){
+                            oMasterPage.byId("page").setHeaderExpanded(false);
+                        }
+                        oViewModel.setProperty("/Detail/Header", oResult);
+                        oAppView.setBusy(false);
+                        this._readItem();
+                    }.bind(this),
+                    error : function(){
+                        oAppView.setBusy(false);
+                    }
+                });
+            }
+            /**
+             * scale 데이터 조회
+             */
             , _readItem : function(){
                 var oComponent, oView, oViewModel, oODataModel, aFilters, oHeader;
                 
@@ -187,13 +271,15 @@ sap.ui.define([
                     new Filter({ path:"evaluation_article_code", operator:"EQ", value1 : oHeader.evaluation_article_code })
                 ];
 
+                var oAppView;
+                oAppView = oComponent.byId("app");
+                oAppView.setBusyIndicatorDelay(0);
+                oAppView.setBusy(true);
 
                 oViewModel.setProperty("/Detail/Item", []);
-                oView.setBusyIndicatorDelay(0);
-                oView.setBusy(true);
                 oODataModel.read("/EvalItemScle",{
                     filters : aFilters,
-                    sorter : [
+                    sorters : [
                         new Sorter("sort_sequence")
                     ],
                     success : function(oData){
@@ -203,29 +289,60 @@ sap.ui.define([
                                 return oRowData;
                             })
                         );
-                        oView.setBusy(false);
+                        oAppView.setBusy(false);
                     },
                     error : function(){
-                        oView.setBusy(false);
+                        oAppView.setBusy(false);
                     }
                 });
             }
+            /**
+             * scale 선택시 edit mode 변경
+             */
             , onSelectTableItem : function(oEvent){
                 var sEvaluResultInType, oHeader, oView, oViewModel, oSelectItem,
-                    oBindContxtPath, oRowData, bSeletFlg, bEditMode;
+                    oBindContxtPath, oRowData, bSeletFlg, bEditMode, oParameters,
+                    bAllSeletFlg, sTablePath, oTable, aListData;
 
                 oView = this.getView();
                 oViewModel = oView.getModel("viewModel");
                 bEditMode = oViewModel.getProperty("/App/EditMode");
-
+                
                 if(!bEditMode){
                     return;
                 }
-
-                oSelectItem = oEvent.getParameter("listItem");
+                
+                oParameters = oEvent.getParameters();
+                oSelectItem = oParameters.listItem;
                 oBindContxtPath = oSelectItem.getBindingContextPath();
                 oRowData = oViewModel.getProperty(oBindContxtPath);
-                bSeletFlg = oEvent.getParameter("selected");
+                bSeletFlg = oParameters.selected;
+                bAllSeletFlg = oParameters.selectAll;
+
+                if(
+                    (bAllSeletFlg && bSeletFlg) || 
+                    (!bAllSeletFlg && !bSeletFlg && oParameters.listItems.length > 1)
+                ){
+                    oTable = oEvent.getSource();
+                    sTablePath = oTable.getBindingPath("items");
+                    aListData = oViewModel.getProperty(sTablePath);
+
+                    oViewModel.setProperty(sTablePath, aListData.map(function(item){
+
+                        if(item.crudFlg === "D"){
+                            return item;
+                        }else if(item.crudFlg === "C"){
+                            item.rowEditable = bSeletFlg;
+                            return item;
+                        }
+
+                        item.rowEditable = bSeletFlg;
+                        item.crudFlg = "U";
+                        item.transaction_code = "U";
+                        return item;
+                    }));
+                    return;
+                }
 
                 if(oRowData.crudFlg === "D"){
                     return;
@@ -241,7 +358,9 @@ sap.ui.define([
 
                 oViewModel.setProperty(oBindContxtPath, oRowData);
             }
-
+            /**
+             * scale 라인 삭제
+             */
             , onPressItemDelete : function(){
                 var oTable, oView, oViewModel, aSelectedItems, aContxtPath, aScaleListData;
                 
@@ -264,7 +383,7 @@ sap.ui.define([
                     }
                 }
 
-                oTable.removeSelections();
+                oTable.removeSelections(true);
                 oViewModel.setProperty("/Detail/Item", aScaleListData);
 
                 // aSelectedItems.forEach(function(oItem){
@@ -278,6 +397,9 @@ sap.ui.define([
                 //     oViewModel.setProperty(sItemPath, oItemData);
                 // })
             }
+            /***
+             * scale 라인 추가
+             */
             , onPressItemAdd : function(){
                 var oView, oViewModel, oHeader, aItems, oNewData, aFields;
                 
@@ -307,9 +429,12 @@ sap.ui.define([
                     }
                 });
                 
-                aItems.unshift(oNewData);
+                aItems.push(oNewData);
                 oViewModel.setProperty("/Detail/Item", aItems);
             }
+            /***
+             * scale 재조회
+             */
             , onPressItemCancle : function(){
                 var oI18NModel, oView;
 
@@ -327,11 +452,16 @@ sap.ui.define([
                 });
 
             }
-
+            /**
+             * detail 페이지 종료
+             */
             , onPressPageNavBack : function(){
                 
                 this.getOwnerComponent().getRouter().navTo("Master");
             }
+            /**
+             * 해당 상세 평가 삭제
+             */
             , onPressDelete : function(){
                 var sURLPath, oSaveData, oView, oViewModel, oArgs, oComponent,
                     oI18NModel;
@@ -354,6 +484,9 @@ sap.ui.define([
                         }
                         
                         oSaveData = this._getSaveData("D");
+                        if(!oSaveData){
+                            return;
+                        }
                         oView.setBusy(true);
                         $.ajax({
                             url: sURLPath,
@@ -393,6 +526,9 @@ sap.ui.define([
                     }.bind(this)
                 });
             }
+            /***
+             * 해당 상세 평가 저장
+             */
             , onPressSave : function(){
                 var sURLPath, oSaveData, oView, oViewModel, oArgs, oComponent,
                     oI18NModel;
@@ -418,6 +554,9 @@ sap.ui.define([
                         }
                         
                         oSaveData = this._getSaveData("U");
+                        if(!oSaveData){
+                            return;
+                        }
                         oView.setBusy(true);
                         $.ajax({
                             url: sURLPath,
@@ -428,12 +567,16 @@ sap.ui.define([
                                 MessageBox.success(oI18NModel.getProperty("/NCM01001"), {
                                     onClose : function (sAction) {
                                         oView.setBusy(false);
-                                        oComponent.getRouter().navTo("Master",{
-                                            search : true
-                                        });
-                                    }
+                                        if(oArgs.new === "Y"){
+                                            oComponent.getRouter().navTo("Master",{
+                                                search : true
+                                            });
+                                            return;
+                                        }
+                                        this._readHeader();
+                                    }.bind(this)
                                 });
-                            },
+                            }.bind(this),
                             error: function (e) {
                                 var sDetails;
 
@@ -457,6 +600,10 @@ sap.ui.define([
                     }.bind(this)
                 });
             }
+            /**
+             * 저장시 Validation 필수값 확인
+             * 
+             */
             , _checkValidation : function(){
                 var bValid, oView, oViewModel, oArgs, aControls;
                 
@@ -473,14 +620,16 @@ sap.ui.define([
                     bValid = this._isValidControl(aControls);
                 }
 
-
-
                 return bValid;
             }
+            /***
+             * 저장시 데이터 구조 맞추기
+             */
             , _getSaveData : function(sTransactionCode){
                 var oSaveData, oUserInfo, oView, oViewModel,
                     aItemFields, aScleFields, oHeader, oItemType,
-                    sHeadField, aScleItem, oNewHeader, sLevel, oArgs;
+                    sHeadField, aScleItem, oNewHeader, sLevel, oArgs,
+                    oI18NModel;
 
                 oUserInfo = this._getUserSession();
                 oView = this.getView();
@@ -489,6 +638,12 @@ sap.ui.define([
                 oArgs = oViewModel.getProperty("/Args");
                 
                 if(oArgs.new === "Y"){
+                    if(!oHeader){
+                        oI18NModel = oView.getModel("I18N");
+                        MessageBox.warning(oI18NModel.getProperty("/NPG00016"));
+                        return null;
+                    }
+                    //신규 건일때
                     oNewHeader = oViewModel.getProperty("/Detail/NewHeader");
                     sLevel = oArgs.level;
                     oSaveData = {
@@ -512,10 +667,6 @@ sap.ui.define([
 
                     return oSaveData;
                 }
-
-
-
-
 
 
                 aItemFields = [
@@ -587,7 +738,9 @@ sap.ui.define([
 
                 return oSaveData;
             }
-            
+            /***
+             * 수정 변경모드 
+             */
             , onPressModeChange : function(oEvent, sGubun){
                 var oView, oViewModel, bEditFlg, oComponent, oMasterPage, oTreeTable,
                     aSelectedIdices, oContext, oRowData, oI18NModel;
@@ -605,25 +758,39 @@ sap.ui.define([
                                 return;
                             }
 
-                            oComponent = this.getOwnerComponent();
-                            oMasterPage = oComponent.byId("Master");
+                            // oComponent = this.getOwnerComponent();
+                            // oMasterPage = oComponent.byId("Master");
                             
-                            if(oMasterPage){
-                                oTreeTable = oMasterPage.byId("treeTable");
-                                aSelectedIdices = oTreeTable.getSelectedIndices();
-                                oContext = oTreeTable.getContextByIndex(aSelectedIdices[0]);
-                                oRowData = this._deepCopy( oContext.getObject() );
+                            // if(oMasterPage){
+                            //     oTreeTable = oMasterPage.byId("treeTable");
+                            //     aSelectedIdices = oTreeTable.getSelectedIndices();
+                            //     oContext = oTreeTable.getContextByIndex(aSelectedIdices[0]);
+                            //     oRowData = this._deepCopy( oContext.getObject() );
         
-                                oViewModel.setProperty("/Detail/Header", oRowData);
-                            }
-                            oViewModel.setProperty("/App/EditMode", !bEditFlg);
-                            this._readItem();
+                            //     oViewModel.setProperty("/Detail/Header", oRowData);
+                            // }
+
+                            this._readHeader();
                         }.bind(this)
                     });
                 }else{
                     oViewModel.setProperty("/App/EditMode", !bEditFlg);
                 }
             }
+            /**
+             * 평가수행방식 변경시
+             * 단위, 항목산식 초기화
+             */
+            , onSelectChangExecMode : function(){
+                var oView, oViewModel, oHeader;
 
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
+                oHeader = oViewModel.getProperty("/Detail/Header");
+
+                oHeader.qttive_item_uom_code = "";
+                oHeader.qttive_eval_article_calc_formula = "";
+                oViewModel.setProperty("/Detail/Header", oHeader);
+            }
 		});
 	});

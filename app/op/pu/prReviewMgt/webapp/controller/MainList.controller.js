@@ -2,23 +2,29 @@ sap.ui.define([
     "op/util/controller/BaseController",
 
     "sap/ui/model/json/JSONModel",
-    "cm/util/control/ui/EmployeeDialog",    
     "ext/lib/util/Validator",
     "sap/m/TablePersoController",
     "./MainListPersoService",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/ui/model/Sorter",
+
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/core/Fragment",
-    
-    "dp/util/control/ui/MaterialMasterDialog",
-], function (BaseController, JSONModel, EmployeeDialog, Validator,
-    TablePersoController, MainListPersoService,
-    Filter, FilterOperator, MessageBox, MessageToast, Fragment, MaterialMasterDialog, Aop) {
-    "use strict";
 
-    var toggleButtonId = "";
+    "cm/util/control/ui/DepartmentDialog",
+    "cm/util/control/ui/EmployeeDialog",    
+    "dp/util/control/ui/MaterialOrgDialog",
+    "cm/util/control/ui/PlantDialog",
+], function (BaseController, JSONModel, Validator,
+    TablePersoController, MainListPersoService,
+    Filter, FilterOperator, Sorter, MessageBox, MessageToast, Fragment, 
+    DepartmentDialog,
+    EmployeeDialog,
+    MaterialOrgDialog, 
+    PlantDialog) {
+    "use strict";
 
     return BaseController.extend("op.pu.prReviewMgt.controller.MainList", {
 
@@ -38,108 +44,152 @@ sap.ui.define([
             var uStart = new Date(Date.UTC(lToday.getFullYear(), lToday.getMonth(), lToday.getDate()-30));
             // 화면제어
             this.setModel(new JSONModel(), "mainListViewModel");
-            // 조회조건 : 
+            // 조회조건
             this.setModel(new JSONModel({
-                tenant_id: "L2100",
-                company_code: "LGCKR",
+                // 테넌트
+                tenant_id: this.$session.tenant_id,
+                // 회사
+                company_code: this.$session.company_code,
+                // 구매요청 유형
                 pr_type_code: {
                     FilterOperator: FilterOperator.Any,
                     values: []
                 },
+                // 구매요청 번호
                 pr_number: {
                     FilterOperator: FilterOperator.Contains,
                     values: []
                 },
+                // 품목 번호
                 pr_item_number: null,
-                org_type_code: null,
+                // 조직코드
                 org_code: {
                     FilterOperator: FilterOperator.Any,
                     values: []
                 },
+                // 자재코드
                 material_code: null,
-                material_group_code: null,
+                // 구매요청 품명
                 pr_desc: {
                     FilterOperator: FilterOperator.Contains,
                     values: []
                 },
-                pr_quantity: null,
-                pr_unit: null,
+                // 구매요청 생성자
                 requestor_empno: null,
-                requestor_name: null,
+                // 요청자부서
+                requestor_department_code: {
+                    FilterOperator: FilterOperator.Any,
+                    values: []
+                },
+                // 구매요청 생성일자
                 request_date: {
                     FilterOperator: FilterOperator.BT,
                     values: [ uStart, uToday ]
                 },
-                accept_date: {
-                    FilterOperator: FilterOperator.BT,
-                    values: [ null, null ]
+                // 구매담당자 
+                buyer_empno: this.$session.employee_number,
+                // 구매담당자부서
+                buyer_department_code: {
+                    FilterOperator: FilterOperator.Any,
+                    values: []
                 },
-                delivery_request_date: null,
-                buyer_empno: null,
-                purchasing_group_code: null,
-                estimated_price: null,
-                currency_code: null,
-                price_unit: null,
-                pr_progress_status_code: {
+                // 구매요청생성상태코드
+                pr_create_status_code: {
                     FilterOperator: FilterOperator.Any,
                     // 30: 결재완료, 50: 생성완료
                     values: ["30", "50"]
-                },
-                remark: null,
-                attch_group_number: null,
-                delete_flag: null,
-                closing_flag: null,
-                item_category_code: null,
-                account_assignment_category_code: null,
-                sloc_code: null
+                }
             }), "jSearch");
+
+            // middleware - token 처리
+            this.before("search", "jSearch", "list", "Pr_ReviewListView", function() {
+                [
+                    ["requestor_department_code", this.byId("requestorDepartmentCode")], 
+                    ["buyer_department_code", this.byId("buyerDepartmentCode")], 
+                ]
+                .forEach(e => this.convTokenToBind("jSearch", ["/", e[0], "/values"].join(""), e[1].getTokens()), this);
+            });
 
             // 화면 호출 될 때마다 실행
             this.getRouter()
                 .getRoute("mainPage")
                 .attachPatternMatched(function() {
-                    this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
+                    this.getModel("mainListViewModel")
+                        .setProperty("/headerExpanded", true);
                 }, this);
-        },
-        // 화면호출시실행
-        onRenderedFirst: function () {
-            return this.search("jSearch", "list", "Pr_ReviewListView");
         },
         /* =========================================================== */
         /* event handlers                                              */
         /* =========================================================== */
         // 공통 다이얼로그 호출
         onValueHelpRequest: function() {
-            // Declare
-            var [event, bindings] = arguments;
-            var [model, paths] = bindings.split(">");
-            var Dialog = this.onValueHelpRequest[bindings];
-            // Dialog Set
-            !Dialog
+
+            var [event, type, model, ...args] = arguments;
+            var control = event.getSource();
+            console.log(">>>> arguments", arguments);
+
+            // 자재코드
+            type == "material_code"
             &&
-            (Dialog = this.onValueHelpRequest[bindings] = new MaterialMasterDialog({
-                title: "Choose MaterialMaster",
-                MultiSelection: true,
+            this.dialog(new MaterialOrgDialog({
+                title: "Choose Material Code",
+                MultiSelection: false,
                 items: {
                     filters: [
-                        new Filter("tenant_id", "EQ", "L2100")
+                        new Filter("tenant_id", "EQ", this.$session.tenant_id)
+                    ]
+                },
+                orgCode: ""
+            }), function(result) {
+                this.getModel("jSearch").setProperty(
+                    "/material_code", 
+                    result.mParameters.item["/material_code".split("/")["/material_code".split("/").length-1]]
+                );
+            });
+
+            // 조직코드
+            type == "org_code"
+            &&
+            this.dialog(new PlantDialog({
+                title: "(미정)조직을 선택하세요.)",
+                MultiSelection: false,
+                items: {
+                    filters: [
+                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code)                            
+                    ],
+                    sorters: [
+                        new Sorter("plant_name")
                     ]
                 }
-            }))
-            .attachEvent("apply", (function (event) {
-                // Default - material_code
-                this.getModel(model).setProperty(
-                    paths, 
-                    event.mParameters.item[paths.split("/")[paths.split("/").length-1]]
-                );
-            }).bind(this));
-            // Dialog Open
-            Dialog.open();
+            }), 
+            function(result) {
+            });
+
+            (
+                // 요청자부서
+                type == "requestor_department_code"
+                ||
+                // 구매담당자부서
+                type == "buyer_department_code"
+            )
+            &&
+            this.dialog(new DepartmentDialog({
+                title: "(미정)부서를 선택하세요",
+                multiSelection: true,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
+                    ]
+                }
+            }), function(r) {
+                // Set Token
+                control.setTokens(r.getSource().getTokens());
+            }, control);
         },
         // 조회
         onSearch: function (event) {
             // Call Service
-            return this.search("jSearch", "list", "Pr_ReviewListView");
+            this.search("jSearch", "list", "Pr_ReviewListView");
         },
 		/**
 		 * Event handler when pressed the item of table
@@ -148,13 +198,15 @@ sap.ui.define([
 		 */
         onColumnListItemPress: function () {
 
-            var [event, record] = arguments;
-
-            this.getRouter().navTo("midView", {
-                layout: this.getOwnerComponent()
+            var [ event, type, model, ...args ] = arguments,
+                layout = this.getOwnerComponent()
                             .getHelper()
                             .getNextUIState(1)
                             .layout,
+                record = this.getModel(model).getProperty(event.getSource().getBindingContextPath());
+
+            this.getRouter().navTo("midView", {
+                layout: layout,
                 "?query": {
                     tenant_id: record.tenant_id,
                     company_code: record.company_code,
@@ -162,38 +214,149 @@ sap.ui.define([
                     pr_item_number: record.pr_item_number
                 }
             });
+            this.getModel("mainListViewModel")
+                .setProperty("/headerExpanded", layout !== "TwoColumnsMidExpanded"); 
         },
         onButtonPress: function () {
+            var [ event, ...args ] = arguments;
+            var { action, service, entry, tId } = args[args.length-1];
+            var message = "", value;
+            var table = this.byId(tId);
+            var items = table
+                        .getSelectedContexts()
+                        .reduce((acc, e) => [...acc, e.getObject()], []);
 
-            var [event, action, ...args] = arguments;
-            var value;
+            // 선택된 건이 없으면 메시지 출력(NCM01008 : 데이터를 선택해 주세요.)
+            if (items.length <= 0) {
+                // 데이터를 선택해 주세요
+                MessageBox.alert(this.getModel("I18N").getText("/NCM01008"));
+                return;
+            }
+            // 아래의 모든 작업은 진행상태가 결재완료(30), 생성완료(50) 상태에서만 가능하다.
+            if (items.filter(e => !(e.pr_create_status_code == "30" || e.pr_create_status_code == "50")).length > 0) {
+                // 결재완료, 생성완료만 선택가능합니다.
+                MessageBox.alert("(메세지)결재완료, 생성완료만 처리 할 수 있습니다.");
+                return ;
+            }
+            // 구매담당자가 본인이 아닐 경우 Confirm 메시지 띄움.
+            if (items.filter(e => (e.buyer_empno != this.$session.employee_number)).length > 0) {
+                //message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다.\n확인시 자동으로 본인 담당으로 변경됩니다.\nRFQ작성을 진행하시겠습니까?";
+                message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다.\n확인시 자동으로 본인 담당으로 변경됩니다.\n";
+            }
+            // 잔량이 없는 PR은 선택이 불가능하다 = 요청수량 0
+            // if (items.filter(e => (+e.pr_quantity) <= 0 || !e).length > 0) {
+            //     MessageBox.alert("(메세지)요청수량(잔량)이 없는 PR 은 선택 할 수 없습니다.");
+            //     return;
+            // }
 
-            // 재작성요청
-            action == 'REWRITE'
+            // Transaction
+            (
+                // 구매담당자변경
+                (action == 'CHANGE' && (message = "(메세지)구매담당자 담당자 변경을 진행하시겠습니까?"))
+                ||
+                // 재작성요청
+                (action == 'REWRITE' && (message = "(메세지)재작성요청을 진행하시겠습니까?"))
+                ||
+                // 마감
+                (action == 'CLOSING' && (message = "(메세지)마감을 진행하시겠습니까?"))
+                ||
+                // RFQ작성
+                (action == 'RFQ' && (message = message + "(메세지)RFQ작성을 진행하시겠습니까?"))
+                ||
+                // 입찰작성
+                (action == 'BIDDING' && (message = message + "(메세지)입찰작성을 진행하시겠습니까?"))
+            )
             &&
-            (value = (function() {
-            })());
-
-            // 마감
-            action == 'CLOSING'
-            &&
-            (value = (function() {
-            })());
-
-            // 구매담당자변경
-            action == 'CHANGE'
-            &&
-            (value = (function() {
-            })());
-
-            return {action, value};
-        },
-        
-        // Excel Download - 추가 화일명이 필요한 경우, arguments 뒤에 인자로 붙인다.
-        // 어쩔 수 없음, Binding Expression 에서 함수 Parsing 해결이 되면, 다시 재작성
-        onExcelDownload: function () {
-
-            return BaseController.prototype["onExcel"].call(this, arguments);
+            (function() {
+                MessageBox.confirm(message, {
+                    title: "Comfirmation",
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: (function (sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            if (action == 'CLOSING' || action == 'CHANGE' || action == 'REWRITE') {
+                                // 사유입력
+                                this.fragment("reason", {
+                                    name: "op.pu.prReviewMgt.view.Reason"
+                                }, {
+                                    onAfterOpen: (function() {
+                                        this.setModel(new JSONModel({
+                                            "reason": {
+                                                action: action,
+                                                buyerEmpno: "",
+                                                processedReason: ""
+                                            }
+                                        }), "fragment");
+                                    }).bind(this),
+                                    onCommit: function() {
+                                        var [event, action, value, ...args] = arguments;
+                                        if (value.action == 'CHANGE' && !value.buyerEmpno) {
+                                            MessageBox.alert("(미정)구매담당자를 선택하세요.");
+                                            return false;
+                                        }
+                                        if (!value.processedReason) {
+                                            MessageBox.alert("(미정)사유를 입력하세요.");
+                                            return false;
+                                        }
+                                        return value;
+                                    },
+                                    onCancel: function() {
+                                        var [event, action, ...args] = arguments;
+                                        return ;
+                                    }
+                                }, this)
+                                .done(result => {
+                                    var { buyerEmpno, buyerDepartmentCode, processedReason } = result;
+                                    console.log(">>>>>>>>>>>>> done", result);
+                                    this.procedure(service, entry, {
+                                        inputData: {
+                                            jobType: action,
+                                            prItemTbl: items.map(function(e) { 
+                                                return { 
+                                                    transaction_code: e.transaction_code, 
+                                                    tenant_id: e.tenant_id, 
+                                                    company_code: e.company_code, 
+                                                    pr_number: e.pr_number, 
+                                                    pr_item_number: e.pr_item_number 
+                                                };
+                                            }),
+                                            buyerEmpno: buyerEmpno,
+                                            buyerDepartmentCode: buyerDepartmentCode,
+                                            processedReason: processedReason,
+                                            employeeNumber: this.$session.employee_number
+                                        }
+                                    })
+                                    .done((function(r) {
+                                        this.search("jSearch", "list", "Pr_ReviewListView");
+                                    }).bind(this));
+                                });
+                            }
+                            else {
+                                this.procedure(service, entry, {
+                                    inputData: {
+                                        jobType: action,
+                                        prItemTbl: items.map(function(e) { 
+                                            return { 
+                                                transaction_code: e.transaction_code, 
+                                                tenant_id: e.tenant_id, 
+                                                company_code: e.company_code, 
+                                                pr_number: e.pr_number, 
+                                                pr_item_number: e.pr_item_number 
+                                            };
+                                        }),
+                                        buyerEmpno: "",
+                                        buyerDepartmentCode: "",
+                                        processedReason: "",
+                                        employeeNumber: this.$session.employee_number
+                                    }
+                                })
+                                .done((function(r) {
+                                    this.search("jSearch", "list", "Pr_ReviewListView");
+                                }).bind(this));
+                            }
+                        }
+                    }).bind(this)
+                });
+            }).call(this);
         }
     });
 });

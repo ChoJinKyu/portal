@@ -1,0 +1,88 @@
+#sementic view에 대한 association 확장은 mixin을 사용하면 됩니다.
+##Sementic View Association#https://cap.cloud.sap/docs/cds/cql#query-local-mixins
+
+#HANA Native Object를 감싼 cds.entity는 entity 안에 association을 적용 후 projection으로 감싸면 projection의 HANA Native Viw Object에 cds.entity 적용한 association이 전파되고 이것과 다른 entity간에 association을 맺으면 됩니다.
+##Native Object Association#https://cap.cloud.sap/docs/advanced/hana#associations-and-compositions
+
+#대략 적으로 다음과 같습니다.
+1. cds entity - association > cds view - association[use mixin] => Service
+2. hana native object > cds entity[cds.persistent.exist] - association > cds projection[association 전파] > cds view association[use mixin] => Service
+ 
+
+
+ curl 'https://lg-common-dev-workspaces-ws-szhkx-app2.jp10.applicationstudio.cloud.sap/srv-api/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' \
+  -H 'Connection: keep-alive' \
+  -H 'sec-ch-ua: "Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99"' \
+  -H 'Accept: */*' \
+  -H 'X-Requested-With: XMLHttpRequest' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36' \
+  -H 'Content-Type: application/json' \
+  -H 'Origin: https://lg-common-dev-workspaces-ws-szhkx-app2.jp10.applicationstudio.cloud.sap' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Referer: https://lg-common-dev-workspaces-ws-szhkx-app2.jp10.applicationstudio.cloud.sap/launchpad.html' \
+  -H 'Accept-Language: ko,en-US;q=0.9,en;q=0.8,ko-KR;q=0.7' \
+  -H 'Cookie: workspaces-ws-hngmx_WSR_SESSIONID=9c43+cND/m8C2QtPSIpxz9TzWwIhV8/vytxobfX63hijSqJ7jtj0MBcIlF3zagCoAdG8LpFs6QUq5fDui71w3A==; workspaces-ws-6h78d_WSR_SESSIONID=SkGLQ8hNjrISgVcks9bJ+RjsTXElZfYAeGOyCDQ93EDpqxvwMjtxWBgUIdv7rpcYRTkOMyM70f4BXXJSSNTKtQ==; workspaces-ws-4zh5k_WSR_SESSIONID=WYhtWiuHBs+2CIMDNYw1m7uTX+3Fd63gNkZroE/tG5B7WuZCCYDcSvu1rWge0xSGdR6yg8knyiI55HLuDu5Hvw==; workspaces-ws-9crq5_WSR_SESSIONID=+DSld5AqFoHpNatdR2DrvqJWkYd/u1xqa21eOhl0VaJRT3/9L/OTF248i/Tie9iZYKojKcYstyw5C2uD60NMaQ==; workspaces-ws-x68wx_WSR_SESSIONID=38p6LvGCbyDNoeHFIGjts0sUqKckFzt4M+cdbO72OTQZ0L5Zupj5LZIMr0eB17S80jtjXG/j23IS2S6kibUOlw==; workspaces-ws-szhkx_WSR_SESSIONID=01S+hbNfPRDFyj3fbtBo71hLZSSB/2OklLDiLIpjaVCdNxBTWJ1JyuOxIyrcXF7fjGKSoAKBneeUWVx389hNjQ==; JSESSIONID=s%3AmIlScEy6LFHjCtAIKqvuzc_tuSSi40j7.JtX8XyUA9swhqXQIEMHwF5Cri047kBCce4ZNVWJWxJM' \
+  --data-raw '{"negoheaders":[{"tenant_id":"L2100","nego_header_id":4}],"negoitemprices":[],"negosuppliers":[]}' \
+  --compressed
+
+ curl 'http://localhost:8080/srv-api/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' \
+  -H 'Connection: keep-alive' \
+  -H 'sec-ch-ua: "Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99"' \
+  -H 'Accept: */*' \
+  -H 'X-Requested-With: XMLHttpRequest' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36' \
+  -H 'Content-Type: application/json' \
+  -H 'Origin: http://localhost' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Referer: http://localhost/launchpad.html' \
+  -H 'Accept-Language: ko,en-US;q=0.9,en;q=0.8,ko-KR;q=0.7' \
+  -H 'Cookie: workspaces-ws-hngmx_WSR_SESSIONID=9c43+cND/m8C2QtPSIpxz9TzWwIhV8/vytxobfX63hijSqJ7jtj0MBcIlF3zagCoAdG8LpFs6QUq5fDui71w3A==; workspaces-ws-6h78d_WSR_SESSIONID=SkGLQ8hNjrISgVcks9bJ+RjsTXElZfYAeGOyCDQ93EDpqxvwMjtxWBgUIdv7rpcYRTkOMyM70f4BXXJSSNTKtQ==; workspaces-ws-4zh5k_WSR_SESSIONID=WYhtWiuHBs+2CIMDNYw1m7uTX+3Fd63gNkZroE/tG5B7WuZCCYDcSvu1rWge0xSGdR6yg8knyiI55HLuDu5Hvw==; workspaces-ws-9crq5_WSR_SESSIONID=+DSld5AqFoHpNatdR2DrvqJWkYd/u1xqa21eOhl0VaJRT3/9L/OTF248i/Tie9iZYKojKcYstyw5C2uD60NMaQ==; workspaces-ws-x68wx_WSR_SESSIONID=38p6LvGCbyDNoeHFIGjts0sUqKckFzt4M+cdbO72OTQZ0L5Zupj5LZIMr0eB17S80jtjXG/j23IS2S6kibUOlw==; workspaces-ws-szhkx_WSR_SESSIONID=01S+hbNfPRDFyj3fbtBo71hLZSSB/2OklLDiLIpjaVCdNxBTWJ1JyuOxIyrcXF7fjGKSoAKBneeUWVx389hNjQ==; JSESSIONID=s%3AmIlScEy6LFHjCtAIKqvuzc_tuSSi40j7.JtX8XyUA9swhqXQIEMHwF5Cri047kBCce4ZNVWJWxJM' \
+  --data-raw '{"negoheaders":[{"tenant_id":"L2100","nego_header_id":4}],"negoitemprices":[],"negosuppliers":[]}' \
+  --compressed
+
+
+  
+ curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' \
+  -H 'Connection: keep-alive' \
+  -H 'sec-ch-ua: "Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99"' \
+  -H 'Accept: */*' \
+  -H 'X-Requested-With: XMLHttpRequest' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36' \
+  -H 'Content-Type: application/json' \
+  -H 'Origin: http://localhost' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Referer: http://localhost/launchpad.html' \
+  -H 'Accept-Language: ko,en-US;q=0.9,en;q=0.8,ko-KR;q=0.7' \
+  -H 'Cookie: workspaces-ws-hngmx_WSR_SESSIONID=9c43+cND/m8C2QtPSIpxz9TzWwIhV8/vytxobfX63hijSqJ7jtj0MBcIlF3zagCoAdG8LpFs6QUq5fDui71w3A==; workspaces-ws-6h78d_WSR_SESSIONID=SkGLQ8hNjrISgVcks9bJ+RjsTXElZfYAeGOyCDQ93EDpqxvwMjtxWBgUIdv7rpcYRTkOMyM70f4BXXJSSNTKtQ==; workspaces-ws-4zh5k_WSR_SESSIONID=WYhtWiuHBs+2CIMDNYw1m7uTX+3Fd63gNkZroE/tG5B7WuZCCYDcSvu1rWge0xSGdR6yg8knyiI55HLuDu5Hvw==; workspaces-ws-9crq5_WSR_SESSIONID=+DSld5AqFoHpNatdR2DrvqJWkYd/u1xqa21eOhl0VaJRT3/9L/OTF248i/Tie9iZYKojKcYstyw5C2uD60NMaQ==; workspaces-ws-x68wx_WSR_SESSIONID=38p6LvGCbyDNoeHFIGjts0sUqKckFzt4M+cdbO72OTQZ0L5Zupj5LZIMr0eB17S80jtjXG/j23IS2S6kibUOlw==; workspaces-ws-szhkx_WSR_SESSIONID=01S+hbNfPRDFyj3fbtBo71hLZSSB/2OklLDiLIpjaVCdNxBTWJ1JyuOxIyrcXF7fjGKSoAKBneeUWVx389hNjQ==; JSESSIONID=s%3AmIlScEy6LFHjCtAIKqvuzc_tuSSi40j7.JtX8XyUA9swhqXQIEMHwF5Cri047kBCce4ZNVWJWxJM' \
+  --data-raw '{"negoheaders":[{"tenant_id":"L2100","nego_header_id":4}],"negoitemprices":[],"negosuppliers":[]}' \
+  --compressed
+
+
+curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' \
+  -H 'Connection: keep-alive' \
+  -H 'sec-ch-ua: "Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99"' \
+  -H 'Accept: */*' \
+  -H 'X-Requested-With: XMLHttpRequest' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'Content-Type: application/json' \
+  -H 'Origin: http://localhost' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Referer: http://localhost/launchpad.html' \
+  -H 'Accept-Language: ko,en-US;q=0.9,en;q=0.8,ko-KR;q=0.7' \
+  --data-raw '{"deepdeletenegoheader":{"negoheaders":[{"tenant_id":"L2100","nego_header_id":4}],"negoitemprices":[],"negosuppliers":[]}}' \
+
+
+curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' \
+  -H 'Content-Type: application/json' \
+  --data-raw '{"deepdeletenegoheader":{"negoheaders":[{"tenant_id":"L2100","nego_header_id":4}],"negoitemprices":[],"negosuppliers":[]}}' \

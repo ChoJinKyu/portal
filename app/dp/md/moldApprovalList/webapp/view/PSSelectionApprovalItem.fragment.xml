@@ -97,7 +97,7 @@
                                         items="{ 
                                                 path : 'util>/Code',
                                                 filters : [
-                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                                     {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
                                                 ]
                                         }">
@@ -125,18 +125,17 @@
                         </table:Column>
                         <table:Column id="c_currency" width="10em" hAlign="Center">
                             <VBox>
-                                <Label text="Currency"/>
+                                <Label text="Currency" required="true"/>
                             </VBox>
                             <table:template>
                                 <ComboBox 
                                     id="currency"
-                                    
                                     editable="{mode>/editFlag}"
                                     selectedKey="{mdItemMaster>currency_code}" 
                                     items="{ 
                                         path : 'psOrgCode>/OrgCodeLanguages',
                                         filters : [
-                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2600'},
+                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
                                             {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_LOCAL_CURRENCY'},
                                             {path : 'language_cd', operator : 'EQ', value1 : 'KO'}
                                         ]
@@ -145,10 +144,9 @@
                                 </ComboBox>
                             </table:template>
                         </table:Column>
-                        <table:Column id="c_target_amount" width="10em" hAlign="Center">
+                        <table:Column id="c_target_amount" width="10em" hAlign="Center" >
                             <VBox>
-                                <Label text="Target"/>
-                                <Label text="Amount"/>
+                                <Label text="Target Amount" required="true"/>
                             </VBox>
                             <table:template>
                                 <Input id="target_amount" textAlign="End" editable="{mode>/editFlag}" value="{mdItemMaster>target_amount}"/>

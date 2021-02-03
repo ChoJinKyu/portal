@@ -1,6 +1,5 @@
-/* PR Review 재작성 요청 및 마감, 구매담당자 변경 */
 PROCEDURE OP_PU_PR_REVIEW_SAVE_PROC (
-                                     IN I_JOB_TYPE NVARCHAR(30) -- 재작성요청(REWRITE), 마감(CLOSING), 구매담당자변경(CHANGE)
+                                     IN I_JOB_TYPE NVARCHAR(30)
                                     ,IN I_PR_ITEM_TBL TABLE(TRANSACTION_CODE NVARCHAR(1)  -- I:신규, U:수정, D:삭제(전체를 받는지 변경된거만 받는지 확인)
                                                            ,TENANT_ID NVARCHAR(5)
                                                            ,COMPANY_CODE NVARCHAR(10)
@@ -10,7 +9,7 @@ PROCEDURE OP_PU_PR_REVIEW_SAVE_PROC (
                                     ,IN I_BUYER_EMPNO NVARCHAR(30)  -- 구매담당자변경 일때 사용
                                     ,IN I_BUYER_DEPARTMENT_CODE NVARCHAR(30)  -- 구매담당자변경 일때 사용
                                     ,IN I_PROCESSED_REASON NVARCHAR(1000)  -- 처리사유
-                                    ,IN I_USER_ID NVARCHAR(255)
+                                    ,IN I_EMPLOYEE_NUMBER NVARCHAR(30)
                                     ,OUT O_MSG_TBL TABLE(
                                                          RETURN_CODE NVARCHAR(2)
                                                         ,RETURN_MSG NVARCHAR(1000)
@@ -22,13 +21,43 @@ SQL SECURITY INVOKER
 Scrum        : OP/구매요청 검토/접수
 Program Name : OP_PU_PR_REVIEW_SAVE_PROC
 Creator      : dokim
-Description  : 구매요청 검토/접수 화면에서 재작성요청(REWRITE), 마감(CLOSING), 구매담당자변경(CHANGE) 처리를 한다.
+Description  : 구매요청 검토/접수 화면에서 재작성요청(REWRITE), 마감(CLOSING), 마감취소(CLOSING_CANCEL), 구매담당자변경(CHANGE), RFQ작성(RFQ), 입찰작성(BIDDING) 처리를 한다.
 History      : 2021-01-25 - 최초적성
 ****************************************************************************************************/
 AS
 
 BEGIN
-    DECLARE v_sql_rowcnt INT := 0;
+    DECLARE v_sql_rowcnt INT = 0;
+
+    DECLARE v_tenant_id NVARCHAR(5);
+	DECLARE v_user_department_code NVARCHAR(50);
+	DECLARE v_buyer_department_code NVARCHAR(50);
+    DECLARE v_remain_quantity DECIMAL = 0;
+
+    DECLARE v_insert_idx INT = 0;
+    DECLARE v_history_tmp TABLE(TENANT_ID NVARCHAR(5)
+                               ,COMPANY_CODE NVARCHAR(10)
+                               ,PR_NUMBER NVARCHAR(50)
+                               ,PR_ITEM_NUMBER NVARCHAR(10)
+                               ,JOB_TYPE_CODE NVARCHAR(30)
+                               ,BEFORE_DESC NVARCHAR(50)
+                               ,AFTER_DESC NVARCHAR(50)
+                               ,REMARK NVARCHAR(3000)
+                               ,EMPLOYEE_NUMBER NVARCHAR(30)
+                               ,UPDATE_DTM SECONDDATE
+                               );
+    DECLARE v_history_tbl TABLE(TENANT_ID NVARCHAR(5)
+                               ,COMPANY_CODE NVARCHAR(10)
+                               ,PR_NUMBER NVARCHAR(50)
+                               ,PR_ITEM_NUMBER NVARCHAR(10)
+                               ,JOB_TYPE_CODE NVARCHAR(30)
+                               ,BEFORE_DESC NVARCHAR(50)
+                               ,AFTER_DESC NVARCHAR(50)
+                               ,REMARK NVARCHAR(3000)
+                               ,EMPLOYEE_NUMBER NVARCHAR(30)
+                               ,UPDATE_DTM SECONDDATE
+                               );
+
 
     -- Cursor 선언
     DECLARE CURSOR c_pr_item FOR
@@ -37,21 +66,20 @@ BEGIN
         ORDER BY TENANT_ID, COMPANY_CODE, PR_NUMBER, PR_ITEM_NUMBER
         ;
 
-    DECLARE param_error CONDITION FOR SQL_ERROR_CODE 10000;
-    DECLARE txn_error   CONDITION FOR SQL_ERROR_CODE 10001;
-    DECLARE var_commit    NVARCHAR(100)  := 'COMMIT';
-    DECLARE var_rollback  NVARCHAR(100)  := 'ROLLBACK';
+    DECLARE status_check CONDITION FOR SQL_ERROR_CODE 10000;
+    DECLARE param_error  CONDITION FOR SQL_ERROR_CODE 10001;
+    DECLARE txn_error    CONDITION FOR SQL_ERROR_CODE 10002;
 
     -- SQL Error 처리
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
-            --EXEC (:var_rollback);
+            --ROLLBACK;
             O_MSG_TBL = SELECT 'NG' RETURN_CODE, 'PR Review Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')' RETURN_MSG FROM DUMMY;
         END;
 
 
-
     /**** Check Input Value - Start ****/
+    -- Job Type별 Check - 재작성요청(REWRITE), 마감(CLOSING), 마감취소(CLOSING_CANCEL), 구매담당자변경(CHANGE), RFQ작성(RFQ), 입찰작성(BIDDING)
 
     -- 체크한거만 넘어오는지 전체가 넘어오는지 확인하자.. 우선 체크된거만 넘어오도록 요청
     SELECT COUNT(*)
@@ -60,46 +88,107 @@ BEGIN
 
     IF  v_sql_rowcnt = 0 THEN  -- 화면에서 체크된게 없으면 호출 안되도록 하면 될듯.
         --SIGNAL param_error SET MESSAGE_TEXT = 'EPG00017' || '-[Required Value Exception]-@-' || 'Param Error.(Please Check Master Data Count)';  --협력사 Pool Master 정보가 없습니다.
-        SIGNAL param_error SET MESSAGE_TEXT = 'No data is selected. PR Review Param Error.(Please Check Selected Data Count)';
-    END IF;
-
-    -- User ID Check
-    IF IFNULL(:I_USER_ID, '-1') = '-1' OR TRIM(' ' FROM :I_USER_ID ) = '' THEN
-        SELECT  IFNULL(:I_USER_ID, 'SYSTEM') INTO I_USER_ID FROM DUMMY;
+        SIGNAL param_error SET MESSAGE_TEXT = '(Undefined)No data is selected. PR Review Param Error.(Data 선택해주세요.)';
     END IF;
 
     IF IFNULL(:I_JOB_TYPE, '-1') = '-1' OR TRIM(' ' FROM :I_JOB_TYPE ) = '' THEN
-        SIGNAL param_error SET MESSAGE_TEXT = 'Job Type information is missing. PR Review Param Error.(Please Check Job Type)';
+        --SIGNAL param_error SET MESSAGE_TEXT = '(Undefined)Job Type information is missing. PR Review Param Error.(Please Check Job Type)';
+        SIGNAL param_error SET MESSAGE_TEXT = '(Undefined)Job Type information is missing. PR Review Param Error.(Job Type을 확인해 주세요.)';
     END IF;
 
-    -- Job Type별 Check - 재작성요청(REWRITE), 마감(CLOSING), 구매담당자변경(CHANGE)
+    v_tenant_id = :I_PR_ITEM_TBL.TENANT_ID[1];
+
+    -- Employee Number Check
+    IF IFNULL(:I_EMPLOYEE_NUMBER, '-1') = '-1' OR TRIM(' ' FROM :I_EMPLOYEE_NUMBER ) = '' THEN
+        SELECT IFNULL(:I_EMPLOYEE_NUMBER, '100000')
+        INTO   I_EMPLOYEE_NUMBER
+        FROM   DUMMY
+        ;
+    END IF;
+
+    -- I_EMPLOYEE_NUMBER로 v_user_department_code 조회
+    SELECT HR.DEPARTMENT_CODE
+    INTO   v_user_department_code
+    FROM   CM_HR_EMPLOYEE HR
+    WHERE  HR.TENANT_ID        = :v_tenant_id
+    AND    HR.USER_STATUS_CODE = 'C'
+    AND    HR.EMPLOYEE_NUMBER  = :I_EMPLOYEE_NUMBER
+    ;
+
     -- 구매담당자변경일때 Buyer정보가 있어야 한다.
-    IF (:I_JOB_TYPE = 'CHANGE' AND (IFNULL(:I_BUYER_EMPNO, '-1') = '-1' OR TRIM(' ' FROM :I_BUYER_EMPNO ) = '')) THEN
-        SIGNAL param_error SET MESSAGE_TEXT = 'Buyer information is missing. PR Review Param Error.(Please Check Buyer Empno)';
-    END IF;
+    IF (:I_JOB_TYPE = 'CHANGE') THEN
+        IF IFNULL(:I_BUYER_EMPNO, '-1') = '-1' OR TRIM(' ' FROM :I_BUYER_EMPNO ) = '' THEN
+            --SIGNAL param_error SET MESSAGE_TEXT = '(Undefined)Buyer information is missing. PR Review Param Error.(Please Check Buyer Empno)';
+            SIGNAL param_error SET MESSAGE_TEXT = '(Undefined)Buyer information is missing. PR Review Param Error.(구매담당자를 선택해주세요.)';
+        END IF;
 
-    IF (:I_JOB_TYPE = 'CHANGE' AND (IFNULL(:I_BUYER_DEPARTMENT_CODE, '-1') = '-1' OR TRIM(' ' FROM :I_BUYER_DEPARTMENT_CODE ) = '')) THEN
-        SIGNAL param_error SET MESSAGE_TEXT = 'Buyer information is missing. PR Review Param Error.(Please Check Buyer Department)';
+        -- I_BUYER_EMPNO로 v_buyer_department_code 조회
+        SELECT HR.DEPARTMENT_CODE
+        INTO   v_buyer_department_code
+        FROM   CM_HR_EMPLOYEE HR
+        WHERE  HR.TENANT_ID = :v_tenant_id
+        AND    HR.EMPLOYEE_NUMBER = :I_BUYER_EMPNO
+        ;
     END IF;
-
-    /*
-    IF (:I_JOB_TYPE = 'REWRITE') THEN
-    ELSEIF (:I_JOB_TYPE = 'CLOSING') THEN
-    ELSEIF (:I_JOB_TYPE = 'CHANGE') THEN
-    ELSE
-    END IF;
-    */
 
     /**** Check Input Value - End ****/
+
 
     /**** Business Logic - Start ****/
 
     -- Cursor 실행
     FOR l_pr_item AS c_pr_item DO
 
-        IF (l_pr_item.TRANSACTION_CODE = 'U') THEN  -- I:신규, U:수정, D:삭제
+        /* 공통 Check Start */
+        /* 구매요청검토 화면의 모든 작업은 구매요청생성상태코드(pr_create_status_code)가 결재완료(30), 생성완료(50) 상태에서만 가능하다. */
+        SELECT COUNT(*)
+        INTO   v_sql_rowcnt
+        FROM   OP_PU_PR_MST PM
+        WHERE  PM.TENANT_ID      = l_pr_item.TENANT_ID
+        AND    PM.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+        AND    PM.PR_NUMBER      = l_pr_item.PR_NUMBER
+        AND    PM.PR_CREATE_STATUS_CODE NOT IN ('30', '50') 
+        ;
 
-            -- 재작성요청(REWRITE), 마감(CLOSING), 담당자변경(CHANGE)
+        IF v_sql_rowcnt > 0 THEN
+            SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Create status check.(결재완료, 생성완료 상태만 진행 할 수 있습니다.)';
+        END IF;
+
+        /* 구매담당자 본인꺼만 작업 진행이 가능하지만 구매담당자변경(본인 또는 본인 부서)과 RFQ작성(RFQ), 입찰작성(BIDDING) (자동으로 본인을 담당자로 변경 후 진행)은 제외 */
+        SELECT COUNT(*)
+        INTO   v_sql_rowcnt
+        FROM   OP_PU_PR_DTL PD
+        WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+        AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+        AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+        AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
+        AND    PD.BUYER_EMPNO    = :I_EMPLOYEE_NUMBER
+        ;
+
+        IF v_sql_rowcnt = 0 AND (:I_JOB_TYPE != 'CHANGE' AND :I_JOB_TYPE != 'RFQ' AND :I_JOB_TYPE != 'BIDDING') THEN
+            --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please check ownership.(You can only proceed with your own purchase.)';
+            SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please check ownership.(본인꺼만 진행이 가능합니다.)';
+        END IF;
+
+        /* 마감된 구매요청건은 마감취소 외 작업을 못한다. */
+        SELECT COUNT(*)
+        INTO   v_sql_rowcnt
+        FROM   OP_PU_PR_DTL PD
+        WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+        AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+        AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+        AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
+        AND    PD.CLOSING_FLAG   = TRUE
+        ;
+
+        IF v_sql_rowcnt > 0 AND :I_JOB_TYPE != 'CLOSING_CANCEL' THEN
+            --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.(Closed items cannot be processed.)';
+            SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.(마감된 구매요청건은 진행 할 수 없습니다.)';
+        END IF;
+        /* 공통 Check End */
+
+        --IF (l_pr_item.TRANSACTION_CODE = 'U') THEN  -- I:신규, U:수정, D:삭제
+
                 IF (:I_JOB_TYPE = 'REWRITE') THEN
 
                     /* 같은 PR_NUMBER 중 PR_ITEM_NUMBER 별로 1건이라도 진행된게 있으면 재작성요청을 못한다. */
@@ -109,36 +198,48 @@ BEGIN
                     WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                     AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                     AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
-                    --AND    PD.PR_PROGRESS_STATUS_CODE > '30'  -- 이 컬럼을 사용할건지? RFQ, 입찰작성등 버튼 클릭시 update해야하나?
+                    AND    PD.PR_PROGRESS_STATUS_CODE = 'RUN'
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        SIGNAL param_error SET MESSAGE_TEXT = 'PR Review Status Error.(작성 진행중인 품목이 존재해서 재작업 요청을 할 수 없습니다.)';
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.(You cannot request a rewrite. Items in progress exist.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.(다른 진행중인 요청건이 존재해서 재작성 요청을 할 수 없습니다.)';
                     END IF;
 
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
-                            SIGNAL txn_error SET MESSAGE_TEXT = 'PR Review Processing error.(REWRITE)';
+                            SIGNAL txn_error SET MESSAGE_TEXT = '(Undefined)PR Review Processing error.(REWRITE)';
                         END;
 
-                        -- PR_NUMBER로 한번에 Update 하자. - 확인해보자.
+                        -- PR_NUMBER로 한번에 Update 하자.
+                        UPDATE OP_PU_PR_MST PM
+                        SET    PM.PR_CREATE_STATUS_CODE = '15'
+                              ,PM.LOCAL_UPDATE_DTM  = NOW()  -- CURRENT_TIMESTAMP
+                              ,PM.UPDATE_USER_ID    = :I_EMPLOYEE_NUMBER  -- CURRENT_USER
+                              ,PM.SYSTEM_UPDATE_DTM = NOW()  -- CURRENT_TIMESTAMP
+                        WHERE  PM.TENANT_ID      = l_pr_item.TENANT_ID
+                        AND    PM.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                        AND    PM.PR_NUMBER      = l_pr_item.PR_NUMBER
+                        ;
+
+                        /*
+                        -- DTL은 Update 할 필요가 있을까? 상태가 안되면 진행이 안될텐데...... 확인 by dokim
                         UPDATE OP_PU_PR_DTL PD
-                        SET    PD.DELETE_FLAG       = TRUE
+                        SET    PD.PR_PROGRESS_STATUS_CODE = 'INIT'
                               ,PD.LOCAL_UPDATE_DTM  = NOW()  -- CURRENT_TIMESTAMP
-                              ,PD.UPDATE_USER_ID    = :I_USER_ID  -- CURRENT_USER
+                              ,PD.UPDATE_USER_ID    = :I_EMPLOYEE_NUMBER  -- CURRENT_USER
                               ,PD.SYSTEM_UPDATE_DTM = NOW()  -- CURRENT_TIMESTAMP
                         WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
-                        --AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
-                        --AND    l_pr_item.TRANSACTION_CODE = 'U'
                         ;
+                        */
                     END;
 
                 ELSEIF (:I_JOB_TYPE = 'CLOSING') THEN
 
-                    /* 작성 진행중인 품목은 마감을 못한다. */
+                    /* 마감 안된 상태만 마감 가능 */
                     SELECT COUNT(*)
                     INTO   v_sql_rowcnt
                     FROM   OP_PU_PR_DTL PD
@@ -146,36 +247,52 @@ BEGIN
                     AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                     AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
                     AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
-                    --AND    PD.PR_PROGRESS_STATUS_CODE > '30'  -- 이 컬럼을 사용할건지? RFQ, 입찰적성등 버튼 클릭시 update해야하나?
+                    AND    PD.CLOSING_FLAG   = TRUE
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        SIGNAL param_error SET MESSAGE_TEXT = 'PR Review Status Error.(작성 진행중인 품목은 마감을 할 수 없습니다.)';
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.(Closed items exist.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.(마감된 구매요청건이 존재합니다.)';
+                    END IF;
+
+                    /* 진행중인 구매요청건은 마감을 못한다. */
+                    SELECT COUNT(*)
+                    INTO   v_sql_rowcnt
+                    FROM   OP_PU_PR_DTL PD
+                    WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                    AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                    AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                    AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
+                    AND    PD.PR_PROGRESS_STATUS_CODE = 'RUN'
+                    ;
+
+                    IF v_sql_rowcnt > 0 THEN
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review status check.(Items in progress cannot be closed.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review status check.(진행중인 구매요청건은 마감을 할 수 없습니다.)';
                     END IF;
 
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
-                            SIGNAL txn_error SET MESSAGE_TEXT = 'PR Review Processing error.(CLOSING)';
+                            SIGNAL txn_error SET MESSAGE_TEXT = '(Undefined)PR Review Processing error.(CLOSING)';
                         END;
 
-                        -- PR_NUMBER로 한번에 Update 하자. - 확인해보자.
                         UPDATE OP_PU_PR_DTL PD
                         SET  PD.CLOSING_FLAG      = TRUE
+                            --,PD.PR_PROGRESS_STATUS_CODE = NULL  -- 어떻게 처리할까?
                             ,PD.LOCAL_UPDATE_DTM  = NOW()  -- CURRENT_TIMESTAMP
-                            ,PD.UPDATE_USER_ID    = :I_USER_ID  -- CURRENT_USER
+                            ,PD.UPDATE_USER_ID    = :I_EMPLOYEE_NUMBER  -- CURRENT_USER
                             ,PD.SYSTEM_UPDATE_DTM = NOW()  -- CURRENT_TIMESTAMP
                         WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
                         AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
-                        --AND    l_pr_item.TRANSACTION_CODE = 'U'
                         ;
                     END;
 
-                ELSEIF (:I_JOB_TYPE = 'CHANGE') THEN
+                ELSEIF (:I_JOB_TYPE = 'CLOSING_CANCEL') THEN
 
-                    /* 작성 진행중인 품목은 구매담당자 변경을 못한다. */
+                    /* 마감된 상태만 취소 가능함 */
                     SELECT COUNT(*)
                     INTO   v_sql_rowcnt
                     FROM   OP_PU_PR_DTL PD
@@ -183,44 +300,232 @@ BEGIN
                     AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                     AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
                     AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
-                    --AND    PD.PR_PROGRESS_STATUS_CODE > '30'  -- 이 컬럼을 사용할건지? RFQ, 입찰적성등 버튼 클릭시 update해야하나?
+                    AND    PD.CLOSING_FLAG   = FALSE
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        SIGNAL param_error SET MESSAGE_TEXT = 'PR Review Status Error.(작성 진행중인 품목은 구매담당자 변경을 할 수 없습니다.)';
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.((Undefined)Nothing has been closed.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.(마감된 상태만 취소 가능합니다.)';
                     END IF;
 
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
-                            SIGNAL txn_error SET MESSAGE_TEXT = 'PR Review Processing error.(CHANGE)';
+                            SIGNAL txn_error SET MESSAGE_TEXT = '(Undefined)PR Review Processing error.(CLOSING_CANCEL)';
+                        END;
+
+                        UPDATE OP_PU_PR_DTL PD
+                        SET  PD.CLOSING_FLAG      = FALSE
+                            ,PD.LOCAL_UPDATE_DTM  = NOW()  -- CURRENT_TIMESTAMP
+                            ,PD.UPDATE_USER_ID    = :I_EMPLOYEE_NUMBER  -- CURRENT_USER
+                            ,PD.SYSTEM_UPDATE_DTM = NOW()  -- CURRENT_TIMESTAMP
+                        WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                        AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                        AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                        AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
+                        ;
+                    END;
+
+                ELSEIF (:I_JOB_TYPE = 'CHANGE') THEN
+
+                    /* 진행중인 구매요청건은 구매담당자 변경을 못한다. */
+                    SELECT COUNT(*)
+                    INTO   v_sql_rowcnt
+                    FROM   OP_PU_PR_DTL PD
+                    WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                    AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                    AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                    AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
+                    AND    PD.PR_PROGRESS_STATUS_CODE = 'RUN'
+                    ;
+
+                    IF v_sql_rowcnt > 0 THEN
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review status check.(Purchase requests in progress cannot be changed by the person in charge of purchase.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review status check.(진행중인 구매요청건은 구매담당자 변경을 할 수 없습니다.)';
+                    END IF;
+
+                    /* 본인과 본인 부서 또는 담당자 지정이 안된 구매요청건만 변경가능 */
+                    SELECT COUNT(*)
+                    INTO   v_sql_rowcnt
+                    FROM   OP_PU_PR_DTL PD
+                    WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                    AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                    AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                    AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
+                    AND    ((PD.BUYER_EMPNO IS NULL) OR (PD.BUYER_EMPNO = :I_EMPLOYEE_NUMBER OR PD.BUYER_DEPARTMENT_CODE = :v_user_department_code))
+                    ;
+
+                    IF v_sql_rowcnt = 0 THEN
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please check ownership.(Only you or your department purchase request can be changed.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please check ownership.(본인과 본인 부서 또는 담당자 지정이 안된 구매요청건만 변경가능합니다.)';
+                    END IF;
+                    
+                    BEGIN
+                        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+                        BEGIN
+                            SIGNAL txn_error SET MESSAGE_TEXT = '(Undefined)PR Review Processing error.(CHANGE)';
                         END;
 
                         UPDATE OP_PU_PR_DTL PD
                         SET  PD.BUYER_EMPNO           = :I_BUYER_EMPNO
-                            ,PD.BUYER_DEPARTMENT_CODE = :I_BUYER_DEPARTMENT_CODE
+                            ,PD.BUYER_DEPARTMENT_CODE = :v_buyer_department_code
                             ,PD.LOCAL_UPDATE_DTM      = NOW()  -- CURRENT_TIMESTAMP
-                            ,PD.UPDATE_USER_ID        = :I_USER_ID  -- CURRENT_USER
+                            ,PD.UPDATE_USER_ID        = :I_EMPLOYEE_NUMBER  -- CURRENT_USER
                             ,PD.SYSTEM_UPDATE_DTM     = NOW()  -- CURRENT_TIMESTAMP
                         WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
                         AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
-                        --AND    l_pr_item.TRANSACTION_CODE = 'U'
+                        ;
+                    END;
+
+                ELSEIF (:I_JOB_TYPE = 'RFQ') THEN
+
+                    /* 진행중인 구매요청건은 RFQ작성을 못한다. */ 
+                    SELECT COUNT(*)
+                    INTO   v_sql_rowcnt
+                    FROM   OP_PU_PR_DTL PD
+                    WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                    AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                    AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                    AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
+                    AND    PD.PR_PROGRESS_STATUS_CODE = 'RUN'
+                    ;
+
+                    IF v_sql_rowcnt > 0 THEN
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review Status Error.(I cannot write an RFQ.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review Status Error.(진행중인 구매요청건은 RFQ작성을 할 수 없습니다.)';
+                    END IF;
+
+                    /* 잔량이 없는 구매요청건은 진행이 불가능하다 */
+                    SELECT CASE WHEN PD.CLOSING_FLAG = TRUE THEN 0 ELSE IFNULL(PD.PR_QUANTITY, 0) END
+                    INTO   v_remain_quantity
+                    FROM   OP_PU_PR_DTL PD
+                    WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                    AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                    AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                    AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
+                    ;
+
+                    IF v_remain_quantity = 0 THEN
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Cannot proceed because the remaining quantity is 0.(RFQ)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)잔량이 없는 구매요청건은 RFQ작성을 진행 할 수 없습니다.';
+                    END IF;
+
+                    /* 구매 담당자를 자신으로 Update 한다. */
+                    BEGIN
+                        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+                        BEGIN
+                            SIGNAL txn_error SET MESSAGE_TEXT = '(Undefined)PR Review Processing error.(CHANGE)';
+                        END;
+
+                        UPDATE OP_PU_PR_DTL PD
+                        SET  PD.PR_PROGRESS_STATUS_CODE = 'RUN'
+                            ,PD.BUYER_EMPNO             = :I_EMPLOYEE_NUMBER
+                            ,PD.BUYER_DEPARTMENT_CODE   = :v_user_department_code
+                            ,PD.LOCAL_UPDATE_DTM        = NOW()  -- CURRENT_TIMESTAMP
+                            ,PD.UPDATE_USER_ID          = :I_EMPLOYEE_NUMBER  -- CURRENT_USER
+                            ,PD.SYSTEM_UPDATE_DTM       = NOW()  -- CURRENT_TIMESTAMP
+                        WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                        AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                        AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                        AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
+                        ;
+                    END;
+
+                ELSEIF (:I_JOB_TYPE = 'BIDDING') THEN
+
+                    /* 진행중인 구매요청건은 BIDDING작성을 못한다. */ 
+                    SELECT COUNT(*)
+                    INTO   v_sql_rowcnt
+                    FROM   OP_PU_PR_DTL PD
+                    WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                    AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                    AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                    AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
+                    AND    PD.PR_PROGRESS_STATUS_CODE = 'RUN'
+                    ;
+
+                    IF v_sql_rowcnt > 0 THEN
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review status check.(I cannot write an BIDDING.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review status check.(진행중인 구매요청건은 입찰작성을 할 수 없습니다.)';
+                    END IF;
+
+                    /* 잔량이 없는 구매요청건은 진행이 불가능하다 */
+                    SELECT CASE WHEN PD.CLOSING_FLAG = TRUE THEN 0 ELSE IFNULL(PD.PR_QUANTITY, 0) END
+                    INTO   v_remain_quantity
+                    FROM   OP_PU_PR_DTL PD
+                    WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                    AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                    AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                    AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
+                    ;
+
+                    IF v_remain_quantity = 0 THEN
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Cannot proceed because the remaining quantity is 0.(BIDDING)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)잔량이 없는 구매요청건은 입찰작성을 진행 할 수 없습니다.';
+                    END IF;
+
+                    /* 구매 담당자를 자신으로 Update 한다. */
+                    BEGIN
+                        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+                        BEGIN
+                            SIGNAL txn_error SET MESSAGE_TEXT = '(Undefined)PR Review Processing error.(CHANGE)';
+                        END;
+
+                        UPDATE OP_PU_PR_DTL PD
+                        SET  PD.PR_PROGRESS_STATUS_CODE = 'RUN'
+                            ,PD.BUYER_EMPNO             = :I_EMPLOYEE_NUMBER
+                            ,PD.BUYER_DEPARTMENT_CODE   = :v_user_department_code
+                            ,PD.LOCAL_UPDATE_DTM        = NOW()  -- CURRENT_TIMESTAMP
+                            ,PD.UPDATE_USER_ID          = :I_EMPLOYEE_NUMBER  -- CURRENT_USER
+                            ,PD.SYSTEM_UPDATE_DTM       = NOW()  -- CURRENT_TIMESTAMP
+                        WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                        AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                        AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                        AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
                         ;
                     END;
 
                 ELSE
-                    SIGNAL param_error SET MESSAGE_TEXT = 'PR Review Processing error.(Please Check Job Type)';
+                    SIGNAL param_error SET MESSAGE_TEXT = '(Undefined)PR Review Processing error.(Please Check Job Type)';
                 END IF;
 
-        END IF;
+        --END IF;
+
+        v_history_tmp = SELECT PD.TENANT_ID
+                               ,PD.COMPANY_CODE
+                               ,PD.PR_NUMBER
+                               ,PD.PR_ITEM_NUMBER
+                               ,:I_JOB_TYPE AS JOB_TYPE_CODE
+                               ,CASE WHEN :I_JOB_TYPE = 'CHANGE' THEN PD.BUYER_EMPNO
+                                     WHEN :I_JOB_TYPE IN ('CLOSING', 'CLOSING_CANCEL') THEN TO_CHAR(PD.CLOSING_FLAG)
+                                     ELSE :I_JOB_TYPE
+                                END AS BEFORE_DESC
+                               ,CASE WHEN :I_JOB_TYPE = 'CHANGE' THEN PD.BUYER_EMPNO
+                                     WHEN :I_JOB_TYPE = 'CLOSING' THEN 'true'
+                                     WHEN :I_JOB_TYPE = 'CLOSING_CANCEL' THEN 'false'
+                                     ELSE :I_JOB_TYPE
+                                END AS AFTER_DESC
+                               ,:I_PROCESSED_REASON AS REMARK
+                               ,PD.UPDATE_USER_ID AS EMPLOYEE_NUMBER
+                               ,PD.LOCAL_UPDATE_DTM AS UPDATE_DTM
+                         FROM   OP_PU_PR_DTL PD
+                         WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
+                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
+                         AND    PD.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
+                         ;
+
+        v_insert_idx = :v_insert_idx + 1;
+        :v_history_tbl.INSERT(:v_history_tmp, :v_insert_idx);
 
     END FOR;
 
+    CALL OP_PU_PR_REVIEW_HIS_SAVE_PROC(:v_history_tbl);
     /**** Business Logic - End ****/
 
-    --EXEC (:var_commit);
-    O_MSG_TBL = SELECT 'OK' RETURN_CODE, 'Successfully Saved.' RETURN_MSG FROM DUMMY;
+    --COMMIT;
+    O_MSG_TBL = SELECT 'OK' RETURN_CODE, 'It has been processed successfully.' RETURN_MSG FROM DUMMY;
 
 END;

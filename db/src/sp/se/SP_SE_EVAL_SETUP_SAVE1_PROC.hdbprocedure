@@ -40,15 +40,13 @@ LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 AS
 BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-    	ROLLBACK;
-    END;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
     
     BEGIN
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             :O_MSG.INSERT(('NG', 'Operation unit master Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')'), 1);
+            RESIGNAL;
         END;
        
         MERGE INTO SP_SE_OPERATION_UNIT_MST AS MST
@@ -111,28 +109,26 @@ BEGIN
     
     END;
 
-    IF :O_MSG.RETURN_CODE[1] = 'NG' THEN
-        SIGNAL SQL_ERROR_CODE 10000;
-    END IF;
-    
     BEGIN
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             :O_MSG.INSERT(('NG', 'Vendor Pool operation unit mapping Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')'), 1);
+            RESIGNAL;
         END;
        
         DELETE FROM SP_SE_OPERATION_UNIT_MAP MA
-        WHERE  NOT EXISTS (SELECT 1
-                           FROM   :I_OPMST MST,
-                                  :I_VPOP VP
-                           WHERE  MST.TENANT_ID = MA.TENANT_ID
-                           AND    MST.COMPANY_CODE = MA.COMPANY_CODE
-                           AND    MST.ORG_TYPE_CODE = MA.ORG_TYPE_CODE
-                           AND    MST.ORG_CODE = MA.ORG_CODE
-                           AND    MST.EVALUATION_OPERATION_UNIT_CODE = MA.EVALUATION_OPERATION_UNIT_CODE
-                           AND    VP.VENDOR_POOL_OPERATION_UNIT_CODE = MA.VENDOR_POOL_OPERATION_UNIT_CODE)
+        WHERE  (MA.TENANT_ID,
+                MA.COMPANY_CODE,
+                MA.ORG_TYPE_CODE,
+                MA.ORG_CODE,
+                MA.EVALUATION_OPERATION_UNIT_CODE) IN (SELECT MST.TENANT_ID,
+                                                              MST.COMPANY_CODE,
+                                                              MST.ORG_TYPE_CODE,
+                                                              MST.ORG_CODE,
+                                                              MST.EVALUATION_OPERATION_UNIT_CODE
+                                                       FROM   :I_OPMST MST)
         ;
-	    
+
         INSERT INTO SP_SE_OPERATION_UNIT_MAP
             (TENANT_ID
             ,COMPANY_CODE
@@ -160,26 +156,19 @@ BEGIN
               ,NOW()
         FROM   :I_OPMST MST,
                :I_VPOP VP
-        WHERE  NOT EXISTS (SELECT 1
-                           FROM   SP_SE_OPERATION_UNIT_MAP MA
-                           WHERE  MST.TENANT_ID = MA.TENANT_ID
-                           AND    MST.COMPANY_CODE = MA.COMPANY_CODE
-                           AND    MST.ORG_TYPE_CODE = MA.ORG_TYPE_CODE
-                           AND    MST.ORG_CODE = MA.ORG_CODE
-                           AND    MST.EVALUATION_OPERATION_UNIT_CODE = MA.EVALUATION_OPERATION_UNIT_CODE
-                           AND    VP.VENDOR_POOL_OPERATION_UNIT_CODE = MA.VENDOR_POOL_OPERATION_UNIT_CODE)
         ;
+        
     END;
-
-    IF :O_MSG.RETURN_CODE[1] = 'NG' THEN
-        SIGNAL SQL_ERROR_CODE 10001;
-    END IF;
-   
    
     BEGIN
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
-            :O_MSG.INSERT(('NG', 'Manager Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')'), 1);
+            IF ::SQL_ERROR_CODE = 349 THEN
+                :O_MSG.INSERT(('NG', 'The person in charge was duplicated.'), 1);
+            ELSE
+                :O_MSG.INSERT(('NG', 'Manager Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')'), 1);
+            END IF;
+            RESIGNAL;
         END;
 
         DELETE FROM SP_SE_OPERATION_UNIT_MANAGER
@@ -249,15 +238,15 @@ BEGIN
         ; 
     END;
 
-    IF :O_MSG.RETURN_CODE[1] = 'NG' THEN
-        SIGNAL SQL_ERROR_CODE 10002;
-    END IF;
-   
-   
     BEGIN
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
-            :O_MSG.INSERT(('NG', 'Quantitative Item Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')'), 1);
+            IF ::SQL_ERROR_CODE = 349 THEN
+                :O_MSG.INSERT(('NG', 'Quantitative item code was duplicated'), 1);
+            ELSE
+                :O_MSG.INSERT(('NG', 'Quantitative Item Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')'), 1);
+            END IF;
+            RESIGNAL;
         END; 
         
         DELETE FROM SP_SE_QUANTITATIVE_ITEM
@@ -337,10 +326,6 @@ BEGIN
                   ,QTT.SYSTEM_UPDATE_DTM = NOW()
         ;
     END;
-
-    IF :O_MSG.RETURN_CODE[1] = 'NG' THEN
-        SIGNAL SQL_ERROR_CODE 10003;
-    END IF;
 
     COMMIT;
     O_MSG = SELECT 'OK' RETURN_CODE, 'Successfully Saved.' RETURN_MSG FROM DUMMY;

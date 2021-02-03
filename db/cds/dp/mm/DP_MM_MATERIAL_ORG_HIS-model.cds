@@ -16,6 +16,7 @@
   8. history
   -. 2020.11.25 : 최미희 최초작성
   -. 2021.01.23 : 최미희 필드 추가(DELETE_MARK)
+  -. 2021.02.01 : 최미희 필드 추가(PROCURE_TYPE_CODE, SPECIAL_PROCURE_TYPE_CODE)
 *************************************************/
 namespace dp;	
 using util from '../../cm/util/util-model';	
@@ -40,6 +41,8 @@ entity Mm_Material_Org_His {
     buyer_empno : String(30)   @title: '구매담당자사번' ;	
     eng_item_flag : Boolean default FALSE  @title: '설계품목여부' ;	
     delete_mark : Boolean @title: 'SAP 삭제표시';
+    procure_type_code : String(30)   @title: '조달유형' ;	
+    special_procure_type_code : String(30)   @title: '특별조달유형' ;	
 }
 
 extend Mm_Material_Org_His with util.Managed;

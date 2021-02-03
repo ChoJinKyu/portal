@@ -11,16 +11,16 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text",
     "sap/m/Input"
-], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
+], function (Parent, Renderer, ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
-    var DepartmentDialog = Parent.extend("op.util.control.ui.OrderDialog", {
+    var OrderDialog = Parent.extend("op.util.control.ui.OrderDialog", {
 
         metadata: {
             properties: {
-                contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
-                keyField: { type: "string", group: "Misc", defaultValue: "department_id" },
-                textField: { type: "string", group: "Misc", defaultValue: "department_local_name" },
+                contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},                
+                keyField:  { type: "string", group: "Misc", defaultValue: "order_number" },
+                textField: { type: "string", group: "Misc", defaultValue: "order_name" },
                 items: { type: "sap.ui.core.Control"}
             }
         },
@@ -32,7 +32,7 @@ sap.ui.define([
             return [
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/DEPARTMENT_CODE") +" or "+ this.getModel("I18N").getText("/DEPARTMENT_LOCAL_NAME")}),
+                        new Label({ text: this.getModel("I18N").getText("/ORDER_NUMBER") +" or "+ this.getModel("I18N").getText("/ORDER_NAME")}),
                         this.oSearchKeyword
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M5 S10"})
@@ -41,17 +41,23 @@ sap.ui.define([
         },
 
         createTableColumns: function(){
-            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/DEPARTMENT"));
+            this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/ORDER"));
             return [
+                // new Column({
+                //     width: "20%",
+                //     hAlign: "Center",
+                //     label: new Label({text: this.getModel("I18N").getText("/COMPANY_CODE")}),
+                //     template: new Text({text: "{company_code}"})
+                // }),
                 new Column({
                     width: "30%",
                     hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/DEPARTMENT_CODE")}),
+                    label: new Label({text: this.getModel("I18N").getText("/ORDER_NUMBER")}),
                     template: new Text({text: "{"+this.getProperty("keyField")+"}"})
                 }),
                 new Column({
                     width: "70%",
-                    label: new Label({text: this.getModel("I18N").getText("/DEPARTMENT_LOCAL_NAME")}),
+                    label: new Label({text: this.getModel("I18N").getText("/ORDER_NAME")}),
                     template: new Text({text: "{"+this.getProperty("textField")+"}"})
                 })
                 
@@ -60,12 +66,28 @@ sap.ui.define([
 
         loadData: function(){
             var sKeyword = this.oSearchKeyword.getValue(),
-                aFilters = this.getProperty("items").filters || [],
+                aFilters = [
+                        // new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                    ],
+                oFilters = this.getProperty("items").filters || [],
                 aSorters = this.getProperty("items").sorters || [];
+
+
+            // aFilters.push(
+            //     new Filter({
+            //         filters: [                            
+            //             new Filter("tenant_id", FilterOperator.EQ, this.getProperty("tenantid") )
+            //         ],
+            //         and: true
+            //     })
+            // );
+
+
+
             if(sKeyword){
                 aFilters.push(
                     new Filter({
-                        filters: [
+                        filters: [                            
                             new Filter("tolower("+this.getProperty("keyField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'"),
                             new Filter("tolower("+this.getProperty("textField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'")
                         ],
@@ -73,18 +95,43 @@ sap.ui.define([
                     })
                 );
             }
-            ODataV2ServiceProvider.getService("cm.util.HrService").read("/Department", {
+
+            oFilters.forEach(function(oItem){
+                aFilters.push(oItem)
+            });
+
+             
+
+             aSorters.push(new Sorter("order_number", false));
+
+            // var oQuery = {
+            //     // urlParameters: {
+            //     //     "$select": "company_code,order_number,order_name"
+            //     // },             
                 
+            // };
+
+           
+            this.oDialog.setBusy(true);
+            ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.util.MstService/").read("/Order_Mst", {
+                fetchAll: true,  //TODL: please disable fetchAll option for performance
                 filters: aFilters,
                 sorters: aSorters,
-                success: function(oData){
-                    var aRecords = oData.results;
-                    this.oDialog.setData(aRecords, false);
+                success: function(oData, bHasMore){
+                    this.oDialog.setData(oData.results, false);
+                    if(!bHasMore) this.oDialog.setBusy(false);
+                }.bind(this),
+                fetchAllSuccess: function(aDatas){
+                    var aDialogData = this.oDialog.getData();
+                    aDatas.forEach(function(oData){
+                        aDialogData = aDialogData.concat(oData.results);
+                    }.bind(this));
+                    this.oDialog.setData(aDialogData);
+                    this.oDialog.setBusy(false);
                 }.bind(this)
-            });
+            });          
         }
-
     });
 
-    return DepartmentDialog;
+    return OrderDialog;
 }, /* bExport= */ true);

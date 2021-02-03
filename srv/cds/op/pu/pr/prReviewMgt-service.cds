@@ -47,7 +47,7 @@ service PrReviewMgtService {
             ,dtl.pr_desc  // 구매요청내역
             ,dtl.pr_unit  // 구매요청단위
             ,dtl.pr_quantity  // 구매요청수량
-            ,dtl.pr_quantity as remain_quantity  // 잔여수량
+            ,case when dtl.closing_flag = true then 0 else dtl.pr_quantity end as remain_quantity : Decimal(30, 10)  // 잔여수량
             ,dtl.delivery_request_date  // 납품요청일자
             ,dtl.buyer_empno  // 구매담당자사번
             ,cm_get_emp_name_func(dtl.tenant_id, dtl.buyer_empno) as buyer_name : String(240)  // 구매담당자명
@@ -68,6 +68,8 @@ service PrReviewMgtService {
             ,mst.pr_create_system_code  // 구매요청생성시스템코드
             ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_SYSTEM_CODE', mst.pr_create_system_code, 'KO') as pr_create_system_name : String(240)  // 구매요청생성시스템
             ,dtl.pr_progress_status_code  // 구매요청진행상태코드
+            ,cm_get_code_name_func(dtl.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', dtl.pr_progress_status_code, 'KO') as pr_progress_status_name : String(240)  // 구매요청진행상태코드
+
             ,dtl.approval_date  // 결재일자
             ,dtl.remark  // 비고
             ,dtl.attch_group_number  // 첨부파일그룹번호
@@ -171,7 +173,8 @@ service PrReviewMgtService {
 
             ,dtl.pr_quantity  // 구매요청수량
             ,dtl.pr_unit  // 구매요청단위
-            ,dtl.pr_quantity as remain_quantity  // 잔여수량  -- by dokim
+            ,case when dtl.closing_flag = true then 0 else dtl.pr_quantity end as remain_quantity : Decimal(30, 10)  // 잔여수량  -- by dokim
+
             ,dtl.estimated_price  // 단가예산
             ,dtl.currency_code  // 통화코드
             ,dtl.price_unit  // Per - 가격단위

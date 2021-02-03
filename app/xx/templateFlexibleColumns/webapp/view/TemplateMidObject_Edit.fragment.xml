@@ -40,38 +40,5 @@
 		<DatePicker placeholder="Starts From" required="true" fieldGroupIds="notnull" value="{master>/start_date}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
 		<Label text="To"/>
 		<DatePicker placeholder="Ends To" required="true" fieldGroupIds="notnull" value="{master>/end_date}"  valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
-		
-		<core:Title text="Boundry" />
-		<Label text="Site"/>
-		<Switch state="{master>/site_flag}" customTextOn="Yes" customTextOff="No">
-			<layoutData>
-				<FlexItemData growFactor="1" />
-			</layoutData>
-		</Switch>
-		<Label text="Company"/>
-		<Switch state="{master>/company_flag}" customTextOn="Yes" customTextOff="No">
-			<layoutData>
-				<FlexItemData growFactor="1" />
-			</layoutData>
-		</Switch>
-		<Label text="Role"/>
-		<Switch state="{master>/role_flag}" customTextOn="Yes" customTextOff="No">
-			<layoutData>
-				<FlexItemData growFactor="1" />
-			</layoutData>
-		</Switch>
-		<Label text="Organization"/>
-		<Switch state="{master>/organization_flag}" customTextOn="Yes" customTextOff="No">
-			<layoutData>
-				<FlexItemData growFactor="1" />
-			</layoutData>
-		</Switch>
-		<Label text="User"/>
-		<Switch state="{master>/user_flag}" customTextOn="Yes" customTextOff="No">
-			<layoutData>
-				<FlexItemData growFactor="1" />
-			</layoutData>
-		</Switch>
-
 	</form:SimpleForm>
 </core:FragmentDefinition>

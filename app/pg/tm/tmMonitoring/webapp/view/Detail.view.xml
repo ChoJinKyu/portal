@@ -1,4 +1,15 @@
-<mvc:View xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns:uxap="sap.uxap" xmlns:table="sap.ui.table" xmlns:u="sap.ui.unified" xmlns:rte="sap.ui.richtexteditor" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" displayBlock="true" xmlns:cm-ui="ext.cm.util.control.ui" controllerName="pg.tm.tmMonitoring.controller.Detail">
+<mvc:View 
+    xmlns="sap.m" 
+    xmlns:core="sap.ui.core" 
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns:uxap="sap.uxap" 
+    xmlns:u="sap.ui.unified" 
+    xmlns:rte="sap.ui.richtexteditor" 
+    xmlns:l="sap.ui.layout" 
+    xmlns:f="sap.ui.layout.form" 
+    displayBlock="true" 
+    xmlns:cm-ui="cm.util.control.ui"
+    controllerName="pg.tm.tmMonitoring.controller.Detail">
 	<App id="idAppControl">
 		<Page title="{I18N>/MONITORING_MANAGEMENT}" showNavButton="true" navButtonType="Back" navButtonPress="onNavToBack">
 			<content>
@@ -26,11 +37,11 @@
 														<Text text="{=${manager_local_name} === ''? 'No Manager Data' : ${manager_local_name}.replaceAll(';', ', ')}" visible="{=!${DetailView>/isEditMode}}"/>
 														<MultiInput id="multiInputWithEmployeeValueHelp" visible="{=${DetailView>/isEditMode}}" tokenUpdate="onTokenUpdate" showValueHelp="false"/>
 														<layoutData>
-															<l:GridData span="XL3 L3 M6 S12"/>
+															<l:GridData span="XL3 L4 M4 S12"/>
 														</layoutData>
 													</VBox>
 													<VBox id="managerVBox" class="sapUiNoMarginTop">
-														<Table id="managerListTable" items="{/TaskMonitoringManagerView}" autoPopinMode="true" mode="MultiSelect">
+														<Table id="managerListTable" autoPopinMode="true" mode="MultiSelect">
 															<headerToolbar>
 																<OverflowToolbar>
 																	<content>
@@ -41,37 +52,37 @@
 																</OverflowToolbar>
 															</headerToolbar>
 															<columns>
-																<Column hAlign="Center" width="5rem" visible="{=${DetailView>/isEditMode}}">
+																<Column width="5rem" visible="{=${DetailView>/isEditMode}}">
 																	<header>
 																		<Label text="{I18N>/STATUS}"/>
 																	</header>
 																</Column>
-																<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+																<Column minScreenWidth="Tablet" demandPopin="true">
 																	<header>
 																		<Label text="{I18N>/EMPNO}"/>
 																	</header>
 																</Column>
-																<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+																<Column minScreenWidth="Tablet" demandPopin="true">
 																	<header>
 																		<Label text="{I18N>/MANAGER}"/>
 																	</header>
 																</Column>
-																<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+																<Column minScreenWidth="Tablet" demandPopin="true">
 																	<header>
 																		<Label text="{I18N>/EMAIL}"/>
 																	</header>
 																</Column>
-																<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+																<Column minScreenWidth="Tablet" demandPopin="true">
 																	<header>
 																		<Label text="{I18N>/DEPARTMENT}"/>
 																	</header>
 																</Column>
-																<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+																<Column minScreenWidth="Tablet" demandPopin="true">
 																	<header>
 																		<Label text="{I18N>/USER_POSITION}"/>
 																	</header>
 																</Column>
-																<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+																<Column minScreenWidth="Tablet" demandPopin="true">
 																	<header>
 																		<Label text="{I18N>/SUPER_AUTHORITY_FLAG}"/>
 																	</header>
@@ -126,7 +137,7 @@
 														<CheckBox id="alarm_flag" text="{I18N>/ALRAM}" editable="{=${DetailView>/isEditMode}}" selected="{=${operation_mode_alram_flag} === 'true' ? true : false}"/>
 													</HBox>
 													<layoutData>
-														<l:GridData span="XL4 L4 M6 S12"/>
+														<l:GridData span="XL3 L4 M4 S12"/>
 													</layoutData>
 												</VBox>
 												<VBox id="cycleVBox">
@@ -136,7 +147,7 @@
 														<core:Item key="{code}" text="{code_name}"/>
 													</MultiComboBox>
 													<layoutData>
-														<l:GridData span="XL4 L4 M6 S12"/>
+														<l:GridData span="XL3 L4 M4 S12"/>
 													</layoutData>
 												</VBox>
 											</f:content>
@@ -155,12 +166,12 @@
 										<l:VerticalLayout width="100%">
 											<VBox class="sapUiTinyMarginTop" id="monitoringVBox">
 												<Label text="{I18N>/MONITORING_PURPOSE}" design="Bold"/>
-												<rte:RichTextEditor id="reMonitoringPurpose" wrapping="false" editorType="TinyMCE4" width="100%" visible="{=${DetailView>/isEditMode}}" editable="true" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+												<rte:RichTextEditor id="reMonitoringPurpose" wrapping="false" editorType="TinyMCE4" width="100%" height="300px" visible="{=${DetailView>/isEditMode}}" editable="true" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
 												<FormattedText id="PurposeFormattedText" visible="{=!${DetailView>/isEditMode}}"/>
 											</VBox>
 											<VBox class="sapUiSmallMarginTop" id="scenarioVBox">
 												<Label text="{I18N>/SCENARIO_DESC}" design="Bold"/>
-												<rte:RichTextEditor id="reMonitoringScenario" wrapping="false" class="sapUiTinyMarginTop" visible="{=${DetailView>/isEditMode}}" editorType="TinyMCE4" editable="true" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+												<rte:RichTextEditor id="reMonitoringScenario" wrapping="false" class="sapUiTinyMarginTop" visible="{=${DetailView>/isEditMode}}" editorType="TinyMCE4" editable="true" width="100%" height="300px" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
 												<FormattedText id="ScenarioDescFormattedText" visible="{=!${DetailView>/isEditMode}}"/>
 											</VBox>
 										</l:VerticalLayout>
@@ -178,7 +189,7 @@
 										<l:VerticalLayout width="100%">
 											<VBox class="sapUiSmallMarginTop" id="systemVBox">
 												<Label text="{I18N>/SOURCE_SYSTEM_DESC}" design="Bold"/>
-												<rte:RichTextEditor id="reSourceSystemDetail" wrapping="false" class="sapUiTinyMarginTop" editorType="TinyMCE4" visible="{=${DetailView>/isEditMode}}" editable="true" width="100%" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+												<rte:RichTextEditor id="reSourceSystemDetail" wrapping="false" class="sapUiTinyMarginTop" editorType="TinyMCE4" visible="{=${DetailView>/isEditMode}}" editable="true" width="100%" height="300px" customToolbar="true" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
 												<FormattedText id="ReSourceSystemFormattedText" visible="{=!${DetailView>/isEditMode}}"/>
 											</VBox>
 										</l:VerticalLayout>
@@ -204,35 +215,35 @@
 												</OverflowToolbar>
 											</headerToolbar>
 											<columns>
-												<Column hAlign="Center" width="5rem">
+												<Column width="5rem">
 													<header>
 														<Label text="{I18N>/STATUS}"/>
 													</header>
 												</Column>
-												<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+												<Column minScreenWidth="Tablet" demandPopin="true">
 													<header>
 														<Label text="{I18N>/INDICATOR}"/>
 													</header>
 												</Column>
-												<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+												<Column minScreenWidth="Tablet" demandPopin="true">
 													<header>
 														<Label text="{I18N>/CONDITION}"/>
 													</header>
 												</Column>
-												<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+												<Column  minScreenWidth="Tablet" demandPopin="true">
 													<Text text="{I18N>/INDICATOR_FIRST_VALUE}"/>
 												</Column>
-												<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+												<Column minScreenWidth="Tablet" demandPopin="true">
 													<header>
 														<Label text="{I18N>/INDICATOR_LAST_VALUE}"/>
 													</header>
 												</Column>
-												<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+												<Column minScreenWidth="Tablet" demandPopin="true">
 													<header>
 														<Label text="{I18N>/GRADE}"/>
 													</header>
 												</Column>
-												<Column hAlign="Center" minScreenWidth="Tablet" demandPopin="true">
+												<Column minScreenWidth="Tablet" demandPopin="true">
 													<header>
 														<Label text="{I18N>/UNIT}"/>
 													</header>

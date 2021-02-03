@@ -185,7 +185,7 @@ sap.ui.define([
 
                 if (searchOperationOrg.length > 0) {
                     for (var i = 0; i < searchOperationOrg.length; i++) {
-                        aFilter.push(new Filter("org_code", FilterOperator.EQ, searchOperationOrg[i]));
+                        oFilter.push(new Filter("supplier_code", FilterOperator.EQ, supplierCode));
                     }
                     oFilter.push(new Filter(aFilter, false));
                 }

@@ -121,7 +121,7 @@
                 },
                 {   
                     "name": "two",
-                    "pattern":"two/{scenario_number},{tenant_id},{company_code},{org_code},{org_type_code},{evaluation_operation_unit_code},{evaluation_type_code}",
+                    "pattern":"two/{scenario_number},{tenant_id},{company_code},{org_code},{org_type_code},{evaluation_operation_unit_code},{evaluation_operation_unit_name},{evaluation_type_code},{use_flag}",
                     "target": ["detail"]
                 }
             ],

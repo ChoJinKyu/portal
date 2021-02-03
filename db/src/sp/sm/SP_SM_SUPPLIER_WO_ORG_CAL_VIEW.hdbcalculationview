@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="SP_SM_SUPPLIER_WO_ORG_CAL_VIEW" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="Calculation View: Supplier"/>
+<localVariables>
+  <variable id="LOCALE" type="session"/>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="SP_SM_SUPPLIER_MST">
+    <resourceUri>SP_SM_SUPPLIER_MST</resourceUri>
+  </DataSource>
+  <DataSource id="SP_SM_SUPPLIER_ROLE">
+    <resourceUri>SP_SM_SUPPLIER_ROLE</resourceUri>
+  </DataSource>
+  <DataSource id="CM_CODE_LNG">
+    <resourceUri>CM_CODE_LNG</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Supplier_Mst">
+    <viewAttributes>
+      <viewAttribute id="TENANT_ID"/>
+      <viewAttribute id="SUPPLIER_CODE"/>
+      <viewAttribute id="SUPPLIER_LOCAL_NAME"/>
+      <viewAttribute id="SUPPLIER_ENGLISH_NAME"/>
+      <viewAttribute id="TAX_ID"/>
+    
+      <viewAttribute id="SUPPLIER_STATUS_CODE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="SP_SM_SUPPLIER_MST">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_STATUS_CODE" source="BP_STATUS_CODE"/>
+    </input></calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Supplier_Role">
+    <viewAttributes>
+      <viewAttribute id="TENANT_ID"/>
+      <viewAttribute id="SUPPLIER_CODE"/>
+      <viewAttribute id="BP_ROLE_CODE"/>
+      <viewAttribute id="OLD_SUPPLIER_CODE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="SP_SM_SUPPLIER_ROLE"/></calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" joinType="leftOuter" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="TENANT_ID"/>
+      <viewAttribute id="SUPPLIER_CODE"/>
+      <viewAttribute id="SUPPLIER_LOCAL_NAME"/>
+      <viewAttribute id="SUPPLIER_ENGLISH_NAME"/>
+      <viewAttribute id="TAX_ID"/>
+      <viewAttribute id="OLD_SUPPLIER_CODE"/>
+      <viewAttribute id="SUPPLIER_STATUS_CODE"/>
+    
+      <viewAttribute id="BP_ROLE_CODE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Supplier_Mst">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_LOCAL_NAME" source="SUPPLIER_LOCAL_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_ENGLISH_NAME" source="SUPPLIER_ENGLISH_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_ID" source="TAX_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TENANT_ID" source="TENANT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_CODE" source="SUPPLIER_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_STATUS_CODE" source="SUPPLIER_STATUS_CODE"/>
+    </input>
+    <input node="Supplier_Role">
+      <mapping xsi:type="Calculation:AttributeMapping" target="OLD_SUPPLIER_CODE" source="OLD_SUPPLIER_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BP_ROLE_CODE" source="BP_ROLE_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TENANT_ID" source="TENANT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_CODE" source="SUPPLIER_CODE"/>
+    </input>
+    <filter>(trim(&quot;BP_ROLE_CODE&quot;) = '100001')</filter>
+    <joinAttribute name="TENANT_ID"/>
+    <joinAttribute name="SUPPLIER_CODE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Status_Lng" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="TENANT_ID"/>
+      <viewAttribute id="GROUP_CODE"/>
+      <viewAttribute id="CODE"/>
+      <viewAttribute id="LANGUAGE_CD"/>
+      <viewAttribute id="CODE_NAME"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input emptyUnionBehavior="undefined" node="CM_CODE_LNG"/>
+    <filter>(&quot;LANGUAGE_CD&quot;=upper(midstr('??LOCALE??',1,2))) and (&quot;GROUP_CODE&quot;='SP_SM_SUPPLIER_STATUS_CODE')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_5" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="TENANT_ID"/>
+      <viewAttribute id="SUPPLIER_CODE"/>
+      <viewAttribute id="SUPPLIER_LOCAL_NAME"/>
+      <viewAttribute id="SUPPLIER_ENGLISH_NAME"/>
+      <viewAttribute id="TAX_ID"/>
+      <viewAttribute id="SUPPLIER_STATUS_NAME"/>
+      <viewAttribute id="SUPPLIER_STATUS_CODE"/>
+      <viewAttribute id="OLD_SUPPLIER_CODE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_LOCAL_NAME" source="SUPPLIER_LOCAL_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_ENGLISH_NAME" source="SUPPLIER_ENGLISH_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_ID" source="TAX_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OLD_SUPPLIER_CODE" source="OLD_SUPPLIER_CODE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_STATUS_CODE" source="SUPPLIER_STATUS_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TENANT_ID" source="TENANT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_CODE" source="SUPPLIER_CODE"/>
+    </input>
+    <input node="Status_Lng">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_STATUS_NAME" source="CODE_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TENANT_ID" source="TENANT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SUPPLIER_STATUS_CODE" source="CODE"/>
+    </input>
+    <joinAttribute name="TENANT_ID"/>
+    <joinAttribute name="SUPPLIER_STATUS_CODE"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_5">
+  <attributes>
+    <attribute id="TENANT_ID" key="true" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TENANT_ID"/>
+      <keyMapping columnObjectName="Join_5" columnName="TENANT_ID"/>
+    </attribute>
+    <attribute id="SUPPLIER_CODE" key="true" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SUPPLIER_CODE"/>
+      <keyMapping columnObjectName="Join_5" columnName="SUPPLIER_CODE"/>
+    </attribute>
+    <attribute id="SUPPLIER_LOCAL_NAME" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SUPPLIER_LOCAL_NAME"/>
+      <keyMapping columnObjectName="Join_5" columnName="SUPPLIER_LOCAL_NAME"/>
+    </attribute>
+    <attribute id="SUPPLIER_ENGLISH_NAME" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SUPPLIER_ENGLISH_NAME"/>
+      <keyMapping columnObjectName="Join_5" columnName="SUPPLIER_ENGLISH_NAME"/>
+    </attribute>
+    <attribute id="TAX_ID" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TAX_ID"/>
+      <keyMapping columnObjectName="Join_5" columnName="TAX_ID"/>
+    </attribute>
+    <attribute id="OLD_SUPPLIER_CODE" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OLD_SUPPLIER_CODE"/>
+      <keyMapping columnObjectName="Join_5" columnName="OLD_SUPPLIER_CODE"/>
+    </attribute>
+  
+    <attribute id="SUPPLIER_STATUS_CODE" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SUPPLIER_STATUS_CODE"/>
+  
+      <keyMapping columnObjectName="Join_5" columnName="SUPPLIER_STATUS_CODE"/>
+  
+    </attribute>
+    <attribute id="SUPPLIER_STATUS_NAME" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CODE_NAME"/>
+      <keyMapping columnObjectName="Join_5" columnName="SUPPLIER_STATUS_NAME"/>
+    </attribute></attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+
+  <sortAttributes>
+
+    <sortAttribute id="SUPPLIER_CODE" direction="ASC"/>
+
+    <sortAttribute id="TENANT_ID" direction="ASC"/>
+
+  </sortAttributes>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="364" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Supplier_Mst" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="516"/>
+      <rectangleSize width="182"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Supplier_Role" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="324" y="516"/>
+      <rectangleSize height="30" width="193"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="129" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Supplier_Mst" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Supplier_Role" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Status_Lng" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="423" y="356"/>
+      <rectangleSize width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="364" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Status_Lng" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

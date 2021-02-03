@@ -1,16 +1,20 @@
 sap.ui.define([
   "./App.controller",
   "sap/ui/model/json/JSONModel",
-  "ext/lib/formatter/DateFormatter",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
   "sap/ui/core/Fragment",
   "sap/m/MessageBox",
+  "sap/ui/core/routing/HashChanger",
+  "sap/ui/core/Component",
+  "sap/ui/core/ComponentContainer",
+  "ext/lib/formatter/DateFormatter",
   "ext/lib/formatter/NumberFormatter",
   "cm/util/control/ui/EmployeeDialog",
   "dp/util/control/ui/MaterialMasterDialog"
 ],
-  function (BaseController, JSONModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, NumberFormatter, EmployeeDialog, MaterialMasterDialog) {
+  function (BaseController, JSONModel, Filter, FilterOperator, Fragment, MessageBox, HashChanger, Component, ComponentContainer, 
+        DateFormatter, NumberFormatter, EmployeeDialog, MaterialMasterDialog) {
     "use strict";
 
     var sSelectedDialogPath, sTenantId, oDialogInfo;
@@ -20,15 +24,21 @@ sap.ui.define([
 
         numberFormatter: NumberFormatter,
 
+        /**
+         * status code에 따라 상태를 나타내는 색 세팅
+         */
         onStatusColor: function (sStautsCodeParam) {
             var sReturnValue = 1;
 
+            // AR: Approval Request, IA: In progress Approval, AP: Approved, RJ: Rejected
             if( sStautsCodeParam === "AR" ) {
-                sReturnValue = 5;
+                sReturnValue = 8;
+            }else if( sStautsCodeParam === "IA" ) {
+                sReturnValue = 9;
             }else if( sStautsCodeParam === "AP" ) {
-                sReturnValue = 7;
+                sReturnValue = 6;
             }else if( sStautsCodeParam === "RJ" ) {
-                sReturnValue = 3;
+                sReturnValue = 2;
             }
 
             return sReturnValue;
@@ -38,17 +48,19 @@ sap.ui.define([
             var oRootModel = this.getOwnerComponent().getModel("rootModel");
             sTenantId = oRootModel.getProperty("/tenantId");
 
+            // 초기 filter값 세팅
             var oToday = new Date();
             var oFilter = {tenantId: sTenantId,
                                 materialCodes: [],
                                 dateValue: new Date(this._changeDateString(new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30), "-")),
                                 secondDateValue: new Date(this._changeDateString(oToday, "-")),
                                 type_list:[]};
+            // 기준단가 목록 테이블 모델 세팅  
             this.setModel(new JSONModel(), "listModel");
+            // filter 모델 세팅
             this.setModel(new JSONModel(oFilter), "filterModel");
 
-
-            // 품의 유형 조회
+            // 품의 유형 조회 시작
             var aApprovalTypeCodeFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId")),
                                         new Filter("group_code", FilterOperator.EQ, "DP_VI_APPROVAL_TYPE")];
             this.getOwnerComponent().getModel("commonODataModel").read("/Code", {
@@ -62,6 +74,7 @@ sap.ui.define([
                     console.log("error", data);
                 }
             });
+            // 품의 유형 조회 끝
 
 
             // Dialog에서 사용할 Model 생성
@@ -78,15 +91,29 @@ sap.ui.define([
             var oFilterModelData = oFilterModel.getData();
             var aMasterFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
             var aDetailFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
+            var aType = oFilterModelData.type || [];
             var sCompanyCode = oFilterModelData.company_code;
             var sOrgCode = oFilterModelData.org_code;
-            var sStatus = oFilterModelData.status;
+            var aStatus = oFilterModelData.status || [];
             var aMaterialCodes = oFilterModelData.materialCodes;
             var sApprovalNumber = oFilterModelData.approvalNumber;
-            var sRequestBy = oFilterModelData.requestBy;
             var oDateValue = oFilterModelData.dateValue;
             var oSecondDateValue = oFilterModelData.secondDateValue;
             var aRequestors = this.byId("multiInputWithEmployeeValueHelp").getTokens();
+
+            // 품의유형이 있는 경우
+            if( 0<aType.length ) {
+                var aTypeFilter = [];
+                
+                aType.forEach(function (sType) {
+                    aTypeFilter.push(new Filter("approval_type_code", FilterOperator.EQ, sType));
+                });
+
+                aMasterFilters.push(new Filter({
+                    filters: aTypeFilter,
+                    and: false
+                }));
+            }
 
             // Company Code가 있는 경우
             if( sCompanyCode ) {
@@ -99,8 +126,17 @@ sap.ui.define([
             }
 
             // Status가 있는 경우
-            if( sStatus ) {
-                aMasterFilters.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
+            if( 0<aStatus.length ) {
+                var aStatusFilter = [];
+                
+                aStatus.forEach(function (sStatus) {
+                    aStatusFilter.push(new Filter("approve_status_code", FilterOperator.EQ, sStatus));
+                });
+
+                aMasterFilters.push(new Filter({
+                    filters: aStatusFilter,
+                    and: false
+                }));
             }
 
             // Material Code가 있는 경우
@@ -128,10 +164,7 @@ sap.ui.define([
                 aMasterFilters.push(new Filter("request_date", FilterOperator.BT, this._changeDateString(oDateValue), this._changeDateString(oSecondDateValue)));
             }
 
-            // Request By가 있는 경우
-            if( sRequestBy ) {
-                aMasterFilters.push(new Filter("requestor_empno", FilterOperator.EQ, sRequestBy));
-            }
+            // 요청자가 있는 경우
             if( 0<aRequestors.length ) {
                 var aRequestorsFilter = [];
                 
@@ -169,6 +202,7 @@ sap.ui.define([
                     var aPriceFilters = [];
                     var aItemSequenceFilters = [];
 
+                    // Master 데이터와 Detail 데이터를 비교해서 approval_number가 서로 일치하는 경우만 Filter값에 맞는 데이터(= aList)
                     for( var k=0; k<aMastersLen; k++ ) {
                         var oMaster = aMasters[k];
 
@@ -177,7 +211,7 @@ sap.ui.define([
 
                             if( oMaster.approval_number === oDetail.approval_number ) {
                                 oDetail.prices = [];
-                                aList.push($.extend(true, oMaster, oDetail));
+                                aList.push($.extend(true, {}, oMaster, oDetail));
 
                                 let aTempFilters = [];
                                 aTempFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenantId));
@@ -191,6 +225,7 @@ sap.ui.define([
                         }
                     }
 
+                    // Master 데이터와 Detail 데이터를 비교해서 approval_number가 서로 일치하는 경우만 Price filter 세팅
                     aPriceFilters.push(new Filter({
                         filters: aItemSequenceFilters,
                         and: false,
@@ -202,6 +237,7 @@ sap.ui.define([
                         var aPricesLen = aPrices.length;
                         var aListLen = aList.length;
 
+                        // Filter값에 맞는 데이터(= aList)에 Price값 세팅
                         for( var m=0; m<aListLen; m++ ) {
                             var oBasePrice = aList[m];
 
@@ -213,6 +249,17 @@ sap.ui.define([
                             }
                         }
 
+                        // approval_number 로 desc 
+                        aList.sort(function(a, b) {
+                            if( a.approval_number < b.approval_number) {
+                                return 1;
+                            };
+                            if( a.approval_number > b.approval_number) {
+                                return -1;
+                            };
+                            return 0;
+                        })
+
                         oListModel.setData(aList);
                         oView.setBusy(false);
                     });
@@ -220,6 +267,9 @@ sap.ui.define([
             }.bind(this));
         },
         
+        /**
+         * oData 호출
+         */
         _readData: function (sCallUrlParam, aFiltersParam, oUrlParametersParam, fCallbackParam) {
             var oModel = this.getModel();
             var oView = this.getView();
@@ -236,7 +286,7 @@ sap.ui.define([
         },
 
         /**
-         * Date 데이터를 String 타입으로 변경. 예) 2020-10-10
+         * Date 데이터를 String 타입으로 변경. 예) 2020-10-10(이 때 구분값은 "-")
          */
         _changeDateString: function (oDateParam, sGubun) {
             var oDate = oDateParam || new Date(),
@@ -276,19 +326,44 @@ sap.ui.define([
         },
 
         /**
-         * 상세 페이지로 이동
+         * 상세 페이지로 이동(basePriceArlMst에 있는 Detail화면으로 이동)
          */
         onGoDetail: function (oEvent) {
             var oListModel = this.getModel("listModel");
-            var oBindingContext = oEvent.getSource().getBindingContext("listModel");
+            var oBindingContext = oEvent.getParameter("rowBindingContext");
 
             if( oBindingContext ) {
                 var sPath = oBindingContext.getPath();
                 var oRootModel = this.getModel("rootModel");
-                oRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
-            }
+                var oSelectedData = oListModel.getProperty(sPath);
 
-            this.getRouter().navTo("basePriceDetail");
+                //portal에 있는 toolPage 
+                var oToolPage = this.getView().oParent.oParent.oParent.oContainer.oParent;
+                //이동하려는 app의 component name,url
+                var sComponent = "dp.vi.basePriceArlMgt",
+                    sUrl = "../dp/vi/basePriceArlMgt/webapp";
+
+                var changeHash = "2/2";         //넘겨줄 hash 값
+                changeHash += "/" + oSelectedData.tenant_id + "/" + oSelectedData.approval_number + "/" + oSelectedData.approval_type_code;
+                HashChanger.getInstance().replaceHash("");
+
+                Component.load({
+                    name: sComponent,
+                    url: sUrl
+                }).then(function (oComponent) {
+                    var oContainer = new ComponentContainer({
+                        name: sComponent,
+                        async: true,
+                        url: sUrl
+                    });
+                    oToolPage.removeAllMainContents();
+                    oToolPage.addMainContent(oContainer);
+                    //hash setting
+                    HashChanger.getInstance().setHash(changeHash);
+                }).catch(function (e) {
+                    MessageBox.show("error");
+                })
+            }
         },
 
         /**

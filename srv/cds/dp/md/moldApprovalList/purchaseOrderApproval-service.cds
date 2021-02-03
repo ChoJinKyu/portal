@@ -6,6 +6,6 @@ namespace dp;
 @path : '/dp.PurchaseOrderApprovalService'
 service PurchaseOrderApprovalService {
     entity PurchaseOrderItems as projection on approvalDtl.Md_Mst_App_Dtl_View;
-    entity Payment as projection on moldPayment.Md_Partial_Payment;
+    entity Payments as projection on moldPayment.Md_Partial_Payment;
 }
 

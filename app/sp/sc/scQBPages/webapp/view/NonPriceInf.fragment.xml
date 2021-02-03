@@ -78,19 +78,58 @@
                                 class="sapMLabelNoText"/>
                         <Select width="100%" selectedKey="{NPHeaderModel>/h5}">
                             <core:Item key="1" text="Automatic" />
+                            <core:Item key="2" text="None" />
                         </Select >
                     </VBox>
-                    <VBox width="15%" class="sapUiLargeMarginBegin">
+                    <VBox width="15%" class="sapUiLargeMarginBeginEnd">
                         <Label  text="Target Score" 
                                 required="true"
                                 class="sapMLabelNoText"/>
-                        <Input  value="{NPHeaderModel>/h6}" class="sapMLabelNoText" type="Number" validateFieldGroup="vfgHeader"/>
+                        <Input  value="{NPHeaderModel>/h6}" width="100%" type="Number" validateFieldGroup="vfgHeader"/>
                     </VBox>
                 </HBox>
             </VBox>
             <!-- Header 입력 end -->
 
             <!-- 파일 업로드 start -->
+            <VBox class="sapUiSmallMarginBottom">
+                <Table >
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <content>
+                                <Title text="첨부파일" level="H2"/>
+                                <ToolbarSpacer />
+                                <Button  text="Add File" type="Transparent" press="" />
+                                <!-- <Button  text="Delete" type="Transparent" press=".onNonPriceItemDelete" /> -->
+                            </content>
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column 
+                            width="50%"
+                            hAlign="Center"
+                            minScreenWidth="Tablet"
+                            demandPopin="true">
+                            <Text text="File Name" />
+                        </Column>
+                        <Column
+                            width="50%"
+                            hAlign="Center"
+                            minScreenWidth="Tablet"
+                            demandPopin="true">
+                            <Label text="Description" required="true" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="" />
+                                <Text text="" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
 
             <!-- 파일 업로드 end -->
 
@@ -103,7 +142,7 @@
                         <headerToolbar>
                             <OverflowToolbar>
                                 <content>
-                                    <Title text="Item Title Name" level="H2"/>
+                                    <!-- <Title text="Item Title Name" level="H2"/> -->
                                     <ToolbarSpacer />
                                     <Button  text="Add" type="Transparent" press=".onNonPriceItemAdd" />
                                     <Button  text="Delete" type="Transparent" press=".onNonPriceItemDelete" />
