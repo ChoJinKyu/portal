@@ -178,6 +178,24 @@ sap.ui.define([
                 return; 
             } // skip
             
+            //Mapping 된 데이터가 있는지 checking
+            //var aList = this.getModel("partListModel").getProperty("/PartListView");
+            var aSelIndics = oTable.getSelectedIndices();
+            var validFlag = true;
+            $.each(aSelIndics, function(nIdx, nRowIdx) {
+                let oCnxt = oTable.getContextByIndex(nRowIdx);
+                let sPath = oCnxt.getPath();
+                let oRow = oTable.getModel("partListModel").getProperty(sPath);
+                if(oRow.mapping_id) {
+                    MessageToast.show("맵핑된 데이터가 있습니다. 맵핑 삭제 후 데이터 삭제가 가능합니다.", {at: "center center"});
+                    validFlag = false;
+                    return false;
+                }
+            }.bind(this));
+            if(!validFlag) {
+                return;
+            }
+
             oTable.getSelectedIndices().reverse().forEach(function (idx) {
                 model.markRemoved(idx);
             });
@@ -235,6 +253,10 @@ sap.ui.define([
         },
 
         onBomInfoMappingPress: function(oEvent) {
+            if(this.getModel("bomMappingModel")) {
+                this.getModel("bomMappingModel").setData({});
+            }
+            
             var oTable = this.byId("tblPartListTable");
             var aSelIndics = oTable.getSelectedIndices();
 
@@ -262,7 +284,10 @@ sap.ui.define([
                     oBomMppingModel.setProperty("/version_number", oRow.version_number);
                     oBomMppingModel.setProperty("/mapping_id", oRow.mapping_id);
                     oBomMppingModel.setProperty("/department_type_code", oRow.department_type_code);
-                    oBomMppingModel.setProperty("/creator_empno", oRow.creator_empno);
+                    //oBomMppingModel.setProperty("/creator_empno", oRow.creator_empno);
+                    oBomMppingModel.setProperty("/creator_empno", oRow.creator_empno || "100000");//추후 세션정보로 셋팅
+                    oBomMppingModel.setProperty("/creator_local_name", "김구매");//추후 세션정보로 셋팅
+
                     oBomMppingModel.setProperty("/eng_change_number", oRow.eng_change_number);
                     oBomMppingModel.setProperty("/change_reason", oRow.change_reason);
                 }
@@ -274,6 +299,9 @@ sap.ui.define([
         },
 
         onChangeNumberLinkPress: function(oEvent) {
+            if(this.getModel("bomMappingModel")) {
+                this.getModel("bomMappingModel").setData({});
+            }
             var sNum = oEvent.getSource().getText();
             var oCnxt = oEvent.getSource().getParent().getRowBindingContext();
             if(!sNum) {
@@ -340,7 +368,7 @@ sap.ui.define([
         },
 
         onBomMappingDeletePress : function() {
-            MessageBox.confirm("삭제 하시겠습니까?", {
+            MessageBox.confirm(this.I18N.getText("/NCM00003"), {//삭제 하시겠습니까?
                 title : "Delete",
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
