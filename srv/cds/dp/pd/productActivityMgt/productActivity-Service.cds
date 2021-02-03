@@ -7,7 +7,7 @@ namespace dp;
 @path : '/dp.productActivityService'
 
 service ProductActivityService {
-    entity PdProdActivityTemplateView as projection on ProdActivityTemplate.Pd_Product_Activity_Template_View;
+    entity PdProdActivityTemplateView as projection on ProdActivityTemplate.Dp_Pd_Product_Activity_Template_View;
     entity PdProdActivityTemplate as projection on ProdActivityTemplate.Pd_Product_Activity_Template;
     entity PdProdActivityTemplateLng as projection on ProdActivityTemplateLng.Pd_Product_Activity_Template_Lng;
     entity ActivityMapping as projection on activityMapping.Pd_Activity_Mapping;
