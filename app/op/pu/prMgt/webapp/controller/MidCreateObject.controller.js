@@ -62,6 +62,9 @@ sap.ui.define([
             // call the base controller's init function
             BaseController.prototype["op.init"].apply(this, arguments);
 
+            // 품의내용 Text editor
+            this._fnSetRichEditor();
+
             // view에서 사용할 메인 Model
             this.setModel(new JSONModel(), "detailModel"); 
             this.setModel(new JSONModel(), "viewModel"); 
@@ -108,10 +111,6 @@ sap.ui.define([
                 }), "session");
             }
             this.$session = this.getModel("session").getData();
-
-
-
-
             
                         
             // if(oArgs.tenantId && oArgs.tenantId !== ""){
@@ -169,8 +168,8 @@ sap.ui.define([
          */
         _fnSetRichEditor : function (){ 
             var that = this,
-                sHtmlValue = '';            
-            var oApprovalLayout = this.getView().byId("approvalContentsTextEditor");
+                sHtmlValue = "&nbsp;";            
+            var oApprovalLayout = this.getView().byId("idApprovalContentsTextEditor");
             var oApprovalRTE = oApprovalLayout.getContent()[0];
 
             if(!that.oApprovalRichTextEditor){
@@ -192,7 +191,7 @@ sap.ui.define([
                         oApprovalLayout.addContent(that.oApprovalRichTextEditor);
                 });
             } else {
-                that.oApprovalRichTextEditor.setValue("");
+                that.oApprovalRichTextEditor.setValue("&nbsp;");
             }                
         },
 
@@ -366,7 +365,7 @@ sap.ui.define([
                 pr_header_text: "구매요청",
                 approval_flag: false,
                 approval_number: "",
-                approval_contents: "",
+                approval_contents: "&nbsp;",
                 erp_interface_flag: false,
                 erp_pr_type_code: "",
                 erp_pr_number: "",
@@ -406,17 +405,18 @@ sap.ui.define([
                     if(data.results.length > 0) {
                         oViewModel.setProperty("/PrMst", data.results[0]);
 
-                        // 품의내용
-                        // if(that.oApprovalRichTextEditor){
-                        //     var approval_contents = data.results[0].approval_contents;
-                        //     that.oApprovalRichTextEditor.setValue(approval_contents);
-                        // }
-
                          // 템플릿 리스트 조회
                         that._fnGetPrTemplateList();
 
                         // 화면 Edit Mode setting
                         that._fnSetEditMode();
+
+                        let approval_contents = data.results[0].approval_contents;
+                        if(approval_contents && approval_contents !== ""){
+                            //let oEditor = that.byId("idApprovalContentsTextEditor");
+                            //oEditor.setValue(approval_contents);
+                            that.oApprovalRichTextEditor.setValue(approval_contents);
+                        }
                     }
                 },
                 error : function(data){
@@ -595,7 +595,7 @@ sap.ui.define([
             if(this.validator.validate(this.byId("pageSectionMain")) !== true){
                 MessageToast.show(this.getModel("I18N").getText("/ECM01002"));
                 return;
-            }           
+            }  
             
             if(!this._fnTableValidator("pritemTable")){
                 return false;
@@ -618,43 +618,55 @@ sap.ui.define([
         _fnTableValidator: function(tableId){
             var oView = this.getView(),
                 that = this;
-            var oTable = oView.byId(tableId);
-
+            
             var oViewModel = this.getModel("viewModel");
             var oViewData = $.extend(true, {}, oViewModel.getData());
 
-            var bReturn=true;
-            var aViewDataPrDtl = oViewData.Pr_Dtl;
-            if(aViewDataPrDtl.length > 0){
-                aViewDataPrDtl.some(function(item, idx){
-                    if(item["org_code"] === null || item["org_code"] === ""){
-                        var msg = that.getModel("I18N").getText("/ECM01002");
-                        msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/ORG_CODE") + ")";
-                        MessageToast.show(msg);
-                        bReturn = false;
-                        return bReturn;
-                    }
-                    if(item["pr_desc"] === null || item["pr_desc"] === ""){
-                        var msg = that.getModel("I18N").getText("/ECM01002");
-                        msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/PR_ITEM_NAME") + ")";
-                        MessageToast.show(msg);
-                        bReturn = false;
-                        return bReturn;
-                    }
-                    if(item["price_unit"] !== null && item["price_unit"] !== "" && item["price_unit"] > 10000){
-                        var msg = that.getModel("I18N").getText("/LIMIT_EXCEEDED");
-                        msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/PRICE_UNIT") + ")";
-                        MessageToast.show(msg);
-                        bReturn = false;
-                        return bReturn;
-                    }
+            let bReturn=true;
 
-                    console.log("item : " + item.key + " : " + item.value);
-                    for(var key in item){
-                        console.log("item : " + key.toUpperCase() + " : " + item[key]);                        
-                    }
-                });
+            
+            this.validator.setModel(oViewModel, "viewModel");
+            bReturn = this.validator.validate(this.byId(tableId));
+            console.log("##### bReturn : " + bReturn);
+
+            if(!bReturn){
+                MessageToast.show(that.getModel("I18N").getText("/ECM01002"));
+                bReturn = true;
             }
+
+
+            // var oTable = oView.byId(tableId);
+            // var aViewDataPrDtl = oViewData.Pr_Dtl;
+            // if(aViewDataPrDtl.length > 0){
+            //     aViewDataPrDtl.some(function(item, idx){
+            //         if(item["org_code"] === null || item["org_code"] === ""){
+            //             var msg = that.getModel("I18N").getText("/ECM01002");
+            //             msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/ORG_CODE") + ")";
+            //             MessageToast.show(msg);
+            //             bReturn = false;
+            //             return bReturn;
+            //         }
+            //         if(item["pr_desc"] === null || item["pr_desc"] === ""){
+            //             var msg = that.getModel("I18N").getText("/ECM01002");
+            //             msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/PR_ITEM_NAME") + ")";
+            //             MessageToast.show(msg);
+            //             bReturn = false;
+            //             return bReturn;
+            //         }
+            //         if(item["price_unit"] !== null && item["price_unit"] !== "" && item["price_unit"] > 10000){
+            //             var msg = that.getModel("I18N").getText("/LIMIT_EXCEEDED");
+            //             msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/PRICE_UNIT") + ")";
+            //             MessageToast.show(msg);
+            //             bReturn = false;
+            //             return bReturn;
+            //         }
+
+            //         console.log("item : " + item.key + " : " + item.value);
+            //         for(var key in item){
+            //             console.log("item : " + key.toUpperCase() + " : " + item[key]);                        
+            //         }
+            //     });
+            // }
 
             return bReturn;
 
@@ -714,9 +726,9 @@ sap.ui.define([
             oViewData.PrMst.pr_desc = pr_desc;
                         
             //품의내용
-            //var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
-            //oViewData.PrMst.approval_contents = approvalContents;
-                
+            // var approvalContents = oView.byId("approvalLayout").getContent()[0].getValue();
+            var approvalContents = that.oApprovalRichTextEditor.getValue();
+            oViewData.PrMst.approval_contents = approvalContents;                
 
             // Master data
             var oMaster = oViewData.PrMst;
