@@ -470,18 +470,30 @@ sap.ui.define([
             if(bModel.getData().ParticipatingSupplier != undefined && bModel.getData().ParticipatingSupplier.length > 0){
                 var amount_err = 0;
                 var supplier_err = 0;
+                var currency_err = 0;
                 bModel.getData().ParticipatingSupplier.forEach(function(item){
-                    if(item.target_amount > item.provisional_budget_amount){
+                    // if(item.target_amount > item.provisional_budget_amount){
+                    //     amount_err = amount_err+1;
+                    // }
+                    if(item.currency_code == null || item.currency_code == ""){
+                        currency_err = currency_err+1;
+                    }
+                    if(item.target_amount == null || item.target_amount == ""){
                         amount_err = amount_err+1;
                     }
                     if(item.supplier_code_1 == null){
                         supplier_err = amount_err+1;
                     }
                 });
-                // if(amount_err > 0){
-                //     MessageToast.show("목표가가 투자예산 금액을 초과하였습니다.");
-                //     return;
-                // }
+                
+                if(currency_err > 0){
+                    MessageToast.show("통화 정보를 입력하세요");
+                    return;
+                }
+                if(amount_err > 0){
+                    MessageToast.show("투자예산 금액을 입력하세요.");
+                    return;
+                }
                 if(supplier_err > 0){
                     MessageToast.show("협력사를 하나 이상 추가하세요.");
                     return;
