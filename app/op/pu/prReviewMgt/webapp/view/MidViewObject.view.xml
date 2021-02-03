@@ -29,21 +29,23 @@
 
                 <uxap:navigationActions>
                     <!-- 전체화면 -->
-                    <!-- visible="{= ${midObjectView>/screen} !== 'Full' }"
+                    <!-- visible="{= ${midObjectView>/screen} !== 'Full' }" -->
                     <OverflowToolbarButton 
                         icon="sap-icon://full-screen" 
                         type="Transparent"
-                        tooltip="Enter Full Screen Mode" 
-                        press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Full' })"
-                    />  -->
+                        tooltip="Enter Full Screen Mode"
+                        visible="true"
+                        press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Full', column: 'two' })"
+                    /> 
                     <!-- 전체화면해제 -->
-                    <!-- visible="{= ${midObjectView>/screen} === 'Full' }"
+                    <!-- visible="{= ${midObjectView>/screen} === 'Full' }" -->
                     <OverflowToolbarButton 
                         icon="sap-icon://exit-full-screen" 
                         type="Transparent"
                         tooltip="Exit Full Screen Mode" 
-                        press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Exit' })"
-                    />  -->
+                        visible="true"
+                        press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Exit', column: 'two' })"
+                    /> 
                     <!-- 뒤로가기 -->
                     <!-- visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }" -->
                     <OverflowToolbarButton 
@@ -51,7 +53,7 @@
                         type="Transparent"
                         text="back" 
                         tooltip="Back to the list" 
-                        press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'NavBack' })"
+                        press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'NavBack', column: 'two' })"
                     />
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>

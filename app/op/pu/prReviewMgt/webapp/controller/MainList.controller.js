@@ -239,7 +239,7 @@ sap.ui.define([
                 return ;
             }
             // 구매담당자가 본인이 아닐 경우 Confirm 메시지 띄움.
-            if (items.filter(e => !(e.buyer_empno != this.$session.employee_number)).length > 0) {
+            if (items.filter(e => (e.buyer_empno != this.$session.employee_number)).length > 0) {
                 message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다.\n확인시 자동으로 본인 담당으로 변경됩니다.\nRFQ작성을 진행하시겠습니까?";
             }
             // 잔량이 없는 PR은 선택이 불가능하다 = 요청수량 0
