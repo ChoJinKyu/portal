@@ -178,6 +178,7 @@ sap.ui.define([
             var oView = this.getView(),
                 oMasterModel = this.getModel("master"),
                 that = this;
+                        debugger;
             MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
                 title: "Comfirmation",
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -188,10 +189,12 @@ sap.ui.define([
                     oMasterModel.setTransactionModel(that.getModel());
                     oMasterModel.submitChanges({
                     success: function (ok) {
+                        debugger;
                         oView.setBusy(false);
-                        that.onPageNavBackButtonPress();
                         that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                        MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
+                        MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                
+                        that.onPageNavBackButtonPress(); 
                     }
                     });
                 };

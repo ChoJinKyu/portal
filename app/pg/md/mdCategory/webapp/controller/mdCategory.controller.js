@@ -144,7 +144,13 @@ sap.ui.define([
             // oTable.setSelected(false);
 
             var tenant_combo = this.getView().byId("searchTenantCombo").getSelectedKey();
-			var sChain = this.getView().byId("searchChain").getSelectedKey();
+            var category_combo = this.getView().byId("searchChain");
+            var sChain = this.getView().byId("searchChain").getSelectedKey();
+            if(sChain == null || category_combo.getValue() == ""){
+                MessageToast.show("사업본부를 설정해주세요.");
+                return;
+            }
+
 			var aSearchFilters = [];
             if (tenant_combo.length > 0) {
                 aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, tenant_combo));

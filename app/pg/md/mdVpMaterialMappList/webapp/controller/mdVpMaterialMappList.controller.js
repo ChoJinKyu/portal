@@ -191,6 +191,10 @@ sap.ui.define([
                                 dataArrName = "spmd_attr_info_0"+j
                             }
 
+                            if(itemArr == null){
+                                continue;
+                            }
+                            
                             var item = JSON.parse(itemArr);
 
                             dataArr[i][dataArrName+"_cateCode"] = item.cateCode;

@@ -119,7 +119,7 @@ sap.ui.define([
             var oView = this.getView(),
                 oTable = this.byId("treeTable"),         
                 that = this;
-                
+
             var items = oTable.getSelectedIndices();
             if(items.length>1 || items.length<1){
                 MessageToast.show("한 건 선택해주세요.");
@@ -130,7 +130,6 @@ sap.ui.define([
             var oContext = oTable.getContextByIndex(nSelIdx);
             var sPath = oContext.getPath();
             var oData = oTable.getBinding().getModel().getProperty(sPath);
-            var level = oData.level_path; //oData.level_path.trim().split(">");
             if(oData.drill_state != "leaf"){
                 MessageToast.show("leaf node를 선택해주세요.");
                 return;
@@ -147,15 +146,10 @@ sap.ui.define([
                     return oDialog;
                 });
             }
-
-            // var level1 = (level[0] ? level[0].trim() : "");
-            // var level2 = (level[1] ? level[1].trim() : "");
-            // var level3 = (level[2] ? level[2].trim() : "");
             
             this.pDialog.then(function (oDialog) {
                 oDialog.open();
-                that.onDialogMappingSearch(level,
-                                        oData.vendor_pool_code);
+                that.onDialogMappingSearch(oData);
             });
         },
 
@@ -243,12 +237,16 @@ sap.ui.define([
                                 itemArr = dataArr[i]["spmd_attr_info_00"+j];
                             }else if(j<100){
                                 itemArr = dataArr[i]["spmd_attr_info_0"+j];
-                            }// else{
-                            //     itemArr = dataArr[i]["spmd_attr_info_"+j];
-                            // }
+                            }
+
+
+                            if(itemArr == null){
+                                continue;
+                            }
                             var item = JSON.parse(itemArr);
                             var index = "attrItemName"+j;
                             dataArr[i][index]= item.itemName; 
+                            
 
                         }
                         
@@ -388,14 +386,24 @@ sap.ui.define([
         /////////////////////////////////Popup - Item Mapping///////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        onDialogMappingSearch: function (vpPath,vpCode) {
+        onDialogMappingSearch: function (oData) {
+            
+            var vpPath = oData.level_path, 
+                vpCode = oData.vendor_pool_code,
+                tenantId = oData.tenant_id, 
+                companyCode = oData.company_code,
+                orgTypeCode = oData.org_type_code, 
+                orgCode = oData.org_code;
 
             this.getView().byId("vpCode1").setText(vpPath);
-            // this.getView().byId("vpCode2").setText(vpName2);
             this.getView().byId("vpCode3").setText(vpCode);
 
             jQuery.ajax({
-                url: "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdItemListConditionView(language_code='KO')/Set", 
+                url: "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdItemListConditionView(language_code='KO')/Set"
+                    +"?$filter=tenant_id eq '"+tenantId+"' and "
+                    +"company_code eq '"+companyCode+"' and "
+                    +"org_type_code eq '"+orgTypeCode+"' and "
+                    +"org_code eq '"+ orgCode +"'",
                 contentType: "application/json",
                 success: function(oData){ 
 
