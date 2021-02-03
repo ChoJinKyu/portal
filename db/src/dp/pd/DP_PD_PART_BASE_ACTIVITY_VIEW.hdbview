@@ -14,4 +14,4 @@ SELECT pat.tenant_id,
                 where LANGUAGE_CD='KO') aname
         on aname.activity_code = pat.activity_code and aname.tenant_id = pat.tenant_id
   where pat.tenant_id = 'L2101'
-ORDER BY pat.sequence;
+;
