@@ -21,7 +21,8 @@ sap.ui.define([
     'sap/m/Token',
     'sap/m/SearchField',
     "ext/lib/util/Validator",
-    "sap/ui/core/Fragment"
+    "sap/ui/core/Fragment",
+    "sap/f/DynamicPageTitle"
 ], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Label, Token, SearchField, Validator, Fragment) {
 	"use strict";
 
@@ -58,7 +59,7 @@ sap.ui.define([
 				intent: "#Template-display"
             }, true);
             
-            this._doInitSearch();
+            
 			
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new ManagedListModel(), "dpMdMstSpecViewG");
@@ -68,17 +69,36 @@ sap.ui.define([
             /*
                 화면 변경
             */
-            Fragment.load({
-                    id: this.getView().getId(),
-					name: "tmp.detailSpecEntry.view.L2101_Retrieve_DP0401-501_SCTG001_Grid",
+           Fragment.load({
+                    id: this.getView().getId() + "12__2",
+					name: "tmp.detailSpecEntry.view.L2101_Retrieve_DP0401-501_SCTT001_title",
 					controller: this          
             }).then(function(oFragment){
                       var oPageSubSection = this.getView().byId("page");
-                          oPageSubSection.setContent(oFragment);
-                 }.bind(this));
-                 
+                      oPageSubSection.destroyTitle();    
+                      oPageSubSection.setTitle(oFragment);
+
+
+                    
+                        
+            }.bind(this));
+
+            Fragment.load({
+                    id: this.getView().getId(),
+                    name: "tmp.detailSpecEntry.view.L2101_Retrieve_DP0401-501_SCTG001_Grid",
+                    controller: this          
+            }).then(function(oFragment){
+                    var oPageSubSection = this.getView().byId("page");
+                        oPageSubSection.setContent(oFragment);
+                        this._doInitSearch();
+            }.bind(this));
+            
+
+            
+            
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
+            
 			this._doInitTablePerso();
         },
         

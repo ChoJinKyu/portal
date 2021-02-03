@@ -50,7 +50,7 @@
                             </layoutData> 
                         </VBox>
                         <VBox alignItems="Center" justifyContent="Center">
-                            <ToggleButton id="Anode" fieldGroupIds="toggleButtons" text="가공비자재-양극재/전구체" pressed="false" press=".onToggleHandleChange" width="18em"/>
+                            <ToggleButton id="Anode" fieldGroupIds="toggleButtons" text="가공비자재-양극체/전구체" pressed="false" press=".onToggleHandleChange" width="18em"/>
                             <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />
                             </layoutData> 

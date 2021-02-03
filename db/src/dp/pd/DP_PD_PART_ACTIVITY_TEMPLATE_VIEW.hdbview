@@ -53,6 +53,6 @@ SELECT pat.tenant_id,
                 from CM_CODE_LNG 
                 where group_code='DP_JOB_TYPE' and LANGUAGE_CD='KO') jt
         on jt.code = pat.job_type_code and jt.tenant_id = pat.tenant_id		
-  where pat.tenant_id = 'L2100'
+  where pat.tenant_id = 'L2101'
 ORDER BY pat.part_project_type_code, pat.sequence
 ;

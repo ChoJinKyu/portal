@@ -1,0 +1,109 @@
+<core:FragmentDefinition xmlns="sap.m"  xmlns:f="sap.f" xmlns:l="sap.ui.layout" xmlns:form="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:uxap="sap.uxap" >
+    <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="{i18n>appTitle}" />
+                </f:heading>
+                <f:snappedContent>
+                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content id="transition">
+                            <VBox id="vbox">
+                                <Label text="LG Company1" labelFor="searchCompanyS" required="true"></Label>
+                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishComp" items="{
+                                    path: 'org>/Org_Company',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                    ],
+                                    sorter: { path: 'company_code'}
+                                }">
+                                    <items>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <l:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="LG Division" labelFor="searchDivisionS" required="true"></Label>
+                                <MultiComboBox id="searchDivisionS" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishDiv" items="{
+                                    path: '/Divisions',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                    ],
+                                    sorter: { path: 'org_code'}
+                                }">
+                                    <items>
+                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <l:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/DATE}" labelFor="searchDateS" required="true"></Label>
+                                <DateRangeSelection id="searchDateS" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD" required="true"/>
+                                <layoutData>
+                                    <l:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            
+                        </form:content>
+                    </form:SimpleForm>
+                </f:snappedContent>
+                <f:expandedContent>
+                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="LG Company2" labelFor="searchCompanyE"  required="true"></Label>
+                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishComp" items="{
+                                    path: 'org>/Org_Company',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                    ],
+                                    sorter: { path: 'company_code'}
+                                }">
+                                    <items>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <l:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="LG Division" labelFor="searchDivisionE" required="true"></Label>
+                                <MultiComboBox id="searchDivisionE" width="100%" selectedKey="" required="true" selectionFinish="handleSelectionFinishDiv" items="{
+                                    path: '/Divisions',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                    ],
+                                    sorter: { path: 'org_code'}
+                                }">
+                                    <items>
+                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <l:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/DATE}" labelFor="searchDateE" required="true"></Label>
+                                <DateRangeSelection id="searchDateE" valueFormat = "yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD" required="true"/>
+                                <layoutData>
+                                    <l:GridData span="XL2 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            
+                        </form:content>
+                    </form:SimpleForm>
+                </f:expandedContent>
+                <f:actions>
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                </f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions>
+    </f:DynamicPageTitle>
+</core:FragmentDefinition>
