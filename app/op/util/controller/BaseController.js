@@ -33,6 +33,8 @@ sap.ui.define([
                 department_name: "석유화학.구매.원재료구매1팀 - 원재료"
             }), "session");
             this.$session = this.getModel("session").getData();
+            this.getOwnerComponent()["$"+this.getView().getViewName().split("view.")[1]] = 
+            this.getView().getController();
             // 다국어
             this.setModel(new Multilingual().getModel(), "I18N");
             // 기능추가
@@ -45,6 +47,36 @@ sap.ui.define([
         // Formatter
         dateFormatter: DateFormatter,
         numberFormatter: NumberFormatter,
+        get: function(ns) {
+            return this.getOwnerComponent()[ns];
+        },
+        // Token to Bind
+        convTokenToBind: function(model, path, tokens) {
+            this.getModel(model).setProperty(path,
+                tokens.reduce((acc, t) => {
+                    return [...acc, t.getKey()];
+                }, [], this)
+            );
+        },
+        before: function() {
+
+            var [pointcut, ...args] = arguments;
+            var [fn, ...keys] = args.slice().reverse();
+            keys = keys.reverse().filter(e => typeof e == "string").join("");
+
+            Aop.around(pointcut, function(f) {
+
+                var args = f.arguments = Array.prototype.slice.call(f.arguments);
+                args = args.filter(e => typeof e == "string").join("");
+
+                keys == args
+                &&
+                fn.call(this);
+               
+                return Aop.next.call(this, f);
+
+            }, this);
+        },
         // Filter
         generateFilters: function(model, filters) {
             // model Object
@@ -154,13 +186,14 @@ sap.ui.define([
             return mDeferred.promise();
         },
         // dialog
-        dialog: function(Dialog, callback) {
+        dialog: function(Dialog, callback, control) {
             // 저장 (strict mode)
             var key = (new Date()).getTime().toString();
             this.dialog[key] = Dialog;
             // 해제
             var release = (function() {
                 setTimeout(() => {
+                    console.log(">>>>>>> release");
                     Dialog.close();
                     Dialog.destroy();
                     delete this.dialog[key];
@@ -182,6 +215,11 @@ sap.ui.define([
                     mDeferred.reject(release());
                 }, this)
                 .open();
+            // Token
+            control 
+            && 
+            Dialog.setTokens(control.getTokens());
+
             return mDeferred.promise();
         },
         /////////////////////////////////////////////////////////////
@@ -207,6 +245,7 @@ sap.ui.define([
                 return oDeferred.promise();
             }).call(this)
             .done(function(r) {
+                console.log(">>>>>>>>>>>> done", r);
                 // Array
                 r.value instanceof Array
                 && 
@@ -221,6 +260,7 @@ sap.ui.define([
                 );
             })
             .fail(function(e) {
+                console.log(">>>>>>>>>>>> failure", e);
                 MessageBox.alert(e.responseText);
                 mDeferred.reject(e);
             })
