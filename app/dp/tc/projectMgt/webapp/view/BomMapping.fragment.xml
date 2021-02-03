@@ -46,8 +46,16 @@
                         <Label text="{I18N>/PERSON}" />
                     </HBox>
                     <HBox>
-                        <Input id="inputWithEmployeeValueHelp" value="{bomMappingModel>/creator_empno}"
+                        <!-- <Input id="inputWithEmployeeValueHelp" value="{bomMappingModel>/creator_person_info/user_local_name}"
                             showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
+                        </Input> -->
+                        <Input value="{bomMappingModel>/creator_local_name}"
+                            showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
+                            <customData>
+                                <core:CustomData key="modelName" value="bomMappingModel" />
+                                <core:CustomData key="textPath" value="/creator_local_name" />
+                                <core:CustomData key="codePath" value="/creator_empno" />
+                            </customData>
                         </Input>
                     </HBox>
                     <layoutData>
@@ -171,8 +179,8 @@
             <Button text="{I18N>/DELETE}" class="sapUiSmallMarginEnd" press=".onBomMappingDeletePress" visible="{= ${bomMappingModel>/mapping_id} ? true : false }"/>
             <Button text="{I18N>/SAVE}" class="sapUiSmallMarginEnd" type="Emphasized" press=".onBomMappingSavePress" />
         </buttons>
-        <cm-ui:EmployeeDialog id="employeeDialog" 
-            title="직원 검색"
+        <cm-ui:EmployeeDialog id="employeeDialogBomMapping" 
+            title="{I18N>/EMPLOYEE} {I18N>/FIND}"
             closeWhenApplied="true"
             items="{
                 filters: [
