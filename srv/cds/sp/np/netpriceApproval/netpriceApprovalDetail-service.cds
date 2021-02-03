@@ -138,6 +138,7 @@ service NpApprovalDetailService {
 
             ,   pad.material_code	                    /*	Material Code	자재코드*/
             ,   pad.material_desc	                    /*	Description	    자재내역*/
+
             ,   pad.supplier_code	                    /*	Supplier Code	공급업체코드 */
             ,   sm.supplier_local_name	                /*	Supplier Name	*/
             ,   sm.supplier_english_name	            /*	Supplier Name(Eng)	*/
@@ -150,67 +151,99 @@ service NpApprovalDetailService {
             ,   vpm.vendor_pool_english_name
 
             ,   pad.net_price_approval_reason_code	    /*	Reason code	*/
-            ,   null as net_price_approval_reason_name	: String //pad.net_price_approval_reason_name	/*	Reason	*/
+            ,   (SELECT code_description 
+                   FROM CM_CODE_DTL 
+                  WHERE tenant_id = pad.tenant_id
+                    AND group_code = 'DP_VI_CHANGE_REASON_CODE'
+                    AND code = pad.net_price_approval_reason_code
+                ) as net_price_approval_reason_name : String               /*	Reason	*/
+
             ,   pad.market_code	                        /*	Market code 납선코드*/
-            ,   null as market_name	                    : String //pad.market_name	                    /*	Market	*/
+            ,   (SELECT code_description 
+                   FROM CM_CODE_DTL 
+                  WHERE tenant_id = pad.tenant_id
+                    AND group_code = 'DP_VI_MARKET_CODE'
+                    AND code = pad.market_code
+                ) as market_name : String               /*	Market	*/
+                 
+            ,	pad.effective_start_date	            /*	유효시작일자	*/
+            ,	pad.effective_end_date		            /*	유효종료일자	*/
+
             ,   pad.line_type_code	                    /*	Line Type Code	*/
-            ,   null as line_type_name	                : String //pad.line_type_name	                /*	Line Type	*/
-            ,   null as uom	                            : String //pad.uom	                            /*	UOM	*/
-            ,   null as curr_currency_code	            : String //pad.curr_currency_code	            /*	(현재)Currency	*/
-            ,   null as curr_net_price	                : String //pad.curr_net_price	                /*	(현재)Price	*/
-            ,   null as currency_code	                : String //pad.currency_code	                /*	(New)Currency	*/
-            ,   null as net_price	                    : String //pad.net_price	                    /*	(New)Price	*/
-            ,   null as change_rate	                    : String //pad.change_rate	                    /*	변동비율(%)	*/
-            ,   null as royalty	                        : String //pad.royalty	                        /*	로열티	*/
+            ,   (SELECT code_description 
+                   FROM CM_CODE_DTL 
+                  WHERE tenant_id = pad.tenant_id
+                    AND group_code = 'LINE_TYPE'
+                    AND code = pad.line_type_code
+                ) as line_type_name : String            /*	Line Type	*/
+
+            ,   pad.uom_code	                        /*	UOM	*/
+
+            ,   bpm.currency_code as curr_currency_code : String    /*	(현재)Currency	*/
+            ,   bpm.base_price as curr_net_price : Decimal          /*	(현재)Price	*/
+
+            ,   pad.currency_code	                    /*	(New)Currency	*/
+            ,   pad.net_price	                        /*	(New)Price	*/
+
+            ,   null as change_rate	                    : String //pad.change_rate	                /*	변동비율(%)	*/
+
+            ,   null as royalty	                        : String //pad.royalty	                    /*	로열티	*/
             ,   null as pcst	                        : String //pad.pcst	                        /*	임가공비	*/
             ,   null as depreciation	                : String //pad.depreciation	                /*	감상비	*/
             ,   null as etc_cost	                    : String //pad.etc_cost	                    /*	기타	*/
             ,   null as lowest_part_flag	            : String //pad.lowest_part_flag	            /*	최저가Part여부	*/
-            ,   null as import_po_type	                : String //pad.import_po_type	                /*	Import PO 유형	*/
-            ,   pad.surrogate_type_code	            /*	Surrogate code	*/
-            ,   null as surrogate_type_name	            : String //pad.surrogate_type_name	            /*	Surrogate	*/
+            ,   null as import_po_type	                : String //pad.import_po_type	            /*	Import PO 유형	*/
+
+            ,   pad.surrogate_type_code	                /*	Surrogate code	*/
+            ,   (SELECT code_description 
+                   FROM CM_CODE_DTL 
+                  WHERE tenant_id = pad.tenant_id
+                    AND group_code = 'SURROGATE'
+                    AND code = pad.surrogate_type_code
+                ) as surrogate_type_name : String       /*	Surrogate	*/
+
             ,   pad.maker_code	                    /*	Maker code	*/
             ,   null as maker_name	                    : String //pad.maker_name	                    /*	Maker	*/
+
             ,   pad.payterms_code	                /*	Payment Term Code	*/
-            ,   null as payterms_name	                : String //pad.payterms_name	                /*	Payment Term	*/
+            ,   (SELECT code_description 
+                   FROM CM_CODE_DTL 
+                  WHERE tenant_id = pad.tenant_id
+                    AND group_code = 'PAYMENT_TERMS'
+                    AND code = pad.payterms_code
+                ) as payterms_name : String         /*	Payment Term	*/
+
             ,   pad.net_price_agreement_sign_flag	/*	(단가합의) 여부	*/
             ,   pad.net_price_agreement_status_code	/*	(Supplier Agreement) Status code	*/
             ,   null as net_price_agreement_status_name	: String //pad.net_price_agreement_status_name	/*	(Supplier Agreement) Status	*/
-            ,   null as incoterms_code	                : String //pad.incoterms_code	                /*	Incoterms Code	*/
-            ,   null as incoterms_name	                : String //pad.incoterms_name	                /*	Incoterms	*/
+
+            ,   pad.incoterms	                    /*	Incoterms Code	*/
+            ,   (SELECT code_description 
+                   FROM CM_CODE_DTL 
+                  WHERE tenant_id = pad.tenant_id
+                    AND group_code = 'OP_INCOTERMS'
+                    AND code = pad.incoterms
+                ) as incoterms_name : String         /*	Incoterms	*/
+
             ,   pad.quality_certi_flag	            /*	부품인정여부	*/
 
-            // ,	pad.quotation_number		            /*	견적번호	*/
-            // ,	pad.quotation_item_number		        /*	견적품목번호	*/
-            // ,	pad.bidding_number		                /*	입찰번호	*/
-            // ,	pad.bidding_item_number		            /*	입찰품목번호	*/
-            // ,	pad.effective_start_date	            /*	유효시작일자	*/
-            // ,	pad.effective_end_date		            /*	유효종료일자	*/
-            // ,	pad.purchasing_quantity		            /*	구매수량	*/
-            // ,	pad.purchasing_amount		            /*	구매금액	*/
-            // ,	pad.agent_code		                    /*	대행사코드	*/
-            // ,	pad.base_price_type_code		        /*	기준단가유형코드	*/
-            // ,	pad.exrate_type_code		            /*	환율유형코드	*/
-            // ,	pad.exrate_date		                    /*	환율일자	*/
-            // ,	pad.exrate		                        /*	환율	*/
-            // ,	pad.pr_number		                    /*	구매요청번호	*/
-            // ,	pad.pr_item_number		                /*	구매요청품목번호	*/
-            // ,	pad.material_class_code		            /*	자재클래스코드	*/
-            // ,	pad.po_unit		                        /*	구매오더단위	*/
-            // ,	pad.material_price_unit		            /*	자재가격단위	*/
-            // ,	pad.conversion_net_price		        /*	환산단가	*/
-            // ,	pad.net_price_type_code		            /*	단가유형코드	*/
-            // ,	pad.contract_date		                /*	계약일자	*/
-            // ,	pad.tax_code		                    /*	세금코드	*/
-            // ,	pad.overdlv_tolerance		            /*	초과납품허용율	*/
-            // ,	pad.hs_code		                        /*	HS코드	*/
-            // ,	pad.fta_code		                    /*	FTA코드	*/
+        FROM SP_NP_NET_PRICE_APPROVAL_DTL pad
 
-        FROM SP_NP_NET_PRICE_APPROVAL_DTL   pad
+        LEFT OUTER JOIN SP_NP_BASE_PRICE_MST bpm             /*  기준단가 마스터 */
+                ON pad.tenant_id        = bpm.tenant_id
+               AND pad.company_code     = bpm.company_code
+               AND pad.org_type_code    = bpm.org_type_code
+               AND pad.org_code         = bpm.org_code
+               AND pad.supplier_code    = bpm.supplier_code
+               AND pad.market_code      = bpm.market_code
+               AND bpm.apply_year = TO_VARCHAR (NOW(), 'YYYY')
+               AND apply_start_mm >= TO_VARCHAR (NOW(), 'MM')
+               AND apply_end_mm <= TO_VARCHAR (NOW(), 'MM')
+               AND bpm.use_flag = 'Y'
 
         LEFT OUTER JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
-                ON pad.tenant_id     = sm.tenant_id
-               AND pad.supplier_code  = sm.supplier_code
+                ON pad.tenant_id        = sm.tenant_id
+               AND pad.supplier_code    = sm.supplier_code
 
         LEFT OUTER JOIN PG_VP_VENDOR_POOL_MST vpm
                 ON pad.tenant_id        = vpm.tenant_id
@@ -218,7 +251,6 @@ service NpApprovalDetailService {
                AND pad.org_type_code    = vpm.org_type_code
                AND pad.org_code         = vpm.org_code
                AND pad.vendor_pool_code = vpm.vendor_pool_code
-
     ;
 
 
@@ -322,5 +354,55 @@ service NpApprovalDetailService {
                AND vpm.org_code         = pad.org_code
                AND vpm.vendor_pool_code = pad.vendor_pool_code
     ;
+
+
+
+
+/*---------------------------------------------------------------------------------------------------------------------*/
+    /* 파라미터 테스트  */
+    view NegoHistoryInfoTestView (Language_code: String) as
+        SELECT
+                key pad.tenant_id		        /*	테넌트ID	*/
+            ,	key pad.company_code		    /*	회사코드	*/
+            ,	key pad.org_type_code		    /*	구매운영조직유형	*/
+            ,	key pad.org_code		        /*	구매운영조직코드	*/
+            ,	key pad.approval_number		    /*	품의번호	*/
+            ,	key pad.item_sequence		    /*	품목순번	*/
+
+            , (SELECT org.org_name
+                  FROM CM_PUR_OPERATION_ORG  org
+                 WHERE org.tenant_id     = pad.tenant_id
+                   AND org.company_code  = pad.company_code
+                   AND org.org_type_code = pad.org_type_code
+                   AND org.org_code      = pad.org_code
+			   ) AS org_name : String           /*	구매운영조직코드 명	*/
+
+            ,	pad.material_code		        /*	자재코드	*/
+            ,	pad.material_desc		        /*	자재내역	*/
+
+            ,	pad.supplier_code		        /*	공급업체코드	*/
+            ,   sm.supplier_local_name
+            ,   sm.supplier_english_name        /*  공급업체명 확인필요 */
+
+            ,	pad.vendor_pool_code		    /*	협력사풀코드	*/
+            ,   vpm.vendor_pool_local_name 
+            ,   vpm.vendor_pool_english_name    /*  협력사풀 명 확인필요 */
+            
+            ,	pad.net_price_approval_reason_code		/*	단가품의사유코드	*/
+            
+        FROM SP_NP_NET_PRICE_APPROVAL_DTL   pad
+
+        LEFT OUTER JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
+                ON sm.tenant_id     = pad.tenant_id
+               AND sm.supplier_code  = pad.supplier_code
+
+        LEFT OUTER JOIN PG_VP_VENDOR_POOL_MST vpm
+                ON vpm.tenant_id        = pad.tenant_id
+               AND vpm.company_code     = pad.company_code
+               AND vpm.org_type_code    = pad.org_type_code
+               AND vpm.org_code         = pad.org_code
+               AND vpm.vendor_pool_code = pad.vendor_pool_code
+    ;
+
 
 }
