@@ -163,29 +163,7 @@ sap.ui.define([
                     this.oSupplierDialogPop = new SupplierDialogPop({
                         multiSelection: false,
                         keyField: "supplier_code",
-                        textField: "supplier_local_name",
-                        filters: [
-                            new VBox({
-                                items: [
-                                    new Label({ text: this.getModel("I18N").getText("/KEYWORD") }),
-                                    new Input({placeholder : this.getModel("I18N").getText("/SUPPLIER_CODE")})
-                                ],
-                                layoutData: new GridData({ span: "XL2 L3 M5 S10" })
-                            })
-                        ],
-                        columns: [
-                            new Column({
-                                width: "75%",
-                                label: new Label({ text: this.getModel("I18N").getText("/VALUE") }),
-                                template: new Text({ text: "supplier_local_name" })
-                            }),
-                            new Column({
-                                width: "25%",
-                                hAlign: "Center",
-                                label: new Label({ text: this.getModel("I18N").getText("/CODE") }),
-                                template: new Text({ text: "supplier_code" })
-                            })
-                        ]
+                        textField: "supplier_local_name"
                     });
 
                     // Pop 내부에 값을 올려주기 위해 구성
@@ -193,6 +171,7 @@ sap.ui.define([
                     var sSearchObj = {};
                     sSearchObj.tanentId = "L2100";
                     sSearchObj.languageCd = "KO";
+                    sSearchObj.companyCode = that.oCompany.getValue();
                     sSearchObj.supplierCode = that.oSupplierCode.getValue();
                     sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey()
                     sSearchObj.orgUnitCode = that.oOperationUnitComb.getSelectedKey()
@@ -218,28 +197,6 @@ sap.ui.define([
                         multiSelection: false,
                         keyField: "material_code",
                         textField: "material_desc",
-                        filters: [
-                            new VBox({
-                                items: [
-                                    new Label({ text: this.getModel("I18N").getText("/KEYWORD") }),
-                                    new Input({placeholder : this.getModel("I18N").getText("/PART")})
-                                ],
-                                layoutData: new GridData({ span: "XL2 L3 M5 S10" })
-                            })
-                        ],
-                        columns: [
-                            new Column({
-                                width: "75%",
-                                label: new Label({ text: this.getModel("I18N").getText("/VALUE") }),
-                                template: new Text({ text: "material_desc" })
-                            }),
-                            new Column({
-                                width: "25%",
-                                hAlign: "Center",
-                                label: new Label({ text: this.getModel("I18N").getText("/CODE") }),
-                                template: new Text({ text: "material_code" })
-                            })
-                        ]
                     });
 
                     this.oMatrialDialogPop.setContentWidth("300px");
@@ -351,15 +308,14 @@ sap.ui.define([
                         })
                     ],
                     layoutData: new GridData({ span: "XL12 L12 M12 S12" })
-
                 }),
-               
+                
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
                         this.oSupplierCode
                     ],
-                    layoutData: new GridData({ span: "XL4 L4 M4 S12" })
+                    layoutData: new GridData({ span: "XL3 L3 M3 S12" }),
                 }),
 
                 new VBox({
@@ -368,7 +324,7 @@ sap.ui.define([
                         new Label({ text: "Part No" }),
                         this.oMatrialCode
                     ],
-                    layoutData: new GridData({ span: "XL4 L4 M4 S12" })
+                    layoutData: new GridData({ span: "XL3 L3 M3 S12" })
                 }),
 
                 new VBox({
@@ -376,7 +332,7 @@ sap.ui.define([
                         new Label({ text: this.getModel("I18N").getText("/MANAGER") }),
                         this.oManagerComb
                     ],
-                    layoutData: new GridData({ span: "XL4 L4 M4 S12" })
+                    layoutData: new GridData({ span: "XL3 L3 M3 S12" })
                 }),
 
                 new VBox({
@@ -384,7 +340,7 @@ sap.ui.define([
                         new Label({ text: this.getModel("I18N").getText("/DEPARTMENT") }),
                         this.oDepartmentComb
                     ],
-                    layoutData: new GridData({ span: "XL4 L4 M4 S12" })
+                    layoutData: new GridData({ span: "XL3 L3 M3 S12" })
                 })
             ]
         },

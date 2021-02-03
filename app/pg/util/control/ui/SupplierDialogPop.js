@@ -56,18 +56,23 @@ sap.ui.define([
             return [
                 new Column({
                     width: "20%",
-                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") }),
-                    template: new Text({ text: "{vendor_pool_code}" })
-                }),
-                new Column({
-                    width: "25%",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
                     template: new Text({ text: "{supplier_code}" })
                 }),
                 new Column({
-                    width: "55%",
+                    width: "35%",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME") }),
                     template: new Text({ text: "{supplier_local_name}" })
+                }),
+                new Column({
+                    width: "35%",
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_ENGLISH_NAME") }),
+                    template: new Text({ text: "{supplier_english_name}" })
+                }),
+                new Column({
+                    width: "10%",
+                    label: new Label({ text: this.getModel("I18N").getText("/STATUS") }),
+                    template: new Text({ text: "{inactive_status_name}" })
                 })
             ];
         },
@@ -78,20 +83,22 @@ sap.ui.define([
             var sSupplierNamePop = this.oSupplierNamePop.getValue();
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
             aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.languageCd));
+            aFilters.push(new Filter("company_code", FilterOperator.EQ, this.oSearchObj.companyCode)); 
             aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oSearchObj.orgCode));
+            aFilters.push(new Filter("supplier_type_code", FilterOperator.EQ, this.oSearchObj.orgUnitCode));
 
             if (sSupplierCodePop) {
-                aFilters.push(new Filter("supplier_code", FilterOperator.EQ, "'" + sSupplierCodePop.toUpperCase() + "'"));
+                aFilters.push(new Filter("supplier_code", FilterOperator.Contains, "'" + sSupplierCodePop.toUpperCase() + "'"));
             }
 
             if (sSupplierNamePop) {
-                aFilters.push(new Filter("supplier_local_name", FilterOperator.EQ, sSupplierNamePop.toUpperCase()));
+                aFilters.push(new Filter("supplier_local_name", FilterOperator.Contains, "'" + sSupplierNamePop.toUpperCase() + "'"));
             }
 
-            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/VpSupplierDtlView", {
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/VpSupplierMstView", {
                 filters: aFilters,
                 sorters: [
-                    new Sorter("vendor_pool_code", true)
+                    new Sorter("supplier_code", true)
                 ],
                 success: function (oData) {
                     var aRecords = oData.results;
@@ -113,7 +120,7 @@ sap.ui.define([
                 this.oSupplierCodePop.setValue(null);
                 this.oSupplierCodePop.setValue(this.oSearchObj.supplierCode);
             }
-            this.loadData();
+            //this.loadData();
             this.oDialog.open();
         }
     });
