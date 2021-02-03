@@ -140,12 +140,11 @@ BEGIN
         ;
 
         /*  I_D Table의 Data 일괄 추가,수정 */
-        MERGE INTO DP_PD_PRODUCT_ACTIVITY_TEMPLATE_LNG D
+ /*       MERGE INTO DP_PD_PRODUCT_ACTIVITY_TEMPLATE_LNG D
             USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE_CODE IN ('C','U')  ) id
             ON ( D.TENANT_ID = id.TENANT_ID
                 AND D.PRODUCT_ACTIVITY_CODE = id.PRODUCT_ACTIVITY_CODE
-                AND D.LANGUAGE_CD = id.LANGUAGE_CD
-                AND id.CRUD_TYPE_CODE IN ('C','U') )
+                AND D.LANGUAGE_CD = id.LANGUAGE_CD )
 
         WHEN MATCHED THEN
             UPDATE
@@ -176,7 +175,7 @@ BEGIN
                     ,NOW()
                     ,NOW()
                 )
-        ;
+        ; */
 
     END IF;
     
