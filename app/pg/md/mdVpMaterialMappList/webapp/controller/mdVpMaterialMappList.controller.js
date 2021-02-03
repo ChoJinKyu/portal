@@ -70,7 +70,7 @@ sap.ui.define([
             var aFiltersComboBox = [];
             aFiltersComboBox.push( new Filter("tenant_id", "EQ", oSelectedkey));
             // oBindingComboBox.filter(aFiltersComboBox);          //sort Ascending
-            var businessSorter = new sap.ui.model.Sorter("bizunit_name", false);        //sort Ascending
+            var businessSorter = new sap.ui.model.Sorter("bizunit_code", false);        //sort Ascending
             
             business_combo.bindAggregation("items", {
                 path: "org>/Org_Unit",
@@ -98,7 +98,7 @@ sap.ui.define([
             var aFiltersComboBox = [];
             aFiltersComboBox.push( new Filter("tenant_id", "EQ", oSelectedkey));
             // oBindingComboBox.filter(aFiltersComboBox);          //sort Ascending
-            var businessSorter = new sap.ui.model.Sorter("bizunit_name", false);        //sort Ascending
+            var businessSorter = new sap.ui.model.Sorter("bizunit_code", false);        //sort Ascending
             
             business_combo.bindAggregation("items", {
                 path: "org>/Org_Unit",

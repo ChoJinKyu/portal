@@ -11,29 +11,31 @@
     height="100%">
 
     <f:DynamicPage id="page" 
-    toggleHeaderOnTitleClick="false" 
+    toggleHeaderOnTitleClick="true" 
     headerExpanded="true" 
     fitContent="true">
       <!--DynamicPage Title -->
       <f:title>
-        <f:DynamicPageTitle>
+        <f:DynamicPageTitle stateChange="stateChange">
           <f:heading>
             <Title text="{I18N>/MAT_MNGT_CHAR_CATEGORY_CONFIG}" />
           </f:heading>
-          <!-- 조회 -->
-          <f:actions>
+            <f:snappedContent>
+            </f:snappedContent>
+            <f:expandedContent>
+            </f:expandedContent>
+          <!-- <f:actions>
             <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/>
           </f:actions>
-          <!-- 즐겨찾기 -->
           <f:navigationActions>
             <Button icon="sap-icon://unfavorite" type="Transparent" />
-          </f:navigationActions>
+          </f:navigationActions> -->
         </f:DynamicPageTitle>
       </f:title>
       <!--DynamicPage Header -->
       <f:header>
-        <f:DynamicPageHeader pinnable="false">
-            <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+        <f:DynamicPageHeader pinnable="true">
+            <form:SimpleForm class="searchBox" id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                 <form:content>
                     <VBox>
                         <Label text="{I18N>/TENANT}" labelFor="searchTenantCombo" required="true"></Label>
@@ -67,6 +69,12 @@
                             <layout:GridData span="XL2 L3 M6 S12" />
                         </layoutData> 
                     </VBox>
+                    <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
+                        <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch" />
+                        <layoutData>
+                            <layout:GridData span="XL12 L12 M12 S12" />
+                        </layoutData>
+                    </FlexBox>
                 </form:content>
             </form:SimpleForm>
         </f:DynamicPageHeader>
@@ -91,8 +99,11 @@
                 width="auto">
             <headerToolbar>
             <OverflowToolbar class="sapFDynamicPageAlignContent">
-              <Title text="{I18N>/LIST} ({= ${list>/MdCategory}.length})" level="H2"/>
+              <Title text="{I18N>/LIST} ({= ${list>/MdCategory}.length})" level="H2" />
+              <Button icon="sap-icon://move" enabled="false" />
               <ToolbarSpacer/>
+              <Button icon="sap-icon://navigation-up-arrow" tooltip="Move up" press="moveUp"/>
+              <Button icon="sap-icon://navigation-down-arrow" tooltip="Move down" press="moveDown"/>
               <Button text="{I18N>/NEW}" id="buttonMainAddRow" press=".onAdd('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/>
               <!-- <Button text="{I18N>/UPDATE}" id="buttonMainEditRow" press=".onEdit('mainTable', 'list', 'MdCategory', 'tenant_id')"  type="Transparent"/> -->
               <!-- <Button text="{I18N>/CANCEL}" id="buttonMainCancelRow" press=".onSearch"  type="Transparent" enabled="false"/> -->
@@ -108,7 +119,10 @@
             </headerToolbar>
 
             <columns>
-                <Column hAlign="Center" mergeDuplicates="false" width="80px" >
+                <Column  hAlign="Center" mergeDuplicates="false" width="3em" >
+                    <Text text="" />
+                </Column>
+                <Column hAlign="Center" mergeDuplicates="false" width="3em" >
                     <Text text="{I18N>/SPMD_CATEGORY_SORT_SEQUENCE}" />
                 </Column>
                 <Column hAlign="Center" mergeDuplicates="false" width="80px" >
@@ -146,6 +160,12 @@
             <items>
                 <ColumnListItem type="Navigation" press="onListItemPress">
                     <cells>
+                        <HBox align="Center">
+                            <ObjectStatus icon="{
+                                path: 'list>_row_state_',
+                                formatter: '.formatter.toModelStateColumnIcon'
+                            }" />
+                        </HBox>
                         <HBox alignItems="Center">
                             <Text text="{list>spmd_category_sort_sequence}" visible="true"></Text>
                         </HBox>

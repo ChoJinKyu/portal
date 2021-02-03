@@ -17,14 +17,25 @@
     fitContent="true">
       <!--DynamicPage Title -->
       <f:title>
-        <f:DynamicPageTitle>
+        <f:DynamicPageTitle stateChange="stateChange">
           <f:heading>
             <Title text="{I18N>/MATERIAL_MANAGEMENT_CHAR_MNGT}" />
           </f:heading>  
         <f:snappedContent>
         </f:snappedContent>        
         <f:expandedContent>
-            <form:SimpleForm id="pageSearchForm" 
+        </f:expandedContent>
+          <!-- 조회 -->
+          <!-- <f:actions>
+            <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch" visible="false"/>
+          </f:actions> -->
+        </f:DynamicPageTitle>
+      </f:title>
+
+      <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm  class="searchBox" 
+                            id="pageSearchForm" 
                             maxContainerCols="2" 
                             editable="true" 
                             layout="ResponsiveGridLayout" 
@@ -84,16 +95,6 @@
 
                     </form:content>
                 </form:SimpleForm>
-            </f:expandedContent>
-          <!-- 조회 -->
-          <!-- <f:actions>
-            <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch" visible="false"/>
-          </f:actions> -->
-        </f:DynamicPageTitle>
-      </f:title>
-
-      <f:header>
-            <f:DynamicPageHeader pinnable="true">
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
 

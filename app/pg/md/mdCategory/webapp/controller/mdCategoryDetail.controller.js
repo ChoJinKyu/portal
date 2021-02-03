@@ -19,10 +19,11 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
+	'sap/m/ColorPalettePopover',
     "sap/m/ObjectStatus"
 ], function (BaseController, Multilingual, Validator, JSONModel, ODataXhrService, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus) {
+	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ColorPalettePopover, ObjectStatus) {
     
     "use strict";
 
@@ -219,6 +220,12 @@ sap.ui.define([
             if(this.validator.validate(this.byId("midObjectForm1Edit")) !== true) return;
             if(this.validator.validate(this.byId("midTable")) !== true) return;
 
+            var tempData = oMasterModel.getData();
+            if(tempData != null){
+                delete tempData.org_infos;
+                oMasterModel.setData(tempData);
+            }
+
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -233,13 +240,15 @@ sap.ui.define([
                                     oView.setBusy(false);
                                     that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                     MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                            
+                                    that.onPageNavBackButtonPress(); 
                                 }
                             });
 
                         }else{//신규생성 채번-저장
                             $.ajax({
                             //new ODataXhrService.ajax({ 
-                                url: "pg/md/mdCategory/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdNewCategoryCode(tenant_id='L2100',company_code='"+ this._sCompany_code+"',org_type_code='"+ this._sOrg_type_code +"',org_code='"+this._sOrg_code+"')/Set", 
+                                url: "pg/md/mdCategory/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdNewCategoryCode(tenant_id='L2100',company_code='"+ that._sCompany_code+"',org_type_code='"+ that._sOrg_type_code +"',org_code='"+that._sOrg_code+"')/Set", 
                                 type: "GET", 
                                 contentType: "application/json", 
                                 success: function(data){ 
@@ -251,14 +260,15 @@ sap.ui.define([
                                             lngArr[idx].spmd_category_code = categoryCode;
                                         }
                                     }
-                                    // that.getModel("details").setProperty("/spmd_category_code", categoryCode); 
                                     
                                     oTransactionManager.submit({  
                                         success: function(ok){ 
                                             that._toShowMode(); 
                                             oView.setBusy(false); 
                                             that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress(); 
-                                            MessageToast.show(that.getModel("I18N").getText("/NCM01001")); 
+                                            MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+
+                                            that.onPageNavBackButtonPress(); 
                                         },
                                         error: function(e){
                                             console.log(e);
@@ -360,7 +370,7 @@ sap.ui.define([
                     "rgb_cell_clolor_code": "",
                     "spmd_category_sort_sequence": this._sSpmd_category_sort_sequence
                 }, "/MdCategory");
-                
+            
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
 				oDetailsModel.setData([], "/MdCategoryLng");
@@ -398,6 +408,7 @@ sap.ui.define([
                     }
                 });
 
+                
                 oView.setBusy(true);
                 var oDetailsModel = this.getModel("details");
                 oDetailsModel.setTransactionModel(this.getModel());
@@ -420,7 +431,12 @@ sap.ui.define([
             this.validator.clearValueState(this.byId("midObjectForm1Edit"));
             this.validator.clearValueState(this.byId("midTable"));
 			oTransactionManager.setServiceModel(this.getModel());
-			// oTransactionManager.setServiceModel(this.getModel("detail"));
+            // oTransactionManager.setServiceModel(this.getModel("detail"));
+            
+            //ScrollTop
+            var oObjectPageLayout = this.getView().byId("page");
+            var oFirstSection = oObjectPageLayout.getSections()[0];
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
 		},
 
 
@@ -589,6 +605,67 @@ sap.ui.define([
 
 			oView.byId("midTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
 
-        }
+        },
+
+		/**
+		 * Opens a fully featured <code>ColorPalette</code> in a <code>sap.m.ResponsivePopover</code>
+		 * @param oEvent
+		 */
+        onFontColor: function(oEvent) {
+            if (!this.oColorPalettePopoverFull) {
+				this.oColorPalettePopoverFull = new ColorPalettePopover("oColorPalettePopoverFull", {
+					defaultColor: "black",
+					colorSelect: this.handleColorSelect
+                });
+                
+			}
+
+			this.oColorPalettePopoverFull.openBy(oEvent.getSource());
+        },
+
+		handleColorSelect: function (oEvent) {
+            debugger;
+            var rgbCode = oEvent.getParameter("value");
+
+            // 컬러값과 쉼표만 남기고 삭제. 
+            var rgb = rgbCode.replace( /[^%,.\d]/g, "" ); 
+
+            // 쉼표(,)를 기준으로 분리해서, 배열에 담기. 
+            rgb = rgb.split( "," ); 
+
+            // 컬러값이 "%"일 경우, 변환하기. 
+            for ( var x = 0; x < 3; x++ ) { 
+                    if ( rgb[ x ].indexOf( "%" ) > -1 ) rgb[ x ] = Math.round( parseFloat( rgb[ x ] ) * 2.55 ); 
+            } 
+
+            // 16진수 문자로 변환. 
+            var toHex = function( string ){ 
+                    string = parseInt( string, 10 ).toString( 16 ); 
+                    string = ( string.length === 1 ) ? "0" + string : string; 
+
+                    return string; 
+            }; 
+
+            var r = toHex( rgb[ 0 ] ); 
+            var g = toHex( rgb[ 1 ] ); 
+            var b = toHex( rgb[ 2 ] ); 
+
+            this.hexaCode = "#" + r + g + b; 
+            MessageToast.show(this.hexaCode);
+            
+            debugger;
+            this.byId("fontColor").setValue(this.hexaCode);
+
+            return this.hexaCode; 
+
+		},
+
+		onExit: function () {
+			// Destroy popovers if any
+
+			if (this.oColorPalettePopoverFull) {
+				this.oColorPalettePopoverFull.destroy();
+			}
+		}
 	});
 });

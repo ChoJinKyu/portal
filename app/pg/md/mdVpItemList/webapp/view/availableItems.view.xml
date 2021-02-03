@@ -24,6 +24,9 @@
                 </OverflowToolbar>
             </t:extension>
             <t:columns>
+				<t:rowSettingsTemplate>
+					<t:RowSettings highlight="{Status}" highlightText="{StatusText}"/>
+				</t:rowSettingsTemplate>
                 <t:Column hAlign="Center" width="10rem" id="itemRow">
                     <Label text="{I18N>/SPMD_CHARACTER_CODE}" textAlign="Center" />
                     <t:template>
