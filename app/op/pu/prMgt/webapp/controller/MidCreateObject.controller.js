@@ -80,19 +80,51 @@ sap.ui.define([
 		 * Binds the view to the data path.
 		 */
 		_onObjectMatched : function (oEvent) { 
-            var oArgs = oEvent.getParameter("arguments");
-                        
-            if(oArgs.tenantId && oArgs.tenantId !== ""){
-                this.tenantId = oArgs.tenantId;
-            }else{
-                this.tenantId = "L2100"
-            } 
 
-            if(oArgs.company_code && oArgs.company_code !== ""){
-                this.company_code = oArgs.company_code;
+            var oArgs = oEvent.getParameter("arguments");
+
+            //--------------------------------------------
+            // 테스트용 사용자 설정
+            // 테스트 후 반드시 삭제 할 것 
+            // (1) 김생산 / 300000 / 50002980 / ABS.여수.ABS생산1팀   - 원재료 (OP_PR_TYPE_CODE_2.TC20001)
+            // (2) 박공무 / 400000 / 58045843 / 석유화학.여수.공무1팀  - 공사 (OP_PR_TYPE_CODE_2.TC20003)
+            if(oArgs.pr_type_code_2 === "TC20003") {
+                this.setModel(new JSONModel({
+                    tenant_id: "L2100",
+                    company_code: "LGCKR",
+                    employee_number: "400000",
+                    employee_name: "박공무",
+                    department_code: "58045843",
+                    department_name: "석유화학.여수.공무1팀"
+                }), "session");
             }else{
-                this.company_code = "LGCKR"
-            } 
+                this.setModel(new JSONModel({
+                    tenant_id: "L2100",
+                    company_code: "LGCKR",
+                    employee_number: "300000",
+                    employee_name: "김생산",
+                    department_code: "50002980",
+                    department_name: "ABS.여수.ABS생산1팀"
+                }), "session");
+            }
+            this.$session = this.getModel("session").getData();
+
+
+
+
+            
+                        
+            // if(oArgs.tenantId && oArgs.tenantId !== ""){
+            //     this.tenantId = oArgs.tenantId;
+            // }else{
+            //     this.tenantId = "L2100"
+            // } 
+
+            // if(oArgs.company_code && oArgs.company_code !== ""){
+            //     this.company_code = oArgs.company_code;
+            // }else{
+            //     this.company_code = "LGCKR"
+            // } 
 
             if(oArgs.pr_number && oArgs.pr_number !== ""){
                 this.pr_number = oArgs.pr_number;
@@ -112,35 +144,8 @@ sap.ui.define([
             }else{
                  this._fnReadPrMaster(oArgs);
                  this._fnReadPrDetail(oArgs);
-            }
+            } 
         },
-        
-        /**
-         * View 항목 visible 세팅
-         */
-        // _fnSetVisible: function(){
-        //     var that = this,
-        //         oView = this.getView(),
-        //         oServiceModel = this.getModel(),
-        //         oViewModel = this.getModel('viewModel'),
-        //         oContModel = this.getModel("contModel");
-        //     var oPrMstData = oViewModel.getProperty("/PrMst");
-
-        //     var oPrDtlVisible = {
-        //         material_code: true,
-        //         material_group_code: true,
-        //         sloc_code: true
-        //     };
-
-        //     //구매유형 : 공사
-        //     if(oPrMstData.pr_type_code_2 === "TC20003"){
-        //         oPrDtlVisible.material_code = false;
-        //         oPrDtlVisible.material_group_code = false;
-        //         oPrDtlVisible.sloc_code = false;
-        //     }
-
-        //     oContModel.setProperty("/Pr_Dtl", oPrDtlVisible);
-        // },
 
         /**
          * Edit Mode setting
@@ -288,31 +293,21 @@ sap.ui.define([
             var oContDisplayFlag={};
 
             oTemplateData.forEach(function(item, idx){
-                var oTableName = item.table_name;
-                var oColumnName = item.column_name;
-                
-                // var oSetFlagData = {
-                //     "hide_column_flag" : item.hide_column_flag,
-                //     "display_column_flag" : item.display_column_flag,
-                //     "input_column_flag" : item.input_column_flag,
-                //     "mandatory_column_flag" : item.mandatory_column_flag
-                // };
-
                 var oSetFlagData = that._fnSetVisibleColumnFlag(item);
                 
+                var oTableName = item.table_name;
+                var oColumnName = item.column_name;
                 if(!oContDisplayFlag[oTableName]){
                     oContDisplayFlag[oTableName] = {};
                 }
                 oContDisplayFlag[oTableName][oColumnName] = oSetFlagData;
             });
             oContModel.setProperty("/DisplayFlag", oContDisplayFlag);
-
-            //var oMATERIAL_CODEdisplay_column_flag = oContModel.getProperty("/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag");
-            //console.log("DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag > " + oMATERIAL_CODEdisplay_column_flag);
         },
 
         /**
          * Template 항목 Visible model 세팅 - Flag 세팅
+         * ----------------------------------------------
          * - mandatory_column_flag가 true이면 input, display, hide flag는 true로 세팅
          * - input_column_flag가 true이면 display, hide flag는 true로 세팅
          * - display_column_flag true이면 hide flag는 true로 세팅
@@ -349,20 +344,23 @@ sap.ui.define([
         _fnSetCreateData : function(oArgs){
             var oToday = new Date();
             var oViewModel = this.getModel('viewModel');
-                        
+
+            console.log("this.$session.employee_number > " + this.$session.employee_number);
+            console.log("this.$session.employee_name > " + this.$session.employee_name);
+                       
             var oNewMasterData = {
-                tenant_id: this.tenantId,
-                company_code: this.company_code,
+                tenant_id: this.$session.tenant_id,
+                company_code: this.$session.company_code,
                 pr_number: "NEW",
                 pr_type_code: oArgs.pr_type_code,
                 pr_type_code_2: oArgs.pr_type_code_2,
                 pr_type_code_3: oArgs.pr_type_code_3,
                 pr_template_number: oArgs.pr_template_number,
                 pr_create_system_code: "TEST",
-                requestor_empno: "A60264",
-                requestor_name: "김구매",
-                requestor_department_code: "10010",
-                requestor_department_name: "생산1팀",
+                requestor_empno: this.$session.employee_number,
+                requestor_name: this.$session.employee_name,
+                requestor_department_code: this.$session.department_code,
+                requestor_department_name: this.$session.department_name,
                 request_date: oToday,
                 pr_create_status_code: "10",
                 pr_header_text: "구매요청",
@@ -382,22 +380,17 @@ sap.ui.define([
 
             oViewModel.setProperty("/PrMst", oNewMasterData);
             oViewModel.setProperty("/Pr_Dtl", []);
+            oViewModel.refresh();
 
             // 템플릿 리스트 조회
             this._fnGetPrTemplateList();
-
-            // 템플릿번호 리스트 조회
-            //this._fnGetPrTemplateNumbers();
-
-            // 항목 Visible setting
-            //this._fnSetVisible();
         },
 
         _fnReadPrMaster : function(oArgs){
             var that = this;
             var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oArgs.tenantId));
-            aFilters.push(new Filter("company_code", FilterOperator.EQ, oArgs.company_code));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id));
+            aFilters.push(new Filter("company_code", FilterOperator.EQ, this.$session.company_code));
             aFilters.push(new Filter("pr_number", FilterOperator.EQ, oArgs.pr_number));
 
 
@@ -422,12 +415,6 @@ sap.ui.define([
                          // 템플릿 리스트 조회
                         that._fnGetPrTemplateList();
 
-                        // 템플릿번호 리스트 조회
-                        //that._fnGetPrTemplateNumbers();
-
-                        // 항목 Visible setting
-                        //that._fnSetVisible();
-
                         // 화면 Edit Mode setting
                         that._fnSetEditMode();
                     }
@@ -443,8 +430,8 @@ sap.ui.define([
                 oServiceModel = this.getModel(),
                 oViewModel = this.getModel('viewModel');
             var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oArgs.tenantId));
-            aFilters.push(new Filter("company_code", FilterOperator.EQ, oArgs.company_code));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id));
+            aFilters.push(new Filter("company_code", FilterOperator.EQ, this.$session.company_code));
             aFilters.push(new Filter("pr_number", FilterOperator.EQ, oArgs.pr_number));
  
             var aSorter = [];
@@ -469,7 +456,6 @@ sap.ui.define([
                     if(aPrDtlData && aPrDtlData.length > 0){
                         aPrDtlData.forEach(function(item, idx){
                             if(item.accounts.results && item.accounts.results.length > 0) {
-                                //item.accounts = item.accounts.results[0]; //==> service.cds, handler를 다 바꿔야해서 보류함 
                                 item.account_code = item.accounts.results[0].account_code;
                                 item.cctr_code = item.accounts.results[0].cctr_code;                                
                                 item.wbs_code = item.accounts.results[0].wbs_code;
@@ -477,7 +463,6 @@ sap.ui.define([
                                 item.order_number = item.accounts.results[0].order_number;
                             }
                         });
-                        console.log("");
                     }
                 },
                 error : function(data){
@@ -495,17 +480,17 @@ sap.ui.define([
                 oToday = new Date();
 
             // 품목번호
-            var prItemNumber = 1;
+            var prItemNumber = 10;
             if(aDetails) {
-                prItemNumber = aDetails.length + 1
+                prItemNumber = (aDetails.length + 1) * 10
             }
 
             // 품목데이터 생성
             var oItem = {
-                tenant_id: this.tenantId,
-                company_code: this.company_code,
+                tenant_id: this.$session.tenant_id,
+                company_code: this.$session.company_code,
                 pr_number: this.pr_number,
-                pr_item_number: prItemNumber+""
+                pr_item_number: prItemNumber
             }
             var oNewData = this._fnSetPrDetailData(oItem);
             
@@ -535,7 +520,7 @@ sap.ui.define([
 
                 //품목번호 reset
                 aDetails.forEach(function(oItem, idx){
-                    oItem.pr_item_number = idx+1;
+                    oItem.pr_item_number = (idx+1) * 10;
                 });
                 oViewModel.setProperty("/Pr_Dtl", aDetails);
             }
@@ -561,7 +546,7 @@ sap.ui.define([
 
                 //품목번호 reset
                 aDetails.forEach(function(oItem, idx){
-                    oItem.pr_item_number = idx+1;
+                    oItem.pr_item_number = (idx+1) * 10;
                 });
                 oViewModel.setProperty("/Pr_Dtl", aDetails);
             }
@@ -610,8 +595,7 @@ sap.ui.define([
             if(this.validator.validate(this.byId("pageSectionMain")) !== true){
                 MessageToast.show(this.getModel("I18N").getText("/ECM01002"));
                 return;
-            }
-           
+            }           
             
             if(!this._fnTableValidator("pritemTable")){
                 return false;
@@ -642,7 +626,6 @@ sap.ui.define([
             var bReturn=true;
             var aViewDataPrDtl = oViewData.Pr_Dtl;
             if(aViewDataPrDtl.length > 0){
-                //aViewDataPrDtl.forEach(function(item, idx){
                 aViewDataPrDtl.some(function(item, idx){
                     if(item["org_code"] === null || item["org_code"] === ""){
                         var msg = that.getModel("I18N").getText("/ECM01002");
@@ -708,10 +691,7 @@ sap.ui.define([
          */
         _fnPrSave: function(pSaveFlag){
             var oView = this.getView();
-            var that = this;
-            //var oDetailModel = this.getModel("detailModel");
-            //var oData = $.extend(true, {}, oDetailModel.getData());
-            
+            var that = this;            
             var oViewModel = this.getModel("viewModel");
             var oViewData = $.extend(true, {}, oViewModel.getData());
 
@@ -798,8 +778,6 @@ sap.ui.define([
 
             // 전송 데이터 세팅
             var sendData = {}, aInputData=[];
-            //aInputData.push(oMasterData);
-            //sendData.inputData = aInputData;
             sendData.inputData = oMasterData;
 
 
@@ -869,17 +847,17 @@ sap.ui.define([
                         org_code            : (item.org_code) ? item.org_code : "", 
                         buyer_empno         : (item.buyer_empno) ? item.buyer_empno : "",
                         currency_code       : (item.currency_code) ? item.currency_code : "KRW",
-                        estimated_price     : (item.estimated_price) ? item.estimated_price+"" : "", 
+                        estimated_price     : (item.estimated_price && item.estimated_price !== "") ? item.estimated_price+"" : "0", 
                         material_code       : (item.material_code) ? item.material_code : "",
                         material_group_code : (item.material_group_code) ? item.material_group_code : "",
                         pr_desc             : (item.pr_desc) ? item.pr_desc : "",                        
-                        pr_quantity         : (item.pr_quantity) ? item.pr_quantity : "",
+                        pr_quantity         : (item.pr_quantity) ? item.pr_quantity : "0",
                         pr_unit             : (item.pr_unit) ? item.pr_unit : "",
-                        requestor_empno     : (item.requestor_empno) ? item.requestor_empno : "A60264",
-                        requestor_name      : (item.requestor_name) ? item.requestor_name : "김구매",
+                        requestor_empno     : (item.requestor_empno) ? item.requestor_empno : this.$session.employee_number,
+                        requestor_name      : (item.requestor_name) ? item.requestor_name : this.$session.employee_name,
                         delivery_request_date: delivery_request_date,
                         purchasing_group_code: (item.purchasing_group_code) ? item.purchasing_group_code : "",
-                        price_unit          : (!item.price_unit || item.price_unit === "") ? null : item.price_unit+"",
+                        price_unit          : (item.price_unit && item.price_unit !== "") ? item.price_unit+"" : "1",
                         pr_progress_status_code: (item.pr_progress_status_code && item.pr_progress_status_code != "") ? item.pr_progress_status_code : "10",
                         remark              : (item.remark) ? item.remark : "",
                         sloc_code           : (item.sloc_code) ? item.sloc_code : "",
@@ -1050,6 +1028,55 @@ sap.ui.define([
             });
 
         },
+
+        //==================== Multiple Item Add - 자재코드 Material Code Dialog ==================== 
+		onItemAddMultiRow: function (oEvent) {
+            var that = this;
+            var oViewModel = this.getModel("viewModel");
+            var oPrDtlData = oViewModel.getProperty("/Pr_Dtl");
+
+            if(this.oSearchMultiMaterialMasterDialog){
+                this.oSearchMultiMaterialMasterDialog.close();
+                this.oSearchMultiMaterialMasterDialog.destroy();
+            }
+            
+            this.oSearchMultiMaterialMasterDialog = new MaterialOrgDialog({                
+                title: "Choose Material Code",
+                multiSelection: true,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, this.tenantId)                            
+                    ],
+                    sorters: [
+                        new Sorter("material_code")
+                    ]
+                },
+                orgCode: ""
+            });
+            this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
+                let aItems = oEvent.getParameter("items");
+                let iPrItemNumber = oPrDtlData.length * 10;
+                aItems.forEach(function(item, idx){
+                    iPrItemNumber += 10;
+
+                    let oPrItemData = {};
+                    oPrItemData.pr_item_number = iPrItemNumber;
+                    oPrItemData.org_code = (item.org_code && item.org_code !== "") ? item.org_code:"";
+                    oPrItemData.material_code = item.material_code;
+                    oPrItemData.pr_desc = (item.material_desc && item.material_desc !== "") ? item.material_desc:"";
+                    oPrItemData.pr_unit = (item.base_uom_code && item.base_uom_code !== "") ? item.base_uom_code:"";
+                    oPrItemData.buyer_empno = (item.buyer_empno && item.buyer_empno !== "") ? item.buyer_empno:"";
+                    oPrItemData.purchasing_group_code = (item.purchasing_group_code && item.purchasing_group_code !== "") ? item.purchasing_group_code:"";                    
+                    oPrItemData.material_group_code = item.material_group_code;
+                    oPrDtlData.push(that._fnSetPrDetailData(oPrItemData));
+                });                
+                oViewModel.refresh();
+            }.bind(that));
+            
+            this.oSearchMultiMaterialMasterDialog.open();
+        },
+
+
 
         //==================== 자재코드 Material Code Dialog 시작 ==================== 
 		onOpenMaterialDialog: function (oEvent) {
@@ -1268,6 +1295,18 @@ sap.ui.define([
             }
             this.oSearchSupplierDialog.open();
         }, 
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

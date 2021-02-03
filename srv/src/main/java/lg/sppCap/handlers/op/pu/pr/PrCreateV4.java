@@ -99,24 +99,21 @@ public class PrCreateV4 implements EventHandler {
         .append(")");   
         
         StringBuffer v_sql_createTableD = new StringBuffer();
-        v_sql_createTableD.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_D (")    
-        .append("TENANT_ID NVARCHAR(5),")
-        .append("COMPANY_CODE NVARCHAR(10),")
-        .append("PR_NUMBER NVARCHAR(50),")
+        v_sql_createTableD.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_D (")
         .append("PR_ITEM_NUMBER NVARCHAR(10),")
         .append("ORG_TYPE_CODE NVARCHAR(2), ")
 		.append("ORG_CODE NVARCHAR(10), ")
 		.append("MATERIAL_CODE NVARCHAR(40), ")
 		.append("MATERIAL_GROUP_CODE NVARCHAR(10),")
 		.append("PR_DESC NVARCHAR(100),")
-        .append("PR_QUANTITY NVARCHAR(34),")        
+        .append("PR_QUANTITY NVARCHAR(40),")        
 		.append("PR_UNIT NVARCHAR(3),")
         .append("REQUESTOR_EMPNO NVARCHAR(30),")
         .append("REQUESTOR_NAME NVARCHAR(50),")
         .append("DELIVERY_REQUEST_DATE NVARCHAR(10),")
         .append("BUYER_EMPNO NVARCHAR(30),")
         .append("PURCHASING_GROUP_CODE NVARCHAR(3),")
-        .append("ESTIMATED_PRICE DECIMAL(34),")
+        .append("ESTIMATED_PRICE DECIMAL(30,10),")
         .append("CURRENCY_CODE NVARCHAR(3),")
         .append("PRICE_UNIT NVARCHAR(5),")
         .append("PR_PROGRESS_STATUS_CODE NVARCHAR(30),")
@@ -138,12 +135,10 @@ public class PrCreateV4 implements EventHandler {
         String v_sql_dropTableD = "DROP TABLE #LOCAL_TEMP_D";
 
         String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_M VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
-        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
+        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
         
         StringBuffer v_sql_callProc = new StringBuffer();
         v_sql_callProc.append("CALL OP_PU_PR_CREATE_SAVE_PROC ( ")
-        .append("I_TENANT_ID => ?, ")
-        .append("I_COMPANY_CODE => ?, ")
         .append("I_PR_NUMBER => ?, ")
         .append("I_M_TABLE => #LOCAL_TEMP_M, ")
         .append("I_D_TABLE => #LOCAL_TEMP_D, ")
@@ -202,9 +197,6 @@ public class PrCreateV4 implements EventHandler {
                         for(SavedDetail v_inRow : v_inDetails){
                             log.info("SavedDetail ###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getPrNumber()+"###"+v_inRow.getPrItemNumber());
                             values = new Object[] {
-                                v_inRow.getTenantId(),
-                                v_inRow.getCompanyCode(),
-                                v_inRow.getPrNumber(),
                                 v_inRow.getPrItemNumber(),
                                 v_inRow.getOrgTypeCode(),
                                 v_inRow.getOrgCode(),
@@ -246,14 +238,12 @@ public class PrCreateV4 implements EventHandler {
 
                     // Procedure Call
                     List<SqlParameter> paramList = new ArrayList<SqlParameter>();
-                    paramList.add(new SqlParameter("I_TENANT_ID", Types.VARCHAR));
-                    paramList.add(new SqlParameter("I_COMPANY_CODE", Types.VARCHAR));
                     paramList.add(new SqlParameter("I_PR_NUMBER", Types.VARCHAR));
 
                     SqlReturnResultSet oTable = new SqlReturnResultSet("O_MSG", new RowMapper<OutType>(){
                         @Override
                         public OutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                            log.info("##### return_code: "+v_rs.getString("return_code")+" ### return_msg: "+v_rs.getString("return_msg"));
+                            log.info("##### return_code: "+v_rs.getString("return_code")+" ##### return_msg: "+v_rs.getString("return_msg"));
                             OutType v_row = OutType.create();
                             v_row.setReturnCode(v_rs.getString("return_code"));
                             v_row.setReturnMsg(v_rs.getString("return_msg"));
@@ -267,8 +257,6 @@ public class PrCreateV4 implements EventHandler {
                         @Override
                         public CallableStatement createCallableStatement(Connection connection) throws SQLException {
                             CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
-                            callableStatement.setString("I_TENANT_ID", v_inputData.getTenantId());
-                            callableStatement.setString("I_COMPANY_CODE", v_inputData.getCompanyCode());
                             callableStatement.setString("I_PR_NUMBER", v_inputData.getPrNumber());
                             return callableStatement;
                         }
