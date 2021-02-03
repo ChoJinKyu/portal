@@ -264,13 +264,19 @@ service SourcingV4Service {
     };
 
     type tyDeepInsertNegoheader {
-        negoheaders: array of tyNegoHeader;
+        negoheaders    : array of tyNegoHeader;
+        negoitemprices : array of tyNegoItemPrice;
+        negosuppliers  : array of tyNegoSupplier;
+    };
+
+    type tyDeepUpsertNegoheader {
+        negoheaders    : array of tyNegoHeader;
         negoitemprices : array of tyNegoItemPrice;
         negosuppliers  : array of tyNegoSupplier;
     };
 
     type tyDeepDeleteNegoheader {
-        negoheaders: array of tyNegoHeaderKey;
+        negoheaders    : array of tyNegoHeaderKey;
         negoitemprices : array of tyNegoItemPriceKey;
         negosuppliers  : array of tyNegoSupplierKey;
     };
@@ -290,6 +296,7 @@ service SourcingV4Service {
     //                             , negosuppliers  : array of tyNegoSupplier  ) returns array of OutputData;
 
     action deepInsertNegoHeader(  deepinsertnegoheader : tyDeepInsertNegoheader  ) returns array of ReturnMsg;
+    action deepUpsertNegoHeader(  deepupsertnegoheader : tyDeepUpsertNegoheader  ) returns array of ReturnMsg;
     action deepDeleteNegoHeader(  deepdeletenegoheader : tyDeepDeleteNegoheader  ) returns array of ReturnMsg;
     // @odata.draft.enabled
 
