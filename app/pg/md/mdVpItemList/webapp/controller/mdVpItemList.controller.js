@@ -75,6 +75,7 @@ sap.ui.define([
                 })
             });
 
+            this.onSetMenuItem();
             this.onSearch();
         },
 
@@ -103,6 +104,25 @@ sap.ui.define([
                 })
             });
         },
+
+        onSetMenuItem: function (){ 
+            var oTenantkey = this.getView().byId("searchTenantCombo").getSelectedKey();
+            var oOrgkey = this.getView().byId("searchChain").getSelectedKey(); 
+            var category_combo = this.getView().byId("searchCategory");   
+
+            var aFiltersComboBox = [];
+            aFiltersComboBox.push( new Filter("tenant_id", "EQ", oTenantkey));
+            aFiltersComboBox.push( new Filter("org_code", "EQ", oOrgkey));
+            category_combo.bindAggregation("items", { 
+                path: "category>/MdCategory", 
+                filters: aFiltersComboBox,
+                // @ts-ignore 
+                template: new sap.m.MenuItem({ 
+                    key: "{category>spmd_category_code}", 
+                    text: "{category>spmd_category_code}: {category>spmd_category_code_name}" 
+                }) 
+            }); 
+        }, 
 
         onMenuAction: function (oEvent){ 
             var oTenantId = this.getView().byId("searchTenantCombo").getSelectedKey();
@@ -207,6 +227,7 @@ sap.ui.define([
                                      
             });
             
+            this.onSetMenuItem();
         },
 
         setItemList: function (oData) {

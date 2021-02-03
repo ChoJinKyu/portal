@@ -134,10 +134,10 @@
                             selectedKey="" 
                             width="100%">
                             <items>
-                                <SegmentedButtonItem text="{I18N>/ALL}" width="4em"/>
-                                <SegmentedButtonItem text="{I18N>/NEW}" width="4em" key="100"/>
+                                <SegmentedButtonItem text="{I18N>/ALL}" width="3em"/>
+                                <SegmentedButtonItem text="{I18N>/NEW}" width="3em" key="100"/>
                                 <SegmentedButtonItem text="{I18N>/TEMP_SAVE}" width="5em" key="200"/>
-                                <SegmentedButtonItem text="{I18N>/CONFIRMED}" width="4em" key="300"/>
+                                <SegmentedButtonItem text="{I18N>/CONFIRMED}" width="3em" key="300"/>
                             </items>
                         </SegmentedButton>
                         <layoutData>
@@ -258,6 +258,7 @@
                 selectionBehavior="Row"
                 onAfterRendering="onAfterRendering"
                 enableColumnReordering="false"
+                columnResize="onColumnResize"
                 rows="{
                     path : 'list>/MdVpItemList',
                     parameters : {
@@ -302,280 +303,280 @@
                     </t:Column>
                     <t:Column label="{I18N>/STATUS}" width="5rem">    
                         <t:template>
-                            <Text text="{list>confirmed_status_code}" wrapping="false" />
+                            <Text text="{list>confirmed_status_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_001}" id="attrItem1" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_001}" id="attrItem1" width="6.5em" visible="false" >    
                         <t:template>
                             <Text text="{list>attrItemName1}" wrapping="false" />
                             <!-- <Text text="{list>spmd_attr_info_001}" wrapping="false" /> -->
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_002}" id="attrItem2" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_002}" id="attrItem2" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName2}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_003}" id="attrItem3" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_003}" id="attrItem3" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName3}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_004}" id="attrItem4" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_004}" id="attrItem4" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName4}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_005}" id="attrItem5" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_005}" id="attrItem5" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName5}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_006}" id="attrItem6" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_006}" id="attrItem6" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName6}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_007}" id="attrItem7" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_007}" id="attrItem7" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName7}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_008}" id="attrItem8" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_008}" id="attrItem8" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName8}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_009}" id="attrItem9" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_009}" id="attrItem9" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName9}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_010}" id="attrItem10" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_010}" id="attrItem10" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName10}" wrapping="false"/>
                         </t:template>
                     </t:Column>
                     
-                    <t:Column label="{I18N>/SPMD_CHAR_011}" id="attrItem11" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_011}" id="attrItem11" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName11}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_012}" id="attrItem12" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_012}" id="attrItem12" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName12}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_013}" id="attrItem13" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_013}" id="attrItem13" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName13}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_014}" id="attrItem14" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_014}" id="attrItem14" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName14}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_015}" id="attrItem15" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_015}" id="attrItem15" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName15}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_016}" id="attrItem16" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_016}" id="attrItem16" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName16}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_017}" id="attrItem17" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_017}" id="attrItem17" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName17}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_018}" id="attrItem18" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_018}" id="attrItem18" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName18}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_019}" id="attrItem19" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_019}" id="attrItem19" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName19}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_020}" id="attrItem20" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_020}" id="attrItem20" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName20}" wrapping="false"/>
                         </t:template>
                     </t:Column>
 
-                    <t:Column label="{I18N>/SPMD_CHAR_021}" id="attrItem21" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_021}" id="attrItem21" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName21}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_022}" id="attrItem22" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_022}" id="attrItem22" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName22}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_023}" id="attrItem23" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_023}" id="attrItem23" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName23}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_024}" id="attrItem24" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_024}" id="attrItem24" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName24}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_025}" id="attrItem25" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_025}" id="attrItem25" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName25}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_026}" id="attrItem26" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_026}" id="attrItem26" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName26}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_027}" id="attrItem27" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_027}" id="attrItem27" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName27}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_028}" id="attrItem28" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_028}" id="attrItem28" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName28}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_029}" id="attrItem29" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_029}" id="attrItem29" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName29}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_030}" id="attrItem30" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_030}" id="attrItem30" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName30}" wrapping="false"/>
                         </t:template>
                     </t:Column>
                     
-                    <t:Column label="{I18N>/SPMD_CHAR_031}" id="attrItem31" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_031}" id="attrItem31" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName31}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_023}" id="attrItem32" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_023}" id="attrItem32" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName32}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_033}" id="attrItem33" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_033}" id="attrItem33" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName33}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_034}" id="attrItem34" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_034}" id="attrItem34" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName34}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_035}" id="attrItem35" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_035}" id="attrItem35" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName35}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_036}" id="attrItem36" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_036}" id="attrItem36" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName36}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_037}" id="attrItem37" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_037}" id="attrItem37" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName37}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_038}" id="attrItem38" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_038}" id="attrItem38" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName38}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_039}" id="attrItem39" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_039}" id="attrItem39" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName39}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_040}" id="attrItem40" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_040}" id="attrItem40" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName40}" wrapping="false"/>
                         </t:template>
                     </t:Column>
                     
-                    <t:Column label="{I18N>/SPMD_CHAR_041}" id="attrItem41" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_041}" id="attrItem41" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName41}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_042}" id="attrItem42" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_042}" id="attrItem42" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName42}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_043}" id="attrItem43" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_043}" id="attrItem43" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName43}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_044}" id="attrItem44" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_044}" id="attrItem44" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName44}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_045}" id="attrItem45" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_045}" id="attrItem45" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName45}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_046}" id="attrItem46" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_046}" id="attrItem46" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName46}" wrapping="false" />
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_047}" id="attrItem47" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_047}" id="attrItem47" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName47}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_048}" id="attrItem48" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_048}" id="attrItem48" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName48}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_049}" id="attrItem49" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_049}" id="attrItem49" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName49}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/SPMD_CHAR_050}" id="attrItem50" visible="false">    
+                    <t:Column label="{I18N>/SPMD_CHAR_050}" id="attrItem50" width="6.5em" visible="false">    
                         <t:template>
                             <Text text="{list>attrItemName50}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/CREATE_USER_ID}"  >    
+                    <t:Column label="{I18N>/CREATE_USER_ID}"  width="6.5em">    
                         <t:template>
                             <Text text="{list>create_user_id}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/UPDATE_USER_ID}" >    
+                    <t:Column label="{I18N>/UPDATE_USER_ID}" width="6.5em">    
                         <t:template>
                             <Text text="{list>update_user_id}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/LOCAL_CREATE_DTM}" >    
+                    <t:Column label="{I18N>/LOCAL_CREATE_DTM}" width="6.5em">    
                         <t:template>
                             <Text text="{path : 'list>local_create_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}" wrapping="false"/>
                         </t:template>
                     </t:Column>
-                    <t:Column label="{I18N>/LOCAL_CHANGE_DTM}">    
+                    <t:Column label="{I18N>/LOCAL_CHANGE_DTM}" width="6.5em">    
                         <t:template>
                             <Text text="{path : 'list>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}" wrapping="false"/>
                         </t:template>

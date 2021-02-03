@@ -236,7 +236,7 @@ sap.ui.define([
         var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
                 sPath = oEvent.getSource().getBindingContext("list").getPath(),
                 oRecord = this.getModel("list").getProperty(sPath);
-        this.byId("buttonMainDeleteRow").setEnabled(false);
+                
         this.getRouter().navTo("midPage", {
             layout: oNextUIState.layout, 
             company_code: oRecord.company_code,
@@ -254,12 +254,16 @@ sap.ui.define([
             var aSorter = [];
             // aFilters.push(new Filter("spmd_category_code", FilterOperator.EQ, this.aSearchCategoryCd));
             aSorter.push(new Sorter("spmd_character_sort_seq", false));
-            var tenant_combo = this.getView().byId("searchTenantCombo").getSelectedKey(),         //회사 콤보박스       //회사 콤보박스
-                // tenant_name = tenant_combo.getValue(),
-                bizunit_combo = this.getView().byId("searchChain").getSelectedKey(),           //사업본부 콤보박스
-                // bizunit_name = bizunit_combo.getValue();
+            var tenant_combo = this.getView().byId("searchTenantCombo").getSelectedKey(),   
+                bizunit_combo = this.getView().byId("searchChain").getSelectedKey(),       
                 category_combo = this.getView().byId("searchCategory").getSelectedKey();   
             
+            var category_combo = this.getView().byId("searchChain");
+            if(bizunit_combo == null || category_combo.getValue() == ""){
+                MessageToast.show("사업본부를 설정해주세요.");
+                return;
+            }
+
             if (tenant_combo.length > 0) {
                 aFilters.push(new Filter("tenant_id", FilterOperator.EQ, tenant_combo));
             }
@@ -372,23 +376,6 @@ sap.ui.define([
             // this.rowIndex = oDataLength;
 		    // this.byId("buttonMainAddRow").setEnabled(false);
             // // this._setEditChange(this.rowIndex,"E");  
-        },
-        
-        onDelete: function(oEvent){
-            var table = oEvent.getSource().getParent().getParent();
-           
-            var model = this.getView().getModel(table.getBindingInfo('items').model);
-            model.setProperty("/entityName", "MdCategoryItem");
-
-            table.getSelectedItems().reverse().forEach(function(item){
-                var iSelectIndex = table.indexOfItem(item);
-                if(iSelectIndex > -1){
-                    model.markRemoved(iSelectIndex);
-                }
-             });
-
-            table.removeSelections(true);
-            // this._setEditChange(this.rowIndex,"R");  
         },
 
       onSave: function () {
