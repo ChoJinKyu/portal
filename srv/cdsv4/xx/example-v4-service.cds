@@ -5,20 +5,23 @@ service ExampleV4Service {
 
     // UI5 Example - PivotTable Backend CDS
     type PivotColumn {
-      label: String;
-      columnId: String;
-      type: String;
+        label     : String;
+        columnId  : String not null;
+        type      : String not null;
     };
+    type PivotCell {
+        columnId        : String not null;
+        stringValue     : String null;
+        numberValue     : Integer null;
+        booleanValue    : Boolean null;
+        dateValue       : Timestamp null;
+    }
     type PivotRecord {
-        columnIds: many String;
-        stringValues: many String null;
-        numberValues: many Integer null;
-        booleanValues: many Boolean null;
-        DateValues: many Timestamp null;
+        cells: many PivotCell;
     };
     type PivotData {
-      columns: many PivotColumn;
-      records: many PivotRecord;
+        columns: many PivotColumn;
+        records: many PivotRecord;
     };
     action GetPivotData() returns PivotData;
 
