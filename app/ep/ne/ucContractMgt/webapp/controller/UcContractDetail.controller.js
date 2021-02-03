@@ -182,6 +182,8 @@ sap.ui.define([
             // 	return;
             // }
 
+            return;
+
             if (this.validator.validate(this.byId("editBox")) !== true) return;
 
             var url = "ep/ne/ucContractMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiPublishProc";
