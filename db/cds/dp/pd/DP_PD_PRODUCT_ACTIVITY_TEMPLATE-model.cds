@@ -18,7 +18,7 @@ entity Pd_Product_Activity_Template {
 extend Pd_Product_Activity_Template with util.Managed;	
 
 @cds.persistence.exists
-entity Dp_Pd_Product_Activity_Template_View {
+entity Pd_Product_Activity_Template_View {
     key tenant_id             : String;
     key product_activity_code : String;
         activity_name         : String;
