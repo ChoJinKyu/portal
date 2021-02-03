@@ -1,8 +1,7 @@
 VIEW DP_PD_PRODUCT_ACTIVITY_TEMPLATE_VIEW AS
 SELECT pat.tenant_id,
       pat.product_activity_code,				
- --     aname.code_name as activity_name,
-      'HAHAHA' as activity_name,
+      aname.code_name as activity_name,
       pat.description,
       pat.sequence,
       pat.active_flag,
