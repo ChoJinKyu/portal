@@ -24,6 +24,8 @@ service CreationRequestV4Service {
             progress_status_code : String;
             creator_empno : String;
             create_category_code : String;
+            update_user_id : String;
+            crud_type_code : String;
     };
 
     type PdCategoryApprovalType : {
@@ -35,6 +37,8 @@ service CreationRequestV4Service {
             tf_flag : Boolean;
             approval_comment : String;
             approve_date_time : DateTime;
+            update_user_id : String;
+            crud_type_code : String;
     };
 
     type OutType : {

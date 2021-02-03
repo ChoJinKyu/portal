@@ -87,7 +87,7 @@ sap.ui.define([
             aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oSearchObj.orgCode));
             aFilters.push(new Filter("supplier_type_code", FilterOperator.EQ, this.oSearchObj.orgUnitCode));
 
-            if (sSupplierCodePop) {
+            if (!!sSupplierCodePop) {
                 aFilters.push(new Filter("supplier_code", FilterOperator.Contains, "'" + sSupplierCodePop.toUpperCase() + "'"));
             }
 
@@ -116,10 +116,10 @@ sap.ui.define([
                 return;
             }
 
-            if (!!this.oSearchObj.supplierCode) {
-                this.oSupplierCodePop.setValue(null);
-                this.oSupplierCodePop.setValue(this.oSearchObj.supplierCode);
-            }
+            // if (!!this.oSearchObj.supplierCode) {
+            //     this.oSupplierCodePop.setValue(null);
+            //     this.oSupplierCodePop.setValue(this.oSearchObj.supplierCode);
+            // }
             //this.loadData();
             this.oDialog.open();
         }

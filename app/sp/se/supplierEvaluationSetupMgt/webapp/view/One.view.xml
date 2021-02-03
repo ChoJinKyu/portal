@@ -231,7 +231,7 @@ xmlns:flex="sap.f"
                                             path: 'DetailView>/manager'
                                             }"
                                         mode="MultiSelect"    
-                                        selectionChange="onSelectQunItem"    
+                                        selectionChange="onSelectItem"    
                                             >
                                             <headerToolbar>
                                                 <Toolbar>
@@ -299,7 +299,7 @@ xmlns:flex="sap.f"
                                                             required="true"   
                                                             >
                                                         </Input>
-                                                          <Text text="{DetailView>department_local_name}"  required="true" />                      
+                                                          <!-- <Text text="{DetailView>department_local_name}"  required="true" />                       -->
                                                     </cells>
                                                 </ColumnListItem>
                                             </items>
@@ -467,7 +467,7 @@ xmlns:flex="sap.f"
                                             path: 'DetailView>/quantitative'
                                             }"
                                         mode="MultiSelect"
-                                        selectionChange="onSelectQunItem"    
+                                        selectionChange="onSelectItem"    
                                             >
                                             <headerToolbar>
                                                 <Toolbar>
@@ -740,11 +740,10 @@ xmlns:flex="sap.f"
                         
                     />
 
-                    <cm-ui:CompanyDetailDialog id="CompanyDetailDialog" 
+                    <!-- <cm-ui:CompanyDetailDialog id="CompanyDetailDialog" 
                         title="{I18N>/COMPANY_CODE}"
                         apply=".onCompanyDetailDialogApplyPress"
-                       
-                    />
+                    /> -->
                     
                     </content>
                 </Page>

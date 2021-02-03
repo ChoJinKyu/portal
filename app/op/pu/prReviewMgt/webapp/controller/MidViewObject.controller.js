@@ -145,6 +145,10 @@ sap.ui.define([
                     }).bind(this)
                 });
             }).call(this);
+
+            action != 'CLOSING_CANCEL'
+            &&
+            MessageBox.alert("준비중 입니다");
         }
 	});
 });

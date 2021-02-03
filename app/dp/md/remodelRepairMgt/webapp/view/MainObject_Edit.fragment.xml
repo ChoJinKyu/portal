@@ -1,0 +1,23 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<form:SimpleForm id="mainObjectForm1Edit" editable="false">
+		<core:Title text="Keys" />
+		<Label text="Chain"/>
+		<Text text="{chain_code}"/>
+		<Label text="Language"/>
+		<Text text="{language_code}"/>
+		<Label text="Code"/>
+		<Text text="{message_code}"/>
+
+		<core:Title text="Others" />
+		<Label text="Contents" required="true" />
+        <Input id="inputMessageContents" value="{message_contents}"/>
+		<Label text="Type" required="true"/>
+        <Select items="{mainObjectCode>/message_type_codes}" selectedKey="{message_type_code}">
+            <core:Item key="{mainObjectCode>key}" text="{mainObjectCode>key}"/>
+        </Select>
+	</form:SimpleForm>
+</core:FragmentDefinition>

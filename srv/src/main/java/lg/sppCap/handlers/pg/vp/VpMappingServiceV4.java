@@ -532,7 +532,7 @@ public class VpMappingServiceV4 implements EventHandler {
             v_sql_callProc.append("I_MAN => #LOCAL_TEMP_MANAGER,");        
             v_sql_callProc.append("I_USER_ID => ?,");        
             v_sql_callProc.append("I_USER_NO => ?,");        
-            v_sql_callProc.append("O_MSG => ?)");   
+            v_sql_callProc.append("O_MSG => ?,");   
             v_sql_callProc.append("O_TABLE => ?)");   
 
         log.info("### DB Connect Start ###");
@@ -718,6 +718,8 @@ public class VpMappingServiceV4 implements EventHandler {
             }
         });
         paramList.add(oReturnHash); 
+
+        log.info("### Define O_MESSAGE Success ###");
         
         // Procedure Call
         SqlReturnResultSet oReturnTable = new SqlReturnResultSet("O_TABLE", new RowMapper<VpOutExpMstType>(){
@@ -785,8 +787,9 @@ public class VpMappingServiceV4 implements EventHandler {
                 return v_row;
             }
         });
-
         paramList.add(oReturnTable);
+
+        log.info("### Define O_TABLE Success ###");
 
         Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
             @Override
@@ -827,7 +830,9 @@ public class VpMappingServiceV4 implements EventHandler {
         
         v_result.setReturnCode(v_resultHash.getReturnCode());   
         v_result.setReturnMsg(v_resultHash.getReturnMsg());   
-        v_result.setReturnVpObj(v_resultTable);
+        if(!"NG".equals(v_result.getReturnCode())){            
+            v_result.setReturnVpObj(v_resultTable);
+        } 
         v_resultArr.add(v_result);
         context.setResult(v_resultArr);
         context.setCompleted();            		

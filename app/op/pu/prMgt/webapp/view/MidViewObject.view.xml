@@ -152,11 +152,13 @@
             <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/ITEM_INFO}">
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection>
-                        <!-- Participating Supplier Table -->
+                        <!-- Participating Supplier Table
+                                visibleRowCountMode="Auto"
+                            -->
                         <table:Table id="pritemTable"
                                 selectionMode="None"
-                                fixedColumnCount="1"
-                                visibleRowCountMode="Auto"
+                                fixedColumnCount="1"                                
+                                visibleRowCount="{= ${detailModel>/dtl}.length || 0}"
                                 rows="{detailModel>/dtl}"
                                 >
                              <table:extension>
@@ -165,8 +167,8 @@
                                     <ToolbarSpacer/>
                                     <!-- Add the Personalization button -->
                                     
-                                    <Button icon="sap-icon://group-2" />
-                                    <Button icon="sap-icon://action-settings" />    
+                                    <!-- <Button icon="sap-icon://group-2" />
+                                    <Button icon="sap-icon://action-settings" />     -->
                                 </OverflowToolbar>
                             </table:extension>          
 
@@ -174,15 +176,18 @@
                                 <table:Column  width="5em" hAlign="Center" >
                                     <Label text="{I18N>/ITEM_NUMBER}"/>
                                     <table:template>
-                                        <Text id="t_model" text="{detailModel>pr_item_number}"/>
+                                        <Text text="{detailModel>pr_item_number}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column  width="5em" hAlign="Center">
+
+
+                                <table:Column  width="10em" hAlign="Center">
                                     <Label text="{I18N>/ORG_CODE}" />           
                                     <table:template>
-                                        <Text text="{detailModel>org_code}" />
+                                        <Text text="{detailModel>plant_name} [{detailModel>org_code}]" hAlign="Begin" />
                                     </table:template>
                                 </table:Column>
+
                                 <table:Column width="8em" hAlign="Center" visible="{
                                             path: 'OPUI>/DTL-MATERIAL_CODE',
                                             type: 'sap.ui.model.type.Bool',
@@ -192,27 +197,37 @@
                                     <table:template>
                                         <Text  text="{detailModel>material_code}" />
                                     </table:template>
-                                </table:Column>                                
+                                </table:Column>   
+
                                 <table:Column  width="20em" hAlign="Center">
                                     <Label text="{I18N>/PURCHASE_REQUISITION} {I18N>/ITEM_NAME}" />           
                                     <table:template>
                                         <Text text="{detailModel>pr_desc}"/>
                                     </table:template>
-                                </table:Column>       
+                                </table:Column>     
+                                
+
                                 <table:Column width="5em" hAlign="Center">
                                     <Label text="{I18N>/REQUEST_QUANTITY}"/>
                                     <table:template>
-                                        <Text text="{detailModel>pr_quantity}"/>
+                                        <Text text="{
+                                                    path:'detailModel>pr_quantity',
+                                                    type: 'sap.ui.model.type.currency',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                    }"/>
                                     </table:template>
-                                </table:Column>                                     
+                                </table:Column>    
+                                
+                                
                                 <table:Column  width="5em" hAlign="Center">
                                     <Label text="{I18N>/UNIT}" />           
                                     <table:template>
                                         <Text text="{detailModel>pr_unit}"/>
                                     </table:template>
                                 </table:Column>
+
                                 <table:Column  width="8em"  hAlign="Center">
-                                    <Label text="납품일" />           
+                                    <Label text="{I18N>/DELIVERY_REQUEST_DATE}" />           
                                     <table:template>
                                         <Text text="{
                                                     path:'detailModel>delivery_request_date',
@@ -224,35 +239,15 @@
                                                 }"/>
                                     </table:template>
                                 </table:Column>    
-                                <table:Column  width="10em" hAlign="Center">
-                                    <Label text="{I18N>/PRICE}" />           
-                                    <table:template>
-                                        <Text text="{detailModel>estimated_price}"/>
-                                    </table:template>
-                                </table:Column>                               
-                                <table:Column  width="5em" hAlign="Center">
-                                    <Label text="{I18N>/CURRENCY}" />           
-                                    <table:template>
-                                        <Text text="{detailModel>currency_code}"/>
-                                    </table:template>
-                                </table:Column> 
-
-                                <table:Column  width="5em" hAlign="Center">
-                                    <Label text="{I18N>/PRICE_UNIT}" />           
-                                    <table:template>
-                                        <Text text="{detailModel>price_unit}"/>
-                                    </table:template>
-                                </table:Column>    
 
                                 <table:Column  width="8em" hAlign="Center">
                                     <Label text="{I18N>/BUYER}"/>           
                                     <table:template>
-                                        <Text text="{detailModel>buyer_empno}"/>
+                                        <Text text="{detailModel>user_local_name} [{detailModel>buyer_empno}]"/>
                                     </table:template>
                                 </table:Column> 
 
-
-                                <table:Column width="10em" hAlign="Center">
+                                <table:Column width="5em" hAlign="Center">
                                     <Label text="{I18N>/PURCHASING_GROUP_CODE}"/>           
                                     <table:template>
                                         <Text text="{detailModel>purchasing_group_code}"/>
@@ -260,30 +255,81 @@
                                 </table:Column>
 
 
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="{I18N>/MATERIAL_GROUP_CODE}"/>           
+                                <table:Column  width="10em" hAlign="Center">
+                                    <Label text="{I18N>/PRICE}" />           
+                                    <table:template>
+                                        <Text text="{
+                                                    path:'detailModel>estimated_price',
+                                                    type: 'sap.ui.model.type.currency',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                    }"/>
+                                    </table:template>
+                                </table:Column>                               
+                                <table:Column  hAlign="Center">
+                                    <Label text="{I18N>/CURRENCY}" />           
+                                    <table:template>
+                                        <Text text="{detailModel>currency_code}"/>
+                                    </table:template>
+                                </table:Column> 
+
+                                <table:Column  hAlign="Center">
+                                    <Label text="{I18N>/PRICE_UNIT}" />           
+                                    <table:template>
+                                        <Text text="{detailModel>price_unit}"/>
+                                    </table:template>
+                                </table:Column> 
+                                
+                                <!-- 18 ~ // -->
+
+                                <table:Column  hAlign="Center">
+                                    <Label text="{I18N>/MATERIAL_GROUP_CODE}" />           
                                     <table:template>
                                         <Text text="{detailModel>material_group_code}"/>
                                     </table:template>
-                                </table:Column>
+                                </table:Column> 
 
-
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="{I18N>/STORAGE_LOCATION}"/>           
+                                <table:Column  hAlign="Center">
+                                    <Label text="{I18N>/STORAGE_LOCATION}" />           
                                     <table:template>
                                         <Text text="{detailModel>sloc_code}"/>
                                     </table:template>
-                                </table:Column>  
+                                </table:Column> 
 
-
-                                <table:Column width="10em" hAlign="Center">
-                                    <Label text="{I18N>/REMARK}"/>           
+                                <table:Column  hAlign="Center">
+                                    <Label text="{I18N>/MATERIAL_GROUP_CODE}" />           
                                     <table:template>
-                                        <Text text="{detailModel>remark}"/>
+                                        <Text text="{detailModel>material_group_code}"/>
                                     </table:template>
-                                </table:Column>  
+                                </table:Column> 
 
+                                <table:Column  hAlign="Center">
+                                    <Label text="{I18N>/SUPPLIER}" />           
+                                    <table:template>
+                                        <Text text="{detailModel>supplier_local_name} [{detailModel>supplier_code}]"/>
+                                    </table:template>
+                                </table:Column> 
 
+                                <table:Column  hAlign="Center">
+                                    <Label text="{I18N>/REQUESTOR}" />           
+                                    <table:template>
+                                        <Text text="{detailModel>user_local_name} [{detailModel>buyer_empno}]"/>
+                                    </table:template>
+                                </table:Column> 
+
+                                <table:Column  hAlign="Center">
+                                    <Label text="{I18N>/REQUEST_DATE}" />           
+                                    <table:template>
+                                        <Text text="{detailModel>request_date}"/>
+                                    </table:template>
+                                </table:Column> 
+
+                                <table:Column  hAlign="Center">
+                                    <Label text="{I18N>/REQUEST_DATE}" />           
+                                    <table:template>
+                                        <Text text="{detailModel>request_date}"/>
+                                    </table:template>
+                                </table:Column> 
+                                
 
                             </table:columns>
                           </table:Table>
@@ -293,6 +339,195 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
             <!-- 품목 정보 끝 -->
+
+
+            <!-- Account 정보 시작 -->
+            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/ACCOUNT_INFO}" visible="{= ${detailModel>/account}.length > 0 ? true : false}">
+				<uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <!-- Participating Supplier Table
+                                visibleRowCountMode="Auto"
+                            -->
+                        <table:Table id="AccountTable"
+                                selectionMode="None"
+                                fixedColumnCount="2"                                
+                                visibleRowCount="{= ${detailModel>/account}.length || 0}"
+                                rows="{detailModel>/account}"
+                                >
+                             <table:extension>
+                                <OverflowToolbar>
+                                    <Title text="{I18N>/ACCOUNT} ({= ${detailModel>/account}.length || 0})" level="H2"/>
+                                    <ToolbarSpacer/>
+                                    <!-- Add the Personalization button -->
+                                    
+                                    <!-- <Button icon="sap-icon://group-2" />
+                                    <Button icon="sap-icon://action-settings" />     -->
+                                </OverflowToolbar>
+                            </table:extension>          
+
+                            <table:columns>
+                                <table:Column  width="5em" hAlign="Center" >
+                                    <Label text="{I18N>/ITEM_NUMBER}"/>
+                                    <table:template>
+                                        <Text text="{detailModel>pr_item_number}"/>
+                                    </table:template>
+                                </table:Column>                                
+
+                                <table:Column  width="5em" hAlign="Center" >
+                                    <Label text="{I18N>/ACCOUNT_SEQUENCE}"/>
+                                    <table:template>
+                                        <Text text="{detailModel>account_sequence}"/>
+                                    </table:template>
+                                </table:Column>
+                              
+                                <table:Column  hAlign="Center" >
+                                    <Label text="{I18N>/ACCOUNT_CODE}"/>
+                                    <table:template>
+                                        <Text text="{detailModel>account_code} [{detailModel>account_name}]"/>
+                                    </table:template>
+                                </table:Column>
+
+                                 <table:Column  hAlign="Center" >
+                                    <Label text="{I18N>/CCTR_CODE}"/>
+                                    <table:template>
+                                        <Text text="{detailModel>cctr_code} [{detailModel>cctr_name}]"/>
+                                    </table:template>
+                                </table:Column>
+
+                                 <table:Column  hAlign="Center" >
+                                    <Label text="{I18N>/WBS_CODE}"/>
+                                    <table:template>
+                                        <Text text="{detailModel>wbs_code} [{detailModel>wbs_name}]"/>
+                                    </table:template>
+                                </table:Column>
+
+                                 <table:Column  hAlign="Center" >
+                                    <Label text="{I18N>/ASSET}"/>
+                                    <table:template>
+                                        <Text text="{detailModel>asset_number} [{detailModel>asset_name}]"/>
+                                    </table:template>
+                                </table:Column>
+
+                                <table:Column  hAlign="Center" >
+                                    <Label text="{I18N>/ORDER}"/>
+                                    <table:template>
+                                        <Text text="{detailModel>order_number} [{detailModel>order_name}]"/>
+                                    </table:template>
+                                </table:Column>
+
+
+                            </table:columns>
+                          </table:Table>
+                       
+                        <!-- // -->
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+            <!-- Account 정보 끝 -->
+
+
+            <!-- Service 정보 시작 -->
+            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/SERVICE_INFO}" visible="{= ${detailModel>/service}.length > 0 ? true : false}">
+				<uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <!-- Participating Supplier Table
+                                visibleRowCountMode="Auto"
+                            -->
+                        <table:Table id="ServiceTable"
+                                selectionMode="None"
+                                fixedColumnCount="1"                                
+                                visibleRowCount="{= ${detailModel>/service}.length || 0}"
+                                rows="{detailModel>/service}"
+                                >
+                             <table:extension>
+                                <OverflowToolbar>
+                                    <Title text="{I18N>/SERVICE} ({= ${detailModel>/service}.length || 0})" level="H2"/>
+                                    <ToolbarSpacer/>
+                                    <!-- Add the Personalization button -->
+                                    
+                                    <!-- <Button icon="sap-icon://group-2" />
+                                    <Button icon="sap-icon://action-settings" />     -->
+                                </OverflowToolbar>
+                            </table:extension>          
+
+                            <table:columns>
+                                <table:Column  width="5em" hAlign="Center" >
+                                    <Label text="{I18N>/ITEM_NUMBER}"/>
+                                    <table:template>
+                                        <Text text="{detailModel>pr_item_number}"/>
+                                    </table:template>
+                                </table:Column>                                
+
+                                <table:Column   width="5em" hAlign="Center" >
+                                    <Label text="{I18N>/SERVICE_SEQUENCE}"/>
+                                    <table:template>
+                                        <Text text="{detailModel>service_sequence}"/>
+                                    </table:template>
+                                </table:Column>
+
+                                <table:Column  hAlign="Center" >
+                                    <Label text="{I18N>/SERVICE_DESC}"/>
+                                    <table:template>
+                                        <Text text="{detailModel>service_desc}"/>
+                                    </table:template>
+                                </table:Column>
+
+                                 <table:Column  hAlign="Center" >
+                                    <Label text="{I18N>/REQUEST_QUANTITY}"/>
+                                    <table:template>
+                                        <Text text="{
+                                                    path:'detailModel>pr_quantity',
+                                                    type: 'sap.ui.model.type.currency',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                    }"/>
+                                    </table:template>
+                                </table:Column>
+
+                                 <table:Column  hAlign="Center" >
+                                    <Label text="{I18N>/UNIT}"/>
+                                    <table:template>
+                                        <Text text="{detailModel>unit}"/>
+                                    </table:template>
+                                </table:Column>
+
+                                 <table:Column  hAlign="Center" >
+                                    <Label text="{I18N>/NET_PRICE}"/>
+                                    <table:template>
+                                        <Text text="{
+                                                    path:'detailModel>net_price',
+                                                    type: 'sap.ui.model.type.currency',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                    }"/>
+                                    </table:template>
+                                </table:Column>
+
+                                <table:Column  hAlign="Center" >
+                                    <Label text="{I18N>/GROSS_AMOUNT}"/>
+                                    <table:template>
+                                        <Text text="{
+                                                    path:'detailModel>gross_amount',
+                                                    type: 'sap.ui.model.type.currency',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                    }"/>
+                                    </table:template>
+                                </table:Column>
+
+                                <table:Column  hAlign="Center" >
+                                    <Label text="{I18N>/CURRENCY_CODE}"/>
+                                    <table:template>
+                                        <Text text="{detailModel>currency_code}"/>
+                                    </table:template>
+                                </table:Column>
+
+
+                            </table:columns>
+                          </table:Table>
+                       
+                        <!-- // -->
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+            <!-- Service 정보 끝 -->
 
 
             <!-- 첨부파일 시작 -->

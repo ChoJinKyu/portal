@@ -346,7 +346,7 @@
                             <Text id="model" text="{list>model}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldMoldNoColumn" width="12em">
+                    <table:Column id="moldNoColumn" width="12em">
                         <Label text="Mold No" wrapping="true"/>
                         <table:template>
                             <Text id="mold_number" text="{list>mold_number}"/>

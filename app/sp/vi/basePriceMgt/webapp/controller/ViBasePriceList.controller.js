@@ -49,12 +49,12 @@ sap.ui.define([
                                         type_list:[{code:"1", text:"양산VI품의"}]}), "filterModel");
 
             this.getRouter().getRoute("basePriceList").attachPatternMatched(this.onSearch, this);
-        },
+        }
 
         /**
          * Search 버튼 클릭(Filter 추출)
          */
-        onSearch: function (oEvent) {
+        , onSearch: function (oEvent) {
             var oFilterModel = this.getModel("filterModel"),
                 oFilterModelData = oFilterModel.getData(),
                 aFilters = [],

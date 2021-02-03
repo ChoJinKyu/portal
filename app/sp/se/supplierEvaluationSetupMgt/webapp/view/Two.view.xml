@@ -30,10 +30,9 @@
                 preserveHeaderStateOnScroll="true"
                 enableLazyLoading="true"
                 class="sapUiContentPadding"
-
-                  alwaysShowContentHeader="false" 
-                    headerContentPinnable="false" 
-                    upperCaseAnchorBar="false" 
+                alwaysShowContentHeader="false" 
+                headerContentPinnable="false" 
+                upperCaseAnchorBar="false" 
                 >
 
                     <uxap:headerTitle/>
@@ -78,6 +77,9 @@
                                                         placeholder="EVALUATION_TYPE_CODE"
                                                         value="{TwoView>/evaluationType2/evaluation_type_code}"
                                                         editable="{=${TwoView>/isCreateMode}}"
+
+                                                        fieldGroupIds="required"
+                                                        required="true"
                                                         />      
                                                 <!--  평가 비율 -->
                                                 <Label text="{I18N>/EVALUATION_RATE}"/>                                                
@@ -86,6 +88,9 @@
                                                         placeholder="EVALUATION_RATE"
                                                         value="{TwoView>/evaluationType2/evaluation_type_distrb_score_rate}"
                                                         editable="{=${TwoView>/isEditMode}}"
+
+                                                        fieldGroupIds="required"
+                                                        required="true"
                                                         />
                                                         
                                                 <!-- Column2. 평가 유형 명 -->
@@ -95,16 +100,22 @@
                                                         placeholder="EVALUATION_TYPE_NAME"
                                                         value="{TwoView>/evaluationType2/evaluation_type_name}"
                                                         editable="{=${TwoView>/isEditMode}}"
+
+                                                        fieldGroupIds="required"
+                                                        required="true"
                                                         />
                                                 
                                                  <!-- 사용여부  -->
                                                 <Label text="{I18N>/USE_FLAG}"/> 
                                                 <SegmentedButton 
-                                                        selectedKey="{=${TwoView>/evaluationType2/use_flag} === true? 'Yes' : 'No'}"
-                                                        enabled="{TwoView>/isEditMode}">                                                       
+                                                        selectedKey="{
+                                                            path : 'TwoView>/evaluationType2/use_flag',
+                                                            type: 'sap.ui.model.type.Boolean'
+                                                        }"
+                                                        enabled="{=${TwoView>/isEditMode}}">                                                       
                                                         <items>
-                                                            <SegmentedButtonItem text="Yes" key="Yes" />
-                                                            <SegmentedButtonItem text="No" key="No" />
+                                                            <SegmentedButtonItem text="Yes" key="true" />
+                                                            <SegmentedButtonItem text="No" key="false" />
                                                         </items>
                                                 </SegmentedButton>
                                             </f:content>
@@ -123,21 +134,22 @@
                         <uxap:ObjectPageSubSection>
                             <uxap:blocks>
 
-                                <Table id="detailValuationTable"
+                                <Table id="scaleTable"
                                         inset="false"
                                         class="sapFDynamicPageAlignContent"
                                         width="auto"
                                         items="{
                                             path: 'TwoView>/scale'
                                             }"
-                                        mode="MultiSelect"    
+                                        mode="MultiSelect" 
+                                        selectionChange="onSelectItem"   
                                             >
                                     <headerToolbar>
                                         <Toolbar>
                                             <ToolbarSpacer/>
                                             <HBox>
-                                                <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onEvalAdd" enabled="{=${TwoView>/isEditMode}}"/>
-                                                <Button text="{I18N>/DELETE}" type="Transparent" press="onEvalDelete" enabled="{=${TwoView>/isEditMode}}"/>
+                                                <Button text="{I18N>/ROW_ADD}" type="Transparent" press="onScaleAdd" enabled="{=${TwoView>/isEditMode}}"/>
+                                                <Button text="{I18N>/DELETE}" type="Transparent" press="onScaleDelete" enabled="{=${TwoView>/isEditMode}}"/>
                                             </HBox>
                                         </Toolbar>
                                     </headerToolbar>
@@ -164,29 +176,46 @@
                                             <cells>
                                                 <core:Icon 
                                                     src="{=
-                                                        ${TwoView>crudFlg} === 'D' ? 'sap-icon://delete' : 'sap-icon://edit'
+                                                        ${TwoView>tansaction_code} === 'D' ? 
+                                                        'sap-icon://delete' : 
+                                                        (${TwoView>tansaction_code} === 'I' ? 'sap-icon://add' : 'sap-icon://edit')
                                                     }"
                                                     visible="{=
-                                                        !!${TwoView>crudFlg}
+                                                        !!${TwoView>tansaction_code}
                                                     }"
                                                 />
                                                 <Input   
                                                 width="100%" 
                                                 placeholder="EVALUATION_GRADE"
                                                 value="{TwoView>evaluation_grade}"
-                                                editable="{=${TwoView>/isEditMode}}"
+                                                editable="{=
+                                                                ${TwoView>/isEditMode}  &amp;&amp;
+                                                                !!${TwoView>rowEditable}
+                                                            }"
+                                                fieldGroupIds="required"
+                                                required="true"
                                                 />
                                                 <Input   
                                                 width="100%" 
                                                 placeholder="OVER"
                                                 value="{TwoView>evaluation_grade_start_score}"
-                                                editable="{=${TwoView>/isEditMode}}"
+                                                editable="{=
+                                                                ${TwoView>/isEditMode}  &amp;&amp;
+                                                                !!${TwoView>rowEditable}
+                                                            }"
+                                                fieldGroupIds="required"
+                                                required="true"
                                                 />
                                                 <Input   
                                                 width="100%" 
                                                 placeholder="LESS_THAN"
                                                 value="{TwoView>evaluation_grade_end_score}"
-                                                editable="{=${TwoView>/isEditMode}}"
+                                                editable="{=
+                                                                ${TwoView>/isEditMode}  &amp;&amp;
+                                                                !!${TwoView>rowEditable}
+                                                            }"
+                                                fieldGroupIds="required"
+                                                required="true"
                                                 />
                                                 <ComboBox selectedKey="{TwoView>inp_apply_code}" width="100%" items="{
                                                             path: 'common>/Code',
@@ -194,7 +223,12 @@
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                                                 {path: 'group_code', operator: 'EQ', value1: 'SP_SE_INP_APPLY_CODE'}
                                                             ]
-                                                            }" editable="{DetailView>/isEditMode}" required="true">
+                                                            }" editable="{=
+                                                                ${TwoView>/isEditMode}  &amp;&amp;
+                                                                !!${TwoView>rowEditable}
+                                                            }"
+                                                            fieldGroupIds="required"          
+                                                            required="true">
                                                             <items>
                                                                 <core:Item key="{common>code}" text="{common>code_name}" />
                                                             </items>

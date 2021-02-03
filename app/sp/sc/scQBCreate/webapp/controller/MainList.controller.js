@@ -58,7 +58,7 @@ sap.ui.define([
                     this._clickEvent("4");
                 }, this);
                 // this.oRouter.attachPatternMatched(this._onProductMatched, this);
-                // debugger;
+                // 
 
                 var a =
                 jQuery.ajax({
@@ -69,7 +69,7 @@ sap.ui.define([
 
                     contentType: "application/json",
                     success: function(oData2){ 
-                        debugger;
+                        
                         return oData2.value;
                         
                         // this.getModel("tblModel").setProperty("/right",oData2.value);
@@ -136,12 +136,12 @@ sap.ui.define([
                 var nego = new JSON(oNego);
                 this.getView().setModel(nego ,"nego");
 
-                // debugger;
+                // 
 
                 // this.oServiceModel.read("/Sc_Nego_Type_Code",{
                 // // oModel.read("mainV4/Sc_Nego_Type_Code?&$orderby=evaluation_type/sort_no,sort_no&$select=tenant_id,nego_type_code,nego_type_name,evaluation_type&$expand=nego_parent_type($select=nego_parent_type_name),evaluation_type($select=evaluation_type_name),Outcomes($select=outcome_name)",{
                 //     success: function(oData){
-                //         debugger;
+                //         
                 //     }.bind(this)                    
                 // });
 
@@ -251,7 +251,7 @@ sap.ui.define([
             _clickEvent: function(num){
 
                 //test
-                debugger;
+                
 
                 // 라디오 그룹 동적 visibled
                 this._oData = { flag : parseInt(num) };

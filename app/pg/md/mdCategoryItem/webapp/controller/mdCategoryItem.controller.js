@@ -34,12 +34,50 @@ sap.ui.define([
         var oMultilingual = new Multilingual();
         this.setModel(oMultilingual.getModel(), "I18N");
         this.getView().setModel(new ManagedListModel(), "list");
-        
-        // this.viewModel = new JSONModel({
-        //     MdCategoryItem : []
-        // });
-        // this.getView().setModel(this.viewModel, "list");
-        
+
+        var STATE_COL = "_row_state_";
+        ManagedListModel.prototype._executeBatch = function (sGroupId) {
+            var oServiceModel = this._oTransactionModel,
+                sTransactionPath = this._transactionPath,
+                cs = this.getCreatedRecords(),
+                us = this.getUpdatedRecords(),
+                ds = this.getDeletedRecords();
+
+            (cs || []).forEach(function (oItem) {
+                var sPath = oItem.__entity || sTransactionPath;
+                delete oItem[STATE_COL];
+                delete oItem.__entity;
+                oServiceModel.create(sPath, oItem, {
+                    groupId: sGroupId,
+                    success: function (oData) {
+                        oItem.__entity = sPath;
+                    }
+                });
+            });
+            (ds || []).forEach(function (oItem) {
+                //delete oItem[STATE_COL];
+                oServiceModel.remove(oItem.__entity, {
+                    groupId: sGroupId,
+                    success: function () {
+                    }
+                });
+            });
+            (us || []).forEach(function (oItem) {
+                var sEntity = oItem.__entity;
+                delete oItem[STATE_COL];
+                delete oItem.__entity;
+                delete oItem.org_infos;
+                delete oItem.category_infos;
+
+                oServiceModel.update(sEntity, oItem, {
+                    groupId: sGroupId,
+                    success: function () {
+                        oItem.__entity = sEntity;
+                    }
+                });
+            });
+        },
+ 
         this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
 
@@ -49,10 +87,6 @@ sap.ui.define([
         }).setTable(this.byId("mainTable"));
         
         this.rowIndex=0;
-
-        // this.aSearchCategoryCd = "C001";
-        // this.byId("textCategoryCode").setText(this.aSearchCategoryCd);
-        // this.byId("textCategoryName").setText();
       },
 
       //window창 파라메터 분리
@@ -93,7 +127,7 @@ sap.ui.define([
                 business_combo.setValue("");
             var aFiltersComboBox = [];
             aFiltersComboBox.push( new Filter("tenant_id", "EQ", tenant_id));
-            var businessSorter = new sap.ui.model.Sorter("bizunit_name", false);   
+            var businessSorter = new sap.ui.model.Sorter("bizunit_code", false);   
             
             business_combo.bindAggregation("items", {
                 path: "org>/Org_Unit",
@@ -140,7 +174,7 @@ sap.ui.define([
         var aFiltersComboBox = [];
         aFiltersComboBox.push( new Filter("tenant_id", "EQ", oSelectedkey));
         // oBindingComboBox.filter(aFiltersComboBox);          //sort Ascending
-        var businessSorter = new sap.ui.model.Sorter("bizunit_name", false);        //sort Ascending
+        var businessSorter = new sap.ui.model.Sorter("bizunit_code", false);        //sort Ascending
         
         business_combo.bindAggregation("items", {
             path: "org>/Org_Unit",
@@ -261,7 +295,7 @@ sap.ui.define([
                 .setTransactionModel(this.getView().getModel())
                 .read("/MdCategoryItem", {
                     filters: aFilters,                
-                    sorters : aSorter,
+                    // sorters : aSorter,
                     urlParameters: {
                         "$expand": "org_infos,category_infos"
                     },
@@ -318,7 +352,6 @@ sap.ui.define([
             //     oDataArr = oModel.getProperty("/MdCategoryItem"); 
             //     oDataLength = oDataArr.length;
             //     lastCtgrSeq = oDataArr[oDataLength-1].spmd_character_sort_seq;
-            //     console.log(lastCtgrSeq);
             //     ctgrSeq = String(parseInt(lastCtgrSeq)+1);
             // }
 
@@ -384,11 +417,6 @@ sap.ui.define([
                   view.setBusy(false);
                   MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
                   this.byId("mainTable").getBinding("items").refresh();
-                //   this._setEditChange(this.rowIndex,"R");  
-                //   this.refresh();
-                //   setTimeout(this.onSearch(), 3000);
-                  //위로 이동 클릭시 refresh 정상
-                  //아래 이동 클릭시 원복처리됨
                 }.bind(this)
               });
             }
@@ -441,8 +469,6 @@ sap.ui.define([
         Utils.getSelectedItemContext(oSelectedProductsTable, function(oSelectedItemContext, iSelectedItemIndex) {
             var oSelectedItem = oSelectedProductsTable.getItems()[iSelectedItemIndex];
             var iSiblingItemIndex = iSelectedItemIndex + (sDirection === "Up" ? -1 : 1);
-            
-            console.log(iSelectedItemIndex + " / "+iSiblingItemIndex);
 
             // that._setEditChange(iSelectedItemIndex,"R");  
             var oSiblingItem = oSelectedProductsTable.getItems()[iSiblingItemIndex];
@@ -475,10 +501,22 @@ sap.ui.define([
     },
 
     moveUp: function() {
+        var category_combo = this.getView().byId("searchChain");
+        var sChain = this.getView().byId("searchChain").getSelectedKey();
+        if(sChain == null || category_combo.getValue() == ""){
+            MessageToast.show("사업본부를 설정해주세요.");
+            return;
+        }
         this.moveSelectedItem("Up");
     },
 
     moveDown: function() {
+        var category_combo = this.getView().byId("searchChain");
+        var sChain = this.getView().byId("searchChain").getSelectedKey();
+        if(sChain == null || category_combo.getValue() == ""){
+            MessageToast.show("사업본부를 설정해주세요.");
+            return;
+        }
         this.moveSelectedItem("Down");
     },
 

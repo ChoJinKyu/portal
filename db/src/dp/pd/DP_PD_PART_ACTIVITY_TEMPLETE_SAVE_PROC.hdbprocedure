@@ -144,11 +144,20 @@ BEGIN
                             ,NOW(), UPDATE_USER_ID
                        FROM :I_M
                       WHERE TENANT_ID = M.TENANT_ID 
+                        AND COMPANY_CODE = M.COMPANY_CODE
+                        AND ORG_TYPE_CODE = M.ORG_TYPE_CODE
+                        AND ORG_CODE = M.ORG_CODE
+                        AND PART_PROJECT_TYPE_CODE = M.PART_PROJECT_TYPE_CODE
                         AND ACTIVITY_CODE = M.ACTIVITY_CODE
                    )
-            WHERE   (M.TENANT_ID, M.ACTIVITY_CODE ) IN
-                    ( SELECT TENANT_ID, ACTIVITY_CODE FROM :I_M )
+                WHERE  M.TENANT_ID = V_TENANT_ID
+                AND    M.COMPANY_CODE = V_COMPANY_CODE
+                AND    M.ORG_TYPE_CODE = V_ORG_TYPE_CODE
+                AND    M.ORG_CODE = V_ORG_CODE
+                AND    M.PART_PROJECT_TYPE_CODE = V_PART_PROJECT_TYPE_CODE
+                AND    M.ACTIVITY_CODE = V_ACTIVITY_CODE
             ;
+
         ELSE
             INSERT INTO DP_PD_PART_ACTIVITY_TEMPLATE M
                       ( TENANT_ID
@@ -180,8 +189,15 @@ BEGIN
                         ,PART_PROJECT_TYPE_CODE
                         ,ACTIVITY_CODE
                         ,CATEGORY_GROUP_CODE
-                        ,SEQUENCE
-                        ,DEVELOPE_EVENT_CODE
+                         ,(SELECT COALESCE(MAX(SEQUENCE), 0) + 1 
+                             FROM DP_PD_PART_ACTIVITY_TEMPLATE
+                            WHERE TENANT_ID = M.TENANT_ID
+                              AND COMPANY_CODE = M.COMPANY_CODE
+                              AND ORG_TYPE_CODE = M.ORG_TYPE_CODE
+                              AND ORG_CODE = M.ORG_CODE
+                              AND PART_PROJECT_TYPE_CODE = M.PART_PROJECT_TYPE_CODE
+                            )
+                       ,DEVELOPE_EVENT_CODE
                         ,ACTUAL_ROLE_CODE
                         ,ACTIVITY_COMPLETE_TYPE_CODE
                         ,JOB_TYPE_CODE
@@ -194,7 +210,7 @@ BEGIN
                         ,UPDATE_USER_ID
                         ,NOW()
                         ,NOW()
-                FROM :I_M 
+                FROM :I_M M
             ;                
 
         END IF;
@@ -213,8 +229,7 @@ BEGIN
             USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE_CODE IN ('C','U')  ) id
             ON ( D.TENANT_ID = id.TENANT_ID
                 AND D.ACTIVITY_CODE = id.ACTIVITY_CODE
-                AND D.LANGUAGE_CD = id.LANGUAGE_CD
-                AND id.CRUD_TYPE_CODE IN ('C','U') )
+                AND D.LANGUAGE_CD = id.LANGUAGE_CD )
 
         WHEN MATCHED THEN
             UPDATE

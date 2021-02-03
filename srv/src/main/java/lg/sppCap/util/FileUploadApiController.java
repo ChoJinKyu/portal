@@ -319,7 +319,7 @@ public class FileUploadApiController {
         return true;
     }
 
-    @PostMapping(value= "/v1/singleUpload", produces="application/json;charset=utf8")
+    @PostMapping(value= "/v2/singleUpload", produces="application/json;charset=utf8")
     public String singleUupload(String groupId, @RequestPart MultipartFile file) throws Exception {
         OkHttpClient client = getOkHttpClient(60);         
         String token = getToken();
@@ -441,8 +441,8 @@ public class FileUploadApiController {
         return mapper.writeValueAsString(resp);
     }
 
-    @PostMapping(value= "/v2/singleUpload", produces="application/json;charset=utf8")
-    public String singleUuploadV2(HttpServletRequest httpRequest, @RequestHeader Map<String, String> headers) throws Exception {
+    @PostMapping(value= "/v1/singleUpload", produces="application/json;charset=utf8")
+    public String singleUuploadV1(HttpServletRequest httpRequest, @RequestHeader Map<String, String> headers) throws Exception {
         OkHttpClient client = getOkHttpClient(60);         
         String token = getToken();
         String originFileName = headers.get("filename");
@@ -487,9 +487,7 @@ public class FileUploadApiController {
             FileUtils.copyInputStreamToFile(inputStream, file);
 
             // file = new File(originalfileName);
-            fileOutputStream = new FileOutputStream(file);            
-            fileSize = (int)Streams.copy(inputStream, fileOutputStream, true);
-
+            fileSize = (int)file.length();
             
         } catch (IOException e) {
              e.printStackTrace();

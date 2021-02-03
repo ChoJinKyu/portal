@@ -1,24 +1,24 @@
 VIEW PG_MI_SAC_MAT_BOM_MAPPING_VIEW AS
     SELECT
-    			 'Actual'				                    AS	"VERSION"
-    			,A.TENANT_ID			                    AS	"TENANT"
-    			,D.BIZUNIT_CODE		                        AS	BIZUNIT
-    			,B.VENDOR_POOL      	                    AS  VENDOR_POOL
-    			,A.MATERIAL_CODE    	                    AS  MATERIAL
-    			,A.SUPPLIER_CODE    	                    AS  SUPPLIER
-    			,'202001'           	                    AS  "DATE"
-    			,'20200101'         	                    AS  LATEST_MI_DATE
-    			,'20200101'         	                    AS  LATEST_NET_PRICE_CFM_DATE
-    			,'#'                	                    AS  SOURCE_CURRENCY
-    			,'#'                	                    AS  TARGET_CURRENCY
-    			,A.QUANTITY_UNIT		                    AS	UOM
-    			,A.CATEGORY_CODE||'_'||A.MI_MATERIAL_CODE   AS	MI_MATERIAL
-    			,A.TERMSDELV			                    AS	MI_INCOTERMS
-    			,A.EXCHANGE				                    AS	EXCHANGE
-    			,'#'					                    AS	NET_PRICE_CONFIRMED_TYPE
-    			,D.PLANT_CODE			                    AS	PLANT
-    			,'PG0102_00012'			                    AS	MI_MEASURE
-    			,1						                    AS	"VALUE"
+    			 'Actual'				AS	"VERSION"
+    			,A.TENANT_ID			AS	"TENANT"
+    			,D.BIZUNIT_CODE		    AS	BIZUNIT
+    			,B.VENDOR_POOL      	AS  VENDOR_POOL
+    			,A.MATERIAL_CODE    	AS  MATERIAL
+    			,A.SUPPLIER_CODE    	AS  SUPPLIER
+    			,'202001'           	AS  "DATE"
+    			,'20200101'         	AS  LATEST_MI_DATE
+    			,'20200101'         	AS  LATEST_NET_PRICE_CFM_DATE
+    			,'#'                	AS  SOURCE_CURRENCY
+    			,'#'                	AS  TARGET_CURRENCY
+    			,A.QUANTITY_UNIT		AS	UOM
+    			,A.MI_MATERIAL_CODE     AS	MI_MATERIAL     --  CATEGORY_CODE 삭제 (2021.02.03)
+    			,A.TERMSDELV			AS	MI_INCOTERMS
+    			,A.EXCHANGE				AS	EXCHANGE
+    			,'#'					AS	NET_PRICE_CONFIRMED_TYPE
+    			,D.PLANT_CODE			AS	PLANT
+    			,'PG0102_00012'			AS	MI_MEASURE
+    			,1						AS	"VALUE"
     	FROM	PG_MI_MAT_CODE_BOM_MANAGEMENT_VIEW  A
     			INNER  JOIN  (
     				SELECT	 DISTINCT
