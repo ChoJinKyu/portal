@@ -41,7 +41,7 @@ namespace pg;
 service individualSpendSacDService {
 
     // Entity List
-    entity MdMaterialItemValue @(title : '자재별 특성 정보') as projection on MaterialItemValue;
+    // entity MdMaterialItemValue @(title : '자재별 특성 정보') as projection on MaterialItemValue;
     // View List
 
     // Tenant View: 회사
@@ -426,5 +426,18 @@ service individualSpendSacDService {
                ,org_code            as  ORG_CODE
         from  GlAccountMst
         ;
+
+    // MdMaterialItemValue View @(title : '자재별 특성 정보')
+    view MdMaterialItemValueView @(title : '자재별 특성 정보 View') as
+        select
+            key a.tenant_id         as  TENANT_ID
+           ,key a.company_code||'_'||a.org_type_code||'_'||a.org_code||'_'||a.vendor_pool_code||'_'||a.material_code||'_'||a.supplier_code  as  ID : String
+               ,b.material_desc     as  Description
+        from  MaterialItemValue  a
+              inner join MaterialMst  b
+                  on  a.tenant_id      =  b.tenant_id
+                  and a.material_code  =  b.material_code
+        ;
+
 
 }
