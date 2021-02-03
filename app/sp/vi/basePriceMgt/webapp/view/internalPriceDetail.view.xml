@@ -280,10 +280,10 @@
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <ComboBox selectedKey="{detailModel>currency_code}" editable="{= ${detailModel>row_state} === 'edit' }"
-                                                    items="{ path: 'currencyODataModel>/Currency' }">
+                                            <ComboBox selectedKey="{detailModel>currency_code}"
+                                                items="{ path: 'currModel>/org_Currency'}">
                                             <items>
-                                                <core:Item key="{currencyODataModel>currency_code}" text="{currencyODataModel>currency_code}" />
+                                                <core:Item key="{currModel>currency_code}" text="{currModel>currency_code}" />
                                             </items>
                                             </ComboBox>
                                         </t:template>

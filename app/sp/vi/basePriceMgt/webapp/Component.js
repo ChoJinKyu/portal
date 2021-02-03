@@ -22,8 +22,12 @@ sap.ui.define([
             this.setModel(new JSONModel(oBasePriceArlMgtRootData), "rootModel");
             this.setModel(new Multilingual().getModel(), "I18N");
 
-            var oRootModel = this.getModel("rootModel");
+            this.setModel(new JSONModel(), "currModel");
+            var oCurrModel = this.getModel("currModel");
 
+            var oRootModel = this.getModel("rootModel");
+            oRootModel.setSizeLimit(10000);
+            
             // 사업부 조회
             var oOrgModel = this.getModel("orgCode");
             var aOrgDivFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
@@ -46,6 +50,21 @@ sap.ui.define([
                 success : function(data){
                     if( data && data.results ) {
                         oRootModel.setProperty("/org_Company", data.results);    
+                    }
+                },
+                error : function(data){
+                    console.log("error", data);
+                }
+            });
+
+            // 통화 조회
+            var oCurryModel = this.getModel("currencyODataModel");
+            var aOrgCompFilter = [new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId"))];
+            oCurryModel.read("/Currency", {
+                filters : aOrgCompFilter,
+                success : function(data){
+                    if( data && data.results ) {
+                        oCurrModel.setProperty("/org_Currency", data.results);    
                     }
                 },
                 error : function(data){
@@ -82,6 +101,7 @@ sap.ui.define([
             });
             //자재 조회
             var oBasePriceArlModel = this.getModel("basePriceArl");
+            oBasePriceArlModel.setSizeLimit(3000);
             var aOrgMetalFilter = [];
                 aOrgMetalFilter.push(new Filter("tenant_id", FilterOperator.EQ, oRootModel.getProperty("/tenantId")));
             oBasePriceArlModel.read("/Base_Price_Aprl_Material", {
