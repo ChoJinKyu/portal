@@ -1,0 +1,192 @@
+{
+    "_version": "1.12.0",
+    "sap.app": {
+        "id": "sp.sm.makerMasterCreate",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "ach": "ach",
+        "sourceTemplate": {
+            "id": "html5moduletemplates.basicSAPUI5ApplicationProjectModule",
+            "version": "1.40.12"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "srv-api/odata/v2/sp.makerViewService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0",
+                    "localUri": "localService/metadata.xml"
+                }
+            },
+            "commonUtilService": {
+                "uri": "srv-api/odata/v2/cm.util.CommonService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
+            "supplierUtilService": {
+                "uri": "srv-api/odata/v2/sp.supplierViewService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            }
+        }
+    },
+    "sap.cloud": {
+        "public": true,
+        "service": "sppCap_ui_dev"
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": false,
+        "rootView": {
+            "viewName": "sp.sm.makerMasterCreate.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "app"
+        },
+        "dependencies": {
+            "minUI5Version": "1.60.1",
+            "libs": {
+                "sap.ui.core": {},
+                "sap.m": {},
+                "sap.ui.layout": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "sp.sm.makerMasterCreate.i18n.i18n"
+                }
+            },
+            "util": {
+                "dataSource": "commonUtilService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {
+                    "operationMode": "Server",
+                    "groupId": "$direct",
+                    "synchronizationMode": "None",
+                    "autoExpandSelect": true
+                }
+            }
+            
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "resourceRoots": {
+            "ext.lib": "../../../../../lib",
+            "ext.util": "../../../util",
+            "sp.sm.util": "../../util"
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "viewPath": "sp.sm.makerMasterCreate.view",
+                "controlId": "fcl",
+                "transition": "slide",
+                "bypassed": {
+                    "target": [
+                        "notFound"
+                    ]
+                },
+                "async": true
+            },
+            "routes": [
+                {
+                    "pattern": "mainPage/{gubun}/{mode}/{tenantId}/{makerCode}",
+                    "name": "mainPage2",
+                    "target": [
+                        "mainObject"
+                    ]
+                },
+                {
+                    "pattern": ":layout:",
+                    "name": "mainPage",
+                    "target": [
+                        "mainObject"
+                    ]
+                },
+                 {
+                    "pattern": "midView/{layout}/{gubun}/{mode}/{tenantId}/{makerCode}",
+                    "name": "midView",
+                    "target": [
+                        "mainObject",
+                        "midObject"
+                    ]
+                },
+                {
+                    "pattern": "endObject/{layout}/{tenantId}/{controlOptionCode}",
+                    "name": "endPage",
+                    "target": [
+                        "mainObject",
+                        "midObject",
+                        "endObject"
+                    ]
+                }
+            ],
+            "targets": {
+                "mainObject": {
+                    "viewName": "MainPage",
+                    "controlAggregation": "beginColumnPages"
+                },
+               "midObject": {
+                    "viewName": "MidObject",
+                    "controlAggregation": "midColumnPages"
+                },
+                "endObject": {
+                    "viewName": "TemplateMidObject",
+                    "controlAggregation": "endColumnPages"
+                },
+                "notFound": {
+                    "viewName": "NotFound",
+                    "viewPath": "ext.lib.view",
+                    "viewId": "notFound"
+                }
+            }
+        }
+    }
+}
