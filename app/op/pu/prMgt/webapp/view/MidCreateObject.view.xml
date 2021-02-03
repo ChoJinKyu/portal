@@ -127,10 +127,11 @@
                                 <OverflowToolbar>
                                     <Title text="{I18N>/ITEM} ({= (${viewModel>/Pr_Dtl})?${viewModel>/Pr_Dtl}.length:0})" level="H2"/>
                                     <ToolbarSpacer/>
-                                    <Button id="btnPsAdd" type="Transparent" text="Add Item" press=".onItemAddRow" />
-                                    <Button id="btnItemCopy"   type="Transparent" text="Copy"  press=".onItemCopyRow" />
+                                    <Button type="Emphasized" text="Add Item" press=".onItemAddRow" />
+                                    <Button type="Transparent" text="Add Multiple Item" press=".onItemAddMultiRow" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag}"/>
+                                    <Button type="Transparent" text="Copy"  press=".onItemCopyRow" />
                                     <!-- <Button id="btnItemEditMulti"   type="Transparent" text="Edit Multiple"  press=".onItemEditMultiRow" /> -->
-                                    <Button id="btnItemDelete"   type="Transparent" text="Delete"  press=".onItemDeleteRow" />
+                                    <Button type="Transparent" text="Delete"  press=".onItemDeleteRow" />
                                 </OverflowToolbar>
                             </table:extension>          
 
