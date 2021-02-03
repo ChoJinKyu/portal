@@ -20,7 +20,7 @@ sap.ui.define([
                 this.setModel(new ManagedListModel(), "sessionList");
                 this.setModel(new ManagedListModel(), "userValue");
 
-                var oSppUserSession = new SppUserSession("controller");
+                var oSppUserSession = new SppUserSession();
                 this.setModel(oSppUserSession.getModel(), "USER_SESSION");
 
                 var oMultilingual = new Multilingual();
@@ -53,12 +53,21 @@ sap.ui.define([
             },
 
             onTest: function() {
+                
+                var userId1 = this.getSessionUserId();  // BaseController의 function 사용
+                var userId2 = this.getSessionUserInfo().USER_ID; // JSON 중 USER_ID 사용
+
+                var langCd1 = SppUserSessionUtil.getLanguageCode();
+                var LangCd2 = SppUserSessionUtil.getUserInfo().LANGUAGE_CODE; 
+
+                var curCode1 = this.getModel("USER_SESSION").getSessionAttr("CURRENCY_CODE");
+
                 debugger
-                console.log("BaseController : " + this.getSessionUserInfo().USER_ID);
-                console.log("BaseController : " + this.getSessionUserId());
-                console.log("Static : " + SppUserSessionUtil.getUserInfo().LANGUAGE_CODE);
-                console.log("Static : " + SppUserSessionUtil.getLanguageCode());
-                console.log("Local Model : " + this.getModel("USER_SESSION").getSessionAttr("USER_ID"));                
+                console.log("BaseController : " + userId1);
+                console.log("BaseController JSON : " + userId2);
+                console.log("Static : " + langCd1);
+                console.log("Static JSON : " + LangCd2);
+                console.log("Local Model : " + curCode1);
             }
 
 		});
