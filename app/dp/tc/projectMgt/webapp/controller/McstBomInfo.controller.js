@@ -178,6 +178,24 @@ sap.ui.define([
                 return; 
             } // skip
             
+            //Mapping 된 데이터가 있는지 checking
+            //var aList = this.getModel("partListModel").getProperty("/PartListView");
+            var aSelIndics = oTable.getSelectedIndices();
+            var validFlag = true;
+            $.each(aSelIndics, function(nIdx, nRowIdx) {
+                let oCnxt = oTable.getContextByIndex(nRowIdx);
+                let sPath = oCnxt.getPath();
+                let oRow = oTable.getModel("partListModel").getProperty(sPath);
+                if(oRow.mapping_id) {
+                    MessageToast.show("맵핑된 데이터가 있습니다. 맵핑 삭제 후 데이터 삭제가 가능합니다.", {at: "center center"});
+                    validFlag = false;
+                    return false;
+                }
+            }.bind(this));
+            if(!validFlag) {
+                return;
+            }
+
             oTable.getSelectedIndices().reverse().forEach(function (idx) {
                 model.markRemoved(idx);
             });
@@ -350,7 +368,7 @@ sap.ui.define([
         },
 
         onBomMappingDeletePress : function() {
-            MessageBox.confirm("삭제 하시겠습니까?", {
+            MessageBox.confirm(this.I18N.getText("/NCM00003"), {//삭제 하시겠습니까?
                 title : "Delete",
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {

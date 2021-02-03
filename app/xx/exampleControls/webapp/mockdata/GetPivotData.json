@@ -1,6 +1,6 @@
 {
     "@context": "$metadata#xx.ExampleV4Service.PivotData",
-    "@metadataEtag": "W/\"e4c9efc039ceace53549b912155b2cda0e5f4d0abe3c20eff3675606dfa1d198\"",
+    "@metadataEtag": "W/\"6abee8a527bc4b72ff2dc43f5a379305d9bf685a3774bab6173cc9d3cd349106\"",
     "columns": [
         {
             "label": "Seq.",
@@ -70,382 +70,574 @@
     ],
     "records": [
         {
-            "columnIds": [
-                "seq",
-                "name",
-                "C001-1",
-                "C0010",
-                "C0011",
-                "C0012",
-                "C0013",
-                "C0014",
-                "C0015",
-                "C0016",
-                "C0017",
-                "C0018",
-                "C0019"
-            ],
-            "stringValues": [
-                "",
-                "Eva 1",
-                "string value-1",
-                "string value0",
-                "string value1",
-                "string value2",
-                "string value3",
-                "string value4",
-                "string value5",
-                "string value6",
-                "string value7",
-                "string value8",
-                "string value9"
-            ],
-            "numberValues": [
-                1,
-                0,
-                -2048,
-                0,
-                4096,
-                10240,
-                18432,
-                28672,
-                40960,
-                55296,
-                71680,
-                90112,
-                110592
-            ],
-            "booleanValues": [
-                false,
-                false,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false
-            ],
-            "DateValues": []
+            "cells": [
+                {
+                    "columnId": "seq",
+                    "stringValue": null,
+                    "numberValue": 0,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "name",
+                    "stringValue": "Henly 0th junior",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C001-1",
+                    "stringValue": null,
+                    "numberValue": 0,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0010",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0011",
+                    "stringValue": "string value1",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0012",
+                    "stringValue": null,
+                    "numberValue": 0,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0013",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0014",
+                    "stringValue": "string value4",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0015",
+                    "stringValue": null,
+                    "numberValue": 0,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0016",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0017",
+                    "stringValue": "string value7",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0018",
+                    "stringValue": null,
+                    "numberValue": 0,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0019",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                }
+            ]
         },
         {
-            "columnIds": [
-                "seq",
-                "name",
-                "C001-1",
-                "C0010",
-                "C0011",
-                "C0012",
-                "C0013",
-                "C0014",
-                "C0015",
-                "C0016",
-                "C0017",
-                "C0018",
-                "C0019"
-            ],
-            "stringValues": [
-                "",
-                "Eva 1",
-                "string value-1",
-                "string value0",
-                "string value1",
-                "string value2",
-                "string value3",
-                "string value4",
-                "string value5",
-                "string value6",
-                "string value7",
-                "string value8",
-                "string value9"
-            ],
-            "numberValues": [
-                1,
-                0,
-                -2048,
-                0,
-                4096,
-                10240,
-                18432,
-                28672,
-                40960,
-                55296,
-                71680,
-                90112,
-                110592
-            ],
-            "booleanValues": [
-                false,
-                false,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false
-            ],
-            "DateValues": []
+            "cells": [
+                {
+                    "columnId": "seq",
+                    "stringValue": null,
+                    "numberValue": 1,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "name",
+                    "stringValue": "Henly 1th junior",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C001-1",
+                    "stringValue": null,
+                    "numberValue": -1024,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0010",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": true,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0011",
+                    "stringValue": "string value1",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0012",
+                    "stringValue": null,
+                    "numberValue": 2048,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0013",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0014",
+                    "stringValue": "string value4",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0015",
+                    "stringValue": null,
+                    "numberValue": 5120,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0016",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": true,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0017",
+                    "stringValue": "string value7",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0018",
+                    "stringValue": null,
+                    "numberValue": 8192,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0019",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                }
+            ]
         },
         {
-            "columnIds": [
-                "seq",
-                "name",
-                "C001-1",
-                "C0010",
-                "C0011",
-                "C0012",
-                "C0013",
-                "C0014",
-                "C0015",
-                "C0016",
-                "C0017",
-                "C0018",
-                "C0019"
-            ],
-            "stringValues": [
-                "",
-                "Eva 1",
-                "string value-1",
-                "string value0",
-                "string value1",
-                "string value2",
-                "string value3",
-                "string value4",
-                "string value5",
-                "string value6",
-                "string value7",
-                "string value8",
-                "string value9"
-            ],
-            "numberValues": [
-                1,
-                0,
-                -2048,
-                0,
-                4096,
-                10240,
-                18432,
-                28672,
-                40960,
-                55296,
-                71680,
-                90112,
-                110592
-            ],
-            "booleanValues": [
-                false,
-                false,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false
-            ],
-            "DateValues": []
+            "cells": [
+                {
+                    "columnId": "seq",
+                    "stringValue": null,
+                    "numberValue": 2,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "name",
+                    "stringValue": "Henly 2th junior",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C001-1",
+                    "stringValue": null,
+                    "numberValue": -2048,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0010",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0011",
+                    "stringValue": "string value1",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0012",
+                    "stringValue": null,
+                    "numberValue": 4096,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0013",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0014",
+                    "stringValue": "string value4",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0015",
+                    "stringValue": null,
+                    "numberValue": 10240,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0016",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0017",
+                    "stringValue": "string value7",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0018",
+                    "stringValue": null,
+                    "numberValue": 16384,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0019",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                }
+            ]
         },
         {
-            "columnIds": [
-                "seq",
-                "name",
-                "C001-1",
-                "C0010",
-                "C0011",
-                "C0012",
-                "C0013",
-                "C0014",
-                "C0015",
-                "C0016",
-                "C0017",
-                "C0018",
-                "C0019"
-            ],
-            "stringValues": [
-                "",
-                "Eva 1",
-                "string value-1",
-                "string value0",
-                "string value1",
-                "string value2",
-                "string value3",
-                "string value4",
-                "string value5",
-                "string value6",
-                "string value7",
-                "string value8",
-                "string value9"
-            ],
-            "numberValues": [
-                1,
-                0,
-                -2048,
-                0,
-                4096,
-                10240,
-                18432,
-                28672,
-                40960,
-                55296,
-                71680,
-                90112,
-                110592
-            ],
-            "booleanValues": [
-                false,
-                false,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false
-            ],
-            "DateValues": []
+            "cells": [
+                {
+                    "columnId": "seq",
+                    "stringValue": null,
+                    "numberValue": 3,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "name",
+                    "stringValue": "Henly 3th junior",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C001-1",
+                    "stringValue": null,
+                    "numberValue": -3072,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0010",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": true,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0011",
+                    "stringValue": "string value1",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0012",
+                    "stringValue": null,
+                    "numberValue": 6144,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0013",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0014",
+                    "stringValue": "string value4",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0015",
+                    "stringValue": null,
+                    "numberValue": 15360,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0016",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": true,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0017",
+                    "stringValue": "string value7",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0018",
+                    "stringValue": null,
+                    "numberValue": 24576,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0019",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                }
+            ]
         },
         {
-            "columnIds": [
-                "seq",
-                "name",
-                "C001-1",
-                "C0010",
-                "C0011",
-                "C0012",
-                "C0013",
-                "C0014",
-                "C0015",
-                "C0016",
-                "C0017",
-                "C0018",
-                "C0019"
-            ],
-            "stringValues": [
-                "",
-                "Eva 1",
-                "string value-1",
-                "string value0",
-                "string value1",
-                "string value2",
-                "string value3",
-                "string value4",
-                "string value5",
-                "string value6",
-                "string value7",
-                "string value8",
-                "string value9"
-            ],
-            "numberValues": [
-                1,
-                0,
-                -2048,
-                0,
-                4096,
-                10240,
-                18432,
-                28672,
-                40960,
-                55296,
-                71680,
-                90112,
-                110592
-            ],
-            "booleanValues": [
-                false,
-                false,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false
-            ],
-            "DateValues": []
+            "cells": [
+                {
+                    "columnId": "seq",
+                    "stringValue": null,
+                    "numberValue": 4,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "name",
+                    "stringValue": "Henly 4th junior",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C001-1",
+                    "stringValue": null,
+                    "numberValue": -4096,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0010",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0011",
+                    "stringValue": "string value1",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0012",
+                    "stringValue": null,
+                    "numberValue": 8192,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0013",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0014",
+                    "stringValue": "string value4",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0015",
+                    "stringValue": null,
+                    "numberValue": 20480,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0016",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0017",
+                    "stringValue": "string value7",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0018",
+                    "stringValue": null,
+                    "numberValue": 32768,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0019",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                }
+            ]
         },
         {
-            "columnIds": [
-                "seq",
-                "name",
-                "C001-1",
-                "C0010",
-                "C0011",
-                "C0012",
-                "C0013",
-                "C0014",
-                "C0015",
-                "C0016",
-                "C0017",
-                "C0018",
-                "C0019"
-            ],
-            "stringValues": [
-                "",
-                "Eva 1",
-                "string value-1",
-                "string value0",
-                "string value1",
-                "string value2",
-                "string value3",
-                "string value4",
-                "string value5",
-                "string value6",
-                "string value7",
-                "string value8",
-                "string value9"
-            ],
-            "numberValues": [
-                1,
-                0,
-                -2048,
-                0,
-                4096,
-                10240,
-                18432,
-                28672,
-                40960,
-                55296,
-                71680,
-                90112,
-                110592
-            ],
-            "booleanValues": [
-                false,
-                false,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false,
-                true,
-                false
-            ],
-            "DateValues": []
+            "cells": [
+                {
+                    "columnId": "seq",
+                    "stringValue": null,
+                    "numberValue": 5,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "name",
+                    "stringValue": "Henly 5th junior",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C001-1",
+                    "stringValue": null,
+                    "numberValue": -5120,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0010",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": true,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0011",
+                    "stringValue": "string value1",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0012",
+                    "stringValue": null,
+                    "numberValue": 10240,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0013",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0014",
+                    "stringValue": "string value4",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0015",
+                    "stringValue": null,
+                    "numberValue": 25600,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0016",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": true,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0017",
+                    "stringValue": "string value7",
+                    "numberValue": null,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0018",
+                    "stringValue": null,
+                    "numberValue": 40960,
+                    "booleanValue": null,
+                    "dateValue": null
+                },
+                {
+                    "columnId": "C0019",
+                    "stringValue": null,
+                    "numberValue": null,
+                    "booleanValue": false,
+                    "dateValue": null
+                }
+            ]
         }
     ]
 }

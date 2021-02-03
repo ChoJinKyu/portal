@@ -2,6 +2,7 @@ package lg.sppCap.handlers.xx;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
@@ -13,6 +14,7 @@ import cds.gen.xx.examplev4service.GetLocalizedMessageContext;
 import cds.gen.xx.examplev4service.GetPivotDataContext;
 import cds.gen.xx.examplev4service.LocalizedMessage;
 import cds.gen.xx.examplev4service.MessageDefine;
+import cds.gen.xx.examplev4service.PivotCell;
 import cds.gen.xx.examplev4service.PivotColumn;
 import cds.gen.xx.examplev4service.PivotData;
 import cds.gen.xx.examplev4service.PivotRecord;
@@ -26,10 +28,12 @@ public class ExampleV4Service extends BaseEventHandler {
     public void onGetPivotData(GetPivotDataContext context) {
         PivotData data = PivotData.create();
         
-        int total = 13;
+        int minColumn = 7;
+        int maxColumn = 25;
+        int columnCount = new Random().nextInt((maxColumn - minColumn) + 1) + minColumn;
 
         List<PivotColumn> columns = new ArrayList<>();
-        for(int i = 0; i < total; i++){
+        for(int i = 0; i < columnCount; i++){
             PivotColumn column = PivotColumn.create();
             if(i == 0){
                 column.setLabel("Seq.");
@@ -52,36 +56,25 @@ public class ExampleV4Service extends BaseEventHandler {
 
         List<PivotRecord> records = new ArrayList<>();
         for(int r = 0; r < 6; r++){
-            List<String> columnIds = new ArrayList<>();
-            List<String> stringValues = new ArrayList<>();
-            List<Integer> numberValues = new ArrayList<>();
-            List<Boolean> booleanValues = new ArrayList<>();
-            for(int i = 0; i < total; i++){
+            List<PivotCell> cells = new ArrayList<>();
+            for(int i = 0; i < columnCount; i++){
+                PivotCell cell = PivotCell.create();
                 if(i == 0){
-                    columnIds.add("seq");
-                    stringValues.add("");
-                    numberValues.add(r);
-                    booleanValues.add(false);
+                    cell.setColumnId("seq");
+                    cell.setNumberValue(r);
                 }else if(i == 1){
-                    columnIds.add("name");
-                    stringValues.add("Eva " + r);
-                    numberValues.add(0);
-                    booleanValues.add(false);
+                    cell.setColumnId("name");
+                    cell.setStringValue("Henly " + r + "th junior");
                 }else{
-                    columnIds.add("C001" + (i-3));
-                    stringValues.add("string value" + (i-3));
-                    numberValues.add((i-3) * 1024 * r);
-                    booleanValues.add((i * r) % 2 == 1);
-                    // if(i % 3 == 1) stringValues.add("string value" + (i-3));
-                    // else if(i % 3 == 2) numberValues.add((i-3) * 1024 * i);
-                    // else if(i % 3 == 0) booleanValues.add(i % 2 ==1);
+                    cell.setColumnId("C001" + (i-3));
+                    if(i % 3 == 1) cell.setStringValue("string value" + (i-3));
+                    else if(i % 3 == 2) cell.setNumberValue((i-3) * 1024 * r);
+                    else if(i % 3 == 0) cell.setBooleanValue((i * r) % 2 == 1);
                 }
+                cells.add(cell);
             }
             PivotRecord record = PivotRecord.create();
-            record.setColumnIds(columnIds);
-            record.setStringValues(stringValues);
-            record.setNumberValues(numberValues);
-            record.setBooleanValues(booleanValues);
+            record.setCells(cells);
             records.add(record);
         }
         data.setRecords(records);
