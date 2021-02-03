@@ -22,8 +22,8 @@ PROCEDURE SP_NP_NET_PRICE_APPROVAL_SAVE_PROC (
                                               ,MATERIAL_CODE                      NVARCHAR(40)
                                               ,PAYTERMS_CODE                      NVARCHAR(30)
                                               ,SUPPLIER_CODE                      NVARCHAR(10)
-                                              ,EFFECTIVE_START_DATE               DATE
-                                              ,EFFECTIVE_END_DATE                 DATE
+                                              ,EFFECTIVE_START_DATE               NVARCHAR(10)
+                                              ,EFFECTIVE_END_DATE                 NVARCHAR(10)
                                               ,SURROGATE_TYPE_CODE                NVARCHAR(30)
                                               ,CURRENCY_CODE                      NVARCHAR(3)
                                               ,NET_PRICE                          DECIMAL
@@ -32,6 +32,7 @@ PROCEDURE SP_NP_NET_PRICE_APPROVAL_SAVE_PROC (
                                               ,NET_PRICE_APPROVAL_REASON_CODE     NVARCHAR(30)
                                               ,MAKER_CODE                         NVARCHAR(10)
                                               ,INCOTERMS                          NVARCHAR(3)
+                                              ,_ROW_STATE_                        NVARCHAR(3)
                                            )
 	,IN   I_USER_ID 		               NVARCHAR(255)
     ,OUT  O_RETURN_CODE                    NVARCHAR(5)

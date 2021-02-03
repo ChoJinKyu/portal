@@ -189,11 +189,12 @@ public class NetpriceApprovalDetailV4Service implements EventHandler {
                     .append(",NET_PRICE_APPROVAL_REASON_CODE     NVARCHAR(30)")
                     .append(",MAKER_CODE                         NVARCHAR(10)")
                     .append(",INCOTERMS                          NVARCHAR(3) ")
+                    .append(",_ROW_STATE_                        NVARCHAR(3) ")
                     .append(")")
                     .toString()
                     );
 
-        String insertSql = "INSERT INTO #LOCAL_TEMP_DTL VALUES (?)";
+        String insertSql = "INSERT INTO #LOCAL_TEMP_DTL VALUES (?,?,?,?,? ,?,?,?,?,? ,?,?,?,?,? ,?)";
 
         // Vendor Pool Mst Local Temp Table에 insert                        
         List<Object[]> batchDtl = new ArrayList<Object[]>();
@@ -213,8 +214,9 @@ public class NetpriceApprovalDetailV4Service implements EventHandler {
                     ,vRow.get("vendor_pool_code")                // '협력사풀코드'	
                     ,vRow.get("market_code")                     // '납선코드'	
                     ,vRow.get("net_price_approval_reason_code")  // '단가품의사유코드'	
-                    ,vRow.get("maker_code")                      // '제조사코드'		
+                    ,vRow.get("maker_code")                      // '제조사코드'
                     ,vRow.get("incoterms")                       // '인코텀즈'
+                    ,vRow.get("_row_state_")                     // Row 상태코드(CUD)
                 });
             }
         }

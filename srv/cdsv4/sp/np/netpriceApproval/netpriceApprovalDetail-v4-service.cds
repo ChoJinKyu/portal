@@ -54,8 +54,8 @@ service NpApprovalDetailV4Service {
         material_code                   : String(40)    ; // '자재코드'	
         payterms_code                   : String(30)    ; // '지불조건코드'	
         supplier_code                   : String(10)    ; // '공급업체코드'	
-        effective_start_date            : Date          ; // '유효시작일자'	
-        effective_end_date              : Date          ; // '유효종료일자'	
+        effective_start_date            : String(10)    ; // '유효시작일자'	
+        effective_end_date              : String(10)    ; // '유효종료일자'	
         surrogate_type_code             : String(30)    ; // '대리견적유형코드'	
         currency_code                   : String(3)     ; // '통화코드'	
         net_price                       : Decimal       ; // '단가'		
@@ -64,6 +64,7 @@ service NpApprovalDetailV4Service {
         net_price_approval_reason_code  : String(30)    ; // '단가품의사유코드'	
         maker_code                      : String(10)    ; // '제조사코드'		
         incoterms                       : String(3)     ; // '인코텀즈'
+        _row_state_                     : String        ; // CUD
     };
 
     /* */
@@ -80,7 +81,7 @@ service NpApprovalDetailV4Service {
     type ResultType : {
         return_code      : String(2);
         return_msg       : String(5000);
-        approval_number  : String(50);
+        approval_number  : String(5000);
     };
 
 
