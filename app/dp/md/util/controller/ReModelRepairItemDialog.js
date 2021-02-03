@@ -15,14 +15,14 @@ sap.ui.define([
     "sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/ui/core/Fragment",
-     "sap/ui/model/json/JSONModel",
+    "sap/ui/model/json/JSONModel",
     "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
-    'sap/m/SearchField', 
-     "sap/m/Token",
+    'sap/m/SearchField',
+    "sap/m/Token",
 ], function (Controller, ODataV2ServiceProvider, Filter
     , FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, ODataModel, Multilingual
-    , ComboBox, Item, Fragment, JSONModel, ManagedModel, ManagedListModel, SearchField , Token
+    , ComboBox, Item, Fragment, JSONModel, ManagedModel, ManagedListModel, SearchField, Token
 ) {
     "use strict";
 
@@ -200,47 +200,46 @@ sap.ui.define([
                 this._oValueHelp2Dialog.setTitle('Mold No');
                 this._oValueHelp2Dialog.setKey('mold_number');
                 this._oValueHelp2Dialog.setDescriptionKey('spec_name');
-
-
-                var aCols = this.oColModel.getData().cols;
-
-
-
-                oThis.getView().addDependent(this._oValueHelp2Dialog);
-
-                this._oValueHelp2Dialog.getTableAsync().then(function (oTable) {
-
-                    oTable.setModel(oThis.getOwnerComponent().getModel());
-                    oTable.setModel(this.oColModel, "columns");
-
-                    if (oTable.bindRows) {
-                        oTable.bindAggregation("rows", path);
-                    }
-
-                    if (oTable.bindItems) {
-                        oTable.bindAggregation("items", path, function () {
-                            return new ColumnListItem({
-                                cells: aCols.map(function (column) {
-                                    return new Label({ text: "{" + column.template + "}" });
-                                })
-                            });
-                        });
-                    }
-                    this._oValueHelp2Dialog.update();
-
-
-                }.bind(this));
-
-                var oToken = new Token();
-                oToken.setKey(this._oInputModel2.getSelectedKey());
-                oToken.setText(this._oInputModel2.getValue());
-                this._oValueHelp2Dialog.setTokens([oToken]);
-                this._oValueHelp2Dialog.open();
-                oFilterBar.search();
-
             }
-        }, 
-            onValueHelpOkPress: function (oEvent) {
+
+            var aCols = this.oColModel.getData().cols;
+
+
+
+            oThis.getView().addDependent(this._oValueHelp2Dialog);
+
+            this._oValueHelp2Dialog.getTableAsync().then(function (oTable) {
+
+                oTable.setModel(oThis.getOwnerComponent().getModel());
+                oTable.setModel(this.oColModel, "columns");
+
+                if (oTable.bindRows) {
+                    oTable.bindAggregation("rows", path);
+                }
+
+                if (oTable.bindItems) {
+                    oTable.bindAggregation("items", path, function () {
+                        return new ColumnListItem({
+                            cells: aCols.map(function (column) {
+                                return new Label({ text: "{" + column.template + "}" });
+                            })
+                        });
+                    });
+                }
+                this._oValueHelp2Dialog.update();
+
+
+            }.bind(this));
+
+            var oToken = new Token();
+            oToken.setKey(this._oInputModel2.getSelectedKey());
+            oToken.setText(this._oInputModel2.getValue());
+            this._oValueHelp2Dialog.setTokens([oToken]);
+            this._oValueHelp2Dialog.open();
+            oFilterBar.search();
+
+        },
+        onValueHelpOkPress: function (oEvent) {
             var aTokens = oEvent.getParameter("tokens");
             this._oInputModel2.setSelectedKey(aTokens[0].getKey());
             this._oValueHelp2Dialog.close();
