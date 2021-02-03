@@ -96,8 +96,8 @@ BEGIN
                       WHERE TENANT_ID = M.TENANT_ID 
                         AND ACTIVITY_CODE = M.ACTIVITY_CODE
                    )
-            WHERE   (M.TENANT_ID, M.ACTIVITY_CODE ) IN
-                    ( SELECT TENANT_ID, ACTIVITY_CODE FROM :I_M )
+            WHERE  M.TENANT_ID = V_TENANT_ID
+            AND    M.ACTIVITY_CODE = V_ACTIVITY_CODE
             ;
 
             ELSE
@@ -144,8 +144,7 @@ BEGIN
             USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE_CODE IN ('C','U')  ) id
             ON ( D.TENANT_ID = id.TENANT_ID
                 AND D.ACTIVITY_CODE = id.ACTIVITY_CODE
-                AND D.LANGUAGE_CD = id.LANGUAGE_CD
-                AND id.CRUD_TYPE_CODE IN ('C','U') )
+                AND D.LANGUAGE_CD = id.LANGUAGE_CD )
 
         WHEN MATCHED THEN
             UPDATE
