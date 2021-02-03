@@ -12,7 +12,7 @@ SELECT X.NODE_ID
       ,X.active_flag
       ,X.update_user_id
       ,X.local_update_dtm
-      ,SUBSTR(X.PATH, 3) AS PATH
+      ,SUBSTR(IFNULL(X.PATH,'-- '), 3) AS PATH
       ,X.HIERARCHY_RANK
       ,X.HIERARCHY_TREE_SIZE
       ,X.HIERARCHY_PARENT_RANK
