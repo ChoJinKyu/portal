@@ -1,8 +1,7 @@
 sap.ui.define([
-    "ext/lib/control/ui/CodeValueHelp",
-    "ext/lib/control/DummyRenderer",
+    "sap/ui/core/mvc/Controller", 
     "ext/lib/core/service/ODataV2ServiceProvider",
-	"sap/ui/model/Filter",
+    "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
     "sap/ui/layout/GridData",
@@ -10,205 +9,135 @@ sap.ui.define([
     "sap/ui/table/Column",
     "sap/m/Label",
     "sap/m/Text",
-    "sap/m/Input" ,
-    "sap/ui/model/odata/v2/ODataModel", 
+    "sap/m/Input",
+    "sap/ui/model/odata/v2/ODataModel",
     "ext/lib/util/Multilingual",
-], function (Parent, Renderer, ODataV2ServiceProvider, Filter
-    , FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input,ODataModel, Multilingual) {
+    "sap/m/ComboBox",
+    "sap/ui/core/Item",
+    "sap/ui/core/Fragment", 
+    "ext/lib/model/ManagedModel",
+    "ext/lib/model/ManagedListModel",
+], function (Controller, ODataV2ServiceProvider, Filter
+    , FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, ODataModel, Multilingual
+    , ComboBox, Item, Fragment , ManagedModel , ManagedListModel
+) {
     "use strict";
 
-     var oServiceModel = new ODataModel({
-            serviceUrl: "srv-api/odata/v2/dp.MoldApprovalListService/",
-            defaultBindingMode: "OneWay",
-            defaultCountMode: "Inline",
-            refreshAfterChange: false,
-            useBatch: true
-        });
+    var oServiceModel = new ODataModel({
+        serviceUrl: "srv-api/odata/v2/dp.MoldApprovalListService/",
+        defaultBindingMode: "OneWay",
+        defaultCountMode: "Inline",
+        refreshAfterChange: false,
+        useBatch: true
+    });
 
-    var ReModelRepairDialog = Parent.extend("dp.md.util.controller.ReModelRepairItemDialog", {
-        metadata: {
-            properties: {
-                contentWidth: { type: "string", group: "Appearance", defaultValue: "70em"},
-                keyField: { type: "string", group: "Misc", defaultValue: "employee_number" },
-                textField: { type: "string", group: "Misc", defaultValue: "s_referer_name" }
-            }
-        },
+    var oServiceModelOrg = new ODataModel({
+        serviceUrl: "srv-api/odata/v2/cm.OrgMgtService/",
+        defaultBindingMode: "OneWay",
+        defaultCountMode: "Inline",
+        refreshAfterChange: false,
+        useBatch: true
+    });
 
-        renderer: Renderer,
+    var oServiceModelPurOrg = new ODataModel({
+        serviceUrl: "srv-api/odata/v2/cm.PurOrgMgtService/",
+        defaultBindingMode: "OneWay",
+        defaultCountMode: "Inline",
+        refreshAfterChange: false,
+        useBatch: true
+    });
 
-        onInit: function () { 
+
+
+    var oThis, oTableName, oArges, oCallback, oApproval_type_code;
+
+    return Controller.extend("dp.md.util.controller.ReModelRepairItemDialog", {
+
+        onInit: function () {
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-         } ,
-
-        createSearchFilters: function(){
-            this.oDepartment = new Input({ placeholder: "Item."});
-            this.oDepartment.attachEvent("change", this.loadData.bind(this));
-            
-            return [
-                new VBox({
-                    items: [
-                        new Label({ text: "Division"}),
-                        new Input({ placeholder: "Item."})
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                }) 
-                ,  new VBox({
-                    items: [
-                        new Label({ text: "Part No"}),
-                        new Input({ placeholder: "Item."})
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                }) 
-                ,  new VBox({
-                    items: [
-                        new Label({ text: "Description"}),
-                        new Input({ placeholder: "Item."})
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                }) 
-                ,  new VBox({
-                    items: [
-                        new Label({ text: "Model"}),
-                        new Input({ placeholder: "Item."})
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                }) 
-                ,  new VBox({
-                    items: [
-                        new Label({ text: "Vendor Name"}),
-                        new Input({ placeholder: "Item."})
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                }) 
-                ,  new VBox({
-                    items: [
-                        new Label({ text: "Repair Type"}),
-                        new Input({ placeholder: "Item."})
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
-                }) 
-            ];
         },
 
-        createTableColumns: function(){
-            return [
-                new Column({ 
-                    width: "15rem",
-                    label: new Label({text: "Request No" }),
-                    template: new Text({text: ""})
-                }),
-                new Column({
-                    width: "5rem",
-                    hAlign: "Center",
-                    label: new Label({text: "Model" }),
-                    template: new Text({text: ""})
-                }),
-                new Column({
-                    width: "5rem",
-                    hAlign: "Center",
-                     label: new Label({text: "Part No" }),
-                    template: new Text({text: ""})
-                }),
-                new Column({
-                    width: "5rem",
-                    hAlign: "Center",
-                    label: new Label({text: "Seq" }),
-                    template: new Text({text: ""})
-                }),
-                new Column({
-                    width: "10rem",
-                    hAlign: "Center",
-                    label: new Label({text: "Spare Part" }),
-                    template: new Text({text: ""})
-                }),
-                new Column({
-                    width: "10rem",
-                    hAlign: "Center",
-                    label: new Label({text: "Item Name" }),
-                    template: new Text({text: ""})
-                }),
-                new Column({
-                    width: "15rem",
-                    hAlign: "Center",
-                    label: new Label({text: "Family Part No" }),
-                    template: new Text({text: ""})
-                }),
-                new Column({
-                    width: "15rem",
-                    hAlign: "Center",
-                    label: new Label({text: "Item Type" }),
-                    template: new Text({text: ""})
-                }),
-                new Column({
-                    width: "15rem",
-                    hAlign: "Center",
-                    label: new Label({text: "Repair Vendor" }),
-                    template: new Text({text: ""})
-                }),
-                new Column({
-                    width: "15rem",
-                    hAlign: "Center",
-                    label: new Label({text: "Order Supplier" }),
-                    template: new Text({text: ""})
-                }),
-                new Column({
-                    width: "10rem",
-                    hAlign: "Center",
-                    label: new Label({text: "Prod Supplier" }),
-                    template: new Text({text: ""})
-                }),
-                new Column({
-                    width: "15rem",
-                    hAlign: "Center",
-                    label: new Label({text: "Reason" }),
-                    template: new Text({text: ""})
-                }),
-                new Column({
-                    width: "5rem",
-                    hAlign: "Center",
-                    label: new Label({text: "Currency" }),
-                    template: new Text({text: ""})
-                }),
-                new Column({
-                    width: "5rem",
-                    hAlign: "Center",
-                    label: new Label({text: "Amount" }),
-                    template: new Text({text: ""})
-                })
-            ];
-        },
+        openPop: function (pThis, pArges, callback) {
+            oThis = pThis;
+            oArges = pArges;
+            oCallback = callback;
+            oThis.setModel(new ManagedModel(), "repairSearchCondition"); 
+            oThis.setModel(new ManagedListModel(), "repairPlant"); 
+            var oView = oThis.getView();
+            var srch = oThis.getModel("repairSearchCondition");
+            srch.setProperty("/company_code", oArges.company_code)
+            srch.setProperty("/org_code", oArges.org_code)
 
-        loadData : function(){
-            var sKeyword = this.oSearchKeyword.getValue() ,
-                aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
-                ];
-            if(sKeyword){
-                aFilters.push(
-                    new Filter({
-                        filters: [
-                            new Filter("tolower("+this.getProperty("keyField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'"),
-                            new Filter("tolower("+this.getProperty("textField")+")", FilterOperator.Contains, "'" + sKeyword.toLowerCase().replace("'","''") + "'")
-                        ],
-                        and: false
-                    })
-                );
-            }
-          
-            oServiceModel.read("/RefererSearch", {
-                filters: aFilters,
-                sorters: [
-                    new Sorter("user_local_name", true)
-                ],
-                success: function(oData){
-                    var aRecords = oData.results;
-                    this.oDialog.setData(aRecords, false);
+            var aSearchFilters = [];
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101'));
+            aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, oArges.company_code));
+            aSearchFilters.push(new Filter("org_type_code", FilterOperator.EQ, 'PL'));
+
+            ODataV2ServiceProvider.getService("cm.util.OrgService").read("/Pur_Operation", {
+                filters: aSearchFilters 
+                , sorters : [ new Sorter("org_code", false) ]
+                , success: function(oData){ 
+                    console.log("odata>>> " , oData);
+                    oThis.getModel("repairPlant").setData(oData, "/Pur_Operation");
                 }.bind(this)
             });
-        }
+
+            // var oButton = oEvent.getSource();
+            if (!this._oRemodelRepairDialog) {
+                this._oRemodelRepairDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.md.util.view.ReModelRepairItemPop",
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                }.bind(this));
+            }
+
+            var that = this;
+            this._oRemodelRepairDialog.then(function (oDialog) {
+                oDialog.open();
+                oThis.byId("reModelRepairSrchBtn").firePress(); // open 하자마자 조회 하여 보여줌 
+
+            });
+
+
+        },
+
+        
+        /**
+         * @public 
+         * @see close 
+         */
+        onExit: function () {
+            if (this._oRemodelRepairDialog) {
+                this._oRemodelRepairDialog.then(function (oDialog) {
+                    oDialog.close();
+                    oDialog.destroy();
+                });
+                this._oRemodelRepairDialog = undefined;
+            }
+
+            // this._setInitPop();
+            // oThis.byId("dialogMolItemSelection").close();
+        },
+        _searchModel : function( model, path, filters, callback ){
+             var oView = oThis.getView(), 
+                 oModel = oThis.getModel(model); 
+
+            oView.setBusy(true);
+            oModel.setTransactionModel(oServiceModelPurOrg);
+            oModel.read( path , {
+                filters: filters,
+                success: function (oData) { 
+                    callback(oData);
+                    oView.setBusy(false);
+                }
+            });
+
+        },
 
     });
 
-    return ReModelRepairDialog;
 }, /* bExport= */ true);
