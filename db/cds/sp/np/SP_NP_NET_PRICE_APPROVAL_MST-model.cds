@@ -23,11 +23,11 @@ entity Np_Net_Price_Approval_Mst {
       approval_excl_flag              : Boolean                @title: '승인제외여부' ;
 
       detailes                        : Association to many    sp.Np_Net_Price_Approval_Dtl    /* Detail 연결 */
-                                                            on detailes.tenant_id       = tenant_id 
-                                                           and detailes.company_code    = company_code 
-                                                           and detailes.org_type_code   = org_type_code
-                                                           and detailes.org_code        = org_code
-                                                           and detailes.approval_number = approval_number
+                                                            on detailes.tenant_id       = $self.tenant_id 
+                                                           and detailes.company_code    = $self.company_code 
+                                                           and detailes.org_type_code   = $self.org_type_code
+                                                           and detailes.org_code        = $self.org_code
+                                                           and detailes.approval_number = $self.approval_number
                                        ;
 
 }	
