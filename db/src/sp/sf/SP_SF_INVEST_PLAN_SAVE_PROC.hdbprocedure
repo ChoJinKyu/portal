@@ -190,7 +190,7 @@ BEGIN
 	**********************************************/
 	BEGIN
 		-------------------------------------------------------------------------------[투자계획 마스터 테이블 INSERT/UPDATE]
-		IF (V_MST_CRUD_TYPE = 'C' OR COALESCE(V_MST_SEQ ,0) = 0) THEN
+		IF (V_MST_CRUD_TYPE = 'C' OR COALESCE(V_MST_SEQ,0) = 0) THEN
 		
 			--------------------------[투자계획순번 채번]
 			SELECT IFNULL(MAX(INVESTMENT_PLAN_SEQUENCE), 0)+1
@@ -249,7 +249,7 @@ BEGIN
 			WHERE FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
 			;
 			
-		ELSEIF V_MST_CRUD_TYPE = 'U' THEN
+		ELSE
 			UPDATE SP_SF_FUNDING_INVEST_PLAN_MST
 			SET 
 				 INVESTMENT_TYPE_CODE			= :I_INVESTMENT_TYPE_CODE		--투자유형코드
@@ -271,7 +271,8 @@ BEGIN
 				,SYSTEM_UPDATE_DTM				= CURRENT_TIMESTAMP
 			WHERE FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
 			AND INVESTMENT_PLAN_SEQUENCE = V_MST_SEQ
-			;     
+			;  
+
 		END IF;
 
         /***********************************************
@@ -333,7 +334,7 @@ BEGIN
 				WHERE AP.FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
 				;
 				
-			ELSEIF V_DTL_CRUD_TYPE = 'U' THEN
+			ELSE
 				--------------------------[UPDATE]
 				UPDATE SP_SF_FUNDING_INVEST_PLAN_DTL
 				SET

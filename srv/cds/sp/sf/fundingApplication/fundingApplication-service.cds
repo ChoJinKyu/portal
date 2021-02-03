@@ -238,14 +238,17 @@ service FundingApplicationService {
              key appl.funding_appl_number				//신청번호
             ,ntfy.funding_notify_number					//공고번호
             ,ntfy.funding_notify_title				    //공고제목
+            ,appl.tenant_id                             //테넌트ID
+            ,appl.company_code                          //회사코드
+            ,appl.org_type_code                         //조직유형코드
+            ,appl.org_code								//조직코드
+            ,org.org_name as org_name : String			//조직명
             ,appl.supplier_code							//업체코드
             ,supp.supplier_local_name as supplier_name : String	//업체명
             ,appl.funding_step_code						//스텝코드
             ,cvStep.code_name  as funding_step_name : String        //스텝명
             ,appl.funding_status_code					//상태코드
             ,cvStatus.code_name  as funding_status_name : String    //상태명
-            ,appl.org_code								//조직코드
-            ,org.org_name as org_name : String						//조직명
             ,appl.funding_appl_date						//자금지원 신청일자
             ,appl.purchasing_department_name			//부서명
             ,appl.funding_appl_amount					//신청금액

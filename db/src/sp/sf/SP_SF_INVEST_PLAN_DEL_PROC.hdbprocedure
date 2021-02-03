@@ -113,14 +113,6 @@ BEGIN
             AND INVESTMENT_PLAN_SEQUENCE  = V_MST_SEQ
             ;
 
-            /***********************************************
-            정상적으로 삭제처리 되었는지 확인
-            **********************************************/
-            SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;	    
-            IF V_CUD_COUNT != 1 THEN
-                SIGNAL V_ERR_DEL SET MESSAGE_TEXT = '';
-            END IF;
-            
             -------------------------------------------------------------------------------[투자계획 상세 테이블 삭제]
             DELETE FROM SP_SF_FUNDING_INVEST_PLAN_DTL
             WHERE FUNDING_APPL_NUMBER  = V_FUNDING_APPL_NUMBER
