@@ -235,6 +235,10 @@ sap.ui.define([
         },
 
         onBomInfoMappingPress: function(oEvent) {
+            if(this.getModel("bomMappingModel")) {
+                this.getModel("bomMappingModel").setData({});
+            }
+            
             var oTable = this.byId("tblPartListTable");
             var aSelIndics = oTable.getSelectedIndices();
 
@@ -262,7 +266,10 @@ sap.ui.define([
                     oBomMppingModel.setProperty("/version_number", oRow.version_number);
                     oBomMppingModel.setProperty("/mapping_id", oRow.mapping_id);
                     oBomMppingModel.setProperty("/department_type_code", oRow.department_type_code);
-                    oBomMppingModel.setProperty("/creator_empno", oRow.creator_empno);
+                    //oBomMppingModel.setProperty("/creator_empno", oRow.creator_empno);
+                    oBomMppingModel.setProperty("/creator_empno", oRow.creator_empno || "100000");//추후 세션정보로 셋팅
+                    oBomMppingModel.setProperty("/creator_local_name", "김구매");//추후 세션정보로 셋팅
+
                     oBomMppingModel.setProperty("/eng_change_number", oRow.eng_change_number);
                     oBomMppingModel.setProperty("/change_reason", oRow.change_reason);
                 }
@@ -274,6 +281,9 @@ sap.ui.define([
         },
 
         onChangeNumberLinkPress: function(oEvent) {
+            if(this.getModel("bomMappingModel")) {
+                this.getModel("bomMappingModel").setData({});
+            }
             var sNum = oEvent.getSource().getText();
             var oCnxt = oEvent.getSource().getParent().getRowBindingContext();
             if(!sNum) {
