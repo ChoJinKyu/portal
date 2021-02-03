@@ -17,7 +17,7 @@ sap.ui.define([
     "sap/m/ComboBox",
     "sap/ui/core/Item",
     "ext/pg/util/control/ui/SupplierDialogPop",
-    "ext/pg/util/control/ui/MatrialDialogPop",
+    "ext/pg/util/control/ui/MaterialDialogPop",
     "ext/cm/util/control/ui/EmployeeDialog",
     "ext/cm/util/control/ui/DepartmentDialog"
 
@@ -40,7 +40,7 @@ sap.ui.define([
         ComboBox, 
         Item, 
         SupplierDialogPop,
-        MatrialDialogPop,
+        MaterialDialogPop,
         EmployeeDialog,
         DepartmentDialog
     ) {
@@ -170,13 +170,13 @@ sap.ui.define([
             });
 
             //Supplier 내부 팝업
-            this.oSupplierCode = new Input({
+            this.oSupplierCode = new MultiInput({
                 placeholder : this.getModel("I18N").getText("/SUPPLIER_CODE"),
                 showValueHelp : true,
-                valueHelpOnly : false,
+                valueHelpOnly : true,
                 valueHelpRequest: function (oEvent) {
                     this.oSupplierDialogPop = new SupplierDialogPop({
-                        multiSelection: false,
+                        multiSelection: true,
                         keyField: "supplier_code",
                         textField: "supplier_local_name"
                     });
@@ -187,28 +187,36 @@ sap.ui.define([
                     sSearchObj.tanentId = "L2100"; // 세션임시값
                     sSearchObj.languageCd = "KO";  // 세션임시값
                     sSearchObj.companyCode = that.oCompany.getValue();
-                    sSearchObj.supplierCode = that.oSupplierCode.getValue();
                     sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey();
                     sSearchObj.orgUnitCode = that.oOperationUnitComb.getSelectedKey();
 
+                    if(!!that.oSupplierCode.getValue()) {
+                         sSearchObj.supplierCode = that.oSupplierCode.getValue();
+                    }
+
                     // Pop의 open에 sSearchObj를 인자로 호출 (override in SupplierDialogPop)
                     this.oSupplierDialogPop.open(sSearchObj);
-                    this.oSupplierDialogPop.attachEvent("apply", function (oEvent) {
-                        //console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
-                        that.oSupplierCode.setValue(null);
-                        that.oSupplierCode.setValue(oEvent.mParameters.item.supplier_code);
+
+                    // this.oSupplierDialogPop.attachEvent("apply", function (oEvent) {
+                    //     that.oSupplierCode.setValue(null);
+                    //     that.oSupplierCode.setValue(oEvent.mParameters.item.supplier_code);
+                    // }.bind(this));
+
+                    this.oSupplierDialogPop.attachEvent("apply", function(oEvent){
+                        that.oSupplierCode.setTokens(oEvent.getSource().getTokens());
                     }.bind(this));
+                    this.oSupplierDialogPop.setTokens(that.oSupplierCode.getTokens());
                 }
             });
 
             // Material 내부팝업
-            this.oMaterialCode = new Input({
+            this.oMaterialCode = new MultiInput({
                 placeholder : this.getModel("I18N").getText("/MATERIAL_CODE"),
                 showValueHelp : true,
-                valueHelpOnly : false,
+                valueHelpOnly : true,
                 valueHelpRequest: function (oEvent) {
-                    this.oMaterialDialogPop = new MatrialDialogPop({
-                        multiSelection: false,
+                    this.oMaterialDialogPop = new MaterialDialogPop({
+                        multiSelection: true,
                         keyField: "material_code",
                         textField: "material_desc",
                     });
@@ -216,17 +224,23 @@ sap.ui.define([
                     this.oMaterialDialogPop.setContentWidth("300px");
                     var sSearchObj = {};
                     sSearchObj.tanentId = "L2100"; //세션 임시값
-                    sSearchObj.languageCd = "KO";  //세션 임시값
+                    sSearchObj.languageCd = "CN";  //세션 임시값
                     sSearchObj.companyCode = that.oCompany.getValue();
                     sSearchObj.materialCode = that.oMaterialCode.getValue();
                     sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey()
                     sSearchObj.orgUnitCode = that.oOperationUnitComb.getSelectedKey()
 
                     this.oMaterialDialogPop.open(sSearchObj);
-                    this.oMaterialDialogPop.attachEvent("apply", function (oEvent) {
-                        that.oMaterialCode.setValue(null);
-                        that.oMaterialCode.setValue(oEvent.mParameters.item.material_code);
+
+                    // this.oMaterialDialogPop.attachEvent("apply", function (oEvent) {
+                    //     that.oMaterialCode.setValue(null);
+                    //     that.oMaterialCode.setValue(oEvent.mParameters.item.material_code);
+                    // }.bind(this));
+
+                    this.oMaterialDialogPop.attachEvent("apply", function(oEvent){
+                        that.oMaterialCode.setTokens(oEvent.getSource().getTokens());
                     }.bind(this));
+                    this.oMaterialDialogPop.setTokens(that.oMaterialCode.getTokens());
                 }
             });
 
@@ -234,7 +248,7 @@ sap.ui.define([
             this.oEmployeeCode = new MultiInput({
                 placeholder : this.getModel("I18N").getText("/EMPLOYEE_NUMBER"),
                 showValueHelp : true,
-                valueHelpOnly : false,
+                valueHelpOnly : true,
                 valueHelpRequest : function (oEvent) {
         
                     this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
@@ -264,10 +278,11 @@ sap.ui.define([
             });
 
             // 부서 내부팝업
-            this.oDepartmentCode = new SearchField({
+            this.oDepartmentCode = new MultiInput({
                 placeholder : this.getModel("I18N").getText("/DEPARTMENT_CODE"),
-                showSearchButton : true,
-                search : function (oEvent) {
+                showValueHelp : true,
+                valueHelpOnly : true,
+                valueHelpRequest : function (oEvent) {
 
                     this.oDepartmentMultiSelectionValueHelp = new DepartmentDialog({
                         title: "Choose Departments",
@@ -367,8 +382,7 @@ sap.ui.define([
 
                 new VBox({
                     items: [
-                        //new Label({ text: this.getModel("I18N").getText("/MATRIAL_CODE") }),
-                        new Label({ text: "Part No" }),
+                        new Label({ text: this.getModel("I18N").getText("/MATERIAL_CODE") }),
                         this.oMaterialCode
                     ],
                     layoutData: new GridData({ span: "XL3 L3 M3 S12" })

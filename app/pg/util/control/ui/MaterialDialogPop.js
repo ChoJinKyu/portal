@@ -17,7 +17,7 @@ sap.ui.define([
 ], function (Parent, Renderer, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, ComboBox, Item, SearchField) {
     "use strict";
     var that;
-    var matrialDialogPop = Parent.extend("pg.util.control.ui.MatrialDialogPop", {
+    var MaterialDialogPop = Parent.extend("pg.util.control.ui.MaterialDialogPop", {
 
         metadata: {
             properties: {
@@ -133,14 +133,14 @@ sap.ui.define([
                 return;
             }
 
-            if (!!this.oSearchObj.matrialCode) {
-                this.oMatrialCodePop.setValue(null);
-                this.oMatrialCodePop.setValue(this.oSearchObj.matrialCode);
-            }
+            // if (!!this.oSearchObj.matrialCode) {
+            //     this.oMatrialCodePop.setValue(null);
+            //     this.oMatrialCodePop.setValue(this.oSearchObj.matrialCode);
+            // }
             //this.loadData();
             this.oDialog.open();
         }
     });                          
 
-    return matrialDialogPop;
+    return MaterialDialogPop;
 }, /* bExport= */ true);
