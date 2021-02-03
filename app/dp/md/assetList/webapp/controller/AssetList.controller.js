@@ -55,18 +55,18 @@ sap.ui.define([
                 oResourceBundle = this.getResourceBundle();
 
             // Model used to manipulate control states
-            oViewModel = new JSONModel({
-                assetListTableTitle: oResourceBundle.getText("assetListTableTitle"),
-                tableNoDataText: oResourceBundle.getText("tableNoDataText")
-            });
-            this.setModel(oViewModel, "assetListView");
+            // oViewModel = new JSONModel({
+            //     assetListTableTitle: oResourceBundle.getText("assetListTableTitle"),
+            //     tableNoDataText: oResourceBundle.getText("tableNoDataText")
+            // });
+            // this.setModel(oViewModel, "assetListView");
 
-            // Add the assetList page to the flp routing history
-            this.addHistoryEntry({
-                title: oResourceBundle.getText("assetListViewTitle"),
-                icon: "sap-icon://table-view",
-                intent: "#Template-display"
-            }, true);
+            // // Add the assetList page to the flp routing history
+            // this.addHistoryEntry({
+            //     title: oResourceBundle.getText("assetListViewTitle"),
+            //     icon: "sap-icon://table-view",
+            //     intent: "#Template-display"
+            // }, true);
 
             this._doInitSearch();
             //this._doInitTablePerso();

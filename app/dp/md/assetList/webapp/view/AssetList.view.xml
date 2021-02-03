@@ -46,7 +46,7 @@
                             </VBox>
                             <VBox height="4em">
                                 <Label text="{I18N>/PLANT}" labelFor="searchPlantS" required="true"></Label>
-                                <MultiComboBox  id="searchPlantS" width="100%" selectedKey="" 
+                                <MultiComboBox  id="searchPlantS" width="100%" 
                                         items="{
                                             path: 'purOrg>/Pur_Operation_Org',
                                             filters: [
@@ -125,7 +125,7 @@
                             </VBox>
                             <VBox height="4em">
                                 <Label text="{I18N>/PLANT}" labelFor="searchPlantE" required="true"></Label>
-                                <MultiComboBox  id="searchPlantE" width="100%" selectedKey="" 
+                                <MultiComboBox  id="searchPlantE" width="100%"
                                         items="{
                                             path: 'purOrg>/Pur_Operation_Org',
                                             filters: [
