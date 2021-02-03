@@ -188,6 +188,7 @@ service PrMgtService {
                     From AccountMst
                     Where  tenant_id = prAccounts.tenant_id                       
                         And company_code = prAccounts.company_code
+                        And language_code = 'KO'
                         And account_code = IFNULL(prAccounts.account_code, '')  ), '' ) as account_name : String(100),
 
                 IFNULL(cctr_code, '') as cctr_code: String(10),            //@title: '비용부서코드' ;	
@@ -195,6 +196,7 @@ service PrMgtService {
                     From CctrMst
                     Where  tenant_id = prAccounts.tenant_id                       
                         And company_code = prAccounts.company_code
+                        And language_code = 'KO'
                         And cctr_code = IFNULL(prAccounts.cctr_code, '')  ), '' ) as cctr_name : String(100),
                 
                 IFNULL(asset_number, '') as asset_number: String(30)  , //          @title: '자산번호' ;	
