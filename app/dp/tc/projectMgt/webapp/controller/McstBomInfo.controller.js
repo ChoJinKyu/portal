@@ -233,7 +233,7 @@ sap.ui.define([
                         _row_state_ : "C",
                         material_code : rtData.material_code,
                         material_desc : rtData.material_desc,
-                        uom_name : rtData.base_uom_code,
+                        uom_code : rtData.base_uom_code,
                         company_code : this.getModel("detailModel").getProperty("/company_code"),
                         buyer_empno : this.getModel("detailModel").getProperty("/buyer_empno")
                     });
@@ -311,35 +311,36 @@ sap.ui.define([
             var oTable = this.byId("tblPartListTable");
             oTable.setBusy(true);
             let oDataModel = this.getModel("mcstBomMgtModel");//McstBomMgtService V2 OData Service
-            oDataModel.read("/mcstProjectPartMapMst", {
+            let oKey = {tenant_id : oCnxt.getObject("tenant_id"), mapping_id : oCnxt.getObject("mapping_id")};
+            let sReadPath = oDataModel.createKey("/mcstProjectPartMapMst", oKey);
+            oDataModel.read(sReadPath, {
                 //filters : aFilters,
                 urlParameters : { "$expand" : "mappping_dtl,creator_person_info" },
                 success : function(data){
                     oTable.setBusy(false);
                     console.log("mcstProjectPartMapMst", data);
 
-                    if( data && data.results && 0<data.results.length ) {
+                    if( data.hasOwnProperty("mapping_id") ) {
                         //this._openBomMappingDialog(oBomMappingModel);
-                        let oRow = data.results[0];
                         this.setModel(new JSONModel, "bomMappingModel");
                         let oBomMppingModel = this.getModel("bomMappingModel");
-                        oBomMppingModel.setProperty("/tenant_id", oRow.tenant_id);
+                        oBomMppingModel.setProperty("/tenant_id", data.tenant_id);
 
                         oBomMppingModel.setProperty("/project_code", oCnxt.getProperty("project_code"));
                         oBomMppingModel.setProperty("/model_code", oCnxt.getProperty("model_code"));
                         oBomMppingModel.setProperty("/version_number", oCnxt.getProperty("version_number"));
 
-                        oBomMppingModel.setProperty("/mapping_id", oRow.mapping_id);
-                        oBomMppingModel.setProperty("/department_type_code", oRow.department_type_code);
-                        oBomMppingModel.setProperty("/creator_empno", oRow.creator_empno);
-                        oBomMppingModel.setProperty("/creator_local_name", oRow.creator_person_info.user_local_name);
-                        oBomMppingModel.setProperty("/eng_change_number", oRow.eng_change_number);
-                        oBomMppingModel.setProperty("/change_reason", oRow.change_reason);
+                        oBomMppingModel.setProperty("/mapping_id", data.mapping_id);
+                        oBomMppingModel.setProperty("/department_type_code", data.department_type_code);
+                        oBomMppingModel.setProperty("/creator_empno", data.creator_empno);
+                        oBomMppingModel.setProperty("/creator_local_name", data.creator_person_info.user_local_name);
+                        oBomMppingModel.setProperty("/eng_change_number", data.eng_change_number);
+                        oBomMppingModel.setProperty("/change_reason", data.change_reason);
 
                         var aAsisData = [];
                         var aTobeData = [];
-                        if(oRow.mappping_dtl) {
-                            oRow.mappping_dtl.results.forEach(function(oDtl) {
+                        if(data.mappping_dtl) {
+                            data.mappping_dtl.results.forEach(function(oDtl) {
                                 if(oDtl.change_info_code === "Old") {
                                     aAsisData.push({material_code : oDtl.material_code});
                                 } else if(oDtl.change_info_code === "New") {
@@ -392,7 +393,6 @@ sap.ui.define([
                     user_id              : this.oUerInfo.user_id
                 }
             }
-
             var targetName = "TcDeleteMcstBomProc";
             var url = "/dp/tc/projectMgt/webapp/srv-api/odata/v4/dp.McstBomMgtV4Service/" + targetName;
             $.ajax({
