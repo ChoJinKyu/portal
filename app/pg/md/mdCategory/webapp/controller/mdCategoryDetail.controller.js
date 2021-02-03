@@ -434,8 +434,8 @@ sap.ui.define([
             }
             this.validator.clearValueState(this.byId("midObjectForm1Edit"));
             this.validator.clearValueState(this.byId("midTable"));
+
 			oTransactionManager.setServiceModel(this.getModel());
-            // oTransactionManager.setServiceModel(this.getModel("detail"));
             
             //ScrollTop
             var oObjectPageLayout = this.getView().byId("page");
