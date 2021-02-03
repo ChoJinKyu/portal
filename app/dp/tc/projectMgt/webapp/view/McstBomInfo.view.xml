@@ -278,7 +278,7 @@
                                 visible="{= ${partListModel>change_info_text} ? true : false }"
                                 renderMode = "Narrow"
                                 displayOnly="true"
-                                colorScheme= "9"
+                                colorScheme= "{= ${partListModel>change_info_text} === 'New' || ${partListModel>change_info_text} === 'Old' ? 1 :  ${partListModel>change_info_text} === 'Add' ? 9 : 3}"
                             />
 						</t:template>
                     </t:Column>
