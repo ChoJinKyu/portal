@@ -1,4 +1,4 @@
-<mvc:View controllerName="sp.vi.basePriceMgt.controller.BasePriceDetail"
+<mvc:View controllerName="sp.vi.basePriceMgt.controller.InternalPriceDetail"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns="sap.m"
@@ -28,7 +28,7 @@
 				<uxap:expandedHeading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBack" />
-                        <Title text="{I18N>/NEW_BASE_PRICE}(일반자재)" wrapping="true"/>
+                        <Title text="{I18N>/NEW_BASE_PRICE}(사내거래)" wrapping="true"/>
                     </HBox>
 				</uxap:expandedHeading>
                 <uxap:navigationActions>
@@ -246,17 +246,18 @@
                                             </ComboBox>
                                         </t:template>
                                     </t:Column>
-                                    <t:Column hAlign="Center" width="8rem">
-                                        <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" width="100%" />
+                                    <t:Column hAlign="Left" width="8rem">
+                                        <Label text="{I18N>/SUPPLY_PLANT}" textAlign="Center" width="100%" />
                                         <t:template>
-                                            <MultiInput editable="{= ${detailModel>row_state} === 'edit' }"
-                                                    valueHelpRequest=".onInputSupplierWithOrgValuePress" value="{detailModel>supplier_code}"/>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Center" width="8rem">
-                                        <Label  text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
-                                        <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>supplier}"/>
+                                            <ComboBox width="100%" editable="{= ${detailModel>row_state} === 'edit' }"
+                                                selectedKey="{detailModel>supply_plant}" 
+                                                items="{
+                                                        path: 'detailModel>org_Plant'
+                                                        }">
+                                                <items>
+                                                    <core:Item key="{detailModel>plant_code}" text="{detailModel>plant_code}" />
+                                                </items>
+                                            </ComboBox>
                                         </t:template>
                                     </t:Column>
                                      <t:Column hAlign="Left" width="8rem">

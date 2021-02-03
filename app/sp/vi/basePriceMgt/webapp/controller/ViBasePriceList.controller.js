@@ -110,6 +110,9 @@ sap.ui.define([
 
             oModel.read("/Base_Price_Aprl_Master", {
                 filters : filtersParam,
+                urlParameters: {
+                    "$orderby": "system_update_dtm desc"
+                },
                 success : function(data){
                     oView.setBusy(false);
 
@@ -177,7 +180,6 @@ sap.ui.define([
         * 생성 Dialog Open
         */
         onOpenCreateDialog: function () {
-            debugger;
             var oView = this.getView();
 
             if ( !this._spcreateDialog ) {
@@ -231,38 +233,30 @@ sap.ui.define([
         * @see 사용처 create 팝업에서 select 버튼 press시 Object로 이동
         */
         handleConfirm: function (oEvent) {
-            debugger;
-
-            var id = toggleButtonId.split('--')[2];
+            var id = toggleButtonId.split('--')[4];
             var approvalTarget = "";
             var oRootModel = this.getModel("rootModel");           
 
-            
-            
              if( !id ){       
                  MessageBox.error("품의서 유형을 선택해주세요");
                  return;
-             }else{
-                this.getRouter().navTo("basePriceDetail");
-             }
-             
-            //     if(id.indexOf("General") > -1){
-            //         MessageBox.show("test");
-            //         this.getRouter().navTo("basePriceDetail");
+             }else{             
+                if(id.indexOf("General") > -1){
+                    this.getRouter().navTo("basePriceDetail");
 
-            //     }else if(id.indexOf("InternalTrading") > -1){
-            //         approvalTarget = "ChangeBasePriceTable";
+                }else if(id.indexOf("InternalTrading") > -1){
+                    this.getRouter().navTo("internalPriceDetail");
 
-            //     }else if(id.indexOf("ProcessingCost") > -1){
-            //         approvalTarget = "ChangeBasePriceTable";
+                }else if(id.indexOf("ProcessingCost") > -1){
+                    approvalTarget = "ChangeBasePriceTable";
 
-            //     }else if(id.indexOf("Sulphate") > -1){
-            //         approvalTarget = "ChangeBasePriceTable";
+                }else if(id.indexOf("Sulphate") > -1){
+                    approvalTarget = "ChangeBasePriceTable";
 
-            //     }else if(id.indexOf("Anode") > -1){
-            //         approvalTarget = "ChangeBasePriceTable";
-            //     }
-            // }    
+                }else if(id.indexOf("Anode") > -1){
+                    approvalTarget = "ChangeBasePriceTable";
+                }
+            }    
         }
 
 
