@@ -708,7 +708,7 @@
                             showValueHelp="true"
                             valueHelpRequest=".onOpenFamilyMaterialCodeDialog" >
                         </Input>
-                        <Text text="{detailModel>family_material_code}" visible="{= !(${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode}) ? true : false }" textAlign="Center" width="100%" />
+                        <Text text="{detailModel>family_material_code}" visible="{= !(${detailModel>base_price_ground_code} === ${detailViewModel>/familyMaterialCodeShowCode} &amp;&amp; ${detailViewModel>/viewMode}) ? true : false }" textAlign="Center" width="100%" />
                     </VBox>
                 </t:template>
                 </t:Column>

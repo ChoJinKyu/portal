@@ -125,9 +125,7 @@ BEGIN
            ,REQUEST_DATE                = CURRENT_TIMESTAMP
            ,LOI_REQUEST_STATUS_CODE     = :V_LOI_REQUEST_STATUS_CODE
            ,LOCAL_UPDATE_DTM            = CURRENT_TIMESTAMP
-           ,CREATE_USER_ID              = 'ADMIN'
            ,UPDATE_USER_ID              = 'ADMIN'
-           ,SYSTEM_CREATE_DTM           = CURRENT_TIMESTAMP
            ,SYSTEM_UPDATE_DTM           = CURRENT_TIMESTAMP
     WHEN NOT MATCHED THEN
         INSERT 
@@ -214,11 +212,8 @@ BEGIN
            ,BUYER_EMPNO                     = :O_D_TABLE.BUYER_EMPNO
            ,PURCHASING_DEPARTMENT_CODE      = :O_D_TABLE.PURCHASING_DEPARTMENT_CODE
            ,REMARK                          = :O_D_TABLE.REMARK
-           ,LOCAL_CREATE_DTM                = CURRENT_TIMESTAMP
            ,LOCAL_UPDATE_DTM                = CURRENT_TIMESTAMP
-           ,CREATE_USER_ID                  = 'ADMIN'
            ,UPDATE_USER_ID                  = 'ADMIN'
-           ,SYSTEM_CREATE_DTM               = CURRENT_TIMESTAMP
            ,SYSTEM_UPDATE_DTM               = CURRENT_TIMESTAMP
     WHEN NOT MATCHED THEN
         INSERT 

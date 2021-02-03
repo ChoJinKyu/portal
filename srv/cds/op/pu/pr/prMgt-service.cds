@@ -162,7 +162,7 @@ service PrMgtService {
                  ( Select supplier_local_name
                     From spWoOrgCalView
                     Where  tenant_id = prDtl.tenant_id                       
-                       And supplier_code = prDtl.supplier_code ) as supplier_lname : String(240)            
+                       And supplier_code = prDtl.supplier_code ) as supplier_name : String(240)            
         from prDtl;
 
     entity Pr_TDtl    as projection on op.Pu_Pr_Template_Dtl;

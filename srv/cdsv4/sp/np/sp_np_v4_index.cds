@@ -1,1 +1,1 @@
-using from './netpriceApproval/netpriceApproval-v4-service.cds';
+using from './netpriceApproval/netpriceApprovalDetail-v4-service.cds';

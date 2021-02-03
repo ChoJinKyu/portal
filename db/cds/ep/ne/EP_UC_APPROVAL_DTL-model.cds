@@ -17,6 +17,7 @@ entity Uc_Approval_Dtl {
         unit                           : String(3);
         material_apply_flag            : Boolean;
         labor_apply_flag               : Boolean;
+        net_price_change_allow_flag    : Boolean;
         material_net_price             : Decimal;
         labor_net_price                : Decimal;
         net_price_amount               : Decimal;
