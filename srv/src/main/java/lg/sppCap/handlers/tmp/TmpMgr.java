@@ -189,11 +189,13 @@ public class TmpMgr implements EventHandler {
             content += writeGrid(result, params);
         }else if("D".equals(params.get("formType"))){
             content += writeForm(result, params);
+        }else if("S".equals(params.get("formType"))){
+            content += writeSearchForm(result, params);
         }
         content += "\n</core:FragmentDefinition>";
 
         String fileName = ("S".equals(params.get("funcType")) ? "Save_":"Retrieve_") + params.get("screenId") + "_" 
-        + params.get("templateId") + ("G".equals(params.get("formType")) ? "_Grid" : "Detail");
+        + params.get("templateId") + ("G".equals(params.get("formType")) ? "_Grid" : ("D".equals(params.get("formType"))) ? "Detail" : "SearchForm");
 
         File file = new File(path + params.get("tenantId") + "_" + fileName + ".fragment.xml");
         try {
@@ -286,6 +288,40 @@ public class TmpMgr implements EventHandler {
         content += columns + cells;
         content += "\n\t\t</Table>\n\t</VBox>";
 
+        return content;
+    }
+
+    private String writeSearchForm(List<Row> result, Map<String, Object> params){
+        //FORM_TYPE
+        String content = "\n\t<f:DynamicPageTitle>";
+        content += "\n\t\t<f:heading>";
+        content += "\n\t\t\t<Title text=\"{i18n>appTitle}\" />";
+        content += "\n\t\t</f:heading>";
+        content += "\n\t\t<f:snappedContent>"; 
+        //TO-DO : 각 요소 값 정의 필요. 
+        content += "\n\t\t\t<form:SimpleForm id=\"" + params.get("templateId") + "\" maxContainerCols=\"2\" editable=\"true\" layout=\"ResponsiveGridLayout\" adjustLabelSpan=\"false\" labelSpanL=\"4\" labelSpanM=\"4\" emptySpanL=\"0\" emptySpanM=\"0\" columnsL=\"2\" columnsM=\"2\">";
+        content += "\n\t\t\t\t<form:content id=\"transition\">";
+        
+        for(Row row : result){
+            content += "\n\t\t\t\t\t<VBox>";
+            content += "\n\t\t\t\t\t\t<Label text=\"" + row.get("COL_ID").toString().replaceAll("_", " ") + "\"" + ("Y".equals(row.get("SCR_COL_REQUIRE_YN")) ? " required=\"true\"" : "") + " labelFor=\"searchCompanyS\"/>";
+            switch((String)row.get("SCR_COL_DP_TYPE")){
+                case "MC" :
+                    //임시로 추가 옵션 그대로 출력
+                    content += row.get("SCR_COL_ADTNL_OPTNS") ;
+                    content += "\n\t\t\t\t\t\t<layoutData>\n\t\t\t\t\t\t<l:GridData span=\"XL2 L3 M6 S12\" />\n\t\t\t\t\t\t</layoutData>";
+                    break;
+                case "DR" :
+                    content += "\n\t\t\t\t\t\t<DateRangeSelection id=\""+ row.get("COL_ID") + "\" valueFormat = \"yyyyMMdd\" displayFormat=\"yyyy-MM-dd\" placeholder=\"YYYY-MM-DD - YYYY-MM-DD\"" + ("Y".equals(row.get("SCR_COL_REQUIRE_YN")) ? " required=\"true\"" : "") + "/>";
+                    content += "\n\t\t\t\t\t\t<layoutData>\n\t\t\t\t\t\t<l:GridData span=\"XL2 L3 M6 S12\" />\n\t\t\t\t\t\t</layoutData>";
+                    break;
+            }
+            content += "\n\t\t\t\t\t</VBox>";
+        }
+        content += "\n\t\t\t\t</form:content id=\"transition\">";
+        content += "\n\t\t\t</form:SimpleForm>";
+        content += "\n\t\t</f:snappedContent>";
+        content += "\n\t<f:DynamicPageTitle>";
         return content;
     }
 
