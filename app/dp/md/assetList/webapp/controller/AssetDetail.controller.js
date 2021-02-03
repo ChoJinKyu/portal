@@ -83,6 +83,6 @@ sap.ui.define([
             this.getRouter().navTo("assetList", {}, true); 
         },
 
-
+        
     });
 });

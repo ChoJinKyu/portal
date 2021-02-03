@@ -92,11 +92,11 @@ sap.ui.define([
 
         },
 
-        // onAfterRendering: function () {
-        //     //this.getModel().setDeferredGroups(["bindReceipt", "cancelBind", "delete", "receipt"]);
-        //     this.byId("pageSearchButton").firePress();
-        //     return;
-        // },
+        onAfterRendering: function () {
+            //this.getModel().setDeferredGroups(["bindReceipt", "cancelBind", "delete", "receipt"]);
+            this.byId("pageSearchButton").firePress();
+            return;
+        },
 
         /**
          * @private
@@ -105,20 +105,21 @@ sap.ui.define([
         _doInitSearch: function () {
             
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
-
+            
             this.getView().setModel(this.getOwnerComponent().getModel());
-            //this.getView().setModel(this.getOwnerComponent().getModel());
-             this.setPlant('LGESL');
+            //this.setPlant('LGESL');
             //접속자 법인 사업부로 바꿔줘야함
             this.getView().byId("searchCompanyS").setSelectedKeys(['LGESL']);
             this.getView().byId("searchCompanyE").setSelectedKeys(['LGESL']);
             this.getView().byId("searchPlantS").setSelectedKeys(['A040']);
             this.getView().byId("searchPlantE").setSelectedKeys(['A040']);
+            
         },
 
         
 
         _onRoutedThisPage : function(){
+            this.getModel("assetListView").setProperty("/headerExpanded", true);
             this._segmentSrch();
         },
 
