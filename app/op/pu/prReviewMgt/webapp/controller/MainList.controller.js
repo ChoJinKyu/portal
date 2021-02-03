@@ -220,7 +220,7 @@ sap.ui.define([
         onButtonPress: function () {
             var [ event, ...args ] = arguments;
             var { action, service, entry, tId } = args[args.length-1];
-            var message, value;
+            var message = "", value;
             var table = this.byId(tId);
             var items = table
                         .getSelectedContexts()
@@ -240,7 +240,8 @@ sap.ui.define([
             }
             // 구매담당자가 본인이 아닐 경우 Confirm 메시지 띄움.
             if (items.filter(e => (e.buyer_empno != this.$session.employee_number)).length > 0) {
-                message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다.\n확인시 자동으로 본인 담당으로 변경됩니다.\nRFQ작성을 진행하시겠습니까?";
+                //message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다.\n확인시 자동으로 본인 담당으로 변경됩니다.\nRFQ작성을 진행하시겠습니까?";
+                message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다.\n확인시 자동으로 본인 담당으로 변경됩니다.\n";
             }
             // 잔량이 없는 PR은 선택이 불가능하다 = 요청수량 0
             // if (items.filter(e => (+e.pr_quantity) <= 0 || !e).length > 0) {
@@ -260,10 +261,10 @@ sap.ui.define([
                 (action == 'CLOSING' && (message = "(메세지)마감을 진행하시겠습니까?"))
                 ||
                 // RFQ작성
-                (action == 'RFQ' && (message = message || "(메세지)RFQ작성을 진행하시겠습니까?"))
+                (action == 'RFQ' && (message = message + "(메세지)RFQ작성을 진행하시겠습니까?"))
                 ||
                 // 입찰작성
-                (action == 'BIDDING' && (message = "(메세지)입찰작성을 진행하시겠습니까?"))
+                (action == 'BIDDING' && (message = message + "(메세지)입찰작성을 진행하시겠습니까?"))
             )
             &&
             (function() {
