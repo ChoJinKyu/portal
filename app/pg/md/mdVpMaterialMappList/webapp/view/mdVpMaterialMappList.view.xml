@@ -141,7 +141,7 @@
                             </layoutData>
                         </VBox>
 
-                        <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
+                        <FlexBox alignItems="End" justifyContent="End">
                             <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch" />
                             <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />

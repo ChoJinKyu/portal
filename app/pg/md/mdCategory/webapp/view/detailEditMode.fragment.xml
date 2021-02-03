@@ -30,6 +30,6 @@
                     maxLength: 50
                 }
             }"></Input>
-		<Button press="onFontColor" icon="sap-icon://text-color" liveChange="handleColorSelect"/>	  
+		<Button id="liveChangeButton" press="onFontColor" icon="sap-icon://text-color" liveChange="handleColorSelect"/>	  
 	</form:SimpleForm>
 </core:FragmentDefinition>

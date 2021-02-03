@@ -18,7 +18,7 @@
       <f:title>
         <f:DynamicPageTitle>
           <f:heading>
-            <Title text="{I18N>/MATERIAL_MANAGEMENT_CHAR_CONFIG}" />
+            <Title text="{I18N>/MAT_MNGT_CHAR_CONFIG}" />
           </f:heading>
             <f:snappedContent>
             </f:snappedContent>
@@ -122,10 +122,7 @@
             <headerToolbar>
             <OverflowToolbar class="sapFDynamicPageAlignContent">
             <Title id="title2" text="{I18N>/LIST} ({= ${list>/MdCategoryItem}.length})" level="H2"/>
-            <VBox>
-                <!-- <ObjectStatus title="범주코드" id="textCategoryCode" text=""/>
-                <ObjectStatus title="범주명" id="textCategoryName" text="{list>spmd_category_code}"/> -->
-            </VBox>
+              <Button icon="sap-icon://move" enabled="false" />
               <ToolbarSpacer/>
               <Button icon="sap-icon://navigation-up-arrow" tooltip="Move up" press="moveUp"/>
               <Button icon="sap-icon://navigation-down-arrow" tooltip="Move down" press="moveDown"/>

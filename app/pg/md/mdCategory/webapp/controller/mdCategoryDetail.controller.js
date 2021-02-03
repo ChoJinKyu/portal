@@ -20,10 +20,11 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
 	'sap/m/ColorPalettePopover',
+	'sap/ui/unified/ColorPickerDisplayMode',
     "sap/m/ObjectStatus"
 ], function (BaseController, Multilingual, Validator, JSONModel, ODataXhrService, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ColorPalettePopover, ObjectStatus) {
+	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ColorPalettePopover, ColorPickerDisplayMode, ObjectStatus) {
     
     "use strict";
 
@@ -612,20 +613,32 @@ sap.ui.define([
 		 * @param oEvent
 		 */
         onFontColor: function(oEvent) {
-            if (!this.oColorPalettePopoverFull) {
-				this.oColorPalettePopoverFull = new ColorPalettePopover("oColorPalettePopoverFull", {
-					defaultColor: "black",
-					colorSelect: this.handleColorSelect
-                });
-                
-			}
+            this.oButton = this.byId("liveChangeButton");
+			if (!this.oColorPaletteDisplayMode) {
+				this.oColorPaletteDisplayMode = new ColorPalettePopover("oColorPaletteDisplayMode", {
+					showDefaultColorButton: false,
+					displayMode: ColorPickerDisplayMode.Simplified,
+					colorSelect: this.handleColorSelect,
+					liveChange: this.handleLiveChange.bind(this)
+				});
+            }
+            this.oColorPaletteDisplayMode.openBy(oEvent.getSource());
 
-			this.oColorPalettePopoverFull.openBy(oEvent.getSource());
+			// this.oColorPaletteDisplayMode.openBy(oEvent.getSource());
+            // if (!this.oColorPalettePopoverFull) {
+			// 	this.oColorPalettePopoverFull = new ColorPalettePopover("oColorPalettePopoverFull", {
+			// 		defaultColor: "black",
+			// 		colorSelect: this.handleColorSelect
+            //     });
+			// }
+
+			// this.oColorPalettePopoverFull.openBy(oEvent.getSource());
         },
 
 		handleColorSelect: function (oEvent) {
             debugger;
             var rgbCode = oEvent.getParameter("value");
+            // this.byId("fontColor").setValue(rgbCode);
 
             // 컬러값과 쉼표만 남기고 삭제. 
             var rgb = rgbCode.replace( /[^%,.\d]/g, "" ); 
@@ -654,11 +667,20 @@ sap.ui.define([
             MessageToast.show(this.hexaCode);
             
             debugger;
-            this.byId("fontColor").setValue(this.hexaCode);
+            // this.byId("fontColor").setValue(this.hexaCode);
 
             return this.hexaCode; 
 
 		},
+
+        handleLiveChange:function (oEvent) {
+            this.oButton.getDomRef().firstChild.firstChild.style.color = "rgba(" + [
+				oEvent.getParameter("r"),
+				oEvent.getParameter("g"),
+				oEvent.getParameter("b"),
+				oEvent.getParameter("alpha")
+			].join(", ") + ")";
+        },
 
 		onExit: function () {
 			// Destroy popovers if any
