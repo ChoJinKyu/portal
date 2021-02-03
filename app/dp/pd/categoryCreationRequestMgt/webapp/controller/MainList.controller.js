@@ -68,6 +68,7 @@ sap.ui.define([
             this.tenant_id = "L2101";
             this.companyCode = "LGCKR";
             this.language_cd = "KO";
+            this.categoryGroupCode = "CO";
             this.setModel(new JSONModel(), "visibleTF");
 
             oTransactionManager = new TransactionManager();
@@ -330,8 +331,8 @@ sap.ui.define([
 
             this.getRouter().navTo("selectionPage", {
                 tenantId: this.tenant_id,
-                companyCode: this.companyCode,
-                ideaNumber: 'new'
+                categoryGroupCode: this.categoryGroupCode,
+                requestNumber: "new"
             }, true);
         },
 
