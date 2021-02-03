@@ -214,15 +214,10 @@ sap.ui.define([
                     title: this.I18N.getText("/MATERIAL_CODE"),
                     multiSelection: false,
                     tenantId: this.getModel("detailModel").getProperty("/tenant_id"),
-                    searchCode: (oInputCntl && oInputCntl.getValue() || "") || "",
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, this.getModel("detailModel").getProperty("/tenant_id")),
-                            new Filter("company_code", FilterOperator.EQ, this.getModel("detailModel").getProperty("/company_code")),
-                            new Filter("org_type_code", FilterOperator.EQ, this.getModel("detailModel").getProperty("/org_type_code")),
-                            new Filter("org_code", FilterOperator.EQ, this.getModel("detailModel").getProperty("/org_code"))
-                        ]
-                    }
+                    company_code: this.getModel("detailModel").getProperty("/company_code"),
+                    org_type_code: this.getModel("detailModel").getProperty("/org_type_code"),
+                    org_code: this.getModel("detailModel").getProperty("/org_code"),
+                    searchCode: (oInputCntl && oInputCntl.getValue() || "") || ""
                 });
 
                 this.oSearchMatDialog.attachEvent("apply", function(oSelEvent) {

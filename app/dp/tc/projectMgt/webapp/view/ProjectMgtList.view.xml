@@ -404,7 +404,7 @@
                                 <core:CustomData key="mcst_code" value="TARGETS"/>
                             </customData>
                         </Button>
-                        <Button text="{I18N>/ESTIMATED} {I18N>/MATERIAL_COST}" type="Emphasized" press=".onGoalCreatePress" >
+                        <Button text="{I18N>/ESTIMATED}{I18N>/MATERIAL_COST}" type="Emphasized" press=".onGoalCreatePress" >
                             <customData>
                                 <core:CustomData key="mcst_code" value="ESTIMATE"/>
                             </customData>

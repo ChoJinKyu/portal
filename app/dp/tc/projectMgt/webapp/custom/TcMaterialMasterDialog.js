@@ -24,6 +24,9 @@ sap.ui.define([
                 textField: { type: "string", group: "Misc", defaultValue: "material_desc" },
                 searchCode: { type: "string", group: "Misc", defaultValue: ""},
                 tenantId: { type: "string", group: "Misc", defaultValue: ""},
+                company_code: { type: "string", group: "Misc", defaultValue: ""},
+                org_type_code: { type: "string", group: "Misc", defaultValue: ""},
+                org_code: { type: "string", group: "Misc", defaultValue: ""},
                 aggregations: {
                     filters: [
                         {path: 'tenant_id', operator: 'EQ', value1: this.tenantId}
@@ -95,17 +98,21 @@ sap.ui.define([
                     width: "10%",
                     hAlign: "Center",
                     label: new Label({text: this.getModel("I18N").getText("/BASE_UOM_CODE")}),  // 단위
-                    template: new Text({text: "{base_uom_code}"})
+                    template: new Text({text: "{uom_name}"})
                 })
             ];
         },
         
         loadData: function(){
+            //debugger;
             var sCode = this.oSearchCode.getValue(),
                 sDesc = this.oSearchDesc.getValue(),
                 sSpec = this.oSearchSpec.getValue(),
                 aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, this.getProperty("tenantId"))
+                    new Filter("tenant_id", FilterOperator.EQ, this.getProperty("tenantId")),
+                    new Filter("company_code", FilterOperator.EQ, this.getProperty("company_code")),
+                    new Filter("org_type_code", FilterOperator.EQ, this.getProperty("org_type_code")),
+                    new Filter("org_code", FilterOperator.EQ, this.getProperty("org_code")),
                 ];
 
             if(sCode){
@@ -120,9 +127,10 @@ sap.ui.define([
                 aFilters.push(new Filter("tolower(material_spec)", FilterOperator.Contains, "'" + sSpec.toLowerCase().replace("'","''") + "'"));
             }
 
-            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.util.MmService/").read("/SearchMaterialMstView", {
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.McstBomMgtService").read("/Org_Material", {
                 filters: aFilters,
                 success: function(oData){
+                    //debugger;
                     var aRecords = oData.results;
                     this.oDialog.setData(aRecords, false);
                 }.bind(this)
