@@ -98,7 +98,7 @@
                                 <core:Title text="{I18N>/DETAIL_INFORMATION}" id="v_derail_information" />                        
                                 <VBox id="v_general_repr_department_code">
                                     <Label text="{I18N>/DEPARTMENT}" design="Bold" required="true"/>
-                                        <lib-m:CodePicker id="general_repr_department_code"
+                                        <!-- <lib-m:CodePicker id="general_repr_department_code"
                                             placeholder="Enter a department name"
                                             keyField="department_code"
                                             textField="department_local_name"
@@ -110,9 +110,16 @@
                                                 serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
                                                 entityName: 'Department'
                                             }">
-                                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
-                                                keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
-                                        </lib-m:CodePicker>
+                                        <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
+                                            keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
+                                        </lib-m:CodePicker> -->
+                                    <HBox>
+                                        <SearchField id="general_repr_department_name"
+                                            search=".onDetailInputWithDeptValuePress" 
+                                            change="resetDetailCode"
+                                            />
+                                        <Input id="general_repr_department_code" placeholder="Input data" visible ="false"></Input>
+                                    </HBox>
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 

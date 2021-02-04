@@ -431,6 +431,7 @@ sap.ui.define([
                     MessageToast.show("해당 Operation Unit에서 정의된 레벨 하위는 구성할 수 없습니다.");
                 }
                 else if (pop_h_lv == "1") {
+                    pop_d_state = "leaf"
                     this.byId("pop_higher_level_path").setText(pop_lv);
                     this.byId("pop_operation_unit_name").setText(pop_org);
                     this.byId("pop_operation_unit_name1").setText(this.byId("tpop_operation_unit_code").getValue());
@@ -775,6 +776,7 @@ sap.ui.define([
             pop_p_vp_cd = row.parent_vendor_pool_code;
             pop_o_unitcode = row.operation_unit_code;
             // pop_hierarchy_level= row.;
+            
             pop_d_state = row.drill_state;
             pop_vp_cd = row.vendor_pool_code;
             console.log(this.getModel("util"));
@@ -1092,9 +1094,20 @@ sap.ui.define([
                                         pop_h_lv = "2";
                                     } else if (pop_h_lv === "2") {
                                         pop_h_lv = "3";
-                                    }                                     
-                                     pop_lv = pop_lv + " > " +  svendor_pool_local_name;
-                                     pop_vp_cd = sVendorPoolCode;
+                                    }
+                                    if(sLevel == "1")
+                                    {
+                                        pop_lv = svendor_pool_local_name;
+                                    }else{
+                                        pop_lv = pop_lv + " > " +  svendor_pool_local_name;
+                                    }
+                                    
+                                    pop_vp_cd = sVendorPoolCode;
+
+                                    reSearchVpNm = svendor_pool_local_name;
+                                    reSearchOpCd = soperation_unit_code;
+                                    reSearchOrgCd = sorg_code;
+                                    that.onAfterDialog();
                                     //  sparent_vendor_pool_code = sVendorPoolCode;
                                      
                                     if (that.byId("tpop_Operation_ORG").getSelectedKey() &&
@@ -1149,7 +1162,7 @@ sap.ui.define([
                                         else if(sCLeaf == "F") {
                                             that.byId("pop_higher_level_path").setText(pop_lv);
                                             that.byId("pop_operation_unit_name").setText(pop_org);
-                                            that.byId("pop_operation_unit_name1").setText(this.byId("tpop_operation_unit_code").getValue());
+                                            that.byId("pop_operation_unit_name1").setText(that.byId("tpop_operation_unit_code").getValue());
                                             that  //화면 LAYOUT
                                             that.byId("pop_detail_info").setText("");
                                             that.byId("v_pop_repr_department_code").setVisible(false);
@@ -1185,6 +1198,7 @@ sap.ui.define([
                                             that.byId("pop_domestic_net_price_diff_rate").setEnabled(false);
                                         }
                                     }
+
                                 }else{
                                     MessageToast.show(sMsg);
                                     //생성시 사용된 Name를 이용하여 재조회
@@ -1198,12 +1212,12 @@ sap.ui.define([
                         });
                     }
 
-                    MessageToast.show(sMsg);
-                    //생성시 사용된 Name를 이용하여 재조회
-                    reSearchVpNm = svendor_pool_local_name;
-                    reSearchOpCd = soperation_unit_code;
-                    reSearchOrgCd = sorg_code;
-                    that.onAfterDialog();
+                    // MessageToast.show(sMsg);
+                    // //생성시 사용된 Name를 이용하여 재조회
+                    // reSearchVpNm = svendor_pool_local_name;
+                    // reSearchOpCd = soperation_unit_code;
+                    // reSearchOrgCd = sorg_code;
+                    // that.onAfterDialog();
 
                     // that.onDialogSearch();
                     // that.resetValue();

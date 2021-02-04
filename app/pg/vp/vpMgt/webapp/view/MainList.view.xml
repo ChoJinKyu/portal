@@ -471,7 +471,7 @@
                                     <Text text="{path : 'list>supplier_flag', formatter: '.fnSetFlagValue'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column label="{I18N>/STATUS}" hAlign="Center" width="0rem">
+                            <table:Column label="{I18N>/STATUS}" hAlign="Center" width="8rem">
                                 <table:template>
                                     <Text text="{list>supplier_status_name}" wrapping="false"  />
                                 </table:template>

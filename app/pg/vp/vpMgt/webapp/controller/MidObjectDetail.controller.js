@@ -17,7 +17,9 @@ sap.ui.define([
     "sap/m/ComboBox",
     "ext/lib/util/Validator",
     "ext/lib/formatter/Formatter",
-    "sap/ui/model/resource/ResourceModel"        
+    "sap/ui/model/resource/ResourceModel",
+    "ext/cm/util/control/ui/EmployeeDialog",
+    "ext/cm/util/control/ui/DepartmentDialog",        
 ], function (
     BaseController, 
     History, 
@@ -37,7 +39,9 @@ sap.ui.define([
     ComboBox,
     Validator,
     Formatter,
-    ResourceModel,) {
+    ResourceModel,
+    EmployeeDialog,
+    DepartmentDialog) {
     "use strict";
     
     var oTransactionManager;
@@ -254,7 +258,27 @@ sap.ui.define([
 				}
 			});
 		},
-        
+        onDetailInputWithDeptValuePress: function(){
+             this.oDetailDeptDialog = new DepartmentDialog({
+                // id:"employeeDialog" ,
+                title:"부서 검색",
+                closeWhenApplied:true,
+                items:{
+                    filters: [
+                    ]
+                }
+
+            });
+            this.oDetailDeptDialog.open();
+            this.oDetailDeptDialog.attachEvent("apply", function (oEvent) {
+                //console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
+                that.byId("general_repr_department_name").setValue(null);
+                that.byId("general_repr_department_code").setValue(null);
+                // that.oSupplierCode.setValue(null);
+                that.byId("general_repr_department_name").setValue(oEvent.mParameters.item.department_local_name);
+                that.byId("general_repr_department_code").setValue(oEvent.mParameters.item.department_id);
+            }.bind(this));
+        },
         
 
 		/**
@@ -844,7 +868,8 @@ sap.ui.define([
                     that.getView().byId("general_vendor_pool_local_name").setValue(generaloDataRst.vendor_pool_local_name);
                     that.getView().byId("general_vendor_pool_english_name").setValue(generaloDataRst.vendor_pool_english_name);
                     that.getView().byId("general_vendor_pool_desc").setValue(generaloDataRst.vendor_pool_desc);
-                    that.getView().byId("general_repr_department_code").setValue(generaloDataRst.Department);
+                    that.getView().byId("general_repr_department_code").setValue(generaloDataRst.repr_department_code);
+                    that.getView().byId("general_repr_department_name").setValue(generaloDataRst.department_local_name);
                     that.getView().byId("general_industry_class_code").setSelectedKey(generaloDataRst.industry_class_code);
                     that.getView().byId("general_inp_type_code").setSelectedKey(generaloDataRst.inp_type_code);
 
