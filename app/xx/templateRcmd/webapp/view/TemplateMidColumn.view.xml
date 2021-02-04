@@ -159,8 +159,8 @@
                                     <Title text="Departments" level="H2"/>
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
-									<Button id="departmentListAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress" />
-									<!-- <Button id="departmentListDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress" /> -->
+									<Button id="departmentListAddButton" text="Add" type="Transparent" press=".onDepartmentListAddButtonPress" />
+									<!-- <Button id="departmentListDeleteButton" text="Delete" type="Transparent" press=".onDepartmentListDeleteButtonPress" /> -->
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>

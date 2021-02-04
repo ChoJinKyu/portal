@@ -9,15 +9,15 @@
 	height="100%">
 
 	<uxap:ObjectPageLayout id="page"
-		toggleHeaderOnTitleClick="true"
-		alwaysShowContentHeader = "true"
-		preserveHeaderStateOnScroll="false"
-		headerContentPinnable="true"
-		isChildPage="true"
-		upperCaseAnchorBar="false"
-		showTitleInHeaderContent="true"
-		showEditHeaderButton="true" 
-		showFooter="true">
+            toggleHeaderOnTitleClick="true"
+            alwaysShowContentHeader = "true"
+            preserveHeaderStateOnScroll="false"
+            headerContentPinnable="true"
+            isChildPage="true"
+            upperCaseAnchorBar="false"
+            showTitleInHeaderContent="true"
+            showEditHeaderButton="true" 
+            showFooter="true">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
@@ -192,30 +192,27 @@
 								width="auto">
 							<headerToolbar>
 								<OverflowToolbar>
-                                    <Title text="Employees who member of department  ({= ${employee>/}.length || 0})" level="H2"/>
+                                    <Title text="Employees who member of department" level="H2"/>
 									<ToolbarSpacer/>
-									<Button id="employeeListAddButton" text="Add" type="Transparent" press=".onEmployeeListAddButtonPress" />
-									<Button id="employeeListDeleteButton" text="Delete" type="Transparent" press=".onEmployeeListDeleteButtonPress" />
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
-								<Column minScreenWidth="Tablet" hAlign="Center" width="10rem">
-									<Label text="Emp No." />
-								</Column>
 								<Column minScreenWidth="Tablet" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
 									<Label text="{I18N>/NAME}" />
 								</Column>
-								<Column minScreenWidth="Tablet" hAlign="Left" demandPopin="true" popinDisplay="WithoutHeader" >
+								<Column minScreenWidth="Tablet" hAlign="Left" width="8rem" popinDisplay="WithoutHeader" >
 									<Label text="Job Title" />
 								</Column>
 								<Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
 									<Label text="Gender" />
 								</Column>
+								<Column minScreenWidth="Tablet" hAlign="Left" width="10rem" demandPopin="true" >
+									<Label text="Emp No." />
+								</Column>
 							</columns>
                             <items>
                                 <ColumnListItem type="Active">
                                     <cells>
-                                        <Text text="{employee_number}"/>
                                         <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
                                             <Text text="{user_local_name}"/>
                                             <Input value="{user_local_name}" required="true"/>
@@ -225,6 +222,7 @@
                                             <Input value="{job_title}" required="true"/>
                                         </lib-m:EditModeVBox>
                                         <Text text="{gender_code}"/>
+                                        <Text text="{employee_number}"/>
                                     </cells>
                                 </ColumnListItem>
                             </items>
@@ -245,10 +243,57 @@
                     ariaHasPopup="Dialog"
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
-				<lib-m:EditModeButton type="Transparent" id="pageEditButton" press=".onPageEditButtonPress" />
+				<lib-m:EditModeButton type="Transparent" id="pageEditButton" press=".onPageEditModeButtonPress" />
+                <Button id="employeeListAddButton" text="Add Employee" type="Transparent" press=".onEmployeeListAddButtonPress" />
+                <Button id="employeeListDeleteButton" text="Remove Employees" type="Transparent" press=".onEmployeeListDeleteButtonPress" />
 				<Button type="Transparent" id="pageDeleteButton" text="Delete" press=".onPageDeleteButtonPress" />
 				<Button type="Emphasized" id="pageSaveButton" text="Save" press=".onPageSaveButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>
-	</uxap:ObjectPageLayout>
+    </uxap:ObjectPageLayout>
+    
+
+    <Dialog id="dialogCreateEmployee" class="sapUiSizeCompact" title="Create a Employee" contentWidth="35%">
+        <content>
+            <VBox>
+                <form:SimpleForm 
+                        maxContainerCols="2"
+                        editable="true"
+                        layout="ResponsiveGridLayout"
+                        adjustLabelSpan="false"
+                        labelSpanL="4"
+                        labelSpanM="4"
+                        emptySpanL="0"
+                        emptySpanM="0"
+                        columnsL="2"
+                        columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="Emp No." required="true"/>
+                            <Input id="dialogCreateEmployeeNo" required="true" />
+                        </VBox>
+                        <VBox>
+                            <Label text="{I18N>/NAME}" required="true"/>
+                            <Input id="dialogCreateEmployeeLocalName" value="No Name" required="true" />
+                        </VBox>
+                        <VBox>
+                            <Label text="Job Title"/>
+                            <Input id="dialogCreateEmployeeJobTitle" value="책임" />
+                        </VBox>
+                        <VBox>
+                            <Label text="Gender"/>
+                            <Input id="dialogCreateEmployeeGenderCode" value="M" />
+                        </VBox>
+                    </form:content>
+                </form:SimpleForm>
+            </VBox>
+        </content>
+        <beginButton>
+            <Button text="Cancel" type="Transparent" press=".onDialogCreateEmployeeCancelButtonPress"/>
+        </beginButton>
+        <endButton>
+            <Button text="Create" type="Emphasized" press=".onDialogCreateEmployeeCreateButtonPress"/>
+        </endButton>
+    </Dialog>
+
 </mvc:View>

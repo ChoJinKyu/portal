@@ -1,28 +1,27 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"ext/lib/util/Multilingual",
-	"ext/lib/model/ManagedModel",
-	"ext/lib/model/ManagedListModel",
 	"sap/ui/model/json/JSONModel",
     "ext/lib/util/Validator",
+    "sap/m/MessageBox",
+    "sap/m/MessageToast",
+    "sap/ui/thirdparty/jquery",
 	"ext/lib/formatter/Formatter",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
-	"sap/ui/core/Fragment",
-    "sap/m/MessageBox",
-    "sap/m/MessageToast",
 	"sap/m/ColumnListItem",
 	"sap/m/ObjectStatus",
 	"sap/m/ObjectIdentifier",
 	"sap/m/Text",
 	"sap/m/Input",
-	"ext/lib/control/m/CodeComboBox",
-	"cm/util/control/ui/EmployeeDialog",
 	"sap/ui/core/Item",
-], function (BaseController, Multilingual, ManagedModel, ManagedListModel, JSONModel, Validator, Formatter, DateFormatter, 
-        Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-        ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, CodeComboBox, EmployeeDialog, Item) {
+	"ext/lib/control/m/CodeComboBox",
+	"cm/util/control/ui/EmployeeDialog"
+], function (BaseController, JSONModel, Validator, MessageBox, MessageToast, jQuery, 
+        Formatter, DateFormatter, 
+        Filter, FilterOperator, 
+        ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, Item, CodeComboBox, 
+        EmployeeDialog) {
 	"use strict";
 
 	return BaseController.extend("xx.templateRcmd.controller.TemplateEndColumn", {
@@ -50,8 +49,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-            var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
+            this.setModel(this.getMultilingual().getModel(), "I18N");
 			this.setModel(new JSONModel(), "endPageViewModel");
 
             this.getRouter().getRoute("endPage").attachPatternMatched(this._onRoutedThisPage, this);
@@ -104,7 +102,7 @@ sap.ui.define([
 		 * Event handler for page edit button press
 		 * @public
 		 */
-		onPageEditButtonPress: function(oEvent){
+		onPageEditModeButtonPress: function(oEvent){
             if(oEvent.getSource().getPressed()){
                 var cancelEdit = function(){
                         if(this.getModel("endPageViewModel").getProperty("/isAddedMode") == true){
@@ -163,7 +161,7 @@ sap.ui.define([
 			var oView = this.getView(),
 				oDepartmentModel = this.getModel("department"),
 				that = this;
-			MessageBox.confirm("Are you sure to delete this control option and employee?", {
+			MessageBox.confirm("Are you sure to delete this department and employee?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
@@ -182,34 +180,30 @@ sap.ui.define([
 			});
 		},
 
-		onMidTableAddButtonPress: function(){
-			var oTable = this.getList(),
-				oEmployeeModel = this.getModel("employee");
-			oEmployeeModel.addRecord({
-				"tenant_id": this._sTenantId,
-				"department_code": this._sDepartmentCode,
-				"control_option_level_code": "",
-				"control_option_level_val": "",
-				"department_name": ""
-			}, "/Company");
-            this.validator.clearValueState(this.getList());
+		onEmployeeListAddButtonPress: function(){
+            this.byId("dialogCreateEmployee").open();
 		},
 
-		onMidTableDeleteButtonPress: function(){
+		onEmployeeListDeleteButtonPress: function(){
 			var oTable = this.getList(),
-				oEmployeeModel = this.getModel("employee"),
-				aItems = oTable.getSelectedItems(),
-				aIndices = [];
-			aItems.forEach(function(oItem){
-				aIndices.push(oEmployeeModel.getProperty("/Company").indexOf(oItem.getBindingContext("employee").getObject()));
+				oModel = this.getModel(),
+				aPaths = oTable.getSelectedContextPaths();
+			aPaths.forEach(function(sPath){
+				oModel.remove(sPath, {
+                    groupId: "removes",
+                    success: function(e){}.bind(this),
+                    error: function(e){}.bind(this)
+                })
 			});
-			aIndices = aIndices.sort(function(a, b){return b-a;});
-			aIndices.forEach(function(nIndex){
-				//oEmployeeModel.removeRecord(nIndex);
-				oEmployeeModel.markRemoved(nIndex);
-			});
-			oTable.removeSelections(true);
-            this.validator.clearValueState(this.getList());
+            oModel.submitChanges({
+                groupId: "removes",
+                success: function(ok){
+                    MessageToast.show("Removed");   //TODO: i18n
+                }.bind(this),
+                error: function(){
+                    MessageToast.show("Error"); //TODO: i18n
+                }.bind(this)
+            });
 		},
 		
 		/**
@@ -258,29 +252,59 @@ sap.ui.define([
 
         },
         
-        onEmployeeListSelectionChange: function(oEvent){
-            return;
-            var oModel = this.getView().getElementBinding().getModel(),
-                aItems = this.getList().getItems(),
-                aSelectedPaths = this.getList().getSelectedContextPaths();
-            aItems.forEach(function(oItem){
-                oModel.setProperty(oItem.getBindingContext().getPath()+"/__metadata/_editMode_", false);
-            });
-            aSelectedPaths.forEach(function(sPath){
-                oModel.setProperty(sPath+"/__metadata/_editMode_", true);
-            });
-        },
+        // onEmployeeListSelectionChange: function(oEvent){
+        //     return;
+        //     var oModel = this.getView().getElementBinding().getModel(),
+        //         aItems = this.getList().getItems(),
+        //         aSelectedPaths = this.getList().getSelectedContextPaths();
+        //     aItems.forEach(function(oItem){
+        //         oModel.setProperty(oItem.getBindingContext().getPath()+"/__metadata/_editMode_", false);
+        //     });
+        //     aSelectedPaths.forEach(function(sPath){
+        //         oModel.setProperty(sPath+"/__metadata/_editMode_", true);
+        //     });
+        // },
 		
-        onEmployeeListItemPress: function(oEvent){
-            if(this.byId('pageEditButton').getPressed() === true){
-                var oModel = this.getView().getElementBinding().getModel(),
-                    aItems = this.getList().getItems(),
-                    selectedPaths = oEvent.getParameter("listItem").getBindingContextPath();
-                aItems.forEach(function(oItem){
-                    oModel.setProperty(oItem.getBindingContext().getPath()+"/__metadata/_editMode_", false);
+        // onEmployeeListItemPress: function(oEvent){
+        //     if(this.byId('pageEditButton').getPressed() === true){
+        //         var oModel = this.getView().getElementBinding().getModel(),
+        //             aItems = this.getList().getItems(),
+        //             selectedPaths = oEvent.getParameter("listItem").getBindingContextPath();
+        //         aItems.forEach(function(oItem){
+        //             oModel.setProperty(oItem.getBindingContext().getPath()+"/__metadata/_editMode_", false);
+        //         });
+        //         oModel.setProperty(selectedPaths+"/__metadata/_editMode_", true);
+        //     }
+        // },
+
+        onDialogCreateEmployeeCancelButtonPress: function(){
+            this.byId("dialogCreateEmployee").close();
+        },
+
+        onDialogCreateEmployeeCreateButtonPress: function(){
+			var oModel = this.getModel(),
+                oContext = oModel.createEntry("/Employee", {
+                     properties: {
+                         "tenant_id": "L2100",
+                         "employee_number": "1000001",
+                         "user_status_code": "C",
+                         "user_local_name": this.byId("dialogCreateEmployeeLocalName").getValue(),
+                         "assign_type_code": "R",
+                         "department_code": "58644670",
+                         "job_title": this.byId("dialogCreateEmployeeJobTitle").getValue(),
+                         "gender_code": this.byId("dialogCreateEmployeeGenderCode").getValue()
+                     }
                 });
-                oModel.setProperty(selectedPaths+"/__metadata/_editMode_", true);
-            }
+            this.getList().setBindingContext(oContext);
+            oModel.submitChanges({
+                success: function(e){
+                    this.byId("dialogCreateEmployee").close();
+                    MessageToast.show("Created");   //TODO : i18n
+                }.bind(this), 
+                error: function(e){
+                    MessageToast.show("Fail");   //TODO : i18n
+                }.bind(this)
+            });
         },
 
 		/* =========================================================== */
@@ -312,44 +336,23 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(oEvent){
-			var oArgs = oEvent.getParameter("arguments"),
-				oView = this.getView();
+			var oArgs = oEvent.getParameter("arguments");
 			this._sTenantId = oArgs.tenantId;
 			this._sCompanyCode = oArgs.companyCode;
 			this._sDepartmentCode = oArgs.departmentCode;
 
-			if(oArgs.tenantId == "create" && oArgs.departmentCode == "new"){
-				//It comes Add button pressed from the before page.
-				this.getModel("endPageViewModel").setProperty("/isAddedMode", true);
-
-				var oDepartmentModel = this.getModel("department");
-				oDepartmentModel.setData({
-					"tenant_id": "L2100",
-					"use_flag": true
-				}, "/Company");
-
-				var oDepartmentModel = this.getModel("employee");
-                oDepartmentModel.setData([], "/Company");
-				oDepartmentModel.addRecord({
-					"tenant_id": this._sTenantId,
-					"department_code": this._sDepartmentCode,
-					"department_name": ""
-				}, "/Company");
-				this._toEditMode();
-			}else{
-				this.getModel("endPageViewModel").setProperty("/isAddedMode", false);
-				
-                this.getView().bindElement({
-                    path: "/Department(tenant_id='" + this._sTenantId + "',department_code='" + this._sDepartmentCode + "')"
-                });
-				
-                this.getList().getBinding("items").filter([
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                    new Filter("department_code", FilterOperator.EQ, "58644670")
-                ], "Application");
-			
-				this._toViewMode();
-			}
+            this.getModel("endPageViewModel").setProperty("/isAddedMode", false);
+            
+            this.getView().bindElement({
+                path: "/Department(tenant_id='" + this._sTenantId + "',department_code='" + this._sDepartmentCode + "')"
+            });
+            
+            this.getList().getBinding("items").filter([
+                new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+                new Filter("department_code", FilterOperator.EQ, "58644670")
+            ], "Application");
+        
+            this._toViewMode();
 		},
 
 		_toViewMode: function(){
@@ -393,7 +396,7 @@ sap.ui.define([
 
 			this.byId("employeeListAddButton").setEnabled(!VIEW_MODE);
 			this.byId("employeeListDeleteButton").setEnabled(!VIEW_MODE);
-			this.getList().setMode(sap.m.ListMode.SingleSelectLeft);
+			this.getList().setMode(sap.m.ListMode.MultiSelect);
 			// this.getList().getColumns()[0].setVisible(!VIEW_MODE);
 			// this._bindTable(this.oEditableTemplate, "Edit");
 		},

@@ -1,26 +1,24 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"ext/lib/util/Multilingual",
-	"ext/lib/model/ManagedModel",
-	"ext/lib/model/ManagedListModel",
 	"sap/ui/model/json/JSONModel",
+    "sap/m/MessageBox",
+    "sap/m/MessageToast",
+    "sap/ui/thirdparty/jquery",
 	"ext/lib/formatter/Formatter",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
-	"sap/ui/core/Fragment",
-    "sap/m/MessageBox",
-    "sap/m/MessageToast",
 	"sap/m/ColumnListItem",
 	"sap/m/ObjectStatus",
 	"sap/m/ObjectIdentifier",
 	"sap/m/Text",
 	"sap/m/Input",
-	"ext/lib/control/m/CodeComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, Multilingual, ManagedModel, ManagedListModel, JSONModel, Formatter, DateFormatter, 
-        Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-        ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, CodeComboBox, Item) {
+	"ext/lib/control/m/CodeComboBox",
+], function (BaseController, JSONModel, MessageBox, MessageToast, jQuery, 
+        Formatter, DateFormatter, 
+        Filter, FilterOperator, 
+        ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, Item, CodeComboBox) {
 	"use strict";
 
 	return BaseController.extend("xx.templateRcmd.controller.TemplateMidColumn", {
@@ -46,8 +44,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-            var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
+            this.setModel(this.getMultilingual().getModel(), "I18N");
 			this.setModel(new JSONModel(), "midPageViewModel");
 
             this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
@@ -128,19 +125,16 @@ sap.ui.define([
 			});
 		},
 
-		onMidTableAddButtonPress: function(){
-			var oTable = this.getList(),
-				oDepartmentModel = this.getModel("department");
-			oDepartmentModel.addRecord({
-				"tenant_id": this._sTenantId,
-				"company_code": this._sCompanyCode,
-				"control_option_level_code": "",
-				"control_option_level_val": "",
-				"company_name": ""
-			}, "/Company");
+		onDepartmentListAddButtonPress: function(oEvent){
+			this.getRouter().navTo("endPage", {
+				layout: sap.f.LayoutType.ThreeColumnsEndExpanded, 
+				tenantId: this._sTenantId,
+				companyCode: this._sCompanyCode,
+                departmentCode: "new"
+			});
 		},
 
-		onMidTableDeleteButtonPress: function(){
+		onDepartmentListDeleteButtonPress: function(){
 			var oTable = this.getList(),
 				oDepartmentModel = this.getModel("department"),
 				aItems = oTable.getSelectedItems(),
@@ -309,8 +303,8 @@ sap.ui.define([
 			// this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
 			this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
 
-			// this.byId("midTableAddButton").setEnabled(!VIEW_MODE);
-			// this.byId("midTableDeleteButton").setEnabled(!VIEW_MODE);
+			// this.byId("DepartmentListAddButton").setEnabled(!VIEW_MODE);
+			// this.byId("DepartmentListDeleteButton").setEnabled(!VIEW_MODE);
 			this.getList().setMode(sap.m.ListMode.SingleSelectLeft);
 			// this.getList().getColumns()[0].setVisible(!VIEW_MODE);
 		},
@@ -322,8 +316,8 @@ sap.ui.define([
 			// this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
 			this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
 
-			// this.byId("midTableAddButton").setEnabled(!VIEW_MODE);
-			// this.byId("midTableDeleteButton").setEnabled(!VIEW_MODE);
+			// this.byId("DepartmentListAddButton").setEnabled(!VIEW_MODE);
+			// this.byId("DepartmentListDeleteButton").setEnabled(!VIEW_MODE);
 			this.getList().setMode(sap.m.ListMode.None);
 			// this.getList().getColumns()[0].setVisible(!VIEW_MODE);
 		},
