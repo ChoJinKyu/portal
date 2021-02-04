@@ -257,8 +257,10 @@
                         <Table
                             id="tblEvalItemScle"
                             items="{viewModel>/Detail/Item}"
-                            mode="SingleSelectLeft"
-                            >
+                            mode="{=
+                                ${viewModel>/App/EditMode} ? 'SingleSelectLeft' : 'None'
+                            }"
+                        >
                             <!-- selectionChange="onSelectTableItem" -->
                             <headerToolbar>
                                 <Toolbar>
