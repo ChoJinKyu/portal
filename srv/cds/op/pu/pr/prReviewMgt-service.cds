@@ -43,8 +43,8 @@ service PrReviewMgtService {
             ,dtl.requestor_empno  // 요청자사번
             ,dtl.requestor_name  // 요청자명
             ,dtl.request_date  // 요청일자
-            ,ifnull(nullif(hrEmp.department_id, ''), mst.requestor_department_code) as requestor_department_code : String(240)  // 요청자부서코드
-            ,ifnull(nullif(cm_get_dept_name_func(hrEmp.tenant_id, hrEmp.department_id), ''), mst.requestor_department_name) as requestor_department_name : String(240)  // 요청자부서명
+            ,ifnull(hrEmp.department_id, mst.requestor_department_code) as requestor_department_code : String(240)  // 요청자부서코드
+            ,ifnull(cm_get_dept_name_func(hrEmp.tenant_id, hrEmp.department_id), mst.requestor_department_name) as requestor_department_name : String(240)  // 요청자부서명
 
             ,dtl.pr_desc  // 구매요청내역
             ,dtl.pr_unit  // 구매요청단위
@@ -132,7 +132,7 @@ service PrReviewMgtService {
             ,mst.pr_create_status_code  // 구매요청생성상태코드
             ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_STATUS_CODE', mst.pr_create_status_code, 'KO') as pr_create_status_name : String(240)  // 구매요청생성상태코드
             ,dtl.pr_progress_status_code  // 구매요청진행상태코드
-            ,cm_get_code_name_func(dtl.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', ifnull(nullif(dtl.pr_progress_status_code, ''), 'INIT'), 'KO') as pr_progress_status_name : String(240)  // 구매요청진행상태코드
+            ,cm_get_code_name_func(dtl.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', ifnull(dtl.pr_progress_status_code, 'INIT'), 'KO') as pr_progress_status_name : String(240)  // 구매요청진행상태코드
 
             ,mst.pr_type_code  // 구매요청유형코드
             ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE', mst.pr_type_code, 'KO') as pr_type_name : String(240)  // 구매요청 유형
@@ -178,7 +178,7 @@ service PrReviewMgtService {
             ,dtl.estimated_price  // 단가예산
             ,dtl.currency_code  // 통화코드
             ,dtl.price_unit  // Per - 가격단위
-            ,dtl.pr_quantity * (ifnull(nullif(dtl.estimated_price, ''), 0) / ifnull(nullif(dtl.price_unit, ''), 1)) as pr_amount : Decimal(30, 10)  // 금액 = 요청수량 * (단가 / Per)
+            ,dtl.pr_quantity * (ifnull(dtl.estimated_price, 0) / ifnull(dtl.price_unit, 1)) as pr_amount : Decimal(30, 10)  // 금액 = 요청수량 * (단가 / Per)
 
             ,dtl.request_date  // 생성일자 - 요청일자
             ,dtl.delivery_request_date  // 납품요청일자
