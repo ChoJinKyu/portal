@@ -25,6 +25,11 @@ entity Vp_Vendor_Pool_Supplier_Popup_View(p_language_code: String, p_tenant_id: 
     vendor_pool_level3_code: String(20) @title: '협력사풀레벨3코드';
     vendor_pool_level4_code: String(20) @title: '협력사풀레벨4코드';
     vendor_pool_level5_code: String(20) @title: '협력사풀레벨5코드';
+    vendor_pool_level1_name: String(240) @title: '협력사풀레벨1명';
+    vendor_pool_level2_name: String(240) @title: '협력사풀레벨2명';
+    vendor_pool_level3_name: String(240) @title: '협력사풀레벨3명';
+    vendor_pool_level4_name: String(240) @title: '협력사풀레벨4명';
+    vendor_pool_level5_name: String(240) @title: '협력사풀레벨5명';
     vendor_pool_mapping_use_flag: Boolean   @title: '협력사풀매핑사용여부';
     register_reason: String(50)   @title: '등록사유'; 
     approval_number: String(50)   @title: '품의번호';

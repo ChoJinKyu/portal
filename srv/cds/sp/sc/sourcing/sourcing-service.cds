@@ -2,6 +2,7 @@
 using {sp.Sc_Nego_Headers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
 using {sp.Sc_Nego_Headers_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
 using {sp.Sc_Nego_Workbench_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
+using {sp.Sc_Nego_Workbench_View2} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
 using {sp.Sc_Nego_Item_Prices} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 using {sp.Sc_Nego_Suppliers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 using {sp.Sc_Nego_Headers_New_Record_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW-model';
@@ -36,81 +37,85 @@ service SourcingService {
     entity NegoHeadersView @(title : '협상헤더정보(+계산항목)')          as projection on Sc_Nego_Headers_View;
 
     // Negotiation(견적&입찰) Workbench 정형 View
-    view NegoWorkbenchView as select from Sc_Nego_Headers_View as Header {
-        key Header.nego_document_number             ,
-        key Header.nego_document_round              ,
-        Key Items.nego_item_number                  ,
-            Header.nego_progress_status_code        ,
-            Header.award_progress_status_code       ,
-            Header.reply_times                      ,
-            Header.supplier_count                   ,
-            Header.supplier_participation_flag      ,
-            Header.remaining_hours                  ,
-            Header.nego_document_title              ,
-            Header.items_count                      ,
-            Header.nego_type_code                   ,
-            Header.negotiation_style_code           ,
-            Header.bidding_result_open_status_code  ,
-            Header.negotiation_output_class_code    ,
-            Items.pr_approve_number                 ,
-            Items.req_submission_status             ,
-            Items.req_reapproval                    ,
-            Items.material_code                     ,
-            Items.material_desc                     ,
-            Items.requestor_empno                   ,
-            Items.request_department_code           ,
-            Header.award_type_code                  ,
-            Header.buyer_empno                      ,
-            Header.buyer_department_code            ,
-            Header.open_date                        ,
-            Header.closing_date                     ,
-            Header.close_date_ext_enabled_hours     ,
-            Header.close_date_ext_enabled_count     ,
-            Header.actual_extension_count           ,
-            Items.requisition_flag                  ,
-            Items.price_submission_no               ,
-            Items.price_submisstion_status          ,
-            Header.local_create_dtm                 ,
-            Items.interface_source                   
-    };
+    // @(title:'UI:Workbench 뷰',description:'Nego(Header+ItemPrices) 정형뷰',readonly) 
+    entity NegoWorkbenchView2 as projection on Sc_Nego_Workbench_View2;
+    entity NegoWorkbenchView as projection on Sc_Nego_Workbench_View;
+    
+    // view NegoWorkbenchView as select from Sc_Nego_Headers_View as Header {
+    //     key Header.nego_document_number             ,
+    //     key Header.nego_document_round              ,
+    //     Key Items.nego_item_number                  ,
+    //         Header.nego_progress_status_code        ,
+    //         Header.award_progress_status_code       ,
+    //         Header.reply_times                      ,
+    //         Header.supplier_count                   ,
+    //         Header.supplier_participation_flag      ,
+    //         Header.remaining_hours                  ,
+    //         Header.nego_document_title              ,
+    //         Header.items_count                      ,
+    //         Header.nego_type_code                   ,
+    //         Header.negotiation_style_code           ,
+    //         Header.bidding_result_open_status_code  ,
+    //         Header.negotiation_output_class_code    ,
+    //         Items.pr_approve_number                 ,
+    //         Items.req_submission_status             ,
+    //         Items.req_reapproval                    ,
+    //         Items.material_code                     ,
+    //         Items.material_desc                     ,
+    //         Items.requestor_empno                   ,
+    //         Items.request_department_code           ,
+    //         Header.award_type_code                  ,
+    //         Header.buyer_empno                      ,
+    //         Header.buyer_department_code            ,
+    //         Header.open_date                        ,
+    //         Header.closing_date                     ,
+    //         Header.close_date_ext_enabled_hours     ,
+    //         Header.close_date_ext_enabled_count     ,
+    //         Header.actual_extension_count           ,
+    //         Items.requisition_flag                  ,
+    //         Items.price_submission_no               ,
+    //         Items.price_submisstion_status          ,
+    //         Header.local_create_dtm                 ,
+    //         Items.interface_source                   
+    // };
         
-    annotate NegoWorkbenchView with @( 
-            title:'UI:Workbench 뷰',description:'Nego(Header+ItemPrices) 정형뷰',readonly
-    ) {
-        nego_document_number             @description:'UI:Negotiation No'         ;
-        nego_document_round              @description:'UI:Revision'               ;
-        nego_progress_status_code        @description:'UI:Negotiation Status'     ;
-        award_progress_status_code       @description:'UI:Award Status'           ;
-        reply_times                      @description:'UI:회신횟수'                   ;
-        supplier_count                   @description:'UI:협력사수'                   ;
-        supplier_participation_flag      @description:'UI:Participation'          ;
-        remaining_hours                  @description:'UI:잔여시간'                   ;
-        nego_document_title              @description:'UI:Title'                  ;
-        items_count                      @description:'UI:품목수'                    ;
-        nego_type_code                   @description:'UI:Negotiation Type'       ;
-        negotiation_style_code           @description:'UI:Quote Style'            ;
-        bidding_result_open_status_code  @description:'UI:Bid Open Status'        ;
-        negotiation_output_class_code    @description:'UI:Outcome'                ;
-        pr_approve_number                @description:'UI:Req Submission No'      ;
-        req_submission_status            @description:'UI:Req Submission Status'  ;
-        req_reapproval                   @description:'UI:Req Reapproval'         ;
-        material_code                    @description:'UI:Part No'                ;
-        material_desc                    @description:'UI:Description'            ;
-        requestor_empno                  @description:'UI:요청자'                    ;
-        request_department_code          @description:'UI:요청 부서'                  ;
-        award_type_code                  @description:'UI:Award Type'             ;
-        buyer_empno                      @description:'UI:Buyer'                  ;
-        buyer_department_code            @description:'UI:Department'             ;
-        open_date                        @description:'UI:Open Date'              ;
-        closing_date                     @description:'UI:Close Date'             ;
-        close_date_ext_enabled_hours     @description:'UI:Extention Period'       ;
-        close_date_ext_enabled_count     @description:'UI:Extention Times'        ;
-        actual_extension_count           @description:'UI:Actual Extension Times' ;
-        requisition_flag                 @description:'UI:Requisition Flag'       ;
-        price_submission_no              @description:'UI:Price Submission No'    ;
-        price_submisstion_status         @description:'UI:Price Submission Status';
-        local_create_dtm                 @description:'UI:Create Date'            ;
-        interface_source                 @description:'UI:Interface Source'       ;
-    };
+    // annotate NegoWorkbenchView with @( 
+    //         title:'UI:Workbench 뷰',description:'Nego(Header+ItemPrices) 정형뷰',readonly
+    // ) {
+    //     nego_document_number             @description:'UI:Negotiation No'         ;
+    //     nego_document_round              @description:'UI:Revision'               ;
+    //     nego_progress_status_code        @description:'UI:Negotiation Status'     ;
+    //     award_progress_status_code       @description:'UI:Award Status'           ;
+    //     reply_times                      @description:'UI:회신횟수'                   ;
+    //     supplier_count                   @description:'UI:협력사수'                   ;
+    //     supplier_participation_flag      @description:'UI:Participation'          ;
+    //     remaining_hours                  @description:'UI:잔여시간'                   ;
+    //     nego_document_title              @description:'UI:Title'                  ;
+    //     items_count                      @description:'UI:품목수'                    ;
+    //     nego_type_code                   @description:'UI:Negotiation Type'       ;
+    //     negotiation_style_code           @description:'UI:Quote Style'            ;
+    //     bidding_result_open_status_code  @description:'UI:Bid Open Status'        ;
+    //     negotiation_output_class_code    @description:'UI:Outcome'                ;
+    //     pr_approve_number                @description:'UI:Req Submission No'      ;
+    //     req_submission_status            @description:'UI:Req Submission Status'  ;
+    //     req_reapproval                   @description:'UI:Req Reapproval'         ;
+    //     material_code                    @description:'UI:Part No'                ;
+    //     material_desc                    @description:'UI:Description'            ;
+    //     requestor_empno                  @description:'UI:요청자'                    ;
+    //     request_department_code          @description:'UI:요청 부서'                  ;
+    //     award_type_code                  @description:'UI:Award Type'             ;
+    //     buyer_empno                      @description:'UI:Buyer'                  ;
+    //     buyer_department_code            @description:'UI:Department'             ;
+    //     open_date                        @description:'UI:Open Date'              ;
+    //     closing_date                     @description:'UI:Close Date'             ;
+    //     close_date_ext_enabled_hours     @description:'UI:Extention Period'       ;
+    //     close_date_ext_enabled_count     @description:'UI:Extention Times'        ;
+    //     actual_extension_count           @description:'UI:Actual Extension Times' ;
+    //     requisition_flag                 @description:'UI:Requisition Flag'       ;
+    //     price_submission_no              @description:'UI:Price Submission No'    ;
+    //     price_submisstion_status         @description:'UI:Price Submission Status';
+    //     local_create_dtm                 @description:'UI:Create Date'            ;
+    //     interface_source                 @description:'UI:Interface Source'       ;
+    // };
 
 }

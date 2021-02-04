@@ -253,13 +253,14 @@ sap.ui.define([
             var aFilters = [];
             var aSorter = [];
             // aFilters.push(new Filter("spmd_category_code", FilterOperator.EQ, this.aSearchCategoryCd));
+            debugger;
             aSorter.push(new Sorter("spmd_character_sort_seq", false));
             var tenant_combo = this.getView().byId("searchTenantCombo").getSelectedKey(),   
                 bizunit_combo = this.getView().byId("searchChain").getSelectedKey(),       
-                category_combo = this.getView().byId("searchCategory").getSelectedKey();   
+                category_combo = this.getView().byId("searchCategory").setSelectedItem().getSelectedKey();  
             
-            var category_combo = this.getView().byId("searchChain");
-            if(bizunit_combo == null || category_combo.getValue() == ""){
+            var org_combo = this.getView().byId("searchChain");
+            if(bizunit_combo == null || org_combo.getValue() == ""){
                 MessageToast.show("사업본부를 설정해주세요.");
                 return;
             }

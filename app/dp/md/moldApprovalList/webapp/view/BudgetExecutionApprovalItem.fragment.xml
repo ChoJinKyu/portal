@@ -348,10 +348,10 @@
                  </form:SimpleForm>
 
                 <cm-ui:DepartmentDialog id="departmentDialog" 
-                    title="직원 검색"
+                    title="부서 검색"
                     items="{
                         filters: [
-                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                         ]
                     }"
                     apply=".onDepartmentDialogApplyPress"

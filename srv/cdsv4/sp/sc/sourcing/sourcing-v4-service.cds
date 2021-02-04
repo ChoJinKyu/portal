@@ -1,6 +1,8 @@
 //cds-service sourcing-v4-service.cds
 using {sp.Sc_Nego_Headers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
 using {sp.Sc_Nego_Headers_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
+using {sp.Sc_Nego_Workbench_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
+using {sp.Sc_Nego_Workbench_View2} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
 using {sp.Sc_Nego_Item_Prices} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 using {sp.Sc_Nego_Suppliers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 using {sp.Sc_Nego_Headers_New_Record_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW-model';
@@ -32,8 +34,14 @@ service SourcingV4Service {
     /* 협상에 대한 헤더 정보의 신규 레코드 초기 값 레코드를 생성한다. */
     entity NegoHeadersNewRecordView @(title : '협상헤더정보-신규레코드') as projection on Sc_Nego_Headers_New_Record_View;
 
-
-    view NegoWorkbenchView as select from Sc_Nego_Headers as Header {
+    // Negotiation(견적&입찰) Workbench 정형 View
+    // @(title:'UI:Workbench 뷰',description:'Nego(Header+ItemPrices) 정형뷰',readonly) 
+    entity NegoWorkbenchView @(title : 'Negotiation(견적&입찰) Workbench 정형뷰') as projection on Sc_Nego_Workbench_View;
+    entity NegoWorkbenchView2 @(title:'Nego(Header+ItemPrices) 정형뷰',description:'UI:Workbench 정형뷰',readonly)  as projection on Sc_Nego_Workbench_View2;
+    view NegoWorkbenchView3 as select from Sc_Nego_Headers_View as Header {
+        Key Header.tenant_id                    ,
+        Key Header.nego_header_id               ,
+        Key Items.nego_item_number              ,
         Header.nego_document_number             ,
         Header.nego_document_round              ,
         Header.nego_progress_status_code        ,
@@ -70,44 +78,44 @@ service SourcingV4Service {
         Items.interface_source                   
     };
         
-    annotate NegoWorkbenchView with @( 
-            title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가',readonly
-    ) {
-        nego_document_number             @description:'UI:Negotiation No'         ;
-        nego_document_round              @description:'UI:Revision'               ;
-        nego_progress_status_code        @description:'UI:Negotiation Status'     ;
-        award_progress_status_code       @description:'UI:Award Status'           ;
-        reply_times                      @description:'UI:회신횟수'                   ;
-        supplier_count                   @description:'UI:협력사수'                   ;
-        supplier_participation_flag      @description:'UI:Participation'          ;
-        remaining_hours                  @description:'UI:잔여시간'                   ;
-        nego_document_title              @description:'UI:Title'                  ;
-        items_count                      @description:'UI:품목수'                    ;
-        nego_type_code                   @description:'UI:Negotiation Type'       ;
-        negotiation_style_code           @description:'UI:Quote Style'            ;
-        bidding_result_open_status_code  @description:'UI:Bid Open Status'        ;
-        negotiation_output_class_code    @description:'UI:Outcome'                ;
-        pr_approve_number                @description:'UI:Req Submission No'      ;
-        req_submission_status            @description:'UI:Req Submission Status'  ;
-        req_reapproval                   @description:'UI:Req Reapproval'         ;
-        material_code                    @description:'UI:Part No'                ;
-        material_desc                    @description:'UI:Description'            ;
-        requestor_empno                  @description:'UI:요청자'                    ;
-        request_department_code          @description:'UI:요청 부서'                  ;
-        award_type_code                  @description:'UI:Award Type'             ;
-        buyer_empno                      @description:'UI:Buyer'                  ;
-        buyer_department_code            @description:'UI:Department'             ;
-        open_date                        @description:'UI:Open Date'              ;
-        closing_date                     @description:'UI:Close Date'             ;
-        close_date_ext_enabled_hours     @description:'UI:Extention Period'       ;
-        close_date_ext_enabled_count     @description:'UI:Extention Times'        ;
-        actual_extension_count           @description:'UI:Actual Extension Times' ;
-        requisition_flag                 @description:'UI:Requisition Flag'       ;
-        price_submission_no              @description:'UI:Price Submission No'    ;
-        price_submisstion_status         @description:'UI:Price Submission Status';
-        local_create_dtm                 @description:'UI:Create Date'            ;
-        interface_source                 @description:'UI:Interface Source'       ;
-    };
+    // annotate NegoWorkbenchView with @( 
+    //         title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가',readonly
+    // ) {
+    //     nego_document_number             @description:'UI:Negotiation No'         ;
+    //     nego_document_round              @description:'UI:Revision'               ;
+    //     nego_progress_status_code        @description:'UI:Negotiation Status'     ;
+    //     award_progress_status_code       @description:'UI:Award Status'           ;
+    //     reply_times                      @description:'UI:회신횟수'                   ;
+    //     supplier_count                   @description:'UI:협력사수'                   ;
+    //     supplier_participation_flag      @description:'UI:Participation'          ;
+    //     remaining_hours                  @description:'UI:잔여시간'                   ;
+    //     nego_document_title              @description:'UI:Title'                  ;
+    //     items_count                      @description:'UI:품목수'                    ;
+    //     nego_type_code                   @description:'UI:Negotiation Type'       ;
+    //     negotiation_style_code           @description:'UI:Quote Style'            ;
+    //     bidding_result_open_status_code  @description:'UI:Bid Open Status'        ;
+    //     negotiation_output_class_code    @description:'UI:Outcome'                ;
+    //     pr_approve_number                @description:'UI:Req Submission No'      ;
+    //     req_submission_status            @description:'UI:Req Submission Status'  ;
+    //     req_reapproval                   @description:'UI:Req Reapproval'         ;
+    //     material_code                    @description:'UI:Part No'                ;
+    //     material_desc                    @description:'UI:Description'            ;
+    //     requestor_empno                  @description:'UI:요청자'                    ;
+    //     request_department_code          @description:'UI:요청 부서'                  ;
+    //     award_type_code                  @description:'UI:Award Type'             ;
+    //     buyer_empno                      @description:'UI:Buyer'                  ;
+    //     buyer_department_code            @description:'UI:Department'             ;
+    //     open_date                        @description:'UI:Open Date'              ;
+    //     closing_date                     @description:'UI:Close Date'             ;
+    //     close_date_ext_enabled_hours     @description:'UI:Extention Period'       ;
+    //     close_date_ext_enabled_count     @description:'UI:Extention Times'        ;
+    //     actual_extension_count           @description:'UI:Actual Extension Times' ;
+    //     requisition_flag                 @description:'UI:Requisition Flag'       ;
+    //     price_submission_no              @description:'UI:Price Submission No'    ;
+    //     price_submisstion_status         @description:'UI:Price Submission Status';
+    //     local_create_dtm                 @description:'UI:Create Date'            ;
+    //     interface_source                 @description:'UI:Interface Source'       ;
+    // };
 
 
     view NegoItemPricesStatusView as select from Sc_Nego_Item_Prices {

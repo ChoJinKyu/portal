@@ -22,12 +22,13 @@ sap.ui.define([
     "dp/md/util/controller/MoldItemSelection",
     'sap/m/SearchField',
     "sap/m/Token",
-    "dp/md/util/controller/DeptSelection",
+    // "dp/md/util/controller/DeptSelection",
 
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
-    , ApprovalBaseController, MoldItemSelection , SearchField , Token , DeptSelection 
+    , ApprovalBaseController, MoldItemSelection , SearchField , Token 
+    // , DeptSelection 
 ) {
     "use strict";
     /**
@@ -46,7 +47,7 @@ sap.ui.define([
 
         moldItemPop: new MoldItemSelection(),
 
-        deptSelection : new DeptSelection(),
+      //  deptSelection : new DeptSelection(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -304,6 +305,28 @@ sap.ui.define([
 
           //    this.byId("moldRecepitPreview").close();
         },
+
+        // 부서 버튼 클릭 
+        onInputWithDepartmentValuePress: function(oEvent){  
+          var index = oEvent.getSource().getBindingContext("mdRecepit").getPath().split('/')[2];
+          this.onInputWithDepartmentValuePress["row"] = index;
+          this.byId("departmentDialogMold").open();
+
+        },
+        onDepartmentDialogApplyPress: function(oEvent){ 
+            var department_id = oEvent.getParameter("item").department_id,
+            department_local_name = oEvent.getParameter("item").department_local_name,
+            oModel = this.getModel("mdRecepit"),
+            rowIndex = this.onInputWithDepartmentValuePress["row"];
+
+            oModel.setProperty("/MoldRecepit/"+rowIndex+"/acq_department_code", department_id);
+            oModel.setProperty("/MoldRecepit/"+rowIndex+"/acq_department_code_nm", department_local_name);
+
+          //  this.byId("acquisition_department").setValue(oEvent.getParameter("item").department_local_name);
+        },
+
+
+        /* 
         onValueHelpRequestedDept : function(mold_id){ 
             // console.log('oEvent>>>> ' , mold_id);
             var that = this;
@@ -328,7 +351,7 @@ sap.ui.define([
              this.getModel("mdRecepit").refresh(true); 
           
         },
-
+ */ 
         onPageRequestButtonPress : function (){
             this.getModel("appMaster").setProperty("/approve_status_code", "AR"); // 결제요청 
             this._moldRecepitApprovalDataSetting();

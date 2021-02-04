@@ -269,7 +269,7 @@ sap.ui.define([
                                         for(var idx=0; idx<lngLength; idx++){
                                             lngArr[idx].spmd_category_code = categoryCode;
                                         }
-                                    
+                                    }
                                     oTransactionManager.submit({  
                                         success: function(ok){ 
                                             that._toShowMode(); 
