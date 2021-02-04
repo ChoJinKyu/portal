@@ -10,8 +10,8 @@ entity Np_Net_Price_Approval_Mst {
   key approval_number                 : String(50)   not null  @title: '품의번호' ;
       net_price_document_type_code    : String(30)             @title: '단가문서유형코드' ;
       net_price_source_code           : String(30)             @title: '견적번호' ;
-      quotation_number                : Decimal                @title: '견적번호' ;
-      quotation_sequence              : Decimal                @title: '견적순번' ;
+      quotation_number                : Integer64              @title: '견적번호' ;
+      quotation_sequence              : Integer64              @title: '견적순번' ;
       bidding_type_code               : String(30)             @title: '입찰유형코드' ;
       buyer_empno                     : String(30)             @title: '구매담당자사번' ;
       effective_start_date            : Date                   @title: '유효시작일자' ;

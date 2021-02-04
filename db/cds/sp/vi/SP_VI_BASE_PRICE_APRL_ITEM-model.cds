@@ -20,13 +20,14 @@ entity VI_Base_Price_Aprl_Item {
          material_name                  : String(240)         ;
          vendor_pool_code               : String(20)  not null;
          currency_code                  : String(3)   not null;
-         material_price_unit            : Decimal(5,0)        ;		
+         base_uom_code                  : String(30)          ;		
          base_price                     : Decimal(19,4)       ;	
          buyer_empno                    : String(30)          ;	
          pcst                           : Decimal(19,4)             ;	
          metal_net_price                : Decimal(19,4)             ;	
          coating_mat_net_price          : Decimal(19,4)             ;	
-         fabric_net_price               : Decimal(19,4)             ;	        
+         fabric_net_price               : Decimal(19,4)             ;	
+        
 };
 
 extend VI_Base_Price_Aprl_Item with util.Managed;
@@ -50,11 +51,12 @@ annotate VI_Base_Price_Aprl_Item with {
     material_name                     @title : '자재명'           @description      : '자재명';
     vendor_pool_code                  @title : '벤더풀코드'       @description      : '벤더풀코드';
     currency_code                     @title : '통화코드'         @description      : '통화코드';
-    material_price_unit               @title : '가격단위'         @description      : '가격단위'; 
+    base_uom_code                     @title : '단위'         @description          : '단위'; 
     buyer_empno                       @title : '구매담당자사번'    @description      : '구매담당자사번';
     base_price                        @title : '기준단가'         @description      : '기준단가';
     pcst                              @title : '가공비'           @description      : '가공비';
     metal_net_price                   @title : '메탈단가'         @description       : '메탈단가';
     coating_mat_net_price             @title : '코팅재단가'       @description       : '코팅재단가';
-    fabric_net_price                  @title : '원단단가'         @description       : '원단단가';	
+    fabric_net_price                  @title : '원단단가'         @description       : '원단단가';
+   
 };

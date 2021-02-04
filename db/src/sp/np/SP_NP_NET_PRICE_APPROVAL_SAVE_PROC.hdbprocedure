@@ -43,6 +43,17 @@ PROCEDURE SP_NP_NET_PRICE_APPROVAL_SAVE_PROC (
                                               ,INCOTERMS                          NVARCHAR(3)
                                               ,_ROW_STATE_                        NVARCHAR(3)
                                            )
+
+    ,IN   I_APPROVERS                         TABLE (
+                                               APPROVE_SEQUENCE                   NVARCHAR(20)
+                                              ,APPROVER_EMPNO                     NVARCHAR(30)
+                                              ,APPROVER_TYPE_CODE                 NVARCHAR(30)
+                                              ,_ROW_STATE_                        NVARCHAR(3)   /* 현재 사용하지 않음. : 전체 삭제 후 다시 Insert */
+                                           )
+
+    ,IN   I_REFERERS                          TABLE (
+                                               REFERER_EMPNO                      NVARCHAR(30)
+                                           )
     ,IN   I_USER_ID                        NVARCHAR(255)
     ,OUT  O_RETURN_CODE                    NVARCHAR(5)
     ,OUT  O_RETURN_MSG                     NVARCHAR(1000)
@@ -447,6 +458,107 @@ BEGIN
         ;
         
     END;
+
+
+    /* 결재자 등록 : 전체 삭제 후, 재 등록 */
+    BEGIN
+
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            O_RETURN_CODE = 'NG080';
+            O_RETURN_MSG  = '품의 결재라인 등록 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
+            SIGNAL V_USER_EXCEPTION;
+        END;
+       
+        DELETE FROM CM_APPROVER
+         WHERE TENANT_ID        = I_TENANT_ID
+           AND APPROVAL_NUMBER  = V_APPROVAL_NUMBER
+        ;
+
+
+        INSERT INTO CM_APPROVER (
+               TENANT_ID
+             , APPROVAL_NUMBER
+             , APPROVE_SEQUENCE
+             , APPROVER_EMPNO
+             , APPROVER_TYPE_CODE
+             , APPROVE_STATUS_CODE
+             , APPROVE_COMMENT
+             , APPROVE_DATE_TIME
+
+             , LOCAL_CREATE_DTM
+             , LOCAL_UPDATE_DTM
+             , CREATE_USER_ID
+             , UPDATE_USER_ID
+             , SYSTEM_CREATE_DTM
+             , SYSTEM_UPDATE_DTM
+        )
+        SELECT 
+               I_TENANT_ID
+             , V_APPROVAL_NUMBER
+             , I.APPROVE_SEQUENCE
+             , I.APPROVER_EMPNO
+             , I.APPROVER_TYPE_CODE
+             , ''                    -- APPROVE_STATUS_CODE
+             , NULL                  -- APPROVE_COMMENT
+             , NULL                  -- APPROVE_DATE_TIME
+
+             , NOW()
+             , NOW()
+             , :I_USER_ID
+             , :I_USER_ID
+             , NOW()
+             , NOW()
+          FROM :I_APPROVERS  I
+        ;
+        
+    END;
+
+    
+    /* 결재자 등록 : 전체 삭제 후, 재 등록 */
+    BEGIN
+
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            O_RETURN_CODE = 'NG080';
+            O_RETURN_MSG  = '품의 결재라인 등록 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
+            SIGNAL V_USER_EXCEPTION;
+        END;
+       
+        DELETE FROM CM_REFERER
+         WHERE TENANT_ID        = I_TENANT_ID
+           AND APPROVAL_NUMBER  = V_APPROVAL_NUMBER
+        ;
+
+
+        INSERT INTO CM_REFERER (
+               TENANT_ID
+             , APPROVAL_NUMBER
+             , REFERER_EMPNO
+
+             , LOCAL_CREATE_DTM
+             , LOCAL_UPDATE_DTM
+             , CREATE_USER_ID
+             , UPDATE_USER_ID
+             , SYSTEM_CREATE_DTM
+             , SYSTEM_UPDATE_DTM
+        )
+        SELECT 
+               I_TENANT_ID
+             , V_APPROVAL_NUMBER
+             , I.REFERER_EMPNO
+
+             , NOW()
+             , NOW()
+             , :I_USER_ID
+             , :I_USER_ID
+             , NOW()
+             , NOW()
+          FROM :I_REFERERS  I
+        ;
+        
+    END;
+
 
     O_RETURN_CODE = 'OK';
     O_RETURN_MSG  = V_APPROVAL_NUMBER;

@@ -53,14 +53,6 @@
                             <ComboBox id="sSupplierCode">
                                 <core:Item key="KR01818401" text="한국유나이티드제약(주)" />
                                 <core:Item key="KR01820600" text="BST상사" />
-                                <core:Item key="KR018113A0" text="(주)에코프로비엠" />
-                                <core:Item key="KR01819100" text="(주)슈피겐코리아" />
-                                <core:Item key="KR01819400" text="엘지이노텍(주)" />
-                                <core:Item key="KR01809200" text="(주)엘앤에프" />
-                                <core:Item key="KR01818601" text="일진머티리얼즈(주)" />
-                                <core:Item key="KR01812500" text="티플랙스" />
-                                <core:Item key="KR01818300" text="에스퓨얼셀(주)" />
-                                <core:Item key="KR01817003" text="(주)골프존 평택공장" />
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />

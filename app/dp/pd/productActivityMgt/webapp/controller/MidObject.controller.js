@@ -229,21 +229,6 @@ sap.ui.define([
 		/* internal methods                                            */
 		/* =========================================================== */
 
-		// _onMasterDataChanged: function(oEvent){
-		// 	if(this.getModel("midObjectViewModel").getProperty("/isAddedMode") == true){
-		// 		var oMasterModel = this.getModel("master");
-		// 		var oDetailsModel = this.getModel("details");
-		// 		var sTenantId = oMasterModel.getProperty("/tenant_id");
-		// 		var sControlOPtionCode = oMasterModel.getProperty("/control_option_code");
-		// 		var oDetailsData = oDetailsModel.getData();
-		// 		oDetailsData.forEach(function(oItem, nIndex){
-		// 			oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-		// 			oDetailsModel.setProperty("/"+nIndex+"/control_option_code", sControlOPtionCode);
-		// 		});
-		// 		oDetailsModel.setData(oDetailsData);
-		// 	}
-		// },
-
 		/**
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
@@ -291,7 +276,7 @@ sap.ui.define([
 				oDetailsModel.addRecord({
 					"tenant_id": this._sTenantId,
 					"product_activity_code": "",
-					"language_code": "KO",
+					"language_cd": "KO",
 					"code_name": ""			
                 }, "/PdProdActivityTemplateLng");
 
@@ -472,10 +457,12 @@ sap.ui.define([
                                     if(CUType === "D") {
                                         v_this.onPageNavBackButtonPress.call(v_this);
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01002"));                                       
                                     } else if(CUType === "C"){
                                         v_this.onPageNavBackButtonPress.call(v_this);
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                        v_this.onPageNavBackButtonPress.call(v_this);
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     }else {
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
@@ -502,8 +489,21 @@ sap.ui.define([
 					};
 				}
             });
+            
 
             this.validator.clearValueState(this.byId("page"));
+        },
+
+        aaa : function(){
+            console.log("test");
+
+            var master = this.getModel("master");
+            var details = this.getModel("details");
+
+            console.log("master :");
+            console.log(master);
+            console.log("details :");
+            console.log(details);
         }
 	});
 });

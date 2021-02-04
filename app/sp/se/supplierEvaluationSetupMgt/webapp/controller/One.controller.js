@@ -11,10 +11,11 @@ sap.ui.define([
     "sap/ui/core/ValueState",
     "sap/ui/core/message/Message",
     "sap/ui/core/MessageType",
+    "sap/m/SegmentedButtonItem"
 
     // @ts-ignore
 ], function (BaseController, History, MessageBox, MessageToast, Filter,JSONModel, 
-    Multilingual, Item, ValueState, Message, MessageType
+    Multilingual, Item, ValueState, Message, MessageType , SegmentedButtonItem
     ) {
     "use strict";
 
@@ -111,7 +112,7 @@ sap.ui.define([
                 oTable = oEvent.getSource().getParent().getParent().getParent();
                 // oTable = this.byId("managerTable");
                 bSelect = oTable.getId() === "container-supplierEvaluationSetupMgt---detail--beginView--managerTable";
-
+                
                 if(bSelect)
                 ListData = oViewModel.getProperty("/manager");
                 else
@@ -927,12 +928,11 @@ sap.ui.define([
                 var oViewModel = oComponent.getModel("viewModel");
                 var layout = oViewModel.getProperty("/App/layout");
 
-                 var bTwoViewEditCheck = oComponent.byId("container-supplierEvaluationSetupMgt---detail--detailView").
-                 getController().getView().getModel("TwoView").getProperty("/isEditMode");
+                 var bTwoViewEditCheck = oComponent.byId("detail").byId("detailView").getModel("TwoView").getData().isEditMode;
                  // var oModel = oView.getModel("DetailView").getProperty("/evaluationType1");
                                
 
-                    if( (layout === "TwoColumnsMidExpanded" || layout === "TwoColumnsBeginExpanded")&&bTwoViewEditCheck ){
+                    if( (layout === "TwoColumnsMidExpanded" || layout === "TwoColumnsBeginExpanded")&& bTwoViewEditCheck ){
                     MessageBox.confirm(i18nModel.getText("/NPG00013"), {
                         actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
                         emphasizedAction: MessageBox.Action.OK,
@@ -1121,23 +1121,41 @@ sap.ui.define([
             }
 
                 
-            // this.getView().getModel("DetailView").setProperty("/",{
-            //                     OperationUnitMst : [],                                
-            //                     manager : [],
-            //                     evaluationType1 : [],
-            //                     quantitative : [],
-            //                     vpOperationUnit : { vendor_pool_operation_unit_code : [] }
-            //                 });
-            // this.getView().byId("managerTable").removeSelections(true);
-            // this.getView().byId("quantitativeTable").removeSelections(true);
+            this.getView().getModel("DetailView").setProperty("/",{
+                                OperationUnitMst : [],                                
+                                manager : [],
+                                evaluationType1 : [],
+                                quantitative : [],
+                                vpOperationUnit : { vendor_pool_operation_unit_code : [] }
+                            });
+            this.getView().byId("managerTable").removeSelections(true);
+            this.getView().byId("quantitativeTable").removeSelections(true);
 
-            // oView.getModel().refresh(true);
-            // oView.getModel("DetailView").refresh(true);
             this._readAll();
 
             
              oView.setBusy(false);
          },
+        //  onCheckLevel : function(oEvent){
+
+        //     //var Keys =  oEvent.getSelectedKeys();
+        //     var iKeys = 3;
+            
+        //     var oSegmentedButton = this.getView().byId("vendor_pool_lvl");
+
+        //     oSegmentedButton.destroyItems();
+
+        //     for(var i=0;i<iKeys;i++){
+        //                 oSegmentedButton.addItem(
+        //                     new SegmentedButtonItem({ 
+        //                         text : (i+1)+"레벨", 
+        //                         key : i
+        //                     })
+        //                 );
+        //             }
+
+
+        //  },
          _readAll : function(){
             var oView = this.getView();
             var oModel = this.getModel("DetailView");

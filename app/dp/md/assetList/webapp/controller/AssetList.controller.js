@@ -53,7 +53,8 @@ sap.ui.define([
         onInit: function () {
             var oViewModel,
                 oResourceBundle = this.getResourceBundle();
-
+            
+            console.log(" session >>> " , this.getSessionUserInfo().TENANT_ID);
             // Model used to manipulate control states
             oViewModel = new JSONModel({
                 assetListTableTitle: oResourceBundle.getText("assetListTableTitle"),
@@ -123,14 +124,15 @@ sap.ui.define([
         },
 
         _segmentSrch : function (){
-             
+            // session에서 받아오는 tenant_id를 변수로 저장함
+            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
             var oView = this.getView(),
                 oModel = this.getModel("SegmentedItem") ,
                 codeName = this.getModel('I18N').getText("/ALL")
                 ;
             console.log("codeName >>>>", codeName);
              var aSearchFilters = [];
-                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101'));
+                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
                 aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'DP_MD_ASSET_STATUS'));
 
 
@@ -155,21 +157,22 @@ sap.ui.define([
         } ,
 
         setPlant: function(companyCode){
-            
+            // session에서 받아오는 tenant_id를 변수로 저장함
+            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
 
             var filter = new Filter({
                     filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
+                            new Filter("tenant_id", FilterOperator.EQ, sTenant_id),
                             new Filter("company_code", FilterOperator.EQ, companyCode)
                         ],
                         and: true
                 });
 
             var bindItemInfo = {
-                    path: '/Divisions',
+                    path: 'dpMdUtil>/Divisions',
                     filters: filter,
                     template: new Item({
-                        key: "{org_code}", text: "[{org_code}] {org_name}"
+                        key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
                     })
                 };
 
@@ -183,7 +186,8 @@ sap.ui.define([
         * @see (멀티박스)Company와 Plant 부분 연관성 포함함
         */
         handleSelectionFinishComp: function (oEvent) {
-
+            // session에서 받아오는 tenant_id를 변수로 저장함
+            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
             this.copyMultiSelected(oEvent);
 
             var params = oEvent.getParameters();
@@ -195,7 +199,7 @@ sap.ui.define([
 
                     plantFilters.push(new Filter({
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, 'L2101'),
+                            new Filter("tenant_id", FilterOperator.EQ, sTenant_id),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
                         and: true
@@ -203,7 +207,7 @@ sap.ui.define([
                 });
             } else {
                 plantFilters.push(
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2101')
+                    new Filter("tenant_id", FilterOperator.EQ, sTenant_id)
                 );
             }
  
@@ -213,10 +217,10 @@ sap.ui.define([
             });
 
             var bindInfo = {
-                    path: '/Divisions',
+                    path: 'dpMdUtil>/Divisions',
                     filters: filter,
                     template: new Item({
-                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                    key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
                     })
                 };
             

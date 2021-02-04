@@ -15,12 +15,12 @@ entity Np_Base_Price_Mst {
       apply_year            : String(4)                  @title: '적용년도' ;	
       apply_start_mm        : String(2)                  @title: '적용시작월' ;	
       apply_end_mm          : String(2)                  @title: '적용종료월' ;	
-      base_price            : Decimal        not null    @title: '기준단가 ' ;	
+      base_price            : Decimal(34,10) not null    @title: '기준단가 ' ;	
       base_price_type_code  : String(30)                 @title: '기준단가유형코드' ;	
-      pcst                  : Decimal                    @title: '가공비' ;	
-      metal_net_price       : Decimal                    @title: '메탈단가' ;	
-      fabric_net_price      : Decimal                    @title: '원단단가' ;	
-      coating_mat_net_price : Decimal                    @title: '코팅재단가' ;	
+      pcst                  : Decimal(34,10)             @title: '가공비' ;	
+      metal_net_price       : Decimal(34,10)             @title: '메탈단가' ;	
+      fabric_net_price      : Decimal(34,10)             @title: '원단단가' ;	
+      coating_mat_net_price : Decimal(34,10)             @title: '코팅재단가' ;	
       use_flag              : Boolean                    @title: '사용여부' ;	
 }	
 

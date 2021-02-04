@@ -355,6 +355,11 @@ service VpMappingService {
                     ,mst.vendor_pool_level3_code                    
                     ,mst.vendor_pool_level4_code                    
                     ,mst.vendor_pool_level5_code                    
+                    ,mst.vendor_pool_level1_name
+                    ,mst.vendor_pool_level2_name
+                    ,mst.vendor_pool_level3_name
+                    ,mst.vendor_pool_level4_name
+                    ,mst.vendor_pool_level5_name
                     ,mst.vendor_pool_mapping_use_flag               
                     ,mst.register_reason                            
                     ,mst.approval_number                            

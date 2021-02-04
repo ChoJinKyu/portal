@@ -64,7 +64,7 @@
 			<FlexBox wrap="Wrap" >
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus
-                        title="{I18N>/APPROVAL_NUMBER}"
+                        title="{I18N>/REQUEST_NUMBER}"
                         text="{appMaster>/approval_number}"/>
                     <ObjectStatus
                         title="{I18N>/REQUESTOR}"

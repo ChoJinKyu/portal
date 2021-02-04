@@ -38,7 +38,7 @@ BEGIN
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 		ROLLBACK;
 
-/*  CRUD_TYPE_CODE가 'D' 인 Data 삭제 */
+/* CRUD_TYPE_CODE가 'D' 인 Data 삭제 */
     IF CRUD_TYPE = 'D' THEN
       BEGIN
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -164,8 +164,7 @@ BEGIN
                 USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE IN ('C','U')  ) id
                 ON ( D.TENANT_ID = id.TENANT_ID
                     AND D.REQUEST_NUMBER = id.REQUEST_NUMBER
-                    AND D.APPROVE_SEQUENCE = id.APPROVE_SEQUENCE
-                    AND id.CRUD_TYPE IN ('C','U') )
+                    AND D.APPROVE_SEQUENCE = id.APPROVE_SEQUENCE )
             WHEN MATCHED THEN
                 UPDATE
                 SET  D.APPROVAL_NUMBER = id.APPROVAL_NUMBER
