@@ -28,12 +28,17 @@
 				<uxap:expandedHeading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBack" />
-                        <Title text="{I18N>/NEW_BASE_PRICE}(일반자재)" wrapping="true"/>
+                        <Title text="{I18N>/NEW_BASE_PRICE}({I18N>/GENERAL_MATERIAL})" wrapping="true"/>
                     </HBox>
 				</uxap:expandedHeading>
                 <uxap:navigationActions>
-					<!-- <OverflowToolbarButton icon="sap-icon://decline" text="{I18N>/BACK}" press=".onBack" /> -->
                 </uxap:navigationActions>
+                <uxap:snappedHeading>
+					<HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBack" />
+                        <Title text="{I18N>/NEW_BASE_PRICE}({I18N>/GENERAL_MATERIAL})" wrapping="true"/>
+                    </HBox>
+				</uxap:snappedHeading>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
