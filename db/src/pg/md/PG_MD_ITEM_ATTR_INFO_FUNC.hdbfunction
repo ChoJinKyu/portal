@@ -77,10 +77,22 @@ BEGIN
                                     AND CID.ORG_TYPE_CODE = CITM.ORG_TYPE_CODE
                                     AND CID.ORG_CODE = CITM.ORG_CODE
                                     AND CID.SPMD_CATEGORY_CODE = CITM.SPMD_CATEGORY_CODE
-    WHERE (CITM.SPMD_CATEGORY_CODE, CITM.SPMD_CHARACTER_CODE, CITM.SPMD_CHARACTER_SERIAL_NO) = (
-                        SELECT SPMD_CATEGORY_CODE, SPMD_CHARACTER_CODE, SPMD_CHARACTER_SERIAL_NO FROM (
+    WHERE (CITM.TENANT_ID, CITM.COMPANY_CODE, CITM.ORG_TYPE_CODE, CITM.ORG_CODE, CITM.SPMD_CATEGORY_CODE, CITM.SPMD_CHARACTER_CODE, CITM.SPMD_CHARACTER_SERIAL_NO) = (
+                        SELECT  
+                                TENANT_ID
+                                , COMPANY_CODE  
+                                , ORG_TYPE_CODE  
+                                , ORG_CODE
+                                , SPMD_CATEGORY_CODE
+                                , SPMD_CHARACTER_CODE
+                                , SPMD_CHARACTER_SERIAL_NO 
+                        FROM (
                             SELECT 
-                                CITM.SPMD_CATEGORY_CODE 
+                                CITM.TENANT_ID
+                                , CITM.COMPANY_CODE  
+                                , CITM.ORG_TYPE_CODE  
+                                , CITM.ORG_CODE
+                                , CITM.SPMD_CATEGORY_CODE 
                                 , CITM.SPMD_CHARACTER_CODE 
                                 , CITM.SPMD_CHARACTER_SERIAL_NO
                                 , (ROW_NUMBER() OVER (PARTITION BY CIVMA.VENDOR_POOL_CODE ORDER BY CID.SPMD_CATEGORY_SORT_SEQUENCE, CITM.SPMD_CHARACTER_SORT_SEQ)) AS ROW_NUM
