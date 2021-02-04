@@ -11,7 +11,7 @@
         <VBox class="sapUiSmallMargin" >
             <form:SimpleForm>
                 <Label text="{I18N>/BUYER}" visible="{= ${fragment>/reason/action} === 'CHANGE'}"/>
-                <lib-m:CodePicker 
+                <!-- <lib-m:CodePicker 
                     visible="{= ${fragment>/reason/action} === 'CHANGE'}"
                     placeholder="(미정)구매담당자를 입력하세요"
                     selectedKey="{fragment>/reason/buyerEmpno}"
@@ -31,7 +31,16 @@
                         keyFieldHeaderText="{I18N>/BUYER_EMPNO}" 
                         textFieldHeaderText="{I18N>/BUYER_NAME}"
                     />
-                </lib-m:CodePicker>
+                </lib-m:CodePicker> -->
+                <MultiInput 
+                    visible="{= ${fragment>/reason/action} === 'CHANGE'}"
+                    showValueHelp="true"
+                    valueHelpRequest=".onValueHelpRequest($event, 'fragment', {
+                        action: 'input',
+                        model: 'jSearch', 
+                        path: 'buyer_empno'
+                    })"
+                />
                 <Label text="(미정)사유"/>
                 <TextArea value="{fragment>/reason/processedReason}" rows="3" />
             </form:SimpleForm>

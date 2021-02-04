@@ -113,13 +113,46 @@ sap.ui.define([
                         .setProperty("/headerExpanded", true);
                 }, this);
             
-            // middleware - token 처리
+            // MultiInput - 초기화
+            this.byId("buyerEmpno").setValue((this.byId("buyerEmpno").oldText = [
+                "(", this.$session.employee_number, ") ", this.$session.employee_name
+            ].join("")));
+            this.byId("buyerEmpno").oldValue = this.$session.employee_number;
+
+            // middleware - token/dialog 처리
             this.before("search", "jSearch", "list", "Pr_ReviewListView", function() {
+                // Multi
                 [
                     ["requestor_department_code", this.byId("requestorDepartmentCode")], 
                     ["buyer_department_code", this.byId("buyerDepartmentCode")], 
+                    ["material_code", this.byId("materialCode")], 
                 ]
                 .forEach(e => this.convTokenToBind("jSearch", ["/", e[0], "/values"].join(""), e[1].getTokens()), this);
+                // Single
+                [
+                    ["requestor_empno", this.byId("requestorEmpno")], 
+                    ["buyer_empno", this.byId("buyerEmpno")], 
+                ]
+                .forEach(e => {
+                    // 키워드값이 변경된 경우(NULL)
+                    !e[1].getValue()
+                    &&
+                    this.getModel("jSearch").setProperty(["/", e[0]].join(""), "");
+
+                    // 키워드값이 변경된 경우
+                    e[1].getValue()
+                    &&
+                    !(e[1].oldText == e[1].getValue())
+                    &&
+                    this.getModel("jSearch").setProperty(["/", e[0]].join(""), "invalid");
+
+                    // 키워드값이 원복된 경우
+                    e[1].getValue()
+                    &&
+                    (e[1].oldText == e[1].getValue())
+                    &&
+                    this.getModel("jSearch").setProperty(["/", e[0]].join(""), e[1].oldValue);
+                }, this);
             });
         },
         /* =========================================================== */
@@ -136,26 +169,26 @@ sap.ui.define([
             &&
             this.dialog(new MaterialOrgDialog({
                 title: "Choose Material Code",
-                MultiSelection: false,
+                multiSelection: true,
                 items: {
                     filters: [
                         new Filter("tenant_id", "EQ", this.$session.tenant_id)
+                    ],
+                    sorters: [
+                        new Sorter("material_code")
                     ]
                 },
                 orgCode: ""
-            }), function(result) {
-                this.getModel("jSearch").setProperty(
-                    "/material_code", 
-                    result.mParameters.item["/material_code".split("/")["/material_code".split("/").length-1]]
-                );
-            });
+            }), function(r) {
+                control.setTokens(r.getSource().getTokens());
+            }, control);
 
             // 조직코드
             type == "org_code"
             &&
             this.dialog(new PlantDialog({
                 title: "(미정)조직을 선택하세요.)",
-                MultiSelection: false,
+                multiSelection: false,
                 items: {
                     filters: [
                         new Filter("company_code", FilterOperator.EQ, this.$session.company_code)                            
@@ -164,9 +197,7 @@ sap.ui.define([
                         new Sorter("plant_name")
                     ]
                 }
-            }), 
-            function(result) {
-            });
+            }));
 
             (
                 // 요청자부서
@@ -188,6 +219,31 @@ sap.ui.define([
                 // Set Token
                 control.setTokens(r.getSource().getTokens());
             }, control);
+
+            (
+                // 요청자명
+                type == "requestor_empno"
+                ||
+                // 구매담당자
+                type == "buyer_empno"
+            )
+            &&
+            this.dialog(new EmployeeDialog({
+                title: "(미정)사원을 선택하세요",
+                multiSelection: false,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
+                    ]
+                }
+            }), function(r) {
+                control.setValue((control.oldText = [
+                    "(", r.getParameter("item").employee_number, ") ", r.getParameter("item").user_local_name
+                ].join("")));
+                control.oldValue = r.getParameter("item").employee_number;
+                this.getModel("jSearch")
+                    .setProperty("/" + type, r.getParameter("item").employee_number);
+            }, control);
         },
         // 조회
         onSearch: function (event) {
@@ -202,10 +258,7 @@ sap.ui.define([
         onColumnListItemPress: function () {
 
             var [ event, type, model, ...args ] = arguments,
-                layout = this.getOwnerComponent()
-                            .getHelper()
-                            .getNextUIState(1)
-                            .layout,
+                layout = args[args.length-1].LayoutType,
                 record = this.getModel(model).getProperty(event.getSource().getBindingContextPath());
 
             // 조회조건접힘처리
@@ -292,6 +345,28 @@ sap.ui.define([
                                             }
                                         }), "fragment");
                                     }).bind(this),
+                                    onValueHelpRequest: function() {
+                                        var [ event, type, ...args ] = arguments;
+                                        var { model, path } = args[args.length - 1];
+                                        var control = event.getSource();
+
+                                        this.dialog(new EmployeeDialog({
+                                            title: "(미정)사원을 선택하세요",
+                                            multiSelection: false,
+                                            items: {
+                                                filters: [
+                                                    new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
+                                                ]
+                                            }
+                                        }), function(r) {
+                                            control.setValue((control.oldText = [
+                                                "(", r.getParameter("item").employee_number, ") ", r.getParameter("item").user_local_name
+                                            ].join("")));
+                                            control.oldValue = r.getParameter("item").employee_number;
+                                            this.getModel("fragment")
+                                                .setProperty("/reason/buyerEmpno", r.getParameter("item").employee_number);
+                                        }, control);
+                                    },
                                     onCommit: function() {
                                         var [event, action, value, ...args] = arguments;
                                         if (value.action == 'CHANGE' && !value.buyerEmpno) {
