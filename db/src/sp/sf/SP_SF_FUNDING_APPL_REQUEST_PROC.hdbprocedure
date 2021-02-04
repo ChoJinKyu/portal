@@ -166,10 +166,12 @@ BEGIN
 			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_12';
 		END IF;
 		
+        /*
 		--담보물 약식확인서 필수 체크
 		IF (COALESCE(:I_COLLATERAL_ATTCH_GROUP_NUMBER,'') = '') THEN
 			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_13';
 		END IF;
+        */
 	
 	
 		-------------------------------------------------------------------------------[투자계획서를 입력했는지 체크]

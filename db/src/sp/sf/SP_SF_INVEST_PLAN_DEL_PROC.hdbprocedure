@@ -64,7 +64,7 @@ BEGIN
         ELSEIF ::SQL_ERROR_CODE = 10200 THEN
             O_RESULT =  SELECT 
                             'NG' AS RESULT_CODE
-                            ,'ERR_SAVE' AS ERR_TYPE
+                            ,'ERR_DEL' AS ERR_TYPE
                             ,::SQL_ERROR_CODE AS SQL_ERR_CODE
                             ,'' AS DEF_ERR_CODE
                             ,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
@@ -107,25 +107,28 @@ BEGIN
         삭제처리 시작
         **********************************************/
         BEGIN
-            -------------------------------------------------------------------------------[투자계획 마스터 테이블 삭제]
-            DELETE FROM SP_SF_FUNDING_INVEST_PLAN_MST
-            WHERE FUNDING_APPL_NUMBER  = V_FUNDING_APPL_NUMBER
-            AND INVESTMENT_PLAN_SEQUENCE  = V_MST_SEQ
-            ;
-
+            
             -------------------------------------------------------------------------------[투자계획 상세 테이블 삭제]
             DELETE FROM SP_SF_FUNDING_INVEST_PLAN_DTL
             WHERE FUNDING_APPL_NUMBER  = V_FUNDING_APPL_NUMBER
             AND INVESTMENT_PLAN_SEQUENCE  = V_MST_SEQ
             ;
 
+            -------------------------------------------------------------------------------[투자계획 마스터 테이블 삭제]
+            DELETE FROM SP_SF_FUNDING_INVEST_PLAN_MST
+            WHERE FUNDING_APPL_NUMBER  = V_FUNDING_APPL_NUMBER
+            AND INVESTMENT_PLAN_SEQUENCE  = V_MST_SEQ
+            ;
+
             /***********************************************
-            정상적으로 삭제처리 되었는지 확인
+            마스터데이터가 정상적으로 삭제처리 되었는지 확인
             **********************************************/
             SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;	    
             IF V_CUD_COUNT != 1 THEN
                 SIGNAL V_ERR_DEL SET MESSAGE_TEXT = '';
             END IF;
+            
+            
 
         END;
         
