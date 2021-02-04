@@ -31,4 +31,23 @@ entity Pd_Part_Base_Activity_Category_Pop_View {
         path                  : String;
         sequence              : Decimal;
         active_flag           : Boolean;
+};
+
+@cds.persistence.exists
+entity Pd_Part_Base_Activity_Category_View {
+    key tenant_id             : String;
+    key activity_code         : String;
+    key category_group_code   : String;
+    key category_code         : String;
+        category_group_name   : String;
+        category_name         : String;
+        active_flag           : Boolean;
+        s_grade_standard_days : Integer;
+        a_grade_standard_days : Integer;
+        b_grade_standard_days : Integer;
+        c_grade_standard_days : Integer;
+        d_grade_standard_days : Integer;
+        update_user_id        : String;
+        local_update_dtm      : DateTime;
 }
+
