@@ -12,6 +12,7 @@ sap.ui.define([
 			onInit: function () {
                 this.getOwnerComponent().getModel("viewModel").setProperty("/App",{
                     layout : "OneColumn",
+                    btnScreen : "sap-icon://full-screen",
                     EditMode : false
                 });
             }

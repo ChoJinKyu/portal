@@ -37,6 +37,13 @@
 
                 <uxap:headerTitle>
                     <uxap:ObjectPageHeader>
+                         <OverflowToolbarButton 
+                         type="Transparent" 
+                         icon="{viewModel>/App/btnScreen}" 
+                         text="screen" 
+                         tooltip="screen change" 
+                         press="onPressLayoutChange" />
+                    
                         <OverflowToolbarButton
                         type="Transparent" 
                         icon="sap-icon://decline"
