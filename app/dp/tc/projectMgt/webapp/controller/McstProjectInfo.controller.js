@@ -124,7 +124,7 @@ sap.ui.define([
             }
         }
 
-        , _sendSaveData: function(oSendData) {
+        , _sendSaveData: function(oSendData, bNavNextStep) {
             //var oModel = this.getModel("v4Proc");
             //var url = oModel.sServiceUrl + "TcUpdateProjectProc";
             var targetName = "TcUpdateMcstProjectProc";
@@ -139,7 +139,18 @@ sap.ui.define([
                     //debugger;
                     if(data.return_code === "OK") {
                         MessageBox.show("적용되었습니다.", {at: "Center Center"});
-                        this._getProjectDetail();
+                        if(bNavNextStep) {
+                            let oParam = {
+                                tenant_id : this.getModel("detailModel").getProperty("/tenant_id"),
+                                project_code : this.getModel("detailModel").getProperty("/project_code"),
+                                model_code : this.getModel("detailModel").getProperty("/model_code"),
+                                version_number : this.getModel("detailModel").getProperty("/version_number"),
+                                view_mode : "READ"
+                            };
+                            this.getRouter().navTo("McstBomInfo", oParam);
+                        } else {
+                            this._getProjectDetail();
+                        }
                     } else {
                         MessageBox.show("저장 실패 하였습니다.", {at: "Center Center"});
                     }
@@ -155,7 +166,7 @@ sap.ui.define([
         /**
          * 저장을 위한 Model Data 재 구성
          */
-        , _reFactorySaveModel: function() {
+        , _reFactorySaveModel: function(bNavNextStep) {
             var oDetailModel = this.getModel("detailModel");
             var oData = oDetailModel.getData();
             var aSimilarModelData = oData.mcst_similar_model.results || [];
@@ -276,7 +287,7 @@ sap.ui.define([
                 }
             };
 
-            this._sendSaveData(oSendData);
+            this._sendSaveData(oSendData, bNavNextStep);
         }
 
 
@@ -292,6 +303,21 @@ sap.ui.define([
                 onClose : function(sButton) {
                     if (sButton === MessageBox.Action.OK) {
                         this._reFactorySaveModel();
+                    }
+                }.bind(this)
+            });
+        }
+
+        /**
+         * 저장&다음
+         */
+        , onSaveNextPress: function (oEvent) {
+            MessageBox.confirm("저장 하시겠습니까?", {
+                title : "저장",
+                initialFocus : MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        this._reFactorySaveModel(true);//Navigator 이동 여부
                     }
                 }.bind(this)
             });
