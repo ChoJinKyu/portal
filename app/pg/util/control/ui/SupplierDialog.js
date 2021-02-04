@@ -173,7 +173,7 @@ sap.ui.define([
             this.oSupplierCode = new MultiInput({
                 placeholder : this.getModel("I18N").getText("/SUPPLIER_CODE"),
                 showValueHelp : true,
-                valueHelpOnly : true,
+                valueHelpOnly : false,
                 valueHelpRequest: function (oEvent) {
                     this.oSupplierDialogPop = new SupplierDialogPop({
                         multiSelection: true,
@@ -188,7 +188,10 @@ sap.ui.define([
                     sSearchObj.languageCd = "KO";  // 세션임시값
                     sSearchObj.companyCode = that.oCompany.getValue();
                     sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey();
-                    sSearchObj.orgUnitCode = that.oOperationUnitComb.getSelectedKey();
+
+                    if(!!that.oOperationUnitComb.getSelectedKey()){
+                        sSearchObj.orgUnitCode = that.oOperationUnitComb.getSelectedKey();
+                    }
 
                     if(!!that.oSupplierCode.getValue()) {
                          sSearchObj.supplierCode = that.oSupplierCode.getValue();
@@ -213,7 +216,7 @@ sap.ui.define([
             this.oMaterialCode = new MultiInput({
                 placeholder : this.getModel("I18N").getText("/MATERIAL_CODE"),
                 showValueHelp : true,
-                valueHelpOnly : true,
+                valueHelpOnly : false,
                 valueHelpRequest: function (oEvent) {
                     this.oMaterialDialogPop = new MaterialDialogPop({
                         multiSelection: true,
@@ -248,7 +251,7 @@ sap.ui.define([
             this.oEmployeeCode = new MultiInput({
                 placeholder : this.getModel("I18N").getText("/EMPLOYEE_NUMBER"),
                 showValueHelp : true,
-                valueHelpOnly : true,
+                valueHelpOnly : false,
                 valueHelpRequest : function (oEvent) {
         
                     this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
@@ -281,7 +284,7 @@ sap.ui.define([
             this.oDepartmentCode = new MultiInput({
                 placeholder : this.getModel("I18N").getText("/DEPARTMENT_CODE"),
                 showValueHelp : true,
-                valueHelpOnly : true,
+                valueHelpOnly : false,
                 valueHelpRequest : function (oEvent) {
 
                     this.oDepartmentMultiSelectionValueHelp = new DepartmentDialog({
@@ -295,13 +298,12 @@ sap.ui.define([
                     });
                     this.oDepartmentMultiSelectionValueHelp.open();
 
-                    // // case : multiSelection: true
+                    // //multiSelection: true
                     // this.oDepartmentMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
                     //     that.oDepartmentCode.setTokens(oEvent.getSource().getTokens());
                     // }.bind(this));
                     // this.oDepartmentMultiSelectionValueHelp.setTokens(that.oDepartmentCode.getTokens());
 
-                    //case : multiSelection: false
                     this.oDepartmentMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
                         that.oDepartmentCode.setValue("");
                         that.oDepartmentCode.setValue(oEvent.mParameters.item.department_id);
@@ -465,7 +467,8 @@ sap.ui.define([
         // 회사코드 load
         loadTenantCode: function() {
             if (this.oSearchObj.tanentId) {
-                that.oCompany.setValue(this.oSearchObj.companyCode);
+                //that.oCompany.setValue(this.oSearchObj.companyCode);
+                that.oCompany.setValue("LGCKR");
             }
         },
 

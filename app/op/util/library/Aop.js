@@ -79,6 +79,27 @@ sap.ui.define([
 
             }).bind(context || this), context || this, true);
         },
+
+        // 네비게이션기능추가
+        addFuncForOnColumnListItemPress: function(context) {
+            
+            Aop.around("onColumnListItemPress", (function(f) {
+
+                var [event, type, ...args] = f.arguments = Array.prototype.slice.call(f.arguments);
+                var result;
+
+                type == "navigation"
+                &&
+                (function(arg) {
+                    result = Aop.next.call(this, f);
+                    this.getModel("fcl").setProperty("/layout", arg.LayoutType);
+                }).call(context || this, args[args.length-1]||{})
+
+                return result;
+
+            }).bind(context || this), context || this, true);
+        },
+
         // 바인딩 정보를 해석하여 적절한 데이터를 반환한다.
         // 정규식도 지원
         // addFuncForArgs: function(regExp, context) {

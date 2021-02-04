@@ -84,7 +84,7 @@ service McstBomMgtService {
                                      ,ppl.change_info_code
                                      ,'KO'
                                      ) AS change_info_text: String(240)        /*변경정보*/
-             , pmm.eng_change_number  /*Mapping Info*/
+             , pmm.change_reason  /*매핑사유*/
           from mcstPartList.Tc_Mcst_Project_Part_List ppl
 left outer join mtlMst.Mm_Material_Mst msi
             on msi.tenant_id = ppl.tenant_id

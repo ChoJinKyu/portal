@@ -357,8 +357,9 @@
                             <ToolbarSeparator/>
                             <Button 
                                 icon="sap-icon://excel-attachment" 
-                                press="onExcel($event, 'Download', ${list>/Pr_ReviewListView}, 'PR Review List', ${session>/tenant_id}, {
-                                    tId: 'mainTable'
+                                press="onExcel($event, 'Download', ${list>/Pr_ReviewListView}, {
+                                    tId: 'mainTable', 
+                                    fileName: 'PR Review List'
                                 })"
                             >
                                 <layoutData>
@@ -435,7 +436,7 @@
                         </Column>
                     </columns>
                     <items>
-                        <ColumnListItem type="Navigation" press=".onColumnListItemPress($event, 'navigation', 'list', {})">
+                        <ColumnListItem type="Navigation" press=".onColumnListItemPress($event, 'navigation', 'list', { LayoutType: 'TwoColumnsMidExpanded' })">
                             <cells>
                                 <!-- 구매요청 번호 -->
                                 <Text text="{list>pr_number}"/>

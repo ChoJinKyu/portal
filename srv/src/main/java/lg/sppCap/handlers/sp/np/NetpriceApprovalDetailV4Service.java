@@ -2,7 +2,6 @@ package lg.sppCap.handlers.sp.np;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -19,16 +18,18 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.CallableStatementCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.SqlReturnResultSet;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import cds.gen.sp.npapprovaldetailv4service.*;
+import cds.gen.sp.npapprovaldetailv4service.ApprovalSaveProcContext;
+import cds.gen.sp.npapprovaldetailv4service.GeneralType;
+import cds.gen.sp.npapprovaldetailv4service.MasterType;
+import cds.gen.sp.npapprovaldetailv4service.NpApprovalDetailV4Service_;
+import cds.gen.sp.npapprovaldetailv4service.ParamType;
+import cds.gen.sp.npapprovaldetailv4service.ResultType;
 
 @Component
 @ServiceName(NpApprovalDetailV4Service_.CDS_NAME)
@@ -66,7 +67,7 @@ public class NetpriceApprovalDetailV4Service implements EventHandler {
         
         ParamType vParam = context.getParam();
         MasterType master = vParam.getMaster();
-        Collection<DetailType> vDetails = vParam.getDetails();
+        Collection<GeneralType> vDetails = vParam.getGeneral();
 
         String detailTableName = null;
         
@@ -80,19 +81,19 @@ public class NetpriceApprovalDetailV4Service implements EventHandler {
             StringBuffer sqlCallProc = new StringBuffer();
             sqlCallProc.append("CALL SP_NP_NET_PRICE_APPROVAL_SAVE_PROC(")       
                         .append(" I_TENANT_ID => ?")
-                        .append(" I_COMPANY_CODE => ?")
-                        .append(" I_ORG_TYPE_CODE => ?")
-                        .append(" I_ORG_CODE => ?")
-                        .append(" I_APPROVAL_NUMBER => ?")
-                        .append(" I_APPROVAL_TITLE => ?")
-                        .append(" I_APPROVAL_CONTENTS => ?")
-                        .append(" I_ATTCH_GROUP_NUMBER => ?")
-                        .append(" I_NET_PRICE_DOCUMENT_TYPE_CODE => ?")
-                        .append(" I_NET_PRICE_SOURCE_CODE => ?")
-                        .append(" I_BUYER_EMPNO => ?")
-                        .append(" I_TENTPRC_FLAG => ?")
-                        .append(" I_OUTCOME_CODE => ?")
-                        .append(",I_DTL => ").append( detailTableName )
+                        .append(",I_COMPANY_CODE => ?")
+                        .append(",I_ORG_TYPE_CODE => ?")
+                        .append(",I_ORG_CODE => ?")
+                        .append(",I_APPROVAL_NUMBER => ?")
+                        .append(",I_APPROVAL_TITLE => ?")
+                        .append(",I_APPROVAL_CONTENTS => ?")
+                        .append(",I_ATTCH_GROUP_NUMBER => ?")
+                        .append(",I_NET_PRICE_DOCUMENT_TYPE_CODE => ?")
+                        .append(",I_NET_PRICE_SOURCE_CODE => ?")
+                        .append(",I_BUYER_EMPNO => ?")
+                        .append(",I_TENTPRC_FLAG => ?")
+                        .append(",I_OUTCOME_CODE => ?")
+                        .append(",I_DETAILS => ").append( detailTableName )
                         .append(",I_USER_ID => ?")
                         .append(",O_RETURN_CODE => ?")
                         .append(",O_RETURN_MSG => ?")
@@ -149,7 +150,7 @@ public class NetpriceApprovalDetailV4Service implements EventHandler {
             }
 
             vResult.setReturnCode( resultCode );
-            vResult.setReturnCode( resultMsg );
+            vResult.setApprovalNumber( resultMsg );
 
         }finally{
             this.dropTempTable( detailTableName );
@@ -167,7 +168,7 @@ public class NetpriceApprovalDetailV4Service implements EventHandler {
      * @param vDetails
      * @return
      */
-    private String createTempTableDtl( Collection<DetailType> vDetails ){
+    private String createTempTableDtl( Collection<GeneralType> vDetails ){
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함 
         
         String tableName = "#SP_NP_NET_PRICE_APPROVAL_SAVE_PROC_LOCAL_TEMP_DTL";
@@ -179,8 +180,8 @@ public class NetpriceApprovalDetailV4Service implements EventHandler {
                     .append(",MATERIAL_CODE                      NVARCHAR(40)")
                     .append(",PAYTERMS_CODE                      NVARCHAR(30)")
                     .append(",SUPPLIER_CODE                      NVARCHAR(10)")
-                    .append(",EFFECTIVE_START_DATE               DATE        ")
-                    .append(",EFFECTIVE_END_DATE                 DATE        ")
+                    .append(",EFFECTIVE_START_DATE               NVARCHAR(10)")
+                    .append(",EFFECTIVE_END_DATE                 NVARCHAR(10)")
                     .append(",SURROGATE_TYPE_CODE                NVARCHAR(30)")
                     .append(",CURRENCY_CODE                      NVARCHAR(3) ")
                     .append(",NET_PRICE                          DECIMAL     ")
@@ -194,12 +195,12 @@ public class NetpriceApprovalDetailV4Service implements EventHandler {
                     .toString()
                     );
 
-        String insertSql = "INSERT INTO #LOCAL_TEMP_DTL VALUES (?,?,?,?,? ,?,?,?,?,? ,?,?,?,?,? ,?)";
+        String insertSql = "INSERT INTO " + tableName + " VALUES (?,?,?,?,? ,?,?,?,?,? ,?,?,?,?,? ,?)";
 
         // Vendor Pool Mst Local Temp Table에 insert                        
         List<Object[]> batchDtl = new ArrayList<Object[]>();
         if(vDetails != null && !vDetails.isEmpty() ){
-            for(DetailType vRow : vDetails){
+            for(GeneralType vRow : vDetails){
                 batchDtl.add( new Object[] {                        
                      vRow.get("item_sequence")                   // '품목순번'	
                     ,vRow.get("line_type_code")                  // '라인유형코드'

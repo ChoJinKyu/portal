@@ -2,11 +2,9 @@ PROCEDURE DP_PD_PART_ACTIVITY_TEMPLETE_SAVE_PROC (
     IN  CRUD_TYPE NVARCHAR(1),
     IN  I_M TABLE ( TENANT_ID NVARCHAR(5),
                     COMPANY_CODE NVARCHAR(10),
-                    ORG_TYPE_CODE NVARCHAR(2),
                     ORG_CODE NVARCHAR(10),
                     PART_PROJECT_TYPE_CODE NVARCHAR(30),
                     ACTIVITY_CODE NVARCHAR(40),
-                    CATEGORY_GROUP_CODE NVARCHAR(30),
                     SEQUENCE DECIMAL,
                     DEVELOPE_EVENT_CODE NVARCHAR(30),
                     ACTUAL_ROLE_CODE NVARCHAR(40),
@@ -45,14 +43,39 @@ BEGIN
 		O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
 	END;
 
-    SELECT TENANT_ID, COMPANY_CODE, ORG_TYPE_CODE, ORG_CODE, PART_PROJECT_TYPE_CODE, ACTIVITY_CODE, SEQUENCE
-    INTO   V_TENANT_ID, V_COMPANY_CODE, V_ORG_TYPE_CODE, V_ORG_CODE, V_PART_PROJECT_TYPE_CODE, V_ACTIVITY_CODE, V_SEQUENCE
-    FROM   :I_M
-    ;   
-    
-     IF :CRUD_TYPE IN ('D', 'U') THEN
+    SELECT MAX(OM.ORG_TYPE_CODE)
+      INTO   V_ORG_TYPE_CODE
+      FROM   CM_PUR_ORG_TYPE_MAPPING OM,
+             CM_PUR_OPERATION_ORG OO,
+             CM_CODE_DTL CD,
+             CM_CODE_LNG CL
+      WHERE  OM.TENANT_ID = OO.TENANT_ID
+       AND   OM.TENANT_ID = CD.TENANT_ID
+       AND   OM.TENANT_ID = CL.TENANT_ID
+       AND   OM.PROCESS_TYPE_CODE = 'DP02'
+       AND   OM.TENANT_ID= OO.TENANT_ID
+       AND   OM.COMPANY_CODE = OO.COMPANY_CODE
+       AND   OM.ORG_TYPE_CODE = OO.ORG_TYPE_CODE
+       AND   OM.USE_FLAG = TRUE
+       AND   CD.GROUP_CODE =  'CM_ORG_TYPE_CODE'
+       AND   CD.GROUP_CODE =  CL.GROUP_CODE
+       AND   CD.CODE = CL.CODE
+       AND   CD.CODE = OM.ORG_TYPE_CODE
+       AND   OM.TENANT_ID = 'L2101'
+    GROUP BY OM.TENANT_ID
+    ;
 
-        SELECT SEQUENCE 
+    SELECT TENANT_ID, COMPANY_CODE, 
+           ORG_CODE, PART_PROJECT_TYPE_CODE,
+           IFNULL(ACTIVITY_CODE, 'PAT' || TO_NCHAR(NOW(), 'YYMMDD') || LPAD(DP_PD_PART_ACTIVITY_SEQ.NEXTVAL, 4, '0')),
+           SEQUENCE
+    INTO   V_TENANT_ID, V_COMPANY_CODE, V_ORG_CODE, V_PART_PROJECT_TYPE_CODE, V_ACTIVITY_CODE, V_SEQUENCE
+    FROM   :I_M
+    ;
+
+    IF :CRUD_TYPE IN ('D', 'U') THEN
+
+        SELECT SEQUENCE
         INTO   V_ORG_SEQUENCE 
         FROM   DP_PD_PART_ACTIVITY_TEMPLATE 
         WHERE  TENANT_ID = V_TENANT_ID
@@ -159,7 +182,7 @@ BEGIN
             ;
 
         ELSE
-            INSERT INTO DP_PD_PART_ACTIVITY_TEMPLATE M
+            INSERT INTO DP_PD_PART_ACTIVITY_TEMPLATE
                       ( TENANT_ID
                         ,COMPANY_CODE
                         ,ORG_TYPE_CODE
@@ -184,16 +207,16 @@ BEGIN
                       )
                  SELECT TENANT_ID
                         ,COMPANY_CODE
-                        ,ORG_TYPE_CODE
+                        ,V_ORG_TYPE_CODE
                         ,ORG_CODE
                         ,PART_PROJECT_TYPE_CODE
                         ,ACTIVITY_CODE
-                        ,CATEGORY_GROUP_CODE
+                        ,'CATEGORY_GROUP_CODE'
                          ,(SELECT COALESCE(MAX(SEQUENCE), 0) + 1 
                              FROM DP_PD_PART_ACTIVITY_TEMPLATE
                             WHERE TENANT_ID = M.TENANT_ID
                               AND COMPANY_CODE = M.COMPANY_CODE
-                              AND ORG_TYPE_CODE = M.ORG_TYPE_CODE
+                              AND ORG_TYPE_CODE = V_ORG_TYPE_CODE
                               AND ORG_CODE = M.ORG_CODE
                               AND PART_PROJECT_TYPE_CODE = M.PART_PROJECT_TYPE_CODE
                             )
