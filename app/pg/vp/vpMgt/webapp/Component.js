@@ -1,15 +1,11 @@
 sap.ui.define([
-    "sap/base/util/UriParameters",
+	"jquery.sap.global",
 	"ext/lib/UIComponent",
-	"sap/ui/Device",
-	"ext/lib/model/models",
-    "sap/f/library",
-    "sap/f/FlexibleColumnLayoutSemanticHelper",
-    "sap/ui/model/json/JSONModel"
-], function (UriParameters, UIComponent, Device, models, library, FlexibleColumnLayoutSemanticHelper, JSONModel) {
+	"sap/ui/model/json/JSONModel",
+    "sap/ui/core/routing/HashChanger",
+	"sap/f/FlexibleColumnLayoutSemanticHelper"
+], function (jQuery, UIComponent, JSONModel, HashChanger, FlexibleColumnLayoutSemanticHelper) {
 	"use strict";
-
-    var LayoutType = library.LayoutType;
 
 	return UIComponent.extend("pg.vp.vpMgt.Component", {
 
@@ -24,16 +20,15 @@ sap.ui.define([
 		 * @override
 		 */
 		init : function () {
+            HashChanger.getInstance().replaceHash("");
+
 			// call the base component's init function
 			UIComponent.prototype.init.apply(this, arguments);
+			
+			this.setModel(new JSONModel(), "fcl");
 
-			// set the device model
-			this.setModel(models.createDeviceModel(), "device");
-
-            this.setModel(new JSONModel({layout:LayoutType.OneColumn}), "fcl");
-
-            // create the views based on the url/hash
-            this.getRouter().initialize();
+			// create the views based on the url/hash
+			this.getRouter().initialize();
 		},
 
 		/**
@@ -42,11 +37,6 @@ sap.ui.define([
 		 * @public
 		 * @override
 		 */
-		destroy : function () {
-			this._oErrorHandler.destroy();
-			// call the base component's destroy function
-			UIComponent.prototype.destroy.apply(this, arguments);
-		},
 
         /**
 		 * Returns an instance of the semantic helper
@@ -54,17 +44,16 @@ sap.ui.define([
 		 */
 		getHelper: function () {
 			var oFCL = this.getRootControl().byId("fcl"),
-			oParams = UriParameters.fromQuery(location.search),
+				oParams = jQuery.sap.getUriParameters(),
 				oSettings = {
-					defaultTwoColumnLayoutType: LayoutType.TwoColumnsMidExpanded,
-					defaultThreeColumnLayoutType: LayoutType.ThreeColumnsEndExpanded,
+					defaultTwoColumnLayoutType: sap.f.LayoutType.TwoColumnsMidExpanded,
+					//defaultThreeColumnLayoutType: sap.f.LayoutType.ThreeColumnsMidExpanded,
 					mode: oParams.get("mode"),
-					initialColumnsCount: oParams.get("initial"),
 					maxColumnsCount: oParams.get("max")
 				};
 
 			return FlexibleColumnLayoutSemanticHelper.getInstanceFor(oFCL, oSettings);
-		}        
+		}      
 	});
 
 });
