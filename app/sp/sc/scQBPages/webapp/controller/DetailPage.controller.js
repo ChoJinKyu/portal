@@ -210,6 +210,9 @@ sap.ui.define([
                 var that = this;
                 var oView = this.getView();
 
+                var oModel = this.getView().getModel();
+                oModel.setSizeLimit(1000);
+
                 // var masterUrl = this.srvUrl+"Sc_Nego_Award_Method_Code?&$expand=nego_parent_type,award_type&$filter=nego_parent_type/nego_parent_type_code%20eq%20%27QP%27&orderby=sort_no";
                 // $.ajax({
                 //     url: masterUrl,
@@ -276,6 +279,7 @@ sap.ui.define([
                     oView.getModel("propInfo").setProperty("/isEditMode", true );
 
                     oView.getModel("NegoHeaders").setProperty("/nego_type_code", this._type );
+                    oView.getModel("NegoHeaders").setProperty("/local_create_dtm", new Date() );
                     oView.getModel("NegoHeaders").setProperty("/negotiation_output_class_code", this.getOutComeName(outcome) );
                     oView.getModel("NegoHeaders").setProperty("/nego_progress_status/nego_progress_status_code", '090' );
                     oView.getModel("NegoHeaders").setProperty("/nego_progress_status/nego_progress_status_name", 'Draft' );
@@ -985,6 +989,8 @@ sap.ui.define([
 
                         this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[5].getAggregation("items")[0].setValue(materialItem.material_code);
                         this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[6].getAggregation("items")[0].setValue(materialItem.material_desc);
+                        this.getView().byId("tableLines").getRows()[this._partnoIndex].getCells()[15].getAggregation("items")[0].setValue(materialItem.base_uom_code);
+                        
                         console.log("materialItem : ", materialItem);
 
                     }.bind(this));
@@ -1846,6 +1852,7 @@ sap.ui.define([
                         // use_flag: true
                         var oItem = this.getView().getModel("NegoHeaders").getData().Items[this._oIndex];
                         oItem.operation_unit_code = resultTokens.org_code;
+                        oItem.operation_unit_name = resultTokens.org_name;
 
                         this.getView().getModel("NegoHeaders").refresh();
 

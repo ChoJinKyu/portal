@@ -50,11 +50,11 @@
                     <uxap:headerContent>
                         <FlexBox wrap="Wrap" >
                             
-                            <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                            <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="30rem">
                                 <ObjectStatus id="objectStatus_nego_document_number" title="Negotiation No" text="{path: 'NegoHeaders>/nego_document_number'}" class="sapUiLargeMarginBegin" />
                                 <ObjectStatus title="Buyer" text="{NegoHeaders>/buyer_employee/employee_name} [{NegoHeaders>/buyer_employee/department_name}]" class="sapUiLargeMarginBegin" />
-                                <ObjectStatus title="Create Date" text="{path: 'NegoHeaders>/local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', 
-                                                                        formatOptions: { pattern: 'yyyy/MM/dd HH:mm:ss' , UTC: true} }"  class="sapUiLargeMarginBegin" />
+                                <ObjectStatus title="Create Date" text="{path: 'NegoHeaders>/local_create_dtm', type: 'sap.ui.model.odata.type.Date', 
+                                                                        formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }"  class="sapUiLargeMarginBegin" />
                             </layout:VerticalLayout>
 
                             <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -317,8 +317,8 @@
                                                 <core:Item key="010" text="Award by Lines"/>
                                                 <core:Item key="020" text="Award by Total Amount"/>
                                             </Select> 
-                                            <Label  text="Target Total Amount" visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
-                                            <Input value="{NegoHeaders>/target_amount}" type="Number"  textAlign="Right" visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
+                                            <Label  text="Target Total Amount" visible="{=${NegoHeaders>/award_type_code}==='020'}"/> 
+                                            <Input value="{NegoHeaders>/target_amount}" type="Number"  textAlign="Right" visible="{=${NegoHeaders>/award_type_code}==='020'}"/> 
                                             <Label text="Partial Response" />
 
                                             <SegmentedButton id="SegmentButtonUsed" selectedKey="{NegoHeaders>/partial_allow_flag}" 
@@ -504,19 +504,22 @@
                                                                 <Button icon="sap-icon://account" press="onLoadSuppliers" />
                                                             </t:template>
                                                         </t:Column>
-                                                        <t:Column width="11rem" hAlign="Center">
+                                                        <t:Column width="20rem" hAlign="Center">
                                                             <Label text="Operating Org" required="true" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center" >
                                                                     <MultiInput id="multiinput_purOperationOrg_code" visible="{=${propInfo>/isEditMode}}" 
-                                                                        tokens="{/processTypes}" value="{NegoHeaders>operation_unit_code}"
+                                                                        tokens="{/processTypes}" value="{NegoHeaders>operation_unit_code} : {NegoHeaders>operation_unit_name}"
                                                                         showValueHelp="true" valueHelpRequest=".onOperationOrgPress" textAlign="Center">
                                                                         <tokens>
                                                                             <Token key="{key}" text="{text}" />
                                                                         </tokens>
+                                                                        <layoutData>
+                                                                            <FlexItemData growFactor="1"/>
+                                                                        </layoutData>
                                                                     </MultiInput>
                                                                     <!-- <Input value="{NegoHeaders>operation_unit_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/> -->
-                                                                    <Text text="{NegoHeaders>operation_unit_code}" visible="{=!${propInfo>/isEditMode}}" textAlign="Center"/>
+                                                                    <Text text="{NegoHeaders>operation_unit_code} : {NegoHeaders>operation_unit_name}" visible="{=!${propInfo>/isEditMode}}" textAlign="Center"/>
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
@@ -664,7 +667,7 @@
                                                                     </ComboBox> -->
                                                                     <lib-m:CodeComboBox id="searchCurrencyCombo" width="100%" showSecondaryValues="true" 
                                                                         keyField="currency_code" textField="currency_code_name" 
-                                                                        useEmpty="true" emptyText="전체"
+                                                                        useEmpty="true" emptyText="전체" visible="{=${propInfo>/isEditMode}}"
                                                                         items="{
                                                                             path: '/',
                                                                             filters: [
@@ -851,10 +854,10 @@
                                                             </t:template>
                                                         </t:Column>
                                                         <t:Column width="11rem" hAlign="Center">
-                                                            <Label text="Incoterms" required="true"/>
+                                                            <Label text="Incoterms" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <Select items="{
+                                                                    <ComboBox items="{
                                                                             path: '/Sc_Incoterms_View', 
                                                                             templateShareable:true, 
                                                                             filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}],
@@ -866,10 +869,7 @@
                                                                         selectedKey="{}" visible="{=${propInfo>/isEditMode}}"
                                                                         width="100%" required="true">
                                                                         <core:ListItem key="{incoterms_code}" text="{incoterms_name}" additionalText="{incoterms_code}"/>
-                                                                        <layoutData>
-                                                                            <FlexItemData growFactor="1"/>
-                                                                        </layoutData>
-                                                                    </Select>
+                                                                    </ComboBox>
                                                                     <Text text="{}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -922,22 +922,19 @@
 
 
                                             <Panel id="panel_SuppliersContent" width="100%" expandable="true" expanded="false" headerText="Suppliers">
-                                                <FlexBox>
-                                                    <form:SimpleForm editable="true"  layout="ColumnLayout" 
-                                                                columnsM="2" width="100%" 
-                                                                columnsL="3"
-                                                                columnsXL="4">
-                                                        <Label  text="Requisition No" />
-                                                        <Text   text="{NegoItemPrices>/pr_number}" />
-                                                        <Label  text="Material Code" />
-                                                        <Text   text="{NegoItemPrices>/material_code}" />
-                                                        <Label  text="Description" />
-                                                        <Text   text="{NegoItemPrices>/material_desc}"/>
-                                                        <Label  text="Vendor Pool" />
-                                                        <Text   text="{NegoItemPrices>/vendor_pool_code}"/>
-                                                    </form:SimpleForm>
-                                                
-                                                </FlexBox>
+                                                <form:SimpleForm editable="true"  layout="ColumnLayout"
+                                                    columnsM="2" width="100%" 
+                                                    columnsL="3"
+                                                    columnsXL="4">
+                                                    <Label  text="Requisition No" />
+                                                    <Text   text="{NegoItemPrices>/pr_number}" />
+                                                    <Label  text="Material Code" />
+                                                    <Text   text="{NegoItemPrices>/material_code}" />
+                                                    <Label  text="Description" />
+                                                    <Text   text="{NegoItemPrices>/material_desc}"/>
+                                                    <Label  text="Vendor Pool" />
+                                                    <Text   text="{NegoItemPrices>/vendor_pool_code}"/>
+                                                </form:SimpleForm>
                                                 
                                                 <Panel id="panel_Evaluation" expandable="true" expanded="true" headerText="Evaluation Supplier">
                                                     <Table 
