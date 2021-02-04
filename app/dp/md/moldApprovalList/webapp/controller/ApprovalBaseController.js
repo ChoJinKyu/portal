@@ -796,16 +796,19 @@ sap.ui.define([
 
             var mst = this.getModel("appMaster").getData(),
                 apr = this.getModel("approver").getData(),
-                ref = this.getModel("referer").getData();
+                ref = this.getModel("referer").getData(),
+                org_type_code = this.getModel("plant").getProperty("/org_type_code");
             var data = {};
             
+            console.log("orgTypeCode >>> " ,org_type_code );
+
             var approvalMaster = {
                 tenant_id: this.tenant_id
                 , approval_number: this.approval_number
                 , company_code: this.company_code
                 , org_code: this.plant_code
                 , chain_code: 'DP' 
-                , org_type_code : 'PL' 
+                , org_type_code : org_type_code  
                 , approval_type_code: this.approval_type_code
                 , approval_title: mst.approval_title
                 , approval_contents: mst.approval_contents
