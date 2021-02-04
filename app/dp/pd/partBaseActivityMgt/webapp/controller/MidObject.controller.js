@@ -296,33 +296,54 @@ sap.ui.define([
                 } else {
                     cateActiveFlg = "false"; 
                 }
-                if(this.isValNull(oCateData.PdPartBaseActivityCategory[i].s_grade_standard_days)){
+                
+                if(oCateData.PdPartBaseActivityCategory[i].s_grade_standard_days=="" ||
+                  oCateData.PdPartBaseActivityCategory[i].s_grade_standard_days==null || 
+                  parseInt(oCateData.PdPartBaseActivityCategory[i].s_grade_standard_days) == undefined || 
+                  parseInt(oCateData.PdPartBaseActivityCategory[i].s_grade_standard_days) == NaN){
+
                     oCateData.PdPartBaseActivityCategory[i].s_grade_standard_days = "0";
                 }
-                if(this.isValNull(oCateData.PdPartBaseActivityCategory[i].a_grade_standard_days)){
+                if(oCateData.PdPartBaseActivityCategory[i].a_grade_standard_days=="" ||
+                  oCateData.PdPartBaseActivityCategory[i].a_grade_standard_days==null || 
+                  parseInt(oCateData.PdPartBaseActivityCategory[i].a_grade_standard_days) == undefined || 
+                  parseInt(oCateData.PdPartBaseActivityCategory[i].a_grade_standard_days) == NaN){
+                      
                     oCateData.PdPartBaseActivityCategory[i].a_grade_standard_days = "0";
                 }
-                if(this.isValNull(oCateData.PdPartBaseActivityCategory[i].b_grade_standard_days)){
+                if(oCateData.PdPartBaseActivityCategory[i].b_grade_standard_days=="" ||
+                  oCateData.PdPartBaseActivityCategory[i].b_grade_standard_days==null || 
+                  parseInt(oCateData.PdPartBaseActivityCategory[i].b_grade_standard_days) == undefined || 
+                  parseInt(oCateData.PdPartBaseActivityCategory[i].b_grade_standard_days) == NaN){
+                      
                     oCateData.PdPartBaseActivityCategory[i].b_grade_standard_days = "0";
                 }
-                if(this.isValNull(oCateData.PdPartBaseActivityCategory[i].c_grade_standard_days)){
+                if(oCateData.PdPartBaseActivityCategory[i].c_grade_standard_days=="" ||
+                  oCateData.PdPartBaseActivityCategory[i].c_grade_standard_days==null || 
+                  parseInt(oCateData.PdPartBaseActivityCategory[i].c_grade_standard_days) == undefined || 
+                  parseInt(oCateData.PdPartBaseActivityCategory[i].c_grade_standard_days) == NaN){
+                      
                     oCateData.PdPartBaseActivityCategory[i].c_grade_standard_days = "0";
                 }
-                if(this.isValNull(oCateData.PdPartBaseActivityCategory[i].d_grade_standard_days)){
+                if(oCateData.PdPartBaseActivityCategory[i].d_grade_standard_days=="" ||
+                  oCateData.PdPartBaseActivityCategory[i].d_grade_standard_days==null || 
+                  parseInt(oCateData.PdPartBaseActivityCategory[i].d_grade_standard_days) == undefined || 
+                  parseInt(oCateData.PdPartBaseActivityCategory[i].d_grade_standard_days) == NaN){
+                      
                     oCateData.PdPartBaseActivityCategory[i].d_grade_standard_days = "0";
-                }
+                }                
                 
                 pdCatVal.push({
                     tenant_id: oCateData.PdPartBaseActivityCategory[i].tenant_id,
                     activity_code: oCateData.PdPartBaseActivityCategory[i].activity_code,
                     category_group_code: oCateData.PdPartBaseActivityCategory[i].category_group_code,
                     category_code: oCateData.PdPartBaseActivityCategory[i].category_code,
-                    s_grade_standard_days: oCateData.PdPartBaseActivityCategory[i].s_grade_standard_days,
+                    s_grade_standard_days: oCateData.PdPartBaseActivityCategory[i].s_grade_standard_days.toString(),
                     
-                    a_grade_standard_days: oCateData.PdPartBaseActivityCategory[i].a_grade_standard_days,
-                    b_grade_standard_days: oCateData.PdPartBaseActivityCategory[i].b_grade_standard_days,
-                    c_grade_standard_days: oCateData.PdPartBaseActivityCategory[i].c_grade_standard_days,
-                    d_grade_standard_days: oCateData.PdPartBaseActivityCategory[i].d_grade_standard_days,
+                    a_grade_standard_days: oCateData.PdPartBaseActivityCategory[i].a_grade_standard_days.toString(),
+                    b_grade_standard_days: oCateData.PdPartBaseActivityCategory[i].b_grade_standard_days.toString(),
+                    c_grade_standard_days: oCateData.PdPartBaseActivityCategory[i].c_grade_standard_days.toString(),
+                    d_grade_standard_days: oCateData.PdPartBaseActivityCategory[i].d_grade_standard_days.toString(),
                     active_flag: cateActiveFlg,
                     
                     update_user_id: this.loginUserId,                        
@@ -364,10 +385,7 @@ sap.ui.define([
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         v_this._toShowMode();                                
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                    }
-                                    // sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
-                                    // v_this._toShowMode();                                
-                                    // v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                    }                                    
                                     
                                 }else{
                                     console.log(rst);
