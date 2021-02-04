@@ -343,7 +343,8 @@ sap.ui.define([
                             });
                         }));
                     }.bind(this));
-          
+                }
+
                 //searObject : 태넌트아이디, 검색 인풋아이디
                 var sSearchObj = {};
                 sSearchObj.tanent_id = "L2100";
