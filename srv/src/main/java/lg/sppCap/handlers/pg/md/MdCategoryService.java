@@ -29,9 +29,11 @@ import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
 import com.sap.cds.ql.Delete;
+import com.sap.cds.ql.Select;
 import com.sap.cds.ql.cqn.AnalysisResult;
 import com.sap.cds.ql.cqn.CqnAnalyzer;
 import com.sap.cds.ql.cqn.CqnDelete;
+import com.sap.cds.ql.cqn.CqnSelect;
 import com.sap.cds.ql.cqn.CqnStatement;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
@@ -48,7 +50,9 @@ import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.ServiceName;
+import com.sap.cds.services.persistence.PersistenceService;
 
+import lg.sppCap.frame.user.SppUserSession;
 import lg.sppCap.util.StringUtil;
 
 import cds.gen.pg.mdcategoryservice.*;
@@ -59,82 +63,51 @@ public class MdCategoryService implements EventHandler {
 
 	private static final Logger log = LogManager.getLogger();
 
+    @Autowired
+    private PersistenceService db;
+    
+    @Autowired
+    SppUserSession sppUserSession;
+    
 	@Autowired
     private JdbcTemplate jdbc;
 
     @Autowired
     @Qualifier(MdCategoryService_.CDS_NAME)
     private CdsService mdCategoryService;
-    
-    // Multi Key값 Count
-    private int iMultiArrayCnt = 0;
 
 	// 카테고리 Id 저장 전
 	@Before(event=CdsService.EVENT_CREATE, entity=MdCategory_.CDS_NAME)
 	public void createBeforeMdCategoryIdProc(List<MdCategory> cateIds) {
 
-		Instant current = Instant.now();
-
-		log.info("### ID Insert... [Before] ###");
-
-		if(!cateIds.isEmpty() && cateIds.size() > 0){
-
-			String cateCode = "";
-
+        log.info("### ID Insert... [Before] ###");
+        
 			for(MdCategory cateId : cateIds) {
-
-                cateCode = cateId.getSpmdCategoryCode();
-
-                if (StringUtils.isEmpty(cateCode)) {
-
-                    cateId.setLocalCreateDtm(current);
-                    cateId.setLocalUpdateDtm(current);
-
-                    // DB처리
-                    try {
-                        // Category 범주코드 사업본부별 신규채번
-                        StringBuffer v_sql_get_query = new StringBuffer();
-
-                        v_sql_get_query.append(" SELECT ")
-                            .append("		IFNULL(MAX(SUBSTRING(SPMD_CATEGORY_CODE,2)), 0)+1 AS MAX_COUNT ")
-                            .append("	FROM PG_MD_CATEGORY_ID ")
-                            .append("	WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? ");                        
                 
-                        int iMaxCount = jdbc.queryForObject(v_sql_get_query.toString()
-																, new Object[] {
-																	cateId.getTenantId()
-																	, cateId.getCompanyCode()
-																	, cateId.getOrgTypeCode()
-																	, cateId.getOrgCode()
-                                                                }
-																, Integer.class);
-						iMultiArrayCnt = (iMultiArrayCnt > 0) ? iMultiArrayCnt+1 : iMaxCount;
+                log.info("### ID Param Info : ["+cateId.getSpmdCategoryCode()+"] ["+cateId.getSpmdCategoryCodeName()+"] ["+cateId.getRgbFontColorCode()+"] ###");
 
-						cateCode = "C"+StringUtil.getFillZero(String.valueOf(iMultiArrayCnt), 3);
-
-                        log.info("###[LOG-10]=> ["+cateCode+"]");
-
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        log.error("### ErrMesg : "+ex.getMessage()+"###");
-                    } finally {
-
-                    }
-                    //log.info("###[LOG-11]=> ["+cateCode+"]");
-                    cateId.setSpmdCategoryCode(cateCode);
+                CqnSelect query = Select.from(MdCategory_.class)
+                    .columns("spmd_category_code")
+                    .where(b -> 
+                        b.tenant_id().eq(cateId.getTenantId())
+                        .and(b.company_code().eq(cateId.getCompanyCode()))
+                        .and(b.org_type_code().eq(cateId.getOrgTypeCode()))
+                        .and(b.org_code().eq(cateId.getOrgCode()))
+                        .and(b.spmd_category_code().eq(cateId.getSpmdCategoryCode()))
+                    );
+                Result rslt = db.run(query);
+                //Result rslt = mdCategoryService.run(query);
+                
+                //log.info("### Result RowCount : ["+rslt.rowCount()+"] ###");
+                if (rslt.rowCount() > 0) {
+                    String spmd_category_code = (String) rslt.first().get().get("spmd_category_code");
+                    //for(Map<String, Object> v_inRow : rslt) spmd_category_code = (String) v_inRow.get("spmd_category_code");
+                    log.info("### Error Result Info : ["+spmd_category_code+"] ###");
+                    //Category범주 신규코드가 이미 존재하여 저장할 수 없습니다.
+                    throw new ServiceException(ErrorStatuses.BAD_REQUEST, "The registered CategoryCode["+spmd_category_code+"] exists and cannot be saved.");
                 }
             }
-        }
-
 	}
-
-    // 카테고리 Id 저장
-    /*
-	@On(event={CdsService.EVENT_CREATE}, entity=MdCategory_.CDS_NAME)
-	public void createOnMdCategoryIdProc(List<MdCategory> cateId) {
-		log.info("### Id Insert [On] ###");
-    }
-    */
 
 	// 카테고리 Id 저장 후
 	@After(event={CdsService.EVENT_CREATE}, entity=MdCategory_.CDS_NAME)
@@ -171,46 +144,27 @@ public class MdCategoryService implements EventHandler {
 	// 카테고리 Id / Item 읽기 전
 	@Before(event=CdsService.EVENT_READ, entity={MdCategory_.CDS_NAME, MdCategoryItem_.CDS_NAME})
 	public void readBeforeMdCategoryAndItemProc(EventContext context) {
-        iMultiArrayCnt=0; // 초기화
-		log.info("### ID/ITEM Read... [Before] ###"+context.getEvent()+"###"+context.getModel().toString()+"###"+context.getUserInfo()+"###");
+		log.info("### ID/ITEM Read... [Before] ###");
+		log.info("### ID/ITEM Read... [Before] [1]###"+sppUserSession.getUserId()+"###"+sppUserSession.getCompanyCode()+"###"+sppUserSession.getLanguageCode()+"###"+sppUserSession.getEmployeeName()+"###");
     }
     
     // 카테고리 Id / Item 저장   
     @On(event={CdsService.EVENT_CREATE}, entity={MdCategory_.CDS_NAME, MdCategoryItem_.CDS_NAME})
     public void createOnMdCategoryAndItemProc(CdsCreateEventContext context) { 
         log.info("### ID/ITEM Insert [On] ###");
-    
-        ChangeSetContext changeSet = context.getChangeSetContext();
-        changeSet.register(new ChangeSetListener() {
-
-            @Override
-            public void beforeClose() {
-                // do something before changeset is closed
-                log.info("### Item Insert [On] - beforeClose() ###");
-            }
-
-            @Override
-            public void afterClose(boolean completed) {
-                // do something after changeset is closed
-                log.info("### Item Insert [On] - afterClose()-1 ###["+completed+"]###["+iMultiArrayCnt+"]###");
-            }
-
-        });
     }
 
 	// 카테고리 삭제 전
 	@Before(event=CdsService.EVENT_DELETE, entity=MdCategory_.CDS_NAME)
     public void deleteBeforeMdCategoryIdProc(CdsDeleteEventContext context) {
         log.info("### ID Delete [Before] ###");
-        
+
         CdsModel cdsModel = context.getModel();
         CqnAnalyzer cqnAnalyzer = CqnAnalyzer.create(cdsModel);
         CqnStatement cqn = context.getCqn();
         AnalysisResult result = cqnAnalyzer.analyze(cqn.ref());
         Map<String, Object> param = result.targetValues();
 
-        log.info("###"+param.get("tenant_id")+"###"+param.get("company_code")+"###"+param.get("org_type_code")+"###"+param.get("org_code")+"###"+param.get("spmd_category_code")+"###");
-        
         // Category 범주코드 삭제시 Item등록여부체크
         StringBuffer v_sql_get_query = new StringBuffer();
 
@@ -231,22 +185,40 @@ public class MdCategoryService implements EventHandler {
 
         log.info("###[LOG-10]=> ["+iCnt+"]");
         if (iCnt > 0) {
-            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Category 범주에 등록된 Item특성이 존재하여 삭제할 수 없습니다.");
-        } else {
-            // Multi Language Delete
-            MdCategoryLng filter = MdCategoryLng.create();
-            filter.setTenantId((String) param.get("tenant_id"));
-            filter.setCompanyCode((String) param.get("company_code"));
-            filter.setOrgTypeCode((String) param.get("org_type_code"));
-            filter.setOrgCode((String) param.get("org_code"));
-            filter.setSpmdCategoryCode((String) param.get("spmd_category_code"));
-            CqnDelete delete = Delete.from(MdCategoryLng_.CDS_NAME).matching(filter);
-            Result rslt = mdCategoryService.run(delete);
+            //Category 범주에 등록된 Item특성이 존재하여 삭제할 수 없습니다.
+            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "The registered item exists and cannot be deleted.");
         }
-/*
+        
+    }
+    
+	// 카테고리 삭제 
+    @On(event = CdsService.EVENT_DELETE, entity=MdCategory_.CDS_NAME)
+    public void deleteOnMdCategoryIdProc(CdsDeleteEventContext context) { 
+        log.info("### ID Delete [On] ###");
+
+        CdsModel cdsModel = context.getModel();
+        CqnAnalyzer cqnAnalyzer = CqnAnalyzer.create(cdsModel);
+        CqnStatement cqn = context.getCqn();
+        AnalysisResult result = cqnAnalyzer.analyze(cqn.ref());
+        Map<String, Object> param = result.targetValues();
+
+        log.info("###"+param.get("tenant_id")+"###"+param.get("company_code")+"###"+param.get("org_type_code")+"###"+param.get("org_code")+"###"+param.get("spmd_category_code")+"###");
+    
+        // Multi Language Delete
+        MdCategoryLng filter = MdCategoryLng.create();
+        filter.setTenantId((String) param.get("tenant_id"));
+        filter.setCompanyCode((String) param.get("company_code"));
+        filter.setOrgTypeCode((String) param.get("org_type_code"));
+        filter.setOrgCode((String) param.get("org_code"));
+        filter.setSpmdCategoryCode((String) param.get("spmd_category_code"));
+        CqnDelete delete = Delete.from(MdCategoryLng_.CDS_NAME).matching(filter);
+        Result rslt = mdCategoryService.run(delete);
+
+        log.info("### Delete count ###"+rslt.rowCount()+"###");
+    
+/*        
         List<MdCategory> v_results = new ArrayList<MdCategory>();
         MdCategory v_result = MdCategory.create();
-        
         v_result.setTenantId((String) param.get("tenant_id"));
         v_result.setCompanyCode((String) param.get("company_code"));
         v_result.setOrgTypeCode((String) param.get("org_type_code"));
@@ -258,7 +230,7 @@ public class MdCategoryService implements EventHandler {
         context.setResult(v_results);
         context.setCompleted();
 */
-        log.info("###[LOG-11]=> ["+iCnt+"]");
+
     }
 
 	/*
@@ -270,72 +242,33 @@ public class MdCategoryService implements EventHandler {
 	@Before(event=CdsService.EVENT_CREATE, entity=MdCategoryItem_.CDS_NAME)
 	public void createBeforeMdCategoryItemProc(EventContext context, List<MdCategoryItem> items) {
 
-		log.info("### Item Insert [Before] ###");
-		//log.info("###"+items.toString()+"###");
-
-		if(!items.isEmpty() && items.size() > 0){
-
-			Instant current = Instant.now();
-
-			String cateCode = "";
-			String charCode = "";
-			int iCharSerialNo = 0;
-
+        log.info("### Item Insert [Before] ###");
+        
 			for (MdCategoryItem item : items) {
 
-				//log.info("###"+item.toString()+"###");
+                CqnSelect query = Select.from(MdCategoryItem_.class)
+                    .columns("spmd_character_code")
+                    .where(b -> 
+                        b.tenant_id().eq(item.getTenantId())
+                        .and(b.company_code().eq(item.getCompanyCode()))
+                        .and(b.org_type_code().eq(item.getOrgTypeCode()))
+                        .and(b.org_code().eq(item.getOrgCode()))
+                        .and(b.spmd_category_code().eq(item.getSpmdCategoryCode()))
+                        .and(b.spmd_character_code().eq(item.getSpmdCharacterCode()))
+                    );
+                Result rslt = db.run(query);
+                //Result rslt = mdCategoryService.run(query);
 
-				item.setLocalCreateDtm(current);
-				item.setLocalUpdateDtm(current);
-				//item.setCreateUserId("guest");
-				//item.setUpdateUserId("guest");
-
-				cateCode = item.getSpmdCategoryCode();
-				charCode = item.getSpmdCharacterCode();
-
-				if (StringUtils.isEmpty(charCode)) {
-
-					// DB처리
-					try {
-
-						// Item 특성코드 신규채번
-                        StringBuffer v_sql_get_query = new StringBuffer();
-
-                        v_sql_get_query.append(" SELECT ")
-                            .append("		IFNULL(MAX(SPMD_CHARACTER_SERIAL_NO), 0)+1 AS CHAR_SERIAL_NO ")
-                            .append("	FROM PG_MD_CATEGORY_ITEM ")
-                            .append("	WHERE TENANT_ID=? AND COMPANY_CODE=? AND ORG_TYPE_CODE=? AND ORG_CODE=? ");                        
-                
-                        iCharSerialNo = jdbc.queryForObject(v_sql_get_query.toString()
-																, new Object[] {
-																	item.getTenantId()
-																	, item.getCompanyCode()
-																	, item.getOrgTypeCode()
-																	, item.getOrgCode()
-                                                                }
-																, Integer.class);
-
-						iMultiArrayCnt = (iMultiArrayCnt > 0) ? iMultiArrayCnt+1 : iCharSerialNo;
-
-						charCode = "T"+StringUtil.getFillZero(String.valueOf(iMultiArrayCnt), 3);
-
-						//log.info("###[LOG-10]=> ["+charCode+"] ["+iCharSerialNo+"] ["+new Long(iMultiArrayCnt)+"]");
-
-					} catch (Exception ex) {
-                        ex.printStackTrace();
-                        log.error("### ErrMesg : "+ex.getMessage()+"###");
-                    } finally {
-
-                    }
-                        
-                    item.setSpmdCharacterCode(charCode);
-                    item.setSpmdCharacterSerialNo(new Long(iMultiArrayCnt));
-				}
-				//charCode = item.getSpmdCharacterCode();
-				log.info("###[LOG-11]=> ["+charCode+"] ["+iCharSerialNo+"] ["+new Long(iMultiArrayCnt)+"]");
-
+                log.info("### Result RowCount : ["+rslt.rowCount()+"] ###");
+                if (rslt.rowCount() > 0) {
+                    String spmd_character_code = (String) rslt.first().get().get("spmd_character_code");
+                    
+                    //for(Map<String, Object> v_inRow : rslt) spmd_character_code = (String) v_inRow.get("spmd_character_code");
+                    log.info("### Error Result Info : ["+spmd_character_code+"] ###");
+                    //Item특성 신규코드가 이미 존재하여 저장할 수 없습니다.
+                    throw new ServiceException(ErrorStatuses.BAD_REQUEST, "The registered ItemCode["+spmd_character_code+"] exists and cannot be saved.");
+                }
 			}
-		}
 
 	}
 
@@ -409,21 +342,38 @@ public class MdCategoryService implements EventHandler {
 
         log.info("###[LOG-10]=> ["+iCnt+"]");
         if (iCnt > 0) {
-            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Vendor Pool에 Mapping된 Item특성이 존재하여 삭제할 수 없습니다.");
-        } else {
-            // Multi Language Delete
-            MdCategoryItemLng filter = MdCategoryItemLng.create();
-            filter.setTenantId((String) param.get("tenant_id"));
-            filter.setCompanyCode((String) param.get("company_code"));
-            filter.setOrgTypeCode((String) param.get("org_type_code"));
-            filter.setOrgCode((String) param.get("org_code"));
-            filter.setSpmdCategoryCode((String) param.get("spmd_category_code"));
-            filter.setSpmdCharacterCode((String) param.get("spmd_character_code"));
-            CqnDelete delete = Delete.from(MdCategoryItemLng_.CDS_NAME).matching(filter);
-            mdCategoryService.run(delete);
-
+            //Vendor Pool에 Mapping된 Item특성이 존재하여 삭제할 수 없습니다.
+            throw new ServiceException(ErrorStatuses.BAD_REQUEST, "The mapped item exists and cannot be deleted.");
         }
-/*        
+
+    }
+    
+	// 카테고리 Item 삭제 
+    @On(event = CdsService.EVENT_DELETE, entity=MdCategoryItem_.CDS_NAME)
+    public void deleteOnMdCategoryItemItemProc(CdsDeleteEventContext context) { 
+        log.info("### Item Delete [On] ###");
+
+        CdsModel cdsModel = context.getModel();
+        CqnAnalyzer cqnAnalyzer = CqnAnalyzer.create(cdsModel);
+        CqnStatement cqn = context.getCqn();
+        AnalysisResult result = cqnAnalyzer.analyze(cqn.ref());
+        Map<String, Object> param = result.targetValues();
+
+        log.info("###"+param.get("tenant_id")+"###"+param.get("company_code")+"###"+param.get("org_type_code")+"###"+param.get("org_code")+"###"+param.get("spmd_category_code")+"###"+param.get("spmd_character_code")+"###");
+    
+        // Multi Language Delete
+        MdCategoryItemLng filter = MdCategoryItemLng.create();
+        filter.setTenantId((String) param.get("tenant_id"));
+        filter.setCompanyCode((String) param.get("company_code"));
+        filter.setOrgTypeCode((String) param.get("org_type_code"));
+        filter.setOrgCode((String) param.get("org_code"));
+        filter.setSpmdCategoryCode((String) param.get("spmd_category_code"));
+        filter.setSpmdCharacterCode((String) param.get("spmd_character_code"));
+        CqnDelete delete = Delete.from(MdCategoryItemLng_.CDS_NAME).matching(filter);
+        Result rslt = mdCategoryService.run(delete);
+
+        log.info("### Delete count ###"+rslt.rowCount()+"###");
+        /*
         List<MdCategoryItem> v_results = new ArrayList<MdCategoryItem>();
         MdCategoryItem v_result = MdCategoryItem.create();
         
@@ -438,8 +388,8 @@ public class MdCategoryService implements EventHandler {
 
         context.setResult(v_results);
         context.setCompleted();
-*/
-        log.info("###[LOG-11]=> ["+iCnt+"]");
+        */
+
     }
 
     

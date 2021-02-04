@@ -133,8 +133,6 @@ sap.ui.define([
      */
         onAddButtonPress: function () {
             this.getRouter().navTo("detailPage", {
-                tenantId: "new",
-                companyCode: "new",
                 netPriceContractDocumentNo: "new",
                 netPriceContractDegree: "new"
             });
@@ -166,7 +164,7 @@ sap.ui.define([
 
             var contractEndModel = this.getModel("viewModel").getProperty("/contractEnd");
 
-            contractEndModel["inputData"].map.map(d => {
+            contractEndModel["inputData"].map(d => {
                 d["delete_reason"] = oView.byId("saveDeleteReason").getValue();
                 return d;
             });

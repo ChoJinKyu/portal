@@ -36,26 +36,28 @@ service SourcingV4Service {
 
     // Negotiation(견적&입찰) Workbench 정형 View
     // @(title:'UI:Workbench 뷰',description:'Nego(Header+ItemPrices) 정형뷰',readonly) 
-    entity NegoWorkbenchView @(title : 'Negotiation(견적&입찰) Workbench 정형뷰') as projection on Sc_Nego_Workbench_View;
-    entity NegoWorkbenchView2 @(title:'Nego(Header+ItemPrices) 정형뷰',description:'UI:Workbench 정형뷰',readonly)  as projection on Sc_Nego_Workbench_View2;
-    view NegoWorkbenchView3 as select from Sc_Nego_Headers_View as Header {
-        Key Header.tenant_id                    ,
-        Key Header.nego_header_id               ,
-        Key Items.nego_item_number              ,
-        Header.nego_document_number             ,
-        Header.nego_document_round              ,
-        Header.nego_progress_status_code        ,
-        Header.award_progress_status_code       ,
-        Header.reply_times                      ,
-        Header.supplier_count                   ,
-        Header.supplier_participation_flag      ,
-        Header.remaining_hours                  ,
-        Header.nego_document_title              ,
-        Header.items_count                      ,
-        Header.nego_type_code                   ,
-        Header.negotiation_style_code           ,
-        Header.bidding_result_open_status_code  ,
-        Header.negotiation_output_class_code    ,
+    // @(title : 'Negotiation(견적&입찰) Workbench 정형뷰') 
+    entity NegoWorkbenchView as projection on Sc_Nego_Workbench_View;
+    // @(title:'Nego(Header+ItemPrices) 정형뷰',description:'UI:Workbench 정형뷰',readonly)  
+    entity NegoWorkbenchView2 as projection on Sc_Nego_Workbench_View2;
+    view NegoWorkbenchView3 as select from Sc_Nego_Headers_View {
+    Key Items.tenant_id                  ,
+    Key Items.nego_header_id             ,
+    Key Items.nego_item_number           ,
+        nego_document_number             ,
+        nego_document_round              ,
+        nego_progress_status_code        ,
+        award_progress_status_code       ,
+        reply_times                      ,
+        supplier_count                   ,
+        supplier_participation_flag      ,
+        remaining_hours                  ,
+        nego_document_title              ,
+        items_count                      ,
+        nego_type_code                   ,
+        negotiation_style_code           ,
+        bidding_result_open_status_code  ,
+        negotiation_output_class_code    ,
         Items.pr_approve_number                 ,
         Items.req_submission_status             ,
         Items.req_reapproval                    ,
@@ -63,18 +65,18 @@ service SourcingV4Service {
         Items.material_desc                     ,
         Items.requestor_empno                   ,
         Items.request_department_code           ,
-        Header.award_type_code                  ,
-        Header.buyer_empno                      ,
-        Header.buyer_department_code            ,
-        Header.open_date                        ,
-        Header.closing_date                     ,
-        Header.close_date_ext_enabled_hours     ,
-        Header.close_date_ext_enabled_count     ,
-        Header.actual_extension_count           ,
+        award_type_code                  ,
+        buyer_empno                      ,
+        buyer_department_code            ,
+        open_date                        ,
+        closing_date                     ,
+        close_date_ext_enabled_hours     ,
+        close_date_ext_enabled_count     ,
+        actual_extension_count           ,
         Items.requisition_flag                  ,
         Items.price_submission_no               ,
         Items.price_submisstion_status          ,
-        Header.local_create_dtm                 ,
+        local_create_dtm                 ,
         Items.interface_source                   
     };
         

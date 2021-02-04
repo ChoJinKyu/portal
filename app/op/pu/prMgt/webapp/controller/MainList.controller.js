@@ -19,16 +19,18 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/core/Fragment",
-    "ext/lib/util/ExcelUtil"
+    "ext/lib/util/ExcelUtil",
+    "op/util/controller/UiControlSet",
 ], function (BaseController, OPUi, Multilingual, ManagedListModel, JSONModel, DateFormatter, 
     EmployeeDialog, DepartmentDialog, //OrderDialog, AssetDialog, AccountDialog, CctrDialog,
     Validator, TablePersoController, MainListPersoService,
-    Filter, FilterOperator, MessageBox, MessageToast, Fragment, ExcelUtil) {
+    Filter, FilterOperator, MessageBox, MessageToast, Fragment, ExcelUtil, UiControlSet) {
     "use strict";
 
     return BaseController.extend("op.pu.prMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
+        uiControlSet: UiControlSet,
         validator: new Validator(),
 
         /* =========================================================== */
@@ -700,7 +702,10 @@ sap.ui.define([
 
             if (sDepartment.length) {
                 _tempFilters = [];
-                _tempFilters.push(new Filter("requestor_department_code", FilterOperator.EQ, sDepartment));
+
+                sDepartment.forEach(function (item) {
+                        _tempFilters.push(new Filter("requestor_department_code", FilterOperator.EQ, item.getKey()));
+                });        
                 aSearchFilters.push(
                     new Filter({
                         filters: _tempFilters,

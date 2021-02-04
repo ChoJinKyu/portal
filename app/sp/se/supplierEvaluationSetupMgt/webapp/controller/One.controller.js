@@ -718,6 +718,10 @@ sap.ui.define([
 
         onSelectItem : function(oEvent){
 
+                /***
+                 * 2021-02-04 단일 셀렉으로 변경
+                 */
+
                 var oView, oViewModel, oSelectItem,
                 oBindContxtPath, oRowData, bSeletFlg, bEditMode, aSelectAll,
                 oParameters, bAllSeletFlg, sTablePath, oTable, aListData;
@@ -737,32 +741,41 @@ sap.ui.define([
                 bSeletFlg = oParameters.selected;
                 bAllSeletFlg = oParameters.selectAll;
 
-                if(
-                   (bAllSeletFlg && bSeletFlg) || 
-                    (!bAllSeletFlg && !bSeletFlg && oParameters.listItems.length > 1)
-                ){
-                    oTable = oEvent.getSource();
-                    sTablePath = oTable.getBindingPath("items");
-                    aListData = oViewModel.getProperty(sTablePath);
-                    
-                    oViewModel.setProperty(sTablePath, aListData.map(function(item){
-
-                    if(item.crudFlg === "D"){
-                        return item;
-                    }else if(item.crudFlg === "I"){
-                        item.rowEditable = bSeletFlg;
-                        return item;
+                oTable = oEvent.getSource();
+                sTablePath = oTable.getBindingPath("items");
+                aListData = oViewModel.getProperty(sTablePath);
+                aListData.forEach(function(item){
+                    if(item.crudFlg !== "I"){
+                        item.rowEditable = false;
                     }
+                });
 
-                    item.rowEditable = bSeletFlg;
-                    item.crudFlg = "U";
-                    item.transaction_code = "U";
+                // if(
+                //    (bAllSeletFlg && bSeletFlg) || 
+                //     (!bAllSeletFlg && !bSeletFlg && oParameters.listItems.length > 1)
+                // ){
+                //     oTable = oEvent.getSource();
+                //     sTablePath = oTable.getBindingPath("items");
+                //     aListData = oViewModel.getProperty(sTablePath);
+                    
+                //     oViewModel.setProperty(sTablePath, aListData.map(function(item){
 
-                    return item;
-                    }));
-                        return;
+                //     if(item.crudFlg === "D"){
+                //         return item;
+                //     }else if(item.crudFlg === "I"){
+                //         item.rowEditable = bSeletFlg;
+                //         return item;
+                //     }
+
+                //     item.rowEditable = bSeletFlg;
+                //     item.crudFlg = "U";
+                //     item.transaction_code = "U";
+
+                //     return item;
+                //     }));
+                //         return;
                             
-                }
+                // }
 
                 if(oRowData.crudFlg === "D"){
                     return;
@@ -780,6 +793,27 @@ sap.ui.define([
            
 
             
+        },
+          onChangeEdit : function(oEvent){
+            var oControl, oContext, oBindContxtPath, oBingModel, oRowData;
+
+            oControl = oEvent.getSource();
+            oContext = oControl.getBindingContext("DetailView");
+            oBingModel = oContext.getModel();
+            oBindContxtPath = oContext.getPath();
+            oRowData = oContext.getObject();
+
+            if(oRowData.crudFlg === "D"){
+                return;
+            }else if(oRowData.crudFlg === "I"){
+                oBingModel.setProperty(oBindContxtPath, oRowData);
+                return;
+            }
+
+            oRowData.crudFlg = "U";
+            oRowData.transaction_code = "U";
+
+            oBingModel.setProperty(oBindContxtPath, oRowData)
         },
         /**
         * quantitativeTable Section 행 삭제
@@ -1136,26 +1170,51 @@ sap.ui.define([
             
              oView.setBusy(false);
          },
-        //  onCheckLevel : function(oEvent){
+         onCheckLevel : function(oEvent){
 
-        //     //var Keys =  oEvent.getSelectedKeys();
-        //     var iKeys = 3;
+            //var Keys =  oEvent.getSelectedKeys();
+          
+            var iKeys = oEvent.getSource().getSelectedKeys().join(",");
             
-        //     var oSegmentedButton = this.getView().byId("vendor_pool_lvl");
+            var url = `srv-api/odata/v4/sp.supEvalSetupV4Service/VpLevelChipView(tenant_id='${this.tenant_id}',org_code='${this.org_code}',op_unit_code='${iKeys}')/Set`;
+            
+                       
+            var param = {};
+            var params = {"language_code":"KR"};
+            
+            var oSegmentedButton = this.getView().byId("vendor_pool_lvl");
 
-        //     oSegmentedButton.destroyItems();
+            param.params = params; // param.params 변수명은 변경불가함 handler에서 사용하기 때문
+			$.ajax({
+				url: url,
+				type: "GET",
+				datatype: "json",
+				contentType: "application/json",
+				success: function(data){
+                    
+                    oSegmentedButton.destroyItems();
+                    for(var i=0;i<data.value.length;i++){
+                                oSegmentedButton.addItem(
+                                    new SegmentedButtonItem({ 
+                                        text : data.value[i].level_name, 
+                                        key : data.value[i].level_no
+                                    })
+                                );
+                            }
+					
+				},
+				error: function(req){
+					
+				}
+			});
 
-        //     for(var i=0;i<iKeys;i++){
-        //                 oSegmentedButton.addItem(
-        //                     new SegmentedButtonItem({ 
-        //                         text : (i+1)+"레벨", 
-        //                         key : i
-        //                     })
-        //                 );
-        //             }
+            
+            
+
+            
 
 
-        //  },
+         },
          _readAll : function(){
             var oView = this.getView();
             var oModel = this.getModel("DetailView");
@@ -1312,6 +1371,24 @@ sap.ui.define([
                         oView.getModel("DetailView").setProperty("/OperationUnitMst",oValues);                        
                         oView.getModel("DetailView").setProperty("/vpOperationUnit/vendor_pool_operation_unit_code", oValues.vendor_pool_operation_unit_code.split(","));
                         
+                        var iLvl = Number(oView.getModel("DetailView").getProperty("/OperationUnitMst").eval_apply_vendor_pool_lvl_no);
+                        
+
+                        if(iLvl < 3)
+                        iLvl = 3;
+
+                         var oSegmentedButton = this.getView().byId("vendor_pool_lvl");
+                            oSegmentedButton.destroyItems();
+                            for(var i=0;i<iLvl;i++){
+                                        oSegmentedButton.addItem(
+                                            new SegmentedButtonItem({ 
+                                                text : (i+1)+" Level", 
+                                                key : (i+1)
+                                            })
+                                        );
+                                    }
+
+
                         // var oVPCombo = this.byId("searchMultiComboCode");
                         // var sKey = this.getModel("DetailView").getProperty("/vpOperationUnit/vendor_pool_operation_unit_code").split(",");                        
                         // oVPCombo.setSelectedKeys(sKey);

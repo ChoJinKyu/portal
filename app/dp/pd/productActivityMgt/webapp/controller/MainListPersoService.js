@@ -1,62 +1,50 @@
 sap.ui.define(["jquery.sap.global"],
     function (jQuery) {
         "use strict";
-
-        var _columns = [
+        var i = 0;            
+        var _columns = [           
             {
-                id: "productActivityMgt-mainList-mainColumnCode",
-                order: 0,
-                text: "Code",
+                id: "partBaseActivityMgt-mainList-mainColumnProductActivityCode",
+                order: i++,
+                text: "제품 Activity 코드",
                 visible: true
             },
             {
-                id: "productActivityMgt-mainList-mainColumnName",
-                order: 1,
-                text: "Name",
-                visible: false
-            },
+                id: "partBaseActivityMgt-mainList-mainColumnActivityName",
+                order: i++,
+                text: "제품 Activity 명",
+                visible: true
+            },            
             {
-                id: "productActivityMgt-mainList-mainColumnStartDate",
-                order: 2,
-                text: "Start Date",
-                visible: false
-            },
-            {
-                id: "productActivityMgt-mainList-mainColumnEndDate",
-                order: 3,
-                text: "End Date",
+                id: "partBaseActivityMgt-mainList-mainColumnDescription",
+                order: i++,
+                text: "설명",
                 visible: true
             },
             {
-                id: "productActivityMgt-mainList-mainColumnSiteFlag",
-                order: 4,
-                text: "Site",
+                id: "partBaseActivityMgt-mainList-mainColumnSequence",
+                order: i++,
+                text: "순번",
+                visible: true
+            },            
+            {
+                id: "partBaseActivityMgt-mainList-mainColumnActiveFlag",
+                order: i++,
+                text: "Status",
+                visible: true
+            },            
+            {
+                id: "partBaseActivityMgt-mainList-mainColumnLocalUpdateDtm",
+                order: i++,
+                text: "수정일시",
                 visible: true
             },
             {
-                id: "productActivityMgt-mainList-mainColumnCompanyFlag",
-                order: 5,
-                text: "Company",
+                id: "partBaseActivityMgt-mainList-mainColumnUpdateUserId",
+                order: i++,
+                text: "수정자",
                 visible: true
-            },
-            {
-                id: "productActivityMgt-mainList-mainColumnRoleFlag",
-                order: 5,
-                text: "Role",
-                visible: true
-            },
-            {
-                id: "productActivityMgt-mainList-mainColumnOrganizationFlag",
-                order: 6,
-                text: "Organization",
-                visible: true
-            },
-            {
-                id: "productActivityMgt-mainList-mainColumnUserFlag",
-                order: 7,
-                text: "User",
-                visible: true
-            }
+            }          
         ];
         // Very simple page-context personalization
         // persistence service, not for productive use!
@@ -102,8 +90,8 @@ sap.ui.define(["jquery.sap.global"],
             //to 'Weight (Important!)', but will leave all other column names as they are.
             getCaption: function (oColumn) {
                 if (oColumn.getHeader() && oColumn.getHeader().getText) {
-                    if (oColumn.getHeader().getText() === "Code") {
-                        return "Code (Important!)";
+                    if (oColumn.getHeader().getText() === "제품 Activity 코드") {
+                        return "제품 Activity 코드 (Important!)";
                     }
                 }
                 return null;
@@ -111,14 +99,15 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("mainColumnCode") != -1 ||
-                    sId.indexOf("mainColumnName") != -1) {
+                if (sId.indexOf("mainColumnActivityCode") != -1 ||
+                    sId.indexOf("mainColumnActivityName") != -1 ) {
                     return "Columns of Key";
                 }
                 return "Others";
             }
         };
 
+        MainListPersoService.delPersData = MainListPersoService.resetPersData;
         return MainListPersoService;
 
     });

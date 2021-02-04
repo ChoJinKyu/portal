@@ -12,6 +12,24 @@
     font-size: 1.2rem;
 }
 
+.sapMDialog .sapMListTbl{
+    padding: 0 !important;
+}
+
+.marginLargeL{
+    margin-left: 3rem !important;
+}
+
+.NonPricePopHeader{
+    height: 1.5rem !important;
+    margin-bottom: 0 !important;
+
+}
+
+.NonPricePopTab{
+    padding: 0 !important;
+}
+
 .mInput{
     margin: 0 !important;
     padding: 0 !important;

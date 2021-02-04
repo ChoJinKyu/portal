@@ -37,6 +37,7 @@ sap.ui.define([
             let oTextPathTemplate = new sap.ui.core.CustomData({key:"textPath"});
                 oTextPathTemplate.setValue(sTextPath);
 
+            oDialog.removeAllCustomData();
             oDialog.addCustomData(oModelNameTemplate);
             oDialog.addCustomData(oCodePathTemplate);
             oDialog.addCustomData(oTextPathTemplate);
@@ -44,7 +45,6 @@ sap.ui.define([
         }
 
         , onEmployeeDialogApplyPress: function(oEvent){
-            debugger;
             let sModelName  = oEvent.getSource().data("modelName");
             let sCodePath = oEvent.getSource().data("codePath");
             let sTextPath = oEvent.getSource().data("textPath");

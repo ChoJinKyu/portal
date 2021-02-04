@@ -338,7 +338,7 @@
                         -->
                         <VBox>
                             
-                            <Input id="inputWithEmployeeValueHelp" value="{filterModel>/buyer_name/value}"
+                            <!-- <Input id="inputWithEmployeeValueHelp" value="{filterModel>/buyer_name/value}"
                                 showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
                             </Input>
                             <cm-ui:EmployeeDialog id="employeeDialog" 
@@ -349,8 +349,11 @@
                                     ]
                                 }"
                                 apply=".onEmployeeDialogApplyPress"
-                            />
-
+                            /> -->
+                            <MultiInput id="multiInputWithEmployeeValueHelp"
+                                placeholder="Choose employees from the ValueHelp"
+                                showValueHelp="true" valueHelpRequest=".onMultiInputWithEmployeeValuePress($event, 'multiInputWithEmployeeValueHelp')">
+                            </MultiInput>
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M3 S12" />
                             </layoutData>

@@ -12,7 +12,6 @@ using {
 } from '../../sp/sc/SP_SC_REFERENCE_COMMON.model';
 
 
-
 // using {sp as ScOutcomeCodeView} from '../../sp/sc/SP_SC_NEGO_MASTERS-model';
 
 

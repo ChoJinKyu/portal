@@ -16,6 +16,7 @@ import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
 
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,10 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.SqlReturnResultSet;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import cds.gen.cm.msgmgtservice.Message;
+import cds.gen.cm.msgmgtservice.Message_;
+import lg.sppCap.frame.handler.BaseEventHandler;
 
 import cds.gen.op.prreviewmgtv4service.*;
 
@@ -109,18 +114,19 @@ public class PrReviewMgtV4Service implements EventHandler {
         SqlReturnResultSet oReturn = new SqlReturnResultSet("O_MSG_TBL", new RowMapper<OutType>() {
             @Override
             public OutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                log.info("====> return_code : " + v_rs.getString("return_code"));
-                log.info("====> return_msg  : " + v_rs.getString("return_msg"));
-
                 OutType v_row = OutType.create();
                 v_row.setReturnCode(v_rs.getString("return_code"));
                 v_row.setReturnMsg(v_rs.getString("return_msg"));
+                log.info("====> return_code : " + v_rs.getString("return_code"));
+                log.info("====> return_msg  : " + v_rs.getString("return_msg"));
 
+/*
                 if ("NG".equals(v_rs.getString("return_code"))) {
                     log.info("#### Call Proc Error!!  ####");
+                    log.info("====> ErrorStatuses.BAD_REQUEST  : " + ErrorStatuses.BAD_REQUEST);
                     throw new ServiceException(ErrorStatuses.BAD_REQUEST, v_rs.getString("return_msg"));
                 }
-
+*/
                 v_result.add(v_row);
                 return v_row;
             }

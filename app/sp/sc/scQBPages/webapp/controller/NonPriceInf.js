@@ -130,7 +130,7 @@ sap.ui.define([
                     aa.setData({ type: "1" });
 
                     var newLine = this._NPFirstLine();
-                    tab.addItem(newLine);
+                    // tab.addItem(newLine);
 
 
 
@@ -187,7 +187,7 @@ sap.ui.define([
                     oItem.destroy();
                 }
                 var newLine = this._NPFirstLine();
-                tab.addItem(newLine);
+                // tab.addItem(newLine);
             },
             _NPNone: function (e){
                 // Header 초기화
@@ -443,10 +443,11 @@ sap.ui.define([
                             oCell = oItem.getCells()[3];
                             
                             if(oItem.getCells()[1].getValue() > oItem.getCells()[2].getValue()){
+                                debugger;
                                 oItem.getCells()[1].setValueState("Error");
-                                oItem.getCells()[1].setValueStateText("ToDate가 From보다 클 수 없음");
+                                oItem.getCells()[1].setValueStateText("'Response Value From'은 'Response Value To'보다 클 수 없습니다.");
                                 oItem.getCells()[2].setValueState("Error");
-                                oItem.getCells()[2].setValueStateText("ToDate가 From보다 클 수 없음");
+                                oItem.getCells()[2].setValueStateText("'Response Value From'은 'Response Value To'보다 클 수 없습니다.");
                                 flag = false;
                                 console.log("from : to =====", oItem.getCells()[1].getValue(), " : ",oItem.getCells()[2].getValue());
                             }
@@ -547,7 +548,7 @@ sap.ui.define([
                     oItem.destroy();
                 }
                 var newLine = this._NPFirstLine();
-                tab.addItem(newLine);
+                // tab.addItem(newLine);
 
             },
             _NPFirstLine: function () {
@@ -556,21 +557,21 @@ sap.ui.define([
                 // @ts-ignore
                 newLine.addCell(new sap.m.Text({ text: "1" }));
                 // @ts-ignore
-                newLine.addCell(new sap.m.DatePicker({ value: "2015-11-23", valueFormat: "yyyy-MM-dd", displayFormat: "long" }));
+                newLine.addCell(new sap.m.DatePicker({ value: "", valueFormat: "yyyy-MM-dd", displayFormat: "long" }));
                 // @ts-ignore
-                newLine.addCell(new sap.m.DatePicker({ value: "2015-11-23", valueFormat: "yyyy-MM-dd", displayFormat: "long" }));
+                newLine.addCell(new sap.m.DatePicker({ value: "", valueFormat: "yyyy-MM-dd", displayFormat: "long" }));
                 // @ts-ignore
-                newLine.addCell(new sap.m.Input({ value: "50", type: "Number" }));
+                newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
                 // @ts-ignore
-                newLine.addCell(new sap.m.Input({ value: "1" }));
+                newLine.addCell(new sap.m.Input({ value: "" }));
                 // @ts-ignore
-                newLine.addCell(new sap.m.Input({ value: "1.2" }));
+                newLine.addCell(new sap.m.Input({ value: "" }));
                 // @ts-ignore
-                newLine.addCell(new sap.m.Input({ value: "100", type: "Number"  }));
+                newLine.addCell(new sap.m.Input({ value: "", type: "Number"  }));
                 // @ts-ignore
-                newLine.addCell(new sap.m.Input({ value: "사업자등록증" }));
+                newLine.addCell(new sap.m.Input({ value: "" }));
                 // @ts-ignore
-                newLine.addCell(new sap.m.Input({ value: "50", type: "Number"  }));
+                newLine.addCell(new sap.m.Input({ value: "", type: "Number"  }));
 
                 return newLine;
             },
@@ -582,9 +583,9 @@ sap.ui.define([
                 // @ts-ignore
                 newLine.addCell(new sap.m.Text({ text: String(oIndex) }));
                 // @ts-ignore
-                newLine.addCell(new sap.m.DatePicker({ value: "2015-11-23", valueFormat: "yyyy-MM-dd", displayFormat: "long" }));
+                newLine.addCell(new sap.m.DatePicker({ value: "", valueFormat: "yyyy-MM-dd", displayFormat: "long" }));
                 // @ts-ignore
-                newLine.addCell(new sap.m.DatePicker({ value: "2015-11-23", valueFormat: "yyyy-MM-dd", displayFormat: "long" }));
+                newLine.addCell(new sap.m.DatePicker({ value: "", valueFormat: "yyyy-MM-dd", displayFormat: "long" }));
                 // @ts-ignore
                 newLine.addCell(new sap.m.Input({ value: "" }));
                 // @ts-ignore

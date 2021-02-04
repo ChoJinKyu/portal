@@ -1,25 +1,27 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"ext/lib/util/Multilingual",
-	"ext/lib/model/ManagedListModel",
+    "ext/lib/model/ManagedListModel",
+    "ext/lib/model/TransactionManager",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/formatter/DateFormatter",
-	"sap/m/TablePersoController",
+	"sap/ui/table/TablePersoController",
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/model/Sorter",
-], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter, 
+    "ext/lib/util/ExcelUtil",
+], function (BaseController, Multilingual, ManagedListModel, TransactionManager, JSONModel, DateFormatter, 
         TablePersoController, MainListPersoService, 
-        Filter, FilterOperator, MessageBox, MessageToast, Sorter) {
-	"use strict";
+        Filter, FilterOperator, MessageBox, MessageToast, Sorter, ExcelUtil) {
+	        "use strict";
+            var oTransactionManager;
 
 	return BaseController.extend("dp.pd.productActivityMgt.controller.MainList", {
 
 		dateFormatter: DateFormatter,
-
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
@@ -34,22 +36,12 @@ sap.ui.define([
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new JSONModel(), "mainListViewModel");
-
-			// oMultilingual.attachEvent("ready", function(oEvent){
-			// 	var oi18nModel = oEvent.getParameter("model");
-			// 	this.addHistoryEntry({
-			// 		title: oi18nModel.getText("/CONTROL_OPTION_MANAGEMENT"),   //제어옵션관리
-			// 		icon: "sap-icon://table-view",
-			// 		intent: "#-display"
-			// 	}, true);
-			// }.bind(this));
-			
-            this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
             
-            console.log(this.getModel("list"));
-         //   this.byId("mainTable").getBinding("rows").sort(sOrder && new Sorter("LastName", sOrder === "desc"));
-			//this._doInitTablePerso();
-            //this.enableMessagePopover();
+            var oTransactionManager = new TransactionManager();
+            this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+
+            this.enableMessagePopover();
+            this._doInitTablePerso();
         },
 		
         onRenderedFirst : function () {
@@ -93,7 +85,7 @@ sap.ui.define([
 		 */
 		onMainTablePersoButtonPressed: function(oEvent){
             console.log("onMainTablePersoButtonPressed");
-		//	this._oTPC.openDialog();
+			this._oTPC.openDialog();
 		},
 
 		/**
@@ -103,23 +95,8 @@ sap.ui.define([
 		 */
 		onMainTablePersoRefresh : function() {
             console.log("onMainTablePersoRefresh");
-			// MainListPersoService.resetPersData();
-			// this._oTPC.refresh();
-		},
-
-		/**
-		 * Event handler when a table add button pressed
-		 * @param {sap.ui.base.Event} oEvent
-		 * @public
-		 */
-		onMainTableAddButtonPress: function(){
-            console.log("onMainTableAddButtonPress");
-			// var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
-			// this.getRouter().navTo("midPage", {
-			// 	layout: oNextUIState.layout, 
-			// 	tenantId: "new",
-			// 	controlOptionCode: "code"
-			// });
+			MainListPersoService.resetPersData();
+			this._oTPC.refresh();
 		},
 
 		/**
@@ -156,7 +133,7 @@ sap.ui.define([
 
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenantId: oRecord.tenant_id,
+				tenantId: "L2101",
 				controlOptionCode: oRecord.product_activity_code
 			}, true);
 
@@ -169,7 +146,7 @@ sap.ui.define([
             var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenantId: "L2100",
+				tenantId: "L2101",
 				controlOptionCode: "new"				
             });
 
@@ -180,20 +157,20 @@ sap.ui.define([
             
         },
 
-        onTableSort : function(){
-            MessageToast.show("Sort 미구현");
-        },
+        onExportPress : function(_oEvent){
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
 
-        onTableFilter : function(){
-            MessageToast.show("Filter 미구현");
-        },
-
-        onTableSettings : function(){
-            MessageToast.show("Settings 미구현");
-        },
-
-        onExportPress : function(){
-            MessageToast.show("Export 미구현");
+            var oTable = this.byId(sTableId);
+            //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+            var sFileName = "Product Activity_"+ this._getDTtype();
+            var oData = this.getModel("list").getProperty("/PdProdActivityTemplateView"); //binded Data
+            // var oData = oTable.getModel().getProperty("/Uom");
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
         },
 
 		/* =========================================================== */
@@ -206,7 +183,7 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(){
-			this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
+            this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
 		},
 
 		/**
@@ -263,16 +240,15 @@ sap.ui.define([
 				}
 			}
 			return aSearchFilters;
-		},
+        },
 		
 		_doInitTablePerso: function(){
 			// init and activate controller
-			this._oTPC = new TablePersoController({
-				table: this.byId("mainTable"),
-				componentName: "productActivityMgt",
-				persoService: MainListPersoService,
-				hasGrouping: true
-			}).activate();
+			// 개인화 - UI 테이블의 경우만 해당
+            this._oTPC = new TablePersoController({
+                customDataKey: "productActivityMgt",
+                persoService: MainListPersoService            
+            }).setTable(this.byId("mainTable"));
         },
         
         _getSorter: function () {
@@ -280,6 +256,24 @@ sap.ui.define([
             aSorter.push(new Sorter("sequence", false));
             return aSorter;
         },
+
+        _getDTtype: function (StartFlag, oDateParam) {
+            let oDate = oDateParam || new Date(),
+                iYear = oDate.getFullYear(),
+                iMonth = oDate.getMonth()+1,
+                iDate = oDate.getDate(),
+                iHours = oDate.getHours(),
+                iMinutes = oDate.getMinutes(),
+                iSeconds = oDate.getSeconds();
+ 
+            let sReturnValue = iYear + this._getPreZero(iMonth) + this._getPreZero(iDate);                      
+
+            return sReturnValue;
+        },
+
+        _getPreZero: function (iDataParam) {
+            return (iDataParam<10 ? "0"+iDataParam : iDataParam);
+        }
 
 	});
 });

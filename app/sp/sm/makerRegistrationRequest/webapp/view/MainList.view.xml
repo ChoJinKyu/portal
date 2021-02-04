@@ -1,158 +1,156 @@
-<mvc:View 
-    controllerName="sp.sm.makerRegistrationRequest.controller.MainList" 
-    xmlns:mvc="sap.ui.core.mvc" 
-    xmlns="sap.m" 
-    xmlns:f="sap.f" 
-    xmlns:t="sap.ui.table"
-    xmlns:form="sap.ui.layout.form" 
-    xmlns:layout="sap.ui.layout" 
-    xmlns:core="sap.ui.core" 
-    xmlns:tnt="sap.tnt"
-    xmlns:lib-m="ext.lib.control.m" 
-    height="100%">
-	<f:DynamicPage id="page"
-        headerExpanded="false" 
-        toggleHeaderOnTitleClick="true">
-        <f:title>
-            <f:DynamicPageTitle>
-                <f:heading>
-                    <Title text="{I18N>/MAKER_REGISTRATION_REQUEST}" />
-                </f:heading>
-                <f:snappedContent>
-                    <form:SimpleForm id="pageSearchForm" class="searchBox" maxContainerCols="2" layout="ResponsiveGridLayout" editable="true" 
-                        adjustLabelSpan="false" 
-                        labelSpanL="4" 
-                        labelSpanM="4" 
-                        emptySpanL="0" 
-                        emptySpanM="0" 
-                        columnsL="2" 
-                        columnsM="2">
-                        <form:content>
-                            <VBox>
-                                <Label text="{I18N>/PROGRESS}:" labelFor="searchProgressSegmentButton"></Label>
-                                <SegmentedButton id="searchProgressSegmentButton" items="{progressModel>/progress}" selectedKey="{progressModel>code}" class="sapUiSmallMarginBottom" width="100%" >
-                                    <items>
-                                        <SegmentedButtonItem text="{progressModel>code_name}" key="{progressModel>code}" width="5rem" />
-                                    </items>
-                                </SegmentedButton>
-                                <layoutData>
-                                    <layout:GridData span="XL3 L4 M12 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="{I18N>/TAX_ID}:" labelFor="searchTaxId" />
-                                <SearchField id="searchTaxId" placeholder="{I18N>/SEARCH}" search=".onSearch" />
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12"/>
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="{I18N>/REQUEST_USER}:" labelFor="searchRequestUser"/>
-                                <SearchField id="searchRequestUser" placeholder="{I18N>/SEARCH}" search=".onSearch"/>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" />
-                                </layoutData>
-                            </VBox>
-                            <VBox>
-                                <Label text="{I18N>/REQUEST_DATE}:" labelFor="searchRequestDate"/>
-                                <DateRangeSelection id="searchRequestDate" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L3 M6 S12" linebreakM="true"/>
-                                </layoutData>
-                            </VBox>
-                            
-                             <VBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
-                                <Label text=""/>
-                                <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch" />
-                                <layoutData>
-                                    <layout:GridData span="XL3 L12 M12 S12" />
-                                </layoutData>
-                            </VBox>
-                        </form:content>
-                    </form:SimpleForm>
-                </f:snappedContent>
-                <!-- <f:navigationActions>
-                    <Button icon="sap-icon://unfavorite" type="Transparent" />
-                </f:navigationActions> -->
-            </f:DynamicPageTitle>
-        </f:title>
-        <f:header>
-            <f:DynamicPageHeader pinnable="true">
-            </f:DynamicPageHeader>
-        </f:header>
+<mvc:View controllerName="sp.sm.makerRegistrationRequest.controller.MainList" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:f="sap.f" xmlns:t="sap.ui.table" xmlns:form="sap.ui.layout.form" xmlns:layout="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:tnt="sap.tnt" xmlns:lib-m="ext.lib.control.m" height="100%">
+	<f:DynamicPage id="page" headerExpanded="false" toggleHeaderOnTitleClick="true">
+		<f:title>
+			<f:DynamicPageTitle>
+				<f:heading>
+					<Title text="{I18N>/MAKER_REGISTRATION_REQUEST}"/>
+				</f:heading>
+				<f:snappedContent>
+					<form:SimpleForm id="pageSearchForm" class="searchBox" maxContainerCols="2" layout="ResponsiveGridLayout" editable="true" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+						<form:content>
+							<VBox>
+								<Label text="{I18N>/PROGRESS}:" labelFor="searchProgressSegmentButton"/>
+								<SegmentedButton id="searchProgressSegmentButton" items="{progressModel>/progress}" selectedKey="{progressModel>code}">
+									<items>
+										<SegmentedButtonItem text="{progressModel>code_name}" key="{progressModel>code}" width="5rem"/>
+									</items>
+								</SegmentedButton>
+								<layoutData>
+									<layout:GridData span="XL4 L12 M12 S12"/>
+								</layoutData>
+							</VBox>
+							<VBox>
+								<Label text="{I18N>/TAX_ID}:" labelFor="searchTaxId"/>
+								<SearchField id="searchTaxId" placeholder="{I18N>/SEARCH}" search=".onSearch"/>
+								<layoutData>
+									<layout:GridData span="XL2 L4 M6 S12"/>
+								</layoutData>
+							</VBox>
+							<VBox>
+								<Label text="{I18N>/REQUEST_USER}:" labelFor="searchRequestUser"/>
+								<SearchField id="searchRequestUser" placeholder="{I18N>/SEARCH}" search=".onSearch"/>
+								<layoutData>
+									<layout:GridData span="XL2 L4 M6 S12"/>
+								</layoutData>
+							</VBox>
+							<VBox>
+								<Label text="{I18N>/REQUEST_DATE}:" labelFor="searchRequestDate"/>
+								<DateRangeSelection id="searchRequestDate" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
+								<layoutData>
+									<layout:GridData span="XL2 L4 M6 S12" linebreakM="true"/>
+								</layoutData>
+							</VBox>
+							
+						</form:content>
+					</form:SimpleForm>
+				</f:snappedContent>
+				<f:expandedContent>
+					<form:SimpleForm id="pageSearchFormE" class="searchBox" maxContainerCols="2" layout="ResponsiveGridLayout" editable="true" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+						<form:content>
+							<VBox>
+								<Label text="{I18N>/PROGRESS}:" labelFor="searchProgressSegmentButton"/>
+								<SegmentedButton id="searchProgressSegmentButtonE" items="{progressModel>/progress}" selectedKey="{progressModel>code}">
+									<items>
+										<SegmentedButtonItem text="{progressModel>code_name}" key="{progressModel>code}" width="5rem"/>
+									</items>
+								</SegmentedButton>
+								<layoutData>
+									<layout:GridData span="XL4 L12 M12 S12"/>
+								</layoutData>
+							</VBox>
+							<VBox>
+								<Label text="{I18N>/TAX_ID}:" labelFor="searchTaxId"/>
+								<SearchField id="searchTaxIdE" placeholder="{I18N>/SEARCH}" search=".onSearch"/>
+								<layoutData>
+									<layout:GridData span="XL2 L4 M6 S12"/>
+								</layoutData>
+							</VBox>
+							<VBox>
+								<Label text="{I18N>/REQUEST_USER}:" labelFor="searchRequestUser"/>
+								<SearchField id="searchRequestUserE" placeholder="{I18N>/SEARCH}" search=".onSearch"/>
+								<layoutData>
+									<layout:GridData span="XL2 L4 M6 S12"/>
+								</layoutData>
+							</VBox>
+							<VBox>
+								<Label text="{I18N>/REQUEST_DATE}:" labelFor="searchRequestDate"/>
+								<DateRangeSelection id="searchRequestDateE" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
+								<layoutData>
+									<layout:GridData span="XL2 L4 M6 S12" linebreakM="true"/>
+								</layoutData>
+							</VBox>
+							
+						</form:content>
+					</form:SimpleForm>
+				</f:expandedContent>
+				<f:actions>
+					<Button id="btn_search" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/>
+				</f:actions>
+				<f:navigationActions>
+					<Button icon="sap-icon://unfavorite" type="Transparent"/>
+				</f:navigationActions>
+			</f:DynamicPageTitle>
+		</f:title>
+		<f:header>
+			<f:DynamicPageHeader pinnable="true"/>
+		</f:header>
 		<f:content>
 			<VBox>
-				<Table id="mainTable" 
-                        growingScrollToLoad="true"
-                        growing="true"
-                        sticky="ColumnHeaders,HeaderToolbar"
-                        growingThreshold="50"
-                        inset="false"   
-                        items="{/MakerRegistrationRequestView}"
-                        mode="None" >
-                    <headerToolbar>
-                        <OverflowToolbar class="sapFDynamicPageAlignContent">
-                        <Title text="{I18N>/MAKER_REQUEST_LIST} ({= ${listModel>/results}.length || 0})" level="H2"/>
-                        <ToolbarSpacer />
-                        <!-- <Button text="{I18N>/CREATE}" press=".onOpenCreateDialog" />
-                        <ToolbarSeparator/> -->
-                        <Button icon="sap-icon://excel-attachment" press=".onExcelExport" >
-                            <layoutData>
-                                <OverflowToolbarLayoutData priority="NeverOverflow" />
-                            </layoutData>
-                        </Button>
-                    </OverflowToolbar>
-                    </headerToolbar>
-                    <columns>
-                        <Column minScreenWidth="Tablet" hAlign="Center">
-                            <Text text="{I18N>/REQUEST_TYPE}"/>
-                        </Column>
-                        <Column minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-                            <Text text="{I18N>/REQUEST_USER}" />
-                        </Column>                        
-                        <Column minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="{I18N>/REQUEST_DEPARTMENT}" />
-                        </Column>
-                        <Column minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="{I18N>/REQUEST_DATE}"  />
-                        </Column>
-                         <Column minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="{I18N>/TAX_ID}"  />
-                        </Column>
-                          <Column minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="{I18N>/MAKER_LOCAL_NAME}"  />
-                        </Column>  
-                          <Column minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="{I18N>/MAKER_ENGLISH_NAME}"  />
-                        </Column>  
-                          <Column minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
-                            <Text text="{I18N>/PROGRESS}"  />
-                        </Column>                                            
-                    </columns>
-                    <items>
-                        <ColumnListItem  type="Navigation" press=".onGoDetail">
-                            <cells>
-                                <Text text="{maker_request_type_code}"/>
-                                <Text text="{requestor_local_name}"/>                                                                
-                                <Text text="{requestor_department_local_name}"/>
-                               <Text text="{
-                                    path: 'local_create_dtm',
-                                    formatter: '.dateFormatter.toDateString'}"/>
-                                 <Text text="{tax_id}"/>
-                                <Text text="{supplier_local_name}"/>
-                                 <Text text="{supplier_english_name}" />
-                                <tnt:InfoLabel 
-                                    text="{maker_progress_status_code}" 
-                                    colorScheme="{
-                                        path: 'maker_progress_status_code',
-                                        formatter: '.onStatusColor'
-                                    }" 
-                                    displayOnly="true"/>
-                                 
-                            </cells>
-                        </ColumnListItem>
-                    </items>
-                </Table>
+				<Table id="mainTable" growingScrollToLoad="true" growing="true" sticky="ColumnHeaders,HeaderToolbar" growingThreshold="50" inset="false" items="{path: '/MakerRegistrationRequestView', sorts: {path: 'maker_request_sequence'}}" mode="None">
+					<headerToolbar>
+						<OverflowToolbar class="sapFDynamicPageAlignContent">
+							<Title text="{I18N>/MAKER_REQUEST_LIST} ({=(${countModel>/count})?${countModel>/count}:0})" level="H2"/>
+							<ToolbarSpacer/>
+							<!-- <Button text="{I18N>/CREATE}" press=".onOpenCreateDialog" />
+                            <ToolbarSeparator/> -->
+							<Button icon="sap-icon://excel-attachment" press=".onExcelExport">
+								<layoutData>
+									<OverflowToolbarLayoutData priority="NeverOverflow"/>
+								</layoutData>
+							</Button>
+						</OverflowToolbar>
+					</headerToolbar>
+					<columns>
+						<Column minScreenWidth="Tablet" hAlign="Center">
+							<Text text="{I18N>/REQUEST_TYPE}"/>
+						</Column>
+						<Column minScreenWidth="Tablet" hAlign="Center" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+							<Text text="{I18N>/REQUEST_USER}"/>
+						</Column>
+						<Column minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+							<Text text="{I18N>/REQUEST_DEPARTMENT}"/>
+						</Column>
+						<Column minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+							<Text text="{I18N>/REQUEST_DATE}"/>
+						</Column>
+						<Column minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+							<Text text="{I18N>/TAX_ID}"/>
+						</Column>
+						<Column minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+							<Text text="{I18N>/MAKER_LOCAL_NAME}"/>
+						</Column>
+						<Column minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+							<Text text="{I18N>/MAKER_ENGLISH_NAME}"/>
+						</Column>
+						<Column minScreenWidth="Tablet" hAlign="Center" demandPopin="true" popinDisplay="Inline">
+							<Text text="{I18N>/PROGRESS}"/>
+						</Column>
+					</columns>
+					<items>
+						<ColumnListItem type="Navigation" press=".onGoDetail">
+							<cells>
+								<Text text="{maker_request_type_code}"/>
+								<Text text="{requestor_local_name}"/>
+								<Text text="{requestor_department_local_name}"/>
+                                <Text text="{path: 'local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { pattern: 'YYYY-MM-dd', UTC: true }}"/>
+								<Text text="{tax_id}"/>
+								<Text text="{maker_local_name}"/>
+								<Text text="{maker_english_name}"/>
+								<tnt:InfoLabel text="{maker_progress_status_code}" colorScheme="{path: 'maker_progress_status_code', formatter: '.onStatusColor'}" displayOnly="true"/>
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>
 			</VBox>
 		</f:content>
 	</f:DynamicPage>

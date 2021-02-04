@@ -18,11 +18,11 @@ entity Sm_Maker_Cal_View {
         maker_local_city           : String(240) @title : '로컬주소(도시)';
         maker_local_region         : String(240) @title : '로컬주소(지역)';
         maker_local_address        : String(240) @title : '로컬주소(상세주소)';
-        maker_local_full_address   : String(1000)@title : '로컬 전체주소';
+        maker_local_full_address   : String(1000)@title : '로컬전체주소';
         maker_english_city         : String(240) @title : '영문주소(도시)';
         maker_english_region       : String(240) @title : '영문주소(지역)';
         maker_english_address      : String(240) @title : '영문주소(상세주소)';
-        maker_english_full_address : String(1000)@title : '영문 전체주소';
+        maker_english_full_address : String(1000)@title : '영문전체주소';
         affiliate_code             : String(10)  @title : '관계사코드';
         affiliate_name             : String(50)  @title : '관계사코드명';
         company_class_code         : String(30)  @title : '회사분류코드';

@@ -12,13 +12,10 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
-    "./MaterialOrgDialog",
-    "sp/util/control/ui/SupplierDialog",
-    "dpmd/util/controller/EmployeeDeptDialog",
     "sap/m/Token"
 ],
-  function (BaseController, ManagedListModel, TransactionManager, Validator, Formatter, DateFormatter, JSONModel, ODataModel,
-        MessageBox, Fragment, Filter, FilterOperator, MessageToast, MaterialOrgDialog, SupplierDialog, EmployeeDeptDialog, Token) {
+  function (BaseController, ManagedListModel, TransactionManager, Validator, Formatter, DateFormatter, JSONModel, ODataModel, 
+        MessageBox, Fragment, Filter, FilterOperator, MessageToast, Token) {
     "use strict";
 
     var _sSelectedDialogPath, _sTenantId;
@@ -27,7 +24,7 @@ sap.ui.define([
     // Change Devloper Procedure
     var _sDpViBasePriceChangeRequestorProcUrl = "/dp/vi/basePriceArlMgt/webapp/srv-api/odata/v4/dp.BasePriceArlV4Service/DpViBasePriceChangeRequestorProc";
 
-    return BaseController.extend("dp.vi.basePriceArlMgt.controller.BasePriceDetail", {
+    return BaseController.extend("dp.vi.basePriceProgressStatusMgt.controller.BasePriceDetail", {
         dateFormatter: DateFormatter,
 
         /**
@@ -329,7 +326,7 @@ sap.ui.define([
                                     "approval_number": "",
                                     "approval_title": "",
                                     "approval_type_code": oRootModel.getProperty("/selectedApprovalType"),   // V10: 신규, V20: 변경
-                                    "approve_status_code": "",    
+                                    "approve_status_code": "DR",    // DR: Draft
                                     "requestor_empno": "5457",
                                     "request_date": this._changeDateString(oToday),
                                     "details": []};
@@ -396,7 +393,7 @@ sap.ui.define([
            if (!this._oFragments[sFragmentName]) {
                Fragment.load({
                    id: this.getView().getId(),
-                   name: "dp.vi.basePriceArlMgt.view." + sFragmentName,
+                   name: "basePriceArlMgt.view." + sFragmentName,
                    controller: this
                }).then(function (oFragment) {
                    this._oFragments[sFragmentName] = oFragment;
@@ -467,20 +464,15 @@ sap.ui.define([
             var oDetailModel = this.getModel("detailModel");
             var aDetails = oDetailModel.getProperty("/details");
             var aPrice = [{market_code: "0"}, {market_code: "1"}, {market_code: "2"}];
-            var oDefault = {base_date:new Date((new Date().getFullYear()-1)+"-12-31"), 
+
+            aDetails.push({base_date:new Date((new Date().getFullYear()-1)+"-12-31"), 
                         company_code: "LGCKR",
                         purOrg: this.getModel("rootModel").getProperty("/purOrg/LGCKR"),
                         org_code: "",
                         org_type_code: "PU",
                         base_price_ground_code: "COST",
                         prices: aPrice
-                        };
-
-            if( oDetailModel.getProperty("/approval_type_code") === "VI20" ) {
-                oDefault.change_reason_code = "10";
-            }            
-
-            aDetails.push(oDefault);
+                        });
             oDetailModel.refresh();
         },
 
@@ -569,7 +561,6 @@ sap.ui.define([
                     delete oDetail.family_material_code;
                     delete oDetail.family_supplier_code;
                     delete oDetail.family_supplier_name;
-                    delete oDetail.change_reason_nm;
                     oDetail.base_date = this._changeDateString(oDetail.base_date, "-");
 
                     // DB에 저장된 config에 따라 필요없는 데이터 삭제
@@ -603,8 +594,6 @@ sap.ui.define([
                 sMessage = oI18NModel.getText("/NCM01001");
             }else if( oData.approval_number ) {
                 sMessage = oI18NModel.getText("/NPG00008");
-            }else if( !oData.approval_number ) {
-                oData.approve_status_code = "DR";
             }
 
             // Approvers 데이터를 cds 데이터 형태에 맞춰 세팅 시작
@@ -668,7 +657,6 @@ sap.ui.define([
         _checkValidation: function (sCheckTypeParam) {
             var oMarketCodeConfig = this.getModel("rootModel").getProperty("/config");
             var oDetail = this.getModel("detailModel").getData();
-            var sApprovalTypeCode = oDetail.approval_type_code;
             var bReturnValue = true;
 
             if( !oDetail.approval_title ) {
@@ -691,65 +679,55 @@ sap.ui.define([
                         break;
                     }
 
-                    if( oMarketCodeConfig.DP_VI_SUPPLY_DISPLAY_FLAG === "Y" ) {
-                        if( !aBacePriceDetails[i].supplier_code ) {
-                            sErrorMessage = "공급업체는 필수입니다.";
+                    if( !aBacePriceDetails[i].supplier_code ) {
+                        sErrorMessage = "공급업체는 필수입니다.";
+                        bReturnValue = false;
+                        break;
+                    }
+
+                    if( oMarketCodeConfig.DP_VI_MARKETCODE2_DISPLAY_FLAG === "Y" ) {
+                        var new_base_price2 = aBacePriceDetails[i].prices[2].new_base_price;
+                        var new_base_price_currency_code2 = aBacePriceDetails[i].prices[2].new_base_price_currency_code;
+
+                        if( new_base_price2 === "" || new_base_price2 === null ||new_base_price2 === undefined ) {
+                            sErrorMessage = "신규기준단가는 필수입니다.";
+                            bReturnValue = false;
+                            break;
+                        }
+                        if( new_base_price_currency_code2 === "" || new_base_price_currency_code2 === null ||new_base_price_currency_code2 === undefined ) {
+                            sErrorMessage = "통화코드는 필수입니다.";
                             bReturnValue = false;
                             break;
                         }
                     }
+                    if( oMarketCodeConfig.DP_VI_MARKETCODE1_DISPLAY_FLAG === "Y" ) {
+                        var new_base_price1 = aBacePriceDetails[i].prices[1].new_base_price;
+                        var new_base_price_currency_code1 = aBacePriceDetails[i].prices[1].new_base_price_currency_code;
 
-                    if( sApprovalTypeCode === "VI10" || (sApprovalTypeCode === "VI20" && aBacePriceDetails[i].prices[2].current_base_price) ) {
-                        if( oMarketCodeConfig.DP_VI_MARKETCODE2_DISPLAY_FLAG === "Y" ) {
-                            var new_base_price2 = aBacePriceDetails[i].prices[2].new_base_price;
-                            var new_base_price_currency_code2 = aBacePriceDetails[i].prices[2].new_base_price_currency_code;
-    
-                            if( new_base_price2 === "" || new_base_price2 === null ||new_base_price2 === undefined ) {
-                                sErrorMessage = "신규기준단가는 필수입니다.";
-                                bReturnValue = false;
-                                break;
-                            }
-                            if( new_base_price_currency_code2 === "" || new_base_price_currency_code2 === null ||new_base_price_currency_code2 === undefined ) {
-                                sErrorMessage = "통화는 필수입니다.";
-                                bReturnValue = false;
-                                break;
-                            }
+                        if( new_base_price1 === "" || new_base_price1 === null ||new_base_price1 === undefined ) {
+                            sErrorMessage = "신규기준단가는 필수입니다.";
+                            bReturnValue = false;
+                            break;
+                        }
+                        if( new_base_price_currency_code1 === "" || new_base_price_currency_code1 === null ||new_base_price_currency_code1 === undefined ) {
+                            sErrorMessage = "통화코드는 필수입니다.";
+                            bReturnValue = false;
+                            break;
                         }
                     }
+                    if( oMarketCodeConfig.DP_VI_MARKETCODE0_DISPLAY_FLAG === "Y" ) {
+                        var new_base_price0 = aBacePriceDetails[i].prices[0].new_base_price;
+                        var new_base_price_currency_code0 = aBacePriceDetails[i].prices[0].new_base_price_currency_code;
 
-                    if( sApprovalTypeCode === "VI10" || (sApprovalTypeCode === "VI20" && aBacePriceDetails[i].prices[1].current_base_price) ) {
-                        if( oMarketCodeConfig.DP_VI_MARKETCODE1_DISPLAY_FLAG === "Y" ) {
-                            var new_base_price1 = aBacePriceDetails[i].prices[1].new_base_price;
-                            var new_base_price_currency_code1 = aBacePriceDetails[i].prices[1].new_base_price_currency_code;
-    
-                            if( new_base_price1 === "" || new_base_price1 === null ||new_base_price1 === undefined ) {
-                                sErrorMessage = "신규기준단가는 필수입니다.";
-                                bReturnValue = false;
-                                break;
-                            }
-                            if( new_base_price_currency_code1 === "" || new_base_price_currency_code1 === null ||new_base_price_currency_code1 === undefined ) {
-                                sErrorMessage = "통화코드는 필수입니다.";
-                                bReturnValue = false;
-                                break;
-                            }
+                        if( new_base_price0 === "" || new_base_price0 === null ||new_base_price0 === undefined ) {
+                            sErrorMessage = "신규기준단가는 필수입니다.";
+                            bReturnValue = false;
+                            break;
                         }
-                    }
-                    
-                    if( sApprovalTypeCode === "VI10" || (sApprovalTypeCode === "VI20" && aBacePriceDetails[i].prices[0].current_base_price) ) {
-                        if( oMarketCodeConfig.DP_VI_MARKETCODE0_DISPLAY_FLAG === "Y" ) {
-                            var new_base_price0 = aBacePriceDetails[i].prices[0].new_base_price;
-                            var new_base_price_currency_code0 = aBacePriceDetails[i].prices[0].new_base_price_currency_code;
-    
-                            if( new_base_price0 === "" || new_base_price0 === null ||new_base_price0 === undefined ) {
-                                sErrorMessage = "신규기준단가는 필수입니다.";
-                                bReturnValue = false;
-                                break;
-                            }
-                            if( new_base_price_currency_code0 === "" || new_base_price_currency_code0 === null ||new_base_price_currency_code0 === undefined ) {
-                                sErrorMessage = "통화코드는 필수입니다.";
-                                bReturnValue = false;
-                                break;
-                            }
+                        if( new_base_price_currency_code0 === "" || new_base_price_currency_code0 === null ||new_base_price_currency_code0 === undefined ) {
+                            sErrorMessage = "통화코드는 필수입니다.";
+                            bReturnValue = false;
+                            break;
                         }
                     }
                 }
@@ -905,7 +883,7 @@ sap.ui.define([
             if ( !this._oFamilyMaterialDialog ) {
                 this._oFamilyMaterialDialog = Fragment.load({
                     id: oView.getId(),
-                    name: "dp.vi.basePriceArlMgt.view.FamilyMaterialDialog",
+                    name: "basePriceArlMgt.view.FamilyMaterialDialog",
                     controller: this
                 }).then(function (oDialog) {
                     oView.addDependent(oDialog);
@@ -983,7 +961,7 @@ sap.ui.define([
 
                         if( -1 === aKeys.indexOf(sKey) ) {
                             oReMakeFmailyMaterialCode = $.extend(true, {}, oFmailyMaterialCode);
-                            oReMakeFmailyMaterialCode.prices = [{}, {}, {}];
+                            oReMakeFmailyMaterialCode.prices = [];
                             aReMakeFmailyMaterialCodes.push(oReMakeFmailyMaterialCode);
                         }
 
@@ -998,7 +976,7 @@ sap.ui.define([
                         oPrice.new_base_price_currency_code = oFmailyMaterialCode.new_base_price_currency_code;
                         //oPrice.new_base_price_start_date = oFmailyMaterialCode.base_date;
 
-                        oReMakeFmailyMaterialCode.prices[oPrice.market_code] = oPrice;
+                        oReMakeFmailyMaterialCode.prices.push(oPrice);
                     });
 
                     var oDialogModel = this.getModel("dialogModel");
@@ -1026,32 +1004,14 @@ sap.ui.define([
             if( oDetailModel.getProperty("/approval_type_code") === "VI10" ) {
                 oDetail.supplier_code = oSelectedData.supplier_code;
                 oDetail.supplier_local_name = oSelectedData.supplier_local_name;
-
-                for( var i=0; i<3; i++ ) {
-                    oDetail.prices[i].new_base_price = parseFloat(oSelectedData.new_base_price);
-                    oDetail.prices[i].new_base_price_currency_code = oSelectedData.new_base_price_currency_code;
-                }
             }else {
-                var oMarketCodeConfig = this.getModel("rootModel").getProperty("/config");
-
-                if( oSelectedData.market_code === "2" && oMarketCodeConfig.DP_VI_MARKETCODE2_DISPLAY_FLAG === "Y" ) {
-                    oDetail.prices[2].new_base_price = parseFloat(oSelectedData.new_base_price);
-                    oDetail.prices[2].new_base_price_currency_code = oSelectedData.new_base_price_currency_code;
-                }
-                if( oSelectedData.market_code === "1" &&  oMarketCodeConfig.DP_VI_MARKETCODE1_DISPLAY_FLAG === "Y" ) {
-                    oDetail.prices[1].new_base_price = parseFloat(oSelectedData.new_base_price);
-                    oDetail.prices[1].new_base_price_currency_code = oSelectedData.new_base_price_currency_code;
-                }
-                if( oSelectedData.market_code === "0" &&  oMarketCodeConfig.DP_VI_MARKETCODE0_DISPLAY_FLAG === "Y" ) {
-                    oDetail.prices[0].new_base_price = parseFloat(oSelectedData.new_base_price);
-                    oDetail.prices[0].new_base_price_currency_code = oSelectedData.new_base_price_currency_code;
-                }
+                oDetail.family_material_code = oSelectedData.material_code;
+                oDetail.family_supplier_code = oSelectedData.supplier_code;
+                oDetail.family_supplier_name = oSelectedData.supplier_local_name;
             }
 
-            oDetail.family_material_code = oSelectedData.material_code;
-            oDetail.family_supplier_code = oSelectedData.supplier_code;
-            oDetail.family_supplier_name = oSelectedData.supplier_local_name;
-
+            oDetail.prices[0].new_base_price = parseFloat(oSelectedData.new_base_price);
+            oDetail.prices[0].new_base_price_currency_code = oSelectedData.new_base_price_currency_code;
             oDetailModel.refresh();
 
             this.onFamilyMaterialDialogClose();
@@ -1131,17 +1091,16 @@ sap.ui.define([
                         this._oDetail.base_date = oSelectedDialogItem.base_date;
                         this._oDetail.base_price_ground_code = oSelectedDialogItem.base_price_ground_code;
 
-                        this._oDetail.prices = this._oDetail.prices ? this._oDetail.prices : [{}, {}, {}];
-                        this._oDetail.prices[oSelectedDialogItem.market_code] = {
+                        this._oDetail.prices = [{
                             market_code: oSelectedDialogItem.market_code,
                             current_base_price: parseFloat(oSelectedDialogItem.first_purchasing_net_price),
                             current_base_price_currency_code: oSelectedDialogItem.first_pur_netprice_curr_cd,
-                            //new_base_price: parseFloat(oSelectedDialogItem.new_base_price),
-                            //new_base_price_currency_code: oSelectedDialogItem.new_base_price_currency_code,
+                            new_base_price: parseFloat(oSelectedDialogItem.new_base_price),
+                            new_base_price_currency_code: oSelectedDialogItem.new_base_price_currency_code,
                             first_pur_netprice_str_dt: oSelectedDialogItem.first_pur_netprice_str_dt,
                             first_purchasing_net_price: parseFloat(oSelectedDialogItem.first_purchasing_net_price),
                             first_pur_netprice_curr_cd: oSelectedDialogItem.first_pur_netprice_curr_cd
-                        };
+                        }];
                     }
 
                     oEvent.getSource().close();

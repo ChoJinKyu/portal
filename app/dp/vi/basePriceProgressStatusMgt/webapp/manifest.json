@@ -199,7 +199,8 @@
     "resourceRoots": {
       "ext.lib": "../../../../lib",
       "dp": "../../../../dp",
-      "cm": "../../../../cm"
+      "cm": "../../../../cm",
+      "basePriceArlMgt": "../../../../dp/vi/basePriceArlMgt/webapp"
     },
     "routing": {
       "config": {
@@ -217,12 +218,21 @@
           "pattern": "",
           "name": "basePriceList",
           "target": "basePriceList"
+        },
+        {
+          "pattern": "basePriceDetail",
+          "name": "basePriceDetail",
+          "target": "basePriceDetail"
         }
       ],
       "targets": {
         "basePriceList": {
           "viewId": "basePriceList",
           "viewName": "BasePriceList"
+        },
+        "basePriceDetail": {
+          "viewId": "basePriceDetail",
+          "viewName": "BasePriceDetail"
         }
       }
     }

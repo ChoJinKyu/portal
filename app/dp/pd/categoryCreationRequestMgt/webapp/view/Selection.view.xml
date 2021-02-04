@@ -12,7 +12,7 @@
     xmlns:rte="sap.ui.richtexteditor"
     height="100%">
 
-	<uxap:ObjectPageLayout
+    <uxap:ObjectPageLayout
         showTitleInHeaderContent="true"
 		showEditHeaderButton="true"
         upperCaseAnchorBar="false"
@@ -24,7 +24,7 @@
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
                     <HBox alignItems="End">
-                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress" />
+                        <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress" />
                         <Title text="Part Category Creation Request" wrapping="true" />
                     </HBox>
 				</uxap:expandedHeading>
@@ -321,61 +321,35 @@
         
         <!-- footer 시작 -->
         <uxap:footer>
-            <OverflowToolbar visible="{= ${master>/progress_status_code} === '' ? true : false}">
+            <OverflowToolbar>
                 <ToolbarSpacer />
-				<Button id="pageDraftButton" type="Transparent" text="{I18N>/DRAFT}" press=".onPageSaveButtonPress('D')" />
-                <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButtonPress"/>
-                <Button id="pageRequestButton" type="Emphasized" text="{I18N>/REQUEST}" press=".onPageSaveButtonPress('R')" />
-            </OverflowToolbar>
+                <HBox visible="{= ${master>/progress_status_code} === '' ? true : false}" alignItems="End" justifyContent="End">
+                    <Button id="pageDraftButton" type="Transparent" text="{I18N>/DRAFT}" press=".onPageSaveButtonPress('D')" />
+                    <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButtonPress"/>
+                    <Button id="pageRequestButton" type="Emphasized" text="{I18N>/REQUEST}" press=".onPageSaveButtonPress('R')" />
+                </HBox>
 
-			<OverflowToolbar visible="{= ${master>/progress_status_code} === 'A' ? true : false}">
-                <ToolbarSpacer />
-                <Button id="pageEditButton" type="Transparent" text="{I18N>/EDIT}" press=".onPageEditButtonPress" />
-				<Button id="pageSaveButton" type="Transparent" text="{I18N>/DRAFT}" press=".onPageSaveButtonPress('D')" />
-                <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteButtonPress"/>
-                <Button id="pageSubmitButton" type="Emphasized" text="{I18N>/REQUEST}" press=".onPageSaveButtonPress('R')" />
-            </OverflowToolbar>
+                <HBox visible="{= ${master>/progress_status_code} === 'A' ? true : false}" alignItems="End" justifyContent="End">
+                    <Button id="pageEditButton" type="Transparent" text="{I18N>/EDIT}" press=".onPageEditButtonPress" />
+                    <Button id="pageSaveButton" type="Transparent" text="{I18N>/DRAFT}" press=".onPageSaveButtonPress('D')" />
+                    <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteButtonPress"/>
+                    <Button id="pageSubmitButton" type="Emphasized" text="{I18N>/REQUEST}" press=".onPageSaveButtonPress('R')" />
+                </HBox>
 
-            <OverflowToolbar visible="{= ${master>/progress_status_code} === 'B' ? true : false}">
-                <ToolbarSpacer />
-                <Button id="pageRejectButton" type="Transparent" text="{I18N>/REJECT}" press=".onPageCancelButtonPress"/>
-                <Button id="pageApprovalButton" type="Emphasized" text="{I18N>/APPROVAL}" press=".onPageSaveButtonPress('R')" />
-            </OverflowToolbar>
+                <HBox visible="{= ${master>/progress_status_code} === 'B' ? true : false}" alignItems="End" justifyContent="End">
+                    <Button id="pageRejectButton" type="Transparent" text="{I18N>/REJECT}" press=".onPageCancelButtonPress('J')"/>
+                    <Button id="pageApprovalButton" type="Emphasized" text="{I18N>/APPROVAL}" press=".onPageSaveButtonPress('A')" />
+                </HBox>
 
-            <OverflowToolbar visible="{= ${master>/progress_status_code} === 'C' ? true : false}">
-                <ToolbarSpacer />
-                <Button id="pageRejectButton2" type="Transparent" text="{I18N>/REJECT}" press=".onPageCancelButtonPress"/>
-                <Button id="pageConfirmButton" type="Emphasized" text="{I18N>/CONFIRM} {I18N>/CREATE}" press=".onPageSaveButtonPress('R')" />
-            </OverflowToolbar>
+                <HBox visible="{= ${master>/progress_status_code} === 'C' ? true : false}" alignItems="End" justifyContent="End">
+                    <Button id="pageRejectButton2" type="Transparent" text="{I18N>/REJECT}" press=".onPageCancelButtonPress('J')"/>
+                    <Button id="pageConfirmButton" type="Emphasized" text="{I18N>/CONFIRM} {I18N>/CREATE}" press=".onPageSaveButtonPress('C')" />
+                </HBox>
 
-            <!-- <OverflowToolbar visible="{= ${master>/progress_status_code} === 'B' ? true : false}">
-				<ToolbarSpacer />
-                <Button
-                    text="{I18N>/CHANGE_DEVELOPER}"
-                    enabled="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
-                    press=".onMultiInputWithEmployeeValuePress($event, 'changeDeveloper')" />
-                <Button
-                    text="{I18N>/EDIT}" 
-                    enabled="{= !${detailViewModel>/viewMode}}"
-                    press=".onEditToggle" />
-				<Button
-                    text="{I18N>/DRAFT}" 
-                    enabled="{= ${detailViewModel>/viewMode}}"
-                    press=".onDraft" />
-                <Button
-                    text="{I18N>/CANCEL}"
-                    enabled="{= ${detailViewModel>/viewMode}}"
-                    press=".onEditToggle" />
-                <Button
-                    text="{I18N>/DELETE}" 
-                    enabled="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
-                    press=".onDelete" />
-                <Button
-                    type="Emphasized"
-                    text="{I18N>/REQUEST}"
-                    enabled="{= ${detailViewModel>/viewMode}}"
-                    press=".onRequest" />
-			</OverflowToolbar> -->
+                <HBox visible="{= ${master>/progress_status_code} === 'E' ? true : false}" alignItems="End" justifyContent="End">
+                    <Button id="pageListButton" type="Transparent" text="{I18N>/LIST}" press=".onPageListButtonPress"/>
+                </HBox>           
+            </OverflowToolbar>
 		</uxap:footer>
         <!-- footer 끝 -->
 	</uxap:ObjectPageLayout>

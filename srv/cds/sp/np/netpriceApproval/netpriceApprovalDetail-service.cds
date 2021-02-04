@@ -22,7 +22,7 @@
   3. history
     -. 2021.02.01 : 우완희
 *************************************************/
-
+using { cm.Spp_User_Session_View     as CM_SPP_USER_SESSION_VIEW     } from '../../../../../db/cds/cm/util/CM_SPP_USER_SESSION_VIEW-model';
 using { cm.Code_Dtl                  as CM_CODE_DTL                  } from '../../../../../db/cds/cm/CM_CODE_DTL-model';
 using { cm.Code_Lng                  as CM_CODE_LNG                  } from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using { cm.Pur_Operation_Org         as CM_PUR_OPERATION_ORG         } from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
@@ -71,8 +71,8 @@ service NpApprovalDetailService {
 
 
             ,   cam.requestor_empno                             /* requestor */
-			,   CASE WHEN clc.language_code = 'EN' THEN che.user_english_name
-			         WHEN clc.language_code = 'KO' THEN che.user_local_name
+			,   CASE WHEN ssi.LANGUAGE_CODE = 'EN' THEN che.user_english_name
+			         WHEN ssi.LANGUAGE_CODE = 'KO' THEN che.user_local_name
 					 ELSE che.user_english_name
 			    END AS requestor_empnm : String
 
@@ -83,7 +83,7 @@ service NpApprovalDetailService {
                    FROM CM_CODE_LNG AS cd
                   WHERE cd.tenant_id   = cam.tenant_id
                     AND cd.group_code  = 'SP_NET_PRICE_APPR_STATUS'
-                    AND cd.language_cd = clc.language_code
+                    AND cd.language_cd = ssi.LANGUAGE_CODE
                	    AND cd.code        = cam.approve_status_code
 			    )  AS approve_status_name : String
 
@@ -94,7 +94,7 @@ service NpApprovalDetailService {
                    FROM CM_CODE_LNG AS cd
                   WHERE cd.tenant_id   = cam.tenant_id
                     AND cd.group_code  = 'SP_DOCUMENT_TYPE'
-                    AND cd.language_cd = clc.language_code
+                    AND cd.language_cd = ssi.LANGUAGE_CODE
                	    AND cd.code        = pam.net_price_document_type_code
 			    )  AS net_price_document_type_name : String
 
@@ -103,13 +103,13 @@ service NpApprovalDetailService {
                    FROM CM_CODE_LNG AS cd
                   WHERE cd.tenant_id   = cam.tenant_id
                     AND cd.group_code  = 'NET_PRICE_SOURCE_CODE'
-                    AND cd.language_cd = clc.language_code
+                    AND cd.language_cd = ssi.LANGUAGE_CODE
                	    AND cd.code        = pam.net_price_source_code
 			    )  AS net_price_source_name : String
 
 
-			,   CASE WHEN clc.language_code = 'EN' THEN chd.department_english_name
-			         WHEN clc.language_code = 'KO' THEN chd.department_local_name
+			,   CASE WHEN ssi.LANGUAGE_CODE = 'EN' THEN chd.department_english_name
+			         WHEN ssi.LANGUAGE_CODE = 'KO' THEN chd.department_local_name
 					 ELSE chd.department_english_name
 			    END AS requestor_teamnm : String         /* requestor team */
 
@@ -118,15 +118,21 @@ service NpApprovalDetailService {
             ,   cam.approval_contents
 
 
+
         FROM SP_NP_NET_PRICE_APPROVAL_MST   pam
         
+        INNER JOIN CM_SPP_USER_SESSION_VIEW  ssi
+            ON ssi.TENANT_ID         = pam.tenant_id
+           AND ssi.COMPANY_CODE      = pam.company_code
+
+        /*
         INNER JOIN (SELECT a.tenant_id 
 					       ,a.code AS language_code
                        FROM CM_CODE_DTL a
                       WHERE a.group_code = 'CM_LANG_CODE'
-                    ) clc  /* 공통코드 언어코드(EN,KO) */
+                    ) clc  /* 공통코드 언어코드(EN,KO) /
 			ON clc.tenant_id         = pam.tenant_id
-        
+        */
         INNER JOIN CM_APPROVAL_MST          cam
             ON cam.tenant_id         = pam.tenant_id
            AND cam.approval_number   = pam.approval_number

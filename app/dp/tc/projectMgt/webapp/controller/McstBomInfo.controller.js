@@ -586,10 +586,18 @@ sap.ui.define([
 
         },
 
-        onConfirmNext: function() {
+        onSaveNext: function() {
             MessageToast.show("준비중", {at: "center center"});            
         },
         
+        onImportSheet: function() {
+            MessageToast.show("준비중", {at: "center center"});            
+        },
+
+        onExportSheet: function() {
+            MessageToast.show("준비중", {at: "center center"}); 
+        },
+
         onInputWithEmployeeValuePress: function(oEvent){
             //let oDialog = this.byId("employeeDialogBomMapping");
             let oDialog = sap.ui.core.Fragment.byId("fragmentBomMapping","employeeDialogBomMapping")
@@ -687,6 +695,17 @@ sap.ui.define([
          */
         _checkValidDraft: function(aList) {
             var rs = true;
+            var bHavingData = false;
+            $.each(aList, function(nIdx, oRow) {
+                if(oRow._row_state_) {
+                    bHavingData = true;
+                    return false;
+                }
+            });
+            if(!bHavingData) {
+                MessageToast.show(this.I18N.getText("/NCM01006"), {at : "center center"});//변경된 데이터가 없습니다.
+                return false;
+            }
             $.each(aList, function(nIdx, oRow) {
                 if(!oRow.material_code) {
                     MessageToast.show(this.I18N.getText("/MATERIAL_CODE") + " 는(은) 필수 입력값 입니다.", {at : "center center"});

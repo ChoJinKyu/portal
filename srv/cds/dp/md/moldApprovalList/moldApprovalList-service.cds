@@ -18,6 +18,9 @@ using { cm as referer} from '../../../../../db/cds/cm/CM_REFERER-model';
 using { cm as approver} from '../../../../../db/cds/cm/CM_APPROVER-model';
 using {cm.Hr_Department as Dept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 
+using { cm as sppUserSession} from '../../../../../db/cds/cm/util/CM_SPP_USER_SESSION_VIEW-model';
+
+
 namespace dp;
 @path : '/dp.MoldApprovalListService'
 service MoldApprovalListService {
@@ -112,12 +115,12 @@ service MoldApprovalListService {
             , emp.locale_code         
             , emp.department_id   
         from approvalMst.Approval_Mst m 
-        join emp.Hr_Employee emp on m.requestor_empno = emp.employee_number 
-         /* and emp.tenant_id = m.tenant_id  데이터가 안나와서 주석 처리 함 */ 
+        join emp.Hr_Employee emp on m.requestor_empno = emp.employee_number and emp.tenant_id = m.tenant_id 
         join ( select 
             l.code, l.code_name, l.tenant_id
             from codeLng.Code_Lng l  
-            where l.group_code='CM_APPROVE_STATUS' and l.language_cd='KO') cd on cd.code =  m.approve_status_code and  cd.tenant_id = m.tenant_id
+            join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE )
+            where l.group_code='CM_APPROVE_STATUS' ) cd on cd.code =  m.approve_status_code and  cd.tenant_id = m.tenant_id 
         ;
 
     // referer 저장 목록 조회 
@@ -154,21 +157,21 @@ service MoldApprovalListService {
         key hr.tenant_id , 
         key ar.approver_empno , 
         (
-            select l.code_name from codeLng.Code_Lng l
+            select l.code_name from codeLng.Code_Lng l 
+            join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE )
             where
                     l.group_code  = 'CM_APPROVER_TYPE'
                 and l.code        = ar.approver_type_code
-                and l.language_cd = 'KO'
                 and l.tenant_id   = ar.tenant_id
         ) as approver_type_code_nm : String(240),
         ar.approver_type_code , 
         ar.approve_comment , 
         (
-            select l.code_name from codeLng.Code_Lng l
+            select l.code_name from codeLng.Code_Lng l 
+            join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE )
             where
                     l.group_code  = 'CM_APPROVE_STATUS'
                 and l.code        = ar.approve_status_code
-                and l.language_cd = 'KO'
                 and l.tenant_id   = ar.tenant_id
         ) as approve_status_code_nm : String(240),
         ar.approve_status_code , 

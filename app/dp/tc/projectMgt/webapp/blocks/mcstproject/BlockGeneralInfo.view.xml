@@ -484,29 +484,14 @@
                 </layoutData>
             </Label>
             <VBox>
-                <lib-m:CodePicker
-                    placeholder="{detailModel>/buyer_info/user_local_name} {detailModel>/buyer_info/job_title}"
-                    selectedKey="{detailModel>/buyer_info/employee_number}"
-                    keyField="employee_number"
-                    textField="user_local_name"
-                    suggestionItems="{
-                        path: '/',
-                        filters: [
-                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                        ],
-                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                        entityName: 'Employee'
-                    }">
-                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
-                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
-                </lib-m:CodePicker>
-                <!-- <Input id="projectLeaderValueHelp" placeholder="{detailModel>/project_leader_info/user_local_name}"
-                       value="{detailModel>/project_leader_info/employee_number}"
+                <Input value="{detailModel>/buyer_info/user_local_name}"
                        showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
                     <customData>
-                        <core:CustomData key="inputId" value="projectLeaderValueHelp" />
+                        <core:CustomData key="modelName" value="detailModel" />
+                        <core:CustomData key="textPath" value="/buyer_info/user_local_name" />
+                        <core:CustomData key="codePath" value="/buyer_empno" />
                     </customData>
-                </Input> -->
+                </Input>
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -518,22 +503,14 @@
                 </layoutData>
             </Label>
             <VBox>
-                <lib-m:CodePicker
-                    placeholder="{detailModel>/marketing_person_info/user_local_name} {detailModel>/marketing_person_info/job_title}"
-                    selectedKey="{detailModel>/marketing_person_info/employee_number}"
-                    keyField="employee_number"
-                    textField="user_local_name"
-                    suggestionItems="{
-                        path: '/',
-                        filters: [
-                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                        ],
-                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                        entityName: 'Employee'
-                    }">
-                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
-                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
-                </lib-m:CodePicker>
+                <Input value="{detailModel>/marketing_person_info/user_local_name}"
+                       showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
+                    <customData>
+                        <core:CustomData key="modelName" value="detailModel" />
+                        <core:CustomData key="textPath" value="/marketing_person_info/user_local_name" />
+                        <core:CustomData key="codePath" value="/marketing_person_empno" />
+                    </customData>
+                </Input>
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>
@@ -545,22 +522,14 @@
                 </layoutData>
             </Label>
             <VBox>
-                <lib-m:CodePicker
-                    placeholder="{detailModel>/planning_person_info/user_local_name} {detailModel>/planning_person_info/job_title}"
-                    selectedKey="{detailModel>/planning_person_info/employee_number}"
-                    keyField="employee_number"
-                    textField="user_local_name"
-                    suggestionItems="{
-                        path: '/',
-                        filters: [
-                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                        ],
-                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                        entityName: 'Employee'
-                    }">
-                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
-                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
-                </lib-m:CodePicker>
+                <Input value="{detailModel>/planning_person_info/user_local_name}"
+                       showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
+                    <customData>
+                        <core:CustomData key="modelName" value="detailModel" />
+                        <core:CustomData key="textPath" value="/planning_person_info/user_local_name" />
+                        <core:CustomData key="codePath" value="/planning_person_empno" />
+                    </customData>
+                </Input>
                 <layoutData>
                     <layout:GridData span="XL2 L2 M3 S12" />
                 </layoutData>

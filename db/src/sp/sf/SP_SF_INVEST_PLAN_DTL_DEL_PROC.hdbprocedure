@@ -68,7 +68,7 @@ BEGIN
         ELSEIF ::SQL_ERROR_CODE = 10200 THEN
             O_RESULT =  SELECT 
                             'NG' AS RESULT_CODE
-                            ,'ERR_SAVE' AS ERR_TYPE
+                            ,'ERR_DEL' AS ERR_TYPE
                             ,::SQL_ERROR_CODE AS SQL_ERR_CODE
                             ,'' AS DEF_ERR_CODE
                             ,V_FUNDING_APPL_NUMBER AS RTN_FUNDING_APPL_NUMBER 
@@ -126,8 +126,9 @@ BEGIN
             SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;	    
             IF V_CUD_COUNT != 1 THEN
                 SIGNAL V_ERR_DEL SET MESSAGE_TEXT = '';
-            END IF;
-			    
+            END IF
+            ;
+                
 		END;
 		
 	END FOR;

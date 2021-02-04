@@ -16,6 +16,10 @@
     text-align: right !important;
 }
 
+.AlignC{
+    text-align: center !important;
+}
+
 .AlignL {
     text-align: left !important;
 }
@@ -90,7 +94,7 @@
 } */
 
 .sapUiAFLayoutItem {
-    max-width: 24rem !important;
+    max-width: 38rem !important;
 }
 
 

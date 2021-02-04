@@ -66,7 +66,7 @@
                 </t:template>
             </t:Column>
             <t:Column width="10rem">
-                <Label text="{I18N>/MATERIAL_CODE}" textAlign="Center" width="100%" />
+                <Label text="{I18N>/MATERIAL_CODE}" textAlign="Center" width="100%" required="true" />
                 <t:template>
                     <!-- <Input
                         value="{detailModel>material_code}"
@@ -107,7 +107,7 @@
                 </t:template>
             </t:Column>
             <t:Column width="14rem">
-                <Label text="{I18N>/BASIS}" textAlign="Center" width="100%" />
+                <Label text="{I18N>/BASIS}" textAlign="Center" width="100%" required="true" />
                 <t:template>
                     <VBox>
                     <Select
@@ -128,7 +128,7 @@
             </t:Column>
             <t:Column headerSpan="2" width="7rem" visible="{= ${rootModel>/config/DP_VI_SUPPLY_DISPLAY_FLAG} === 'Y' ? true : false}">
                 <t:multiLabels>
-                    <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
+                    <Label text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" required="true" />
                     <Label text="{I18N>/CODE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
@@ -152,13 +152,13 @@
                     </Input> -->
                     <VBox>
                     <Input
-                        visible="{detailViewModel>/viewMode}"
+                        visible="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode}  ? true : false }"
                         value="{detailModel>supplier_local_name}"
                         tooltip="{detailModel>supplier_local_name}"
                         showValueHelp="true"
                         valueHelpRequest=".onSupplierDialogPress">
                     </Input>
-                    <Text text="{detailModel>supplier_local_name}" visible="{= !${detailViewModel>/viewMode}}" />
+                    <Text text="{detailModel>supplier_local_name}" visible="{= !(${detailViewModel>/viewMode} &amp;&amp; ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode})}" />
                     </VBox>
                 </t:template>
             </t:Column>
@@ -175,7 +175,7 @@
                 </t:template>
             </t:Column>
             <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
-                <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
+                <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" required="true" />
                 <t:template>
                     <VBox>
                     <Input 
@@ -208,7 +208,7 @@
                 </t:template>
             </t:Column>
             <t:Column width="6rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
-                <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
+                <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%" required="true" />
                 <t:template>
                     <VBox>
                     <ComboBox
@@ -243,7 +243,7 @@
             <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                 <t:multiLabels>
                     <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
-                    <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
+                    <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" required="true" />
                 </t:multiLabels>
                 <t:template>
                     <VBox>
@@ -278,7 +278,7 @@
             <t:Column width="6rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                 <t:multiLabels>
                     <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
-                    <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
+                    <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%" required="true" />
                 </t:multiLabels>
                 <t:template>
                     <VBox>
@@ -314,7 +314,7 @@
             <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                 <t:multiLabels>
                     <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
-                    <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
+                    <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" required="true" />
                 </t:multiLabels>
                 <t:template>
                     <VBox>
@@ -349,7 +349,7 @@
             <t:Column width="6rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                 <t:multiLabels>
                     <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
-                    <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
+                    <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%" required="true" />
                 </t:multiLabels>
                 <t:template>
                     <VBox>
@@ -403,13 +403,13 @@
                     </VBox>
                 </t:template>
                 </t:Column>
-            <t:Column width="12rem">
+            <t:Column width="10rem">
                 <t:multiLabels>
                     <Label text="{I18N>/FAMILY_MATERIAL_CODE}" textAlign="Center" width="100%" />
                     <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <Text text="{detailModel>family_supplier_code}" />
+                    <Text text="{detailModel>family_supplier_code}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
             <t:Column width="12rem">

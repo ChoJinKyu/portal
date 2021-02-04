@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.vi.basePriceArlMgt.controller.BasePriceDetail"
+<mvc:View controllerName="dp.vi.basePriceProgressStatusMgt.controller.BasePriceDetail"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns="sap.m"
@@ -213,7 +213,7 @@
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
                             <!-- Approval & Reference 시작 -->
-                            <core:Fragment fragmentName="dp.vi.basePriceArlMgt.view.ApprovalLine" type="XML" />
+                            <core:Fragment fragmentName="basePriceArlMgt.view.ApprovalLine" type="XML" />
                             <!-- Approval & Reference 끝 -->
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
@@ -224,7 +224,7 @@
 
         <!-- footer 시작 -->
         <uxap:footer>
-			<OverflowToolbar visible="{= ${detailModel>/approve_status_code} === 'DR' || ${detailModel>/approve_status_code} === '' ? true : false}">
+			<OverflowToolbar visible="false">
 				<ToolbarSpacer />
                 <Button
                     text="{I18N>/CHANGE_DEVELOPER}"

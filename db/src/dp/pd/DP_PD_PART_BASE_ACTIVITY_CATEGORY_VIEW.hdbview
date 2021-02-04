@@ -1,0 +1,30 @@
+VIEW DP_PD_PART_BASE_ACTIVITY_CATEGORY_VIEW AS
+SELECT pat.tenant_id,
+      pat.activity_code,				
+      pat.category_group_code,
+      pat.category_code,
+      (select code_name 
+         from cm_code_lng
+      	where tenant_id = pat.tenant_id
+      	  and group_code = 'DP_PD_CATEGORY_GROUP'
+      	  and code = pat.category_group_code
+      	  and language_cd = 'KO'
+      ) as category_group_name,
+      (select code_name 
+         from dp_pd_part_category_lng
+      	where tenant_id = pat.tenant_id
+      	  and category_group_code = pat.category_group_code
+      	  and category_code = pat.category_code
+      	  and language_cd = 'KO'
+      ) as category_name,
+      pat.active_flag,
+      pat.s_grade_standard_days,
+      pat.a_grade_standard_days,
+      pat.b_grade_standard_days,
+      pat.c_grade_standard_days,
+      pat.d_grade_standard_days,
+      pat.update_user_id,
+      pat.local_update_dtm
+       FROM dp_pd_part_base_activity_category pat
+  where pat.tenant_id = 'L2101'
+;

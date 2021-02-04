@@ -24,7 +24,7 @@ sap.ui.define([
     Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, JSONModel, ListItem) {
     "use strict";
 
-    var _aValidTabKeys = ["Tenant", "Company", "Plant", "Purchasing", "Unit", "Division"];
+    // var _aValidTabKeys = ["Tenant", "Company", "Plant", "Purchasing", "Unit", "Division"];
 
     return BaseController.extend("cm.organizationMgt.controller.MainList", {
 
@@ -110,16 +110,16 @@ sap.ui.define([
             oArgs = oEvent.getParameter("arguments");
             oView = this.getView();
 
-            oQuery = oArgs["?query"];
-            if (oQuery && _aValidTabKeys.indexOf(oQuery.tab) > -1) {
-                oView.getModel("view").setProperty("/selectedTabKey", oQuery.tab);
-            } else {
-                this.getRouter().navTo("mainList", {
-                    "?query": {
-                        tab: _aValidTabKeys[0]
-                    }
-                }, false /*history*/);
-            }
+            // oQuery = oArgs["?query"];
+            // if (oQuery && _aValidTabKeys.indexOf(oQuery.tab) > -1) {
+            //     oView.getModel("view").setProperty("/selectedTabKey", oQuery.tab);
+            // } else {
+            //     this.getRouter().navTo("mainList", {
+            //         "?query": {
+            //             tab: _aValidTabKeys[0]
+            //         }
+            //     }, false /*history*/);
+            // }
         },
 
         onSelectedKey: function (oEvent) {
@@ -127,11 +127,11 @@ sap.ui.define([
             aTableSearchState.push(new Filter("tenant_id", FilterOperator.EQ, "NotTenant"));
             var oCtx = this.getView().getBindingContext();
             var selectedKey = oEvent.getParameter("selectedKey");
-            this.getRouter().navTo("mainList", {
-                "?query": {
-                    tab: oEvent.getParameter("selectedKey")
-                }
-            }, false /*without history*/);
+            // this.getRouter().navTo("mainList", {
+            //     "?query": {
+            //         tab: oEvent.getParameter("selectedKey")
+            //     }
+            // }, false /*without history*/);
 
         },
 

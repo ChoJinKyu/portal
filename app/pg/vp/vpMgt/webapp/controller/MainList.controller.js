@@ -41,6 +41,7 @@ sap.ui.define([
     "sap/ui/table/Column",
     "ext/cm/util/control/ui/EmployeeDialog",
     "ext/cm/util/control/ui/DepartmentDialog",
+    "ext/pg/util/control/ui/MaterialDialogPop",
 
 ], function (BaseController,
     History,
@@ -83,7 +84,8 @@ sap.ui.define([
     HBox,
     Column,
     EmployeeDialog,
-    DepartmentDialog
+    DepartmentDialog,
+    MaterialDialogPop
 
 
 ) {

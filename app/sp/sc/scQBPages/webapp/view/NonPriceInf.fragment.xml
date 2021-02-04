@@ -30,8 +30,8 @@
         title="Non Price"> 
         <VBox class="sapUiLargeMargin">
             <!-- Header 입력 start -->
-            <VBox>
-                <HBox class="sapUiTinyMarginBottom">
+            <VBox class="sapUiSmallMarginBegin" width="80%">
+                <HBox class="sapUiTinyMarginBottom" width="100%">
                     <VBox width="15%" class="sapUiLargeMarginEnd" >
                         <Label  text="평가항목 유형" 
                                 required="true"
@@ -46,21 +46,22 @@
                                 value="{NPHeader>/h1}"/> -->
                         
                     </VBox>
-                    <VBox width="60%" class="sapUiLargeMarginBegin">
+                    
+                    <VBox width="85%" class="marginLargeL">
                         <Label  text="요구사항" 
                                 required="true"
                                 class="sapMLabelNoText"/>
-                        <Input  value="{NPHeaderModel>/h2}" class="sapMLabelNoText"/>
+                        <Input  value="{NPHeaderModel>/h2}" class="sapMLabelNoText" />
                     </VBox>
                 </HBox>
-                <HBox class="sapUiTinyMarginBottom">
-                    <VBox width="85%">
+                <HBox class="sapUiTinyMarginBottom" width="100%">
+                    <VBox width="100%">
                         <Label  text="비고" 
                                 class="sapMLabelNoText"/>
-                        <TextArea value="{NPHeaderModel>/h3}" cols="175"/>
+                        <TextArea value="{NPHeaderModel>/h3}" cols="300"/>
                     </VBox>
                 </HBox>
-                <HBox class="sapUiTinyMarginBottom">
+                <HBox class="sapUiTinyMarginBottom" width="100%">
                     <VBox width="15%" class="sapUiLargeMarginEnd">
                         <Label  text="평가 속성" 
                                 required="true"
@@ -92,10 +93,10 @@
             <!-- Header 입력 end -->
 
             <!-- 파일 업로드 start -->
-            <VBox class="sapUiSmallMarginBottom">
-                <Table >
+            <VBox class="sapUiSmallMarginBottom sapUiSmallMarginTop">
+                <Table class="sapUiSmallMarginBottom">
                     <headerToolbar>
-                        <OverflowToolbar>
+                        <OverflowToolbar class="NonPricePopHeader">
                             <content>
                                 <Title text="첨부파일" level="H2"/>
                                 <ToolbarSpacer />
@@ -104,7 +105,7 @@
                             </content>
                         </OverflowToolbar>
                     </headerToolbar>
-                    <columns>
+                    <columns class="NonPricePopTab">
                         <Column 
                             width="50%"
                             hAlign="Center"
@@ -120,11 +121,11 @@
                             <Label text="Description" required="true" />
                         </Column>
                     </columns>
-                    <items>
-                        <ColumnListItem>
+                    <items class="NonPricePopTab">
+                        <ColumnListItem class="NonPricePopTab">
                             <cells>
-                                <Text text="" />
-                                <Text text="" />
+                                <!-- <Text text="" />
+                                <Text text="" /> -->
                             </cells>
                         </ColumnListItem>
                     </items>
@@ -140,7 +141,7 @@
                         mode="MultiSelect"
                         inset="false">
                         <headerToolbar>
-                            <OverflowToolbar>
+                            <OverflowToolbar class="NonPricePopHeader">
                                 <content>
                                     <!-- <Title text="Item Title Name" level="H2"/> -->
                                     <ToolbarSpacer />

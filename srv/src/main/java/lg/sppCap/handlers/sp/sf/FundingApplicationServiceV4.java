@@ -565,9 +565,9 @@ public class FundingApplicationServiceV4 implements EventHandler {
 
                 log.info(v_rs.getString("result_code"));
                 log.info(v_rs.getString("err_type"));
-                log.info(v_rs.getString("err_code"));
+                // log.info(v_rs.getString("err_code"));
                 log.info(v_rs.getString("rtn_funding_appl_number"));
-                log.info(v_rs.getString("rtn_investment_plan_sequence"));
+                // log.info(v_rs.getString("rtn_investment_plan_sequence"));
 
                 if ("NG".equals(v_rs.getString("result_code"))) {
                     log.info("### Call Proc Error!!  ###");

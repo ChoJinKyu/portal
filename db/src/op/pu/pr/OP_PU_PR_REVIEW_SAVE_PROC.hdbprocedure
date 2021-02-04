@@ -76,7 +76,8 @@ BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             --ROLLBACK;
-            O_MSG_TBL = SELECT 'NG' RETURN_CODE, 'PR Review Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')' RETURN_MSG FROM DUMMY;
+            --O_MSG_TBL = SELECT 'NG' AS RETURN_CODE, ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE AS RETURN_MSG FROM DUMMY;
+            O_MSG_TBL = SELECT 'NG' AS RETURN_CODE, ::SQL_ERROR_MESSAGE AS RETURN_MSG FROM DUMMY;
         END;
 
     /**** Check Input Value - Start ****/
@@ -89,13 +90,13 @@ BEGIN
 
     IF  v_sql_rowcnt = 0 THEN
         --SIGNAL param_error SET MESSAGE_TEXT = 'EPG00017' || '-[Required Value Exception]-@-' || 'Param Error.(Please Check Master Data Count)';  --협력사 Pool Master 정보가 없습니다.
-        SIGNAL param_error SET MESSAGE_TEXT = '(Undefined)No data is selected. PR Review Param Error.(Data 선택해주세요.)';
+        SIGNAL param_error SET MESSAGE_TEXT = '(메세지)Data 선택해주세요.';
     END IF;
 
     /* Input Job Type 체크 - 화면에서 넣어서 안해도 된다. */
     IF IFNULL(:I_JOB_TYPE, '-1') = '-1' OR TRIM(' ' FROM :I_JOB_TYPE ) = '' THEN
-        --SIGNAL param_error SET MESSAGE_TEXT = '(Undefined)Job Type information is missing. PR Review Param Error.(Please Check Job Type)';
-        SIGNAL param_error SET MESSAGE_TEXT = '(Undefined)Job Type information is missing. PR Review Param Error.(Job Type을 확인해 주세요.)';
+        --SIGNAL param_error SET MESSAGE_TEXT = '(메세지)Job Type information is missing. PR Review Param Error.(Please Check Job Type)';
+        SIGNAL param_error SET MESSAGE_TEXT = '(메세지)Job Type을 확인해 주세요.';
     END IF;
 
     v_tenant_id = :I_PR_ITEM_TBL.TENANT_ID[1];
@@ -120,8 +121,8 @@ BEGIN
     -- 구매담당자변경일때 Buyer정보가 있어야 한다.
     IF (:I_JOB_TYPE = 'CHANGE') THEN
         IF IFNULL(:I_BUYER_EMPNO, '-1') = '-1' OR TRIM(' ' FROM :I_BUYER_EMPNO ) = '' THEN
-            --SIGNAL param_error SET MESSAGE_TEXT = '(Undefined)Buyer information is missing. PR Review Param Error.(Please Check Buyer Empno)';
-            SIGNAL param_error SET MESSAGE_TEXT = '(Undefined)Buyer information is missing. PR Review Param Error.(구매담당자를 선택해주세요.)';
+            --SIGNAL param_error SET MESSAGE_TEXT = '(메세지)Buyer information is missing. PR Review Param Error.(Please Check Buyer Empno)';
+            SIGNAL param_error SET MESSAGE_TEXT = '(메세지)구매담당자를 선택해주세요.';
         END IF;
 
         -- I_BUYER_EMPNO로 v_buyer_department_code 조회
@@ -153,7 +154,7 @@ BEGIN
         ;
 
         IF v_sql_rowcnt > 0 THEN
-            SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Create status check.(결재완료, 생성완료 상태만 진행 할 수 있습니다.)';
+            SIGNAL status_check SET MESSAGE_TEXT = '(메세지)결재완료, 생성완료 상태만 진행 할 수 있습니다.';
         END IF;
 
         /* 구매담당자 본인꺼만 작업 진행이 가능하지만 구매담당자변경(본인 또는 본인 부서)과 RFQ작성(RFQ), 입찰작성(BIDDING) (자동으로 본인을 담당자로 변경 후 진행)은 제외 */
@@ -168,8 +169,8 @@ BEGIN
         ;
 
         IF v_sql_rowcnt = 0 AND (:I_JOB_TYPE != 'CHANGE' AND :I_JOB_TYPE != 'RFQ' AND :I_JOB_TYPE != 'BIDDING') THEN
-            --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please check ownership.(You can only proceed with your own purchase.)';
-            SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please check ownership.(본인꺼만 진행이 가능합니다.)';
+            --SIGNAL status_check SET MESSAGE_TEXT = '(메세지)Please check ownership.(You can only proceed with your own purchase.)';
+            SIGNAL status_check SET MESSAGE_TEXT = '(메세지)자신의 담당 품목이 아닙니다. 구매담당자 변경(지정) 후 진행해주세요.';
         END IF;
 
         /* 마감된 구매요청건은 마감취소 외 다른 작업을 못한다. */
@@ -184,8 +185,8 @@ BEGIN
         ;
 
         IF v_sql_rowcnt > 0 AND :I_JOB_TYPE != 'CLOSING_CANCEL' THEN
-            --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.(Closed items cannot be processed.)';
-            SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.(마감된 구매요청건은 진행 할 수 없습니다.)';
+            --SIGNAL status_check SET MESSAGE_TEXT = '(메세지)Please PR Review status check.(Closed items cannot be processed.)';
+            SIGNAL status_check SET MESSAGE_TEXT = '(메세지)마감된 구매요청건은 진행 할 수 없습니다.';
         END IF;
         /* 공통 Check - End */
 
@@ -235,14 +236,14 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.(You cannot request a rewrite. Items in progress exist.)';
-                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.(다른 진행중인 요청건이 존재해서 재작성 요청을 할 수 없습니다.)';
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(메세지)Please PR Review status check.(You cannot request a rewrite. Items in progress exist.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(메세지)다른 진행중인 요청건이 존재해서 재작성 요청을 할 수 없습니다.';
                     END IF;
 
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
-                            SIGNAL txn_error SET MESSAGE_TEXT = '(Undefined)PR Review Processing error.(REWRITE)';
+                            SIGNAL txn_error SET MESSAGE_TEXT = '(메세지)PR Review Processing error.(REWRITE)';
                         END;
 
                         -- PR_NUMBER로 한번에 Update 하자.
@@ -284,8 +285,8 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.(Closed items exist.)';
-                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.(마감된 구매요청건이 존재합니다.)';
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(메세지)Please PR Review status check.(Closed items exist.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(메세지)마감된 구매요청건이 존재합니다.';
                     END IF;
 
                     /* 진행중인 구매요청건도 일부 마감을 할 수 있으므로 가능하게 하자. 그래서 주석처리
@@ -300,15 +301,15 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review status check.(Items in progress cannot be closed.)';
-                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review status check.(진행중인 구매요청건은 마감을 할 수 없습니다.)';
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(메세지)PR Review status check.(Items in progress cannot be closed.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(메세지)진행중인 구매요청건은 마감을 할 수 없습니다.';
                     END IF;
                     */
 
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
-                            SIGNAL txn_error SET MESSAGE_TEXT = '(Undefined)PR Review Processing error.(CLOSING)';
+                            SIGNAL txn_error SET MESSAGE_TEXT = '(메세지)PR Review Processing error.(CLOSING)';
                         END;
 
                         UPDATE OP_PU_PR_DTL PD
@@ -338,14 +339,14 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.((Undefined)Nothing has been closed.)';
-                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please PR Review status check.(마감된 상태만 취소 가능합니다.)';
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(메세지)Please PR Review status check.((메세지)Nothing has been closed.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(메세지)마감된 상태만 취소 가능합니다.';
                     END IF;
 
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
-                            SIGNAL txn_error SET MESSAGE_TEXT = '(Undefined)PR Review Processing error.(CLOSING_CANCEL)';
+                            SIGNAL txn_error SET MESSAGE_TEXT = '(메세지)PR Review Processing error.(CLOSING_CANCEL)';
                         END;
 
                         UPDATE OP_PU_PR_DTL PD
@@ -374,8 +375,8 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review status check.(Purchase requests in progress cannot be changed by the person in charge of purchase.)';
-                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review status check.(진행중인 구매요청건은 구매담당자 변경을 할 수 없습니다.)';
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(메세지)PR Review status check.(Purchase requests in progress cannot be changed by the person in charge of purchase.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(메세지)진행중인 구매요청건은 구매담당자 변경을 할 수 없습니다.';
                     END IF;
 
                     /* 본인과 본인 부서 또는 담당자 지정이 안된 구매요청건만 변경가능 */
@@ -390,14 +391,14 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt = 0 THEN
-                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please check ownership.(Only you or your department purchase request can be changed.)';
-                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Please check ownership.(본인과 본인 부서 또는 담당자 지정이 안된 구매요청건만 변경가능합니다.)';
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(메세지)Please check ownership.(Only you or your department purchase request can be changed.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(메세지)본인과 본인 부서 또는 담당자 지정이 안된 구매요청건만 변경가능합니다.';
                     END IF;
                     
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
-                            SIGNAL txn_error SET MESSAGE_TEXT = '(Undefined)PR Review Processing error.(CHANGE)';
+                            SIGNAL txn_error SET MESSAGE_TEXT = '(메세지)PR Review Processing error.(CHANGE)';
                         END;
 
                         UPDATE OP_PU_PR_DTL PD
@@ -427,8 +428,8 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review Status Error.(I cannot write an RFQ.)';
-                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review Status Error.(진행중인 구매요청건은 RFQ작성을 할 수 없습니다.)';
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(메세지)PR Review Status Error.(I cannot write an RFQ.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(메세지)진행중인 구매요청건은 RFQ작성을 할 수 없습니다.';
                     END IF;
 
                     /* 잔량이 없는 구매요청건은 진행이 불가능하다 */
@@ -442,15 +443,15 @@ BEGIN
                     ;
 
                     IF v_remain_quantity = 0 THEN
-                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Cannot proceed because the remaining quantity is 0.(RFQ)';
-                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)잔량이 없는 구매요청건은 RFQ작성을 진행 할 수 없습니다.';
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(메세지)Cannot proceed because the remaining quantity is 0.(RFQ)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(메세지)잔량이 없는 구매요청건은 RFQ작성을 진행 할 수 없습니다.';
                     END IF;
 
                     /* 구매 담당자를 자신으로 Update 한다. */
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
-                            SIGNAL txn_error SET MESSAGE_TEXT = '(Undefined)PR Review Processing error.(CHANGE)';
+                            SIGNAL txn_error SET MESSAGE_TEXT = '(메세지)PR Review Processing error.(CHANGE)';
                         END;
 
                         UPDATE OP_PU_PR_DTL PD
@@ -481,8 +482,8 @@ BEGIN
                     ;
 
                     IF v_sql_rowcnt > 0 THEN
-                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review status check.(I cannot write an BIDDING.)';
-                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)PR Review status check.(진행중인 구매요청건은 입찰작성을 할 수 없습니다.)';
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(메세지)PR Review status check.(I cannot write an BIDDING.)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(메세지)진행중인 구매요청건은 입찰작성을 할 수 없습니다.';
                     END IF;
 
                     /* 잔량이 없는 구매요청건은 진행이 불가능하다 */
@@ -496,15 +497,15 @@ BEGIN
                     ;
 
                     IF v_remain_quantity = 0 THEN
-                        --SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)Cannot proceed because the remaining quantity is 0.(BIDDING)';
-                        SIGNAL status_check SET MESSAGE_TEXT = '(Undefined)잔량이 없는 구매요청건은 입찰작성을 진행 할 수 없습니다.';
+                        --SIGNAL status_check SET MESSAGE_TEXT = '(메세지)Cannot proceed because the remaining quantity is 0.(BIDDING)';
+                        SIGNAL status_check SET MESSAGE_TEXT = '(메세지)잔량이 없는 구매요청건은 입찰작성을 진행 할 수 없습니다.';
                     END IF;
 
                     /* 구매 담당자를 자신으로 Update 한다. */
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
-                            SIGNAL txn_error SET MESSAGE_TEXT = '(Undefined)PR Review Processing error.(CHANGE)';
+                            SIGNAL txn_error SET MESSAGE_TEXT = '(메세지)PR Review Processing error.(CHANGE)';
                         END;
 
                         UPDATE OP_PU_PR_DTL PD
@@ -522,7 +523,7 @@ BEGIN
                     END;
 
                 ELSE
-                    SIGNAL param_error SET MESSAGE_TEXT = '(Undefined)PR Review Processing error.(Please Check Job Type)';
+                    SIGNAL param_error SET MESSAGE_TEXT = '(메세지)PR Review Processing error.(Please Check Job Type)';
                 END IF;
 
         --END IF;
@@ -536,6 +537,6 @@ BEGIN
     /**** Business Logic - End ****/
 
     --COMMIT;
-    O_MSG_TBL = SELECT 'OK' RETURN_CODE, 'It has been processed successfully.' RETURN_MSG FROM DUMMY;
+    O_MSG_TBL = SELECT 'OK' AS RETURN_CODE, 'It has been processed successfully.' AS RETURN_MSG FROM DUMMY;
 
 END;

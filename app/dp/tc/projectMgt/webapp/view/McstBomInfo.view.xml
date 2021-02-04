@@ -188,20 +188,20 @@
                     <OverflowToolbar>
                         <Title text="{I18N>/BOM} {I18N>/LIST} ({= ${partListModel>/PartListView}.length || 0 })" level="H2"/>
                         <ToolbarSpacer/>
-                        <Button text="Add" type="Transparent" press=".onPartListAddButtonPress" />
-                        <Button text="Delete" type="Transparent" press=".onPartListDeleteButtonPress" />
-                        <Button text="Compare BOM" type="Transparent" press=".onCompareBomPress" />
-                        <Button text="BOM Mapping" type="Transparent" press=".onBomInfoMappingPress" />
-                        <Button text="BOM Info." type="Transparent" press=".onBomInfo" />
-                        <Button text="Draft" type="Transparent" press=".onDraftPress" />
+                        <Button text="{I18N>/ROW_ADD}" type="Transparent" press=".onPartListAddButtonPress" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
+                        <Button text="{I18N>/ROW_DELETE}" type="Transparent" press=".onPartListDeleteButtonPress" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
+                        <Button text="{I18N>/COMPARE_BOM}" type="Transparent" press=".onCompareBomPress" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
+                        <Button text="{I18N>/BOM_MAPPING}" type="Transparent" press=".onBomInfoMappingPress" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
+                        <Button text="{I18N>/BOM}{I18N>/INFORMATION}" type="Transparent" press=".onBomInfo" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
                         <ToolbarSeparator/>
                         <Button text="Search" type="Emphasized" press=".onSearchButtonPress" />
-                        <Button text="Confirm &amp; Next" type="Emphasized" press="" />
+                        <Button text="Save" type="Emphasized" press=".onDraftPress" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
+                        <Button text="Save &amp; Next" type="Emphasized" press=".onSaveNext" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
                         <ToolbarSeparator/>
-                        <Button icon="sap-icon://upload" press=""/>
-                        <Button icon="sap-icon://excel-attachment" press=""/>
-                        <Button icon="sap-icon://group-2" press=""/>
-                        <Button icon="sap-icon://action-settings" press=""/>
+                        <Button icon="sap-icon://upload" press=".onImportSheet" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
+                        <Button icon="sap-icon://excel-attachment" press=".onExportSheet"/>
+                        <!-- <Button icon="sap-icon://group-2" press=""/>
+                        <Button icon="sap-icon://action-settings" press=""/> -->
                     </OverflowToolbar>
                 </t:extension>
                 <t:columns>
@@ -214,11 +214,11 @@
                             }" />
 						</t:template>
                     </t:Column>
-                    <t:Column hAlign="Center" width="12%" >
-                        <Label text="자재코드" required="true" />
+                    <t:Column hAlign="Left" width="8%" >
+                        <Label text="자재코드" required="true" textAlign="Center" width="100%"/>
                         <t:template>
-                            <HBox justifyContent="Center">
-                                <Text text="{partListModel>material_code}" textAlign="Begin" visible="{= ${partListModel>_row_state_} === 'C' ? false : true }" />
+                            <HBox justifyContent="Begin">
+                                <Text text="{partListModel>material_code}" textAlign="Left" width="100%" visible="{= ${partListModel>_row_state_} === 'C' ? false : true }" />
                                 <Input placeholder="Choose codes from the ValueHelp"
                                             value="{partListModel>material_code}"
                                             showValueHelp="true"
@@ -228,15 +228,15 @@
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Left" width="auto" >
-                        <Label text="자재설명" textAlign="Center" width="100%"/>
+                        <Label text="자재설명" required="true" textAlign="Center" width="100%"/>
                         <t:template>
 							<Text text="{partListModel>material_desc}"/>
 						</t:template>
                     </t:Column>
-                    <t:Column hAlign="Center" width="10em" >
-                        <Label text="단위" />
+                    <t:Column hAlign="Left" width="10em" >
+                        <Label text="단위" required="true" textAlign="Center" width="100%"/>
                         <t:template>
-                            <HBox justifyContent="Center">
+                            <HBox justifyContent="Begin">
                                 <Text text="{partListModel>uom_name}" textAlign="Center" visible="{= ${partListModel>_row_state_} === 'C' ? false : true }"/>
                                 <!-- <Input value="{partListModel>uom_name}" visible="{= ${partListModel>_row_state_} === 'C' ? true : false }"/> -->
                                 <ComboBox
@@ -257,8 +257,8 @@
                             </HBox>
 						</t:template>
                     </t:Column>
-                    <t:Column hAlign="End" width="10em" >
-                        <Label text="소요량" textAlign="Center" width="100%" />
+                    <t:Column hAlign="End" width="8em" >
+                        <Label text="소요량" required="true" textAlign="Center" width="100%" />
                         <t:template>
                             <HBox justifyContent="End">
                                 <Text text="{
@@ -270,7 +270,7 @@
                             </HBox>
 						</t:template>
                     </t:Column>
-                    <t:Column hAlign="Center" width="15em" >
+                    <t:Column hAlign="Center" width="8em" >
                         <Label text="변경정보" />
                         <t:template>
                             <tnt:InfoLabel
@@ -283,7 +283,7 @@
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="10%" >
-                        <Label text="소요량 차이&#10;&#13;(목표 比)" />
+                        <Label text="{I18N>/REQ_QTY_DIFFERENCE}" />
                         <t:template>
                             <HBox>
                                 <Text text="{partListModel>material_reqm_diff_quantity}"/>
@@ -291,11 +291,11 @@
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="15%" >
-                        <Label text="Mapping Info." />
+                        <Label text="{I18N>/MAPPING_RSN}" />
                         <t:template>
                             <!-- <Text text="{partListModel>eng_change_number}"/> -->
                             <Link
-                                text="{partListModel>eng_change_number}"
+                                text="{partListModel>change_reason}"
                                 emphasized="true"
                                 press=".onChangeNumberLinkPress" />
 						</t:template>
