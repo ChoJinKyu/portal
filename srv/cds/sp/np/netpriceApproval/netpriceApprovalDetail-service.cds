@@ -117,7 +117,8 @@ service NpApprovalDetailService {
 
             ,   cam.approval_contents
 
-
+            ,	clc.language_code
+            
         FROM SP_NP_NET_PRICE_APPROVAL_MST   pam
         
         INNER JOIN (SELECT a.tenant_id 
