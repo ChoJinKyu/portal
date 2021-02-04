@@ -100,6 +100,7 @@ sap.ui.define([
             //벤더 레벨1
             this.oVendorPoolLvl1 = new ComboBox({
                 id: "vendorPoolLvl1Sp",
+                width : "90%",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -115,6 +116,7 @@ sap.ui.define([
             //벤더 레벨2
             this.oVendorPoolLvl2 = new ComboBox({
                 id: "vendorPoolLvl2Sp",
+                width : "90%",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -130,6 +132,7 @@ sap.ui.define([
             //벤더 레벨3
             this.oVendorPoolLvl3 = new ComboBox({
                 id: "vendorPoolLvl3Sp",
+                width : "90%",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -145,6 +148,7 @@ sap.ui.define([
             //벤더 레벨4
             this.oVendorPoolLvl4 = new ComboBox({
                 id: "vendorPoolLvl4Sp",
+                width : "90%",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -160,6 +164,7 @@ sap.ui.define([
             //벤더 레벨5
             this.oVendorPoolLvl5 = new ComboBox({
                 id: "vendorPoolLvl5Sp",
+                width : "90%",
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -412,7 +417,7 @@ sap.ui.define([
         createTableColumns: function () {
             return [
                 new Column({
-                    width: "10rem",
+                    width: "8rem",
                     label: new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT") }),
                     template: new Text({ text: ""})
                 }),
@@ -432,12 +437,12 @@ sap.ui.define([
                     template: new Text({ text: "{vendor_pool_level3_code}" })
                 }),
                 new Column({
-                    width: "10rem",
+                    width: "8rem",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_CODE") }),
                     template: new Text({ text: "{supplier_code}" })
                 }),
                 new Column({
-                    width: "10rem",
+                    width: "15rem",
                     label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_LOCAL_NAME") }),
                     template: new Text({ text: "{supplier_local_name}" })
                 }),
@@ -534,8 +539,18 @@ sap.ui.define([
             
             // 세션에서 받아오는 필터 value
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
-            aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.language));
-            aFilters.push(new Filter("supplier_company_code", FilterOperator.EQ, this.oSearchObj.companyCode));
+             if (!!this.oSearchObj.tanentId) {
+                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
+            }
+
+            if (!!this.oSearchObj.languageCd) {
+                aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.languageCd));
+            }
+
+            if (!!this.oSearchObj.companyCode) {
+                aFilters.push(new Filter("company_code", FilterOperator.EQ, this.oSearchObj.companyCode)); 
+            }
+
 
             // 조회조건에서 가져오는 value
           
