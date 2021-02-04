@@ -17,7 +17,7 @@ sap.ui.define([
         DateFormatter, NumberFormatter, EmployeeDialog, MaterialMasterDialog) {
     "use strict";
 
-    var sSelectedDialogPath, sTenantId, oDialogInfo;
+    var _sTenantId;
 
     return BaseController.extend("dp.vi.basePriceProgressStatusMgt.controller.BasePriceList", {
         dateFormatter: DateFormatter,
@@ -46,11 +46,11 @@ sap.ui.define([
 
         onInit: function () {
             var oRootModel = this.getOwnerComponent().getModel("rootModel");
-            sTenantId = oRootModel.getProperty("/tenantId");
+            _sTenantId = oRootModel.getProperty("/tenantId");
 
             // 초기 filter값 세팅
             var oToday = new Date();
-            var oFilter = {tenantId: sTenantId,
+            var oFilter = {tenantId: _sTenantId,
                                 materialCodes: [],
                                 dateValue: new Date(this._changeDateString(new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30), "-")),
                                 secondDateValue: new Date(this._changeDateString(oToday, "-")),
@@ -89,8 +89,8 @@ sap.ui.define([
         onSearch: function () {
             var oFilterModel = this.getModel("filterModel");
             var oFilterModelData = oFilterModel.getData();
-            var aMasterFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
-            var aDetailFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
+            var aMasterFilters = [new Filter("tenant_id", FilterOperator.EQ, _sTenantId)];
+            var aDetailFilters = [new Filter("tenant_id", FilterOperator.EQ, _sTenantId)];
             var aType = oFilterModelData.type || [];
             var sCompanyCode = oFilterModelData.company_code;
             var sOrgCode = oFilterModelData.org_code;
@@ -214,7 +214,7 @@ sap.ui.define([
                                 aList.push($.extend(true, {}, oMaster, oDetail));
 
                                 let aTempFilters = [];
-                                aTempFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenantId));
+                                aTempFilters.push(new Filter("tenant_id", FilterOperator.EQ, _sTenantId));
                                 aTempFilters.push(new Filter("approval_number", FilterOperator.EQ, oDetail.approval_number));
                                 aTempFilters.push(new Filter("item_sequence", FilterOperator.EQ, oDetail.item_sequence));
                                 aItemSequenceFilters.push(new Filter({
@@ -329,40 +329,54 @@ sap.ui.define([
          * 상세 페이지로 이동(basePriceArlMst에 있는 Detail화면으로 이동)
          */
         onGoDetail: function (oEvent) {
+            // var oListModel = this.getModel("listModel");
+            // var oBindingContext = oEvent.getParameter("rowBindingContext");
+
+            // if( oBindingContext ) {
+            //     var sPath = oBindingContext.getPath();
+            //     var oRootModel = this.getModel("rootModel");
+            //     var oSelectedData = oListModel.getProperty(sPath);
+
+            //     //portal에 있는 toolPage 
+            //     var oToolPage = this.getView().oParent.oParent.oParent.oContainer.oParent;
+            //     //이동하려는 app의 component name,url
+            //     var sComponent = "dp.vi.basePriceArlMgt",
+            //         sUrl = "../dp/vi/basePriceArlMgt/webapp";
+
+            //     var changeHash = "2/2";         //넘겨줄 hash 값
+            //     changeHash += "/" + oSelectedData.tenant_id + "/" + oSelectedData.approval_number + "/" + oSelectedData.approval_type_code;
+            //     HashChanger.getInstance().replaceHash("");
+
+            //     Component.load({
+            //         name: sComponent,
+            //         url: sUrl
+            //     }).then(function (oComponent) {
+            //         var oContainer = new ComponentContainer({
+            //             name: sComponent,
+            //             async: true,
+            //             url: sUrl
+            //         });
+            //         oToolPage.removeAllMainContents();
+            //         oToolPage.addMainContent(oContainer);
+            //         //hash setting
+            //         HashChanger.getInstance().setHash(changeHash);
+            //     }).catch(function (e) {
+            //         MessageBox.show("error");
+            //     })
+            // }
+
             var oListModel = this.getModel("listModel");
             var oBindingContext = oEvent.getParameter("rowBindingContext");
 
+            // 테이블 Row를 클릭했을 경우
             if( oBindingContext ) {
                 var sPath = oBindingContext.getPath();
                 var oRootModel = this.getModel("rootModel");
                 var oSelectedData = oListModel.getProperty(sPath);
+                oRootModel.setProperty("/selectedData", oSelectedData);
 
-                //portal에 있는 toolPage 
-                var oToolPage = this.getView().oParent.oParent.oParent.oContainer.oParent;
-                //이동하려는 app의 component name,url
-                var sComponent = "dp.vi.basePriceArlMgt",
-                    sUrl = "../dp/vi/basePriceArlMgt/webapp";
-
-                var changeHash = "2/2";         //넘겨줄 hash 값
-                changeHash += "/" + oSelectedData.tenant_id + "/" + oSelectedData.approval_number + "/" + oSelectedData.approval_type_code;
-                HashChanger.getInstance().replaceHash("");
-
-                Component.load({
-                    name: sComponent,
-                    url: sUrl
-                }).then(function (oComponent) {
-                    var oContainer = new ComponentContainer({
-                        name: sComponent,
-                        async: true,
-                        url: sUrl
-                    });
-                    oToolPage.removeAllMainContents();
-                    oToolPage.addMainContent(oContainer);
-                    //hash setting
-                    HashChanger.getInstance().setHash(changeHash);
-                }).catch(function (e) {
-                    MessageBox.show("error");
-                })
+                this.getModel("rootModel").setProperty("/selectedApprovalType", oSelectedData.approval_type_code);
+                this.getRouter().navTo("basePriceDetail");
             }
         },
 
@@ -378,7 +392,7 @@ sap.ui.define([
                     multiSelection: true,
                     items: {
                         filters:[
-                            new Filter("tenant_id", FilterOperator.EQ, sTenantId)
+                            new Filter("tenant_id", FilterOperator.EQ, _sTenantId)
                         ]
                     }
                 })
@@ -410,7 +424,7 @@ sap.ui.define([
                     multiSelection: true,
                     items: {
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, sTenantId)
+                            new Filter("tenant_id", FilterOperator.EQ, _sTenantId)
                         ]
                     }
                 });

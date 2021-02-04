@@ -54,7 +54,7 @@
                     <!-- Approval Number 시작 -->
                     <VBox>
                         <Label text="{I18N>/APPROVAL_NUMBER} " />
-                        <Input value="{filterModel>/approvalNumber}" placeholder="VyyyyMMdd" change=".onSearch" />
+                        <Input value="{filterModel>/approvalNumber}" change=".onSearch" />
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
