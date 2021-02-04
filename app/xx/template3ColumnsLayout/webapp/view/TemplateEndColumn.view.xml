@@ -68,15 +68,6 @@
 		</uxap:headerContent>
 
 		<uxap:sections>
-			<uxap:ObjectPageSection titleUppercase="false" title="Path">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-						<form:SimpleForm editable="false" >
-						    <ObjectAttribute title="Full Path" text="{department>/full_path_desc}"/>
-                        </form:SimpleForm>
-					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection>
 
 			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="Department">
 				<uxap:subSections>
@@ -85,22 +76,22 @@
 
                             <core:Title text="Normal" />
                             <Label text="{I18N>/CODE}"/>
-                            <lib-m:EditModeVBox mode="{department>/__metadata/_editMode_}" editable="{endPageViewModel>/isAddedMode}">
+                            <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}" editable="{endPageViewModel>/isAddedMode}">
                                 <Text text="{department>/department_code}"/>
                                 <Input value="{department>/department_code}"/>
                             </lib-m:EditModeVBox>
                             <Label text="Korean Name"/>
-                            <lib-m:EditModeVBox mode="{department>/__metadata/_editMode_}">
+                            <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
                                 <Text text="{department>/department_korean_name}"/>
                                 <Input value="{department>/department_korean_name}"/>
                             </lib-m:EditModeVBox>
                             <Label text="English Name"/>
-                            <lib-m:EditModeVBox mode="{department>/__metadata/_editMode_}">
+                            <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
                                 <Text text="{department>/department_english_name}"/>
                                 <Input value="{department>/department_english_name}"/>
                             </lib-m:EditModeVBox>
                             <Label text="Leader Employee No."/>
-                            <lib-m:EditModeVBox mode="{department>/__metadata/_editMode_}">
+                            <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
                                 <Text text="{department>/department_leader_empno}" />
                                 <Input value="{department>/department_leader_empno}"
                                     showValueHelp="true" valueHelpRequest=".onDepartmentLeaderEmployeeValueHelpPress"/>
@@ -108,7 +99,7 @@
 
                             <core:Title text="Settings" />
                             <Label text="Department Type"/>
-                            <lib-m:EditModeVBox mode="{department>/__metadata/_editMode_}">
+                            <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
                                 <Text text="{department>/department_type_code}" />
                                 <lib-m:CodeComboBox width="100%" showSecondaryValues="true" 
                                     useEmpty="true" selectedKey="{department>/department_type_code}"
@@ -124,7 +115,7 @@
                                 </lib-m:CodeComboBox>
                             </lib-m:EditModeVBox>
                             <Label text="Used"/>
-                            <lib-m:EditModeVBox mode="{department>/__metadata/_editMode_}">
+                            <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
                                 <Text text="{
                                         path: 'department>/use_flag',
                                         formatter: '.viewFormatter.toYesNo'
@@ -141,6 +132,74 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
+			<uxap:ObjectPageSection titleUppercase="false" title="Members">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<Table id="employeeList" 
+								sticky="HeaderToolbar,ColumnHeaders" 
+                                inset="false" 
+                                items="{
+                                    path: 'employee>/'
+                                }"
+                                growing="true"
+                                growingThreshold="10"
+								class="sapFDynamicPageAlignContent" 
+								mode="SingleSelectLeft" 
+								width="auto">
+							<headerToolbar>
+								<OverflowToolbar>
+                                    <Title text="Employees ({= ${employee>/}.length || 0})" level="H2"/>
+									<ToolbarSpacer/>
+									<!-- Add the Personalization button -->
+									<Button id="employeeListAddButton" text="Add" type="Transparent" press=".onEmployeeListAddButtonPress" />
+									<Button id="employeeListDeleteButton" text="Delete" type="Transparent" press=".onEmployeeListDeleteButtonPress" />
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column minScreenWidth="Tablet" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+									<Label text="{I18N>/NAME}" />
+								</Column>
+								<Column minScreenWidth="Tablet" hAlign="Left" demandPopin="true" popinDisplay="WithoutHeader" >
+									<Label text="Job Title" />
+								</Column>
+								<Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
+									<Label text="Gender" />
+								</Column>
+								<Column minScreenWidth="Tablet" hAlign="Right" width="10rem">
+									<Label text="Emp No." />
+								</Column>
+							</columns>
+                            <items>
+                                <ColumnListItem type="Active">
+                                    <cells>
+                                        <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
+                                            <Text text="{employee>user_local_name}"/>
+                                            <Input value="{employee>user_local_name}" required="true"/>
+                                        </lib-m:EditModeVBox>
+                                        <lib-m:EditModeVBox editMode="{endPageViewModel>/isEditMode}">
+                                            <Text text="{employee>job_title}"/>
+                                            <Input value="{employee>job_title}" required="true"/>
+                                        </lib-m:EditModeVBox>
+                                        <Text text="{employee>gender_code}"/>
+                                        <Text text="{employee>employee_number}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+						</Table>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" title="Path">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<form:SimpleForm editable="false" >
+						    <ObjectAttribute title="Full Path" text="{department>/full_path_desc}"/>
+                        </form:SimpleForm>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+            </uxap:ObjectPageSection>
+            
 			<uxap:ObjectPageSection titleUppercase="false" title="History" visible="{= !${endPageViewModel>/isAddedMode}}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
@@ -166,45 +225,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Members">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-						<Table id="endTable" 
-								sticky="HeaderToolbar,ColumnHeaders" 
-								inset="false" 
-                                growing="true"
-                                growingThreshold="10"
-								class="sapFDynamicPageAlignContent" 
-								mode="SingleSelectLeft" 
-								width="auto">
-							<headerToolbar>
-								<OverflowToolbar>
-                                    <Title text="Employees who member of department  ({= ${employee>/}.length || 0})" level="H2"/>
-									<ToolbarSpacer/>
-									<!-- Add the Personalization button -->
-									<Button id="endTableAddButton" text="Add" type="Transparent" press=".onEndTableAddButtonPress" />
-									<Button id="endTableDeleteButton" text="Delete" type="Transparent" press=".onEndTableDeleteButtonPress" />
-								</OverflowToolbar>
-							</headerToolbar>
-							<columns>
-								<Column minScreenWidth="Tablet" hAlign="Right" width="10rem">
-									<Label text="Emp No." />
-								</Column>
-								<Column minScreenWidth="Tablet" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
-									<Label text="{I18N>/NAME}" />
-								</Column>
-								<Column minScreenWidth="Tablet" hAlign="Left" demandPopin="true" popinDisplay="WithoutHeader" >
-									<Label text="Job Title" />
-								</Column>
-								<Column minScreenWidth="Tablet" hAlign="Center" width="8rem">
-									<Label text="Gender" />
-								</Column>
-							</columns>
-						</Table>
-					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection>
-
+            
 		</uxap:sections>
 		
 		<uxap:footer>
@@ -217,7 +238,7 @@
                     ariaHasPopup="Dialog"
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
-				<lib-m:EditModeButton type="Transparent" id="pageEditButton" editPress=".onPageEditButtonPress" cancelPress=".onPageCancelEditButtonPress" />
+				<lib-m:EditModeButton type="Transparent" id="pageEditModeButton" press=".onPageEditModeButtonPress" />
 				<Button type="Transparent" id="pageDeleteButton" text="Delete" press=".onPageDeleteButtonPress" />
 				<Button type="Emphasized" id="pageSaveButton" text="Save" press=".onPageSaveButtonPress" />
 			</OverflowToolbar>

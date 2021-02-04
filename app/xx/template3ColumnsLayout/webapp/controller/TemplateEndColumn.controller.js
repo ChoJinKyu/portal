@@ -1,6 +1,5 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"ext/lib/util/Multilingual",
 	"ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
 	"sap/ui/model/json/JSONModel",
@@ -20,7 +19,7 @@ sap.ui.define([
 	"ext/lib/control/m/CodeComboBox",
 	"cm/util/control/ui/EmployeeDialog",
 	"sap/ui/core/Item",
-], function (BaseController, Multilingual, ManagedModel, ManagedListModel, JSONModel, Validator, Formatter, DateFormatter, 
+], function (BaseController, ManagedModel, ManagedListModel, JSONModel, Validator, Formatter, DateFormatter, 
         Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
         ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, CodeComboBox, EmployeeDialog, Item) {
 	"use strict";
@@ -50,18 +49,15 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-            var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
+            this.setModel(this.getMultilingual().getModel(), "I18N");
+            this.setModel(new JSONModel(), "endPageViewModel");
 			this.setModel(new JSONModel(), "department");
 			this.setModel(new JSONModel(), "employee");
-			this.setModel(new JSONModel(), "endPageViewModel");
-
+            
             this.getRouter().getRoute("endPage").attachPatternMatched(this._onRoutedThisPage, this);
             
-			this.getModel("department").attachPropertyChange(this._onMasterDataChanged.bind(this));
-
-			this._initTableTemplates();
-            this.enableMessagePopover();
+			this.getModel("department").attachPropertyChange(this._onDepartmentPropertyChange.bind(this));
+			this.getModel("employee").attachPropertyChange(this._onEmployeePropertyChange.bind(this));
 		}, 
 
 		/* =========================================================== */
@@ -108,36 +104,42 @@ sap.ui.define([
 		},
 
 		/**
-		 * Event handler for page edit button press
+		 * Event handler for page edit mode button press
 		 * @public
 		 */
-		onPageEditButtonPress: function(){
-			this._toEditMode();
-        },
-        
-		/**
-		 * Event handler for cancel page editing
-		 * @public
-		 */
-        onPageCancelEditButtonPress: function(){
-			var cancelEdit = function(){
-					if(this.getModel("endPageViewModel").getProperty("/isAddedMode") == true){
-						this.onPageNavBackButtonPress.call(this);
-					}else{
-						this.validator.clearValueState(this.byId("page"));
-						this._toViewMode();
-					}
-				}.bind(this);
-				
-            MessageBox.confirm(this.getModel("I18N").getText("/NCM00007"), {
-                title : "Comfirmation",
-                initialFocus : sap.m.MessageBox.Action.CANCEL,
-                onClose : function(sButton) {
+		onPageEditModeButtonPress: function(oEvent){
+            if(oEvent.getSource().getPressed()){
+                var cancelEdit = function(){
+                        if(this.getModel("endPageViewModel").getProperty("/isAddedMode") == true){
+                            this.onPageNavBackButtonPress.call(this);
+                        }else{
+                            this.validator.clearValueState(this.byId("page"));
+                            this._toViewMode();
+                        }
+                    }.bind(this);
+                    
+                
+                if(this.isDepartmentChanged || this.isEmployeeChanged){
+                    MessageBox.confirm(this.getModel("I18N").getText("/NCM00007"), {
+                        title : "Comfirmation",
+                        initialFocus : sap.m.MessageBox.Action.CANCEL,
+                        onClose : function(sButton) {
+                            if(sButton == MessageBox.Action.OK)
+                                cancelEdit();
+                        }
+                    });
+                }else{
                     cancelEdit();
                 }
-            });
+            }else{
+                this._toEditMode();
+            }
         },
 
+		/**
+		 * Event handler to open dialog for changing leader employee of the department
+		 * @public
+		 */
         onDepartmentLeaderEmployeeValueHelpPress: function(oEvent){
             var oInput = oEvent.getSource();
             if(!this.oDepartmentLeaderEmployeeValueHelp){
@@ -186,26 +188,39 @@ sap.ui.define([
 			});
 		},
 
-		onMidTableAddButtonPress: function(){
-			var oTable = this.byId("endTable"),
-				oEmployeeModel = this.getModel("employee");
-			oEmployeeModel.addRecord({
-				"tenant_id": this._sTenantId,
-				"department_code": this._sDepartmentCode,
-				"control_option_level_code": "",
-				"control_option_level_val": "",
-				"department_name": ""
-			}, "/Company");
-            this.validator.clearValueState(this.byId("endTable"));
+		/**
+		 * Event handler for new employee add
+		 * @public
+		 */
+		onEmployeeListAddButtonPress: function(){
+            var oEmployeeModel = this.getModel("employee"),
+                aItems = oEmployeeModel.getProperty("/");
+                
+            aItems.splice(0 || 0, 0, {
+                "tenant_id": this._sTenantId,
+                "employee_number": "1000001",
+                "user_status_code": "C",
+                "user_local_name": "",
+                "assign_type_code": "R",
+                "department_code": this._sDepartmentCode,
+                "job_title": "",
+                "gender_code": "M"
+            });
+			oEmployeeModel.setProperty("/", aItems);
+            this.validator.clearValueState(this.getList());
 		},
 
-		onMidTableDeleteButtonPress: function(){
-			var oTable = this.byId("endTable"),
+		/**
+		 * Event handler for new employee remove
+		 * @public
+		 */
+		onEmployeeListDeleteButtonPress: function(){
+			var oTable = this.getList(),
 				oEmployeeModel = this.getModel("employee"),
 				aItems = oTable.getSelectedItems(),
 				aIndices = [];
 			aItems.forEach(function(oItem){
-				aIndices.push(oEmployeeModel.getProperty("/Company").indexOf(oItem.getBindingContext("employee").getObject()));
+				aIndices.push(oEmployeeModel.getProperty("/").indexOf(oItem.getBindingContext("employee").getObject()));
 			});
 			aIndices = aIndices.sort(function(a, b){return b-a;});
 			aIndices.forEach(function(nIndex){
@@ -213,7 +228,7 @@ sap.ui.define([
 				oEmployeeModel.markRemoved(nIndex);
 			});
 			oTable.removeSelections(true);
-            this.validator.clearValueState(this.byId("endTable"));
+            this.validator.clearValueState(this.getList());
 		},
 		
 		/**
@@ -223,22 +238,24 @@ sap.ui.define([
         onPageSaveButtonPress: function(){
             var oView = this.getView(),
                 oDepartmentModel = this.getModel("department"),
-                oDepartmentModel = this.getModel("employee"),
+                oEmployeeModel = this.getModel("employee"),
                 that = this;
                 
-			// if(!oDepartmentModel.isChanged() && !oDepartmentModel.isChanged()) {
-			// 	MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-			// 	return;
-            // }
+            if(!this.isDepartmentChanged && !this.isEmployeeChanged){
+				MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+				return;
+            }
 
-            if(this.validator.validate(this.byId("page")) !== true) return;
+            // if(this.validator.validate(this.byId("page")) !== true) return;
 
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
+                        oView.setBusy(true);
+                        
+
 						// oTransactionManager.submit({
 						// 	success: function(ok){
 						// 		that._toViewMode();
@@ -256,22 +273,11 @@ sap.ui.define([
 
 		/* =========================================================== */
 		/* internal methods                                            */
-		/* =========================================================== */
-
-		_onMasterDataChanged: function(oEvent){
-			if(this.getModel("endPageViewModel").getProperty("/isAddedMode") == true){
-				var oDepartmentModel = this.getModel("department");
-				var oDepartmentModel = this.getModel("employee");
-				var sTenantId = oDepartmentModel.getProperty("/tenant_id");
-				var sControlOPtionCode = oDepartmentModel.getProperty("/department_code");
-				var oDetailsData = oDepartmentModel.getData();
-				oDetailsData.forEach(function(oItem, nIndex){
-					oDepartmentModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-					oDepartmentModel.setProperty("/"+nIndex+"/department_code", sControlOPtionCode);
-				});
-				oDepartmentModel.setData(oDetailsData);
-			}
-		},
+        /* =========================================================== */
+        
+        getList: function(){
+            return this.byId("employeeList");
+        },
 
 		/**
 		 * When it routed to this page from the other page.
@@ -285,13 +291,13 @@ sap.ui.define([
 			this._sCompanyCode = oArgs.companyCode;
 			this._sDepartmentCode = oArgs.departmentCode;
 
-			if(oArgs.tenantId == "create" && oArgs.departmentCode == "new"){
+			if(oArgs.departmentCode == "new"){
 				//It comes Add button pressed from the before page.
 				this.getModel("endPageViewModel").setProperty("/isAddedMode", true);
 
 				var oDepartmentModel = this.getModel("department");
 				oDepartmentModel.setData({
-					"tenant_id": "L2100",
+					"tenant_id": this._sTenantId,
 					"use_flag": true
 				}, "/Company");
 
@@ -302,12 +308,12 @@ sap.ui.define([
 					"department_code": this._sDepartmentCode,
 					"department_name": ""
 				}, "/Company");
-				this._toEditMode();
+                this._toEditMode();
+                
 			}else{
 				this.getModel("endPageViewModel").setProperty("/isAddedMode", false);
-				
+                
 				var sPath = "/Department(tenant_id='" + this._sTenantId + "',department_code='" + this._sDepartmentCode + "')";
-				oView.setBusy(true);
 				this.getModel().read(sPath, {
 					success: function(oData){
                         this.getModel("department").setProperty("/", oData);
@@ -315,7 +321,7 @@ sap.ui.define([
 					}.bind(this)
 				});
 			
-				oView.setBusy(true);
+                oView.setBusy(true);
 				this.getModel().read("/Employee", {
                     urlParameters: {
                         "$top": 30,
@@ -336,88 +342,54 @@ sap.ui.define([
 
 		_toViewMode: function(){
             var VIEW_MODE = true;
-            this.getModel("department").setProperty("/__metadata/_editMode_", !VIEW_MODE);
+            this.getModel("endPageViewModel").setProperty("/isEditMode", !VIEW_MODE);
 			this.byId("page").setSelectedSection("pageSectionMain");
+            this.byId('pageEditModeButton').setEditMode(!VIEW_MODE);
 			this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
 			this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
 			this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
 
-			this.byId("endTableAddButton").setEnabled(!VIEW_MODE);
-			this.byId("endTableDeleteButton").setEnabled(!VIEW_MODE);
-			this.byId("endTable").setMode(sap.m.ListMode.None);
-			// this.byId("endTable").getColumns()[0].setVisible(!VIEW_MODE);
-			this._bindTable(this.oReadOnlyTemplate, "Navigation");
+			this.byId("employeeListAddButton").setEnabled(!VIEW_MODE);
+			this.byId("employeeListDeleteButton").setEnabled(!VIEW_MODE);
+			this.getList().setMode(sap.m.ListMode.None);
         },
         
 		_toEditMode: function(){
 			var VIEW_MODE = false;
-            this.getModel("department").setProperty("/__metadata/_editMode_", !VIEW_MODE);
+            this.getModel("endPageViewModel").setProperty("/isEditMode", !VIEW_MODE);
 			this.byId("page").setSelectedSection("pageSectionMain");
+            this.byId('pageEditModeButton').setEditMode(!VIEW_MODE);
 			this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
 			this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
 			this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
 
-			this.byId("endTableAddButton").setEnabled(!VIEW_MODE);
-			this.byId("endTableDeleteButton").setEnabled(!VIEW_MODE);
-			this.byId("endTable").setMode(sap.m.ListMode.SingleSelectLeft);
-			// this.byId("endTable").getColumns()[0].setVisible(!VIEW_MODE);
-			this._bindTable(this.oEditableTemplate, "Edit");
-		},
+			this.byId("employeeListAddButton").setEnabled(!VIEW_MODE);
+			this.byId("employeeListDeleteButton").setEnabled(!VIEW_MODE);
+			this.getList().setMode(sap.m.ListMode.MultiSelect);
+        },
 
-		_initTableTemplates: function(){
-			this.oReadOnlyTemplate = new ColumnListItem({
-				cells: [
-					new ObjectIdentifier({
-						text: "{employee>employee_number}"
-					}), 
-					new Text({
-						text: "{employee>user_local_name}"
-					}), 
-					new Text({
-						text: "{employee>job_title}"
-					}), 
-					new Text({
-						text: "{employee>gender_code}"
-					})
-				]
-			});
-
-			this.oEditableTemplate = new ColumnListItem({
-				cells: [
-					new Text({
-						text: "{employee>employee_number}"
-					}), 
-					new Text({
-						text: "{employee>user_local_name}"
-					}), 
-					new Input({
-						value: {
-							path: "employee>job_title",
-                            type: new sap.ui.model.type.String(null, {
-								maxLength: 100
-							}),
-						},
-						required: true
-					}),
-					new Input({
-						value: {
-							path: "employee>gender_code",
-                            type: new sap.ui.model.type.String(null, {
-								maxLength: 100
-							})
-						},
-						required: true
-					})
-				]
-            });
-		},
-
-		_bindTable: function(oTemplate, sKeyboardMode){
-			this.byId("endTable").bindItems({
-				path: "employee>/",
-				template: oTemplate
-			}).setKeyboardMode(sKeyboardMode);
-        }
+		_onDepartmentPropertyChange: function(oEvent){
+            this.isDepartmentChanged = true;
+			if(this.getModel("endPageViewModel").getProperty("/isAddedMode") == true){
+				var oDepartmentModel = this.getModel("department");
+				var oEmployeeModel = this.getModel("employee");
+				var sTenantId = oDepartmentModel.getProperty("/tenant_id");
+				var sDepartmentCode = oDepartmentModel.getProperty("/department_code");
+				var aItems = oEmployeeModel.getData();
+				aItems.forEach(function(oItem, nIndex){
+					oEmployeeModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
+					oEmployeeModel.setProperty("/"+nIndex+"/department_code", sDepartmentCode);
+				});
+				oEmployeeModel.setData(aItems);
+			}
+        },
+        
+        _onEmployeePropertyChange: function(oEvent){
+            this.isEmployeeChanged = true;
+            if(!this.updatedEmployees) this.updatedEmployees = [];
+            this.updatedEmployees.push(oEvent.getParameter("context").getObject());
+            debugger;
+        },
 
 	});
 });

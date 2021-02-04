@@ -266,7 +266,7 @@ sap.ui.define([
         // },
 		
         // onEmployeeListItemPress: function(oEvent){
-        //     if(this.byId('pageEditButton').getPressed() === true){
+        //     if(this.byId('pageEditModeButton').getPressed() === true){
         //         var oModel = this.getView().getElementBinding().getModel(),
         //             aItems = this.getList().getItems(),
         //             selectedPaths = oEvent.getParameter("listItem").getBindingContextPath();
@@ -369,7 +369,7 @@ sap.ui.define([
             // });
             
 			this.byId("page").setSelectedSection("pageSectionMain");
-            this.byId('pageEditButton').setEditMode(!VIEW_MODE);
+            this.byId('pageEditModeButton').setEditMode(!VIEW_MODE);
 			this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
 			this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
 			this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
@@ -389,7 +389,7 @@ sap.ui.define([
             // oModel.setProperty(sPath+"/__metadata/_editMode_", !VIEW_MODE);
             
 			this.byId("page").setSelectedSection("pageSectionMain");
-            this.byId('pageEditButton').setEditMode(!VIEW_MODE);
+            this.byId('pageEditModeButton').setEditMode(!VIEW_MODE);
 			this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
 			this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
 			this.byId("pageNavBackButton").setEnabled(VIEW_MODE);

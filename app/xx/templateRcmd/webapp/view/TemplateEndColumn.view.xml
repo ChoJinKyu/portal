@@ -243,7 +243,7 @@
                     ariaHasPopup="Dialog"
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
-				<lib-m:EditModeButton type="Transparent" id="pageEditButton" press=".onPageEditModeButtonPress" />
+				<lib-m:EditModeButton type="Transparent" id="pageEditModeButton" press=".onPageEditModeButtonPress" />
                 <Button id="employeeListAddButton" text="Add Employee" type="Transparent" press=".onEmployeeListAddButtonPress" />
                 <Button id="employeeListDeleteButton" text="Remove Employees" type="Transparent" press=".onEmployeeListDeleteButtonPress" />
 				<Button type="Transparent" id="pageDeleteButton" text="Delete" press=".onPageDeleteButtonPress" />
