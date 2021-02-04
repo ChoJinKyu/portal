@@ -233,7 +233,8 @@
                         </VBox>    
                         <VBox>
                             <Label text = "{I18N>/DESCRIPTION}" design="Bold" /> 
-                                <Input id="pop_vendor_pool_desc" placeholder="Input data"></Input> 
+                                <TextArea id="pop_vendor_pool_desc" row="5" width="100%" />
+                                <!-- <Input id="pop_vendor_pool_desc" placeholder="Input data"></Input>  -->
                             <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />
                             </layoutData> 
@@ -244,22 +245,13 @@
                     
                                 <VBox id="v_pop_repr_department_code">
                                     <Label text = "{I18N>/DEPARTMENT}" design="Bold" required="true"/> 
-                                        <lib-m:CodePicker id="pop_repr_department_code"
-                                        placeholder="Enter a department name"
-                                        keyField="department_code"
-                                        textField="department_local_name"
-                                        suggestionItems="{
-                                            path: '/',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                            ],
-                                            serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                            entityName: 'Department'
-                                        }">
-                                        <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
-                                            keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
-                                        </lib-m:CodePicker>
-                                        <!-- <Input id="pop_repr_department_code"></Input>  -->
+                                    <HBox>
+                                        <SearchField id="pop_repr_department_name"
+                                            search=".onPopInputWithDeptValuePress" 
+                                            change="resetCode"
+                                            />
+                                        <Input id="pop_repr_department_code" placeholder="Input data" visible ="false"></Input>
+                                    </HBox>                                        
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M6 S12" />
                                     </layoutData> 
