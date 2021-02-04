@@ -217,7 +217,7 @@ sap.ui.define([
             
             var activeFlg = "false";
 
-            if (oMasterData.active_flag === "true") {
+            if (oMasterData.active_flag === true) {
                 activeFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
             }            
 
