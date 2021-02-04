@@ -28,6 +28,12 @@ namespace sp;
 @path : '/sp.netpriceApprovalDetailV4Service'
 service NpApprovalDetailV4Service {
 
+    /* 기본 Result */
+    type DefaultResultType : {
+        return_code      : String(2);
+        return_msg       : String(5000);
+    };
+
     type masterType : {
         tenant_id                       : String(5)     ; // 'L1100'
         company_code                    : String(10)    ; // '회사코드'
@@ -79,11 +85,10 @@ service NpApprovalDetailV4Service {
     /* */
     type refererType : {
         referer_empno                   : String(30)    ; // 참조자사번
-        _row_state_                     : String        ; // CUD
     };
 
     /* */
-    type ParamType : {
+    type SaveParamType : {
         master    : masterType;
         general   : array of generalType;
         approvers : array of approverType;
@@ -95,13 +100,43 @@ service NpApprovalDetailV4Service {
     /**
     
     */
-    type ResultType : {
+    type SaveResultType : {
         return_code      : String(2);
         return_msg       : String(5000);
         approval_number  : String(5000);
     };
 
 
-    action ApprovalSaveProc( param : ParamType ) returns ResultType;
+    action ApprovalSaveProc( param : SaveParamType ) returns SaveResultType;
+
+
+
+
+    /* 상태 변경 Proc Parameter */
+    type StatusChangeParamType : {
+        tenant_id           : String(5) ; // 'L1100'
+        company_code        : String(10); // '회사코드'
+        approval_number     : String(50); // '품의번호'
+    }
+
+
+
+    action ApprovalStatusChagneProc( param : StatusChangeParamType ) returns DefaultResultType;
+
+
+
+
+    /* 상태 변경 Proc Parameter */
+    type DeleteParamType : {
+        tenant_id         : String(5)     ; // 'L1100'
+        company_code      : String(10)    ; // '회사코드'
+        org_type_code     : String(2)     ; // '구매운영조직유형'
+        org_code          : String(10)    ; // '구매운영조직코드'
+        approval_number   : String(50)    ; // '품의번호'
+    }
+
+
+    action ApprovalDeleteProc( param : StatusChangeParamType ) returns DefaultResultType;
+
 
 }

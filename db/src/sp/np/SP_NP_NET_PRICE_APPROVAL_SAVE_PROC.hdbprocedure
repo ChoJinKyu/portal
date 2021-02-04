@@ -82,7 +82,7 @@ BEGIN
     /* 사용자 정의 Exception시, 종료 처리 : 이전 Exception Catch 부분에서 결과 메시지 등록 됨. */
     DECLARE EXIT HANDLER FOR V_USER_EXCEPTION
     BEGIN
-        
+        -- 아무것도 하지 않습니다.
     END;
 
     /* 사용자 정의 이외 Exception 발생시 처리 : 발생될 가능성 낮음. */
@@ -561,6 +561,6 @@ BEGIN
 
 
     O_RETURN_CODE = 'OK';
-    O_RETURN_MSG  = V_APPROVAL_NUMBER;
+    O_RETURN_MSG  = V_APPROVAL_NUMBER;  -- 처리 완료
                                                 
 END;

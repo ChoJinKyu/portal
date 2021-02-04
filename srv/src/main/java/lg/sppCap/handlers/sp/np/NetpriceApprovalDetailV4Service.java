@@ -26,6 +26,10 @@ import cds.gen.sp.npapprovaldetailv4service.*;
 @ServiceName(NpApprovalDetailV4Service_.CDS_NAME)
 public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements EventHandler {
 
+    /**
+     * 단가 품의 저장 
+     *  - 저장 Procedure 호출
+     */
     @Transactional(rollbackFor = SQLException.class)
     @On(event=ApprovalSaveProcContext.CDS_NAME)
     public void onApprovalSaveProc(ApprovalSaveProcContext context) {   
@@ -38,6 +42,19 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
         Collection<GeneralType> vDetails = vParam.getGeneral();
         Collection<ApproverType> vApprovers = vParam.getApprovers();
         Collection<RefererType> vReferers = vParam.getReferers();
+
+
+        if( isEmpty( master.getTenantId() ) ){
+
+        }else if( isEmpty( master.getCompanyCode() ) ){
+
+        }else if( isEmpty( master.getOrgTypeCode() ) ){
+
+        }else if( isEmpty( master.getOrgCode() ) ){
+
+        }
+
+
 
         String detailTableName = null;
         String approverTableName = null;
@@ -145,6 +162,9 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
 
 
     /**
+     * 품의 상세 정보를 Local Temp 테이블에 등록
+     * - Local Temp 테이블을 생성하여 Insert
+     * - Procedure 호출 후, Local Temp 테이블 삭제 해야 함.
      * 
      * @param vDetails
      * @return
@@ -210,6 +230,9 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
 
 
     /**
+     * 품의 결재자를 Local Temp 테이블에 등록
+     * - Local Temp 테이블을 생성하여 Insert
+     * - Procedure 호출 후, Local Temp 테이블 삭제 해야 함.
      * 
      * @param vApprovers
      * @return
@@ -250,6 +273,9 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
     }
 
     /**
+     * 품의 참조자를 Local Temp 테이블에 등록
+     * - Local Temp 테이블을 생성하여 Insert
+     * - Procedure 호출 후, Local Temp 테이블 삭제 해야 함.
      * 
      * @param vApprovers
      * @return

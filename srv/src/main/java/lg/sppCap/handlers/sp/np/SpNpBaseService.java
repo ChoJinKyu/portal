@@ -1,5 +1,8 @@
 package lg.sppCap.handlers.sp.np;
 
+import java.util.Collection;
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,49 @@ public class SpNpBaseService {
     protected void dropTempTable(String tempTableName){
         if(tempTableName != null && !tempTableName.isEmpty()){
             jdbc.execute( String.format("DROP TABLE %s", tempTableName) );
+        }
+    }
+
+
+
+
+    protected boolean isNotEmpty( Object value ){
+        return !isEmpty( value );
+    }
+
+    protected boolean isEmpty( Object value ){
+
+        if( value == null || value.toString().isEmpty() ){
+            return true;
+
+        }else if( value instanceof Collection ){
+            return ((Collection)value).isEmpty();
+
+        }else if( value instanceof Map ){
+            return ((Map)value).isEmpty();
+        }
+
+        return false;
+    }
+
+    protected String validation( ValidType type, Object value, String valueName ){
+        if( ValidType.REQUIRED.equals( type ) ){
+            if( isEmpty(value) ){
+                return String.format( "%s is required", valueName);
+            }
+        }
+
+        return null;
+    }
+
+
+    public enum ValidType {
+        REQUIRED("required");
+
+        private String name = null;
+
+        ValidType(String name){
+            this.name = name;
         }
     }
 
