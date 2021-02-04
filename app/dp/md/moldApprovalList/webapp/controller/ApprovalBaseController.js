@@ -205,15 +205,14 @@ sap.ui.define([
             });
 
             var oModel2 = this.getModel("plant");
-            oModel2.setTransactionModel(this.getModel("purOrg"));
+            oModel2.setTransactionModel(this.getModel("dpMdUtil"));
 
-            oModel2.read("/Pur_Operation_Org(tenant_id='" + this.tenant_id
+            oModel2.read("/Divisions(tenant_id='" + this.tenant_id
                 + "',company_code='" + this.company_code
-                + "',org_type_code='" + "PL"
                 + "',org_code='" + this.plant_code + "')", {
                 filters: [],
                 success: function (oData) {
-                    // console.log("orgName ", oData);
+                      console.log("orgName ", oData);
                 }
             });
 
