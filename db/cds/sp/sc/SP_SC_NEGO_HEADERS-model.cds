@@ -10,8 +10,8 @@ using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model';
 using {
     sp.Sc_Outcome_Code,
     sp.Sc_Nego_Parent_Type_Code,
-    sp.Sc_Nego_Type_Code,            /*<--폐기예정*/
-    sp.Sc_Nego_Award_Method_Code,
+    sp.Sc_Nego_Type_Code,            
+    sp.Sc_Nego_Award_Method_Code,      
     sp.Sc_Nego_Award_Method_Map,
     sp.Sc_Negotiation_Style_Map,
 } from '../../sp/sc/SP_SC_NEGO_MASTERS-model';
@@ -19,6 +19,7 @@ using {
 /** 타스크럼 재정의[Redefined, Restricted, Materialized 등] */
 using { 
     sp.Sc_Employee_View,
+    sp.Sc_Hr_Department,
     sp.Sc_Pur_Operation_Org
 } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
 
@@ -29,17 +30,16 @@ using {
     sp.Sc_Award_Method_Code_View
 } from '../../sp/sc/SP_SC_REFERENCE_COMMON.model';
 
+// TYPE-POOLS
+using {
+    sp.CurrencyT,
+    sp.AmountT,
+    sp.PriceAmountT,
+    sp.UnitT,
+    sp.QuantityT
+} from '../../sp/sc/SP_SC_NEGO_0TYPE_POOLS-model';
 
 // using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
-
-/*********************************** Local Type ************************************/
-type CurrencyT   : String(5)      @title: '{i18n>currency}';
-type AmountT     : Decimal(28,2);
-type PriceAmountT: Decimal(28,5);
-type UnitT       : String(3)      @title: '{i18n>quantityUnit}';
-type QuantityT   : Decimal(28,3)  @(title: '{i18n>quantity}', Measures.Unit: Units.Quantity );
-/***********************************************************************************/
-
 
 entity Sc_Nego_Headers {
     key tenant_id : type of orgTenant.Org_Tenant : tenant_id @title : '테넌트ID';
@@ -49,7 +49,7 @@ entity Sc_Nego_Headers {
                                               on  Items.tenant_id      = $self.tenant_id
                                               and Items.nego_header_id = $self.nego_header_id;
         reference_nego_header_id        : type of nego_header_id @title : '참조협상헤더ID';
-        previous_nego_header_id         : Integer64          @title : '이존협상헤더ID';
+        previous_nego_header_id         : Integer64          @title : '기존협상헤더ID';
         operation_org_code              : String(10)         @title : '운영조직코드';
         operation_unit_code             : String(10)         @title : '운영단위코드--폐기예정';
         reference_nego_document_number  : Integer            @title : '참조협상문서번호';
@@ -87,6 +87,9 @@ entity Sc_Nego_Headers {
                             on buyer_employee.tenant_id = $self.tenant_id
                               and buyer_employee.employee_number = $self.buyer_empno;
         buyer_department_code           : String(10)         @title : '구매담당자부서코드';
+        buyer_department : Association to Sc_Hr_Department    //UseCase        
+                            on buyer_department.tenant_id = $self.tenant_id
+                              and buyer_department.department_code = $self.buyer_department_code;
         //    ship_to_location_code : Integer   @title: '납품처위치코드' ;
         //    submit_date : Date   @title: '제출일자' ;
         immediate_apply_flag            : String(1)          @title : '즉시적용여부';

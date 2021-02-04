@@ -1,3 +1,5 @@
+namespace sp;
+
 //cds-service sourcing-service.cds
 using {sp.Sc_Nego_Headers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
 using {sp.Sc_Nego_Headers_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
@@ -14,7 +16,10 @@ using {sp.Sc_Nego_Headers_New_Record_View} from '../../../../../db/cds/sp/sc/SP_
     sp.Sc_Nego_Prog_Status_Code_View as scNegoProgStatusCodeView,
 } from '../../../../../db/cds/sp/sc/SP_SC_NEGO_MASTERS-model'; */
 
-namespace sp;
+
+// using {cm.Dummy}         from '../../../../../db/cds/cm/CM_DUMMY-model';
+using {sp.Sc_Session_Local_Func} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_USER_DEFINED_FUNCTION.cds';
+
 
 @path : '/sp.sourcingService'
 service SourcingService {
@@ -40,19 +45,29 @@ service SourcingService {
 
     // Negotiation(견적&입찰) Workbench 정형 View
     // @(title:'UI:Workbench 뷰',description:'Nego(Header+ItemPrices) 정형뷰',readonly) 
-    entity NegoWorkbenchView2 as projection on Sc_Nego_Workbench_View2;
     entity NegoWorkbenchView as projection on Sc_Nego_Workbench_View;
 
-    // using {cm.Dummy}         from '../../../../../db/cds/cm/CM_DUMMY-model';
-    // using {sp.Sc_My_Session} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_USER_DEFINED_FUNCTION.cds';
+    //////////////////////////////////////////////////////////////////////////////
+    // Test Begin
+    entity NegoWorkbenchView2 as projection on Sc_Nego_Workbench_View2;
+    view NegoWorkbenchViewMy as select *,
+        // SP_SC_MY_SESSION( ).tenant_id as my_tenant_id :String(5)
+        // SP_SC_SESSION_LOCAL_FUNC(TENANT_ID: wv.tenant_id).locale_lg as locale_lg :String(2)
+        
+        OP_PU_PR_TEMPLATE_NUMBERS_FUNC( wv.tenant_id, '' ) as  pr_template_numbers1: String(1000)
+        from Sc_Nego_Workbench_View as wv
+    ;
+        
+    // where tenant_id = SP_SC_MY_SESSION( ).tenant_id
+/* 
+    entity NegoSessionUDF    as select from Dummy {
+        Sc_My_Session().locale_lg, 
+        Sc_My_Session().locale, 
+        Sc_My_Session().locale_sap, 
+        Sc_My_Session().tenant_id
+    };
+     */
 
-    // view NegoWorkbenchViewMy as projection on Sc_Nego_Workbench_View where tenant_id = SP_SC_MY_SESSION( ).tenant_id;
-    // entity NegoSessionUDF    as select from Dummy {
-    //     Sc_My_Session().locale_lg, 
-    //     Sc_My_Session().locale, 
-    //     Sc_My_Session().locale_sap, 
-    //     Sc_My_Session().tenant_id
-    // };
-    
-
+    // Test End
+    //////////////////////////////////////////////////////////////////////////////
 }

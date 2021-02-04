@@ -141,6 +141,31 @@ entity Sc_Pur_Operation_Org as
             POO.use_flag
     };
 
+/***********************************************************************************/
+/******************* For NegoHeaders-operation_unit_code ***************************/
+/******************* For NegoItemPrices-operation_unit_code ************************/
+/* 
+// #Sc_Pur_Operation_Org == Pur_Org_Type_Mapping[process_type_code='SP03:견적입찰'] = Pur_Operation_Org =+ Code_Lng[group_code='CM_ORG_TYPE_CODE']
+// #How to use : as association
+using { sp.Sc_Pur_Operation_Org } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+        operation_org : association to Sc_Pur_Operation_Org 
+            on operation_org.tenant_id = $projection.tenant_id
+            and operation_org.company_code = $projection.company_code
+            and operation_org.operation_org_code = $projection.operation_unit_code
+            ; 
+*/
+
+using {pg.Vp_Vendor_Pool_Mst} from '../../pg/vp/PG_VP_VENDOR_POOL_MST-model.cds';
+
+// entity Sc_Pur_Org_Type_Mapping as select from Pur_Org_Type_Mapping distinct {
+//     key tenant_id,
+//     key map(company_code,'*','%',company_code) as company_code : Pur_Org_Type_Mapping:company_code,
+//     key org_type_code
+// } where process_type_code = 'SP03' and use_flag = TRUE;
+
+@cds.autoexpose  // Sc_Pur_Operation_Org = Pur_Org_Type_View[process_type_code='SP03:견적입찰'] + Pur_Operation_Org + Code_Lng[group_code='CM_ORG_TYPE_CODE']
+entity Sc_Vp_Vendor_Pool_Mst as select from Vp_Vendor_Pool_Mst;
+
 /* 
 // #조직 유형 뷰
 select * from cm_Pur_Org_Type_View where 1=1
