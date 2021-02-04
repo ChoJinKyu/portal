@@ -169,10 +169,10 @@ sap.ui.define([
                 });
 
             var bindItemInfo = {
-                    path: '/Divisions',
+                    path: 'dpMdUtil>/Divisions',
                     filters: filter,
                     template: new Item({
-                        key: "{org_code}", text: "[{org_code}] {org_name}"
+                        key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
                     })
                 };
 
@@ -217,10 +217,10 @@ sap.ui.define([
             });
 
             var bindInfo = {
-                    path: '/Divisions',
+                    path: 'dpMdUtil>/Divisions',
                     filters: filter,
                     template: new Item({
-                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                    key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
                     })
                 };
             
