@@ -170,7 +170,7 @@ BEGIN
 
         IF v_sql_rowcnt = 0 AND (:I_JOB_TYPE != 'CHANGE' AND :I_JOB_TYPE != 'RFQ' AND :I_JOB_TYPE != 'BIDDING') THEN
             --SIGNAL status_check SET MESSAGE_TEXT = '(메세지)Please check ownership.(You can only proceed with your own purchase.)';
-            SIGNAL status_check SET MESSAGE_TEXT = '(메세지)본인꺼만 진행이 가능합니다.';
+            SIGNAL status_check SET MESSAGE_TEXT = '(메세지)자신의 품목이 아닙니다. 구매담당자 변경(지정) 후 진행해주세요.';
         END IF;
 
         /* 마감된 구매요청건은 마감취소 외 다른 작업을 못한다. */
