@@ -4,6 +4,7 @@ sap.ui.define([
     "sap/ui/core/routing/HashChanger",
     "sap/ui/core/ComponentContainer",
     "ext/lib/util/Multilingual",
+    "ext/lib/util/SppUserSession",
     "ext/lib/model/ManagedListModel",
     "sap/ui/model/json/JSONModel",
     "ext/lib/formatter/DateFormatter",    
@@ -16,7 +17,7 @@ sap.ui.define([
     "sap/ui/core/Fragment",
     "ext/lib/util/ExcelUtil"
 ], function (BaseController, Component, HashChanger, ComponentContainer,
-    Multilingual, ManagedListModel, JSONModel, DateFormatter, Validator,
+    Multilingual, SppUserSession, ManagedListModel, JSONModel, DateFormatter, Validator,
     TablePersoController, Filter, FilterOperator, MessageBox, MessageToast, Fragment, ExcelUtil) {
     "use strict";
 
@@ -27,19 +28,6 @@ sap.ui.define([
         dateFormatter: DateFormatter,
         validator: new Validator(),
 
-		_sso : { //수정대상 공통 사용자 정보 확인될시 
-            user : {
-                id : "Admin",
-                name : "Hong Gil-dong"
-            },
-            dept : {
-				tenant_id: "L2100",
-				material_code:"new",	
-				supplier_code: "KR00008",	
-				mi_material_code: ""
-            }          
-		},
-
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -49,10 +37,17 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            //var oMultilingual = new Multilingual();
-           // this.setModel(oMultilingual.getModel(), "I18N");
-            this.setModel(new JSONModel(), "mainListViewModel");
+            var oMultilingual = new Multilingual();
+            this.setModel(oMultilingual.getModel(), "I18N");
 
+            var oSppUserSession = new SppUserSession();            
+            this.setModel(oSppUserSession.getModel(), "USER_SESSION");
+
+            //임시
+            this.getModel("USER_SESSION").setProperty("/TENANT_ID", "L2100");
+            this.getModel("USER_SESSION").setProperty("/USER_TYPE_CODE", "B");
+            
+            this.setModel(new JSONModel(), "mainListViewModel");
             //var today = new Date();
             //this.getView().byId("searchRequestDate").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30));
             //this.getView().byId("searchRequestDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
@@ -114,7 +109,7 @@ sap.ui.define([
             });
                         
             var aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                    new Filter("tenant_id", FilterOperator.EQ, this.getModel("USER_SESSION").getSessionAttr("TENANT_ID"))
                 ];
                 oModel.read("/MakerStatusView", {
                     filters : aFilters , 
@@ -264,13 +259,15 @@ sap.ui.define([
                 oRecord = this.getModel().getProperty(sPath);//this.getModel("list").getProperty(sPath);
 
                 var inputModel = new JSONModel();
-                inputModel.setData({gubun : "MM", mode : "R", tenantId : oRecord.tenant_id, makerCode : oRecord.maker_code});
+                inputModel.setData({gubun : "MM", mode : "R", tenantId : oRecord.tenant_id, taxId : oRecord.tax_id, makerCode : oRecord.maker_code});
                 this._fnMoveMakerMasterCreate(inputModel);
         },
 
         onPressBtnCreate : function(){
+            
+            var sTenantId =  this.getModel("USER_SESSION").getSessionAttr("TENANT_ID");
             var inputModel = new JSONModel();
-                inputModel.setData({gubun : "MM", mode : "C", tenantId : "", makerCode : ""});
+                inputModel.setData({gubun : "MM", mode : "C", tenantId : sTenantId , taxId : "", makerCode : ""});
                 this._fnMoveMakerMasterCreate(inputModel);
         },
 
@@ -325,9 +322,8 @@ sap.ui.define([
 
             var mainListViewModel = this.getModel("mainListViewModel");
             
-            //임시
-            var otenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, this._sso.dept.tenant_id);
-           aSearchFilters.push(otenant_idFilter);
+            var otenant_idFilter = new Filter("tenant_id", FilterOperator.EQ, this.getModel("USER_SESSION").getSessionAttr("TENANT_ID"));
+            aSearchFilters.push(otenant_idFilter);
             
             var bHeaderStatus = mainListViewModel.getProperty("/headerExpanded");
             

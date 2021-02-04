@@ -214,7 +214,7 @@
                     <smartTable:customToolbar>
                         <OverflowToolbar design="Transparent">
                             <ToolbarSpacer/>
-                            <Button text="{I18N>/NEW}" id="btn_create" type="Transparent" press=".onPressBtnCreate"/>                       
+                            <Button text="{I18N>/NEW}" id="btn_create" visible="{= ${USER_SESSION>/USER_TYPE_CODE} === 'B'}" type="Transparent" press=".onPressBtnCreate"/>                       
                             <!-- <OverflowToolbarButton
                                 icon="sap-icon://sort"
                                 tooltip="Sort"
