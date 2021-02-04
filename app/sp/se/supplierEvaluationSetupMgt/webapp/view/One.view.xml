@@ -112,7 +112,7 @@ xmlns:flex="sap.f"
                                                             selectedKeys="{DetailView>/vpOperationUnit/vendor_pool_operation_unit_code}"
                                                             fieldGroupIds="required"
                                                             required="true"    
-                                                                       
+                                                               selectionChange="onCheckLevel" 
                                                             >
                                                              <!-- selectionChange="onCheckLevel"      -->
                                                         <items>
@@ -202,11 +202,9 @@ xmlns:flex="sap.f"
                                                         selectedKey="{DetailView>/OperationUnitMst/eval_apply_vendor_pool_lvl_no}"
                                                         enabled="{DetailView>/isEditMode}">
                                                              <items>
-                                                                <SegmentedButtonItem text="1레벨" key="1"/>
-                                                                <SegmentedButtonItem text="2레벨" key="2" />
-                                                                <SegmentedButtonItem text="3레벨" key="3" />
-                                                                 <!-- <SegmentedButtonItem text="4레벨" key="4" />
-                                                                <SegmentedButtonItem text="5레벨" key="5" /> -->
+                                                                <SegmentedButtonItem text="1 Level" key="1"/>
+                                                                <SegmentedButtonItem text="2 Level" key="2" />
+                                                                <SegmentedButtonItem text="3 Level" key="3" />
                                                             </items> 
                                                         </SegmentedButton>                                                                    
 

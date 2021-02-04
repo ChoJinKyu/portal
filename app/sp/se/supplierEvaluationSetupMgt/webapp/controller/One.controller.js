@@ -1173,48 +1173,45 @@ sap.ui.define([
          onCheckLevel : function(oEvent){
 
             //var Keys =  oEvent.getSelectedKeys();
-            var iKeys = 3;
-            var url = "srv-api/odata/v4/sp.supEvalSetupV4Service/VpLevelChipView(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00200')/Set";
+          
+            var iKeys = oEvent.getSource().getSelectedKeys().join(",");
             
+            var url = `srv-api/odata/v4/sp.supEvalSetupV4Service/VpLevelChipView(tenant_id='${this.tenant_id}',org_code='${this.org_code}',op_unit_code='${iKeys}')/Set`;
             
-            var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdNewCategoryItemCode(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00200')/Set";
-			
-            
+                       
             var param = {};
-			var params = {"language_code":"KR"};
-            param.params = params; // param.params 변수명은 변경불가함 handler에서 사용하기 때문
-			$.ajax({
-				url: url,
-				type: "POST",
-				//datatype: "json",
-				data : JSON.stringify(param),
-				contentType: "application/json",
-				success: function(data){
-                    alert("Reslt Value => ["+JSON.stringify(data.titles)+"]  ["+JSON.stringify(data.records)+"] ");
-                    console.log("Title 출력");
-                    console.log(JSON.stringify(data.titles));
-                    console.log("BODY Record 출력");
-                    console.log(JSON.stringify(data.records));
-				},
-				error: function(req){
-					alert("Ajax Error => "+req.status);
-				}
-            });
-            
-
+            var params = {"language_code":"KR"};
             
             var oSegmentedButton = this.getView().byId("vendor_pool_lvl");
 
-            oSegmentedButton.destroyItems();
+            param.params = params; // param.params 변수명은 변경불가함 handler에서 사용하기 때문
+			$.ajax({
+				url: url,
+				type: "GET",
+				datatype: "json",
+				contentType: "application/json",
+				success: function(data){
+                    
+                    oSegmentedButton.destroyItems();
+                    for(var i=0;i<data.value.length;i++){
+                                oSegmentedButton.addItem(
+                                    new SegmentedButtonItem({ 
+                                        text : data.value[i].level_name, 
+                                        key : data.value[i].level_no
+                                    })
+                                );
+                            }
+					
+				},
+				error: function(req){
+					
+				}
+			});
 
-            for(var i=0;i<iKeys;i++){
-                        oSegmentedButton.addItem(
-                            new SegmentedButtonItem({ 
-                                text : (i+1)+"레벨", 
-                                key : i
-                            })
-                        );
-                    }
+            
+            
+
+            
 
 
          },
@@ -1374,6 +1371,24 @@ sap.ui.define([
                         oView.getModel("DetailView").setProperty("/OperationUnitMst",oValues);                        
                         oView.getModel("DetailView").setProperty("/vpOperationUnit/vendor_pool_operation_unit_code", oValues.vendor_pool_operation_unit_code.split(","));
                         
+                        var iLvl = Number(oView.getModel("DetailView").getProperty("/OperationUnitMst").eval_apply_vendor_pool_lvl_no);
+                        
+
+                        if(iLvl < 3)
+                        iLvl = 3;
+
+                         var oSegmentedButton = this.getView().byId("vendor_pool_lvl");
+                            oSegmentedButton.destroyItems();
+                            for(var i=0;i<iLvl;i++){
+                                        oSegmentedButton.addItem(
+                                            new SegmentedButtonItem({ 
+                                                text : (i+1)+" Level", 
+                                                key : (i+1)
+                                            })
+                                        );
+                                    }
+
+
                         // var oVPCombo = this.byId("searchMultiComboCode");
                         // var sKey = this.getModel("DetailView").getProperty("/vpOperationUnit/vendor_pool_operation_unit_code").split(",");                        
                         // oVPCombo.setSelectedKeys(sKey);
