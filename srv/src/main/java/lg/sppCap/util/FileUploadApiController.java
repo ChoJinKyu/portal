@@ -76,6 +76,7 @@ import lg.sppCap.frame.repository.FileMstRepository;
 import lg.sppCap.solutionized.bizrule.okhttp.OkHttpClientInstance;
 import okio.Okio;
 
+
 @RestController
 @RequestMapping("/cm/fileupload/api")
 public class FileUploadApiController {
@@ -681,7 +682,22 @@ public class FileUploadApiController {
     }
 
     @PostMapping("/v1/delete")
-    public String deleteFile(String groupId, String fileId) throws Exception {
+    // public String deleteFile(String groupId, String fileId) throws Exception {
+    public String deleteFile(@org.springframework.web.bind.annotation.RequestBody HashMap<String, String> paramMap) throws Exception {
+        // test code
+        String groupId = paramMap.get("groupId");
+        String fileId = paramMap.get("fileId");
+
+        System.out.println(">> Enter fileDelete");
+
+        System.out.println(">> groupId : " + paramMap.get("groupId"));
+        System.out.println(">> fileId : " + paramMap.get("fileId"));
+
+        if(!groupId.isEmpty()){
+            throw new Exception("");
+        }            
+        // test code end
+
         Map<String, String> result = new HashMap<>();
 
         OkHttpClient client = getOkHttpClient(60);
