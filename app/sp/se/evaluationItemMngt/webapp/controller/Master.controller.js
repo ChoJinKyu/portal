@@ -69,6 +69,7 @@ sap.ui.define([
                 );
 
                 oViewModel.setProperty("/App/layout", "OneColumn");
+                oViewModel.setProperty("/App/btnScreen", "sap-icon://full-screen");
 
                 this.byId("page").setHeaderExpanded(true);
             }

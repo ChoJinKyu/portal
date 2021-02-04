@@ -811,7 +811,7 @@ sap.ui.define([
             }
 
             , onPressLayoutChange : function(oEvent){
-                var oControl, oView, oViewModel, sLayout, sIcon;
+                var oControl, oView, oViewModel, sLayout, sIcon, sBtnScreenText;
 
                 oControl = oEvent.getSource();
                 oView = this.getView();
@@ -820,13 +820,15 @@ sap.ui.define([
 
                 if(sIcon === "sap-icon://full-screen"){
                     sLayout = "MidColumnFullScreen";
-                    oControl.setIcon("sap-icon://exit-full-screen");
+                    sBtnScreenText = "sap-icon://exit-full-screen";
                 }else{
                     sLayout = "TwoColumnsMidExpanded";
-                    oControl.setIcon("sap-icon://full-screen");
+                    sBtnScreenText = "sap-icon://full-screen";
                 }
 
-                oViewModel.setProperty("/App/layout", sLayout)
+                oViewModel.setProperty("/App/layout", sLayout);
+                oViewModel.setProperty("/App/btnScreen", sBtnScreenText);
+                
             }
 		});
 	});
