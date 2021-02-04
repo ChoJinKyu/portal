@@ -390,6 +390,12 @@ sap.ui.define([
                 }
             }              
 
+            var activeFlg = "false";
+
+            if (oMasterData.active_flag === true) {
+                activeFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+            };
+
             var pdDtlVal = [];
 
             var pdMstVal = {
@@ -397,7 +403,7 @@ sap.ui.define([
                 product_activity_code   : oMasterData.product_activity_code,
                 description             : oMasterData.description,
                 sequence                : oMasterData.sequence,
-                active_flag             : oMasterData.active_flag,
+                active_flag             : activeFlg,
                 update_user_id          : this._sLoginUserId,
                 crud_type_code          : CUType
             };
@@ -481,7 +487,6 @@ sap.ui.define([
                             error: function (rst) {
                                     console.log("eeeeee");
                                     console.log(rst);
-                                    console.log(rst.return_msg);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
                                     // v_this.onSearch(rst.return_msg );
                             }
