@@ -72,7 +72,7 @@ public class CreationRequestV4 implements EventHandler {
         v_sql_createMstTable.append("SIMILAR_CATEGORY_CODE NVARCHAR(40),");
         v_sql_createMstTable.append("REQUESTOR_EMPNO NVARCHAR(30), ");
         v_sql_createMstTable.append("REQUEST_DATE_TIME TIMESTAMP, ");
-        v_sql_createMstTable.append("REQUEST_DESC BLOB, ");
+        v_sql_createMstTable.append("REQUEST_DESC NCLOB, ");
 
         v_sql_createMstTable.append("ATTCH_GROUP_NUMBER NVARCHAR(100), ");
         v_sql_createMstTable.append("PROGRESS_STATUS_CODE NVARCHAR(30),");

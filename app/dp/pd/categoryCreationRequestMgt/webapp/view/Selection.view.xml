@@ -299,31 +299,12 @@
             <!-- 결재라인 끝 -->
 
 		</uxap:sections>
-		
-		<!-- <uxap:footer>
-			<OverflowToolbar>
-                <Button
-                    icon="sap-icon://alert"
-                    type="Emphasized"
-                    text="{= ${message>/}.length }"
-                    visible="{= ${message>/}.length > 0 }"
-                    ariaHasPopup="Dialog"
-                    press=".onMessagePopoverPress" />
-				<ToolbarSpacer />
-                
-                <Button id="pageEditButton" type="Transparent" text="{I18N>/EDIT}" press=".onPageEditButtonPress" />
-				<Button id="pageSaveButton" type="Transparent" text="{I18N>/TEMP_SAVE}" press=".onPageSaveButtonPress('D')" />
-				<Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButtonPress"/>
-				<Button id="pageListButton" type="Transparent" text="{I18N>/LIST}" press=".onPageListButtonPress"/>
-                <Button id="pageSubmitButton" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSaveButtonPress('R')" />
-			</OverflowToolbar>
-        </uxap:footer> -->
-        
+		        
         <!-- footer 시작 -->
         <uxap:footer>
             <OverflowToolbar>
                 <ToolbarSpacer />
-                <HBox visible="{= ${master>/progress_status_code} === '' ? true : false}" alignItems="End" justifyContent="End">
+                <HBox visible="{= ${master>/request_number} === 'new' ? true : false}" alignItems="End" justifyContent="End">
                     <Button id="pageDraftButton" type="Transparent" text="{I18N>/DRAFT}" press=".onPageSaveButtonPress('D')" />
                     <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButtonPress"/>
                     <Button id="pageRequestButton" type="Emphasized" text="{I18N>/REQUEST}" press=".onPageSaveButtonPress('R')" />
@@ -337,18 +318,24 @@
                 </HBox>
 
                 <HBox visible="{= ${master>/progress_status_code} === 'B' ? true : false}" alignItems="End" justifyContent="End">
-                    <Button id="pageRejectButton" type="Transparent" text="{I18N>/REJECT}" press=".onPageCancelButtonPress('J')"/>
+                    <Button id="pageJListButton" type="Transparent" text="{I18N>/LIST}" press=".onPageListButtonPress"/>
+                    <Button id="pageRejectButton" type="Transparent" text="{I18N>/REJECT}" press=".onPageSaveButtonPress('J')"/>
                     <Button id="pageApprovalButton" type="Emphasized" text="{I18N>/APPROVAL}" press=".onPageSaveButtonPress('A')" />
                 </HBox>
 
                 <HBox visible="{= ${master>/progress_status_code} === 'C' ? true : false}" alignItems="End" justifyContent="End">
-                    <Button id="pageRejectButton2" type="Transparent" text="{I18N>/REJECT}" press=".onPageCancelButtonPress('J')"/>
+                    <Button id="pageCListButton" type="Transparent" text="{I18N>/LIST}" press=".onPageListButtonPress"/>
+                    <Button id="pageRejectButton2" type="Transparent" text="{I18N>/REJECT}" press=".onPageSaveButtonPress('J')"/>
                     <Button id="pageConfirmButton" type="Emphasized" text="{I18N>/CONFIRM} {I18N>/CREATE}" press=".onPageSaveButtonPress('C')" />
                 </HBox>
 
                 <HBox visible="{= ${master>/progress_status_code} === 'E' ? true : false}" alignItems="End" justifyContent="End">
+                    <Button id="pageEListButton" type="Transparent" text="{I18N>/LIST}" press=".onPageListButtonPress"/>
+                </HBox>
+
+                <HBox visible="{= ${master>/progress_status_code} === 'D' ? true : false}" alignItems="End" justifyContent="End">
                     <Button id="pageListButton" type="Transparent" text="{I18N>/LIST}" press=".onPageListButtonPress"/>
-                </HBox>           
+                </HBox> 
             </OverflowToolbar>
 		</uxap:footer>
         <!-- footer 끝 -->

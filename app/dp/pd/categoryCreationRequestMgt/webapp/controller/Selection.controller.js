@@ -145,6 +145,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSaveButtonPress: function (flag) {
+            
             var oView = this.getView();
             var oMasterModel = this.getModel("master");
             var oDetailsModel = this.getModel("details");
@@ -183,7 +184,8 @@ sap.ui.define([
                 }
             }
            
-            var requestDesc = this.byId("requestDesc").getValue();
+            //var requestDesc = this.byId("requestDesc").getValue();
+            //request_desc             : this.htmlEncoding(requestDesc, this.byId("requestDesc").getId()),
             var pdMstVal = {
                 tenant_id                : oMasterData.tenant_id,
                 request_number           : oMasterData.request_number,
@@ -194,7 +196,7 @@ sap.ui.define([
                 similar_category_code    : oMasterData.similar_category_code,
                 requestor_empno          : oMasterData.requestor_empno,
                 request_date_time        : oMasterData.request_date_time,
-                request_desc             : this.htmlEncoding(requestDesc, this.byId("requestDesc").getId()),
+                request_desc             : oMasterData.request_desc,
                 attch_group_number       : oMasterData.attch_group_number,
                 progress_status_code     : progressCode,
                 creator_empno            : oMasterData.creator_empno,
@@ -229,11 +231,11 @@ sap.ui.define([
             }
 
             input.inputData.pdDtl = pdDtlVal;
-            
-            if(this.validator.validate(this.byId("midObjectForm")) !== true) return;
+     
+            //if(this.validator.validate(this.byId("midObjectForm")) !== true) return;
 
             var url = "srv-api/odata/v4/dp.creationRequestV4Service/PdCreationRequestSaveProc";
-            
+
 			oTransactionManager.setServiceModel(this.getModel());
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
@@ -253,8 +255,26 @@ sap.ui.define([
                                     if(flag == "D"){
                                         v_this.onSearch(rst.return_msg );
                                     }else if(flag == "R"){
+                                        sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         v_this.onPageNavBackButtonPress();
+                                    }else if(flag == "J"){
+                                        sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                        v_this.onPageNavBackButtonPress();
+                                    }else if(flag == "A"){
+                                        sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                        v_this.onPageNavBackButtonPress();
+                                    }else if(flag == "C"){
+                                        MessageBox.confirm("검토 완료되었습니다. \n Category를 생성을 진행하시겠습니까?", {
+                                            title : "Confirmation",
+                                            initialFocus : sap.m.MessageBox.Action.CANCEL,
+                                            onClose : function(sButton) {
+                                                if (sButton === MessageBox.Action.OK) {
+                                                    sap.m.MessageToast.show("왕부장님 화면");
+                                                }
+                                            }
+                                        });
                                     }
+                                    
                                 }else{
                                     console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
@@ -414,8 +434,6 @@ sap.ui.define([
         htmlEncoding: function (value, sId) {
             return btoa(unescape(encodeURIComponent(value)))
         },
-
-		
 
         _toShowMode: function () {
             var oMasterModel = this.getModel("master");
