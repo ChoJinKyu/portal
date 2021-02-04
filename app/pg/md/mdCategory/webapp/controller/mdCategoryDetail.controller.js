@@ -182,7 +182,7 @@ sap.ui.define([
             var oView = this.getView(),
                 oMasterModel = this.getModel("master"),
                 that = this;
-                        debugger;
+
             MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
                 title: "Comfirmation",
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -193,7 +193,7 @@ sap.ui.define([
                     oMasterModel.setTransactionModel(that.getModel());
                     oMasterModel.submitChanges({
                     success: function (ok) {
-                        debugger;
+                        
                         oView.setBusy(false);
                         that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                         MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
@@ -214,6 +214,7 @@ sap.ui.define([
             var oView = this.getView(),
                 oMasterModel = this.getModel("master"),
                 oDetailsModel = this.getModel("details"),
+                temp = oMasterModel.oData,
                 lngArr = oDetailsModel.getProperty("/MdCategoryLng"),
                 lngLength = lngArr.length,
                 that = this;
@@ -231,7 +232,7 @@ sap.ui.define([
             var tempData = oMasterModel.getData();
             if(tempData != null){
                 delete tempData.org_infos;
-                oMasterModel.setData(tempData);
+                oMasterModel.setData(tempData,"/MdCategory");
             }
 
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
@@ -261,13 +262,13 @@ sap.ui.define([
                                 contentType: "application/json", 
                                 success: function(data){ 
                                     var categoryCode = data.value[0].spmd_category_code;
-                                    that.getModel("master").setProperty("/spmd_category_code", categoryCode); 
+                                    temp.spmd_category_code = categoryCode;
+
                                     //Lng 갯수만큼 categoryCode 매핑
                                     if(lngLength>0){
                                         for(var idx=0; idx<lngLength; idx++){
                                             lngArr[idx].spmd_category_code = categoryCode;
                                         }
-                                    }
                                     
                                     oTransactionManager.submit({  
                                         success: function(ok){ 
@@ -377,7 +378,7 @@ sap.ui.define([
                     "rgb_font_color_code": "",
                     "rgb_cell_clolor_code": "",
                     "spmd_category_sort_sequence": this._sSpmd_category_sort_sequence
-                }, "/MdCategory");
+                }, "/MdCategory" );//, "/MdCategory"
             
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
@@ -399,10 +400,6 @@ sap.ui.define([
                                         + "',org_type_code='"      + this._sOrg_type_code 
                                         + "',org_code='"           + this._sOrg_code 
                                         + "',spmd_category_code='" + this._sSpmd_category_code 
-                                        // + "',spmd_category_code_name='" + this._sSpmd_category_code_name 
-                                        // + "',rgb_font_color_code='" + this._sRgb_font_clolor_code  
-                                        // + "',rgb_cell_clolor_code='" + this._sRgb_cell_clolor_code  
-                                        // + "',spmd_category_sort_sequence='" + this._sSpmd_category_sort_sequence  
                                         + "')";
                 var oMasterModel = this.getModel("master");
                 oView.setBusy(true);
