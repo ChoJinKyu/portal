@@ -99,15 +99,15 @@ sap.ui.define([
             //aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.languageCd));
             //aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oSearchObj.orgCode));
 
-            if (sMatrialCodePop) {
+            if (!!sMatrialCodePop) {
                 aFilters.push(new Filter("material_code", FilterOperator.Contains, "'" + sMatrialCodePop.toUpperCase() + "'"));
             }
 
-            if (sMatrialNamePop) {
+            if (!!sMatrialNamePop) {
                 aFilters.push(new Filter("material_desc", FilterOperator.Contains, "'" + sMatrialNamePop.toUpperCase() + "'"));
             }
 
-            if (sMatrialSpecPop) {
+            if (!!sMatrialSpecPop) {
                 aFilters.push(new Filter("material_spec", FilterOperator.Contains, sMatrialSpecPop.toUpperCase()));
             }
 
