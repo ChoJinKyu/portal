@@ -15,10 +15,6 @@ import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Component;
@@ -33,30 +29,7 @@ import cds.gen.sp.npapprovaldetailv4service.ResultType;
 
 @Component
 @ServiceName(NpApprovalDetailV4Service_.CDS_NAME)
-public class NetpriceApprovalDetailV4Service implements EventHandler {
-
-    private final Logger log = LogManager.getLogger( this.getClass() );
-
-    @Autowired
-    private JdbcTemplate jdbc;
-
-    /**
-     * DDL 수행시, 자동 Commit 기능 OFF
-     */
-    private void setTransactionAutoCommitDdlOff(){
-        jdbc.execute("SET TRANSACTION AUTOCOMMIT DDL OFF;");
-    }
-
-    /**
-     * Local Temp Table 제거
-     * 
-     * @param tempTableName : Table Name
-     */
-    private void dropTempTable(String tempTableName){
-        if(tempTableName != null && !tempTableName.isEmpty()){
-            jdbc.execute( String.format("DROP TABLE %s", tempTableName) );
-        }
-    }
+public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements EventHandler {
 
     @Transactional(rollbackFor = SQLException.class)
     @On(event=ApprovalSaveProcContext.CDS_NAME)
@@ -133,7 +106,8 @@ public class NetpriceApprovalDetailV4Service implements EventHandler {
                 callableStatement.setString("I_BUYER_EMPNO"                  , master.getBuyerEmpno() );
                 callableStatement.setBoolean("I_TENTPRC_FLAG"                , master.getTentprcFlag() );
                 callableStatement.setString("I_OUTCOME_CODE"                 , master.getOutcomeCode() );
-                callableStatement.setString("I_USER_ID"                      , vParam.getUserId() );
+                //callableStatement.setString("I_USER_ID"                      , userSession.getUserId() );
+                callableStatement.setString("I_USER_ID"                      , "T8000" );
                 return callableStatement;
             }, paramList);
 
