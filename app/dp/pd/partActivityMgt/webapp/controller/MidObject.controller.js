@@ -1,265 +1,286 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
     "ext/lib/util/Multilingual",
-    "ext/lib/model/TransactionManager",
-    "ext/lib/model/ManagedModel",
-    "ext/lib/model/ManagedListModel",
-    "sap/ui/model/json/JSONModel",
-    "ext/lib/util/Validator",
-    "ext/lib/formatter/DateFormatter",
-    "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator",
-    "sap/ui/core/Fragment",
+	"ext/lib/util/Validator",
+	"sap/ui/model/json/JSONModel",
+	"ext/lib/model/TransactionManager",
+	"ext/lib/model/ManagedModel",
+	"ext/lib/model/ManagedListModel",
+	"ext/lib/formatter/DateFormatter",
+	"sap/ui/model/Filter",
+	"sap/ui/model/FilterOperator",
+	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-    "sap/ui/core/routing/History",
-    "sap/m/ColumnListItem",
-    "sap/m/ObjectIdentifier",
-    "sap/m/Text",
-    "sap/m/Input",
-    "sap/m/ComboBox",
+	"sap/m/ColumnListItem",
+	"sap/m/ObjectIdentifier",
+	"sap/m/Text",
+	"sap/m/Input",
+	"sap/m/ComboBox",
     "sap/ui/core/Item",
-    "sap/ui/richtexteditor/RichTextEditor",
-    "sap/ui/model/odata/v2/ODataModel",
-    "sap/ui/model/FilterType",
-    "dp/util/control/ui/IdeaManagerDialog"
-], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, DateFormatter,
-    Filter, FilterOperator, Fragment, MessageBox, MessageToast, History,
-    ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel,FilterType,IdeaManagerDialog) {
-    "use strict";
+    "sap/m/ObjectStatus",
+    "sap/f/LayoutType"
+], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
+	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
+	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus, LayoutType) {
+		
+	"use strict";
 
-    var oTransactionManager;
+	var oTransactionManager;
 
-    return BaseController.extend("dp.pd.partActivityMgt.controller.MidObject", {
+	return BaseController.extend("dp.pd.partActivityMgt.controller.MidObject", {
 
         dateFormatter: DateFormatter,
-
+        
         validator: new Validator(),
-
-        loginUserId: new String,
+        
         tenant_id: new String,
-        statusGloCode: new String,
+        loginUserId: new String,
+        loginUserName: new String,		
 
-        /* =========================================================== */
-        /* lifecycle methods                                           */
-        /* =========================================================== */
+		/* =========================================================== */
+		/* lifecycle methods                                           */
+		/* =========================================================== */
 
 		/**
 		 * Called when the midObject controller is instantiated.
 		 * @public
 		 */
-        onInit: function () {
+		onInit : function () {
 
             //로그인 세션 작업완료시 수정
+            this.tenant_id = "L2101";
             this.loginUserId = "TestUser";
-            this.tenant_id = "L2100";
-            //법인 필터
-            this.setCompanyFilter();
+            this.loginUserName = "TestUser";            
 
             var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
-            this.setModel(new ManagedModel(), "master");
-            this.setModel(new ManagedListModel(), "list");
-            this.setModel(new ManagedModel(), "details");
-            this.setModel(new JSONModel(), "midObjectViewModel");
-
+			this.setModel(oMultilingual.getModel(), "I18N");
+			this.setModel(new ManagedListModel(), "list");
+			// Model used to manipulate controlstates. The chosen values make sure,
+			// detail page shows busy indication immediately so there is no break in
+			// between the busy indication for loading the view's meta data
 			var oViewModel = new JSONModel({
-                    showMode: true,                    
-                    editMode: false
+					busy : true,
+                    delay : 0,
+                    screen: ""                    
 				});
+			this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
+			this.setModel(oViewModel, "midObjectView");
+			
+			this.setModel(new ManagedModel(), "master");
+            this.setModel(new ManagedListModel(), "languages");            
 
-            this.setModel(oViewModel, "viewModel");
+			oTransactionManager = new TransactionManager();
+			oTransactionManager.addDataModel(this.getModel("master"));
+            oTransactionManager.addDataModel(this.getModel("languages"));            
+
+			this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
             
-
-            
-            oTransactionManager = new TransactionManager();
-            oTransactionManager.addDataModel(this.getModel("master"));
-            oTransactionManager.addDataModel(this.getModel("details"));
-
-            this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
-
             this.enableMessagePopover();
-        },
+        }, 
 
-        /**
-         * 세션에서 받은 tenant_id 로 필터 걸어주기
-         */
-        setCompanyFilter: function () {
-            var oSelect, oBinding, aFilters;
-            oSelect = this.getView().byId('ideaCompany');
-            oBinding = oSelect.getBinding("items");
-            aFilters = [];
-            aFilters.push( new Filter("tenant_id", 'EQ', this.tenant_id) );
-            //oBinding.filter(aFilters, FilterType.Application); 
-        },
-        
-
-        _fnInitModel : function(){
-            var oInitData = {
-                tenant_id: "L2100",
-                company_code: "",
-                idea_number: ""
-            };
-            var oViewModel = this.getModel("details");
-            oViewModel.setProperty("/SupplierIdea", oInitData);
-        },
-
-		/**
-		 * When it routed to this page from the other page.
-		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
-		 * @private
-		 */
-        _onRoutedThisPage: function (oEvent) {
-            var oArgs = oEvent.getParameter("arguments"),
-                oView = this.getView();
-            this._sTenantId = oArgs.tenantId;
-            this._sCompanyCode = oArgs.companyCode;
-            this._sIdeaNumber = oArgs.ideaNumber;
-
-            this.validator.clearValueState(this.byId("midObjectForm"));
-            if (oArgs.ideaNumber == "new") {
-                this._toEditMode();
-                //console.log("###신규저장");
-                this._fnInitModel();
-                var date = new Date();
-                var year = date.getFullYear();
-                var month = ("0" + (1 + date.getMonth())).slice(-2);
-                var day = ("0" + date.getDate()).slice(-2);
-                var toDate = year + "/" + month + "/" + day;
-                var toDate2 = year + "-" + month + "-" + day;
-
-                this.getView().byId("ideaDate").setText(toDate);
-                var oDetailModel = this.getModel("details");
-                oDetailModel.setData({
-                    "tenant_id": this._sTenantId,
-                    "company_code": this._sCompanyCode,
-                    "idea_number": "New",
-                    "idea_date": toDate2,
-                    "supplier_code": "KR01820500",
-                    "idea_create_user_id": this.loginUserId,
-                    "local_create_dtm": toDate2,
-                    "local_update_dtm": toDate2,
-                    "create_user_id": this.loginUserId,
-                    "update_user_id": this.loginUserId,
-                    "system_create_dtm": toDate2,
-                    "system_update_dtm": toDate2
-                }, "/SupplierIdea"); 
-                
-
-                oView.byId("ideaCompany").setValue(this._sCompanyCode);
-                oDetailModel.setTransactionModel(this.getModel());
-            } else {
-                //console.log("###수정");
-                this.onSearch(oArgs.ideaNumber);
+        formattericon: function(sState){
+            switch(sState){
+                case "D":
+                    return "sap-icon://decline";
+                break;
+                case "U": 
+                    return "sap-icon://accept";
+                break;
+                case "C": 
+                    return "sap-icon://add";
+                break;
             }
+            return "";
         },
 
-        
-
-        
+		/* =========================================================== */
+		/* event handlers                                              */
+		/* =========================================================== */
 
 		/**
-		 * 조회
+		 * Event handler for Enter Full Screen Button pressed
 		 * @public
 		 */
-        onSearch: function (idea_number) {
-            var oView = this.getView();
-            var sObjectPath = "/IdeaView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',idea_number='" + idea_number + "')";
-            var oMasterModel = this.getModel("master");
-            var v_this = this;
-            this.statusGloCode = "";
+		
+		handleFullScreen: function () {
+            var oContModel = this.getModel("contModel");
+            oContModel.setProperty("/midObject/visibleFullScreenBtn", false);
 
-            //테스트 에러로 
-            //oView.setBusy(true);
-            oMasterModel.setTransactionModel(this.getModel());
-            oMasterModel.read(sObjectPath, {
-                success: function (oData) {
-                    oView.byId("ideaCompany").setValue(oData.company_code);
-                    oView.setBusy(false);
-                }
-            });
-            
-            var sObjectPath2 = "/SupplierIdea(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',idea_number='" + this._sIdeaNumber + "')";
-            var oDetailsModel = this.getModel("details");
-            
-            oView.setBusy(true);
-            oDetailsModel.setTransactionModel(this.getModel());
-            oDetailsModel.read(sObjectPath2, {
-                success: function (oData) {
-                    v_this.statusGloCode = oData.idea_progress_status_code;
-                    v_this._toShowMode();
-                    oView.setBusy(false);
-                }
-            });
+            // var sLayout = LayoutType.EndColumnFullScreen;
+            var sLayout = LayoutType.MidColumnFullScreen;
+			this._changeFlexibleColumnLayout(sLayout);
+        },
+        
+		handleExitFullScreen: function () {
+			var oContModel = this.getModel("contModel");
+            oContModel.setProperty("/midObject/visibleFullScreenBtn", true);
 
+            // var sLayout = LayoutType.ThreeColumnsEndExpanded;
+            var sLayout = LayoutType.TwoColumnsMidExpanded;
+            this._changeFlexibleColumnLayout(sLayout);
+        },
+        
+		handleClose: function () {
+            var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            this.getRouter().navTo("mainPage", {layout: sNextLayout});
         },
 
+        _changeFlexibleColumnLayout : function(layout){
+            var oFclModel = this.getModel("fcl");
+            oFclModel.setProperty("/layout", layout);
+        },
+
+		/**
+		 * Event handler for page edit button press
+		 * @public
+		 */
+		onPageEditButtonPress: function(){
+			this._toEditMode();
+		},
+		
+		/**
+		 * Event handler for delete page entity
+		 * @public
+		 */
+        onPageDeleteEditButtonPress: function(){
+			this.onPageSaveButtonPress("D");
+		},
+
+		onLngTableAddButtonPress: function(){
+			var oTable = this.byId("lngTable"),
+				oLanguagesModel = this.getModel("languages");
+			oLanguagesModel.addRecord({
+				"tenant_id": this._sTenantId,
+				"activity_code": this._sActivityCode,
+				"language_code": "",
+				"code_name": ""			
+			}, "/PdPartBaseActivityLng");
+		},
+
+		onLngTableDeleteButtonPress: function(){
+			var oTable = this.byId("lngTable"),
+				oModel = this.getModel("languages"),
+				aItems = oTable.getSelectedItems(),
+				aIndices = [];
+			aItems.forEach(function(oItem){
+				aIndices.push(oModel.getProperty("/PdPartBaseActivityLng").indexOf(oItem.getBindingContext("languages").getObject()));
+			});
+			aIndices = aIndices.sort(function(a, b){return b-a;});
+			aIndices.forEach(function(nIndex){
+				//oModel.removeRecord(nIndex);
+				oModel.markRemoved(nIndex);
+			});
+			oTable.removeSelections(true);
+		},
+		
 		/**
 		 * Event handler for saving page changes
 		 * @public
 		 */
-        onPageSaveButtonPress: function (flag) {
+        onPageSaveButtonPress: function(CUDType){
+           
+            var oView = this.getView();
+            var oMasterModel = this.getModel("master");
+            var oLanguagesModel = this.getModel("languages");
             
-            var oView = this.getView(),
-                oDetailsModel = this.getModel("details"),
-                v_this = this;
-            var oData = oDetailsModel.oData;
-            var statsCode = "DRAFT";
-            var CUType = "C";            
-                var inputData = {
-                    inputdata : {}
-                };
-            if (this._sIdeaNumber !== "new"){
-                if(!oDetailsModel.isChanged() ) {
-                    MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-                    return;
-                }
-                CUType = "U";
-                /*
-                    진행상태에 대한 정의가 필요 하며 정의에 따른 진행상태 셋팅 필요
-                    idea_progress_status_code
-                    업체에서 SUBMIT인 경우 정의 필요
-                */
-                if( flag == "D"){
-                    statsCode = oData.idea_progress_status_code;
-                }else if( flag == "R"){
-                    statsCode = oData.idea_progress_status_code;
+            var v_this = this;            
+                
+            var oMasterData = oMasterModel.oData;
+            var oLngData = oLanguagesModel.oData;            
+
+            var oLngTable = this.byId("lngTable");            
+           
+            var CUType = CUDType;
+
+            if(CUType !== "D" ){
+                if(!oMasterModel.isChanged() && !oLanguagesModel.isChanged()) {
+                        MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+                        return;
                 }
             }
 
+            if(CUType !== "D") {
+                if(this._sActivityCode !== "new"){
+                    CUType = "U";                
+                } else {
+                    CUType = "C";
+                }
+            }  
 
-            inputData.inputdata = {
-                tenant_id                            : oData.tenant_id                  ,
-                company_code                         : oData.company_code               ,
-                idea_number                          : oData.idea_number                ,
-                idea_title                           : oData.idea_title                 ,
-                idea_progress_status_code            : statsCode                         ,
+            console.log(CUType);
+            
+            var attachmentMandatoryFlag = "false";
+            var approveMandatoryFlag = "false";
+            var activeFlg = "false";           
 
-                supplier_code                        : oData.supplier_code              ,
-                idea_create_user_id                  : this.loginUserId                 ,
-                bizunit_code                         : oData.bizunit_code               ,
-                idea_product_group_code              : oData.idea_product_group_code    ,
-                idea_type_code                       : oData.idea_type_code             ,
-
-                idea_period_code                     : oData.idea_period_code           ,
-                idea_manager_empno                   : oData.idea_manager_empno         ,
-                idea_part_desc                       : oData.idea_part_desc             ,
-                current_proposal_contents            : oData.current_proposal_contents  ,
-                change_proposal_contents             : oData.change_proposal_contents   ,
-                
-                idea_contents                        : oData.idea_contents              ,
-                attch_group_number                   : oData.attch_group_number         ,
-                create_user_id                       : this.loginUserId                 ,
-                update_user_id                       : this.loginUserId                 ,
-                crd_type_code                        : CUType
+            console.log(oMasterData.attachment_mandatory_flag);
+            if (oMasterData.attachment_mandatory_flag === true) {
+                attachmentMandatoryFlag = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
             }
-        
-                
-            if(this.validator.validate(this.byId("midObjectForm")) !== true) return;
+            if (oMasterData.approve_mandatory_flag === true) {
+                approveMandatoryFlag = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+            }
+            if (oMasterData.active_flag === true) {
+                activeFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+            }
 
-            var url = "srv-api/odata/v4/dp.partActivityMgtV4Service/SaveIdeaProc";
+            // if(oMasterData.sequence=="" ||  oMasterData.sequence==null || parseInt(oMasterData.sequence) == undefined || parseInt(oMasterData.sequence) == NaN){
+            //     oMasterData.sequence = "0";
+            // }
+
+            var pdMstVal = {
+					tenant_id                   : oMasterData.tenant_id,
+                    company_code                : oMasterData.company_code,
+                    // org_type_code               : oMasterData.org_type_code,
+                    org_code                    : oMasterData.org_code,                    
+                    part_project_type_code      : oMasterData.part_project_type_code,
+
+                    activity_code               : oMasterData.activity_code,
+                    // category_group_code         : oMasterData.category_group_code,
+                    sequence                    : oMasterData.sequence,
+                    develope_event_code         : oMasterData.develope_event_code,
+                    actual_role_code            : oMasterData.actual_role_code,
+
+                    activity_complete_type_code : oMasterData.activity_complete_type_code,
+                    job_type_code               : oMasterData.job_type_code,
+                    attachment_mandatory_flag   : attachmentMandatoryFlag,
+                    approve_mandatory_flag      : approveMandatoryFlag,
+                    active_flag                 : activeFlg,
+
+                    update_user_id  : this.loginUserId,
+                    crud_type_code  : CUType
+            };           
             
 
+            var input = {
+                inputData : {
+                    crud_type : CUType,
+                    pdMst : pdMstVal,
+                    pdDtl: []
+                }
+            };
+
+            var pdDtlVal = [];
+            
+            for (var i = 0; i <  oLngTable.getItems().length; i++) {
+                pdDtlVal.push({
+                    tenant_id: oLngData.PdPartBaseActivityLng[i].tenant_id,
+                    activity_code: oLngData.PdPartBaseActivityLng[i].activity_code,
+                    language_cd: oLngData.PdPartBaseActivityLng[i].language_cd,
+                    code_name: oLngData.PdPartBaseActivityLng[i].code_name,
+                    update_user_id: this.loginUserId,                        
+                    crud_type_code: oLngData.PdPartBaseActivityLng[i]._row_state_
+                });
+            }
+
+            input.inputData.pdDtl = pdDtlVal;                      
+
+            if(this.validator.validate(this.byId("page")) !== true) return;
+
+            var url = "srv-api/odata/v4/dp.partActivityV4Service/PdpartActivitySaveProc";
+            
+            // console.log(inputData);
 			oTransactionManager.setServiceModel(this.getModel());
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
@@ -270,152 +291,242 @@ sap.ui.define([
                         $.ajax({
                             url: url,
                             type: "POST",
-                            data: JSON.stringify(inputData),
+                            data: JSON.stringify(input),
                             contentType: "application/json",
                             success: function (rst) {
-                                if(rst.return_code =="S"){
-                                    sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
-                                    v_this.onSearch(rst.return_msg );
+                                console.log(rst);
+                                if(rst.return_code =="OK"){
+                                    if(CUType === "D") {
+                                        v_this.handleClose.call(v_this);
+                                        v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                        MessageToast.show(v_this.getModel("I18N").getText("/NCM01002"));                                       
+                                    } else if(CUType === "C"){
+                                        v_this.handleClose.call(v_this);
+                                        v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                        MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                    }else {
+                                        MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                        v_this._toShowMode();                                
+                                        v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                    }
+                                    // sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                    // v_this._toShowMode();                                
+                                    // v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                    
                                 }else{
+                                    console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
                                 }
                             },
                             error: function (rst) {
+                                    console.log("eeeeee");
+                                    console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
-
+                                    // v_this.onSearch(rst.return_msg );
                             }
                         });
 					};
 				}
             });
-            this.validator.clearValueState(this.byId("midObjectForm"));
+            this.validator.clearValueState(this.byId("page"));
+		},
+		
+		
+		/**
+		 * Event handler for cancel page editing
+		 * @public
+		 */
+        onPageCancelEditButtonPress: function(){
+			
+            var oView = this.getView();            
 
+            if (this._sActivityCode === "new"){
+                this.handleClose();
+            }else if (this._sActivityCode !== "new"){
+                
+                this.getModel("contModel").setProperty("/createMode", false);                
+                
+                // this._bindView("/pdPartactivityTemplateView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode
+                // + "',org_type_code='" + this._sOrgTypeCode + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
+                // + "',activity_code='" + this._sActivityCode + "',category_group_code='" + this._sCategoryGroupCode + "')");
+                this._bindView("/pdPartactivityTemplateView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode
+                + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
+                + "',activity_code='" + this._sActivityCode + "')");
+                oView.setBusy(true);
+                
+                var oLanguagesModel = this.getModel("languages");                
+
+                oLanguagesModel.setTransactionModel(this.getModel());               
+
+                oLanguagesModel.read("/PdPartBaseActivityLng", {
+					filters: [
+						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+						new Filter("activity_code", FilterOperator.EQ, this._sActivityCode),
+					],
+					success: function(oData){
+						oView.setBusy(false);
+					}
+                });
+                
+                this._toShowMode();
+            }
+            this.validator.clearValueState(this.byId("pageSubSection1"));
+            this.validator.clearValueState(this.byId("lngTable"));
         },
 
-        _toShowMode: function () {
-            var oMasterModel = this.getModel("master");
-            var oDetailsModel = this.getModel("details");
-            var oData = oDetailsModel.oData;
+		/* =========================================================== */
+		/* internal methods                                            */
+		/* =========================================================== */
 
-            this.getView().getModel("viewModel").setProperty("/showMode", true);
-            this.getView().getModel("viewModel").setProperty("/editMode", false);
-            this.byId("page").setProperty("showFooter", true);
+		_onMasterDataChanged: function(oEvent){
+			if(this.getModel("contModel").getProperty("/createMode") == true){
+				var oMasterModel = this.getModel("master");
+                var oLanguagesModel = this.getModel("languages");                
+                var sTenantId = oMasterModel.getProperty("/tenant_id");
+                var sActivityCode = oMasterModel.getProperty("/activity_code");
+
+                var olanguagesData = oLanguagesModel.getData();
+				olanguagesData.PdPartBaseActivityLng.forEach(function(oItem, nIndex){
+					oLanguagesModel.setProperty("/PdPartBaseActivityLng/"+nIndex+"/tenant_id", sTenantId);
+					oLanguagesModel.setProperty("/PdPartBaseActivityLng/"+nIndex+"/activity_code", sActivityCode);
+                });               
+                
+				//oLanguagesModel.setData(olanguagesData);
+			}
+		},
+
+		/**
+		 * When it routed to this page from the other page.
+		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
+		 * @private
+		 */
+		_onRoutedThisPage: function(oEvent){
+			var oArgs = oEvent.getParameter("arguments"),
+				oView = this.getView();
+			this._sTenantId = oArgs.tenantId;
+            this._sCompanyCode = oArgs.companyCode;
+            this._sOrgTypeCode = oArgs.orgTypeCode;
+            this._sOrgCode = oArgs.orgCode;
+            this._sPartProjectTypeCode = oArgs.partProjectTypeCode;
+            this._sActivityCode = oArgs.activityCode;
+            this._sCategoryGroupCode = oArgs.categoryGroupCode;
             
-            this.byId("pageNavBackButton").setVisible(true);
-            if(this.statusGloCode =="DRAFT" || this.statusGloCode =="REQUEST REWRITING"){
-                this.byId("pageEditButton").setEnabled(true);
-            }else{
-                this.byId("pageEditButton").setEnabled(false);
-            }
-            this.byId("pageSaveButton").setEnabled(false);
-            this.byId("pageCancelButton").setEnabled(false);
-            this.byId("pageListButton").setEnabled(true);
-            this.byId("pageSubmitButton").setEnabled(false);
+            this._fnInitControlModel();
+
+			if(this._sActivityCode == "new"){
+				//It comes Add button pressed from the before page.
+				this.getModel("contModel").setProperty("/createMode", true);
+
+				var oMasterModel = this.getModel("master");
+				oMasterModel.setData({
+                    "tenant_id": this._sTenantId,
+                    "company_code": "",                    
+                    // "org_type_code": "",
+                    "org_code": "",
+                    "part_project_type_code": "",
+                    "activity_code": "",
+                    // "category_group_code": "",
+                    "attachment_mandatory_flag": true,
+                    "approve_mandatory_flag": true					
+                }, "/pdPartactivityTemplateView");
+                
+				var oLanguagesModel = this.getModel("languages");
+				oLanguagesModel.setTransactionModel(this.getModel());
+				oLanguagesModel.setData([], "/PdPartBaseActivityLng");
+				oLanguagesModel.addRecord({
+					"tenant_id": this._sTenantId,
+					"activity_code": this._sActivityCode,
+					"language_code": "",
+					"code_name": ""			
+                }, "/PdPartBaseActivityLng");
+                
+				this._toEditMode();
+			}else{
+				this.getModel("contModel").setProperty("/createMode", false);
+
+                // this._bindView("/pdPartactivityTemplateView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode
+                // + "',org_type_code='" + this._sOrgTypeCode + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
+                // + "',activity_code='" + this._sActivityCode + "',category_group_code='" + this._sCategoryGroupCode + "')");
+                this._bindView("/pdPartactivityTemplateView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode
+                + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
+                + "',activity_code='" + this._sActivityCode + "')");
+				oView.setBusy(true);
+				var oLanguagesModel = this.getModel("languages");
+				oLanguagesModel.setTransactionModel(this.getModel());
+				oLanguagesModel.read("/PdPartBaseActivityLng", {
+					filters: [
+						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+						new Filter("activity_code", FilterOperator.EQ, this._sActivityCode),
+					],
+					success: function(oData){
+						oView.setBusy(false);
+					}
+                });
+                
+				this._toShowMode();
+			}
+			oTransactionManager.setServiceModel(this.getModel());
         },
         
-        _toEditMode: function () {
-            this.getView().getModel("viewModel").setProperty("/showMode", false);
-            this.getView().getModel("viewModel").setProperty("/editMode", true);
-            var oMasterModel = this.getModel("master")
-            this.byId("page").setProperty("showFooter", true);
-            this.byId("pageNavBackButton").setVisible(false);
-            this.byId("pageEditButton").setEnabled(false);
+        _fnInitControlModel : function(){
+            var oData = {
+                readMode : null,
+                createMode : null,
+                editMode : null
+            }
+
+            var oContModel = this.getModel("contModel");
+            oContModel.setProperty("/midObject", oData);            
+            oContModel.setProperty("/midObject/visibleFullScreenBtn", true);
+        },
+
+		/**
+		 * Binds the view to the object path.
+		 * @function
+		 * @param {string} sObjectPath path to the object to be bound
+		 * @private
+		 */
+		_bindView : function (sObjectPath) {
+			var oView = this.getView(),
+				oMasterModel = this.getModel("master");
+			oView.setBusy(true);
+			oMasterModel.setTransactionModel(this.getModel());
+			oMasterModel.read(sObjectPath, {
+				success: function(oData){
+					oView.setBusy(false);
+				}
+			});
+		},
+
+		_toEditMode: function(){
+           
+			// this.byId("page").setSelectedSection("pageSectionMain");			
+			this.byId("pageEditButton").setEnabled(false);			
             this.byId("pageSaveButton").setEnabled(true);
             this.byId("pageCancelButton").setEnabled(true);
-            this.byId("pageListButton").setEnabled(false);
-            this.byId("pageSubmitButton").setEnabled(true);
-        },
-
-        
-
-		/**
-		 * Event handler for cancel page editing
-		 * @public
-		 */
-        onPageListButtonPress: function () {
-            this.validator.clearValueState(this.byId("midObjectForm"));
-            this.onPageNavBackButtonPress.call(this);
-        },
-
-		/**
-		 * Event handler for cancel page editing
-		 * @public
-		 */
-        onPageCancelButtonPress: function () {
-            this.validator.clearValueState(this.byId("midObjectForm"));
-            this._toShowMode();
-        },
-
-		/**
-		 * Event handler for Nav Back Button pressed
-		 * @public
-		 */
-        onPageNavBackButtonPress: function () {
-            this.validator.clearValueState(this.byId("midObjectForm"));
-            var sPreviousHash = History.getInstance().getPreviousHash();
-            this.getRouter().navTo("mainPage", {}, true);
-        },
-
-		/**
-		 * Event handler for page edit button press
-		 * @public
-		 */
-        onPageEditButtonPress: function () {
-            this._toEditMode();
-        },
-
-
-        processIconStr (obj , obj2){
-            if(obj == obj2){
-                if(obj = "아이디어"){
-                    return "sap-icon://circle-task-2";
-                }
-            }
-            return "";
-        },
-
-
-        
-        /**
-         * function : 아이디어 관리자 팝업 Call 함수
-         * date : 2021/01/14
-         */
-        onIdeaManagerDialogPress : function(){
+            this.byId("pageDeleteButton").setEnabled(true);
+			this.byId("lngTableAddButton").setEnabled(true);
+            this.byId("lngTableDeleteButton").setEnabled(true);
+                      
             
-            if(!this.oSearchIdeaManagerDialog){
-                this.oSearchIdeaManagerDialog = new IdeaManagerDialog({
-                    title: this.getModel("I18N").getText("/SEARCH_IDEA_MANAGER"),
-                    multiSelection: false,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, this.tenant_id)
-                        ]
-                    }
-                });
-                this.oSearchIdeaManagerDialog.attachEvent("apply", function(oEvent){ 
-                    this.byId("ideaManager").setValue(oEvent.getParameter("item").idea_manager_name);
-                    // this.byId("ideaManager").setValue(oEvent.getParameter("item").idea_manager_name+"("+oEvent.getParameter("item").idea_manager_empno+")");
-                    this.byId("ideaManagerId").setValue(oEvent.getParameter("item").idea_manager_empno);
-                    
-                }.bind(this));
-                }
-            this.oSearchIdeaManagerDialog.open();
+            this.getView().getModel("contModel").setProperty("/editMode", true);
+            this.getView().getModel("contModel").setProperty("/readMode", false);
+		},
 
-        },
+		_toShowMode: function(){		
+			
+			// this.byId("page").setSelectedSection("pageSectionMain");			
+			this.byId("pageEditButton").setEnabled(true);			
+            this.byId("pageSaveButton").setEnabled(false);
+            this.byId("pageCancelButton").setEnabled(false);
+            this.byId("pageDeleteButton").setEnabled(false);
+			this.byId("lngTableAddButton").setEnabled(false);
+            this.byId("lngTableDeleteButton").setEnabled(false);           
 
-        
-        /**
-         * 코드 체크
-         */
-        onNameChk : function(e) {
-            console.log(e);
-            var oView = this.getView();
-            var ideaManagerId = this.getView().byId("ideaManagerId");
-            ideaManagerId.setValue("");
-        },
+            this.getView().getModel("contModel").setProperty("/editMode", false);
+            this.getView().getModel("contModel").setProperty("/readMode", true);
+            
+		}
 
-
-
-
-    });
+	});
 });
