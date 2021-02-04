@@ -13,17 +13,17 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
-    "dputil/control/ui/MaterialOrgDialog",
     "sap/m/Token",
     "sp/util/control/ui/SupplierDialog",
     "dp/util/control/ui/MaterialMasterDialog",
     "cm/util/control/ui/EmployeeDialog",
     "dpmd/util/controller/EmployeeDeptDialog",
+    "./MaterialOrgDialog",
     "ext/lib/util/ExcelUtil"
 ],
   function (BaseController, ManagedListModel, TransactionManager, Validator, Formatter, DateFormatter,
-        JSONModel, ODataModel, RichTextEditor, MessageBox, Fragment, Filter, FilterOperator, MessageToast, MaterialOrgDialog, Token
-        , SupplierDialog, MaterialMasterDialog, EmployeeDialog,EmployeeDeptDialog,ExcelUtil) {
+        JSONModel, ODataModel, RichTextEditor, MessageBox, Fragment, Filter, FilterOperator, MessageToast, Token
+        , SupplierDialog, MaterialMasterDialog, EmployeeDialog,EmployeeDeptDialog, MaterialOrgDialog, ExcelUtil) {
     "use strict";
 
     var sSelectedDialogPath, sTenantId, oOpenDialog;
@@ -130,9 +130,10 @@ sap.ui.define([
                         supply_plant : "",
                         material_code : "",
                         material : "",
+                        vendor_pool_code : "",
                         vendor_pool : "",
                         currency : "",
-                        basePriceUnit : "",
+                        base_uom_code : "",
                         base_price : "",
                         buyer : ""
                         });
@@ -275,106 +276,46 @@ sap.ui.define([
         }
 
         /**
-         * 자재 마스터 Dialog 창
-         */
-        , onMaterialMasterMultiDialogPress : function(oEvent){          
-            var oRootModel = this.getModel("rootModel");
-            var RootTenantId = oRootModel.getProperty("/tenantId");
-            var oDetailModel = this.getModel("detailModel");
-            var oDetailModelPath = oEvent.getSource().getBindingContext("detailModel").getPath();
-            var oDetail = oDetailModel.getProperty(oDetailModelPath);
-            this._oDetail = oDetail;
-        
-            if(!this.oSearchMultiMaterialMasterDialog){
-                this.oSearchMultiMaterialMasterDialog = new MaterialMasterDialog({
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, RootTenantId)
-                        ]
-                    }, 
-                    multiSelection: false
-                });
+          * Material Code Dailog 호출
+          */
+        , onMaterialMasterMultiDialogPress: function (oEvent) {
+            debugger;
+             var oRootModel = this.getModel("rootModel");
+             var oDetailModel = this.getModel("detailModel");
+             var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
+             var oDetail = oDetailModel.getProperty(sSelectedPath);
+             this._oDetail = oDetail;
 
-                this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
-                    //자매 코드 추가시 자재, 협력사,수량 자동세팅                    
+             if( !this.oSearchMultiMaterialOrgDialog) {
+                 this.oSearchMultiMaterialOrgDialog = new MaterialOrgDialog({
+                     title: "Choose MaterialMaster",
+                     multiSelection: false,
+                     tenantId: sTenantId,
+                     items: {
+                         filters:[
+                             new Filter("tenant_id", FilterOperator.EQ, sTenantId)
+                         ]
+                     }
+                 })
+
+                 this.oSearchMultiMaterialOrgDialog.attachEvent("apply", function(oEvent) {
                     var oSelectedDialogItem = oEvent.getParameter("item");
+                    debugger;
                     this._oDetail.material_code = oSelectedDialogItem.material_code;
-                    this._oDetail.material = oSelectedDialogItem.material_desc;
-                    
-                    //material Code 기준으로 조회하여 추가데이터 제공 
-                    //this.getMaterialSearch(this._oDetail.material_code);
+                    this._oDetail.material  = oSelectedDialogItem.material_desc;
+                    this._oDetail.vendor_pool_code = oSelectedDialogItem.vendor_pool_code;
+                    this._oDetail.vendor_pool = oSelectedDialogItem.vendor_pool_local_name;
+                    this._oDetail.base_uom_code = oSelectedDialogItem.base_uom_code;
 
-                    var material = this.getModel("rootModel").getProperty("/material_code/"+this._oDetail.material_code);
-
-                    if(!material) {
-                        MessageBox.show(oEvent.getParameter("item").material_code+"없는 코드입니다.");
-                        this._oDetail.vendor_pool = "";
-                        this._oDetail.basePriceUnit = "";
-                        oDetailModel.refresh();
-                        return;
-                    }
-                    this._oDetail.vendor_pool = material[0].vendor_pool_local_name;
-                    this._oDetail.basePriceUnit = material[0].material_price_unit;
-                    this._oDetail.vendor_pool_code = material[0].vendor_pool_code;
                     oDetailModel.refresh();
-                }.bind(this));
-            }
-            this.oSearchMultiMaterialMasterDialog.open();
-        }
+                 }.bind(this));
+             }
 
-        //자재 조회
-        // , getMaterialSearch : function(material_code){
-        //     debugger;
-        //     var oBasePriceArlModel = this.getModel("basePriceArl");
-        //     var aOrgMetalFilter = [];
-        //         aOrgMetalFilter.push(new Filter("material_code", FilterOperator.EQ, material_code));
+             this.oSearchMultiMaterialOrgDialog.open();
 
-        //     this._getListSearch(aOrgMetalFilter);
-        // }
-
-        // , _getListSearch : function(aOrgMetalFilter){
-        //     debugger;
-        //     var oView = this.getView();
-        //     var oModel = this.getModel("basePriceArl");
-            
-        //     oModel.read("/Base_Price_Aprl_Material", {
-        //         filters : aOrgMetalFilter,
-        //         success : function(data){
-        //             debugger;
-        //             console.log(data);
-        //             if( data && data.results ) {
-        //                 var aResults = data.results;
-        //                 var aCompoany = [];
-        //                 var oPurOrg = {};
-
-        //                 for( var i=0; i<aResults.length; i++ ) {
-        //                     var oResult = aResults[i];
-        //                     if( -1===aCompoany.indexOf(oResult.material_code) ) {
-        //                         aCompoany.push(oResult.material_code);
-        //                         oPurOrg[oResult.material_code] = [];
-        //                     }
-
-        //                     oPurOrg[oResult.material_code].push({material_code: oResult.material_code
-        //                                                         ,material_desc: oResult.material_desc
-        //                                                         ,material_price_unit : oResult.material_price_unit
-        //                                                         ,vendor_pool_code : oResult.vendor_pool_code
-        //                                                         ,vendor_pool_local_name : oResult.vendor_pool_local_name
-        //                                                         });
-        //                 }
-
-        //                 this.getModel("rootModel").setProperty("/material_code", oPurOrg);
-        //                 debugger;
-        //                 // this._oDetail.vendor_pool = material[0].vendor_pool_local_name;
-        //             // this._oDetail.basePriceUnit = material[0].material_price_unit;
-        //             // this._oDetail.vendor_pool_code = material[0].vendor_pool_code;
-
-        //             }
-        //         },
-        //         error : function(data){
-        //             console.log("error", data);
-        //         }
-        //     });
-        //}
+             var aTokens = [new Token({key: oDetail.material_code, text: oDetail.material_desc})];
+             this.oSearchMultiMaterialOrgDialog.setTokens(aTokens);
+         }
 
         /**
          * 구매 담당자 Dialog 창
@@ -604,7 +545,7 @@ sap.ui.define([
                     oNewPriceObj['material_name'] = aPriceData[idx].material;
                     oNewPriceObj['vendor_pool_code'] = aPriceData[idx].vendor_pool_code;
                     oNewPriceObj['currency_code'] = aPriceData[idx].currency_code;
-                    oNewPriceObj['material_price_unit'] = Number(aPriceData[idx].basePriceUnit);
+                    oNewPriceObj['base_uom_code'] = aPriceData[idx].base_uom_code;
                     oNewPriceObj['buyer_empno'] = aPriceData[idx].buyer;
                     oNewPriceObj['base_price'] = parseFloat(aPriceData[idx].base_price);
                     oNewPriceObj['pcst'] = null;

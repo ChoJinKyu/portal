@@ -41,7 +41,7 @@
 			<FlexBox wrap="Wrap">
                 <!-- base Info 시작 -->
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
-                    <ObjectStatus title="{I18N>/APPROVAL_NO}" text="{I18N>/AUTOMATIC}"/>
+                    <ObjectStatus title="{I18N>/APPROVAL_NO}" text=""/>
                     <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/create_user_id}"/>
                     <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/>
                     <ObjectStatus title="사번본부" text="{detailModel>/bizunit_name}"/>
@@ -51,7 +51,7 @@
                 <!-- Status 시작 -->
 				<layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
 					<Label text="{I18N>/STATUS} :"/>
-                    <ObjectStatus class="sapMObjectStatusLarge" text="{I18N>/DRAFT}" state="Error" />
+                    <ObjectStatus class="sapMObjectStatusLarge" text="{I18N>/NEW}" state="Error" />
 				</layout:VerticalLayout>
                 <!-- Status 끝 -->
 
@@ -73,7 +73,6 @@
                                     state="{= ${detailModel>/approval_status_code} === '30' ? 'Error' : 'None'}" 
                                     stepWidth="5rem"
                                     icon="{= ${detailModel>/approval_status_code} === '30' ? 'sap-icon://circle-task' : ''}" /> -->
-                                <co:MicroProcessFlowItem state="Error" stepWidth="5rem" icon="sap-icon://complete" />
                                 <co:MicroProcessFlowItem state="None" stepWidth="5rem" icon="sap-icon://circle-task" />
                                 <co:MicroProcessFlowItem state="None" stepWidth="5rem" icon="sap-icon://circle-task" />
                                 <co:MicroProcessFlowItem state="None" stepWidth="5rem" icon="sap-icon://circle-task" />
@@ -82,7 +81,6 @@
                         </co:MicroProcessFlow>
                     </HBox>
                     <HBox>
-                        <Text text="{I18N>/DRAFT}" width="5rem" />
                         <Text text="{I18N>/TEMP_SAVE}" width="7rem" />
                         <Text text="결재요청" width="6rem" />
                         <Text text="결재중" width="5rem" />
@@ -146,9 +144,10 @@
                                             </items>
                                         </ComboBox>
                                         <ToolbarSeparator/> -->
-                                        <Button text="Add mgmt." type="Emphasized" press=".onRowSelectadd('MANAGEMENT')" />
-                                        <Button text="Add MP" type="Emphasized" press=".onRowSelectadd('MARKET_PRICE')" />
-                                        <Button text="{I18N>/ROW_DELETE}" type="Emphasized" press=".onListRowDelete" />
+                                         <Button text="{I18N>/ADDITION}({I18N>/MANAGEMENT})" type="Emphasized" press=".onRowSelectadd('MANAGEMENT')" />
+                                        <Button text="{I18N>/ADDITION}({I18N>/MARKET_PRICE})" type="Emphasized" press=".onRowSelectadd('MARKET_PRICE')" />
+                                        <Button text="{I18N>/DELETE}" type="Emphasized" press=".onListRowDelete" />
+
 
                                         <u:FileUploader id="FileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
                                         buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="{I18N>/UPLOAD}" enabled="false"/>
@@ -188,21 +187,21 @@
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Left" width="8rem">
-                                            <Label text="{I18N>/SP_APPLY_START_DATA_YYYYMM}" textAlign="Center" width="100%"/>
+                                            <Label text="{I18N>/SP_APPLY_START_DATA_YYYYMM}" textAlign="Center" width="100%" required="true"/>
                                             <t:template>
                                                 <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" displayFormat="y-MM" 
                                                             value="{ path: 'detailModel>apply_start_date'}" />
                                             </t:template>
                                         </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/SP_APPLY_END_DATE_YYYYMM}" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/SP_APPLY_END_DATE_YYYYMM}" textAlign="Center" width="100%" required="true"/>
                                         <t:template>
                                             <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" displayFormat="y-MM"
                                                         value="{ path: 'detailModel>apply_end_date' }" />
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="10rem">
-                                        <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%" required="true"/>
                                         <t:template>
                                             <ComboBox id="listDivComboBox" width="100%" selectedKey="{detailModel>business_division}" 
                                                 items="{
@@ -215,7 +214,7 @@
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/CORPORATION}" textAlign="Center" width="100%" />
+                                        <Label text="{I18N>/CORPORATION}" textAlign="Center" width="100%" required="true"/>
                                         <t:template>
                                             <ComboBox id="CorpComboBox" width="100%"  selectedKey="{detailModel>corporation}" 
                                                 editable="{= ${detailModel>row_state} === 'edit' }"
@@ -231,7 +230,7 @@
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Center" width="8rem">
-                                        <Label text="{I18N>/PLANT}" textAlign="Center" width="100%" />
+                                        <Label text="{I18N>/PLANT}" textAlign="Center" width="100%" required="true"/>
                                         <t:template>
                                             <ComboBox width="100%" editable="{= ${detailModel>row_state} === 'edit' }"
                                                 selectedKey="{detailModel>plant}" 
@@ -245,7 +244,7 @@
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/SUPPLY_PLANT}" textAlign="Center" width="100%" />
+                                        <Label text="{I18N>/SUPPLY_PLANT}" textAlign="Center" width="100%" required="true"/>
                                         <t:template>
                                             <ComboBox width="100%" editable="{= ${detailModel>row_state} === 'edit' }"
                                                 selectedKey="{detailModel>supply_plant}" 
@@ -258,27 +257,36 @@
                                             </ComboBox>
                                         </t:template>
                                     </t:Column>
-                                     <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/MATERIAL} {I18N>/CODE}" textAlign="Center" width="100%"/>
+                                    <t:Column hAlign="Left" width="8rem">
+                                        <Label text="{I18N>/MATERIAL}{I18N>/CODE}" textAlign="Center" width="100%" required="true"/>
                                         <t:template>
-                                            <MultiInput editable="{= ${detailModel>row_state} === 'edit' }"
-                                                    valueHelpRequest="onMaterialMasterMultiDialogPress" value="{detailModel>material_code}"/>
+                                            <VBox>
+                                                <Input value="{detailModel>material_code}" showValueHelp="true"
+                                                    valueHelpRequest=".onMaterialMasterMultiDialogPress">
+                                                </Input>
+                                            </VBox>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/MATERIAL}" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/MATERIAL_NAME}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>material}"/>
                                         </t:template>
                                     </t:Column>
-                                    <t:Column hAlign="Left" width="13rem">
-                                        <Label text="{I18N>/VENDOR_POOL}" textAlign="Center" width="100%"/>
+                                    <t:Column hAlign="Left" width="8rem">
+                                        <Label text="{I18N>/VENDOR_POOL_CODE}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>vendor_pool}[{detailModel>vendor_pool_code}]"/>
+                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>vendor_pool_code}"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/VENDOR_POOL}" textAlign="Center" width="100%"/>
+                                        <t:template>
+                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>vendor_pool}"/>
+                                        </t:template>
+                                    </t:Column>
+                                    <t:Column hAlign="Left" width="8rem">
+                                        <Label text="{I18N>/CURRENCY}" textAlign="Center" width="100%" required="true"/>
                                         <t:template>
                                             <ComboBox selectedKey="{detailModel>currency_code}"
                                                 items="{ path: 'currModel>/org_Currency'}">
@@ -291,17 +299,17 @@
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/BASE_PRICE_UNIT}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>basePriceUnit}"/>
+                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>base_uom_code}"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/BASE_PRICE}" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/BASE_PRICE}" textAlign="Center" width="100%" required="true"/>
                                         <t:template>
                                             <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>base_price}"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/BUYER}" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/BUYER}" textAlign="Center" width="100%" required="true"/>
                                         <t:template>
                                             <MultiInput editable="{= ${detailModel>row_state} === 'edit' }"
                                                     valueHelpRequest="onEmployeeDialogPress" value="{detailModel>buyer}"/>

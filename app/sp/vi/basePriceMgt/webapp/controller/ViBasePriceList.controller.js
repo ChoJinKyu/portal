@@ -6,9 +6,10 @@ sap.ui.define([
   "sap/ui/model/FilterOperator",
   "sap/ui/core/Fragment",
   "sap/m/MessageBox",
-  "ext/lib/util/ExcelUtil"
+  "ext/lib/util/ExcelUtil",
+  "cm/util/control/ui/EmployeeDialog"
 ],
-  function (BaseController, JSONModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, ExcelUtil) {
+  function (BaseController, JSONModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, ExcelUtil,EmployeeDialog) {
     "use strict";
 
     var sSelectedPath, sTenantId, oDialogInfo, toggleButtonId = "";
@@ -52,9 +53,61 @@ sap.ui.define([
         }
 
         /**
+         * 사원 Dialog 공통 팝업 호출
+         */
+        , onMultiInputWithEmployeeValuePress: function(oEvent, sInputIdParam){
+            var that = this;
+            var bMultiSelection = true;
+            var bCloseWhenApplied = true;
+
+            if( sInputIdParam === "changeDeveloper" ) {
+                bMultiSelection = false;
+                bCloseWhenApplied = false;
+            }
+
+            if(!this.oEmployeeMultiSelectionValueHelp || this.oEmployeeMultiSelectionValueHelp.getMultiSelection() !== bMultiSelection ){
+                this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
+                    title: "Choose Employees",
+                    multiSelection: bMultiSelection,
+                    closeWhenApplied: bCloseWhenApplied,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, this.getModel("rootModel").getProperty("tenantId"))
+                        ]
+                    }
+                });
+                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    if( sInputIdParam === "changeDeveloper" ) {
+                        var oApplyEvent = oEvent;
+                        var oSelectedItem = oEvent.getParameter("item");
+                        MessageBox.confirm("선택한 사원으로 변경 하시겠습니까?", {
+                            title : "Request",
+                            initialFocus : sap.m.MessageBox.Action.CANCEL,
+                            onClose : function(sButton) {
+                                if (sButton === MessageBox.Action.OK) {
+                                    that._changeDeveloper(oSelectedItem);
+                                    oApplyEvent.getSource().close();
+                                }
+                            }.bind(this)
+                        });
+                    }else {
+                        this.byId(sInputIdParam).setTokens(oEvent.getSource().getTokens());
+                    }
+                    
+                }.bind(this));
+            }
+            this.oEmployeeMultiSelectionValueHelp.open();
+
+            if( sInputIdParam !== "changeDeveloper" ) {
+                this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId(sInputIdParam).getTokens());
+            }
+        }
+
+        /**
          * Search 버튼 클릭(Filter 추출)
          */
         , onSearch: function (oEvent) {
+            debugger;
             var oFilterModel = this.getModel("filterModel"),
                 oFilterModelData = oFilterModel.getData(),
                 aFilters = [],
@@ -65,6 +118,7 @@ sap.ui.define([
                 oDateValue = oFilterModelData.dateValue,
                 oSecondDateValue = oFilterModelData.secondDateValue,
                 oNetPriceTypeCodeNm = oFilterModelData.net_price_type_code;
+            var aRequestors = this.byId("multiInputWithEmployeeValueHelp").getTokens();
 
             // Status가 있는 경우
             if( sStatus ) {
@@ -85,10 +139,19 @@ sap.ui.define([
             if( oDateValue ) {
                 aFilters.push(new Filter("request_date", FilterOperator.BT, this._changeDateFormat(oDateValue), this._changeDateFormat(oSecondDateValue)));
             }
+            
+            // Requestor가 있는 경우
+            if( 0<aRequestors.length ) {
+                var aRequestorsFilter = [];
+                
+                aRequestors.forEach(function (oRequestor) {
+                    aRequestorsFilter.push(new Filter("requestor_empno", FilterOperator.EQ, oRequestor.getKey()));
+                });
 
-            // Request By가 있는 경우
-            if( sRequestBy ) {
-                aFilters.push(new Filter("approval_requestor_empno", FilterOperator.EQ, sRequestBy));
+                aFilters.push(new Filter({
+                    filters: aRequestorsFilter,
+                    and: false
+                }));
             }
 
             // 품의유형이 있는경우
@@ -103,6 +166,7 @@ sap.ui.define([
          * Base Price Progress List 조회
          */
         _getBasePriceList: function(filtersParam) {
+            debugger;
             var oView = this.getView();
             var oModel = this.getModel("basePriceArl");
             filtersParam =  Array.isArray(filtersParam) ? filtersParam : [];
@@ -111,10 +175,11 @@ sap.ui.define([
             oModel.read("/Base_Price_Aprl_Master", {
                 filters : filtersParam,
                 urlParameters: {
-                    "$orderby": "system_update_dtm desc"
+                    "$orderby": "approval_number desc, request_date desc"
                 },
                 success : function(data){
                     oView.setBusy(false);
+                    debugger;
 
                     oView.getModel("listModel").setData(data);
                 },
@@ -267,7 +332,7 @@ sap.ui.define([
          * 상세 페이지로 이동
          */
         , onGoDetail: function (oEvent) {
-            //MessageBox.show("준비중입니다.");
+            MessageBox.show("준비중입니다.");
             return;
 
             // var oListModel = this.getModel("listModel");
