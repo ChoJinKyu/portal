@@ -16,7 +16,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{I18N>/DP_PART_ACTIVITY_MGT}" />
+                    <Title text="{I18N>/PRODUCT} {I18N>/ACTIVITY}" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -35,7 +35,7 @@
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="코드 / 명 / 설명 :" labelFor="searchProductActivity" required="true"></Label>
+                            <Label text="코드 / 명 / 설명 :" labelFor="searchProductActivity"></Label>
                             <Input id="searchProductActivity" 
                                 placeholder="코드 / 명 / 설명 :"/>
                             <layoutData>
@@ -74,7 +74,7 @@
                     width="auto">
                 <t:extension>
                     <OverflowToolbar class="sapFDynamicPageAlignContent">
-                        <Title id="mainTableTitle2" text="{I18N>/DP_PART_ACTIVITY_MGT} {I18N>/LIST} {= ${list>/PdProdActivityTemplateView}.length > 0 ? '(' + ${list>/PdProdActivityTemplateView}.length + ')' : ''}" level="H2"/>
+                        <Title id="mainTableTitle2" text="{I18N>/PRODUCT} {I18N>/ACTIVITY} {I18N>/LIST} {= ${list>/PdProdActivityTemplateView}.length > 0 ? '(' + ${list>/PdProdActivityTemplateView}.length + ')' : ''}" level="H2"/>
                         <ToolbarSpacer/>
                         <Button text="{I18N>/CREATE}" id="createActivity" press=".onCreateActivity"  type="Transparent"/>
                         <Button icon="sap-icon://excel-attachment" press="onExportPress" type="Transparent"/>
@@ -87,21 +87,21 @@
                 <t:columns>
 
                     <t:Column hAlign="Center">
-                        <Text text="{I18N>/PROD_ACTIVITY_CODE}" />
+                        <Text text="{I18N>/PRODUCT_ACTIVITY_CODE}" />
                         <t:template>
                             <Text text="{list>product_activity_code}" ></Text>  
                         </t:template>
                     </t:Column>
 
                     <t:Column hAlign="Center">
-                        <Text text="{I18N>/PROD_ACTIVITY_NAME}" />
+                        <Text text="{I18N>/PRODUCT_ACTIVITY_NAME}" />
                         <t:template>
                             <Text text="{list>activity_name}" ></Text>  
                         </t:template>
                     </t:Column>
 
                     <t:Column hAlign="Center">
-                        <Text text="{I18N>/DESCRIPTION}" />
+                        <Text text="{I18N>/PRODUCT_DESC}" />
                         <t:template>
                             <Text text="{list>description}" ></Text>  
                         </t:template>
