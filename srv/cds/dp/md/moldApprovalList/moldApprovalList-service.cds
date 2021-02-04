@@ -112,8 +112,7 @@ service MoldApprovalListService {
             , emp.locale_code         
             , emp.department_id   
         from approvalMst.Approval_Mst m 
-        join emp.Hr_Employee emp on m.requestor_empno = emp.employee_number 
-         /* and emp.tenant_id = m.tenant_id  데이터가 안나와서 주석 처리 함 */ 
+        join emp.Hr_Employee emp on m.requestor_empno = emp.employee_number and emp.tenant_id = m.tenant_id 
         join ( select 
             l.code, l.code_name, l.tenant_id
             from codeLng.Code_Lng l  
