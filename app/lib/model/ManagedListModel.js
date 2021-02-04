@@ -147,7 +147,13 @@ sap.ui.define([
                 oServiceModel.create(sPath, oItem, {
                     groupId: sGroupId,
                     success: function (oData) {
-                        oItem.__entity = sPath;
+                        if (oData.__metadata && oData.__metadata.uri) {
+                            var sType = oData.__metadata.type,
+                                sUrl = oData.__metadata.uri;
+                            sType = sType.substring(0, sType.lastIndexOf("."));
+                            oItem.__entity = sUrl.substring(sUrl.indexOf(sType) + sType.length);
+                        }
+                        //oItem.__entity = sPath;
                     }
                 });
             });
