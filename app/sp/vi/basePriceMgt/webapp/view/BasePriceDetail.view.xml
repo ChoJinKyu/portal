@@ -9,12 +9,12 @@
     xmlns:lib-m="ext.lib.m"
     xmlns:lib-cm="ext.lib.control.m"
     xmlns:t="sap.ui.table"
-    xmlns:tnt="sap.tnt"    
+    xmlns:tnt="sap.tnt"     
     xmlns:co="sap.suite.ui.commons"
     xmlns:rte="sap.ui.richtexteditor"
     xmlns:u="sap.ui.unified"
     height="100%">
-
+ 
     <uxap:ObjectPageLayout
         showTitleInHeaderContent="true"
 		showEditHeaderButton="true"
