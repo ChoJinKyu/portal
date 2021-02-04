@@ -2,7 +2,7 @@
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:form="sap.ui.layout.form"
-    xmlns:layout="sap.ui.layout" >
+    xmlns:layout="sap.ui.layout" > 
     
     <Dialog id="dialogApprovalCategory" class="sapUiSmallMargin" title="품의서 유형 선택" contentWidth="20%" >
         <content>  

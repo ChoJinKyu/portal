@@ -5,7 +5,7 @@
     xmlns:t="sap.ui.table"
     xmlns:layout="sap.ui.layout" >
     <t:Table 
-        selectionMode="MultiToggle"
+        selectionMode="MultiToggle" 
         rows="{detailModel>/details}"
         rowSelectionChange=".onRowSelectionChange"
         fixedColumnCount="3"

@@ -2,7 +2,7 @@ sap.ui.define([
   "ext/lib/UIComponent",
   "sap/ui/model/json/JSONModel",
   "ext/lib/util/Multilingual",
-  "sap/ui/model/Filter",
+  "sap/ui/model/Filter", 
   "sap/ui/model/FilterOperator",
 ], function (UIComponent, JSONModel, Multilingual, Filter, FilterOperator) {
   "use strict";
