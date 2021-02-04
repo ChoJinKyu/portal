@@ -1,6 +1,6 @@
 sap.ui.define([
 	"jquery.sap.global",
-	"sap/ui/core/UIComponent",
+	"ext/lib/UIComponent",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/Device",
 	"ext/lib/model/models",
