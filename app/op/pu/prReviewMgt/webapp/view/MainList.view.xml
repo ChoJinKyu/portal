@@ -80,7 +80,7 @@
                             </MultiComboBox>
                             <!-- 구매요청 생성자 -->
                             <Label text="{I18N>/REQUESTOR}"/>
-                            <lib-m:CodePicker 
+                            <!-- <lib-m:CodePicker 
                                 placeholder="(미정)구매요청생성자"
                                 selectedKey="{jSearch>/requestor_empno}"
                                 keyField="employee_number"
@@ -100,7 +100,12 @@
                                     keyFieldHeaderText="{I18N>/PR_REQUESTOR_EMPNO}" 
                                     textFieldHeaderText="{I18N>/PR_REQUESTOR_NAME}"
                                 />
-                            </lib-m:CodePicker>
+                            </lib-m:CodePicker> -->
+                            <MultiInput 
+                                id="requestorEmpno"
+                                showValueHelp="true" 
+                                valueHelpRequest=".onValueHelpRequest($event, 'requestor_empno', 'jSearch', {})"
+                            />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -139,26 +144,6 @@
                             </MultiComboBox>
                             <!-- 구매요청자 부서 -->
                             <Label text="{I18N>/REQUESTOR_DEPARTMENT}"/>
-                            <!-- <lib-m:CodePicker 
-                                placeholder="(미정)부서명을 입력하세요"
-                                selectedKey="{jSearch>/requestor_department_code}"
-                                keyField="department_id"
-                                textField="department_local_name"
-                                suggestionItems="{
-                                    path: '/',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                    ],
-                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                    entityName: 'Department'
-                                }">
-                                <lib-m:CodePickerValueHelp 
-                                    title="(미정)부서를 선택하세요"
-                                    contentWidth="500px"
-                                    keyFieldHeaderText="{I18N>/PR_DEPARTMENT_CODE}" 
-                                    textFieldHeaderText="{I18N>/PR_DEPARTMENT_NAME}"
-                                />
-                            </lib-m:CodePicker> -->
                             <MultiInput 
                                 id="requestorDepartmentCode"
                                 showValueHelp="true" 
@@ -183,7 +168,7 @@
                             />
                             <!-- 구매담당자 -->
                             <Label text="{I18N>/BUYER}"/>
-                            <lib-m:CodePicker 
+                            <!-- <lib-m:CodePicker 
                                 placeholder="(미정)구매담당자를 입력하세요"
                                 selectedKey="{jSearch>/buyer_empno}"
                                 keyField="employee_number"
@@ -202,7 +187,12 @@
                                     keyFieldHeaderText="{I18N>/BUYER_EMPNO}" 
                                     textFieldHeaderText="{I18N>/BUYER_NAME}"
                                 />
-                            </lib-m:CodePicker>
+                            </lib-m:CodePicker> -->
+                            <MultiInput 
+                                id="buyerEmpno"
+                                showValueHelp="true"
+                                valueHelpRequest=".onValueHelpRequest($event, 'buyer_empno', 'jSearch', {})"
+                            />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -239,9 +229,14 @@
                             </layoutData> -->
                             <!-- 자재코드 -->
                             <Label text="{I18N>/MATERIAL_CODE}"/>
-                            <Input
+                            <!-- <Input
                                 value="{jSearch>/material_code}"
                                 placeholder="(미정)자재를 선택하세요"
+                                showValueHelp="true"
+                                valueHelpRequest=".onValueHelpRequest($event, 'material_code', 'jSearch', {})" 
+                            /> -->
+                            <MultiInput 
+                                id="materialCode"
                                 showValueHelp="true"
                                 valueHelpRequest=".onValueHelpRequest($event, 'material_code', 'jSearch', {})" 
                             />

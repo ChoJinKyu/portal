@@ -144,24 +144,7 @@
                   "mainObject",
                   "midViewObject"
               ]
-          },
-          {
-              "pattern": "midModify/{layout}/{vMode}/{tenantId}/{company_code}/{pr_number}",
-              "name": "midModify",
-              "target": [
-                  "mainObject",
-                  "midModifyObject"
-              ]
-          },
-          {
-              "pattern": "midCreate/{layout}/{vMode}/{tenantId}/{company_code}/{pr_type_code}/{pr_type_code_2}/{pr_type_code_3}/{pr_template_number}",
-              "name": "midCreate",
-              "target": [
-                  "mainObject",
-                  "midCreateObject"
-              ]
           }
-
       ],
       "targets": {
           "mainObject": {
@@ -170,14 +153,6 @@
           },
           "midViewObject": {
               "viewName": "MidViewObject",
-              "controlAggregation": "midColumnPages"
-          },
-          "midCreateObject": {
-              "viewName": "MidCreateObject",
-              "controlAggregation": "midColumnPages"
-          },
-          "midModifyObject": {
-              "viewName": "MidCreateObject",
               "controlAggregation": "midColumnPages"
           },
           "notFound": {
