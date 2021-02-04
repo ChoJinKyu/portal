@@ -12,11 +12,6 @@
     xmlns:custom="ext.lib.custom">
     <m:Panel>
     <m:content>
-        <custom:SppCustomUploadCollection
-            uploadUrl="srv-api/test/upload"
-            instantUpload="false"
-        >
-        </custom:SppCustomUploadCollection>
 		<m:HBox>
 			<m:ToggleButton text="Disabled" enabled="false" press="" >
 				<m:layoutData>
@@ -172,11 +167,14 @@
         <m:HBox>
             <!-- <TreeTable -->
             <Table
-                    id="TreeTableBasic"
-                    rows="{/modelData}"
-                    selectionMode="MultiToggle"
-                    enableSelectAll="false"
-                    ariaLabelledBy="title">
+                id="TreeTableBasic"
+                rows="{/modelData}"
+                selectionMode="Single"
+                selectionBehavior="RowOnly"
+                enableSelectAll="false"
+                ariaLabelledBy="title"
+                rowSelectionChange="onRowSelectionChange"
+                >
                 <extension>
                     <m:OverflowToolbar>
                         <m:Title id="title" text="Clothing"/>
@@ -203,7 +201,7 @@
                     <Column width="11rem">
                         <m:Label text="Phone"/>
                          <template>
-                        <m:Text text="{phone}" wrapping="false" />
+                        <m:Input value="{phone}" />
                         </template>
                     </Column>
                 </columns>

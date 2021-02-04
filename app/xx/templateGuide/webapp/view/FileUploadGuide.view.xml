@@ -1,0 +1,50 @@
+<mvc:View
+	controllerName="xx.templateGuie.controller.FileUploadGuide"
+	xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    class="sapUiSizeCompact"
+    height="100%">
+    <Panel height="100%">
+		<content height="auto">
+            <UploadCollection
+                id="fileUploadCollection"
+                busyIndicatorDelay="0"
+                fileType="bmp,gif,jpg,jpeg,png,tif,doc,pdf,ppt,xls,xlsx,htm"
+                typeMissmatch="onTypeMissmatch"
+                maximumFileSize="10"
+                fileSizeExceed="onFileSizeExceed"
+                multiple="true"
+                change="onChange"                
+                uploadUrl="srv-api/cm/fileupload/api/v2/singleUpload"
+                beforeUploadStarts="onBeforeUploadStarts"
+                uploadComplete="onUploadComplete"
+                fileDeleted="onFileDeleted"
+                items="{
+                    path : 'fileList>/records'
+                }">
+                <items>
+                    <UploadCollectionItem
+                        documentId="{fileList>fileId}"
+                        fileName="{fileList>fileName}"
+                        thumbnailUrl="{path : 'fileList>fileExt', formatter : '._getTypeIcon'}"
+                        enableEdit="false"
+                        visibleEdit="false"
+                        enableDelete="true"
+                        visibleDelete="true"
+                        selected="true"
+                        press="onFileDownload">
+                        <attributes>
+                            <ObjectAttribute title="Upload Date" text="{fileList>uploadDate}" />
+                            <ObjectAttribute title="File Size" text="{path : 'fileList>fileSize', formatter : '._formatAttribute'}" />
+                        </attributes>
+                        <statuses>
+						    <ObjectStatus title="Status"
+                                text="{= ${fileList>state} !== 'Error' ? 'Uploaded' : ${fileList>state} }"
+                                state="{fileList>state}" />
+					    </statuses> 
+                    </UploadCollectionItem>
+                </items>
+            </UploadCollection>
+        </content>
+    </Panel>
+</mvc:View>

@@ -5,6 +5,14 @@
 	xmlns="sap.m">
 	<Panel>
 		<content>
+                <SegmentedButton enabled="false">
+					<items>
+						<SegmentedButtonItem text="Kids" key="kids" />
+						<SegmentedButtonItem text="Adults" />
+						<SegmentedButtonItem text="Seniors" />
+					</items>
+                </SegmentedButton>
+                
 			<t:Table
 				id="table1"
 				ariaLabelledBy="title"
@@ -64,7 +72,7 @@
 							<Label text="City" textAlign="Center" width="100%"/>
 						</t:multiLabels>
 						<t:template>
-							<Input value="{city}"/>
+							<Input value="{city}" change="onChange"/>
 						</t:template>
 					</t:Column>
 					<t:Column

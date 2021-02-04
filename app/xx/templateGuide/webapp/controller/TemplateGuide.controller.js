@@ -20,8 +20,8 @@ sap.ui.define([
 			onInit: function () {
                 var that = this;
                 var oView = sap.ui.core.mvc.XMLView.create({
-                    viewName : "templateGuideView/GridTable",
-                    controller : sap.ui.controller("templateGuideController/GridTable")
+                    viewName : "templateGuideView/FileUploadGuide",
+                    controller : sap.ui.controller("templateGuideController/FileUploadGuide")
                 }).then(function(oView){
                     that.getView().byId("mainTabContainer").removeAllContent();
                     that.getView().byId("mainTabContainer").addContent(oView);
@@ -35,6 +35,14 @@ sap.ui.define([
 
                 switch(keyViewName){
                   case "GridTable" :
+                        sViewName = "templateGuideView/" + keyViewName;
+                        oController = sap.ui.controller("templateGuideController/" + keyViewName);
+                    break;
+                  case "FileUploadGuide" :
+                        sViewName = "templateGuideView/" + keyViewName;
+                        oController = sap.ui.controller("templateGuideController/" + keyViewName);
+                    break;
+                  case "FileUploadFragmentGuide" :
                         sViewName = "templateGuideView/" + keyViewName;
                         oController = sap.ui.controller("templateGuideController/" + keyViewName);
                     break;
@@ -66,6 +74,14 @@ sap.ui.define([
                         sViewName   = jQuery.sap.getModulePath("templateGuideView") + "/" + keyViewName + ".view.xml";
                         sController = jQuery.sap.getModulePath("templateGuideController")+ "/" + keyViewName + ".controller.js";     
                     break;
+                    case "FileUploadGuide" :                        
+                        sViewName   = jQuery.sap.getModulePath("templateGuideView") + "/" + keyViewName + ".view.xml";
+                        sController = jQuery.sap.getModulePath("templateGuideController")+ "/" + keyViewName + ".controller.js";     
+                    break;    
+                    case "FileUploadFragmentGuide" :                        
+                        sViewName   = jQuery.sap.getModulePath("templateGuideView") + "/" + keyViewName + ".view.xml";
+                        sController = jQuery.sap.getModulePath("templateGuideController")+ "/" + keyViewName + ".controller.js";     
+                    break;    
                     case "Test" :                        
                         sViewName   = jQuery.sap.getModulePath("templateGuideView") + "/" + keyViewName + ".view.xml";
                         sController = jQuery.sap.getModulePath("templateGuideController")+ "/" + keyViewName + ".controller.js";     

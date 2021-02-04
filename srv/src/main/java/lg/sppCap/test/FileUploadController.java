@@ -1,280 +1,178 @@
 package lg.sppCap.test;
 
-import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.tomcat.util.http.fileupload.FileItemIterator;
-import org.apache.tomcat.util.http.fileupload.FileItemStream;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.apache.tomcat.util.http.fileupload.util.Streams;
-import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 @Controller
 public class FileUploadController {
 
+    private final static String BROWSER_INTERNET_EXPLORER	= "IE";
+	private final static String BROWSER_CHROME 				= "CR";
+	private final static String BROWSER_FIREFOX				= "FF";
+	private final static String BROWSER_SAFARI				= "SF";
+	private final static String BROWSER_OPERA				= "OP";
+
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault());
-    
+
     @RequestMapping("/test/upload")
-    public @ResponseBody String upload(MultipartHttpServletRequest request){ // @RequestPart List<MultipartFile> files
+    public @ResponseBody String upload(HttpServletRequest request, @RequestHeader Map<String, String> headers) {
         System.out.println(">>> Enter upload");
 
         JSONObject retunObj = new JSONObject();
 
-        String fileRootPath = File.separator + "tmp" + File.separator + "fileTemp" + File.separator; //폴더 경로
+        String fileRootPath = File.separator + "tmp" + File.separator + "fileTemp" + File.separator; // 폴더 경로
         File folder = new File(fileRootPath);
 
         System.out.println(fileRootPath);
-        
-        if (!folder.exists()){
-            try{
+
+        if (!folder.exists()) {
+            try {
                 folder.mkdir();
                 System.out.println("Create folder.");
-            } catch(Exception e){
+            } catch (Exception e) {
                 e.getStackTrace();
-            }        
+            }
         }
 
-        List<MultipartFile> files = request.getFiles("uploadCollection");
+        InputStream inputStream = null;
+        FileOutputStream fileOutputStream = null;
 
-        for (MultipartFile file : files) {
-            String originalfileName = file.getOriginalFilename();
+        try {
+            headers.forEach((key, value) -> {
+                 System.out.println(String.format("Header '%s' = %s", key, value));
+            });
 
-            System.out.println("originalfileName : " + originalfileName);
+            String originalfileName = headers.get("filename");
+            String extention = originalfileName.substring(originalfileName.lastIndexOf(".") + 1, originalfileName.length());
+            String groupId = headers.get("groupid");
 
-            File dest = new File(fileRootPath + originalfileName);
-            try{
-                file.transferTo(dest);
-            } catch(Exception e){
-                e.getStackTrace();
-            }       
-            // TODO
+            inputStream = request.getInputStream();
+
+            File newFile = new File(fileRootPath + originalfileName);
+            fileOutputStream = new FileOutputStream(newFile);            
+            long fileSize = Streams.copy(inputStream, fileOutputStream, true);
+
+            System.out.println("fileSize : " + fileSize); 
+
+            retunObj.put("result", "success");
+            retunObj.put("groupId", groupId);
+            retunObj.put("fileId",  java.util.UUID.randomUUID());
+            retunObj.put("fileName", originalfileName);
+            retunObj.put("fileSize", fileSize);
+            retunObj.put("uploadDate", sdf.format(new Date()));
+            retunObj.put("fileExt", extention);
+            retunObj.put("message", "");            
+        } catch (IOException e) {
+            e.printStackTrace();
+            retunObj.put("result", "fail");
+            retunObj.put("message", "Upload Fail");     
+        } finally {   
+            try {
+                if (fileOutputStream != null) { fileOutputStream.close(); }
+                if (inputStream != null){ inputStream.close(); }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
-
-        Enumeration<String> en = request.getParameterNames();
-		while ( en.hasMoreElements() ){
-			String name = en.nextElement();
-			String[] values = request.getParameterValues(name);		
-			for (String value : values) {
-				System.out.println("name=" + name + ",value=" + value);
-			}   
-		}
-
-        // String targetDir = null;
-		// String targetFullPath = null;
-		// String docId = null;
-        
-        // boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-
-        // try {			
-		// 	long maxFileSize = 1024 * 1024 * 50; // default 50M			
-        //     // maxFileSize = 1024 * 1024 * Integer.parseInt(FILE_UPLOAD_MAX_FILE_SIZE));
-        //     maxFileSize = 1024 * 1024 * 100;
-			
-		// 	if (isMultipart) {	
-		// 		DiskFileItemFactory factory = new DiskFileItemFactory();
-	
-		// 		factory.setSizeThreshold(10240);
-		// 		factory.setRepository(folder);
-	
-		// 		ServletFileUpload upload = new ServletFileUpload(factory);	
-		// 		upload.setSizeMax(maxFileSize);
-	
-        //         FileItemIterator itemIter = upload.getItemIterator(request);
-				
-		// 		JSONArray  files = new JSONArray();
-		// 		JSONObject fileInfo = null;
-		// 		BufferedInputStream bis = null;
-				
-		// 		String fieldName, fieldValue, prefix, randomFileName, itemName, contentType, sMtype, sExtensionType = null, sUploadTarget = null, sUploadSystem, extension;
-		// 		byte[] data = null;
-				
-		// 		// while(itemIter.hasNext()){
-		// 		// 	FileItemStream item = itemIter.next();
-	
-		// 		// 	if (item.isFormField()) {
-        //         //         fieldName = item.getFieldName();                      
-
-        //         //         InputStream stream = item.openStream();                        
-        //         //         fieldValue = Streams.asString(stream);
-        //         //         stream.close();
-                        
-        //         //         System.out.println("fieldName : " + fieldName);
-        //         //         System.out.println("fieldValue : " + fieldValue);
-                        
-                        
-												
-		// 		// 		// if("extensionType".equalsIgnoreCase(fieldName)){
-		// 		// 		// 	sExtensionType = fieldValue;	
-		// 		// 		// }else if("uploadTarget".equalsIgnoreCase(fieldName)){
-		// 		// 		// 	sUploadTarget = fieldValue;
-							
-		// 		// 		// 	if("editor".equalsIgnoreCase(sUploadTarget)) {	// Editor inner contents
-		// 		// 		// 		//fileRootDir = dynamicConfig.getValue("namo.image.temp.dir");
-		// 		// 		// 		fileRootDir = sResourcePath + NEPProperties.IMAGE_TEMP_DIR;
-        //         //         //     }else if("FS".equalsIgnoreCase(sUploadTarget)) {
-		// 		// 		// 		//fileRootDir = dynamicConfig.getValue("file.upload.publishDir");
-		// 		// 		// 		fileRootDir = sResourcePath + NEPProperties.IMAGE_PUBLISH;
-		// 		// 		// 	}
-		// 		// 		// }
-		// 		// 	}
-		// 		// }
-				
-		// 		// if(null == fileRootDir) {
-		// 		// 	throw new Exception("UploadTarget not exist");
-		// 		// }
-								
-		// 		// List<Map<String, Object>> fileExtensionList;
-		// 		// fileExtensionList = selectFileExtension(sExtensionType);
-				
-		// 		// if(0 >= fileExtensionList.size()){
-		// 		// 	throw new Exception("Allow file extension not exist on DB");
-		// 		// }
-                
-        //         System.out.println("Start Create File");
-                
-        //         itemIter = upload.getItemIterator(request);
-				
-		// 		while(itemIter.hasNext()){
-        //             System.out.println("Start Create File - itemIter.hasNext");
-
-		// 			FileItemStream item = itemIter.next();
-					
-		// 			if(!item.isFormField()){
-        //                 System.out.println("Not FormField");
-
-		// 				fileInfo = new JSONObject();
-		// 				itemName = FilenameUtils.getName(item.getName());
-		// 				contentType = item.getContentType();
-						
-		// 				if(itemName != null && contentType != null){	
-		// 					if("".equalsIgnoreCase(itemName)) {
-		// 						itemName = "pasteImage.png";
-		// 					}
-							
-        //                     // bis = new BufferedInputStream(item.openStream());
-
-		// 					sMtype = item.getContentType();
-							
-		// 					if(null == sMtype) {	// MIME Type이 없다면 파일명에서 확장자를 추출하여 재확인
-		// 						sMtype = FilenameUtils.getExtension(itemName);
-		// 					}
-							
-		// 					if(null == sMtype){
-		// 						throw new Exception("Disallowed file type : " + itemName);
-		// 					}
-																											
-		// 					// sMtype = sMtype.substring(sMtype.indexOf("/") + 1, sMtype.length());
-			
-		// 					// if(0 > fileExtensionList.get(0).toString().indexOf(sMtype.toLowerCase()) && 0 > fileExtensionList.get(0).toString().indexOf(sMtype.toUpperCase())) {
-		// 					// 	throw new Exception("Disallowed file type : " + itemName);
-		// 					// }
-							
-		// 					prefix = sdf.format(new Date());						
-		// 					docId = prefix + UUID.randomUUID();
-		// 					randomFileName = docId;
-							
-		// 					if(!"blob".equalsIgnoreCase(itemName)) {
-		// 						extension = itemName.substring(itemName.lastIndexOf("."));	
-		// 					}else {
-		// 						extension = ".png";	 // IE DropDown Image일 경우(Editor inner contents)
-		// 					}
-							
-		// 					// if("editor".equalsIgnoreCase(sUploadTarget)) {
-		// 					// 	targetDir = fileRootDir;
-		// 					// 	targetFullPath = fileRootDir + randomFileName + extension;
-		// 					// }else if("FS".equalsIgnoreCase(sUploadTarget)){
-		// 					// 	targetDir = fileRootDir;
-		// 					// 	targetFullPath = targetDir + File.separator + randomFileName;	
-		// 					// }else {
-		// 						targetDir = fileRootPath + prefix.substring(0,8);
-		// 						targetFullPath = targetDir + File.separator + randomFileName;	
-		// 					// }
-														
-        //                     // item.write(new File(targetFullPath));
-
-        //                     System.out.println("targetFullPath : " + targetFullPath);
-                        
-        //                     File newFile = new File(targetFullPath);
-        //                     FileOutputStream fos = new FileOutputStream(newFile);
-
-        //                     InputStream stream = item.openStream();     
-        //                     long fileSize = Streams.copy(stream, fos, true);
-        //                     stream.close();
-							
-		// 					// if("editor".equalsIgnoreCase(sUploadTarget)) {	// editor일 경우 src url을 위한 targetFullPath 변경
-		// 					// 	//targetDir = dynamicConfig.getValue("namo.image.temp.url");
-		// 					// 	targetDir = NEPProperties.IMAGE_TEMP_DIR;
-		// 					// 	targetFullPath = targetDir + randomFileName + extension;
-		// 					// }							
-							
-        //                     // fileSize = bis.available();
-        //                     // bis.close();                            
-		// 					// data = new byte[fileSize];
-		// 					// bis.read(data);
-							
-		// 					fileInfo.put("DOC_ID", docId);
-		// 					fileInfo.put("ORI_NAME", itemName);
-		// 					fileInfo.put("EXTENSION", extension.substring(extension.lastIndexOf(".") + 1));
-		// 					// fileInfo.addProperty("TARGET_FULL_PATH", targetFullPath);
-		// 					fileInfo.put("SIZE", fileSize);
-		// 					files.put(fileInfo);
-		// 				}
-		// 			} else{
-        //                 fieldName = item.getFieldName();                      
-
-        //                 InputStream stream = item.openStream();                        
-        //                 fieldValue = Streams.asString(stream);
-        //                 stream.close();
-
-        //                 System.out.println("fieldName : " + fieldName);
-        //                 System.out.println("fieldValue : " + fieldValue);
-        //             }
-        //         } // while : fileItemIte		
-                	
-		// 		retunObj.put("FILES", files);
-		// 		retunObj.put("RST_CD", "S");
-		// 		// isMultiPart
-		// 	}else {
-		// 		retunObj.put("RST_MSG", "Not a multipart Content");
-		// 	}
-		// } catch (Exception e) {
-		// 	retunObj.put("RST_MSG", e.getLocalizedMessage());
-		// 	System.err.println("===>>> FileUpload Error : " + e.getMessage());
-		// }
-
-        // // for (MultipartFile file : files) {
-        // //     String originalfileName = file.getOriginalFilename();
-        // //     System.out.println("/Service/FileUpload : " + originalfileName);
-
-        // //     JsonObject obj = new JsonObject();
-        // //     obj.addProperty("originalfileName", originalfileName);
-        // //     retunObj.add("fileList", obj);
-
-        // //     // File dest = new File("C:/Image/" + originalfileName);
-        // //     // file.transferTo(dest);
-        // //     // TODO
-        // // }
 
         return retunObj.toString();
     }
+
+    @RequestMapping("/test/download")
+    public void fileDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request.setCharacterEncoding("UTF-8");
+    	
+		FileInputStream inStream = null;			
+		OutputStream outStream = null;
+		
+		JSONObject returnValue = new JSONObject();
+		returnValue.put("RST_CD", "F");
+
+		try {			
+            String oriFileName = "1.jpg";
+            String fileRootPath = File.separator + "tmp" + File.separator + "fileTemp" + File.separator + oriFileName; // 폴더 경로
+            
+            File file = new File(fileRootPath);			
+                    
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/octet-stream;charset=utf-8");
+            response.setHeader("Content-Transper-Encoding", "binary");
+            response.setHeader("Content-Disposition", getDisposition(oriFileName, checkBrowser(request)));
+
+            inStream = new FileInputStream(file);			
+            outStream = response.getOutputStream();
+        
+            byte[] buffer = new byte[4096];
+            int bytesRead = -1;
+
+            while ((bytesRead = inStream.read(buffer)) != -1) {
+                outStream.write(buffer, 0, bytesRead);
+            }
+		} catch (Exception e) {
+			returnValue.put("RST_MSG", e.getLocalizedMessage());
+			response.getWriter().println(returnValue.toString());
+		} finally {
+			try {
+				if(null != inStream) {
+					inStream.close();
+					outStream.close();	
+				}					
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+		}	
+    }
+
+	private String getDisposition(String fileName, String browserName) throws UnsupportedEncodingException {
+		String prefix = "attachment;filename=";
+		String encodedFileName = null;
+		
+		if ( BROWSER_INTERNET_EXPLORER.equals(browserName) || BROWSER_CHROME.equals(browserName) ) {
+			encodedFileName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+		} else {
+			encodedFileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+		}
+		
+		return prefix + encodedFileName;
+	}
+
+    private String checkBrowser(HttpServletRequest request) {
+		String browserName = "";
+		String userAgent = request.getHeader("User-Agent");
+		
+		if ( userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("Trident") > -1 ) {
+			browserName = BROWSER_INTERNET_EXPLORER;
+		} else if ( userAgent.indexOf("Chrome") > -1 ) {
+			browserName = BROWSER_CHROME;
+		} else if ( userAgent.indexOf("Opera") > -1 ) {
+			browserName = BROWSER_OPERA;
+		} else if ( userAgent.indexOf("Apple") > -1 ) {
+			browserName = BROWSER_SAFARI;
+		} else {
+			browserName = BROWSER_FIREFOX;
+		}
+		
+		return browserName;
+	}
 }
