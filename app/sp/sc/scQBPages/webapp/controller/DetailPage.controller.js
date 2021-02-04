@@ -210,26 +210,26 @@ sap.ui.define([
                 var that = this;
                 var oView = this.getView();
 
-                var masterUrl = this.srvUrl+"Sc_Nego_Award_Method_Code?&$expand=nego_parent_type,award_type&$filter=nego_parent_type/nego_parent_type_code%20eq%20%27QP%27&orderby=sort_no";
-                $.ajax({
-                    url: masterUrl,
-                    type: "GET",
-                    contentType: "application/json",
-                    success: function(data){
-                        // debugger;
-                        oView.setModel(new JSONModel( data.value ), "master") ;
+                // var masterUrl = this.srvUrl+"Sc_Nego_Award_Method_Code?&$expand=nego_parent_type,award_type&$filter=nego_parent_type/nego_parent_type_code%20eq%20%27QP%27&orderby=sort_no";
+                // $.ajax({
+                //     url: masterUrl,
+                //     type: "GET",
+                //     contentType: "application/json",
+                //     success: function(data){
+                //         // debugger;
+                //         oView.setModel(new JSONModel( data.value ), "master") ;
 
-                         // this.getView().byId("tableLines").getVisibleRowCount();
+                //          // this.getView().byId("tableLines").getVisibleRowCount();
                         
 
-                        // data.value[0].Items.lengt
-                        // oView.byId("table1")
+                //         // data.value[0].Items.lengt
+                //         // oView.byId("table1")
 
-                    },
-                    error: function(e){
-                        console.log( "error :: " + e.responseText);
-                    }
-                });
+                //     },
+                //     error: function(e){
+                //         console.log( "error :: " + e.responseText);
+                //     }
+                // });
 
                 var outcome = e.getParameter("arguments").outcome;
                 console.log("_onRouteMatched " + e.getParameter("arguments").mode);
@@ -352,7 +352,7 @@ sap.ui.define([
                     success: function(data){	
                         promise.resolve(data);	
                     }.bind(that),						
-                    error: function(data){						
+                    error: function(data){						+
                         promise.reject(data);	
                     }						
                         
@@ -374,6 +374,7 @@ sap.ui.define([
             },
             onPageDeleteButtonPress: function() {
                 // this._CallDeleteProc();
+                this._CallInsertProc();
             },
             onPageEditButtonPress: function() {
                 this.getView().getModel("propInfo").setProperty("/isEditMode", true );
@@ -706,6 +707,7 @@ sap.ui.define([
 
             getSupplierItem: function(oObj) {
                 var supplierItem = {
+                    "_row_state_" : "C",
                     "tenant_id": oObj.tenant_id,
                     "nego_header_id": String(oObj.nego_header_id),
                     "nego_item_number": oObj.nego_item_number,
@@ -839,6 +841,24 @@ sap.ui.define([
             },
 
             onDeleteSuppliers: function () {
+                var oView = this.getView();
+                var deleteList = oView.byId("table_Specific").getSelectedContexts();
+
+                // var lineItems = oView.getModel("NegoItemPrices").getData().Suppliers;
+                // oView.getModel("NegoItemPrices").getProperty(oView.byId("table_Specific").getSelectedContexts()[0].getPath())
+                
+                deleteList.forEach(function(element, index, array){
+                    // if( element )
+                    var lineItems = oView.getModel("NegoItemPrices").getProperty(element.getPath())
+                    lineItems["_row_state_"] = "D";
+                    // console.log( lineItems[element] );
+                    // lineItems.splice( index ,1);
+                }.bind(this));
+
+                oView.getModel("NegoItemPrices").refresh(true);
+
+                // this.getView().byId("tableLines").setVisibleRowCount( oView.getModel("NegoHeaders").getData().Items.length );
+                // oView.byId("table_Specific").setSelectedIndex(-1);
 
             },
 
@@ -1857,14 +1877,15 @@ sap.ui.define([
                 var oModel = this.getView().getModel("NegoHeaders");
                 var oView = this.getView(),
                     v_returnModel,
-                    urlInfo = "srv-api/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader"; // delete
-                var inputInfo =
-                {
-                    "negoheaders": [
-                        { "tenant_id": oModel.getProperty("/tenant_id"), "nego_header_id":  oModel.getProperty("/nego_header_id") }
-                    ],
-                    "negoitemprices" : [],
-                    "negosuppliers" : []
+                    urlInfo = "srv-api/odata/v4/sp.sourcingV4Service/deepInsertNegoHeader"; // delete
+                var inputInfo = {
+                    "deepinsertnegoheader" : {
+                        "negoheaders": [
+                            { "tenant_id": oModel.getProperty("/tenant_id"), "nego_header_id":  oModel.getProperty("/nego_header_id") }
+                        ],
+                        "negoitemprices" : [],
+                        "negosuppliers" : []
+                    }
                 };
                 // console.log(inputInfo);
                 $.ajax({
@@ -1899,11 +1920,13 @@ sap.ui.define([
                     urlInfo = "srv-api/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader"; // delete
                 var inputInfo =
                 {
-                    "negoheaders": [
-                        { "tenant_id": oModel.getProperty("/tenant_id"), "nego_header_id":  oModel.getProperty("/nego_header_id") }
-                    ],
-                    "negoitemprices" : [],
-                    "negosuppliers" : []
+                    "deepdeletenegoheader" : {
+                        "negoheaders": [
+                            { "tenant_id": oModel.getProperty("/tenant_id"), "nego_header_id":  oModel.getProperty("/nego_header_id") }
+                        ],
+                        "negoitemprices" : [],
+                        "negosuppliers" : []
+                    }
                 };
                 // console.log(inputInfo);
                 $.ajax({
