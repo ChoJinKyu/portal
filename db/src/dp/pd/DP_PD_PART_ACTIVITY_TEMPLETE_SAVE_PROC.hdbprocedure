@@ -212,7 +212,7 @@ BEGIN
                         ,V_ORG_TYPE_CODE
                         ,ORG_CODE
                         ,PART_PROJECT_TYPE_CODE
-                        ,ACTIVITY_CODE
+                        ,V_ACTIVITY_CODE
                          ,(SELECT COALESCE(MAX(SEQUENCE), 0) + 1 
                              FROM DP_PD_PART_ACTIVITY_TEMPLATE
                             WHERE TENANT_ID = M.TENANT_ID
@@ -274,7 +274,7 @@ BEGIN
                     ,SYSTEM_UPDATE_DTM
                 )
             VALUES ( id.TENANT_ID
-                    ,id.ACTIVITY_CODE
+                    ,V_ACTIVITY_CODE
                     ,id.LANGUAGE_CD
                     ,id.CODE_NAME
                     ,NOW()
