@@ -1,6 +1,7 @@
 //https://lgcommondev2-workspaces-ws-7bzzl-app1.jp10.applicationstudio.cloud.sap/odata/v4/dp.partActivityV4Service/PdpartActivitySaveProcCall
 //using { dp as PartActivityTemplate } from '../../../../../db/cds/dp/pd/DP_PD_PART_ACTIVITY_TEMPLATE-model';
 //using {dp as activityMapping} from '../../../../../db/cds/dp/pd/DP_PD_ACTIVITY_MAPPING-model';
+//using {dp as partBaseActivity} from '../../../../../db/cds/dp/pd/DP_PD_PART_BASE_ACTIVITY-model';
 
 namespace dp;
 @path : '/dp.partActivityV4Service'
@@ -9,6 +10,7 @@ service partActivityV4Service {
 //    entity PdProdActivityTemplateView as projection on ProdActivityTemplate.Pd_Product_Activity_Template_View;
 //    entity PdProdActivityTemplate as projection on ProdActivityTemplate.Pd_Product_Activity_Template;
 //    entity ActivityMapping as projection on activityMapping.Pd_Activity_Mapping;
+//    entity PartBaseActivity as projection on partBaseActivity.Pd_Select_An_Activity_View;
 
     type PdpartActivityTemplateType : {
         tenant_id : String;

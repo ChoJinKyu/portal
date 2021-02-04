@@ -1,0 +1,15 @@
+VIEW DP_PD_SELECT_AN_ACTIVITY_VIEW AS
+select pa.tenant_id,
+      pa.activity_code,				
+      STRING_AGG( l.code_name, ' / ' ) as activity_name,
+      pa.active_flag
+ from 
+	( select 'L2101' as tenant_id, activity_code, active_flag from dp_pd_part_base_activity -- where tenant_id = 'L2101'
+	   minus
+	  select tenant_id, activity_code, active_flag from dp_pd_part_activity_template where tenant_id = 'L2101'
+	) pa
+      left join DP_PD_PART_BASE_ACTIVITY_LNG l
+      on ( l.tenant_id = pa.tenant_id and l.activity_code = pa.activity_code )
+where pa.tenant_id = 'L2101'
+ group by pa.tenant_id, pa.activity_code, pa.active_flag
+;
