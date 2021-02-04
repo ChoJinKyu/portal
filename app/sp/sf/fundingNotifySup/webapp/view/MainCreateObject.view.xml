@@ -221,6 +221,7 @@
                                 <VBox>
                                     <Label text="Mail Address :" required="true"/>
                                     <Input
+                                        id="inputEmail"
                                         fieldGroupIds="newRequest"
                                         required="true"
                                         change="onCheckEmail"
