@@ -94,7 +94,8 @@
                                 fieldGroupIds="newInvestmentPlan"
                                 required="true"
                                 change="onCheckDatePicker"
-                                value="{applicationSup>/popUpInvestPlanMst/investment_yyyymm}"/>
+                                value="{applicationSup>/popUpInvestPlanMst/investment_yyyymm}"
+                            />
                             <layoutData>
                                <layout:GridData span="XL3 L3 M3 S12" />
                             </layoutData>
@@ -183,12 +184,12 @@
                             <Label text="집행시기 :" required="true"/>
                             <DatePicker 
                                 displayFormat='yyyy-MM'
-                                change="onCheckDatePicker"
+                                valueFormat ="yyyy-MM"
                                 fieldGroupIds="newInvestmentPlan"
                                 required="true"
-                                value="{
-                                    path: 'applicationSup>/popUpInvestPlanMst/execution_yyyymm'
-                                }"/>
+                                change="onCheckDatePicker"
+                                value="{applicationSup>/popUpInvestPlanMst/execution_yyyymm}"
+                            />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S12" />
                             </layoutData>
