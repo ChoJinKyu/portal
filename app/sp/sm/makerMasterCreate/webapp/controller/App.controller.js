@@ -1,10 +1,11 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
     "ext/lib/util/Multilingual",
+    "ext/lib/util/SppUserSession",
 	"sap/ui/core/UIComponent",
     "sap/m/library",
     "sap/ui/model/json/JSONModel"
-], function (BaseController, Multilingual, UIComponent, mobileLibrary, JSONModel) {
+], function (BaseController, Multilingual, SppUserSession, UIComponent, mobileLibrary, JSONModel) {
 	"use strict";
 
     // shortcut for sap.m.URLHelper
@@ -15,6 +16,9 @@ sap.ui.define([
         onInit : function () {
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
+
+            var oSppUserSession = new SppUserSession();            
+            this.setModel(oSppUserSession.getModel(), "USER_SESSION");
                 
 			// apply content density mode to root view
             this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
@@ -31,7 +35,7 @@ sap.ui.define([
                 // 생성/보기 모드 코드(C : 생성, R : 보기) -> mode
 
                 var inputModel = new JSONModel();
-                inputModel.setData({tenantId : "L2100", gubun : "MA", mode : "C" });
+                inputModel.setData({tenantId : this.getModel("USER_SESSION").getSessionAttr("TENANT_ID"), gubun : "MA", mode : "C"});
                 //this.getView().setModel(inputModel, "callByAppModel"); 
                 this.getOwnerComponent().setModel(inputModel, "callByAppModel");
             }

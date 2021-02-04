@@ -343,8 +343,7 @@ sap.ui.define([
                             });
                         }));
                     }.bind(this));
-                }
-
+          
                 //searObject : 태넌트아이디, 검색 인풋아이디
                 var sSearchObj = {};
                 sSearchObj.tanent_id = "L2100";
@@ -371,8 +370,8 @@ sap.ui.define([
                         //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
                         oSearch.setTokens(jQuery.map(oEvent.mParameters.items, function(oToken){
                             return new Token({
-                                key: oToken.vendor_pool_code,
-                                text: oToken.vendor_pool_local_name,
+                                key: oToken.supplier_code,
+                                text: oToken.supplier_local_name,
                             });
                         }));
                     }.bind(this));
@@ -380,8 +379,8 @@ sap.ui.define([
 
                 //searObject : 태넌트아이디, 검색 인풋아이디
                 var sSearchObj = {};
-                sSearchObj.tanent_id = "L2100";
-                sSearchObj.vendor_pool_code = oSearch.getValue();
+                sSearchObj.tanentId = "L2100";
+                sSearchObj.supplierCode = oSearch.getValue();
                 this.oSearchSupplierDialog.open(sSearchObj);
             },
 

@@ -20,7 +20,8 @@ SELECT 'NONE' as TABLE_NAME, count(*) cnt FROM SP_SC_NEGO_HEADERS NH WHERE 1=0
 SELECT TOP 5000 * 
 FROM SP_SC_NEGO_HEADERS NH 
 WHERE 1=1 
--- AND FIELD = "VALUE"
+AND tenant_id = 'L2100'
+AND nego_header_id = 4
 ;
 -- @block Bookmarked query
 -- @group SP_SC

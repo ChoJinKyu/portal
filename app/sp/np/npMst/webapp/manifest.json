@@ -180,7 +180,8 @@
         "resourceRoots": {
             "ext.lib": "../../../../lib",
             "ext.dp": "../../../../dp",
-            "ext.pg": "../../../../pg"
+            "ext.pg": "../../../../pg",
+            "ext.cm": "../../../../cm"
         },
         "routing": {
             "config": {

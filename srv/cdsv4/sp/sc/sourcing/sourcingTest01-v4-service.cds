@@ -19,7 +19,8 @@ using {
     sp.Sc_Tester00 as scTester00,
     sp.Sc_Language as scLanguage,
     // sp.Sc_Nego_Headers_Test01 as negoHeadersTest01,
-    sp.Sc_Nego_Headers_Test04 as negoHeadersTest04
+    sp.Sc_Nego_Headers_Test04 as negoHeadersTest04,
+    sp.Sc_Test_Session_Context
 } from '../../../../../db/cds/sp/sc/SP_SC_00TESTER-model';
 
 namespace sp;
@@ -52,6 +53,8 @@ service SourcingTest01V4Service {
     // entity ScNegoTypeCode                                     as projection on scNegoTypeCode;
     entity ScAwardTypeCodeView                                as projection on scAwardTypeCodeView;
     entity ScAwardTypeCodeView1                               as projection on scAwardTypeCodeView1;
+
+    entity ScTestSessionContext                               as projection on Sc_Test_Session_Context;
     // entity ScNegoProgStatusCodeView                           as projection on scNegoProgStatusCodeView;
 
     //    sp.Sc_Nego_Type_Code as scNegoTypeCode,

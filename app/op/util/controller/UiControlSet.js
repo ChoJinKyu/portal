@@ -17,7 +17,10 @@ sap.ui.define([
                     return true ;
                 break;    
                 case "Input": 
-                    return true ;    
+                    return true ; 
+                break;
+                case "Undefine": 
+                    return true ; 
                 break;
             }
             return false;

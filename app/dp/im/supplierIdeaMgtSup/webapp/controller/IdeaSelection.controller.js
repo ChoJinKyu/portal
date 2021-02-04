@@ -272,6 +272,7 @@ sap.ui.define([
                 var inputData = {
                     inputdata : {}
                 };
+            
             if (this._sIdeaNumber !== "new"){
                 CUType = "U";
                 /*
@@ -285,13 +286,19 @@ sap.ui.define([
                         return;
                     }
                     statsCode = "DRAFT";
-                }else if( flag == "R"){
-                    statsCode = "SUBMIT";
                 }
-            }if( flag == "D"){
+            }
+            
+            if( flag == "D"){
                 CUType = "D";
                 statsCode = "DELETE";
             }
+            
+            if( flag == "R"){
+                CUType = "R";
+                statsCode = "SUBMIT";
+            }
+
             if(oData.vi_amount=="" ||  oData.vi_amount==null || parseInt(oData.vi_amount) == undefined || parseInt(oData.vi_amount) == NaN){
                 oData.vi_amount = "0";
             }

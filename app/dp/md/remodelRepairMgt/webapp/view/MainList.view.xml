@@ -246,7 +246,28 @@
                 <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Item Type " labelFor="searchItemType"></Label>
+                            <Label text="ECO No"></Label>
+                            <Input id="searchEcoNo" width="100%"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="{I18N>/DESCRIPTION}"></Label>
+                            <Input id="searchDescription" width="100%"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Repair Supplier"></Label>
+                            <Input id="searchRepairSupplier" width="100%"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Type " labelFor="searchType"></Label>
                             <MultiComboBox   id="searchItemType" width="100%"
                                         selectedKey=""
                                         items="{
@@ -261,71 +282,33 @@
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </MultiComboBox>
                             <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Production Type" labelFor="searchProductionType"></Label>
-                            <MultiComboBox   id="searchProductionType" width="100%"
-                                        selectedKey=""
-                                        items="{
-                                            path : 'util>/Code',
-                                            filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
-                                            ],
-                                            sorter: { path: 'sort_no'}
-                                        }"
-                            >
-                                <core:Item key="{util>code}" text="{util>code_name}" />
-                            </MultiComboBox>
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="{I18N>/DESCRIPTION}"></Label>
-                            <Input id="searchDescription" width="100%"/>
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="Export/Domestic Type"></Label>
-                            <ComboBox   id="searchEDType" width="100%"
-                                        selectedKey=""
-                                        items="{
-                                            path : 'util>/Code',
-                                            filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
-                                            ],
-                                            sorter: { path: 'sort_no'}
-                                        }"
-                            >
-                                <core:Item key="{util>code}" text="{util>code_name}" />
-                            </ComboBox>
-                            <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         
                         <VBox>
+                            <Label text="Family Part No" labelFor="searchFamilyPartNo"></Label>
+                            <Input id="searchFamilyPartNo" width="100%"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
                             <Label text="{I18N>/MODEL}" labelFor="searchModel"></Label>
                             <Input id="searchModel" 
-                                    showValueHelp="true"  
-                                    valueHelpRequest=".onValueHelpRequested"
-                                    suggestionItems="{
-                                        path: '/Models',
-                                        filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
-                                        ],
-                                        sorter: { path: 'model' }
+                                showValueHelp="true"  
+                                valueHelpRequest=".onValueHelpRequested"
+                                suggestionItems="{
+                                    path: '/Models',
+                                    filters: [
+                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                    ],
+                                    sorter: { path: 'model' }
                             }">
                                 <core:Item key="{model}" text="{model}" />
                             </Input>
                             <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -347,10 +330,30 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Family Part No" labelFor="searchFamilyPartNo"></Label>
-                            <Input id="searchFamilyPartNo" width="100%"/>
+                            <Label text="Asset No" labelFor="searchAssetNo"></Label>
+                            <MultiComboBox   id="searchAssetNo" width="100%"
+                                        selectedKey=""
+                                        items="{
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
+                                            ],
+                                            sorter: { path: 'sort_no'}
+                                        }"
+                            >
+                                <core:Item key="{util>code}" text="{util>code_name}" />
+                            </MultiComboBox>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+
+                        <VBox>
+                            <Label text="Requester" labelFor="searchRequester"></Label>
+                            <Input id="searchRequester" width="100%"/>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
                             </layoutData>
                         </VBox>
                     </form:content>
@@ -419,13 +422,13 @@
                     <table:Column id="assetNoColumn" width="12em">
                         <Label text="Asset No" wrapping="true"/>
                         <table:template>
-                            <Text id="mold_number" text="{list>mold_number}"/>
+                            <Text text="{list>mold_number}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldNoColumn" width="12em">
                         <Label text="Asset No" wrapping="true"/>
                         <table:template>
-                            <Text id="mold_number" text="{list>mold_number}"/>
+                            <Text text="{list>mold_number}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldSeqColumn" width="3em" hAlign="Center">
@@ -434,28 +437,58 @@
                             <Text id="mold_sequence" text="{list>mold_sequence}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="13em">
-                        <Label text="{I18N>/STATUS}" wrapping="true"/>
+                    <table:Column width="4em">
+                        <Label text="{I18N>/TYPE}" wrapping="true"/>
                         <table:template>
-                            <Text id="mold_progress_status_name" text="{list>mold_progress_status_name}"/>
+                            <Text text="{list>mold_sequence}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldItemTypeColumn" width="9em" hAlign="Center">
+                        <Label text="Item Type" required="true" wrapping="true"/>
+                        <table:template>
+                            <Text id="mold_item_type_code" text="{list>mold_item_type_code}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldRequesterColumn" width="12em" hAlign="Center">
+                        <Label text="Requester" wrapping="true"/>
+                        <table:template>
+                            <Text id="mold_develope_requestor_name" text="{list>mold_develope_requestor_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="13em">
-                        <Label text="{I18N>/STATUS}" wrapping="true"/>
+                        <Label text="Order Sheet No" wrapping="true"/>
                         <table:template>
-                            <Text id="mold_progress_status_name" text="{list>mold_progress_status_name}"/>
+                            <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
-
-
-
-
                     <table:Column id="moldStatusColumn" width="13em">
-                        <Label text="{I18N>/STATUS}" wrapping="true"/>
+                        <Label text="Request {I18N>/STATUS}" wrapping="true"/>
                         <table:template>
                             <Text id="mold_progress_status_name" text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
+                    <table:Column width="13em">
+                        <Label text="Request No" wrapping="true"/>
+                        <table:template>
+                            <Text text="{list>mold_progress_status_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldRequestDateColumn" width="10em" hAlign="Center">
+                        <Label text="Request {I18N>/DATE}" wrapping="true"/>
+                        <table:template>
+                            <Text id="local_create_dtm" text="{path: 'list>local_create_dtm', formatter: '.dateFormatter.toDateString'}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="13em">
+                        <Label text="Title" wrapping="true"/>
+                        <table:template>
+                            <Text text="{list>mold_progress_status_name}"/>
+                        </table:template>
+                    </table:Column>
+
+
+
+
                     <table:Column width="5em" hAlign="Center">
                         <Label text="Set ID"/>
                         <table:template>
@@ -496,26 +529,6 @@
                                             sorter: { path: 'sort_no'}
                                         }"
                                 required="true" change="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="{util>code}" text="{util>code_name}" />
-                            </Select>
-                        </table:template>
-                    </table:Column>
-                    <table:Column id="moldItemTypeColumn" width="9em" hAlign="Center">
-                        <Label text="Item Type" required="true" wrapping="true"/>
-                        <table:template>
-                            <Select   id="mold_item_type_code"
-                                selectedKey="{list>mold_item_type_code}"
-                                forceSelection="false"
-                                items="{
-                                            path : 'util>/Code',
-                                            filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
-                                            ],
-                                            sorter: { path: 'sort_no'}
-                                        }"
-                                required="true" change=".onSelectChange"
                                 editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
@@ -666,18 +679,6 @@
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </Select>
                         </table:template>
-                    </table:Column>
-                    <table:Column id="moldCreationDateColumn" width="10em" hAlign="Center">
-                        <Label text="Creation {I18N>/DATE}" wrapping="true"/>
-                        <table:template>
-                            <Text id="local_create_dtm" text="{path: 'list>local_create_dtm', formatter: '.dateFormatter.toDateString'}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column id="moldRequesterColumn" width="12em" hAlign="Center">
-                        <Label text="Requester" wrapping="true"/>
-                            <table:template>
-                                <Text id="mold_develope_requestor_name" text="{list>mold_develope_requestor_name}"/>
-                            </table:template>
                     </table:Column>
                     <table:Column id="moldMoldDeveloperColumn" width="12em" hAlign="Center">
                         <Label text="Mold Developer" required="true" wrapping="true"/>

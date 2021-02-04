@@ -24,10 +24,11 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Input",
     "sap/m/VBox",
-    "ext/lib/util/ExcelUtil"
+    "ext/lib/util/ExcelUtil",
+    "sap/f/LayoutType"
 ], function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, JSONModel, DateFormatter,
     Formatter, TablePersoController, MainListPersoService, Fragment, NumberFormatter, Sorter,
-    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox, ExcelUtil) {
+    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox, ExcelUtil, LayoutType) {
     "use strict";
 
     var oTransactionManager;
@@ -64,13 +65,10 @@ sap.ui.define([
             
             //로그인 세션 작업완료시 수정
             this.loginUserId = "TestUser";
-            this.tenant_id = "L2100";
-            this.companyCode = "LGCKR";
+            this.tenant_id = "L2101";
+            // this.companyCode = "LGCKR";            
 
-            this.setModel(new JSONModel(), "visibleTF");
-
-            oTransactionManager = new TransactionManager();            
-            
+            oTransactionManager = new TransactionManager();
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
 
@@ -115,17 +113,6 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSearchButtonPress: function (oEvent) {
-            // if (oEvent.getParameters().refreshButtonPressed) {
-            //     // Search field's 'refresh' button has been pressed.
-            //     // This is visible if you select any master list item.
-            //     // In this case no new search is triggered, we only
-            //     // refresh the list binding.
-            //     this.onRefresh();
-            // } else {
-            //     var aSearchFilters = this._getSearchStates();
-            //     var aSorter = this._getSorter();
-            //     this._applySearch(aSearchFilters, aSorter);
-            // }
 
             if(this.getModel("list").isChanged() === true){
 				MessageBox.confirm(this.getModel("I18N").getText("/NCM00005"), {
@@ -153,12 +140,19 @@ sap.ui.define([
         },
 
         onCreate: function (oEvent) {
-            // this.getRouter().navTo("midPage", {
-            //     tenantId: this.tenant_id,
-            //     companyCode: this.companyCode,
-            //     ideaNumber: 'new'
-            // }, true);
-            MessageBox.alert("준비중입니다.");
+        
+            var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
+			this.getRouter().navTo("midPage", {
+				layout: oNextUIState.layout, 
+				tenantId: this.tenant_id,               
+                companyCode: 'new',
+                orgTypeCode: 'new',                
+                orgCode: 'new',
+                partProjectTypeCode: 'new',
+                activityCode: 'new'
+                // categoryGroupCode: 'new'
+            }, true);            
+            // MessageBox.alert("준비중입니다.");
         },
 
         onCopy: function (oEvent) {
@@ -179,22 +173,7 @@ sap.ui.define([
                 table: oTable,
                 data: oData
             });
-        },
-
-        onStatusColor: function (sStautsCodeParam) {
-
-            var sReturnValue = 5;
-            //색상 정의 필요
-            if( sStautsCodeParam === "DRAFT" ) {
-                sReturnValue = 5;
-            }else if( sStautsCodeParam === "30" ) {
-                sReturnValue = 7;
-            }else if( sStautsCodeParam === "40" ) {
-                sReturnValue = 3;
-            }
-
-            return sReturnValue;
-        },
+        },        
 
 
         /**
@@ -234,6 +213,7 @@ sap.ui.define([
                 filters: aSearchFilters,
                 sorters: aSorter,
                 success: function (oData) {
+                    console.log("SearchStates====", aSearchFilters);
                     console.log("oData====", oData);
                     oView.setBusy(false);
                 }
@@ -293,7 +273,7 @@ sap.ui.define([
 
         _getSorter: function () {
             var aSorter = [];
-            // aSorter.push(new Sorter("idea_number", true));
+            aSorter.push(new Sorter("sequence", false));
             return aSorter;
         },
 
@@ -324,7 +304,12 @@ sap.ui.define([
             this.getRouter().navTo("midPage", {
                 layout: oNextUIState.layout,
                 tenantId: rowData.tenant_id,
+                companyCode: rowData.company_code,
+                orgTypeCode: rowData.org_type_code,                
+                orgCode: rowData.org_code,
+                partProjectTypeCode: rowData.part_project_type_code,
                 activityCode: rowData.activity_code
+                // categoryGroupCode: rowData.category_group_code
             }, true);
         }
 

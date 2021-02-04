@@ -20,11 +20,12 @@ sap.ui.define([
     "sap/ui/richtexteditor/RichTextEditor",
     "./ApprovalBaseController",
     "dp/md/util/controller/MoldItemSelection",
-    "dp/md/util/controller/DeptSelection",
+    // "dp/md/util/controller/DeptSelection",
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
-    , ApprovalBaseController, MoldItemSelection, DeptSelection
+    , ApprovalBaseController, MoldItemSelection 
+    // , DeptSelection
 ) {
     "use strict";
 
@@ -43,7 +44,7 @@ sap.ui.define([
 
         moldItemPop: new MoldItemSelection(),
 
-        deptSelection: new DeptSelection(),
+      //  deptSelection: new DeptSelection(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -213,15 +214,14 @@ sap.ui.define([
         _bindComboPlant: function (company_code) {
             var aFilter = [
                 new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)
-                , new Filter("org_type_code", FilterOperator.EQ, 'PL')
                 , new Filter("company_code", FilterOperator.EQ, company_code)
             ];
 
             var oView = this.getView(),
                 oModel = this.getModel("importPlant");
             oView.setBusy(true);
-            oModel.setTransactionModel(this.getModel("purOrg"));
-            oModel.read("/Pur_Operation_Org", {
+            oModel.setTransactionModel(this.getModel("dpMdUtil"));
+            oModel.read("/Divisions", {
                 filters: aFilter,
                 success: function (oData) { 
                     // console.log(" Pur_Operation_Org " , oData);
@@ -301,18 +301,28 @@ sap.ui.define([
             }
         },
         // 부서 버튼 클릭 
-        onValueHelpRequestedDept: function () {
-            var that = this;
-            this.deptSelection.openDeptSelectionPop(this, function (data) {
-                //  console.log("data " , data[0]);
-                that.setDept(data[0].oData);
-            });
+        onInputWithDepartmentValuePress: function(){
+            this.byId("departmentDialog").open();
         },
-        setDept: function (data) {
+        onDepartmentDialogApplyPress: function(oEvent){ 
             var md = this.getModel('mdCommon');
-            md.setProperty("/acq_department_code", data.department_id);
-            md.setProperty("/acq_department_code_nm", data.department_local_name);
+            md.setProperty("/acq_department_code", oEvent.getParameter("item").department_id);
+            md.setProperty("/acq_department_code_nm", oEvent.getParameter("item").department_local_name);
+            this.byId("acquisition_department").setValue(oEvent.getParameter("item").department_local_name);
         },
+
+        // onValueHelpRequestedDept: function () {
+        //     var that = this;
+        //     this.deptSelection.openDeptSelectionPop(this, function (data) {
+        //         //  console.log("data " , data[0]);
+        //         that.setDept(data[0].oData);
+        //     });
+        // },
+        // setDept: function (data) {
+        //     var md = this.getModel('mdCommon');
+        //     md.setProperty("/acq_department_code", data.department_id);
+        //     md.setProperty("/acq_department_code_nm", data.department_local_name);
+        // },
         /**
         * @description Participating Supplier 의 delete 버튼 누를시 
         */

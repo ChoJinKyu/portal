@@ -29,6 +29,8 @@ sap.ui.define([
 
   return BaseController.extend("cm.menuMgt.controller.MidObject", {
 
+    validator: new Validator(),
+
     dateFormatter: DateFormatter,
 
     formatter: (function () {
@@ -334,9 +336,14 @@ sap.ui.define([
     //   }
 
       // Master
-      if (!Validator.isValid(this.byId("pageSectionMainForm"))) return ;
-      // Detail
-      if (!Validator.isValid(this.byId("midTable"))) return ;
+      this.validator.setModel(this.getModel("form"), "form");
+      if(this._validatorCheck() === "Error"){
+          return;
+      }
+        
+    //   if (!Validator.isValid(this.byId("pageSectionMainForm"))) return ;
+    //   // Detail
+    //   if (!Validator.isValid(this.byId("midTable"))) return ;
       // Set Details (New)
       (length = detail.getData()["MenuLng"].length) 
       && 
@@ -350,7 +357,7 @@ sap.ui.define([
 
       // 다국어를 등록하세요.
       if (length <= 0) {
-          MessageBox.alert(this.getModel("I18N").getText("/NCM02003", 3, this.getModel("I18N").getText("/MULTILINGUAL")));
+          MessageBox.alert(this.getModel("I18N").getText("/NCM02003", this.getModel("I18N").getText("/MULTILINGUAL")));
           return;
       }
 
@@ -364,12 +371,26 @@ sap.ui.define([
               success: function (ok) {
                 view.setBusy(false);
                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
+                // MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
+                MessageToast.show("저장 되었습니다.");
               }
             });
           };
         }
       });
+    },
+
+    _validatorCheck: function () {
+        var sValidatorCheck;
+        if(this.validator.validate(this.byId("pageSectionMainFormHBoxLine1")) !== true){sValidatorCheck = "Error";}
+        if(this.validator.validate(this.byId("pageSectionMainFormHBoxLine2")) !== true){sValidatorCheck = "Error";}
+        if(this.validator.validate(this.byId("pageSectionMainFormHBoxLine3")) !== true){sValidatorCheck = "Error";}
+        if(this.validator.validate(this.byId("pageSectionMainFormHBoxLine4")) !== true){sValidatorCheck = "Error";}
+        if(this.validator.validate(this.byId("pageSectionMainFormHBoxLine5")) !== true){sValidatorCheck = "Error";}
+        if(this.validator.validate(this.byId("midTable")) !== true) {
+            sValidatorCheck = "Error";
+        }
+        return sValidatorCheck;
     },
 
     /**

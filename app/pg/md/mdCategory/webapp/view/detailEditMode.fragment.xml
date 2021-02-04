@@ -23,6 +23,7 @@
             }" required="true"></Input>  
         <Label text="{I18N>/FONT_RGB_CODE}"/>
         <Input id="fontColor"
+               editable="false"
                value="{
                 path: 'master>/rgb_font_color_code',
                 type: 'sap.ui.model.type.String',
@@ -31,6 +32,6 @@
                     maxLength: 7
                 }
             }"></Input>
-		<Button id="liveChangeButton" press="onFontColor" icon="sap-icon://text-color" liveChange="handleColorSelect"/>	  
+		<Button text="" id="liveChangeButton" press="onFontColor" width="20px" icon="sap-icon://text-color"/>	  
 	</form:SimpleForm>
 </core:FragmentDefinition>

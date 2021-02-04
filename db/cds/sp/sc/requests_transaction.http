@@ -10,8 +10,10 @@
 @serviceUrlV2 = http://localhost:8080/odata/v2
 # Local PC[DB+AP] : cds serve all --with-mocks --in-memory?
 @serviceUrl = http://localhost:4004
-# Cloud Container Service : sppCap New
+# Cloud Container Service : sppCap New V4 
 @serviceUrl = https://biztech-partners-co---ltd-lg-common-dev-dev-po-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4
+# Cloud Container Service : sppCap New V2
+@serviceUrlV2 = https://biztech-partners-co---ltd-lg-common-dev-dev-po-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v2
 # Local PC : mvn spring-boot:run : v4
 @serviceUrl = http://localhost:8080/odata/v4
 
@@ -83,4 +85,25 @@ PUT {{reviews-service}}/NegoHeadersView?
 Cookie: {{cookie}}
 Accept-Language: en-US
 Accept-Datetime: 366
+# Accept-Language: ko-KR
+
+
+### Multi Select | Single Select
+GET {{reviews-serviceV2}}/NegoHeadersView
+Accept-Language: ko
+
+### Multi Select | Single Select
+GET {{reviews-serviceV2}}/NegoHeaders(tenant_id=L2100,nego_header_id=4)?$format=json
+&$top=4
+# &$filter=nego_header_id%20eq%204
+# &$filter=open_date le {{$datetime iso8601}}
+# &$filter=open_date eq 2021-01-01T07:30:10Z
+&$filter=open_date eq 2021-01-01T07:30:10Z
+&$expand=*&$select=*
+# &$filter=((IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null) and (nego_header_id eq 2 or nego_header_id eq 3))
+# &$select=tenant_id,nego_header_id,nego_document_round,HasActiveEntity,IsActiveEntity,SiblingEntity,DraftAdministrativeData
+# &$expand=SiblingEntity,DraftAdministrativeData
+Cookie: {{cookie}}
+Accept-Language: en-US
+# Accept-Datetime: 12
 # Accept-Language: ko-KR

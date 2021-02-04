@@ -6,7 +6,6 @@ sap.ui.define([
     "ext/lib/model/ManagedListModel",
     "ext/lib/formatter/DateFormatter",
     "sap/m/TablePersoController",
-    //"./MainListPersoService",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
@@ -18,7 +17,7 @@ sap.ui.define([
     "sap/m/Input",
     "sap/m/ComboBox",
     "sap/ui/core/Item",
-], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, /*MainListPersoService,*/ Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
+], function (BaseController, Multilingual, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item) {
     "use strict";
 
     return BaseController.extend("sp.sf.fundingNotifySup.controller.MainList", {
@@ -59,7 +58,6 @@ sap.ui.define([
             
             this.getRouter().getRoute("mainList").attachPatternMatched(this._onRoutedThisPage, this);
 
-            //this._doInitTablePerso();
         },
 
         onRenderedFirst: function () {

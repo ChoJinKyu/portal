@@ -11,7 +11,8 @@
         xmlns:co="sap.suite.ui.commons" 
         xmlns:si="sap.suite.ui.commons.statusindicator" 
         xmlns:u="sap.ui.unified" 
-        xmlns:table="sap.ui.table"
+        xmlns:table="sap.ui.table" 
+        xmlns:cm-ui="cm.util.control.ui"
         core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
          >
     <VBox class="sapUiSmallMargin">
@@ -59,11 +60,14 @@
 				<VBox height="6em">
 					<Label text="{path:'I18N>/ACQUISITION_DEPARTMENT', formatter:'I18NFormatter'}" required="true"/>
                     <!-- Md_Asset > acq_department_code -->
-					<Input id="acquisition_department" 
-                           value="{mdCommon>/acq_department_code_nm}"
-                          
-                           editable="{mode>/editFlag}" 
-                           showValueHelp="true" valueHelpRequest=".onValueHelpRequestedDept" />
+
+                         <Input id="acquisition_department" 
+                               editable="{mode>/editFlag}" 
+                                value="{mdCommon>/acq_department_code_nm}"
+                                placeholder="Choose a Department"
+                                showValueHelp="true" 
+                                valueHelpRequest=".onInputWithDepartmentValuePress">
+                        </Input>
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -71,14 +75,14 @@
 				<VBox  height="6em">
 					<Label text="{path:'I18N>/ACCOUNT_DEPARTMENT', formatter:'I18NFormatter'}" required="true"/>
                     <!-- edit Mode -->
-					<ComboBox id="accounting_department"
+					 <ComboBox id="accounting_department"
                               editable="{mode>/editFlag}" 
                               
                               width="100%"  
                               selectedKey="{mdCommon>/accounting_department_code}" 
                               items="{}">
 						<core:Item key="{util>code}" text="{util>code_description}"/>
-					</ComboBox>
+					</ComboBox> 
 					<layoutData>
 						<layout:GridData span="XL6 L6 M12 S12"/>
 					</layoutData>
@@ -132,7 +136,7 @@
                               selectedKey="{mdCommon>/import_company_org_code}" 
                               enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
                               items="{
-                                  path: 'importPlant>/Pur_Operation_Org'
+                                  path: 'importPlant>/Divisions'
                               }">
 						<core:Item key="{importPlant>org_code}" text="[{importPlant>org_code}]{importPlant>org_name}" />
 					</Select>
@@ -343,11 +347,20 @@
                      </form:content>
                  </form:SimpleForm>
 
+                <cm-ui:DepartmentDialog id="departmentDialog" 
+                    title="직원 검색"
+                    items="{
+                        filters: [
+                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                        ]
+                    }"
+                    apply=".onDepartmentDialogApplyPress"
+                />
 
 
     </VBox>
 
-
+  
 
 
        

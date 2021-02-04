@@ -723,8 +723,15 @@ xmlns:flex="sap.f"
                     <uxap:footer>
                     <OverflowToolbar>
                         <ToolbarSpacer/>
-                        <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" press=".onPageEditButtonPress" visible="{=!${DetailView>/isCreateMode}}" />
-                        <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress" />
+                        <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" press=".onPageEditButtonPress" 
+                            visible="{=!${DetailView>/isCreateMode}}" 
+                            enabled="{=
+                                !${DetailView>/isEditMode}
+                            }" />
+                        <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress" 
+                            enabled="{=
+                                ${DetailView>/isEditMode}
+                            }"/>
                         <!-- <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" enabled="{=!${DetailView>/isCreate}}" press="onDelete"/> -->
                         <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPressSaveBtn" enabled="{=${DetailView>/isEditMode}}"/>
                     </OverflowToolbar>

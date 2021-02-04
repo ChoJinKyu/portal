@@ -425,25 +425,20 @@ sap.ui.define([
                         data: JSON.stringify(oSaveData),
                         contentType: "application/json",
                         success: function (data) {
+                            MessageBox.success(i18nModel.getProperty("/NCM01001"), {
+                            onClose : function (sAction) {
+                            oView.setBusy(false);     
                             
                             if(this.scenario_number==="New"){
 
-                              this.getRouter().navTo("main");
+                               this.getRouter().navTo("main");
                               
                             }else{
-                                this._readOperationUnitMst();
-                                this._readManagerListView();
-                                this._readEvalTypeListView();
-                                this._readQttiveItemListView(); 
+                                this._readAll();
+                                 }
 
-                                this.getView().byId("managerTable").removeSelections(true);
-                                this.getView().byId("quantitativeTable").removeSelections(true);
-                                this.getModel("DetailView").setProperty("/isEditMode", false);
-                            
-                            
-                            }
-
-                            oView.setBusy(false);
+                             }.bind(this)
+                            });
                         }.bind(this),
                         error: function (e) {
                                 var sDetails;
@@ -474,6 +469,7 @@ sap.ui.define([
 
 
         },
+        
         /**
          * 저장시 Validation 필수값 확인
          * 
@@ -927,19 +923,54 @@ sap.ui.define([
                      evaluation_operation_unit_code = oItem.evaluation_operation_unit_code,
                      evaluation_type_code = oItem.evaluation_type_code
                      
-                
-                    this.getRouter().navTo("two", {
-                        scenario_number: "Detail",
-                        tenant_id: tenant_id,
-                        company_code: company_code,
-                        org_code: org_code,
-                        org_type_code: org_type_code,
-                        evaluation_operation_unit_code : evaluation_operation_unit_code,
-                        evaluation_operation_unit_name : this.evaluation_operation_unit_name,
-                        evaluation_type_code : evaluation_type_code,
-                        use_flag : this.use_flag
-                    });
+                var oComponent = this.getOwnerComponent();
+                var oViewModel = oComponent.getModel("viewModel");
+                var layout = oViewModel.getProperty("/App/layout");
 
+                 var bTwoViewEditCheck = oComponent.byId("container-supplierEvaluationSetupMgt---detail--detailView").
+                 getController().getView().getModel("TwoView").getProperty("/isEditMode");
+                 // var oModel = oView.getModel("DetailView").getProperty("/evaluationType1");
+                               
+
+                    if( (layout === "TwoColumnsMidExpanded" || layout === "TwoColumnsBeginExpanded")&&bTwoViewEditCheck ){
+                    MessageBox.confirm(i18nModel.getText("/NPG00013"), {
+                        actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                        emphasizedAction: MessageBox.Action.OK,
+                        onClose: function (sAction) {
+                            if (sAction === MessageBox.Action.OK) {
+
+                                    this.getRouter().navTo("two", {
+                                    scenario_number: "Detail",
+                                    tenant_id: tenant_id,
+                                    company_code: company_code,
+                                    org_code: org_code,
+                                    org_type_code: org_type_code,
+                                    evaluation_operation_unit_code : evaluation_operation_unit_code,
+                                    evaluation_operation_unit_name : this.evaluation_operation_unit_name,
+                                    evaluation_type_code : evaluation_type_code,
+                                    use_flag : this.use_flag
+                                    });
+                    
+                            }
+
+                        }.bind(this)
+                    });
+                    }else{
+                                    this.getRouter().navTo("two", {
+                                    scenario_number: "Detail",
+                                    tenant_id: tenant_id,
+                                    company_code: company_code,
+                                    org_code: org_code,
+                                    org_type_code: org_type_code,
+                                    evaluation_operation_unit_code : evaluation_operation_unit_code,
+                                    evaluation_operation_unit_name : this.evaluation_operation_unit_name,
+                                    evaluation_type_code : evaluation_type_code,
+                                    use_flag : this.use_flag
+                                    });
+                            }
+
+
+                    
             },
 
              onCreateTwo: function (oEvent) { 
@@ -964,7 +995,21 @@ sap.ui.define([
          * @public
          */
             onPageCancelEditButtonPress: function () {
-            this.onNavToBack();
+                
+                 MessageBox.confirm(i18nModel.getText("/NPG00013"), {
+                    actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                    emphasizedAction: MessageBox.Action.OK,
+                    onClose: function (sAction) {
+                        if (sAction === MessageBox.Action.OK) {
+
+                            this._readAll();
+
+                        }
+
+                    }.bind(this)
+                });
+
+                
         },
 
 
@@ -1076,28 +1121,43 @@ sap.ui.define([
             }
 
                 
-            this.getView().getModel("DetailView").setProperty("/",{
+            // this.getView().getModel("DetailView").setProperty("/",{
+            //                     OperationUnitMst : [],                                
+            //                     manager : [],
+            //                     evaluationType1 : [],
+            //                     quantitative : [],
+            //                     vpOperationUnit : { vendor_pool_operation_unit_code : [] }
+            //                 });
+            // this.getView().byId("managerTable").removeSelections(true);
+            // this.getView().byId("quantitativeTable").removeSelections(true);
+
+            // oView.getModel().refresh(true);
+            // oView.getModel("DetailView").refresh(true);
+            this._readAll();
+
+            
+             oView.setBusy(false);
+         },
+         _readAll : function(){
+            var oView = this.getView();
+            var oModel = this.getModel("DetailView");
+
+            // Create 버튼 눌렀을때
+            if(this.scenario_number === "New") {
+
+                 this.getView().getModel("DetailView").setProperty("/",{
                                 OperationUnitMst : [],                                
                                 manager : [],
                                 evaluationType1 : [],
                                 quantitative : [],
                                 vpOperationUnit : { vendor_pool_operation_unit_code : [] }
                             });
-                            // vpOperationUnit : { vendor_pool_operation_unit_code : [] }
-            this.getView().byId("managerTable").removeSelections(true);
-            this.getView().byId("quantitativeTable").removeSelections(true);
+                            
+                oModel.setProperty("/isEditMode", true);
+                oModel.setProperty("/isCreateMode", true);
+                oModel.setProperty("/transaction_code", "I");
 
-            // oView.getModel().refresh(true);
-            // oView.getModel("DetailView").refresh(true);
-            
-
-            // Create 버튼 눌렀을때
-            if (this.scenario_number === "New") {
-                this.getModel("DetailView").setProperty("/isEditMode", true);
-                this.getModel("DetailView").setProperty("/isCreateMode", true);
-                this.getModel("DetailView").setProperty("/transaction_code", "I");
-
-                this.getModel("DetailView").setProperty("/OperationUnitMst", {
+                oModel.setProperty("/OperationUnitMst", {
                 "tenant_id":this.tenant_id,
                 "company_code":this.company_code,
                 "org_type_code":this.org_type_code,
@@ -1108,6 +1168,7 @@ sap.ui.define([
                 "evaluation_request_approval_flag" : false,
                 "evaluation_request_mode_code" : this.evaluation_request_mode_code                 
                 });
+
                 
                 // this.getModel("DetailView").setProperty("/OperationUnitMst/tenant_id", this.tenant_id);
                 // this.getModel("DetailView").setProperty("/OperationUnitMst/company_code", this.company_code);
@@ -1115,24 +1176,28 @@ sap.ui.define([
                 
 
             } else{ // Detail 일때
-                this.getModel("DetailView").setProperty("/isEditMode", false);
-                this.getModel("DetailView").setProperty("/isCreateMode", false); 
-                this.getModel("DetailView").setProperty("/transaction_code", "R");        
+                oModel.setProperty("/isEditMode", false);
+                oModel.setProperty("/isCreateMode", false); 
+                oModel.setProperty("/transaction_code", "R");        
 
- 
+                this._readOperationUnitMst();
+                this._readManagerListView();
+                this._readEvalTypeListView();
+                this._readQttiveItemListView(); 
+
+
                 // 키값 파라미터가 모두있고 단건일때 이렇게도 쓰인다.
                 // var s = oView.getModel().crateKey("/OpUnitView",{
                 //     tenant_id : this.tenant_id,
                 //     ...
                 // })
-                this._readOperationUnitMst();
-                this._readManagerListView();
-                this._readEvalTypeListView();
-                this._readQttiveItemListView();
              }
+
              
-             oView.setBusy(false);
-         },
+                oView.byId("managerTable").removeSelections(true);
+                oView.byId("quantitativeTable").removeSelections(true);
+          
+        },
          _readManagerListView : function(){
 
             var oView = this.getView();
@@ -1215,7 +1280,7 @@ sap.ui.define([
                 OpUnitViewFilters.push(new Filter("org_code", 'EQ', this.org_code));     
                 OpUnitViewFilters.push(new Filter("evaluation_operation_unit_code", 'EQ', this.evaluation_operation_unit_code));
 
-                if(!this.getModel("DetailView").getProperty("/isEditMode")){
+                // if(!this.getModel("DetailView").getProperty("/isEditMode")){
                     oView.getModel().read("/OpUnitView", {
                     filters: OpUnitViewFilters,
                     success: function (oData) {
@@ -1238,7 +1303,7 @@ sap.ui.define([
                         }.bind(this),
                        error: function () {}
                     });
-            };
+            // };
         },
          
             /**

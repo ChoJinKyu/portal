@@ -19,12 +19,13 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
-	'sap/m/ColorPalettePopover',
-	'sap/ui/unified/ColorPickerDisplayMode',
+	'sap/ui/unified/library',
+	'sap/ui/unified/ColorPickerPopover',
+	'sap/ui/unified/ColorPicker',
     "sap/m/ObjectStatus"
 ], function (BaseController, Multilingual, Validator, JSONModel, ODataXhrService, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ColorPalettePopover, ColorPickerDisplayMode, ObjectStatus) {
+	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, unifiedLibrary, ColorPickerPopover, ColorPicker, ObjectStatus) {
     
     "use strict";
 
@@ -64,6 +65,9 @@ sap.ui.define([
             
 			this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
+            this.ColorPickerMode = unifiedLibrary.ColorPickerMode,
+		    this.ValueState = unifiedLibrary.ValueState;
+        
 			this._initTableTemplates();
             this.enableMessagePopover();
         },
@@ -178,7 +182,7 @@ sap.ui.define([
             var oView = this.getView(),
                 oMasterModel = this.getModel("master"),
                 that = this;
-                        debugger;
+
             MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
                 title: "Comfirmation",
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -189,7 +193,7 @@ sap.ui.define([
                     oMasterModel.setTransactionModel(that.getModel());
                     oMasterModel.submitChanges({
                     success: function (ok) {
-                        debugger;
+                        
                         oView.setBusy(false);
                         that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                         MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
@@ -210,6 +214,7 @@ sap.ui.define([
             var oView = this.getView(),
                 oMasterModel = this.getModel("master"),
                 oDetailsModel = this.getModel("details"),
+                temp = oMasterModel.oData,
                 lngArr = oDetailsModel.getProperty("/MdCategoryLng"),
                 lngLength = lngArr.length,
                 that = this;
@@ -227,7 +232,7 @@ sap.ui.define([
             var tempData = oMasterModel.getData();
             if(tempData != null){
                 delete tempData.org_infos;
-                oMasterModel.setData(tempData);
+                oMasterModel.setData(tempData,"/MdCategory");
             }
 
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
@@ -257,13 +262,13 @@ sap.ui.define([
                                 contentType: "application/json", 
                                 success: function(data){ 
                                     var categoryCode = data.value[0].spmd_category_code;
-                                    that.getModel("master").setProperty("/spmd_category_code", categoryCode); 
+                                    temp.spmd_category_code = categoryCode;
+
                                     //Lng 갯수만큼 categoryCode 매핑
                                     if(lngLength>0){
                                         for(var idx=0; idx<lngLength; idx++){
                                             lngArr[idx].spmd_category_code = categoryCode;
                                         }
-                                    }
                                     
                                     oTransactionManager.submit({  
                                         success: function(ok){ 
@@ -373,7 +378,7 @@ sap.ui.define([
                     "rgb_font_color_code": "",
                     "rgb_cell_clolor_code": "",
                     "spmd_category_sort_sequence": this._sSpmd_category_sort_sequence
-                }, "/MdCategory");
+                }, "/MdCategory" );//, "/MdCategory"
             
 				var oDetailsModel = this.getModel("details");
 				oDetailsModel.setTransactionModel(this.getModel());
@@ -395,10 +400,6 @@ sap.ui.define([
                                         + "',org_type_code='"      + this._sOrg_type_code 
                                         + "',org_code='"           + this._sOrg_code 
                                         + "',spmd_category_code='" + this._sSpmd_category_code 
-                                        // + "',spmd_category_code_name='" + this._sSpmd_category_code_name 
-                                        // + "',rgb_font_color_code='" + this._sRgb_font_clolor_code  
-                                        // + "',rgb_cell_clolor_code='" + this._sRgb_cell_clolor_code  
-                                        // + "',spmd_category_sort_sequence='" + this._sSpmd_category_sort_sequence  
                                         + "')";
                 var oMasterModel = this.getModel("master");
                 oView.setBusy(true);
@@ -616,80 +617,31 @@ sap.ui.define([
 		 * @param oEvent
 		 */
         onFontColor: function(oEvent) {
-            this.oButton = this.byId("liveChangeButton");
-			if (!this.oColorPaletteDisplayMode) {
-				this.oColorPaletteDisplayMode = new ColorPalettePopover("oColorPaletteDisplayMode", {
-					showDefaultColorButton: false,
-					displayMode: ColorPickerDisplayMode.Simplified,
-					colorSelect: this.handleColorSelect,
-					liveChange: this.handleLiveChange.bind(this)
+
+			if (!this.oColorPickerPopover) {
+				this.oColorPickerPopover = new ColorPickerPopover("oColorPickerPopover", {
+					colorString: "black",
+					mode: this.ColorPickerMode.HSL,
+					change: this.handleChange.bind(this)
 				});
-            }
-            this.oColorPaletteDisplayMode.openBy(oEvent.getSource());
-
-			// this.oColorPaletteDisplayMode.openBy(oEvent.getSource());
-            // if (!this.oColorPalettePopoverFull) {
-			// 	this.oColorPalettePopoverFull = new ColorPalettePopover("oColorPalettePopoverFull", {
-			// 		defaultColor: "black",
-			// 		colorSelect: this.handleColorSelect
-            //     });
-			// }
-
-			// this.oColorPalettePopoverFull.openBy(oEvent.getSource());
+			}
+            this.oColorPickerPopover.openBy(oEvent.getSource());
+            
+            
         },
 
-		handleColorSelect: function (oEvent) {
-            debugger;
-            var rgbCode = oEvent.getParameter("value");
-            // this.byId("fontColor").setValue(rgbCode);
+        handleChange: function (oEvent) {
+			var oView = this.getView(),
+				oInput = oView.byId("fontColor");
 
-            // 컬러값과 쉼표만 남기고 삭제. 
-            var rgb = rgbCode.replace( /[^%,.\d]/g, "" ); 
-
-            // 쉼표(,)를 기준으로 분리해서, 배열에 담기. 
-            rgb = rgb.split( "," ); 
-
-            // 컬러값이 "%"일 경우, 변환하기. 
-            for ( var x = 0; x < 3; x++ ) { 
-                    if ( rgb[ x ].indexOf( "%" ) > -1 ) rgb[ x ] = Math.round( parseFloat( rgb[ x ] ) * 2.55 ); 
-            } 
-
-            // 16진수 문자로 변환. 
-            var toHex = function( string ){ 
-                    string = parseInt( string, 10 ).toString( 16 ); 
-                    string = ( string.length === 1 ) ? "0" + string : string; 
-
-                    return string; 
-            }; 
-
-            var r = toHex( rgb[ 0 ] ); 
-            var g = toHex( rgb[ 1 ] ); 
-            var b = toHex( rgb[ 2 ] ); 
-
-            this.hexaCode = "#" + r + g + b; 
-            MessageToast.show(this.hexaCode);
-            
-            debugger;
-            // this.byId("fontColor").setValue(this.hexaCode);
-
-            return this.hexaCode; 
-
-		},
-
-        handleLiveChange:function (oEvent) {
-            this.oButton.getDomRef().firstChild.firstChild.style.color = "rgba(" + [
-				oEvent.getParameter("r"),
-				oEvent.getParameter("g"),
-				oEvent.getParameter("b"),
-				oEvent.getParameter("alpha")
-			].join(", ") + ")";
+			oInput.setValue(oEvent.getParameter("hex"));
+			// oInput.setValueState(this.ValueState.None);
+			MessageToast.show("Chosen color string: " + oEvent.getParameter("hex"));
         },
 
 		onExit: function () {
-			// Destroy popovers if any
-
-			if (this.oColorPalettePopoverFull) {
-				this.oColorPalettePopoverFull.destroy();
+			if (this.oColorPickerPopover) {
+				this.oColorPickerPopover.destroy();
 			}
 		}
 	});

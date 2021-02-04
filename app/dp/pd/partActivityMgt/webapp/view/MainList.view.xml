@@ -40,7 +40,7 @@
                                 text="{I18N>/COMPANY}: "
                                 labelFor="searchCompany">
                             </Label>
-                            <ComboBox id="searchCompany" width="100%" selectedKey="*" items="{
+                            <ComboBox id="searchCompany" width="100%" selectedKey="" items="{
                                 path: '/CompanyView'
                                
                                 }">
@@ -58,7 +58,7 @@
                                 text="{I18N>/ORGANIZATION}: "
                                 labelFor="searchOrg">
                             </Label>
-                            <ComboBox id="searchOrg" width="100%" selectedKey="*" items="{
+                            <ComboBox id="searchOrg" width="100%" selectedKey="" items="{
                                 path: '/OrgView'
                                
                                 }">
