@@ -7,6 +7,7 @@ sap.ui.define([
 	"ext/lib/formatter/NumberFormatter",
     "ext/lib/control/ui/CodeValueHelp",
     "sap/ui/model/json/JSONModel", 
+    "sap/ui/model/odata/v2/ODataModel",
     "sap/ui/core/routing/History",
     "sap/ui/richtexteditor/RichTextEditor",
 	"sap/ui/model/Filter",
@@ -31,7 +32,7 @@ sap.ui.define([
     "op/util/control/ui/WbsDialog",
     "sp/util/control/ui/SupplierDialog"
 ], function (BaseController, ManagedListModel, ManagedModel, Validator, DateFormatter, NumberFormatter, CodeValueHelp, 
-            JSONModel, History, RichTextEditor, Filter, FilterOperator, Sorter,
+            JSONModel, ODataModel, History, RichTextEditor, Filter, FilterOperator, Sorter,
             Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label,
             EmployeeDialog, PlantDialog, MaterialOrgDialog, AccountDialog, CctrDialog, CurrencyDialog, UomDialog, WbsDialog, SupplierDialog) {
             
@@ -174,7 +175,7 @@ sap.ui.define([
             if(!that.oApprovalRichTextEditor){
                 sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
                     function (RTE, EditorType) {
-                        that.oApprovalRichTextEditor = new RTE("prCreateApprovalRTE", {
+                        that.oApprovalRichTextEditor = new RTE("prCreateApprovalContentsRTE", {
                             editorType: EditorType.TinyMCE4,
                             width: "100%",
                             height: "200px",
@@ -196,6 +197,8 @@ sap.ui.define([
 
         /**
          * 구매요청 템플릿 리스트 조회
+         * -------------------------------
+         * (1) 템플릿 리스트  (2) PR_TEMPLATE_NUMBER에 대한 상위 템플릿번호
          */
         _fnGetPrTemplateList: function() {
             var that = this,
@@ -210,29 +213,37 @@ sap.ui.define([
                     new Filter("pr_type_code_2", FilterOperator.EQ, oPrMstData.pr_type_code_2),
                     new Filter("pr_type_code_3", FilterOperator.EQ, oPrMstData.pr_type_code_3)
                 ];
+            
+            var aSorters = [];
+            aSorters.push(new Sorter("pr_template_name", false));
 
             oServiceModel.read("/Pr_TMapView", {
                 filters: aFilters,
+                sorters: aSorters,
                 success: function (oData) {
                     oViewModel.setProperty("/prTemplateList", oData.results);
 
                     // PR 템플릿 정보 세텅
                     oData.results.some(function(oPrTemplateData){
                         if(oPrTemplateData.pr_template_number === oPrMstData.pr_template_number){
+                            debugger;
+                            // 신규등록에서는 템플릿명이 없으므로 값 세팅 해줘야함
                             oPrMstData.pr_template_name =  oPrTemplateData.pr_template_name;
                             oPrMstData.pr_type_name =  oPrTemplateData.pr_type_name;
                             oPrMstData.pr_type_name_2 =  oPrTemplateData.pr_type_name_2;
                             oPrMstData.pr_type_name_3 =  oPrTemplateData.pr_type_name_3;
+
                             oPrMstData.pr_template_numbers = oPrTemplateData.pr_template_numbers;
                             if(!oPrTemplateData.pr_template_numbers) {
                                 oPrMstData.pr_template_numbers = oPrTemplateData.pr_template_numbers1;
                             }
-                            oViewModel.setProperty("/PrMst",oPrMstData);
+                            oViewModel.setProperty("/PrMst", oPrMstData);
                             return true;
                         }
                     });
 
-                    that._fnReadPrTemplateDetail();
+                    //that._fnReadPrTemplateDetail();
+                    that._fnReadPrTemplateData();
 
                 },
                 error: function (oErrorData) {
@@ -241,8 +252,62 @@ sap.ui.define([
         },
 
         /**
+         * PR Template 정보 조회 (템플릿 목록, 템플릿 상세)     
+         */
+        _fnReadPrTemplateData : function(oArgs){
+            var that = this,
+                oView = this.getView(),
+                oViewModel = this.getModel('viewModel'),
+                oContModel = this.getModel('contModel');
+            var oPrMstData = oViewModel.getProperty("/PrMst");
+
+            // PR 템플릿 마스터 정보
+            var aTMstFilters = [];
+            aTMstFilters.push(new Filter("tenant_id", FilterOperator.EQ, oPrMstData.tenant_id));
+            aTMstFilters.push(new Filter("pr_template_number", FilterOperator.EQ, oPrMstData.pr_template_number));
+            
+
+            // PR 템플릿 상세정보
+            var aTDtlFilters = [];
+            aTDtlFilters.push(new Filter("tenant_id", FilterOperator.EQ, oPrMstData.tenant_id));
+            aTDtlFilters.push(new Filter("txn_type_code", FilterOperator.EQ, "CREATE"));
+            aTDtlFilters.push(new Filter("use_flag", FilterOperator.EQ, true));
+
+                // 조회 대상 PR 템플릿번호
+                var aPrTemplateNumber=[];   
+                if(oPrMstData.pr_template_numbers && oPrMstData.pr_template_numbers != ""){
+                    aPrTemplateNumber = oPrMstData.pr_template_numbers.split(",");
+                }
+                if(aPrTemplateNumber.length > 0){
+                    aPrTemplateNumber.forEach(function(item, idx){
+                        aTDtlFilters.push(new Filter("pr_template_number", FilterOperator.EQ, item));
+                    });
+                }
+            
+            var aTDtlSorters = [];
+            aTDtlSorters.push(new Sorter("pr_template_number", false));
+
+            $.when(
+                    that._fnReadServiceModel("opUtilTemplateODataModel", "/Pr_TMst", aTMstFilters, []),
+                    that._fnReadServiceModel("opUtilTemplateODataModel", "/Pr_TDtl", aTDtlFilters, aTDtlSorters)
+            ).done(function(oTMapData, oTDtlData){ 
+                // PR 결재정보 Visible flag
+                if(oTMapData.results.length > 0) {
+                    var oContApprovalFlag = {"approval_flag" : oTMapData.results[0].approval_flag};
+                    oContModel.setProperty("/Approval", oContApprovalFlag);
+                }
+
+                // PR 템플릿상세(항목 Visible flag, Required flag)
+                if(oTDtlData.results){
+                    that._fnSetVisibleModel(oTDtlData.results);
+                }              
+            });
+        },
+
+        /**
          * 템플릿상세정보 조회
          */
+        /*
         _fnReadPrTemplateDetail: function(){
             var that = this,
                 oView = this.getView(),
@@ -279,6 +344,7 @@ sap.ui.define([
                 }
             });
         },
+        */
 
         /**
          * Template 항목 Visible model 세팅
@@ -343,8 +409,8 @@ sap.ui.define([
             var oToday = new Date();
             var oViewModel = this.getModel('viewModel');
 
-            console.log("this.$session.employee_number > " + this.$session.employee_number);
-            console.log("this.$session.employee_name > " + this.$session.employee_name);
+            //console.log("this.$session.employee_number > " + this.$session.employee_number);
+            //console.log("this.$session.employee_name > " + this.$session.employee_name);
                        
             var oNewMasterData = {
                 tenant_id: this.$session.tenant_id,
@@ -362,7 +428,7 @@ sap.ui.define([
                 request_date: oToday,
                 pr_create_status_code: "10",
                 pr_create_status_name: "New",
-                pr_header_text: "구매요청",
+                pr_header_text: "",
                 approval_flag: false,
                 approval_number: "",
                 approval_contents: "",
@@ -423,6 +489,7 @@ sap.ui.define([
             });
         },
 
+        /*
         _fnReadPrDetail_ori : function(oArgs){
             var that = this,
                 oServiceModel = this.getModel(),
@@ -468,8 +535,12 @@ sap.ui.define([
                 }
             });
         },
+        */
 
 
+        /**
+         * 품목정보 조회 (품목, 계정, 서비스)         
+         */
         _fnReadPrDetail : function(oArgs){
             var that = this,
                 oViewModel = this.getModel('viewModel');
@@ -489,9 +560,9 @@ sap.ui.define([
             aServiceFilters.push(new Filter("service_sequence", FilterOperator.EQ, 1));
 
             $.when(
-                    that._fnReadServiceModel("/Pr_DtlView", aFilters, aSorters),
-                    that._fnReadServiceModel("/Pr_Account", aAccountFilters, aSorters),
-                    that._fnReadServiceModel("/Pr_Service", aServiceFilters, aSorters)
+                    that._fnReadServiceModel("", "/Pr_DtlView", aFilters, aSorters),
+                    that._fnReadServiceModel("", "/Pr_Account", aAccountFilters, aSorters),
+                    that._fnReadServiceModel("", "/Pr_Service", aServiceFilters, aSorters)
             ).done(function(oDetailData, oAccountData, oServiceData){              
 
                 if(oDetailData.results.length > 0) {
@@ -504,6 +575,7 @@ sap.ui.define([
                 let aPrDtlData = oViewModel.getProperty("/Pr_Dtl");
                 if(aPrDtlData && aPrDtlData.length > 0){
                     aPrDtlData.forEach(function(itemDtl, idx){
+                        // 계정정보
                         if(oAccountData.results.length > 0){
                             oAccountData.results.forEach(function(itemAccount, idx){
                                 if(itemAccount.pr_item_number === itemDtl.pr_item_number){
@@ -515,6 +587,7 @@ sap.ui.define([
                             });
                         }
 
+                        // 서비스정보
                         if(oServiceData.results.length > 0){
                             oServiceData.results.forEach(function(itemService, idx){
                                 if(itemService.pr_item_number === itemDtl.pr_item_number){
@@ -531,15 +604,21 @@ sap.ui.define([
         },
 
         /**
-         * Service model read
+         * ODataV2 Service model read
          */
-        _fnReadServiceModel : function(sEntityName, aFilters, aSorters){
-            var that = this,
-                oServiceModel = this.getModel();
+        _fnReadServiceModel : function(sODataModelName, sEntityName, aFilters, aSorters){
+            var that = this;
+            var oODataServiceModel = null;
+
+            if(sODataModelName && sODataModelName !== ""){
+                oODataServiceModel = this.getModel(sODataModelName);
+            }else{
+                oODataServiceModel = this.getModel();
+            }
 
             var deferred = $.Deferred();
 
-            oServiceModel.read(sEntityName,{
+            oODataServiceModel.read(sEntityName,{
                 filters : aFilters,
                 sorters : aSorters,
                 success : function(data){
@@ -949,7 +1028,7 @@ sap.ui.define([
                         delivery_request_date: delivery_request_date,
                         purchasing_group_code: (item.purchasing_group_code) ? item.purchasing_group_code : "",
                         price_unit          : (item.price_unit && item.price_unit !== "") ? item.price_unit+"" : "1",
-                        pr_progress_status_code: (item.pr_progress_status_code && item.pr_progress_status_code != "") ? item.pr_progress_status_code : "10",
+                        pr_progress_status_code: (item.pr_progress_status_code && item.pr_progress_status_code != "") ? item.pr_progress_status_code : "",
                         remark              : (item.remark) ? item.remark : "",
                         sloc_code           : (item.sloc_code) ? item.sloc_code : "",
                         supplier_code       : (item.supplier_code) ? item.supplier_code : "",

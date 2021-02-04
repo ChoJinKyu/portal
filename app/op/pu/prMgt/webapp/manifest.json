@@ -19,6 +19,13 @@
           "odataVersion": "2.0"
         }
       },
+      "opUtilTemplateService": {
+        "uri": "srv-api/odata/v2/op.util.TemplateService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
       "commonUtilService": {
         "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
@@ -83,32 +90,42 @@
     },
     "handleValidation": true,
     "models": {
-      "i18n": {
-        "type": "sap.ui.model.resource.ResourceModel",
-        "settings": {
-          "bundleName": "op.pu.prMgt.i18n.i18n"
-        }
-      },
-      "util": {
-        "dataSource": "commonUtilService",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": false,
-          "useBatch": true
-        }
-      },
-      "": {
-        "dataSource": "mainService",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": true,
-          "useBatch": true
-        }
-      },
+        "i18n": {
+            "type": "sap.ui.model.resource.ResourceModel",
+            "settings": {
+                "bundleName": "op.pu.prMgt.i18n.i18n"
+            }
+        },
+        "util": {
+            "dataSource": "commonUtilService",
+            "preload": true,
+            "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": false,
+                "useBatch": true
+            }
+        },
+        "": {
+            "dataSource": "mainService",
+            "preload": true,
+            "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": true,
+                "useBatch": true
+            }
+        },
+        "opUtilTemplateODataModel": {
+            "dataSource": "opUtilTemplateService",
+            "preload": true,
+            "settings": {
+                "defaultBindingMode": "TwoWay",
+                "defaultCountMode": "Inline",
+                "refreshAfterChange": false,
+                "useBatch": true
+            }
+        },
         "purOrg": {
             "dataSource": "purOrgMgrService",
             "preload": true,

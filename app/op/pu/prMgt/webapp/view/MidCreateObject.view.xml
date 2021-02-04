@@ -426,7 +426,7 @@
 			</uxap:ObjectPageSection>
             <!-- 첨부파일 끝 -->
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Report Line">
+			<uxap:ObjectPageSection titleUppercase="false" title="Report Line" visible="{contModel>/Approval/approval_flag}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection titleUppercase="false">
 						<uxap:blocks>
