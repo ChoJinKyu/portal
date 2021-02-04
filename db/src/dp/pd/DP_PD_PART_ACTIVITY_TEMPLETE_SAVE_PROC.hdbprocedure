@@ -189,7 +189,6 @@ BEGIN
                         ,ORG_CODE
                         ,PART_PROJECT_TYPE_CODE
                         ,ACTIVITY_CODE
-                        ,CATEGORY_GROUP_CODE
                         ,SEQUENCE
                         ,DEVELOPE_EVENT_CODE
                         ,ACTUAL_ROLE_CODE
@@ -211,7 +210,6 @@ BEGIN
                         ,ORG_CODE
                         ,PART_PROJECT_TYPE_CODE
                         ,ACTIVITY_CODE
-                        ,'CATEGORY_GROUP_CODE'
                          ,(SELECT COALESCE(MAX(SEQUENCE), 0) + 1 
                              FROM DP_PD_PART_ACTIVITY_TEMPLATE
                             WHERE TENANT_ID = M.TENANT_ID

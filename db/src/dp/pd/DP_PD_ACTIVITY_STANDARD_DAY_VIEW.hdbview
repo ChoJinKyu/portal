@@ -37,7 +37,6 @@ SELECT pca.tenant_id,
    and pat.company_code = pca.company_code
    and pat.org_type_code = pca.org_type_code
    and pat.org_code = pca.org_code
-   and pat.category_group_code = pca.category_group_code
    and pat.activity_code = pca.activity_code
    and pat.part_project_type_code = pca.part_project_type_code
    and pca.tenant_id = 'L2101'
