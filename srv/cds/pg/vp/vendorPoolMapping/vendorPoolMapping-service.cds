@@ -69,7 +69,6 @@ service VpMappingService {
                 and    md.material_code = mv.material_code
                 join sppUserSession.Spp_User_Session_View ssn
                 on     md.tenant_id    = ssn.TENANT_ID
-                and    md.company_code = ssn.COMPANY_CODE                
                 and    mv.language_cd  = ssn.LANGUAGE_CODE
         where   ifnull(md.vendor_pool_mapping_use_flag, true) = true
         group by mv.language_cd,
@@ -112,8 +111,7 @@ service VpMappingService {
                 on     he.tenant_id       = hd.tenant_id
                 and    he.department_code = hd.department_code
                 join sppUserSession.Spp_User_Session_View ssn
-                on     md.tenant_id    = ssn.TENANT_ID
-                and    md.company_code = ssn.COMPANY_CODE                                
+                on     md.tenant_id    = ssn.TENANT_ID                
         where  ifnull(md.vendor_pool_mapping_use_flag, true) = true;        
 
         entity VpSupplierMstView @(title : '공급업체마스터 View') as projection on vpSupplierMst.Vp_Supplier_Mst_View;
@@ -155,8 +153,7 @@ service VpMappingService {
                 mst.maker_material_code_mngt_flag
         from   vpDetailView.Vp_Vendor_Pool_Detail_View mst
                 join sppUserSession.Spp_User_Session_View ssn
-                on     mst.tenant_id    = ssn.TENANT_ID
-                and    mst.company_code = ssn.COMPANY_CODE                
+                on     mst.tenant_id    = ssn.TENANT_ID                
                 and    mst.language_cd  = ssn.LANGUAGE_CODE        
         ;  
 
