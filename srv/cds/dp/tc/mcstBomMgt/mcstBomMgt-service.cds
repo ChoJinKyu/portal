@@ -57,7 +57,7 @@ service McstBomMgtService {
           left outer join unitOfMeasure.Mm_Unit_Of_Measure uom
             on msi.tenant_id = uom.tenant_id
            and msi.base_uom_code = uom.uom_code
-           and uom.uom_class_code = 'AAAADL'
+           //and uom.uom_class_code = 'AAAADL'
            and uom.uom_desc is not null
            and uom.disable_date is null;
 
