@@ -87,8 +87,8 @@
         
         <ToolbarSpacer/>
         <HBox justifyContent="End" >
-            <Button text="Cancel" type="Transparent" press=".createPopupClose"/>
-            <Button text="Select" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".handleConfirm"/>
+            <Button text="{I18N>/CANCEL}" type="Transparent" press=".createPopupClose"/>
+            <Button text="{I18N>/SELECT}" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".handleConfirm"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>
