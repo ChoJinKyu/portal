@@ -74,19 +74,12 @@
                     width="auto">
                 <t:extension>
                     <OverflowToolbar class="sapFDynamicPageAlignContent">
-                        <Title id="mainTableTitle2" text="{I18N>/DP_PART_ACTIVITY_MGT} {I18N>/LIST} {= ${/PdProdActivityTemplateView}.length > 0 ? '(' + ${/PdProdActivityTemplateView}.length + ')' : ''}" level="H2"/>
+                        <Title id="mainTableTitle2" text="{I18N>/DP_PART_ACTIVITY_MGT} {I18N>/LIST} {= ${list>/PdProdActivityTemplateView}.length > 0 ? '(' + ${list>/PdProdActivityTemplateView}.length + ')' : ''}" level="H2"/>
                         <ToolbarSpacer/>
                         <Button text="{I18N>/CREATE}" id="createActivity" press=".onCreateActivity"  type="Transparent"/>
-                        <Button icon="sap-icon://sort" press=".onTableSort"/>
-                        <Button icon="sap-icon://filter" press=".onTableFilter"/>
+                        <Button icon="sap-icon://excel-attachment" press="onExportPress" type="Transparent"/>
+                        <ToolbarSeparator/>
                         <Button icon="sap-icon://action-settings" press=".onTableSettings"/>
-                        <MenuButton icon="sap-icon://excel-attachment" buttonMode="Split" defaultAction=".onExportPress">
-                            <menu>
-                                <Menu id="gTableExportButton" itemSelected="onMenuAction">
-                                    <MenuItem text="다른이름으로저장(x)"/>
-                                </Menu>
-                            </menu>
-                        </MenuButton>
                         
                     </OverflowToolbar>
                 </t:extension>
