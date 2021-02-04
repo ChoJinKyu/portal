@@ -65,7 +65,9 @@ sap.ui.define([
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-            
+           
+            console.log(" session >>> " , this.getSessionUserInfo().TENANT_ID);
+
             //this._showFormFragment();
         },
 
@@ -187,7 +189,7 @@ sap.ui.define([
 
             // console.log("args>>>>> " , args);
 
-            this.tenant_id = "L2101";
+            this.tenant_id = this.getSessionUserInfo().TENANT_ID;
             this.approval_number = args.approval_number;
             this.approval_type_code = args.approval_type_code;
             this.company_code = args.company_code;
@@ -482,7 +484,7 @@ sap.ui.define([
                     multiSelection: true,
                     items: {
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2101")
+                            new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)
                         ]
                     }
                 });
