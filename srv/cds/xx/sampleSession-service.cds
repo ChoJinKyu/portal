@@ -63,4 +63,26 @@ service SampleSessionService {
         ,$user.id as USER_ID :String
         ,$user.locale as USER_LOCALE :String
     from Spp_User_Session_View;
+
+    type SppUserSessionType {
+        USER_ID : String;
+        TENANT_ID : String;
+        COMPANY_CODE : String;
+        EMPLOYEE_NUMBER : String;
+        EMPLOYEE_NAME : String;
+        ENGLISH_EMPLOYEE_NAME : String;
+        EMPLOYEE_STATUS_CODE : String;
+        LANGUAGE_CODE : String;
+        TIMEZONE_CODE : String;
+        DATE_FORMAT_TYPE : String;
+        DIGITS_FORMAT_TYPE : String;
+        CURRENCY_CODE : String;
+        EMAIL : String;
+        ROLES : String;
+        APPLICATIONUSER : String;
+        CONNECTION: Integer64;
+
+    };
+
+    action SessionProc() returns SppUserSessionType;
 }

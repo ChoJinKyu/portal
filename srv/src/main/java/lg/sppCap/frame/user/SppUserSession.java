@@ -3,6 +3,7 @@ package lg.sppCap.frame.user;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+//import java.util.Properties;
 
 import com.sap.cds.feature.xsuaa.XsuaaUserInfo;
 
@@ -37,18 +38,47 @@ public class SppUserSession {
     private JdbcTemplate jdbc;
 
     public void setDbSessionContext(){
-        String sessUserSql = "SELECT  SESSION_CONTEXT('USER_ID') FROM DUMMY";
-        String sessUserId = jdbc.queryForObject(sessUserSql, String.class);
+        //String sessUserSql = "SELECT  SESSION_CONTEXT('USER_ID') FROM DUMMY";
+        //String sessUserId = jdbc.queryForObject(sessUserSql, String.class);
 
-        if (sessUserId == null || !"".equals(sessUserId)) {
+        //if (sessUserId == null || !"".equals(sessUserId)) {
             Map<String, String> userSeesionMap = this.getUserSessionInfo();
             String setStatement = "";
             for (String key : userSeesionMap.keySet()) {
                 setStatement = "SET '" + key + "' = '" + userSeesionMap.get(key) + "';";
                 jdbc.execute(setStatement);
             }
-        }
+        //}
     }
+
+    public void unSetDbSessionContext(){
+        //String sessUserSql = "SELECT  SESSION_CONTEXT('USER_ID') FROM DUMMY";
+        //String sessUserId = jdbc.queryForObject(sessUserSql, String.class);
+
+        //if (sessUserId == null || !"".equals(sessUserId)) {
+            Map<String, String> userSeesionMap = this.getUserSessionInfo();
+            String setStatement = "";
+            for (String key : userSeesionMap.keySet()) {
+                setStatement = "UNSET '" + key + "'";
+                jdbc.execute(setStatement);
+            }
+        //}
+    }
+
+    // public Properties getDbSessionContextProperties(Boolean p_setFlag){
+    //     Properties properties = new Properties();
+    //     if(p_setFlag){
+    //         properties.putAll(this.getXsuaaUserMap());
+    //     }else{
+    //         Map<String, String> map = this.getXsuaaUserMap();
+    //         for(String key : map.keySet()){
+    //             map.replace(key, null);
+    //         }
+    //         properties.putAll(map);
+    //     }
+
+    //     return properties;
+    // }
 
     public String getSppUserAttribute(String attrName) {
         if(this.xsuaaUserInfo.getAttributeValues(attrName) == null || this.xsuaaUserInfo.getAttributeValues(attrName).isEmpty()){
