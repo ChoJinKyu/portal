@@ -256,9 +256,9 @@
                         <Table
                             id="tblEvalItemScle"
                             items="{viewModel>/Detail/Item}"
-                            mode="MultiSelect"
-                            selectionChange="onSelectTableItem"
-                        >
+                            mode="SingleSelectLeft"
+                            >
+                            <!-- selectionChange="onSelectTableItem" -->
                             <headerToolbar>
                                 <Toolbar>
                                     <ToolbarSpacer />
@@ -352,9 +352,9 @@
                                                 }
                                             }" 
                                             editable="{=
-                                                ${viewModel>/App/EditMode} &amp;&amp;
-                                                ${viewModel>rowEditable}
+                                                ${viewModel>/App/EditMode}
                                             }"
+                                            change="onChangeEdit"
                                         />
                                         <Input 
                                             value="{
@@ -365,9 +365,9 @@
                                                 }
                                             }" 
                                             editable="{=
-                                                ${viewModel>/App/EditMode} &amp;&amp;
-                                                ${viewModel>rowEditable}
+                                                ${viewModel>/App/EditMode}
                                             }"
+                                            change="onChangeEdit"
                                         />
                                         <Input 
                                             value="{
@@ -378,9 +378,9 @@
                                                 }
                                             }"
                                             editable="{=
-                                                ${viewModel>/App/EditMode} &amp;&amp;
-                                                ${viewModel>rowEditable}
+                                                ${viewModel>/App/EditMode}
                                             }"
+                                            change="onChangeEdit"
                                         />
                                         <Input 
                                             value="{
@@ -391,9 +391,9 @@
                                                 }
                                             }" 
                                             editable="{=
-                                                ${viewModel>/App/EditMode} &amp;&amp;
-                                                ${viewModel>rowEditable}
+                                                ${viewModel>/App/EditMode}
                                             }"
+                                            change="onChangeEdit"
                                         />
                                         <Input 
                                             required="true"
@@ -406,9 +406,9 @@
                                                 }
                                             }" 
                                             editable="{=
-                                                ${viewModel>/App/EditMode} &amp;&amp;
-                                                ${viewModel>rowEditable}
+                                                ${viewModel>/App/EditMode}
                                             }"
+                                            change="onChangeEdit"
                                         />
                                     </cells>
                                 </ColumnListItem>

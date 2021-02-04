@@ -317,37 +317,54 @@ sap.ui.define([
                 oBindContxtPath = oSelectItem.getBindingContextPath();
                 oRowData = oViewModel.getProperty(oBindContxtPath);
                 bSeletFlg = oParameters.selected;
-                bAllSeletFlg = oParameters.selectAll;
 
-                if(
-                    (bAllSeletFlg && bSeletFlg) || 
-                    (!bAllSeletFlg && !bSeletFlg && oParameters.listItems.length > 1)
-                ){
-                    oTable = oEvent.getSource();
-                    sTablePath = oTable.getBindingPath("items");
-                    aListData = oViewModel.getProperty(sTablePath);
+                /***
+                 * 2021-02-04 단일 셀렉으로 변경
+                 */
+                oTable = oEvent.getSource();
+                sTablePath = oTable.getBindingPath("items");
+                aListData = oViewModel.getProperty(sTablePath);
+                aListData.forEach(function(item){
+                    if(item.crudFlg !== "C"){
+                        item.rowEditable = false;
+                    }
+                });
 
-                    oViewModel.setProperty(sTablePath, aListData.map(function(item){
 
-                        if(item.crudFlg === "D"){
-                            return item;
-                        }else if(item.crudFlg === "C"){
-                            item.rowEditable = bSeletFlg;
-                            return item;
-                        }
 
-                        item.rowEditable = bSeletFlg;
-                        item.crudFlg = "U";
-                        item.transaction_code = "U";
-                        return item;
-                    }));
-                    return;
-                }
+                /***
+                 * 2021-02-04 단일 셀렉으로 변경
+                 */
+                // bAllSeletFlg = oParameters.selectAll;
+                // if(
+                //     (bAllSeletFlg && bSeletFlg) || 
+                //     (!bAllSeletFlg && !bSeletFlg && oParameters.listItems.length > 1)
+                // ){
+                //     oTable = oEvent.getSource();
+                //     sTablePath = oTable.getBindingPath("items");
+                //     aListData = oViewModel.getProperty(sTablePath);
+
+                //     oViewModel.setProperty(sTablePath, aListData.map(function(item){
+
+                //         if(item.crudFlg === "D"){
+                //             return item;
+                //         }else if(item.crudFlg === "C"){
+                //             item.rowEditable = bSeletFlg;
+                //             return item;
+                //         }
+
+                //         item.rowEditable = bSeletFlg;
+                //         item.crudFlg = "U";
+                //         item.transaction_code = "U";
+                //         return item;
+                //     }));
+                //     return;
+                // }
 
                 if(oRowData.crudFlg === "D"){
                     return;
                 }else if(oRowData.crudFlg === "C"){
-                    oRowData.rowEditable = bSeletFlg;
+                    oRowData.rowEditable = true;
                     oViewModel.setProperty(oBindContxtPath, oRowData);
                     return;
                 }

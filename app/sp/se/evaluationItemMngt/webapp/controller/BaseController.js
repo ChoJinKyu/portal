@@ -337,5 +337,26 @@ sap.ui.define([
                 });
             })
         }
+        , onChangeEdit : function(oEvent){
+            var oControl, oContext, oBindContxtPath, oBingModel, oRowData;
+
+            oControl = oEvent.getSource();
+            oContext = oControl.getBindingContext("viewModel");
+            oBingModel = oContext.getModel();
+            oBindContxtPath = oContext.getPath();
+            oRowData = oContext.getObject();
+
+            if(oRowData.crudFlg === "D"){
+                return;
+            }else if(oRowData.crudFlg === "C"){
+                oBingModel.setProperty(oBindContxtPath, oRowData);
+                return;
+            }
+
+            oRowData.crudFlg = "U";
+            oRowData.transaction_code = "U";
+
+            oBingModel.setProperty(oBindContxtPath, oRowData)
+        }
 	});
 });
