@@ -602,7 +602,10 @@ sap.ui.define([
 
         },
         onSelectItem : function(oEvent){
-
+            
+                /***
+                 * 2021-02-04 단일 셀렉으로 변경
+                 */
                 var oView, oViewModel, oSelectItem,
                 oBindContxtPath, oRowData, bSeletFlg, bEditMode, aSelectAll,
                 oParameters, bAllSeletFlg, sTablePath, oTable, aListData;
@@ -614,6 +617,7 @@ sap.ui.define([
                 if(!bEditMode){
                     return;
                 }
+                
 
                 oParameters = oEvent.getParameters();
                 oSelectItem = oParameters.listItem;
@@ -622,31 +626,40 @@ sap.ui.define([
                 bSeletFlg = oParameters.selected;
                 bAllSeletFlg = oParameters.selectAll;
 
-                if(
-                   (bAllSeletFlg && bSeletFlg) || 
-                    (!bAllSeletFlg && !bSeletFlg && oParameters.listItems.length > 1)
-                ){
-                    oTable = oEvent.getSource();
-                    sTablePath = oTable.getBindingPath("items");
-                    aListData = oViewModel.getProperty(sTablePath);
-                    
-                    oViewModel.setProperty(sTablePath, aListData.map(function(item){
-
-                    if(item.crudFlg === "D"){
-                        return item;
-                    }else if(item.crudFlg === "I"){
-                        item.rowEditable = bSeletFlg;
-                        return item;
+                oTable = oEvent.getSource();
+                sTablePath = oTable.getBindingPath("items");
+                aListData = oViewModel.getProperty(sTablePath);
+                aListData.forEach(function(item){
+                    if(item.crudFlg !== "I"){
+                        item.rowEditable = false;
                     }
+                });
 
-                    item.rowEditable = bSeletFlg;
-                    item.crudFlg = "U";
-                    item.tansaction_code = "U";
-                    return item;
-                    }));
-                        return;
+                // if(
+                //    (bAllSeletFlg && bSeletFlg) || 
+                //     (!bAllSeletFlg && !bSeletFlg && oParameters.listItems.length > 1)
+                // ){
+                //     oTable = oEvent.getSource();
+                //     sTablePath = oTable.getBindingPath("items");
+                //     aListData = oViewModel.getProperty(sTablePath);
+                    
+                //     oViewModel.setProperty(sTablePath, aListData.map(function(item){
+
+                //     if(item.crudFlg === "D"){
+                //         return item;
+                //     }else if(item.crudFlg === "I"){
+                //         item.rowEditable = bSeletFlg;
+                //         return item;
+                //     }
+
+                //     item.rowEditable = bSeletFlg;
+                //     item.crudFlg = "U";
+                //     item.tansaction_code = "U";
+                //     return item;
+                //     }));
+                //         return;
                             
-                }
+                // }
 
                 if(oRowData.crudFlg === "D"){
                     return;
@@ -664,6 +677,27 @@ sap.ui.define([
            
 
             
+        }
+         , onChangeEdit : function(oEvent){
+            var oControl, oContext, oBindContxtPath, oBingModel, oRowData;
+
+            oControl = oEvent.getSource();
+            oContext = oControl.getBindingContext("TwoView");
+            oBingModel = oContext.getModel();
+            oBindContxtPath = oContext.getPath();
+            oRowData = oContext.getObject();
+
+            if(oRowData.crudFlg === "D"){
+                return;
+            }else if(oRowData.crudFlg === "I"){
+                oBingModel.setProperty(oBindContxtPath, oRowData);
+                return;
+            }
+
+            oRowData.crudFlg = "U";
+            oRowData.tansaction_code = "U";
+
+            oBingModel.setProperty(oBindContxtPath, oRowData)
         }
         ,/**
         * 메인화면으로 이동

@@ -718,6 +718,10 @@ sap.ui.define([
 
         onSelectItem : function(oEvent){
 
+                /***
+                 * 2021-02-04 단일 셀렉으로 변경
+                 */
+
                 var oView, oViewModel, oSelectItem,
                 oBindContxtPath, oRowData, bSeletFlg, bEditMode, aSelectAll,
                 oParameters, bAllSeletFlg, sTablePath, oTable, aListData;
@@ -737,32 +741,41 @@ sap.ui.define([
                 bSeletFlg = oParameters.selected;
                 bAllSeletFlg = oParameters.selectAll;
 
-                if(
-                   (bAllSeletFlg && bSeletFlg) || 
-                    (!bAllSeletFlg && !bSeletFlg && oParameters.listItems.length > 1)
-                ){
-                    oTable = oEvent.getSource();
-                    sTablePath = oTable.getBindingPath("items");
-                    aListData = oViewModel.getProperty(sTablePath);
-                    
-                    oViewModel.setProperty(sTablePath, aListData.map(function(item){
-
-                    if(item.crudFlg === "D"){
-                        return item;
-                    }else if(item.crudFlg === "I"){
-                        item.rowEditable = bSeletFlg;
-                        return item;
+                oTable = oEvent.getSource();
+                sTablePath = oTable.getBindingPath("items");
+                aListData = oViewModel.getProperty(sTablePath);
+                aListData.forEach(function(item){
+                    if(item.crudFlg !== "I"){
+                        item.rowEditable = false;
                     }
+                });
 
-                    item.rowEditable = bSeletFlg;
-                    item.crudFlg = "U";
-                    item.transaction_code = "U";
+                // if(
+                //    (bAllSeletFlg && bSeletFlg) || 
+                //     (!bAllSeletFlg && !bSeletFlg && oParameters.listItems.length > 1)
+                // ){
+                //     oTable = oEvent.getSource();
+                //     sTablePath = oTable.getBindingPath("items");
+                //     aListData = oViewModel.getProperty(sTablePath);
+                    
+                //     oViewModel.setProperty(sTablePath, aListData.map(function(item){
 
-                    return item;
-                    }));
-                        return;
+                //     if(item.crudFlg === "D"){
+                //         return item;
+                //     }else if(item.crudFlg === "I"){
+                //         item.rowEditable = bSeletFlg;
+                //         return item;
+                //     }
+
+                //     item.rowEditable = bSeletFlg;
+                //     item.crudFlg = "U";
+                //     item.transaction_code = "U";
+
+                //     return item;
+                //     }));
+                //         return;
                             
-                }
+                // }
 
                 if(oRowData.crudFlg === "D"){
                     return;
@@ -780,6 +793,27 @@ sap.ui.define([
            
 
             
+        },
+          onChangeEdit : function(oEvent){
+            var oControl, oContext, oBindContxtPath, oBingModel, oRowData;
+
+            oControl = oEvent.getSource();
+            oContext = oControl.getBindingContext("DetailView");
+            oBingModel = oContext.getModel();
+            oBindContxtPath = oContext.getPath();
+            oRowData = oContext.getObject();
+
+            if(oRowData.crudFlg === "D"){
+                return;
+            }else if(oRowData.crudFlg === "I"){
+                oBingModel.setProperty(oBindContxtPath, oRowData);
+                return;
+            }
+
+            oRowData.crudFlg = "U";
+            oRowData.transaction_code = "U";
+
+            oBingModel.setProperty(oBindContxtPath, oRowData)
         },
         /**
         * quantitativeTable Section 행 삭제
@@ -1136,26 +1170,54 @@ sap.ui.define([
             
              oView.setBusy(false);
          },
-        //  onCheckLevel : function(oEvent){
+         onCheckLevel : function(oEvent){
 
-        //     //var Keys =  oEvent.getSelectedKeys();
-        //     var iKeys = 3;
+            //var Keys =  oEvent.getSelectedKeys();
+            var iKeys = 3;
+            var url = "srv-api/odata/v4/sp.supEvalSetupV4Service/VpLevelChipView(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00200')/Set";
             
-        //     var oSegmentedButton = this.getView().byId("vendor_pool_lvl");
+            
+            var url = "pg/mdCategoryItem2/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdNewCategoryItemCode(tenant_id='L2100',company_code='*',org_type_code='BU',org_code='BIZ00200')/Set";
+			
+            
+            var param = {};
+			var params = {"language_code":"KR"};
+            param.params = params; // param.params 변수명은 변경불가함 handler에서 사용하기 때문
+			$.ajax({
+				url: url,
+				type: "POST",
+				//datatype: "json",
+				data : JSON.stringify(param),
+				contentType: "application/json",
+				success: function(data){
+                    alert("Reslt Value => ["+JSON.stringify(data.titles)+"]  ["+JSON.stringify(data.records)+"] ");
+                    console.log("Title 출력");
+                    console.log(JSON.stringify(data.titles));
+                    console.log("BODY Record 출력");
+                    console.log(JSON.stringify(data.records));
+				},
+				error: function(req){
+					alert("Ajax Error => "+req.status);
+				}
+            });
+            
 
-        //     oSegmentedButton.destroyItems();
+            
+            var oSegmentedButton = this.getView().byId("vendor_pool_lvl");
 
-        //     for(var i=0;i<iKeys;i++){
-        //                 oSegmentedButton.addItem(
-        //                     new SegmentedButtonItem({ 
-        //                         text : (i+1)+"레벨", 
-        //                         key : i
-        //                     })
-        //                 );
-        //             }
+            oSegmentedButton.destroyItems();
+
+            for(var i=0;i<iKeys;i++){
+                        oSegmentedButton.addItem(
+                            new SegmentedButtonItem({ 
+                                text : (i+1)+"레벨", 
+                                key : i
+                            })
+                        );
+                    }
 
 
-        //  },
+         },
          _readAll : function(){
             var oView = this.getView();
             var oModel = this.getModel("DetailView");
