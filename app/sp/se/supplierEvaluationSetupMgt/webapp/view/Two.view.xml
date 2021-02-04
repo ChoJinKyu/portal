@@ -10,51 +10,51 @@
     class="sapUiSizeCompact"
     displayBlock="true"
     xmlns:lib-m="ext.lib.control.m"
-    xmlns:cm-ui="cm.util.control.ui"
-    xmlns:flex="sap.f"
     >
 
-    <Page title="{I18N>/CREATE_EVALUATION_TYPE}" 
-        showNavButton="true" 
-        navButtonType="Back" 
-        navButtonPress="onNavToBack"
-        > 
-        <!-- showNavButton="true"  : 상단 < 버튼  -->
+    <Page title="{I18N>/CREATE_EVALUATION_TYPE}"> 
+        <!-- 
+            showNavButton="true" 
+            navButtonType="Back" 
+            navButtonPress="onNavToBack"
+            showNavButton="true"  : 상단 < 버튼  -->
         <content>  
             <uxap:ObjectPageLayout
-                id="two"
+                id="two"                
+                showFooter="true"
+                >
+                <!-- 
+                class="sapUiContentPadding" 
+                preserveHeaderStateOnScroll="false" 
+                enableLazyLoading="true"
                 showTitleHeaderContent="true"
                 showEditHeaderButton="true"
                 editHeaderButtonPress="handleEditBtnPress"
-                showFooter="true" 
-                preserveHeaderStateOnScroll="true"
-                enableLazyLoading="true"
-                class="sapUiContentPadding"
                 alwaysShowContentHeader="false" 
                 headerContentPinnable="false" 
-                upperCaseAnchorBar="false" 
-                >
+                upperCaseAnchorBar="false"  
+                -->
 
-                    <uxap:headerTitle/>
-                    <uxap:headerContent/>                
+                <uxap:headerTitle>
+                    <uxap:ObjectPageHeader>
+                        <OverflowToolbarButton
+                        type="Transparent" 
+                        icon="sap-icon://decline"
+                        text="back"
+                        tooltip="back to the list" press="onNavToBack"
+                        />    
+                    </uxap:ObjectPageHeader>
+                </uxap:headerTitle>
 
-                    <!-- id="page" 
-                    alwaysShowContentHeader="false" 
-                    preserveHeaderStateOnScroll="true" 
-                    headerContentPinnable="false" 
-                    upperCaseAnchorBar="false" 
-                    enableLazyLoading="true" 
-                    showFooter="true" 
-                    class="sapUiContentPadding"
-                     -->
+                <uxap:headerContent/>                
 
-             <uxap:sections>
-                    <uxap:ObjectPageSection titleUppercase="true" title="ObjectPageSection">
-                        <uxap:subSections>            
-                            <uxap:ObjectPageSubSection id="pageSubSection1"/>
-                        </uxap:subSections>
-                    </uxap:ObjectPageSection>
-            </uxap:sections>
+                <uxap:sections>
+                        <uxap:ObjectPageSection titleUppercase="true" title="ObjectPageSection">
+                            <uxap:subSections>            
+                                <uxap:ObjectPageSubSection id="pageSubSection1"/>
+                            </uxap:subSections>
+                        </uxap:ObjectPageSection>
+                </uxap:sections>
 
             <uxap:sections>
                     <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/VALUATION_TYPE}">
@@ -254,8 +254,19 @@
             <uxap:footer>
                 <OverflowToolbar>
                     <ToolbarSpacer/>
-                    <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}" visible="{=!${TwoView>/isCreateMode}}" press=".onPageEditButtonPress" enabled="{=!${DetailView>/isEditMode}}" />
-                    <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress" />
+                    <Button id="pageEditButton" type="Transparent" text="{I18N>/UPDATE}"  press=".onPageEditButtonPress" 
+                        visible="{=
+                            !${TwoView>/isCreateMode}
+                        }"
+                        enabled="{=
+                            !${TwoView>/isEditMode}
+                        }"                        
+                        />
+                    <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress" 
+                        enabled="{=
+                            ${TwoView>/isEditMode}
+                        }"
+                        />
                     <!-- <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" enabled="{=!${DetailView>/isCreate}}" press="onDelete"/> -->
                     <Button id="pageSaveButton" type="Emphasized" text="{I18N>/SAVE}" press=".onPressSaveBtn" enabled="{=${TwoView>/isEditMode}}"/>
                 </OverflowToolbar>
