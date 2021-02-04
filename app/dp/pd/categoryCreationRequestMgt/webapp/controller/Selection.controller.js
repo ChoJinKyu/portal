@@ -166,7 +166,13 @@ sap.ui.define([
                     }
                     progressCode = "A";
                 }else if( flag == "R"){
-                    progressCode = "B"
+                    progressCode = "B";
+                }else if( flag == "J") {
+                    progressCode = "E";
+                }else if( flag == "A") {
+                    progressCode = "C";
+                }else if( flag == "C") {
+                    progressCode = "D";
                 }
             } else {
                 CUType = "C";
@@ -418,40 +424,32 @@ sap.ui.define([
 
             this.getView().getModel("viewModel").setProperty("/showMode", true);
             this.getView().getModel("viewModel").setProperty("/editMode", false);
-            this.byId("page").setProperty("showFooter", true);
+            //this.byId("page").setProperty("showFooter", true);
             
             this.byId("pageNavBackButton").setVisible(true);
-            if(this.statusGloCode =="DRAFT" || this.statusGloCode =="REQUEST REWRITING"){
-                this.byId("pageEditButton").setEnabled(true);
-            }else{
-                this.byId("pageEditButton").setEnabled(false);
-            }
-            this.byId("pageSaveButton").setEnabled(false);
-            this.byId("pageCancelButton").setEnabled(false);
-            this.byId("pageListButton").setEnabled(true);
-            this.byId("pageSubmitButton").setEnabled(false);
+            // if(this.statusGloCode =="DRAFT" || this.statusGloCode =="REQUEST REWRITING"){
+            //     this.byId("pageEditButton").setEnabled(true);
+            // }else{
+            //     this.byId("pageEditButton").setEnabled(false);
+            // }
+            // this.byId("pageSaveButton").setEnabled(false);
+            // this.byId("pageCancelButton").setEnabled(false);
+            // this.byId("pageListButton").setEnabled(true);
+            // this.byId("pageSubmitButton").setEnabled(false);
         },
         
         _toEditMode: function () {
             this.getView().getModel("viewModel").setProperty("/showMode", false);
             this.getView().getModel("viewModel").setProperty("/editMode", true);
             var oMasterModel = this.getModel("master")
-            this.byId("page").setProperty("showFooter", true);
+            //this.byId("page").setProperty("showFooter", true);
             this.byId("pageNavBackButton").setVisible(false);
-            this.byId("pageEditButton").setEnabled(false);
-            this.byId("pageSaveButton").setEnabled(true);
-            this.byId("pageCancelButton").setEnabled(true);
-            this.byId("pageListButton").setEnabled(false);
-            this.byId("pageSubmitButton").setEnabled(true);
+            // this.byId("pageEditButton").setEnabled(false);
+            // this.byId("pageSaveButton").setEnabled(true);
+            // this.byId("pageCancelButton").setEnabled(true);
+            // this.byId("pageListButton").setEnabled(false);
+            // this.byId("pageSubmitButton").setEnabled(true);
         },
-
-		
-
-		
-
-		
-
-		
 
         onSearchPartCategory: function (oEvent) {
             var oButton = oEvent.getSource(),
