@@ -67,7 +67,7 @@ BEGIN
 
     SELECT TENANT_ID, COMPANY_CODE, 
            ORG_CODE, PART_PROJECT_TYPE_CODE,
-           CASE WHEN COALESCE(ACTIVITY_CODE,'') = '' THEN
+           CASE WHEN ACTIVITY_CODE = 'new' THEN
                      'PAT' || TO_NCHAR(NOW(), 'YYMMDD') || LPAD(DP_PD_PART_ACTIVITY_SEQ.NEXTVAL, 4, '0')
                 ELSE ACTIVITY_CODE
             END,
