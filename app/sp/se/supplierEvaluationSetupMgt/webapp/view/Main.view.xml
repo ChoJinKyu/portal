@@ -127,7 +127,6 @@
                                             <ColumnListItem type="Navigation" press=".onNavToDetail">
                                             <cells>
                                                 <ObjectIdentifier text="{= ${use_flag}? 'Y' : 'N'}"/> 
-                                               
                                             </cells>
                                             </ColumnListItem>
                                         </items>

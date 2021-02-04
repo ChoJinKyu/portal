@@ -49,7 +49,7 @@ service NpApprovalDetailV4Service {
 
     /* */
     type generalType : {
-        item_sequence                   : Decimal       ; // '품목순번'	
+        item_sequence                   : Integer64     ; // '품목순번'	
         line_type_code                  : String(30)    ; // '라인유형코드'
         material_code                   : String(40)    ; // '자재코드'	
         payterms_code                   : String(30)    ; // '지불조건코드'	
@@ -67,10 +67,27 @@ service NpApprovalDetailV4Service {
         _row_state_                     : String        ; // CUD
     };
 
+
+    /* */
+    type approverType : {
+        approve_sequence                : String(10)    ; // '결재순번';
+        approver_empno                  : String(30)    ; // '결재자사번';
+        approver_type_code              : String(30)    ; // '결재자유형코드';
+        _row_state_                     : String        ; // CUD
+    };
+
+    /* */
+    type refererType : {
+        referer_empno                   : String(30)    ; // 참조자사번
+        _row_state_                     : String        ; // CUD
+    };
+
     /* */
     type ParamType : {
         master    : masterType;
         general   : array of generalType;
+        approvers : array of approverType;
+        referers  : array of refererType;
         user_id   : String(255);
         user_no   : String(255);
     }

@@ -9,16 +9,18 @@ sap.ui.define([
   "sap/m/MessageToast",
   "sap/m/MessageBox",
   "sap/ui/core/Fragment",
-  "sap/ui/core/Item"
+  "sap/ui/core/Item",
+  "cm/util/control/ui/EmployeeDialog"
 ],
   function (BaseController, JSONModel, ManagedListModel, Multilingual, DateFormatter, Filter, FilterOperator
-         , MessageToast, MessageBox, Fragment, Item) {
+         , MessageToast, MessageBox, Fragment, Item, EmployeeDialog) {
     "use strict";
 
     return BaseController.extend("dp.tc.projectMgt.controller.ProjectMgtList", {
 
         dateFormatter: DateFormatter,
 
+        
         oUerInfo : {user_id : "A60262"},
 
         onInit: function () {
@@ -36,7 +38,6 @@ sap.ui.define([
                 massprod_start_date : {operator: 'BT', start: null, end: null},
                 project_grade_code : {operator: 'EQ', value: ''},
                 develope_event_code : {operator: 'EQ', value: ''},
-                buyer_name : {operator: 'Contains', value: ''},
                 mcst_excl_flag : {operator: 'EQ', value: ''}
             };
             
@@ -52,6 +53,7 @@ sap.ui.define([
          */
         , onSearch: function () {
             var oI18nModel = this.getModel("I18N");
+            var aBuyerTokens = this.byId("multiInputWithEmployeeValueHelp").getTokens();
 
             var oFilterModel = this.getModel("filterModel"),
                 oFilterData = oFilterModel.getData(),
@@ -81,6 +83,18 @@ sap.ui.define([
                 }
             }.bind(this));
 
+            if(aBuyerTokens.length> 0) {
+                var aBuyerFilter = [];
+                
+                aBuyerTokens.forEach(function (oRequestor) {
+                    aBuyerFilter.push(new Filter("buyer_empno", FilterOperator.EQ, oRequestor.getKey()));
+                });
+
+                aFilters.push(new Filter({
+                    filters: aBuyerFilter,
+                    and: false
+                }));
+            }
             this._getProjectMgtList(aFilters);
         }
         
@@ -92,6 +106,58 @@ sap.ui.define([
             var keycode = (oEvent.keyCode ? oEvent.keyCode : oEvent.which);
             if(keycode === '13'){
                 this.onSearch();
+            }
+        }
+
+        /**
+         * 사원 Dialog 공통 팝업 호출
+         */
+        , onMultiInputWithEmployeeValuePress: function(oEvent, sInputIdParam){
+            var that = this;
+            var bMultiSelection = true;
+            var bCloseWhenApplied = true;
+
+            if( sInputIdParam === "changeDeveloper" ) {
+                bMultiSelection = false;
+                bCloseWhenApplied = false;
+            }
+
+
+            if(!this.oEmployeeMultiSelectionValueHelp || this.oEmployeeMultiSelectionValueHelp.getMultiSelection() !== bMultiSelection ){
+                this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
+                    title: "Choose Employees",
+                    multiSelection: bMultiSelection,
+                    closeWhenApplied: bCloseWhenApplied,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, this.getModel("globalModel").getProperty("tenant_id"))
+                        ]
+                    }
+                });
+                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                    if( sInputIdParam === "changeDeveloper" ) {
+                        var oApplyEvent = oEvent;
+                        var oSelectedItem = oEvent.getParameter("item");
+                        MessageBox.confirm("선택한 사원으로 변경 하시겠습니까?", {
+                            title : "Request",
+                            initialFocus : sap.m.MessageBox.Action.CANCEL,
+                            onClose : function(sButton) {
+                                if (sButton === MessageBox.Action.OK) {
+                                    that._changeDeveloper(oSelectedItem);
+                                    oApplyEvent.getSource().close();
+                                }
+                            }.bind(this)
+                        });
+                    }else {
+                        this.byId(sInputIdParam).setTokens(oEvent.getSource().getTokens());
+                    }
+                    
+                }.bind(this));
+            }
+            this.oEmployeeMultiSelectionValueHelp.open();
+
+            if( sInputIdParam !== "changeDeveloper" ) {
+                this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId(sInputIdParam).getTokens());
             }
         }
 
@@ -402,7 +468,7 @@ sap.ui.define([
 
         , _callCreateProjectProc: function () {
             //TcCreateMcstProjectProcContext
-            debugger;
+            //debugger;
             var me = this;
             /*
             var oTable = sap.ui.core.Fragment.byId("fragmentProjectSelection","detailPopupTable")
@@ -440,7 +506,7 @@ sap.ui.define([
                 contentType: "application/json",
                 success: function(data){
                     console.log("create Proc callback Data", data);
-                    debugger;
+                    //debugger;
                     if(data.return_code === "OK") {
                         let detailParam = oInputData.inputData;
                         detailParam.version_number = data.version_number;
@@ -477,7 +543,7 @@ sap.ui.define([
         , _goCreateView: function (oSendData) {
             const view_mode = "EDIT";
             oSendData.view_mode = view_mode;
-            debugger;
+            //debugger;
             this.getRouter().navTo("McstProjectInfo", oSendData);
 
         }

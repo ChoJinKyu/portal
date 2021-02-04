@@ -1,159 +1,197 @@
 <mvc:View controllerName="dp.pd.categoryCreationRequestMgt.controller.Selection" 
-	xmlns:mvc="sap.ui.core.mvc" 
-	xmlns="sap.m" 
-	xmlns:uxap="sap.uxap" 
-	xmlns:layout="sap.ui.layout" 
+	xmlns:mvc="sap.ui.core.mvc"
+    xmlns:uxap="sap.uxap"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
     xmlns:form="sap.ui.layout.form"
-    xmlns:sc="sap.suite.ui.commons"
+    xmlns:layout="sap.ui.layout"
     xmlns:core="sap.ui.core"
-    xmlns:table="sap.ui.table"
-    xmlns:richtexteditor="sap.ui.richtexteditor"
-	height="100%">
+    xmlns:lib-m="ext.lib.m"
+    xmlns:t="sap.ui.table"
+    xmlns:co="sap.suite.ui.commons"
+    xmlns:rte="sap.ui.richtexteditor"
+    height="100%">
 
-	<uxap:ObjectPageLayout id="page"
-		toggleHeaderOnTitleClick="true"
-		alwaysShowContentHeader = "true"
-		preserveHeaderStateOnScroll="false"
-		headerContentPinnable="true"
-		isChildPage="true"
-		upperCaseAnchorBar="false"
-		showTitleInHeaderContent="true"
-		showEditHeaderButton="true" 
-		showFooter="false">
+    <uxap:ObjectPageLayout
+        showTitleInHeaderContent="true"
+		showEditHeaderButton="true"
+        upperCaseAnchorBar="false"
+        headerContentPinnable="false"
+        showAnchorBarPopover="false"
+        showFooter="true">
+
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
                     <HBox alignItems="End">
-                        <OverflowToolbarButton
-                            id="pageNavBackButton"
-                            type="Transparent"
-                            icon="sap-icon://nav-back"
-                            tooltip="back to the list"
-                            press=".onPageNavBackButtonPress"
-                            visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
-					    <Title text="Part Category Creation Request" wrapping="true" />
+                        <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress" />
+                        <Title text="Part Category Creation Request" wrapping="true" />
                     </HBox>
 				</uxap:expandedHeading>
-				<uxap:snappedHeading>
-					<Title text="Part Category Creation Request" wrapping="true" />
-				</uxap:snappedHeading>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
 		<uxap:headerContent>
-			<FlexBox wrap="Wrap" visible="false" width="100%">
-                
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <Label text="요청번호 :"/>
-                    <ObjectStatus text="1234567-1234568"/>
-                    <Label text="요청자 :"/>
-                    <ObjectStatus text="손흥민"/>
-                </layout:VerticalLayout>
-                
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<Label text="진행상태 :"/>
-                    <ObjectStatus class="sapMObjectStatusLarge" text="NEW" state="Error" />
-				</layout:VerticalLayout>
+            <FlexBox wrap="Wrap">
+                <!-- Requester 시작 -->
+                <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
+                    <ObjectStatus title="요청번호" text="{master>/request_number}"/>
+                    <ObjectStatus title="요청자" text="{master>/requestor}"/>
+                    </layout:VerticalLayout>
+                <!-- Requester 끝 -->
 
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <Label text="{I18N>/PROGRESS}{I18N>/STATUS} : " labelFor="searchIdeaManager"></Label>
-                    <sc:MicroProcessFlow>
-                        <sc:content>
-                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="5em"/>
-                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="5em"/>
-                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="5em"/>
-                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="5em"/>
-                            <sc:MicroProcessFlowItem icon="sap-icon://circle-task" stepWidth="5em"/>
-                        </sc:content>
-                    </sc:MicroProcessFlow>
-                    <layout:HorizontalLayout>
-                        <Text text="A" width="5em" textAlign="Center"/>
-                        <Text text="B" width="5em" textAlign="Center"/>
-                        <Text text="C" width="5em" textAlign="Center"/>
-                        <Text text="D" width="5em" textAlign="Center"/>
-                        <Text text="E" width="5em" textAlign="Center"/>
-                    </layout:HorizontalLayout>
-                </layout:VerticalLayout>
+                <!-- Status 시작 -->
+				<layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
+					<Label text="진행상태 :"/>
+                    <ObjectStatus class="sapMObjectStatusLarge" text="{master>/progress_status_code}" state="Error" />
+				</layout:VerticalLayout>
+                <!-- Status 끝 -->
+                
+                <!-- Process 시작 -->
+                <!-- <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
+                    <HBox>
+					    <Label text="{I18N>/PROCESS} : "/>
+                    </HBox>
+                    <HBox>
+                        <co:MicroProcessFlow>
+                            <co:content>
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/0}" color="{detailViewModel>/processFlowColors/0}"/>
+                                            <Text text="{rootModel>/processList/0/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/1}" color="{detailViewModel>/processFlowColors/1}"/>
+                                            <Text text="{rootModel>/processList/1/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/2}" color="{detailViewModel>/processFlowColors/2}"/>
+                                            <Text text="{rootModel>/processList/2/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/3}" color="{detailViewModel>/processFlowColors/3}"/>
+                                            <Text text="{rootModel>/processList/3/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                            </co:content>
+                        </co:MicroProcessFlow>
+                    </HBox>
+				</layout:VerticalLayout> -->
+                <!-- Process 끝 -->
                 
 			</FlexBox>
 		</uxap:headerContent>
 
 		<uxap:sections>
+            <!-- General Information 시작 -->
 			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/BASIC_INFO}">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection id="pageSubSection1">
-                    <form:SimpleForm id="midObjectForm" editable="{midObjectViewModel>/isEditMode}">
-                        <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
-                            <layout:Grid containerQuery="true" defaultSpan="XL12 L12 M12 S12">
+                    <uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <VBox>
+                                <HBox alignItems="Center">
+                                    <Label
+                                        text="카테고리 그룹:"
+                                        class="sapUiTinyMarginEnd"
+                                        textAlign="Left"
+                                        labelFor="input"
+                                        required="true"/>
+                                    <VBox>
+                                        <ComboBox
+                                            visible="{viewModel>/editMode}"
+                                            id="categoryGroupCodeCombo"
+                                            selectedKey="{master>/category_group_code}"
+                                            items="{
+                                                path: 'common>/Code',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
+                                                    {path: 'group_code', operator: 'EQ', value1: 'DP_PD_CATEGORY_GROUP'}
+                                                ]
+                                            }">
+                                            <items>
+                                                <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
+                                            </items>
+                                        </ComboBox>
+                                        <Text id="categoryGroupCodeTx" text="{master>/category_group_code}" visible="{viewModel>/showMode}" />
+                                    </VBox>
+                                </HBox>
+                                <HBox alignItems="Center">
+                                    <Label
+                                        text="요청 명:"
+                                        class="sapUiTinyMarginEnd"
+                                        textAlign="Left"
+                                        labelFor="input"
+                                        required="true"/>
+                                    <VBox>
+                                        <Input id="requestTitle" value="{master>/request_title}" visible="{viewModel>/editMode}" />
+                                        <Text id="requestTitleTx" text="{master>/request_title}" visible="{viewModel>/showMode}" />
+                                    </VBox>
+                                </HBox>
+                                <HBox alignItems="Center">
+                                    <Label
+                                        text="요청 카테고리 명:"
+                                        class="sapUiTinyMarginEnd"
+                                        textAlign="Left"
+                                        labelFor="input"
+                                        required="true"/>
+                                    <VBox>
+                                        <Input id="requestCategoryName" value="{master>/request_category_name}" visible="{viewModel>/editMode}" />
+                                        <Text id="requestCategoryNameTx" text="{master>/request_category_name}" visible="{viewModel>/showMode}" />
+                                    </VBox>
+                                </HBox>
+                                <HBox alignItems="Center">
+                                    <Label
+                                        text="유사 카테고리: "
+                                        class="sapUiTinyMarginEnd"
+                                        textAlign="Left"
+                                        labelFor="input"
+                                        required="true"/>
+                                    <VBox>
+                                        <SearchField id="searchField" search=".onSearchPartCategory" visible="{viewModel>/editMode}"/>
+                                        <Text id="searchText" text="{master>/similar_category_code}" visible="{viewModel>/showMode}"/>
+                                        <Input id="similarCategoryCode" placeholder="Input data" visible ="false" />
+                                    </VBox>
+                                </HBox>
                                 <VBox>
-                                    <Label text="카테고리 그룹: " labelFor="categoryGroupCode" required="true" />
-                                    <ComboBox
-                                        visible="{viewModel>/editMode}"
-                                        id="categoryGroupCodeCombo"
-                                        width="50%"
-                                        selectedKey="{master>/category_group_code}"
-                                        items="{
-                                            path: 'common>/Code',
-                                            filters: [
-                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
-                                                {path: 'group_code', operator: 'EQ', value1: 'DP_PD_CATEGORY_GROUP'}
-                                            ]
-                                        }">
-                                        <items>
-                                            <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
-                                        </items>
-                                    </ComboBox>
-                                    <Text id="categoryGroupCodeTx" text="{master>/category_group_code}" visible="{viewModel>/showMode}" width="50%"/>
+                                    <Label text="설명: " required="true"/>
+                                    <VBox>
+                                        <!-- Text Editor 시작 -->
+                                        <rte:RichTextEditor 
+                                            width="100%" 
+                                            height="200px" 
+                                            value="{master>/request_desc}" 
+                                            customToolbar="true" 
+                                            showGroupFont="true" 
+                                            showGroupLink="true" 
+                                            showGroupInsert="true"
+                                            visible="{viewModel>/editMode}" />
+                                        <!-- Text Editor 끝 -->
+                                        <FormattedText height="200px" htmlText="{= ${master>/request_desc} ? ${master>/request_desc} : '' }" visible="{= !${viewModel>/editMode}}"/>
+                                    </VBox>
                                 </VBox>
-                            </layout:Grid>
-                            <layout:Grid containerQuery="true" defaultSpan="XL12 L12 M12 S12">
-                                <VBox>
-                                    <Label text="요청 명: " labelFor="requestTitle"  required="true" />
-                                    <Input id="requestTitle" value="{master>/request_title}" visible="{viewModel>/editMode}" width="50%"/>
-                                    <Text id="requestTitleTx" text="{master>/request_title}" visible="{viewModel>/showMode}" width="50%"/>
-                                </VBox>
-                            </layout:Grid>
-                            <layout:Grid containerQuery="true" defaultSpan="XL12 L12 M12 S12">
-                                <VBox>
-                                    <Label text="요청 카테고리 명: " labelFor="requestCategoryName" required="true" />
-                                    <Input id="requestCategoryName" value="{master>/request_category_name}" visible="{viewModel>/editMode}" width="50%"/>
-                                    <Text id="requestCategoryNameTx" text="{master>/request_category_name}" visible="{viewModel>/showMode}" width="50%"/>
-                                </VBox>
-                            </layout:Grid>
-                            <layout:Grid containerQuery="true" defaultSpan="XL12 L12 M12 S12">
-                                <VBox>
-                                    <Label text="유사 카테고리: " labelFor="similarCategoryCodeCombo" required="true"></Label>
-                                    <SearchField id="searchField" search=".onSearchPartCategory" width="50%" visible="{viewModel>/editMode}"/>
-                                    <Text id="searchText" text="{master>/similar_category_code}" width="50%" visible="{viewModel>/showMode}"/>
-                                    <Input id="similarCategoryCode" placeholder="Input data" visible ="false" width="50%" />
-                                </VBox>
-                            </layout:Grid>
-                            <layout:Grid containerQuery="true" defaultSpan="XL12 L12 M12 S12">
-                                <VBox>
-                                    <Label text="설명: " labelFor="requestDesc" required="true"></Label>
-                                    <richtexteditor:RichTextEditor
-                                        id="requestDesc"
-                                        editorType="TinyMCE4"
-                                        width="100%"
-                                        height="400px"
-                                        editable="true"
-                                        customToolbar="true"
-                                        showGroupFont="true"
-                                        showGroupLink="true"
-                                        showGroupInsert="true"
-                                        value="{master>/request_desc}">
-                                    </richtexteditor:RichTextEditor> 
-                                </VBox>
-                            </layout:Grid>
-
-                        </VBox>
-                        </form:SimpleForm>
+                            </VBox>
+						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- General Information 끝 -->
 
             <!-- 첨부파일 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/Attachments}" visible="true" id="attachBlock">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/Attachments}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
@@ -180,83 +218,75 @@
             </uxap:ObjectPageSection>
             <!-- 첨부파일 끝 -->
 
-
             <!-- 결재라인 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="결재라인">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/APPROVAL_LINE}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                         <uxap:blocks>
-                            <Table
-                                id="detailsTable"
-                                mode="{= ${viewModel>/showMode}?'None':'MultiSelect'}"
-                                sticky="HeaderToolbar,ColumnHeaders"
-                                inset="false"
-                                class="sapFDynamicPageAlignContent"
+                            <Table id="detailsTable"
+                                growing="true"
+                                growingThreshold="20"
+                                class="sapFDynamicPageAlignContent" 
+                                updateFinished=".onListMainTableUpdateFinished"
+                                mode="SingleSelectMaster" 
+                                type="None"
                                 width="auto"
-                                items="{
-                                    path: 'details>/PdCategoryApprovalType'
-                                }">
+                                items="{details>/PdCategoryApprovalType}">
                                 <headerToolbar>
-                                    <Toolbar visible="{viewModel>/editMode}">
-                                        <ToolbarSpacer/>
-                                        <HBox>
-                                            <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onMstAddRow"/>
-                                            <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onMstDeleteRow"/>
-                                        </HBox>
-                                    </Toolbar>
+                                    <OverflowToolbar>
+                                        <Label text="Approval Line"/>
+                                    </OverflowToolbar>
                                 </headerToolbar>
                                 <columns>
-                                    <Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center">
                                         <Text text="TENANT_ID" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center">
                                         <Text text="REQUEST_NUMBER" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center">
                                         <Text text="APPROVE_SEQUENCE" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center">
                                         <Text text="APPROVAL_NUMBER" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center">
                                         <Text text="REQUESTOR_EMPNO" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center">
                                         <Text text="TF_FLAG" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center">
                                         <Text text="APPROVAL_COMMENT" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center">
                                         <Text text="APPROVE_DATE_TIME" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center">
                                         <Text text="UPDATE_USER_ID" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center">
+                                        <Text text="행추가" />
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" hAlign="Center">
+                                        <Text text="행삭제" />
                                     </Column>
                                 </columns>
                                 <items>
-                                    <ColumnListItem>
+                                    <ColumnListItem type="Active" press=".onItemPress">
                                         <cells>
-                                            <HBox direction="Column">
-                                                <Text text="{details>tenant_id}" visible="{viewModel>/showMode}" />
-                                                <Input value="{details>tenant_id}" visible="{viewModel>/editMode}" />
-                                            </HBox>
-                                            <HBox direction="Column">
-                                                <Text text="{details>request_number}" visible="{viewModel>/showMode}" />
-                                                <Input value="{details>request_number}" visible="{viewModel>/editMode}" />
-                                            </HBox>
-                                            <HBox direction="Column">
-                                                <Text text="{details>approve_sequence}" visible="{viewModel>/showMode}" />
-                                                <Input value="{details>approve_sequence}" visible="{viewModel>/editMode}" />
-                                            </HBox>
-                                            <HBox direction="Column">
-                                                <Text text="{details>approval_number}" visible="{viewModel>/showMode}" />
-                                                <Input value="{details>approval_number}" visible="{viewModel>/editMode}" />
-                                            </HBox>
-                                            <HBox direction="Column">
-                                                <Text text="{details>requestor_empno}" visible="{viewModel>/showMode}" />
-                                                <Input value="{details>requestor_empno}" visible="{viewModel>/editMode}" />
-                                            </HBox>
-                                            <HBox direction="Column">
-                                                <Text text="{details>tf_flag}" visible="{viewModel>/showMode}" />
-                                                <Input value="{details>tf_flag}" visible="{viewModel>/editMode}" />
-                                            </HBox>
-                                            <HBox direction="Column">
-                                                <Text text="{details>approval_comment}" visible="{viewModel>/showMode}" />
-                                                <Input value="{details>approval_comment}" visible="{viewModel>/editMode}" />
-                                            </HBox>
-                                            <HBox direction="Column">
-                                                <Text text="{details>approve_date_time}" visible="{viewModel>/showMode}" />
-                                                <Input value="{details>approve_date_time}" visible="{viewModel>/editMode}" />
-                                            </HBox>
-                                            <HBox direction="Column">
-                                                <Text text="{details>update_user_id}" visible="{viewModel>/showMode}" />
-                                                <Input value="{details>update_user_id}" visible="{viewModel>/editMode}" />
-                                            </HBox>
+                                            <Input value="{details>tenant_id}" />
+                                            <Input value="{details>request_number}" />
+                                            <Input value="{details>approve_sequence}" />
+                                            <Input value="{details>approval_number}" />
+                                            <Input value="{details>requestor_empno}" />
+                                            <Input value="{details>tf_flag}" />
+                                            <Input value="{details>approval_comment}" />
+                                            <Input value="{details>approve_date_time}" />
+                                            <Input value="{details>update_user_id}" />
+
+                                            <Button icon="sap-icon://sys-add" press=".onApproverAdd(${details>approve_sequence})" tooltip="add" />
+                                            <Button icon="sap-icon://delete" press=".setApproverRemoveRow(${details>approve_sequence})" tooltip="delete" />
                                         </cells>
                                     </ColumnListItem>
                                 </items>
@@ -270,7 +300,7 @@
 
 		</uxap:sections>
 		
-		<uxap:footer>
+		<!-- <uxap:footer>
 			<OverflowToolbar>
                 <Button
                     icon="sap-icon://alert"
@@ -287,6 +317,40 @@
 				<Button id="pageListButton" type="Transparent" text="{I18N>/LIST}" press=".onPageListButtonPress"/>
                 <Button id="pageSubmitButton" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSaveButtonPress('R')" />
 			</OverflowToolbar>
+        </uxap:footer> -->
+        
+        <!-- footer 시작 -->
+        <uxap:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+                <HBox visible="{= ${master>/progress_status_code} === '' ? true : false}" alignItems="End" justifyContent="End">
+                    <Button id="pageDraftButton" type="Transparent" text="{I18N>/DRAFT}" press=".onPageSaveButtonPress('D')" />
+                    <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButtonPress"/>
+                    <Button id="pageRequestButton" type="Emphasized" text="{I18N>/REQUEST}" press=".onPageSaveButtonPress('R')" />
+                </HBox>
+
+                <HBox visible="{= ${master>/progress_status_code} === 'A' ? true : false}" alignItems="End" justifyContent="End">
+                    <Button id="pageEditButton" type="Transparent" text="{I18N>/EDIT}" press=".onPageEditButtonPress" />
+                    <Button id="pageSaveButton" type="Transparent" text="{I18N>/DRAFT}" press=".onPageSaveButtonPress('D')" />
+                    <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteButtonPress"/>
+                    <Button id="pageSubmitButton" type="Emphasized" text="{I18N>/REQUEST}" press=".onPageSaveButtonPress('R')" />
+                </HBox>
+
+                <HBox visible="{= ${master>/progress_status_code} === 'B' ? true : false}" alignItems="End" justifyContent="End">
+                    <Button id="pageRejectButton" type="Transparent" text="{I18N>/REJECT}" press=".onPageCancelButtonPress('J')"/>
+                    <Button id="pageApprovalButton" type="Emphasized" text="{I18N>/APPROVAL}" press=".onPageSaveButtonPress('A')" />
+                </HBox>
+
+                <HBox visible="{= ${master>/progress_status_code} === 'C' ? true : false}" alignItems="End" justifyContent="End">
+                    <Button id="pageRejectButton2" type="Transparent" text="{I18N>/REJECT}" press=".onPageCancelButtonPress('J')"/>
+                    <Button id="pageConfirmButton" type="Emphasized" text="{I18N>/CONFIRM} {I18N>/CREATE}" press=".onPageSaveButtonPress('C')" />
+                </HBox>
+
+                <HBox visible="{= ${master>/progress_status_code} === 'E' ? true : false}" alignItems="End" justifyContent="End">
+                    <Button id="pageListButton" type="Transparent" text="{I18N>/LIST}" press=".onPageListButtonPress"/>
+                </HBox>           
+            </OverflowToolbar>
 		</uxap:footer>
+        <!-- footer 끝 -->
 	</uxap:ObjectPageLayout>
 </mvc:View>

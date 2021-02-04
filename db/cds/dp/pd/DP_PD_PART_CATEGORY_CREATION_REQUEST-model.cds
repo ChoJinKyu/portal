@@ -12,7 +12,7 @@ entity Pd_Part_Category_Creation_Request {
     similar_category_code : String(40)   @title: '유사카테고리코드' ;	
     requestor_empno : String(30)   @title: '요청자사번' ;	
     request_date_time : DateTime   @title: '요청일시' ;	
-    request_desc : LargeBinary   @title: '요청설명' ;	
+    request_desc : LargeString   @title: '요청설명' ;	
     attch_group_number : String(100)   @title: '첨부파일그룹번호' ;	
     progress_status_code : String(30)   @title: '진행상태코드' ;	
     creator_empno : String(30)   @title: '생성자사번' ;	

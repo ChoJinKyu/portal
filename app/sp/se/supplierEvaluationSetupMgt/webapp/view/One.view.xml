@@ -111,8 +111,10 @@ xmlns:flex="sap.f"
                                                             editable="{=${DetailView>/isEditMode}}"
                                                             selectedKeys="{DetailView>/vpOperationUnit/vendor_pool_operation_unit_code}"
                                                             fieldGroupIds="required"
-                                                            required="true"                     
+                                                            required="true"    
+                                                                       
                                                             >
+                                                             <!-- selectionChange="onCheckLevel"      -->
                                                         <items>
                                                             <core:ListItem key="{common>code}" text="{common>code_name}" additionalText="{common>code}"/>
                                                         </items>
@@ -196,15 +198,16 @@ xmlns:flex="sap.f"
                                                     <!-- 평가 대상 V/P 레벨 -->
                                                     <Label text="{I18N>/EVAL_APPLY_VENDOR_POOL_LVL_NO}"/> 
                                                         <SegmentedButton
+                                                        id="vendor_pool_lvl"
                                                         selectedKey="{DetailView>/OperationUnitMst/eval_apply_vendor_pool_lvl_no}"
                                                         enabled="{DetailView>/isEditMode}">
-                                                            <items>
+                                                             <items>
                                                                 <SegmentedButtonItem text="1레벨" key="1"/>
                                                                 <SegmentedButtonItem text="2레벨" key="2" />
                                                                 <SegmentedButtonItem text="3레벨" key="3" />
-                                                                <!-- <SegmentedButtonItem text="4레벨" key="4" />
+                                                                 <!-- <SegmentedButtonItem text="4레벨" key="4" />
                                                                 <SegmentedButtonItem text="5레벨" key="5" /> -->
-                                                            </items>
+                                                            </items> 
                                                         </SegmentedButton>                                                                    
 
                                                 </f:content>
@@ -230,9 +233,12 @@ xmlns:flex="sap.f"
                                         items="{
                                             path: 'DetailView>/manager'
                                             }"
-                                        mode="MultiSelect"    
-                                        selectionChange="onSelectItem"    
+                                        mode="{=
+                                            ${DetailView>/isEditMode} ? 'SingleSelectLeft' : 'None'
+                                        }"
+                                          
                                             >
+                                            <!-- selectionChange="onSelectItem"   -->
                                             <headerToolbar>
                                                 <Toolbar>
                                                     <ToolbarSpacer/>
@@ -282,8 +288,7 @@ xmlns:flex="sap.f"
                                                             }"
                                                             enabled="{DetailView>/isEditMode}"
                                                             editable="{=
-                                                                ${DetailView>/isEditMode}  &amp;&amp;
-                                                                !!${DetailView>rowEditable}
+                                                                ${DetailView>/isEditMode}
                                                             }"
                                                             fieldGroupIds="required"
                                                             required="true"   
@@ -299,7 +304,8 @@ xmlns:flex="sap.f"
                                                             value="{DetailView>user_local_name}"
                                                             enabled="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}" 
                                                             fieldGroupIds="required"
-                                                            required="true"   
+                                                            required="true" 
+                                                            change="onChangeEdit"  
                                                             >
                                                         </Input>
                                                           <Text text="{DetailView>department_local_name}"  required="true" />                      
@@ -413,7 +419,7 @@ xmlns:flex="sap.f"
                                                             text="{I18N>/NEW}" 
                                                             press=".onCreateTwo"
                                                             visible="{= !${DetailView>/isCreateMode}}"
-                                                            
+                                                            enabled="{= ${DetailView>/isEditMode}}"
                                                             />
                                                             <!-- enabled="{DetailView>/isEditMode}" -->
                                                     </HBox>
@@ -434,7 +440,11 @@ xmlns:flex="sap.f"
                                                 </Column>
                                             </columns>
                                             <items>
-                                                <ColumnListItem type="Navigation" press=".onNavTwo">
+                                                <ColumnListItem type="{= 
+                                                    ${DetailView>/isEditMode} ? 'Navigation' : 'Inactive' 
+                                                }"
+                                                
+                                                 press=".onNavTwo">
                                                     <cells>
                                                         <Text
                                                                 text="{DetailView>evaluation_type_code}" />
@@ -469,9 +479,12 @@ xmlns:flex="sap.f"
                                         items="{
                                             path: 'DetailView>/quantitative'
                                             }"
-                                        mode="MultiSelect"
-                                        selectionChange="onSelectItem"    
+                                        mode="{=
+                                            ${DetailView>/isEditMode} ? 'SingleSelectLeft' : 'None'
+                                        }"
+                                        
                                             >
+                                            <!-- selectionChange="onSelectItem"   -->
                                             <headerToolbar>
                                                 <Toolbar>
                                                     <ToolbarSpacer/>
@@ -526,17 +539,18 @@ xmlns:flex="sap.f"
                                                             editable="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}"
                                                             fieldGroupIds="required"
                                                             required="true"   
+                                                            change="onChangeEdit"
                                                             />
                                                         <Input   
                                                             width="100%" 
                                                             placeholder="QUANTITATIVE_ITEM_NAME"
                                                             value="{DetailView>qttive_item_name}"
                                                             editable="{=
-                                                                ${DetailView>/isEditMode}  &amp;&amp;
-                                                                !!${DetailView>rowEditable}
+                                                                ${DetailView>/isEditMode}
                                                             }"
                                                             fieldGroupIds="required"
                                                             required="true"
+                                                            change="onChangeEdit"
                                                             />
 
                                                             
@@ -548,11 +562,11 @@ xmlns:flex="sap.f"
                                                             ]
                                                             }"
                                                             editable="{=
-                                                                ${DetailView>/isEditMode}  &amp;&amp;
-                                                                !!${DetailView>rowEditable}
+                                                                ${DetailView>/isEditMode}
                                                             }"
                                                             fieldGroupIds="required"
-                                                            required="true">
+                                                            required="true"
+                                                            change="onChangeEdit">
                                                             <items>
                                                                 <core:Item key="{common>code}" text="{common>code_name}" />
                                                             </items>
@@ -565,11 +579,11 @@ xmlns:flex="sap.f"
                                                             ]
                                                             }" 
                                                             editable="{=
-                                                            ${DetailView>/isEditMode}  &amp;&amp;
-                                                            !!${DetailView>rowEditable}
+                                                            ${DetailView>/isEditMode}
                                                             }" 
                                                             fieldGroupIds="required"
-                                                            required="true">
+                                                            required="true"
+                                                            change="onChangeEdit">
                                                             <items>
                                                                 <core:Item key="{common>code}" text="{common>code_name}" />
                                                             </items>
@@ -579,9 +593,9 @@ xmlns:flex="sap.f"
                                                             placeholder="QUANTITATIVE_ITEM_DESC"
                                                             value="{DetailView>qttive_item_desc}"
                                                             editable="{=
-                                                                ${DetailView>/isEditMode}  &amp;&amp;
-                                                                !!${DetailView>rowEditable}
+                                                                ${DetailView>/isEditMode}  
                                                             }"
+                                                            change="onChangeEdit"
                                                             
                                                             />     
                                                         <Input   
@@ -589,11 +603,11 @@ xmlns:flex="sap.f"
                                                             placeholder="SORT_NUMBER"
                                                             value="{DetailView>sort_sequence}"
                                                             editable="{=
-                                                                ${DetailView>/isEditMode}  &amp;&amp;
-                                                                !!${DetailView>rowEditable}
+                                                                ${DetailView>/isEditMode}
                                                             }"
                                                             fieldGroupIds="required"
                                                             required="true"
+                                                            change="onChangeEdit"
                                                         />             
                                                     </cells>
                                                 </ColumnListItem>

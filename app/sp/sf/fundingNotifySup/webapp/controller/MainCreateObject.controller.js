@@ -145,31 +145,53 @@ sap.ui.define([
         //임시 저장 성공 후
         onAfterProcSaveTemp: function(results){
             var urlPram = this.getModel("contModel").getProperty("/oArgs"),
-                aFilters =[];
+                aFilters =[],
+                oI18n = this.getView().getModel("I18N");
 
             aFilters.push(new Filter("supplier_code", FilterOperator.EQ, urlPram.supplierCode));
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, urlPram.tenantId));
             aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, urlPram.fundingNotifyNumber));
             
             this._onObjectRead(aFilters);
-            MessageToast.show("Success to save.");
+            MessageToast.show(oI18n.getText("/NCM01001"));
         },
 
         //신청서 제출
         onPageSubmissionButtonPress: function (oEvent) {
 
             var procRequest = {},
+                oPramCheackValue=[],
                 urlPram = this.getModel("contModel").getProperty("/oArgs"),
                 oPramDataModel = this.getModel("applicationSup"),
                 oPramCheack = this.getModel("contModel").getProperty("/detail/checkModel"),
                 ofunding_status_code = oPramDataModel.getProperty("/funding_status_code"),
                 aControls = this.getView().getControlsByFieldGroupId("newRequest"),
                 bValid = this._isValidControl(aControls);//newRequest
+            
+            for(var i = 0; i<oPramCheack.length; i++){
+                if(oPramCheack[i]){
+                    oPramCheackValue.push(i+1);
+                }else{
+                    oPramCheackValue.push("")
+                }
+            }
 
+            if(!oPramCheackValue.some(function(o){return o;})){
+                MessageBox.alert("지원 사유 한가지 이상 선택 하세요.");
+                return;
+            }
+
+            if(!oPramDataModel.getProperty("/investPlanMst").length){
+                MessageBox.alert("투자계획이 한건 이상 있어야 합니다.");
+                return;
+            };
+            
             if(!bValid){
                 return;
             };
 
+
+            
             procRequest = {
                 funding_appl_number: oPramDataModel.getProperty("/funding_appl_number")
                 , funding_notify_number: urlPram.fundingNotifyNumber
@@ -187,12 +209,14 @@ sap.ui.define([
                 , appl_user_name: oPramDataModel.getProperty("/appl_user_name")
                 , appl_user_tel_number: oPramDataModel.getProperty("/appl_user_tel_number")
                 , appl_user_email_address: oPramDataModel.getProperty("/appl_user_email_address")
-                , funding_reason_code: oPramCheack.toString().replaceAll("false", "")
+                , funding_reason_code: oPramCheackValue.toString()
                 , collateral_type_code: oPramDataModel.getProperty("/collateral_type_code")
                 , collateral_amount: parseInt(oPramDataModel.getProperty("/collateral_amount"))
                 , collateral_attch_group_number: ""
                 , funding_status_code : ofunding_status_code
             };
+
+            
 
             if(!ofunding_status_code || ofunding_status_code=="110"|| ofunding_status_code=="120"|| ofunding_status_code=="230"){
                 this._ajaxCall("ProcRequest", procRequest);
@@ -275,7 +299,7 @@ sap.ui.define([
         //투자계획 저장 성공 후
         onAfterProcSaveInvPlan : function(oEvent){
             this.onCreatePopupClose();
-            MessageToast.show("Success to save.");
+            MessageToast.show("저장 하였습니다.");
         },
 
         //투자계획마스터 삭제
@@ -626,9 +650,10 @@ sap.ui.define([
 
         //odataV4 호출
         _ajaxCall : function(procUrl, parmData) {
-            var that = this;
+            var that = this,
+                oI18n = this.getView().getModel("I18N");
 
-            MessageBox.confirm("Are you sure ?", {
+            MessageBox.confirm(oI18n.getProperty("/NCM00001"), {
             title: "Comfirmation",
             initialFocus: sap.m.MessageBox.Action.CANCEL,
             onClose: function (sButton) {
@@ -723,6 +748,17 @@ sap.ui.define([
             };
         },
 
+        _onCheckEmail: function (str) {                                                 
+
+            var reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
+
+            if(!reg_email.test(str)) {
+                return false;
+            }else {
+                return true;
+            }
+        },
+
         onCheckPhone: function (oEvent) {
             var str = oEvent.getSource().getValue(),
                 check = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/;
@@ -749,6 +785,7 @@ sap.ui.define([
             bAllValid = aControls.every(function(oControl){
                 var sEleName = oControl.getMetadata().getElementName(),
                     sValue;
+                
                 
                 switch(sEleName){
                     case "sap.m.DatePicker":

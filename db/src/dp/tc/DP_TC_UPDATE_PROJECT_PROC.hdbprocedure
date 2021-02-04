@@ -93,6 +93,7 @@ BEGIN
                  , BUYER_EMPNO = loop_project.BUYER_EMPNO
                  , MARKETING_PERSON_EMPNO = loop_project.MARKETING_PERSON_EMPNO
                  , PLANNING_PERSON_EMPNO = loop_project.PLANNING_PERSON_EMPNO
+                 , CUSTOMER_LOCAL_NAME = loop_project.CUSTOMER_LOCAL_NAME
                  , LAST_CUSTOMER_NAME = loop_project.LAST_CUSTOMER_NAME
                  , CUSTOMER_MODEL_DESC = loop_project.CUSTOMER_MODEL_DESC
                  , MCST_YIELD_RATE = loop_project.MCST_YIELD_RATE

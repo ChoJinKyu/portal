@@ -3,8 +3,9 @@ sap.ui.define([
 	"sap/ui/core/UIComponent",
 	"sap/ui/core/Fragment",
     "sap/m/library",
+	"ext/lib/util/Multilingual",
     "ext/lib/util/SppUserSessionUtil"
-], function (Controller, UIComponent, Fragment, mobileLibrary, SppUserSessionUtil) {
+], function (Controller, UIComponent, Fragment, mobileLibrary, Multilingual, SppUserSessionUtil) {
 	"use strict";
 
 	// shortcut for sap.m.URLHelper
@@ -150,6 +151,12 @@ sap.ui.define([
 				}
 			};
         })(),
+
+        getMultilingual: function(){
+            if(!this.oMultilingual)
+                this.oMultilingual = new Multilingual();
+            return this.oMultilingual;
+        },
         
         isValNull: function (p_val) {
             if(!p_val || p_val == "" || p_val == null){

@@ -7,26 +7,26 @@ public class FileDtlDto {
     private String fileGroupId;
     private String fileId;
     private Integer sortNumber;
-    private String originName;
-    private String savedName;
+    private String originalFileName;
+    private String saveFileName;
     private Integer fileSize;
-    private String mimeType;
+    private String mimeTypeName;
     private Boolean confirmFlag;
     private Timestamp localCreateDtm;
     private String createUserId;
     private Timestamp sytemCreateDtm;
 
-    public FileDtlDto(String tenantId, String fileGroupId, String fileId, Integer sortNumber, String originName,
-            String savedName, Integer fileSize, String mimeType, Boolean confirmFlag, Timestamp localCreateDtm,
+    public FileDtlDto(String tenantId, String fileGroupId, String fileId, Integer sortNumber, String originalName,
+            String saveFileName, Integer fileSize, String mimeTypeName, Boolean confirmFlag, Timestamp localCreateDtm,
             String createUserId, Timestamp sytemCreateDtm) {
         this.tenantId = tenantId;
         this.fileGroupId = fileGroupId;
         this.fileId = fileId;
         this.sortNumber = sortNumber;
-        this.originName = originName;
-        this.savedName = savedName;
+        this.originalFileName = originalName;
+        this.saveFileName = saveFileName;
         this.fileSize = fileSize;
-        this.mimeType = mimeType;
+        this.mimeTypeName = mimeTypeName;
         this.confirmFlag = confirmFlag;
         this.localCreateDtm = localCreateDtm;
         this.createUserId = createUserId;
@@ -69,20 +69,20 @@ public class FileDtlDto {
         this.sortNumber = sortNumber;
     }
 
-    public String getOriginName() {
-        return originName;
+    public String getOriginalFileName() {
+        return originalFileName;
     }
 
-    public void setOriginName(String originName) {
-        this.originName = originName;
+    public void setOriginalFileName(String originFileName) {
+        this.originalFileName = originFileName;
     }
 
-    public String getSavedName() {
-        return savedName;
+    public String getSaveFileName() {
+        return saveFileName;
     }
 
-    public void setSavedName(String savedName) {
-        this.savedName = savedName;
+    public void setSaveFileName(String saveFileName) {
+        this.saveFileName = saveFileName;
     }
 
     public Integer getFileSize() {
@@ -94,11 +94,11 @@ public class FileDtlDto {
     }
 
     public String getMimeType() {
-        return mimeType;
+        return mimeTypeName;
     }
 
-    public void setMimeType(String mimeType) {
-        this.mimeType = mimeType;
+    public void setMimeTypeName(String mimeType) {
+        this.mimeTypeName = mimeType;
     }
 
     public Boolean getConfirmFlag() {

@@ -229,21 +229,6 @@ sap.ui.define([
 		/* internal methods                                            */
 		/* =========================================================== */
 
-		// _onMasterDataChanged: function(oEvent){
-		// 	if(this.getModel("midObjectViewModel").getProperty("/isAddedMode") == true){
-		// 		var oMasterModel = this.getModel("master");
-		// 		var oDetailsModel = this.getModel("details");
-		// 		var sTenantId = oMasterModel.getProperty("/tenant_id");
-		// 		var sControlOPtionCode = oMasterModel.getProperty("/control_option_code");
-		// 		var oDetailsData = oDetailsModel.getData();
-		// 		oDetailsData.forEach(function(oItem, nIndex){
-		// 			oDetailsModel.setProperty("/"+nIndex+"/tenant_id", sTenantId);
-		// 			oDetailsModel.setProperty("/"+nIndex+"/control_option_code", sControlOPtionCode);
-		// 		});
-		// 		oDetailsModel.setData(oDetailsData);
-		// 	}
-		// },
-
 		/**
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
@@ -277,7 +262,9 @@ sap.ui.define([
 
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
-					"tenant_id": this._sTenantId,
+                    "tenant_id": this._sTenantId,
+                    "update_user_id": this._sLoginUserId,
+                    "local_update_dtm": new Date(),
 					"product_activity_code": "",
 					"activity_name": "",
 					"description": "",
@@ -291,7 +278,7 @@ sap.ui.define([
 				oDetailsModel.addRecord({
 					"tenant_id": this._sTenantId,
 					"product_activity_code": "",
-					"language_code": "KO",
+					"language_cd": "KO",
 					"code_name": ""			
                 }, "/PdProdActivityTemplateLng");
 
@@ -348,7 +335,7 @@ sap.ui.define([
 
 				oLangDataModel.read("/Code", {
 					filters: [
-						new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
 						new Filter("group_code", FilterOperator.EQ, "CM_LANG_CODE"),
 					],
 					success: function (rData, reponse) {
@@ -402,8 +389,12 @@ sap.ui.define([
                     CUType = "C";
                 }
             }              
-            
-            var activeFlg = oMasterData.active_flag ? "true" : "false";
+
+            var activeFlg = "false";
+
+            if (oMasterData.active_flag === true) {
+                activeFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+            };
 
             var pdDtlVal = [];
 
@@ -472,10 +463,12 @@ sap.ui.define([
                                     if(CUType === "D") {
                                         v_this.onPageNavBackButtonPress.call(v_this);
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01002"));                                       
                                     } else if(CUType === "C"){
                                         v_this.onPageNavBackButtonPress.call(v_this);
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                        v_this.onPageNavBackButtonPress.call(v_this);
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     }else {
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
@@ -494,7 +487,6 @@ sap.ui.define([
                             error: function (rst) {
                                     console.log("eeeeee");
                                     console.log(rst);
-                                    console.log(rst.return_msg);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
                                     // v_this.onSearch(rst.return_msg );
                             }
@@ -502,8 +494,21 @@ sap.ui.define([
 					};
 				}
             });
+            
 
             this.validator.clearValueState(this.byId("page"));
+        },
+
+        aaa : function(){
+            console.log("test");
+
+            var master = this.getModel("master");
+            var details = this.getModel("details");
+
+            console.log("master :");
+            console.log(master);
+            console.log("details :");
+            console.log(details);
         }
 	});
 });

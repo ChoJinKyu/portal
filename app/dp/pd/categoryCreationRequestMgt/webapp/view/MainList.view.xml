@@ -89,7 +89,8 @@
                     descending: true 
                 }                   
             }"
-            visibleRowCountMode="Auto" >
+            visibleRowCountMode="Auto"
+            cellClick=".onCellClickPress" >
             <!-- 
             selectionMode="None"
             selectionMode="MultiSelect"

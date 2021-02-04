@@ -29,13 +29,6 @@
                 "settings": {
                     "odataVersion": "2.0"
                 }
-            },
-            "mainV4": {
-                "uri": "srv-api/odata/v4/sp.negoHeadersV4Service/",
-                "type": "OData",
-                "settings": {
-                    "odataVersion": "4.0"
-                }
             }
         }
 	},
@@ -102,18 +95,6 @@
                     "odataVersion": "2.0"
                 },
                 "dataSource": "buyer"
-            }
-            ,
-            "mainV4": {
-                "type": "sap.ui.model.odata.v4.ODataModel",
-                "dataSource": "mainV4",
-                
-                "settings": {
-                    "odataVersion": "4.0",
-                    "synchronizationMode": "None",
-                    "operationMode": "Server",
-                    "autoExpandSelect": false
-                }
             }
 		},
 		"resources": {

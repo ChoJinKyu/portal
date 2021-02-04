@@ -1,4 +1,4 @@
-<mvc:View controllerName="sp.vi.basePriceMgt.controller.ViBasePriceList"
+<mvc:View controllerName="sp.vi.basePriceMgt.controller.ViBasePriceList" 
   xmlns:mvc="sap.ui.core.mvc"
   xmlns="sap.m"
   xmlns:f="sap.f"

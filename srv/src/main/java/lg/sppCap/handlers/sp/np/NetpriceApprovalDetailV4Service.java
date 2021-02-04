@@ -20,12 +20,7 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import cds.gen.sp.npapprovaldetailv4service.ApprovalSaveProcContext;
-import cds.gen.sp.npapprovaldetailv4service.GeneralType;
-import cds.gen.sp.npapprovaldetailv4service.MasterType;
-import cds.gen.sp.npapprovaldetailv4service.NpApprovalDetailV4Service_;
-import cds.gen.sp.npapprovaldetailv4service.ParamType;
-import cds.gen.sp.npapprovaldetailv4service.ResultType;
+import cds.gen.sp.npapprovaldetailv4service.*;
 
 @Component
 @ServiceName(NpApprovalDetailV4Service_.CDS_NAME)
@@ -41,14 +36,21 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
         ParamType vParam = context.getParam();
         MasterType master = vParam.getMaster();
         Collection<GeneralType> vDetails = vParam.getGeneral();
+        Collection<ApproverType> vApprovers = vParam.getApprovers();
+        Collection<RefererType> vReferers = vParam.getReferers();
 
         String detailTableName = null;
+        String approverTableName = null;
+        String refererTableName = null;
         
         ResultType vResult = ResultType.create();
         
         try{
 
-            detailTableName = this.createTempTableDtl( vDetails );
+            detailTableName = this.createTempTableDetail( vDetails );
+            approverTableName = this.createTempTableApprover( vApprovers );
+            refererTableName = this.createTempTableReferer( vReferers );
+
 
             // Procedure Call
             StringBuffer sqlCallProc = new StringBuffer();
@@ -67,6 +69,8 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
                         .append(",I_TENTPRC_FLAG => ?")
                         .append(",I_OUTCOME_CODE => ?")
                         .append(",I_DETAILS => ").append( detailTableName )
+                        .append(",I_APPROVERS => ").append( approverTableName )
+                        .append(",I_REFERERS => ").append( refererTableName )
                         .append(",I_USER_ID => ?")
                         .append(",O_RETURN_CODE => ?")
                         .append(",O_RETURN_MSG => ?")
@@ -127,8 +131,11 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
             vResult.setApprovalNumber( resultMsg );
 
         }finally{
-            this.dropTempTable( detailTableName );
+            try{ this.dropTempTable( detailTableName ); }catch(Exception e){}
+            try{ this.dropTempTable( approverTableName ); }catch(Exception e){}
+            try{ this.dropTempTable( refererTableName ); }catch(Exception e){}
         }
+
 
         log.info("### callProc Success ###");
 
@@ -142,7 +149,7 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
      * @param vDetails
      * @return
      */
-    private String createTempTableDtl( Collection<GeneralType> vDetails ){
+    private String createTempTableDetail( Collection<GeneralType> vDetails ){
         // local Temp table은 테이블명이 #(샵) 으로 시작해야 함 
         
         String tableName = "#SP_NP_NET_PRICE_APPROVAL_SAVE_PROC_LOCAL_TEMP_DTL";
@@ -192,6 +199,81 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
                     ,vRow.get("maker_code")                      // '제조사코드'
                     ,vRow.get("incoterms")                       // '인코텀즈'
                     ,vRow.get("_row_state_")                     // Row 상태코드(CUD)
+                });
+            }
+        }
+
+        jdbc.batchUpdate(insertSql, batchDtl);  
+
+        return tableName;
+    }
+
+
+    /**
+     * 
+     * @param vApprovers
+     * @return
+     */
+    private String createTempTableApprover( Collection<ApproverType> vApprovers ){
+        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함 
+        
+        String tableName = "#SP_NP_NET_PRICE_APPROVAL_SAVE_PROC_LOCAL_TEMP_APPROVER";
+
+        jdbc.execute(new StringBuffer()
+                    .append("CREATE local TEMPORARY column TABLE ").append( tableName ).append(" (")
+                    .append(" APPROVE_SEQUENCE                   NVARCHAR(10)")
+                    .append(",APPROVER_EMPNO                     NVARCHAR(30)")
+                    .append(",APPROVER_TYPE_CODE                 NVARCHAR(30)")
+                    .append(",_ROW_STATE_                        NVARCHAR(3) ")
+                    .append(")")
+                    .toString()
+                    );
+
+        String insertSql = "INSERT INTO " + tableName + " VALUES (?,?,?,?)";
+
+        // Vendor Pool Mst Local Temp Table에 insert                        
+        List<Object[]> batchDtl = new ArrayList<Object[]>();
+        if(vApprovers != null && !vApprovers.isEmpty() ){
+            for(ApproverType vRow : vApprovers){
+                batchDtl.add( new Object[] {                        
+                     vRow.get("approve_sequence")                // 결재순번
+                    ,vRow.get("approver_empno")                  // 결재자사번
+                    ,vRow.get("approver_type_code")              // 결재자유형코드
+                    ,vRow.get("_row_state_")                     // Row 상태코드(CUD)
+                });
+            }
+        }
+
+        jdbc.batchUpdate(insertSql, batchDtl);  
+
+        return tableName;
+    }
+
+    /**
+     * 
+     * @param vApprovers
+     * @return
+     */
+    private String createTempTableReferer( Collection<RefererType> vReferers ){
+        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함 
+        
+        String tableName = "#SP_NP_NET_PRICE_APPROVAL_SAVE_PROC_LOCAL_TEMP_REFERER";
+
+        jdbc.execute(new StringBuffer()
+                    .append("CREATE local TEMPORARY column TABLE ").append( tableName ).append(" (")
+                    .append(" REFERER_EMPNO                      NVARCHAR(30)")
+                    .append(")")
+                    .toString()
+                    );
+
+        String insertSql = "INSERT INTO " + tableName + " VALUES (?)";
+
+        // Vendor Pool Mst Local Temp Table에 insert                        
+        List<Object[]> batchDtl = new ArrayList<Object[]>();
+        if(vReferers != null && !vReferers.isEmpty() ){
+            for(RefererType vRow : vReferers){
+                batchDtl.add( new Object[] {                        
+                     vRow.get("referer_empno")                // 결재순번
                 });
             }
         }

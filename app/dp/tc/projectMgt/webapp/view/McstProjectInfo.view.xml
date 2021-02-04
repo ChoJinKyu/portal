@@ -361,8 +361,9 @@
             <OverflowToolbar>
                 <ToolbarSpacer />
                     <Button type="Transparent" text="{I18N>/CANCEL}" press=".onReadPress" class="sapUiSmallMarginEnd" visible="{detailModel>/mode/editMode}"/>
-                    <Button type="Transparent" text="{I18N>/UPDATE}" press=".onEditPress" class="sapUiSmallMarginEnd" enabled="{detailModel>/mode/readMode}"/>
+                    <Button type="Transparent" text="{I18N>/UPDATE}" press=".onEditPress" class="sapUiSmallMarginEnd" enabled="{= (${detailModel>/mode/readMode} &amp;&amp; ${detailModel>/mcst_status_code} !== 'CONFIRMED') ? true : false }"/>
                     <Button type="Emphasized"  text="{I18N>/SAVE}"  press=".onSavePress" class="sapUiSmallMarginEnd" visible="{detailModel>/mode/editMode}"/>
+                    <Button type="Emphasized"  text="저장&amp;다음"  press=".onSaveNextPress" class="sapUiSmallMarginEnd" visible="{detailModel>/mode/editMode}"/>
             </OverflowToolbar>
         </uxap:footer>
 	</uxap:ObjectPageLayout>

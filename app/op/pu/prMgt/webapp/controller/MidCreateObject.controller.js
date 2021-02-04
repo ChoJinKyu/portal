@@ -68,7 +68,7 @@ sap.ui.define([
             // view에서 사용할 메인 Model
             this.setModel(new JSONModel(), "detailModel"); 
             this.setModel(new JSONModel(), "viewModel"); 
-
+            
             this.getRouter().getRoute("midCreate").attachPatternMatched(this._onObjectMatched, this);
             this.getRouter().getRoute("midModify").attachPatternMatched(this._onObjectMatched, this);
         },
@@ -83,7 +83,6 @@ sap.ui.define([
 		 * Binds the view to the data path.
 		 */
 		_onObjectMatched : function (oEvent) { 
-
             var oArgs = oEvent.getParameter("arguments");
 
             //--------------------------------------------
@@ -168,7 +167,7 @@ sap.ui.define([
          */
         _fnSetRichEditor : function (){ 
             var that = this,
-                sHtmlValue = "&nbsp;";            
+                sHtmlValue = "";            
             var oApprovalLayout = this.getView().byId("idApprovalContentsTextEditor");
             var oApprovalRTE = oApprovalLayout.getContent()[0];
 
@@ -191,7 +190,7 @@ sap.ui.define([
                         oApprovalLayout.addContent(that.oApprovalRichTextEditor);
                 });
             } else {
-                that.oApprovalRichTextEditor.setValue("&nbsp;");
+                that.oApprovalRichTextEditor.setValue("");
             }                
         },
 
@@ -362,10 +361,11 @@ sap.ui.define([
                 requestor_department_name: this.$session.department_name,
                 request_date: oToday,
                 pr_create_status_code: "10",
+                pr_create_status_name: "New",
                 pr_header_text: "구매요청",
                 approval_flag: false,
                 approval_number: "",
-                approval_contents: "&nbsp;",
+                approval_contents: "",
                 erp_interface_flag: false,
                 erp_pr_type_code: "",
                 erp_pr_number: "",
@@ -374,7 +374,7 @@ sap.ui.define([
                 pr_type_name_2: "",
                 pr_type_name_3: "",
                 pr_desc: "",
-                update_user_id: "A60264"
+                update_user_id: this.$session.employee_number
             };
 
             oViewModel.setProperty("/PrMst", oNewMasterData);
@@ -413,8 +413,6 @@ sap.ui.define([
 
                         let approval_contents = data.results[0].approval_contents;
                         if(approval_contents && approval_contents !== ""){
-                            //let oEditor = that.byId("idApprovalContentsTextEditor");
-                            //oEditor.setValue(approval_contents);
                             that.oApprovalRichTextEditor.setValue(approval_contents);
                         }
                     }
@@ -425,7 +423,7 @@ sap.ui.define([
             });
         },
 
-        _fnReadPrDetail : function(oArgs){
+        _fnReadPrDetail_ori : function(oArgs){
             var that = this,
                 oServiceModel = this.getModel(),
                 oViewModel = this.getModel('viewModel');
@@ -470,6 +468,93 @@ sap.ui.define([
                 }
             });
         },
+
+
+        _fnReadPrDetail : function(oArgs){
+            var that = this,
+                oViewModel = this.getModel('viewModel');
+
+            var aFilters = [];
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id));
+            aFilters.push(new Filter("company_code", FilterOperator.EQ, this.$session.company_code));
+            aFilters.push(new Filter("pr_number", FilterOperator.EQ, oArgs.pr_number));
+ 
+            var aSorters = [];
+            aSorters.push(new Sorter("pr_item_number", false));
+
+            var aAccountFilters = aFilters.slice();
+            aAccountFilters.push(new Filter("account_sequence", FilterOperator.EQ, 1));
+
+            var aServiceFilters = aFilters.slice();
+            aServiceFilters.push(new Filter("service_sequence", FilterOperator.EQ, 1));
+
+            $.when(
+                    that._fnReadServiceModel("/Pr_DtlView", aFilters, aSorters),
+                    that._fnReadServiceModel("/Pr_Account", aAccountFilters, aSorters),
+                    that._fnReadServiceModel("/Pr_Service", aServiceFilters, aSorters)
+            ).done(function(oDetailData, oAccountData, oServiceData){              
+
+                if(oDetailData.results.length > 0) {
+                    oViewModel.setProperty("/Pr_Dtl", oDetailData.results);
+                } else {
+                    oViewModel.setProperty("/Pr_Dtl", []);
+                }
+
+                let oAccounts={}, oServices={};
+                let aPrDtlData = oViewModel.getProperty("/Pr_Dtl");
+                if(aPrDtlData && aPrDtlData.length > 0){
+                    aPrDtlData.forEach(function(itemDtl, idx){
+                        if(oAccountData.results.length > 0){
+                            oAccountData.results.forEach(function(itemAccount, idx){
+                                if(itemAccount.pr_item_number === itemDtl.pr_item_number){
+                                    for(var key in itemAccount){
+                                        console.log("##### " + key + " : " + itemAccount[key]);
+                                        itemDtl[key] = itemAccount[key];
+                                    }
+                                }
+                            });
+                        }
+
+                        if(oServiceData.results.length > 0){
+                            oServiceData.results.forEach(function(itemService, idx){
+                                if(itemService.pr_item_number === itemDtl.pr_item_number){
+                                    for(var key in itemService){
+                                        console.log("##### " + key + " : " + itemService[key]);
+                                        itemDtl[key] = itemService[key];
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }                
+            });
+        },
+
+        /**
+         * Service model read
+         */
+        _fnReadServiceModel : function(sEntityName, aFilters, aSorters){
+            var that = this,
+                oServiceModel = this.getModel();
+
+            var deferred = $.Deferred();
+
+            oServiceModel.read(sEntityName,{
+                filters : aFilters,
+                sorters : aSorters,
+                success : function(data){
+                    deferred.resolve(data);
+                },
+                error : function(data){
+                    MessageToast.show( sEntityName + " read failed.");
+                    deferred.resolve(data);
+                }
+            });
+
+            return deferred;           
+        },
+
+
 
         /**
          * 품목 라인 추가
@@ -560,19 +645,13 @@ sap.ui.define([
         onSaveButtonPress: function(){
 			var oView = this.getView(),
                 that = this;
-                
-			// var	oMessageContents = this.byId("inputMessageContents");
-			// if(!oMessageContents.getValue()) {
-			// 	oMessageContents.setValueState(sap.ui.core.ValueState.Error);
-			// 	return;
-            // }
 
             if(this.validator.validate(this.byId("pageSectionMain")) !== true){
                 MessageToast.show(this.getModel("I18N").getText("/NCM005"));
                 return;
             }
             
-			MessageBox.confirm("저장 하시겠습니까 ?", {
+			MessageBox.confirm("저장 후에는 변경이 불가합니다.\r\n\r\n저장 하시겠습니까 ? ", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
@@ -913,12 +992,12 @@ sap.ui.define([
         /**
          * Dialog Close
          */
-        onClose: function (oEvent) {
-            var sFragmentName = oEvent.getSource().data("fragmentName");
-            this[sFragmentName].then(function(oDialog) {
-                oDialog.close();
-            });
-        },
+        // onClose: function (oEvent) {
+        //     var sFragmentName = oEvent.getSource().data("fragmentName");
+        //     this[sFragmentName].then(function(oDialog) {
+        //         oDialog.close();
+        //     });
+        // },
 
 
         //==================== OP 공통 Dialog 호출 ====================
@@ -1656,9 +1735,9 @@ sap.ui.define([
          * @public 
          * @see 사용처 Participating Supplier Fragment 취소 이벤트
          */
-        onExit: function () {
-            this.byId("dialogMolItemSelection").close();
-        },
+        // onExit: function () {
+        //     this.byId("dialogMolItemSelection").close();
+        // },
          /**
          * @description  Participating Supplier Fragment Apply 버튼 클릭시 
          */

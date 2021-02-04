@@ -46,7 +46,7 @@
                         >
                     <headerToolbar>
                         <OverflowToolbar>
-                            <Label text="Approval Line"/> 
+                            <Label text="{I18N>/APPROVAL_LINE}"/> 
                             <ObjectStatus icon="sap-icon://move" text="" tooltip="드래그앤드랍으로 승인라인을 변경할 수 있습니다." /> 
                         </OverflowToolbar>
                     </headerToolbar>
@@ -134,16 +134,16 @@
 			<form:content>
 				<VBox class="sapUiSmallMarginBegin">
                     <Toolbar>
-                    <Label text="Referer" />
+                    <Label text="참조자" />
                     <ToolbarSpacer/>
-                    <HBox alignItems="End" justifyContent="End" >
+                    <!-- <HBox alignItems="End" justifyContent="End" >
                         <Label text="Adress Book" class=""/>
                         <core:Icon 
                             src="sap-icon://address-book"
                             class="size2 sapUiSmallMarginBeginEnd" 
                             >
                         </core:Icon>
-                    </HBox>
+                    </HBox> -->
                     </Toolbar>
                     <layout:VerticalLayout class="sapUiContentPadding" width="100%"> 
                         <MultiInput id="referMulti"

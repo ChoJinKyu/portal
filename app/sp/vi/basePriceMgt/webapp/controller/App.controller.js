@@ -2,7 +2,7 @@ sap.ui.define([
   "ext/lib/controller/BaseController",
   "sap/m/MessageBox",
   "sap/ui/model/Filter",
-  "sap/ui/model/FilterOperator",
+  "sap/ui/model/FilterOperator", 
   "cm/util/control/ui/EmployeeDialog"
 ], function (BaseController, MessageBox, Filter, FilterOperator, EmployeeDialog) {
   "use strict";

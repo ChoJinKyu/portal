@@ -1,20 +1,20 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"ext/lib/util/Multilingual",
 	"sap/ui/model/json/JSONModel",
-    "ext/lib/util/ExcelUtil",
-	"ext/lib/formatter/DateFormatter",
-	"sap/m/TablePersoController",
-	"cm/util/control/ui/CountryDialog",
-	"sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/thirdparty/jquery",
-], function (BaseController, Multilingual, JSONModel, ExcelUtil, DateFormatter, 
+	"sap/m/TablePersoController",
+	"ext/lib/formatter/DateFormatter",
+    "ext/lib/util/ExcelUtil",
+	"sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+	"cm/util/control/ui/CountryDialog",
+], function (BaseController, JSONModel, MessageBox, MessageToast, jQuery, 
         TablePersoController, 
-        CountryDialog,
-        Filter, FilterOperator, MessageBox, MessageToast, jQuery) {
+        DateFormatter, ExcelUtil, 
+        Filter, FilterOperator, 
+        CountryDialog) {
 	"use strict";
 
 	return BaseController.extend("xx.templateRcmd.controller.TemplateBeginColumn", {
@@ -30,7 +30,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-			var oMultilingual = new Multilingual();
+			var oMultilingual = this.getMultilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new JSONModel(), "beginPageViewModel");
 

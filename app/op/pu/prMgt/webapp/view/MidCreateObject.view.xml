@@ -68,7 +68,7 @@
 					<Label text="{path:'I18N>/PR_PROGRESS_STATUS'} :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="New"
+                        text="{viewModel>/PrMst/pr_create_status_name}"
                         state="Error" />
 				</layout:VerticalLayout>
 			</FlexBox>
@@ -349,7 +349,8 @@
                                     <table:template>
                                         <Input value="{viewModel>remark}" 
                                             maxLength="2000"
-                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/REMARK/mandatory_column_flag}" />                                            
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/REMARK/mandatory_column_flag}" 
+                                            valueState="{form>__metadata/_valueStates/remark/valueState}" valueStateText="{form>__metadata/_valueStates/remark/valueStateText}"/>                                            
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/ITEM_CATEGORY_CODE/display_column_flag}">

@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -18,11 +19,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.http.fileupload.util.Streams;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 
 @Controller
 public class FileUploadController {
@@ -109,7 +111,7 @@ public class FileUploadController {
 		JSONObject returnValue = new JSONObject();
 		returnValue.put("RST_CD", "F");
 
-		try {			
+		try {
             String oriFileName = "1.jpg";
             String fileRootPath = File.separator + "tmp" + File.separator + "fileTemp" + File.separator + oriFileName; // 폴더 경로
             
@@ -142,6 +144,14 @@ public class FileUploadController {
 				e.printStackTrace();
 			}			
 		}	
+    }
+
+    @RequestMapping("/test/delete")
+    public void fileDelete(@RequestBody HashMap<String, String> paramMap, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        System.out.println(">> Enter fileDelete");
+
+        System.out.println(">> groupId : " + paramMap.get("groupId"));
+        System.out.println(">> fileId : " + paramMap.get("fileId"));
     }
 
 	private String getDisposition(String fileName, String browserName) throws UnsupportedEncodingException {

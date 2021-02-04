@@ -20,7 +20,7 @@ public class FileDtlRepository {
     private JdbcTemplate template;
 
     public FileDtlDto findById(String tenantId, String fileGroupId, String fileId){
-        String sql = "SELECT TENANT_ID, FILE_GROUP_ID, FILE_ID,	SORT_NUMBER, ORIGIN_NAME, SAVED_NAME, FILE_SIZE, MIME_TYPE, CONFIRM_FLAG, LOCAL_CREATE_DTM,CREATE_USER_ID, SYSTEM_CREATE_DTM FROM CM_FILE_DTL WHERE TENANT_ID = ? AND FILE_GROUP_ID = ? AND FILE_ID = ?"; 
+        String sql = "SELECT TENANT_ID, FILE_GROUP_ID, FILE_ID,	SORT_NUMBER, ORIGINAL_FILE_NAME, SAVE_FILE_NAME, FILE_SIZE, MIME_TYPE_NAME, CONFIRM_FLAG, LOCAL_CREATE_DTM,CREATE_USER_ID, SYSTEM_CREATE_DTM FROM CM_FILE_DTL WHERE TENANT_ID = ? AND FILE_GROUP_ID = ? AND FILE_ID = ?"; 
         try {
             return template.queryForObject(sql,new Object[]{tenantId, fileGroupId}, FileDtlMapper);
             
@@ -30,20 +30,20 @@ public class FileDtlRepository {
     }
 
     public List<UploadFile> getGroup(String tenantId, String groupId) {
-        String sql = "SELECT FILE_GROUP_ID, FILE_ID, ORIGIN_NAME, FILE_SIZE, LOCAL_CREATE_DTM, MIME_TYPE FROM CM_FILE_DTL WHERE TENANT_ID =? AND FILE_GROUP_ID = ?";
+        String sql = "SELECT FILE_GROUP_ID, FILE_ID, ORIGINAL_FILE_NAME, FILE_SIZE, LOCAL_CREATE_DTM, MIME_TYPE_NAME FROM CM_FILE_DTL WHERE TENANT_ID =? AND FILE_GROUP_ID = ?";
         return template.query(sql, new Object[]{tenantId, groupId}, UploadFileMapper);
     }
 
     public void insert(FileDtlDto fileDtl){
-        String sql = "INSERT INTO CM_FILE_DTL( TENANT_ID, FILE_GROUP_ID, FILE_ID, SORT_NUMBER, ORIGIN_NAME,	SAVED_NAME,	FILE_SIZE,	MIME_TYPE, CONFIRM_FLAG, LOCAL_CREATE_DTM, CREATE_USER_ID, SYSTEM_CREATE_DTM )" +
+        String sql = "INSERT INTO CM_FILE_DTL( TENANT_ID, FILE_GROUP_ID, FILE_ID, SORT_NUMBER, ORIGINAL_FILE_NAME,	SAVE_FILE_NAME,	FILE_SIZE,	MIME_TYPE_NAME, CONFIRM_FLAG, LOCAL_CREATE_DTM, CREATE_USER_ID, SYSTEM_CREATE_DTM )" +
                      "VALUES( ?,?,?,?,?,?,?,?,?,?,?,?)";
         template.update(sql, new Object[]{
             fileDtl.getTenantId(), 
             fileDtl.getFileGroupId(), 
             fileDtl.getFileId(),
             fileDtl.getSortNumber(),
-            fileDtl.getOriginName(),
-            fileDtl.getSavedName(),
+            fileDtl.getOriginalFileName(),
+            fileDtl.getSaveFileName(),
             fileDtl.getFileSize(),
             fileDtl.getMimeType(),
             fileDtl.getConfirmFlag(),
@@ -61,10 +61,10 @@ public class FileDtlRepository {
     static RowMapper<UploadFile> UploadFileMapper = (rs, rowNum) -> new UploadFile(
         rs.getString("FILE_GROUP_ID"),
         rs.getString("FILE_ID"),
-        rs.getString("ORIGIN_NAME"),
+        rs.getString("ORIGINAL_FILE_NAME"),
         rs.getString("FILE_SIZE"),
         rs.getString("LOCAL_CREATE_DTM"),
-        rs.getString("MIME_TYPE")
+        rs.getString("MIME_TYPE_NAME")
     ); 
 
     static RowMapper<FileDtlDto> FileDtlMapper = (rs, rowNum) -> new FileDtlDto( 
@@ -72,10 +72,10 @@ public class FileDtlRepository {
         rs.getString("FILE_GROUP_ID"),
         rs.getString("FILE_ID"),
         rs.getInt("SORT_NUMBER"),
-        rs.getString("ORIGIN_NAME"),
-        rs.getString("SAVED_NAME"),
+        rs.getString("ORIGINAL_FILE_NAME"),
+        rs.getString("SAVE_FILE_NAME"),
         rs.getInt("FILE_SIZE"),
-        rs.getString("MIME_TYPE"), 
+        rs.getString("MIME_TYPE_NAME"), 
         rs.getBoolean("CONFIRM_FLAG"),
         rs.getTimestamp("LOCAL_CREATE_DTM"),
         rs.getString("CREATE_USER_ID"),

@@ -1,4 +1,4 @@
-<mvc:View controllerName="sp.vi.basePriceMgt.controller.BasePriceDetail"
+<mvc:View controllerName="sp.vi.basePriceMgt.controller.BasePriceDetail" 
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns="sap.m"
@@ -9,12 +9,12 @@
     xmlns:lib-m="ext.lib.m"
     xmlns:lib-cm="ext.lib.control.m"
     xmlns:t="sap.ui.table"
-    xmlns:tnt="sap.tnt"    
+    xmlns:tnt="sap.tnt"     
     xmlns:co="sap.suite.ui.commons"
     xmlns:rte="sap.ui.richtexteditor"
     xmlns:u="sap.ui.unified"
     height="100%">
-
+ 
     <uxap:ObjectPageLayout
         showTitleInHeaderContent="true"
 		showEditHeaderButton="true"
@@ -28,12 +28,17 @@
 				<uxap:expandedHeading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBack" />
-                        <Title text="{I18N>/NEW_BASE_PRICE}(일반자재)" wrapping="true"/>
+                        <Title text="{I18N>/NEW_BASE_PRICE}({I18N>/GENERAL_MATERIAL})" wrapping="true"/>
                     </HBox>
 				</uxap:expandedHeading>
                 <uxap:navigationActions>
-					<!-- <OverflowToolbarButton icon="sap-icon://decline" text="{I18N>/BACK}" press=".onBack" /> -->
                 </uxap:navigationActions>
+                <uxap:snappedHeading>
+					<HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBack" />
+                        <Title text="{I18N>/NEW_BASE_PRICE}({I18N>/GENERAL_MATERIAL})" wrapping="true"/>
+                    </HBox>
+				</uxap:snappedHeading>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
@@ -254,7 +259,7 @@
                                         <t:Column hAlign="Center" width="8rem">
                                             <Label  text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
                                             <t:template>
-                                                <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>supplier}"/>
+                                                <Input editable="FALSE" value="{detailModel>supplier}"/>
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Left" width="8rem">
@@ -270,19 +275,19 @@
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/MATERIAL_NAME}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>material}"/>
+                                            <Input editable="FALSE" value="{detailModel>material}"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/VENDOR_POOL_CODE}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>vendor_pool_code}"/>
+                                            <Input editable="FALSE" value="{detailModel>vendor_pool_code}"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/VENDOR_POOL}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>vendor_pool}"/>
+                                            <Input editable="FALSE" value="{detailModel>vendor_pool}"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
@@ -298,9 +303,9 @@
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/BASE_PRICE_UNIT}" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/QUANTITY_UNIT}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>base_uom_code}"/>
+                                            <Input editable="FALSE" value="{detailModel>base_uom_code}"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">

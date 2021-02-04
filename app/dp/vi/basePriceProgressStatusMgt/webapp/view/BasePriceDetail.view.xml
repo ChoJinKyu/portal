@@ -1,0 +1,273 @@
+<mvc:View controllerName="dp.vi.basePriceProgressStatusMgt.controller.BasePriceDetail"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:uxap="sap.uxap"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:layout="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    xmlns:lib-m="ext.lib.m"
+    xmlns:cm-ui="cm.util.control.ui"
+    xmlns:t="sap.ui.table"
+    xmlns:co="sap.suite.ui.commons"
+    xmlns:rte="sap.ui.richtexteditor"
+    height="100%">
+
+    <uxap:ObjectPageLayout
+        showTitleInHeaderContent="true"
+		showEditHeaderButton="true"
+        upperCaseAnchorBar="false"
+        headerContentPinnable="false"
+        showAnchorBarPopover="false"
+        showFooter="true">
+
+		<uxap:headerTitle>
+			<uxap:ObjectPageDynamicHeaderTitle>
+				<uxap:heading>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onGoToList" />
+                        <Title text="{detailViewModel>/basePriceTitle}" wrapping="true"/>
+                    </HBox>
+				</uxap:heading>
+                <!-- <uxap:navigationActions>
+					<OverflowToolbarButton icon="sap-icon://decline" text="{I18N>/BACK}" press=".onGoToList" />
+                </uxap:navigationActions> -->
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+			<FlexBox wrap="Wrap">
+                <!-- Requester 시작 -->
+                <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
+                    <ObjectStatus title="{I18N>/APPROVAL_NUMBER}" text="{detailModel>/approval_number}"/>
+                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/requestor_local_nm} {detailModel>/requestor_job_title} / {detailModel>/requestor_dept_local_nm}"/>
+                    <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/request_date', formatter: '.onChangeDateFormat'}"/>
+                </layout:VerticalLayout>
+                <!-- Requester 끝 -->
+
+                <!-- Status 시작 -->
+				<layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
+					<Label text="{I18N>/STATUS} :"/>
+                    <ObjectStatus class="sapMObjectStatusLarge" text="{path:'detailModel>/approve_status_code', formatter: '.onSetStatusText'}" state="Error" />
+				</layout:VerticalLayout>
+                <!-- Status 끝 -->
+
+                <!-- Process 시작 -->
+                <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
+                    <HBox>
+					    <Label text="{I18N>/PROCESS} : "/>
+                    </HBox>
+                    <HBox>
+                        <co:MicroProcessFlow>
+                            <co:content>
+                               <!--  <co:MicroProcessFlowItem 
+                                    state="{detailViewModel>/processFlowStates/0}" 
+                                    stepWidth="5rem" 
+                                    icon="{detailViewModel>/processFlowIcons/0}" />
+                                <co:MicroProcessFlowItem 
+                                    state="{detailViewModel>/processFlowStates/1}"
+                                    stepWidth="5rem"
+                                    icon="{detailViewModel>/processFlowIcons/1}" />
+                                <co:MicroProcessFlowItem 
+                                    state="{detailViewModel>/processFlowStates/2}"
+                                    stepWidth="5rem"
+                                    icon="{detailViewModel>/processFlowIcons/2}" />
+                                <co:MicroProcessFlowItem 
+                                    state="{detailViewModel>/processFlowStates/3}"
+                                    stepWidth="5rem"
+                                    icon="{detailViewModel>/processFlowIcons/3}" /> -->
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/1}" color="{detailViewModel>/processFlowColors/1}"/>
+                                            <Text text="{rootModel>/processList/0/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/2}" color="{detailViewModel>/processFlowColors/2}"/>
+                                            <Text text="{rootModel>/processList/1/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/3}" color="{detailViewModel>/processFlowColors/3}"/>
+                                            <Text text="{rootModel>/processList/2/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/4}" color="{detailViewModel>/processFlowColors/4}"/>
+                                            <Text text="{rootModel>/processList/3/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                            </co:content>
+                        </co:MicroProcessFlow>
+                    </HBox>
+                    <!-- <HBox>
+                        <Text text="{rootModel>/processList/0/code_name}" width="4rem" />
+                        <Text text="{rootModel>/processList/1/code_name}" width="6rem" textAlign="Center" />
+                        <Text text="{rootModel>/processList/2/code_name}" width="7rem" textAlign="Center" />
+                        <Text text="{rootModel>/processList/3/code_name}" width="4rem" textAlign="Center" />
+                    </HBox> -->
+				</layout:VerticalLayout>
+                <!-- Process 시작 -->
+			</FlexBox>
+		</uxap:headerContent>
+
+        <uxap:sections>
+            <!-- General Information 시작 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/GENERAL_INFO}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <VBox>
+                                <HBox alignItems="Center">
+                                    <Label
+                                        text="{I18N>/TITLE}"
+                                        class="sapUiTinyMarginEnd"
+                                        textAlign="Left"
+                                        labelFor="input"
+                                        required="true"/>
+                                    <VBox>
+                                        <Input
+                                            width="20rem"
+                                            placeholder=""
+                                            visible="{detailViewModel>/viewMode}"
+                                            value="{detailModel>/approval_title}">
+                                        </Input>
+                                        <Text text="{detailModel>/approval_title}" visible="{= !${detailViewModel>/viewMode}}" />
+                                    </VBox>
+                                </HBox>
+                                <VBox>
+                                    <Label text="{I18N>/DESCRIPTION}" required="true"/>
+                                    <VBox>
+                                        <!-- Text Editor 시작 -->
+                                        <rte:RichTextEditor 
+                                            width="100%" 
+                                            height="200px" 
+                                            value="{detailModel>/approval_contents}" 
+                                            customToolbar="true" 
+                                            showGroupFont="true" 
+                                            showGroupLink="true" 
+                                            showGroupInsert="true"
+                                            visible="{detailViewModel>/viewMode}" />
+                                        <!-- Text Editor 끝 -->
+                                        <FormattedText height="200px" htmlText="{= ${detailModel>/approval_contents} ? ${detailModel>/approval_contents} : '' }" visible="{= !${detailViewModel>/viewMode}}"/>
+                                    </VBox>
+                                </VBox>
+                            </VBox>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- General Information 끝 -->
+
+            <!-- Material Code 시작 -->
+            <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/BASE_PRICE_LIST}({detailViewModel>/detailsLength})">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="bacePriceTableSection">
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- Material Code 끝 -->
+
+            <!-- Attachment 시작 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/ATTACHMENT}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <!-- File Upload 시작-->
+                            <UploadCollection
+                                id="UploadCollection"
+                                maximumFilenameLength="55"
+                                maximumFileSize="10"
+                                multiple="true"
+                                sameFilenameAllowed="true"
+                                instantUpload="false"
+                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                change="onChange"
+                                fileDeleted="onFileDeleted"
+                                filenameLengthExceed="onFilenameLengthExceed"
+                                fileSizeExceed="onFileSizeExceed"
+                                typeMissmatch="onTypeMissmatch"
+                                uploadComplete="onUploadComplete"
+                                beforeUploadStarts="onBeforeUploadStarts" />
+                            <!-- File Upload 끝-->
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- GAttachment 끝 -->
+
+            <!-- Report Line 시작 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/APPROVAL_LINE}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <!-- Approval & Reference 시작 -->
+                            <core:Fragment fragmentName="basePriceArlMgt.view.ApprovalLine" type="XML" />
+                            <!-- Approval & Reference 끝 -->
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- Report Line 끝 -->
+        </uxap:sections>
+
+        <!-- footer 시작 -->
+        <uxap:footer>
+			<OverflowToolbar visible="false">
+				<ToolbarSpacer />
+                <Button
+                    text="{I18N>/CHANGE_DEVELOPER}"
+                    enabled="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
+                    press=".onMultiInputWithEmployeeValuePress($event, 'changeDeveloper')" />
+                <Button
+                    text="{I18N>/EDIT}" 
+                    enabled="{= !${detailViewModel>/viewMode}}"
+                    press=".onEditToggle" />
+                <!-- <Button
+                    text="{I18N>/PREVIEW}" 
+                    enabled="{= ${detailModel>/approve_status_code} === '10' ? true : false}"
+                    press=".onPreview" /> -->
+                <!-- <Button
+                    text="{I18N>/CANCEL}" press=".onGoToList" /> -->
+				<Button
+                    text="{I18N>/DRAFT}" 
+                    enabled="{= ${detailViewModel>/viewMode}}"
+                    press=".onDraft" />
+                <Button
+                    text="{I18N>/CANCEL}"
+                    enabled="{= ${detailViewModel>/viewMode}}"
+                    press=".onEditToggle" />
+                <Button
+                    text="{I18N>/DELETE}" 
+                    enabled="{= ${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
+                    press=".onDelete" />
+                <Button
+                    type="Emphasized"
+                    text="{I18N>/REQUEST}"
+                    enabled="{= ${detailViewModel>/viewMode}}"
+                    press=".onRequest" />
+			</OverflowToolbar>
+		</uxap:footer>
+        <!-- footer 끝 -->
+    </uxap:ObjectPageLayout>
+    <cm-ui:EmployeeDialog id="employeeDialog" 
+        title="직원 검색"
+        items="{
+            filters: [
+                {path: 'tenant_id', operator: 'EQ', value1: 'L2600'}
+            ]
+        }"
+        apply=".onEmployeeDialogApplyPress"
+    />
+</mvc:View>

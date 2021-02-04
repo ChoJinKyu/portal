@@ -23,12 +23,12 @@
 
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
+				<uxap:heading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onGoToList" />
                         <Title text="{detailViewModel>/basePriceTitle}" wrapping="true"/>
                     </HBox>
-				</uxap:expandedHeading>
+				</uxap:heading>
                 <!-- <uxap:navigationActions>
 					<OverflowToolbarButton icon="sap-icon://decline" text="{I18N>/BACK}" press=".onGoToList" />
                 </uxap:navigationActions> -->
@@ -79,7 +79,7 @@
                                 <co:MicroProcessFlowItem stepWidth="2rem" >
                                     <co:customControl>
                                         <VBox alignItems="Center">
-                                            <core:Icon src="{detailViewModel>/processFlowIcons/0}" color="{detailViewModel>/processFlowColors/0}"/>
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/1}" color="{detailViewModel>/processFlowColors/1}"/>
                                             <Text text="{rootModel>/processList/0/code_name}" textAlign="Center" class=""/>
                                         </VBox>
                                     </co:customControl>
@@ -87,7 +87,7 @@
                                 <co:MicroProcessFlowItem stepWidth="2rem" >
                                     <co:customControl>
                                         <VBox alignItems="Center">
-                                            <core:Icon src="{detailViewModel>/processFlowIcons/1}" color="{detailViewModel>/processFlowColors/1}"/>
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/2}" color="{detailViewModel>/processFlowColors/2}"/>
                                             <Text text="{rootModel>/processList/1/code_name}" textAlign="Center" class=""/>
                                         </VBox>
                                     </co:customControl>
@@ -95,7 +95,7 @@
                                 <co:MicroProcessFlowItem stepWidth="2rem" >
                                     <co:customControl>
                                         <VBox alignItems="Center">
-                                            <core:Icon src="{detailViewModel>/processFlowIcons/2}" color="{detailViewModel>/processFlowColors/2}"/>
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/3}" color="{detailViewModel>/processFlowColors/3}"/>
                                             <Text text="{rootModel>/processList/2/code_name}" textAlign="Center" class=""/>
                                         </VBox>
                                     </co:customControl>
@@ -103,7 +103,7 @@
                                 <co:MicroProcessFlowItem stepWidth="2rem" >
                                     <co:customControl>
                                         <VBox alignItems="Center">
-                                            <core:Icon src="{detailViewModel>/processFlowIcons/3}" color="{detailViewModel>/processFlowColors/3}"/>
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/4}" color="{detailViewModel>/processFlowColors/4}"/>
                                             <Text text="{rootModel>/processList/3/code_name}" textAlign="Center" class=""/>
                                         </VBox>
                                     </co:customControl>
@@ -224,7 +224,7 @@
 
         <!-- footer 시작 -->
         <uxap:footer>
-			<OverflowToolbar visible="{= ${detailModel>/approve_status_code} === 'DR' ? true : false}">
+			<OverflowToolbar visible="{= ${detailModel>/approve_status_code} === 'DR' || ${detailModel>/approve_status_code} === '' ? true : false}">
 				<ToolbarSpacer />
                 <Button
                     text="{I18N>/CHANGE_DEVELOPER}"

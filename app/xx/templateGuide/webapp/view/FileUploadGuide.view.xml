@@ -15,7 +15,7 @@
                 fileSizeExceed="onFileSizeExceed"
                 multiple="true"
                 change="onChange"                
-                uploadUrl="srv-api/cm/fileupload/api/v2/singleUpload"
+                uploadUrl="srv-api/cm/fileupload/api/v1/singleUpload"
                 beforeUploadStarts="onBeforeUploadStarts"
                 uploadComplete="onUploadComplete"
                 fileDeleted="onFileDeleted"

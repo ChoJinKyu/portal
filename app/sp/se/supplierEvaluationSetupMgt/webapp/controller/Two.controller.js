@@ -100,15 +100,22 @@ sap.ui.define([
             },  
             _readAll : function(){
                 var oView = this.getView();
-                var oModel = this.getModel("TwoView");
+                var oModel = oView.getModel("TwoView");
 
                 // Create 버튼 눌렀을때
             if (this.scenario_number === "New") {
-                this.getModel("TwoView").setProperty("/isEditMode", true);
-                this.getModel("TwoView").setProperty("/isCreateMode", true);
-                this.getModel("TwoView").setProperty("/tansaction_code", "I");
+                oModel.setProperty("/isEditMode", true);
+                oModel.setProperty("/isCreateMode", true);
+                oModel.setProperty("/tansaction_code", "I");
 
-                this.getModel("TwoView").setProperty("/evaluationType2", {
+                oView.getModel("TwoView").setProperty("/",{
+                            evaluationType2 : [],
+                            scale : []
+                        });
+                
+                
+
+                oModel.setProperty("/evaluationType2", {
                 "tenant_id":this.tenant_id,
                 "company_code":this.company_code,
                 "org_type_code":this.org_type_code,
@@ -119,24 +126,26 @@ sap.ui.define([
 
 
             } else { // Detail 일때
-                this.getModel("TwoView").setProperty("/isEditMode", false);
-                this.getModel("TwoView").setProperty("/isCreateMode", false);  
-                this.getModel("TwoView").setProperty("/tansaction_code", "R");       
+                oModel.setProperty("/isEditMode", false);
+                oModel.setProperty("/isCreateMode", false);  
+                oModel.setProperty("/tansaction_code", "R");       
  
              
                 this._readEval2View();                
                 this._readScaleView();
+                
                   
                 }   
+                oView.byId("scaleTable").removeSelections(true);
             },
             _readEval1View : function(){
 
                 var TwoFilters = [];  
                 
-                var oOwnerComponent = this.getOwnerComponent();
+                var oComponent = this.getOwnerComponent();
 
                 
-                var oView = oOwnerComponent.byId("container-supplierEvaluationSetupMgt---detail--beginView").getController().getView();
+                var oView =  oComponent.byId("detail").byId("beginView").getController().getView();
 
                 var oModel = oView.getModel("DetailView").getProperty("/evaluationType1");
 
@@ -188,6 +197,7 @@ sap.ui.define([
             _readScaleView : function(){
                 var oView = this.getView();
                 var TwoFilters = [];      
+                var oTable = oView.byId("scaleTable");
               
                 TwoFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
                 TwoFilters.push(new Filter("company_code", 'EQ', this.company_code));                   
@@ -207,6 +217,8 @@ sap.ui.define([
                             error: function () {
 
                         }});
+
+                        oTable.removeSelections("true");
 
         }   ,
             
@@ -590,7 +602,10 @@ sap.ui.define([
 
         },
         onSelectItem : function(oEvent){
-
+            
+                /***
+                 * 2021-02-04 단일 셀렉으로 변경
+                 */
                 var oView, oViewModel, oSelectItem,
                 oBindContxtPath, oRowData, bSeletFlg, bEditMode, aSelectAll,
                 oParameters, bAllSeletFlg, sTablePath, oTable, aListData;
@@ -602,6 +617,7 @@ sap.ui.define([
                 if(!bEditMode){
                     return;
                 }
+                
 
                 oParameters = oEvent.getParameters();
                 oSelectItem = oParameters.listItem;
@@ -610,31 +626,40 @@ sap.ui.define([
                 bSeletFlg = oParameters.selected;
                 bAllSeletFlg = oParameters.selectAll;
 
-                if(
-                   (bAllSeletFlg && bSeletFlg) || 
-                    (!bAllSeletFlg && !bSeletFlg && oParameters.listItems.length > 1)
-                ){
-                    oTable = oEvent.getSource();
-                    sTablePath = oTable.getBindingPath("items");
-                    aListData = oViewModel.getProperty(sTablePath);
-                    
-                    oViewModel.setProperty(sTablePath, aListData.map(function(item){
-
-                    if(item.crudFlg === "D"){
-                        return item;
-                    }else if(item.crudFlg === "I"){
-                        item.rowEditable = bSeletFlg;
-                        return item;
+                oTable = oEvent.getSource();
+                sTablePath = oTable.getBindingPath("items");
+                aListData = oViewModel.getProperty(sTablePath);
+                aListData.forEach(function(item){
+                    if(item.crudFlg !== "I"){
+                        item.rowEditable = false;
                     }
+                });
 
-                    item.rowEditable = bSeletFlg;
-                    item.crudFlg = "U";
-                    item.tansaction_code = "U";
-                    return item;
-                    }));
-                        return;
+                // if(
+                //    (bAllSeletFlg && bSeletFlg) || 
+                //     (!bAllSeletFlg && !bSeletFlg && oParameters.listItems.length > 1)
+                // ){
+                //     oTable = oEvent.getSource();
+                //     sTablePath = oTable.getBindingPath("items");
+                //     aListData = oViewModel.getProperty(sTablePath);
+                    
+                //     oViewModel.setProperty(sTablePath, aListData.map(function(item){
+
+                //     if(item.crudFlg === "D"){
+                //         return item;
+                //     }else if(item.crudFlg === "I"){
+                //         item.rowEditable = bSeletFlg;
+                //         return item;
+                //     }
+
+                //     item.rowEditable = bSeletFlg;
+                //     item.crudFlg = "U";
+                //     item.tansaction_code = "U";
+                //     return item;
+                //     }));
+                //         return;
                             
-                }
+                // }
 
                 if(oRowData.crudFlg === "D"){
                     return;
@@ -652,6 +677,27 @@ sap.ui.define([
            
 
             
+        }
+         , onChangeEdit : function(oEvent){
+            var oControl, oContext, oBindContxtPath, oBingModel, oRowData;
+
+            oControl = oEvent.getSource();
+            oContext = oControl.getBindingContext("TwoView");
+            oBingModel = oContext.getModel();
+            oBindContxtPath = oContext.getPath();
+            oRowData = oContext.getObject();
+
+            if(oRowData.crudFlg === "D"){
+                return;
+            }else if(oRowData.crudFlg === "I"){
+                oBingModel.setProperty(oBindContxtPath, oRowData);
+                return;
+            }
+
+            oRowData.crudFlg = "U";
+            oRowData.tansaction_code = "U";
+
+            oBingModel.setProperty(oBindContxtPath, oRowData)
         }
         ,/**
         * 메인화면으로 이동
@@ -709,6 +755,29 @@ sap.ui.define([
 
             }
         },
+        onPressLayoutChange : function(oEvent){
+                var oControl, oView, oViewModel, sLayout, sIcon, sBtnScreenText;
+
+                oControl = oEvent.getSource();
+                oView = this.getView();
+
+                var oComponent = this.getOwnerComponent();
+                oViewModel = oComponent.getModel("viewModel");
+
+                sIcon = oControl.getIcon();
+
+                if(sIcon === "sap-icon://full-screen"){
+                    sLayout = "MidColumnFullScreen";
+                    sBtnScreenText = "sap-icon://exit-full-screen";
+                }else{
+                    sLayout = "TwoColumnsMidExpanded";
+                    sBtnScreenText = "sap-icon://full-screen";
+                }
+
+                oViewModel.setProperty("/App/layout", sLayout);
+                oViewModel.setProperty("/App/btnScreen", sBtnScreenText);
+                
+            },
         /**
          * footer Cancel 버튼 기능
          * @public

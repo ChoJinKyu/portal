@@ -104,7 +104,7 @@
                            <HBox alignItems="Center" width="100%">
                             <VBox>
                                 <Label
-                                    text="{I18N>/APPROVAL_TITLE}"                                      
+                                    text="{I18N>/APPROVAL_TITLE} : "                                      
                                     class="sapUiTinyMarginEnd"
                                     textAlign="Left"
                                     labelFor="input"/>
@@ -117,32 +117,16 @@
                                 </Label>
                             </VBox>
                            </HBox>                           
-                            <HBox alignItems="Center" width="100%">
-                                <VBox>
+                            <HBox alignItems="Center" width="100%" id="Hbox_approval_contents" >
+                                <!-- <VBox>
                                 <Label
                                     text="{I18N>/APPROVAL_CONTENTS}"                           
                                     class="sapUiTinyMarginEnd"
                                     textAlign="Left"
                                     labelFor="input"/>
-                                </VBox> 
-                                <VBox alignItems="Left" width="100%">
-                                 <richtexteditor:RichTextEditor
-                                    editorType="TinyMCE4"
-                                    width="100%"
-                                    height="200px"
-                                    editable="false"
-                                    customToolbar="false"
-                                    showGroupClipboard="false"
-                                    showGroupFont="false"
-                                    showGroupFontStyle="false"
-                                    showGroupInsert="false"
-                                    showGroupLink="false"
-                                    showGroupStructure="false"
-                                    showGroupTextAlign="false"
-                                    showGroupUndo="false"
-                                    
-                                    value="{detailModel>/mst/approval_contents}">
-                                </richtexteditor:RichTextEditor>
+                                </VBox>  -->
+                                <VBox alignItems="Left" width="100%" id="Vbox_approval_contents">
+                                    <layout:VerticalLayout id="idApprovalContentsTextEditor" class="sapUiTinyMarginEnd" width="100%"></layout:VerticalLayout>                                 
                                 <!-- <FormattedText htmlText="{detailModel>/mst/approval_contents}"  width="40em"  /> -->
                                 </VBox>   
                             </HBox>
@@ -705,7 +689,7 @@
                                     </table:template>
                                 </table:Column>
 
-                                <table:Column   hAlign="Center" 
+                                <table:Column   hAlign="Center" width="10em"
                                                 visible="{
                                                     path: 'OPUI>/SERVICE-GROSS_AMOUNT',
                                                     type: 'sap.ui.model.type.Bool',
@@ -717,19 +701,19 @@
                                                     path:'detailModel>gross_amount',
                                                     type: 'sap.ui.model.type.currency',
                                                     formatter: '.numberFormatter.toNumberString'
-                                                    }"/>
+                                                    }"  hAlign="End"/>
                                     </table:template>
                                 </table:Column>
 
-                                <table:Column   hAlign="Center" width="5em"
+                                <table:Column   hAlign="Center" width="8em"
                                                 visible="{
                                                     path: 'OPUI>/SERVICE-CURRENCY_CODE',
                                                     type: 'sap.ui.model.type.Bool',
                                                     formatter: '.uiControlSet.toColumnVisible'
                                                     }">
                                     <Label text="{I18N>/CURRENCY_CODE}"/>
-                                    <table:template width="5em" >
-                                        <Text hAlign="End" text="{detailModel>currency_code}"/>
+                                    <table:template >
+                                        <Text text="{detailModel>currency_code}" hAlign="End" />
                                     </table:template>
                                 </table:Column>
 

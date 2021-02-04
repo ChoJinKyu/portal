@@ -319,47 +319,47 @@
       <keyMapping columnObjectName="Join_2" columnName="REQUESTOR_EMPNO"/>
     </attribute>
     <attribute id="REQUESTOR_LOCAL_NAME" order="6" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="EMPLOYEE_LOCAL_NAME"/>
+      <descriptions defaultDescription="REQUESTOR_LOCAL_NAME"/>
       <keyMapping columnObjectName="Join_2" columnName="EMPLOYEE_LOCAL_NAME"/>
     </attribute>
     <attribute id="REQUESTOR_KOREAN_NAME" order="7" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="EMPLOYEE_KOREAN_NAME"/>
+      <descriptions defaultDescription="REQUESTOR_KOREAN_NAME"/>
       <keyMapping columnObjectName="Join_2" columnName="EMPLOYEE_KOREAN_NAME"/>
     </attribute>
     <attribute id="REQUESTOR_ENGLISH_NAME" order="8" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="EMPLOYEE_ENGLISH_NAME"/>
+      <descriptions defaultDescription="REQUESTOR_ENGLISH_NAME"/>
       <keyMapping columnObjectName="Join_2" columnName="EMPLOYEE_ENGLISH_NAME"/>
     </attribute>
     <attribute id="REQUESTOR_DEPARTMENT_CODE" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="DEPARTMENT_CODE"/>
+      <descriptions defaultDescription="REQUESTOR_DEPARTMENT_CODE"/>
       <keyMapping columnObjectName="Join_2" columnName="REQUESTOR_DEPARTMENT_CODE"/>
     </attribute>
     <attribute id="REQUESTOR_DEPARTMENT_LOCAL_NAME" order="10" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="DEPARTMENT_LOCAL_NAME"/>
+      <descriptions defaultDescription="REQUESTOR_DEPARTMENT_LOCAL_NAME"/>
       <keyMapping columnObjectName="Join_2" columnName="REQUESTOR_DEPARTMENT_LOCAL_NAME"/>
     </attribute>
     <attribute id="REQUESTOR_DEPARTMENT_KOREAN_NAME" order="11" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="DEPARTMENT_KOREAN_NAME"/>
+      <descriptions defaultDescription="REQUESTOR_DEPARTMENT_KOREAN_NAME"/>
       <keyMapping columnObjectName="Join_2" columnName="REQUESTOR_DEPARTMENT_KOREAN_NAME"/>
     </attribute>
     <attribute id="REQUESTOR_DEPARTMENT_ENGLISH_NAME" order="12" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="DEPARTMENT_ENGLISH_NAME"/>
+      <descriptions defaultDescription="REQUESTOR_DEPARTMENT_ENGLISH_NAME"/>
       <keyMapping columnObjectName="Join_2" columnName="REQUESTOR_DEPARTMENT_ENGLISH_NAME"/>
     </attribute>
     <attribute id="TAX_ID" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="TAX_ID"/>
       <keyMapping columnObjectName="Join_2" columnName="TAX_ID"/>
     </attribute>
-    <attribute id="SUPPLIER_CODE" order="14" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="SUPPLIER_CODE"/>
+    <attribute id="MAKER_CODE" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_CODE"/>
       <keyMapping columnObjectName="Join_2" columnName="SUPPLIER_CODE"/>
     </attribute>
-    <attribute id="SUPPLIER_LOCAL_NAME" order="15" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="SUPPLIER_LOCAL_NAME"/>
+    <attribute id="MAKER_LOCAL_NAME" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_LOCAL_NAME"/>
       <keyMapping columnObjectName="Join_2" columnName="SUPPLIER_LOCAL_NAME"/>
     </attribute>
-    <attribute id="SUPPLIER_ENGLISH_NAME" order="16" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="SUPPLIER_ENGLISH_NAME"/>
+    <attribute id="MAKER_ENGLISH_NAME" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_ENGLISH_NAME"/>
       <keyMapping columnObjectName="Join_2" columnName="SUPPLIER_ENGLISH_NAME"/>
     </attribute>
     <attribute id="COUNTRY_CODE" order="17" displayAttribute="false" attributeHierarchyActive="false">
@@ -378,44 +378,44 @@
       <descriptions defaultDescription="ZIP_CODE"/>
       <keyMapping columnObjectName="Join_2" columnName="ZIP_CODE"/>
     </attribute>
-    <attribute id="LOCAL_ADDRESS_1" order="21" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="LOCAL_ADDRESS_1"/>
+    <attribute id="MAKER_LOCAL_CITY" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_LOCAL_CITY"/>
       <keyMapping columnObjectName="Join_2" columnName="LOCAL_ADDRESS_1"/>
     </attribute>
-    <attribute id="LOCAL_ADDRESS_2" order="22" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="LOCAL_ADDRESS_2"/>
+    <attribute id="MAKER_LOCAL_REGION" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_LOCAL_REGION"/>
       <keyMapping columnObjectName="Join_2" columnName="LOCAL_ADDRESS_2"/>
     </attribute>
-    <attribute id="LOCAL_ADDRESS_3" order="23" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="LOCAL_ADDRESS_3"/>
+    <attribute id="MAKER_LOCAL_ADDRESS" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_LOCAL_ADDRESS"/>
       <keyMapping columnObjectName="Join_2" columnName="LOCAL_ADDRESS_3"/>
     </attribute>
-    <attribute id="LOCAL_FULL_ADDRESS" order="24" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="LOCAL_FULL_ADDRESS"/>
+    <attribute id="MAKER_LOCAL_FULL_ADDRESS" order="24" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_LOCAL_FULL_ADDRESS"/>
       <keyMapping columnObjectName="Join_2" columnName="LOCAL_FULL_ADDRESS"/>
     </attribute>
-    <attribute id="ENGLISH_ADDRESS_1" order="25" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ENGLISH_ADDRESS_1"/>
+    <attribute id="MAKER_ENGLISH_CITY" order="25" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_ENGLISH_CITY"/>
       <keyMapping columnObjectName="Join_2" columnName="ENGLISH_ADDRESS_1"/>
     </attribute>
-    <attribute id="ENGLISH_ADDRESS_2" order="26" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ENGLISH_ADDRESS_2"/>
+    <attribute id="MAKER_ENGLISH_REGION" order="26" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_ENGLISH_REGION"/>
       <keyMapping columnObjectName="Join_2" columnName="ENGLISH_ADDRESS_2"/>
     </attribute>
-    <attribute id="ENGLISH_ADDRESS_3" order="27" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ENGLISH_ADDRESS_3"/>
+    <attribute id="MAKER_ENGLISH_ADDRESS" order="27" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_ENGLISH_ADDRESS"/>
       <keyMapping columnObjectName="Join_2" columnName="ENGLISH_ADDRESS_3"/>
     </attribute>
-    <attribute id="ENGLISH_FULL_ADDRESS" order="28" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ENGLISH_FULL_ADDRESS"/>
+    <attribute id="MAKER_ENGLISH_FULL_ADDRESS" order="28" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_ENGLISH_FULL_ADDRESS"/>
       <keyMapping columnObjectName="Join_2" columnName="ENGLISH_FULL_ADDRESS"/>
     </attribute>
     <attribute id="AFFILIATE_CODE" order="29" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="AFFILIATE_CODE"/>
       <keyMapping columnObjectName="Join_2" columnName="AFFILIATE_CODE"/>
     </attribute>
-    <attribute id="AFFILIATE_CODE_NAME" order="30" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="AFFILIATE_CODE_NAME"/>
+    <attribute id="AFFILIATE_NAME" order="30" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AFFILIATE_NAME"/>
       <keyMapping columnObjectName="Join_2" columnName="AFFILIATE_CODE_NAME"/>
     </attribute>
     <attribute id="COMPANY_CLASS_CODE" order="31" displayAttribute="false" attributeHierarchyActive="false">
@@ -426,24 +426,24 @@
       <descriptions defaultDescription="COMPANY_CLASS_NAME"/>
       <keyMapping columnObjectName="Join_2" columnName="COMPANY_CLASS_NAME"/>
     </attribute>
-    <attribute id="REPRE_NAME" order="33" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="REPRE_NAME"/>
+    <attribute id="REPRESENT_NAME" order="33" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REPRESENT_NAME"/>
       <keyMapping columnObjectName="Join_2" columnName="REPRE_NAME"/>
     </attribute>
-    <attribute id="TEL_NUMBER" order="34" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="TEL_NUMBER"/>
+    <attribute id="COMPANY_TEL_NUMBER" order="34" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COMPANY_TEL_NUMBER"/>
       <keyMapping columnObjectName="Join_2" columnName="TEL_NUMBER"/>
     </attribute>
-    <attribute id="EMAIL_ADDRESS" order="35" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="EMAIL_ADDRESS"/>
+    <attribute id="COMPANY_EMAIL_ADDRESS" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COMPANY_EMAIL_ADDRESS"/>
       <keyMapping columnObjectName="Join_2" columnName="EMAIL_ADDRESS"/>
     </attribute>
-    <attribute id="SUPPLIER_STATUS_CODE" order="36" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="SUPPLIER_STATUS_CODE"/>
+    <attribute id="MAKER_STATUS_CODE" order="36" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_STATUS_CODE"/>
       <keyMapping columnObjectName="Join_2" columnName="SUPPLIER_STATUS_CODE"/>
     </attribute>
-    <attribute id="SUPPLIER_STATUS_NAME" order="37" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="SUPPLIER_STATUS_NAME"/>
+    <attribute id="MAKER_STATUS_NAME" order="37" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MAKER_STATUS_NAME"/>
       <keyMapping columnObjectName="Join_2" columnName="SUPPLIER_STATUS_NAME"/>
     </attribute>
     <attribute id="BIZ_CERTI_ATTCH_NUMBER" order="38" displayAttribute="false" attributeHierarchyActive="false">

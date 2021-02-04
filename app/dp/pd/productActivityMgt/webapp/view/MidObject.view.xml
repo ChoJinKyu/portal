@@ -21,6 +21,13 @@
 		showFooter="true">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
+                <uxap:heading>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <Title text="{I18N>/PRODUCT_ACTIVITY} {I18N>/DETAIL}" wrapping="true" class="" />
+                    </HBox>
+                </uxap:heading>	
+
 				<uxap:expandedHeading>
 					<Title text="{I18N>/PRODUCT_ACTIVITY_DETAIL}" wrapping="true" />
 				</uxap:expandedHeading>
@@ -35,9 +42,8 @@
 					<Title text="{I18N>/PRODUCT_ACTIVITY_DETAIL}" />
 				</uxap:snappedTitleOnMobile>
                 <uxap:navigationActions>
-					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
-					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
-					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${fcl>/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
+					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${fcl>/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -47,24 +53,26 @@
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
 						<Label text="{= !${midObjectViewModel>/isAddedMode} ? ${I18N>/UPDATE_USER_ID} : ${I18N>/CREATE_USER_ID}} : " />
-						<Text text="{master>/update_user_id}"/>
+						<Label text="{master>/update_user_id}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
 					</layout:HorizontalLayout>
 				</layout:VerticalLayout>
 
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
-						<Label text="{= !${midObjectViewModel>/isAddedMode} ? ${I18N>/CHANGE_DATE} : ${I18N>/CREATION_DATE}} : "/>
-						<Text text="{
-                                    path: 'master>/local_update_dtm',
-                                    formatter: '.dateFormatter.toDateString'
-                                    }"/>
+						<Label text="{I18N>/LATEST} {I18N>/CHANGE} {I18N>/DATE_TIME}" class="sapUiLargeMarginBegin"/>
+						<Label text="{
+                                        path: 'master>/local_update_dtm',
+                                        formatter: '.dateFormatter.toUTCDateTimeString'
+                                    }"
+                                class="sapUiTinyMarginBegin"  
+                                design="Bold"/>
 					</layout:HorizontalLayout>
 				</layout:VerticalLayout>
 			</FlexBox>
 		</uxap:headerContent>
 
 		<uxap:sections>
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="General Info(x)">
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/GENERAL_INFO}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
 
@@ -73,21 +81,22 @@
                                 <Label  
                                     text="{I18N>/ACTIVITY_CODE} :" 
                                     design="Bold" 
+                                    required="{= ${midObjectViewModel>/isAddedMode} }"
                                     class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
                                     <Text visible="{= !${midObjectViewModel>/isAddedMode} }" text="{master>/product_activity_code}" class="sapMLabelNoText"/> 
-                                    <Input visible="{= ${midObjectViewModel>/isAddedMode} }" value="{master>/product_activity_code}" class="sapMLabelNoText"/> 
+                                    <Input required="{= ${midObjectViewModel>/isAddedMode} }" visible="{= ${midObjectViewModel>/isAddedMode} }" value="{master>/product_activity_code}" class="sapMLabelNoText"/> 
                                     <!-- <Input id="input_category_text" visible="false"/> -->
                             </layout:VerticalLayout>
                         </FlexBox>
 
-                        <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
+                        <FlexBox visible="{= !${midObjectViewModel>/isAddedMode} }" height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
                             <layout:VerticalLayout class="sapUiLargeMarginEnd">
                                 <Label  
                                     text="{I18N>/SEQUENCE} :" 
                                     design="Bold" 
                                     class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
-                                    <Text visible="{= ${midObjectViewModel>/editMode} ? ${midObjectViewModel>/isAddedMode} ? true : false : true }" text="{master>/sequence}" class="sapMLabelNoText"/> 
-                                    <Input visible="{= ${midObjectViewModel>/editMode} ? ${midObjectViewModel>/isAddedMode} ? false : true : false }" type="Number" value="{master>/sequence}" class="sapMLabelNoText"/> 
+                                    <Text visible="{= !${midObjectViewModel>/editMode} }" text="{master>/sequence}" class="sapMLabelNoText"/> 
+                                    <Input visible="{midObjectViewModel>/editMode}" type="Number" value="{master>/sequence}" class="sapMLabelNoText"/> 
                             </layout:VerticalLayout>
                         </FlexBox>
 
@@ -108,15 +117,15 @@
                                     text="{I18N>/STATUS} :" 
                                     design="Bold" 
                                     class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
-                                <Text visible="{= !${midObjectViewModel>/editMode} }" text="{path: 'master>/active_flag', formatter: '.viewFormatter.toStatus'}" class="sapMLabelNoText"/> 
                                 <SegmentedButton 
                                     id="segmentedbutton_use_flag"
-                                    selectedKey="{path: 'master>/active_flag', formatter: '.viewFormatter.toStatus'}"
-                                    visible="{midObjectViewModel>/editMode}"
+                                    selectionChange="aaa"
+                                    selectedKey="{master>/active_flag}"
+                                    enabled="{midObjectViewModel>/editMode}"
                                     width="100%">
                                     <items>
-                                        <SegmentedButtonItem text="Active" width="4em" key="Active"/>
-                                        <SegmentedButtonItem text="Inactive" width="5em" key="Inactive"/>
+                                        <SegmentedButtonItem text="Active" width="5em" key="true"/>
+                                        <SegmentedButtonItem text="Inactive" width="5em" key="false"/>
                                     </items>
                                 </SegmentedButton> 
                             </layout:VerticalLayout>    
@@ -126,69 +135,9 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection titleUppercase="false" title="언어(x)">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/MULTILINGUAL} ({= (${details>/PdProdActivityTemplateLng})?${details>/PdProdActivityTemplateLng}.length:0})">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-						<!-- <t:Table 
-                            id="pdActivityLengTable" 
-                            rows="{details>/PdProdActivityTemplateLng}"
-                            selectionMode="{= ${midObjectViewModel>/editMode} ? 'MultiToggle' : 'None' }"
-                            visibleRowCount="{= ${details>/PdProdActivityTemplateLng}.length }"
-                            columnResize=".onColumnResize"
-                            rowSelectionChange=".onMainTableItemPress"
-                            width="auto">
-                            <t:extension>
-                                <OverflowToolbar class="sapFDynamicPageAlignContent">
-                                    <ToolbarSpacer/>
-                                    <Button visible="{midObjectViewModel>/editMode}" text="행추가(x)" press=".onPdActivityLengCreate"  type="Transparent"/>
-                                    <Button visible="{midObjectViewModel>/editMode}" text="삭제(x)" press=".onPdActivityLengDelete"/>
-                                    
-                                </OverflowToolbar>
-                            </t:extension>
-
-                            <t:columns>
-
-                                <t:Column hAlign="Center">
-                                    <Text text="언어 코드(x)" />
-                                    <t:template>
-                                        <VBox>
-
-                                            <ComboBox
-                                                id="langDataComboBox"
-                                                width="150px"
-                                                selectedKey="{details>language_cd}"
-                                                required="{= ${details>addItem}}"
-                                                visible="{= ${details>addItem}}"
-                                                items="{
-                                                    path: 'langDataModel>/',
-                                                    templateShareable:true
-                                                }">
-                                                <items>
-                                                    <core:Item key="{langDataModel>code}" text="{langDataModel>code} - {langDataModel>code_name}" />
-                                                </items>
-                                            </ComboBox>
-
-                                            <Text text="{details>language_cd}" visible="{= !${details>addItem}}" ></Text>  
-                                        </VBox> 
-                                    </t:template>
-                                </t:Column>
-
-                                <t:Column visible="{= !${midObjectViewModel>/editMode} }" hAlign="Center">
-                                    <Text text="Activity 명(x)" />
-                                    <t:template>
-                                        <Text text="{details>code_name}" ></Text>  
-                                    </t:template>
-                                </t:Column>
-
-                                <t:Column visible="{midObjectViewModel>/editMode}" hAlign="Center">
-                                    <Text text="Activity 명(x)" />
-                                    <t:template>
-                                        <Input value="{details>code_name}" ></Input>  
-                                    </t:template>
-                                </t:Column>
-
-                            </t:columns>  
-                        </t:Table> -->
 
                         <Table
                             id="pdActivityLengTable" 
@@ -203,8 +152,8 @@
                                 <Toolbar visible="{midObjectViewModel>/editMode}">
                                     <ToolbarSpacer/>
                                     <HBox >
-                                        <Button text="행추가(x)" press=".onPdActivityLengCreate"  type="Transparent"/>
-                                        <Button text="삭제(x)" press=".onPdActivityLengDelete"/>
+                                        <Button text="{I18N>/ROW_ADD}" press=".onPdActivityLengCreate"  type="Transparent"/>
+                                        <Button text="{I18N>/ROW_DELETE}" press=".onPdActivityLengDelete"/>
                                     </HBox>
                                 </Toolbar>
                             </headerToolbar>
@@ -266,11 +215,12 @@
 		
 		<uxap:footer>
 			<OverflowToolbar>
-				<ToolbarSpacer />
-				<Button enabled="{midObjectViewModel>/editMode}" type="Transparent" text="취소(x)" press=".onPageCancelButton" />
-				<Button enabled="{= !${midObjectViewModel>/editMode} }" type="Transparent" text="수정(x)" press=".onPageEditeButton" />
-                <Button enabled="{midObjectViewModel>/editMode}" type="Transparent" text="삭제(x)" press=".onPageDeleteButton" />
-                <Button enabled="{midObjectViewModel>/editMode}" type="Emphasized" text="저장(x)" press=".onPageSaveButton" />
+                <ToolbarSpacer />
+                
+                <Button enabled="{= !${midObjectViewModel>/editMode} }" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditeButton" />							
+                <Button enabled="{midObjectViewModel>/editMode}" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButton"/>
+                <Button enabled="{midObjectViewModel>/editMode}" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteButton"/>
+                <Button enabled="{midObjectViewModel>/editMode}" type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButton" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

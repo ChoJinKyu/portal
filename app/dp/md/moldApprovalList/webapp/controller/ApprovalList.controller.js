@@ -59,6 +59,7 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
+            
             appThis = this;
             var oViewModel,
                 oResourceBundle = this.getResourceBundle();
@@ -96,7 +97,6 @@ sap.ui.define([
             this.getRouter().getRoute("approvalList").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._doInitTablePerso();
-
         },
         
         /**
@@ -156,24 +156,25 @@ sap.ui.define([
 
 
         setPlant: function(companyCode){
-            
+            // session에서 받아오는 tenant_id를 변수로 저장함
+            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID ),
+                                    new Filter("tenant_id", FilterOperator.EQ, sTenant_id),
                                     new Filter("company_code", FilterOperator.EQ, companyCode)
                                 ],
                                 and: true
                         });
 
             var bindItemInfo = {
-                    path: '/Divisions',
+                    path: 'dpMdUtil>/Divisions',
                     filters: filter,
                     template: new Item({
-                        key: "{org_code}", text: "[{org_code}] {org_name}"
+                        key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
                     })
                 };
-
-                
+            
+            console.log( bindItemInfo)    ;
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
             this.getView().byId("searchPlantE").bindItems(bindItemInfo);
         },
@@ -311,7 +312,8 @@ sap.ui.define([
         * @see (멀티박스)Company와 Plant 부분 연관성 포함함
         */
         handleSelectionFinishComp: function (oEvent) {
-
+            // session에서 받아오는 tenant_id를 변수로 저장함
+            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
             this.copyMultiSelected(oEvent);
 
             var params = oEvent.getParameters();
@@ -323,7 +325,7 @@ sap.ui.define([
 
                     plantFilters.push(new Filter({
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID),
+                            new Filter("tenant_id", FilterOperator.EQ, sTenant_id),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
                         and: true
@@ -331,7 +333,7 @@ sap.ui.define([
                 });
             } else {
                 plantFilters.push(
-                    new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)
+                    new Filter("tenant_id", FilterOperator.EQ, sTenant_id)
                 );
             }
  
@@ -341,10 +343,10 @@ sap.ui.define([
             });
 
             var bindInfo = {
-                    path: '/Divisions',
+                    path: 'dpMdUtil>/Divisions',
                     filters: filter,
                     template: new Item({
-                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                    key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
                     })
                 };
 
@@ -647,27 +649,27 @@ sap.ui.define([
         },
 
         dialogChangeComp: function (oEvent) {
-
             this.copySelected(oEvent);
-
             var source = oEvent.getSource();
-            var plantFilter = [];
-
-            plantFilter.push(new Filter({
-                filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID),
-                    new Filter("company_code", FilterOperator.EQ, source.getSelectedKey())
-                ],
-                and: true
-            }));
-
-
+            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
             var filter = new Filter({
-                filters: plantFilter,
-                and: false
-            });
+                            filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, sTenant_id),
+                                    new Filter("company_code", FilterOperator.EQ, source.getSelectedKey())
+                                ],
+                                and: true
+                        });
 
-            this.getView().byId("searchPlantF").getBinding("items").filter(filter, "Application");
+            var bindItemInfo = {
+                    path: 'dpMdUtil>/Divisions',
+                    filters: filter,
+                    template: new Item({
+                        key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
+                    })
+                };
+            
+            console.log( bindItemInfo)    ;
+            this.getView().byId("searchPlantF").bindItems(bindItemInfo);
         },
 
 
@@ -961,14 +963,15 @@ sap.ui.define([
         },
         
         _segmentSrch : function (){
-             
+            // session에서 받아오는 tenant_id를 변수로 저장함
+            var sTenant_id=this.getSessionUserInfo().TENANT_ID; 
             var oView = this.getView(),
                 oModel = this.getModel("SegmentedItem") ,
                 codeName = this.getModel('I18N').getText("/ALL")
                 ;
             
              var aSearchFilters = [];
-                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID));
+                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
                 aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'CM_APPROVE_STATUS'));
 
 
@@ -1010,6 +1013,8 @@ sap.ui.define([
         * @see List search 할 값 필터링 관련 메소드 
         */
         _getSearchStates: function () {
+            // session에서 받아오는 tenant_id를 변수로 저장함
+            var sTenant_id=this.getSessionUserInfo().TENANT_ID; 
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
 
             var aCompany = this.getView().byId("searchCompany" + sSurffix).getSelectedKeys();
@@ -1121,7 +1126,7 @@ sap.ui.define([
             }
 
             
-            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID));
+            aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
             return aSearchFilters;
         },
 

@@ -74,7 +74,7 @@
                         <form:SimpleForm editable="false">
                             <core:Title text="Boundry" />
                             <Label text="Site"/>
-                            <lib-m:EditModeVBox editableValue="{master>/__metadata/_row_editable_}">
+                            <lib-m:EditModeVBox editMode="{midObjectViewModel>/isEditMode}">
                                 <Text text="{path: 'master>/site_flag', formatter: '.viewFormatter.toYesNo'}"></Text>
                                 <Switch state="{master>/site_flag}" customTextOn="Yes" customTextOff="No">
                                     <layoutData>
@@ -84,7 +84,7 @@
                             </lib-m:EditModeVBox>
 
                             <Label text="Company"/>
-                            <lib-m:EditModeVBox editableValue="{master>/__metadata/_row_editable_}">
+                            <lib-m:EditModeVBox editMode="{midObjectViewModel>/isEditMode}">
                                 <Text text="{path: 'master>/company_flag', formatter: '.viewFormatter.toYesNo'}"></Text>
                                 <Switch state="{master>/company_flag}" customTextOn="Yes" customTextOff="No">
                                     <layoutData>
@@ -94,7 +94,7 @@
                             </lib-m:EditModeVBox>
 
                             <Label text="Role"/>
-                            <lib-m:EditModeVBox editableValue="{master>/__metadata/_row_editable_}">
+                            <lib-m:EditModeVBox editMode="{midObjectViewModel>/isEditMode}">
                                 <Text text="{path: 'master>/role_flag', formatter: '.viewFormatter.toYesNo'}"></Text>
                                 <Switch state="{master>/role_flag}" customTextOn="Yes" customTextOff="No">
                                     <layoutData>
@@ -104,7 +104,7 @@
                             </lib-m:EditModeVBox>
 
                             <Label text="Organization"/>
-                            <lib-m:EditModeVBox editableValue="{master>/__metadata/_row_editable_}">
+                            <lib-m:EditModeVBox editMode="{midObjectViewModel>/isEditMode}">
                                 <Text text="{path: 'master>/organization_flag', formatter: '.viewFormatter.toYesNo'}"></Text>
                                 <Switch state="{master>/organization_flag}" customTextOn="Yes" customTextOff="No">
                                     <layoutData>
@@ -114,7 +114,7 @@
                             </lib-m:EditModeVBox>
 
                             <Label text="User"/>
-                            <lib-m:EditModeVBox editableValue="{master>/__metadata/_row_editable_}">
+                            <lib-m:EditModeVBox editMode="{midObjectViewModel>/isEditMode}">
                                 <Text text="{path: 'master>/user_flag', formatter: '.viewFormatter.toYesNo'}"></Text>
                                 <Switch state="{master>/user_flag}" customTextOn="Yes" customTextOff="No">
                                     <layoutData>

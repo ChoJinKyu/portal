@@ -22,7 +22,7 @@
   3. history
     -. 2021.02.01 : 우완희
 *************************************************/
-
+using { cm.Spp_User_Session_View     as CM_SPP_USER_SESSION_VIEW     } from '../../../../../db/cds/cm/util/CM_SPP_USER_SESSION_VIEW-model';
 using { cm.Code_Dtl                  as CM_CODE_DTL                  } from '../../../../../db/cds/cm/CM_CODE_DTL-model';
 using { cm.Code_Lng                  as CM_CODE_LNG                  } from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using { cm.Pur_Operation_Org         as CM_PUR_OPERATION_ORG         } from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
@@ -34,12 +34,16 @@ using { cm.Hr_Department             as CM_HR_DEPARTMENT             } from '../
 using { sp.Np_Net_Price_Approval_Mst as SP_NP_NET_PRICE_APPROVAL_MST } from '../../../../../db/cds/sp/np/SP_NP_NET_PRICE_APPROVAL_MST-model';
 using { sp.Np_Net_Price_Approval_Dtl as SP_NP_NET_PRICE_APPROVAL_DTL } from '../../../../../db/cds/sp/np/SP_NP_NET_PRICE_APPROVAL_DTL-model';
 using { sp.Np_Base_Price_Mst         as SP_NP_BASE_PRICE_MST         } from '../../../../../db/cds/sp/np/SP_NP_BASE_PRICE_MST-model';
-
+using { sp.Np_Net_Price_Mst          as SP_NP_NET_PRICE_MST          } from '../../../../../db/cds/sp/np/SP_NP_NET_PRICE_MST-model';
+ 
 /* 공급사 마스터 */
 using { sp.Sm_Supplier_Mst           as SP_SM_SUPPLIER_MST           } from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';
 
 /* vendor pool 마스터 */
 using { pg.Vp_Vendor_Pool_Mst        as PG_VP_VENDOR_POOL_MST        } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_MST-model';
+
+
+
 
 
 namespace sp;
@@ -51,59 +55,84 @@ service NpApprovalDetailService {
     /* 단가품의 마스터조회 */
     view MasterView as
         SELECT
-               key pam.tenant_id
-             , key pam.company_code
-             , key pam.org_type_code
-             , key pam.org_code	                    /* operating org */
-             , key pam.approval_number              /* Approval No. */
+                key pam.tenant_id
+             ,  key pam.company_code
+             ,  key pam.org_type_code
+             ,  key pam.org_code	                            /* operating org */
+             ,  key pam.approval_number                         /* Approval No. */
 
-             , (SELECT org.org_name
-                  FROM CM_PUR_OPERATION_ORG  org
-                 WHERE org.tenant_id     = pam.tenant_id
-                   AND org.company_code  = pam.company_code
-                   AND org.org_type_code = pam.org_type_code
-                   AND org.org_code      = pam.org_code
-			   ) AS org_name : String               /* org */
+             ,  (SELECT org.org_name
+                   FROM CM_PUR_OPERATION_ORG  org
+                  WHERE org.tenant_id     = pam.tenant_id
+                    AND org.company_code  = pam.company_code
+                    AND org.org_type_code = pam.org_type_code
+                    AND org.org_code      = pam.org_code
+			    ) AS org_name : String                          /* org */
 
-            ,   cam.approval_title                   /* title !!! */
-            ,   cam.approve_status_code              /* status !!! */
 
-            ,   pam.net_price_document_type_code    /* 단가문서유형코드 */
-            ,   pam.net_price_source_code           /* 견적번호??? */
+            ,   cam.requestor_empno                             /* requestor */
+			,   CASE WHEN ssi.LANGUAGE_CODE = 'EN' THEN che.user_english_name
+			         WHEN ssi.LANGUAGE_CODE = 'KO' THEN che.user_local_name
+					 ELSE che.user_english_name
+			    END AS requestor_empnm : String
 
-             , (SELECT cd.code_name
-                  FROM CM_CODE_LNG AS cd
-                 WHERE cd.tenant_id   = cam.tenant_id
-                   AND cd.group_code  = 'sp_net_price_type'
-                   AND cd.language_cd = clc.language_code
-               	   AND cd.code        = cam.approve_status_code
-			   )  AS approve_status_name : String
+            ,   cam.request_date                                /* request date */
+            ,   cam.approve_status_code                         /* status !!! */
 
-             , cam.requestor_empno                      /* requestor !!! */
-			 , CASE WHEN clc.language_code = 'EN' THEN che.user_english_name
-			        WHEN clc.language_code = 'KO' THEN che.user_local_name
-					ELSE che.user_english_name
-			   END AS requestor_empnm : String
+            ,   (SELECT cd.code_name
+                   FROM CM_CODE_LNG AS cd
+                  WHERE cd.tenant_id   = cam.tenant_id
+                    AND cd.group_code  = 'SP_NET_PRICE_APPR_STATUS'
+                    AND cd.language_cd = ssi.LANGUAGE_CODE
+               	    AND cd.code        = cam.approve_status_code
+			    )  AS approve_status_name : String
 
-			 , CASE WHEN clc.language_code = 'EN' THEN chd.department_english_name
-			        WHEN clc.language_code = 'KO' THEN chd.department_local_name
-					ELSE che.user_english_name
-			   END AS requestor_teamnm : String         /* requestor team */
+            ,   cam.approval_title                              /* title !!! */
 
-                                                        /* ??? outcome ??? */
-             , cam.request_date                         /* request date !!!! */
-                                                        /* ??? negotiation no ??? */
-             , pam.local_create_dtm AS creation_date    /* creation date */
+            ,   pam.net_price_document_type_code                /* 단가문서유형코드 */
+            ,   (SELECT cd.code_name
+                   FROM CM_CODE_LNG AS cd
+                  WHERE cd.tenant_id   = cam.tenant_id
+                    AND cd.group_code  = 'SP_DOCUMENT_TYPE'
+                    AND cd.language_cd = ssi.LANGUAGE_CODE
+               	    AND cd.code        = pam.net_price_document_type_code
+			    )  AS net_price_document_type_name : String
+
+            ,   pam.net_price_source_code           
+            ,   (SELECT cd.code_name
+                   FROM CM_CODE_LNG AS cd
+                  WHERE cd.tenant_id   = cam.tenant_id
+                    AND cd.group_code  = 'NET_PRICE_SOURCE_CODE'
+                    AND cd.language_cd = ssi.LANGUAGE_CODE
+               	    AND cd.code        = pam.net_price_source_code
+			    )  AS net_price_source_name : String
+
+
+			,   CASE WHEN ssi.LANGUAGE_CODE = 'EN' THEN chd.department_english_name
+			         WHEN ssi.LANGUAGE_CODE = 'KO' THEN chd.department_local_name
+					 ELSE chd.department_english_name
+			    END AS requestor_teamnm : String         /* requestor team */
+
+            ,   pam.local_create_dtm AS creation_date    /* creation date */
+
+            ,   cam.approval_contents
+
+
 
         FROM SP_NP_NET_PRICE_APPROVAL_MST   pam
         
-         INNER JOIN (SELECT a.tenant_id 
+        INNER JOIN CM_SPP_USER_SESSION_VIEW  ssi
+            ON ssi.TENANT_ID         = pam.tenant_id
+           AND ssi.COMPANY_CODE      = pam.company_code
+
+        /*
+        INNER JOIN (SELECT a.tenant_id 
 					       ,a.code AS language_code
                        FROM CM_CODE_DTL a
                       WHERE a.group_code = 'CM_LANG_CODE'
-                     ) clc  /* 공통코드 언어코드(EN,KO) */
+                    ) clc  /* 공통코드 언어코드(EN,KO) /
 			ON clc.tenant_id         = pam.tenant_id
-        
+        */
         INNER JOIN CM_APPROVAL_MST          cam
             ON cam.tenant_id         = pam.tenant_id
            AND cam.approval_number   = pam.approval_number
@@ -151,18 +180,20 @@ service NpApprovalDetailService {
             ,   vpm.vendor_pool_english_name
 
             ,   pad.net_price_approval_reason_code	    /*	Reason code	*/
-            ,   (SELECT code_description 
-                   FROM CM_CODE_DTL 
+            ,   (SELECT code_name 
+                   FROM CM_CODE_LNG 
                   WHERE tenant_id = pad.tenant_id
-                    AND group_code = 'DP_VI_CHANGE_REASON_CODE'
+                    AND group_code = 'SP_NET_PRICE_REASON_CODE'
+                    AND language_cd = 'KO'
                     AND code = pad.net_price_approval_reason_code
                 ) as net_price_approval_reason_name : String               /*	Reason	*/
 
             ,   pad.market_code	                        /*	Market code 납선코드*/
-            ,   (SELECT code_description 
-                   FROM CM_CODE_DTL 
+            ,   (SELECT code_name 
+                   FROM CM_CODE_LNG 
                   WHERE tenant_id = pad.tenant_id
                     AND group_code = 'DP_VI_MARKET_CODE'
+                    AND language_cd = 'KO'
                     AND code = pad.market_code
                 ) as market_name : String               /*	Market	*/
                  
@@ -170,22 +201,24 @@ service NpApprovalDetailService {
             ,	pad.effective_end_date		            /*	유효종료일자	*/
 
             ,   pad.line_type_code	                    /*	Line Type Code	*/
-            ,   (SELECT code_description 
-                   FROM CM_CODE_DTL 
+            ,   (SELECT code_name 
+                   FROM CM_CODE_LNG 
                   WHERE tenant_id = pad.tenant_id
                     AND group_code = 'LINE_TYPE'
+                    AND language_cd = 'KO'
                     AND code = pad.line_type_code
                 ) as line_type_name : String            /*	Line Type	*/
 
             ,   pad.uom_code	                        /*	UOM	*/
 
-            ,   bpm.currency_code as curr_currency_code : String    /*	(현재)Currency	*/
-            ,   bpm.base_price as curr_net_price : Decimal          /*	(현재)Price	*/
+            ,   npm.currency_code as curr_currency_code : String    /*	(현재)Currency	*/
+            ,   npm.net_price as curr_net_price : Decimal(34,10)          /*	(현재)Price	*/
 
             ,   pad.currency_code	                    /*	(New)Currency	*/
-            ,   pad.net_price	                        /*	(New)Price	*/
+            ,   pad.net_price                           /*	(New)Price	*/
 
-            ,   null as change_rate	                    : String //pad.change_rate	                /*	변동비율(%)	*/
+            //,   TO_VARCHAR((ROUND(((npm.net_price)/pad.net_price),2,ROUND_HALF_UP))*100)
+            ,   null as change_rate	                    : String   /*	변동비율(%) 이전단가 대비 변동비 net_price 	*/
 
             ,   null as royalty	                        : String //pad.royalty	                    /*	로열티	*/
             ,   null as pcst	                        : String //pad.pcst	                        /*	임가공비	*/
@@ -195,10 +228,11 @@ service NpApprovalDetailService {
             ,   null as import_po_type	                : String //pad.import_po_type	            /*	Import PO 유형	*/
 
             ,   pad.surrogate_type_code	                /*	Surrogate code	*/
-            ,   (SELECT code_description 
-                   FROM CM_CODE_DTL 
+            ,   (SELECT code_name 
+                   FROM CM_CODE_LNG 
                   WHERE tenant_id = pad.tenant_id
                     AND group_code = 'SURROGATE'
+                    AND language_cd = 'KO'
                     AND code = pad.surrogate_type_code
                 ) as surrogate_type_name : String       /*	Surrogate	*/
 
@@ -206,22 +240,25 @@ service NpApprovalDetailService {
             ,   null as maker_name	                    : String //pad.maker_name	                    /*	Maker	*/
 
             ,   pad.payterms_code	                /*	Payment Term Code	*/
-            ,   (SELECT code_description 
-                   FROM CM_CODE_DTL 
+            ,   (SELECT code_name 
+                   FROM CM_CODE_LNG 
                   WHERE tenant_id = pad.tenant_id
                     AND group_code = 'PAYMENT_TERMS'
+                    AND language_cd = 'KO'
                     AND code = pad.payterms_code
                 ) as payterms_name : String         /*	Payment Term	*/
 
             ,   pad.net_price_agreement_sign_flag	/*	(단가합의) 여부	*/
             ,   pad.net_price_agreement_status_code	/*	(Supplier Agreement) Status code	*/
+
             ,   null as net_price_agreement_status_name	: String //pad.net_price_agreement_status_name	/*	(Supplier Agreement) Status	*/
 
             ,   pad.incoterms	                    /*	Incoterms Code	*/
-            ,   (SELECT code_description 
-                   FROM CM_CODE_DTL 
+            ,   (SELECT code_name 
+                   FROM CM_CODE_LNG 
                   WHERE tenant_id = pad.tenant_id
                     AND group_code = 'OP_INCOTERMS'
+                    AND language_cd = 'KO'
                     AND code = pad.incoterms
                 ) as incoterms_name : String         /*	Incoterms	*/
 
@@ -229,23 +266,23 @@ service NpApprovalDetailService {
 
         FROM SP_NP_NET_PRICE_APPROVAL_DTL pad
 
-        LEFT OUTER JOIN SP_NP_BASE_PRICE_MST bpm             /*  기준단가 마스터 */
-                ON pad.tenant_id        = bpm.tenant_id
-               AND pad.company_code     = bpm.company_code
-               AND pad.org_type_code    = bpm.org_type_code
-               AND pad.org_code         = bpm.org_code
-               AND pad.supplier_code    = bpm.supplier_code
-               AND pad.market_code      = bpm.market_code
-               AND bpm.apply_year = TO_VARCHAR (NOW(), 'YYYY')
-               AND apply_start_mm >= TO_VARCHAR (NOW(), 'MM')
-               AND apply_end_mm <= TO_VARCHAR (NOW(), 'MM')
-               AND bpm.use_flag = 'Y'
+        LEFT JOIN SP_NP_NET_PRICE_MST npm             /*  기준단가 마스터 */
+                ON pad.tenant_id        = npm.tenant_id
+               AND pad.company_code     = npm.company_code
+               AND pad.org_type_code    = npm.org_type_code
+               AND pad.org_code         = npm.org_code
 
-        LEFT OUTER JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
+               AND pad.supplier_code    = npm.supplier_code
+               AND pad.material_code    = npm.material_code
+               AND pad.market_code      = npm.market_code
+               AND npm.effective_start_date <= TO_VARCHAR (NOW(), 'YYYYMMDD')
+               AND npm.effective_end_date >= TO_VARCHAR (NOW(), 'YYYYMMDD')
+
+        LEFT JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
                 ON pad.tenant_id        = sm.tenant_id
                AND pad.supplier_code    = sm.supplier_code
 
-        LEFT OUTER JOIN PG_VP_VENDOR_POOL_MST vpm
+        LEFT JOIN PG_VP_VENDOR_POOL_MST vpm
                 ON pad.tenant_id        = vpm.tenant_id
                AND pad.company_code     = vpm.company_code
                AND pad.org_type_code    = vpm.org_type_code
@@ -265,45 +302,35 @@ service NpApprovalDetailService {
             ,	key pad.approval_number		                    /*	품의번호	*/
             ,	key pad.item_sequence		                    /*	품목순번	*/
 
-            ,	pad.material_code		                        /*	자재코드	*/
-            ,	pad.material_desc		                        /*	자재내역	*/
+            ,   (SELECT org.org_name
+                   FROM CM_PUR_OPERATION_ORG  org
+                  WHERE org.tenant_id     = pad.tenant_id
+                    AND org.company_code  = pad.company_code
+                    AND org.org_type_code = pad.org_type_code
+                    AND org.org_code      = pad.org_code
+			    ) AS org_name : String                  /*	구매운영조직코드 명	*/     
 
-            ,	pad.supplier_code		                        /*	공급업체코드	*/
-            ,   sm.supplier_local_name
-            ,   sm.supplier_english_name                        /*  공급업체명 확인필요 */              
+            ,   pad.material_code	                    /*	Material Code	자재코드*/
+            ,   pad.supplier_code	                    /*	Supplier Code	공급업체코드 */
+            ,   sm.supplier_local_name	                /*	Supplier Name	*/
+            ,   sm.supplier_english_name	            /*	Supplier Name(Eng)	*/
 
-            ,	pad.currency_code		                        /*	통화코드	*/
-            ,	pad.net_price		                            /*	단가	*/
+            ,   pad.currency_code
+            ,   pad.net_price
 
-            ,   pad.base_price_type_code                        /*  기준단가유형코드 */
-
-            ,   pad.pyear_dec_base_currency_code                /*  전년12월기준통화코드 */
-            ,   pad.pyear_dec_base_price                        /*  전년12월기준단가 */	
-            ,   pad.pyear_dec_ci_rate                           /*  전년12월CI비율' */	
-
-            ,	pad.quarter_base_currency_code		            /*	분기기준통화코드	*/
-            ,	pad.quarter_base_price		                    /*	분기기준단가	*/
-            ,	pad.quarter_ci_rate		                        /*	분기CI비율	*/
-
-            ,	pad.vendor_pool_code		                    /*	협력사풀코드	*/
-            ,   vpm.vendor_pool_local_name
-            ,   vpm.vendor_pool_english_name                    /*  협력사풀 명 확인필요 */
-
-            ,	pad.net_price_approval_reason_code		        /*	단가품의사유코드	*/
-            
-
+            ,   pad.base_price_type_code                /*  기준단가유형코드    */
+            ,   pad.pyear_dec_base_currency_code        /*  전년12월기준통화코드    */	
+            ,   pad.pyear_dec_base_price                /*  전년12월기준단가    */	
+            ,   pad.pyear_dec_ci_rate                   /*  전년12월CI비율    */	
+            ,   pad.quarter_base_currency_code          /*  분기기준통화코드    */	
+            ,   pad.quarter_base_price                  /*  분기기준단가    */	
+            ,   pad.quarter_ci_rate                     /*  분기CI비율    */	
+   
         FROM SP_NP_NET_PRICE_APPROVAL_DTL   pad
 
-        LEFT OUTER JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
+        LEFT JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
                 ON pad.tenant_id        = sm.tenant_id
                AND pad.supplier_code    = sm.supplier_code
-
-        LEFT OUTER JOIN PG_VP_VENDOR_POOL_MST vpm
-                ON pad.tenant_id        = vpm.tenant_id
-               AND pad.company_code     = vpm.company_code
-               AND pad.org_type_code    = vpm.org_type_code
-               AND pad.org_code         = vpm.org_code
-               AND pad.vendor_pool_code = vpm.vendor_pool_code
 
     ;
 
@@ -343,11 +370,11 @@ service NpApprovalDetailService {
             
         FROM SP_NP_NET_PRICE_APPROVAL_DTL   pad
 
-        LEFT OUTER JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
+        LEFT JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
                 ON sm.tenant_id     = pad.tenant_id
                AND sm.supplier_code  = pad.supplier_code
 
-        LEFT OUTER JOIN PG_VP_VENDOR_POOL_MST vpm
+        LEFT JOIN PG_VP_VENDOR_POOL_MST vpm
                 ON vpm.tenant_id        = pad.tenant_id
                AND vpm.company_code     = pad.company_code
                AND vpm.org_type_code    = pad.org_type_code
@@ -392,11 +419,11 @@ service NpApprovalDetailService {
             
         FROM SP_NP_NET_PRICE_APPROVAL_DTL   pad
 
-        LEFT OUTER JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
+        LEFT JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
                 ON sm.tenant_id     = pad.tenant_id
                AND sm.supplier_code  = pad.supplier_code
 
-        LEFT OUTER JOIN PG_VP_VENDOR_POOL_MST vpm
+        LEFT JOIN PG_VP_VENDOR_POOL_MST vpm
                 ON vpm.tenant_id        = pad.tenant_id
                AND vpm.company_code     = pad.company_code
                AND vpm.org_type_code    = pad.org_type_code

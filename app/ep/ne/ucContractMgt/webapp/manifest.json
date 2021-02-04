@@ -161,7 +161,7 @@
                     ]
                 },
                 {
-                    "pattern": "detailObject/{tenantId}/{companyCode}/{netPriceContractDocumentNo}/{netPriceContractDegree}",
+                    "pattern": "detailObject/{netPriceContractDocumentNo}/{netPriceContractDegree}",
                     "name": "detailPage",
                     "target": [
                         "detailObject"

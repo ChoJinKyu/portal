@@ -1,4 +1,4 @@
-<mvc:View controllerName="sp.vi.basePriceMgt.controller.InternalPriceDetail"
+<mvc:View controllerName="sp.vi.basePriceMgt.controller.InternalPriceDetail" 
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns="sap.m"
@@ -28,12 +28,17 @@
 				<uxap:expandedHeading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBack" />
-                        <Title text="{I18N>/NEW_BASE_PRICE}(사내거래)" wrapping="true"/>
+                        <Title text="{I18N>/NEW_BASE_PRICE}({I18N>/INTERNAL_TRADING})" wrapping="true"/>
                     </HBox>
 				</uxap:expandedHeading>
                 <uxap:navigationActions>
-					<!-- <OverflowToolbarButton icon="sap-icon://decline" text="{I18N>/BACK}" press=".onBack" /> -->
                 </uxap:navigationActions>
+                <uxap:snappedHeading>
+					<HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBack" />
+                        <Title text="{I18N>/NEW_BASE_PRICE}({I18N>/INTERNAL_TRADING})" wrapping="true"/>
+                    </HBox>
+				</uxap:snappedHeading>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
@@ -270,19 +275,19 @@
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/MATERIAL_NAME}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>material}"/>
+                                            <Input editable="FALSE" value="{detailModel>material}"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/VENDOR_POOL_CODE}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>vendor_pool_code}"/>
+                                            <Input editable="FALSE" value="{detailModel>vendor_pool_code}"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/VENDOR_POOL}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>vendor_pool}"/>
+                                            <Input editable="FALSE" value="{detailModel>vendor_pool}"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
@@ -297,9 +302,9 @@
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/BASE_PRICE_UNIT}" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/QUANTITY_UNIT}" textAlign="Center" width="100%"/> 
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>base_uom_code}"/>
+                                            <Input editable="FALSE" value="{detailModel>base_uom_code}"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">

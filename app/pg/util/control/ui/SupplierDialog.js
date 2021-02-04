@@ -190,7 +190,7 @@ sap.ui.define([
                     this.oSupplierDialogPop.setContentWidth("300px");
                     var sSearchObj = {};
                     sSearchObj.tanentId = "L2100"; // 세션임시값
-                    sSearchObj.languageCd = "KO";  // 세션임시값
+                     sSearchObj.languageCd = "KO";  // 세션임시값
                     sSearchObj.companyCode = that.oCompany.getValue();
                     sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey();
 
@@ -424,17 +424,17 @@ sap.ui.define([
                 new Column({
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "1" }),
-                    template: new Text({ text: "{vendor_pool_level1_code}" })
+                    template: new Text({ text: "{vendor_pool_level1_name}" })
                 }),
                 new Column({
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "2" }),
-                    template: new Text({ text: "{vendor_pool_level2_code}" })
+                    template: new Text({ text: "{vendor_pool_level2_name}" })
                 }),
                 new Column({
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "3" }),
-                    template: new Text({ text: "{vendor_pool_level3_code}" })
+                    template: new Text({ text: "{vendor_pool_level3_name}" })
                 }),
                 new Column({
                     width: "8rem",
@@ -532,13 +532,14 @@ sap.ui.define([
         loadData: function () {
 
             var aFilters = [];
+            var aTempFilters = [];
             var sSupplierCode,
                 sMaterialCode,
                 sEmployeeCode,
-                sDepartmentCode;
+                sDepartmentCode,
+                aSupplierToken;
             
             // 세션에서 받아오는 필터 value
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
              if (!!this.oSearchObj.tanentId) {
                 aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
             }
@@ -560,6 +561,15 @@ sap.ui.define([
 
             if (sSupplierCode) {
                 aFilters.push(new Filter("supplier_code", FilterOperator.Contains, "'" + sSupplierCode.toUpperCase() + "'"));
+            }
+
+            if(this.oSupplierCode.getTokens().length > 0 ){
+                aTempFilters = [];
+                aSupplierToken = this.oSupplierCode.getTokens();
+                 for (var i = 0; i < aSupplierToken.length; i++) {
+                    aTempFilters.push(new Filter("supplier_code", FilterOperator.EQ, aSupplierToken[i].mProperties.key));
+                }
+                    aFilters.push(new Filter(aTempFilters, false));
             }
 
             if(!!this.oVendorPoolLvl1.getSelectedKey()){
@@ -586,6 +596,15 @@ sap.ui.define([
                 sMaterialCode = this.oMaterialCode.getValue();
                 //aFilters.push(new Filter("material_code", FilterOperator.EQ, sSupplierCode));
             }
+
+            // if(this.oMaterialCode.getTokens().length > 0 ){
+            //     aTempFilters = [];
+            //     aMaterialToken = this.oMaterialCode.getTokens();
+            //      for (var i = 0; i < aSuppliaMaterialTokenerToken.length; i++) {
+            //         aTempFilters.push(new Filter("material_code", FilterOperator.EQ, aMaterialToken[i].mProperties.key));
+            //     }
+            //         aFilters.push(new Filter(aTempFilters, false));
+            // }
 
             if(!!this.oEmployeeCode.getValue()) {
                 sEmployeeCode = that.oEmployeeCode.getValue();
@@ -712,6 +731,7 @@ sap.ui.define([
             
             // dialog가 호출될 때 넘어오는 인자
             this.oSearchObj = sSearchObj;
+            this.oSearchObj.tanentId = "L2100";
             console.log("sSearchObj:" + sSearchObj);
             if(!this.oDialog) {
                 this.openWasRequested = true;

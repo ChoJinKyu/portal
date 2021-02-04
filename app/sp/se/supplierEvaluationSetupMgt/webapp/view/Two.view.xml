@@ -37,6 +37,13 @@
 
                 <uxap:headerTitle>
                     <uxap:ObjectPageHeader>
+                         <OverflowToolbarButton 
+                         type="Transparent" 
+                         icon="{viewModel>/App/btnScreen}" 
+                         text="screen" 
+                         tooltip="screen change" 
+                         press="onPressLayoutChange" />
+                    
                         <OverflowToolbarButton
                         type="Transparent" 
                         icon="sap-icon://decline"
@@ -141,9 +148,12 @@
                                         items="{
                                             path: 'TwoView>/scale'
                                             }"
-                                        mode="MultiSelect" 
-                                        selectionChange="onSelectItem"   
+                                        mode="{=
+                                            ${TwoView>/isEditMode} ? 'SingleSelectLeft' : 'None'
+                                        }" 
+                                      
                                             >
+                                              <!-- selectionChange="onSelectItem"    -->
                                     <headerToolbar>
                                         <Toolbar>
                                             <ToolbarSpacer/>
@@ -201,22 +211,22 @@
                                                 placeholder="OVER"
                                                 value="{TwoView>evaluation_grade_start_score}"
                                                 editable="{=
-                                                                ${TwoView>/isEditMode}  &amp;&amp;
-                                                                !!${TwoView>rowEditable}
+                                                                ${TwoView>/isEditMode}
                                                             }"
                                                 fieldGroupIds="required"
                                                 required="true"
+                                                change="onChangeEdit"
                                                 />
                                                 <Input   
                                                 width="100%" 
                                                 placeholder="LESS_THAN"
                                                 value="{TwoView>evaluation_grade_end_score}"
                                                 editable="{=
-                                                                ${TwoView>/isEditMode}  &amp;&amp;
-                                                                !!${TwoView>rowEditable}
+                                                                ${TwoView>/isEditMode}
                                                             }"
                                                 fieldGroupIds="required"
                                                 required="true"
+                                                change="onChangeEdit"
                                                 />
                                                 <ComboBox selectedKey="{TwoView>inp_apply_code}" width="100%" items="{
                                                             path: 'common>/Code',
@@ -224,15 +234,20 @@
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                                                 {path: 'group_code', operator: 'EQ', value1: 'SP_SE_INP_APPLY_CODE'}
                                                             ]
-                                                            }" editable="{=
-                                                                ${TwoView>/isEditMode}  &amp;&amp;
-                                                                !!${TwoView>rowEditable}
+                                                            }"
+                                                            editable="{=
+                                                                ${TwoView>/isEditMode}
                                                             }"
                                                             fieldGroupIds="required"          
-                                                            required="true">
+                                                            required="true"
+                                                            change="onChangeEdit">
                                                             <items>
                                                                 <core:Item key="{common>code}" text="{common>code_name}" />
                                                             </items>
+                                                            <!-- editable="{=
+                                                                ${TwoView>/isEditMode}  &amp;&amp;
+                                                                !!${TwoView>rowEditable}
+                                                            }" -->
                                                 </ComboBox>
                                                 <!-- <Input   
                                                 width="100%" 

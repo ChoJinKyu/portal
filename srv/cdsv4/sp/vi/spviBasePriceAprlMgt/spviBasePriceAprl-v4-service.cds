@@ -77,7 +77,7 @@ service spviBasePriceArlV4Service {
         material_name	          : String(240)  ;
         vendor_pool_code	      : String(20)   ;
         currency_code	          : String(3)    ;
-        material_price_unit 	  : Decimal	     ;
+        base_uom_code        	  : String(30)   ;
         buyer_empno	              : String(30)   ;
         base_price	              : Decimal(19,4)    ;
         pcst	                  : Decimal(19,4)    ;
@@ -92,11 +92,11 @@ service spviBasePriceArlV4Service {
     };
 
     type BasePriceAprlDtlType : {
-        tenant_id                        : String(5);
-        approval_number                  : String(30);
-        item_sequence                    : Decimal;
-        metal_type_code                  : String(30);
-        metal_net_price                  : Decimal(19, 4);
+        tenant_id              : String(5);
+        approval_number        : String(30);
+        item_sequence          : Decimal;
+        metal_type_code        : String(30);
+        metal_net_price        : Decimal(19, 4);
 
         local_create_dtm       : DateTime;
         local_update_dtm       : DateTime;

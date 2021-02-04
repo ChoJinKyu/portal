@@ -19,7 +19,7 @@ service CreationRequestV4Service {
             similar_category_code : String;
             requestor_empno : String;
             request_date_time : DateTime;
-            request_desc : LargeBinary;
+            request_desc : LargeString;
             attch_group_number : String;
             progress_status_code : String;
             creator_empno : String;

@@ -71,9 +71,10 @@ service ProjectMgtService {
                 uom_name,
                 uom_desc
         }
-        where uom_class_code = 'AAAADL'
-          and uom_desc is not null
-          and disable_date is null;
+        where uom_desc is not null
+          and disable_date is null
+          //and uom_class_code = 'AAAADL'
+          ;
 
     @readonly
     entity Currency as

@@ -1,4 +1,4 @@
-PROCEDURE DP_PD_CATEGORY_CREATION_REQUEST_SAVE_PROC (		
+PROCEDURE DP_PD_CATEGORY_CREATION_REQUEST_SAVE_PROC (
     IN  CRUD_TYPE NVARCHAR(1),
     IN  I_M TABLE ( TENANT_ID NVARCHAR(5), 
                     REQUEST_NUMBER NVARCHAR(30),
@@ -9,7 +9,7 @@ PROCEDURE DP_PD_CATEGORY_CREATION_REQUEST_SAVE_PROC (
                     SIMILAR_CATEGORY_CODE NVARCHAR(40),
                     REQUESTOR_EMPNO NVARCHAR(30),
                     REQUEST_DATE_TIME TIMESTAMP,
-                    REQUEST_DESC BLOB,
+                    REQUEST_DESC NCLOB,
                     ATTCH_GROUP_NUMBER NVARCHAR(100),
                     PROGRESS_STATUS_CODE NVARCHAR(30),
                     CREATOR_EMPNO NVARCHAR(30),
@@ -33,34 +33,56 @@ SQL SECURITY INVOKER
 
 AS
 BEGIN
+    DECLARE V_TENANT_ID NVARCHAR(5);
+    DECLARE V_CATEGORY_GROUP_CODE NVARCHAR(30);
+    DECLARE V_REQUEST_NUMBER NVARCHAR(50);
+    DECLARE V_M_CNT INT;
     DECLARE V_D_CNT INT;
-    DECLARE CREATE_CATEGORY_CODE NVARCHAR(40);
+    DECLARE V_CREATE_CATEGORY_CODE NVARCHAR(40);
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 		ROLLBACK;
 
-/*  CRUD_TYPE_CODE가 'D' 인 Data 삭제 */
+    SELECT TENANT_ID, CATEGORY_GROUP_CODE,
+           CASE WHEN REQUEST_NUMBER = 'new' THEN
+                     'CCR' || TO_NCHAR(NOW(), 'YYMMDD') || LPAD(DP_PD_REQUEST_SEQ.NEXTVAL, 4, '0')
+                ELSE REQUEST_NUMBER
+            END,
+            CREATE_CATEGORY_CODE
+    INTO   V_TENANT_ID, V_CATEGORY_GROUP_CODE, V_REQUEST_NUMBER, V_CREATE_CATEGORY_CODE
+    FROM   :I_M
+    ;
+
+    SELECT COUNT(1) INTO V_M_CNT FROM :I_M;
+    SELECT COUNT(1) INTO V_D_CNT FROM :I_D;
+
+/* CRUD_TYPE_CODE가 'D' 인 Data 삭제 */
     IF CRUD_TYPE = 'D' THEN
-      BEGIN
-        DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
-            O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
-            RESIGNAL;
+            DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            BEGIN
+                O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
+                RESIGNAL;
+            END;
+
+            IF V_D_CNT > 0 THEN
+                DELETE FROM DP_PD_PART_CATEGORY_APPROVAL D
+                WHERE (D.TENANT_ID, D.REQUEST_NUMBER ) IN
+                    ( SELECT TENANT_ID, REQUEST_NUMBER FROM :I_D )
+                ;
+            END IF;
+    /*
+            IF ::rowcount = 0 THEN
+                SIGNAL SQL_ERROR_CODE 10001 set ;
+            END IF;
+    */
+            IF V_M_CNT > 0 THEN
+                DELETE FROM DP_PD_PART_CATEGORY_CREATION_REQUEST M
+                WHERE (M.TENANT_ID, M.REQUEST_NUMBER, M.CATEGORY_GROUP_CODE ) IN
+                    ( SELECT TENANT_ID, REQUEST_NUMBER, CATEGORY_GROUP_CODE FROM :I_M )
+                ;
+            END IF;
         END;
 
-        DELETE FROM DP_PD_PART_CATEGORY_APPROVAL D
-        WHERE (D.TENANT_ID, D.REQUEST_NUMBER, D.APPROVE_SEQUENCE ) IN
-            ( SELECT TENANT_ID, REQUEST_NUMBER, APPROVE_SEQUENCE FROM :I_D )
-        ;
-/*
-        IF ::rowcount = 0 THEN
-            SIGNAL SQL_ERROR_CODE 10001 set ;
-        END IF;
-*/
-        DELETE FROM DP_PD_PART_CATEGORY_CREATION_REQUEST M
-        WHERE (M.TENANT_ID, M.REQUEST_NUMBER, M.CATEGORY_GROUP_CODE ) IN
-            ( SELECT TENANT_ID, REQUEST_NUMBER, CATEGORY_GROUP_CODE FROM :I_M )
-        ;
-      END;
     ELSE
         IF CRUD_TYPE = 'U' THEN
             UPDATE DP_PD_PART_CATEGORY_CREATION_REQUEST M
@@ -123,7 +145,7 @@ BEGIN
                         ,SYSTEM_UPDATE_DTM
                       )
                  SELECT TENANT_ID
-                        ,REQUEST_NUMBER	
+                        ,V_REQUEST_NUMBER	
                         ,CATEGORY_GROUP_CODE	
                         ,APPROVAL_NUMBER	
                         ,REQUEST_TITLE	
@@ -148,8 +170,6 @@ BEGIN
         END IF;
 
         /*  I_D Table의 Data 일괄 삭제 */
-        SELECT COUNT(1) INTO V_D_CNT FROM :I_D;
-
         IF V_D_CNT > 0 THEN
             DELETE FROM DP_PD_PART_CATEGORY_APPROVAL D
             WHERE (D.TENANT_ID, D.REQUEST_NUMBER, D.APPROVE_SEQUENCE ) IN
@@ -164,8 +184,7 @@ BEGIN
                 USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE IN ('C','U')  ) id
                 ON ( D.TENANT_ID = id.TENANT_ID
                     AND D.REQUEST_NUMBER = id.REQUEST_NUMBER
-                    AND D.APPROVE_SEQUENCE = id.APPROVE_SEQUENCE
-                    AND id.CRUD_TYPE IN ('C','U') )
+                    AND D.APPROVE_SEQUENCE = id.APPROVE_SEQUENCE )
             WHEN MATCHED THEN
                 UPDATE
                 SET  D.APPROVAL_NUMBER = id.APPROVAL_NUMBER
@@ -192,7 +211,7 @@ BEGIN
                         ,SYSTEM_UPDATE_DTM
                     )
                 VALUES ( id.TENANT_ID
-                        ,id.REQUEST_NUMBER
+                        ,V_REQUEST_NUMBER
                         ,id.APPROVE_SEQUENCE
                         ,id.APPROVAL_NUMBER
                         ,id.REQUESTOR_EMPNO

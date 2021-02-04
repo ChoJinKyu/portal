@@ -67,7 +67,7 @@ BEGIN
 
     SELECT TENANT_ID, COMPANY_CODE, 
            ORG_CODE, PART_PROJECT_TYPE_CODE,
-           CASE WHEN COALESCE(ACTIVITY_CODE,'') = '' THEN
+           CASE WHEN ACTIVITY_CODE = 'new' THEN
                      'PAT' || TO_NCHAR(NOW(), 'YYMMDD') || LPAD(DP_PD_PART_ACTIVITY_SEQ.NEXTVAL, 4, '0')
                 ELSE ACTIVITY_CODE
             END,
@@ -212,7 +212,7 @@ BEGIN
                         ,V_ORG_TYPE_CODE
                         ,ORG_CODE
                         ,PART_PROJECT_TYPE_CODE
-                        ,ACTIVITY_CODE
+                        ,V_ACTIVITY_CODE
                          ,(SELECT COALESCE(MAX(SEQUENCE), 0) + 1 
                              FROM DP_PD_PART_ACTIVITY_TEMPLATE
                             WHERE TENANT_ID = M.TENANT_ID
@@ -274,7 +274,7 @@ BEGIN
                     ,SYSTEM_UPDATE_DTM
                 )
             VALUES ( id.TENANT_ID
-                    ,id.ACTIVITY_CODE
+                    ,V_ACTIVITY_CODE
                     ,id.LANGUAGE_CD
                     ,id.CODE_NAME
                     ,NOW()
