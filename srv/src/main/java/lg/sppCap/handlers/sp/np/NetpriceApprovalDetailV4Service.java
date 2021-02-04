@@ -131,8 +131,11 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
             vResult.setApprovalNumber( resultMsg );
 
         }finally{
-            this.dropTempTable( detailTableName );
+            try{ this.dropTempTable( detailTableName ); }catch(Exception e){}
+            try{ this.dropTempTable( approverTableName ); }catch(Exception e){}
+            try{ this.dropTempTable( refererTableName ); }catch(Exception e){}
         }
+
 
         log.info("### callProc Success ###");
 
