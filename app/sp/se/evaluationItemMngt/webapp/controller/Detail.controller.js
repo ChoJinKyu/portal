@@ -809,5 +809,24 @@ sap.ui.define([
                 oHeader.qttive_eval_article_calc_formula = "";
                 oViewModel.setProperty("/Detail/Header", oHeader);
             }
+
+            , onPressLayoutChange : function(oEvent){
+                var oControl, oView, oViewModel, sLayout, sIcon;
+
+                oControl = oEvent.getSource();
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
+                sIcon = oControl.getIcon();
+
+                if(sIcon === "sap-icon://full-screen"){
+                    sLayout = "MidColumnFullScreen";
+                    oControl.setIcon("sap-icon://exit-full-screen");
+                }else{
+                    sLayout = "TwoColumnsMidExpanded";
+                    oControl.setIcon("sap-icon://full-screen");
+                }
+
+                oViewModel.setProperty("/App/layout", sLayout)
+            }
 		});
 	});

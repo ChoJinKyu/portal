@@ -23,7 +23,8 @@
             <!-- 상세 -->
 			<uxap:ObjectPageHeader objectTitle="{I18N>/DETAIL}">
                 <uxap:actions>
-					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press="onPressPageNavBack" />
+                    <OverflowToolbarButton type="Transparent" icon="sap-icon://full-screen" text="screen" tooltip="screen change" press="onPressLayoutChange" />
+                    <OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press="onPressPageNavBack" />
                 </uxap:actions> 
 			</uxap:ObjectPageHeader>
 		</uxap:headerTitle>
