@@ -223,11 +223,7 @@ sap.ui.define([
             }
             if (oMasterData.active_flag === true) {
                 activeFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-            }
-
-            // if(oMasterData.sequence=="" ||  oMasterData.sequence==null || parseInt(oMasterData.sequence) == undefined || parseInt(oMasterData.sequence) == NaN){
-            //     oMasterData.sequence = "0";
-            // }
+            }            
 
             var pdMstVal = {
 					tenant_id                   : oMasterData.tenant_id,
@@ -425,7 +421,7 @@ sap.ui.define([
                     "org_type_code": "",
                     "org_code": "",
                     "part_project_type_code": "",
-                    "activity_code": "",
+                    "activity_code": "new",
                     "category_group_code": "",
                     "attachment_mandatory_flag": true,
                     "approve_mandatory_flag": true					

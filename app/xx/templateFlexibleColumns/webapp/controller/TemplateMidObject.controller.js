@@ -111,7 +111,6 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageEditButtonPress: function(oEvent){
-            debugger;
             //편집취소 클릭
             if(oEvent.getSource().getPressed()){
                 var oView = this.getView(),
@@ -122,11 +121,6 @@ sap.ui.define([
 						this.onPageNavBackButtonPress.call(this);
 					}else{
                         this.validator.clearValueState(this.byId("page"));
-                        //View모드
-                        this._toShowMode();
-                        //EditButton버튼 전환
-                        this.getView().byId('pageEditButton').setEditMode(false);
-                        
                         //데이터 복원
                         if(oMasterModel.isChanged()){
                             var temp = jQuery.extend(true, {}, this._oCloneMasterModelData);  
@@ -137,6 +131,8 @@ sap.ui.define([
                             var sDetailModelEntityName = this.getModel("details").getProperty("/entityName");
                             oDetailsModel.setProperty("/"+sDetailModelEntityName, temp);
                         }
+                        //View모드
+                        this._toViewMode();
 					}
                 }.bind(this);
                 if(oMasterModel.isChanged() || oDetailsModel.isChanged()) {
@@ -161,8 +157,6 @@ sap.ui.define([
                 this._oCloneDetailsModelData = jQuery.extend(true, [], this.getModel("details").getProperty("/"+sDetailModelEntityName));
                 //Edit모드
                 this._toEditMode();
-                //EditButton버튼 전환
-                oEvent.getSource().setEditMode(true);
             }
 		},
 		
@@ -185,7 +179,6 @@ sap.ui.define([
 						oMasterModel.submitChanges({
 							success: function(ok){
                                 oView.setBusy(false);
-                                //삭제 완료시 메인페이지 조회버튼 클릭
                                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 that.onPageNavBackButtonPress.call(that);
 								MessageToast.show("Success to delete.");
@@ -256,8 +249,7 @@ sap.ui.define([
                                 //midTable 리프레쉬
                                 //이유 : __entity에 부가정보들이 부족(Update, Delete시 Error나옴.).
                                 //that._refreshMidTable();
-
-                                that.getView().byId('pageEditButton').setPressed(false);
+                                that._toViewMode();
 
 								oView.setBusy(false);
                                 that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
@@ -346,7 +338,6 @@ sap.ui.define([
 					"local_update_dtm": new Date()
 				}, "/ControlOptionDetails");
                 this._toEditMode();
-                //편집버튼 비활성화
                 this.byId("pageEditButton").setEnabled(false);
 			}else{
 				this.getModel("midObjectViewModel").setProperty("/isAddedMode", false);
@@ -373,9 +364,7 @@ sap.ui.define([
 						oView.setBusy(false);
 					}
 				});
-                this._toShowMode();
-                //this.getView().byId('pageEditButton').setPressed(false);
-                //편집버튼 활성화
+                this._toViewMode();
                 this.byId("pageEditButton").setEnabled(true);
 			}
             oTransactionManager.setServiceModel(this.getModel());
@@ -385,12 +374,16 @@ sap.ui.define([
 		_toEditMode: function(){
             var VIEW_MODE = false;
             this._showFormFragment('TemplateMidObject_Edit');
-			//this.byId("page").setSelectedSection("pageSectionMain");
+
+            //this.byId("page").setSelectedSection("pageSectionMain");
+            //this.byId("pageEditButton").setEnabled(false);
+            this.getView().byId('pageEditButton').setEditMode(!VIEW_MODE);
+            
 			this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
 			this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
             this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
             
-            this.getModel("master").setProperty("/__metadata/_row_editable_", !VIEW_MODE);
+            this.getModel("midObjectViewModel").setProperty("/isEditMode", !VIEW_MODE);
 
 			this.byId("midTableAddButton").setEnabled(!VIEW_MODE);
 			this.byId("midTableDeleteButton").setEnabled(!VIEW_MODE);
@@ -400,16 +393,18 @@ sap.ui.define([
 			this._bindMidTable(this.oEditableTemplate, "Edit");
 		},
 
-		_toShowMode: function(){
+		_toViewMode: function(){
 			var VIEW_MODE = true;
-			this._showFormFragment('TemplateMidObject_Show');
-			//this.byId("page").setSelectedSection("pageSectionMain");
+            this._showFormFragment('TemplateMidObject_Show');
+            
+            //this.byId("page").setSelectedSection("pageSectionMain");
+            this.getView().byId('pageEditButton').setEditMode(!VIEW_MODE);
+            
 			this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
 			this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
             this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
             
-            this.getModel("master").setProperty("/__metadata/_row_editable_", VIEW_MODE);
-
+            this.getModel("midObjectViewModel").setProperty("/isEditMode", !VIEW_MODE);
 			this.byId("midTableAddButton").setEnabled(!VIEW_MODE);
 			this.byId("midTableDeleteButton").setEnabled(!VIEW_MODE);
 			this.byId("midTableSearchField").setEnabled(VIEW_MODE);

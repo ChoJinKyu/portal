@@ -79,7 +79,7 @@
                                 showValueHelp="true" valueHelpRequest=".onCmInputWithCodeValuePress">
                             </Input>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S10" />
+                                <layout:GridData span="XL3 L3 M6 S10" />
                             </layoutData>
                         </VBox>
                         <FlexBox alignItems="End" justifyContent="End" class="searchBoxButtonArea">
