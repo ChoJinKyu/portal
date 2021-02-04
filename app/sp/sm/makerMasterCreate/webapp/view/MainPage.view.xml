@@ -78,14 +78,15 @@
                                         <form:content>
                                             <VBox>
                                                 <Label design="Bold" text="{I18N>/TAX_ID}" />
-                                                <Input id="input_tax_id_chk" value="{writeModel>/businessNoCheck/tax_id}"/>
+                                                <Input id="input_tax_id_chk" enabled ="{mainPageView>/enabled/tax_id_chk}" value="{callByAppModel>/taxId}"/>
                                                 <layoutData>
                                                     <layout:GridData span="XL2 L2 M6 S6" />
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
                                                 <Label design="Bold" text="" />
-                                                <Button id="btn_check" text="{I18N>/CHECK}" class="forChkBizNoBtn" type="Emphasized" press=".onCheckBizNoButtonPress" />
+                                                <Button id="btn_check" text="{I18N>/CHECK}" class="forChkBizNoBtn" type="Emphasized" 
+                                                    enabled ="{mainPageView>/enabled/btn_check}" press=".onCheckBizNoButtonPress" />
                                                 <layoutData>
                                                     <layout:GridData span="XL2 L2 M6 S6" />
                                                 </layoutData>
@@ -105,7 +106,7 @@
                                                     <Table id="mainTable"
                                                         mode="None" 
                                                         noDataText="{I18N>/NCM0001}"
-                                                        items="{writeModel>/businessNoCheck/list}"
+                                                        items="{writeModel>/businessNoCheckList}"
                                                         width="auto">
                                                     <headerToolbar>
                                                     </headerToolbar>
@@ -147,9 +148,9 @@
                                             <VBox>
                                                 <MessageStrip
                                                     visible="{mainPageView>/visible/message_strip_biz_chk}"
-                                                    type="{writeModel>/businessNoCheck/list/0/messageStripType}"
+                                                    type="{writeModel>/businessNoCheckList/0/messageStripType}"
                                                     class="forMakerMasterMessageStrip sapUiMediumMarginBottom sapUiTinyMarginTop"
-                                                    text="{writeModel>/businessNoCheck/list/0/message}"
+                                                    text="{writeModel>/businessNoCheckList/0/message}"
                                                     showIcon="true"
                                                     showCloseButton="false"/>
                                                 <layoutData>

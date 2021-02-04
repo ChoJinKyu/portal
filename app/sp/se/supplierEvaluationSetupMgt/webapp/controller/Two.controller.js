@@ -68,7 +68,41 @@ sap.ui.define([
             this.use_flag =  oEvent.getParameter("arguments")["use_flag"];     
                                 
 
-            // Create 버튼 눌렀을때
+            // // Create 버튼 눌렀을때
+            // if (this.scenario_number === "New") {
+            //     this.getModel("TwoView").setProperty("/isEditMode", true);
+            //     this.getModel("TwoView").setProperty("/isCreateMode", true);
+            //     this.getModel("TwoView").setProperty("/tansaction_code", "I");
+
+            //     this.getModel("TwoView").setProperty("/evaluationType2", {
+            //     "tenant_id":this.tenant_id,
+            //     "company_code":this.company_code,
+            //     "org_type_code":this.org_type_code,
+            //     "org_code":this.org_code ,   
+            //     "use_flag" : false,   
+            //     "evaluation_operation_unit_code" : this.evaluation_operation_unit_code
+            //     });
+
+
+            // } else { // Detail 일때
+            //     this.getModel("TwoView").setProperty("/isEditMode", false);
+            //     this.getModel("TwoView").setProperty("/isCreateMode", false);  
+            //     this.getModel("TwoView").setProperty("/tansaction_code", "R");       
+ 
+             
+            //     this._readEval2View();                
+            //     this._readScaleView();
+
+                  
+            //     }   
+
+                this._readAll();
+            },  
+            _readAll : function(){
+                var oView = this.getView();
+                var oModel = this.getModel("TwoView");
+
+                // Create 버튼 눌렀을때
             if (this.scenario_number === "New") {
                 this.getModel("TwoView").setProperty("/isEditMode", true);
                 this.getModel("TwoView").setProperty("/isCreateMode", true);
@@ -92,10 +126,9 @@ sap.ui.define([
              
                 this._readEval2View();                
                 this._readScaleView();
-
                   
                 }   
-            },  
+            },
             _readEval1View : function(){
 
                 var TwoFilters = [];  
@@ -245,6 +278,11 @@ sap.ui.define([
                     else
                     oSaveData = this._getSaveData("U");
 
+                    if(!oSaveData){
+                        return;
+                    }
+                    
+
                     oView.setBusy(true);
                     $.ajax({
                         url: sURLPath,
@@ -252,41 +290,41 @@ sap.ui.define([
                         data: JSON.stringify(oSaveData),
                         contentType: "application/json",
                         success: function (data) {
-                            
-                            if(this.scenario_number==="New"){
+                        MessageBox.success(i18nModel.getProperty("/NCM01001"), {
+                            onClose : function (sAction) {
+                            oView.setBusy(false);     
 
+                            if(this.scenario_number==="New"){
                                 this._readEval1View();
-                                // var oView = oOwnerComponent.byId("container-supplierEvaluationSetupMgt---detail--beginView").getController().getView();
-                                // var oModel = oView.getModel("DetailView").getProperty("/evaluationType1");
+                                            // var oView = oOwnerComponent.byId("container-supplierEvaluationSetupMgt---detail--beginView").getController().getView();
+                                            // var oModel = oView.getModel("DetailView").getProperty("/evaluationType1");
                                
                                 var oComponent = this.getOwnerComponent();
                                 var oViewModel = oComponent.getModel("viewModel");
                                 oViewModel.setProperty("/App/layout", "OneColumn");
 
-
-                                // this.getRouter().navTo("detail", {
-                                //     scenario_number: "Detail",
-                                //     tenant_id: this.tenant_id,
-                                //     company_code: this.company_code,
-                                //     org_code: this.org_code,
-                                //     org_type_code: this.org_type_code,
-                                //     evaluation_operation_unit_code : this.evaluation_operation_unit_code,
-                                //     evaluation_operation_unit_name : this.evaluation_operation_unit_name,
-                                //     use_flag : this.use_flag
-                                // });
-                              
+                                            // this.getRouter().navTo("detail", {
+                                            //     scenario_number: "Detail",
+                                            //     tenant_id: this.tenant_id,
+                                            //     company_code: this.company_code,
+                                            //     org_code: this.org_code,
+                                            //     org_type_code: this.org_type_code,
+                                            //     evaluation_operation_unit_code : this.evaluation_operation_unit_code,
+                                            //     evaluation_operation_unit_name : this.evaluation_operation_unit_name,
+                                            //     use_flag : this.use_flag
+                                            // });
                             }else{
-                                            
                                     this._readEval2View();                
                                     this._readScaleView();
-
                                     this._readEval1View();
 
                                     this.getView().byId("scaleTable").removeSelections(true);
                                     this.getModel("TwoView").setProperty("/isEditMode", false);
-                            }
+                                 }
 
-                            oView.setBusy(false);
+                                    
+                                }.bind(this)
+                            });
                         }.bind(this),
                         error: function (e) {
                                 var sDetails;
@@ -308,6 +346,8 @@ sap.ui.define([
 
                             oView.setBusy(false);
                         }
+
+
                     });
                 }.bind(this)
             });            
@@ -674,12 +714,23 @@ sap.ui.define([
          * @public
          */
             onPageCancelEditButtonPress: function () {
-            this.onNavToBack();
+            MessageBox.confirm(i18nModel.getText("/NPG00013"), {
+                    actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                    emphasizedAction: MessageBox.Action.OK,
+                    onClose: function (sAction) {
+                        if (sAction === MessageBox.Action.OK) {
+
+                            this._readAll();
+
+                        }
+
+                    }.bind(this)
+                });
         },
 
-            onPageEditButtonPress: function () {
-            this._toEditMode();
-            },
+        onPageEditButtonPress: function () {
+        this._toEditMode();
+        },
 
         /**
         * Edit모드일 때 설정 

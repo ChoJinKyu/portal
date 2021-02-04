@@ -211,6 +211,7 @@ sap.ui.define([
             var oView = this.getView(),
                 oMasterModel = this.getModel("master"),
                 oDetailsModel = this.getModel("details"),
+                temp = oMasterModel.oData,
                 lngArr = oDetailsModel.getProperty("/MdCategoryItemLng"),
                 lngLength = lngArr.length,
                 that = this;
@@ -228,7 +229,7 @@ sap.ui.define([
             var tempData = oMasterModel.getData();
             if(tempData != null){
                 delete tempData.org_infos;
-                oMasterModel.setData(tempData);
+                oMasterModel.setData(tempData,"/MdCategoryItem");
             }
 
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
@@ -261,8 +262,8 @@ sap.ui.define([
 
                                     var characterCode = data.value[0].spmd_character_code;
                                     var serialNo = data.value[0].spmd_character_serial_no;
-                                    that.getModel("master").setProperty("/spmd_character_code", characterCode); 
-                                    that.getModel("master").setProperty("/spmd_character_serial_no", serialNo+""); 
+                                    temp.spmd_character_code = characterCode; 
+                                    temp.spmd_character_serial_no = serialNo+""; 
                                     
                                     if(lngLength>0){
                                         for(var idx=0; idx<lngLength; idx++){

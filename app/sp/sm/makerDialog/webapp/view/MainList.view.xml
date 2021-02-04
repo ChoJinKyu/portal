@@ -28,11 +28,7 @@
                             <Label text="Multi Supplier With Org" labelFor="multiinput_supplierwithorg_code"></Label>
                                 <MultiInput id="multiinput_supplierwithorg_code"
                                 placeholder="Choose codes from the ValueHelp"
-                                tokens="{/processTypes}"
                                 showValueHelp="true" valueHelpRequest=".onMultiInputSupplierWithOrgValuePress">
-                                <tokens>
-                                    <Token key="{key}" text="{text}" />
-                                </tokens>
                             </MultiInput>
                             <layoutData>
                                 <layout:GridData span="XL5 L5 M5 S10" />
@@ -52,11 +48,7 @@
                             <Label text="Multi Supplier" labelFor="multiinput_supplier_code"></Label>
                                 <MultiInput id="multiinput_supplier_code"
                                 placeholder="Choose codes from the ValueHelp"
-                                tokens="{/processTypes}"
                                 showValueHelp="true" valueHelpRequest=".onMultiInputSupplierValuePress">
-                                <tokens>
-                                    <Token key="{key}" text="{text}" />
-                                </tokens>
                             </MultiInput>
                             <layoutData>
                                 <layout:GridData span="XL5 L5 M5 S10" />
@@ -77,11 +69,7 @@
                             <Label text="Multi Maker" labelFor="multiinput_maker_code"></Label>
                             <MultiInput id="multiinput_maker_code"
                             placeholder="Choose a maker from the ValueHelp"
-                            tokens="{/processTypes}"
                             showValueHelp="true" valueHelpRequest=".onMultiInputMakerValuePress">
-                                <tokens>
-                                    <Token key="{key}" text="{text}" />
-                                </tokens>
                             </MultiInput>
                             <layoutData>
                                 <layout:GridData span="XL5 L5 M5 S10" />
@@ -101,11 +89,7 @@
                             <Label text="Multi BP" labelFor="multiinput_bp_code"></Label>
                             <MultiInput id="multiinput_bp_code"
                             placeholder="Choose a BP from the ValueHelp"
-                            tokens="{/processTypes}"
                             showValueHelp="true" valueHelpRequest=".onMultiInputBPValuePress">
-                                <tokens>
-                                    <Token key="{key}" text="{text}" />
-                                </tokens>
                             </MultiInput>
                             <layoutData>
                                 <layout:GridData span="XL5 L5 M5 S10" />

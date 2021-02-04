@@ -43,7 +43,7 @@ sap.ui.define([
     });
 
     var oServiceModelPurOrg = new ODataModel({
-        serviceUrl: "srv-api/odata/v2/cm.PurOrgMgtService/",
+        serviceUrl: "srv-api/odata/v2/dp.util.DpMdCommonService/",
         defaultBindingMode: "OneWay",
         defaultCountMode: "Inline",
         refreshAfterChange: false,
@@ -74,16 +74,19 @@ sap.ui.define([
             var aSearchFilters = [];
             aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101'));
             aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, oArges.company_code));
-            aSearchFilters.push(new Filter("org_type_code", FilterOperator.EQ, 'PL'));
+   
+            var  oModel = oThis.getModel("repairPlant");
 
-            ODataV2ServiceProvider.getService("cm.util.OrgService").read("/Pur_Operation", {
-                filters: aSearchFilters
-                , sorters: [new Sorter("org_code", false)]
-                , success: function (oData) {
-                    console.log("odata>>> ", oData);
-                    oThis.getModel("repairPlant").setData(oData, "/Pur_Operation");
-                }.bind(this)
+            oView.setBusy(true);
+            oModel.setTransactionModel(oServiceModelPurOrg);
+            oModel.read("/Divisions", {
+                filters: aSearchFilters,
+                success: function (oData) {
+                    oView.setBusy(false);
+                }
             });
+
+
 
             // var oButton = oEvent.getSource();
             if (!this._oRemodelRepairDialog) {

@@ -38,6 +38,7 @@ public class PartBaseActivityMgtV4 implements EventHandler {
         String crudType = context.getInputData().getCrudType();
         PdpartBaseActivityType v_pdMst = context.getInputData().getPdMst();
         Collection<PdpartBaseActivityLngType> v_pdDtl = context.getInputData().getPdDtl();
+        Collection<PdpartBaseActivityCategoryType> v_pdCat = context.getInputData().getPdCat();
         
         /*
         System.out.println(v_inDatas.get("tenant_id"));
@@ -86,7 +87,31 @@ public class PartBaseActivityMgtV4 implements EventHandler {
         
         String v_sql_dropLngtable = "DROP TABLE #LOCAL_TEMP_PART_BASE_ACTIVITY_LNG";
 
-        String v_sql_callProc = "CALL DP_PD_PART_BASE_ACTIVITY_SAVE_PROC(CRUD_TYPE => ?, I_M => #LOCAL_TEMP_PART_BASE_ACTIVITY, I_D => #LOCAL_TEMP_PART_BASE_ACTIVITY_LNG, O_MSG => ?)";
+        // category 테이블
+        StringBuffer v_sql_createCateTable = new StringBuffer();
+        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
+        v_sql_createCateTable.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_PART_BASE_ACTIVITY_CATEGORY (");
+
+        v_sql_createCateTable.append("TENANT_ID NVARCHAR(5),"); 
+        v_sql_createCateTable.append("ACTIVITY_CODE NVARCHAR(40),");
+        v_sql_createCateTable.append("CATEGORY_GROUP_CODE NVARCHAR(30),");
+        v_sql_createCateTable.append("CATEGORY_CODE NVARCHAR(40),");
+        v_sql_createCateTable.append("S_GRADE_STANDARD_DAYS INTEGER,");
+
+        v_sql_createCateTable.append("A_GRADE_STANDARD_DAYS INTEGER,");	
+        v_sql_createCateTable.append("B_GRADE_STANDARD_DAYS INTEGER,");	
+        v_sql_createCateTable.append("C_GRADE_STANDARD_DAYS INTEGER,");	
+        v_sql_createCateTable.append("D_GRADE_STANDARD_DAYS INTEGER,");	
+        v_sql_createCateTable.append("ACTIVE_FLAG BOOLEAN,");        
+
+        v_sql_createCateTable.append("UPDATE_USER_ID NVARCHAR(255),");
+        v_sql_createCateTable.append("CRUD_TYPE_CODE NVARCHAR(1) )");
+
+        String v_sql_insertCateTable = "INSERT INTO #LOCAL_TEMP_PART_BASE_ACTIVITY_CATEGORY VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
+        
+        String v_sql_dropCatetable = "DROP TABLE #LOCAL_TEMP_PART_BASE_ACTIVITY_CATEGORY";
+
+        String v_sql_callProc = "CALL DP_PD_PART_BASE_ACTIVITY_SAVE_PROC(CRUD_TYPE => ?, I_M => #LOCAL_TEMP_PART_BASE_ACTIVITY, I_D => #LOCAL_TEMP_PART_BASE_ACTIVITY_LNG, I_C => #LOCAL_TEMP_PART_BASE_ACTIVITY_CATEGORY, O_MSG => ?)";
 
         Collection<OutType> v_result = new ArrayList<>();
 
@@ -115,43 +140,61 @@ public class PartBaseActivityMgtV4 implements EventHandler {
                 active_flag,
                 v_pdMst.get("update_user_id"),
                 v_pdMst.get("crud_type_code")                
-                
-                // Integer.parseInt(String.valueOf(v_inDatas.get("vi_amount"))),
-                // Integer.parseInt(String.valueOf(v_inDatas.get("monthly_mtlmob_quantity"))),
-                // Integer.parseInt(String.valueOf(v_inDatas.get("monthly_purchasing_amount"))),
-                // Integer.parseInt(String.valueOf(v_inDatas.get("annual_purchasing_amount"))),
                         
             };
             batch_mst.add(values);
             int[] updateMstCounts = jdbc.batchUpdate(v_sql_insertMstTable, batch_mst);
-        }
-
-        
+        }        
 
         jdbc.execute(v_sql_createLngTable.toString());
+        
+        List<Object[]> batch_dtl = new ArrayList<Object[]>();
+        if(!v_pdDtl.isEmpty() && v_pdDtl.size() > 0){        
+            for(PdpartBaseActivityLngType v_inRow : v_pdDtl){
+                Object[] values = new Object[] {
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("activity_code"),
+                    v_inRow.get("language_cd"),
+                    v_inRow.get("code_name"),
+                    v_inRow.get("update_user_id"),
+                    v_inRow.get("crud_type_code")
+                };                
+                batch_dtl.add(values);
+            }            
+            int[] updateLngCounts = jdbc.batchUpdate(v_sql_insertLngTable, batch_dtl);            
+        }       
 
-        // BaseExtrate Local Temp Table에 insert
-            List<Object[]> batch_dtl = new ArrayList<Object[]>();
-            if(!v_pdDtl.isEmpty() && v_pdDtl.size() > 0){
-            // log.info("-----> v_pdDtl : " + v_pdDtl.size());
-                for(PdpartBaseActivityLngType v_inRow : v_pdDtl){
-                    Object[] values = new Object[] {
-                        v_inRow.get("tenant_id"),
-                        v_inRow.get("activity_code"),
-                        v_inRow.get("language_cd"),
-                        v_inRow.get("code_name"),
-                        v_inRow.get("update_user_id"),
-                        v_inRow.get("crud_type_code")
-                    };
-                    //v_statement_insertBaseExtrate.addBatch();
-                    batch_dtl.add(values);
+        jdbc.execute(v_sql_createCateTable.toString());
+        
+        List<Object[]> batch_cat = new ArrayList<Object[]>();
+        System.out.println("MID PROC.....");
+        if(!v_pdCat.isEmpty() && v_pdCat.size() > 0){
+            boolean cate_active_flag = false;        
+            for(PdpartBaseActivityCategoryType v_inRow : v_pdCat){                
+                if(v_inRow.get("active_flag")!=null && (v_inRow.get("active_flag")).equals("true")){
+                    cate_active_flag = true;
+                } else {
+                    cate_active_flag = false;
                 }
-                //v_statement_insertBaseExtrate.executeBatch();
-                int[] updateLngCounts = jdbc.batchUpdate(v_sql_insertLngTable, batch_dtl);
-                // log.info("batch_BaseExtrate : " + updateCounts);
-            }
-
-        // int[] updateLngCounts = jdbc.batchUpdate(v_sql_insertLngTable, batch);
+                System.out.println("ERR.....");
+                Object[] values = new Object[] {
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("activity_code"),
+                    v_inRow.get("category_group_code"),
+                    v_inRow.get("category_code"),
+                    Integer.parseInt(String.valueOf(v_inRow.get("s_grade_standard_days"))),                    
+                    Integer.parseInt(String.valueOf(v_inRow.get("a_grade_standard_days"))),
+                    Integer.parseInt(String.valueOf(v_inRow.get("b_grade_standard_days"))),
+                    Integer.parseInt(String.valueOf(v_inRow.get("c_grade_standard_days"))),
+                    Integer.parseInt(String.valueOf(v_inRow.get("d_grade_standard_days"))),                    
+                    cate_active_flag,
+                    v_inRow.get("update_user_id"),
+                    v_inRow.get("crud_type_code")
+                };                
+                batch_cat.add(values);
+            }            
+            int[] updateCateCounts = jdbc.batchUpdate(v_sql_insertCateTable, batch_cat);            
+        }
                 
     
         OutType v_row = OutType.create();
@@ -185,6 +228,7 @@ public class PartBaseActivityMgtV4 implements EventHandler {
         // Local Temp Table DROP
         jdbc.execute(v_sql_dropMstTable);
         jdbc.execute(v_sql_dropLngtable);
+        jdbc.execute(v_sql_dropCatetable);
 
         context.setResult(v_row);
         context.setCompleted();

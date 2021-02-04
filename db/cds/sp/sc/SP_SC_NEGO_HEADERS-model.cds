@@ -2,7 +2,7 @@ namespace sp;
 
 /* Transaction Association */
 using util from '../../cm/util/util-model';
-using {sp as negoItemPrices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
+using {sp.Sc_Nego_Item_Prices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 using {dp as materialMst} from '../../dp/mm/DP_MM_MATERIAL_MST-model';
 
 /* Master Association */
@@ -45,7 +45,7 @@ entity Sc_Nego_Headers {
     key tenant_id : type of orgTenant.Org_Tenant : tenant_id @title : '테넌트ID';
         // key tenant_id                       : Association to orgTenant.Org_Tenant @title : '테넌트ID';
     key nego_header_id                  : Integer64 not null @title : '협상헤더ID';
-        Items                           : Composition of many negoItemPrices.Sc_Nego_Item_Prices
+        Items                           : Composition of many Sc_Nego_Item_Prices
                                               on  Items.tenant_id      = $self.tenant_id
                                               and Items.nego_header_id = $self.nego_header_id;
         reference_nego_header_id        : type of nego_header_id @title : '참조협상헤더ID';
@@ -258,6 +258,84 @@ entity Sc_Nego_Headers_View_Ext as projection on Sc_Nego_Headers_View;
 //   annotate Sc_Nego_Headers_View with {
 //         remain_times @title:'잔여시간' @description:'잔여시간=마감시간-현재시간' @readonly;
 //   };
+
+
+view Sc_Nego_Workbench_View as select from Sc_Nego_Headers as Header {
+    Key Header.nego_document_number            ,
+    Key Header.nego_document_round             ,
+    Key Items.nego_item_number                 ,
+        Header.nego_progress_status_code       ,
+        Header.award_progress_status_code      ,
+        Header.reply_times                     ,
+        Header.supplier_count                  ,
+        Header.supplier_participation_flag     ,
+        Header.remaining_hours                 ,
+        Header.nego_document_title             ,
+        Header.items_count                     ,
+        Header.nego_type_code                  ,
+        Header.negotiation_style_code          ,
+        Header.bidding_result_open_status_code ,
+        Header.negotiation_output_class_code   ,
+        Items.pr_approve_number                ,
+        Items.req_submission_status            ,
+        Items.req_reapproval                   ,
+        Items.material_code                    ,
+        Items.material_desc                    ,
+        Items.requestor_empno                  ,
+        Items.request_department_code          ,
+        Header.award_type_code                 ,
+        Header.buyer_empno                     ,
+        Header.buyer_department_code           ,
+        Header.open_date                       ,
+        Header.closing_date                    ,
+        Header.close_date_ext_enabled_hours    ,
+        Header.close_date_ext_enabled_count    ,
+        Header.actual_extension_count          ,
+        Items.requisition_flag                 ,
+        Items.price_submission_no              ,
+        Items.price_submisstion_status         ,
+        Header.local_create_dtm                ,
+        Items.interface_source                  
+};
+    
+annotate Sc_Nego_Workbench_View with @( 
+        title:'UI:Workbench 뷰',description:'Nego(Header+ItemPrices) 정형뷰',readonly
+) {
+    nego_document_number             @description:'UI:Negotiation No'         ;
+    nego_document_round              @description:'UI:Revision'               ;
+    nego_progress_status_code        @description:'UI:Negotiation Status'     ;
+    award_progress_status_code       @description:'UI:Award Status'           ;
+    reply_times                      @description:'UI:회신횟수'                   ;
+    supplier_count                   @description:'UI:협력사수'                   ;
+    supplier_participation_flag      @description:'UI:Participation'          ;
+    remaining_hours                  @description:'UI:잔여시간'                   ;
+    nego_document_title              @description:'UI:Title'                  ;
+    items_count                      @description:'UI:품목수'                    ;
+    nego_type_code                   @description:'UI:Negotiation Type'       ;
+    negotiation_style_code           @description:'UI:Quote Style'            ;
+    bidding_result_open_status_code  @description:'UI:Bid Open Status'        ;
+    negotiation_output_class_code    @description:'UI:Outcome'                ;
+    pr_approve_number                @description:'UI:Req Submission No'      ;
+    req_submission_status            @description:'UI:Req Submission Status'  ;
+    req_reapproval                   @description:'UI:Req Reapproval'         ;
+    material_code                    @description:'UI:Part No'                ;
+    material_desc                    @description:'UI:Description'            ;
+    requestor_empno                  @description:'UI:요청자'                    ;
+    request_department_code          @description:'UI:요청 부서'                  ;
+    award_type_code                  @description:'UI:Award Type'             ;
+    buyer_empno                      @description:'UI:Buyer'                  ;
+    buyer_department_code            @description:'UI:Department'             ;
+    open_date                        @description:'UI:Open Date'              ;
+    closing_date                     @description:'UI:Close Date'             ;
+    close_date_ext_enabled_hours     @description:'UI:Extention Period'       ;
+    close_date_ext_enabled_count     @description:'UI:Extention Times'        ;
+    actual_extension_count           @description:'UI:Actual Extension Times' ;
+    requisition_flag                 @description:'UI:Requisition Flag'       ;
+    price_submission_no              @description:'UI:Price Submission No'    ;
+    price_submisstion_status         @description:'UI:Price Submission Status';
+    local_create_dtm                 @description:'UI:Create Date'            ;
+    interface_source                 @description:'UI:Interface Source'       ;
+};
 
 /***********************************************************************************
 @cds.persistence.exists 사용된 네이티브 데이터베이스 개체 Entity와의 직접적인 Association 연결은 오류를 일으킨다

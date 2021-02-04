@@ -217,7 +217,7 @@
                         <Column id="mainColumnPR_TYPE_CODE_2" minScreenWidth="Desktop" hAlign="Center"  width="6em">
                             <Text text="{I18N>/PR_TYPE_CODE_2}" />
                         </Column>
-                        <Column id="mainColumnPR_TYPE_CODE_3" minScreenWidth="Desktop" hAlign="Center" width="6em">
+                        <Column id="mainColumnPR_TYPE_CODE_3" minScreenWidth="Desktop" hAlign="Center" width="8em">
                             <Text text="{I18N>/PR_TYPE_CODE_3}" />
                         </Column>
                         <Column id="mainColumnPR_TEMPLATE_NUMBER" minScreenWidth="Desktop" hAlign="Center" width="14em">
@@ -249,7 +249,7 @@
                                 <Text text="{list>pr_desc}"  hAlign="Begin" width="25em"/>
                                 <Text text="{list>pr_type_name}"     hAlign="Begin" width="8em"/>
                                 <Text text="{list>pr_type_name_2}"   hAlign="Begin" width="6em"/>
-                                <Text text="{list>pr_type_name_3}"   hAlign="Begin" width="6em"  />
+                                <Text text="{list>pr_type_name_3}"   hAlign="Begin" width="8em"  />
                                 <Text text="{list>pr_template_name}" hAlign="Begin" width="14em"/>                                
                                 <Text text="{list>requestor_department_name}" hAlign="Begin" width="6.5em"/> 
                                 <Text text="{list>requestor_name}"/>     

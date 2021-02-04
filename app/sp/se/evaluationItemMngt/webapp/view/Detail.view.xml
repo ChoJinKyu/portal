@@ -23,7 +23,8 @@
             <!-- 상세 -->
 			<uxap:ObjectPageHeader objectTitle="{I18N>/DETAIL}">
                 <uxap:actions>
-					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press="onPressPageNavBack" />
+                    <OverflowToolbarButton type="Transparent" icon="sap-icon://full-screen" text="screen" tooltip="screen change" press="onPressLayoutChange" />
+                    <OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press="onPressPageNavBack" />
                 </uxap:actions> 
 			</uxap:ObjectPageHeader>
 		</uxap:headerTitle>
@@ -256,9 +257,9 @@
                         <Table
                             id="tblEvalItemScle"
                             items="{viewModel>/Detail/Item}"
-                            mode="MultiSelect"
-                            selectionChange="onSelectTableItem"
-                        >
+                            mode="SingleSelectLeft"
+                            >
+                            <!-- selectionChange="onSelectTableItem" -->
                             <headerToolbar>
                                 <Toolbar>
                                     <ToolbarSpacer />
@@ -352,9 +353,9 @@
                                                 }
                                             }" 
                                             editable="{=
-                                                ${viewModel>/App/EditMode} &amp;&amp;
-                                                ${viewModel>rowEditable}
+                                                ${viewModel>/App/EditMode}
                                             }"
+                                            change="onChangeEdit"
                                         />
                                         <Input 
                                             value="{
@@ -365,9 +366,9 @@
                                                 }
                                             }" 
                                             editable="{=
-                                                ${viewModel>/App/EditMode} &amp;&amp;
-                                                ${viewModel>rowEditable}
+                                                ${viewModel>/App/EditMode}
                                             }"
+                                            change="onChangeEdit"
                                         />
                                         <Input 
                                             value="{
@@ -378,9 +379,9 @@
                                                 }
                                             }"
                                             editable="{=
-                                                ${viewModel>/App/EditMode} &amp;&amp;
-                                                ${viewModel>rowEditable}
+                                                ${viewModel>/App/EditMode}
                                             }"
+                                            change="onChangeEdit"
                                         />
                                         <Input 
                                             value="{
@@ -391,9 +392,9 @@
                                                 }
                                             }" 
                                             editable="{=
-                                                ${viewModel>/App/EditMode} &amp;&amp;
-                                                ${viewModel>rowEditable}
+                                                ${viewModel>/App/EditMode}
                                             }"
+                                            change="onChangeEdit"
                                         />
                                         <Input 
                                             required="true"
@@ -406,9 +407,9 @@
                                                 }
                                             }" 
                                             editable="{=
-                                                ${viewModel>/App/EditMode} &amp;&amp;
-                                                ${viewModel>rowEditable}
+                                                ${viewModel>/App/EditMode}
                                             }"
+                                            change="onChangeEdit"
                                         />
                                     </cells>
                                 </ColumnListItem>

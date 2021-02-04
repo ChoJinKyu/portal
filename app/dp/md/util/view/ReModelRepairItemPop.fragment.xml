@@ -30,7 +30,7 @@
                         <VBox>
                             <Label text = "Division" /> 
                             <Select width="100%" selectedKey="{repairSearchCondition>/org_code}" 
-                                     items="{path: 'repairPlant>/Pur_Operation'}">
+                                     items="{path: 'repairPlant>/Divisions'}">
                                 <items>
                                     <core:Item key="{repairPlant>org_code}"  text="[{repairPlant>org_code}] {repairPlant>org_name}" />
                                 </items>

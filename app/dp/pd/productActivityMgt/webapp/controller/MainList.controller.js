@@ -9,10 +9,11 @@ sap.ui.define([
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
-    "sap/m/MessageToast"
+    "sap/m/MessageToast",
+    "sap/ui/model/Sorter",
 ], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter, 
         TablePersoController, MainListPersoService, 
-        Filter, FilterOperator, MessageBox, MessageToast) {
+        Filter, FilterOperator, MessageBox, MessageToast, Sorter) {
 	"use strict";
 
 	return BaseController.extend("dp.pd.productActivityMgt.controller.MainList", {
@@ -43,8 +44,10 @@ sap.ui.define([
 			// 	}, true);
 			// }.bind(this));
 			
-			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
-
+            this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
+            
+            console.log(this.getModel("list"));
+         //   this.byId("mainTable").getBinding("rows").sort(sOrder && new Sorter("LastName", sOrder === "desc"));
 			//this._doInitTablePerso();
             //this.enableMessagePopover();
         },
@@ -133,8 +136,9 @@ sap.ui.define([
 				// refresh the list binding.
 				this.onRefresh();
 			} else {
-				var aSearchFilters = this._getSearchStates();
-				this._applySearch(aSearchFilters);
+                var aSearchFilters = this._getSearchStates();
+                var aSorter = this._getSorter();
+				this._applySearch(aSearchFilters, aSorter);
 			}
 		},
 
@@ -145,27 +149,35 @@ sap.ui.define([
 		 */
 		onMainTableItemPress: function(oEvent) {
             console.log("onMainTableItemPress");
-            MessageToast.show("상세 페이지 미구현");
 
-			// var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-			// 	sPath = oEvent.getParameters("rowIndices").rowContext.sPath,
-            //     oRecord = this.getModel("list").getProperty(sPath);
-                
-            // console.log(oNextUIState.layout);
-            // console.log(sPath);
-            // console.log(oRecord.product_activity_code);
+			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
+				sPath = oEvent.getParameters("rowIndices").rowContext.sPath,
+                oRecord = this.getModel("list").getProperty(sPath);
 
-			// this.getRouter().navTo("midPage", {
-			// 	layout: oNextUIState.layout, 
-			// 	tenantId: oRecord.tenant_id,
-			// 	controlOptionCode: oRecord.product_activity_code
-			// }, true);
+			this.getRouter().navTo("midPage", {
+				layout: oNextUIState.layout, 
+				tenantId: oRecord.tenant_id,
+				controlOptionCode: oRecord.product_activity_code
+			}, true);
 
             
         },
         
         onCreateActivity : function(){
-            MessageToast.show("Create 미구현");
+
+            var that = this;
+            var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
+			this.getRouter().navTo("midPage", {
+				layout: oNextUIState.layout, 
+				tenantId: "L2100",
+				controlOptionCode: "new"				
+            });
+
+			// //수정대상 : 수정 검색한 값을 기준으로 데이타를 수정해야한다. 
+			// if(oNextUIState.layout === 'TwoColumnsMidExpanded'){
+			// 	this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
+            // }	
+            
         },
 
         onTableSort : function(){
@@ -203,14 +215,15 @@ sap.ui.define([
 		 * @private
 		 */
 
-		_applySearch: function(aSearchFilters) {
+		_applySearch: function(aSearchFilters, aSorter) {
 			var oView = this.getView(),
 				oModel = this.getModel("list");
             oView.setBusy(true);
          //  console.log(oModel);
 			oModel.setTransactionModel(this.getModel());
 			oModel.read("/PdProdActivityTemplateView", {
-				filters: aSearchFilters,
+                filters: aSearchFilters,
+                sorters: aSorter,
 				success: function(oData){
 					oView.setBusy(false);
                 }
@@ -219,18 +232,24 @@ sap.ui.define([
 		},
 		
 		_getSearchStates: function(){
-			var sProductActivityName = this.getView().byId("searchProductActivityName").getValue(),
-				sDescription = this.getView().byId("searchDescription").getValue(),
+
+            console.log()
+
+			var sSearchProductActivity = this.byId("searchProductActivity").getValue(),
 				sStatus = this.getView().byId("searchStatusSegmentButton").getSelectedKey();
 			
             var aSearchFilters = [];
-            
-			if (sProductActivityName) {
-				aSearchFilters.push(new Filter("activity_name", FilterOperator.Contains, sProductActivityName));
-            }
-            
-			if (sDescription) {
-				aSearchFilters.push(new Filter("description", FilterOperator.Contains, sDescription));
+
+            if (sSearchProductActivity) {
+                aSearchFilters.push(new Filter({
+                    path: 'keyword', 
+                    filters: [
+                        new Filter("tolower(product_activity_code)", FilterOperator.Contains, "'" + sSearchProductActivity.toLowerCase().replace("'","''") + "'"),
+                        new Filter("tolower(activity_name)", FilterOperator.Contains, "'" + sSearchProductActivity.toLowerCase().replace("'","''") + "'"),
+                        new Filter("tolower(description)", FilterOperator.Contains, "'" + sSearchProductActivity.toLowerCase().replace("'","''") + "'")
+                    ],
+                    and: false
+                }));
             }
             
 			if(sStatus !== "All"){
@@ -254,8 +273,13 @@ sap.ui.define([
 				persoService: MainListPersoService,
 				hasGrouping: true
 			}).activate();
-		}
-
+        },
+        
+        _getSorter: function () {
+            var aSorter = [];
+            aSorter.push(new Sorter("sequence", false));
+            return aSorter;
+        },
 
 	});
 });

@@ -233,7 +233,7 @@ public class SpviBasePriceArlServiceV4 implements EventHandler {
         v_sql_createTableItem.append("MATERIAL_NAME          NVARCHAR(240),");
         v_sql_createTableItem.append("VENDOR_POOL_CODE       NVARCHAR(20),");
         v_sql_createTableItem.append("CURRENCY_CODE          NVARCHAR(3),");
-        v_sql_createTableItem.append("MATERIAL_PRICE_UNIT    DECIMAL(34),");
+        v_sql_createTableItem.append("BASE_UOM_CODE          NVARCHAR(30),");
         v_sql_createTableItem.append("BUYER_EMPNO            NVARCHAR(30),");
         v_sql_createTableItem.append("BASE_PRICE             DECIMAL(19, 4),");
         v_sql_createTableItem.append("PCST                   DECIMAL(34),");
@@ -431,7 +431,7 @@ public class SpviBasePriceArlServiceV4 implements EventHandler {
                     v_inRow.get("material_name"),
                     v_inRow.get("vendor_pool_code"),
                     v_inRow.get("currency_code"),
-                    v_inRow.get("material_price_unit"),
+                    v_inRow.get("base_uom_code"),
                     v_inRow.get("buyer_empno"),
                     v_inRow.get("base_price"),
                     v_inRow.get("pcst"),

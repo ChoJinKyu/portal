@@ -69,7 +69,8 @@ sap.ui.define([
 				intent: "#Template-display"
             }, true);
 
-			this._doInitTable();
+            this._doInitSearch();
+			//this._doInitTable();
             //this._doInitTablePerso();
             
             var oMultilingual = new Multilingual();
@@ -81,8 +82,8 @@ sap.ui.define([
                 persoService: MainListPersoService
             }).setTable(this.byId("moldMstTable"));
 */
-            this.process.setDrawProcessUI(this, "remodelRepairMgtProcessE", "B", 0);
-            this.process.setDrawProcessUI(this, "remodelRepairMgtProcessS", "B", 0);
+            //this.process.setDrawProcessUI(this, "remodelRepairMgtProcessE", "B", 0);
+            //this.process.setDrawProcessUI(this, "remodelRepairMgtProcessS", "B", 0);
         },
         
         onAfterRendering : function () {
@@ -182,8 +183,8 @@ sap.ui.define([
                 receiptFromDate = this.getView().byId("searchRequestDate" + sSurffix).getDateValue(),
                 receiptToDate = this.getView().byId("searchRequestDate" + sSurffix).getSecondDateValue(),
                 itemType = this.getView().byId("searchItemType").getSelectedKeys(),
-                productionType = this.getView().byId("searchProductionType").getSelectedKeys(),
-                eDType = this.getView().byId("searchEDType").getSelectedKey(),
+                //productionType = this.getView().byId("searchProductionType").getSelectedKeys(),
+                //eDType = this.getView().byId("searchEDType").getSelectedKey(),
                 description = this.getView().byId("searchDescription").getValue(),
                 model = this.getView().byId("searchModel").getValue(),
                 moldNo = this.getView().byId("searchPart").getValue(),
@@ -244,7 +245,7 @@ sap.ui.define([
                     })
                 );
             }
-
+/*
             if(productionType.length > 0){
 
                 var _productionTypeFilters = [];
@@ -262,7 +263,7 @@ sap.ui.define([
 
             if (eDType && eDType.length > 0) {
                 aTableSearchState.push(new Filter("mold_location_type_code", FilterOperator.EQ, eDType));
-            }
+            }*/
             if (model && model.length > 0) {
                 aTableSearchState.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + model.toLowerCase() + "'"));
             }

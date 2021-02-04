@@ -40,6 +40,7 @@ sap.ui.define([
             // 기능추가
             Aop.addFuncForButtonPress(this);
             Aop.addFuncForNavigation(this);
+            Aop.addFuncForOnColumnListItemPress(this);
         },
         /////////////////////////////////////////////////////////////
         // Util
@@ -317,6 +318,9 @@ sap.ui.define([
                     today.getFullYear(), 
                     ((today.getMonth()+1)+"").length == 1 ? "0" + (today.getMonth()+1) : today.getMonth()+1, 
                     ((today.getDay())+"").length == 1 ? "0" + (today.getDay()) : today.getDay(), 
+                    ((today.getHours())+"").length == 1 ? "0" + (today.getHours()) : today.getHours(), 
+                    ((today.getMinutes())+"").length == 1 ? "0" + (today.getMinutes()) : today.getMinutes(), 
+                    ((today.getSeconds())+"").length == 1 ? "0" + (today.getSeconds()) : today.getSeconds()
                 ].join("");
                 return ExcelUtil.fnExportExcel({
                     fileName: (args[args.length-1]["fileName"] || (function(args){

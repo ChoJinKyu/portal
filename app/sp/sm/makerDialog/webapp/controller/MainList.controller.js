@@ -45,15 +45,9 @@ sap.ui.define([
         var that;
         return BaseController.extend("sp.sm.makerDialog.controller.MainList", {
             onInit: function () {
-                var oViewModel,
-                    oResourceBundle = this.getResourceBundle();
-
-                this.oRouter = this.getOwnerComponent().getRouter();
-
                 // Model used to manipulate control states
-                oViewModel = new JSONModel({});
+                var oViewModel = new JSONModel({});
                 this.setModel(oViewModel, "mainListView");
-                this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
                 that = this;
             },
             onInputSupplierWithOrgValuePress: function () {

@@ -19,7 +19,7 @@
                     "odataVersion": "2.0"
                 }
             },
-            "commonService": {
+            "commonUtilService": {
                 "uri": "srv-api/odata/v2/cm.util.CommonService/",
                 "type": "OData",
                 "settings": {
@@ -76,13 +76,19 @@
                 }
             },
             "util": {
-                "dataSource": "commonService",
+                "dataSource": "commonUtilService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",
                     "defaultCountMode": "Inline",
                     "refreshAfterChange": false,
                     "useBatch": true
+                }
+            },
+            "contModel": {
+                "type": "sap.ui.model.json.JSONModel",
+                "settings": {
+                    "defaultBindingMode": "TwoWay"
                 }
             },
             "": {
@@ -96,24 +102,17 @@
                 }
             }
         },
-        "resources": {
-            "css": [
-                {
-                    "uri": "css/style.css"
-                }
-            ]
-        },
         "resourceRoots": {
             "ext.lib": "../../../../lib",
-            "dp": "../../../../dp"
+            "dp.util": "../../util"
         },
         "routing": {
             "config": {
                 "routerClass": "sap.m.routing.Router",
                 "viewType": "XML",
                 "viewPath": "dp.pd.partActivityMgt.view",
-                "controlId": "app",
-                "controlAggregation": "pages",
+                "controlId": "fcl",
+                "transition": "slide",
                 "bypassed": {
                     "target": [
                         "notFound"
@@ -123,46 +122,32 @@
             },
             "routes": [
                 {
-                    "pattern": "",
+                    "pattern": ":layout:",
                     "name": "mainPage",
                     "target": [
                         "mainObject"
                     ]
                 },
                 {
-                    "pattern": "midObject/{tenantId}/{companyCode}/{ideaNumber}",
+                    "pattern": "midObject/{layout}/{tenantId}/{companyCode}/{orgTypeCode}/{orgCode}/{partProjectTypeCode}/{activityCode}",
                     "name": "midPage",
                     "target": [
+                        "mainObject",
                         "midObject"
-                    ]
-                },
-                {
-                    "pattern": "publishObject/{tenantId}/{companyCode}/{ideaNumber}",
-                    "name": "publishPage",
-                    "target": [
-                        "publishObject"
                     ]
                 }
             ],
             "targets": {
                 "mainObject": {
                     "viewName": "MainList",
-                    "viewId": "mainPage",
-                    "viewLevel": 1
+                    "controlAggregation": "beginColumnPages"
                 },
                 "midObject": {
-                    "viewName": "IdeaSelection",
-                    "viewId": "selectionPage",
-                    "viewLevel": 2
-                },
-                "publishObject": {
-                    "viewName": "Publish",
-                    "viewId": "publishPage",
-                    "viewLevel": 2
+                    "viewName": "MidObject",
+                    "controlAggregation": "midColumnPages"
                 },
                 "notFound": {
-                    "viewName": "NotFound",
-                    "viewPath": "ext.lib.view",
+                    "viewName": "MidObjectNotFound",
                     "viewId": "notFound"
                 }
             }

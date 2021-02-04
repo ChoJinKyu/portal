@@ -6,13 +6,17 @@ sap.ui.define([
     'sap/ui/model/json/JSONModel',
     "sap/ui/table/Row",
     "sap/ui/core/routing/HashChanger",
-    "sap/ui/core/EventBus"
+    "sap/ui/core/EventBus",
+    "sap/m/UploadCollectionParameter",
+    "sap/ui/Device"
 ],
-	function(MessageToast, Controller, JSONModel, Row, HashChanger, EventBus) {
+	function(MessageToast, Controller, JSONModel, Row, HashChanger, EventBus, UploadCollectionParameter, Device) {
 	"use strict";
  
 	return Controller.extend("xx.templateGuie.controller.Test", {
         onInit: function() {   
+            this.getView().setBusyIndicatorDelay(0);
+
             var oModel = new JSONModel();
 			var oData = {
 				modelData: [
@@ -28,43 +32,24 @@ sap.ui.define([
 			oModel.setData(oData);
             oView.setModel(oModel);
 
-            // var oHashChanger = HashChanger.getInstance();
-            //     oHashChanger.init();
-            //     oHashChanger.attachEvent("hashChanged", function(oEvent) {
-            //     alert(oEvent.getParameter("newHash") + "," + oEvent.getParameter("oldHash"));
-            // });
-
-            // var oModel = new JSONModel(sap.ui.require.toUrl("templateGuideModel/clothing.json"));
-            // this.getView().setModel(oModel);
+            var oFileModel = new JSONModel([]);
+            oView.setModel(oFileModel, "fileList");
         },
 
         onExit : function(){
             console.log("onExit Test");
         },
-
-        onSaveFile : function(){
-			var fnSave = $.ajax({
-				url: 'srv-api/test/upload',
-                type: "POST",
-                data: new FormData($("#upload-file-form")[0]),
-                enctype: 'multipart/form-data',
-                processData: false,
-                contentType: false,
-                cache: false,
-				data: ""
-			});
-						
-			fnSave.done(function(oResultData) {	
-                oResultData;
-            });
-        },
-
+        
         onPress: function (oEvent) {
 			if (oEvent.getSource().getPressed()) {
 				MessageToast.show(oEvent.getSource().getId() + " Pressed");
 			} else {
 				MessageToast.show(oEvent.getSource().getId() + " Unpressed");
 			}
+        },
+
+        onRowSelectionChange : function (oEvent) {
+            oEvent;
         },
 
         onDragStart : function(oEvent){

@@ -6,7 +6,7 @@
   xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core"
 	height="100%">
-	<uxap:ObjectPageLayout id="page"
+	<uxap:ObjectPageLayout id="ObjectPage"
 		toggleHeaderOnTitleClick="true"
 		alwaysShowContentHeader = "true"
 		preserveHeaderStateOnScroll="false"
@@ -82,8 +82,8 @@
                       <Input placeholder="Input Data" editable="false"/>
                     </VBox>
                   </HBox>
-                  <HBox alignItems="Start" justifyContent="Start">
-                    <HBox class="sapUiContentPadding">
+                  <HBox alignItems="Start" justifyContent="Start" >
+                    <HBox class="sapUiContentPadding" id="pageSectionMainFormHBoxLine1">
                       <VBox>
                         <Label text="{I18N>/CHAIN} / {I18N>/MENU_TYPE}" labelFor="searchChainCombo" required="true"></Label>
                         <HBox>
@@ -122,7 +122,7 @@
                         </HBox>
                       </VBox>
                     </HBox>
-                    <HBox class="sapUiContentPadding">
+                    <HBox class="sapUiContentPadding" id="pageSectionMainFormHBoxLine2">
                       <VBox>
                         <Label text="{I18N>/MENU_CODE}" labelFor="menuCodeInput" required="true"/>
                         <Input id="menuCodeInput" placeholder="Input Data" width="100%"
@@ -134,8 +134,8 @@
                     </HBox>
                   </HBox>
 
-                  <HBox alignItems="Start" justifyContent="Start">
-                    <HBox class="sapUiContentPadding">
+                  <HBox alignItems="Start" justifyContent="Start" >
+                    <HBox class="sapUiContentPadding" id="pageSectionMainFormHBoxLine3">
                       <VBox>
                         <Label text="{I18N>/MENU_LEVEL} / {I18N>/SORT_NUMBER}" labelFor="menuLevelCombo" required="true"></Label>
                         <HBox>
@@ -152,7 +152,7 @@
                                 <core:Item key="{menu_level>level}" text="{menu_level>level}" />
                             </items>
                           </ComboBox>
-                          <Input id="sortNumberInput" width="100%" 
+                          <Input id="sortNumberInput" width="100%" required="true"
                             value="{path: 'master>/sort_number', type: 'sap.ui.model.type.Decimal'}"
                             editable="{= ${midObjectView>/mode} !== 'R'}"
                           />
@@ -161,7 +161,7 @@
                     </HBox>
                     <HBox>
                       <VBox class="sapUiContentPadding">
-                        <Label text="{I18N>/SCREEN_MARK_FLAG}" labelFor="menuDisplayFlagButton" required="true"/>
+                        <Label text="{I18N>/SCREEN_MARK_FLAG}" labelFor="menuDisplayFlagButton" />
                         <SegmentedButton id="menuDisplayFlagButton" class="sapUiSmallMarginBottom" width="100%"
                           enabled="{= ${midObjectView>/mode} !== 'R'}"
                           selectedKey="{path: 'master>/menu_display_flag', type: 'sap.ui.model.type.Boolean'}"
@@ -176,7 +176,7 @@
                         </layoutData>
                       </VBox>
                       <VBox class="sapUiContentPadding">
-                        <Label text="{I18N>/USE_FLAG}" labelFor="useFlagButton" required="true"/>
+                        <Label text="{I18N>/USE_FLAG}" labelFor="useFlagButton"/>
                         <SegmentedButton id="useFlagButton" class="sapUiSmallMarginBottom" width="100%"
                           enabled="{= ${midObjectView>/mode} !== 'R'}"
                           selectedKey="{path: 'master>/use_flag', type: 'sap.ui.model.type.Boolean'}"
@@ -193,7 +193,7 @@
                     </HBox>
                   </HBox>
 
-                  <HBox class="sapUiContentPadding">
+                  <HBox class="sapUiContentPadding" id="pageSectionMainFormHBoxLine4">
                     <VBox width="100%">
                       <Label text="{I18N>/MENU_DESC}" labelFor="" required="true"/>
                       <Input placeholder="Input Data" width="100%"
@@ -204,7 +204,7 @@
                     </VBox>
                   </HBox>
 
-                  <HBox class="sapUiContentPadding">
+                  <HBox class="sapUiContentPadding" id="pageSectionMainFormHBoxLine5">
                     <VBox width="100%">
                       <Label text="{I18N>/MENU_PATH}" labelFor="" required="true"/>
                       <Input placeholder="Input Data" width="100%"

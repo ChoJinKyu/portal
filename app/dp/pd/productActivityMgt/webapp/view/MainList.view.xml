@@ -16,7 +16,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="Product Activity(x)" />
+                    <Title text="{I18N>/DP_PART_ACTIVITY_MGT}" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -35,19 +35,11 @@
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Product Activity 명 :(x)" labelFor="searchProductActivityName" required="true"></Label>
-                            <Input id="searchProductActivityName" 
-                                placeholder="Product Activity 명(x)"/>
+                            <Label text="코드 / 명 / 설명 :" labelFor="searchProductActivity" required="true"></Label>
+                            <Input id="searchProductActivity" 
+                                placeholder="코드 / 명 / 설명 :"/>
                             <layoutData>
-                                <layout:GridData span="XL2 L2 M3 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox>
-                            <Label text="설명 :(x)" labelFor="searchDescription" required="true"></Label>
-                            <Input id="searchDescription" 
-                                placeholder="설명(x)"/>
-                            <layoutData>
-                                <layout:GridData span="XL2 L2 M3 S12" />
+                                <layout:GridData span="XL4 L4 M6 S12" />
                             </layoutData>
                         </VBox>
                        
@@ -55,9 +47,9 @@
                             <Label text="{I18N>/OPTION}:" labelFor="searchUsageSegmentButton"></Label>
                             <SegmentedButton id="searchStatusSegmentButton" selectedKey="all" class="sapUiSmallMarginBottom" width="100%" >
                                 <items>
-                                    <SegmentedButtonItem text="All(x)" key="All" width="4.1rem" />
-                                    <SegmentedButtonItem text="Active(x)" key="Active" width="6rem" />
-                                    <SegmentedButtonItem text="Inactive(x)" key="Inactive" width="6rem" />
+                                    <SegmentedButtonItem text="All" key="All" width="4.1rem" />
+                                    <SegmentedButtonItem text="Active" key="Active" width="6rem" />
+                                    <SegmentedButtonItem text="Inactive" key="Inactive" width="6rem" />
                                 </items>
                             </SegmentedButton>
                             <layoutData>
@@ -68,9 +60,12 @@
                 </form:SimpleForm>
             </f:DynamicPageHeader>
         </f:header>
+        
         <f:content>
             <t:Table id="mainTable" 
-                    rows="{list>/PdProdActivityTemplateView}"
+                    rows="{
+                        path: 'list>/PdProdActivityTemplateView'
+                    }"
                     selectionMode="Single"
                     selectionBehavior="RowOnly"
                     visibleRowCountMode="Auto"
@@ -79,7 +74,7 @@
                     width="auto">
                 <t:extension>
                     <OverflowToolbar class="sapFDynamicPageAlignContent">
-                        <Title id="mainTableTitle2" text="Product Activity List(x) {= ${/PdProdActivityTemplateView}.length > 0 ? '(' + ${/PdProdActivityTemplateView}.length + ')' : ''}" level="H2"/>
+                        <Title id="mainTableTitle2" text="{I18N>/DP_PART_ACTIVITY_MGT} {I18N>/LIST} {= ${/PdProdActivityTemplateView}.length > 0 ? '(' + ${/PdProdActivityTemplateView}.length + ')' : ''}" level="H2"/>
                         <ToolbarSpacer/>
                         <Button text="{I18N>/CREATE}" id="createActivity" press=".onCreateActivity"  type="Transparent"/>
                         <Button icon="sap-icon://sort" press=".onTableSort"/>
@@ -99,42 +94,42 @@
                 <t:columns>
 
                     <t:Column hAlign="Center">
-                        <Text text="Product Activity 코드(x)" />
+                        <Text text="{I18N>/PROD_ACTIVITY_CODE}" />
                         <t:template>
                             <Text text="{list>product_activity_code}" ></Text>  
                         </t:template>
                     </t:Column>
 
                     <t:Column hAlign="Center">
-                        <Text text="Product Activity 명(x)" />
+                        <Text text="{I18N>/PROD_ACTIVITY_NAME}" />
                         <t:template>
                             <Text text="{list>activity_name}" ></Text>  
                         </t:template>
                     </t:Column>
 
                     <t:Column hAlign="Center">
-                        <Text text="설명(x)" />
+                        <Text text="{I18N>/DESCRIPTION}" />
                         <t:template>
                             <Text text="{list>description}" ></Text>  
                         </t:template>
                     </t:Column>
 
                     <t:Column hAlign="Center">
-                        <Text text="순번(x)" />
+                        <Text text="{I18N>/SEQUENCE}" />
                         <t:template>
                             <Text text="{list>sequence}" ></Text>  
                         </t:template>
                     </t:Column>
 
                     <t:Column hAlign="Center">
-                        <Text text="Status(x)" />
+                        <Text text="{I18N>/STATUS}" />
                         <t:template>
                             <Text text="{= ${list>active_flag} === true ? 'Active' : 'Inactive'}"/>  
                         </t:template>
                     </t:Column>
 
                     <t:Column hAlign="Center">
-                        <Text text="로컬변경일시(x)" />
+                        <Text text="{I18N>/LOCAL_UPDATE_DTM}" />
                         <t:template>
                             <Text text="{
                                         path: 'list>local_update_dtm',
@@ -144,7 +139,7 @@
                     </t:Column>
 
                     <t:Column hAlign="Center">
-                        <Text text="수정사용자ID(x)" />
+                        <Text text="{I18N>/UPDATE_USER_ID}" />
                         <t:template>
                             <Text text="{list>update_user_id}" ></Text>  
                         </t:template>

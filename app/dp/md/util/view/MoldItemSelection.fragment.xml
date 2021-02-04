@@ -41,7 +41,7 @@
                         <VBox>
                             <Label text = "{I18N>/PLANT}" required="true"/> 
                             <ComboBox id="moldItemPopPlant"  width="100%" selectedKey="{moldItemPop>/org_code}" 
-                                    enabled="false" items="{ path: 'moldSelectionPlantPopList>/Pur_Operation_Org'}">
+                                    enabled="false" items="{ path: 'moldSelectionPlantPopList>/Divisions'}">
                                 <items>
                                     <core:Item key="{moldSelectionPlantPopList>org_code}" text="[{moldSelectionPlantPopList>org_code}]{moldSelectionPlantPopList>org_name}" />
                                 </items>

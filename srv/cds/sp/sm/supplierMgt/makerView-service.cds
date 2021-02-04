@@ -68,6 +68,22 @@ service makerViewService {
             sort_no
         ;
 
+    //Maker Company Class View
+    @readonly
+    view MakerCompanyClassCodeView @(title : '제조사 회사 분류 코드 View') as
+        select from mkMstView.Sm_Master_Cal_View as makerView {
+            key makerView.tenant_id,
+            key makerView.code,
+                makerView.sort_no,
+                makerView.code_name
+        }
+        where
+            trim(group_code) = 'SP_SM_COMPANY_CLASS_CODE'
+        order by
+            tenant_id,
+            sort_no
+        ;
+
     //Business Partner Master View
     //Business Partner Role Code View
     @readonly

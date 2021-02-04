@@ -90,19 +90,19 @@ service SupEvalSetupService {
             and    cd.group_code = 'SP_SM_SUPPLIER_TYPE'
             and    cd.language_cd = lng.language_cd
             and    cd.code =  ma.vendor_pool_operation_unit_code) as vendor_pool_operation_unit_name : String(500)
-    from   opUnitMst as mst,
-           opUnitMap as ma,
+    from   opUnitMst as mst
+           left outer join opUnitMap as ma
+           on     mst.tenant_id = ma.tenant_id
+           and    mst.company_code = ma.company_code
+           and    mst.org_type_code = ma.org_type_code
+           and    mst.org_code = ma.org_code
+           and    mst.evaluation_operation_unit_code = ma.evaluation_operation_unit_code,
            (select tenant_id,
                    code language_cd
             from   codeDtl
             where  group_code = 'CM_LANG_CODE'
             and    now() between start_date and end_date) lng
-    where  mst.tenant_id = ma.tenant_id
-    and    mst.company_code = ma.company_code
-    and    mst.org_type_code = ma.org_type_code
-    and    mst.org_code = ma.org_code
-    and    mst.evaluation_operation_unit_code = ma.evaluation_operation_unit_code
-    and    mst.tenant_id = lng.tenant_id
+    where  mst.tenant_id = lng.tenant_id
     ;
 
     view OpUnitView as

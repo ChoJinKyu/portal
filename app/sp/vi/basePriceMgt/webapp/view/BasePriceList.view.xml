@@ -32,26 +32,27 @@
             layout="ResponsiveGridLayout"
             adjustLabelSpan="false">
                 <form:content>
-                    <!-- Type 시작 -->
+                    <!-- 품의유형 시작 -->
                     <VBox>
-                        <Label text="{I18N>/TYPE} "></Label>
+                        <Label text="{I18N>/SP_APPROVAL_TYPE}"></Label>
                         <ComboBox
                             width="100%"
-                            selectedKey="{filterModel>/type}"
+                            selectedKey="{filterModel>/net_price_type_code}"
                             items="{
-                            path: 'filterModel>/type_list',
-                            filters: [
+                            path: 'codeMgt>/CodeLanguages',
+                            filters: [ 
+                                 {path: 'group_code', operator: 'EQ', value1: 'SP_VI_NET_PRICE_TYPE_CODE'}
                             ]
                             }">
                             <items>
-                            <core:Item key="{filterModel>code}" text="{filterModel>text}" />
+                            <core:Item key="{codeMgt>code}" text="{codeMgt>code_name}" />
                             </items>
                         </ComboBox>
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
                     </VBox>
-                    <!-- Type 끝 -->
+                    <!-- 품의유형 끝 -->
                     
                     <!-- Approval Number 시작 -->
                     <VBox>
@@ -94,48 +95,15 @@
                     <!-- Request By 시작 -->
                     <VBox height="56px">
                         <Label text="{I18N>/REQUESTOR} "></Label>
-                        <lib-m:CodePicker
-                            placeholder="Enter a Employee name"
-                            value="{filterModel>/requestBy}"
-                            keyField="employee_number"
-                            textField="user_local_name"
-                            suggestionItems="{
-                                path: '/',
-                                filters: [
-                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                ],
-                                serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                entityName: 'Employee'
-                            }">
-                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
-                                keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
-                        </lib-m:CodePicker>
+                        <MultiInput id="multiInputWithEmployeeValueHelp"
+                            placeholder="Choose employees from the ValueHelp"
+                            showValueHelp="true" valueHelpRequest=".onMultiInputWithEmployeeValuePress($event, 'multiInputWithEmployeeValueHelp')">
+                        </MultiInput>
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
                         </layoutData>
                     </VBox>
                     <!-- Request By 끝 -->
-                    <!-- 품의유형 시작 -->
-                    <VBox>
-                        <Label text="{I18N>/SP_APPROVAL_TYPE}"></Label>
-                        <ComboBox
-                            width="100%"
-                            selectedKey="{filterModel>/net_price_type_code}"
-                            items="{
-                            path: 'codeMgt>/CodeLanguages',
-                            filters: [ 
-                                 {path: 'group_code', operator: 'EQ', value1: 'SP_VI_NET_PRICE_TYPE_CODE'}
-                            ]
-                            }">
-                            <items>
-                            <core:Item key="{codeMgt>code}" text="{codeMgt>code_name}" />
-                            </items>
-                        </ComboBox>
-                        <layoutData>
-                            <layout:GridData span="XL2 L4 M6 S12" />
-                        </layoutData>
-                    </VBox>
-                    <!-- 품의유형 끝 -->
 
                     <!-- Status 시작 -->
                     <VBox>
@@ -216,8 +184,8 @@
                     <Label text="{I18N>/REQUEST_DATE}" />
                     <t:template>
                         <Text text="{
-                                path: 'listModel>local_create_dtm',
-                                formatter: '.dateFormatter.toDateString'}" />
+                                path: 'listModel>request_date',
+                                formatter: '.onChangeDateFormat'}" />
                     </t:template>
                 </t:Column>
                 <t:Column hAlign="Center" width="12rem">

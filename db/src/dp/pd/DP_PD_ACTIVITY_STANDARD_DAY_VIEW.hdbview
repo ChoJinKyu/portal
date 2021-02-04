@@ -20,7 +20,7 @@ SELECT pca.tenant_id,
        pca.update_user_id,
        pca.local_update_dtm
   FROM DP_PD_PART_CATEGORY_ACTIVITY pca, 
-       DP_PD_ACTIVITY_CODE_LNG aname,
+       DP_PD_PART_BASE_ACTIVITY_LNG aname,
        DP_PD_PART_CATEGORY_LNG cname, 
     (select code, code_name, tenant_id from CM_CODE_LNG where group_code='DP_PART_PJT_TYPE' and LANGUAGE_CD='KO') a,
       DP_PD_PART_ACTIVITY_TEMPLATE pat
@@ -28,7 +28,6 @@ SELECT pca.tenant_id,
    and cname.category_code = pca.category_code
    and aname.LANGUAGE_CD='KO'
    and cname.LANGUAGE_CD='KO'
-   AND aname.activity_type_code='PART'
    and aname.activity_code = pca.activity_code
    AND cname.tenant_id = pca.tenant_id
    AND aname.tenant_id = pca.tenant_id
@@ -38,7 +37,6 @@ SELECT pca.tenant_id,
    and pat.company_code = pca.company_code
    and pat.org_type_code = pca.org_type_code
    and pat.org_code = pca.org_code
-   and pat.category_group_code = pca.category_group_code
    and pat.activity_code = pca.activity_code
    and pat.part_project_type_code = pca.part_project_type_code
    and pca.tenant_id = 'L2101'

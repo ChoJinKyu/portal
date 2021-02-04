@@ -8,6 +8,9 @@ entity Sm_Maker_Reg_Req_Cal_View {
         maker_request_type_code           : String(30)  @title : '제조사요청타입코드';
         maker_progress_status_code        : String(30)  @title : '제조사진행상태코드';
         requestor_empno                   : String(30)  @title : '요청자사번';
+        requestor_local_name              : String(240) @title : '요청자로컬명';
+        requestor_korean_name             : String(240) @title : '요청자한글명';
+        requestor_english_name            : String(240) @title : '요청자영문명';
         requestor_department_code         : String(50)  @title : '요청자부서';
         requestor_department_local_name   : String(240) @title : '요청자부서로컬명';
         requestor_department_korean_name  : String(240) @title : '요청자부서한글명';

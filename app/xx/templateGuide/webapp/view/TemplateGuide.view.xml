@@ -16,15 +16,21 @@
                 <content>
                 <IconTabBar id="mainTabContainer" expandable="false" expanded="true" select="onTabSelect">
                     <items >
-                        <IconTabFilter text="GridTable" key="GridTable">
+                        <IconTabFilter text="FileUpload" key="FileUploadGuide">
+                            <content></content>
+                        </IconTabFilter>
+                        <IconTabFilter text="FileUpload - Use fragment" key="FileUploadFragmentGuide">
                             <content></content>
                         </IconTabFilter>
                         <IconTabFilter text="Test" key="Test">
                             <content></content>
                         </IconTabFilter>
-                        <IconTabFilter text="MainDashBoard" key="MainDashBoard">
+                        <!-- <IconTabFilter text="GridTable" key="GridTable">
                             <content></content>
-                        </IconTabFilter>
+                        </IconTabFilter> -->
+                        <!-- <IconTabFilter text="MainDashBoard" key="MainDashBoard">
+                            <content></content>
+                        </IconTabFilter> -->
                     </items>
                 </IconTabBar>
                 </content>

@@ -71,6 +71,10 @@ sap.ui.define([
 
         onRowSelectionChange : function(oEvent){
             oEvent;
-        }
+        },
+
+        onChange : function(oEvent){
+            oEvent;
+        },
 	});
 });

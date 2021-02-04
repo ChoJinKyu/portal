@@ -1,6 +1,7 @@
 //cds-service sourcing-service.cds
 using {sp.Sc_Nego_Headers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
 using {sp.Sc_Nego_Headers_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
+using {sp.Sc_Nego_Workbench_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
 using {sp.Sc_Nego_Item_Prices} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 using {sp.Sc_Nego_Suppliers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 using {sp.Sc_Nego_Headers_New_Record_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW-model';
@@ -18,10 +19,6 @@ namespace sp;
 service SourcingService {
 
     /* 협상에 대한 헤더 정보(네고종류, 네고산출물, Award유형, 개설일자, 마감일자, 오리엔테이션정보 등)를 관리한다. */
-    entity NegoHeadersView @(title : '협상헤더정보뷰') as projection on Sc_Nego_Headers_View { *,
-        Items : redirected to NegoItemPrices
-    };
-    /* 협상에 대한 헤더 정보(네고종류, 네고산출물, Award유형, 개설일자, 마감일자, 오리엔테이션정보 등)를 관리한다. */
     entity NegoHeaders @(title : '협상헤더정보')                    as projection on Sc_Nego_Headers{ *,
         Items : redirected to NegoItemPrices
     };
@@ -36,45 +33,49 @@ service SourcingService {
     /* 협상에 대한 헤더 정보의 신규 레코드 초기 값 레코드를 생성한다. */
     entity NegoHeadersNewRecordView @(title : '협상헤더정보-신규레코드') as projection on Sc_Nego_Headers_New_Record_View;
 
-    view NegoWorkbenchView as select from Sc_Nego_Headers as Header {
-        Header.nego_document_number             ,
-        Header.nego_document_round              ,
-        Header.nego_progress_status_code        ,
-        Header.award_progress_status_code       ,
-        Header.reply_times                      ,
-        Header.supplier_count                   ,
-        Header.supplier_participation_flag      ,
-        Header.remaining_hours                  ,
-        Header.nego_document_title              ,
-        Header.items_count                      ,
-        Header.nego_type_code                   ,
-        Header.negotiation_style_code           ,
-        Header.bidding_result_open_status_code  ,
-        Header.negotiation_output_class_code    ,
-        Items.pr_approve_number                 ,
-        Items.req_submission_status             ,
-        Items.req_reapproval                    ,
-        Items.material_code                     ,
-        Items.material_desc                     ,
-        Items.requestor_empno                   ,
-        Items.request_department_code           ,
-        Header.award_type_code                  ,
-        Header.buyer_empno                      ,
-        Header.buyer_department_code            ,
-        Header.open_date                        ,
-        Header.closing_date                     ,
-        Header.close_date_ext_enabled_hours     ,
-        Header.close_date_ext_enabled_count     ,
-        Header.actual_extension_count           ,
-        Items.requisition_flag                  ,
-        Items.price_submission_no               ,
-        Items.price_submisstion_status          ,
-        Header.local_create_dtm                 ,
-        Items.interface_source                   
+    entity NegoHeadersView @(title : '협상헤더정보(+계산항목)')          as projection on Sc_Nego_Headers_View;
+
+    // Negotiation(견적&입찰) Workbench 정형 View
+    view NegoWorkbenchView as select from Sc_Nego_Headers_View as Header {
+        key Header.nego_document_number             ,
+        key Header.nego_document_round              ,
+        Key Items.nego_item_number                  ,
+            Header.nego_progress_status_code        ,
+            Header.award_progress_status_code       ,
+            Header.reply_times                      ,
+            Header.supplier_count                   ,
+            Header.supplier_participation_flag      ,
+            Header.remaining_hours                  ,
+            Header.nego_document_title              ,
+            Header.items_count                      ,
+            Header.nego_type_code                   ,
+            Header.negotiation_style_code           ,
+            Header.bidding_result_open_status_code  ,
+            Header.negotiation_output_class_code    ,
+            Items.pr_approve_number                 ,
+            Items.req_submission_status             ,
+            Items.req_reapproval                    ,
+            Items.material_code                     ,
+            Items.material_desc                     ,
+            Items.requestor_empno                   ,
+            Items.request_department_code           ,
+            Header.award_type_code                  ,
+            Header.buyer_empno                      ,
+            Header.buyer_department_code            ,
+            Header.open_date                        ,
+            Header.closing_date                     ,
+            Header.close_date_ext_enabled_hours     ,
+            Header.close_date_ext_enabled_count     ,
+            Header.actual_extension_count           ,
+            Items.requisition_flag                  ,
+            Items.price_submission_no               ,
+            Items.price_submisstion_status          ,
+            Header.local_create_dtm                 ,
+            Items.interface_source                   
     };
         
     annotate NegoWorkbenchView with @( 
-            title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가',readonly
+            title:'UI:Workbench 뷰',description:'Nego(Header+ItemPrices) 정형뷰',readonly
     ) {
         nego_document_number             @description:'UI:Negotiation No'         ;
         nego_document_round              @description:'UI:Revision'               ;

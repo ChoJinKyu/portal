@@ -176,6 +176,13 @@
                     "target": [
                         "publishObject"
                     ]
+                },
+                {
+                    "pattern": "addCreateObject/{tenantId}/{requestNumber}",
+                    "name": "addCreatePage",
+                    "target": [
+                        "addCreateObject"
+                    ]
                 }
             ],
             "targets": {
@@ -192,6 +199,11 @@
                 "publishObject": {
                     "viewName": "Publish",
                     "viewId": "publishPage",
+                    "viewLevel": 2
+                },
+                "addCreateObject": {
+                    "viewName": "AddCreate",
+                    "viewId": "addCreatePage",
                     "viewLevel": 2
                 },
                 "notFound": {

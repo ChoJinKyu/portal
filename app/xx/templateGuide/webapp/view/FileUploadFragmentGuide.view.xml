@@ -1,0 +1,10 @@
+<mvc:View
+	controllerName="xx.templateGuie.controller.FileUploadFragmentGuide"
+	xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    class="sapUiSizeCompact">
+	<Panel id="mainPanel">
+		<content>
+        </content>
+    </Panel>
+</mvc:View>

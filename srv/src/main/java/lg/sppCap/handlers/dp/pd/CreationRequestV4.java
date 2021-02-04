@@ -80,7 +80,7 @@ public class CreationRequestV4 implements EventHandler {
         v_sql_createMstTable.append("CREATE_CATEGORY_CODE NVARCHAR(40), ");
         v_sql_createMstTable.append("UPDATE_USER_ID NVARCHAR(255), ");
 
-        v_sql_createMstTable.append("CRUD_TYPE_CODE NVARCHAR(1) ");
+        v_sql_createMstTable.append("CRUD_TYPE NVARCHAR(1) ");
         v_sql_createMstTable.append(")");
 
         String v_sql_insertMstTable = "INSERT INTO #LOCAL_TEMP_DP_PD_PART_CATEGORY_CREATION_REQUEST VALUES (?, ?, ?, ?, ?,   ?, ?, ?, ?, ?,    ?, ?, ?, ?, ?,    ?)";
@@ -99,8 +99,8 @@ public class CreationRequestV4 implements EventHandler {
         v_sql_createDtlTable.append("TF_FLAG BOOLEAN, ");
         v_sql_createDtlTable.append("APPROVAL_COMMENT NVARCHAR(500), ");
         v_sql_createDtlTable.append("APPROVE_DATE_TIME TIMESTAMP, ");
-        v_sql_createDtlTable.append("UPDATE_USER_ID NVARCHAR(255) ");
-        v_sql_createDtlTable.append("CRUD_TYPE_CODE NVARCHAR(1) ");
+        v_sql_createDtlTable.append("UPDATE_USER_ID NVARCHAR(255), ");
+        v_sql_createDtlTable.append("CRUD_TYPE NVARCHAR(1) ");
         v_sql_createDtlTable.append(")");
 
         String v_sql_insertDtlTable = "INSERT INTO #LOCAL_TEMP_DP_PD_PART_CATEGORY_APPROVAL VALUES (?, ?, ?, ?, ?,   ?, ?, ?, ?, ?)";

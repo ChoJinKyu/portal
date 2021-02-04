@@ -20,11 +20,12 @@ sap.ui.define([
     "sap/ui/richtexteditor/RichTextEditor",
     "./ApprovalBaseController",
     "dp/md/util/controller/MoldItemSelection",
-    "dp/md/util/controller/DeptSelection",
+    // "dp/md/util/controller/DeptSelection",
 ], function (DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
     Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor
-    , ApprovalBaseController, MoldItemSelection, DeptSelection
+    , ApprovalBaseController, MoldItemSelection 
+    // , DeptSelection
 ) {
     "use strict";
 
@@ -43,7 +44,7 @@ sap.ui.define([
 
         moldItemPop: new MoldItemSelection(),
 
-        deptSelection: new DeptSelection(),
+      //  deptSelection: new DeptSelection(),
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -91,7 +92,7 @@ sap.ui.define([
             //  } else {
 
             schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
+                , new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)
             ];
             // this.getView().setModel(new ManagedModel(), "mdCommon");
             var md = this.getModel('mdCommon');
@@ -162,7 +163,7 @@ sap.ui.define([
         _searchAssetType : function(parent_code,callback){ // 목록의 combo 조회  
 
            var aFilter = [new Filter("group_code", FilterOperator.EQ, 'DP_MD_ASSET_TYPE' )
-                , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
+                , new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)
                 , new Filter("parent_code", FilterOperator.EQ, parent_code)
             ];
             var oView = this.getView(),
@@ -181,7 +182,7 @@ sap.ui.define([
         },
         _searchImportCompany: function () {
             var nFilter = [
-                new Filter("tenant_id", FilterOperator.EQ, 'L2101')
+                new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)
                 , new Filter("company_code", FilterOperator.NE, this.company_code)
             ];
             // console.log("nFilter>>>>> " , nFilter);
@@ -212,16 +213,15 @@ sap.ui.define([
 
         _bindComboPlant: function (company_code) {
             var aFilter = [
-                new Filter("tenant_id", FilterOperator.EQ, 'L2101')
-                , new Filter("org_type_code", FilterOperator.EQ, 'PL')
+                new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)
                 , new Filter("company_code", FilterOperator.EQ, company_code)
             ];
 
             var oView = this.getView(),
                 oModel = this.getModel("importPlant");
             oView.setBusy(true);
-            oModel.setTransactionModel(this.getModel("purOrg"));
-            oModel.read("/Pur_Operation_Org", {
+            oModel.setTransactionModel(this.getModel("dpMdUtil"));
+            oModel.read("/Divisions", {
                 filters: aFilter,
                 success: function (oData) { 
                     // console.log(" Pur_Operation_Org " , oData);
@@ -277,7 +277,7 @@ sap.ui.define([
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
             var approval_number = mstModel.oData.approval_number;
             oModel.addRecord({
-                "tenant_id": "L2101",
+                "tenant_id": this.getSessionUserInfo().TENANT_ID,
                 "mold_id": String(data.mold_id),
                 "approval_number": approval_number,
                 "model": data.model,
@@ -301,18 +301,28 @@ sap.ui.define([
             }
         },
         // 부서 버튼 클릭 
-        onValueHelpRequestedDept: function () {
-            var that = this;
-            this.deptSelection.openDeptSelectionPop(this, function (data) {
-                //  console.log("data " , data[0]);
-                that.setDept(data[0].oData);
-            });
+        onInputWithDepartmentValuePress: function(){
+            this.byId("departmentDialog").open();
         },
-        setDept: function (data) {
+        onDepartmentDialogApplyPress: function(oEvent){ 
             var md = this.getModel('mdCommon');
-            md.setProperty("/acq_department_code", data.department_id);
-            md.setProperty("/acq_department_code_nm", data.department_local_name);
+            md.setProperty("/acq_department_code", oEvent.getParameter("item").department_id);
+            md.setProperty("/acq_department_code_nm", oEvent.getParameter("item").department_local_name);
+            this.byId("acquisition_department").setValue(oEvent.getParameter("item").department_local_name);
         },
+
+        // onValueHelpRequestedDept: function () {
+        //     var that = this;
+        //     this.deptSelection.openDeptSelectionPop(this, function (data) {
+        //         //  console.log("data " , data[0]);
+        //         that.setDept(data[0].oData);
+        //     });
+        // },
+        // setDept: function (data) {
+        //     var md = this.getModel('mdCommon');
+        //     md.setProperty("/acq_department_code", data.department_id);
+        //     md.setProperty("/acq_department_code_nm", data.department_local_name);
+        // },
         /**
         * @description Participating Supplier 의 delete 버튼 누를시 
         */
