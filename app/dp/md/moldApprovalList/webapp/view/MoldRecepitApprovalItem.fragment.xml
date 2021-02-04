@@ -13,6 +13,7 @@
         xmlns:u="sap.ui.unified" 
         xmlns:table="sap.ui.table" 
         xmlns:lib-m="ext.lib.m" 
+         xmlns:cm-ui="cm.util.control.ui"
          core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
         >
     <VBox class="sapUiSmallMargin">
@@ -163,9 +164,8 @@
                                    id="acq_department_code" 
                                     editable="{mode>/editFlag}" 
                                     showValueHelp="true" 
-                                    valueHelpOnly="true"
                                     value="{mdRecepit>acq_department_code_nm}"
-                                    valueHelpRequest=".onValueHelpRequestedDept(${mdRecepit>mold_id})" /> 
+                                    valueHelpRequest=".onInputWithDepartmentValuePress" /> 
                                
 							</table:template>
 						</table:Column>
@@ -208,9 +208,20 @@
 						</table:Column>
 
 					</table:columns>
-				</table:Table>
+                </table:Table> 
+
 	    </form:content>
-        </form:SimpleForm>
+        </form:SimpleForm> 
+                
+        <cm-ui:DepartmentDialog id="departmentDialogMold" 
+            title="부서 검색"
+            items="{
+                filters: [
+                    {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                ]
+            }"
+            apply=".onDepartmentDialogApplyPress"
+        />
     </VBox>
   
 </core:FragmentDefinition>
