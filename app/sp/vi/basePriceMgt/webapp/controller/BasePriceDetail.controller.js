@@ -1,7 +1,7 @@
 sap.ui.define([
     "./App.controller",
     "ext/lib/model/ManagedListModel",
-    "ext/lib/model/TransactionManager",
+    "ext/lib/model/TransactionManager", 
     "ext/lib/util/Validator",
     "ext/lib/formatter/Formatter",
     "ext/lib/formatter/DateFormatter",

@@ -4,7 +4,7 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:t="sap.ui.table"
     xmlns:layout="sap.ui.layout" >
-    <t:Table 
+    <t:Table  
         selectionMode="MultiToggle"
         rows="{detailModel>/details}"
         rowSelectionChange=".onRowSelectionChange"

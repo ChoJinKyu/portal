@@ -3,7 +3,7 @@ sap.ui.define([
     "ext/lib/control/DummyRenderer",
     "ext/lib/core/service/ODataV2ServiceProvider",
     "sap/ui/model/json/JSONModel",
-	"sap/ui/model/Filter",
+	"sap/ui/model/Filter", 
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
     "sap/ui/layout/GridData",

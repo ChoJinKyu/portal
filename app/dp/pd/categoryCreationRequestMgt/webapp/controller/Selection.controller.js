@@ -24,11 +24,12 @@ sap.ui.define([
     "sap/ui/model/FilterType",
     "ext/lib/formatter/NumberFormatter",
     "ext/lib/model/TreeListModel",
-    "sap/ui/thirdparty/jquery"
+    "sap/ui/thirdparty/jquery",
+    "sap/m/SegmentedButtonItem"
 ], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, DateFormatter,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast, History,
     ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel, FilterType ,NumberFormatter,
-    TreeListModel, jQuery) {
+    TreeListModel, jQuery, SegmentedButtonItem) {
     "use strict";
 
     var oTransactionManager;
@@ -54,6 +55,7 @@ sap.ui.define([
 		 */
         onInit: function () {
 
+            //로그인 세션 작업완료시 수정
             this.loginUserId = "TestUser";
             this.loginUserName = "TestUser";
             this.tenant_id = "L2101";
@@ -69,7 +71,7 @@ sap.ui.define([
 				});
 
             this.setModel(oViewModel, "viewModel");
-            
+
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("master"));
             oTransactionManager.addDataModel(this.getModel("details"));
@@ -77,6 +79,219 @@ sap.ui.define([
             this.getRouter().getRoute("selectionPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this.enableMessagePopover();
+        },
+
+        /**
+		 * Event handler for page edit button press
+		 * @public
+		 */
+        onPageEditButtonPress: function () {
+            this._toEditMode();
+        },
+
+        onMstAddRow : function () {
+            var oTable = this.byId("detailsTable");
+            var oDetailsModel = this.getModel("details");
+            oDetailsModel.addRecord({
+                "tenant_id"         : this._sTenantId,
+                "request_number"    : this._sRequestNumber,
+                "approve_sequence"  : null,
+                "approval_number"   : null,
+                "requestor_empno"   : "Admin",
+                "tf_flag"           : true,
+                "approval_comment"  : null,
+                "approve_date_time" : new Date(),
+                "update_user_id"    : this.loginUserId
+            }, "/PdCategoryApprovalType");
+        },
+
+        onApproverAdd : function (){
+            var oDetailsModel = this.getView().getModel("details");
+             oDetailsModel.addRecord({
+                "tenant_id"         : this._sTenantId,
+                "request_number"    : this._sRequestNumber,
+                "approve_sequence"  : null,
+                "approval_number"   : null,
+                "requestor_empno"   : "Admin",
+                "tf_flag"           : true,
+                "approval_comment"  : null,
+                "approve_date_time" : new Date(),
+                "update_user_id"    : this.loginUserId
+            }, "/PdCategoryApprovalType");
+        },
+
+        setApproverRemoveRow: function (oParam) {
+            var oModel = this.getModel("details");
+            oModel.removeRecord(oParam - 1);
+        },
+
+        onMstDeleteRow : function () {
+            var oTable = this.byId("detailsTable");
+            var oModel = this.getModel("details");
+            var aItems = oTable.getSelectedItems();
+            var aIndices = [];
+            aItems.forEach(function(oItem){
+                aIndices.push(oModel.getProperty("/PdCategoryApprovalType").indexOf(oItem.getBindingContext("details").getObject()));
+            });
+            aIndices = aIndices.sort(function(a, b){return b-a;});
+            aIndices.forEach(function(nIndex){
+                oModel.markRemoved(nIndex);
+            });
+            oTable.removeSelections(true);
+        },
+
+        /**
+		 * Event handler for saving page changes
+		 * @public
+		 */
+        onPageSaveButtonPress: function (flag) {
+            var oView = this.getView();
+            var oMasterModel = this.getModel("master");
+            var oDetailsModel = this.getModel("details");
+            var v_this = this;
+
+            var oMasterData = oMasterModel.oData;
+            var oDetailsData = oDetailsModel.oData;
+            var oDetailsTable = this.byId("detailsTable");
+
+            var progressCode, CUType;
+
+            if (this._sRequestNumber !== "new"){
+                CUType = "U";
+                
+                if(flag == "D"){
+                    if(!oMasterModel.isChanged() ) {
+                        MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+                        return;
+                    }
+                    progressCode = "A";
+                }else if( flag == "R"){
+                    progressCode = "B"
+                }
+            } else {
+                CUType = "C";
+                if( flag == "D"){
+                    progressCode = "A";
+                }else if( flag == "R"){
+                    progressCode = "B"
+                }
+            }
+           
+            var requestDesc = this.byId("requestDesc").getValue();
+            var pdMstVal = {
+                tenant_id                : oMasterData.tenant_id,
+                request_number           : oMasterData.request_number,
+                category_group_code      : oMasterData.category_group_code,
+                approval_number          : oMasterData.approval_number,
+                request_title            : oMasterData.request_title,
+                request_category_name    : oMasterData.request_category_name,
+                similar_category_code    : oMasterData.similar_category_code,
+                requestor_empno          : oMasterData.requestor_empno,
+                request_date_time        : oMasterData.request_date_time,
+                request_desc             : this.htmlEncoding(requestDesc, this.byId("requestDesc").getId()),
+                attch_group_number       : oMasterData.attch_group_number,
+                progress_status_code     : progressCode,
+                creator_empno            : oMasterData.creator_empno,
+                create_category_code     : oMasterData.create_category_code,
+                update_user_id           : this.loginUserId,
+                crud_type_code           : CUType
+            };
+
+            var input = {
+                inputData : {
+                    crud_type : CUType,
+                    pdMst : pdMstVal,
+                    pdDtl : []
+                }
+            };
+            
+            var pdDtlVal = [];  // 결재테이블은 나중에
+
+            for (var i = 0; i < oDetailsTable.getItems().length; i++) {
+                pdDtlVal.push({
+                    tenant_id: oDetailsData.PdCategoryApprovalType[i].tenant_id,
+                    request_number : oDetailsData.PdCategoryApprovalType[i].request_number,
+                    approve_sequence : oDetailsData.PdCategoryApprovalType[i].approve_sequence,
+                    approval_number : oDetailsData.PdCategoryApprovalType[i].approval_number,
+                    requestor_empno : oDetailsData.PdCategoryApprovalType[i].requestor_empno,
+                    tf_flag : oDetailsData.PdCategoryApprovalType[i].tf_flag,
+                    approval_comment : oDetailsData.PdCategoryApprovalType[i].approval_comment,
+                    approve_date_time : oDetailsData.PdCategoryApprovalType[i].approve_date_time,
+                    update_user_id : oDetailsData.PdCategoryApprovalType[i].update_user_id,
+                    crud_type_code : CUType
+                });
+            }
+
+            input.inputData.pdDtl = pdDtlVal;
+            
+            if(this.validator.validate(this.byId("midObjectForm")) !== true) return;
+
+            var url = "srv-api/odata/v4/dp.creationRequestV4Service/PdCreationRequestSaveProc";
+            
+			oTransactionManager.setServiceModel(this.getModel());
+			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+				title : this.getModel("I18N").getText("/SAVE"),
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+                        //oView.setBusy(true);
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            data: JSON.stringify(input),
+                            contentType: "application/json",
+                            success: function (rst) {
+                                console.log(rst);
+                                if(rst.return_code =="OK"){
+                                    sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                    if(flag == "D"){
+                                        v_this.onSearch(rst.return_msg );
+                                    }else if(flag == "R"){
+                                        v_this.onPageNavBackButtonPress();
+                                    }
+                                }else{
+                                    console.log(rst);
+                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                }
+                            },
+                            error: function (rst) {
+                                console.log("eeeeee");
+                                console.log(rst);
+                                sap.m.MessageToast.show( "error : "+rst.return_msg );
+                            }
+                        });
+					};
+				}
+            });
+            this.validator.clearValueState(this.byId("midObjectForm"));
+        },
+
+        /**
+		 * Event handler for cancel page editing
+		 * @public
+		 */
+        onPageCancelButtonPress: function () {
+            this.validator.clearValueState(this.byId("midObjectForm"));
+            this._toShowMode();
+        },
+
+        /**
+		 * Event handler for cancel page editing
+		 * @public
+		 */
+        onPageListButtonPress: function () {
+            this.validator.clearValueState(this.byId("midObjectForm"));
+            this.onPageNavBackButtonPress.call(this);
+        },
+
+        /**
+		 * Event handler for Nav Back Button pressed
+		 * @public
+		 */
+        onPageNavBackButtonPress: function () {
+            this.validator.clearValueState(this.byId("midObjectForm"));
+            var sPreviousHash = History.getInstance().getPreviousHash();
+            this.getRouter().navTo("mainPage", {}, true);
         },
 
         _fnInitModel : function(){
@@ -194,133 +409,7 @@ sap.ui.define([
             return btoa(unescape(encodeURIComponent(value)))
         },
 
-		/**
-		 * Event handler for saving page changes
-		 * @public
-		 */
-        onPageSaveButtonPress: function (flag) {
-            var oView = this.getView(),
-                oMasterModel = this.getModel("master"),
-                oDetailsModel = this.getModel("details"),
-                v_this = this;
-
-            var oMasterData = oMasterModel.oData;
-            var oDetailsData = oDetailsModel.oData;
-            var oDetailsTable = this.byId("detailsTable");
-
-            var statsCode = "DRAFT";
-            var progressCode = "Draft";
-            var CUType = "C";
-
-            if (this._sRequestNumber !== "new"){
-                CUType = "U";
-                
-                if( flag == "D"){
-                    if(!oMasterModel.isChanged() ) {
-                        MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-                        return;
-                    }
-                    statsCode = "DRAFT";
-                    progressCode = "A";
-                }else if( flag == "R"){
-                    statsCode = "SUBMIT";
-                    progressCode = "B"
-                }
-            }
-           
-            var requestDesc = this.byId("requestDesc").getValue();
-            var pdMstVal = {
-                tenant_id                : oMasterData.tenant_id,
-                request_number           : oMasterData.request_number,
-                category_group_code      : oMasterData.category_group_code,
-                approval_number          : oMasterData.approval_number,
-                request_title            : oMasterData.request_title,
-                request_category_name    : oMasterData.request_category_name,
-                similar_category_code    : oMasterData.similar_category_code,
-                requestor_empno          : oMasterData.requestor_empno,
-                request_date_time        : oMasterData.request_date_time,
-                request_desc             : this.htmlEncoding(requestDesc, this.byId("requestDesc").getId()),
-                attch_group_number       : oMasterData.attch_group_number,
-                progress_status_code     : oMasterData.progress_status_code,
-                creator_empno            : oMasterData.creator_empno,
-                create_category_code     : oMasterData.create_category_code,
-                update_user_id           : this.loginUserId,
-                crud_type_code           : CUType
-            };
-
-            var input = {
-                inputData : {
-                    crud_type : CUType,
-                    pdMst : pdMstVal,
-                    pdDtl : []
-                }
-            };
-            
-            var pdDtlVal = [];  // 결재테이블은 나중에
-            console.log("11111111111111111111111111111111");
-
-            for (var i = 0; i < oDetailsTable.getItems().length; i++) {
-                pdDtlVal.push({
-                    tenant_id: oDetailsData.PdCategoryApprovalType[i].tenant_id,
-                    request_number : oDetailsData.PdCategoryApprovalType[i].request_number,
-                    approve_sequence : oDetailsData.PdCategoryApprovalType[i].approve_sequence,
-                    approval_number : oDetailsData.PdCategoryApprovalType[i].approval_number,
-                    requestor_empno : oDetailsData.PdCategoryApprovalType[i].requestor_empno,
-                    tf_flag : oDetailsData.PdCategoryApprovalType[i].tf_flag,
-                    approval_comment : oDetailsData.PdCategoryApprovalType[i].approval_comment,
-                    approve_date_time : oDetailsData.PdCategoryApprovalType[i].approve_date_time,
-                    update_user_id : oDetailsData.PdCategoryApprovalType[i].update_user_id,
-                    crud_type_code : CUType
-                });
-            }
-
-            console.log("22222222222222222222222222222222222222222222");
-            input.inputData.pdDtl = pdDtlVal;
-            
-            if(this.validator.validate(this.byId("midObjectForm")) !== true) return;
-
-            var url = "srv-api/odata/v4/dp.creationRequestV4Service/PdCreationRequestSaveProc";
-            
-            console.log("3333333333333333333333333333333333333333333");
-			oTransactionManager.setServiceModel(this.getModel());
-			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
-				title : this.getModel("I18N").getText("/SAVE"),
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-                        //oView.setBusy(true);
-                        $.ajax({
-                            url: url,
-                            type: "POST",
-                            data: JSON.stringify(input),
-                            contentType: "application/json",
-                            success: function (rst) {
-                                console.log(rst);
-                                if(rst.return_code =="OK"){
-                                    sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
-                                    if( flag == "D"){
-                                        v_this.onSearch(rst.return_msg );
-                                    }else if( flag == "R"){
-                                        v_this.onPageNavBackButtonPress();
-                                    }
-                                }else{
-                                    console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
-                                }
-                            },
-                            error: function (rst) {
-                                    console.log("eeeeee");
-                                    console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
-                                    v_this.onSearch(rst.return_msg );
-                            }
-                        });
-					};
-				}
-            });
-            
-            this.validator.clearValueState(this.byId("midObjectForm"));
-        },
+		
 
         _toShowMode: function () {
             var oMasterModel = this.getModel("master");
@@ -356,41 +445,13 @@ sap.ui.define([
             this.byId("pageSubmitButton").setEnabled(true);
         },
 
-		/**
-		 * Event handler for cancel page editing
-		 * @public
-		 */
-        onPageListButtonPress: function () {
-            this.validator.clearValueState(this.byId("midObjectForm"));
-            this.onPageNavBackButtonPress.call(this);
-        },
+		
 
-		/**
-		 * Event handler for cancel page editing
-		 * @public
-		 */
-        onPageCancelButtonPress: function () {
-            this.validator.clearValueState(this.byId("midObjectForm"));
-            this._toShowMode();
-        },
+		
 
-		/**
-		 * Event handler for Nav Back Button pressed
-		 * @public
-		 */
-        onPageNavBackButtonPress: function () {
-            this.validator.clearValueState(this.byId("midObjectForm"));
-            var sPreviousHash = History.getInstance().getPreviousHash();
-            this.getRouter().navTo("mainPage", {}, true);
-        },
+		
 
-		/**
-		 * Event handler for page edit button press
-		 * @public
-		 */
-        onPageEditButtonPress: function () {
-            this._toEditMode();
-        },
+		
 
         onSearchPartCategory: function (oEvent) {
             var oButton = oEvent.getSource(),
@@ -460,36 +521,9 @@ sap.ui.define([
             this.partCategoryPopupClose();
         },
        
-        onMstAddRow : function () {
-            var oTable = this.byId("detailsTable");
-            var oDetailsModel = this.getModel("details");
-            oDetailsModel.addRecord({
-                "tenant_id"         : this._sTenantId,
-                "request_number"    : this._sRequestNumber,
-                "approve_sequence"  : null,
-                "approval_number"   : null,
-                "requestor_empno"   : "Admin",
-                "tf_flag"           : true,
-                "approval_comment"  : null,
-                "approve_date_time" : new Date(),
-                "update_user_id"    : this.loginUserId
-            }, "/PdCategoryApprovalType");
-        },
+        
 
-        onMstDeleteRow : function () {
-            var oTable = this.byId("detailsTable");
-            var oModel = this.getModel("details");
-            var aItems = oTable.getSelectedItems();
-            var aIndices = [];
-            aItems.forEach(function(oItem){
-                aIndices.push(oModel.getProperty("/PdCategoryApprovalType").indexOf(oItem.getBindingContext("details").getObject()));
-            });
-            aIndices = aIndices.sort(function(a, b){return b-a;});
-            aIndices.forEach(function(nIndex){
-                oModel.markRemoved(nIndex);
-            });
-            oTable.removeSelections(true);
-        }
+        
 
         
     });
