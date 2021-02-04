@@ -39,6 +39,8 @@
                     <Label text="{I18N>/PR_NUMBER} :"/>
                     <ObjectStatus
                         text="{detailModel>/mst/pr_number}"/>
+                </layout:VerticalLayout>
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <Label text="{I18N>/PR_REQUEST_DATE} :"/>
                     <ObjectStatus
                         text="{ path: 'detailModel>/mst/request_date',
@@ -52,7 +54,9 @@
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <Label text="{I18N>/PR_TEMPLATE_NUMBER} :"/>
                     <ObjectStatus
-                        text="{detailModel>/mst/pr_template_number}"/>
+                        text="{detailModel>/mst/pr_template_name}"/>
+                </layout:VerticalLayout>      
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">  
                     <Label text="{I18N>/REQUESTOR_NAME} :"/>
                     <ObjectStatus
                         text="{detailModel>/mst/requestor_name}"/>
@@ -67,7 +71,7 @@
 				</layout:VerticalLayout>
                 
                 <!-- Process 시작 -->
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                <!-- <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                       <HBox>
                         <Title text="Process"/>
                     </HBox>
@@ -87,7 +91,7 @@
                         <Text text="{I18N>/BIDDING}" width="7em" textAlign="Center" />
                         <Text text="{I18N>/PURCHASE_ORDER}" width="5em" textAlign="Center" />
                     </HBox>
-                </layout:VerticalLayout>
+                </layout:VerticalLayout> -->
 			</FlexBox>
 		</uxap:headerContent>
 
@@ -181,25 +185,36 @@
                                 </table:Column>
 
 
-                                <table:Column  width="10em" hAlign="Center">
+                                <table:Column   width="10em" hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-ORG_CODE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/ORG_CODE}" />           
                                     <table:template>
                                         <Text text="{detailModel>plant_name} [{detailModel>org_code}]" hAlign="Begin" />
                                     </table:template>
                                 </table:Column>
 
-                                <table:Column width="8em" hAlign="Center" visible="{
-                                            path: 'OPUI>/DTL-MATERIAL_CODE',
-                                            type: 'sap.ui.model.type.Bool',
-                                            formatter: '.uiControlSet.toColumnVisible'
-                                            }">
+                                <table:Column   width="8em" hAlign="Center" 
+                                                visible="{
+                                                    path: 'OPUI>/DTL-MATERIAL_CODE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/MATERIAL_CODE}" />           
                                     <table:template>
                                         <Text  text="{detailModel>material_code}" />
                                     </table:template>
                                 </table:Column>   
 
-                                <table:Column  width="20em" hAlign="Center">
+                                <table:Column   width="20em" hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-PR_DESC',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/PURCHASE_REQUISITION} {I18N>/ITEM_NAME}" />           
                                     <table:template>
                                         <Text text="{detailModel>pr_desc}"/>
@@ -207,7 +222,12 @@
                                 </table:Column>     
                                 
 
-                                <table:Column width="5em" hAlign="Center">
+                                <table:Column   width="5em" hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-PR_QUANTITY',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/REQUEST_QUANTITY}"/>
                                     <table:template>
                                         <Text text="{
@@ -219,14 +239,24 @@
                                 </table:Column>    
                                 
                                 
-                                <table:Column  width="5em" hAlign="Center">
+                                <table:Column   width="5em" hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-PR_UNIT',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }"> 
                                     <Label text="{I18N>/UNIT}" />           
                                     <table:template>
                                         <Text text="{detailModel>pr_unit}"/>
                                     </table:template>
                                 </table:Column>
 
-                                <table:Column  width="8em"  hAlign="Center">
+                                <table:Column   width="8em"  hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-DELIVERY_REQUEST_DATE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/DELIVERY_REQUEST_DATE}" />           
                                     <table:template>
                                         <Text text="{
@@ -240,14 +270,24 @@
                                     </table:template>
                                 </table:Column>    
 
-                                <table:Column  width="8em" hAlign="Center">
+                                <table:Column   width="8em" hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-BUYER_EMPNO',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/BUYER}"/>           
                                     <table:template>
                                         <Text text="{detailModel>user_local_name} [{detailModel>buyer_empno}]"/>
                                     </table:template>
                                 </table:Column> 
 
-                                <table:Column width="5em" hAlign="Center">
+                                <table:Column   width="5em" hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-PURCHASING_GROUP_CODE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/PURCHASING_GROUP_CODE}"/>           
                                     <table:template>
                                         <Text text="{detailModel>purchasing_group_code}"/>
@@ -255,7 +295,12 @@
                                 </table:Column>
 
 
-                                <table:Column  width="10em" hAlign="Center">
+                                <table:Column   width="10em" hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-ESTIMATED_PRICE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/PRICE}" />           
                                     <table:template>
                                         <Text text="{
@@ -265,14 +310,24 @@
                                                     }"/>
                                     </table:template>
                                 </table:Column>                               
-                                <table:Column  hAlign="Center">
+                                <table:Column   hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-CURRENCY_CODE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/CURRENCY}" />           
                                     <table:template>
                                         <Text text="{detailModel>currency_code}"/>
                                     </table:template>
                                 </table:Column> 
 
-                                <table:Column  hAlign="Center">
+                                <table:Column   hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-PRICE_UNIT',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/PRICE_UNIT}" />           
                                     <table:template>
                                         <Text text="{detailModel>price_unit}"/>
@@ -281,52 +336,161 @@
                                 
                                 <!-- 18 ~ // -->
 
-                                <table:Column  hAlign="Center">
+                                <table:Column   width="10em" hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-MATERIAL_GROUP_CODE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/MATERIAL_GROUP_CODE}" />           
                                     <table:template>
                                         <Text text="{detailModel>material_group_code}"/>
                                     </table:template>
                                 </table:Column> 
 
-                                <table:Column  hAlign="Center">
+                                <table:Column   width="10em" hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-SLOC_CODE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/STORAGE_LOCATION}" />           
                                     <table:template>
                                         <Text text="{detailModel>sloc_code}"/>
                                     </table:template>
                                 </table:Column> 
 
-                                <table:Column  hAlign="Center">
+                                <table:Column   width="10em" hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-MATERIAL_GROUP_CODE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/MATERIAL_GROUP_CODE}" />           
                                     <table:template>
                                         <Text text="{detailModel>material_group_code}"/>
                                     </table:template>
                                 </table:Column> 
 
-                                <table:Column  hAlign="Center">
+                                <table:Column   width="10em" hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-SUPPLIER_CODE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/SUPPLIER}" />           
                                     <table:template>
                                         <Text text="{detailModel>supplier_local_name} [{detailModel>supplier_code}]"/>
                                     </table:template>
                                 </table:Column> 
 
-                                <table:Column  hAlign="Center">
+                                <table:Column   width="10em" hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-BUYER_EMPNO',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/REQUESTOR}" />           
                                     <table:template>
                                         <Text text="{detailModel>user_local_name} [{detailModel>buyer_empno}]"/>
                                     </table:template>
                                 </table:Column> 
 
-                                <table:Column  hAlign="Center">
+                                <table:Column  width="10em" hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-REQUEST_DATE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/REQUEST_DATE}" />           
                                     <table:template>
-                                        <Text text="{detailModel>request_date}"/>
+                                        <Text text="{
+                                                    path:'detailModel>request_date',
+                                                    type:'sap.ui.model.odata.type.DateTime',
+                                                    formatOptions: {
+                                                        UTC: true,
+                                                        pattern: 'yyyy-MM-dd'
+                                                    }
+                                                }"/>
                                     </table:template>
                                 </table:Column> 
 
-                                <table:Column  hAlign="Center">
-                                    <Label text="{I18N>/REQUEST_DATE}" />           
+                                 <table:Column      width="10em" hAlign="Center"
+                                                    visible="{
+                                                    path: 'OPUI>/DTL-ORG_TYPE_CODE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
+                                    <Label text="{I18N>/REQUESTOR}" />           
                                     <table:template>
-                                        <Text text="{detailModel>request_date}"/>
+                                        <Text text="{detailModel>org_type_code}"/>
+                                    </table:template>
+                                </table:Column> 
+
+                                <table:Column       width="10em" hAlign="Center"
+                                                    visible="{
+                                                    path: 'OPUI>/DTL-APPROVAL_DATE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
+                                    <Label text="{I18N>/APPROVE_DATE}" />           
+                                    <table:template>
+                                        <Text text="{
+                                                    path:'detailModel>approval_date',
+                                                    type:'sap.ui.model.odata.type.DateTime',
+                                                    formatOptions: {
+                                                        UTC: true,
+                                                        pattern: 'yyyy-MM-dd'
+                                                    }
+                                                }"/>
+                                    </table:template>
+                                </table:Column> 
+
+                                <table:Column       width="10em" hAlign="Center"
+                                                    visible="{
+                                                    path: 'OPUI>/DTL-PR_PROGRESS_STATUS_NAME',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
+                                    <Label text="{I18N>/PR_PROGRESS_STATUS}" />           
+                                    <table:template>
+                                        <Text text="{detailModel>pr_progress_status_name}"/>
+                                    </table:template>
+                                </table:Column> 
+
+                                <table:Column  width="10em" hAlign="Center"
+                                               visible="{
+                                                    path: 'OPUI>/DTL-REMARK',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
+                                    <Label text="{I18N>/REMARK}" />           
+                                    <table:template>
+                                        <Text text="{detailModel>remark}"/>
+                                    </table:template>
+                                </table:Column> 
+
+                                <table:Column   width="10em" hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-ITEM_CATEGORY_CODE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
+                                    <Label text="{I18N>/ITEM_CATEGORY}" />           
+                                    <table:template>
+                                        <Text text="{detailModel>item_category_code}"/>
+                                    </table:template>
+                                </table:Column> 
+
+                                <table:Column   width="10em" hAlign="Center"
+                                                visible="{
+                                                    path: 'OPUI>/DTL-ACCOUNT_ASSIGNMENT_CATEGORY_CODE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
+                                    <Label text="{I18N>/ACCOUNT_ASSIGNMENT_CATEGORY}" />           
+                                    <table:template>
+                                        <Text text="{detailModel>account_assignment_category_code}"/>
                                     </table:template>
                                 </table:Column> 
                                 
@@ -366,7 +530,8 @@
                             </table:extension>          
 
                             <table:columns>
-                                <table:Column  width="5em" hAlign="Center" >
+                                <table:Column  width="5em" hAlign="Center" 
+                                                >
                                     <Label text="{I18N>/ITEM_NUMBER}"/>
                                     <table:template>
                                         <Text text="{detailModel>pr_item_number}"/>
@@ -387,28 +552,47 @@
                                     </table:template>
                                 </table:Column>
 
-                                 <table:Column  hAlign="Center" >
+                                 <table:Column  hAlign="Center" 
+                                                visible="{
+                                                    path: 'OPUI>/ACCOUNT-CCTR_CODE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/CCTR_CODE}"/>
                                     <table:template>
                                         <Text text="{detailModel>cctr_code} [{detailModel>cctr_name}]"/>
                                     </table:template>
                                 </table:Column>
 
-                                 <table:Column  hAlign="Center" >
+                                 <table:Column  hAlign="Center" 
+                                                visible="{
+                                                    path: 'OPUI>/ACCOUNT-WBS_CODE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/WBS_CODE}"/>
                                     <table:template>
                                         <Text text="{detailModel>wbs_code} [{detailModel>wbs_name}]"/>
                                     </table:template>
                                 </table:Column>
 
-                                 <table:Column  hAlign="Center" >
+                                 <table:Column  hAlign="Center" visible="{
+                                                    path: 'OPUI>/ACCOUNT-ASSET_NUMBER',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/ASSET}"/>
                                     <table:template>
                                         <Text text="{detailModel>asset_number} [{detailModel>asset_name}]"/>
                                     </table:template>
                                 </table:Column>
 
-                                <table:Column  hAlign="Center" >
+                                <table:Column  hAlign="Center" 
+                                               visible="{
+                                                    path: 'OPUI>/ACCOUNT-ORDER_NUMBER',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/ORDER}"/>
                                     <table:template>
                                         <Text text="{detailModel>order_number} [{detailModel>order_name}]"/>
@@ -465,14 +649,24 @@
                                     </table:template>
                                 </table:Column>
 
-                                <table:Column  hAlign="Center" >
+                                <table:Column  hAlign="Center" 
+                                               visible="{
+                                                    path: 'OPUI>/SERVICE-SERVICE_DESC',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/SERVICE_DESC}"/>
                                     <table:template>
                                         <Text text="{detailModel>service_desc}"/>
                                     </table:template>
                                 </table:Column>
 
-                                 <table:Column  hAlign="Center" >
+                                 <table:Column  hAlign="Center" 
+                                                visible="{
+                                                    path: 'OPUI>/SERVICE-PR_QUANTITY',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/REQUEST_QUANTITY}"/>
                                     <table:template>
                                         <Text text="{
@@ -483,14 +677,24 @@
                                     </table:template>
                                 </table:Column>
 
-                                 <table:Column  hAlign="Center" >
+                                 <table:Column  hAlign="Center" 
+                                                visible="{
+                                                    path: 'OPUI>/SERVICE-UNIT',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/UNIT}"/>
                                     <table:template>
                                         <Text text="{detailModel>unit}"/>
                                     </table:template>
                                 </table:Column>
 
-                                 <table:Column  hAlign="Center" >
+                                 <table:Column  hAlign="Center" 
+                                                visible="{
+                                                    path: 'OPUI>/SERVICE-NET_PRICE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/NET_PRICE}"/>
                                     <table:template>
                                         <Text text="{
@@ -501,7 +705,12 @@
                                     </table:template>
                                 </table:Column>
 
-                                <table:Column  hAlign="Center" >
+                                <table:Column   hAlign="Center" 
+                                                visible="{
+                                                    path: 'OPUI>/SERVICE-GROSS_AMOUNT',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/GROSS_AMOUNT}"/>
                                     <table:template>
                                         <Text text="{
@@ -512,10 +721,15 @@
                                     </table:template>
                                 </table:Column>
 
-                                <table:Column  hAlign="Center" >
+                                <table:Column   hAlign="Center" width="5em"
+                                                visible="{
+                                                    path: 'OPUI>/SERVICE-CURRENCY_CODE',
+                                                    type: 'sap.ui.model.type.Bool',
+                                                    formatter: '.uiControlSet.toColumnVisible'
+                                                    }">
                                     <Label text="{I18N>/CURRENCY_CODE}"/>
-                                    <table:template>
-                                        <Text text="{detailModel>currency_code}"/>
+                                    <table:template width="5em" >
+                                        <Text hAlign="End" text="{detailModel>currency_code}"/>
                                     </table:template>
                                 </table:Column>
 

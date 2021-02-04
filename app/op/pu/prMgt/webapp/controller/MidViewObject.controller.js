@@ -44,7 +44,6 @@ sap.ui.define([
 		 */
 		onInit : function () { 
 
-
 			var oViewModel = new JSONModel({
 					busy : true,
 					delay : 0
@@ -55,8 +54,7 @@ sap.ui.define([
 
             // view에서 사용할 메인 Model    
             this.setModel(new JSONModel(), "viewModel"); 
-            this.setModel(new JSONModel(), "detailModel"); 
-            
+            this.setModel(new JSONModel(), "detailModel");             
             
             var oMultilingual = new Multilingual();            
             this.setModel(oMultilingual.getModel(), "I18N");
@@ -64,14 +62,11 @@ sap.ui.define([
             this.getRouter().getRoute("midView").attachPatternMatched(this._onObjectMatched, this);
             this.setModel(oViewModel, "midObjectView");
             
-            this.setModel(new ManagedModel(), "mst");
-            
+            this.setModel(new ManagedModel(), "mst");            
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("mst"));
-            // oTransactionManager.addDataModel(this.getModel("dtl"));
-            // oTransactionManager.addDataModel(this.getModel("account"));
-            // oTransactionManager.addDataModel(this.getModel("service"));
+              
         },
         
         onBeforeRendering : function(){            
@@ -92,9 +87,10 @@ sap.ui.define([
             }else{
                 this._fnGetMasterData(oArgs);
             }
-
             // 텍스트 에디터
             //this.setRichEditor();	
+            var oPage = this.getView().byId("page");     //Get Hold of page
+            oPage._scrollTo(0);           
         },
         
         /**
@@ -122,7 +118,7 @@ sap.ui.define([
             var that = this;
 
             var aFilters = [
-                    new Filter(  FilterOperator.EQ, oArgs.tenantId),
+                    new Filter("tenant_id"      , FilterOperator.EQ, oArgs.tenantId),
                     new Filter("company_code"   , FilterOperator.EQ, oArgs.company_code),
                     new Filter("pr_number"      , FilterOperator.EQ, oArgs.pr_number)
                 ];   

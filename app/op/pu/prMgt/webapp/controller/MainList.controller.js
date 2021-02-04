@@ -312,7 +312,7 @@ sap.ui.define([
             this.onInitPR_TYPE3();           
         },
 
-        onExit: function () {
+        onDialogClose: function () {
             this.byId("dialogTemplateSelection").close();
         },
 
