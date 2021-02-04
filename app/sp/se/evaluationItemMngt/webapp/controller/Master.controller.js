@@ -623,78 +623,92 @@ sap.ui.define([
             }
 
             , onExcelExport : function(){
-                var oTable, oView, aFilters, oUserInfo, oViewModel, oCondData, oODataModel;
+                // var oTable, oView, aFilters, oUserInfo, oViewModel, oCondData, oODataModel;
 
-                oTable = this.byId("treeTable");
-                oView = this.getView();
-                oUserInfo = this._getUserSession();
-                oViewModel = oView.getModel("viewModel");
+                // oTable = this.byId("treeTable");
+                // oView = this.getView();
+                // oUserInfo = this._getUserSession();
+                // oViewModel = oView.getModel("viewModel");
                 
-                oODataModel = oView.getModel();
-                //조회용 데이터
-                oCondData = oViewModel.getProperty("/cond");
-                aFilters = [
-                    new Filter({ path:"tenant_id", operator : "EQ", value1 : oUserInfo.tenantId }),
-                    new Filter({ path:"company_code", operator:"EQ", value1 : oUserInfo.companyCode }),
-                    new Filter({ path:"org_type_code", operator:"EQ", value1 : oUserInfo.orgTypeCode }),
+                // oODataModel = oView.getModel();
+                // //조회용 데이터
+                // oCondData = oViewModel.getProperty("/cond");
+                // aFilters = [
+                //     new Filter({ path:"tenant_id", operator : "EQ", value1 : oUserInfo.tenantId }),
+                //     new Filter({ path:"company_code", operator:"EQ", value1 : oUserInfo.companyCode }),
+                //     new Filter({ path:"org_type_code", operator:"EQ", value1 : oUserInfo.orgTypeCode }),
 
-                ];
+                // ];
 
-                //필수입력체크
-                var aControls = oView.getControlsByFieldGroupId("searchRequired"),
-                    bValid = this._isValidControl(aControls);
+                // //필수입력체크
+                // var aControls = oView.getControlsByFieldGroupId("searchRequired"),
+                //     bValid = this._isValidControl(aControls);
 
-                if(!bValid){
-                    return;
-                }
+                // if(!bValid){
+                //     return;
+                // }
 
-                //미리 세팅해둔 경로를 바탕으로 Filter를 생성한다.
-                /**
-                 * EQ {
-                 *    Field
-                 * }
-                 * Contains {
-                 *    Field
-                 * }
-                 */
-                for(var operator in oCondData){
-                    if(oCondData.hasOwnProperty(operator)){
-                        for(var field in oCondData[operator]){
-                            if(oCondData[operator].hasOwnProperty(field) && oCondData[operator][field]){
-                                aFilters.push(
-                                    new Filter({ path : field, operator : operator, value1 : oCondData[operator][field] })
-                                );
-                            }
-                        }
-                    }
-                }
+                // //미리 세팅해둔 경로를 바탕으로 Filter를 생성한다.
+                // /**
+                //  * EQ {
+                //  *    Field
+                //  * }
+                //  * Contains {
+                //  *    Field
+                //  * }
+                //  */
+                // for(var operator in oCondData){
+                //     if(oCondData.hasOwnProperty(operator)){
+                //         for(var field in oCondData[operator]){
+                //             if(oCondData[operator].hasOwnProperty(field) && oCondData[operator][field]){
+                //                 aFilters.push(
+                //                     new Filter({ path : field, operator : operator, value1 : oCondData[operator][field] })
+                //                 );
+                //             }
+                //         }
+                //     }
+                // }
 
 
-                var oI18nModel = oView.getModel("i18n"),
-                    oResourceBundle = oI18nModel.getResourceBundle();
+                // var oI18nModel = oView.getModel("i18n"),
+                //     oResourceBundle = oI18nModel.getResourceBundle();
 
                 /***
                  * 
                  */
-                oView.setBusy(true);
-                this._readOdata({
-                    model : oODataModel,
-                    entity : "/EvalItemListView",
-                    param : {
-                        path : "/EvalItemListView", 
-                        filters : aFilters,
-                        error : function(){
-                            oView.setBusy(false);
-                        },
-                        success : function(oData){
-                            oView.setBusy(false);
-                            ExcelUtil.fnExportExcel({
-                                fileName : oResourceBundle.getText("appTitle"),
-                                table : oTable,
-                                data : oData.results
-                            });
-                        }
-                    }
+                // oView.setBusy(true);
+                // this._readOdata({
+                //     model : oODataModel,
+                //     entity : "/EvalItemListView",
+                //     param : {
+                //         path : "/EvalItemListView", 
+                //         filters : aFilters,
+                //         error : function(){
+                //             oView.setBusy(false);
+                //         },
+                //         success : function(oData){
+                //             oView.setBusy(false);
+                //             ExcelUtil.fnExportExcel({
+                //                 fileName : oResourceBundle.getText("appTitle"),
+                //                 table : oTable,
+                //                 data : oData.results
+                //             });
+                //         }
+                //     }
+                // });
+                var oTable, oView, oViewModel, oI18nModel, oResourceBundle, aTreeData;
+
+                oTable = this.byId("treeTable");
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
+                oI18nModel = oView.getModel("i18n");
+                oResourceBundle = oI18nModel.getResourceBundle();
+                aTreeData = oViewModel.getProperty("/Tree/list");
+
+                ExcelUtil.fnExportExcel({
+                    fileName : oResourceBundle.getText("appTitle"),
+                    table : oTable,
+                    data : aTreeData
                 });
             }
 
