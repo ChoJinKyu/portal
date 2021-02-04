@@ -166,6 +166,26 @@ sap.ui.define([
         }
 
         /**
+         * 시세의 경우 적용시작월 선택시 적종종료월이 적용시작월로 픽스(수정불가)
+         */
+        , onChangeStartData : function(oEvent) {
+            var oDetailModel = this.getModel("detailModel");
+            var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
+            var oDetailData = oDetailModel.getProperty(sSelectedPath);
+
+            var management = "";
+            if(oDetailData.management == "관리"){
+                 management = "MNGT"
+            }else if(oDetailData.management == "시세"){
+                management = "MPRICE"
+
+                //oDetailData.apply_end_data = oDetailData.apply_start_date;
+                oDetailModel.setProperty(sSelectedPath+"/apply_end_date", oDetailData.apply_start_date);
+                oDetailModel.refresh();
+            }            
+        }
+
+        /**
          * detail 선택 데이터 체크
          */
         , onRowSelectionChange : function (oEvent) {

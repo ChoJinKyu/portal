@@ -189,17 +189,17 @@
                                         <t:Column hAlign="Left" width="8rem">
                                             <Label text="{I18N>/SP_APPLY_START_DATA_YYYYMM}" textAlign="Center" width="100%" required="true"/>
                                             <t:template>
-                                                <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" displayFormat="y-MM" 
-                                                            value="{ path: 'detailModel>apply_start_date'}" />
+                                                <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" displayFormat="y-MM"
+                                                            value="{ path: 'detailModel>apply_start_date'}" change=".onChangeStartData" />
                                             </t:template>
                                         </t:Column>
-                                    <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/SP_APPLY_END_DATE_YYYYMM}" textAlign="Center" width="100%" required="true"/>
-                                        <t:template>
-                                            <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" displayFormat="y-MM"
-                                                        value="{ path: 'detailModel>apply_end_date' }" />
-                                        </t:template>
-                                    </t:Column>
+                                        <t:Column hAlign="Left" width="8rem">
+                                            <Label text="{I18N>/SP_APPLY_END_DATE_YYYYMM}" textAlign="Center" width="100%" required="true"/>
+                                            <t:template>
+                                                <DatePicker editable="{= ${detailModel>management} === '관리' }" displayFormat="y-MM" 
+                                                            value="{ path: 'detailModel>apply_end_date' }" />
+                                            </t:template>
+                                        </t:Column>
                                     <t:Column hAlign="Left" width="10rem">
                                         <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%" required="true"/>
                                         <t:template>

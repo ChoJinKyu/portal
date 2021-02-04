@@ -191,82 +191,82 @@
                                             <Label text="{I18N>/SP_APPLY_START_DATA_YYYYMM}" textAlign="Center" width="100%" required="true"/>
                                             <t:template>
                                                 <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" displayFormat="y-MM"
-                                                            value="{ path: 'detailModel>apply_start_date'}" />
+                                                            value="{ path: 'detailModel>apply_start_date'}" change=".onChangeStartData" />
                                             </t:template>
                                         </t:Column>
-                                    <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/SP_APPLY_END_DATE_YYYYMM}" textAlign="Center" width="100%" required="true"/>
-                                        <t:template>
-                                            <DatePicker editable="{= ${detailModel>row_state} === 'edit' }" displayFormat="y-MM" 
-                                                        value="{ path: 'detailModel>apply_end_date' }" />
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Left" width="10rem">
-                                        <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%" required="true"/>
-                                        <t:template>
-                                            <ComboBox id="listDivComboBox" width="100%" selectedKey="{detailModel>business_division}" 
-                                                items="{
-                                                        path: 'rootModel>/org_Division'
-                                                       }">
-                                                <items>
-                                                    <core:Item key="{rootModel>bizdivision_code}" text="{rootModel>bizdivision_code} [{rootModel>bizdivision_name}]" />
-                                                </items>
-                                            </ComboBox>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/CORPORATION}" textAlign="Center" width="100%" required="true"/>
-                                        <t:template>
-                                            <ComboBox id="CorpComboBox" width="100%"  selectedKey="{detailModel>corporation}" 
-                                                editable="{= ${detailModel>row_state} === 'edit' }"
-                                                items="{ path: 'rootModel>/org_Company',
-                                                        filters: [
-                                                        {path: 'affiliate_code', operator: 'EQ', value1: 'C100'}
-                                                        ]
-                                                }" change=".onChangeCorporation"> 
-                                                <items>
-                                                    <core:Item key="{rootModel>company_code}" text="{rootModel>affiliate_code} [{rootModel>company_code}]" />
-                                                </items>
-                                            </ComboBox>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Center" width="8rem">
-                                        <Label text="{I18N>/PLANT}" textAlign="Center" width="100%" required="true"/>
-                                        <t:template>
-                                            <ComboBox width="100%" editable="{= ${detailModel>row_state} === 'edit' }"
-                                                selectedKey="{detailModel>plant}" 
-                                                items="{
-                                                        path: 'detailModel>org_Plant'
+                                        <t:Column hAlign="Left" width="8rem">
+                                            <Label text="{I18N>/SP_APPLY_END_DATE_YYYYMM}" textAlign="Center" width="100%" required="true"/>
+                                            <t:template>
+                                                <DatePicker editable="{= ${detailModel>management} === '관리' }" displayFormat="y-MM" 
+                                                            value="{ path: 'detailModel>apply_end_date' }" />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Left" width="10rem">
+                                            <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%" required="true"/>
+                                            <t:template>
+                                                <ComboBox id="listDivComboBox" width="100%" selectedKey="{detailModel>business_division}" 
+                                                    items="{
+                                                            path: 'rootModel>/org_Division'
                                                         }">
-                                                <items>
-                                                    <core:Item key="{detailModel>plant_code}" text="{detailModel>plant_code}" />
-                                                </items>
-                                            </ComboBox>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Center" width="8rem">
-                                        <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" width="100%" required="true"/>
-                                        <t:template>
-                                            <MultiInput editable="{= ${detailModel>row_state} === 'edit' }"
-                                                    valueHelpRequest=".onInputSupplierWithOrgValuePress" value="{detailModel>supplier_code}"/>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Center" width="8rem">
-                                        <Label  text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
-                                        <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>supplier}"/>
-                                        </t:template>
-                                    </t:Column>
-                                    <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/MATERIAL}{I18N>/CODE}" textAlign="Center" width="100%" required="true"/>
-                                        <t:template>
-                                            <VBox>
-                                                <Input value="{detailModel>material_code}" showValueHelp="true"
-                                                    valueHelpRequest=".onMaterialMasterMultiDialogPress">
-                                                </Input>
-                                            </VBox>
-                                        </t:template>
-                                    </t:Column>
+                                                    <items>
+                                                        <core:Item key="{rootModel>bizdivision_code}" text="{rootModel>bizdivision_code} [{rootModel>bizdivision_name}]" />
+                                                    </items>
+                                                </ComboBox>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Left" width="8rem">
+                                            <Label text="{I18N>/CORPORATION}" textAlign="Center" width="100%" required="true"/>
+                                            <t:template>
+                                                <ComboBox id="CorpComboBox" width="100%"  selectedKey="{detailModel>corporation}" 
+                                                    editable="{= ${detailModel>row_state} === 'edit' }"
+                                                    items="{ path: 'rootModel>/org_Company',
+                                                            filters: [
+                                                            {path: 'affiliate_code', operator: 'EQ', value1: 'C100'}
+                                                            ]
+                                                    }" change=".onChangeCorporation"> 
+                                                    <items>
+                                                        <core:Item key="{rootModel>company_code}" text="{rootModel>affiliate_code} [{rootModel>company_code}]" />
+                                                    </items>
+                                                </ComboBox>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="8rem">
+                                            <Label text="{I18N>/PLANT}" textAlign="Center" width="100%" required="true"/>
+                                            <t:template>
+                                                <ComboBox width="100%" editable="{= ${detailModel>row_state} === 'edit' }"
+                                                    selectedKey="{detailModel>plant}" 
+                                                    items="{
+                                                            path: 'detailModel>org_Plant'
+                                                            }">
+                                                    <items>
+                                                        <core:Item key="{detailModel>plant_code}" text="{detailModel>plant_code}" />
+                                                    </items>
+                                                </ComboBox>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="8rem">
+                                            <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" width="100%" required="true"/>
+                                            <t:template>
+                                                <MultiInput editable="{= ${detailModel>row_state} === 'edit' }"
+                                                        valueHelpRequest=".onInputSupplierWithOrgValuePress" value="{detailModel>supplier_code}"/>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="8rem">
+                                            <Label  text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
+                                            <t:template>
+                                                <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>supplier}"/>
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Left" width="8rem">
+                                            <Label text="{I18N>/MATERIAL}{I18N>/CODE}" textAlign="Center" width="100%" required="true"/>
+                                            <t:template>
+                                                <VBox>
+                                                    <Input value="{detailModel>material_code}" showValueHelp="true"
+                                                        valueHelpRequest=".onMaterialMasterMultiDialogPress">
+                                                    </Input>
+                                                </VBox>
+                                            </t:template>
+                                        </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/MATERIAL_NAME}" textAlign="Center" width="100%"/>
                                         <t:template>

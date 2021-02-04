@@ -230,6 +230,27 @@ sap.ui.define([
         }
         
         /**
+         * 시세의 경우 적용시작월 선택시 적종종료월이 적용시작월로 픽스(수정불가)
+         */
+        , onChangeStartData : function(oEvent) {
+            var oDetailModel = this.getModel("detailModel");
+            var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
+            var oDetailData = oDetailModel.getProperty(sSelectedPath);
+
+            var management = "";
+            if(oDetailData.management == "관리"){
+                 management = "MNGT"
+            }else if(oDetailData.management == "시세"){
+                management = "MPRICE"
+
+                //oDetailData.apply_end_data = oDetailData.apply_start_date;
+                oDetailModel.setProperty(sSelectedPath+"/apply_end_date", oDetailData.apply_start_date);
+                oDetailModel.refresh();
+            }            
+        }
+
+
+        /**
          * 법인 변경시 플랜트 데이터 변경 
          */
         , onChangeCorporation : function (oEvent) {
@@ -266,7 +287,7 @@ sap.ui.define([
                     var oSelectedDialogItem = oEvent.getParameter("item");
                     this._oDetail.supplier_code = oSelectedDialogItem.supplier_code;
                     this._oDetail.supplier = oSelectedDialogItem.supplier_local_name;
-                     oDetailModel.refresh();
+                    oDetailModel.refresh();
                 }.bind(this));
             }
             this.oSupplierWithOrgValueHelp.open();
