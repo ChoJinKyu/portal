@@ -39,6 +39,13 @@
                 "settings": {
                     "odataVersion": "4.0"
                 }
+            },
+            "partCategoryService": {
+                "uri": "srv-api/odata/v2/dp.PartCategoryService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
             }
         }
     },
@@ -127,6 +134,16 @@
                     "refreshAfterChange": true,
                     "useBatch": true
                 }
+            },
+            "partCategoryService": {
+                "dataSource": "partCategoryService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": true,
+                    "useBatch": true
+                }
             }
         },
         "resources": {
@@ -178,7 +195,7 @@
                     ]
                 },
                 {
-                    "pattern": "addCreateObject/{tenantId}/{requestNumber}",
+                    "pattern": "addCreateObject/{tenantId}/{categoryGroupCode}/{requestNumber}/{categoryCode}",
                     "name": "addCreatePage",
                     "target": [
                         "addCreateObject"
