@@ -144,16 +144,20 @@ sap.ui.define([
 
             var inputModel = new JSONModel();
             inputModel.setData({ gubun: "MR", mode: "R", tenantId: oRecord.tenant_id, taxId: oRecord.tax_id, progressCode: oRecord.maker_progress_status_code, makerCode: "" });
+            this._fnMoveMakerMasterCreate(inputModel);
+        },
+        _fnMoveMakerMasterCreate: function (inputModel) {
+            // App To App
             //portal에 있는 toolPage 
-            var oToolPage = this.getView().oParent.oParent.oParent.oContainer.oParent;
-            //이동하려는 app의 component name,url
-            var sComponent = "sp.sm.makerMasterList",
-                sUrl = "../sp/sm/makerMasterList/webapp";
+            var oToolPage = this.getView().getParent().getParent().getParent().getParent().getParent().oContainer.getParent();
 
-            var changeHash = inputModel.getData();    //넘겨줄 hash 값
-            // var changeHash = "{gubun : 'MR', mode : 'R', tenantId : '"+oRecord.tenant_id+"', taxId: '"+ oRecord.tax_id +"', progressCode: '"+ oRecord.maker_progress_status_code +"', makerCode: ''}";
-            console.log(changeHash);
-            HashChanger.getInstance().replaceHash("");
+            //이동하려는 app의 component name,url
+            var sComponent = "sp.sm.makerMasterCreate",
+                sUrl = "../sp/sm/makerMasterCreate/webapp";
+
+            // 화면 구분 코드(MM : Maker Mater, MR : Maker Registration, MA : 타모듈  등록)  -> gubun
+            // 생성/보기 모드 코드(C : 생성, R : 보기) -> mode
+
 
             Component.load({
                 name: sComponent,
@@ -164,13 +168,13 @@ sap.ui.define([
                     async: true,
                     url: sUrl
                 });
+                oContainer.setPropagateModel(true);
+                oContainer.setModel(inputModel, "callByAppModel");
                 oToolPage.removeAllMainContents();
                 oToolPage.addMainContent(oContainer);
-                //hash setting
-                HashChanger.getInstance().setHash(changeHash);
             }).catch(function (e) {
                 MessageToast.show("error");
-            })
+            });
         }
 
 
