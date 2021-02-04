@@ -66,8 +66,6 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
            
-            console.log(" session >>> " , this.getSessionUserInfo().TENANT_ID);
-
             //this._showFormFragment();
         },
 

@@ -13,11 +13,9 @@ service partActivityV4Service {
     type PdpartActivityTemplateType : {
         tenant_id : String;
         company_code : String;
-        org_type_code : String;
         org_code : String;
         part_project_type_code : String;
         activity_code : String;
-        category_group_code : String;
         sequence : String;
         develope_event_code : String;
         actual_role_code : String;
