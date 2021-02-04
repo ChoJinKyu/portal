@@ -411,7 +411,7 @@ BEGIN
              , I_ORG_TYPE_CODE
              , I_ORG_CODE
              , V_APPROVAL_NUMBER
-             , DTL.ITEM_SEQUENCE
+             , SEQ.MAX_ITEM_SEQUENCE + ROW_NUMBER()OVER(PARTITION BY SEQ.MAX_ITEM_SEQUENCE ORDER BY SEQ.MAX_ITEM_SEQUENCE)
 
              , DTL.LINE_TYPE_CODE
              , DTL.MATERIAL_CODE
@@ -435,8 +435,17 @@ BEGIN
              , NOW()
              , NOW()
           FROM :I_DETAILS   DTL
+             ,(SELECT IFNULL(MAX(ITEM_SEQUENCE), 0) AS MAX_ITEM_SEQUENCE
+                 FROM SP_NP_NET_PRICE_APPROVAL_DTL
+                WHERE TENANT_ID        = I_TENANT_ID
+                  AND COMPANY_CODE     = I_COMPANY_CODE
+                  AND ORG_TYPE_CODE    = I_ORG_TYPE_CODE
+                  AND ORG_CODE         = I_ORG_CODE
+                  AND APPROVAL_NUMBER  = V_APPROVAL_NUMBER
+              ) SEQ
          WHERE DTL._ROW_STATE_ = 'C'
         ;
+        
     END;
 
     O_RETURN_CODE = 'OK';
