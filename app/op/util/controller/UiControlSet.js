@@ -5,23 +5,50 @@ sap.ui.define([
 
 	return {
 
+        toControlEditorVisible: function(oStatus){
+             switch(oStatus){
+            
+                case "&nbsp;":
+                    return false;
+                    break;
+                case "":
+                    return false;
+                    break;    
+               
+            }
+            return true;
+        },
+
+        toControlRWVisible: function(oStatus){
+             switch(oStatus){
+                
+                case "10":
+                    return true;
+                    break;
+                case "15": 
+                    return true ;
+                    break;
+            }
+            return false;
+        },
+
         toColumnVisible: function(oVisiblity){
             switch(oVisiblity){
                 case "Hide":
                     return false;
-                break;
+                    break;
                 case "Display": 
                     return true ;
-                break;
+                    break;
                 case "Mandatory": 
                     return true ;
-                break;    
+                    break;    
                 case "Input": 
                     return true ; 
-                break;
+                    break;
                 case "Undefine": 
                     return true ; 
-                break;
+                    break;
             }
             return false;
         },
@@ -30,16 +57,16 @@ sap.ui.define([
             switch(oVisiblity){
                 case "Hide":
                     return false;
-                break;
+                    break;
                 case "Display": 
                     return false ;
-                break;
+                    break;
                 case "Mandatory": 
                     return true ;
-                break;    
+                    break;    
                 case "Input": 
                     return true ;    
-                break;
+                    break;
             }
             return false;
         },
@@ -48,16 +75,16 @@ sap.ui.define([
             switch(oVisiblity){
                 case "Hide":
                     return false;
-                break;
+                    break;
                 case "Display": 
                     return false ;
-                break;
+                    break;
                 case "Mandatory": 
                     return false ;
-                break;    
+                    break;    
                 case "Input": 
                     return true ;    
-                break;
+                    break;
             }
             return false;
         }

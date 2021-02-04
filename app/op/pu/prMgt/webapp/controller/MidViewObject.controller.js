@@ -16,8 +16,9 @@ sap.ui.define([
     "ext/lib/util/Validator",
     "op/util/controller/OPUi",
     "op/util/controller/UiControlSet",
+    "sap/ui/richtexteditor/RichTextEditor"
 ], function (BaseController, Multilingual, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, NumberFormatter,
-                Filter, FilterOperator, Fragment, MessageBox, MessageToast, Validator, OPUi, UiControlSet) {
+                Filter, FilterOperator, Fragment, MessageBox, MessageToast, Validator, OPUi, UiControlSet, RichTextEditor) {
      "use strict";
     
     var oTransactionManager;
@@ -47,7 +48,7 @@ sap.ui.define([
 			var oViewModel = new JSONModel({
 					busy : true,
 					delay : 0
-                });                
+                });       
       
             // 템플릿 정보 모델.
             this.getView().setModel(new JSONModel(), "tModel");       
@@ -73,6 +74,8 @@ sap.ui.define([
         },
 
         onAfterRendering: function () {
+        //    var oDetailModel = this.getModel('detailModel');
+        //    this.oApprovalRichTextEditor.setValue(oDetailModel.getProperty("/mst/approval_contents") );
         },
 
         /**
@@ -184,13 +187,25 @@ sap.ui.define([
         _setUI : function (){
 
             var oDetailModel = this.getModel('detailModel');
-
             var oOPUi = new OPUi({
                 tenantId:   oDetailModel.getProperty("/TenantId"),
                 txnType:    oDetailModel.getProperty("/XtnTypeCode"),
                 templateNumber: oDetailModel.getProperty("/PrTemplateNumber")
             });
             this.setModel(oOPUi.getModel(), "OPUI");
+
+            if (  oDetailModel.getProperty("/mst/approval_contents") === "&nbsp;"
+                 || oDetailModel.getProperty("/mst/approval_contents") === "" )
+                 {
+                     this.byId('Hbox_approval_contents').setVisible(false);
+                 }
+            else
+            {
+                this.byId('Hbox_approval_contents').setVisible(true);
+                this._fnSetRichEditor(oDetailModel.getProperty("/mst/approval_contents"));   
+                //this.oApprovalRichTextEditor.setValue(oDetailModel.getProperty("/mst/approval_contents") );
+            }
+
         },
         
 
@@ -357,7 +372,44 @@ sap.ui.define([
             });
         },
 
-       
+       /**
+         * 품의내용 폅집기 창 
+         */
+        _fnSetRichEditor : function (sHtmlValue){ 
+            var that = this ;
+                //sHtmlValue = "";            
+            var oApprovalLayout = this.getView().byId("idApprovalContentsTextEditor");
+            var oApprovalRTE = oApprovalLayout.getContent()[0];
+
+            if(!that.oApprovalRichTextEditor){
+                sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+                    function (RTE, EditorType) {
+                        that.oApprovalRichTextEditor = new RTE("prCreateApprovalRTE", {
+                            editorType: EditorType.TinyMCE4,
+                            width: "100%",
+                            height: "200px",
+                            editable: false,
+                            customToolbar: false,
+                            showGroupClipboard: false,
+                            showGroupFont: false,
+                            showGroupFontStyle: false,
+                            showGroupInsert: false,
+                            showGroupLink: false,
+                            showGroupStructure:false,
+                            showGroupTextAlign: false,
+                            showGroupUndo:false,
+                            value: sHtmlValue,
+                            // ready: function () {
+                            //     this.addButtonGroup("styleselect").addButtonGroup("table");
+                            // }
+                        });
+                        oApprovalLayout.addContent(that.oApprovalRichTextEditor);
+                });
+            } else {
+                that.oApprovalRichTextEditor.setValue(sHtmlValue);
+            }                
+        },
+
        
 
 
