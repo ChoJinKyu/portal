@@ -800,7 +800,7 @@ sap.ui.define([
                 org_type_code = this.getModel("plant").getProperty("/org_type_code");
             var data = {};
             
-            console.log("orgTypeCode >>> " ,org_type_code );
+           // console.log("orgTypeCode >>> " ,org_type_code );
 
             var approvalMaster = {
                 tenant_id: this.tenant_id
