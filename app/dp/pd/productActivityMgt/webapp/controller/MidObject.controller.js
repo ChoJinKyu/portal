@@ -19,10 +19,11 @@ sap.ui.define([
 	"sap/m/Text",
 	"sap/m/Input",
 	"ext/lib/control/m/CodeComboBox",
-	"sap/ui/core/Item",
+    "sap/ui/core/Item",
+    "sap/ui/model/Sorter",
 ], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, Formatter, DateFormatter, 
         Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-        ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, CodeComboBox, Item) {
+        ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, CodeComboBox, Item, Sorter) {
 	"use strict";
 
 	var oTransactionManager;
@@ -32,14 +33,15 @@ sap.ui.define([
 		validator: new Validator(),
 		
 		formatter: Formatter,
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        _detailDeleteData : [],
 		viewFormatter: (function(){
 			return {
-				toYesNo: function(oData){
-					return oData === true ? "YES" : "NO"
+				toStatus: function(oData){
+					return oData === true ? "Active" : "Inactive"
 				},
 			}
-		})(),
+        })(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -50,11 +52,15 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
+
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
 			this.setModel(new ManagedModel(), "master");
-			this.setModel(new ManagedListModel(), "details");
-			this.setModel(new JSONModel(), "midObjectViewModel");
+            this.setModel(new ManagedListModel(), "details");
+			this.setModel(new JSONModel({
+                editMode : false,
+            }), "midObjectViewModel");
+            this.setModel(new JSONModel([]), "langDataModel");
 
 			oTransactionManager = new TransactionManager();
 			oTransactionManager.addDataModel(this.getModel("master"));
@@ -65,7 +71,9 @@ sap.ui.define([
 			//this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
 			//this._initTables();
-            this.enableMessagePopover();
+           // this.enableMessagePopover();
+
+
 		}, 
 
 		/* =========================================================== */
@@ -106,117 +114,88 @@ sap.ui.define([
 		},
 
 		/**
-		 * Event handler for page edit button press
 		 * @public
+         * function 수정 모드 버튼 클릭 이벤트
+         * 수정모드 메소드 실행
 		 */
-		onPageEditButtonPress: function(){
+		onPageEditeButton: function(){
 			this._toEditMode();
+        },
+        
+
+        /**
+         * function : 언어코드 테이블 행 추가 버튼 클릭 이벤트
+         * 언어코드 테이블의 행을 추가 시킨다.
+         */
+        onPdActivityLengCreate: function(){
+
+            var oTable = this.getView().byId("pdActivityLengTable"),
+                oLangDataModel = this.getModel("langDataModel"),
+                oDetailsModel = this.getModel("details"),
+                bFlag = false;
+
+            if(oDetailsModel.getProperty("/PdProdActivityTemplateLng").length < oLangDataModel.getProperty("/").length){
+                bFlag = true;
+            }
+
+            if(!bFlag){
+                MessageToast.show(this.getModel("I18N").getText("/NPG00002"));
+                return;
+            }
+
+			oDetailsModel.addRecord({
+				"tenant_id": this._sTenantId,
+				"product_activity_code": "",
+				"language_cd": "",
+				"code_name": ""			
+            }, "/PdPartBaseActivityLng");
+
 		},
+
+        /**
+         * function : 언어코드 테이블 행 삭제 버튼 클릭 이벤트
+         * 언어코드 테이블의 행을 삭제 시킨다.
+         */
+		onPdActivityLengDelete: function(){
+            var oTable = this.byId("pdActivityLengTable"),
+				oModel = this.getModel("details"),
+				aItems = oTable.getSelectedItems(),
+				aIndices = [];
+			aItems.forEach(function(oItem){
+				aIndices.push(oModel.getProperty("/PdProdActivityTemplateLng").indexOf(oItem.getBindingContext("details").getObject()));
+			});
+			aIndices = aIndices.sort(function(a, b){return b-a;});
+			aIndices.forEach(function(nIndex){
+				//oModel.removeRecord(nIndex);
+				oModel.markRemoved(nIndex);
+			});
+			oTable.removeSelections(true);
+        },
+        
 		
 		/**
 		 * Event handler for delete page entity
 		 * @public
 		 */
-        // onPageDeleteButtonPress: function(){
-		// 	var oView = this.getView(),
-		// 		oMasterModel = this.getModel("master"),
-		// 		that = this;
-		// 	MessageBox.confirm("Are you sure to delete this control option and details?", {
-		// 		title : "Comfirmation",
-		// 		initialFocus : sap.m.MessageBox.Action.CANCEL,
-		// 		onClose : function(sButton) {
-		// 			if (sButton === MessageBox.Action.OK) {
-		// 				oView.setBusy(true);
-		// 				oMasterModel.removeData();
-		// 				oMasterModel.setTransactionModel(that.getModel());
-		// 				oMasterModel.submitChanges({
-		// 					success: function(ok){
-		// 						oView.setBusy(false);
-		// 						that.onPageNavBackButtonPress.call(that);
-		// 						MessageToast.show("Success to delete.");
-		// 					}
-        //                 });
-        //                 oView.setBusy(true);
-		// 			};
-		// 		}
-		// 	});
-		// },
 
-		// onMidTableAddButtonPress: function(){
-		// 	var oTable = this.byId("midTable"),
-		// 		oDetailsModel = this.getModel("details");
-		// 	oDetailsModel.addRecord({
-		// 		"tenant_id": this._sTenantId,
-		// 		"control_option_code": this._sControlOptionCode,
-		// 		"control_option_level_code": "",
-		// 		"control_option_level_val": "",
-		// 		"control_option_val": "",
-		// 		"local_create_dtm": new Date(),
-		// 		"local_update_dtm": new Date()
-		// 	}, "/ControlOptionMasters");
-        //     this.validator.clearValueState(this.byId("midTable"));
-		// },
-
-		// onMidTableDeleteButtonPress: function(){
-		// 	var oTable = this.byId("midTable"),
-		// 		oDetailsModel = this.getModel("details"),
-		// 		aItems = oTable.getSelectedItems(),
-		// 		aIndices = [];
-		// 	aItems.forEach(function(oItem){
-		// 		aIndices.push(oDetailsModel.getProperty("/ControlOptionDetails").indexOf(oItem.getBindingContext("details").getObject()));
-		// 	});
-		// 	aIndices = aIndices.sort(function(a, b){return b-a;});
-		// 	aIndices.forEach(function(nIndex){
-		// 		//oDetailsModel.removeRecord(nIndex);
-		// 		oDetailsModel.markRemoved(nIndex);
-		// 	});
-		// 	oTable.removeSelections(true);
-        //     this.validator.clearValueState(this.byId("midTable"));
-		// },
+        onPageDeleteButton: function(){
+			this._procedureCall("D");
+		},
 		
 		/**
 		 * Event handler for saving page changes
 		 * @public
 		 */
-        // onPageSaveButtonPress: function(){
-        //     var oView = this.getView(),
-        //         oMasterModel = this.getModel("master"),
-        //         oDetailsModel = this.getModel("details"),
-        //         that = this;
-                
-		// 	if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
-		// 		MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-		// 		return;
-        //     }
-
-        //     if(this.validator.validate(this.byId("page")) !== true) return;
-
-		// 	MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
-		// 		title : this.getModel("I18N").getText("/SAVE"),
-		// 		initialFocus : sap.m.MessageBox.Action.CANCEL,
-		// 		onClose : function(sButton) {
-		// 			if (sButton === MessageBox.Action.OK) {
-		// 				oView.setBusy(true);
-		// 				oTransactionManager.submit({
-		// 					success: function(ok){
-		// 						that._toShowMode();
-		// 						oView.setBusy(false);
-        //                         that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-		// 						MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
-		// 					}
-        //                 });
-        //                 oView.setBusy(true);
-		// 			};
-		// 		}
-		// 	});
-
-		// },
+        onPageSaveButton: function(){
+			this._procedureCall("S");
+		},
 		
 		/**
-		 * Event handler for cancel page editing
 		 * @public
+         * function : 상세페이지 취소 버튼 클릭 이벤트
+         * 수정 모드를 취소하고 수정하기 전 화면으로 돌아간다.
 		 */
-        onPageCancelEditButtonPress: function(){
+        onPageCancelButton: function(){
             var oView = this.getView(),
                 oMasterModel = this.getModel("master"),
                 oDetailsModel = this.getModel("details"),
@@ -224,8 +203,11 @@ sap.ui.define([
 					if(this.getModel("midObjectViewModel").getProperty("/isAddedMode") == true){
 						this.onPageNavBackButtonPress.call(this);
 					}else{
-						this.validator.clearValueState(this.byId("page"));
-						this._toShowMode();
+                        this.validator.clearValueState(this.byId("page"));
+                        
+                        this._toShowMode();
+                        this._onRoutedThisPage();
+                        
 					}
 				}.bind(this);
 				
@@ -263,216 +245,265 @@ sap.ui.define([
 		// },
 
 		/**
-		 * When it routed to this page from the other page.
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
+         * function : 라우트 이벤트
 		 */
 		_onRoutedThisPage: function(oEvent){
-			var oArgs = oEvent.getParameter("arguments"),
-				oView = this.getView();
-			 this._sTenantId = oArgs.tenantId;
-             this._sControlOptionCode = oArgs.controlOptionCode;
             
-            console.log(oArgs)
-            console.log(this._sTenantId)
-            console.log(this._sControlOptionCode)
+            var oView = this.getView(),
+                that = this;
 
-			// if(oArgs.tenantId == "new" && oArgs.controlOptionCode == "code"){
-			// 	//It comes Add button pressed from the before page.
-			// 	this.getModel("midObjectViewModel").setProperty("/isAddedMode", true);
+            if(oEvent){
+                var oArgs = oEvent.getParameter("arguments");
+                this._sTenantId = oArgs.tenantId;
+                this._sControlOptionCode = oArgs.controlOptionCode;
 
-			// 	var oMasterModel = this.getModel("master");
-			// 	oMasterModel.setData({
-			// 		"tenant_id": "L2100",
-			// 		"site_flag": false,
-			// 		"company_flag": false,
-			// 		"role_flag": false,
-			// 		"organization_flag": false,
-			// 		"user_flag": false,
-			// 		"start_date": new Date(),
-			// 		"end_date": new Date(9999, 11, 31),
-			// 		"local_create_dtm": new Date(),
-			// 		"local_update_dtm": new Date()
-			// 	}, "/ControlOptionMasters");
+                //로그인 세션 작업완료시 수정
+                this._sLoginUserId = "TestUserId";
+                this._sLoginUserName = "TestUserName";
+            }
 
-			// 	var oDetailsModel = this.getModel("details");
-            //     oDetailsModel.setTransactionModel(this.getModel());
-            //     oDetailsModel.setData([], "/ControlOptionDetails");
-			// 	oDetailsModel.addRecord({
-			// 		"tenant_id": this._sTenantId,
-			// 		"control_option_code": this._sControlOptionCode,
-			// 		"control_option_level_code": "",
-			// 		"control_option_level_val": "",
-			// 		"control_option_val": "",
-			// 		"local_create_dtm": new Date(),
-			// 		"local_update_dtm": new Date()
-			// 	}, "/ControlOptionDetails");
-			// 	this._toEditMode();
-			// }else{
-			// 	this.getModel("midObjectViewModel").setProperty("/isAddedMode", false);
-				
-			// 	var sObjectPath = "/ControlOptionMasters(tenant_id='" + this._sTenantId + "',control_option_code='" + this._sControlOptionCode + "')";
-			// 	var oMasterModel = this.getModel("master");
-			// 	oView.setBusy(true);
-			// 	oMasterModel.setTransactionModel(this.getModel());
-			// 	oMasterModel.read(sObjectPath, {
-			// 		success: function(oData){
-			// 			oView.setBusy(false);
-			// 		}
-			// 	});
+            console.log(oArgs);
+            console.log(this._sTenantId);
+            console.log(this._sControlOptionCode);
+            this.getView().setBusy(true);
+
+
+			if(this._sControlOptionCode == "new"){
+
+				//It comes Add button pressed from the before page.
+                this.getModel("midObjectViewModel").setProperty("/isAddedMode", true);
+
+				var oMasterModel = this.getModel("master");
+				oMasterModel.setData({
+					"tenant_id": this._sTenantId,
+					"product_activity_code": "",
+					"activity_name": "",
+					"description": "",
+					"sequence": "1",
+					"active_flag": true,
+                }, "/PdProdActivityTemplateView");
+                
+                var oDetailsModel = this.getModel("details");
+
+                oDetailsModel.setData([], "/PdProdActivityTemplateLng");
+				oDetailsModel.addRecord({
+					"tenant_id": this._sTenantId,
+					"product_activity_code": "",
+					"language_code": "KO",
+					"code_name": ""			
+                }, "/PdProdActivityTemplateLng");
+
+				var oLangDataModel = this.getOwnerComponent().getModel("common");
+
+				oLangDataModel.read("/Code", {
+					filters: [
+						new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+						new Filter("group_code", FilterOperator.EQ, "CM_LANG_CODE"),
+					],
+					success: function (rData, reponse) {
+                        if(rData.results.length>0){
+                            that.getView().getModel("langDataModel").setData(reponse.data.results);
+                        }
+                    }
+                });
+                this._toEditMode();
+                
+			}else{
+                oView.setBusy(true);
+
+                this.getModel("midObjectViewModel").setProperty("/isAddedMode", false);
+                var sObjectPath = "/PdProdActivityTemplateView(tenant_id='" + this._sTenantId + "',product_activity_code='" + this._sControlOptionCode + "')";
+                var oMasterModel = this.getModel("master");
+                
+				oMasterModel.setTransactionModel(this.getModel());
+				oMasterModel.read(sObjectPath, {
+					success: function(oData){
+						oView.setBusy(false);
+					}
+                });
 			
-			// 	oView.setBusy(true);
-			// 	var oDetailsModel = this.getModel("details");
-			// 	oDetailsModel.setTransactionModel(this.getModel());
-			// 	oDetailsModel.read("/ControlOptionDetails", {
-			// 		filters: [
-			// 			new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-			// 			new Filter("control_option_code", FilterOperator.EQ, this._sControlOptionCode),
-			// 		],
-			// 		success: function(oData){
-			// 			oView.setBusy(false);
-			// 		}
-            //     });
-            //     oView.setBusy(true);
-			// 	this._toShowMode();
-			// }
-			// oTransactionManager.setServiceModel(this.getModel());
+                var oDetailsModel = this.getModel("details");
+                oDetailsModel.setTransactionModel(this.getModel());
+                
+				oDetailsModel.read("/PdProdActivityTemplateLng", {
+					filters: [
+						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+						new Filter("product_activity_code", FilterOperator.EQ, this._sControlOptionCode),
+					],
+					success: function (rData, reponse) {
+
+                        if(rData.results.length>0){
+                            for(var i=0;i<reponse.data.results.length;i++){
+                                reponse.data.results[i].addItem = false;
+                            }
+                           // that.getView().getModel("pdActivityLeng").setData(reponse.data.results);
+                            oDetailsModel.setData(reponse.data.results);
+                        }
+                    }
+                });
+
+                var oLangDataModel = this.getOwnerComponent().getModel("common");
+
+				oLangDataModel.read("/Code", {
+					filters: [
+						new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+						new Filter("group_code", FilterOperator.EQ, "CM_LANG_CODE"),
+					],
+					success: function (rData, reponse) {
+                        if(rData.results.length>0){
+                            that.getView().getModel("langDataModel").setData(reponse.data.results);
+                        }
+                    }
+                });
+                //detail table detete data 초기화 ;
+                this._detailDeleteData = [];
+
+                oView.setBusy(false);
+                this._toShowMode();
+            
+            }
+            this.getView().setBusy(false);
+			oTransactionManager.setServiceModel(this.getModel());
+        },
+        
+        /**
+         * function : 수정 모드 메소드
+         */
+		_toEditMode: function(){
+            this.getView().getModel("midObjectViewModel").setProperty("/editMode", true);
 		},
 
-		// _toEditMode: function(){
-		// 	var FALSE = false;
-        //     this._showFormFragment('MidObject_Edit');
-		// 	this.byId("page").setSelectedSection("pageSectionMain");
-		// 	this.byId("pageDeleteButton").setEnabled(FALSE);
-		// 	this.byId("pageSaveButton").setEnabled(!FALSE);
-		// 	this.byId("pageNavBackButton").setEnabled(FALSE);
-
-		// 	this.byId("midTableAddButton").setEnabled(!FALSE);
-		// 	this.byId("midTableDeleteButton").setEnabled(!FALSE);
-		// 	this.byId("midTableSearchField").setEnabled(FALSE);
-		// 	this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
-		// 	this.byId("midTable").getColumns()[0].setVisible(!FALSE);
-		// 	this._bindMidTable(this.oEditable, "Edit");
-		// },
-
+        /**
+         * function : 뷰 모드 메소드
+         */
 		_toShowMode: function(){
-			// var TRUE = true;
-			// this._showFormFragment('MidObject_Show');
-			// this.byId("page").setSelectedSection("pageSectionMain");
-			// this.byId("pageDeleteButton").setEnabled(TRUE);
-			// this.byId("pageSaveButton").setEnabled(!TRUE);
-			// this.byId("pageNavBackButton").setEnabled(TRUE);
+            this.getView().getModel("midObjectViewModel").setProperty("/editMode", false);
+        },
 
-			// this.byId("midTableAddButton").setEnabled(!TRUE);
-			// this.byId("midTableDeleteButton").setEnabled(!TRUE);
-			// this.byId("midTableSearchField").setEnabled(TRUE);
-			// this.byId("midTable").setMode(sap.m.ListMode.None);
-			// this.byId("midTable").getColumns()[0].setVisible(!TRUE);
-			// this._bindMidTable(this.oReadOnly, "Navigation");
-		},
+        _procedureCall: function(CUDType){
 
-		// _initTables: function(){
-		// 	this.oReadOnly = new ColumnListItem({
-		// 		cells: [
-		// 			new ObjectStatus({
-		// 				icon: {
-		// 					path: 'details>_row_state_',
-		// 					formatter: this.formatter.toModelStateColumnIcon
-		// 				}
-		// 			}), 
-		// 			new ObjectIdentifier({
-		// 				text: "{details>control_option_code}"
-		// 			}), 
-		// 			new ObjectIdentifier({
-		// 				text: "{details>control_option_level_code}"
-		// 			}), 
-		// 			new Text({
-		// 				text: "{details>control_option_level_val}"
-		// 			}), 
-		// 			new Text({
-		// 				text: "{details>control_option_val}"
-		// 			})
-		// 		],
-		// 		type: sap.m.ListType.Inactive
-		// 	});
+            var oView = this.getView(),
+                oMasterModel = this.getModel("master"),
+                oDetailsModel = this.getModel("details"),
+                oTable = this.byId("pdActivityLengTable"),
+                v_this = this;
 
-		// 	this.oEditable = new ColumnListItem({
-		// 		cells: [
-		// 			new ObjectStatus({
-		// 				icon: {
-		// 					path: 'details>_row_state_',
-		// 					formatter: this.formatter.toModelStateColumnIcon
-		// 				}
-		// 			}),
-		// 			new Text({
-		// 				text: "{details>control_option_code}"
-		// 			}), 
-		// 			new CodeComboBox({
-		// 				selectedKey: "{details>control_option_level_code}",
-		// 				emptyText: "Choose One",
-        //                 items: {
-        //                     path: '/',
-        //                     filters: [
-        //                         new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-        //                         new Filter("group_code", FilterOperator.EQ, 'CM_CHAIN_CD')
-		// 					],
-		// 					serviceName: 'cm.util.CommonService',
-		// 					entityName: 'Code'
-        //                 },
-        //                 required: true
-        //             }), 
-		// 			new Input({
-		// 				value: {
-		// 					path: "details>control_option_level_val",
-        //                     type: new sap.ui.model.type.String(null, {
-		// 						maxLength: 100
-		// 					}),
-		// 				},
-		// 				required: true
-		// 			}),
-		// 			new Input({
-		// 				value: {
-		// 					path: "details>control_option_val",
-        //                     type: new sap.ui.model.type.String(null, {
-		// 						maxLength: 100
-		// 					})
-		// 				},
-		// 				required: true
-		// 			})
-		// 		]
-        //     });
-		// },
+            var oMasterData = oMasterModel.oData;
+            var oDetailsData = oDetailsModel.oData;
 
-		// _bindMidTable: function(o, sKeyboardMode){
-		// 	this.byId("midTable").bindItems({
-		// 		path: "details>/ControlOptionDetails",
-		// 		: o
-		// 	}).setKeyboardMode(sKeyboardMode);
-		// },
+            var CUType = CUDType;
 
-		_oFragments: {},
-		// _showFormFragment : function (sFragmentName) {
-        //     var oPageSubSection = this.byId("pageSubSection1");
-        //     this._loadFragment(sFragmentName, function(oFragment){
-		// 		oPageSubSection.removeAllBlocks();
-		// 		oPageSubSection.addBlock(oFragment);
-		// 	})
-        // },
-        // _loadFragment: function (sFragmentName, oHandler) {
-		// 	if(!this._oFragments[sFragmentName]){
-		// 		Fragment.load({
-		// 			id: this.getView().getId(),
-		// 			name: "dp.pd.productActivityMgt.view." + sFragmentName,
-		// 			controller: this
-		// 		}).then(function(oFragment){
-		// 			this._oFragments[sFragmentName] = oFragment;
-		// 			if(oHandler) oHandler(oFragment);
-		// 		}.bind(this));
-		// 	}else{
-		// 		if(oHandler) oHandler(this._oFragments[sFragmentName]);
-		// 	}
-		// }
+            if(CUType !== "D") {
+                if(this._sControlOptionCode !== "new"){
+                    CUType = "U";                
+                } else {
+                    CUType = "C";
+                }
+            }              
+            
+            var activeFlg = oMasterData.active_flag ? "true" : "false";
 
+            var pdDtlVal = [];
 
+            var pdMstVal = {
+                tenant_id               : oMasterData.tenant_id,
+                product_activity_code   : oMasterData.product_activity_code,
+                description             : oMasterData.description,
+                sequence                : oMasterData.sequence,
+                active_flag             : activeFlg,
+                update_user_id          : this._sLoginUserId,
+                crud_type_code          : CUType
+            };
+
+            var input = {
+                inputData : {
+                    crud_type   : CUType,
+                    pdMst       : pdMstVal,
+                    pdDtl       : []
+                }
+            }; 
+
+            if(CUType === "S"){
+               if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
+                    MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+                    return;
+                } 
+            }
+
+            for (var i = 0; i <  oTable.getItems().length; i++) {
+                if(oDetailsData.PdProdActivityTemplateLng[i].product_activity_code === ""){
+                    oDetailsData.PdProdActivityTemplateLng[i].product_activity_code = oMasterData.product_activity_code;
+                }
+                pdDtlVal.push({
+                    tenant_id: oDetailsData.PdProdActivityTemplateLng[i].tenant_id,
+                    product_activity_code: oDetailsData.PdProdActivityTemplateLng[i].product_activity_code,
+                    language_cd: oDetailsData.PdProdActivityTemplateLng[i].language_cd,
+                    code_name: oDetailsData.PdProdActivityTemplateLng[i].code_name,
+                    update_user_id: this._sLoginUserId,                        
+                    crud_type_code: oDetailsData.PdProdActivityTemplateLng[i]._row_state_ ? oDetailsData.PdProdActivityTemplateLng[i]._row_state_ : CUType
+                });
+            }
+
+            input.inputData.pdDtl = pdDtlVal;
+
+            console.log(input);         
+
+            if(this.validator.validate(this.byId("page")) !== true) return;
+
+            var url = "srv-api/odata/v4/dp.productActivityV4Service/PdProductActivitySaveProc";
+             
+			oTransactionManager.setServiceModel(this.getModel());
+			MessageBox.confirm(CUType === "D" ? this.getModel("I18N").getText("/NCM00003") : this.getModel("I18N").getText("/NCM00001"), {
+				title : CUType === "D" ? this.getModel("I18N").getText("/DELETE") : this.getModel("I18N").getText("/SAVE"),
+				initialFocus : sap.m.MessageBox.Action.CANCEL,
+				onClose : function(sButton) {
+					if (sButton === MessageBox.Action.OK) {
+                        //oView.setBusy(true);
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            data: JSON.stringify(input),
+                            contentType: "application/json",
+                            success: function (rst) {
+                                  console.log(rst);
+                                if(rst.return_code =="OK"){
+                                    if(CUType === "D") {
+                                        v_this.onPageNavBackButtonPress.call(v_this);
+                                        v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                        MessageToast.show(v_this.getModel("I18N").getText("/NCM01002"));                                       
+                                    } else if(CUType === "C"){
+                                        v_this.onPageNavBackButtonPress.call(v_this);
+                                        v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                        MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                    }else {
+                                        MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                        v_this._toShowMode();                                
+                                        v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                    }
+                                    // sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                    // v_this._toShowMode();                                
+                                    // v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                    
+                                }else{
+                                    console.log(rst);
+                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                }
+                            },
+                            error: function (rst) {
+                                    console.log("eeeeee");
+                                    console.log(rst);
+                                    console.log(rst.return_msg);
+                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                    // v_this.onSearch(rst.return_msg );
+                            }
+                        });
+					};
+				}
+            });
+
+            this.validator.clearValueState(this.byId("page"));
+        }
 	});
 });
