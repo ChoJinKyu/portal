@@ -19,10 +19,6 @@ sap.ui.define([
             // apply content density mode to root view
             this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
 
-            this.oRouter = this.getOwnerComponent().getRouter();
-            this.oRouter.attachRouteMatched(this.onRouteMatched, this);
-            this.oRouter.attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
-
             this.setModel(new JSONModel(), "listModel");
         },
         /**
@@ -30,10 +26,7 @@ sap.ui.define([
 		 * @public
 		 * @returns {sap.ui.core.routing.Router} the router for this component
 		 */
-        getRouter: function () {
-            return UIComponent.getRouterFor(this);
-        },
-
+       
 		/**
 		 * Convenience method for getting the view model by name.
 		 * @public
@@ -101,54 +94,6 @@ sap.ui.define([
                 }
             };
         },
-
-        onBeforeRouteMatched: function (oEvent) {
-            var oModel = this.getModel("fcl");
-
-            var sLayout = oEvent.getParameters().arguments.layout;
-            // If there is no layout parameter, query for the default level 0 layout (normally OneColumn)
-            if (!sLayout) {
-                var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(0);
-                sLayout = oNextUIState.layout;
-            }
-
-            // Optional UX improvement:
-            // The app may want to hide the old view early (before the routing hides it)
-            // to prevent the view being temporarily shown aside the next view (during the transition to the next route)
-            // if the views for both routes do not match semantically
-            if (this.currentRouteName === "mainPage") { // last viewed route was master
-                var oMainListView = this.oRouter.getView("pg.vp.vendorPoolChange.view.MainList");
-                this.getView().byId("fcl").removeBeginColumnPage(oMainListView);
-
-            }
-
-            // Update the layout of the FlexibleColumnLayout
-            if (sLayout) {
-                oModel.setProperty("/layout", sLayout);
-            }
-        },
-
-        onRouteMatched: function (oEvent) {
-            var sRouteName = oEvent.getParameter("name"),
-                oArguments = oEvent.getParameter("arguments");
-
-            this._updateUIElements();
-
-            // Save the current route name
-            this.currentRouteName = sRouteName;
-        },
-
-        // Update the close/fullscreen buttons visibility
-        _updateUIElements: function () {
-            var oModel = this.getModel('fcl');
-            var oUIState = this.getOwnerComponent().getHelper().getCurrentUIState();
-            oModel.setData(oUIState);
-        },
-
-        onExit: function () {
-            this.oRouter.detachRouteMatched(this.onRouteMatched, this);
-            this.oRouter.detachBeforeRouteMatched(this.onBeforeRouteMatched, this);
-        }
     });
 
 });
