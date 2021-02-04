@@ -286,7 +286,7 @@ sap.ui.define([
 
 				oLangDataModel.read("/Code", {
 					filters: [
-						new Filter("tenant_id", FilterOperator.EQ, "L2101"),
+						new Filter("tenant_id", FilterOperator.EQ, "L2100"),
 						new Filter("group_code", FilterOperator.EQ, "CM_LANG_CODE"),
 					],
 					success: function (rData, reponse) {
