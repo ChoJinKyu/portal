@@ -13,10 +13,11 @@
     height="100%">
 
     <uxap:ObjectPageLayout
+        id="midObjectForm"
         showTitleInHeaderContent="true"
 		showEditHeaderButton="true"
         upperCaseAnchorBar="false"
-        headerContentPinnable="false"
+        headerContentPinnable="true"
         showAnchorBarPopover="false"
         showFooter="true">
 
@@ -161,9 +162,8 @@
                                         labelFor="input"
                                         required="true"/>
                                     <VBox>
-                                        <SearchField id="searchField" search=".onSearchPartCategory" visible="{viewModel>/editMode}"/>
-                                        <Text id="searchText" text="{master>/similar_category_code}" visible="{viewModel>/showMode}"/>
-                                        <Input id="similarCategoryCode" placeholder="Input data" visible ="false" />
+                                        <SearchField id="searchField" search=".onSearchPartCategory" value="{master>/similar_category_code}" visible="{viewModel>/editMode}"/>
+                                        <Text id="similarCategoryCode" text="{master>/similar_category_code}" visible="{viewModel>/showMode}"/>
                                     </VBox>
                                 </HBox>
                                 <VBox>

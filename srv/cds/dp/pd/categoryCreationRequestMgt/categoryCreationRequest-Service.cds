@@ -9,6 +9,7 @@ service PartCategoryCreationRequestService {
     entity pdPartCategoryCreationRequestView as projection on creationRequest.Pd_Part_Category_Creation_Request_View ;
     entity pdPartCategoryCreationRequest as projection on creationRequest.Pd_Part_Category_Creation_Request;
     entity PdGetCmCodeCombo as projection on getCmCodeCombo.Pd_Get_Cm_Code_Combo_View;
+    entity pdPartCategoryView as projection on PartCategory.Pd_Part_Category_View;
     // tenant_id, language_cd, 'DP_PD_PROGRESS_STATUS' 
 
 }
