@@ -216,10 +216,17 @@ sap.ui.define([
                     mDeferred.reject(release());
                 }, this)
                 .open();
+            // // Token
+            // control 
+            // && 
+            // Dialog.setTokens(control.getTokens());
+
             // Token
             control 
             && 
-            Dialog.setTokens(control.getTokens());
+            setTimeout(() => {
+                Dialog.setTokens(control.getTokens());
+            }, 0); 
 
             return mDeferred.promise();
         },
