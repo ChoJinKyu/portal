@@ -96,12 +96,13 @@ sap.ui.define([
 		},
 
         onUploadComplete : function(oEvent){
+            var originalFileName = oEvent.getParameter("files")[0].fileName;
             var resultData = JSON.parse(oEvent.getParameter("files")[0].responseRaw);
 
             var oModel = this._oUploadCollection.getModel("fileList");
             oModel.getProperty("/records").unshift({
 				"fileId": resultData.fileId,
-				"fileName": resultData.fileName,
+				"fileName": originalFileName,
                 "fileExt": resultData.fileExt,
                 "uploadDate":  resultData.uploadDate,
                 "fileSize":  resultData.fileSize,
@@ -111,7 +112,7 @@ sap.ui.define([
             oModel.refresh();
 
             if(resultData.result !== "success"){
-                MessageBox.error(resultData.fileName + " upload fail.");
+                MessageBox.error(originalFileName + " upload fail.");
             }            
         },
 
@@ -128,9 +129,9 @@ sap.ui.define([
 
             jQuery('<input type=\"hidden\" name=\"fileId\" value=\"' + documentId + '\" />').appendTo(oForm);
 
-            $("iframe[name=iframe_spp_common_single_file_download]").remove();
+            jQuery("iframe[name=iframe_spp_common_single_file_download]").remove();
                 
-            $.fileDownload($(oForm).prop('action'),{
+            jQuery.fileDownload($(oForm).prop('action'),{
                 httpMethod:"GET",
                 data:$(oForm).serialize(),
                 successCallback: function(url){
@@ -168,7 +169,7 @@ sap.ui.define([
             this._oUploadCollection.setBusy(true);
 
             $.ajax({
-                url: "srv-api/test/delete",
+                url: "srv-api/cm/fileupload/api/v1/delete",
                 type: "POST",
                 data: JSON.stringify({
                     groupId : this._fileGroupId,
