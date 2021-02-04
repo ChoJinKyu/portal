@@ -5,7 +5,8 @@
 	xmlns:layout="sap.ui.layout" 
     xmlns:form="sap.ui.layout.form"
     xmlns:sc="sap.suite.ui.commons"
-	xmlns:core="sap.ui.core"
+    xmlns:core="sap.ui.core"
+    xmlns:table="sap.ui.table"
     xmlns:richtexteditor="sap.ui.richtexteditor"
 	height="100%">
 
@@ -122,7 +123,8 @@
                             <layout:Grid containerQuery="true" defaultSpan="XL12 L12 M12 S12">
                                 <VBox>
                                     <Label text="유사 카테고리: " labelFor="similarCategoryCodeCombo" required="true"></Label>
-                                    <SearchField id="searchField" search=".onSearchPartCategory" width="50%"/>
+                                    <SearchField id="searchField" search=".onSearchPartCategory" width="50%" visible="{viewModel>/editMode}"/>
+                                    <Text id="searchText" text="{master>/similar_category_code}" width="50%" visible="{viewModel>/showMode}"/>
                                     <Input id="similarCategoryCode" placeholder="Input data" visible ="false" width="50%" />
                                 </VBox>
                             </layout:Grid>
@@ -184,7 +186,82 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                         <uxap:blocks>
-                            
+                            <Table
+                                id="detailsTable"
+                                mode="{= ${viewModel>/showMode}?'None':'MultiSelect'}"
+                                sticky="HeaderToolbar,ColumnHeaders"
+                                inset="false"
+                                class="sapFDynamicPageAlignContent"
+                                width="auto"
+                                items="{
+                                    path: 'details>/PdCategoryApprovalType'
+                                }">
+                                <headerToolbar>
+                                    <Toolbar visible="{viewModel>/editMode}">
+                                        <ToolbarSpacer/>
+                                        <HBox>
+                                            <Button text="행추가" icon="sap-icon://add"  type="Accept" press="onMstAddRow"/>
+                                            <Button text="행삭제" icon="sap-icon://delete" type="Reject" press="onMstDeleteRow"/>
+                                        </HBox>
+                                    </Toolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column>
+                                        <Text text="TENANT_ID" />
+                                        <Text text="REQUEST_NUMBER" />
+                                        <Text text="APPROVE_SEQUENCE" />
+                                        <Text text="APPROVAL_NUMBER" />
+                                        <Text text="REQUESTOR_EMPNO" />
+                                        <Text text="TF_FLAG" />
+                                        <Text text="APPROVAL_COMMENT" />
+                                        <Text text="APPROVE_DATE_TIME" />
+                                        <Text text="UPDATE_USER_ID" />
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <HBox direction="Column">
+                                                <Text text="{details>tenant_id}" visible="{viewModel>/showMode}" />
+                                                <Input value="{details>tenant_id}" visible="{viewModel>/editMode}" />
+                                            </HBox>
+                                            <HBox direction="Column">
+                                                <Text text="{details>request_number}" visible="{viewModel>/showMode}" />
+                                                <Input value="{details>request_number}" visible="{viewModel>/editMode}" />
+                                            </HBox>
+                                            <HBox direction="Column">
+                                                <Text text="{details>approve_sequence}" visible="{viewModel>/showMode}" />
+                                                <Input value="{details>approve_sequence}" visible="{viewModel>/editMode}" />
+                                            </HBox>
+                                            <HBox direction="Column">
+                                                <Text text="{details>approval_number}" visible="{viewModel>/showMode}" />
+                                                <Input value="{details>approval_number}" visible="{viewModel>/editMode}" />
+                                            </HBox>
+                                            <HBox direction="Column">
+                                                <Text text="{details>requestor_empno}" visible="{viewModel>/showMode}" />
+                                                <Input value="{details>requestor_empno}" visible="{viewModel>/editMode}" />
+                                            </HBox>
+                                            <HBox direction="Column">
+                                                <Text text="{details>tf_flag}" visible="{viewModel>/showMode}" />
+                                                <Input value="{details>tf_flag}" visible="{viewModel>/editMode}" />
+                                            </HBox>
+                                            <HBox direction="Column">
+                                                <Text text="{details>approval_comment}" visible="{viewModel>/showMode}" />
+                                                <Input value="{details>approval_comment}" visible="{viewModel>/editMode}" />
+                                            </HBox>
+                                            <HBox direction="Column">
+                                                <Text text="{details>approve_date_time}" visible="{viewModel>/showMode}" />
+                                                <Input value="{details>approve_date_time}" visible="{viewModel>/editMode}" />
+                                            </HBox>
+                                            <HBox direction="Column">
+                                                <Text text="{details>update_user_id}" visible="{viewModel>/showMode}" />
+                                                <Input value="{details>update_user_id}" visible="{viewModel>/editMode}" />
+                                            </HBox>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+
                         </uxap:blocks>
 					</uxap:ObjectPageSubSection>
                 </uxap:subSections>
