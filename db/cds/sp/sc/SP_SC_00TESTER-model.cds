@@ -54,7 +54,7 @@ using {cm.Hr_Employee as hrEmployee} from '../../cm/CM_HR_EMPLOYEE-model.cds';
 entity Sc_Nego_Headers_Test01 : managed {
         // key tenant_id                       : String(5) not null  @title : '테넌트ID';
     // key tenant_id              : Association to orgTenant.Org_Tenant @title : '테넌트ID';
-    key tenant              : Association to orgTenant.Org_Tenant{tenant_id as id} @title : '테넌트ID';
+    key tenant              : Association to one orgTenant.Org_Tenant{tenant_id as id} @title : '테넌트ID';
     key nego_header_id         : Integer64 not null                  @title : '협상헤더ID';
         currency_code          : Currency not null                   @title : '환율코드';
         response_currency_code : Currency not null                   @title : '응답환율코드';
@@ -76,9 +76,9 @@ entity Sc_Nego_Headers_Test01 : managed {
         negotiation_output_class_code   : String(100)                          @title : '협상산출물분류코드';
         buyer_empno                     : type of hrEmployee : employee_number @title : '구매담당자사번';
         buyer_empno_1                    : Association to hrEmployee  on buyer_empno_1.tenant_id = $self.tenant.tenant_id and buyer_empno_1.employee_number = $self.buyer_empno;
-        pr                              : Association to hrEmployee {tenant_id, employee_number as buyer_empno } @title : '구매담당자사번_navi';
-        buyer_empno_2                    : Association to hrEmployee { user_status_code as user_status_code } @title : '유저상태_navi';
-        hrEmployee_ : association to hrEmployee  @assert.integrity:false;
+        pr                              : Association to one hrEmployee {tenant_id, employee_number as buyer_empno } @title : '구매담당자사번_navi';
+        buyer_empno_2                    : Association to one hrEmployee { user_status_code as user_status_code } @title : '유저상태_navi';
+        hrEmployee_ : Association to one hrEmployee  @assert.integrity:false;
 }
 
 
