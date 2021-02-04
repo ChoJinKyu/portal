@@ -106,6 +106,7 @@
                     <!-- <Button text="TEST" id="testButton" press=".onTestPress"  type="Transparent"/> -->
 
                     <ToolbarSeparator/>
+                    <Button text="임시 추가생성버튼" id="buttonAddCreate" press=".onAddCreate"  type="Transparent"/>
                     <Button id="gTableExportButton" text="" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
                     <!-- <Button icon="sap-icon://action-settings" press=".onPersoButtonPressed" >
                         <layoutData>

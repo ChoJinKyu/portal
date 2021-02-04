@@ -1,0 +1,301 @@
+<mvc:View controllerName="dp.pd.categoryCreationRequestMgt.controller.AddCreate"
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns="sap.m" 
+    xmlns:t="sap.ui.table"
+	xmlns:uxap="sap.uxap" 
+	xmlns:layout="sap.ui.layout" 
+    xmlns:form="sap.ui.layout.form"
+    xmlns:sc="sap.suite.ui.commons"
+	xmlns:core="sap.ui.core"
+    xmlns:richtexteditor="sap.ui.richtexteditor"
+        
+	height="100%">
+
+	<uxap:ObjectPageLayout id="page"
+		toggleHeaderOnTitleClick="true"
+		alwaysShowContentHeader = "true"
+		preserveHeaderStateOnScroll="false"
+		headerContentPinnable="true"
+		isChildPage="true"
+		upperCaseAnchorBar="false"
+		showTitleInHeaderContent="true"
+		showEditHeaderButton="true" 
+		showFooter="false">
+		<uxap:headerTitle>
+			<uxap:ObjectPageDynamicHeaderTitle>
+				<uxap:expandedHeading>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+					    <Title text="{I18N>/PART_CATEGORY_CREATION}" wrapping="true" />
+                    </HBox>
+				</uxap:expandedHeading>
+				<uxap:snappedHeading>
+					    <Title text="{I18N>/PART_CATEGORY_CREATION}" wrapping="true" />
+				</uxap:snappedHeading>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+			<FlexBox wrap="Wrap" visible="true" width="100%">
+                
+                <layout:Grid
+                        containerQuery="true"
+                        defaultIndent="XL1 L1 M1 S1"
+                        defaultSpan="XL3 L3 M3 S3">
+                    <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                        <Label text="{I18N>/REQUEST_NUMBER} :"/>
+                        <ObjectStatus text="{master>/idea_number}"/>
+                        <Label text="{I18N>/REQUESTOR} :"/>
+                        <ObjectStatus text="{master>/supplier_local_name}"/>
+                    </layout:VerticalLayout>
+                </layout:Grid>
+                
+                
+                
+			</FlexBox>
+		</uxap:headerContent>
+
+		<uxap:sections>
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/CATEGORY}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSection1">
+                    <form:SimpleForm id="midObjectForm" editable="{midObjectViewModel>/isEditMode}">
+                        <HBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
+                            <layout:Grid containerQuery="true" defaultSpan="XL2 L4">
+                                <VBox>
+                                <!-- liveChange=".onCellChg"  -->
+                                    <Label text="{I18N>/CATEGORY_GROUP}: " labelFor="ideaCompany"  required="true"></Label>
+                                    <Input id="hidIdeaNumber"  visible="false" value="{details>/idea_number}"  />
+                                    <ComboBox id="ideaCompany" width="250em" editable="false"
+                                        selectedKey="{details>/company_code}"
+                                        items="{
+                                            path: 'org>/Company',
+                                            sorter: { path: 'company_code' }
+                                        }">
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </ComboBox>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{I18N>/PARENT_CATEGORY_CODE}: " labelFor="ideaBizUnit" ></Label>
+                                    <ComboBox id="ideaBizUnit" width="250em" editable="{viewModel>/editMode}"
+                                        selectedKey="{details>/bizunit_code}"
+                                        items="{
+                                            path: 'org>/Unit',
+                                            filters : [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}],
+                                            sorter: { path: 'bizunit_code' }
+                                        }">
+                                        <core:Item key="{org>bizunit_code}" text="[{org>bizunit_code}] {org>bizunit_name}" />
+                                    </ComboBox>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{I18N>/SEQUENCE}: " labelFor="ideaGroupCode" required="true" ></Label>
+                                    <ComboBox id="ideaGroupCode" width="250em" editable="{viewModel>/editMode}"
+                                        selectedKey="{details>/idea_product_group_code}"
+                                        items="{
+                                        path: 'common>/Code',
+                                        parameters: {
+                                            tenant_id : 'L2100'
+                                            , group_code : 'DP_IM_IDEA_PRODUCT_GROUP'
+                                        },
+                                        filters : [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                {path: 'group_code', operator: 'EQ', value1: 'DP_IM_IDEA_PRODUCT_GROUP'}],
+                                        sorter: { path: 'sort_no'}
+                                        }">
+                                        <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
+                                    </ComboBox>
+                                </VBox>
+                            </layout:Grid>
+                            
+                            <VBox>
+                                <Label text="{I18N>/STATUS}: " labelFor="searchStatusButton"></Label>
+                                <SegmentedButton id="searchStatusButton" selectedKey="all" class="sapUiSmallMarginBottom" width="100%" >
+                                    <items>
+                                        <SegmentedButtonItem text="All" key="all" width="3rem" />
+                                        <SegmentedButtonItem text="Active" key="true" width="5rem" />
+                                        <SegmentedButtonItem text="Inactive" key="false" width="5rem" />
+                                    </items>
+                                </SegmentedButton>
+                                <layoutData>
+                                    <layout:GridData span="XL6 L6 M12 S12" />
+                                </layoutData>
+                            </VBox>
+                            
+                        </HBox>
+                        </form:SimpleForm>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection id="pageSectionMain3" titleUppercase="false" title="{I18N>/LANGUAGE}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSection3" >
+						<Table id="midTable3" 
+                            sticky="HeaderToolbar,ColumnHeaders" 
+                            inset="false" 
+                            items="{details>/MenuLng}"
+                            class="sapFDynamicPageAlignContent" 
+                            updateFinished=".onMidTableUpdateFinished"
+                            mode="MultiSelect" 
+                            width="auto">
+							<headerToolbar>
+								<OverflowToolbar>
+                                    <Title text="{I18N>/LIST} ({= ${details>/MenuLng}.length || 0})" level="H2"/>
+									<!-- <ToolbarSpacer/>
+                                    <Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Emphasized" press=".onAdd" 
+                                        enabled="{= ${midObjectView>/mode} !== 'R'}"/>
+									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onDelete('midTable', 'details', 'MenuLng')"
+                                        enabled="{= ${midObjectView>/mode} !== 'R'}"/> -->
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column id="midStateColumn3" minScreenWidth="Small" hAlign="Center" width="40px" >
+									<!-- <Text text="S" /> -->
+								</Column>
+								<Column id="midLanguageCodeColumn3" minScreenWidth="Small" hAlign="Center">
+									<Text text="{I18N>/LANGUAGE}" />
+								</Column>
+                                <Column id="midMenuNameColumn3" minScreenWidth="Small" hAlign="Center">
+									<Text text="{I18N>/MANAGEMENT_NAME}" />
+								</Column>
+							</columns>
+							<items>
+								<ColumnListItem press=".onMidTableItemPress">
+									<cells>
+                                        <!-- 상태 -->
+										<Text text="{details>_row_state_}"/>
+                                        <!-- 언어코드 -->
+                                        <ComboBox
+                                        id="midLevelCombo3"
+                                        enabled="{=${midObjectView>/mode} !== 'R'}"
+                                        selectedKey="{details>language_code}"
+                                        width="100%"
+                                        items="{
+                                            path: 'util>/Code',
+                                            filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                            ]
+                                        }">
+                                        <items>
+                                            <core:Item key="{util>code}" text="{util>code} : {util>code_description}"/>
+                                        </items>
+                                        </ComboBox>
+                                        <!-- 메뉴명 -->
+										<Input value="{details>menu_name}"
+                                            required="true"
+                                            enabled="{=${midObjectView>/mode} !== 'R'}"
+                                        />
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
+                     
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+
+			<uxap:ObjectPageSection id="pageSectionMain5" titleUppercase="false" title="{I18N>/STANDARD_DAYS}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSection5" >
+						
+			<t:Table
+				id="table1"
+				ariaLabelledBy="title"
+				selectionMode="MultiToggle"
+				rows="{/modelData}"
+				visibleRowCount="5"
+				enableColumnFreeze="true"
+				showColumnVisibilityMenu="true">
+				<t:extension>
+					<OverflowToolbar style="Clear">
+						<Title id="title" text="Contacts"/>
+					</OverflowToolbar>
+				</t:extension>
+				<t:columns>
+					<t:Column
+						width="11rem"
+						sortProperty="supplier"
+						filterProperty="supplier">
+						<Label text="Supplier" textAlign="Center" width="100%"/>
+						<t:template>
+							<Text text="{supplier}"/>
+						</t:template>
+					</t:Column>
+					<t:Column
+						width="11rem"
+						sortProperty="street"
+						filterProperty="street"
+						headerSpan="3,2">
+						<t:multiLabels>
+							<Label text="Contact" textAlign="Center" width="100%"/>
+							<Label text="Address" textAlign="Center" width="100%"/>
+							<Label text="Street" textAlign="Center" width="100%"/>
+						</t:multiLabels>
+						<t:template>
+							<Text text="{street}" wrapping="false"/>
+						</t:template>
+					</t:Column>
+					<t:Column
+						width="11rem"
+						sortProperty="city"
+						headerSpan="2">
+						<t:multiLabels>
+							<Label text="Contact"/>
+							<Label text="Address"/>
+							<Label text="City" textAlign="Center" width="100%"/>
+						</t:multiLabels>
+						<t:template>
+							<Input value="{city}"/>
+						</t:template>
+					</t:Column>
+					<t:Column
+						width="11rem"
+						sortProperty="phone">
+						<t:multiLabels>
+							<Label text="Contact"/>
+							<Label text="Phone" textAlign="Center" width="100%"/>
+						</t:multiLabels>
+						<t:template>
+							<Input value="{phone}"/>
+						</t:template>
+					</t:Column>
+					<t:Column width="8rem" hAlign="End">
+						<t:multiLabels>
+							<Label visible="false" />
+							<Label visible="false" />
+							<Label text="Open Orders" />
+						</t:multiLabels>
+						<t:template>
+							<Text text="{openOrders}"/>
+						</t:template>
+					</t:Column>
+				</t:columns>
+			</t:Table>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+		</uxap:sections>
+		
+		<uxap:footer>
+			<OverflowToolbar>
+                <Button
+                    icon="sap-icon://alert"
+                    type="Emphasized"
+                    text="{= ${message>/}.length }"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                    press=".onMessagePopoverPress" />
+				<ToolbarSpacer />
+                
+                <Button id="pageEditButton" type="Transparent" text="{I18N>/EDIT}" press=".onPageEditButtonPress" />
+				<Button id="pageSaveButton" type="Transparent" text="{I18N>/TEMP_SAVE}" press=".onPageSaveButtonPress('T')" />
+				<Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButtonPress"/>
+				<Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" press=".onPageSaveButtonPress('D')"/>
+				<Button id="pageListButton" type="Transparent" text="{I18N>/LIST}" press=".onPageListButtonPress"/>
+                <Button id="pageSubmitButton" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSaveButtonPress('R')" />
+			</OverflowToolbar>
+		</uxap:footer>
+	</uxap:ObjectPageLayout>
+</mvc:View>
