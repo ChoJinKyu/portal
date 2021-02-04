@@ -23,12 +23,12 @@
 
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
+				<uxap:heading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onGoToList" />
                         <Title text="{detailViewModel>/basePriceTitle}" wrapping="true"/>
                     </HBox>
-				</uxap:expandedHeading>
+				</uxap:heading>
                 <!-- <uxap:navigationActions>
 					<OverflowToolbarButton icon="sap-icon://decline" text="{I18N>/BACK}" press=".onGoToList" />
                 </uxap:navigationActions> -->
