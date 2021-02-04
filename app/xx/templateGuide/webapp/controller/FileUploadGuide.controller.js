@@ -168,12 +168,12 @@ sap.ui.define([
             this._oUploadCollection.setBusy(true);
 
             $.ajax({
-                url: "srv-api/cm/fileupload/api/v1/delete",
+                url: "srv-api/test/delete",
                 type: "POST",
-                data: {
+                data: JSON.stringify({
                     groupId : this._fileGroupId,
                     fileId : documentId
-                },
+                }),
                 contentType: "application/json"
             }).done(function(resultData) {
                 var resultData = JSON.parse(resultData);
