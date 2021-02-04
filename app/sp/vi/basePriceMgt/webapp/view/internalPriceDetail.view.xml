@@ -297,7 +297,7 @@
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
-                                        <Label text="{I18N>/BASE_PRICE_UNIT}" textAlign="Center" width="100%"/>
+                                        <Label text="{I18N>/QUANTITY_UNIT}" textAlign="Center" width="100%"/>
                                         <t:template>
                                             <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>base_uom_code}"/>
                                         </t:template>
