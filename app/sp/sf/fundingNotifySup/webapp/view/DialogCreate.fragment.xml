@@ -91,6 +91,9 @@
                             <DatePicker 
                                 displayFormat='yyyy-MM'
                                 valueFormat ="yyyy-MM"
+                                fieldGroupIds="newInvestmentPlan"
+                                required="true"
+                                change="onCheckDatePicker"
                                 value="{applicationSup>/popUpInvestPlanMst/investment_yyyymm}"/>
                             <layoutData>
                                <layout:GridData span="XL3 L3 M3 S12" />
@@ -180,8 +183,12 @@
                             <Label text="집행시기 :" required="true"/>
                             <DatePicker 
                                 displayFormat='yyyy-MM'
-                                valueFormat ="yyyy-MM"
-                                value="{applicationSup>/popUpInvestPlanMst/execution_yyyymm}"/>
+                                change="onCheckDatePicker"
+                                fieldGroupIds="newInvestmentPlan"
+                                required="true"
+                                value="{
+                                    path: 'applicationSup>/popUpInvestPlanMst/execution_yyyymm'
+                                }"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M3 S12" />
                             </layoutData>
@@ -236,6 +243,7 @@
                         width="auto">
                         <headerToolbar>
                             <OverflowToolbar>
+                                <Title text="투자내역 상세" level="H2"/>
                                 <ToolbarSpacer/>
                                 <Button id="dtlAddRow" text="추가" type="Transparent" press=".onInvestmentDtlAddButtonPress" />
                                 <Button id="dtlDeleteRow" text="삭제" type="Transparent" press=".onInvestmentDtlDeleteButtonPress" />
@@ -258,10 +266,40 @@
                         <items>
                             <ColumnListItem>
                                 <cells>
-                                    <Input value="{applicationSup>investment_item_name}"/>
-                                    <Input value="{applicationSup>investment_item_purchasing_price}" change=".onPurchasingAtm"/>
-                                    <Input value="{applicationSup>investment_item_purchasing_qty}" change=".onPurchasingAtm"/>
-                                    <Input value="{applicationSup>investment_item_purchasing_amt}"/>
+                                    <Input 
+                                        fieldGroupIds="newInvestmentPlan"
+                                        required="true"
+                                        value="{
+                                            path: 'applicationSup>investment_item_name',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 500
+                                            }
+                                        }"
+                                    />
+                                    <Input 
+                                        fieldGroupIds="newInvestmentPlan"
+                                        required="true"
+                                        textAlign="Right"
+                                        change="onPurchasingAtm"
+                                        type="Number" 
+                                        value="{
+                                            path: 'applicationSup>investment_item_purchasing_price', 
+                                            type: 'sap.ui.model.type.Integer'
+                                        }"
+                                    />
+                                    <Input 
+                                        fieldGroupIds="newInvestmentPlan"
+                                        required="true"
+                                        textAlign="Right"
+                                        change="onPurchasingAtm"
+                                        type="Number" 
+                                        value="{
+                                            path: 'applicationSup>investment_item_purchasing_qty', 
+                                            type: 'sap.ui.model.type.Integer'
+                                        }"
+                                    />
+                                    <Text textAlign="Right" text="{applicationSup>investment_item_purchasing_amt}"/>
                                 </cells>
                             </ColumnListItem>
                         </items>
