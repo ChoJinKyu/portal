@@ -106,7 +106,7 @@ sap.ui.define([
                 aFilters.push(new Filter("supplier_code", FilterOperator.Contains, "'" + sSupplierCodePop.toUpperCase() + "'"));
             }
 
-            if (sSupplierNamePop) {
+            if (!!sSupplierNamePop) {
                 aFilters.push(new Filter("supplier_local_name", FilterOperator.Contains, "'" + sSupplierNamePop.toUpperCase() + "'"));
             }
 
