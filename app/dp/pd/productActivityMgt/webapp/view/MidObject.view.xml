@@ -89,14 +89,14 @@
                             </layout:VerticalLayout>
                         </FlexBox>
 
-                        <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
+                        <FlexBox visible="{= !${midObjectViewModel>/isAddedMode} }" height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
                             <layout:VerticalLayout class="sapUiLargeMarginEnd">
                                 <Label  
                                     text="{I18N>/SEQUENCE} :" 
                                     design="Bold" 
                                     class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
-                                    <Text visible="{= ${midObjectViewModel>/editMode} ? ${midObjectViewModel>/isAddedMode} ? true : false : true }" text="{master>/sequence}" class="sapMLabelNoText"/> 
-                                    <Input visible="{= ${midObjectViewModel>/editMode} ? ${midObjectViewModel>/isAddedMode} ? false : true : false }" type="Number" value="{master>/sequence}" class="sapMLabelNoText"/> 
+                                    <Text visible="{= !${midObjectViewModel>/editMode} }" text="{master>/sequence}" class="sapMLabelNoText"/> 
+                                    <Input visible="{midObjectViewModel>/editMode}" type="Number" value="{master>/sequence}" class="sapMLabelNoText"/> 
                             </layout:VerticalLayout>
                         </FlexBox>
 
@@ -215,11 +215,12 @@
 		
 		<uxap:footer>
 			<OverflowToolbar>
-				<ToolbarSpacer />
-				<Button enabled="{midObjectViewModel>/editMode}" type="Transparent" text="취소(x)" press=".onPageCancelButton" />
-				<Button enabled="{= !${midObjectViewModel>/editMode} }" type="Transparent" text="수정(x)" press=".onPageEditeButton" />
-                <Button enabled="{midObjectViewModel>/editMode}" type="Transparent" text="삭제(x)" press=".onPageDeleteButton" />
-                <Button enabled="{midObjectViewModel>/editMode}" type="Emphasized" text="저장(x)" press=".onPageSaveButton" />
+                <ToolbarSpacer />
+                
+                <Button enabled="{= !${midObjectViewModel>/editMode} }" text="{I18N>/UPDATE}" type="Transparent" press=".onPageEditeButton" />							
+                <Button enabled="{midObjectViewModel>/editMode}" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButton"/>
+                <Button enabled="{midObjectViewModel>/editMode}" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteButton"/>
+                <Button enabled="{midObjectViewModel>/editMode}" type="Emphasized" text="{I18N>/SAVE}" press=".onPageSaveButton" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
