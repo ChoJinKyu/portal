@@ -19,6 +19,7 @@ entity Se_Eval_Sheet_Eval_Item {
       qttive_item_uom_code             : String(3)            @title: '정량항목측정단위코드' ;	
       qttive_eval_article_calc_formula : String(1000)         @title: '정량평가항목계산공식' ;	
       evaluation_article_desc          : String(3000)         @title: '평가항목설명' ;	
-      evaluation_article_lvl_attr_cd   : String(30)           @title: '평가항목레벨속성코드' ;	
+      evaluation_article_lvl_attr_cd   : String(30)           @title: '평가항목레벨속성코드' ;
+      sort_sequence                    : Decimal              @title: '정렬순서';	
 }	
 extend Se_Eval_Sheet_Eval_Item with util.Managed;	
