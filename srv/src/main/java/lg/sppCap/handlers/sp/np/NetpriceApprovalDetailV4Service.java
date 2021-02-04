@@ -37,7 +37,7 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
         // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
         this.setTransactionAutoCommitDdlOff();
         
-        ParamType vParam = context.getParam();
+        SaveParamType vParam = context.getParam();
         MasterType master = vParam.getMaster();
         Collection<GeneralType> vDetails = vParam.getGeneral();
         Collection<ApproverType> vApprovers = vParam.getApprovers();
@@ -60,7 +60,7 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
         String approverTableName = null;
         String refererTableName = null;
         
-        ResultType vResult = ResultType.create();
+        SaveResultType vResult = SaveResultType.create();
         
         try{
 
