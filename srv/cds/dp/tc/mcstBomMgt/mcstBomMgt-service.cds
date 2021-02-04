@@ -104,8 +104,9 @@ left outer join uom.Mm_Unit_Of_Measure muom
                 uom_name,
                 uom_desc
         }
-        where uom_class_code = 'AAAADL'
-          and uom_desc is not null
-          and disable_date is null;           
+        where uom_desc is not null
+          and disable_date is null
+          //and uom_class_code = 'AAAADL'
+          ;           
 
 }
