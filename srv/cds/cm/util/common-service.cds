@@ -128,19 +128,9 @@ service CommonService {
     ;
 
     @readonly
-    view File as
-        select
-            key a.tenant_id,
-            key a.file_group_id,
-            key a.file_id,
-            a.sort_number,
-            a.origin_name,
-            a.saved_name,
-            a.file_size,
-            a.mime_type,
-            a.confirm_flag
-        from
-            cm_File a
-    ;
+    view File as SELECT from cm_File
+        excluding { 
+            save_file_name
+        };
 
 }
