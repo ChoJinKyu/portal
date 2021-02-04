@@ -686,17 +686,7 @@ public class FileUploadApiController {
     public String deleteFile(@org.springframework.web.bind.annotation.RequestBody HashMap<String, String> paramMap) throws Exception {
         // test code
         String groupId = paramMap.get("groupId");
-        String fileId = paramMap.get("fileId");
-
-        System.out.println(">> Enter fileDelete");
-
-        System.out.println(">> groupId : " + paramMap.get("groupId"));
-        System.out.println(">> fileId : " + paramMap.get("fileId"));
-
-        if(!groupId.isEmpty()){
-            throw new Exception("");
-        }            
-        // test code end
+        String fileId = paramMap.get("fileId");       
 
         Map<String, String> result = new HashMap<>();
 
@@ -723,11 +713,18 @@ public class FileUploadApiController {
             result.put("result", "success");
             result.put("fileId", fileId);
         } else {
-            result.put("result", "fail");
-            result.put("fileId", fileId);
-            result.put("message", JsonParser.parseString(respBody.string()).getAsJsonObject().get("exception").getAsString());
+            String msg = JsonParser.parseString(respBody.string()).getAsJsonObject().get("exception").getAsString();
+            if (msg.equals("objectNotFound")){
+                fileDtlRepository.delete("L2100", groupId, fileId);
+                result.put("result", "success");
+                result.put("fileId", fileId);
+            } else {
+                result.put("result", "fail");
+                result.put("fileId", fileId);
+                result.put("message", JsonParser.parseString(respBody.string()).getAsJsonObject().get("exception").getAsString());
+            }           
         }
-
+        
         return mapper.writeValueAsString(result);
     }
 
