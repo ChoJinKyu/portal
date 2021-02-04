@@ -147,10 +147,17 @@
                 selectionBehavior="Row"
                 fixedColumnCount="1"
                 expandFirstLevel="true"
+                rows="{
+                    path : 'viewModel>/Tree',
+                    parameters : {
+                        arrayNames: ['nodes'],
+                        numberOfExpandedLevels: 5
+                    }
+                }"
             >
                 <t:extension>
                     <OverflowToolbar>
-                        <Title id="title" text="{I18N>/EVAL_ITEM}" level="H2"/> 
+                        <Title id="title" text="{I18N>/EVAL_ITEM}({=${viewModel>/Tree/list}.length || 0})" level="H2"/> 
                         <ToolbarSeparator/>
                         <ToolbarSpacer/>
                         <Button 
@@ -183,74 +190,74 @@
                     <!-- 평가항목 -->
                     <t:Column label="{I18N>/EVAL_ITEM}" width="20em">    
                         <t:template>
-                            <Text text="{evaluation_article_name}" tooltip="{evaluation_article_name}" wrapping="false" />
+                            <Text text="{viewModel>evaluation_article_name}" tooltip="{viewModel>evaluation_article_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 평가운영단위 -->
                     <t:Column label="{I18N>/EVAL_OP_UNT}" width="7em" hAlign="Center">    
                         <t:template>
-                            <Text text="{evaluation_operation_unit_name}" tooltip="{evaluation_operation_unit_name}" wrapping="false" />
+                            <Text text="{viewModel>evaluation_operation_unit_name}" tooltip="{viewModel>evaluation_operation_unit_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 평가유형명 -->
                     <t:Column label="{I18N>/EVALUATION_TYPE_NAME}" width="7em" hAlign="Center">    
                         <t:template>
-                            <Text text="{evaluation_type_name}" tooltip="{evaluation_type_name}" wrapping="false" />
+                            <Text text="{viewModel>evaluation_type_name}" tooltip="{viewModel>evaluation_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 평가수행방식 -->
                     <t:Column label="{I18N>/EVAL_EXEC_MODE}" width="7em" hAlign="Center">    
                         <t:template>
-                            <Text text="{evaluation_execute_mode_name}" tooltip="{evaluation_execute_mode_name}" wrapping="false" />
+                            <Text text="{viewModel>evaluation_execute_mode_name}" tooltip="{viewModel>evaluation_execute_mode_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 평가항목구분-->
                     <t:Column label="{I18N>/EVAL_ITEM_TYPE}" width="7em" hAlign="Center">    
                         <t:template>
-                            <Text text="{evaluation_article_type_name}" tooltip="{evaluation_article_type_name}" wrapping="false" />
+                            <Text text="{viewModel>evaluation_article_type_name}" tooltip="{viewModel>evaluation_article_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 배점유형 -->
                     <t:Column label="{I18N>/DISTRB_SCOR_TYPE}" width="7em" hAlign="Center">    
                         <t:template>
-                            <Text text="{evaluation_distrb_scr_type_name}" tooltip="{evaluation_distrb_scr_type_name}" wrapping="false" />
+                            <Text text="{viewModel>evaluation_distrb_scr_type_name}" tooltip="{viewModel>evaluation_distrb_scr_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- Scale유형 -->
                     <t:Column label="{I18N>/SCLE_TYPE}" width="7em" hAlign="Center">    
                         <t:template>
-                            <Text text="{evaluation_result_input_type_name}" tooltip="{evaluation_result_input_type_name}" wrapping="false" />
+                            <Text text="{viewModel>evaluation_result_input_type_name}" tooltip="{viewModel>evaluation_result_input_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 평가항목설명 -->
                     <t:Column label="{I18N>/EVAL_ITEM_DESC}" width="20em">    
                         <t:template>
-                            <Text text="{evaluation_article_desc}" tooltip="{evaluation_article_desc}" wrapping="false" />
+                            <Text text="{viewModel>evaluation_article_desc}" tooltip="{viewModel>evaluation_article_desc}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 정렬 -->
                     <t:Column label="{I18N>/SORT}" width="5em" hAlign="Center">    
                         <t:template>
-                            <Text text="{sort_sequence}" tooltip="{sort_sequence}" wrapping="false" />
+                            <Text text="{viewModel>sort_sequence}" tooltip="{viewModel>sort_sequence}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 작성자 -->
                     <t:Column label="{I18N>/WRITER}" width="8em" hAlign="Center">    
                         <t:template>
-                            <Text text="{writer}" tooltip="{writer}" wrapping="false" />
+                            <Text text="{viewModel>writer}" tooltip="{viewModel>writer}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 작성일자 -->
                     <t:Column label="{I18N>/WRITE_DATE}" width="8em" hAlign="Center">    
                         <t:template>
                             <Text text="{
-                                path:'write_tm',
+                                path:'viewModel>write_tm',
                                 type:'sap.ui.model.odata.type.DateTime',
                                 constraints : {
                                     displayFormat: 'Date'
                                 }
                             }" tooltip="{
-                                path:'write_tm',
+                                path:'viewModel>write_tm',
                                 type:'sap.ui.model.odata.type.DateTime',
                                 constraints : {
                                     displayFormat: 'Date'

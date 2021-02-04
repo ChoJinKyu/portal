@@ -9,14 +9,15 @@ sap.ui.define([
     "sap/m/SegmentedButtonItem",
     "ext/lib/util/ExcelUtil",
     "sap/ui/table/TablePersoController",
-	"./MainListPersoService",
+	"./MainListPersoService"
 ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      * 2021-01-20 개발시작
      * A61987
      */
-	function (Controller, fioriLibrary, Filter, Sorter, MessageBox, Multilingual, ListItem, SegmentedButtonItem, ExcelUtil, TablePersoController, MainListPersoService) {
+    function (Controller, fioriLibrary, Filter, Sorter, MessageBox, Multilingual, ListItem, SegmentedButtonItem, ExcelUtil, 
+        TablePersoController, MainListPersoService) {
         "use strict";
         
 		return Controller.extend("sp.se.evaluationItemMngt.controller.Master", {
@@ -35,6 +36,10 @@ sap.ui.define([
                 oViewModel.setProperty("/cond",{
                     EQ : {},
                     Contains : {}
+                });
+                oViewModel.setProperty("/Tree",{
+                    "nodes": [],
+                    "list": []
                 });
                 
                 this._bindOrgCodeComboItem();
@@ -318,7 +323,7 @@ sap.ui.define([
                 oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
                 oRowData.qttive_eval_article_calc_formula = oRowData.qttive_eval_article_calc_formula || "";
 
-                if(oRowData.leaf_flag === "Y"){
+                if(oRowData.leaf_flag === "Y" && sBtnGubun === "LowLevel"){
                     oI18NModel = oView.getModel("I18N");
                     MessageBox.warning(oI18NModel.getProperty("/ESP00001"));
                     return;
@@ -373,6 +378,19 @@ sap.ui.define([
                     if(oCondData.hasOwnProperty(operator)){
                         for(var field in oCondData[operator]){
                             if(oCondData[operator].hasOwnProperty(field) && oCondData[operator][field]){
+                                if(operator === "Contains" && typeof oCondData[operator][field] === "string"){
+                                    aFilters.push(
+                                        new Filter({ path : "tolower(" + field + ")", operator : operator, value1 : "'" + oCondData[operator][field].toLowerCase().replace("'","''") + "'" })
+                                    );
+                                    continue;
+                                }else if(operator === "BT"){
+                                    if(oCondData[operator][field].value1 || oCondData[operator][field].value2){
+                                        aFilters.push(
+                                            new Filter({ path : field, operator : operator, value1 : oCondData[operator][field].value1, value2 : oCondData[operator][field].value2 })
+                                        );
+                                    }
+                                    continue;
+                                }
                                 aFilters.push(
                                     new Filter({ path : field, operator : operator, value1 : oCondData[operator][field] })
                                 );
@@ -381,40 +399,89 @@ sap.ui.define([
                     }
                 }
                 
+                oViewModel.setProperty("/Tree",{
+                    "nodes": [],
+                    "list": []
+                });
+                    var aTableFilter = [
+                    new Filter({ path:"tenant_id", operator : "EQ", value1 : oUserInfo.tenantId }),
+                    new Filter({ path:"company_code", operator:"EQ", value1 : oUserInfo.companyCode }),
+                    new Filter({ path:"org_type_code", operator:"EQ", value1 : oUserInfo.orgTypeCode })
+                ];
+
+                if(oCondData.EQ.org_code){
+                    aTableFilter.push(
+                        new Filter({ path:"org_code", operator:"EQ", value1 : oCondData.EQ.org_code })
+                    );
+                }
+                if(oCondData.EQ.evaluation_operation_unit_code){
+                    aTableFilter.push(
+                        new Filter({ path:"evaluation_operation_unit_code", operator:"EQ", value1 : oCondData.EQ.evaluation_operation_unit_code })
+                    );
+                }
+                if(oCondData.EQ.evaluation_type_code){
+                    aTableFilter.push(
+                        new Filter({ path:"evaluation_type_code", operator:"EQ", value1 : oCondData.EQ.evaluation_type_code })
+                    );
+                }
+                oView.setBusy(true);
                 oView.setBusyIndicatorDelay(0);
-                if(!oCondData.EQ.evaluation_article_type_code && !oCondData.Contains.evaluation_article_name){
+                this.read(this.getModel(), "/EvalItemListView", {
+                    filters: aFilters,
+                    sorters: [new Sorter("hierarchy_rank")]
+                }, aTableFilter)
+                // 성공시
+                .then((function (jNodes) {
+
+                    oViewModel.setProperty("/Tree",
+                        {
+                            "nodes": jNodes[0],
+                            "list": jNodes[1].results
+                        }
+                    );
+                }).bind(this))
+                // 실패시
+                .catch(function (oError) {
+                })
+                // 모래시계해제
+                .finally((function () {
+                    this.getView().setBusy(false);
+                }).bind(this));
+
+                    //2021-02-04 Odata Tree 구조에서 Json Tree 구조로 변경
+                // if(!oCondData.EQ.evaluation_article_type_code && !oCondData.Contains.evaluation_article_name){
                     /*** 
                      * Tree 구조에선 상위 0 level 만 조건으로 걸린다.
                      * 평가항목구분과 평가항목명은 하위 항목에 대한 데이터 이므로 
                      * 별다른 작업없이 호출
                      */
-                    oTable.bindRows({
-                        path : "/EvalItemListView",
-                        filters : aFilters,
-                        sorter : [
-                            new Sorter("hierarchy_rank")
-                        ],
-                        parameters : {
-                            countMode: 'Inline',
-                            treeAnnotationProperties : {
-                                hierarchyLevelFor : 'hierarchy_level',
-                                hierarchyNodeFor : 'evaluation_article_code',
-                                hierarchyParentNodeFor : 'parent_evaluation_article_code',
-                                hierarchyDrillStateFor : 'drill_state',
-                                numberOfExpandedLevels : 5
-                            }
-                        },
-                        events : {
-                            dataRequested : function(){
-                                oView.setBusy(true);
-                            },
-                            dataReceived : function(){
-                                oView.setBusy(false);
-                            }
-                        }
-                    });
-                    return;
-                }
+                    // oTable.bindRows({
+                    //     path : "/EvalItemListView",
+                    //     filters : aFilters,
+                    //     sorter : [
+                    //         new Sorter("hierarchy_rank")
+                    //     ],
+                    //     parameters : {
+                    //         countMode: 'Inline',
+                    //         treeAnnotationProperties : {
+                    //             hierarchyLevelFor : 'hierarchy_level',
+                    //             hierarchyNodeFor : 'evaluation_article_code',
+                    //             hierarchyParentNodeFor : 'parent_evaluation_article_code',
+                    //             hierarchyDrillStateFor : 'drill_state',
+                    //             numberOfExpandedLevels : 5
+                    //         }
+                    //     },
+                    //     events : {
+                    //         dataRequested : function(){
+                    //             oView.setBusy(true);
+                    //         },
+                    //         dataReceived : function(){
+                    //             oView.setBusy(false);
+                    //         }
+                    //     }
+                    // });
+                //     return;
+                // }
                 /***
                  * Tree 구조에선 상위 0 level 만 조건으로 걸린다.
                  * 하위 항목에 대한 평가항목구분과 평가항목명에 대한 조건은
@@ -422,92 +489,92 @@ sap.ui.define([
                  * 해당 상위 level을 읽어온다.
                  * 
                  */
-                oView.setBusy(true);
-                this._readOdata({
-                    model : oODataModel,
-                    entity : "/EvalItemListView",
-                    param : {
-                        path : "/EvalItemListView", 
-                        filters : aFilters,
-                        error : function(){
-                            oView.setBusy(false);
-                        },
-                        success : function(oData){
-                            var aDataKeys, aDummyFilters, aTableFilter, aResults;
-                            aDataKeys = [];
-                            aDummyFilters = [];
-                            aTableFilter = [];
-                            aResults = oData.results;
+                // oView.setBusy(true);
+                // this._readOdata({
+                //     model : oODataModel,
+                //     entity : "/EvalItemListView",
+                //     param : {
+                //         path : "/EvalItemListView", 
+                //         filters : aFilters,
+                //         error : function(){
+                //             oView.setBusy(false);
+                //         },
+                //         success : function(oData){
+                //             var aDataKeys, aDummyFilters, aTableFilter, aResults;
+                //             aDataKeys = [];
+                //             aDummyFilters = [];
+                //             aTableFilter = [];
+                //             aResults = oData.results;
 
-                            aResults.forEach(function(oRowData){
-                                for(var i = 1, len = 5; i < 6; i++){
-                                    var sCode = oRowData["evaluation_article_level" + i + "_code"];
-                                    if(!sCode){
-                                        continue;
-                                    }
-                                    if(aDataKeys.indexOf(sCode) === -1){
-                                        aDataKeys.push(sCode);
-                                        aDummyFilters.push(
-                                            new Filter({ path : "evaluation_article_code", operator : "EQ", value1 : sCode })
-                                        );
-                                    }
-                                }
-                            });
+                //             aResults.forEach(function(oRowData){
+                //                 for(var i = 1, len = 5; i < 6; i++){
+                //                     var sCode = oRowData["evaluation_article_level" + i + "_code"];
+                //                     if(!sCode){
+                //                         continue;
+                //                     }
+                //                     if(aDataKeys.indexOf(sCode) === -1){
+                //                         aDataKeys.push(sCode);
+                //                         aDummyFilters.push(
+                //                             new Filter({ path : "evaluation_article_code", operator : "EQ", value1 : sCode })
+                //                         );
+                //                     }
+                //                 }
+                //             });
                             
-                            aTableFilter = [
-                                new Filter({ path:"tenant_id", operator : "EQ", value1 : oUserInfo.tenantId }),
-                                new Filter({ path:"company_code", operator:"EQ", value1 : oUserInfo.companyCode }),
-                                new Filter({ path:"org_type_code", operator:"EQ", value1 : oUserInfo.orgTypeCode })
-                            ];
+                //             aTableFilter = [
+                //                 new Filter({ path:"tenant_id", operator : "EQ", value1 : oUserInfo.tenantId }),
+                //                 new Filter({ path:"company_code", operator:"EQ", value1 : oUserInfo.companyCode }),
+                //                 new Filter({ path:"org_type_code", operator:"EQ", value1 : oUserInfo.orgTypeCode })
+                //             ];
 
-                            aTableFilter.push(
-                                new Filter({ filters : aDummyFilters, and : false })
-                            );
+                //             aTableFilter.push(
+                //                 new Filter({ filters : aDummyFilters, and : false })
+                //             );
                             
-                            if(oCondData.EQ.org_code){
-                                aTableFilter.push(
-                                    new Filter({ path:"org_code", operator:"EQ", value1 : oCondData.EQ.org_code })
-                                );
-                            }
-                            if(oCondData.EQ.evaluation_operation_unit_code){
-                                aTableFilter.push(
-                                    new Filter({ path:"evaluation_operation_unit_code", operator:"EQ", value1 : oCondData.EQ.evaluation_operation_unit_code })
-                                );
-                            }
-                            if(oCondData.EQ.evaluation_type_code){
-                                aTableFilter.push(
-                                    new Filter({ path:"evaluation_type_code", operator:"EQ", value1 : oCondData.EQ.evaluation_type_code })
-                                );
-                            }
+                //             if(oCondData.EQ.org_code){
+                //                 aTableFilter.push(
+                //                     new Filter({ path:"org_code", operator:"EQ", value1 : oCondData.EQ.org_code })
+                //                 );
+                //             }
+                //             if(oCondData.EQ.evaluation_operation_unit_code){
+                //                 aTableFilter.push(
+                //                     new Filter({ path:"evaluation_operation_unit_code", operator:"EQ", value1 : oCondData.EQ.evaluation_operation_unit_code })
+                //                 );
+                //             }
+                //             if(oCondData.EQ.evaluation_type_code){
+                //                 aTableFilter.push(
+                //                     new Filter({ path:"evaluation_type_code", operator:"EQ", value1 : oCondData.EQ.evaluation_type_code })
+                //                 );
+                //             }
 
-                            oTable.bindRows({
-                                path : "/EvalItemListView",
-                                filters : aTableFilter,
-                                sorter : [
-                                    new Sorter("hierarchy_rank")
-                                ],
-                                parameters : {
-                                    countMode: 'Inline',
-                                    treeAnnotationProperties : {
-                                        hierarchyLevelFor : 'hierarchy_level',
-                                        hierarchyNodeFor : 'evaluation_article_code',
-                                        hierarchyParentNodeFor : 'parent_evaluation_article_code',
-                                        hierarchyDrillStateFor : 'drill_state',
-                                        numberOfExpandedLevels : 5
-                                    }
-                                },
-                                events : {
-                                    dataRequested : function(){
-                                        oView.setBusy(true);
-                                    },
-                                    dataReceived : function(){
-                                        oView.setBusy(false);
-                                    }
-                                }
-                            });
-                        }
-                    }
-                });
+                //             oTable.bindRows({
+                //                 path : "/EvalItemListView",
+                //                 filters : aTableFilter,
+                //                 sorter : [
+                //                     new Sorter("hierarchy_rank")
+                //                 ],
+                //                 parameters : {
+                //                     countMode: 'Inline',
+                //                     treeAnnotationProperties : {
+                //                         hierarchyLevelFor : 'hierarchy_level',
+                //                         hierarchyNodeFor : 'evaluation_article_code',
+                //                         hierarchyParentNodeFor : 'parent_evaluation_article_code',
+                //                         hierarchyDrillStateFor : 'drill_state',
+                //                         numberOfExpandedLevels : 5
+                //                     }
+                //                 },
+                //                 events : {
+                //                     dataRequested : function(){
+                //                         oView.setBusy(true);
+                //                     },
+                //                     dataReceived : function(){
+                //                         oView.setBusy(false);
+                //                     }
+                //                 }
+                //             });
+                //         }
+                //     }
+                // });
 
             }
             
