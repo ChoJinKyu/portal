@@ -254,7 +254,7 @@
                                         <t:Column hAlign="Center" width="8rem">
                                             <Label  text="{I18N>/SUPPLIER}" textAlign="Center" width="100%" />
                                             <t:template>
-                                                <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>supplier}"/>
+                                                <Input editable="FALSE" value="{detailModel>supplier}"/>
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Left" width="8rem">
@@ -270,19 +270,19 @@
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/MATERIAL_NAME}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>material}"/>
+                                            <Input editable="FALSE" value="{detailModel>material}"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/VENDOR_POOL_CODE}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>vendor_pool_code}"/>
+                                            <Input editable="FALSE" value="{detailModel>vendor_pool_code}"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/VENDOR_POOL}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>vendor_pool}"/>
+                                            <Input editable="FALSE" value="{detailModel>vendor_pool}"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
@@ -300,7 +300,7 @@
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/QUANTITY_UNIT}" textAlign="Center" width="100%"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>base_uom_code}"/>
+                                            <Input editable="FALSE" value="{detailModel>base_uom_code}"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">

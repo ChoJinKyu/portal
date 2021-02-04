@@ -176,11 +176,11 @@ sap.ui.define([
                     label: new Label({text: this.getModel("I18N").getText("/PLANT_CODE")}),
                     template: new Text({text: "{plant_code}"})
                 }));
-            //가격단위
+            //수량단위
             aColumnsControl.push(new Column({
                     width: "15%",
                     hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/BASE_PRICE_UNIT")}),
+                    label: new Label({text: this.getModel("I18N").getText("/QUANTITY_UNIT")}),
                     template: new Text({text: "{base_uom_code}"})
                 }));
 
