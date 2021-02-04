@@ -118,7 +118,7 @@
                                 <SegmentedButton 
                                     id="segmentedbutton_use_flag"
                                     selectionChange="aaa"
-                                    selectedKey="{path: 'master>/active_flag', formatter: '.viewFormatter.toStatus'}"
+                                    selectedKey="{master>/active_flag}"
                                     enabled="{midObjectViewModel>/editMode}"
                                     width="100%">
                                     <items>

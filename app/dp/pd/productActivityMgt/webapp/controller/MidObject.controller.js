@@ -333,7 +333,7 @@ sap.ui.define([
 
 				oLangDataModel.read("/Code", {
 					filters: [
-						new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
 						new Filter("group_code", FilterOperator.EQ, "CM_LANG_CODE"),
 					],
 					success: function (rData, reponse) {
@@ -387,8 +387,6 @@ sap.ui.define([
                     CUType = "C";
                 }
             }              
-            
-            var activeFlg = oMasterData.active_flag ? "true" : "false";
 
             var pdDtlVal = [];
 
@@ -397,7 +395,7 @@ sap.ui.define([
                 product_activity_code   : oMasterData.product_activity_code,
                 description             : oMasterData.description,
                 sequence                : oMasterData.sequence,
-                active_flag             : activeFlg,
+                active_flag             : oMasterData.active_flag,
                 update_user_id          : this._sLoginUserId,
                 crud_type_code          : CUType
             };
