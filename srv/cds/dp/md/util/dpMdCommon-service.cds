@@ -60,25 +60,28 @@ service DpMdCommonService {
     ; 
 
 
-    /** DP05 모듈 plant_code 가져오기  */   
+    /** DP05 모듈 plant_code 가져오기  */
     view Divisions as
-    select key a.tenant_id       
-            ,key a.company_code  
-            ,key a.org_type_code 
-            ,key a.org_code         
-                ,a.org_name          
-                ,a.purchase_org_code 
-                ,a.plant_code        
-                ,a.affiliate_code    
-                ,a.bizdivision_code  
-                ,a.bizunit_code      
-                ,a.au_code           
-                ,a.hq_au_code        
-                ,a.use_flag  
-    from Org.Pur_Operation_Org a  
-    left join orgMapping.Pur_Org_Type_Mapping b on a.tenant_id=b.tenant_id
-    and a.org_type_code=b.org_type_code
-    where b.process_type_code='DP05'
+        select
+            key a.tenant_id,
+            key a.company_code,
+            key a.org_code,
+                a.org_type_code,
+                a.org_name,
+                a.purchase_org_code,
+                a.plant_code,
+                a.affiliate_code,
+                a.bizdivision_code,
+                a.bizunit_code,
+                a.au_code,
+                a.hq_au_code,
+                a.use_flag
+        from Org.Pur_Operation_Org a
+        left join orgMapping.Pur_Org_Type_Mapping b
+            on a.tenant_id = b.tenant_id
+            and a.org_type_code = b.org_type_code
+        where
+            b.process_type_code = 'DP05' ;
  
 
 }
