@@ -323,22 +323,11 @@
                                 </table:Column>
                                 <table:Column label="{I18N>/SUPPLIER_CODE}" width="11em" filterProperty="supplier_code">
                                     <table:template>
-                                        <lib-m:CodePicker id="supplier_code"
-                                            placeholder="Enter a department name"
-                                            keyField="supplier_code"
-                                            textField="supplier_local_name"
-                                            suggestionItems="{
-                                                path: '/',
-                                                filters : [
-                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                    {path : 'language_cd', operator : 'EQ', value1 : 'EN'}
-                                                ],
-                                                serviceUrl: 'srv-api/odata/v2/pg.vendorPoolMappingService/',
-                                                entityName: 'VpSupplierMstView'
-                                            }" value="{suplist>supplier_code}" change=".supplierChg">
-                                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a supplier"
-                                                keyFieldHeaderText="Supplier ID" textFieldHeaderText="Supplier" />
-                                        </lib-m:CodePicker>
+                                        <Input id="supplier_code"
+                                            valueHelpRequest=".onDetailInputWithSupValuePress"
+                                            value="{suplist>supplier_code}"
+                                            showValueHelp="true"
+                                            />
                                     </table:template>
                                 </table:Column>
                                 
@@ -480,7 +469,7 @@
                                 </table:Column>
                                 <table:Column label="{I18N>/MATERIAL_CODE}" width="20%" filterProperty="material_code">
                                     <table:template>
-                                        <lib-m:CodePicker id="material_code"
+                                        <!-- <lib-m:CodePicker id="material_code"
                                             placeholder="Enter a material name"
                                             keyField="material_code"
                                             textField="material_desc"
@@ -495,7 +484,12 @@
                                             }" value="{matlist>material_code}" change=".materialChg" enabled="{= ${matlist>_row_state_} === 'C' }">
                                             <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a material"
                                                 keyFieldHeaderText="Material ID" textFieldHeaderText="Material"/>
-                                        </lib-m:CodePicker>
+                                        </lib-m:CodePicker> -->
+                                        <Input id="material_code"
+                                            valueHelpRequest=".onDetailInputWithMatValuePress"
+                                            value="{matlist>material_code}"
+                                            showValueHelp="true"
+                                            />                                        
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="{I18N>/MATERIAL_SPEC}" width="50%" filterProperty="material_desc">
@@ -569,7 +563,7 @@
                                 </table:Column>
                                 <table:Column label="{I18N>/EMPLOYEE_NAME}" width="20%" filterProperty="user_local_name">
                                     <table:template>
-                                        <lib-m:CodePicker id="user_local_name"
+                                        <!-- <lib-m:CodePicker id="user_local_name"
                                             placeholder="Enter a vendor_pool_person_empno"
                                             keyField="vendor_pool_person_empno"
                                             textField="user_local_name"
@@ -584,7 +578,12 @@
                                             }" value="{manlist>user_local_name}" change=".managerChg" enabled="{= ${manlist>_row_state_} === 'C' }">
                                             <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a material"
                                                 keyFieldHeaderText="Manager ID" textFieldHeaderText="Manager"/>
-                                        </lib-m:CodePicker>
+                                        </lib-m:CodePicker> -->
+                                        <Input id="user_local_name"
+                                            valueHelpRequest=".onDetailInputWithManValuePress"
+                                            value="{manlist>user_local_name}"
+                                            showValueHelp="true"
+                                            />  
                                     </table:template>
                                 </table:Column>                            
                                 <!-- <table:Column label="이름" width="20%" filterProperty="user_korean_name">
@@ -624,6 +623,11 @@
                                     </table:template>
                                 </table:Column>
 
+                                <table:Column label="" width="0em" filterProperty="vendor_pool_person_empno">
+                                    <table:template>
+                                        <Text text="{manlist>vendor_pool_person_empno}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
                                 <table:Column label="" width="0em" filterProperty="vendor_pool_mapping_use_flag">
                                     <table:template>
                                         <Text text="{manlist>vendor_pool_mapping_use_flag}" wrapping="false" />

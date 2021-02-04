@@ -19,7 +19,14 @@ sap.ui.define([
     "ext/lib/formatter/Formatter",
     "sap/ui/model/resource/ResourceModel",
     "ext/cm/util/control/ui/EmployeeDialog",
-    "ext/cm/util/control/ui/DepartmentDialog",        
+    "ext/cm/util/control/ui/DepartmentDialog",    
+    "ext/pg/util/control/ui/SupplierDialogPop",   
+    "sap/ui/layout/GridData",
+    "sap/m/VBox",
+    "sap/m/HBox",
+    "sap/ui/table/Column",  
+    'sap/m/Label',   
+    "ext/pg/util/control/ui/MaterialDialogPop",
 ], function (
     BaseController, 
     History, 
@@ -41,7 +48,14 @@ sap.ui.define([
     Formatter,
     ResourceModel,
     EmployeeDialog,
-    DepartmentDialog) {
+    DepartmentDialog,
+    SupplierDialogPop,
+    GridData,
+    VBox,
+    HBox,
+    Column,
+    Label,
+    MaterialDialogPop) {
     "use strict";
     
     var oTransactionManager;
@@ -280,6 +294,135 @@ sap.ui.define([
             }.bind(this));
         },
         
+        onDetailInputWithSupValuePress: function (oEvent) {
+            var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+            that = this;
+            this.oDetailSupDialog = new SupplierDialogPop({
+                multiSelection: false,
+                keyField: "supplier_code",
+                textField: "supplier_local_name",
+                filters: [
+                    new VBox({
+                        items: [
+                            new Label({ text: this.getModel("I18N").getText("/KEYWORD") }),
+                            new Input({placeholder : this.getModel("I18N").getText("/SUPPLIER_CODE")})
+                        ],
+                        layoutData: new GridData({ span: "XL2 L3 M5 S10" })
+                    })
+                ],
+                columns: [
+                    new Column({
+                        width: "75%",
+                        label: new Label({ text: this.getModel("I18N").getText("/VALUE") }),
+                        template: new Text({ text: "supplier_local_name" })
+                    }),
+                    new Column({
+                        width: "25%",
+                        hAlign: "Center",
+                        label: new Label({ text: this.getModel("I18N").getText("/CODE") }),
+                        template: new Text({ text: "supplier_code" })
+                    })
+                ]
+            });
+
+            // Pop 내부에 값을 올려주기 위해 구성
+            this.oDetailSupDialog.setContentWidth("300px");
+            var sSearchObj = {};
+            sSearchObj.tanentId = "L2100";
+            sSearchObj.languageCd = "KO";
+            // sSearchObj.supplierCode = that.byId("search_Sup_Code").getValue();
+            // sSearchObj.orgCode = that.byId("search_Operation_ORG_E").getSelectedKey();
+            // sSearchObj.orgUnitCode = that.byId("search_Operation_UNIT_E").getSelectedKey();
+
+            // Pop의 open에 sSearchObj를 인자로 호출 
+            this.oDetailSupDialog.open(sSearchObj);
+            this.oDetailSupDialog.attachEvent("apply", function (oEvent) {
+                var sModel = this.getModel("suplist");
+                      
+                sModel.setProperty(sPath + "/supplier_code", oEvent.mParameters.item.supplier_code);
+                sModel.setProperty(sPath + "/supplier_local_name", oEvent.mParameters.item.supplier_local_name);
+                sModel.setProperty(sPath + "/supplier_english_name", oEvent.mParameters.item.supplier_english_name);
+                sModel.setProperty(sPath + "/supplier_company_code", oEvent.mParameters.item.supplier_company_code);
+                sModel.setProperty(sPath + "/supplier_company_name", oEvent.mParameters.item.supplier_company_name);
+
+            }.bind(this));
+        
+        },
+        
+        onDetailInputWithMatValuePress: function (oEvent) {
+          var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;    
+            that = this;        
+            this.oDetailMaterialDialog = new MaterialDialogPop({
+                // id:"employeeDialog" ,
+                title:"자재 검색",
+                closeWhenApplied:true,
+                items:{
+                    filters: [
+                    ]
+                }
+
+            });
+            this.oDetailMaterialDialog.open();
+            this.oDetailMaterialDialog.attachEvent("apply", function (oEvent) {
+                //console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
+                 var sModel = this.getModel("matlist");
+                sModel.setProperty(sPath + "/material_code", oEvent.mParameters.item.material_code);
+                sModel.setProperty(sPath + "/material_desc", oEvent.mParameters.item.material_desc);             
+
+            }.bind(this));            
+  
+        },
+
+        onDetailInputWithManValuePress: function (oEvent) {
+            var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;    
+            that = this;        
+            this.oDetailEmployeeDialog = new EmployeeDialog({
+                // id:"employeeDialog" ,
+                title:"직원 검색",
+                closeWhenApplied:true,
+                items:{
+                    filters: [
+                    ]
+                }
+
+            });
+            this.oDetailEmployeeDialog.open();
+            this.oDetailEmployeeDialog.attachEvent("apply", function (oEvent) {
+                //console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
+                var sModel = this.getModel("manlist");
+
+                    // if (!that.fnChkDupData(that.mngListTbl, "manlist", "/vpManagerDtlView", "vendor_pool_person_empno", empNo)) {
+
+                        // sModel.setProperty(sPath + "/user_local_name", oEvent.mParameters.item.user_local_name);
+                        // sModel.setProperty(sPath + "/user_english_name", oEvent.mParameters.item.user_english_name);
+                        // sModel.setProperty(sPath + "/job_title", oEvent.mParameters.item.job_title);
+                        // sModel.setProperty(sPath + "/vendor_pool_person_role_text", oEvent.mParameters.item.vendor_pool_person_role_text);
+                        // sModel.setProperty(sPath + "/department_local_name", oEvent.mParameters.item.department_local_name);
+                        // sModel.setProperty(sPath + "/department_english_name", oEvent.mParameters.item.department_english_name);
+                        // sModel.setProperty(sPath + "/user_status_code", oEvent.mParameters.item.user_status_code); 
+
+                //     } else {
+                //         alert("중복 값이 있습니다.");
+                //         sModel.setProperty(sPath + "/user_local_name", "");
+                //         sModel.setProperty(sPath + "/user_english_name", "");
+                //         sModel.setProperty(sPath + "/job_title", "");
+                //         sModel.setProperty(sPath + "/vendor_pool_person_role_text", "");
+                //         sModel.setProperty(sPath + "/department_local_name", "");
+                //         sModel.setProperty(sPath + "/department_english_name", "");
+                //         sModel.setProperty(sPath + "/user_status_code", "");
+                //     }
+
+                sModel.setProperty(sPath + "/user_local_name", oEvent.mParameters.item.user_local_name);
+                sModel.setProperty(sPath + "/vendor_pool_person_empno", oEvent.mParameters.item.employee_number);
+                // sModel.setProperty(sPath + "/user_english_name", oEvent.mParameters.item.user_english_name);
+                sModel.setProperty(sPath + "/job_title", oEvent.mParameters.item.job_title);
+                // sModel.setProperty(sPath + "/vendor_pool_person_role_text", oEvent.mParameters.item.vendor_pool_person_role_text);
+                sModel.setProperty(sPath + "/department_local_name", oEvent.mParameters.item.department_local_name);
+                // sModel.setProperty(sPath + "/department_english_name", oEvent.mParameters.item.department_english_name);
+                // sModel.setProperty(sPath + "/user_status_code", oEvent.mParameters.item.user_status_code);                
+
+            }.bind(this));
+        },
 
 		/**
 		 * Event handler for saving page changes
