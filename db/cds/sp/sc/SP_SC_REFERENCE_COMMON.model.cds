@@ -85,7 +85,7 @@ define view Sc_Nego_Prog_Status_Code_View as
     } 
     where group_code = 'SP_SC_NEGO_PROG_STATUS_CODE';
 
-@cds.autoexpose  // SP_SC_NEGO_PROG_STATUS_CODE : 협상 상태 코드[예:Approval]
+@cds.autoexpose  // SP_SC_NEGO_PROG_STATUS_CODE : 낙찰 상태 코드[예:Approval]
 define view Sc_Award_Prog_Status_Code_View as
     select from codeMst.Code_Dtl as cd {
         key cd.tenant_id,
