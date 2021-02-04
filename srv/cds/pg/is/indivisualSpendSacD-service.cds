@@ -431,7 +431,7 @@ service individualSpendSacDService {
     view MdMaterialItemValueView @(title : '자재별 특성 정보 View') as
         select
             key a.tenant_id         as  TENANT_ID
-           ,key a.company_code||'_'||a.org_type_code||'_'||a.org_code||'_'||a.vendor_pool_code||'_'||a.material_code||'_'||a.supplier_code  as  ID : String
+           ,key a.company_code||'_'||a.org_type_code||'_'||a.org_code||'_'||a.material_code||'_'||a.supplier_code  as  ID : String
                ,b.material_desc     as  Description
                ,a.vendor_pool_code  as vendor_pool_code
                ,a.material_code     as material_code
@@ -738,11 +738,11 @@ service individualSpendSacDService {
                ,a.spmd_attr_298     as spmd_attr_298
                ,a.spmd_attr_299     as spmd_attr_299
                ,a.spmd_attr_300     as spmd_attr_300
-
         from  MaterialItemValue  a
               inner join MaterialMst  b
                   on  a.tenant_id      =  b.tenant_id
                   and a.material_code  =  b.material_code
+        where  a.supplier_code  <>  '*'
         ;
 
 
