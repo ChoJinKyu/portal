@@ -55,10 +55,10 @@ public class FileMstRepository {
     }
 
     public void insertFileDtl(FileDtlDto fileDtl){
-        String sql = "insert into cm_file_dtl(tenant_id, file_group_id, file_id, sort_number, origin_name, saved_name, file_size, mime_type, confirm_flag,  local_create_dtm, create_user_id, system_crete_dtm)" +
+        String sql = "insert into cm_file_dtl(tenant_id, file_group_id, file_id, sort_number, origin_file_name, save_file_name, file_size, mime_type_name, confirm_flag,  local_create_dtm, create_user_id, system_crete_dtm)" +
                      "into values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                      
-        jdbcTemplate.update(sql, new Object[]{fileDtl.getTenantId(), fileDtl.getFileGroupId(), fileDtl.getFileId(), fileDtl.getSortNumber(), fileDtl.getOriginName(), fileDtl.getSavedName(), fileDtl.getFileSize(), fileDtl.getMimeType(), fileDtl.getConfirmFlag(),  fileDtl.getLocalCreateDtm(), fileDtl.getCreateUserId(),  fileDtl.getSytemCreateDtm()});
+        jdbcTemplate.update(sql, new Object[]{fileDtl.getTenantId(), fileDtl.getFileGroupId(), fileDtl.getFileId(), fileDtl.getSortNumber(), fileDtl.getOriginalFileName(), fileDtl.getSaveFileName(), fileDtl.getFileSize(), fileDtl.getMimeType(), fileDtl.getConfirmFlag(),  fileDtl.getLocalCreateDtm(), fileDtl.getCreateUserId(),  fileDtl.getSytemCreateDtm()});
 
     }
 
