@@ -37,23 +37,26 @@
                         <VBox>
                             <Label text="{I18N>/PRODUCT_ACTIVITY_NAME}" labelFor="searchProductActivity"></Label>
                             <Input id="searchProductActivity" 
-                                placeholder="{I18N>/PRODUCT_ACTIVITY_NAME}"/>
+                                placeholder="{I18N>/PRODUCT_ACTIVITY_NAME}" change=".onPageSearchButtonPress"/>
                             <layoutData>
-                                <layout:GridData span="XL4 L4 M6 S12" />
+                                <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                        
                         <VBox>
                             <Label text="{I18N>/OPTION}:" labelFor="searchUsageSegmentButton"></Label>
-                            <SegmentedButton id="searchStatusSegmentButton" selectedKey="all" class="sapUiSmallMarginBottom" width="100%" >
+                            <SegmentedButton 
+                                id="searchStatusSegmentButton"
+                                selectedKey="all"
+                                width="100%" >
                                 <items>
-                                    <SegmentedButtonItem text="All" key="All" width="4.1rem" />
-                                    <SegmentedButtonItem text="Active" key="Active" width="6rem" />
-                                    <SegmentedButtonItem text="Inactive" key="Inactive" width="6rem" />
+                                    <SegmentedButtonItem text="All" key="All" width="3rem" />
+                                    <SegmentedButtonItem text="Active" key="Active" width="5rem" />
+                                    <SegmentedButtonItem text="Inactive" key="Inactive" width="5rem" />
                                 </items>
                             </SegmentedButton>
                             <layoutData>
-                                <layout:GridData span="XL5 L5 M6 S12" />
+                                <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                     </form:content>
@@ -77,9 +80,9 @@
                         <Title id="mainTableTitle2" text="{I18N>/PRODUCT_ACTIVITY} {I18N>/LIST} {= ${list>/PdProdActivityTemplateView}.length > 0 ? '(' + ${list>/PdProdActivityTemplateView}.length + ')' : ''}" level="H2"/>
                         <ToolbarSpacer/>
                         <Button text="{I18N>/CREATE}" id="createActivity" press=".onCreateActivity"  type="Transparent"/>
-                        <Button icon="sap-icon://excel-attachment" press="onExportPress" type="Transparent"/>
+                        <Button icon="sap-icon://excel-attachment" text="{I18N>/EXCEL}" press="onExportPress" type="Transparent"/>
                         <ToolbarSeparator/>
-                        <Button icon="sap-icon://action-settings" text="{I18N>/EXCEL}" press=".onMainTablePersoButtonPressed"/>
+                        <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed"/>
                         
                     </OverflowToolbar>
                 </t:extension>

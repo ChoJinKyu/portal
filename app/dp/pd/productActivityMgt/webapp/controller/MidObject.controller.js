@@ -268,7 +268,7 @@ sap.ui.define([
 					"product_activity_code": "",
 					"activity_name": "",
 					"description": "",
-					"sequence": "1",
+					"sequence": "",
 					"active_flag": true,
                 }, "/PdProdActivityTemplateView");
                 

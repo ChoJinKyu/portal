@@ -72,6 +72,103 @@
 		</uxap:headerContent>
 
 		<uxap:sections>
+
+        <uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/DEFAULT}{I18N>/INFORMATION}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSection1">
+                        <form:SimpleForm         
+                            editable="true"
+                            layout="ResponsiveGridLayout"			
+                            labelSpanXL="12"
+                            labelSpanL="12"
+                            labelSpanM="12"
+                            labelSpanS="12"
+                            adjustLabelSpan="false"
+                            emptySpanXL="0"
+                            emptySpanL="0"
+                            emptySpanM="0"
+                            emptySpanS="0"
+                            columnsXL="1"
+                            columnsL="1"
+                            columnsM="1" >
+                            
+                            <form:content>
+                                <VBox>            
+                                    <Label text="{I18N>/ACTIVITY_CODE}" required="true"/>
+                                    <Text
+                                        text="{master>/product_activity_code}"
+                                        visible="{= !${midObjectViewModel>/isAddedMode} }">
+                                    </Text>
+                                    <Input value="{
+                                            path: 'master>/product_activity_code',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 40
+                                            }
+                                        }" visible="{= ${midObjectViewModel>/isAddedMode} }" editable="{contModel>/createMode}" required="true"></Input>
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                </VBox>
+                                <VBox>			
+                                    <Label text="{I18N>/DESCRIPTION}"/>
+                                    <Text
+                                        text="{master>/description}"
+                                        visible="{= !${midObjectViewModel>/editMode} }">
+                                    </Text>
+                                    <Input value="{
+                                            path: 'master>/description',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 240
+                                            }
+                                        }" visible="{midObjectViewModel>/editMode}"></Input>
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                </VBox>
+                                <VBox>			
+                                    <Label text="{I18N>/SEQUENCE}"/>
+                                    <Text
+                                        text="{master>/sequence}"
+                                        visible="{= !${midObjectViewModel>/editMode} }">
+                                    </Text>
+                                    <Input value="{
+                                            path: 'master>/sequence'
+                                        }" type="Number"  visible="{midObjectViewModel>/editMode}" editable="{= !${midObjectViewModel>/isAddedMode} }"></Input>
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="{I18N>/STATUS}"/>                                    
+                                    <SegmentedButton 
+                                        id="editUseflag"
+                                        selectedKey="{master>/active_flag}" 
+                                        selectionChange=""
+                                        enabled="{midObjectViewModel>/editMode}"
+                                        width="100%">
+                                        <items>
+                                            <SegmentedButtonItem text="Active" width="5em" key="true"/>
+                                            <SegmentedButtonItem text="Inactive" width="5em" key="false"/>
+                                        </items>
+                                    </SegmentedButton>                                        
+                                    <layoutData>
+                                        <layout:GridData
+                                            span="XL2 L3 M6 S12" />
+                                    </layoutData>
+                                </VBox>                                
+                            </form:content>
+                        </form:SimpleForm>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+            </uxap:ObjectPageSection>
+            
+
+<!-- 
 			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/GENERAL_INFO}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection1" >
@@ -85,7 +182,7 @@
                                     class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
                                     <Text visible="{= !${midObjectViewModel>/isAddedMode} }" text="{master>/product_activity_code}" class="sapMLabelNoText"/> 
                                     <Input required="{= ${midObjectViewModel>/isAddedMode} }" visible="{= ${midObjectViewModel>/isAddedMode} }" value="{master>/product_activity_code}" class="sapMLabelNoText"/> 
-                                    <!-- <Input id="input_category_text" visible="false"/> -->
+                                  
                             </layout:VerticalLayout>
                         </FlexBox>
 
@@ -133,7 +230,7 @@
 
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
-			</uxap:ObjectPageSection>
+			</uxap:ObjectPageSection> -->
 
 			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/MULTILINGUAL} ({= (${details>/PdProdActivityTemplateLng})?${details>/PdProdActivityTemplateLng}.length:0})">
 				<uxap:subSections>
