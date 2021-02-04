@@ -15,6 +15,8 @@ using {op.Pu_Cctr_Mst as cctrMst} from '../../../../../db/cds/op/pu/cctr/OP_PU_C
 using {op.Pu_Order_Mst as orderMst} from '../../../../../db/cds/op/pu/order/OP_PU_ORDER_MST-model';
 using {op.Pu_Wbs_Mst as wbsMst} from '../../../../../db/cds/op/pu/wbs/OP_PU_WBS_MST-model';
 
+using {op.Pu_Pr_Dtl_His as prDtlHis} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL_HIS-model';
+
 
 @path : '/op.prReviewMgtService'
 service PrReviewMgtService {
@@ -130,7 +132,7 @@ service PrReviewMgtService {
             ,mst.pr_create_status_code  // 구매요청생성상태코드
             ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_STATUS_CODE', mst.pr_create_status_code, 'KO') as pr_create_status_name : String(240)  // 구매요청생성상태코드
             ,dtl.pr_progress_status_code  // 구매요청진행상태코드
-            ,dtl.pr_progress_status_code as pr_progress_status_name  // 구매요청진행상태코드  -- by dokim
+            ,cm_get_code_name_func(dtl.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', ifnull(nullif(dtl.pr_progress_status_code, ''), 'INIT'), 'KO') as pr_progress_status_name : String(240)  // 구매요청진행상태코드
 
             ,mst.pr_type_code  // 구매요청유형코드
             ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE', mst.pr_type_code, 'KO') as pr_type_name : String(240)  // 구매요청 유형
@@ -158,14 +160,12 @@ service PrReviewMgtService {
             ,dtl.requestor_empno  // 구매요청자사번
             ,cm_get_emp_name_func(dtl.tenant_id, dtl.requestor_empno) as requestor_name : String(240)  // 구매요청자명
             ,cm_get_dept_name_func(hrEmp.tenant_id, hrEmp.department_id) as requestor_department_name : String(240)
-           //,mst.requestor_department_code  // 요청자부서코드
-           //,mst.requestor_department_name  // 요청자부서명
             ,dtl.requestor_name as erp_requestor_name // 요청자명
  
             ,dtl.buyer_empno  // 구매담당자사번
             ,cm_get_emp_name_func(dtl.tenant_id, dtl.buyer_empno) as buyer_name : String(240)  // 구매담당자명
             ,dtl.buyer_department_code  // 구매담당자부서
-            ,dtl.buyer_department_code as buyer_department_name  // 구매담당자부서  -- by dokim
+            ,cm_get_dept_name_func(dtl.tenant_id, dtl.buyer_department_code) as buyer_department_name : String(240)  // 구매담당자부서
             ,dtl.purchasing_group_code  // 구매그룹코드
             ,dtl.purchasing_group_code as purchasing_group_name  // 구매그룹코드
             ,mtl.purchasing_group_code as material_purchasing_group_code  // 자재구매그룹  -- by dokim
@@ -178,7 +178,7 @@ service PrReviewMgtService {
             ,dtl.estimated_price  // 단가예산
             ,dtl.currency_code  // 통화코드
             ,dtl.price_unit  // Per - 가격단위
-            ,dtl.pr_quantity * (ifnull(dtl.estimated_price, 0) / ifnull(dtl.price_unit, 1)) as pr_amount : Decimal(20,2)  // 금액 = 요청수량 * (단가 / Per)
+            ,dtl.pr_quantity * (ifnull(dtl.estimated_price, 0) / ifnull(dtl.price_unit, 1)) as pr_amount : Decimal(30, 10)  // 금액 = 요청수량 * (단가 / Per)
 
             ,dtl.request_date  // 생성일자 - 요청일자
             ,dtl.delivery_request_date  // 납품요청일자
@@ -283,7 +283,31 @@ service PrReviewMgtService {
         on  orderMst.tenant_id    = acct.tenant_id
         and orderMst.company_code = acct.company_code
         and orderMst.order_number = acct.order_number
+    ;
 
+   // 구매요청 검토/접수 상세 - 이력정보
+    view Pr_ReviewDtlHistView @(title : '구매요청 검토/접수 Detail History View') as
+        select
+             key hist.tenant_id  // 테넌트ID
+            ,key hist.company_code  // 회사코드
+            ,key hist.pr_number  // 구매요청번호
+            ,key hist.pr_item_number  // 구매요청품목번호
+            ,key hist.sequence  // 순번
+
+            ,hist.local_update_dtm  // 변경일자 - 로컬수정시간
+            ,hist.job_type_code  // 업무유형코드
+            ,cm_get_code_name_func(hist.tenant_id, 'OP_PR_REVIEW_JOB_TYPE_CODE', hist.job_type_code, 'KO') as job_type_name : String(240)  // 업무유형명
+            ,hist.before_desc  // 이전내역
+            ,hist.after_desc  // 이후내역
+            ,hist.remark AS processed_reason  // 처리사유
+            ,hist.update_user_id as worker_empno  // 처리자사번
+            ,cm_get_emp_name_func(hist.tenant_id, hist.update_user_id) as worker_name : String(240)  // 처리자명
+        from prDtlHis hist
+        inner join prDtl dtl
+        on  dtl.tenant_id      = hist.tenant_id
+        and dtl.company_code   = hist.company_code
+        and dtl.pr_number      = hist.pr_number
+        and dtl.pr_item_number = hist.pr_item_number
     ;
 
 }

@@ -301,10 +301,6 @@ html.sap-desktop:not(.sapUiNativeScrollbars) ::-webkit-scrollbar {
     margin: 0 !important;
 }
 
-.sapUiFormResGrid>div {
-    padding: 1rem 0 0!important;
-}
-
 .sapMTB-Transparent-CTX.sapMTB {
     padding: 0 !important;
     margin-bottom: .5rem !important;
@@ -1458,6 +1454,9 @@ html.sap-desktop .sapMLnk:focus:not(.sapMLnkDsbl) {
     line-height: 2.125rem;
 }
 
+.sapMIBar-CTX .sapMTitle {
+    font-size: 1rem;
+}
 
 .sapMPersoDialog .sapMListBGTranslucent .sapMLIB.sapMListTblRow.sapMPersoDialogItemSelected, .sapMPersoDialog .sapMListBGTranslucent .sapMLIB.sapMListTblRow.sapMPersoDialogItemSelected:focus, .sapMPersoDialog .sapMListBGTranslucent .sapMLIB:not(.sapMLIBActive):not(.sapMLIBSelected):not(:hover).sapMListTblRow.sapMPersoDialogItemSelected, .sapMPersoDialog .sapMListBGTranslucent .sapMLIB:not(.sapMLIBActive):not(.sapMLIBSelected):not(:hover).sapMListTblRow.sapMPersoDialogItemSelected:focus {
     background-color: #F0FDFF;

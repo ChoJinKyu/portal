@@ -37,7 +37,7 @@ sap.ui.define([
         });
 
         var oServiceModel3 = new ODataModel({
-            serviceUrl: "srv-api/odata/v2/cm.PurOrgMgtService/",
+            serviceUrl: "srv-api/odata/v2/dp.util.DpMdCommonService/",
             defaultBindingMode: "OneWay",
             defaultCountMode: "Inline",
             refreshAfterChange: false,
@@ -249,10 +249,9 @@ sap.ui.define([
 
             oView.setBusy(true);
             plantModel.setTransactionModel(oServiceModel3);
-            plantModel.read("/Pur_Operation_Org", {
+            plantModel.read("/Divisions", {
                 filters: [
                       new Filter("tenant_id", FilterOperator.EQ, 'L2101')
-                    , new Filter("org_type_code", FilterOperator.EQ, 'PL')
                     , new Filter("company_code", FilterOperator.EQ, oThis.getModel('moldItemPop').oData.company_code)
                 ],
                 success: function (oData) {

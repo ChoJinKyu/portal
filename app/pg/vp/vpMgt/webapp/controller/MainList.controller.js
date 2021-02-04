@@ -33,8 +33,14 @@ sap.ui.define([
     "ext/pg/util/control/ui/VendorPoolDialog",
     "ext/pg/util/control/ui/SupplierDialog",
     "ext/pg/util/control/ui/MatrialDialog",
-    
-
+    "ext/pg/util/control/ui/SupplierDialogPop",
+    // "ext/pg/util/control/ui/MatrialDialogPop",
+    "sap/ui/layout/GridData",
+    "sap/m/VBox",
+    "sap/m/HBox",
+    "sap/ui/table/Column",
+    "ext/cm/util/control/ui/EmployeeDialog",
+    "ext/cm/util/control/ui/DepartmentDialog",
 
 ], function (BaseController,
     History,
@@ -70,7 +76,15 @@ sap.ui.define([
     VendorPoolDialog,
     SupplierDialog,
     MatrialDialog,
-    
+    SupplierDialogPop,
+    // MatrialDialogPop,
+    GridData,
+    VBox,
+    HBox,
+    Column,
+    EmployeeDialog,
+    DepartmentDialog
+
 
 ) {
     "use strict";
@@ -347,7 +361,7 @@ sap.ui.define([
             this.byId("pop_vendor_pool_local_name").setEnabled(false);
             this.byId("pop_vendor_pool_english_name").setEnabled(false);
             this.byId("pop_vendor_pool_desc").setEnabled(false);
-            this.byId("pop_repr_department_code").setEnabled(false);
+            this.byId("pop_repr_department_name").setEnabled(false);
             this.byId("pop_industry_class_code").setEnabled(false);
             this.byId("pop_inp_type_code").setEnabled(false);
             this.byId("pop_plan_base").setEnabled(false);
@@ -444,7 +458,7 @@ sap.ui.define([
                     this.byId("pop_vendor_pool_local_name").setEnabled(true);
                     this.byId("pop_vendor_pool_english_name").setEnabled(true);
                     this.byId("pop_vendor_pool_desc").setEnabled(true);
-                    this.byId("pop_repr_department_code").setEnabled(true);
+                    this.byId("pop_repr_department_name").setEnabled(true);
                     this.byId("pop_industry_class_code").setEnabled(true);
                     this.byId("pop_inp_type_code").setEnabled(true);
                     this.byId("pop_plan_base").setEnabled(true);
@@ -482,7 +496,7 @@ sap.ui.define([
                     this.byId("pop_vendor_pool_local_name").setEnabled(true);
                     this.byId("pop_vendor_pool_english_name").setEnabled(true);
                     this.byId("pop_vendor_pool_desc").setEnabled(true);
-                    this.byId("pop_repr_department_code").setEnabled(false);
+                    this.byId("pop_repr_department_name").setEnabled(false);
                     this.byId("pop_industry_class_code").setEnabled(false);
                     this.byId("pop_inp_type_code").setEnabled(false);
                     this.byId("pop_plan_base").setEnabled(false);
@@ -548,7 +562,7 @@ sap.ui.define([
                     this.byId("pop_vendor_pool_local_name").setEnabled(true);
                     this.byId("pop_vendor_pool_english_name").setEnabled(true);
                     this.byId("pop_vendor_pool_desc").setEnabled(true);
-                    this.byId("pop_repr_department_code").setEnabled(true);
+                    this.byId("pop_repr_department_name").setEnabled(true);
                     this.byId("pop_industry_class_code").setEnabled(true);
                     this.byId("pop_inp_type_code").setEnabled(true);
                     this.byId("pop_plan_base").setEnabled(true);
@@ -588,7 +602,7 @@ sap.ui.define([
                     this.byId("pop_vendor_pool_local_name").setEnabled(true);
                     this.byId("pop_vendor_pool_english_name").setEnabled(true);
                     this.byId("pop_vendor_pool_desc").setEnabled(true);
-                    this.byId("pop_repr_department_code").setEnabled(false);
+                    this.byId("pop_repr_department_name").setEnabled(false);
                     this.byId("pop_industry_class_code").setEnabled(false);
                     this.byId("pop_inp_type_code").setEnabled(false);
                     this.byId("pop_plan_base").setEnabled(false);
@@ -780,7 +794,7 @@ sap.ui.define([
             this.getView().byId("pop_vendor_pool_local_name").setValue("");
             this.getView().byId("pop_vendor_pool_english_name").setValue("");
             this.getView().byId("pop_vendor_pool_desc").setValue("");
-            this.getView().byId("pop_repr_department_code").setValue("");
+            this.getView().byId("pop_repr_department_name").setValue("");
             // this.getView().byId("pop_repr_department_code").setSelectedKey("");
             // this.getView().byId("general_industry_class_code").setSelectedKey("");
             this.getView().byId("pop_industry_class_code").setSelectedKey("");
@@ -909,7 +923,7 @@ sap.ui.define([
             var svendor_pool_desc = this.getView().byId("pop_vendor_pool_desc").getValue().trim();
 
             if (pop_d_state == "leaf") {
-                var srepr_department_code = this.getView().byId("pop_repr_department_code").getSelectedKey().trim();
+                var srepr_department_code = this.getView().byId("pop_repr_department_name").getValue().trim();
                 var sindustry_class_code = this.getView().byId("pop_industry_class_code").getSelectedKey();
                 var sinp_type_code = this.getView().byId("pop_inp_type_code").getSelectedKey();
                 var splan_base = this.getView().byId("pop_plan_base").getSelectedKey();
@@ -1119,7 +1133,7 @@ sap.ui.define([
                                             that.byId("pop_vendor_pool_local_name").setEnabled(true);
                                             that.byId("pop_vendor_pool_english_name").setEnabled(true);
                                             that.byId("pop_vendor_pool_desc").setEnabled(true);
-                                            that.byId("pop_repr_department_code").setEnabled(true);
+                                            that.byId("pop_repr_department_name").setEnabled(true);
                                             that.byId("pop_industry_class_code").setEnabled(true);
                                             that.byId("pop_inp_type_code").setEnabled(true);
                                             that.byId("pop_plan_base").setEnabled(true);
@@ -1157,7 +1171,7 @@ sap.ui.define([
                                             that.byId("pop_vendor_pool_local_name").setEnabled(true);
                                             that.byId("pop_vendor_pool_english_name").setEnabled(true);
                                             that.byId("pop_vendor_pool_desc").setEnabled(true);
-                                            that.byId("pop_repr_department_code").setEnabled(false);
+                                            that.byId("pop_repr_department_name").setEnabled(false);
                                             that.byId("pop_industry_class_code").setEnabled(false);
                                             that.byId("pop_inp_type_code").setEnabled(false);
                                             that.byId("pop_plan_base").setEnabled(false);
@@ -1944,12 +1958,11 @@ sap.ui.define([
 
                 var s_Operation_ORG_E = this.getView().byId("search_Operation_ORG_E").getSelectedKey();
                 var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
-                var s_Dept = this.getView().byId("search_Dept").getSelectedKey();
+                var s_Dept = this.getView().byId("search_Dept_Code").getValue();
                 // debugger
-                var s_Man = this.getView().byId("search_Man").getSelectedKey();
-
+                var s_Man = this.getView().byId("search_Man_Code").getValue();
                 var s_VPC = this.getView().byId("search_Vp_Code").getValue();
-                var s_Sup = this.getView().byId("search_Sup").getSelectedKey();
+                var s_Sup = this.getView().byId("search_Sup_Code").getValue();
                 var s_SupT = this.getView().byId("search_Sup_Type").getSelectedKey();
 
                 if (s_VPN == "") {
@@ -2043,13 +2056,36 @@ sap.ui.define([
             }
             return rtnStr;
         },
-        resetVpCode: function () {
+        resetCode: function () {
             // debugger;
             var s_vp_name = this.getView().byId("search_Vp_Name").getValue();
-
+            var s_sup_name = this.getView().byId("search_Sup_Name").getValue();
+            var s_man_name = this.getView().byId("search_Man_Name").getValue();
+            var s_dept_name = this.getView().byId("search_Dept_Name").getValue();
             if(s_vp_name == ""){
                 this.getView().byId("search_Vp_Code").setValue("");
             }
+
+            if(s_sup_name == ""){
+            this.getView().byId("search_Sup_Code").setValue("");
+            }
+            if(s_man_name == ""){
+                this.getView().byId("search_Man_Code").setValue("");
+            }
+
+            if(s_dept_name == ""){
+            this.getView().byId("search_Dept_Code").setValue("");
+            }
+
+        },
+        resetPopCode: function () {
+            // debugger;
+            var s_dept_name = this.getView().byId("pop_repr_department_name").getValue();
+
+            if(s_dept_name == ""){
+            this.getView().byId("pop_repr_department_code").setValue("");
+            }
+
         },
         //아래 정규식 둘중에 하나 골라서 쓰면 됩니다. 
         chkReplaceChange: function (oEvent) {
@@ -2066,42 +2102,121 @@ sap.ui.define([
                 oEvent.oSource.setValue(newValue);
             }
         },
+
         vhSupplierCode: function (oEvent) {
-            var supplierCode;
-            var oSearchValue = this.byId(oEvent.getSource().sId).getValue();
+            that = this;
+            this.oSupplierDialogPop = new SupplierDialogPop({
+                multiSelection: false,
+                keyField: "supplier_code",
+                textField: "supplier_local_name",
+                filters: [
+                    new VBox({
+                        items: [
+                            new Label({ text: this.getModel("I18N").getText("/KEYWORD") }),
+                            new Input({placeholder : this.getModel("I18N").getText("/SUPPLIER_CODE")})
+                        ],
+                        layoutData: new GridData({ span: "XL2 L3 M5 S10" })
+                    })
+                ],
+                columns: [
+                    new Column({
+                        width: "75%",
+                        label: new Label({ text: this.getModel("I18N").getText("/VALUE") }),
+                        template: new Text({ text: "supplier_local_name" })
+                    }),
+                    new Column({
+                        width: "25%",
+                        hAlign: "Center",
+                        label: new Label({ text: this.getModel("I18N").getText("/CODE") }),
+                        template: new Text({ text: "supplier_code" })
+                    })
+                ]
+            });
 
-            if (!this.oSearchSupplierDialog) {
-                this.oSearchSupplierDialog = new SupplierDialog({
-                    title: "Choose Supplier",
-                    MultiSelection: true
-                });
-
-                //여기에 다가 받을 아이디를 셋팅한다. searchField면 아이디를 그리드 아이탬이면 sPath의 경로의 셀 번호를 지정해주면됨다.
-                /*
-                    그리드의 경우
-                    function에서 받은 oEvent를 활용하여 셋팅
-                    var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
-                    sModel.setProperty(sPath + "/supplier_code", oEvent.mParameters.item);
-                */
-                // this.oSearchVendorPollDialog.attachEvent("apply", function (oEvent) {
-                //     vendorPoolCode = oEvent.mParameters.item;
-                //     //console.log("materialItem : ", materialItem);
-                //     that.byId("search_material_code").setValue(vendorPoolCode.material_code);
-
-                // }.bind(this));
-            }
-
-            //searObject : 태넌트아이디, 검색 인풋아이디
+            // Pop 내부에 값을 올려주기 위해 구성
+            this.oSupplierDialogPop.setContentWidth("300px");
             var sSearchObj = {};
-            sSearchObj.tanent_id = "L2100";
-            sSearchObj.supplier_code = oSearchValue;
-            if (this.byId("search_Vp_Code").getValue()) {
-                sSearchObj.vendor_pool_code = this.byId("search_Vp_Code").getValue();
-            }
-            this.oSearchSupplierDialog.open(sSearchObj);
-        },
-        vhMaterialCode: function () {
+            sSearchObj.tanentId = "L2100";
+            sSearchObj.languageCd = "KO";
+            sSearchObj.supplierCode = that.byId("search_Sup_Code").getValue();
+            sSearchObj.orgCode = that.byId("search_Operation_ORG_E").getSelectedKey();
+            sSearchObj.orgUnitCode = that.byId("search_Operation_UNIT_E").getSelectedKey();
 
+            // Pop의 open에 sSearchObj를 인자로 호출 
+            this.oSupplierDialogPop.open(sSearchObj);
+            this.oSupplierDialogPop.attachEvent("apply", function (oEvent) {
+                //console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
+                that.byId("search_Sup_Name").setValue(null);
+                that.byId("search_Sup_Code").setValue(null);
+                // that.oSupplierCode.setValue(null);
+                that.byId("search_Sup_Name").setValue(oEvent.mParameters.item.supplier_local_name);
+                that.byId("search_Sup_Code").setValue(oEvent.mParameters.item.supplier_code);
+            }.bind(this));
+        },
+
+        onInputWithEmployeeValuePress: function(){
+             this.oEmployeeDialog = new EmployeeDialog({
+                // id:"employeeDialog" ,
+                title:"직원 검색",
+                closeWhenApplied:true,
+                items:{
+                    filters: [
+                    ]
+                }
+
+            });
+            this.oEmployeeDialog.open();
+            this.oEmployeeDialog.attachEvent("apply", function (oEvent) {
+                //console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
+                that.byId("search_Man_Name").setValue(null);
+                that.byId("search_Man_Code").setValue(null);
+                // that.oSupplierCode.setValue(null);
+                that.byId("search_Man_Name").setValue(oEvent.mParameters.item.user_local_name);
+                that.byId("search_Man_Code").setValue(oEvent.mParameters.item.employee_number);
+            }.bind(this));
+        },
+        onPopInputWithDeptValuePress: function(){
+             this.oPopDeptDialog = new DepartmentDialog({
+                // id:"employeeDialog" ,
+                title:"부서 검색",
+                closeWhenApplied:true,
+                items:{
+                    filters: [
+                    ]
+                }
+
+            });
+            this.oPopDeptDialog.open();
+            this.oPopDeptDialog.attachEvent("apply", function (oEvent) {
+                //console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
+                that.byId("pop_repr_department_name").setValue(null);
+                that.byId("pop_repr_department_code").setValue(null);
+                // that.oSupplierCode.setValue(null);
+                that.byId("pop_repr_department_name").setValue(oEvent.mParameters.item.department_local_name);
+                that.byId("pop_repr_department_code").setValue(oEvent.mParameters.item.department_id);
+            }.bind(this));
+        },
+
+        onInputWithDeptValuePress: function(){
+             this.oDeptDialog = new DepartmentDialog({
+                // id:"employeeDialog" ,
+                title:"부서 검색",
+                closeWhenApplied:true,
+                items:{
+                    filters: [
+                    ]
+                }
+
+            });
+            this.oDeptDialog.open();
+            this.oDeptDialog.attachEvent("apply", function (oEvent) {
+                //console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
+                that.byId("search_Dept_Name").setValue(null);
+                that.byId("search_Dept_Code").setValue(null);
+                // that.oSupplierCode.setValue(null);
+                that.byId("search_Dept_Name").setValue(oEvent.mParameters.item.department_local_name);
+                that.byId("search_Dept_Code").setValue(oEvent.mParameters.item.department_id);
+            }.bind(this));
         },
 
         vhSupplier: function () {

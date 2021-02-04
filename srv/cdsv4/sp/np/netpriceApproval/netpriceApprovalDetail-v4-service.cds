@@ -48,7 +48,7 @@ service NpApprovalDetailV4Service {
     }
 
     /* */
-    type DetailType : {
+    type generalType : {
         item_sequence                   : Decimal       ; // '품목순번'	
         line_type_code                  : String(30)    ; // '라인유형코드'
         material_code                   : String(40)    ; // '자재코드'	
@@ -70,7 +70,7 @@ service NpApprovalDetailV4Service {
     /* */
     type ParamType : {
         master    : masterType;
-        details   : array of DetailType;
+        general   : array of generalType;
         user_id   : String(255);
         user_no   : String(255);
     }

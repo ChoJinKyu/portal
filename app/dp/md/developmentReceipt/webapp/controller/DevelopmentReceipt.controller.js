@@ -104,11 +104,11 @@ sap.ui.define([
         _doInitSearch: function () {
             this.getView().setModel(this.getOwnerComponent().getModel());
 
-            this.setDivision('LGESL');//LGEKR
+            this.setDivision(this.getSessionUserInfo().COMPANY_CODE);//LGEKR
 
             //접속자 법인 사업부로 바꿔줘야함
-            this.getView().byId("searchCompanyS").setSelectedKeys(['LGESL']);
-            this.getView().byId("searchCompanyE").setSelectedKeys(['LGESL']);
+            this.getView().byId("searchCompanyS").setSelectedKeys([this.getSessionUserInfo().COMPANY_CODE]);
+            this.getView().byId("searchCompanyE").setSelectedKeys([this.getSessionUserInfo().COMPANY_CODE]);
             this.getView().byId("searchPlantS").setSelectedKeys(['A040']);//CCZ', 'DHZ', 'PGZ
             this.getView().byId("searchPlantE").setSelectedKeys(['A040']);
 
@@ -125,7 +125,7 @@ sap.ui.define([
 /*
             var filter = new Filter({
                 filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2101'),
+                    new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID),
                     new Filter("org_type_code", FilterOperator.EQ, 'AU'),
                     new Filter("company_code", FilterOperator.EQ, companyCode)
                 ],
@@ -142,7 +142,7 @@ sap.ui.define([
 */
             var filter = new Filter({
                 filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2101'),
+                    new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID),
                     new Filter("company_code", FilterOperator.EQ, companyCode)
                 ],
                 and: true
@@ -768,7 +768,7 @@ sap.ui.define([
                 combo.bindItems({
                     path: 'util>/Code',
                     filters: [
-                        new Filter('tenant_id', FilterOperator.EQ, 'L2101'),
+                        new Filter('tenant_id', FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID),
                         new Filter("group_code", FilterOperator.EQ, 'DP_MD_MOLD_TYPE'),
                         new Filter("parent_code", FilterOperator.EQ, key)
                     ],
@@ -782,7 +782,7 @@ sap.ui.define([
                 combo.bindItems({
                     path: 'util>/Code',
                     filters: [
-                        new Filter('tenant_id', FilterOperator.EQ, 'L2101'),
+                        new Filter('tenant_id', FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID),
                         new Filter("group_code", FilterOperator.EQ, 'DP_MD_MOLD_STRUCTURE'),
                         new Filter("parent_code", FilterOperator.EQ, key)
                     ],
@@ -1130,15 +1130,15 @@ sap.ui.define([
 
                     plantFilters.push(new Filter({
                         filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, 'L2101'),
+                            new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID),
                             new Filter("company_code", FilterOperator.EQ, item.getKey())
                         ],
                         and: true
                     }));
-                });
+                }.bind(this));
             } else {
                 plantFilters.push(
-                    new Filter("tenant_id", FilterOperator.EQ, 'L2101')
+                    new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)
                 );
             }
 
@@ -1347,7 +1347,7 @@ sap.ui.define([
 				and: false
             }));
             
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101' ));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID ));
 
 			this._filterTable(new Filter({
 				filters: aFilters,

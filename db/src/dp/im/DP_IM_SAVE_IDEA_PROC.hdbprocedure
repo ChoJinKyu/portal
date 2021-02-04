@@ -63,6 +63,18 @@ BEGIN
     DECLARE V_COMMIT  NVARCHAR(100) := 'COMMIT';
 	DECLARE V_ROLLBACK NVARCHAR(100) := 'ROLLBACK';
     DECLARE V_IDEA_SEQUENCE NVARCHAR(10);
+    DECLARE v_cnt BIGINT;
+
+    DECLARE v_LOCAL_TEMP_STATUS TABLE(
+                        TENANT_ID NVARCHAR(5), 
+                        COMPANY_CODE NVARCHAR(10),
+                        IDEA_NUMBER NVARCHAR(10),
+                        IDEA_PROGRESS_STATUS_CODE NVARCHAR(30),
+                        STATUS_CHANGE_COMMENT NVARCHAR(100),
+                        USER_ID NVARCHAR(255) 
+                );
+
+
     /*저장데이터 커서*/
     DECLARE CURSOR CUR_DATA FOR
     SELECT A.TENANT_ID,
@@ -162,6 +174,10 @@ BEGIN
            :O_RETURN_TAB.INSERT(('E', 'EDP','This is no value(CUD_TYPE_CODE)'),1);
            RETURN;
         END IF;
+
+        
+
+
 
         
         /*생성*/
@@ -270,6 +286,177 @@ BEGIN
 
             END;
             
+        
+        
+        /*SUBMIT*/
+        ELSEIF ( :I_SAVE_TAB.CUD_TYPE_CODE[1] = 'R' ) THEN
+            BEGIN
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+                BEGIN
+                    EXEC (:V_ROLLBACK);
+                :O_RETURN_TAB.INSERT(('E', 'SUB',::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE),1);
+                END;
+
+                /************************************************
+                기존데이터 체크
+                ************************************************/
+                SELECT COUNT(*)
+                INTO   v_cnt
+                FROM   DP_IM_SUPPLIER_IDEA DI
+                WHERE  DI.TENANT_ID = REC_DATA.TENANT_ID
+                AND    DI.COMPANY_CODE = REC_DATA.COMPANY_CODE
+                AND    DI.IDEA_NUMBER = REC_DATA.IDEA_NUMBER;
+
+                IF ( v_cnt > 0  ) THEN
+                    /* 기존 저장을 제출 경우  */
+                    UPDATE DP_IM_SUPPLIER_IDEA
+                    SET 
+                        IDEA_TITLE                    =     REC_DATA.IDEA_TITLE,
+                        IDEA_PROGRESS_STATUS_CODE     =     REC_DATA.IDEA_PROGRESS_STATUS_CODE,
+                        SUPPLIER_CODE                 =     REC_DATA.SUPPLIER_CODE,
+                        IDEA_CREATE_USER_ID           =     REC_DATA.USER_ID,					
+                        BIZUNIT_CODE                  =     REC_DATA.BIZUNIT_CODE,
+                        
+                        IDEA_PRODUCT_GROUP_CODE       =     REC_DATA.IDEA_PRODUCT_GROUP_CODE,	
+                        IDEA_TYPE_CODE                =     REC_DATA.IDEA_TYPE_CODE,
+                        IDEA_PERIOD_CODE              =     REC_DATA.IDEA_PERIOD_CODE,
+                        IDEA_MANAGER_EMPNO            =     REC_DATA.IDEA_MANAGER_EMPNO,			
+                        IDEA_PART_DESC                =     REC_DATA.IDEA_PART_DESC,
+                        
+                        CURRENT_PROPOSAL_CONTENTS     =     REC_DATA.CURRENT_PROPOSAL_CONTENTS,
+                        CHANGE_PROPOSAL_CONTENTS      =     REC_DATA.CHANGE_PROPOSAL_CONTENTS,
+                        IDEA_CONTENTS                 =     REC_DATA.IDEA_CONTENTS,
+                        ATTCH_GROUP_NUMBER            =     REC_DATA.ATTCH_GROUP_NUMBER,
+                        MATERIAL_CODE				  =     REC_DATA.MATERIAL_CODE,
+                        
+                        PURCHASING_UOM_CODE           =     REC_DATA.PURCHASING_UOM_CODE,
+                        CURRENCY_CODE                 =     REC_DATA.CURRENCY_CODE,
+                        VI_AMOUNT                     =     REC_DATA.VI_AMOUNT,
+                        MONTHLY_MTLMOB_QUANTITY       =     REC_DATA.MONTHLY_MTLMOB_QUANTITY,
+                        MONTHLY_PURCHASING_AMOUNT     =     REC_DATA.MONTHLY_PURCHASING_AMOUNT,
+                        
+                        ANNUAL_PURCHASING_AMOUNT      =     REC_DATA.ANNUAL_PURCHASING_AMOUNT,
+                        PERFORM_CONTENTS              =     REC_DATA.PERFORM_CONTENTS,     					
+                        LOCAL_UPDATE_DTM              =     current_date,												  
+                        UPDATE_USER_ID                =     REC_DATA.USER_ID,
+                        SYSTEM_UPDATE_DTM             =     current_date
+                    WHERE TENANT_ID = REC_DATA.TENANT_ID
+                    AND COMPANY_CODE = REC_DATA.COMPANY_CODE
+                    AND IDEA_NUMBER = REC_DATA.IDEA_NUMBER;
+
+                    V_IDEA_SEQUENCE :=  REC_DATA.IDEA_NUMBER;
+                ELSE
+                    /************************************************
+                    신규 채번
+                    ************************************************/
+                    SELECT TO_NCHAR(NOW(), 'YYMM') || LPAD(DP_IM_IDEA_NUMBER_SEQ.NEXTVAL, 6, '0')
+                    INTO V_IDEA_SEQUENCE
+                    FROM DUMMY;
+                    
+                    
+                    /* 신규 저장 및 제출 동시일 경우  */
+                    INSERT INTO DP_IM_SUPPLIER_IDEA
+                    (
+                        TENANT_ID,
+                        COMPANY_CODE,
+                        IDEA_NUMBER,
+                        IDEA_TITLE,
+                        IDEA_PROGRESS_STATUS_CODE,
+
+                        IDEA_DATE,
+                        SUPPLIER_CODE,
+                        IDEA_CREATE_USER_ID,
+                        BIZUNIT_CODE,
+                        IDEA_PRODUCT_GROUP_CODE,
+
+                        IDEA_TYPE_CODE,
+                        IDEA_PERIOD_CODE,
+                        IDEA_MANAGER_EMPNO,
+                        IDEA_PART_DESC,
+                        CURRENT_PROPOSAL_CONTENTS,
+
+                        CHANGE_PROPOSAL_CONTENTS,
+                        IDEA_CONTENTS,
+                        ATTCH_GROUP_NUMBER,
+                        MATERIAL_CODE,
+                        PURCHASING_UOM_CODE,
+
+                        CURRENCY_CODE,
+                        VI_AMOUNT,
+                        MONTHLY_MTLMOB_QUANTITY,
+                        MONTHLY_PURCHASING_AMOUNT,
+                        ANNUAL_PURCHASING_AMOUNT,
+
+                        PERFORM_CONTENTS,
+                        LOCAL_CREATE_DTM,
+                        LOCAL_UPDATE_DTM,
+                        CREATE_USER_ID,
+                        UPDATE_USER_ID,
+
+                        SYSTEM_CREATE_DTM,
+                        SYSTEM_UPDATE_DTM
+                    )
+                    VALUES 
+                    (
+                        REC_DATA.TENANT_ID,
+                        REC_DATA.COMPANY_CODE,
+                        :V_IDEA_SEQUENCE,
+                        REC_DATA.IDEA_TITLE,
+                        REC_DATA.IDEA_PROGRESS_STATUS_CODE,
+                        
+                        current_date,
+                        REC_DATA.SUPPLIER_CODE,
+                        REC_DATA.USER_ID,
+                        REC_DATA.BIZUNIT_CODE,
+                        REC_DATA.IDEA_PRODUCT_GROUP_CODE,
+                        
+                        REC_DATA.IDEA_TYPE_CODE,
+                        REC_DATA.IDEA_PERIOD_CODE,
+                        REC_DATA.IDEA_MANAGER_EMPNO,
+                        REC_DATA.IDEA_PART_DESC,
+                        REC_DATA.CURRENT_PROPOSAL_CONTENTS,
+                        
+                        REC_DATA.CHANGE_PROPOSAL_CONTENTS,
+                        REC_DATA.IDEA_CONTENTS,
+                        REC_DATA.ATTCH_GROUP_NUMBER,
+                        REC_DATA.MATERIAL_CODE,
+                        REC_DATA.PURCHASING_UOM_CODE,
+
+                        REC_DATA.CURRENCY_CODE,
+                        REC_DATA.VI_AMOUNT,
+                        REC_DATA.MONTHLY_MTLMOB_QUANTITY,
+                        REC_DATA.MONTHLY_PURCHASING_AMOUNT,
+                        REC_DATA.ANNUAL_PURCHASING_AMOUNT,
+
+                        REC_DATA.PERFORM_CONTENTS,                    
+                        current_date,
+                        current_date,                    
+                        REC_DATA.USER_ID,
+                        REC_DATA.USER_ID,
+
+                        current_date,
+                        current_date
+                    );
+                END IF;
+
+
+                /*
+                * SUBMIT 프로시저 호출
+                */
+                INSERT INTO :v_LOCAL_TEMP_STATUS (TENANT_ID, COMPANY_CODE, IDEA_NUMBER, IDEA_PROGRESS_STATUS_CODE, STATUS_CHANGE_COMMENT, USER_ID)
+                SELECT REC_DATA.TENANT_ID, REC_DATA.COMPANY_CODE, :V_IDEA_SEQUENCE, REC_DATA.IDEA_PROGRESS_STATUS_CODE, 'SUBMIT',   REC_DATA.USER_ID
+                FROM DUMMY;
+                
+                CALL DP_IM_CREATE_IDEA_STATUS_PROC(I_STATUS_TAB => :v_LOCAL_TEMP_STATUS , O_RETURN_TAB => :O_RETURN_TAB);
+
+                EXEC (:V_COMMIT);
+                :O_RETURN_TAB.INSERT(('S', 'SUU',REC_DATA.IDEA_NUMBER),2);
+                RETURN;
+
+            END;
+            
+        
+        /*삭제*/
         ELSEIF ( :I_SAVE_TAB.CUD_TYPE_CODE[1] = 'D' ) THEN
         
             BEGIN
@@ -283,6 +470,9 @@ BEGIN
                 RETURN;
 
             END;
+
+        
+        /*기타 ( 수정 ) */
         ELSE
             BEGIN
                 UPDATE DP_IM_SUPPLIER_IDEA
@@ -326,8 +516,6 @@ BEGIN
 
             END;
         END IF;
-
-    
     
     END FOR;
   /*  

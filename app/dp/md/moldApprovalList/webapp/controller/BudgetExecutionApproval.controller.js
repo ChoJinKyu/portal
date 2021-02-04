@@ -213,15 +213,14 @@ sap.ui.define([
         _bindComboPlant: function (company_code) {
             var aFilter = [
                 new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)
-                , new Filter("org_type_code", FilterOperator.EQ, 'PL')
                 , new Filter("company_code", FilterOperator.EQ, company_code)
             ];
 
             var oView = this.getView(),
                 oModel = this.getModel("importPlant");
             oView.setBusy(true);
-            oModel.setTransactionModel(this.getModel("purOrg"));
-            oModel.read("/Pur_Operation_Org", {
+            oModel.setTransactionModel(this.getModel("dpMdUtil"));
+            oModel.read("/Divisions", {
                 filters: aFilter,
                 success: function (oData) { 
                     // console.log(" Pur_Operation_Org " , oData);

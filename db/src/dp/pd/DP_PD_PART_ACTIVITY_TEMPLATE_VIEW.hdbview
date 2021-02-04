@@ -5,7 +5,6 @@ SELECT pat.tenant_id,
       pat.org_code,
       pat.part_project_type_code,
       pat.activity_code,				
-      pat.category_group_code,				
       pt.code_name as part_project_type_name,
       pat.sequence,
       pat.develope_event_code,          /* develope_event 명 Function 변경 */

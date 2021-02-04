@@ -8,6 +8,7 @@
     xmlns:table="sap.ui.table"
     xmlns:tnt="sap.tnt"    
     xmlns:lib-m="ext.lib.control.m"
+    xmlns:cm-ui="ext.cm.util.control.ui"
     height="100%">
 
         <f:DynamicPage id="page"
@@ -151,28 +152,36 @@
                     <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                            <Label text="{I18N>/DEPARTMENT}"></Label>
-                            <lib-m:CodePicker id="search_Dept"
-                                placeholder="Enter a department name"
-                                keyField="department_code"
-                                textField="department_local_name"
-                                suggestionItems="{
-                                    path: '/',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                    ],
-                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                    entityName: 'Department'
-                                }">
-                                <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
-                                    keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
-                            </lib-m:CodePicker>
-                            <layoutData>
-                                <layout:GridData span="XL2 L3 M5 S10" />
-                            </layoutData>                                
+                                <!-- <Label text="{I18N>/DEPARTMENT}"></Label>
+                                <lib-m:CodePicker id="search_Dept"
+                                    placeholder="Enter a department name"
+                                    keyField="department_code"
+                                    textField="department_local_name"
+                                    suggestionItems="{
+                                        path: '/',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        ],
+                                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                        entityName: 'Department'
+                                    }">
+                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Department"
+                                        keyFieldHeaderText="Department ID" textFieldHeaderText="Department" />
+                                </lib-m:CodePicker> -->
+                                <Label text="{I18N>/DEPARTMENT}" labelFor="search_Dept_Name"></Label>
+                                <HBox>
+                                    <SearchField id="search_Dept_Name"
+                                        search=".onInputWithDeptValuePress" 
+                                        change="resetCode"
+                                        />
+                                    <Input id="search_Dept_Code" placeholder="Input data" visible ="false"></Input>
+                                </HBox>                                
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M5 S10" />
+                                </layoutData>                                
                             </VBox>
                             <VBox>
-                                <Label text="{I18N>/MANAGER}"></Label>
+                                <!-- <Label text="{I18N>/MANAGER}"></Label>
                                 <lib-m:CodePicker id="search_Man"
                                     placeholder="Enter a Employee name"
                                     keyField="employee_number"
@@ -187,7 +196,34 @@
                                     }">
                                     <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
                                         keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
-                                </lib-m:CodePicker>
+                                </lib-m:CodePicker> -->
+                                <!-- <Label text= "{I18N>/MANAGER}" labelFor="search_Man_Name"></Label>
+                                <HBox>
+                                    <SearchField id="search_Man_Name"
+                                                search=".vhManagerCode" 
+                                                change="resetCode"
+                                                valueHelpOnly="true" 
+                                                />
+                                    <Input id="search_Man_Code" placeholder="Input data" visible ="false"></Input>
+                                </HBox> -->
+                                <!-- <Label text="{I18N>/MANAGER}" labelFor="search_Man_Name"></Label>
+                                <Input id="search_Man_Name"
+                                    placeholder="Choose a employee from the ValueHelp"
+                                    showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
+                                </Input>                                 -->
+                        <VBox>
+                            <Label text="{I18N>/MANAGER}" labelFor="search_Man_Name"></Label>
+                            <HBox>
+                            <SearchField id="search_Man_Name"
+                                search=".onInputWithEmployeeValuePress" 
+                                change="resetCode"
+                                />
+                            <Input id="search_Man_Code" placeholder="Input data" visible ="false"></Input>
+                            </HBox>
+                            <layoutData>
+                                <layout:GridData span="XL10 L10 M10 S10" />
+                            </layoutData>
+                        </VBox>                                
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M5 S10" />
                                 </layoutData>                                
@@ -197,7 +233,7 @@
                                 <HBox>
                                     <SearchField id="search_Vp_Name"
                                                 search=".onDialogTreeCreate" 
-                                                change="resetVpCode"
+                                                change="resetCode"
 
                                                 />
                                     <Input id="search_Vp_Code" placeholder="Input data" visible ="false"></Input>
@@ -216,7 +252,16 @@
                                 </layoutData>
                             </VBox>                        
                             <VBox>
-                                <Label text="{I18N>/SUPPLIER}" labelFor="search_Sup"></Label>
+                                <Label text= "{I18N>/SUPPLIER}" labelFor="search_Sup_Name"></Label>
+                                <HBox>
+                                    <SearchField id="search_Sup_Name"
+                                                search=".vhSupplierCode" 
+                                                change="resetCode"
+                                                valueHelpOnly="true" 
+                                                />
+                                    <Input id="search_Sup_Code" placeholder="Input data" visible ="false"></Input>
+                                </HBox>
+                                <!-- <Label text="{I18N>/SUPPLIER}" labelFor="search_Sup"></Label> -->
 
                                 <!-- <lib-m:CodePicker id="search_Sup"
                                     placeholder="Enter a supplier name"
@@ -236,7 +281,7 @@
                                 </lib-m:CodePicker> -->
 
                                 <!-- <Input id="search_Sup" placeholder="Input data"></Input> -->
-                                <Input id="search_Sup" placeholder="Input data" showValueHelp="true" valueHelpOnly="false" valueHelpRequest=".vhSupplierCode"/>
+                                <!-- <Input id="search_Sup" placeholder="Input data" showValueHelp="true" valueHelpOnly="false" valueHelpRequest=".vhSupplierCode"/> -->
                                 <layoutData>
                                     <layout:GridData span="XL2 L3 M6 S12" />
                                 </layoutData>
@@ -253,15 +298,7 @@
                                         span="XL2 L3 M6 S12"/>
                                 </layoutData>
                             </VBox>
-                            <VBox>
-                                <Label text="Material" labelFor="search_Material"></Label>
-
-                                <Input id="search_Material" placeholder="Input data" showValueHelp="true" valueHelpOnly="false" valueHelpRequest=".vhMaterialCode"/>
-                                <layoutData>
-                                    <layout:GridData
-                                        span="XL2 L3 M6 S12"/>
-                                </layoutData>
-                            </VBox>
+                            
                         </form:content>
                     </form:SimpleForm>
                 </f:DynamicPageHeader>
@@ -500,6 +537,7 @@
                     <Button type="Reject" text="{I18N>/REJECT}"/>
                 </OverflowToolbar>
             </f:footer>
+
         </f:DynamicPage>
 
 </mvc:View>

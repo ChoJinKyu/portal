@@ -66,8 +66,6 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
            
-            console.log(" session >>> " , this.getSessionUserInfo().TENANT_ID);
-
             //this._showFormFragment();
         },
 
@@ -207,15 +205,14 @@ sap.ui.define([
             });
 
             var oModel2 = this.getModel("plant");
-            oModel2.setTransactionModel(this.getModel("purOrg"));
+            oModel2.setTransactionModel(this.getModel("dpMdUtil"));
 
-            oModel2.read("/Pur_Operation_Org(tenant_id='" + this.tenant_id
+            oModel2.read("/Divisions(tenant_id='" + this.tenant_id
                 + "',company_code='" + this.company_code
-                + "',org_type_code='" + "PL"
                 + "',org_code='" + this.plant_code + "')", {
                 filters: [],
                 success: function (oData) {
-                    // console.log("orgName ", oData);
+                      console.log("orgName ", oData);
                 }
             });
 
@@ -232,7 +229,9 @@ sap.ui.define([
             this._onRoutedThisPage(this.approval_number);
 
             if (this.approval_number === "New") {
-                this.getModel("appMaster").setProperty("/requestor_empno", '6975'); // 나중에 세션 값 세팅 할 것 
+                this.getModel("appMaster").setProperty("/requestor_empno", this.getSessionUserInfo().EMPLOYEE_NUMBER);  
+                this.getModel("appMaster").setProperty("/user_english_name", this.getSessionUserInfo().ENGLISH_EMPLOYEE_NAME); 
+                this.getModel("appMaster").setProperty("/user_local_name", this.getSessionUserInfo().EMPLOYEE_NAME); 
                 this.getModel("appMaster").setProperty("/request_date", this._getToday());
             }
 

@@ -17,13 +17,17 @@ sap.ui.define([
     "cm/util/control/ui/EmployeeDialog",    
     "dp/util/control/ui/MaterialOrgDialog",
     "cm/util/control/ui/PlantDialog",
+
+    "sap/f/LayoutType",
 ], function (BaseController, JSONModel, Validator,
     TablePersoController, MainListPersoService,
     Filter, FilterOperator, Sorter, MessageBox, MessageToast, Fragment, 
     DepartmentDialog,
     EmployeeDialog,
     MaterialOrgDialog, 
-    PlantDialog) {
+    PlantDialog,
+    LayoutType
+    ) {
     "use strict";
 
     return BaseController.extend("op.pu.prReviewMgt.controller.MainList", {
@@ -101,6 +105,14 @@ sap.ui.define([
                 }
             }), "jSearch");
 
+            // 화면 호출 될 때마다 실행
+            this.getRouter()
+                .getRoute("mainPage")
+                .attachPatternMatched(function() {
+                    this.getModel("mainListViewModel")
+                        .setProperty("/headerExpanded", true);
+                }, this);
+            
             // middleware - token 처리
             this.before("search", "jSearch", "list", "Pr_ReviewListView", function() {
                 [
@@ -109,14 +121,6 @@ sap.ui.define([
                 ]
                 .forEach(e => this.convTokenToBind("jSearch", ["/", e[0], "/values"].join(""), e[1].getTokens()), this);
             });
-
-            // 화면 호출 될 때마다 실행
-            this.getRouter()
-                .getRoute("mainPage")
-                .attachPatternMatched(function() {
-                    this.getModel("mainListViewModel")
-                        .setProperty("/headerExpanded", true);
-                }, this);
         },
         /* =========================================================== */
         /* event handlers                                              */
@@ -126,7 +130,6 @@ sap.ui.define([
 
             var [event, type, model, ...args] = arguments;
             var control = event.getSource();
-            console.log(">>>> arguments", arguments);
 
             // 자재코드
             type == "material_code"
@@ -205,6 +208,11 @@ sap.ui.define([
                             .layout,
                 record = this.getModel(model).getProperty(event.getSource().getBindingContextPath());
 
+            // 조회조건접힘처리
+            (this.getModel("fcl").getProperty("/layout") != layout)
+            &&
+            this.getModel("mainListViewModel").setProperty("/headerExpanded", false);
+            // Route
             this.getRouter().navTo("midView", {
                 layout: layout,
                 "?query": {
@@ -213,9 +221,7 @@ sap.ui.define([
                     pr_number: record.pr_number,
                     pr_item_number: record.pr_item_number
                 }
-            });
-            this.getModel("mainListViewModel")
-                .setProperty("/headerExpanded", layout !== "TwoColumnsMidExpanded"); 
+            }, true);
         },
         onButtonPress: function () {
             var [ event, ...args ] = arguments;
@@ -240,7 +246,6 @@ sap.ui.define([
             }
             // 구매담당자가 본인이 아닐 경우 Confirm 메시지 띄움.
             if (items.filter(e => (e.buyer_empno != this.$session.employee_number)).length > 0) {
-                //message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다.\n확인시 자동으로 본인 담당으로 변경됩니다.\nRFQ작성을 진행하시겠습니까?";
                 message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다.\n확인시 자동으로 본인 담당으로 변경됩니다.\n";
             }
             // 잔량이 없는 PR은 선택이 불가능하다 = 요청수량 0
@@ -327,6 +332,8 @@ sap.ui.define([
                                     })
                                     .done((function(r) {
                                         this.search("jSearch", "list", "Pr_ReviewListView");
+                                        // main 화면으로 복귀
+                                        this.getModel("fcl").setProperty("/layout", LayoutType.OneColumn);
                                     }).bind(this));
                                 });
                             }
@@ -351,6 +358,8 @@ sap.ui.define([
                                 })
                                 .done((function(r) {
                                     this.search("jSearch", "list", "Pr_ReviewListView");
+                                    // main 화면으로 복귀
+                                    this.getModel("fcl").setProperty("/layout", LayoutType.OneColumn);
                                 }).bind(this));
                             }
                         }

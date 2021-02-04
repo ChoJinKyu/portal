@@ -140,7 +140,8 @@
     "resourceRoots": {
       "ext.lib": "../../../../lib",
       "ext.util": "../../../util",
-      "ext.pg": "../../../../pg"
+      "ext.pg": "../../../../pg",
+      "ext.cm": "../../../../cm"
     },
     "routing": {
       "config": {

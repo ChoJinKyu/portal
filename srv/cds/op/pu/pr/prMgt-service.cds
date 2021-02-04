@@ -158,7 +158,13 @@ service PrMgtService {
                 estimated_price , //: Decimal           @title: '예상가격' ;	
                 currency_code   , //: String(3)         @title: '통화코드' ;	
                 price_unit     , // : Decimal(5,0)        @title: '가격단위' ;	
-                pr_progress_status_code , //: String(30)        @title: '구매요청진행상태코드' ;	
+                IFNULL(pr_progress_status_code, '') as pr_progress_status_code : String(30),   //     @title: '구매요청진행상태코드' ;
+                IFNULL( (
+                    select code_name from cdLng
+                    where   cdLng.tenant_id   = prDtl.tenant_id  
+                        and cdLng.group_code  = 'OP_PR_PROGRESS_STATUS_CODE'
+                        and cdLng.language_cd = 'KO'
+                        and cdLng.code        = prDtl.pr_progress_status_code) , '' ) as pr_progress_status_name : String(240),	
                 remark          , //: String(3000)      @title: '비고' ;	
                 attch_group_number , //: String(100)    @title: '첨부파일그룹번호' ;	
                 delete_flag     , //: Boolean   not null   @cds.on.insert: false   @title: '삭제여부' ;	

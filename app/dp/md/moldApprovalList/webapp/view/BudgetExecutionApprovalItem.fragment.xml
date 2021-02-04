@@ -132,7 +132,7 @@
                               selectedKey="{mdCommon>/import_company_org_code}" 
                               enabled="{=${mdCommon>/investment_ecst_type_code}!=='S'?false:true}"
                               items="{
-                                  path: 'importPlant>/Pur_Operation_Org'
+                                  path: 'importPlant>/Divisions'
                               }">
 						<core:Item key="{importPlant>org_code}" text="[{importPlant>org_code}]{importPlant>org_name}" />
 					</Select>

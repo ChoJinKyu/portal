@@ -19,12 +19,13 @@ sap.ui.define([
 	"sap/m/Input",
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
-	'sap/m/ColorPalettePopover',
-	'sap/ui/unified/ColorPickerDisplayMode',
+	'sap/ui/unified/library',
+	'sap/ui/unified/ColorPickerPopover',
+	'sap/ui/unified/ColorPicker',
     "sap/m/ObjectStatus"
 ], function (BaseController, Multilingual, Validator, JSONModel, ODataXhrService, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ColorPalettePopover, ColorPickerDisplayMode, ObjectStatus) {
+	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, unifiedLibrary, ColorPickerPopover, ColorPicker, ObjectStatus) {
     
     "use strict";
 
@@ -64,6 +65,9 @@ sap.ui.define([
             
 			this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
+            this.ColorPickerMode = unifiedLibrary.ColorPickerMode,
+		    this.ValueState = unifiedLibrary.ValueState;
+        
 			this._initTableTemplates();
             this.enableMessagePopover();
         },
@@ -616,80 +620,31 @@ sap.ui.define([
 		 * @param oEvent
 		 */
         onFontColor: function(oEvent) {
-            this.oButton = this.byId("liveChangeButton");
-			if (!this.oColorPaletteDisplayMode) {
-				this.oColorPaletteDisplayMode = new ColorPalettePopover("oColorPaletteDisplayMode", {
-					showDefaultColorButton: false,
-					displayMode: ColorPickerDisplayMode.Simplified,
-					colorSelect: this.handleColorSelect,
-					liveChange: this.handleLiveChange.bind(this)
+
+			if (!this.oColorPickerPopover) {
+				this.oColorPickerPopover = new ColorPickerPopover("oColorPickerPopover", {
+					colorString: "black",
+					mode: this.ColorPickerMode.HSL,
+					change: this.handleChange.bind(this)
 				});
-            }
-            this.oColorPaletteDisplayMode.openBy(oEvent.getSource());
-
-			// this.oColorPaletteDisplayMode.openBy(oEvent.getSource());
-            // if (!this.oColorPalettePopoverFull) {
-			// 	this.oColorPalettePopoverFull = new ColorPalettePopover("oColorPalettePopoverFull", {
-			// 		defaultColor: "black",
-			// 		colorSelect: this.handleColorSelect
-            //     });
-			// }
-
-			// this.oColorPalettePopoverFull.openBy(oEvent.getSource());
+			}
+            this.oColorPickerPopover.openBy(oEvent.getSource());
+            
+            
         },
 
-		handleColorSelect: function (oEvent) {
-            debugger;
-            var rgbCode = oEvent.getParameter("value");
-            // this.byId("fontColor").setValue(rgbCode);
+        handleChange: function (oEvent) {
+			var oView = this.getView(),
+				oInput = oView.byId("fontColor");
 
-            // 컬러값과 쉼표만 남기고 삭제. 
-            var rgb = rgbCode.replace( /[^%,.\d]/g, "" ); 
-
-            // 쉼표(,)를 기준으로 분리해서, 배열에 담기. 
-            rgb = rgb.split( "," ); 
-
-            // 컬러값이 "%"일 경우, 변환하기. 
-            for ( var x = 0; x < 3; x++ ) { 
-                    if ( rgb[ x ].indexOf( "%" ) > -1 ) rgb[ x ] = Math.round( parseFloat( rgb[ x ] ) * 2.55 ); 
-            } 
-
-            // 16진수 문자로 변환. 
-            var toHex = function( string ){ 
-                    string = parseInt( string, 10 ).toString( 16 ); 
-                    string = ( string.length === 1 ) ? "0" + string : string; 
-
-                    return string; 
-            }; 
-
-            var r = toHex( rgb[ 0 ] ); 
-            var g = toHex( rgb[ 1 ] ); 
-            var b = toHex( rgb[ 2 ] ); 
-
-            this.hexaCode = "#" + r + g + b; 
-            MessageToast.show(this.hexaCode);
-            
-            debugger;
-            // this.byId("fontColor").setValue(this.hexaCode);
-
-            return this.hexaCode; 
-
-		},
-
-        handleLiveChange:function (oEvent) {
-            this.oButton.getDomRef().firstChild.firstChild.style.color = "rgba(" + [
-				oEvent.getParameter("r"),
-				oEvent.getParameter("g"),
-				oEvent.getParameter("b"),
-				oEvent.getParameter("alpha")
-			].join(", ") + ")";
+			oInput.setValue(oEvent.getParameter("hex"));
+			// oInput.setValueState(this.ValueState.None);
+			MessageToast.show("Chosen color string: " + oEvent.getParameter("hex"));
         },
 
 		onExit: function () {
-			// Destroy popovers if any
-
-			if (this.oColorPalettePopoverFull) {
-				this.oColorPalettePopoverFull.destroy();
+			if (this.oColorPickerPopover) {
+				this.oColorPickerPopover.destroy();
 			}
 		}
 	});
