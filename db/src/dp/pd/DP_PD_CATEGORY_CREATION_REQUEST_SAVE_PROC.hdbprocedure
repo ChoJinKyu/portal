@@ -9,7 +9,7 @@ PROCEDURE DP_PD_CATEGORY_CREATION_REQUEST_SAVE_PROC (
                     SIMILAR_CATEGORY_CODE NVARCHAR(40),
                     REQUESTOR_EMPNO NVARCHAR(30),
                     REQUEST_DATE_TIME TIMESTAMP,
-                    REQUEST_DESC BLOB,
+                    REQUEST_DESC NCLOB,
                     ATTCH_GROUP_NUMBER NVARCHAR(100),
                     PROGRESS_STATUS_CODE NVARCHAR(30),
                     CREATOR_EMPNO NVARCHAR(30),
