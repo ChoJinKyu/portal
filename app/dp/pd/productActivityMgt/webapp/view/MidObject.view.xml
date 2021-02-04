@@ -24,7 +24,7 @@
                 <uxap:heading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
-                        <Title text="{I18N>/PART_BASE_ACTIVITY} {I18N>/DETAIL}" wrapping="true" class="" />
+                        <Title text="{I18N>/PRODUCT_ACTIVITY} {I18N>/DETAIL}" wrapping="true" class="" />
                     </HBox>
                 </uxap:heading>	
 
@@ -53,17 +53,19 @@
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
 						<Label text="{= !${midObjectViewModel>/isAddedMode} ? ${I18N>/UPDATE_USER_ID} : ${I18N>/CREATE_USER_ID}} : " />
-						<Text text="{master>/update_user_id}"/>
+						<Label text="{master>/update_user_id}" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
 					</layout:HorizontalLayout>
 				</layout:VerticalLayout>
 
 				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
-						<Label text="{= !${midObjectViewModel>/isAddedMode} ? ${I18N>/CHANGE_DATE} : ${I18N>/CREATION_DATE}} : "/>
-						<Text text="{
+						<Label text="{I18N>/LATEST} {I18N>/CHANGE} {I18N>/DATE_TIME}" class="sapUiLargeMarginBegin"/>
+						<Label text="{
                                         path: 'master>/local_update_dtm',
-                                        formatter: '.dateFormatter.toDateString'
-                                    }"/>
+                                        formatter: '.dateFormatter.toUTCDateTimeString'
+                                    }"
+                                class="sapUiTinyMarginBegin"  
+                                design="Bold"/>
 					</layout:HorizontalLayout>
 				</layout:VerticalLayout>
 			</FlexBox>

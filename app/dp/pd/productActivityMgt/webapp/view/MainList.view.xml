@@ -16,7 +16,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{I18N>/PRODUCT} {I18N>/ACTIVITY}" />
+                    <Title text="{I18N>/PRODUCT_ACTIVITY}" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -35,9 +35,9 @@
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="코드 / 명 / 설명 :" labelFor="searchProductActivity"></Label>
+                            <Label text="{I18N>/PRODUCT_ACTIVITY_NAME}" labelFor="searchProductActivity"></Label>
                             <Input id="searchProductActivity" 
-                                placeholder="코드 / 명 / 설명 :"/>
+                                placeholder="{I18N>/PRODUCT_ACTIVITY_NAME}"/>
                             <layoutData>
                                 <layout:GridData span="XL4 L4 M6 S12" />
                             </layoutData>
@@ -74,12 +74,12 @@
                     width="auto">
                 <t:extension>
                     <OverflowToolbar class="sapFDynamicPageAlignContent">
-                        <Title id="mainTableTitle2" text="{I18N>/PRODUCT} {I18N>/ACTIVITY} {I18N>/LIST} {= ${list>/PdProdActivityTemplateView}.length > 0 ? '(' + ${list>/PdProdActivityTemplateView}.length + ')' : ''}" level="H2"/>
+                        <Title id="mainTableTitle2" text="{I18N>/PRODUCT_ACTIVITY} {I18N>/LIST} {= ${list>/PdProdActivityTemplateView}.length > 0 ? '(' + ${list>/PdProdActivityTemplateView}.length + ')' : ''}" level="H2"/>
                         <ToolbarSpacer/>
                         <Button text="{I18N>/CREATE}" id="createActivity" press=".onCreateActivity"  type="Transparent"/>
                         <Button icon="sap-icon://excel-attachment" press="onExportPress" type="Transparent"/>
                         <ToolbarSeparator/>
-                        <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed"/>
+                        <Button icon="sap-icon://action-settings" text="{I18N>/EXCEL}" press=".onMainTablePersoButtonPressed"/>
                         
                     </OverflowToolbar>
                 </t:extension>

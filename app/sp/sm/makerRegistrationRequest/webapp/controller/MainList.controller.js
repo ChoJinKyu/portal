@@ -3,7 +3,6 @@ sap.ui.define([
     "ext/lib/util/Multilingual",
     "sap/ui/model/json/JSONModel",
     "ext/lib/formatter/DateFormatter",
-    "ext/lib/core/service/ODataV2ServiceProvider",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
@@ -11,15 +10,11 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/ui/core/Component",
     "sap/ui/core/ComponentContainer",
-    "ext/lib/util/ExcelUtil",
-    "sap/ui/core/routing/HashChanger"
+    "ext/lib/util/ExcelUtil"
 
-], function (BaseController, Multilingual, JSONModel, DateFormatter, ODataV2ServiceProvider, Filter, FilterOperator, Sorter, MessageBox, MessageToast, Component, ComponentContainer, ExcelUtil, HashChanger) {
+], function (BaseController, Multilingual, JSONModel, DateFormatter, Filter, FilterOperator, Sorter, MessageBox, MessageToast, Component, ComponentContainer, ExcelUtil) {
     "use strict";
 
-    var sTenantId;
-    var oServiceModel = ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/sp.makerViewService/");
-    var oMultilingual = new Multilingual();
 
     return BaseController.extend("sp.sm.makerRegistrationRequest.controller.MainList", {
 
@@ -46,20 +41,21 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            //Multilingual Model
-            var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
             //Process filter model
             var oView = this.getView(),
+                oModel = this.getOwnerComponent().getModel(),
+                oI18NModel = this.getOwnerComponent().getModel("I18N"),
                 that = this;
             this.setModel(new JSONModel(), "progressModel");
-            oServiceModel.read("/MakerRegistrationRequestProgressTypeView", {
+            console.log();
+
+            oModel.read("/MakerRegistrationRequestProgressTypeView", {
                 filters: [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
                 sorters: [new Sorter("sort_no")],
                 success: function (data) {
                     oView.setBusy(false);
                     var aRecords = data.results;
-                    aRecords.unshift({ code: "", code_name: "전체" });
+                    aRecords.unshift({ code: "", code_name: oI18NModel.getText("/ALL") });
                     oView.getModel("progressModel").setProperty("/progress", aRecords);
                 }.bind(this),
                 error: function (data) {
@@ -67,11 +63,12 @@ sap.ui.define([
                     console.log("error");
                 }
             });
+            //MakerRegistrationRequestView count
+            this.setModel(new JSONModel(), "countModel");
+            this._getListCount();
 
-            this.setModel(new JSONModel(), "listModel");
 
         },
-
 
         /**
         * Search 버튼 클릭(Filter 추출)
@@ -97,27 +94,19 @@ sap.ui.define([
                 aFilters.push(new Filter("local_create_dtm", FilterOperator.BT, this.dateFormatter.toDateString(oDateValue), this.dateFormatter.toDateString(oSecondDateValue)));
             }
             this.byId("mainTable").getBinding("items").filter(aFilters);
-            // this._getBasePriceList(aFilters);
+            this._getListCount(aFilters);
         },
-        _getBasePriceList: function (filtersParam) {
-            var oView = this.getView();
-            var oModel = this.getModel();
+        _getListCount: function (filtersParam) {
+            var oView = this.getView(),
+                oModel = this.getOwnerComponent().getModel();
             filtersParam = Array.isArray(filtersParam) ? filtersParam : [];
             oView.setBusy(true);
 
-            oModel.read("/MakerRegistrationRequestView", {
+            oModel.read("/MakerRegistrationRequestView/$count", {
                 filters: filtersParam,
-                urlParameters: {
-                    "$orderby": "maker_request_sequence"
-                },
                 success: function (data) {
                     oView.setBusy(false);
-
-                    oView.getModel("listModel").setData(data);
-                },
-                error: function (data) {
-                    oView.setBusy(false);
-                    console.log("error", data);
+                    oView.getModel("countModel").setProperty("/count", data);
                 }
             });
         },
@@ -129,7 +118,7 @@ sap.ui.define([
 
             var oTable = this.byId(sTableId);
             var sFileName = "MAKER REQUEST LIST";
-            var oList = oTable.getModel("listModel").getProperty("/results");
+            var oList = oTable.getBinding("items");
 
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
@@ -147,7 +136,6 @@ sap.ui.define([
             this._fnMoveMakerMasterCreate(inputModel);
         },
         _fnMoveMakerMasterCreate: function (inputModel) {
-            
             //portal에 있는 toolPage 
             var oToolPage = this.getView().getParent().getParent().getParent().oContainer.getParent();
 
@@ -157,7 +145,6 @@ sap.ui.define([
 
             // 화면 구분 코드(MM : Maker Mater, MR : Maker Registration, MA : 타모듈  등록)  -> gubun
             // 생성/보기 모드 코드(C : 생성, R : 보기) -> mode
-
 
             Component.load({
                 name: sComponent,
