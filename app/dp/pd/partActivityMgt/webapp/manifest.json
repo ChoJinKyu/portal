@@ -129,7 +129,7 @@
                     ]
                 },
                 {
-                    "pattern": "midObject/{layout}/{tenantId}/{companyCode}/{orgCode}/{partProjectTypeCode}/{activityCode}",
+                    "pattern": "midObject/{layout}/{tenantId}/{companyCode}/{orgTypeCode}/{orgCode}/{partProjectTypeCode}/{activityCode}",
                     "name": "midPage",
                     "target": [
                         "mainObject",

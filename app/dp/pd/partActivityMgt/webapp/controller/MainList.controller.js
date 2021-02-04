@@ -146,7 +146,7 @@ sap.ui.define([
 				layout: oNextUIState.layout, 
 				tenantId: this.tenant_id,               
                 companyCode: 'new',
-                // orgTypeCode: 'new',                
+                orgTypeCode: 'new',                
                 orgCode: 'new',
                 partProjectTypeCode: 'new',
                 activityCode: 'new'
@@ -305,7 +305,7 @@ sap.ui.define([
                 layout: oNextUIState.layout,
                 tenantId: rowData.tenant_id,
                 companyCode: rowData.company_code,
-                // orgTypeCode: rowData.org_type_code,                
+                orgTypeCode: rowData.org_type_code,                
                 orgCode: rowData.org_code,
                 partProjectTypeCode: rowData.part_project_type_code,
                 activityCode: rowData.activity_code

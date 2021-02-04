@@ -350,8 +350,9 @@ sap.ui.define([
                 // + "',org_type_code='" + this._sOrgTypeCode + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
                 // + "',activity_code='" + this._sActivityCode + "',category_group_code='" + this._sCategoryGroupCode + "')");
                 this._bindView("/pdPartactivityTemplateView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode
-                + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
+                + "',org_type_code='" + this._sOrgTypeCode + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
                 + "',activity_code='" + this._sActivityCode + "')");
+                
                 oView.setBusy(true);
                 
                 var oLanguagesModel = this.getModel("languages");                
@@ -409,7 +410,7 @@ sap.ui.define([
             this._sOrgCode = oArgs.orgCode;
             this._sPartProjectTypeCode = oArgs.partProjectTypeCode;
             this._sActivityCode = oArgs.activityCode;
-            this._sCategoryGroupCode = oArgs.categoryGroupCode;
+            // this._sCategoryGroupCode = oArgs.categoryGroupCode;
             
             this._fnInitControlModel();
 
@@ -421,11 +422,11 @@ sap.ui.define([
 				oMasterModel.setData({
                     "tenant_id": this._sTenantId,
                     "company_code": "",                    
-                    // "org_type_code": "",
+                    "org_type_code": "",
                     "org_code": "",
                     "part_project_type_code": "",
                     "activity_code": "",
-                    // "category_group_code": "",
+                    "category_group_code": "",
                     "attachment_mandatory_flag": true,
                     "approve_mandatory_flag": true					
                 }, "/pdPartactivityTemplateView");
@@ -448,8 +449,9 @@ sap.ui.define([
                 // + "',org_type_code='" + this._sOrgTypeCode + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
                 // + "',activity_code='" + this._sActivityCode + "',category_group_code='" + this._sCategoryGroupCode + "')");
                 this._bindView("/pdPartactivityTemplateView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode
-                + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
+                + "',org_type_code='" + this._sOrgTypeCode + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
                 + "',activity_code='" + this._sActivityCode + "')");
+                
 				oView.setBusy(true);
 				var oLanguagesModel = this.getModel("languages");
 				oLanguagesModel.setTransactionModel(this.getModel());
