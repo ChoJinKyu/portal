@@ -1,10 +1,11 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
 	"ext/lib/util/Multilingual",
-	"ext/lib/model/ManagedListModel",
+    "ext/lib/model/ManagedListModel",
+    "ext/lib/model/TransactionManager",
 	"sap/ui/model/json/JSONModel",
 	"ext/lib/formatter/DateFormatter",
-	"sap/m/TablePersoController",
+	"sap/ui/table/TablePersoController",
 	"./MainListPersoService",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -12,15 +13,15 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/ui/model/Sorter",
     "ext/lib/util/ExcelUtil",
-], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter, 
+], function (BaseController, Multilingual, ManagedListModel, TransactionManager, JSONModel, DateFormatter, 
         TablePersoController, MainListPersoService, 
         Filter, FilterOperator, MessageBox, MessageToast, Sorter, ExcelUtil) {
-	"use strict";
+	        "use strict";
+            var oTransactionManager;
 
 	return BaseController.extend("dp.pd.productActivityMgt.controller.MainList", {
 
 		dateFormatter: DateFormatter,
-
 		/* =========================================================== */
 		/* lifecycle methods                                           */
 		/* =========================================================== */
@@ -35,11 +36,12 @@ sap.ui.define([
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new JSONModel(), "mainListViewModel");
-			
+            
+            var oTransactionManager = new TransactionManager();
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this.enableMessagePopover();
-			this._doInitTablePerso();
+            this._doInitTablePerso();
         },
 		
         onRenderedFirst : function () {
@@ -83,7 +85,7 @@ sap.ui.define([
 		 */
 		onMainTablePersoButtonPressed: function(oEvent){
             console.log("onMainTablePersoButtonPressed");
-		//	this._oTPC.openDialog();
+			this._oTPC.openDialog();
 		},
 
 		/**
@@ -153,10 +155,6 @@ sap.ui.define([
 			// 	this.getView().getModel('oUi').setProperty("/headerExpandFlag", false);
             // }	
             
-        },
-
-        onTableSettings : function(){
-            this._oTPC.openDialog();
         },
 
         onExportPress : function(_oEvent){

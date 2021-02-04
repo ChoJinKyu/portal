@@ -1,50 +1,50 @@
 sap.ui.define(["jquery.sap.global"],
     function (jQuery) {
         "use strict";
-
-        var _columns = [
+        var i = 0;            
+        var _columns = [           
             {
-                id: "productActivityMgt-mainList-mainColumnProductActivityCode",
-                order: 0,
-                text: "부품 Activity Code",
+                id: "partBaseActivityMgt-mainList-mainColumnProductActivityCode",
+                order: i++,
+                text: "제품 Activity 코드",
                 visible: true
             },
             {
-                id: "productActivityMgt-mainList-mainColumnActivityName",
-                order: 1,
-                text: "부품 Activity 명",
-                visible: false
-            },
+                id: "partBaseActivityMgt-mainList-mainColumnActivityName",
+                order: i++,
+                text: "제품 Activity 명",
+                visible: true
+            },            
             {
-                id: "productActivityMgt-mainList-mainColumnDescription",
-                order: 2,
+                id: "partBaseActivityMgt-mainList-mainColumnDescription",
+                order: i++,
                 text: "설명",
-                visible: false
+                visible: true
             },
             {
-                id: "productActivityMgt-mainList-mainColumnSequence",
-                order: 3,
+                id: "partBaseActivityMgt-mainList-mainColumnSequence",
+                order: i++,
                 text: "순번",
                 visible: true
-            },
+            },            
             {
-                id: "productActivityMgt-mainList-mainColumnActiveFlag",
-                order: 4,
-                text: "상태",
+                id: "partBaseActivityMgt-mainList-mainColumnActiveFlag",
+                order: i++,
+                text: "Status",
+                visible: true
+            },            
+            {
+                id: "partBaseActivityMgt-mainList-mainColumnLocalUpdateDtm",
+                order: i++,
+                text: "수정일시",
                 visible: true
             },
             {
-                id: "productActivityMgt-mainList-mainColumnLocalUpdateDtm",
-                order: 5,
-                text: "로컬변경일시",
+                id: "partBaseActivityMgt-mainList-mainColumnUpdateUserId",
+                order: i++,
+                text: "수정자",
                 visible: true
-            },
-            {
-                id: "productActivityMgt-mainList-mainColumnUpdateUserId",
-                order: 5,
-                text: "수정사용자ID",
-                visible: true
-            }
+            }          
         ];
         // Very simple page-context personalization
         // persistence service, not for productive use!
@@ -90,8 +90,8 @@ sap.ui.define(["jquery.sap.global"],
             //to 'Weight (Important!)', but will leave all other column names as they are.
             getCaption: function (oColumn) {
                 if (oColumn.getHeader() && oColumn.getHeader().getText) {
-                    if (oColumn.getHeader().getText() === "부품 Activity 코드") {
-                        return "부품 Activity 코드 (Important!)";
+                    if (oColumn.getHeader().getText() === "제품 Activity 코드") {
+                        return "제품 Activity 코드 (Important!)";
                     }
                 }
                 return null;
@@ -99,8 +99,8 @@ sap.ui.define(["jquery.sap.global"],
 
             getGroup: function (oColumn) {
                 var sId = oColumn.getId();
-                if (sId.indexOf("mainColumnProductActivityCode") != -1 ||
-                    sId.indexOf("mainColumnActivityName") != -1) {
+                if (sId.indexOf("mainColumnActivityCode") != -1 ||
+                    sId.indexOf("mainColumnActivityName") != -1 ) {
                     return "Columns of Key";
                 }
                 return "Others";

@@ -79,7 +79,7 @@
                         <Button text="{I18N>/CREATE}" id="createActivity" press=".onCreateActivity"  type="Transparent"/>
                         <Button icon="sap-icon://excel-attachment" press="onExportPress" type="Transparent"/>
                         <ToolbarSeparator/>
-                        <Button icon="sap-icon://action-settings" press=".onTableSettings"/>
+                        <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed"/>
                         
                     </OverflowToolbar>
                 </t:extension>
