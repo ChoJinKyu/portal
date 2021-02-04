@@ -20,14 +20,14 @@ entity VI_Base_Price_Aprl_Item {
          material_name                  : String(240)         ;
          vendor_pool_code               : String(20)  not null;
          currency_code                  : String(3)   not null;
-         base_uom_code                  : String(3)          ;		
+         base_uom_code                  : String(30)          ;		
          base_price                     : Decimal(19,4)       ;	
          buyer_empno                    : String(30)          ;	
          pcst                           : Decimal(19,4)             ;	
          metal_net_price                : Decimal(19,4)             ;	
          coating_mat_net_price          : Decimal(19,4)             ;	
          fabric_net_price               : Decimal(19,4)             ;	
-         use_flag                       : String(1) not null          ;        
+        
 };
 
 extend VI_Base_Price_Aprl_Item with util.Managed;
@@ -58,5 +58,5 @@ annotate VI_Base_Price_Aprl_Item with {
     metal_net_price                   @title : '메탈단가'         @description       : '메탈단가';
     coating_mat_net_price             @title : '코팅재단가'       @description       : '코팅재단가';
     fabric_net_price                  @title : '원단단가'         @description       : '원단단가';
-    use_flag                          @title : '사용여부'         @description       : '사용여부';	
+   
 };
