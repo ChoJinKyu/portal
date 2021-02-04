@@ -122,11 +122,11 @@
                     </t:Column>
 
                     <t:Column hAlign="Center">
-                        <Text text="{I18N>/LOCAL_UPDATE_DTM}" />
+                        <Text text="{I18N>/UPDATE} {I18N>/DATE_TIME}" />
                         <t:template>
                             <Text text="{
                                         path: 'list>local_update_dtm',
-                                        formatter: '.dateFormatter.toDateString'
+                                        formatter: '.dateFormatter.toDateTimeString'
                                     }"/>  
                         </t:template>
                     </t:Column>

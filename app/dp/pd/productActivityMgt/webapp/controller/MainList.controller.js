@@ -133,7 +133,7 @@ sap.ui.define([
 
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenantId: oRecord.tenant_id,
+				tenantId: "L2101",
 				controlOptionCode: oRecord.product_activity_code
 			}, true);
 
@@ -146,7 +146,7 @@ sap.ui.define([
             var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
-				tenantId: "L2100",
+				tenantId: "L2101",
 				controlOptionCode: "new"				
             });
 

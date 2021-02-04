@@ -262,7 +262,9 @@ sap.ui.define([
 
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
-					"tenant_id": this._sTenantId,
+                    "tenant_id": this._sTenantId,
+                    "update_user_id": this._sLoginUserId,
+                    "local_update_dtm": new Date(),
 					"product_activity_code": "",
 					"activity_name": "",
 					"description": "",
@@ -284,7 +286,7 @@ sap.ui.define([
 
 				oLangDataModel.read("/Code", {
 					filters: [
-						new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+						new Filter("tenant_id", FilterOperator.EQ, "L2101"),
 						new Filter("group_code", FilterOperator.EQ, "CM_LANG_CODE"),
 					],
 					success: function (rData, reponse) {
