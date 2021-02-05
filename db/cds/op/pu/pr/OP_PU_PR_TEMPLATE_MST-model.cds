@@ -16,11 +16,12 @@ entity Pu_Pr_Template_Mst {
             on tplds.tenant_id = tenant_id
                and tplds.pr_template_number = pr_template_number ;
 
-        erp_interface_flag  : Boolean        not null @cds.on.insert: false @title: 'ERP인터페이스여부' ;	
+        erp_interface_flag  : Boolean        not null @cds.on.insert:false @title: 'ERP인터페이스여부' ;	
         default_template_number : String(10)          @title: '기본템플릿번호' ;	
-        use_flag            : Boolean        not null @cds.on.insert: false @title: '사용여부' ;	
-        approval_flag       : Boolean        not null @cds.on.insert: false @title: '품의여부' ;	
-
+        use_flag            : Boolean        not null @cds.on.insert:false @title: '사용여부' ;	
+        approval_flag       : Boolean        not null @cds.on.insert:false @title: '품의여부' ;	
+        default_template_flag : Boolean               @cds.on.insert:false @title: '기본템플릿여부' ; 
     }	
+
 extend Pu_Pr_Template_Mst with util.Managed;    
 
