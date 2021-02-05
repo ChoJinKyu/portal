@@ -60,6 +60,12 @@ service PrMgtService {
                 erp_pr_type_code,
                 erp_pr_number,
                 approval_contents,
+                local_create_dtm     ,    
+                local_update_dtm     ,    
+                create_user_id       , 
+                update_user_id       , 
+                system_create_dtm    , 
+                system_update_dtm    , 
                 pr_dtl_cnt,
                 pr_progress_status_cnt,
                 CONCAT(
