@@ -78,7 +78,7 @@ sap.ui.define([
             },
             onPressAriba: function(e){
                 MessageToast.show("BP사와 FM사에서 Interface 업무항목 정의 작업중입니다.");
-
+                debugger;
                 return;
                 var oModel = this.getView().getModel();
                 async function _read(oModel){

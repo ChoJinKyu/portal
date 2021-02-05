@@ -578,7 +578,7 @@ sap.ui.define([
             var newLine = new sap.m.ColumnListItem();
             var oDatePicker = new sap.m.DatePicker();
             oDatePicker.setDisplayFormat("yyyy/MM/dd");
-            oDatePicker.setPlaceholder("yyyy/MM/dd");
+            oDatePicker.setPlaceholder("YYYY/MM/DD");
             
             newLine.addCell(new sap.m.Text({ text: "1" }));
             
@@ -622,7 +622,7 @@ sap.ui.define([
             // }
             );
             oDatePicker.setDisplayFormat("yyyy/MM/dd");
-            oDatePicker.setPlaceholder("yyyy/MM/dd");
+            oDatePicker.setPlaceholder("YYYY/MM/DD");
             
             newLine.addCell(new sap.m.Text({ text: String(oIndex) }));
             
