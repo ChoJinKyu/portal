@@ -18,7 +18,7 @@ sap.ui.define([
 
     "use strict";
 
-    return BaseController.extend("sp.sf.fundingStatus.controller.FundingApply", {
+    return BaseController.extend("sp.sf.fundingStatus.controller.Apply", {
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -59,8 +59,8 @@ sap.ui.define([
          * @private
          */
         _onRoutedThisPage: function (oEvent) {
-            alert("??");
-            debugger;
+            var sParmaModel=this.getModel("viewModel");
+            
         }
     })
 });

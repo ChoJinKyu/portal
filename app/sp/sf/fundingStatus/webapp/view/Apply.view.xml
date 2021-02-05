@@ -1,4 +1,4 @@
-<mvc:View controllerName="sp.sf.fundingStatus.controller.FundingApply" 
+<mvc:View controllerName="sp.sf.fundingStatus.controller.Apply" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
 	xmlns:uxap="sap.uxap" 
@@ -29,20 +29,34 @@
 		</uxap:headerTitle>
 
 		<uxap:headerContent>
-			<!-- 헤더 영역 -->
-			<FlexBox wrap="Wrap" visible="{midObjectView>/showMode}">
-				<VBox>
-                    <ObjectStatus
-                        title="공고번호"
-                        text="{applicationSup>/funding_notify_number}"/>
-                    <ObjectStatus
-                        title="신청번호"
-                        text="{applicationSup>/funding_appl_number}"/>
-                    <layoutData>
-                        <layout:GridData span="XL4 L4 M6 S12" />
-                    </layoutData>
-                </VBox>
-			</FlexBox>
+            <!-- <layout:VerticalLayout> -->
+                <FlexBox id="headerContentId" height="30px" alignItems="Start" justifyContent="Start" >
+                    <VBox>
+                        <Label text="Supplier Code :"  class="sapUiLargeMarginBegin" />
+                        <Label text="KR007289" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                        <Label text="대표자명 :"  class="sapUiLargeMarginBegin" />
+                        <Label text="김대표" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                    </VBox>
+                    <VBox>
+                        <Label text="사업자번호 :" class="sapUiLargeMarginBegin" />
+                        <Label text="609-81-07658" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                        <Label text="대표자 Mail Address :" class="sapUiLargeMarginBegin" />
+                        <Label text="rep@supplier.com" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                    </VBox>
+                    <VBox>
+                        <Label text="Supplier Name :"  class="sapUiLargeMarginBegin" />
+                        <Label text="(주) 유창" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                        <Label text="전화번호 :"  class="sapUiLargeMarginBegin" />
+                        <Label text="02-2222-4545" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                    </VBox>
+                    <VBox>
+                        <Label text="주소 :" class="sapUiLargeMarginBegin" />
+                        <Label text="서울시 영등포구 문래동 112-11" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                        <Label text="협력회 여부 :" class="sapUiLargeMarginBegin" />
+                        <Label text="Y" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                    </VBox>
+                </FlexBox>          
+            <!-- </layout:VerticalLayout> -->
 		</uxap:headerContent>
 
 		<uxap:sections>

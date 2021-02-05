@@ -73,7 +73,7 @@ sap.ui.define([
                 }else{
                     if(statusCode=="110" || statusCode=="120" ){
                         this.byId("beginView").setVisible(true)
-                        this.getOwnerComponent().getRouter().navTo("Apply");
+                        this.getOwnerComponent().getRouter().navTo("Apply", sPramModel);
                     }else{
                         this.byId("beginView").setVisible(false)
                     }
