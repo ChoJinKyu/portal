@@ -186,7 +186,11 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-        _onRoutedThisPage: function () {
+        _onRoutedThisPage: function () {            
+            
+            this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("local_update_dtm").setVisible(true);
+            this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("update_user_id").setVisible(true);
+            
             this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
             this.byId("pageSearchButton").firePress();
         },
@@ -229,7 +233,8 @@ sap.ui.define([
                     path: 'keyword', 
                     filters: [
                         new Filter("tolower(activity_name)", FilterOperator.Contains, "'" + searchPartBaseKeyword.toLowerCase().replace("'","''") + "'"),                        
-                        new Filter("tolower(activity_code)", FilterOperator.Contains, "'" + searchPartBaseKeyword.toLowerCase().replace("'","''") + "'")
+                        new Filter("tolower(activity_code)", FilterOperator.Contains, "'" + searchPartBaseKeyword.toLowerCase().replace("'","''") + "'"),
+                        new Filter("tolower(description)", FilterOperator.Contains, "'" + searchPartBaseKeyword.toLowerCase().replace("'","''") + "'")
                     ],
                     and: false
                 }));

@@ -1,7 +1,8 @@
 <mvc:View controllerName="dp.pd.partBaseActivityMgt.controller.MidObject"
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m" 
-	xmlns:uxap="sap.uxap" 
+	xmlns:uxap="sap.uxap"
+    xmlns:table="sap.ui.table" 
 	xmlns:layout="sap.ui.layout" 
     xmlns:form="sap.ui.layout.form"
 	xmlns:core="sap.ui.core"
@@ -184,22 +185,25 @@
                                 </Toolbar>
                             </headerToolbar>
 							<columns>
-                                    <Column 
-                                        visible="{contModel>/editMode}"
-                                        width="4em">
-                                        <Text text="{I18N>/STATUS}"/>
-                                    </Column>
-                                    <Column>
-                                        <Text text="{I18N>/LANGUAGE}" />
-                                    </Column>
-                                    <Column>
-                                        <Text text="{I18N>/ACTIVITY_NAME}" />
-                                    </Column>
-                                </columns>
+                                <Column 
+                                    visible="{contModel>/editMode}"
+                                    width="4em">
+                                    <Text text="{I18N>/STATUS}"/>
+                                </Column>
+                                <Column>
+                                    <Text text="{I18N>/LANGUAGE}" />
+                                </Column>
+                                <Column>
+                                    <Text text="{I18N>/ACTIVITY_NAME}" />
+                                </Column>
+                            </columns>
                                 <items>
                                     <ColumnListItem>
-                                        <cells>
-                                            <Text text="{languages>_row_state_}"/>
+                                        <cells>                                            
+                                            <ObjectStatus icon="{
+                                                path: 'languages>_row_state_',
+                                                formatter: '.formatter.toModelStateColumnIcon'
+                                            }" />
                                             <HBox>
                                                 <Text
                                                     visible="{contModel>/readMode}"
@@ -241,6 +245,172 @@
 			</uxap:ObjectPageSection>
 
             <uxap:ObjectPageSection 
+                titleUppercase="false" 
+                title="{I18N>/CATEGORY} ({= (${category>/PdPartBaseActivityCategoryView})?${category>/PdPartBaseActivityCategoryView}.length:0})">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                    <uxap:blocks>
+						<table:Table id="cateTable" selectionMode="{= ${contModel>/readMode}?'None':'MultiToggle'}" 
+                            cellClick=".onCellClick" rowSelectionChange=".onCheck" enableColumnReordering="false"
+                            filter="filterPrice"
+                            rows="{category>/PdPartBaseActivityCategoryView}">
+                            <table:extension>
+                                <OverflowToolbar visible="{contModel>/editMode}">			
+                                    <ToolbarSpacer/>
+                                    <Button
+                                        id="cateTableBundleAddButton" 
+                                        type="Transparent" 
+                                        text="일괄 등록"
+                                        press="onBundleAddRow"/>
+                                    <Button
+                                        id="cateTableAddButton" 
+                                        type="Transparent" 
+                                        text="{I18N>/ROW_ADD}"
+                                        press=".onCateAddRow"/>
+                                    <Button
+                                        id="cateTableDeleteButton" 
+                                        type="Transparent" 
+                                        text="{I18N>/ROW_DELETE}"
+                                        press=".onCateDelRow"/>			
+                                    <ToolbarSeparator/>
+                                </OverflowToolbar>
+                            </table:extension>
+                            <table:columns>	
+                                <table:Column id="state" width="5em" visible="{contModel>/editMode}" hAlign="Center">
+                                    <Text text="{I18N>/STATUS}"/>
+                                    <table:template>
+                                        <ObjectStatus icon="{
+                                            path: 'category>_row_state_',
+                                            formatter: '.formatter.toModelStateColumnIcon'
+                                        }" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/GROUP_CODE}" visible="false" filterProperty="category_group_code">
+                                    <table:template>
+                                        <Text text="{category>category_group_code}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/GROUP}" width="10em" filterProperty="category_group_name">
+                                    <table:template>
+                                        <Text text="{category>category_group_name}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/CATEGORY_CODE}" visible="false" filterProperty="category_code">
+                                    <table:template>
+                                        <Text text="{category>category_code}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/CATEGORY}" visible="{= !${contModel>/editMode}}" filterProperty="category_name">                                                                   
+                                    <table:template>                                                                           
+                                        <Text text="{category>category_name}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>		
+                                <table:Column label="{I18N>/CATEGORY}" visible="{= ${contModel>/editMode}}" filterProperty="category_name">                                                                   
+                                    <table:template>                                                                           
+                                        <Input
+                                            editable="{= ${category>_row_state_} === 'C' }"
+                                            id="category_name"
+                                            valueHelpRequest=".onDialogCategoryPress"
+                                            value="{category>category_name}"
+                                            showValueHelp="true"
+                                            />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/USE}" visible="{contModel>/readMode}" width="5em" filterProperty="active_flag">
+                                    <table:template>                                    
+                                        <Text text="{= !!${category>active_flag} ? 'Y' : 'N'}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/USE}" visible="{contModel>/editMode}" width="5em" filterProperty="active_flag">
+                                    <table:template>                                    
+                                        <ToggleButton                                                                                            
+                                            text="{= ${category>active_flag}? 'Yes':'No'}" 
+                                            pressed="{category>active_flag}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/S_GRADE_STANDARD_DAYS}" visible="{contModel>/readMode}" width="5em" filterProperty="s_grade_standard_days">
+                                    <table:template>
+                                        <Text text="{category>s_grade_standard_days}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/S_GRADE_STANDARD_DAYS}" visible="{contModel>/editMode}" width="5em" filterProperty="s_grade_standard_days">
+                                    <table:template>
+                                        <Input
+                                            visible="{contModel>/editMode}"
+                                            editable="{contModel>/editMode}"
+                                            maxLength="40"
+                                            type="Number"
+                                            value="{category>s_grade_standard_days}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/A_GRADE_STANDARD_DAYS}" visible="{contModel>/readMode}" width="5em" filterProperty="a_grade_standard_days">
+                                    <table:template>
+                                        <Text text="{category>a_grade_standard_days}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/A_GRADE_STANDARD_DAYS}" visible="{contModel>/editMode}" width="5em" filterProperty="a_grade_standard_days">
+                                    <table:template>
+                                        <Input
+                                            visible="{contModel>/editMode}"
+                                            editable="{contModel>/editMode}"
+                                            maxLength="40"
+                                            type="Number"
+                                            value="{category>a_grade_standard_days}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/B_GRADE_STANDARD_DAYS}" visible="{contModel>/readMode}" width="5em" filterProperty="b_grade_standard_days">
+                                    <table:template>
+                                        <Text text="{category>b_grade_standard_days}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/B_GRADE_STANDARD_DAYS}" visible="{contModel>/editMode}" width="5em" filterProperty="b_grade_standard_days">
+                                    <table:template>
+                                        <Input
+                                            visible="{contModel>/editMode}"
+                                            editable="{contModel>/editMode}"
+                                            maxLength="40"
+                                            type="Number"
+                                            value="{category>b_grade_standard_days}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/C_GRADE_STANDARD_DAYS}" visible="{contModel>/readMode}" width="5em" filterProperty="c_grade_standard_days">
+                                    <table:template>
+                                        <Text text="{category>c_grade_standard_days}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/C_GRADE_STANDARD_DAYS}" visible="{contModel>/editMode}" width="5em" filterProperty="c_grade_standard_days">
+                                    <table:template>
+                                        <Input
+                                            visible="{contModel>/editMode}"
+                                            editable="{contModel>/editMode}"
+                                            maxLength="40"
+                                            type="Number"
+                                            value="{category>c_grade_standard_days}"/>
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/D_GRADE_STANDARD_DAYS}" visible="{contModel>/readMode}" width="5em" filterProperty="d_grade_standard_days">
+                                    <table:template>
+                                        <Text text="{category>d_grade_standard_days}" wrapping="false" />
+                                    </table:template>
+                                </table:Column>
+                                <table:Column label="{I18N>/D_GRADE_STANDARD_DAYS}" visible="{contModel>/editMode}" width="5em" filterProperty="d_grade_standard_days">
+                                    <table:template>
+                                        <Input
+                                            visible="{contModel>/editMode}"
+                                            editable="{contModel>/editMode}"
+                                            maxLength="40"
+                                            type="Number"
+                                            value="{category>d_grade_standard_days}"/>
+                                    </table:template>
+                                </table:Column>                                
+                            </table:columns>
+                        </table:Table>
+                    </uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+            
+            <!-- <uxap:ObjectPageSection 
                 titleUppercase="false" 
                 title="{I18N>/CATEGORY} ({= (${category>/PdPartBaseActivityCategoryView})?${category>/PdPartBaseActivityCategoryView}.length:0})">
 				<uxap:subSections>
@@ -349,12 +519,7 @@
                                             <HBox
                                                 direction="Column">
                                                 <Text                                                    
-                                                    text="{category>category_name}" />
-                                                <!-- <Input
-                                                    visible="{contModel>/editMode}"
-                                                    editable="false"
-                                                    maxLength="40"
-                                                    value="{category>category_code}" /> -->
+                                                    text="{category>category_name}" />                                                
                                                 <Input
                                                     visible="{= ${category>_row_state_} === 'C' }"                                                     
                                                     id="searchCategoryInput"
@@ -434,7 +599,7 @@
                         </uxap:blocks>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
-			</uxap:ObjectPageSection>            
+			</uxap:ObjectPageSection> -->
 
 		</uxap:sections>
 		
