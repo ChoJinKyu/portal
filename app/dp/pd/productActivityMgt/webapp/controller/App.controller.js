@@ -55,7 +55,7 @@ sap.ui.define([
 			// Save the current route name
 			this.sCurrentRouteName = sRouteName;
 			this.sCurrentTenantId = oArguments.tenantId;
-			this.sCurrentControlOptionCode = oArguments.supplier;
+			this.sCurrentControlOptionCode = oArguments.controlOptionCode;
 		},
 
 		onStateChanged: function (oEvent) {

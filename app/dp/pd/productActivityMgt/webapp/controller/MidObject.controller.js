@@ -216,6 +216,9 @@ sap.ui.define([
 					title : "Comfirmation",
 					initialFocus : sap.m.MessageBox.Action.CANCEL,
 					onClose : function(sButton) {
+                        if(sButton === "CANCEL"){
+                            return;
+                        }
 						cancelEdit();
 					}
 				});
@@ -236,6 +239,7 @@ sap.ui.define([
 		 */
 		_onRoutedThisPage: function(oEvent){
             
+            console.log(oEvent);
             var oView = this.getView(),
                 that = this;
 
@@ -243,18 +247,29 @@ sap.ui.define([
                 var oArgs = oEvent.getParameter("arguments");
                 this._sTenantId = oArgs.tenantId;
                 this._sControlOptionCode = oArgs.controlOptionCode;
+                this._slayout = oArgs.layout;
 
                 //로그인 세션 작업완료시 수정
                 this._sLoginUserId = "TestUserId";
                 this._sLoginUserName = "TestUserName";
             }
 
-            console.log(oArgs);
             console.log(this._sTenantId);
             console.log(this._sControlOptionCode);
+            console.log(this._slayout);
+
             this.getView().setBusy(true);
+            
+            //Flexible 넓은 화면 레이아웃 일 때 Main List 화면 테이블의 컬럼을 줄이기 위한 설정
+            if(this._slayout === "TwoColumnsMidExpanded" ){
+                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("localUpdateDtmColumn").setVisible(false);
+                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("updateUserIdColumn").setVisible(false);
+            }else{
+                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("localUpdateDtmColumn").setVisible(true);
+                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("updateUserIdColumn").setVisible(true);
+            }
 
-
+            //Detail 화면 테이블 데이터 세팅
 			if(this._sControlOptionCode == "new"){
 
 				//It comes Add button pressed from the before page.
@@ -391,10 +406,11 @@ sap.ui.define([
                     CUType = "C";
                 }
             }              
+            console.log(oMasterData.active_flag); 
 
             var activeFlg = "false";
 
-            if (oMasterData.active_flag === true) {
+            if (oMasterData.active_flag === "true") {
                 activeFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
             };
 

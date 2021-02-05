@@ -129,7 +129,7 @@
                         </t:template>
                     </t:Column>
 
-                    <t:Column hAlign="Center">
+                    <t:Column id="localUpdateDtmColumn" hAlign="Center">
                         <Text text="{I18N>/UPDATE} {I18N>/DATE_TIME}" />
                         <t:template>
                             <Text text="{
@@ -139,7 +139,7 @@
                         </t:template>
                     </t:Column>
 
-                    <t:Column hAlign="Center">
+                    <t:Column id="updateUserIdColumn" hAlign="Center">
                         <Text text="{I18N>/UPDATE_USER_ID}" />
                         <t:template>
                             <Text text="{list>update_user_id}" ></Text>  
