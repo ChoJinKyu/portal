@@ -10,10 +10,10 @@ SELECT
     , ifnull((select USER_LOCAL_NAME from CM_HR_EMPLOYEE where EMPLOYEE_NUMBER=b.CREATE_USER_ID),'-') create_user_name 
     , ifnull((select USER_LOCAL_NAME from CM_HR_EMPLOYEE where EMPLOYEE_NUMBER=b.CREATE_USER_ID),'-')||'['||b.CREATE_USER_ID||']' create_user
     , TO_VARCHAR(b.LOCAL_UPDATE_DTM,'YYYY-MM-DD') last_update_date 
-    ,CM_GET_CODE_NAME_FUNC(a.tenant_id, 'DP_MD_ITEM_TYPE', a.mold_item_type_code, 'KO') mold_item_type_name
-    ,CM_GET_CODE_NAME_FUNC(a.tenant_id, 'DP_MD_PROD_TYPE', a.mold_production_type_code, 'KO') mold_production_type_name
-    ,CM_GET_CODE_NAME_FUNC(a.tenant_id, 'DP_MD_MOLD_SPEC_STATUS', b.mold_spec_status_code, 'KO') mold_spec_status_name
-    ,CM_GET_CODE_NAME_FUNC(a.tenant_id, 'DP_MD_PROGRESS_STATUS_LOCAL', a.mold_progress_status_code, 'KO') mold_progress_status_name
+    ,CM_GET_CODE_NAME_FUNC(a.tenant_id, 'DP_MD_ITEM_TYPE', a.mold_item_type_code, c.language_code) mold_item_type_name
+    ,CM_GET_CODE_NAME_FUNC(a.tenant_id, 'DP_MD_PROD_TYPE', a.mold_production_type_code, c.language_code) mold_production_type_name
+    ,CM_GET_CODE_NAME_FUNC(a.tenant_id, 'DP_MD_MOLD_SPEC_STATUS', b.mold_spec_status_code, c.language_code) mold_spec_status_name
+    ,CM_GET_CODE_NAME_FUNC(a.tenant_id, 'DP_MD_PROGRESS_STATUS_LOCAL', a.mold_progress_status_code, c.language_code) mold_progress_status_name
     ,trim(ifnull(a.family_part_number_1,'')||' '||ifnull(a.family_part_number_2,'')||' '||ifnull(a.family_part_number_3,'')||' '||ifnull(a.family_part_number_4,'')||' '||ifnull(a.family_part_number_5,'')) family_part_numbers
     ,ifnull((select USER_LOCAL_NAME from CM_HR_EMPLOYEE where EMPLOYEE_NUMBER=a.receipt_confirmed_user_empno),'-')||'['||b.CREATE_USER_ID||']' receipt_confirmed_user_name
     ,( case when b.inspection_flag = false then (select inspection_date from dp_md_schedule where mold_id=a.mold_id and mold_develope_date_type_code='P')
@@ -164,4 +164,7 @@ from dp_md_mst a
 left join dp_md_spec b
 on a.tenant_id=b.tenant_id
 and a.mold_id=b.mold_id
+
+join cm_spp_user_session_view c
+on a.tenant_id=c.tenant_id
 ;
