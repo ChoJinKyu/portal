@@ -156,12 +156,12 @@
 
 
                         <VBox>
-                            <Label text="Gategory Dialog(Single)" labelFor="searchGategoryInput"></Label>
+                            <Label text="Category Dialog(Single)" labelFor="searchCategoryInput"></Label>
                                 <Input 
-                                    id="searchGategoryInput"
-                                    placeholder="Gategory Dialog(Single)"
+                                    id="searchCategoryInput"
+                                    placeholder="Category Dialog(Single)"
                                     showValueHelp="true"
-                                    valueHelpRequest=".onDialogGategoryPress"/>
+                                    valueHelpRequest=".onDialogCategoryPress"/>
                                 <layoutData>
                                     <layout:GridData 
                                         moveForward="XL1 L1 M1 S1"
@@ -169,12 +169,12 @@
                                 </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Gategory Dialog(Multi)" labelFor="searchGategoryMultiInput"></Label>
+                            <Label text="Category Dialog(Multi)" labelFor="searchCategoryMultiInput"></Label>
                                 <MultiInput 
-                                    id="searchGategoryMultiInput"
-                                    placeholder="Gategory Dialog(Multi)"
+                                    id="searchCategoryMultiInput"
+                                    placeholder="Category Dialog(Multi)"
                                     showValueHelp="true" 
-                                    valueHelpRequest=".onDialogMultiGategoryPress">
+                                    valueHelpRequest=".onDialogMultiCategoryPress">
                                 </MultiInput>
                             <layoutData>
                                 <layout:GridData 
