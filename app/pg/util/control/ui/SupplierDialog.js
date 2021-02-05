@@ -101,6 +101,7 @@ sap.ui.define([
             this.oVendorPoolLvl1 = new ComboBox({
                 id: "vendorPoolLvl1Sp",
                 width : "90%",
+                enabled : false,
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -117,6 +118,7 @@ sap.ui.define([
             this.oVendorPoolLvl2 = new ComboBox({
                 id: "vendorPoolLvl2Sp",
                 width : "90%",
+                enabled : false,
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -133,6 +135,7 @@ sap.ui.define([
             this.oVendorPoolLvl3 = new ComboBox({
                 id: "vendorPoolLvl3Sp",
                 width : "90%",
+                enabled : false,
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -149,6 +152,7 @@ sap.ui.define([
             this.oVendorPoolLvl4 = new ComboBox({
                 id: "vendorPoolLvl4Sp",
                 width : "90%",
+                enabled : false,
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -165,6 +169,7 @@ sap.ui.define([
             this.oVendorPoolLvl5 = new ComboBox({
                 id: "vendorPoolLvl5Sp",
                 width : "90%",
+                enabled : false,
                 items: {
                     path: "/items",
                     template: new sap.ui.core.Item({
@@ -176,9 +181,9 @@ sap.ui.define([
 
             //Supplier 내부 팝업
             this.oSupplierCode = new MultiInput({
-                placeholder : this.getModel("I18N").getText("/SUPPLIER_CODE"),
+                //placeholder : this.getModel("I18N").getText("/SUPPLIER_CODE"),
                 showValueHelp : true,
-                valueHelpOnly : false,
+                valueHelpOnly : true,
                 valueHelpRequest: function (oEvent) {
                     this.oSupplierDialogPop = new SupplierDialogPop({
                         multiSelection: true,
@@ -190,7 +195,7 @@ sap.ui.define([
                     this.oSupplierDialogPop.setContentWidth("300px");
                     var sSearchObj = {};
                     sSearchObj.tanentId = "L2100"; // 세션임시값
-                     sSearchObj.languageCd = "KO";  // 세션임시값
+                    sSearchObj.languageCd = "KO";  // 세션임시값
                     sSearchObj.companyCode = that.oCompany.getValue();
                     sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey();
 
@@ -219,9 +224,9 @@ sap.ui.define([
 
             // Material 내부팝업
             this.oMaterialCode = new MultiInput({
-                placeholder : this.getModel("I18N").getText("/MATERIAL_CODE"),
+                //placeholder : this.getModel("I18N").getText("/MATERIAL_CODE"),
                 showValueHelp : true,
-                valueHelpOnly : false,
+                valueHelpOnly : true,
                 valueHelpRequest: function (oEvent) {
                     this.oMaterialDialogPop = new MaterialDialogPop({
                         multiSelection: true,
@@ -342,35 +347,35 @@ sap.ui.define([
                     items: [
                         new VBox({
                             items: [
-                                new Label({ text: "level1" }),
+                                new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") + " " + this.getModel("I18N").getText("/LEVEL1") }),
                                 this.oVendorPoolLvl1
                             ],
                             layoutData: new GridData({ span: "XL2 L2 M2 S12" })
                         }),
                         new VBox({
                             items: [
-                                new Label({ text: "level2" }),
+                                new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") + " " + this.getModel("I18N").getText("/LEVEL2") }),
                                 this.oVendorPoolLvl2
                             ],
                             layoutData: new GridData({ span: "XL2 L2 M2 S12" })
                         }),
                         new VBox({
                             items: [
-                                new Label({ text: "level3" }),
+                                new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") + " " + this.getModel("I18N").getText("/LEVEL3") }),
                                 this.oVendorPoolLvl3
                             ],
                             layoutData: new GridData({ span: "XL2 L2 M2 S12" })
                         }),
                         new VBox({
                             items: [
-                                new Label({ text: "level4" }),
+                                new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") + " " + this.getModel("I18N").getText("/LEVEL4") }),
                                 this.oVendorPoolLvl4
                             ],
                             layoutData: new GridData({ span: "XL2 L2 M2 S12" })
                         }),
                         new VBox({
                             items: [
-                                new Label({ text: "level5" }),
+                                new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") + " " + this.getModel("I18N").getText("/LEVEL5") }),
                                 this.oVendorPoolLvl5
                             ],
                             layoutData: new GridData({ span: "XL2 L2 M2 S12" })
@@ -524,9 +529,57 @@ sap.ui.define([
         // 운영조직 필드에 따른 vp level 설정
         loadOperationChange: function() {
             if (that.oOperationOrgComb.getSelectedKey() && that.oOperationUnitComb.getSelectedKey()) {
-                that.loadoVendorPoolLvlData();
-            }
-        },
+                var aFilters = [];
+                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, that.oSearchObj.tanentId));
+                aFilters.push(new Filter("org_code", FilterOperator.EQ, that.oOperationOrgComb.getSelectedKey()));
+                aFilters.push(new Filter("operation_unit_code", FilterOperator.EQ, that.oOperationUnitComb.getSelectedKey()));
+
+                ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolSearchService/").read("/vpMaxLevelView", {
+                        filters: aFilters,
+                        success: function (oData) {
+                            var aRecords = oData.results;
+                            if (aRecords.length !== 0){
+                                switch (aRecords[0].max_level) {
+                                    case "1" : 
+                                        that.oVendorPoolLvl2.oParent.setVisible(false);
+                                        that.oVendorPoolLvl3.oParent.setVisible(false);
+                                        that.oVendorPoolLvl4.oParent.setVisible(false);
+                                        that.oVendorPoolLvl5.oParent.setVisible(false);
+                                        break;
+                                    case "2" : 
+                                        that.oVendorPoolLvl2.oParent.setVisible(true);
+                                        that.oVendorPoolLvl3.oParent.setVisible(false);
+                                        that.oVendorPoolLvl4.oParent.setVisible(false);
+                                        that.oVendorPoolLvl5.oParent.setVisible(false);
+                                        break;
+                                    case "3" :
+                                        that.oVendorPoolLvl2.oParent.setVisible(true);
+                                        that.oVendorPoolLvl3.oParent.setVisible(true);
+                                        that.oVendorPoolLvl4.oParent.setVisible(false);
+                                        that.oVendorPoolLvl5.oParent.setVisible(false);
+                                        break;
+                                    case "4" : 
+                                        that.oVendorPoolLvl2.oParent.setVisible(true);
+                                        that.oVendorPoolLvl3.oParent.setVisible(true);
+                                        that.oVendorPoolLvl4.oParent.setVisible(true);
+                                        that.oVendorPoolLvl5.oParent.setVisible(false); 
+                                        break;
+                                    case "5" : 
+                                        that.oVendorPoolLvl2.oParent.setVisible(true);
+                                        that.oVendorPoolLvl3.oParent.setVisible(true);
+                                        that.oVendorPoolLvl4.oParent.setVisible(true);
+                                        that.oVendorPoolLvl5.oParent.setVisible(true);
+                                        break;
+                                }
+                            } else {
+                                that.oVendorPoolLvl2.oParent.setVisible(false);
+                                that.oVendorPoolLvl3.oParent.setVisible(false);
+                            }
+                        }.bind(this)
+                    }); 
+                }
+                this.loadoVendorPoolLvlData();
+            },
 
         // Data 조회
         loadData: function () {
@@ -664,11 +717,14 @@ sap.ui.define([
                             that.oVendorPoolLvl3.setModel(null);
                             that.oVendorPoolLvl4.setModel(null);
                             that.oVendorPoolLvl5.setModel(null);
+
+                            that.oVendorPoolLvl1.setEnabled(true);
+                            that.oVendorPoolLvl2.setEnabled(false);
+                            that.oVendorPoolLvl3.setEnabled(false);
+                            that.oVendorPoolLvl4.setEnabled(false);
+                            that.oVendorPoolLvl5.setEnabled(false);
                             
-                            that.oVendorPoolLvl2.oParent.setVisible(false);
-                            that.oVendorPoolLvl3.oParent.setVisible(false);
-                            that.oVendorPoolLvl4.oParent.setVisible(false);
-                            that.oVendorPoolLvl5.oParent.setVisible(false);
+                            //that.oVendorPoolLvl2.oParent.setVisible(false);
                             break;
 
                         case "2" : 
@@ -678,13 +734,13 @@ sap.ui.define([
                             that.oVendorPoolLvl5.setModel(null);
 
                             if(oModel.oData.items.length > 0) {
-                                that.oVendorPoolLvl2.oParent.setVisible(true);
+                                that.oVendorPoolLvl2.setEnabled(true);
                             } else {
-                                that.oVendorPoolLvl2.oParent.setVisible(false);
+                                that.oVendorPoolLvl2.setEnabled(false);
                             }
-                            that.oVendorPoolLvl3.oParent.setVisible(false);
-                            that.oVendorPoolLvl4.oParent.setVisible(false);
-                            that.oVendorPoolLvl5.oParent.setVisible(false);
+                            that.oVendorPoolLvl3.setEnabled(false);
+                            that.oVendorPoolLvl4.setEnabled(false);
+                            that.oVendorPoolLvl5.setEnabled(false);
                             break;
 
                         case "3" : 
@@ -693,12 +749,12 @@ sap.ui.define([
                             that.oVendorPoolLvl5.setModel(null);
                             
                             if(oModel.oData.items.length > 0) {
-                                that.oVendorPoolLvl3.oParent.setVisible(true);
+                                that.oVendorPoolLvl3.setEnabled(true);
                             } else {
-                                that.oVendorPoolLvl3.oParent.setVisible(false);
+                                that.oVendorPoolLvl3.setEnabled(false);
                             }
-                            that.oVendorPoolLvl4.oParent.setVisible(false);
-                            that.oVendorPoolLvl5.oParent.setVisible(false);
+                            that.oVendorPoolLvl4.setEnabled(false);
+                            that.oVendorPoolLvl5.setEnabled(false);
                             break;
 
                         case "4" : 
@@ -706,20 +762,20 @@ sap.ui.define([
                             that.oVendorPoolLvl5.setModel(null); 
                             
                             if(oModel.oData.items.length > 0) {
-                                that.oVendorPoolLvl4.oParent.setVisible(true);
+                                that.oVendorPoolLvl4.setEnabled(true);
                             } else {
-                                that.oVendorPoolLvl4.oParent.setVisible(false);
+                                that.oVendorPoolLvl4.setEnabled(false);
                             }
-                            that.oVendorPoolLvl5.oParent.setVisible(false);
+                            that.oVendorPoolLvl5.setEnabled(false);
                             break;
 
                         case "5" : 
                             that.oVendorPoolLvl5.setModel(oModel);
                             
                             if(oModel.oData.items.length > 0) {
-                                that.oVendorPoolLvl5.oParent.setVisible(true);
+                                that.oVendorPoolLvl5.setEnabled(true);
                             } else {
-                                that.oVendorPoolLvl5.oParent.setVisible(false);
+                                that.oVendorPoolLvl5.setEnabled(false);
                             }
                             break;
                     }    
@@ -738,11 +794,9 @@ sap.ui.define([
                 return;
             }
             
-            // 초기화면 안정화를 위한 초기설정
-            that.oVendorPoolLvl2.oParent.setVisible(false);
-            that.oVendorPoolLvl3.oParent.setVisible(false);
+            // 초기화면 설정 (기본레벨3)
             that.oVendorPoolLvl4.oParent.setVisible(false);
-            that.oVendorPoolLvl5.oParent.setVisible(false)
+            that.oVendorPoolLvl5.oParent.setVisible(false);
 
             // 앞 화면에서 넘어온 supplierCode가 있는 경우 화면에 넘김
             if (!!this.oSearchObj.supplierCode) {
