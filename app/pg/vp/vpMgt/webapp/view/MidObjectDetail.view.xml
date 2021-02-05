@@ -366,22 +366,41 @@
                                         <!-- <Text text="{suplist>supeval_control_flag}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/EVAL_CONTROL_START_DATE}" width="8em" filterProperty="supeval_control_start_date">
+                                <table:Column label="{I18N>/EVAL_CONTROL_START_DATE}" width="10em" filterProperty="supeval_control_start_date">
                                     <table:template>
                                         <!-- <DatePicker  
                                         placeholder="Date" 
                                         value="{path: 'suplist>/supeval_control_start_date',type: 'sap.ui.model.odata.type.DateTime'}" 
                                         valueFormat="yyyyMMdd" 
                                         displayFormat="yyyy-MM-dd"/> -->
-                                    <DatePicker 
-                                     value="{ path: 'suplist>supeval_control_start_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyyyMMdd' } }" />
+                                    <!-- <DatePicker 
+                                     value="{ path: 'suplist>supeval_control_start_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyyyMMdd' } }" 
+                                     displayFormat="yyyy-MM-dd"
+                                     valueFormat="yyyy-MM-dd"
+                                     /> -->
+                                     <DatePicker 
+                                     value="{ path: 'suplist>supeval_control_start_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                formatOptions: {
+                                                    pattern: 'yyyy-MM-dd'
+                                                } 
+                                            }" 
+                                     displayFormat="yyyy-MM-dd"
+                                     valueFormat="yyyy-MM-dd"
+                                     />
                                         <!-- <Text text="{suplist>supeval_control_start_date}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/EVAL_CONTROL_END_DATE}" width="8em" filterProperty="supeval_control_end_date">
+                                <table:Column label="{I18N>/EVAL_CONTROL_END_DATE}" width="10em" filterProperty="supeval_control_end_date">
                                     <table:template>
                                         <DatePicker 
-                                     value="{ path: 'suplist>supeval_control_end_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyyyMMdd' } }" />
+                                     value="{ path: 'suplist>supeval_control_end_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                formatOptions: {
+                                                    pattern: 'yyyy-MM-dd'
+                                                } 
+                                            }" 
+                                     displayFormat="yyyy-MM-dd"
+                                     valueFormat="yyyy-MM-dd"
+                                     />
                                         
                                     </table:template>
                                 </table:Column>

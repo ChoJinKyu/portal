@@ -233,22 +233,86 @@ sap.ui.define([
         onDialogTreeCreate: function () {
             var oView = this.getView();
 
-            if (!this.treeDialog) {
-                this.treeDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "pg.vp.vpMgt.view.DialogCreateTree",
-                    controller: this
-                }).then(function (tDialog) {
-                    // connect dialog to the root view of this component (models, lifecycle)
-                    oView.addDependent(tDialog);
-                    return tDialog;
-                });
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
+
+            // var aSearchFilters = [];
+
+
+            if (sSurffix === "S") {
+                var s_Operation_ORG_S = this.getView().byId("search_Operation_ORG_S").getSelectedKey();
+                var s_Operation_UNIT_S = this.getView().byId("search_Operation_UNIT_S").getSelectedKey();
+
+
+                if (s_Operation_ORG_S && s_Operation_ORG_S.length > 0 && s_Operation_UNIT_S && s_Operation_UNIT_S.length > 0) {
+
+                    if (!this.treeDialog) {
+                        this.treeDialog = Fragment.load({
+                            id: oView.getId(),
+                            name: "pg.vp.vpMgt.view.DialogCreateTree",
+                            controller: this
+                        }).then(function (tDialog) {
+                            // connect dialog to the root view of this component (models, lifecycle)
+                            oView.addDependent(tDialog);
+                            return tDialog;
+                        });
+                    }
+                    this.treeDialog.then(function (tDialog) {
+                        tDialog.open();
+                        this.onDialogTreeSearch();
+                        // this.onAfterDialog();
+                    }.bind(this));   
+                }
+                else {
+                    MessageToast.show("필수값을 입력 하세요.");
+                }
             }
-            this.treeDialog.then(function (tDialog) {
-                tDialog.open();
-                this.onDialogTreeSearch();
-                // this.onAfterDialog();
-            }.bind(this));
+            else if (sSurffix === "E") {
+
+                var s_Operation_ORG_E = this.getView().byId("search_Operation_ORG_E").getSelectedKey();
+                var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
+
+                if (s_Operation_ORG_E && s_Operation_ORG_E.length > 0 && s_Operation_UNIT_E && s_Operation_UNIT_E.length > 0) {
+
+                    if (!this.treeDialog) {
+                        this.treeDialog = Fragment.load({
+                            id: oView.getId(),
+                            name: "pg.vp.vpMgt.view.DialogCreateTree",
+                            controller: this
+                        }).then(function (tDialog) {
+                            // connect dialog to the root view of this component (models, lifecycle)
+                            oView.addDependent(tDialog);
+                            return tDialog;
+                        });
+                    }
+                    this.treeDialog.then(function (tDialog) {
+                        tDialog.open();
+                        this.onDialogTreeSearch();
+                        // this.onAfterDialog();
+                    }.bind(this));                    
+
+                }
+                else {
+                    MessageToast.show("필수값을 입력 하세요.");
+                }
+
+            }
+
+            // if (!this.treeDialog) {
+            //     this.treeDialog = Fragment.load({
+            //         id: oView.getId(),
+            //         name: "pg.vp.vpMgt.view.DialogCreateTree",
+            //         controller: this
+            //     }).then(function (tDialog) {
+            //         // connect dialog to the root view of this component (models, lifecycle)
+            //         oView.addDependent(tDialog);
+            //         return tDialog;
+            //     });
+            // }
+            // this.treeDialog.then(function (tDialog) {
+            //     tDialog.open();
+            //     this.onDialogTreeSearch();
+            //     // this.onAfterDialog();
+            // }.bind(this));
         },
 
         createTreePopupClose: function (oEvent) {
