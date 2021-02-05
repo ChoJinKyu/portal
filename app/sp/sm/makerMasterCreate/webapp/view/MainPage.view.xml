@@ -14,13 +14,14 @@
 	height="100%">
 
 <App id="idAppControl">
-        <Page id="mainPage" title="{I18N>/MAKER_MASTER}"
+        <Page id="mainPage" 
+            title="{I18N>/MAKER_MASTER} {= ${callByAppModel>/mode} === 'R' ? ${I18N>/DETAIL} : ${I18N>/REGISTER}}"
             titleLevel="H2"
-            showNavButton="true" navButtonType="Back"
+            showNavButton="true" navButtonType="{mainPageView>/navButtonType}"
             navButtonPress=".onNavigationBackPress"> 
             <content>
             <html:style>
-            .sapUiSizeCompact .sapUiFormEdit .forMakerMasterMessageStrip .sapMText  {
+             .sapUiSizeCompact .sapUiFormEdit .forMakerMasterMessageStrip .sapMText  {
                 min-height: 1rem !important;
                 padding-top: 0rem;
                 padding-bottom: 0rem;
@@ -44,10 +45,10 @@
                    <uxap:headerTitle>
                         <uxap:ObjectPageDynamicHeaderTitle visible="false">
                             <uxap:expandedHeading>
-                                <Title text="{mainPageView>/title}" wrapping="true" />
+                                <Title text="" wrapping="true" />
                             </uxap:expandedHeading>
                             <uxap:snappedHeading>
-                             <Title text="{mainPageView>/title}" wrapping="true" />
+                             <Title text="" wrapping="true" />
                             </uxap:snappedHeading>
                             <!-- <uxap:actions>
                                 <Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" />
@@ -409,7 +410,19 @@
                                             </VBox>
                                             <VBox>
                                                 <Label design="Bold" text="{I18N>/COMPANY_CLASS}" />
-                                                <Input id="input_company_class_name" value="{writeModel>/generalInfo/company_class_name}" visible="{mainPageView>/visible/isEditable}"/>
+                                                <ComboBox id="combobox_company_class_code" width="100%"  visible="{mainPageView>/visible/isEditable}"
+                                                        placeholder=" " 
+                                                        selectedKey="{writeModel>/generalInfo/company_class_code}" 
+                                                        items="{
+                                                        path: '/MakerCompanyClassCodeView',
+                                                        filters: [
+                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'}
+                                                        ]}"
+                                                    >
+                                                    <items>
+                                                        <core:Item key="{code}" text="[{code}] {code_name}"/>
+                                                    </items>
+                                                </ComboBox>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/company_class_name',
                                                         type:'sap.ui.model.odata.type.String'
@@ -488,7 +501,7 @@
                         <uxap:ObjectPageSection titleUppercase="false" visible="{mainPageView>/visible/section_change_history}" title="{I18N>/CHANGE_HISTORY}">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
-                                <Label text="sprint2 개발제외" />
+                                <Label text="sprint3 공통모듈 개발후 적용예정" />
                                     <!-- Participating Supplier Table -->
                                     <!-- <table:Table id="pritemTable"
                                             selectionMode="None"
@@ -630,7 +643,7 @@
                         <uxap:ObjectPageSection titleUppercase="false" visible="{mainPageView>/visible/section_approval_line}" title="{I18N>/APPROVAL_LINE}">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
-                                <Label text="sprint2 개발제외" />
+                                <Label text="sprint3 공통모듈 개발후 적용예정" />
                                 </uxap:ObjectPageSubSection>
                             </uxap:subSections>
                         </uxap:ObjectPageSection>

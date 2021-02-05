@@ -30,6 +30,7 @@ sap.ui.define([
             if(callByAppModel){
                 //this.getView().setModel(callByAppModel, "callByAppModel"); 
                 this.getOwnerComponent().setModel(callByAppModel, "callByAppModel");
+                this.getView().getParent().oContainer.setModel(undefined, "callByAppModel");
             }else{
                 // 화면 구분 코드(MM : Maker Mater, MR : Maker Registration, MA : 타모듈  등록)  -> gubun
                 // 생성/보기 모드 코드(C : 생성, R : 보기) -> mode
