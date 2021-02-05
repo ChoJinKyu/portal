@@ -94,7 +94,6 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTablePersoRefresh : function() {
-            console.log("onMainTablePersoRefresh");
 			MainListPersoService.resetPersData();
 			this._oTPC.refresh();
 		},
@@ -246,7 +245,7 @@ sap.ui.define([
 			// init and activate controller
 			// 개인화 - UI 테이블의 경우만 해당
             this._oTPC = new TablePersoController({
-                customDataKey: "productActivityMgt",
+                customDataKey: "persoKey",
                 persoService: MainListPersoService            
             }).setTable(this.byId("mainTable"));
         },

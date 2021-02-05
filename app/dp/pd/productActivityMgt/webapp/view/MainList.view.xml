@@ -95,54 +95,55 @@
                 <t:columns>
 
                     <t:Column hAlign="Center">
-                        <Text text="{I18N>/PRODUCT_ACTIVITY_CODE}" />
+                        <Text text="{I18N>/PRODUCT_ACTIVITY_CODE}" wrapping="false"/>
                         <t:template>
-                            <Text text="{list>product_activity_code}" ></Text>  
+                            <Text text="{list>product_activity_code}" wrapping="false"></Text>  
                         </t:template>
                     </t:Column>
 
                     <t:Column hAlign="Center">
-                        <Text text="{I18N>/PRODUCT_ACTIVITY_NAME}" />
+                        <Text text="{I18N>/PRODUCT_ACTIVITY_NAME}" wrapping="false"/>
                         <t:template>
-                            <Text text="{list>activity_name}" ></Text>  
+                            <Text text="{list>activity_name}" wrapping="false"></Text>  
                         </t:template>
                     </t:Column>
 
                     <t:Column hAlign="Center">
-                        <Text text="{I18N>/PRODUCT_DESC}" />
+                        <Text text="{I18N>/PRODUCT_DESC}" wrapping="false"/>
                         <t:template>
-                            <Text text="{list>description}" ></Text>  
+                            <Text text="{list>description}" wrapping="false"></Text>  
+                        </t:template>
+                    </t:Column>
+
+                    <t:Column hAlign="Center" width="auto">
+                        <Text text="{I18N>/SEQUENCE}" wrapping="false"/>
+                        <t:template>
+                            <Text text="{list>sequence}" wrapping="false"></Text>  
                         </t:template>
                     </t:Column>
 
                     <t:Column hAlign="Center">
-                        <Text text="{I18N>/SEQUENCE}" />
+                        <Text text="{I18N>/STATUS}" wrapping="false"/>
                         <t:template>
-                            <Text text="{list>sequence}" ></Text>  
-                        </t:template>
-                    </t:Column>
-
-                    <t:Column hAlign="Center">
-                        <Text text="{I18N>/STATUS}" />
-                        <t:template>
-                            <Text text="{= ${list>active_flag} === true ? 'Active' : 'Inactive'}"/>  
+                            <Text text="{= ${list>active_flag} === true ? 'Active' : 'Inactive'}" wrapping="false"/>  
                         </t:template>
                     </t:Column>
 
                     <t:Column id="localUpdateDtmColumn" hAlign="Center">
-                        <Text text="{I18N>/UPDATE} {I18N>/DATE_TIME}" />
+                        <Text text="{I18N>/UPDATE} {I18N>/DATE_TIME}" wrapping="false"/>
                         <t:template>
                             <Text text="{
                                         path: 'list>local_update_dtm',
                                         formatter: '.dateFormatter.toDateTimeString'
-                                    }"/>  
+                                    }"
+                                    wrapping="false"/>  
                         </t:template>
                     </t:Column>
 
                     <t:Column id="updateUserIdColumn" hAlign="Center">
-                        <Text text="{I18N>/UPDATE_USER_ID}" />
+                        <Text text="{I18N>/UPDATE_USER_ID}" wrapping="false"/>
                         <t:template>
-                            <Text text="{list>update_user_id}" ></Text>  
+                            <Text text="{list>update_user_id}" wrapping="false" ></Text>  
                         </t:template>
                     </t:Column>
 
