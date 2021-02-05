@@ -67,43 +67,35 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "division");
 
             /*
-                화면 변경
+                화면 변이 
             */
-           Fragment.load({
-                    id: this.getView().getId() + "12__2",
-					name: "tmp.detailSpecEntry.view.L2101_Retrieve_DP0401-501_SCTT001_title",
-					controller: this          
-            }).then(function(oFragment){
-                      var oPageSubSection = this.getView().byId("page");
-                      oPageSubSection.destroyTitle();    
-                      oPageSubSection.setTitle(oFragment);
+            var input = {};
+            //tenant_id, templateId, sectionId
+            input.tenantId = 'L2101';
+            input.templateId = 'SCTS001';
+            input.sectionId = "page";
+            input.target = "title";
+            //title (조회조건 Form) 로드
+            this._loadTemplate(input);
 
-
-                    
-                        
-            }.bind(this));
-
-            Fragment.load({
-                    id: this.getView().getId(),
-                    name: "tmp.detailSpecEntry.view.L2101_Retrieve_DP0401-501_SCTG001_Grid",
-                    controller: this          
-            }).then(function(oFragment){
-                    var oPageSubSection = this.getView().byId("page");
-                        oPageSubSection.setContent(oFragment);
-                        this._doInitSearch();
-            }.bind(this));
+            //content (Grid) 로드
+            var input2={
+                tenantId: "L2101",
+                templateId: "SCTG001",
+                sectionId: "page",
+                target: "content" 
+            };
             
+            this._loadTemplate(input2);
 
-            
             
 			this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
-
-            
 			this._doInitTablePerso();
         },
         
+        
         onAfterRendering : function () {
-			this.byId("pageSearchButton").firePress();
+			//this.byId("pageSearchButton").firePress();
 			return;
         },
 
@@ -128,10 +120,10 @@ sap.ui.define([
             /** Date */
             var today = new Date();
             
-            this.getView().byId("searchDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
-            this.getView().byId("searchDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-            this.getView().byId("searchDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
-            this.getView().byId("searchDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            this.getView().byId("MOLD_SPEC_REGISTER_DATES").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            this.getView().byId("MOLD_SPEC_REGISTER_DATES").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            this.getView().byId("MOLD_SPEC_REGISTER_DATEE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()-90));
+            this.getView().byId("MOLD_SPEC_REGISTER_DATEE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
         },
 
         setDivision: function(companyCode){
@@ -223,7 +215,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageSearchButtonPress : function (oEvent) {
-			if (oEvent.getParameters().refreshButtonPressed) {
+     			if (oEvent.getParameters().refreshButtonPressed) {
 				// Search field's 'refresh' button has been pressed.
 				// This is visible if you select any master list item.
 				// In this case no new search is triggered, we only
@@ -231,8 +223,8 @@ sap.ui.define([
 				this.onRefresh();
 			} else {
 
-                this.validator.validate( this.byId('pageSearchFormE'));
-                if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
+                this.validator.validate( this.byId('SCTS001E'));
+                if(this.validator.validate( this.byId('SCTS001S') ) !== true) return;
 
                 var aSearchFilters = this._getSearchStates();
 				this._applySearch(aSearchFilters);
@@ -252,7 +244,6 @@ sap.ui.define([
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
 				sPath = oSelectedItem.getBindingContext("dpMdMstSpecViewG").getPath(),
 				oRecord = this.getModel("dpMdMstSpecViewG").getProperty(sPath);
-
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
 				tenantId: oRecord.tenant_id,
@@ -285,35 +276,6 @@ sap.ui.define([
             var self = this;
             var oModel = this.getModel('orgMap');
             oModel.setTransactionModel(this.getModel('purOrg'));
-
-            //alert("Hello");
-
-
-            
-
-            // oModel.read("/Pur_Org_Type_Mapping", {
-            //     filters: [
-            //         new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
-            //         new Filter("process_type_code", FilterOperator.EQ, 'DP05') //금형 DP05
-            //     ],
-            //     success: function(oData){
-
-            //         var oModelDiv = self.getModel('division');
-            //         oModelDiv.setTransactionModel(self.getModel('purOrg'));
-            //         oModelDiv.read("/Pur_Operation_Org", {
-            //             filters: [
-            //                 new Filter("tenant_id", FilterOperator.EQ, 'L2600'),
-            //                 new Filter("org_type_code", FilterOperator.EQ, oData.results[0].org_type_code)
-            //             ],
-            //             sorters: [
-            //                 new Sorter("org_code", false)
-            //             ],
-            //             success: function(oData){
-                            
-            //             }
-            //         });
-            //     }
-            // });
 		},
 
 		/**
@@ -329,7 +291,6 @@ sap.ui.define([
 			oModel.read("/MoldMasterSpec", {
 				filters: aSearchFilters,
 				success: function(oData){
-                    debugger
 					oView.setBusy(false);
 				}
 			});
@@ -342,8 +303,8 @@ sap.ui.define([
             var aCompany = this.getView().byId("searchCompany"+sSurffix).getSelectedKeys();
             var aDivision = this.getView().byId("searchDivision"+sSurffix).getSelectedKeys();
 
-            var sDateFrom = this.getView().byId("searchDate"+sSurffix).getDateValue();
-            var sDateTo = this.getView().byId("searchDate"+sSurffix).getSecondDateValue();
+            var sDateFrom = this.getView().byId("MOLD_SPEC_REGISTER_DATE"+sSurffix).getDateValue();
+            var sDateTo = this.getView().byId("MOLD_SPEC_REGISTER_DATE"+sSurffix).getSecondDateValue();
 
 			var sModel = this.getView().byId("searchModel").getValue().trim();
             var	sPart = this.getView().byId("searchPart").getValue().trim();
@@ -587,9 +548,7 @@ sap.ui.define([
 
             }.bind(this));
 
-            
-
-            // debugger
+        
 
             var oToken = new Token();
 			oToken.setKey(this._oInputModel.getSelectedKey());
@@ -678,7 +637,87 @@ sap.ui.define([
             var day = date.getDate();                   //d
             day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
             return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
-        }
+        },
+
+        /*
+                화면 변경
+            */
+            // Fragment.load({
+            //         id: this.getView().getId(),
+			// 		name: "tmp.detailSpecEntry.view.L2101_Retrieve_DP0401-501_SCTS001SearchForm",
+			// 		controller: this          
+            // }).then(function(oFragment){
+            //         var oPageSubSection = this.getView().byId("page");
+            //         oPageSubSection.destroyTitle();    
+            //         oPageSubSection.setTitle(oFragment);   
+            //         Fragment.load({
+            //             id: this.getView().getId(),
+            //             name: "tmp.detailSpecEntry.view.L2101_Retrieve_DP0401-501_SCTG001_Grid",
+            //             controller: this          
+            //         }).then(function(oFragment){
+            //             var oPageSubSection = this.getView().byId("page");
+            //                 oPageSubSection.setContent(oFragment);
+            //         }.bind(this));
+
+            //         this._doInitSearch();                   
+            // }.bind(this));
+
+        _loadTemplate: function(input){
+            var inp = {};
+            inp.TENANT_ID = input.tenantId;
+            inp.TEMPLATE_ID = input.templateId;
+
+            var that = this;
+
+            $.ajax({
+                url: "tmp/SampleSolutionized/webapp/srv-api/odata/v4/tmp.TmpMgrService/RetrieveTemplateSample",
+                type: "POST",
+                data : JSON.stringify(inp),
+                contentType: "application/json",
+                success: function(data){
+                    var templatePath = data.TEMPLATE_PATH;
+                    that._loadFragment(templatePath, input);
+                },
+                error: function(e){
+                    
+                }
+            });
+        },
+
+        _loadFragment: function (sFragmentName, input) {
+            Fragment.load({
+                id: this.getView().getId(),
+                name: "tmp.detailSpecEntry.view." + sFragmentName,
+                controller: this
+            }).then(function(oFragment){
+                var oSection = this.byId(input.sectionId);
+                var target = input.target;
+                switch (target){
+                    case "content":
+                        var func = function(v){
+                            oSection.setContent(v);
+                        }.bind(this);
+                        break;
+                    case "heading" : 
+                        var func = function(v){
+                            oSection.setHeading(v);
+                        }.bind(this);
+                        break;
+                    case "title" :
+                        var func = function(v){
+                            oSection.setTitle(v);
+                            this._doInitSearch();
+                        }.bind(this);
+                        break;
+                    case "block" :
+                        var func = function(v){
+                            oSection.addBlock(v);
+                        }.bind(this);
+                        break;
+                }
+                func(oFragment);
+            }.bind(this));
+		}
 
 	});
 });

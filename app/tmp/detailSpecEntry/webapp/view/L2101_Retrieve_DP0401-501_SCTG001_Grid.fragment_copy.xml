@@ -8,11 +8,10 @@
 			growingThreshold="10"
 			class="sapFDynamicPageAlignContent" 
 			updateFinished=".onMainTableUpdateFinished"
-			itemPress="onItemPress"
-			items="{dpMdMstSpecViewG>/MoldMasterSpec}"
-            width="auto" 
+            itemPress="onItemPress"
             visibleRowCountMode="Auto"
-			fixedColumnCount="3">
+			items="{dpMdMstSpecViewG>/MoldMasterSpec}"
+			width="auto">
 			<headerToolbar>
 				<OverflowToolbar>
 					<Title text="{I18N>/LIST} ({= ${dpMdMstSpecView>/MoldMasterSpec}.length || 0})" level="H2"/>

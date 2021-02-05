@@ -349,13 +349,6 @@ sap.ui.define([
             var tenantId = this._sTenantId;
             debugger
             this._loadTemplate(tenantId, templateId, sectionId);
-
-            // Grid Section Sample
-            var oPageSubSection5 = this.byId("pageSubSection5");
-            this._loadFragment("L2600_test_grid", function(oFragment){
-				oPageSubSection5.removeAllBlocks();
-				oPageSubSection5.addBlock(oFragment);
-            })  
         },
         _loadTemplate: function(tenant_id, templateId, sectionId){
             var input = {};

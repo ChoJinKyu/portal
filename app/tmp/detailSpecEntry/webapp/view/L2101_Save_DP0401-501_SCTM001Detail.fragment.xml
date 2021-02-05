@@ -2,6 +2,225 @@
 <VBox class="sapUiSmallMargin">
 <form:SimpleForm editable="false" layout="ResponsiveGridLayout">
 <form:content>
+	<VBox height="3.5rem"><Label text="USE MATERIAL VALUE"/>
+		<Input value="{tmpCcDpMdSpec>/use_material_value}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="INSPECTION FLAG" required="true"/>
+		<Switch state="{tmpCcDpMdSpec>/inspection_flag}" customTextOn="Yes" customTextOff="No" enabled="true" />
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="ASSEMBLY APPROVAL FLAG" required="true"/>
+		<Switch state="{tmpCcDpMdSpec>/assembly_approval_flag}" customTextOn="Yes" customTextOff="No" enabled="true" />
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="REQUEST LIFE SHOT COUNT"/>
+		<Input value="{tmpCcDpMdSpec>/request_life_shot_count}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="CAVITY PROCESS QTY"/>
+		<Input value="{tmpCcDpMdSpec>/cavity_process_qty}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="DIE FORM"/>
+		<Input value="{tmpCcDpMdSpec>/die_form}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD HOT RUNNER QTY"/>
+		<Input value="{tmpCcDpMdSpec>/mold_hot_runner_qty}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD SIZE"/>
+		<Input value="{tmpCcDpMdSpec>/mold_size}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD WEIGHT" required="true"/>
+		<Input value="{tmpCcDpMdSpec>/mold_weight}" required="true"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="HOT RUNNER MAKER NAME"/>
+		<Input value="{tmpCcDpMdSpec>/hot_runner_maker_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD SIZE 2"/>
+		<Input value="{tmpCcDpMdSpec>/mold_size_2}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="ORDER QTY" required="true"/>
+		<Input value="{tmpCcDpMdSpec>/order_qty}" required="true"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD OUTFORM SPEC NAME"/>
+		<Input value="{tmpCcDpMdSpec>/mold_outform_spec_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD RUNNEROUT SPEC NAME"/>
+		<Input value="{tmpCcDpMdSpec>/mold_runnerout_spec_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD UNDERCUT SPEC NAME"/>
+		<Input value="{tmpCcDpMdSpec>/mold_undercut_spec_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD HOT RUNNER SPEC NAME"/>
+		<Input value="{tmpCcDpMdSpec>/mold_hot_runner_spec_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD GATE SPEC NAME"/>
+		<Input value="{tmpCcDpMdSpec>/mold_gate_spec_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD RETURN TYPE NAME"/>
+		<Input value="{tmpCcDpMdSpec>/mold_return_type_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD FORMOUT METHOD"/>
+		<Input value="{tmpCcDpMdSpec>/mold_formout_method}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD SAMPLE QTY"/>
+		<Input value="{tmpCcDpMdSpec>/mold_sample_qty}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="SPARE PART EYEBOLT COUNT"/>
+		<Input value="{tmpCcDpMdSpec>/spare_part_eyebolt_count}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="SPARE PART EJSLAVE COUNT"/>
+		<Input value="{tmpCcDpMdSpec>/spare_part_ejslave_count}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="SPARE PART EJECTOR PIN COUNT"/>
+		<Input value="{tmpCcDpMdSpec>/spare_part_ejector_pin_count}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="SPARE PART HEATER COUNT"/>
+		<Input value="{tmpCcDpMdSpec>/spare_part_heater_count}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="SPARE PART SPEAKER CORE COUNT"/>
+		<Input value="{tmpCcDpMdSpec>/spare_part_speaker_core_count}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="SPARE PART ETC COUNT"/>
+		<Input value="{tmpCcDpMdSpec>/spare_part_etc_count}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD CAVITY MATERIAL NAME"/>
+		<Input value="{tmpCcDpMdSpec>/mold_cavity_material_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD CORE MATERIAL NAME"/>
+		<Input value="{tmpCcDpMdSpec>/mold_core_material_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD SLIDE CORE MATERIAL NAME"/>
+		<Input value="{tmpCcDpMdSpec>/mold_slide_core_material_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD SLOPE MATERIAL NAME"/>
+		<Input value="{tmpCcDpMdSpec>/mold_slope_material_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="TOP CIRCLE MATERIAL NAME"/>
+		<Input value="{tmpCcDpMdSpec>/top_circle_material_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="BOTTOM CIRCLE MATERIAL NAME"/>
+		<Input value="{tmpCcDpMdSpec>/bottom_circle_material_name}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="CYCLE TIME"/>
+		<Input value="{tmpCcDpMdSpec>/cycle_time}"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD SPEC REGISTER DATE"/>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
+	<VBox height="3.5rem"><Label text="MOLD TYPE CODE" required="true"/>
+		<Select   width="100%" forceSelection="false"			selectedKey="{tmpCcDpMdSpec>/mold_type_code}"
+			items="{
+						path : 'util>/Code',
+						filters : [
+							{path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
+							{path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+						]
+					}"
+			editable="true">
+			<core:Item key="{util>code}" text="{util>code_name}" />
+		</Select>
+		<layoutData>
+			<l:GridData span="XL4 L4 M4 S6" />
+		</layoutData>
+	</VBox>
 </form:content>
 </form:SimpleForm>
 </VBox>
