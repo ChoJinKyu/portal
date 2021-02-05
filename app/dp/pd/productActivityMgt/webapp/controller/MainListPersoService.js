@@ -28,7 +28,7 @@ sap.ui.define(["jquery.sap.global"],
                 visible: true
             },            
             {
-                id: "partBaseActivityMgt-mainList-mainColumnActiveFlag",
+                id: "partBaseActivityMgt-mainList-mainColumnActiveFlagVal",
                 order: i++,
                 text: "Status",
                 visible: true

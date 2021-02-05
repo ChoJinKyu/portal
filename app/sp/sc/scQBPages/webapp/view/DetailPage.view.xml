@@ -120,11 +120,18 @@
                                                             <Label  text="Bid Style:" class="nameTitle " />
                                                             <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="{=${NegoHeaders>/negotiation_style_code}==='Blind' ? 1 : 0 }" 
                                                                 visible="{=${propInfo>/isEditMode}}" 
-                                                                >
-                                                                <!-- buttons="{Sc_Negotiation_Style_Map}"
-                                                                <RadioButton text="{negotiation_style_name}" /> -->
-                                                                <RadioButton text="Sealed (Purchaser : X,Supplier :X)" />
-                                                                <RadioButton text="Blind (Purchaser : O,Supplier :X)" />
+                                                                buttons="{
+                                                                    path: '/Sc_Negotiation_Style_Map', 
+                                                                    templateShareable:true, 
+                                                                    sorter: {
+                                                                        path: 'negotiation_style_code',
+                                                                        descending: false
+                                                                    }}"
+                                                                    >
+                                                                    <!-- filters: [{path: 'nego_type_code', operator: 'EQ', value1: ${NegoHeaders>/nego_type_code} }], -->
+                                                                <RadioButton key="{negotiation_style_code}" text="{negotiation_style_name}" />
+                                                                <!-- <RadioButton text="Sealed (Purchaser : X,Supplier :X)" />
+                                                                <RadioButton text="Blind (Purchaser : O,Supplier :X)" /> -->
                                                             </RadioButtonGroup>
                                                             <Text text="{NegoHeaders>/negotiation_style_code}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                                         
@@ -627,13 +634,12 @@
                                                             <Label text="Specific Supplier" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                        <!-- placeholder="Choose codes from the ValueHelp" -->
-                                                                    <MultiInput id="multiinput_supplierwithorg_code" visible="{=${propInfo>/isEditMode}}" 
+                                                                    <MultiInput id="multiinput_bp_code" visible="{=${propInfo>/isEditMode}}" 
                                                                         value="{NegoHeaders>specific_supplier_count}"
                                                                         showValueHelp="true" valueHelpRequest=".onSupplierPress" textAlign="Center">
-                                                                        <tokens>
+                                                                        <!-- <tokens>
                                                                             <Token key="{key}" text="{text}" />
-                                                                        </tokens>
+                                                                        </tokens> -->
                                                                     </MultiInput>
                                                                     <!-- <Input valueHelpRequest=".onSupplierPress" visible="{=${propInfo>/isEditMode}}" value="{NegoHeaders>specific_supplier_count}" showValueHelp="true" valueHelpOnly="true" type="Number" ></Input> -->
                                                                     <Text text="{NegoHeaders>specific_supplier_count}" visible="{=!${propInfo>/isEditMode}}" />
@@ -662,10 +668,7 @@
                                                             <Label text="통화"  />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <!-- <ComboBox value="{NegoHeaders>currency_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center">
-
-                                                                    </ComboBox> -->
-                                                                    <lib-m:CodeComboBox id="searchCurrencyCombo" width="100%" showSecondaryValues="true" 
+                                                                    <!-- <lib-m:CodeComboBox id="searchCurrencyCombo" width="100%" showSecondaryValues="true" 
                                                                         keyField="currency_code" textField="currency_code_name" 
                                                                         useEmpty="true" emptyText="전체" visible="{=${propInfo>/isEditMode}}"
                                                                         items="{
@@ -680,7 +683,20 @@
                                                                             serviceName: 'cm.util.CommonService',
                                                                             entityName: 'Currency'
                                                                         }">
-                                                                    </lib-m:CodeComboBox>
+                                                                    </lib-m:CodeComboBox> -->
+                                                                    <ComboBox items="{
+                                                                            path: 'common>/Currency', 
+                                                                            templateShareable:true, 
+                                                                            filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}],
+                                                                            sorter: {
+                                                                                path: 'currency_code',
+                                                                                descending: false
+                                                                            }}" 
+                                                                        showSecondaryValues= "true"
+                                                                        selectedKey="{NegoHeaders>currency_code}" visible="{=${propInfo>/isEditMode}}"
+                                                                        width="100%" required="true">
+                                                                        <core:ListItem key="{common>currency_code}" text="{common>currency_code_name}" additionalText="{common>currency_code}"/>
+                                                                    </ComboBox>
                                                                     <Text text="{NegoHeaders>currency_code}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>

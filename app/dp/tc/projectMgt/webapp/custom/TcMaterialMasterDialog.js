@@ -23,6 +23,7 @@ sap.ui.define([
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "70em"},
                 closeWhenApplied: {type: "boolean", group: "Misc", defaultValue: true},
+                loadWhenOpen: {type: "boolean", group: "Misc", defaultValue: true},
                 keyField: { type: "string", group: "Misc", defaultValue: "material_code" },
                 textField: { type: "string", group: "Misc", defaultValue: "material_desc" },
                 searchCode: { type: "string", group: "Misc", defaultValue: ""},
@@ -155,9 +156,9 @@ sap.ui.define([
                 sDesc = this.oSearchDesc.getValue(),
                 sSpec = this.oSearchSpec.getValue();
 
-            if(!sCode && !sDesc && !sSpec) {
-                return;
-            }
+            // if(!sCode && !sDesc && !sSpec) {
+            //     return;
+            // }
 
             var aFilters = [
                     new Filter("tenant_id", FilterOperator.EQ, this.getProperty("tenantId")),

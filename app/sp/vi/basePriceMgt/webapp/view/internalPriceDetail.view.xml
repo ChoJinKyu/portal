@@ -49,7 +49,7 @@
                     <ObjectStatus title="{I18N>/APPROVAL_NO}" text=""/>
                     <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/create_user_id}"/>
                     <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/>
-                    <ObjectStatus title="사번본부" text="{detailModel>/bizunit_name}"/>
+                    <ObjectStatus title="{I18N>/BUSINESS_UNIT}" text="{detailModel>/bizunit_name}"/>
                 </layout:VerticalLayout>
                 <!-- base Info 끝 -->
 
@@ -66,29 +66,17 @@
                     <HBox>
                         <co:MicroProcessFlow>
                             <co:content>   
-                                <!-- <co:MicroProcessFlowItem 
-                                    state="{= ${detailModel>/approval_status_code} === '10' ? 'Error' : 'None'}" 
-                                    stepWidth="5rem" 
-                                    icon="{= ${detailModel>/approval_status_code} === '10' ? 'sap-icon://circle-task' : 'sap-icon://complete'}" />
-                                <co:MicroProcessFlowItem 
-                                    state="{= ${detailModel>/approval_status_code} === '20' ? 'Error' : 'None'}" 
-                                    stepWidth="5rem"
-                                    icon="{= ${detailModel>/approval_status_code} === '20' ? 'sap-icon://circle-task' : (${detailModel>/approval_status_code} === '30' ? 'sap-icon://complete' : '')}" />
-                                <co:MicroProcessFlowItem 
-                                    state="{= ${detailModel>/approval_status_code} === '30' ? 'Error' : 'None'}" 
-                                    stepWidth="5rem"
-                                    icon="{= ${detailModel>/approval_status_code} === '30' ? 'sap-icon://circle-task' : ''}" /> -->
-                                <co:MicroProcessFlowItem state="None" stepWidth="5rem" icon="sap-icon://circle-task" />
-                                <co:MicroProcessFlowItem state="None" stepWidth="5rem" icon="sap-icon://circle-task" />
-                                <co:MicroProcessFlowItem state="None" stepWidth="5rem" icon="sap-icon://circle-task" />
-                                <co:MicroProcessFlowItem state="None" stepWidth="5rem" icon="sap-icon://circle-task" />
+                                <co:MicroProcessFlowItem state="{= ${rootModel>/selectedData/approve_status_code} === 'DR' ? 'Error' : 'None'}" stepWidth="5rem" icon="sap-icon://circle-task" />
+                                <co:MicroProcessFlowItem state="{= ${rootModel>/selectedData/approve_status_code} === 'AR' ? 'Error' : 'None'}" stepWidth="5rem" icon="sap-icon://circle-task" />
+                                <co:MicroProcessFlowItem state="{= ${rootModel>/selectedData/approve_status_code} === 'IA' ? 'Error' : 'None'}" stepWidth="5rem" icon="sap-icon://circle-task" />
+                                <co:MicroProcessFlowItem state="{= ${rootModel>/selectedData/approve_status_code} === 'AP' ? 'Error' : 'None'}" stepWidth="5rem" icon="sap-icon://circle-task" />
                             </co:content>
                         </co:MicroProcessFlow>
                     </HBox>
                     <HBox>
-                        <Text text="{I18N>/TEMP_SAVE}" width="7rem" />
-                        <Text text="결재요청" width="6rem" />
-                        <Text text="결재중" width="5rem" />
+                        <Text text="{I18N>/TEMP_SAVE}" width="6rem" />
+                        <Text text="{I18N>/APPROVAL_REQUEST}" width="6rem" />
+                        <Text text="{I18N>/APPROVAL_PROGRESS}" width="5rem" />
                         <Text text="{I18N>/APPROVED}" width="6rem" textAlign="Center" />                        
                     </HBox>
 				</layout:VerticalLayout>
@@ -310,7 +298,7 @@
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/BASE_PRICE}" textAlign="Center" width="100%" required="true"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>base_price}"/>
+                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>base_price}" change=".onOnlyNumber(${detailModel>base_price})"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">

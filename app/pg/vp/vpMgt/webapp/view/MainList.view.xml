@@ -291,7 +291,7 @@
 
                                 <ComboBox id="search_Sup_Type" selectedKey=""  width="auto">
                                         <core:Item key="Potential" text="Potential"/>
-                                        <core:Item key="Formal" text="Formal"/>                                                            
+                                        <core:Item key="Qualified" text="Qualified"/>                                                            
                                     </ComboBox>  
                                 <layoutData>
                                     <layout:GridData
@@ -344,27 +344,27 @@
 
                     <table:columns>
                             
-                            <table:Column id="table_1lv" label="1레벨" width="12rem" filterProperty="vendor_pool_level1_name" >
+                            <table:Column id="table_1lv" label="레벨1" width="12rem" filterProperty="vendor_pool_level1_name" >
                                 <table:template>
                                     <Text text="{list>vendor_pool_level1_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column id="table_2lv" label="2레벨" width="12rem" filterProperty="vendor_pool_level2_name" >
+                            <table:Column id="table_2lv" label="레벨2" width="12rem" filterProperty="vendor_pool_level2_name" >
                                 <table:template>
                                     <Text text="{list>vendor_pool_level2_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column id="table_3lv" label="3레벨" width="12rem" filterProperty="vendor_pool_level3_name" >
+                            <table:Column id="table_3lv" label="레벨3" width="12rem" filterProperty="vendor_pool_level3_name" >
                                 <table:template>
                                     <Text text="{list>vendor_pool_level3_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column id="table_4lv" label="4레벨" width="12rem" filterProperty="vendor_pool_level4_name" >
+                            <table:Column id="table_4lv" label="레벨4" width="12rem" filterProperty="vendor_pool_level4_name" >
                                 <table:template>
                                     <Text text="{list>vendor_pool_level4_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column id="table_5lv" label="5레벨" width="12rem" filterProperty="vendor_pool_level5_name" >
+                            <table:Column id="table_5lv" label="레벨5" width="12rem" filterProperty="vendor_pool_level5_name" >
                                 <table:template>
                                     <Text text="{list>vendor_pool_level5_name}" wrapping="false" />
                                 </table:template>

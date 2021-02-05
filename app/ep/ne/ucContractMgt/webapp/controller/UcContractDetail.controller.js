@@ -155,8 +155,6 @@ sap.ui.define([
                 statusCode = "711010";
             }
 
-            var input = {};
-            var inputData = {};
             var mstData = oViewModel.getProperty("/mst");
             var dtlData = oViewModel.getProperty("/dtl");
             var supplierData = oViewModel.getProperty("/supplier");
@@ -164,23 +162,52 @@ sap.ui.define([
 
             mstData["ep_item_class_name"] = mstData["ep_item_class_code"].split(":")[1];
             mstData["ep_item_class_code"] = mstData["ep_item_class_code"].split(":")[0];
+            mstData["contract_write_date"] = null;
+            //mstData["net_price_contract_start_date"] = new Date(mstData["net_price_contract_start_date"]).toLocaleString();
+
+            supplierData.map(d => {
+                d["distrb_rate"] = (d["distrb_rate"] ? parseInt(d["distrb_rate"]) : null);
+                return d;
+            });  
+
+            dtlData.map(d => {
+                d["material_apply_flag"] = (d["material_apply_flag"] == "Y" ? true : false);
+                d["labor_apply_flag"] = (d["labor_apply_flag"] == "Y" ? true : false);
+                return d;
+            });            
 
             extraData.map(d => {
                 d["extra_class_name"] = d["extra_class_number"].split(":")[1];
                 d["extra_class_number"] = d["extra_class_number"].split(":")[0];
                 d["extra_name"] = d["extra_number"].split(":")[1];
                 d["extra_number"] = d["extra_number"].split(":")[0];
+                d["apply_extra_rate"] = (d["apply_extra_rate"] ? parseInt(d["apply_extra_rate"]) : null);
+                d["base_extra_rate"] = (d["base_extra_rate"] ? parseInt(d["base_extra_rate"]) : null);
                 return d;
             });
 
-            inputData = {
-                "mst": mstData,
-                "dtl": dtlData,
-                "supplier": supplierData,
-                "extra": extraData
-            }
+            var input = {
+                inputData: {
+                    approvalMstType: [],
+                    approvalDtlType: [],
+                    approvalSupplierType: [],
+                    approvalExtraType: []
+                }
+            };   
+            
+            input.inputData.approvalMstType = [mstData];
+            input.inputData.approvalDtlType = dtlData;
+            input.inputData.approvalSupplierType = supplierData;
+            input.inputData.approvalExtraType = extraData;
 
-            input.inputData = inputData;
+            // inputData = {
+            //     "approvalMstType": mstData,
+            //     "approvalDtlType": dtlData,
+            //     "approvalSupplierType": supplierData,
+            //     "approvalExtraType": extraData
+            // }
+
+            // input.inputData = inputData;
 
             console.log("input====", input.inputData);
 
@@ -189,11 +216,9 @@ sap.ui.define([
             // 	return;
             // }
 
-            return;
-
             if (this.validator.validate(this.byId("editBox")) !== true) return;
 
-            var url = "ep/ne/ucContractMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SaveLoiPublishProc";
+            var url = "ep/ne/ucContractMgt/webapp/srv-api/odata/v4/ep.UcContractMgtV4Service/UcApprovalMstCudProc";
 
             MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
                 title: this.getModel("I18N").getText("/SAVE"),
@@ -208,10 +233,16 @@ sap.ui.define([
                             contentType: "application/json",
                             success: function (data) {
 
-                                //console.log("#########Success#####", data.value[0].savedkey);
+                                console.log("#########Success#####", data.approvalMstType);
                                 oView.setBusy(false);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                                 that.validator.clearValueState(that.byId("editBox"));
+
+                                oViewModel.setProperty("/mst", data.approvalMstType[0]);
+                                oViewModel.setProperty("/dtl", data.approvalDtlType);
+                                oViewModel.setProperty("/supplier", data.approvalSupplierType);
+                                oViewModel.setProperty("/extra", data.approvalExtraType);  
+                                that._toShowMode();                              
 
                             },
                             error: function (e) {
@@ -510,6 +541,7 @@ sap.ui.define([
                 mstModel["net_price_contract_status_name"] = "작성중";
                 mstModel["create_user_id"] = "100003";
                 mstModel["update_user_id"] = "100003";
+                mstModel["row_state"] = "C";
                 // mstModel["org_type_code"] = "PL";
 
                 oViewModel.setProperty("/mst", mstModel);
@@ -527,13 +559,34 @@ sap.ui.define([
 
                 var sObjectPath = "/UcApprovalMstDetailView(tenant_id='" + this._tenantId + "',company_code='" + this._companyCode + "',net_price_contract_document_no='" + this._netPriceContractDocumentNo + "',net_price_contract_degree='" + this._netPriceContractDegree + "')";
                 oView.setBusy(true);
-                oRootModel.read(sObjectPath, {
-                    success: function (oData) {
-                        console.log("oData====", oData);
-                        oView.setBusy(false);
-                        that._toShowMode();
-                    }
+                var mstDataLoading = new Promise(function (resolve, reject) {
+                    oRootModel.read(sObjectPath, {
+                        success: function (oData) {
+                            resolve(oData);
+                        },
+                        error: function (data) {
+                            reject(data);
+                        }
+                    });
                 });
+
+                mstDataLoading.then(function (oData) {
+                    console.log("oData====", oData);
+                    oView.setBusy(false);
+                    that._toShowMode();
+                }, function (data) {
+                    console.log("error====", data);
+                });                
+
+                // var sObjectPath = "/UcApprovalMstDetailView(tenant_id='" + this._tenantId + "',company_code='" + this._companyCode + "',net_price_contract_document_no='" + this._netPriceContractDocumentNo + "',net_price_contract_degree='" + this._netPriceContractDegree + "')";
+                // oView.setBusy(true);
+                // oRootModel.read(sObjectPath, {
+                //     success: function (oData) {
+                //         console.log("oData====", oData);
+                //         oView.setBusy(false);
+                //         that._toShowMode();
+                //     }
+                // });
 
             }
         },

@@ -163,6 +163,37 @@ public class UcQuotationMgtV4Service implements EventHandler {
         List<Object[]> batchH = new ArrayList<Object[]>();
         if(!v_inHeaders.isEmpty() && v_inHeaders.size() > 0){
             for(UcMasterData v_inRow : v_inHeaders){
+                log.info("master ---->  tenant_id="+v_inRow.get("tenant_id"));
+                log.info("master ---->  company_code="+v_inRow.get("company_code"));
+                log.info("master ---->  const_quotation_number="+v_inRow.get("const_quotation_number"));
+                log.info("master ---->  org_code="+v_inRow.get("org_code"));
+                log.info("master ---->  org_name="+v_inRow.get("org_name"));
+                log.info("master ---->  const_name="+v_inRow.get("const_name"));
+                log.info("master ---->  ep_item_code="+v_inRow.get("ep_item_code"));
+                log.info("master ---->  const_start_date="+v_inRow.get("const_start_date"));
+                log.info("master ---->  const_end_date="+v_inRow.get("const_end_date"));
+                log.info("master ---->  quotation_status_code="+v_inRow.get("quotation_status_code"));
+                log.info("master ---->  quotation_status_name="+v_inRow.get("quotation_status_name"));
+                log.info("master ---->  supplier_code="+v_inRow.get("supplier_code"));
+                log.info("master ---->  buyer_empno="+v_inRow.get("buyer_empno"));
+                log.info("master ---->  buyer_name="+v_inRow.get("buyer_name"));
+                log.info("master ---->  const_person_empno="+v_inRow.get("const_person_empno"));
+                log.info("master ---->  const_person_name="+v_inRow.get("const_person_name"));
+                log.info("master ---->  purchasing_department_code="+v_inRow.get("purchasing_department_code"));
+                log.info("master ---->  purchasing_department_name="+v_inRow.get("purchasing_department_name"));
+                log.info("master ---->  pr_number="+v_inRow.get("pr_number"));
+                log.info("master ---->  quotation_write_date="+v_inRow.get("quotation_write_date"));
+                log.info("master ---->  remark="+v_inRow.get("remark"));
+                log.info("master ---->  currency_code="+v_inRow.get("currency_code"));
+                log.info("master ---->  attch_group_number="+v_inRow.get("attch_group_number"));
+                log.info("master ---->  supplier_write_flag="+v_inRow.get("supplier_write_flag"));
+                log.info("master ---->  completion_flag="+v_inRow.get("completion_flag"));
+                log.info("master ---->  completion_date="+v_inRow.get("completion_date"));
+                log.info("master ---->  facility_person_empno="+v_inRow.get("facility_person_empno"));
+                log.info("master ---->  facility_person_name="+v_inRow.get("facility_person_name"));
+                log.info("master ---->  facility_department_code="+v_inRow.get("facility_department_code"));
+                log.info("master ---->  completion_attch_group_number="+v_inRow.get("completion_attch_group_number"));
+                log.info("master ---->  row_state="+v_inRow.get("row_state"));
                 Object[] values = new Object[] {
                     v_inRow.get("tenant_id                  "),	
                     v_inRow.get("company_code               "), 
@@ -224,6 +255,7 @@ public class UcQuotationMgtV4Service implements EventHandler {
                 log.info("quotation_quantity="+v_inRow.get("quotation_quantity"));
                 log.info("unit="+v_inRow.get("unit"));
                 log.info("currency_code="+v_inRow.get("currency_code"));
+                log.info("currency_name="+v_inRow.get("currency_name"));
                 log.info("material_apply_flag="+v_inRow.get("material_apply_flag"));
                 log.info("labor_apply_flag="+v_inRow.get("labor_apply_flag"));
                 log.info("net_price_change_allow_flag="+v_inRow.get("net_price_change_allow_flag"));
@@ -239,6 +271,7 @@ public class UcQuotationMgtV4Service implements EventHandler {
                 log.info("net_price_contract_degree="+v_inRow.get("net_price_contract_degree"));
                 log.info("net_price_contract_item_number="+v_inRow.get("net_price_contract_item_number"));
                 log.info("supplier_item_create_flag="+v_inRow.get("supplier_item_create_flag"));
+                log.info("row_state="+v_inRow.get("row_state"));
 
                 Object[] values = new Object[] {
                     v_inRow.get("tenant_id                       "),

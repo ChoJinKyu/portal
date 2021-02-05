@@ -990,7 +990,7 @@ BEGIN
 										--,SUPEVAL_RESTRICT_START_DATE		 
 										--,SUPEVAL_RESTRICT_END_DATE          
 										--,INP_CODE                          
-										,SUPPLIER_RM_CONTROL_FLAG		     ,SUPPLIER_BASE_PORTION_RATE         
+										,SUPPLIER_RM_CONTROL_FLAG		     ,SUPPLIER_BASE_PORTION_RATE         ,VENDOR_POOL_MAPPING_USE_FLAG
 										--,APPROVAL_NUMBER --승인된 DTL의 APPR번호 재 요청할 때도 값을 넘겨야하는지
 										,LOCAL_CREATE_DTM                    ,CREATE_USER_ID         		
 										,SYSTEM_CREATE_DTM                  ,LOCAL_UPDATE_DTM                    ,UPDATE_USER_ID
@@ -1011,7 +1011,8 @@ BEGIN
 										--,TRIM( ' ' FROM loop_sup.SUPEVAL_RESTRICT_END_DATE )
 										--,TRIM( ' ' FROM loop_sup.INP_CODE )
 										,IFNULL( loop_sup.SUPPLIER_RM_CONTROL_FLAG, FALSE)
-										,loop_sup.SUPPLIER_BASE_PORTION_RATE
+                                        ,loop_sup.SUPPLIER_BASE_PORTION_RATE
+                                        ,true
 										--,loop_sup.APPROVAL_NUMBER
 										,NOW()
 										,I_USER_ID

@@ -36,7 +36,18 @@
                         <ColumnListItem >
                             <cells>
                                 <Text text="Currency"/>
-                                <ComboBox id="comboBoxCurrency" value="" ></ComboBox>
+                                <ComboBox items="{
+                                        path: 'common>/Currency', 
+                                        templateShareable:true, 
+                                        filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}],
+                                        sorter: {
+                                            path: 'currency_code',
+                                            descending: false
+                                        }}" 
+                                    showSecondaryValues= "true"
+                                    width="100%" required="true">
+                                    <core:ListItem key="{common>currency_code}" text="{common>currency_code_name}" additionalText="{common>currency_code}"/>
+                                </ComboBox>
                             </cells>
                         </ColumnListItem>
                         <ColumnListItem >

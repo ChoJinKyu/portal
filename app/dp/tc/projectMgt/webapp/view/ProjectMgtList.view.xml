@@ -235,6 +235,7 @@
                             items="{
                                 path: 'util>/Code',
                                 filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                     {path: 'group_code', operator: 'EQ', value1: 'DC_TC_PRODUCT_GROUP_CODE'}
                                 ],
                                 sorter: { path: 'sort_no'}
@@ -257,6 +258,7 @@
                             items="{
                                 path: 'util>/Code',
                                 filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                     {path: 'group_code', operator: 'EQ', value1: 'DP_TC_PROJECT_STATUS_CODE'}
                                 ],
                                 sorter: { path: 'sort_no'}
@@ -291,6 +293,7 @@
                             items="{
                                 path: 'util>/Code',
                                 filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                     {path: 'group_code', operator: 'EQ', value1: 'DP_TC_PROJECT_GRADE_CODE'}
                                 ],
                                 sorter: { path: 'sort_no'}
@@ -313,6 +316,7 @@
                             items="{
                                 path: 'util>/Code',
                                 filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                     {path: 'group_code', operator: 'EQ', value1: 'DP_TC_DEVELOP_EVENT_CODE'}
                                 ],
                                 sorter: { path: 'sort_no'}

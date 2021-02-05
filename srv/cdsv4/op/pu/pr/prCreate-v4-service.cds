@@ -66,6 +66,8 @@ service PrCreateV4Service {
         asset_number : String;
         order_number : String;
         service_desc : String;
+        org_name : String;
+        org_name_desc : String;
     };
 
     type PrCreateSaveType : {

@@ -118,7 +118,7 @@ BEGIN
          WHEN MATCHED THEN
 	   UPDATE
 	      SET ppl.MATERIAL_REQM_QUANTITY = it.MATERIAL_REQM_QUANTITY
-	        , ppl.MATERIAL_REQM_DIFF_QUANTITY = CASE WHEN it.MATERIAL_REQM_QUANTITY = ppl.MATERIAL_REQM_QUANTITY
+/*	        , ppl.MATERIAL_REQM_DIFF_QUANTITY = CASE WHEN it.MATERIAL_REQM_QUANTITY = ppl.MATERIAL_REQM_QUANTITY
 	                                                 THEN null
 	                                                 ELSE it.MATERIAL_REQM_QUANTITY - ppl.MATERIAL_REQM_QUANTITY
 	                                            END
@@ -126,6 +126,7 @@ BEGIN
 	                                      THEN null
 	                                      ELSE 'Req_Qty_Chg' --cm_code_dtl:DP_TC_CHANGE_INFO_CODE.Req_Qty_Chg(소요량변경)
 	                                 END
+*/                                     
             , ppl.LOCAL_UPDATE_DTM = CURRENT_TIMESTAMP
             , ppl.UPDATE_USER_ID = I_USER_ID
             , ppl.SYSTEM_UPDATE_DTM = CURRENT_TIMESTAMP
@@ -141,10 +142,8 @@ BEGIN
             , UOM_CODE
             , MATERIAL_REQM_QUANTITY
             , BUYER_EMPNO
-            --, SUPPLIER_CODE
             , CHANGE_INFO_CODE
             , DIRECT_REGISTER_FLAG
-            --, MAPPING_ID
             , LOCAL_CREATE_DTM
             , LOCAL_UPDATE_DTM
             , CREATE_USER_ID

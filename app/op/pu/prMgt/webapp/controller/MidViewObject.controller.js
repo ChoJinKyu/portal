@@ -70,7 +70,7 @@ sap.ui.define([
             this.setModel(new ManagedModel(), "mst");            
 
             oTransactionManager = new TransactionManager();
-            oTransactionManager.addDataModel(this.getModel("mst"));
+            oTransactionManager.addDataModel(this.getModel("mst"));            
               
         },
         
@@ -95,9 +95,7 @@ sap.ui.define([
                 this._fnGetMasterData(oArgs);
             }
             // 텍스트 에디터
-            //this.setRichEditor();	
-            var oPage = this.getView().byId("page");     //Get Hold of page
-            oPage._scrollTo(0);           
+            //this.setRichEditor();	           
         },
         
         /**
@@ -209,6 +207,10 @@ sap.ui.define([
                 this._fnSetRichEditor(oDetailModel.getProperty("/mst/approval_contents"));   
                 //this.oApprovalRichTextEditor.setValue(oDetailModel.getProperty("/mst/approval_contents") );
             }
+
+            var oPage = this.getView().byId("page");     //Get Hold of page
+                oPage._scrollTo(0);           
+            oPage.setSelectedSection("pageSectionMain");
 
         },
         

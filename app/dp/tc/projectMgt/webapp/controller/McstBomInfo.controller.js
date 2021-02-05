@@ -214,6 +214,7 @@ sap.ui.define([
                     title: this.I18N.getText("/MATERIAL_CODE"),
                     multiSelection: false,
                     closeWhenApplied: false,
+                    loadWhenOpen: false,
                     tenantId: this.getModel("detailModel").getProperty("/tenant_id"),
                     company_code: this.getModel("detailModel").getProperty("/company_code"),
                     org_type_code: this.getModel("detailModel").getProperty("/org_type_code"),

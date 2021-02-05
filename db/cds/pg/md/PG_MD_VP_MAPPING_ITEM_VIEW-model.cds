@@ -28,18 +28,20 @@ entity Md_Vp_Mapping_Item_View(language_code : String) {
         node_id                      : String      @title : 'node id';
         parent_id                    : String      @title : 'parent node id';
         path                         : String      @title : 'path';
+        vendor_pool_path_code        : String(240) @title : 'VP Code Chain';
+        vendor_pool_path_name        : String(400) @title : 'VP Code Name Chain';
         hierarchy_rank               : Integer64;
         hierarchy_tree_size          : Integer64;
         hierarchy_parent_rank        : Integer64;
         hierarchy_level              : Integer;
         hierarchy_root_rank          : Integer64;
         drill_state                  : String      @title : 'expanded/leaf';
+        child_drill_state            : String      @title : 'expanded/leaf';
         language_cd                  : String(2)   @title : '언어코드';
-        confirmed_status_code        : String(30)   @title : '확정상태코드';
-        confirmed_status_name        : String(100)   @title : '확정상태명';
+        confirmed_status_code        : String(30)  @title : '확정상태코드';
+        confirmed_status_name        : String(100) @title : '확정상태명';
         max_mapping_cnt              : Integer64   @title : '협력사전체Mapping최대Count';
         vendor_pool_item_mapping_cnt : Integer64   @title : '협력사Item매핑총Count';
-        
         spmd_attr_info_001           : String(1000)@title : 'spmd_attr_info_001';
         spmd_attr_info_002           : String(1000)@title : 'spmd_attr_info_002';
         spmd_attr_info_003           : String(1000)@title : 'spmd_attr_info_003';

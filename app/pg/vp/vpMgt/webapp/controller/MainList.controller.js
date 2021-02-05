@@ -927,7 +927,7 @@ sap.ui.define([
             var svendor_pool_desc = this.getView().byId("pop_vendor_pool_desc").getValue().trim();
 
             if (pop_d_state == "leaf") {
-                var srepr_department_code = this.getView().byId("pop_repr_department_name").getValue().trim();
+                var srepr_department_code = this.getView().byId("pop_repr_department_code").getValue().trim();
                 var sindustry_class_code = this.getView().byId("pop_industry_class_code").getSelectedKey();
                 var sinp_type_code = this.getView().byId("pop_inp_type_code").getSelectedKey();
                 var splan_base = this.getView().byId("pop_plan_base").getSelectedKey();
@@ -992,8 +992,8 @@ sap.ui.define([
                     , vendor_pool_local_name: svendor_pool_local_name
                     , vendor_pool_english_name: svendor_pool_english_name
                     , vendor_pool_desc: svendor_pool_desc
-                    // , repr_department_code: srepr_department_code
-                    , repr_department_code: "11010002"
+                    , repr_department_code: srepr_department_code
+                    // , repr_department_code: "11010002"
                     , industry_class_code: sindustry_class_code
                     , inp_type_code: sinp_type_code
                     , mtlmob_base_code: splan_base
@@ -1007,8 +1007,6 @@ sap.ui.define([
                     // "local_update_dtm": "2020-11-09T00:00:00Z",
                     , dom_oversea_netprice_diff_rate: parseFloat(sdom_oversea_netprice_diff_rate)
                     , domestic_net_price_diff_rate: parseFloat(sdomestic_net_price_diff_rate)
-
-
                 });
 
                 inputInfo.inputData.vpMst = vpMstList;

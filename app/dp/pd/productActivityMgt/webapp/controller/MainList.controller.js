@@ -141,7 +141,7 @@ sap.ui.define([
         },
         
         onCreateActivity : function(){
-
+            console.log("onCreateActivity");
             var that = this;
             var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
 			this.getRouter().navTo("midPage", {

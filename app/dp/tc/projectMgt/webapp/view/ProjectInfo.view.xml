@@ -18,12 +18,12 @@
         showFooter="true">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
+				<uxap:heading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBackPress" />
                         <Title text="{I18N>/PROJECT} {I18N>/INFORMATION}" wrapping="true"/>
                     </HBox>
-				</uxap:expandedHeading>
+				</uxap:heading>
                 <uxap:navigationActions>
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>

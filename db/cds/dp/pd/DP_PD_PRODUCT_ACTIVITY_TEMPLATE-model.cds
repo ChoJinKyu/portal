@@ -25,6 +25,7 @@ entity Pd_Product_Activity_Template_View {
         description           : String;
         sequence              : Decimal;
         active_flag           : Boolean;
+        active_flag_val       : String;
         update_user_id        : String;
         local_update_dtm      : DateTime;
 }

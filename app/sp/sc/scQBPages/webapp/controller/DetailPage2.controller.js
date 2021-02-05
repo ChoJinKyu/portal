@@ -891,7 +891,7 @@ sap.ui.define([
                 oView.byId("tableLines").setSelectedIndex(-1);
             },
             onPartNoPress(e){
-                debugger;
+                
                 var materialItem;
                 this._partnoIndex = e.oSource.getParent().getParent().getIndex();
                 

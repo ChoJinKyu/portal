@@ -363,7 +363,7 @@ sap.ui.define([
 
             //if(!that.getModel("BPVIEW").getProperty("/supplierType")){
             oServiceModel.read("/SupplierTypeView", {
-                // filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
+                filters: cFilters,
                 sorters: [new Sorter("code", true)],
                 success: function (oData) {
                     var aRecords = oData.results;
@@ -374,7 +374,7 @@ sap.ui.define([
             //}
 
             oServiceModel.read("/BusinessPartnerRoleCodeView", {
-                // filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
+                 filters: cFilters,
                 sorters: [new Sorter("code", true)],
                 success: function (oData) {
                     var aRecords = oData.results;
@@ -384,7 +384,7 @@ sap.ui.define([
             })
 
             oServiceModel.read("/BusinessPartnerRegistrationProgressView", {
-                // filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
+                 filters: cFilters,
                 sorters: [new Sorter("code", true)],
                 success: function (oData) {
                     var aRecords = oData.results;
@@ -394,7 +394,7 @@ sap.ui.define([
             });
 
             oServiceModel.read("/BusinessPartnerStatusView", {
-                // filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
+                 filters: cFilters,
                 sorters: [new Sorter("code", true)],
                 success: function (oData) {
                     var aRecords = oData.results;

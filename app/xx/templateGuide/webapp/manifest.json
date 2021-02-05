@@ -76,7 +76,7 @@
             "ext.lib": "../../../lib",
             "ext.lib.fragment": "./fragment",
             "ext.lib.fragment.controller": "./fragmentController",
-            "ext.lib.js": "./js",
+            "ext.lib.js": "../../../lib/thirdParty",
             "templateGuideView" : "./view",
             "templateGuideController" : "./controller"
         },

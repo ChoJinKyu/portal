@@ -190,7 +190,7 @@
                                 minScreenWidth="Desktop"
                                 demandPopin="true"
                                 hAlign="Center">
-                                <Label text="Response Value To( ) " required="true" />
+                                <Label text="Response Value To(  ) " required="true" />
                             </Column>
                             <Column
                                 visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}"
@@ -241,7 +241,7 @@
                                         value="2015-11-23"
                                         valueFormat="yyyy-MM-dd"
                                         displayFormat="long"/>
-                                    <Input value="50"
+                                    <Input value=""
                                         visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}" />
 
 
@@ -256,10 +256,10 @@
 
 
                                         
-                                    <Input value="사업자등록증"
+                                    <Input value=""
                                         visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}" />
-                                    <Input value="50"
-                                        visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}" />
+                                    <Input value=""
+                                        visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}" /> 
 
 
                                     <!-- <Text text="4" />

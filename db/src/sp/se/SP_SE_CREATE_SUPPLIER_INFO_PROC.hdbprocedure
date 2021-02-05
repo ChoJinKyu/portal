@@ -13,20 +13,25 @@ BEGIN
 
     DELETE FROM SP_SE_EVAL_SUPPLIER
     WHERE  (TENANT_ID,
-    	    COMPANY_CODE,
+            COMPANY_CODE,
+            ORG_TYPE_CODE,
+            ORG_CODE,
     	    SUPPLIER_CODE) IN (SELECT SD.TENANT_ID,
-							          SM.COMPANY_CODE,
+                                      SD.COMPANY_CODE,
+                                      SD.ORG_TYPE_CODE,
+                                      SD.ORG_CODE,
 							          SD.SUPPLIER_CODE
 							   FROM   PG_VP_VENDOR_POOL_SUPPLIER_DTL SD,
 							          PG_VP_VENDOR_POOL_MST VP,
 							 	      PG_VP_SUPPLIER_MST_VIEW SM
 							   WHERE  SD.TENANT_ID = VP.TENANT_ID
-							   AND    SD.COMPANY_CODE = VP.COMPANY_CODE
-							   AND    SD.ORG_TYPE_CODE = VP.ORG_TYPE_CODE
-							   AND    SD.ORG_CODE = VP.ORG_CODE
+							   --AND    SD.COMPANY_CODE = VP.COMPANY_CODE
+							   --AND    SD.ORG_TYPE_CODE = VP.ORG_TYPE_CODE
+							   --AND    SD.ORG_CODE = VP.ORG_CODE
 							   AND    SD.VENDOR_POOL_CODE = VP.VENDOR_POOL_CODE
-							   AND    SD.TENANT_ID = SM.TENANT_ID
-							   AND    SD.ORG_CODE = SM.BIZUNIT_CODE
+                               AND    SD.TENANT_ID = SM.TENANT_ID
+                               AND    SD.COMPANY_CODE = SM.COMPANY_CODE
+							   AND    SD.ORG_CODE = SM.ORG_CODE
 							   AND    SD.SUPPLIER_CODE = SM.SUPPLIER_CODE
 							   AND    SM.LANGUAGE_CD = 'KO'
 							   AND   (VP.REGULAR_EVALUATION_FLAG = FALSE
@@ -37,13 +42,17 @@ BEGIN
 							   AND    EXISTS (SELECT 1
 									          FROM   SP_SE_EVAL_SUPPLIER
 									          WHERE  TENANT_ID = SD.TENANT_ID
-									          AND    COMPANY_CODE = SM.COMPANY_CODE
+                                              AND    COMPANY_CODE = SD.COMPANY_CODE
+                                              AND    ORG_TYPE_CODE = SD.ORG_TYPE_CODE
+                                              AND    ORG_CODE = SD.ORG_CODE
 									          AND    SUPPLIER_CODE = SD.SUPPLIER_CODE))
 	;
     
     INSERT INTO SP_SE_EVAL_SUPPLIER
         (TENANT_ID,
          COMPANY_CODE,
+         ORG_TYPE_CODE,
+         ORG_CODE,
          SUPPLIER_CODE,
          SUPPLIER_GROUP_CODE,
          SUPPLIER_GROUP_NAME,
@@ -55,7 +64,9 @@ BEGIN
          SYSTEM_CREATE_DTM,
          SYSTEM_UPDATE_DTM)
     SELECT SD.TENANT_ID,
-	       SM.COMPANY_CODE,
+           SD.COMPANY_CODE,
+           SD.ORG_TYPE_CODE,
+           SD.ORG_CODE,
 	       SD.SUPPLIER_CODE,
 	       NULL SUPPLIER_GROUP_CODE,
 	       NULL SUPPLIER_GROUP_NAME,
@@ -71,14 +82,15 @@ BEGIN
 	       PG_VP_SUPPLIER_MST_VIEW SM
 	WHERE  SD.TENANT_ID = VP.TENANT_ID
 	AND    SD.COMPANY_CODE = VP.COMPANY_CODE
-	AND    SD.ORG_TYPE_CODE = VP.ORG_TYPE_CODE
-	AND    SD.ORG_CODE = VP.ORG_CODE
+	--AND    SD.ORG_TYPE_CODE = VP.ORG_TYPE_CODE
+	--AND    SD.ORG_CODE = VP.ORG_CODE
 	AND    SD.VENDOR_POOL_CODE = VP.VENDOR_POOL_CODE
 	AND    VP.REGULAR_EVALUATION_FLAG = TRUE
 	AND    VP.VENDOR_POOL_USE_FLAG = TRUE
 	AND    SD.VENDOR_POOL_MAPPING_USE_FLAG = TRUE
-	AND    SD.TENANT_ID = SM.TENANT_ID
-	AND    SD.ORG_CODE = SM.BIZUNIT_CODE
+    AND    SD.TENANT_ID = SM.TENANT_ID
+    AND    SD.COMPANY_CODE = SM.COMPANY_CODE
+	AND    SD.ORG_CODE = SM.ORG_CODE
 	AND    SD.SUPPLIER_CODE = SM.SUPPLIER_CODE
 	AND    SM.LANGUAGE_CD = 'KO'
     AND    SM.INACTIVE_STATUS_CODE = 'A'
@@ -86,11 +98,14 @@ BEGIN
 	AND    NOT EXISTS (SELECT 1
 		               FROM   SP_SE_EVAL_SUPPLIER
 		               WHERE  TENANT_ID = SD.TENANT_ID
-		               AND    COMPANY_CODE = SM.COMPANY_CODE
-		               AND    SUPPLIER_CODE = SD.SUPPLIER_CODE
-	)
-	GROUP BY SD.TENANT_ID,
-	         SM.COMPANY_CODE,
+                       AND    COMPANY_CODE = SD.COMPANY_CODE
+                       AND    ORG_TYPE_CODE = SD.ORG_TYPE_CODE
+                       AND    ORG_CODE = SD.ORG_CODE
+                       AND    SUPPLIER_CODE = SD.SUPPLIER_CODE)
+    GROUP BY SD.TENANT_ID,
+             SD.COMPANY_CODE,
+             SD.ORG_TYPE_CODE,
+             SD.ORG_CODE,
 	         SD.SUPPLIER_CODE
 	;
 	

@@ -147,7 +147,7 @@ sap.ui.define([
 
             //if(!that.getModel("SUPPLIERVIEW").getProperty("/supplierStatus")){
             oServiceModel.read("/MakerStatusView", {
-                // filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
+                filters: cFilters,
                 sorters: [new Sorter("code", true)],
                 success: function (oData) {
                     var aRecords = oData.results;

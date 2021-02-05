@@ -233,7 +233,6 @@ sap.ui.define([
             if(!!sFromDate || !!sToDate){
                 aSearchFilters.push(new Filter({
                     filters: [
-                        //new Filter("funding_notify_title", FilterOperator.Contains, sTitle)
                         new Filter("funding_notify_start_date", FilterOperator.BT, sFromDate, new Date(sToDate.toString())),
                         new Filter("funding_notify_end_date", FilterOperator.BT, sFromDate, new Date(sToDate.toString()))
                     ],
