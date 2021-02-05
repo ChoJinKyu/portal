@@ -232,7 +232,7 @@
                                                     }">
                                     <Label text="{I18N>/PURCHASE_REQUISITION} {I18N>/ITEM_NAME}" />           
                                     <table:template>
-                                        <Text text="{detailModel>pr_desc}"/>
+                                        <Text text="{detailModel>pr_desc}"   textAlign="Begin" width="100%"/>
                                     </table:template>
                                 </table:Column>     
                                 
