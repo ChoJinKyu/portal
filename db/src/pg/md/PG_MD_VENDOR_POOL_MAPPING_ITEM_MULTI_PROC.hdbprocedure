@@ -238,6 +238,6 @@ BEGIN
 	END FOR;
 
 	:O_TABLE.delete();
-	:O_TABLE.insert(('0000', 'Procedure Success...'));
+	:O_TABLE.insert(('00000', 'Procedure Success...'));
 
 END;
