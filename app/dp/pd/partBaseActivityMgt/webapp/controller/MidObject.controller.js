@@ -19,10 +19,11 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/ObjectStatus",
+    "dp/util/control/ui/CategoryDialog",
     "sap/f/LayoutType"
 ], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus, LayoutType) {
+	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus, CategoryDialog, LayoutType) {
 		
 	"use strict";
 
@@ -158,7 +159,7 @@ sap.ui.define([
 				"activity_code": this._sActivityCode,
 				"language_code": "",
 				"code_name": ""			
-			}, "/PdPartBaseActivityLng");
+			}, "/PdPartBaseActivityLng", 0);
 		},
 
 		onLngTableDeleteButtonPress: function(){
@@ -178,14 +179,19 @@ sap.ui.define([
         },
 
          onCateTableAddButtonPress: function(){
-			var oTable = this.byId("cateTable"),
-				oCateModel = this.getModel("category");
+			var oTable = this.byId("cateTable");
+            var oCateModel = this.getModel("category");
+            var aItems = oTable.getItems();
+
 			oCateModel.addRecord({
 				"tenant_id": this._sTenantId,
 				"activity_code": this._sActivityCode,
-				"category_group_code": "",
-				"category_code": ""			
-			}, "/PdPartBaseActivityCategory");
+                "category_group_code": "",
+                "category_group_name": "",
+                "category_code": "",
+                "category_name": ""			
+            }, "/PdPartBaseActivityCategoryView", 0);           
+            
 		},
 
 		onCateTableDeleteButtonPress: function(){
@@ -194,7 +200,7 @@ sap.ui.define([
 				aItems = oTable.getSelectedItems(),
 				aIndices = [];
 			aItems.forEach(function(oItem){
-				aIndices.push(oModel.getProperty("/PdPartBaseActivityCategory").indexOf(oItem.getBindingContext("category").getObject()));
+				aIndices.push(oModel.getProperty("/PdPartBaseActivityCategoryView").indexOf(oItem.getBindingContext("category").getObject()));
 			});
 			aIndices = aIndices.sort(function(a, b){return b-a;});
 			aIndices.forEach(function(nIndex){
@@ -202,7 +208,34 @@ sap.ui.define([
 				oModel.markRemoved(nIndex);
 			});
 			oTable.removeSelections(true);
-		},
+        },
+        
+        onDialogCategoryPress : function(){
+            // this.byId("searchCategoryInput").setValue("");
+            var oTable = this.byId("cateTable");            
+
+                if(!this.oSearchCategoryDialog){
+                    this.oSearchCategoryDialog = new CategoryDialog({
+                        title: "카테고리 다이얼로그 제목",
+                        multiSelection: false,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, this.tenant_id)
+                            ]
+                        }
+                    });
+                    this.oSearchCategoryDialog.attachEvent("apply", function(oEvent){ 
+                        console.log(oEvent.getParameter("item"));
+                        oTable.getAggregation('items')[0].getCells()[1].mAggregations.items[0].setValue(oEvent.getParameter("item").category_group_code);
+                        oTable.getAggregation('items')[0].getCells()[2].mAggregations.items[1].setValue(oEvent.getParameter("item").category_group_name);
+                        oTable.getAggregation('items')[0].getCells()[3].mAggregations.items[0].setValue(oEvent.getParameter("item").category_code);
+                        oTable.getAggregation('items')[0].getCells()[4].mAggregations.items[1].setValue(oEvent.getParameter("item").category_name);                        
+                    }.bind(this));
+                }
+
+                this.oSearchCategoryDialog.open();
+
+            },
 		
 		/**
 		 * Event handler for saving page changes
@@ -291,63 +324,63 @@ sap.ui.define([
             
             for (var i = 0; i <  oCateTable.getItems().length; i++) {
                 
-                if (oCateData.PdPartBaseActivityCategory[i].active_flag === true) {
+                if (oCateData.PdPartBaseActivityCategoryView[i].active_flag === true) {
                     cateActiveFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
                 } else {
                     cateActiveFlg = "false"; 
                 }
                 
-                if(oCateData.PdPartBaseActivityCategory[i].s_grade_standard_days=="" ||
-                  oCateData.PdPartBaseActivityCategory[i].s_grade_standard_days==null || 
-                  parseInt(oCateData.PdPartBaseActivityCategory[i].s_grade_standard_days) == undefined || 
-                  parseInt(oCateData.PdPartBaseActivityCategory[i].s_grade_standard_days) == NaN){
+                if(oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days=="" ||
+                  oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days==null || 
+                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days) == undefined || 
+                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days) == NaN){
 
-                    oCateData.PdPartBaseActivityCategory[i].s_grade_standard_days = "0";
+                    oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days = "0";
                 }
-                if(oCateData.PdPartBaseActivityCategory[i].a_grade_standard_days=="" ||
-                  oCateData.PdPartBaseActivityCategory[i].a_grade_standard_days==null || 
-                  parseInt(oCateData.PdPartBaseActivityCategory[i].a_grade_standard_days) == undefined || 
-                  parseInt(oCateData.PdPartBaseActivityCategory[i].a_grade_standard_days) == NaN){
+                if(oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days=="" ||
+                  oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days==null || 
+                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days) == undefined || 
+                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days) == NaN){
                       
-                    oCateData.PdPartBaseActivityCategory[i].a_grade_standard_days = "0";
+                    oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days = "0";
                 }
-                if(oCateData.PdPartBaseActivityCategory[i].b_grade_standard_days=="" ||
-                  oCateData.PdPartBaseActivityCategory[i].b_grade_standard_days==null || 
-                  parseInt(oCateData.PdPartBaseActivityCategory[i].b_grade_standard_days) == undefined || 
-                  parseInt(oCateData.PdPartBaseActivityCategory[i].b_grade_standard_days) == NaN){
+                if(oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days=="" ||
+                  oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days==null || 
+                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days) == undefined || 
+                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days) == NaN){
                       
-                    oCateData.PdPartBaseActivityCategory[i].b_grade_standard_days = "0";
+                    oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days = "0";
                 }
-                if(oCateData.PdPartBaseActivityCategory[i].c_grade_standard_days=="" ||
-                  oCateData.PdPartBaseActivityCategory[i].c_grade_standard_days==null || 
-                  parseInt(oCateData.PdPartBaseActivityCategory[i].c_grade_standard_days) == undefined || 
-                  parseInt(oCateData.PdPartBaseActivityCategory[i].c_grade_standard_days) == NaN){
+                if(oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days=="" ||
+                  oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days==null || 
+                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days) == undefined || 
+                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days) == NaN){
                       
-                    oCateData.PdPartBaseActivityCategory[i].c_grade_standard_days = "0";
+                    oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days = "0";
                 }
-                if(oCateData.PdPartBaseActivityCategory[i].d_grade_standard_days=="" ||
-                  oCateData.PdPartBaseActivityCategory[i].d_grade_standard_days==null || 
-                  parseInt(oCateData.PdPartBaseActivityCategory[i].d_grade_standard_days) == undefined || 
-                  parseInt(oCateData.PdPartBaseActivityCategory[i].d_grade_standard_days) == NaN){
+                if(oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days=="" ||
+                  oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days==null || 
+                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days) == undefined || 
+                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days) == NaN){
                       
-                    oCateData.PdPartBaseActivityCategory[i].d_grade_standard_days = "0";
+                    oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days = "0";
                 }                
                 
                 pdCatVal.push({
-                    tenant_id: oCateData.PdPartBaseActivityCategory[i].tenant_id,
-                    activity_code: oCateData.PdPartBaseActivityCategory[i].activity_code,
-                    category_group_code: oCateData.PdPartBaseActivityCategory[i].category_group_code,
-                    category_code: oCateData.PdPartBaseActivityCategory[i].category_code,
-                    s_grade_standard_days: oCateData.PdPartBaseActivityCategory[i].s_grade_standard_days.toString(),
+                    tenant_id: oCateData.PdPartBaseActivityCategoryView[i].tenant_id,
+                    activity_code: oCateData.PdPartBaseActivityCategoryView[i].activity_code,
+                    category_group_code: oCateData.PdPartBaseActivityCategoryView[i].category_group_code,
+                    category_code: oCateData.PdPartBaseActivityCategoryView[i].category_code,
+                    s_grade_standard_days: oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days.toString(),
                     
-                    a_grade_standard_days: oCateData.PdPartBaseActivityCategory[i].a_grade_standard_days.toString(),
-                    b_grade_standard_days: oCateData.PdPartBaseActivityCategory[i].b_grade_standard_days.toString(),
-                    c_grade_standard_days: oCateData.PdPartBaseActivityCategory[i].c_grade_standard_days.toString(),
-                    d_grade_standard_days: oCateData.PdPartBaseActivityCategory[i].d_grade_standard_days.toString(),
+                    a_grade_standard_days: oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days.toString(),
+                    b_grade_standard_days: oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days.toString(),
+                    c_grade_standard_days: oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days.toString(),
+                    d_grade_standard_days: oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days.toString(),
                     active_flag: cateActiveFlg,
                     
                     update_user_id: this.loginUserId,                        
-                    crud_type_code: oCateData.PdPartBaseActivityCategory[i]._row_state_
+                    crud_type_code: oCateData.PdPartBaseActivityCategoryView[i]._row_state_
                 });
             }
 
@@ -442,7 +475,7 @@ sap.ui.define([
 					}
                 });
                 
-                oCategoryModel.read("/PdPartBaseActivityCategory", {
+                oCategoryModel.read("/PdPartBaseActivityCategoryView", {
 					filters: [
 						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
 						new Filter("activity_code", FilterOperator.EQ, this._sActivityCode),
@@ -478,9 +511,9 @@ sap.ui.define([
                 });
                
                 var oCategoryData = oCategoryModel.getData();
-                oCategoryData.PdPartBaseActivityCategory.forEach(function(oItem, nIndex){
-					oCategoryModel.setProperty("/PdPartBaseActivityCategory/"+nIndex+"/tenant_id", sTenantId);
-					oCategoryModel.setProperty("/PdPartBaseActivityCategory/"+nIndex+"/activity_code", sActivityCode);
+                oCategoryData.PdPartBaseActivityCategoryView.forEach(function(oItem, nIndex){
+					oCategoryModel.setProperty("/PdPartBaseActivityCategoryView/"+nIndex+"/tenant_id", sTenantId);
+					oCategoryModel.setProperty("/PdPartBaseActivityCategoryView/"+nIndex+"/activity_code", sActivityCode);
 				});
 				//oLanguagesModel.setData(olanguagesData);
 			}
@@ -523,7 +556,7 @@ sap.ui.define([
                 
                 var oCategoryModel = this.getModel("category");
 				oCategoryModel.setTransactionModel(this.getModel());
-				oCategoryModel.setData([], "/PdPartBaseActivityCategory");
+				oCategoryModel.setData([], "/PdPartBaseActivityCategoryView");
 				// oCategoryModel.addRecord({
 				// 	"tenant_id": this._sTenantId,
 				// 	"activity_code": this._sActivityCode,
@@ -551,7 +584,7 @@ sap.ui.define([
                 
                 var oCategoryModel = this.getModel("category");
 				oCategoryModel.setTransactionModel(this.getModel());
-				oCategoryModel.read("/PdPartBaseActivityCategory", {
+				oCategoryModel.read("/PdPartBaseActivityCategoryView", {
 					filters: [
 						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
 						new Filter("activity_code", FilterOperator.EQ, this._sActivityCode),

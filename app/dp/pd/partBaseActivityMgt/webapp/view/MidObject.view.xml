@@ -88,7 +88,7 @@
                                             constraints: {
                                                 maxLength: 40
                                             }
-                                        }" visible="{contModel>/editMode}" editable="{contModel>/createMode}" required="true"></Input>
+                                        }" visible="{contModel>/editMode}" editable="false"></Input>
                                         <layoutData>
                                             <layout:GridData
                                                 span="XL12 L12 M12 S12" />
@@ -242,7 +242,7 @@
 
             <uxap:ObjectPageSection 
                 titleUppercase="false" 
-                title="{I18N>/CATEGORY} ({= (${category>/PdPartBaseActivityCategory})?${category>/PdPartBaseActivityCategory}.length:0})">
+                title="{I18N>/CATEGORY} ({= (${category>/PdPartBaseActivityCategoryView})?${category>/PdPartBaseActivityCategoryView}.length:0})">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
                     <uxap:blocks>
@@ -254,12 +254,17 @@
                             class="sapFDynamicPageAlignContent"
                             width="auto"
                             items="{
-                                path: 'category>/PdPartBaseActivityCategory'
+                                path: 'category>/PdPartBaseActivityCategoryView'
                             }">
 							<headerToolbar>
                                 <Toolbar visible="{contModel>/editMode}">
                                     <ToolbarSpacer/>                                   
                                     <HBox >
+                                        <Button
+                                            id="cateTableBatchAddButton" 
+                                            type="Transparent" 
+                                            text="일괄 등록"
+                                            press=""/>
                                         <Button
                                             id="cateTableAddButton" 
                                             type="Transparent" 
@@ -269,12 +274,7 @@
                                             id="cateTableDeleteButton" 
                                             type="Transparent" 
                                             text="{I18N>/ROW_DELETE}"
-                                            press=".onCateTableDeleteButtonPress"/>
-                                        <Button
-                                            id="cateTableBatchAddButton" 
-                                            type="Transparent" 
-                                            text="일괄 등록"
-                                            press=""/>
+                                            press=".onCateTableDeleteButtonPress"/>                                        
                                     </HBox>
                                 </Toolbar>
                             </headerToolbar>
@@ -284,8 +284,14 @@
                                         width="4em">
                                         <Text text="{I18N>/STATUS}"/>
                                     </Column>
+                                    <Column visible="true">
+                                        <Text text="{I18N>/GROUP_CODE}" />
+                                    </Column>
                                     <Column>
                                         <Text text="{I18N>/GROUP}" />
+                                    </Column>
+                                    <Column visible="true">
+                                        <Text text="{I18N>/CATEGORY_CODE}" />
                                     </Column>
                                     <Column>
                                         <Text text="{I18N>/CATEGORY}" />
@@ -314,13 +320,10 @@
                                         <cells>
                                             <Text text="{category>_row_state_}"/>                                            
                                             <HBox
-                                                direction="Column">
-                                                <Text
-                                                    visible="{contModel>/readMode}"
-                                                    text="{category>category_group_code}" />
+                                                direction="Column">                                                
                                                 <Input
-                                                    visible="{contModel>/editMode}"
-                                                    editable="{= ${category>_row_state_} === 'C' }"
+                                                    visible="true"
+                                                    editable="false"
                                                     maxLength="30"
                                                     value="{category>category_group_code}" />
                                             </HBox>
@@ -328,12 +331,36 @@
                                                 direction="Column">
                                                 <Text
                                                     visible="{contModel>/readMode}"
-                                                    text="{category>category_code}" />
+                                                    text="{category>category_group_name}" />
                                                 <Input
                                                     visible="{contModel>/editMode}"
-                                                    editable="{= ${category>_row_state_} === 'C' }"
+                                                    editable="false"
+                                                    maxLength="30"
+                                                    value="{category>category_group_name}" />
+                                            </HBox>
+                                            <HBox
+                                                direction="Column">                                                
+                                                <Input
+                                                    visible="true"
+                                                    editable="false"
                                                     maxLength="40"
-                                                    value="{category>category_code}" />
+                                                    value="{category>category_code}" />                                                
+                                            </HBox>                                            
+                                            <HBox
+                                                direction="Column">
+                                                <Text                                                    
+                                                    text="{category>category_name}" />
+                                                <!-- <Input
+                                                    visible="{contModel>/editMode}"
+                                                    editable="false"
+                                                    maxLength="40"
+                                                    value="{category>category_code}" /> -->
+                                                <Input
+                                                    visible="{= ${category>_row_state_} === 'C' }"                                                     
+                                                    id="searchCategoryInput"
+                                                    placeholder=""
+                                                    showValueHelp="true"
+                                                    valueHelpRequest=".onDialogCategoryPress"/>
                                             </HBox>
                                             <HBox
                                                 direction="Column">
