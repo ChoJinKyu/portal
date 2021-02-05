@@ -313,6 +313,7 @@ sap.ui.define([
 
                 _chartDialog.open();
 
+
                 $.ajax({
                     url: "ep/cm/forexDeclarationMgt/webapp/srv-api/odata/v4/ep.PoApprMgtV4Service/ForexDeclarationSummaryView(tenant_id='L2100',company_code='LGCKR',purchasing_department_code='',buyer_empno='',po_start_date="+sDate +",po_end_date="+ eDate +")/Set",
                     type: "GET",
@@ -333,28 +334,7 @@ sap.ui.define([
             console.log(" _goChartlView__ oEvent :: ", oEvent);
             var oView = this.getView();
 
-            this._chartDialog = Fragment.load({
-                id: oView.getId(),
-                name: "ep.cm.forexDeclarationMgt.view.SummaryChart",
-                controller: this
-            }).then(function (_chartDialog) {
-                oView.addDependent(_chartDialog);
-                
-                //console.log("_chartDialog :::: " , oView);
-                return _chartDialog;
-            }.bind(this));
-
-            console.log("_chartDialog :::: " , oView);
-
-            
-
-
-            
-
-            this._chartDialog.then((function (_chartDialog) {
-                _chartDialog.open();
-
-                $.ajax({
+            $.ajax({
                     url: "ep/cm/forexDeclarationMgt/webapp/srv-api/odata/v4/ep.PoApprMgtV4Service/ForexDeclarationSummaryView(tenant_id='L2100',company_code='LGCKR',purchasing_department_code='',buyer_empno='',po_start_date="+this.sFrom +",po_end_date="+ this.sTo +")/Set",
                     type: "GET",
                     contentType: "application/json",
@@ -365,8 +345,6 @@ sap.ui.define([
                         //console.log("#########SummaryChartModel#####", oView.getModel("SummaryChartModel").getData());
                     }).bind(this) 
                 })
-                 
-            }).bind(this));
         },
 
         onChartSearchButtonPress: function (oEvent) {
@@ -566,7 +544,6 @@ sap.ui.define([
                     d["declare_scheduled_date"] = that.getFormatDate2(oView.byId("declareScheduledDate").getDateValue());
                     d["declare_date"] = that.getFormatDate2(oView.byId("declareDate").getDateValue());
                     d["remark"] = oView.byId("remark").getValue();
-                    d["attch_group_number"] = oView.byId("attchGroupNumber").getText();
                     d["forex_declare_status_code"] = statusChange;
                     return d;
                 });
