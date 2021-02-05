@@ -38,14 +38,9 @@
                         <ComboBox
                             width="100%"
                             selectedKey="{filterModel>/net_price_type_code}"
-                            items="{
-                            path: 'codeMgt>/CodeLanguages',
-                            filters: [ 
-                                 {path: 'group_code', operator: 'EQ', value1: 'SP_VI_NET_PRICE_TYPE_CODE'}
-                            ]
-                            }">
+                            items="{ path: 'rootModel>/type_code'}" >
                             <items>
-                            <core:Item key="{codeMgt>code}" text="{codeMgt>code_name}" />
+                            <core:Item key="{rootModel>code}" text="{rootModel>code_name}" />
                             </items>
                         </ComboBox>
                         <layoutData>
