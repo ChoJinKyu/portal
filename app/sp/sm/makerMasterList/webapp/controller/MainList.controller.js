@@ -277,7 +277,7 @@ sap.ui.define([
         _fnMoveMakerMasterCreate : function(inputModel){
             // App To App
             //portal에 있는 toolPage 
-            var oToolPage =  this.getView().getParent().getParent().getParent().getParent().getParent().oContainer.getParent();
+            var oToolPage =  this.getView().getParent().getParent().getParent().oContainer.getParent();
             
             //이동하려는 app의 component name,url
             var sComponent = "sp.sm.makerMasterCreate",

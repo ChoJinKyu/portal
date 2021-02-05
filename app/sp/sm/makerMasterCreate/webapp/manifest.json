@@ -4,24 +4,19 @@
         "id": "sp.sm.makerMasterCreate",
         "type": "application",
         "i18n": "i18n/i18n.properties",
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
         "applicationVersion": {
             "version": "1.0.0"
         },
-        "title": "{{appTitle}}",
-        "description": "{{appDescription}}",
+        "ach": "set-ach",
         "resources": "resources.json",
-        "ach": "ach",
-        "sourceTemplate": {
-            "id": "html5moduletemplates.basicSAPUI5ApplicationProjectModule",
-            "version": "1.40.12"
-        },
         "dataSources": {
             "mainService": {
                 "uri": "srv-api/odata/v2/sp.makerViewService/",
                 "type": "OData",
                 "settings": {
-                    "odataVersion": "2.0",
-                    "localUri": "localService/metadata.xml"
+                    "odataVersion": "2.0"
                 }
             },
             "commonUtilService": {
@@ -40,14 +35,14 @@
             }
         }
     },
-    "sap.cloud": {
-        "public": true,
-        "service": "sppCap_ui_dev"
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "transactional"
     },
     "sap.ui": {
         "technology": "UI5",
         "icons": {
-            "icon": "",
+            "icon": "sap-icon://task",
             "favIcon": "",
             "phone": "",
             "phone@2": "",
@@ -61,7 +56,6 @@
         }
     },
     "sap.ui5": {
-        "flexEnabled": false,
         "rootView": {
             "viewName": "sp.sm.makerMasterCreate.view.App",
             "type": "XML",
@@ -69,17 +63,18 @@
             "id": "app"
         },
         "dependencies": {
-            "minUI5Version": "1.60.1",
+            "minUI5Version": "1.66.0",
             "libs": {
                 "sap.ui.core": {},
                 "sap.m": {},
-                "sap.ui.layout": {}
+                "sap.f": {}
             }
         },
         "contentDensities": {
             "compact": true,
             "cozy": true
         },
+        "handleValidation": true,
         "models": {
             "i18n": {
                 "type": "sap.ui.model.resource.ResourceModel",
@@ -111,32 +106,22 @@
                 "dataSource": "mainService",
                 "preload": true,
                 "settings": {
-                    "operationMode": "Server",
-                    "groupId": "$direct",
-                    "synchronizationMode": "None",
-                    "autoExpandSelect": true
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": true,
+                    "useBatch": true
                 }
             }
-            
-        },
-        "resources": {
-            "css": [
-                {
-                    "uri": "css/style.css"
-                }
-            ]
         },
         "resourceRoots": {
-            "ext.lib": "../../../../../lib",
-            "ext.util": "../../../util",
-            "sp.sm.util": "../../util"
+            "ext.lib": "../../../../lib"
         },
         "routing": {
             "config": {
                 "routerClass": "sap.m.routing.Router",
                 "viewType": "XML",
                 "viewPath": "sp.sm.makerMasterCreate.view",
-                "controlId": "fcl",
+                "controlId": "app",
                 "transition": "slide",
                 "bypassed": {
                     "target": [
@@ -147,49 +132,16 @@
             },
             "routes": [
                 {
-                    "pattern": "mainPage/{gubun}/{mode}/{tenantId}/{makerCode}",
-                    "name": "mainPage2",
-                    "target": [
-                        "mainObject"
-                    ]
-                },
-                {
-                    "pattern": ":layout:",
+                    "pattern": "",
                     "name": "mainPage",
                     "target": [
                         "mainObject"
-                    ]
-                },
-                 {
-                    "pattern": "midView/{layout}/{gubun}/{mode}/{tenantId}/{makerCode}",
-                    "name": "midView",
-                    "target": [
-                        "mainObject",
-                        "midObject"
-                    ]
-                },
-                {
-                    "pattern": "endObject/{layout}/{tenantId}/{controlOptionCode}",
-                    "name": "endPage",
-                    "target": [
-                        "mainObject",
-                        "midObject",
-                        "endObject"
                     ]
                 }
             ],
             "targets": {
                 "mainObject": {
-                    "viewName": "MainPage",
-                    "controlAggregation": "beginColumnPages"
-                },
-               "midObject": {
-                    "viewName": "MidObject",
-                    "controlAggregation": "midColumnPages"
-                },
-                "endObject": {
-                    "viewName": "TemplateMidObject",
-                    "controlAggregation": "endColumnPages"
+                    "viewName": "MainPage"
                 },
                 "notFound": {
                     "viewName": "NotFound",
@@ -198,5 +150,9 @@
                 }
             }
         }
+    },
+    "sap.cloud": {
+        "public": true,
+        "service": "sppCap_ui_dev"
     }
 }

@@ -164,7 +164,7 @@ sap.ui.define([
             }
  
             if (this.sCurrentRouteName === "mainPage") { // last viewed route was master
-                var oMainListView = this.oRouter.getView("sp.sm.makerMasterCreate.view.MainPage");
+                var oMainPageView = this.oRouter.getView("sp.sm.makerMasterCreate.view.MainPage");
                 
             }
         

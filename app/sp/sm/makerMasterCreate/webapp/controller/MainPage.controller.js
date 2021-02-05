@@ -33,6 +33,7 @@ sap.ui.define([
 	return BaseController.extend("sp.sm.makerMasterCreate.controller.MainPage", {
 
         dateFormatter: DateFormatter,
+        validator: new Validator(),
         _masterData : {
             affiliate_code: "Y",
             affiliate_name: "",
@@ -85,7 +86,6 @@ sap.ui.define([
 					busy : true,
 					delay : 0
                 });                
-       
 
             // view에서 사용할 메인 Model
             this.setModel(new JSONModel(), "viewModel"); 
@@ -121,6 +121,7 @@ sap.ui.define([
         },
 
         onAfterRendering: function () {
+            this.getModel().setSizeLimit(500);
             //$($("#"+this.byId("vbox_vat_number").getId()).parent()).hide(); //setTimeout필요..ㅠ.
         },
 
@@ -137,8 +138,10 @@ sap.ui.define([
             sMode = oCallByAppModel.getProperty("/mode"),
             sProgress = oCallByAppModel.getProperty("/progressCode");
 
-            oModel.setProperty("/navButtonType", sGubun !== "MA" ? "Back" : "Unstyled");//Transparent , Default
             
+            oModel.setProperty("/navButtonType", sGubun !== "MA" ? "Back" : "Unstyled");//Transparent , Default
+            oModel.setProperty("/required", true);//sGubun !== "MA"
+
             //활성화 설정
             oModel.setProperty("/visible", {
                 vbox_maker_code : true,
@@ -192,7 +195,7 @@ sap.ui.define([
 		 * Binds the view to the data path.
 		 */
 		_onObjectMatched : function (oEvent) { 
-            //var callByAppModel = this.getView().getParent().getParent().getParent().getParent().getModel("callByAppModel");
+            //var callByAppModel = this.getView().getParent().getParent().getModel("callByAppModel");
             var oCallByAppModel = this.getOwnerComponent().getModel("callByAppModel");
             var sGubun = oCallByAppModel.getProperty("/gubun");
             var sMode = oCallByAppModel.getProperty("/mode");
@@ -215,6 +218,22 @@ sap.ui.define([
 
         },
         
+        onChangeAddress : function(oEvent){
+            var oWriteModel = this.getModel("writeModel");
+            var oGeneralInfo = oWriteModel.getProperty("/generalInfo");
+            var sFullAddress = "";
+            //var sGubun = oEvent.getSource().getBindingPath("value").indexOf("local") > -1 ? "local" : "english";
+            
+            if(oEvent.getSource().getBindingPath("value").indexOf("local") > -1 ){ //local
+                sFullAddress = oGeneralInfo["maker_local_city"]  + " " + oGeneralInfo["maker_local_region"] + " "+oGeneralInfo["maker_local_address"];
+                oWriteModel.setProperty("/generalInfo/maker_local_full_address", sFullAddress);
+            }else{ //english
+                sFullAddress = oGeneralInfo["maker_english_address"]  + " " + oGeneralInfo["maker_english_region"] + " "+oGeneralInfo["maker_english_city"];
+                oWriteModel.setProperty("/generalInfo/maker_english_full_address", sFullAddress);
+            }
+            
+        },
+
         onChangeCountry : function(oEvent){
             var oSelectedItem = sap.ui.getCore().byId(oEvent.getSource().getSelectedItemId()).getBindingContext().getObject();
             this._setVisiableVatNumber(oSelectedItem["eu_flag"]);
@@ -224,7 +243,7 @@ sap.ui.define([
         onNavigationBackPress: function(e){
 
             //portal에 있는 toolPage 
-            var oToolPage = this.getView().oParent.oParent.oParent.oParent.oParent.oContainer.oParent,
+            var oToolPage = this.getView().getParent().getParent().getParent().oContainer.getParent(),
             oCallByAppModel = this.getModel("callByAppModel"),
             sGubun = oCallByAppModel.getProperty("/gubun");
 
@@ -262,28 +281,113 @@ sap.ui.define([
             sGubun = oCallByAppModel.getProperty("/gubun"),
             sMode = oCallByAppModel.getProperty("/mode");
 
-            if(sMode === "U"){
-                
-                oCallByAppModel.setProperty("/mode", "R");
-                //oCallByAppModel.setProperty("/isEditable", false);
-                //oCallByAppModel.setProperty("/bizNoCheck",false);
-                this._setTitle("R");
-                this._initControlData(false);
-                this._fnGetMasterData();
-            }else{
-                if(sGubun === "MA"){
-                    this._initMasterData();
-                    this._initControlData(true);
-                }else this.onNavigationBackPress();
+            if(sGubun === "MM"){
+                if(sMode === "U"){
+                    oCallByAppModel.setProperty("/mode", "R");
+                    this._setTitle("R");
+                    this._initControlData(false);
+                    this._fnGetMasterData();
+                }else{
+                    this.onNavigationBackPress();
+                }
+            }else if(sGubun === "MA"){
+                this._initMasterData();
+                this._initControlData(true);
+            }else{//"MR"
+                this.onNavigationBackPress();
             }
         },
 
         /**
          * 저장 데이터 세팅  
          */
-        _fnSetRequestData : function(oArgs){          
+        _fnSetRequestData : function(sMakerProgressStatusCode){    
+            
+            var oWriteModel = this.getModel("writeModel"),
+            oViewModel = this.getModel("viewModel"),
+            oCallByAppModel = this.getModel("callByAppModel"),
+            oUserSessionModel = this.getModel("USER_SESSION");
+            
+            var oGeneralInfo = oWriteModel.getProperty("/generalInfo"),
+            checkResult = oWriteModel.getProperty("/businessNoCheckList/0"),
+            bSupplierRole = checkResult.supplier_role === "Y",
+            bMakerRole = checkResult.maker_role === "Y",
+            sProgress = oCallByAppModel.getProperty("/progressCode"),
+            sGubun = oCallByAppModel.getProperty("/gubun"),
+            sMode = oCallByAppModel.getProperty("/mode");
+
+            var sMakerRequestTypeCode = (sGubun !== "MR" && sMode === "C") ? "NEW" : "CHANGE";
+            //(var sMakerProgressStatusCode = sGubun === "MR" && sProgress === "REQUEST") ? "REQUEST" : "APPROVAL";
+            var sRequestorEmpno = "3167";//oUserSessionModel.gtProperty("/EMPLOYEE_NUMBER");
+
+            
+
+            var inputInfo = {
+                InputData : { 
+                    tenant_id : "L2100",
+                    sourceMakerRestnReq: [
+                        {
+                            tenant_id: "L2100",					
+                            maker_request_sequence: null,			
+                            maker_request_type_code: sMakerProgressStatusCode,			 
+                            maker_progress_status_code: sMakerProgressStatusCode,     	
+                            requestor_empno: sRequestorEmpno,                	
+                            tax_id: oGeneralInfo["tax_id"],                         	
+                            supplier_code: oGeneralInfo["maker_code"],                  	
+                            supplier_local_name: oGeneralInfo["maker_local_name"],            	
+                            supplier_english_name: oGeneralInfo["maker_english_name"],          	
+                            country_code: oGeneralInfo["country_code"],                   	
+                            country_name: oGeneralInfo["country_name"],                   	
+                            vat_number: oGeneralInfo["vat_number"],                   	
+                            zip_code: oGeneralInfo["zip_code"],                       	
+                            local_address_1: oGeneralInfo["maker_local_city"],                	
+                            local_address_2: oGeneralInfo["maker_local_region"],                	
+                            local_address_3: oGeneralInfo["maker_local_address"],                	
+                            local_full_address: oGeneralInfo["maker_local_full_address"],             	
+                            english_address_1: oGeneralInfo["maker_english_city"],              	
+                            english_address_2: oGeneralInfo["maker_english_region"],              	
+                            english_address_3: oGeneralInfo["maker_english_address"],              	
+                            english_full_address: oGeneralInfo["maker_english_full_address"],           	
+                            affiliate_code: oGeneralInfo["affiliate_code"],                 	
+                            affiliate_code_name: oGeneralInfo["affiliate_code_name"],            	
+                            company_class_code: oGeneralInfo["company_class_code"],             	
+                            company_class_name: oGeneralInfo["company_class_name"],             	
+                            repre_name: oGeneralInfo["represent_name"],                    	
+                            tel_number: oGeneralInfo["company_tel_number"],                    	
+                            email_address: oGeneralInfo["company_email_address"],                	
+                            supplier_status_code: oGeneralInfo["maker_status_code"],          	
+                            supplier_status_name: oGeneralInfo["maker_status_name"],          	
+                            biz_certi_attch_number: null,       	
+                            attch_number_2: null,               	
+                            attch_number_3: null,               	
+                            local_create_dtm: null,		//null 값 고정
+                            local_update_dtm: null, 	//null 값 고정
+                            create_user_id: null,             	//null 값 고정
+                            update_user_id: null,             	//null 값 고정
+                            system_create_dtm: null,	//null 값 고정
+                            system_update_dtm: null 	//null 값 고정
+                        }
+                    ]
+                }
+            }
+
+            return inputInfo;
+
         },
 
+        _fnRequestMakerMaster : function(){
+
+            var oCallByAppModel = this.getModel("callByAppModel"),
+            oViewModel = this.getModel("viewModel"),
+            oWriteModel = this.getModel("writeModel"),
+            checkResult = oWriteModel.getProperty("/businessNoCheckList/0"),
+            bSupplierRole = checkResult.supplier_role === "Y",
+            bMakerRole = checkResult.maker_role === "Y",
+            sProgress = oCallByAppModel.getProperty("/progressCode"),
+            sGubun = oCallByAppModel.getProperty("/gubun"),
+            sMode = oCallByAppModel.getProperty("/mode"),
+            that = this;
+        },
 
          /**
          * 기존 데이터 조회  
@@ -330,7 +434,7 @@ sap.ui.define([
                     if(data && data.results.length > 0){
                         var oResultData = data.results[0];
                         
-                        /*if(bSupplierRole && !bMakerRole){
+                        if(bSupplierRole && !bMakerRole){
 
                             oResultData["maker_code"] = oResultData["supplier_code"];
                             oResultData["maker_english_address"] = oResultData["supplier_english_address"];
@@ -362,13 +466,14 @@ sap.ui.define([
                             delete oResultData["supplier_status_name"];
                             delete oResultData["old_supplier_code"];
 
-                        }*/
+                        }
 
                         oViewModel.setProperty("/generalInfo" , oResultData);   
                         oWriteModel.setProperty("/generalInfo" , oResultData); 
                         oCallByAppModel.setProperty("/bizNoCheck", false);
                     
                         that._setVisiableVatNumber(oResultData.eu_flag);
+
                     }else{
                         alert("조회된 내역이 없습니다.");
 
@@ -403,29 +508,18 @@ sap.ui.define([
             var oWriteModel = this.getModel("writeModel");
             var bEuFlag = (sEuFlag !== undefined) ? (sEuFlag === "Y") : (oWriteModel.getProperty("/generalInfo/eu_flag") === "Y");
 
-            /* var aFilters = [
+            //euFlag가 없는 경우 모델에서 가져오는 경우를 만들어 보자....
+            /* sObjectPath() var aFilters = [
                 new Filter("tenant_id"    , FilterOperator.EQ, "L2100"),
                 new Filter("country_code"   , FilterOperator.EQ, "KR")
             ];
 
-            var mParameters = {
-                filters : aFilters , // your Filter Array
-                success : function (oData, oResponse) {
+            oMasterModel.read(sObjectPath, {
+				success: function(oData){
+					oView.setBusy(false);
+				}
+			}); */
 
-                },
-                error: function (oError) {
-
-                }
-              };
-
-            this.getView().getModel().read("/MakerCountryManagement",mParameters); 
-            
-            var bEuFlag = sEuFlag === "Y";
-            */
-
-
-            
-            
             oMainPageModel.setProperty("/enabled/vat_number", bEuFlag); //enabled 상태만 변경할때...
             if(!bEuFlag)oWriteModel.setProperty("/generalInfo/vat_number", ""); //유럽국가인 경우만 입력 가능하므로 아닌경우 초기화
             //oMainPageModel.setProperty("/visible/vbox_vat_number", bEuFlag); //영역은 남겨둘때...
@@ -472,7 +566,8 @@ sap.ui.define([
                     oCallByAppModel.setProperty("/isEditable", bFlag);
                     this._initControlData(bFlag);
                 }else if(sGubun === "MR"){
-                    //maker, supplier role 모두 없는경우 등록진행가능.
+                    /*
+                    //A : maker, supplier role 모두 없는경우 등록진행가능.
                     var bFlag = !bSupplierRole && !bMakerRole && sProgress === "REQUEST";
 
                     if(sProgress === "REQUEST"){
@@ -484,14 +579,31 @@ sap.ui.define([
 
                     oCallByAppModel.setProperty("/isEditable", bFlag);
                     this._initControlData(bFlag);
+                    */
+
+                    //B : m = N,S = Y일때 supplier정보를 가져와서 한다?? 21.02.05 전병훈책임...
+
+                    if(sProgress === "REQUEST"){
+                        if(!bSupplierRole && !bMakerRole){
+                            oCallByAppModel.setProperty("/mode", "U");  
+                        }else if(bSupplierRole && !bMakerRole){
+                            oCallByAppModel.setProperty("/mode", "C");  
+                        }
+
+                        if(bMakerRole)sMessageStripType = "Warning";
+                        oWriteModel.setProperty("/businessNoCheckList/0/messageStripType", sMessageStripType);
+                        oCallByAppModel.setProperty("/isEditable", !bSupplierRole && !bMakerRole); //입력가능   
+                        this._initControlData(!bMakerRole);                                      
+                    }else{
+                        oCallByAppModel.setProperty("/isEditable", false);
+                        this._initControlData(false);
+                    }
                 }
                 
                 this._fnGetMasterData();
             }
             
         },
-
-        
 
         _CheckTaxIDFunction: function () {
 
@@ -567,6 +679,49 @@ sap.ui.define([
             this._CheckTaxIDFunction();
         },
 
+        onRequestButtonPress : function(){
+            var that= this;
+            var oCallByAppModel = this.getModel("callByAppModel");
+            var sConfirmMsg = this.getModel("I18N").getText("/NCM00001");
+            var sGubun = oCallByAppModel.getProperty("/gubun");
+            var sMode = oCallByAppModel.getProperty("/mode");
+            var sProgress = oCallByAppModel.getProperty("/progressCode");
+
+            // || sProgress === "REQUEST"
+            if(sMode === "U")sConfirmMsg = this.getModel("I18N").getText("/NPG00007");
+
+           // this.validator.setModel(this.getModel("writeModel"), "writeModel");
+            //if(this.validator.validate(this.byId("page")) === true) {
+
+                var oRequestData = this._fnSetRequestData("REQUEST");
+                MessageBox.confirm(sConfirmMsg, {
+                    title : "Create",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            that._fnCallAjax(
+                            oRequestData,
+                            "upsertMakerRestnReqProc",
+                            function(result){
+                                debugger;
+                                //oView.setBusy(false);
+                                if(result && result.value && result.value.length > 0){// && result.value[0].return_code === "OK") {
+                                    alert(result.value[0].returnmessage);
+                                    //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                    //that.onNavigationBackPress();
+                                }
+                            }
+                        );
+                        }
+                    }.bind(this)
+                });
+           /* }else{
+                 
+                console.log("checkRequire");
+                return;
+            }*/
+        },
+
         onPageDeleteButtonPress: function () {
 
             var oWriteModel = this.getModel("writeModel");
@@ -628,7 +783,7 @@ sap.ui.define([
         },
 
         _fnCallAjax: function (sendData, targetName , callback) {            
-            var that = this;            
+            var that = this;          
             var url = "/sp/sm/makerMasterCreate/webapp/srv-api/odata/v4/sp.supplierManagementV4Service/" + targetName;
 
             $.ajax({
