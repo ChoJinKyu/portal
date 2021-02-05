@@ -22,10 +22,8 @@
                 </f:snappedContent>
                 <f:expandedContent>
                 </f:expandedContent>
-                <f:actions>
-                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
-                </f:actions>
                 <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
                 </f:navigationActions>
             </f:DynamicPageTitle>
         </f:title>
@@ -61,6 +59,13 @@
                         </VBox>
                     </form:content>
                 </form:SimpleForm>
+
+                <HBox width="100%" alignItems="Center" alignContent="End" justifyContent="End">
+                    <items>
+                        <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress"/>
+                    </items>
+                </HBox>
+
             </f:DynamicPageHeader>
         </f:header>
         
