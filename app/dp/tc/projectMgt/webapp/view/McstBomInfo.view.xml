@@ -68,55 +68,101 @@
                                     layout="ResponsiveGridLayout"
                                     class="sapUiNoMarginBottom sapUiNoContentPadding">
                                     <form:content>
-
-                                    <Label text="{I18N>/COMPUT_TYPE}">
+                                    
+                                    <!--line1-->
+                                    <Label text="{I18N>/PROJECT_CODE}">
+                                        <layoutData>
+                                            <layout:GridData span="XL1 L1 M2 S12" />
+                                        </layoutData>
+                                    </Label>
+                                    <Text text="{detailModel>/project_code}">
                                         <layoutData>
                                             <layout:GridData span="XL2 L2 M2 S12" />
+                                        </layoutData>
+                                    </Text>
+
+                                    <Label text="{I18N>/PROJECT_NAME}">
+                                        <layoutData>
+                                            <layout:GridData span="XL1 L1 M2 S12" />
+                                        </layoutData>
+                                    </Label>
+                                    <Text text="{detailModel>/project_name}">
+                                        <layoutData>
+                                            <layout:GridData span="XL2 L2 M2 S12" />
+                                        </layoutData>
+                                    </Text>
+
+                                    <Label text="{I18N>/MODEL_CODE}">
+                                        <layoutData>
+                                            <layout:GridData span="XL1 L1 M2 S12" />
+                                        </layoutData>
+                                    </Label>
+                                    <Text text="{detailModel>/model_code}">
+                                        <layoutData>
+                                            <layout:GridData span="XL2 L2 M2 S12" />
+                                        </layoutData>
+                                    </Text>
+
+                                    <Label text="{I18N>/MODEL_NAME}">
+                                        <layoutData>
+                                            <layout:GridData span="XL1 L1 M2 S12" />
+                                        </layoutData>
+                                    </Label>
+                                    <Text text="{detailModel>/model_name}">
+                                        <layoutData>
+                                            <layout:GridData span="XL2 L2 M2 S12" />
+                                        </layoutData>
+                                    </Text>
+                                    
+                                    <!--line 2-->
+                                    <Label text="{I18N>/COMPUT_TYPE}">
+                                        <layoutData>
+                                            <layout:GridData span="XL1 L1 M2 S12" linebreakL="true"/>
                                         </layoutData>
                                     </Label>
                                     <Text text="{detailModel>/mcst_text/code_name}">
                                         <layoutData>
-                                            <layout:GridData span="XL4 L4 M4 S12" />
+                                            <layout:GridData span="XL2 L2 M2 S12" />
                                         </layoutData>
                                     </Text>
 
                                     <Label text="Seq">
                                         <layoutData>
-                                            <layout:GridData span="XL2 L2 M2 S12" />
+                                            <layout:GridData span="XL1 L1 M2 S12" />
                                         </layoutData>
                                     </Label>
                                     <Text text="{detailModel>/version_sequence}'st ">
                                         <layoutData>
-                                            <layout:GridData span="XL4 L4 M4 S12" />
+                                            <layout:GridData span="XL2 L2 M2 S12" />
                                         </layoutData>
                                     </Text>
 
                                     <Label text="{I18N>/REQUESTOR}">
                                         <layoutData>
-                                            <layout:GridData span="XL2 L2 M2 S12" />
+                                            <layout:GridData span="XL1 L1 M2 S12" />
                                         </layoutData>
                                     </Label>
                                     <Text text="{detailModel>/project_creator_info/user_local_name} {detailModel>/project_creator_info/job_title}">
                                         <layoutData>
-                                            <layout:GridData span="XL4 L4 M4 S12" />
+                                            <layout:GridData span="XL2 L2 M2 S12" />
                                         </layoutData>
                                     </Text>
 
                                     <Label text="{I18N>/COMPANY}">
                                         <layoutData>
-                                            <layout:GridData span="XL2 L2 M2 S12" />
+                                            <layout:GridData span="XL1 L1 M2 S12" />
                                         </layoutData>
                                     </Label>
                                     <Text text="{detailModel>/company_code}">
                                         <layoutData>
-                                            <layout:GridData span="XL4 L4 M4 S12" />
+                                            <layout:GridData span="XL2 L2 M2 S12" />
                                         </layoutData>
                                     </Text>
-                                    
 
+                                    <!--line3-->
                                     <Label text="{I18N>/CREATION_DATE}">
                                         <layoutData>
-                                            <layout:GridData span="XL2 L2 M2 S12" />
+                                            <layout:GridData span="XL1 L1 M2 S12" />
                                         </layoutData>
                                     </Label>
                                     <Text text="{
@@ -124,25 +170,25 @@
                                                 formatter: '.dateFormatter.toUTCDateString'
                                             }">
                                         <layoutData>
-                                            <layout:GridData span="XL4 L4 M4 S12" />
+                                            <layout:GridData span="XL2 L2 M2 S12" />
                                         </layoutData>
                                     </Text>
 
                                     <Label text="{I18N>/BUSINESS_DIVISION}">
                                         <layoutData>
-                                            <layout:GridData span="XL2 L2 M2 S12" />
+                                            <layout:GridData span="XL1 L1 M2 S12" />
                                         </layoutData>
                                     </Label>
                                     <Text text="{detailModel>/bizdivision_text/bizdivision_name}">
                                         <layoutData>
-                                            <layout:GridData span="XL4 L4 M4 S12" />
+                                            <layout:GridData span="XL2 L2 M2 S12" />
                                         </layoutData>
                                     </Text>
 
                                     </form:content>
 
                                     <form:layoutData>
-                                        <layout:GridData span="XL6 L6 M6 S12" />
+                                        <layout:GridData span="XL10 L10 M10 S12" />
                                     </form:layoutData>
                                 
                                 </form:SimpleForm>
@@ -159,7 +205,7 @@
                                         </layoutData>
                                     </ObjectStatus>
                                     <layoutData>
-                                        <layout:GridData span="XL6 L6 M6 S12" />
+                                        <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData>
                                 </VBox>
 

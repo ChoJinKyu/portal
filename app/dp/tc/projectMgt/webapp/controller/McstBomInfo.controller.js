@@ -435,31 +435,31 @@ sap.ui.define([
             var oBomMappData = oBomMappingModel.getData();
             let sItem = "";
             if(!oBomMappData.department_type_code) {
-                sItem = this.I18N.getText("/DEPARTMENT");
+                sItem = this.I18N.getText("/CHARGE_DEPT");
                 //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
                 MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
                 return;
             }
             if(!oBomMappData.creator_empno) {
-                sItem = this.I18N.getText("/PERSON");
+                sItem = this.I18N.getText("/CHARGE_PERSON");
                 //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
                 MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
                 return;
             }
-            if(!oBomMappData.eng_change_number) {
-                sItem = "ECO/ECR No.";
-                //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
-                MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
-                return;
-            }
+            // if(!oBomMappData.eng_change_number) {
+            //     sItem = "ECO/ECR No.";
+            //     //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
+            //     MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
+            //     return;
+            // }
             if(!oBomMappData.change_reason) {
-                sItem = this.I18N.getText("/REASON");
+                sItem = this.I18N.getText("/MAPPING_RSN");
                 //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
                 MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
                 return;
             }
 
-            MessageBox.confirm("저장 하시겠습니까?", {
+            MessageBox.confirm(this.I18N.getText("/NCM00001"), {//저장 하시겠습니까?
                 title : "Save",
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
@@ -685,7 +685,7 @@ sap.ui.define([
                     return false;
                 }
 
-                if(oRow.eng_change_number) {
+                if(oRow.mapping_id) {
                     MessageToast.show("선택한 데이터 중 이미 Mapping 된 데이터가 있습니다.", {at: "center center"});
                     rtFlag = false;
                     return false;

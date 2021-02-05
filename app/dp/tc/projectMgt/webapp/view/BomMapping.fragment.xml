@@ -8,19 +8,19 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout"
     xmlns:cm-ui="cm.util.control.ui">
-    <Dialog id="diaBomMapping" class="sapUiSmallMargin sapUiSizeCompact" title="BOM Mapping" contentWidth="70%" contentHeight="60%" >
+    <Dialog id="diaBomMapping" class="sapUiSmallMargin sapUiSizeCompact" title="{I18N>/BOM_MAPPING}" contentWidth="70%" contentHeight="60%" >
         <content>
         <VBox class="sapUiSmallMargin">
+            <VBox>
             <form:SimpleForm 
-                title="To-be Manager"
                 editable="true" 
                 layout="ResponsiveGridLayout"
                 adjustLabelSpan="false">
-                <VBox>
-                    <HBox>
-                        <Label text="{I18N>/DEPARTMENT}" />
-                    </HBox>
-                    <HBox>
+                        <Label text="{I18N>/CHARGE_DEPT}" required="true">
+                            <layoutData>
+                                <layout:GridData span="XL1 L1 M1 S12" />
+                            </layoutData>
+                        </Label>
                         <ComboBox
                             id="cbxBomMapDept"
                             width="100%"
@@ -28,6 +28,7 @@
                             items="{
                                 path: 'util>/Code',
                                 filters: [
+                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
                                     {path: 'group_code', operator: 'EQ', value1: 'DP_TC_CI_DEPT_CODE'}
                                 ],
                                 sorter: { path: 'sort_no'}
@@ -35,20 +36,16 @@
                             <items>
                                 <core:Item key="{util>code}" text="{util>code_name}" />
                             </items>
+                            <layoutData>
+                                <layout:GridData span="XL2 L2 M2 S12" />
+                            </layoutData>
                         </ComboBox>
-                    </HBox>
-                    <layoutData>
-                        <layout:GridData span="XL3 L3 M3 S12" />
-                    </layoutData>
-                </VBox>
-                <VBox>
-                    <HBox>
-                        <Label text="{I18N>/PERSON}" />
-                    </HBox>
-                    <HBox>
-                        <!-- <Input id="inputWithEmployeeValueHelp" value="{bomMappingModel>/creator_person_info/user_local_name}"
-                            showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
-                        </Input> -->
+
+                        <Label text="{I18N>/CHARGE_PERSON}" required="true">
+                            <layoutData>
+                                <layout:GridData span="XL2 L2 M2 S12" />
+                            </layoutData>
+                        </Label>
                         <Input value="{bomMappingModel>/creator_local_name}"
                             showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
                             <customData>
@@ -56,39 +53,34 @@
                                 <core:CustomData key="textPath" value="/creator_local_name" />
                                 <core:CustomData key="codePath" value="/creator_empno" />
                             </customData>
-                        </Input>
-                    </HBox>
-                    <layoutData>
-                        <layout:GridData span="XL3 L3 M3 S12" />
-                    </layoutData>
-                </VBox>                    
-                <VBox>
-                    <HBox>
-                        <Label text="ECO/ECR No." />
-                    </HBox>
-                    <HBox>
-                        <Input value="{bomMappingModel>/eng_change_number}" />
-                    </HBox>
-                    <layoutData>
-                        <layout:GridData span="XL3 L3 M3 S12" />
-                    </layoutData>
-                </VBox>
-                <VBox>
-                    <HBox>
-                        <Label text="{I18N>/REASON}" />
-                    </HBox>
-                    <HBox>
-                        <Input width="100%" value="{bomMappingModel>/change_reason}" >
                             <layoutData>
-                                <FlexItemData growFactor="1"/>
+                                <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData>
                         </Input>
-                    </HBox>
-                    <layoutData>
-                        <layout:GridData span="XL3 L3 M3 S12" />
-                    </layoutData>
-                </VBox>                
+
+                        <Label text="{I18N>/ECO_ECR_NO}" >
+                            <layoutData>
+                                <layout:GridData span="XL2 L2 M2 S12" />
+                            </layoutData>
+                        </Label>
+                        <Input value="{bomMappingModel>/eng_change_number}">
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M3 S12" />
+                            </layoutData>
+                        </Input>
+
+                        <Label text="{I18N>/MAPPING_RSN}" required="true">
+                            <layoutData>
+                                <layout:GridData span="XL1 L1 M1 S12" linebreak="true"/>
+                            </layoutData>
+                        </Label>
+                        <Input width="100%" value="{bomMappingModel>/change_reason}" >
+                            <layoutData>
+                                <layout:GridData span="XL11 L11 M11 S12" />
+                            </layoutData>
+                        </Input>
             </form:SimpleForm>
+            </VBox>
             <!-- </Panel> -->
 
             <HBox>
@@ -103,16 +95,16 @@
                         <headerToolbar>
                             <OverflowToolbar>
                                 <content>
-                                    <Title text="As-is 자재코드" level="H2"/>
+                                    <Title text="{I18N>/ASIS_MTL_CODE}" level="H2"/>
                                 </content>
                             </OverflowToolbar>
                         </headerToolbar>
                         <columns>
                             <Column hAlign="Begin" width="30%">
-                                <Text text="자재코드" />
+                                <Text text="{I18N>/MATERIAL_CODE}" />
                             </Column>
                             <Column hAlign="Begin" width="70%">
-                                <Text text="자재설명" />
+                                <Text text="{I18N>/MATERIAL_DESC}" />
                             </Column>
                         </columns>
                         <items>
@@ -144,19 +136,19 @@
                         <headerToolbar>
                             <OverflowToolbar>
                                 <content>
-                                    <Title text="To-be Information" level="H2"/>
+                                    <Title text="{I18N>/TOBE_MTL_CODE}" level="H2"/>
                                 </content>
                             </OverflowToolbar>
                         </headerToolbar>
                         <columns>
                             <Column hAlign="Begin" width="20%">
-                                <Text text="자재코드" />
+                                <Text text="{I18N>/MATERIAL_CODE}" />
                             </Column>
                             <Column hAlign="Begin" width="30%">
-                                <Text text="자재설명" />
+                                <Text text="{I18N>/MATERIAL_DESC}" />
                             </Column>
                             <Column hAlign="Begin" width="50%">
-                                <Text text="Reason" />
+                                <Text text="{I18N>/REMARK}" />
                             </Column>
                         </columns>
                         <items>
@@ -176,8 +168,8 @@
         </content>
         <buttons>
             <Button text="{I18N>/CLOSE}" class="sapUiSmallMarginEnd" press=".onBomMappingExit"/>
-            <Button text="{I18N>/DELETE}" class="sapUiSmallMarginEnd" press=".onBomMappingDeletePress" visible="{= ${bomMappingModel>/mapping_id} ? true : false }"/>
-            <Button text="{I18N>/SAVE}" class="sapUiSmallMarginEnd" type="Emphasized" press=".onBomMappingSavePress" />
+            <Button text="{I18N>/DELETE}" class="sapUiSmallMarginEnd" press=".onBomMappingDeletePress" visible="{= ${detailModel>/mcst_status_code} !== 'CONFIRMED' &amp;&amp; ${bomMappingModel>/mapping_id} ? true : false }"/>
+            <Button text="{I18N>/SAVE}" class="sapUiSmallMarginEnd" type="Emphasized" press=".onBomMappingSavePress" visible="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true }"/>
         </buttons>
         <cm-ui:EmployeeDialog id="employeeDialogBomMapping" 
             title="{I18N>/EMPLOYEE} {I18N>/FIND}"
