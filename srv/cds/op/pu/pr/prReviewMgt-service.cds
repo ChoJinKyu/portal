@@ -1,21 +1,32 @@
 namespace op;
 
 using {op.Pu_Pr_Mst as prMst} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_MST-model';
-using {op.Pu_Pr_Dtl as prDtl} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL-model';
-using {cm.Code_View as cdView } from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
-using {cm.Hr_Employee as hrEmployee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
-//using {cm.Pur_Operation_Org as operationOrg } from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
 
+using {op.Pu_Pr_Dtl as prDtl} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL-model';
+using {cm.Code_View as cdView} from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
+using {cm.Hr_Employee as hrEmployee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
+
+// 조직코드
+using {cm.Pur_Operation_Org as operationOrg} from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
+
+// 자재그룹코드
+using {dp.Mm_Material_Group as mtlGroup}        from  '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_GROUP-model';
+using {dp.Mm_Material_Group_Lng as mtlGroupLng} from  '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_GROUP_LNG-model';
+
+// 자재구매그룹
 using {dp.Mm_Material_Org as mtlOrg } from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_ORG-model';
 
-using {op.Pu_Pr_Account as prAcct} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_ACCOUNT-model';
-using {op.Pu_Account_Mst as acctMst} from '../../../../../db/cds/op/pu/account/OP_PU_ACCOUNT_MST-model';
-using {op.Pu_Asset_Mst as assetMst} from '../../../../../db/cds/op/pu/asset/OP_PU_ASSET_MST-model';
-using {op.Pu_Cctr_Mst as cctrMst} from '../../../../../db/cds/op/pu/cctr/OP_PU_CCTR_MST-model';
-using {op.Pu_Order_Mst as orderMst} from '../../../../../db/cds/op/pu/order/OP_PU_ORDER_MST-model';
-using {op.Pu_Wbs_Mst as wbsMst} from '../../../../../db/cds/op/pu/wbs/OP_PU_WBS_MST-model';
-
+using {op.Pu_Pr_Account as prAcct}   from '../../../../../db/cds/op/pu/pr/OP_PU_PR_ACCOUNT-model';
 using {op.Pu_Pr_Dtl_His as prDtlHis} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL_HIS-model';
+
+using {op.Pu_Account_Mst as acctMst} from '../../../../../db/cds/op/pu/account/OP_PU_ACCOUNT_MST-model';
+using {op.Pu_Asset_Mst as assetMst}  from '../../../../../db/cds/op/pu/asset/OP_PU_ASSET_MST-model';
+using {op.Pu_Cctr_Mst as cctrMst}    from '../../../../../db/cds/op/pu/cctr/OP_PU_CCTR_MST-model';
+using {op.Pu_Order_Mst as orderMst}  from '../../../../../db/cds/op/pu/order/OP_PU_ORDER_MST-model';
+using {op.Pu_Wbs_Mst as wbsMst}      from '../../../../../db/cds/op/pu/wbs/OP_PU_WBS_MST-model';
+
+// Sess
+using {cm.Spp_User_Session_View as sppUserSession} from '../../../../../db/cds/cm/util/CM_SPP_USER_SESSION_VIEW-model';
 
 
 @path : '/op.prReviewMgtService'
@@ -37,6 +48,7 @@ service PrReviewMgtService {
             ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE_3', mst.pr_type_code_3, 'KO') as pr_type_name_3 : String(240)  // 카테고리
 
             ,dtl.org_code  // 조직코드
+            ,org.org_name : String(240) // 조직코드명
             ,dtl.material_code  // 자재코드
             ,dtl.material_group_code  // 자재그룹코드
 
@@ -87,37 +99,17 @@ service PrReviewMgtService {
         and dtl.company_code = mst.company_code
         and dtl.pr_number    = mst.pr_number
 
+        // 요청자 부서
         left outer join hrEmployee hrEmp
         on  hrEmp.tenant_id = dtl.tenant_id
         and hrEmp.employee_number = dtl.requestor_empno
 
-/*      Function 으로 변경
-        left outer join cdView cd1
-        on  cd1.tenant_id   = mst.tenant_id
-        and cd1.group_code  = 'OP_PR_TYPE_CODE'
-        and cd1.language_cd = 'KO'
-        and cd1.code        = mst.pr_type_code
-        left outer join cdView cd2
-        on  cd2.tenant_id   = mst.tenant_id
-        and cd2.group_code  = 'OP_PR_TYPE_CODE_2'
-        and cd2.language_cd = 'KO'
-        and cd2.code        = mst.pr_type_code_2
-        left outer join cdView cd3
-        on  cd3.tenant_id   = mst.tenant_id
-        and cd3.group_code  = 'OP_PR_TYPE_CODE_3'
-        and cd3.language_cd = 'KO'
-        and cd3.code        = mst.pr_type_code_3
-        left outer join cdView cd4
-        on  cd4.tenant_id   = mst.tenant_id
-        and cd4.group_code  = 'OP_PR_CREATE_SYSTEM_CODE'
-        and cd4.language_cd = 'KO'
-        and cd4.code        = mst.pr_create_system_code
-        left outer join cdView cd5
-        on  cd5.tenant_id   = mst.tenant_id
-        and cd5.group_code  = 'OP_PR_CREATE_STATUS_CODE'
-        and cd5.language_cd = 'KO'
-        and cd5.code        = mst.pr_create_status_code
-*/
+        // 조직코드
+        left outer join operationOrg org
+        on  org.tenant_id     = dtl.tenant_id
+        and org.company_code  = dtl.company_code
+        and org.org_type_code = dtl.org_type_code
+        and org.org_code      = dtl.org_code
     ;
 
    // 구매요청 검토/접수 상세
@@ -145,16 +137,16 @@ service PrReviewMgtService {
             ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_SYSTEM_CODE', mst.pr_create_system_code, 'KO') as pr_create_system_name : String(240)  // 구매요청생성시스템
 
             ,dtl.org_code  // 조직코드
-            ,dtl.org_code as org_name  // 조직코드명  -- by dokim
+            ,org.org_name : String(240)  // 조직코드명
             ,dtl.material_code  // 자재코드
-            ,dtl.material_code as material_name  // 자재코드  -- by dokim
+            ,dtl.material_code as material_name  // 자재코드명은 안보여준다
             ,dtl.material_group_code  // 자재그룹코드
-            ,dtl.material_group_code as material_group_name  // 자재그룹코드  -- by dokim
+            ,mtlGr.material_group_name  // 자재그룹코드명
 
             ,dtl.pr_desc  // 품명 - 구매요청내역
             ,dtl.remark  // 비고
             ,dtl.item_category_code  // 품목범주코드
-            ,dtl.item_category_code as item_category_name  // 품목범주코드  -- by dokim
+            ,cm_get_code_name_func(dtl.tenant_id, 'OP_ERP_ITEM_CATEGORY_CODE', dtl.item_category_code, 'KO') as item_category_name : String(240)  // 품목범주코드
             ,dtl.sloc_code  // 저장위치코드
 
             ,dtl.requestor_empno  // 구매요청자사번
@@ -167,8 +159,8 @@ service PrReviewMgtService {
             ,dtl.buyer_department_code  // 구매담당자부서
             ,cm_get_dept_name_func(dtl.tenant_id, dtl.buyer_department_code) as buyer_department_name : String(240)  // 구매담당자부서
             ,dtl.purchasing_group_code  // 구매그룹코드
-            ,dtl.purchasing_group_code as purchasing_group_name  // 구매그룹코드
-            ,mtl.purchasing_group_code as material_purchasing_group_code  // 자재구매그룹  -- by dokim
+            ,dtl.purchasing_group_code as purchasing_group_name  // 구매그룹코드  -- by dokim
+            ,mtl.purchasing_group_code as material_purchasing_group_code  // 자재구매그룹
             ,mtl.purchasing_group_code as material_purchasing_group_name  // 자재구매그룹  -- by dokim
 
             ,dtl.pr_quantity  // 구매요청수량
@@ -199,19 +191,31 @@ service PrReviewMgtService {
         and dtl.company_code = mst.company_code
         and dtl.pr_number    = mst.pr_number
 
-       // 정상일때 inner join으로 변경하자.  -- by dokim
-       //inner join hrEmployee hrEmp
+        // 요청자 부서
         left outer join hrEmployee hrEmp
         on  hrEmp.tenant_id = dtl.tenant_id
         and hrEmp.employee_number = dtl.requestor_empno
 
-        /*
+        // 조직코드
         left outer join operationOrg org
         on  org.tenant_id     = dtl.tenant_id
         and org.company_code  = dtl.company_code
         and org.org_type_code = dtl.org_type_code
         and org.org_code      = dtl.org_code
-        */
+
+        // 자재그룹코드
+        left outer join (select m.tenant_id
+                               ,m.material_group_code
+                               ,ifnull(l.material_group_name, m.material_group_name) as material_group_name : String(100)
+                         from mtlGroup m
+                         left outer join mtlGroupLng l
+                         on l.tenant_id = m.tenant_id
+                         and l.material_group_code = m.material_group_code
+                         and l.language_code = 'KO') mtlGr
+        on  mtlGr.tenant_id = dtl.tenant_id
+        and mtlGr.material_group_code = dtl.material_group_code
+
+        // 자재구매그룹
         left outer join mtlOrg mtl
         on  mtl.tenant_id     = dtl.tenant_id
         and mtl.company_code  = dtl.company_code
