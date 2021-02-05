@@ -24,8 +24,8 @@ sap.ui.define([
         metadata: {
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "55em"},
-                keyField: { type: "string", group: "Misc", defaultValue: "idea_manager_empno" },
-                textField: { type: "string", group: "Misc", defaultValue: "idea_manager_name" }
+                keyField: { type: "string", group: "Misc", defaultValue: "category_code" },
+                textField: { type: "string", group: "Misc", defaultValue: "category_name" }
             }
         },
 
@@ -35,127 +35,74 @@ sap.ui.define([
 
             var that = this;
 
-            this.oCompanyCode = new CodeComboBox({ 
+            this.oCateGroupCode = new CodeComboBox({ 
                 showSecondaryValues: true,
                 useEmpty: true,
-                keyField: 'company_name',
-                textField: 'company_code',
-                additionalText:"company_name",
+                keyField: 'code_name',
+                textField: 'code',
+                additionalText:"code_name",
                 items: {
                     path: '/',
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2100')
+                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
+                        new Filter("group_code", FilterOperator.EQ, 'DP_PD_CATEGORY_GROUP')
                     ],
-                    serviceName: 'cm.util.OrgService',
-                    entityName: 'Company'
+                    serviceName: 'cm.util.CommonService',
+                    entityName: 'Code'
                 },
                 required: true
-            });
+            });          
             
-
-            this.oBizunitCode = new CodeComboBox({ 
-                showSecondaryValues:true,
-                useEmpty:true,
-                keyField: 'bizunit_name',
-                textField: 'bizunit_code',
-                additionalText:"bizunit_name",
-                items: {
-                    path: '/',
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2100')
-                    ],
-                    serviceName: 'cm.util.OrgService',
-                    entityName: 'Unit'
-                },
-                required: true
-            });
-
-            this.oLocalUserName = new SearchField({
-                 placeholder: this.getModel("I18N").getText("/IDEA_MANAGER_NAME")
-            });
-            
-            this.oCompanyCode.attachEvent("change", this.loadData.bind(this));
-            this.oBizunitCode.attachEvent("change", this.loadData.bind(this));
-            this.oLocalUserName.attachEvent("change", this.loadData.bind(this));
+            this.oCateGroupCode.attachEvent("change", this.loadData.bind(this));            
             
             return [
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/COMPANY_CODE")}),
-                        this.oCompanyCode
+                        new Label({ text: this.getModel("I18N").getText("/CATEGORY_GROUP")}),
+                        this.oCateGroupCode
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M3 S12"})
-                }),
-                new VBox({
-                    items: [
-                        new Label({ text: this.getModel("I18N").getText("/BIZUNIT_CODE")}),
-                        this.oBizunitCode
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M3 S12"})
-                }),
-                new VBox({
-                    items: [
-                        new Label({ text: this.getModel("I18N").getText("/IDEA_MANAGER_NAME")}),
-                        this.oLocalUserName
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M3 S12"})
-                })
+                })                
             ];
         },
 
         createTableColumns: function(){
             return [
                 new Column({
-                    width: "10%",
-                    label: new Label({text: this.getModel("I18N").getText("/COMPANY_CODE")}),
-                    template: new Text({text: "{company_code}"})
+                    width: "20%",
+                    label: new Label({text: this.getModel("I18N").getText("/CATEGORY_NAME")}),
+                    template: new Text({text: "{category_name}"})
                 }),
                 new Column({
-                    width: "15%",
-                    label: new Label({text: this.getModel("I18N").getText("/BIZUNIT_CODE")}),
-                    template: new Text({text: "{bizunit_code}"})
+                    width: "60%",
+                    label: new Label({text: this.getModel("I18N").getText("/PARENT_CATEGORY")}),
+                    template: new Text({text: "{path}"})
                 }),
                 new Column({
                     width: "20%",
-                    label: new Label({text: this.getModel("I18N").getText("/IDEA_MANAGER_NAME")}),
-                    template: new Text({text: "{idea_manager_name}"})
-                }),
-                new Column({
-                    width: "50%",
-                    label: new Label({text: this.getModel("I18N").getText("/DEPARTMENT_LOCAL_NAME")}),
-                    template: new Text({text: "{department_local_name}"})
-                })
+                    label: new Label({text: this.getModel("I18N").getText("/STATUS")}),
+                    template: new Text({text: "{active_flag}"})
+                })               
             ];
         },
 
         loadData: function(oThis){
 
                var that = this,
-                sCompanyCode = this.oCompanyCode._lastValue,
-                sBizunitCode = this.oBizunitCode._lastValue,
-                sLocalUserName = this.oLocalUserName.getValue(),
+                sCateGroupCode = this.oCateGroupCode._lastValue                
 
                 aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                    new Filter("tenant_id", FilterOperator.EQ, "L2101")
                 ];
 
-                if(sCompanyCode){
-                    aFilters.push(new Filter("tolower(company_code)", FilterOperator.Contains, "'" + sCompanyCode.toLowerCase().replace("'","''") + "'"));
-                }
+                if(sCateGroupCode){
+                    aFilters.push(new Filter("tolower(company_code)", FilterOperator.Contains, "'" + sCateGroupCode.toLowerCase().replace("'","''") + "'"));
+                }                
 
-                if(sBizunitCode){
-                    aFilters.push(new Filter("tolower(bizunit_code)", FilterOperator.Contains, "'" + sBizunitCode.toLowerCase().replace("'","''") + "'"));
-                }
-
-                if(sLocalUserName){
-                    aFilters.push(new Filter("tolower(idea_manager_name)", FilterOperator.Contains, "'" + sLocalUserName.toLowerCase().replace("'","''") + "'"));
-                }
-
-
-            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.util.ImService/").read("/IdeaManager", {
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.partBaseActivityService/").read("/PdPartBaseActivityCategoryPopView", {
                 filters: aFilters,
                 sorters: [
-                    new Sorter("company_code", true)
+                    new Sorter("category_group_code", true)
                 ],
                 success: function(oData){
                     var aRecords = oData.results;
