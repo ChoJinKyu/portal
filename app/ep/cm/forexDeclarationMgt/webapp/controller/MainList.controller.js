@@ -21,7 +21,7 @@ sap.ui.define([
     "sap/m/Button",
     "sap/m/ButtonType",
     "sap/m/Text",
-    "sap/m/Label",
+    "sap/m/Label", 
     "sap/m/Input",
     "sap/m/VBox",
     "sap/ui/core/mvc/Controller"
