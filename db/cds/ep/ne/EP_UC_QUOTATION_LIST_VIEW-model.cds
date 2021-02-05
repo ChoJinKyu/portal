@@ -29,6 +29,14 @@ entity Uc_Quotation_List_View {
         currency_code              : String(15)             @title : '통화코드';
         attch_group_number         : String(100)            @title : '첨부파일그룹번호';
         supplier_write_flag        : Boolean                @title : '공급업체작성여부';
+        completion_flag            : Boolean                @title : '준공여부';
+        completion_date            : Date                   @title : '준공일자';
+        facility_person_empno      : String(30)             @title : '시설담당자사번';
+        facility_person_name       : String(30)             @title : '시설담당자'; 
+        facility_department_code   : String(50)             @title : '시설부서코드'; 
+        completion_attch_group_number   : String(50)        @title : '준공첨부파일그룹번호'; 
+
+
 }
 
 extend Uc_Quotation_List_View with util.Managed;

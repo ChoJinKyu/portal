@@ -26,6 +26,7 @@ entity Get_Uc_Approval_Dtl_View {
         net_price_contract_end_date    : Date;
         net_price_contract_period      : String(30);
         remark                         : String(3000);
+        item_sequence                  : Decimal;
         //expiration_flag                : Boolean;
         
         //supplier_item_create_flag        : Boolean;
