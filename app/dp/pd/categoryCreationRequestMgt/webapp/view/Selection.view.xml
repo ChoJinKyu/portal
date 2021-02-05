@@ -261,8 +261,7 @@
                                 growingThreshold="20"
                                 class="sapFDynamicPageAlignContent" 
                                 updateFinished=".onListMainTableUpdateFinished"
-                                mode="SingleSelectMaster" 
-                                type="None"
+                                mode="SingleSelectMaster"
                                 width="auto"
                                 items="{details>/PdCategoryApprovalType}">
                                 <headerToolbar>

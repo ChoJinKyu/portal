@@ -314,8 +314,8 @@ sap.ui.define([
 
         onMoveAddCreate: function (oEvent) {
             this.getRouter().navTo("addCreatePage", {
-                tenantId: this._sTenantId,
-                requestNumber: this._sRequestNumber
+                requestNumber: this._sRequestNumber,
+                categoryGroupCode: this._sCategoryGroupCode
             }, true);
         },
 
@@ -554,10 +554,16 @@ sap.ui.define([
         selectPartCategoryValue: function (oEvent) {
             var row = this.getView().getModel("tree").getObject(oEvent.getParameters().rowContext.sPath);
 
-            this.byId("searchField").setValue( "[" + row.category_code + " ] " + row.category_name);
-            this.byId("similarCategoryCode").setText( "[" + row.category_code + " ] " + row.category_name);
+            if(row.drill_state !== "leaf"){
+                MessageToast.show("Leaf Category만 선택할 수 있습니다.");
+                return;
+            } else {
+                this.byId("searchField").setValue( "[" + row.category_code + " ] " + row.category_name);
+                this.byId("similarCategoryCode").setText( "[" + row.category_code + " ] " + row.category_name);
 
-            this.partCategoryPopupClose();
+                this.partCategoryPopupClose();
+            }
+            
         },
        
         
