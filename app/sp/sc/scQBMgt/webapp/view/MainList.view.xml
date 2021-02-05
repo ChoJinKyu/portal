@@ -33,8 +33,8 @@
 
         <f:header> 
             <f:DynamicPageHeader pinnable="true">
-                <smartFilterBar:SmartFilterBar id="smartFilterBar"  useToolbar="false"  enableBasicSearch="false" class="sapUiLargeTop"
-                            considerSelectionVariants="true" entitySet="NegoWorkbenchView33" search="filterSearch" >
+                <smartFilterBar:SmartFilterBar id="smartFilterBar"  useToolbar="false"  enableBasicSearch="false" class="sapUiLargeTop" 
+                            considerSelectionVariants="true" entitySet="NegoWorkbenchView" search="filterSearch" >
                     <smartFilterBar:controlConfiguration class="">
 
                     
@@ -343,7 +343,7 @@
         </f:header>
         <f:content>
             <smartTable:SmartTable id="sTable1" entitySet="NegoWorkbenchView"
-                ignoreFromPersonalisation="tenant_id"
+                ignoreFromPersonalisation="tenant_id,nego_item_number" ignoredFields=""
                 smartFilterId="smartFilterBar" tableType="Table" 
                 useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true" 
                 useTablePersonalisation="true" header="Negotiation Workbench List" showRowCount="true" 
