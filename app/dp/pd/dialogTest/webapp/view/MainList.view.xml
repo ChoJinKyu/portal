@@ -153,6 +153,38 @@
                                     span="XL5 L5 M5 S10" />
                             </layoutData>
                         </VBox>
+
+
+                        <VBox>
+                            <Label text="Gategory Dialog(Single)" labelFor="searchGategoryInput"></Label>
+                                <Input 
+                                    id="searchGategoryInput"
+                                    placeholder="Gategory Dialog(Single)"
+                                    showValueHelp="true"
+                                    valueHelpRequest=".onDialogGategoryPress"/>
+                                <layoutData>
+                                    <layout:GridData 
+                                        moveForward="XL1 L1 M1 S1"
+                                        span="XL5 L5 M5 S10" />
+                                </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Gategory Dialog(Multi)" labelFor="searchGategoryMultiInput"></Label>
+                                <MultiInput 
+                                    id="searchGategoryMultiInput"
+                                    placeholder="Gategory Dialog(Multi)"
+                                    showValueHelp="true" 
+                                    valueHelpRequest=".onDialogMultiGategoryPress">
+                                </MultiInput>
+                            <layoutData>
+                                <layout:GridData 
+                                    moveForward="XL1 L1 M1 S1"
+                                    span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+
+
+
                     </form:content>
                 </form:SimpleForm>
             </VBox>

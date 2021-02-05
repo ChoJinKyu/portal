@@ -14,7 +14,8 @@ sap.ui.define([
     "dp/util/control/ui/HsCodeDialog",
     "dp/util/control/ui/MaterialClassDialog",
     "dp/util/control/ui/MaterialCommodityDialog",
-    "dp/util/control/ui/MaterialGroupDialog"
+    "dp/util/control/ui/MaterialGroupDialog",
+    "dp/util/control/ui/GategoryDialog",
 ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -22,7 +23,7 @@ sap.ui.define([
     function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, 
             JSONModel, DateFormatter, Filter, FilterOperator, MessageBox, 
             MessageToast, IdeaManagerDialog, HsCodeDialog, MaterialClassDialog,
-            MaterialCommodityDialog, MaterialGroupDialog) {
+            MaterialCommodityDialog, MaterialGroupDialog, GategoryDialog) {
           "use strict";
 
         return BaseController.extend("dp.pd.dialogTest.controller.MainList", {
@@ -254,7 +255,55 @@ sap.ui.define([
 
                 this.oSearchMaterialMultiGroupDialog.open();
                 this.oSearchMaterialMultiGroupDialog.setTokens(this.byId("searchMaterialGroupMultiInput").getTokens());
+            },
+
+
+            //MaterialGroup 싱글 팝업
+            onDialogGategoryPress : function(){
+
+                if(!this.oSearchGategoryDialog){
+                    this.oSearchGategoryDialog = new GategoryDialog({
+                        title: this.getModel("I18N").getText("/SELECT")+" "+this.getModel("I18N").getText("/MATERIAL_GROUP_CODE"),
+                        multiSelection: false,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                            ]
+                        }
+                    });
+                    this.oSearchGategoryDialog.attachEvent("apply", function(oEvent){ 
+                        console.log(oEvent.getParameter("item"));
+                        this.byId("searchGategoryInput").setValue(oEvent.getParameter("item").material_group_name);
+                    }.bind(this));
+                }
+
+                this.oSearchGategoryDialog.open();
+
+            },
+
+            //MaterialGroup 멀티 팝업
+            onDialogMultiGategoryPress : function(){
+
+                if(!this.oSearchGategoryMultiDialog){
+                    this.oSearchGategoryMultiDialog = new GategoryDialog({
+                        title: this.getModel("I18N").getText("/SELECT")+" "+this.getModel("I18N").getText("/MATERIAL_GROUP_CODE"),
+                        multiSelection: true,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                            ]
+                        }
+                    });
+                    this.oSearchGategoryMultiDialog.attachEvent("apply", function(oEvent){ 
+                        this.byId("searchGategoryMultiInput").setTokens(oEvent.getSource().getTokens());
+                    }.bind(this));
+                }
+
+                this.oSearchGategoryMultiDialog.open();
+                this.oSearchGategoryMultiDialog.setTokens(this.byId("searchMaterialGroupMultiInput").getTokens());
             }
+
+
 
 
 
