@@ -7,50 +7,24 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/base/util/deepExtend",
-    "ext/lib/js/jquery.fileDownload"
+    "ext/lib/js/jquery.fileDownload",
+    "jquery.sap.global"
 ],
-	function(Controller, JSONModel, UploadCollectionParameter, FileSizeFormat, UUID, MessageBox, MessageToast, deepExtend) {
+	function(Controller, JSONModel, UploadCollectionParameter, FileSizeFormat, UUID, MessageBox, MessageToast, deepExtend, fileDownload, $) {
     "use strict";
     
     var _fileGroupId;
     var _oUploadCollection;
 
 	return Controller.extend("xx.templateGuie.controller.FileUploadGuide", {
-        onInit: function() {
-            // Test Data
-            var oData = {
-                "result" : "success",
-                "records" :[
-                    {
-                        "groupId": "550e8400-e29b-41d4-a716–446655440000",
-                        "fileId" : "Ef9FrbyJWpLrOLnTGJf0US1X_VQSWZI-SnLBexUYsu1",
-                        "fileName" : "테스트파일.ppt",
-                        "fileSize" : "1200",
-                        "uploadDate" : "2021-01-11",
-                        "fileExt" : "ppt"
-                    },
-                    {
-
-                        "groupId": "550e8400-e29b-41d4-a716–446655440000",
-                        "fileId" : "Ef9FrbyJWpLrOLnTGJf0US1X_VQSWZI-SnLBexUYsu2",
-                        "fileName" : "테스트파일2.ppt",
-                        "fileSize" : "1200",
-                        "uploadDate" : "2021-01-11",
-                        "fileExt" : "ppt"       
-                    }
-                ],
-                "message" : ""
-            };
-            // Test Data End
-            
+        onInit: function() {            
             this._fileGroupId = "098239879832998";
-            // this._fileGroupId = ""; 
+            // this._fileGroupId = "";
             
             this._oUploadCollection = this.getView().byId("fileUploadCollection");
             
             var oFileModel = new JSONModel();
-            // oFileModel.setData(oData);
-            this._oUploadCollection.setModel(oFileModel, "fileList");           
+            this._oUploadCollection.setModel(oFileModel, "fileList");     
 
             if(this._fileGroupId){  // _fileGroupId가 있다면 조회를 수행한다(기 저장된 데이터인 경우)
                 this._selectFileList();
@@ -61,12 +35,10 @@ sap.ui.define([
         },
 
         onExit : function(){
-            console.log("onExit Test");
+            
         },
 
         onChange: function(oEvent) {
-            console.log("Enter onChange");
-
 			var oUploadCollection = oEvent.getSource();
 			// Header Token
 			var oCustomerHeaderToken = new UploadCollectionParameter({
@@ -78,8 +50,6 @@ sap.ui.define([
 		},
 
 		onBeforeUploadStarts: function(oEvent) {
-            console.log("Enter onBeforeUploadStarts");
-
 			// Header Slug
 			var oCustomerHeaderForFile = new UploadCollectionParameter({
                 name: "filename",
@@ -100,7 +70,7 @@ sap.ui.define([
             var resultData = JSON.parse(oEvent.getParameter("files")[0].responseRaw);
 
             var oModel = this._oUploadCollection.getModel("fileList");
-            oModel.getProperty("/records").unshift({
+            oModel.getProperty("/records").push({
 				"fileId": resultData.fileId,
 				"fileName": originalFileName,
                 "fileExt": resultData.fileExt,
@@ -122,44 +92,26 @@ sap.ui.define([
 
             var documentId = oEvent.getSource().getProperty("documentId");
 
-            var oForm = jQuery('<form/>');
-            jQuery(oForm).attr('action', "srv-api/cm/fileupload/api/v1/download")
+            var oForm = $('<form/>');
+            $(oForm).attr('action', "srv-api/cm/fileupload/api/v1/download")
                             .attr('method','POST')
                             .attr('accept-charset','UTF-8');
 
-            jQuery('<input type=\"hidden\" name=\"fileId\" value=\"' + documentId + '\" />').appendTo(oForm);
+            $('<input type=\"hidden\" name=\"fileId\" value=\"' + documentId + '\" />').appendTo(oForm);
 
-            jQuery("iframe[name=iframe_spp_common_single_file_download]").remove();
+            $("iframe[name=iframe_spp_common_single_file_download]").remove();
                 
-            jQuery.fileDownload($(oForm).prop('action'),{
-                httpMethod:"GET",
-                data:$(oForm).serialize(),
-                successCallback: function(url){
+            $.fileDownload($(oForm).prop('action'),{
+                httpMethod : "GET",
+                data : $(oForm).serialize(),
+                successCallback : function(url){
                     that._oUploadCollection.setBusy(false);
                 },
-                failCallback: function(responseHtml, url){
+                failCallback : function(responseHtml, url){
                     that._oUploadCollection.setBusy(false);
                     MessageBox.error("Download Fail.");
                 }
-            });				
-
-            // $.ajax({
-            //     url: "srv-api/cm/fileupload/api/v1/download",
-            //     type: "GET",
-            //     data: {fileId : documentId},
-            //     contentType: "application/json"
-            // }).done(function(resultData) {
-            //     if(resultData.result === "success"){
-            //         that._deleteItemById(documentId);
-            //     }
-            // })
-            // .fail(function (resultData, textStatus, xhr) {
-            //     MessageBox.error("File delete fail.");
-            // })
-            // .always(function () {
-            //     that._oUploadCollection.setBusy(false);
-            // });
-            // srv-api/test/download"
+            });
         },
         
 		onFileDeleted: function(oEvent) {
@@ -230,7 +182,7 @@ sap.ui.define([
 			var oData = this._oUploadCollection.getModel("fileList").getData();
 			var aItems = deepExtend({}, oData).records;
             
-            jQuery.each(aItems, function(index){
+            $.each(aItems, function(index){
 				if (aItems[index] && aItems[index].fileId === sItemToDeleteId) {
 					aItems.splice(index, 1);
 				}

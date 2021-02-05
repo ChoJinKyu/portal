@@ -6,42 +6,18 @@ sap.ui.define([
     "ext/lib/util/UUID",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-    "sap/base/util/deepExtend"
+    "sap/base/util/deepExtend",
+    "ext/lib/js/jquery.fileDownload",
+    "jquery.sap.global"
 ],
-	function(Controller, JSONModel, UploadCollectionParameter, FileSizeFormat, UUID, MessageBox, MessageToast, deepExtend) {
+	function(Controller, JSONModel, UploadCollectionParameter, FileSizeFormat, UUID, MessageBox, MessageToast, deepExtend, fileDownload, $) {
     "use strict";
     
     var _fileGroupId;
     var _oUploadCollection;
 
 	return Controller.extend("xx.templateGuie.controller.UploadCollection", {
-        onInit: function(initParam) {
-            // Test Data
-            // var oData = {
-            //     "result" : "success",
-            //     "records" :[
-            //         {
-            //             "groupId": "550e8400-e29b-41d4-a716–446655440000",
-            //             "fileId" : "Ef9FrbyJWpLrOLnTGJf0US1X_VQSWZI-SnLBexUYsu1",
-            //             "fileName" : "테스트파일.ppt",
-            //             "fileSize" : "1200",
-            //             "uploadDate" : "2021-01-11",
-            //             "fileExt" : "ppt"
-            //         },
-            //         {
-
-            //             "groupId": "550e8400-e29b-41d4-a716–446655440000",
-            //             "fileId" : "Ef9FrbyJWpLrOLnTGJf0US1X_VQSWZI-SnLBexUYsu2",
-            //             "fileName" : "테스트파일2.ppt",
-            //             "fileSize" : "1200",
-            //             "uploadDate" : "2021-01-11",
-            //             "fileExt" : "ppt"       
-            //         }
-            //     ],
-            //     "message" : ""
-            // };
-            // Test Data End
-            
+        onInit: function(initParam) {           
             this._fileGroupId = initParam.fileGroupId;
             this._oUploadCollection = initParam.oUploadCollection;
 
@@ -57,8 +33,6 @@ sap.ui.define([
         },
 
         onChange: function(oEvent) {
-            console.log("Enter onChange");
-
 			var oUploadCollection = oEvent.getSource();
 			// Header Token
 			var oCustomerHeaderToken = new UploadCollectionParameter({
@@ -70,8 +44,6 @@ sap.ui.define([
 		},
 
 		onBeforeUploadStarts: function(oEvent) {
-            console.log("Enter onBeforeUploadStarts");
-
 			// Header Slug
 			var oCustomerHeaderForFile = new UploadCollectionParameter({
                 name: "filename",
@@ -91,7 +63,7 @@ sap.ui.define([
             var resultData = JSON.parse(oEvent.getParameter("files")[0].responseRaw);
 
             var oModel = this._oUploadCollection.getModel("fileList");
-            oModel.getProperty("/records").unshift({
+            oModel.getProperty("/records").push({
 				"fileId": resultData.fileId,
 				"fileName": resultData.fileName,
                 "fileExt": resultData.fileExt,
@@ -108,11 +80,60 @@ sap.ui.define([
         },
 
         onFileDownload : function(oEvent) {
-            oEvent;
+            var that = this;
+            this._oUploadCollection.setBusy(true);
+
+            var documentId = oEvent.getSource().getProperty("documentId");
+
+            var oForm = $('<form/>');
+            $(oForm).attr('action', "srv-api/cm/fileupload/api/v1/download")
+                            .attr('method','POST')
+                            .attr('accept-charset','UTF-8');
+
+            $('<input type=\"hidden\" name=\"fileId\" value=\"' + documentId + '\" />').appendTo(oForm);
+
+            $("iframe[name=iframe_spp_common_single_file_download]").remove();
+                
+            $.fileDownload($(oForm).prop('action'),{
+                httpMethod : "GET",
+                data : $(oForm).serialize(),
+                successCallback : function(url){
+                    that._oUploadCollection.setBusy(false);
+                },
+                failCallback : function(responseHtml, url){
+                    that._oUploadCollection.setBusy(false);
+                    MessageBox.error("Download Fail.");
+                }
+            });
         },
         
 		onFileDeleted: function(oEvent) {
-            
+            var that = this;
+            var documentId = oEvent.getParameter("documentId");
+
+            this._oUploadCollection.setBusy(true);
+
+            $.ajax({
+                url: "srv-api/cm/fileupload/api/v1/delete",
+                type: "POST",
+                data: JSON.stringify({
+                    groupId : this._fileGroupId,
+                    fileId : documentId
+                }),
+                contentType: "application/json"
+            }).done(function(resultData) {
+                var resultData = JSON.parse(resultData);
+                
+                if(resultData.result === "success"){
+                    that._deleteItemById(documentId);
+                }
+            })
+            .fail(function (resultData, textStatus, xhr) {
+                MessageBox.error("File delete fail.");
+            })
+            .always(function () {
+                that._oUploadCollection.setBusy(false);
+            });
         },
 
         onTypeMissmatch : function(oEvent){
@@ -154,7 +175,7 @@ sap.ui.define([
 			var oData = this._oUploadCollection.getModel("fileList").getData();
 			var aItems = deepExtend({}, oData).records;
             
-            jQuery.each(aItems, function(index){
+            $.each(aItems, function(index){
 				if (aItems[index] && aItems[index].fileId === sItemToDeleteId) {
 					aItems.splice(index, 1);
 				}

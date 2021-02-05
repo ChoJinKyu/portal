@@ -73,11 +73,12 @@
 			}]
         },
         "resourceRoots": {
-            "ext.lib": "../../../../lib",
-            "ext.lib.custom": "./controller",
+            "ext.lib": "../../../lib",
             "ext.lib.fragment": "./fragment",
             "ext.lib.fragment.controller": "./fragmentController",
-            "ext.lib.js": "./js"
+            "ext.lib.js": "./js",
+            "templateGuideView" : "./view",
+            "templateGuideController" : "./controller"
         },
 		"routing": {
 			"config": {
