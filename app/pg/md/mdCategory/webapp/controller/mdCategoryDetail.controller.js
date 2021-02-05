@@ -635,8 +635,6 @@ sap.ui.define([
 				oInput = oView.byId("fontColor");
 
 			oInput.setValue(oEvent.getParameter("hex"));
-			// oInput.setValueState(this.ValueState.None);
-			MessageToast.show("Chosen color string: " + oEvent.getParameter("hex"));
         },
 
 		onExit: function () {
