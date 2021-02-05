@@ -49,9 +49,10 @@ service OrgService {
                 org.org_name,
                 org.purchase_org_code
         from Pur_Org_Type_Map as map
-        left join Pur_Operation_Org as org
+        join Pur_Operation_Org as org
             on map.tenant_id = org.tenant_id
-            and map.company_code = org.company_code;
+            and map.company_code = org.company_code
+            and map.org_type_code = org.org_type_code;
 
     //세션 이용? TENANT_ID , LANGUAGE_CODE Mst.use_flag = 'true'  
     @readonly
@@ -59,7 +60,7 @@ service OrgService {
         { grant: 'READ', where: 'tenant_id = $user.TENANT_ID and language_cd = $user.LANGUAGE_CODE'}
     ])  as
         select
-            key Mst.tenant_id,
+            key Mst.tenant_id, 
             key Mst.group_code,
             Mst.code_control_org_type_code,
             Dtl.org_code,
