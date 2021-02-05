@@ -101,7 +101,12 @@ BEGIN
                        AND    COMPANY_CODE = SD.COMPANY_CODE
                        AND    ORG_TYPE_CODE = SD.ORG_TYPE_CODE
                        AND    ORG_CODE = SD.ORG_CODE
-		               AND    SUPPLIER_CODE = SD.SUPPLIER_CODE)
+                       AND    SUPPLIER_CODE = SD.SUPPLIER_CODE)
+    GROUP BY SD.TENANT_ID,
+             SD.COMPANY_CODE,
+             SD.ORG_TYPE_CODE,
+             SD.ORG_CODE,
+	         SD.SUPPLIER_CODE
 	;
 	
 	:O_MSG.INSERT(('OK', ::ROWCOUNT || ' Rows created!'), 1);
