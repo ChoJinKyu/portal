@@ -20,7 +20,7 @@ entity Pu_Pr_Template_Mst {
         default_template_number : String(10)          @title: '기본템플릿번호' ;	
         use_flag            : Boolean        not null @cds.on.insert:false @title: '사용여부' ;	
         approval_flag       : Boolean        not null @cds.on.insert:false @title: '품의여부' ;	
-        default_template_flag : Boolean               @cds.on.insert:false @title: '기본템플릿여부' ; 
+        default_template_flag : Boolean      not null @cds.on.insert:false @title: '기본템플릿여부' ; 
     }	
 
 extend Pu_Pr_Template_Mst with util.Managed;    
