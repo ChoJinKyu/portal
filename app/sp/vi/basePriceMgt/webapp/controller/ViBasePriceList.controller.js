@@ -49,7 +49,7 @@ sap.ui.define([
                                         secondDateValue: new Date(this._changeDateFormat(oToday, "-")),
                                         type_list:[{code:"1", text:"양산VI품의"}]}), "filterModel");
 
-            this.getRouter().getRoute("basePriceList").attachPatternMatched(this.onSearch, this);
+            this.getRouter().getRoute("basePriceList").attachPatternMatched(this.onSearch, this); 
         }
 
         /**

@@ -41,7 +41,7 @@
                             items="{ path: 'rootModel>/type_code'}" >
                             <items>
                             <core:Item key="{rootModel>code}" text="{rootModel>code_name}" />
-                            </items>
+                            </items> 
                         </ComboBox>
                         <layoutData>
                             <layout:GridData span="XL2 L4 M6 S12" />
