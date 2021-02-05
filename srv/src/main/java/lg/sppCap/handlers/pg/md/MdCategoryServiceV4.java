@@ -49,6 +49,7 @@ import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.ServiceName;
 
+import lg.sppCap.frame.user.SppUserSession;
 import lg.sppCap.util.StringUtil;
 
 import cds.gen.pg.mdcategoryv4service.*;
@@ -58,6 +59,9 @@ import cds.gen.pg.mdcategoryv4service.*;
 public class MdCategoryServiceV4 implements EventHandler {
 
 	private static final Logger log = LogManager.getLogger();
+
+    @Autowired
+    SppUserSession sppUserSession;
 
 	@Autowired
 	private JdbcTemplate jdbc;
@@ -127,7 +131,7 @@ public class MdCategoryServiceV4 implements EventHandler {
                         , v_inRow.get("supplier_code")
                         , Integer.parseInt((String)v_inRow.get("item_serial_no"))
                         , v_inRow.get("attr_value")
-                        , "procSaveId"   // TODO:세션 ID로 처리
+                        , sppUserSession.getUserId() // "procSaveId"   // 세션 ID로 처리
                     };
 
                     //for(Object sObj : values) log.info("######### array ###["+sObj+"]###");
@@ -164,11 +168,24 @@ public class MdCategoryServiceV4 implements EventHandler {
                 }
             }, paramList);
 
-            // TODO : rsltList<CommonReturnType>의 마지막Row getReturnCode()가 '00000'이 아니면 Procedure Error로 판단.
+            String rsltCd = "999";
+            String rsltMesg = "DB Procedure process Error.";
+            for(Map<String, String> rtnRow : rsltList){
+                log.info("### Procedure Return Code ["+rtnRow.get("return_code")+"] ###");
+			    if ("00000".equals((String)rtnRow.get("return_code"))) {
+			        rsltCd = "000";
+			        rsltMesg = "SUCCESS";
+			        break;
+			    } else { 
+			        rsltCd = (String)rtnRow.get("return_code");
+			        rsltMesg = "DB Procedure process STEP Error.";
+                }
+			}
+            // rsltList<Map<String, String>>의 마지막Row "return_code"가 '00000'이 아니면 Procedure Error로 판단.
             rsltInfoMap.put("procRslt", rsltList);  // Procedure Result
 
-            rtnRslt.setRsltCd("000");
-            rtnRslt.setRsltMesg("SUCCESS");
+            rtnRslt.setRsltCd(rsltCd);
+            rtnRslt.setRsltMesg(rsltMesg);
 
 		} catch (Exception e) {
             e.printStackTrace();
@@ -239,7 +256,7 @@ public class MdCategoryServiceV4 implements EventHandler {
                         , v_inRow.get("spmd_character_code")
                         , v_inRow.get("spmd_character_serial_no")
                         , v_inRow.get("vendor_pool_code")
-                        , "procMultiId"   // TODO:세션 ID로 처리
+                        , sppUserSession.getUserId() // "procMultiId"   // 세션 ID로 처리
                     };
 
                     //for(Object sObj : values) log.info("### array ###["+sObj+"]###");
@@ -278,11 +295,24 @@ public class MdCategoryServiceV4 implements EventHandler {
                 }
             }, paramList);
 
-            // TODO : rsltList<CommonReturnType>의 마지막Row getReturnCode()가 '00000'이 아니면 Procedure Error로 판단.
+            String rsltCd = "999";
+            String rsltMesg = "DB Procedure process Error.";
+            for(CommonReturnType rtnRow : rsltList){
+                log.info("### Procedure Return Code ["+rtnRow.getReturnCode()+"] ###");        
+			    if ("00000".equals(rtnRow.getReturnCode())) {
+			        rsltCd = "000";
+			        rsltMesg = "SUCCESS";
+			        break;
+			    } else { 
+			        rsltCd = rtnRow.getReturnCode();
+			        rsltMesg = "DB Procedure process STEP Error.";
+                }
+			}
+            // rsltList<CommonReturnType>의 마지막Row getReturnCode()가 '00000'이 아니면 Procedure Error로 판단.
             rsltInfoMap.put("procRslt", rsltList);  // Procedure Result
 
-            rtnRslt.setRsltCd("000");
-            rtnRslt.setRsltMesg("SUCCESS");
+            rtnRslt.setRsltCd(rsltCd);
+            rtnRslt.setRsltMesg(rsltMesg);
 
 		} catch (Exception e) {
             e.printStackTrace();
@@ -349,7 +379,7 @@ public class MdCategoryServiceV4 implements EventHandler {
                         , v_inRow.get("org_code")
                         , v_inRow.get("vendor_pool_code")
                         , "300"             // 100:신규(최초), 200:저장, 300:확정(품위결제)
-                        , "UpdateMultiId"   // TODO:세션 ID로 처리
+                        , sppUserSession.getUserId() // "UpdateMultiId"   // 세션 ID로 처리
                     };
 
                     batch.add(values);
@@ -386,11 +416,24 @@ public class MdCategoryServiceV4 implements EventHandler {
                 }
             }, paramList);
 
-            // TODO : rsltList<CommonReturnType>의 마지막Row getReturnCode()가 '00000'이 아니면 Procedure Error로 판단.
+            String rsltCd = "999";
+            String rsltMesg = "DB Procedure process Error.";
+            for(CommonReturnType rtnRow : rsltList){
+                log.info("### Procedure Return Code ["+rtnRow.getReturnCode()+"] ###");        
+			    if ("00000".equals(rtnRow.getReturnCode())) {
+			        rsltCd = "000";
+			        rsltMesg = "SUCCESS";
+			        break;
+			    } else { 
+			        rsltCd = rtnRow.getReturnCode();
+			        rsltMesg = "DB Procedure process STEP Error.";
+                }
+			}
+            // rsltList<CommonReturnType>의 마지막Row getReturnCode()가 '00000'이 아니면 Procedure Error로 판단.
             rsltInfoMap.put("procRslt", rsltList);  // Procedure Result
 
-            rtnRslt.setRsltCd("000");
-            rtnRslt.setRsltMesg("SUCCESS");
+            rtnRslt.setRsltCd(rsltCd);
+            rtnRslt.setRsltMesg(rsltMesg);
 
 		}catch (Exception e) {
             e.printStackTrace();
@@ -628,9 +671,4 @@ public class MdCategoryServiceV4 implements EventHandler {
         
     }
 */
-
-
-
-
-
 }

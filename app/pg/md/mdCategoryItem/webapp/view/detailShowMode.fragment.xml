@@ -11,7 +11,7 @@
         <Text text="{master>/org_infos/bizunit_name}"/>
         <Label text="{I18N>/SPMD_CHARACTER_CODE}" />
         <Text text="{master>/spmd_character_code}"/>
-        <Label text="{I18N>/SPMD_CHARACTER_CODE_NAME}" required="true"/>
+        <Label text="{I18N>/SPMD_CHARACTER_CODE_NAME}"/>
         <Text text="{master>/spmd_character_code_name}"/>
         <Label text="{I18N>/SPMD_CHARACTER_DESC}"/>
         <Text text="{master>/spmd_character_desc}"/>

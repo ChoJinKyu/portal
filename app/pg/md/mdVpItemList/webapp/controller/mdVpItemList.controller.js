@@ -196,13 +196,13 @@ sap.ui.define([
             //     MessageToast.show("Vendor Pool을 설정해주세요.");
             //     return;
             // }
-            // tenant_combo = "L2100";
-            // sChain = "BIZ00200";
-            // sVpCode = "VP201610260004";
+            // new Filter("vendor_pool_path_code", FilterOperator.Contains, '벤더풀코드');
+            aSearchFilters.push(new Filter("vendor_pool_path_code", FilterOperator.Contains, "VP202101070088"));
             var url = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemView('KO')/Set"
                         +"?$filter=tenant_id eq '"+tenant_combo+"' and "
                         +"org_code eq '"+ sChain +"'";//+"' and "
-                        //+"vendor_pool_code eq '"+ sVpCode +"'"; //path 변경해야함
+                        // +"vendor_pool_path_code cs 'VP202101070088'";
+                        // +"vendor_pool_code cs '"+ sVpCode +"'"; //path 변경해야함
          
 			// if (sStatusflag && sStatusflag.length > 0) {
             //     url = url +" and confirmed_status_code eq '"+ sStatusflag +"'"; 
@@ -213,6 +213,7 @@ sap.ui.define([
                 url: url, 
                 contentType: "application/json",
                 type: "GET",
+                // filters: aSearchFilters,    
                 sorters: [new Sorter("hierarchy_rank")],
                 success: function(oData){ 
                     this.byId("title").setText(this.getModel("I18N").getText("/LIST") +" ("+oData.value.length+")");
@@ -316,7 +317,6 @@ sap.ui.define([
                 var param = {};
                 var items = [];
                 for(var i = 0 ; i < selectedItems.length; i++){
-                    debugger;
                     var oContext = oTable.getContextByIndex(selectedItems[i]);
                     var sPath = oContext.getPath();
                     var oData = oTable.getBinding().getModel().getProperty(sPath);
@@ -338,27 +338,35 @@ sap.ui.define([
                     });
 
                 }            
-
-                var url = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingStatusMultiProc";
-                param.items = items;
-                $.ajax({
-                    url: url,
-                    type: "POST",
-                    data : JSON.stringify(param),
-                    contentType: "application/json",
-                    success: function(data){
-                        if(data.rsltCd=="000"){
-                            MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
-                            that.onSearch();
-                        }else{
-                            alert("["+data.rsltCd+"] ["+data.rsltMesg+"]");
+///////////////////////////////MSG : 확정되었습니다
+                MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+                    title: this.getModel("I18N").getText("/SAVE"),
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: function (sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            var url = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingStatusMultiProc";
+                            param.items = items;
+                            $.ajax({
+                                url: url,
+                                type: "POST",
+                                data : JSON.stringify(param),
+                                contentType: "application/json",
+                                success: function(data){
+                                    if(data.rsltCd=="000"){
+                                        MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                        that.onSearch();
+                                    }else{
+                                        alert("["+data.rsltCd+"] ["+data.rsltMesg+"]");
+                                    }
+                                    
+                                },
+                                error: function(req){
+                                    alert("Ajax Error => "+req.status);
+                                }
+                            });
                         }
-                        
-                    },
-                    error: function(req){
-					    alert("Ajax Error => "+req.status);
-                    }
-                });
+                    }.bind(this)
+                })
 
             }
         },

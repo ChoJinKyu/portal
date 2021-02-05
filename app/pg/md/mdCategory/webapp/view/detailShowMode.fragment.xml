@@ -2,6 +2,7 @@
 	xmlns="sap.m"
 	xmlns:l="sap.ui.layout"
     xmlns:form="sap.ui.layout.form"
+    xmlns:lib-m="ext.lib.control.m"
 	xmlns:core="sap.ui.core">
 	<form:SimpleForm id="midObjectForm1Show" editable="false">		
         
@@ -15,7 +16,7 @@
         <Label text="{I18N>/SPMD_CATEGORY_CODE_NAME}"/>
         <Text text="{master>/spmd_category_code_name}"/>
         <Label text="{I18N>/FONT_RGB_CODE}"/>
-        <Text text="{master>/rgb_font_color_code}"/>
+        <lib-m:ColoredText text="{master>/rgb_font_color_code}" color="{master>/rgb_font_color_code}"/>
 
 	</form:SimpleForm>
 </core:FragmentDefinition>

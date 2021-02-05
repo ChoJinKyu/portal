@@ -25,7 +25,7 @@ sap.ui.define([
         // Button Action - press
         addFuncForButtonPress: function(context) {
 
-            Aop.around("^onButtonPress", (function(f) {
+            Aop.around("onButtonPress", function(f) {
 
                 var [event, type, ...args] = f.arguments = Array.prototype.slice.call(f.arguments);
                 var action = "";
@@ -36,19 +36,19 @@ sap.ui.define([
                     if (arg["action"] != "NavBack") return false;
                     this.getModel("fcl").setProperty("/layout", LayoutType.OneColumn);
                     return "NavBack";
-                }).call(context || this, args[args.length-1]||{}))
+                }).call(context, args[args.length-1]||{}))
                
                 return (type == "navigation" || type == "personalize")
                     ? "" 
                     : Aop.next.call(this, f);
 
-            }).bind(context || this), context || this, true);
+            }, context, true);
         },
 
         // Navigation Action
         addFuncForNavigation: function(context) {
 
-            Aop.around("^onOverflowToolbarButtonPress", (function(f) {
+            Aop.around("^onOverflowToolbarButtonPress", function(f) {
 
                 var [event, type, ...args] = f.arguments = Array.prototype.slice.call(f.arguments);
                 var action = "";
@@ -59,25 +59,25 @@ sap.ui.define([
                     if (arg["action"] != "NavBack") return false;
                     this.getModel("fcl").setProperty("/layout", LayoutType.OneColumn);
                     return "NavBack";
-                }).call(context || this, args[args.length-1]||{}))
+                }).call(context, args[args.length-1]||{}))
                 ||
                 !action && (action = (function(arg) {
                     if (arg["action"] != "Full") return false;
                     this.getModel("fcl").setProperty("/layout", LayoutType.MidColumnFullScreen);
                     return "Full";
-                }).call(context || this, args[args.length-1]||{}))
+                }).call(context, args[args.length-1]||{}))
                 ||
                 !action && (action = (function(arg) {
                     if (arg["action"] != "Exit") return false;
                     this.getModel("fcl").setProperty("/layout", LayoutType.TwoColumnsMidExpanded);
                     return "Exit";
-                }).call(context || this, args[args.length-1]||{}))
+                }).call(context, args[args.length-1]||{}))
 
                 return (type == "navigation")
                     ? "" 
                     : Aop.next.call(this, f);
 
-            }).bind(context || this), context || this, true);
+            }, context, true);
         },
 
         // 네비게이션기능추가

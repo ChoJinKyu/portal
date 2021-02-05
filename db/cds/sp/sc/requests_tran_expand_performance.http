@@ -1,0 +1,163 @@
+#################################################
+# OData Sever Configuration
+#################################################
+###
+# Cloud Container Service : sppCap Workspace
+@serviceUrl = https://lgcommondev-workspaces-ws-ll5cb-app1.jp10.applicationstudio.cloud.sap
+# Cloud Container Service : sppCap
+@serviceUrl = https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com
+# Local PC[DB+AP] : cds serve all --with-mocks --in-memory?
+@serviceUrl = http://localhost:4004
+# Cloud Container Service : sppCap New V4 
+@serviceUrl = https://biztech-partners-co---ltd-lg-common-dev-dev-po-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4
+# Cloud Container Service : sppCap New V2
+@serviceUrlV2 = https://biztech-partners-co---ltd-lg-common-dev-dev-po-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v2
+# Local PC : mvn spring-boot:run : v4
+@serviceUrl = http://localhost:8080/odata/v4
+# Local PC : mvn spring-boot:run : v2
+@serviceUrlV2 = http://localhost:8080/odata/v2
+
+#################################################
+# OData Service Configuration
+#################################################
+# @reviews-service = {{bookshop}}/sp.negoHeadersV4Service
+# Uncomment this when running a separate reviews service
+# Odata v2 service
+@reviews-serviceV2 = {{serviceUrlV2}}/sp.sourcingService
+# Odata v4 service
+@reviews-service = {{serviceUrl}}/sp.sourcingV4Service
+
+#################################################
+# OData Service Configuration
+# Need not a Cookie for credential in local
+#################################################
+# https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/
+@cookie = JTENANTSESSIONID_services=5fZp7Tlz85JCf51p0PLyDiYoWX3fugTkSnF61L2Fb%2BU%3D
+# https://lgcommondev-workspaces-ws-bhnz4-app2.jp10.applicationstudio.cloud.sap/
+@cookie = workspaces-ws-ll5cb_WSR_SESSIONID=l29o4E9wu3PwAfEjhmtMpz70gsMR9MQmJ3RmtUxhKRT2V+Vlwtrw7Tgo1lGyBzodAPxXU52Efga/NZzmtSaoLA==
+# for LG spp Dev Server
+@cookie = 
+
+#################################################
+# OData Ping Test
+#################################################
+### Ping Test : Deployed Server(DEV)
+GET https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4/cm.ControlOptionMgtService/ControlOptionMasters
+Cookie: {{cookie}}
+
+### Ping Test : Localhost
+GET http://localhost:8080/odata/v4/sp.sourcingTest01V4Service/$metadata
+
+### Get Metadata for Service
+GET {{reviews-service}}/$metadata
+
+### Metadata | 
+# https://docs.microsoft.com/en-us/aspnet/web-api/overview/odata-support-in-aspnet-web-api/using-select-expand-and-value
+GET http://localhost:8080/odata/v4/sp.sourcingV4Service/$metadata
+OData-Version: 4.0
+# Accept: odata.metadata=full
+Accept: application/json
+# Accept: application/xml;odata.metadata=full #now working
+###
+GET http://localhost:8080/odata/v4/sp.sourcingV4Service/$metadata#NegoHeadersView
+OData-Version: 4.0
+# Accept: odata.metadata=full
+Accept: application/json
+# Accept: application/xml;odata.metadata=full #now working
+###
+GET http://localhost:8080/odata/v4/sp.sourcingV4Service/$metadata#NegoItemPrices&$select=tenant_id,Header/tenant_id
+OData-Version: 4.0
+# Accept: odata.metadata=full
+Accept: application/json
+###
+GET http://localhost:8080/odata/v4/sp.sourcingV4Service/$metadata#NegoItemPrices/@tenant_id
+# Accept: odata.metadata=full
+
+### Metadata | 
+GET http://localhost:8080/odata/v2/sp.sourcingService/$metadata
+OData-Version: 4.0
+
+
+
+#################################################
+# OData Main Test #1
+#   Transaction CRUD
+#################################################
+
+### Multi Select | mvn spring-boot:run | 비정형
+GET http://localhost:8080/odata/v4/sp.sourcingV4Service/NegoItemPrices?&$expand=Header($select=nego_document_number,nego_document_round,nego_progress_status_code,award_progress_status_code,reply_times;$expand=nego_progress_status($select=nego_progress_status_name),award_progress_status($select=award_progress_status_name))&$select=pr_approve_number
+Cookie: {{cookie}}
+Accept-Language: en-US
+# Accept-Datetime: 12
+# Accept-Language: ko-KR
+OData-Version: 4.00
+Accept: application/json;odata.metadata=full
+
+### Multi Select | mvn spring-boot:run | 정형
+GET http://localhost:8080/odata/v4/sp.sourcingV4Service/NegoItemPricesStatusView
+Cookie: {{cookie}}
+Accept-Language: en-US
+
+
+,Header/nego_document_round,Header/nego_progress_status_code,Header/award_progress_status_code,Header/reply_times,Header/nego_progress_status/nego_progress_status_name,Header/award_progress_status/award_progress_status_name
+
+
+### Multi Select | mvn spring-boot:run | 비정형 | V2
+GET http://localhost:8080/odata/v2/sp.sourcingService/NegoItemPrices?&$top=5
+&$format=json
+&$select=Header/nego_document_number,pr_approve_number
+&$expand=Header
+Cookie: {{cookie}}
+Accept-Language: en-US
+# Accept-Datetime: 12
+# Accept-Language: ko-KR
+OData-Version: 2.00
+
+### Multi Select | mvn spring-boot:run | 정형 | V2
+GET http://localhost:8080/odata/v2/sp.sourcingService/NegoItemPricesStatusView?
+&$format=json
+Cookie: {{cookie}}
+Accept-Language: en-US
+
+### Multi Select | mvn spring-boot:run | 정형 | V2 v4service
+GET http://localhost:8080/odata/v2/sp.sourcingV4Service/NegoItemPricesStatusView?
+&$format=json
+Cookie: {{cookie}}
+Accept-Language: en-US
+
+###################################################################################
+### Test Begin
+### Multi Select | mvn spring-boot:run | 비정형 | V2 # Not Working
+GET http://localhost:8080/odata/v2/sp.sourcingService/NegoItemPrices(tenant_id='L2100',nego_header_id=4,nego_item_number='00001')?
+# &$format=json
+&$select=pr_approve_number,Header/nego_header_id
+&$expand=Header,Header/tenant_id,Header/nego_header_id
+# &$expand=Header,Header/nego_document_number
+Accept-Language: en-US
+### Multi Select | mvn spring-boot:run | 비정형 | V2 | V2 # Not Working
+GET http://localhost:8080/odata/v2/sp.sourcingService/NegoItemPrices(tenant_id='L2100',nego_header_id=4,nego_item_number='00001')/$links/Header
+# &$format=json
+# &$select=pr_approve_number,Header/nego_document_number
+# &$expand=Header
+# &$expand=Header,Header/nego_document_number
+Accept-Language: en-US
+### Test End
+###################################################################################
+
+### Multi Select | cds serve all --with-mocks --in-memory? | 비정형
+GET http://localhost:4004/sp.sourcingV4Service/NegoItemPrices?&$expand=Header($select=nego_document_number,nego_document_round,nego_progress_status_code,award_progress_status_code,reply_times;$expand=nego_progress_status($select=nego_progress_status_name),award_progress_status($select=award_progress_status_name))&$select=pr_approve_number
+Cookie: {{cookie}}
+Accept: application/json;odata.metadata=full
+Accept-Language: en-US
+
+
+### Multi Select | cds serve all --with-mocks --in-memory? | 정형 | V2Service
+GET http://localhost:4004/sp.sourcingService/NegoItemPricesStatusView
+Cookie: {{cookie}}
+Accept-Language: en-US
+
+
+### Multi Select | cds serve all --with-mocks --in-memory? | 정형 | V4Service
+GET http://localhost:4004/sp.sourcingV4Service/NegoItemPricesStatusView
+Cookie: {{cookie}}
+Accept-Language: en-US

@@ -160,7 +160,7 @@ sap.ui.define([
             });  
         }
          
-        this.onSearch();
+        // this.onSearch();
       },
     
       /** 
@@ -260,8 +260,13 @@ sap.ui.define([
                 category_combo = this.getView().byId("searchCategory").setSelectedItem().getSelectedKey();  
             
             var org_combo = this.getView().byId("searchChain");
+            var category = this.getView().byId("searchCategory");
             if(bizunit_combo == null || org_combo.getValue() == ""){
                 MessageToast.show("사업본부를 설정해주세요.");
+                return;
+            }
+            if(category_combo == null || category.getValue() == ""){
+                MessageToast.show("범주를 설정해주세요.");
                 return;
             }
 

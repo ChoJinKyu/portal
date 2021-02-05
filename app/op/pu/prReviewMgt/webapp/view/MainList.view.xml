@@ -80,27 +80,6 @@
                             </MultiComboBox>
                             <!-- 구매요청 생성자 -->
                             <Label text="{I18N>/REQUESTOR}"/>
-                            <!-- <lib-m:CodePicker 
-                                placeholder="(미정)구매요청생성자"
-                                selectedKey="{jSearch>/requestor_empno}"
-                                keyField="employee_number"
-                                textField="user_local_name"
-                                suggestionItems="{
-                                    path: '/',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                    ],
-                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                    entityName: 'Employee'
-                                }"
-                            >
-                                <lib-m:CodePickerValueHelp 
-                                    title="(미정)구매요청 생성자를 선택하세요."
-                                    contentWidth="500px"
-                                    keyFieldHeaderText="{I18N>/PR_REQUESTOR_EMPNO}" 
-                                    textFieldHeaderText="{I18N>/PR_REQUESTOR_NAME}"
-                                />
-                            </lib-m:CodePicker> -->
                             <MultiInput 
                                 id="requestorEmpno"
                                 showValueHelp="true" 
@@ -156,38 +135,12 @@
                         <VBox>
                             <!-- 구매요청 번호 -->
                             <Label text="{I18N>/PR_NUMBER}"/>
-                            <Input 
-                                placeholder="(미정)구매요청번호를 입력하세요"
-                                value="{path: 'jSearch>/pr_number/values/0'}"
-                            />
+                            <Input value="{path: 'jSearch>/pr_number/values/0'}"/>
                             <!-- 구매요청 품명 -->
                             <Label text="{I18N>/PR_ITEM_NAME}"/>
-                            <Input 
-                                placeholder="(미정)구매요청품명을 입력하세요"
-                                value="{path: 'jSearch>/pr_desc/values/0'}"
-                            />
+                            <Input value="{path: 'jSearch>/pr_desc/values/0'}"/>
                             <!-- 구매담당자 -->
                             <Label text="{I18N>/BUYER}"/>
-                            <!-- <lib-m:CodePicker 
-                                placeholder="(미정)구매담당자를 입력하세요"
-                                selectedKey="{jSearch>/buyer_empno}"
-                                keyField="employee_number"
-                                textField="user_local_name"
-                                suggestionItems="{
-                                    path: '/',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                    ],
-                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                    entityName: 'Employee'
-                                }">
-                                <lib-m:CodePickerValueHelp 
-                                    title="(미정)구매담당자를 선택하세요"
-                                    contentWidth="500px"
-                                    keyFieldHeaderText="{I18N>/BUYER_EMPNO}" 
-                                    textFieldHeaderText="{I18N>/BUYER_NAME}"
-                                />
-                            </lib-m:CodePicker> -->
                             <MultiInput 
                                 id="buyerEmpno"
                                 showValueHelp="true"
@@ -200,22 +153,6 @@
                         <VBox>
                             <!-- 조직코드 -->
                             <Label text="{I18N>/ORG_CODE}"/>
-                            <!-- <MultiComboBox
-                                selectedKeys="{jSearch>/org_code/values}"
-                                showSecondaryValues="false"
-                                width="100%"
-                                items="{
-                                    path: 'util>/Code',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                        {path: 'group_code', operator: 'EQ', value1: 'OP_PR_CREATE_STATUS_CODE'}
-                                    ]
-                                }"
-                            >
-                                <items>
-                                    <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
-                                </items>
-                            </MultiComboBox> -->
                             <MultiInput 
                                 id="orgCode"
                                 showValueHelp="true"
@@ -224,22 +161,8 @@
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
-                            <!-- <MultiInput
-                                placeholder="(미정)조직을 선택하세요."
-                                showValueHelp="true" 
-                                valueHelpRequest=".onValueHelpRequest($event, 'org_code', 'jSearch', {})" 
-                            />
-                            <layoutData>
-                                <layout:GridData span="XL10 L10 M10 S10" />
-                            </layoutData> -->
                             <!-- 자재코드 -->
                             <Label text="{I18N>/MATERIAL_CODE}"/>
-                            <!-- <Input
-                                value="{jSearch>/material_code}"
-                                placeholder="(미정)자재를 선택하세요"
-                                showValueHelp="true"
-                                valueHelpRequest=".onValueHelpRequest($event, 'material_code', 'jSearch', {})" 
-                            /> -->
                             <MultiInput 
                                 id="materialCode"
                                 showValueHelp="true"
@@ -247,26 +170,6 @@
                             />
                             <!-- 구매담당자 부서 -->
                             <Label text="{I18N>/BUYER_DEPARTMENT}" labelFor="searchRequestDepartmentS"/>
-                            <!-- <lib-m:CodePicker 
-                                placeholder="(미정)구매담당자 부서명을 입력하세요"
-                                selectedKey="{jSearch>/buyer_department_code}"
-                                keyField="department_id"
-                                textField="department_local_name"
-                                suggestionItems="{
-                                    path: '/',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                    ],
-                                    serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                    entityName: 'Department'
-                                }">
-                                <lib-m:CodePickerValueHelp 
-                                    title="(미정)부서를 선택하세요"
-                                    contentWidth="500px"
-                                    keyFieldHeaderText="{I18N>/BUYER_DEPARTMENT_CODE}" 
-                                    textFieldHeaderText="{I18N>/BUYER_DEPARTMENT_CODE}"
-                                />
-                            </lib-m:CodePicker> -->
                             <MultiInput 
                                 id="buyerDepartmentCode"
                                 showValueHelp="true"
@@ -460,7 +363,7 @@
                                 <Text text="{
                                     path: 'list>pr_quantity', 
                                     formatter: '.numberFormatter.toNumberString'
-                                }" width="10em"/>
+                                }" width="5em"/>
                                 <!-- 잔여수량 -->
                                 <Text text="{
                                     path: 'list>remain_quantity', 

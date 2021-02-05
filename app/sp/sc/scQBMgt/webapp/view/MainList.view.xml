@@ -343,7 +343,8 @@
         </f:header>
         <f:content>
             <smartTable:SmartTable id="sTable1" entitySet="NegoWorkbenchView"
-                ignoreFromPersonalisation="tenant_id,nego_item_number" ignoredFields=""
+                ignoreFromPersonalisation="tenant_id,nego_item_number,nego_header_id,nego_progress_status_code,award_progress_status_code,award_type_code" 
+                ignoredFields=""
                 smartFilterId="smartFilterBar" tableType="Table" 
                 useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true" 
                 useTablePersonalisation="true" header="Negotiation Workbench List" showRowCount="true" 
@@ -396,25 +397,25 @@
                                     <Text text="{nego_document_round}" wrapping="false" />
                                 </t:template> 
                             </t:Column> 
-                            <t:Column width="12rem" hAlign="Center" sortProperty="nego_progress_status_code" filterProperty="nego_progress_status_code">
+                            <t:Column width="12rem" hAlign="Center" sortProperty="nego_progress_status_name" filterProperty="nego_progress_status_name">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "nego_progress_status_code", "leadingProperty": "nego_progress_status_code", "sortProperty": "nego_progress_status_code", "filterProperty": "nego_progress_status_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "nego_progress_status_name", "leadingProperty": "nego_progress_status_name", "sortProperty": "nego_progress_status_name", "filterProperty": "nego_progress_status_name"}'/>
                                 </t:customData>
                                 <Label text="Negotiation Status" />
                                 <t:template>
-                                    <Text text="{nego_progress_status_code}" wrapping="false" /> 
+                                    <Text text="{nego_progress_status_name}" wrapping="false" /> 
                                     
                                 
                                     
                                 </t:template>
                             </t:Column> 
-                            <t:Column width="10rem" hAlign="Center" sortProperty="award_progress_status_code" filterProperty="award_progress_status_code">
+                            <t:Column width="10rem" hAlign="Center" sortProperty="award_progress_status_name" filterProperty="award_progress_status_name">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "award_progress_status_code", "leadingProperty": "award_progress_status_code", "sortProperty": "award_progress_status_code", "filterProperty": "award_progress_status_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "award_progress_status_name", "leadingProperty": "award_progress_status_name", "sortProperty": "award_progress_status_name", "filterProperty": "award_progress_status_name"}'/>
                                 </t:customData>
                                 <Label text="Award Status" />
                                 <t:template>
-                                    <Text text="{award_progress_status_code}" wrapping="false" />
+                                    <Text text="{award_progress_status_name}" wrapping="false" />
                                 </t:template>
                             </t:Column> 
                             <t:Column width="6rem" hAlign="Center" sortProperty="reply_times" filterProperty="reply_times">
@@ -579,13 +580,13 @@
                             </t:Column>
 
 
-                            <t:Column  width="12rem" hAlign="Center" sortProperty="award_type_code" filterProperty="award_type_code">
+                            <t:Column  width="12rem" hAlign="Center" sortProperty="award_type_name" filterProperty="award_type_name">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "award_type_code", "leadingProperty": "award_type_code", "sortProperty": "award_type_code", "filterProperty": "award_type_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "award_type_name", "leadingProperty": "award_type_name", "sortProperty": "award_type_name", "filterProperty": "award_type_name"}'/>
                                 </t:customData>
                                 <Label text="Award Type" />
                                 <t:template>
-                                    <Text text="{award_type_code}" wrapping="false" />
+                                    <Text text="{award_type_name}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
                             

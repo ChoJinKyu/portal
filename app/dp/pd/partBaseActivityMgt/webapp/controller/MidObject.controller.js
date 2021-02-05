@@ -6,7 +6,8 @@ sap.ui.define([
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
-	"ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/Formatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
@@ -22,7 +23,7 @@ sap.ui.define([
     "dp/util/control/ui/CategoryDialog",
     "sap/f/LayoutType"
 ], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
-	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
+	Formatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus, CategoryDialog, LayoutType) {
 		
 	"use strict";
@@ -32,6 +33,8 @@ sap.ui.define([
 	return BaseController.extend("dp.pd.partBaseActivityMgt.controller.MidObject", {
 
         dateFormatter: DateFormatter,
+
+        formatter: Formatter,
         
         validator: new Validator(),
         
@@ -81,22 +84,7 @@ sap.ui.define([
 
             // this._initTableTemplates();
             this.enableMessagePopover();
-        }, 
-
-        formattericon: function(sState){
-            switch(sState){
-                case "D":
-                    return "sap-icon://decline";
-                break;
-                case "U": 
-                    return "sap-icon://accept";
-                break;
-                case "C": 
-                    return "sap-icon://add";
-                break;
-            }
-            return "";
-        },
+        },        
 
 		/* =========================================================== */
 		/* event handlers                                              */
@@ -149,7 +137,25 @@ sap.ui.define([
 		 */
         onPageDeleteEditButtonPress: function(){
 			this.onPageSaveButtonPress("D");
-		},
+        },
+
+        onBundleAddRow: function () {
+            MessageBox.alert("준비중입니다.");
+        },
+        
+        onCateAddRow: function () {
+            var oModel = this.getModel("category");
+            oModel.addRecord({"tenant_id": this._sTenantId}, 0);
+            this.validator.clearValueState(this.byId("cateTable"));
+        },
+
+        onCateDelRow: function (oEvent) {
+            var table = this.byId("cateTable"),
+                model = this.getModel("category");
+            table.getSelectedIndices().reverse().forEach(function (idx) {
+                model.markRemoved(idx);
+            });
+        },
 
 		onLngTableAddButtonPress: function(){
 			var oTable = this.byId("lngTable"),
@@ -178,7 +184,7 @@ sap.ui.define([
 			oTable.removeSelections(true);
         },
 
-         onCateTableAddButtonPress: function(){
+        onCateTableAddButtonPress: function(){
 			var oTable = this.byId("cateTable");
             var oCateModel = this.getModel("category");
             var aItems = oTable.getItems();
@@ -210,32 +216,34 @@ sap.ui.define([
 			oTable.removeSelections(true);
         },
         
-        onDialogCategoryPress : function(){
-            // this.byId("searchCategoryInput").setValue("");
-            var oTable = this.byId("cateTable");            
+        onDialogCategoryPress : function(oEvent){
+            var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;           
 
-                if(!this.oSearchCategoryDialog){
-                    this.oSearchCategoryDialog = new CategoryDialog({
-                        title: "카테고리 다이얼로그 제목",
-                        multiSelection: false,
-                        items: {
-                            filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, this.tenant_id)
-                            ]
-                        }
-                    });
-                    this.oSearchCategoryDialog.attachEvent("apply", function(oEvent){ 
-                        console.log(oEvent.getParameter("item"));
-                        oTable.getAggregation('items')[0].getCells()[1].mAggregations.items[0].setValue(oEvent.getParameter("item").category_group_code);
-                        oTable.getAggregation('items')[0].getCells()[2].mAggregations.items[1].setValue(oEvent.getParameter("item").category_group_name);
-                        oTable.getAggregation('items')[0].getCells()[3].mAggregations.items[0].setValue(oEvent.getParameter("item").category_code);
-                        oTable.getAggregation('items')[0].getCells()[4].mAggregations.items[1].setValue(oEvent.getParameter("item").category_name);                        
-                    }.bind(this));
-                }
+            if(!this.oSearchCategoryDialog){
+                this.oSearchCategoryDialog = new CategoryDialog({
+                    title: "카테고리 다이얼로그 제목",
+                    multiSelection: false,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, this.tenant_id)
+                        ]
+                    }
+                });
+                this.oSearchCategoryDialog.attachEvent("apply", function(oEvent){ 
+                    console.log(oEvent.getParameter("item"));
+                    var sModel = this.getModel("category");
+                    
+                    sModel.setProperty(sPath + "/category_group_code", oEvent.getParameter("item").category_group_code);
+                    sModel.setProperty(sPath + "/category_group_name", oEvent.getParameter("item").category_group_name);
+                    sModel.setProperty(sPath + "/category_code", oEvent.getParameter("item").category_code);
+                    sModel.setProperty(sPath + "/category_name", oEvent.getParameter("item").category_name);
+                                            
+                }.bind(this));
+            }
 
-                this.oSearchCategoryDialog.open();
+            this.oSearchCategoryDialog.open();
 
-            },
+        },
 		
 		/**
 		 * Event handler for saving page changes
@@ -321,8 +329,12 @@ sap.ui.define([
             input.inputData.pdDtl = pdDtlVal;
 
             var pdCatVal = [];
+
+            var cateObj = this.getModel("category").getProperty("/PdPartBaseActivityCategoryView");
+
+            console.log(cateObj);
             
-            for (var i = 0; i <  oCateTable.getItems().length; i++) {
+            for (var i = 0; i <  cateObj.length; i++) {
                 
                 if (oCateData.PdPartBaseActivityCategoryView[i].active_flag === true) {
                     cateActiveFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
@@ -416,8 +428,36 @@ sap.ui.define([
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     }else {
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                        // 저장 후 재조회
+                                        v_this.getModel("contModel").setProperty("/createMode", false);
+                                        v_this._bindView("/PdPartBaseActivity(tenant_id='" + v_this._sTenantId + "',activity_code='" + v_this._sActivityCode + "')");
+                                        oView.setBusy(true);
+                                        var oLanguagesModel = v_this.getModel("languages");
+                                            oLanguagesModel.setTransactionModel(v_this.getModel());
+                                            oLanguagesModel.read("/PdPartBaseActivityLng", {
+                                                filters: [
+                                                    new Filter("tenant_id", FilterOperator.EQ, v_this._sTenantId),
+                                                    new Filter("activity_code", FilterOperator.EQ, v_this._sActivityCode),
+                                                ],
+                                                success: function(oData){
+                                                    oView.setBusy(false);
+                                                }
+                                            });
+                                        
+                                        var oCategoryModel = v_this.getModel("category");
+                                        oCategoryModel.setTransactionModel(v_this.getModel());
+                                        oCategoryModel.read("/PdPartBaseActivityCategoryView", {
+                                            filters: [
+                                                new Filter("tenant_id", FilterOperator.EQ, v_this._sTenantId),
+                                                new Filter("activity_code", FilterOperator.EQ, v_this._sActivityCode),
+                                            ],
+                                            success: function(oData){
+                                                oView.setBusy(false);
+                                            }
+                                        });
                                         v_this._toShowMode();                                
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                        
                                     }                                    
                                     
                                 }else{
@@ -529,8 +569,18 @@ sap.ui.define([
 				oView = this.getView();
 			this._sTenantId = oArgs.tenantId;
             this._sActivityCode = oArgs.activityCode;
+            this._slayout = oArgs.layout;
             
             this._fnInitControlModel();
+
+            //Flexible 넓은 화면 레이아웃 일 때 Main List 화면 테이블의 컬럼을 줄이기 위한 설정
+            if(this._slayout === "TwoColumnsMidExpanded" ){
+                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("local_update_dtm").setVisible(false);
+                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("update_user_id").setVisible(false);
+            }else{
+                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("local_update_dtm").setVisible(true);
+                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("update_user_id").setVisible(true);
+            }
 
 			if(this._sActivityCode == "new"){
 				//It comes Add button pressed from the before page.
