@@ -19,7 +19,10 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{i18n>appTitle}" />
+                    <HBox alignItems="Center">
+                        <Button icon="sap-icon://unfavorite" type="Transparent" />
+                        <Title text="{i18n>appTitle}" />
+                    </HBox>
                 </f:heading>
                 <f:expandedContent>
                     <HBox>
@@ -52,8 +55,8 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="{I18N>/PLANT}" labelFor="searchDivisionE" required="true"></Label>
-                                <MultiComboBox  id="searchDivisionE" width="100%" selectedKey="" 
+                                <Label text="{I18N>/PLANT}" labelFor="searchPlantE" required="true"></Label>
+                                <MultiComboBox  id="searchPlantE" width="100%" selectedKey="" 
                                         items="{
                                             path: 'purOrg>/Pur_Operation_Org',
                                             filters: [
@@ -99,8 +102,8 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="LG {I18N>/DATE}" labelFor="searchLGDateE" required="true"></Label>
-                                    <DateRangeSelection id="searchLGDateE" width="100%" change="creationDateChange" required="true"/>
+                                <Label text="LG {I18N>/DATE}" labelFor="searchLGDateE"></Label>
+                                    <DateRangeSelection id="searchLGDateE" width="100%" change="creationDateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -158,8 +161,8 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="{I18N>/PLANT}" labelFor="searchDivisionS" required="true"></Label>
-                                <MultiComboBox  id="searchDivisionS" width="100%" selectedKey="" 
+                                <Label text="{I18N>/PLANT}" labelFor="searchPlantS" required="true"></Label>
+                                <MultiComboBox  id="searchPlantS" width="100%" selectedKey="" 
                                         items="{
                                             path: 'purOrg>/Pur_Operation_Org',
                                             filters: [
@@ -205,8 +208,8 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="LG {I18N>/DATE}" labelFor="searchLGDateS" required="true"></Label>
-                                    <DateRangeSelection id="searchLGDateS" width="100%" change="creationDateChange" required="true"/>
+                                <Label text="LG {I18N>/DATE}" labelFor="searchLGDateS"></Label>
+                                    <DateRangeSelection id="searchLGDateS" width="100%" change="creationDateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -235,9 +238,6 @@
                 <f:actions>
                     <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
-                <f:navigationActions>
-                    <Button icon="sap-icon://unfavorite" type="Transparent" />
-                </f:navigationActions>
             </f:DynamicPageTitle>
         </f:title>
         <!-- DynamicPage Header -->
@@ -361,22 +361,20 @@
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
-            <table:Table id="moldMstTable"
+            <table:Table id="mainTable"
                     selectionMode="None"
-                    fixedColumnCount="8"
+                    fixedColumnCount="12"
                     visibleRowCountMode="Auto"
                     rows="{list>/MoldMstView}"
-                    cellClick=".onCellClick"
+                    cellClick=".onMainTableItemPress"
                     rowSelectionChange=".onCheck">
                 <table:extension>
                     <OverflowToolbar>
                         <Title text="List ({= ${list>/MoldMstView}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
                         <!-- Add the Personalization button -->
-                        <Button id="moldMstTableBindButton"     type="Transparent" text="Bind &amp; Receipt" press=".onMoldMstTableBindButtonPress"    />
-                        <Button id="moldMstTableCancelButton"   type="Transparent" text="Cancel Bind"        press=".onMoldMstTableCancelButtonPress"  />
-                        <Button id="moldMstTableDeleteButton"   type="Transparent" text="Delete"             press=".onMoldMstTableDeleteButtonPress"  />
-                        <Button id="moldMstTableReceiptButton"  type="Emphasized"  text="Receipt"            press=".onMoldMstTableReceiptButtonPress" />
+                        <Button id="moldMstTableBindButton"   type="Transparent" text="New"    press=".onMainTableNewButtonPress"   />
+                        <Button id="moldMstTableDeleteButton" type="Emphasized"  text="Delete" press=".onMainTableDeleteButtonPress" />
                         <ToolbarSeparator/>
                         <Button icon="sap-icon://excel-attachment" press=".onExportPress" />
                         <Button icon="sap-icon://action-settings"  press=".onMoldMstTablePersoButtonPressed" >
@@ -426,7 +424,7 @@
                         </table:template>
                     </table:Column>
                     <table:Column id="moldNoColumn" width="12em">
-                        <Label text="Asset No" wrapping="true"/>
+                        <Label text="Mold No" wrapping="true"/>
                         <table:template>
                             <Text text="{list>mold_number}"/>
                         </table:template>
@@ -485,123 +483,56 @@
                             <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
-
-
-
-
                     <table:Column width="5em" hAlign="Center">
-                        <Label text="Set ID"/>
+                        <Label text="Prod Supplier"/>
                         <table:template>
                             <Text text="{list>set_id}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldFamilyFlagColumn" width="6.3em" hAlign="Center">
-                        <Label text="Family Y/N" wrapping="true"/>
+                    <table:Column width="20em" hAlign="Center">
+                        <Label text="LGE Remark" wrapping="true"/>
                         <table:template>
-                            <Select   id="family_flag"    
-                                selectedKey="{list>family_flag}"
-                                items="{
-                                            path : 'util>/Code',
-                                            filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'}
-                                            ],
-                                            sorter: { path: 'sort_no'}
-                                        }"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
-                                change="familyFlagChange">
-                                <core:Item key="{util>code}" text="{util>code_name}" />
-                            </Select>
+                            <TextArea value="{list>remark}" rows="2" width="100%" editable="false" />
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldProductionTypeColumn" width="8em" hAlign="Center">
-                        <Label text="Production Type" required="true" wrapping="true"/>
+                    <table:Column width="20em" hAlign="Center">
+                        <Label text="Suppliers Remark" wrapping="true"/>
                         <table:template>
-                            <Select   id="mold_production_type_code" width="8em"
-                                selectedKey="{list>mold_production_type_code}"
-                                forceSelection="false"
-                                items="{
-                                            path : 'util>/Code',
-                                            filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PROD_TYPE'}
-                                            ],
-                                            sorter: { path: 'sort_no'}
-                                        }"
-                                required="true" change="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="{util>code}" text="{util>code_name}" />
-                            </Select>
+                            <TextArea value="{list>remark}" rows="2" width="100%" editable="false" />
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldTypeColumn" width="10em" hAlign="Center">
-                        <Label text="Mold Type" required="true" wrapping="true"/>
-                        <table:template><!--{path : 'parent_code', operator : 'EQ', value1 : ${list>mold_item_type_code}}-->
-                            <!--<Select id="mold_type_code" width="10em"
-                                selectedKey="{list>mold_type_code}"
-                                items="{
-                                            path : 'util>/Code',
-                                            filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
-                                            ],
-                                            sorter: { path: 'sort_no'}
-                                        }"
-                                required="true" change=".inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="{util>code}" text="{util>code_name}" />
-                            </Select>-->
-                            <Input id="mold_type_name"
-                                placeholder="Mold Type"
-                                value="{list>mold_type_name}"
-                                required="true" change=".inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
-                                showValueHelp="true" valueHelpRequest=".onCmInputWithCodeValuePress">
-                            </Input>
-                        </table:template>
-                    </table:Column>
-                    <table:Column id="moldEDTypeColumn" width="8em" hAlign="Center">
-                        <Label text="Export/Domestic Type" required="true" wrapping="true"/>
+                    <table:Column width="13em">
+                        <Label text="Receipt estimation Status" wrapping="true"/>
                         <table:template>
-                            <Select   id="mold_location_type_code"
-                                selectedKey="{list>mold_location_type_code}"
-                                forceSelection="false"
-                                items="{
-                                            path : 'util>/Code',
-                                            filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
-                                            ],
-                                            sorter: { path: 'sort_no'}
-                                        }"
-                                required="true" change="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="{util>code}" text="{util>code_name}" />
-                            </Select>
+                            <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldTestUseFlagColumn" width="7em" hAlign="Center">
-                        <Label text="Mold Cost Analysis Type" wrapping="true"/>
+                    <table:Column width="10em" hAlign="Center">
+                        <Label text="LGE Review Req {I18N>/DATE}" wrapping="true"/>
                         <table:template>
-                            <Select   id="mold_cost_analysis_type_code"    
-                                selectedKey="{list>mold_cost_analysis_type_code}"
-                                forceSelection="false"
-                                items="{
-                                            path : 'util>/Code',
-                                            filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_COST_ANALYSIS_TYPE'}
-                                            ],
-                                            sorter: { path: 'sort_no'}
-                                        }"
-                                change="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="{util>code}" text="{util>code_name}" />
-                            </Select>
+                            <Text text="{path: 'list>local_create_dtm', formatter: '.dateFormatter.toDateString'}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldTestAttachColumn" width="8em" hAlign="Center">
-                        <Label text="T-EST Attach" wrapping="true"/>
+                    <table:Column width="7em" hAlign="Center">
+                        <Label text="Estimate Amount" wrapping="true"/>
+                        <table:template>
+                            <Text text="{path: 'list>provisional_budget_amount', formatter: '.numberFormatter.toNumberString'}" textAlign="Right" />
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="7em" hAlign="Center">
+                        <Label text="Req Amount" wrapping="true"/>
+                        <table:template>
+                            <Text text="{path: 'list>provisional_budget_amount', formatter: '.numberFormatter.toNumberString'}" textAlign="Right" />
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="13em">
+                        <Label text="Supplier Name" wrapping="true"/>
+                        <table:template>
+                            <Text text="{list>mold_progress_status_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldAttachColumn" width="8em" hAlign="Center">
+                        <Label text="Attach" wrapping="true"/>
                         <table:template>
                             <core:Icon 
                                 src="sap-icon://attachment"
@@ -612,148 +543,82 @@
                             </core:Icon>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldProcessTypeColumn" width="7em" hAlign="Center">
-                        <Label text="Process Type" wrapping="true"/>
+                    <table:Column width="13em">
+                        <Label text="Investment/Cost" wrapping="true"/>
                         <table:template>
-                            <!--<Text id="mold_purchasing_type_code" text="{list>mold_purchasing_type_code}"/>-->
-                            
-                            <Select   id="mold_purchasing_type_code"    
-                                selectedKey="{list>mold_purchasing_type_code}"
-                                forceSelection="false"
-                                items="{
-                                            path : 'util>/Code',
-                                            filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_PURCHASE_TYPE'}
-                                            ],
-                                            sorter: { path: 'sort_no'}
-                                        }"
-                                change="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="{util>code}" text="{util>code_name}" />
-                            </Select>
+                            <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldStructureColumn" width="9em" hAlign="Center">
-                        <Label text="Mold Structure" required="true" wrapping="true"/>
+                    <table:Column width="13em">
+                        <Label text="Account" wrapping="true"/>
                         <table:template>
-                            <!--<Select   id="die_form" width="9em"
-                                selectedKey="{list>die_form}"
-                                items="{
-                                            path : 'util>/Code',
-                                            filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_STRUCTURE'}
-                                            ],
-                                            sorter: { path: 'sort_no'}
-                                        }"
-                                change="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="{util>code}" text="{util>code_name}" />
-                            </Select>-->
-                            <Input id="die_form_name"
-                                placeholder="Mold Structure"
-                                value="{list>die_form_name}"
-                                required="true" change=".inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }"
-                                showValueHelp="true" valueHelpRequest=".onCmInputWithCodeValuePress">
-                            </Input>
+                            <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldSizeColumn" width="8em" hAlign="Center">
-                        <Label text="Size" required="true" wrapping="true"/>
+                    <table:Column width="13em">
+                        <Label text="Account Dept" wrapping="true"/>
                         <table:template>
-                            <Select   id="mold_size"    
-                                selectedKey="{list>mold_size}"
-                                forceSelection="false"
-                                items="{
-                                            path : 'util>/Code',
-                                            filters : [
-                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_SIZE'}
-                                            ],
-                                            sorter: { path: 'sort_no'}
-                                        }"
-                                change="inputFieldChange"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" >
-                                <core:Item key="{util>code}" text="{util>code_name}" />
-                            </Select>
-                        </table:template>
-                    </table:Column>
-                    <table:Column id="moldMoldDeveloperColumn" width="12em" hAlign="Center">
-                        <Label text="Mold Developer" required="true" wrapping="true"/>
-                        <table:template>
-                            <Input value="{list>mold_developer_name}" placeholder="Search employee" required="true"
-                                editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" 
-                                showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
-                            </Input>
-                        </table:template>
-                    </table:Column>
-                    <table:Column id="moldRemarkColumn" width="20em" hAlign="Center">
-                        <Label text="Remark" wrapping="true"/>
-                        <table:template>
-                            <TextArea id="remark" value="{list>remark}" rows="2" width="100%" change="inputFieldChange"
-                            editable="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" />
+                            <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldProjectCodeColumn" width="15em">
-                        <Label text="Project Code" wrapping="true"/>
+                        <Label text="Acquisition Dept" wrapping="true"/>
                         <table:template>
                             <Text id="pdm_project_code" text="{list>pdm_project_code}"/>
                         </table:template>
                     </table:Column>
+                    <table:Column id="crrencyColumn" width="6em" hAlign="Center">
+                        <Label text="Currency"/>
+                        <table:template>
+                            <Text id="currency" text="{list>book_currency_code}" textAlign="Center"/>
+                        </table:template>
+                    </table:Column>
                     <table:Column id="moldProjectNameColumn" width="20em">
-                        <Label text="Project Name" wrapping="true"/>
+                        <Label text="Factor" wrapping="true"/>
                         <table:template>
                             <Text id="pdm_project_name" text="{list>pdm_project_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldFamilyPartNo1Column" width="12em" hAlign="Center">
-                        <Label text="Family Part No(1)" wrapping="true"/>
+                        <Label text="Remarks" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_1" value="{list>family_part_number_1}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
+                            <TextArea value="{list>remark}" rows="2" width="100%" editable="false" />
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldFamilyPartNo2Column" width="12em" hAlign="Center">
-                        <Label text="Family Part No(2)" wrapping="true"/>
+                    <table:Column id="moldDateColumn" width="10em" hAlign="Center">
+                        <Label text="Remodel/Repair {I18N>/DATE}" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_2" value="{list>family_part_number_2}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
+                            <Text text="{path: 'list>local_create_dtm', formatter: '.dateFormatter.toDateString'}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldFamilyPartNo3Column" width="12em" hAlign="Center">
-                        <Label text="Family Part No(3)" wrapping="true"/>
+                    <table:Column width="13em">
+                        <Label text="Specification Number" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_3" value="{list>family_part_number_3}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
+                            <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldFamilyPartNo4Column" width="12em" hAlign="Center">
-                        <Label text="Family Part No(4)" wrapping="true"/>
+                    <table:Column width="13em">
+                        <Label text="Spare Part" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_4" value="{list>family_part_number_4}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
+                            <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldFamilyPartNo5Column" width="12em" hAlign="Center">
-                        <Label text="Family Part No(5)" wrapping="true"/>
+                    <table:Column width="13em">
+                        <Label text="Family Part No" wrapping="true"/>
                         <table:template>
-                            <Input id="family_part_number_5" value="{list>family_part_number_5}" maxLength="120" change="inputFieldChange" editable="{= ${list>family_flag} === 'Y' ? ((${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false) : false }" />
+                            <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column visible="false">
-                        <Label text="Mold Developer"/>
+                    <table:Column width="13em">
+                        <Label text="PMD Request No" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>mold_developer_empno}"/>
+                            <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column visible="false">
-                        <Label text="Mold Type Code"/>
+                    <table:Column width="13em">
+                        <Label text="Specification Machine Number" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>mold_type_code}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column visible="false">
-                        <Label text="Mold Structure"/>
-                        <table:template>
-                            <Text text="{list>die_form}"/>
+                            <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
                 </table:columns>

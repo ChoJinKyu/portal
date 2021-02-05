@@ -1,6 +1,7 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
     "ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/NumberFormatter",
     "ext/lib/model/ManagedListModel",
     "ext/lib/util/Multilingual",
     "ext/lib/util/Validator",
@@ -30,7 +31,7 @@ sap.ui.define([
     'sap/m/SearchField',
     "sap/m/Text",
     "sap/m/Token"
-], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, ExcelUtil, EmployeeDialog, CmDialogHelp, ProcessUI, MainListPersoService,
+], function (BaseController, DateFormatter, NumberFormatter, ManagedListModel, Multilingual, Validator, ExcelUtil, EmployeeDialog, CmDialogHelp, ProcessUI, MainListPersoService,
     ManagedObject, History, Element, Fragment, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item,
     ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token) {
     "use strict";
@@ -38,6 +39,8 @@ sap.ui.define([
 	return BaseController.extend("dp.md.remodelRepairMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
+
+        numberFormatter: NumberFormatter,
 
         validator: new Validator(),
 
@@ -82,11 +85,12 @@ sap.ui.define([
                 persoService: MainListPersoService
             }).setTable(this.byId("moldMstTable"));
 */
-            //this.process.setDrawProcessUI(this, "remodelRepairMgtProcessE", "B", 0);
-            //this.process.setDrawProcessUI(this, "remodelRepairMgtProcessS", "B", 0);
+            this.process.setDrawProcessUI(this, "remodelRepairMgtProcessE", "B", 1);
+            this.process.setDrawProcessUI(this, "remodelRepairMgtProcessS", "B", 1);
         },
         
         onAfterRendering : function () {
+            this.byId("pageSearchButton").firePress();
 			return;
         },
 
@@ -146,15 +150,137 @@ sap.ui.define([
 			this.getView().byId("mainTable").getBinding("items").filter(oTableFilterState, "Application");
 		},
 
+		onMainTableNewButtonPress : function () {
+            this.getRouter().navTo("mainObject", {
+                //layout: oNextUIState.layout,
+                //tenantId: rowData.tenant_id,
+                moldId: "new",
+                orgCode: "new"
+            });
+		},
+
 		/**
 		 * Event handler when a table item gets pressed
 		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
 		 * @public
 		 */
-		onListMainTableItemPress : function (oEvent) {
-			// The source is the list item that got pressed
-			this._showMainObject(oEvent.getSource());
+		onMainTableItemPress : function (oEvent) {
+            var rowData = oEvent.getParameter('rowBindingContext').getObject();
+
+            this.getRouter().navTo("mainObject", {
+                //layout: oNextUIState.layout,
+                //tenantId: rowData.tenant_id,
+                moldId: rowData.mold_id,
+                orgCode: rowData.org_code
+            });
 		},
+
+        /**
+         * @private
+         * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
+         */
+        _doInitSearch: function () {
+            this.getView().setModel(this.getOwnerComponent().getModel());
+
+            this.setDivision(this.getSessionUserInfo().COMPANY_CODE);//LGEKR
+
+            //접속자 법인 사업부로 바꿔줘야함
+            this.getView().byId("searchCompanyS").setSelectedKeys([this.getSessionUserInfo().COMPANY_CODE]);
+            this.getView().byId("searchCompanyE").setSelectedKeys([this.getSessionUserInfo().COMPANY_CODE]);
+            this.getView().byId("searchPlantS").setSelectedKeys(['A040']);//CCZ', 'DHZ', 'PGZ
+            this.getView().byId("searchPlantE").setSelectedKeys(['A040']);
+
+            /** Create Date */
+            var today = new Date();
+
+            this.getView().byId("searchRequestDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
+            this.getView().byId("searchRequestDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
+            this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+        },
+
+        setDivision: function (companyCode) {
+            var filter = new Filter({
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID),
+                    new Filter("company_code", FilterOperator.EQ, companyCode)
+                ],
+                and: true
+            });
+
+            var bindItemInfo = {
+                path: '/Divisions',
+                filters: filter,
+                template: new Item({
+                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                })
+            };
+            this.getView().byId("searchPlantS").bindItems(bindItemInfo);
+            this.getView().byId("searchPlantE").bindItems(bindItemInfo);
+        },
+
+        handleSelectionFinishComp: function (oEvent) {
+
+            this.copyMultiSelected(oEvent);
+
+            var params = oEvent.getParameters();
+            var plantFilters = [];
+
+            if (params.selectedItems.length > 0) {
+
+                params.selectedItems.forEach(function (item, idx, arr) {
+
+                    plantFilters.push(new Filter({
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID),
+                            new Filter("company_code", FilterOperator.EQ, item.getKey())
+                        ],
+                        and: true
+                    }));
+                }.bind(this));
+            } else {
+                plantFilters.push(
+                    new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)
+                );
+            }
+
+            var filter = new Filter({
+                filters: plantFilters,
+                and: false
+            });
+
+            var bindInfo = {
+                    path: '/Divisions',
+                    filters: filter,
+                    template: new Item({
+                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                    })
+                };
+
+            this.getView().byId("searchPlantS").bindItems(bindInfo);
+            this.getView().byId("searchPlantE").bindItems(bindInfo);
+        },
+
+        handleSelectionFinishDiv: function (oEvent) {
+            this.copyMultiSelected(oEvent);
+        },
+
+        copyMultiSelected: function (oEvent) {
+            var source = oEvent.getSource(),
+                params = oEvent.getParameters();
+
+            var sIds = source.sId.split('--'),
+                id = sIds[sIds.length-1],
+                idPreFix = id.substr(0, id.length - 1),
+                selectedKeys = [];
+
+            params.selectedItems.forEach(function (item, idx, arr) {
+                selectedKeys.push(item.getKey());
+            });
+
+            this.getView().byId(idPreFix + 'S').setSelectedKeys(selectedKeys);
+            this.getView().byId(idPreFix + 'E').setSelectedKeys(selectedKeys);
+        },
 
 		/**
 		 * Event handler when a search button pressed
@@ -162,22 +288,17 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageSearchButtonPress : function (oEvent) {
-			if (oEvent.getParameters().refreshButtonPressed) {
-				// Search field's 'refresh' button has been pressed.
-				// This is visible if you select any master list item.
-				// In this case no new search is triggered, we only
-				// refresh the list binding.
-				this.onRefresh();
-			} else {
-				var aTableSearchState = this._getSearchStates();
-				this._applySearch(aTableSearchState);
-			}
+			this.validator.validate( this.byId('pageSearchFormE'));
+            if(this.validator.validate( this.byId('pageSearchFormS') ) !== true) return;
+
+            var aTableSearchState = this._getSearchStates();
+            this._applySearch(aTableSearchState);
 		},
 
 		_getSearchStates: function(){
 			var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
                 company = this.getView().byId("searchCompany" + sSurffix).getSelectedKeys(),
-                division = this.getView().byId("searchDivision" + sSurffix).getSelectedKeys(),
+                division = this.getView().byId("searchPlant" + sSurffix).getSelectedKeys(),
                 status = this.getView().byId("searchRequestStatus" + sSurffix).getSelectedKey(),
                 //status = Element.registry.get(statusSelectedItemId).getText(),
                 receiptFromDate = this.getView().byId("searchRequestDate" + sSurffix).getDateValue(),
@@ -336,35 +457,23 @@ sap.ui.define([
 		/* =========================================================== */
 
 		/**
-		 * Shows the selected item on the object page
-		 * On phones a additional history entry is created
-		 * @param {sap.m.ObjectListItem} oItem selected Item
-		 * @private
-		 */
-		_showMainObject : function (oItem) {
-			var that = this;
-			that.getRouter().navTo("mainObject", {
-				tenantId: oItem.getBindingContext().getProperty("tenant_id"),
-				messageCode: oItem.getBindingContext().getProperty("message_code"),
-				languageCode: oItem.getBindingContext().getProperty("language_code")
-			});
-		},
-
-		/**
 		 * Internal helper method to apply both filter and search state together on the list binding
 		 * @param {sap.ui.model.Filter[]} aTableSearchState An array of filters for the search
 		 * @private
 		 */
-		_applySearch: function(aTableSearchState) {
-			var oTable = this.byId("mainTable"),
-				oViewModel = this.getModel("mainListView");
-
-			oTable.getBinding("items").filter(aTableSearchState, "Application");
-			// changes the noDataText of the list in case there are no filter results
-			if (aTableSearchState.length !== 0) {
-				oViewModel.setProperty("/tableNoDataText", this.getResourceBundle().getText("mainListNoDataWithSearchText"));
-			}
-		},
+		_applySearch: function (aTableSearchState) {
+            var oView = this.getView(),
+                oModel = this.getModel("list");
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel());
+            oModel.read("/MoldMstView", {
+                filters: aTableSearchState,
+                success: function (oData) {
+                    this.validator.clearValueState(this.byId("mainTable"));
+                    oView.setBusy(false);
+                }.bind(this)
+            });
+        },
 
 		_doInitTable: function(){
 

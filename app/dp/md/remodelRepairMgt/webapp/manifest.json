@@ -164,7 +164,7 @@
           ]
         },
         {
-          "pattern": "Message/{tenantId}/{messageCode}/{languageCode}",
+          "pattern": "MainObject/{moldId}/{orgCode}",
           "name": "mainObject",
           "target": [
             "mainObject"

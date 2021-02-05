@@ -1,19 +1,30 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"sap/ui/model/json/JSONModel",
 	"sap/ui/core/routing/History",
+    "sap/ui/model/json/JSONModel",
+    "ext/lib/model/TransactionManager",
+	"ext/lib/model/ManagedModel",
+	"ext/lib/model/ManagedListModel",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
-], function (BaseController, JSONModel, History, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
-	"use strict";
+    "sap/ui/core/Item",
+    "ext/lib/util/Validator",
+    "dp/md/util/controller/SupplierSelection"
+], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Item, Validator, SupplierSelection) {
+    "use strict";
+    
+    var oTransactionManager = null;
 
 	return BaseController.extend("dp.md.remodelRepairMgt.controller.MainObject", {
 
-		dateFormatter: DateFormatter,
+        dateFormatter: DateFormatter,
+        validator: new Validator(),
+        supplierSelection: new SupplierSelection(),
+        tenantId: 'L2101',
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -24,30 +35,65 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-			// Model used to manipulate control states. The chosen values make sure,
+			// Model used to manipulate controlstates. The chosen values make sure,
 			// detail page shows busy indication immediately so there is no break in
-			// between the busy indication for loading the view's meta data
+            // between the busy indication for loading the view's meta data
 			var oViewModel = new JSONModel({
 					busy : true,
-					delay : 0
+                    delay : 0
 				});
-			this.getRouter().getRoute("mainObject").attachPatternMatched(this._onObjectMatched, this);
+			this.getRouter().getRoute("mainObject").attachPatternMatched(this._onRoutedThisPage, this);
 			this.setModel(oViewModel, "mainObjectView");
-		},
+			
+            this.setModel(new ManagedModel(), "master");
+            this.setModel(new ManagedModel(), "mstSpecView");
+			this.setModel(new ManagedListModel(), "schedule");
+            this.setModel(new ManagedModel(), "spec");
+
+            oTransactionManager = new TransactionManager();
+            oTransactionManager.aDataModels.length = 0;
+
+			oTransactionManager.addDataModel(this.getModel("master"));
+            oTransactionManager.addDataModel(this.getModel("schedule"));
+            oTransactionManager.addDataModel(this.getModel("spec"));
+		}, 
 
 		/* =========================================================== */
 		/* event handlers                                              */
 		/* =========================================================== */
 
-
 		/**
-		 * Event handler  for navigating back.
-		 * It there is a history entry we go one step back in the browser history
-		 * If not, it will replace the current entry of the browser history with the miainList route.
+		 * Event handler for Enter Full Screen Button pressed
 		 * @public
 		 */
-		onPageNavBackButtonPress : function() {
-			var sPreviousHash = History.getInstance().getPreviousHash();
+		onPageEnterFullScreenButtonPress: function () {
+			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/fullScreen");
+			this.getRouter().navTo("mainObject", {
+				layout: sNextLayout, 
+				tenantId: this._sTenantId,
+				moldId: this._sMoldId
+			});
+		},
+		/**
+		 * Event handler for Exit Full Screen Button pressed
+		 * @public
+		 */
+		onPageExitFullScreenButtonPress: function () {
+			var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/exitFullScreen");
+			this.getRouter().navTo("mainObject", {
+				layout: sNextLayout, 
+				tenantId: this._sTenantId,
+				moldId: this._sMoldId
+			});
+		},
+		/**
+		 * Event handler for Nav Back Button pressed
+		 * @public
+		 */
+		onPageNavBackButtonPress: function () {
+			//var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
+            //this.getRouter().navTo("mainPage", {layout: sNextLayout});
+            var sPreviousHash = History.getInstance().getPreviousHash();
 			if (sPreviousHash !== undefined) {
 				// eslint-disable-next-line sap-no-history-manipulation
 				history.go(-1);
@@ -61,8 +107,41 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageEditButtonPress: function(){
-			this._toEditMode();
-		},
+
+            this._toEditMode();
+            //this.setImportOrg();
+            //this.clearValueState();
+        },
+
+        clearValueState: function(){
+            this.validator.clearValueState( this.byId('scheduleTable1E') );
+            this.validator.clearValueState( this.byId('frmMold') );
+            this.validator.clearValueState( this.byId('frmPress') );
+            this.validator.clearValueState( this.byId('detailSpecForm') );
+        },
+        
+        setImportOrg: function(){
+            var importCompanyCode = this.getModel('master').getProperty('/import_company_code');
+            //importOrg filter
+            var filter = new Filter({
+                            filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId ),
+                                    new Filter("company_code", FilterOperator.EQ, importCompanyCode)
+                                ],
+                                and: true
+                        });
+
+            this.getView().byId("importOrg").bindItems(
+                {
+                    path: '/Divisions',
+                    filters: filter,
+                    template: new Item({
+                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                    })
+                }
+            )
+            //this.getView().byId("importOrg").setSelectedKey("CVZ");
+        },
 		
 		/**
 		 * Event handler for delete page entity
@@ -71,7 +150,6 @@ sap.ui.define([
         onPageDeleteButtonPress: function(){
 			var oView = this.getView(),
 				me = this;
-
 			MessageBox.confirm("Are you sure to delete?", {
 				title : "Comfirmation",
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -85,7 +163,6 @@ sap.ui.define([
 					};
 				}
 			});
-
 		},
 		
 		/**
@@ -94,25 +171,128 @@ sap.ui.define([
 		 */
         onPageSaveButtonPress: function(){
 			var oView = this.getView(),
-				me = this,
-				oMessageContents = this.byId("inputMessageContents");
+                me = this;
+            
+            
+            // if(!this.checkChange()){
+            //     MessageToast.show(this.getModel('I18N').getText("/NCM0002"));
+            //     return;
+            // }
 
-			if(!oMessageContents.getValue()) {
-				oMessageContents.setValueState(sap.ui.core.ValueState.Error);
-				return;
-			}
-			MessageBox.confirm("Are you sure ?", {
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-						oView.setBusy(true);
-						oView.getModel().submitBatch("odataGroupIdForUpdate").then(function(ok){
-							me._toShowMode();
-							oView.setBusy(false);
-                            MessageToast.show("Success to save.");
-						}).catch(function(err){
-                            MessageBox.error("Error while saving.");
+            if(this.validator.validate( this.byId('detailSpecForm') ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+
+            if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+
+            //mold 인지 press 인지 구분해야한다..
+            var dtlForm = '';
+            if(this.itemType == 'P' || this.itemType == 'E'){
+                dtlForm = 'frmPress';
+            }else{
+                dtlForm = 'frmMold';
+            }
+
+            if(this.validator.validate( this.byId(dtlForm) ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+
+            console.log(oTransactionManager.aDataModels);
+
+            MessageBox.confirm( this.getModel('I18N').getText('/NCM00001') || 'NCM00001', {
+                title : "Draft",
+                initialFocus : sap.m.MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+                        
+                        me.getModel('spec').setProperty('/mold_spec_status_code', 'D'); //21.01.07 안쓸듯
+                        me.getModel("master").setProperty('/mold_progress_status_code', 'DTL_ENT');
+
+						oTransactionManager.submit({
+						// oView.getModel("master").submitChanges({
+							success: function(ok){
+								me._toShowMode();
+								oView.setBusy(false);
+                                MessageToast.show( me.getModel('I18N').getText('/NCM01001') || 'NCM01001' );
+							}
+						});
+					};
+				}
+			});
+
+        },
+
+        checkChange: function(){
+            var omMaster = this.getModel('master');
+            var omSchedule = this.getModel('schedule');
+            var omSpec = this.getModel('spec');
+
+            if(omMaster.isChanged() || omSchedule.isChanged() || omSpec.isChanged()){
+                return true;
+            }else{
+                return false;
+            }
+        },
+        
+        onPageConfirmButtonPress: function(){
+			var oView = this.getView(),
+                me = this;
+
+            if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+
+            //mold 인지 press 인지 구분해야한다..
+            var dtlForm = '';
+            if(this.itemType == 'P' || this.itemType == 'E'){
+                dtlForm = 'frmPress';
+            }else{
+                dtlForm = 'frmMold';
+            }
+
+            if(this.validator.validate( this.byId(dtlForm) ) !== true){
+                MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
+                return;
+            }
+                
+            MessageBox.confirm(this.getModel('I18N').getText('/NDP10001') || 'NDP10001', {
+                title : "Comfirmation",
+                initialFocus : sap.m.MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+                        
+                        me.getModel('spec').setProperty('/mold_spec_status_code', 'C'); //21.01.07 안쓸듯
+                        me.getModel("master").setProperty('/mold_progress_status_code', 'DTL_CNF');
+
+						oTransactionManager.submit({
+							success: function(ok){
+
+                                oView.setBusy(false);
+
+                                var err = ok.__batchResponses[0].__changeResponses.filter(function(item){
+                                    return item.statusCode != '204';
+                                });
+
+                                if(err.length > 0){
+                                    
+                                    var body = JSON.parse(err[0].response.body);
+
+                                    MessageToast.show(body.error.code+'\n'+body.error.message.value);
+                                    return;
+                                }
+
+                                me._toShowMode();
+                                MessageToast.show(me.getModel('I18N').getText('/NDP10002') || 'NDP10002');
+
+							}
 						});
 					};
 				}
@@ -129,23 +309,76 @@ sap.ui.define([
 			this._toShowMode();
         },
 
+        onSuppValueHelpRequested: function(oEvent){
+
+            var oInput = oEvent.getSource();
+            var companyCode  = this.getModel('master').getProperty('/company_code');
+            var orgCode = this.getModel('master').getProperty('/org_code');
+
+            var param = {
+                'oThis':this,
+                'oEvent':oEvent,
+                'companyCode':companyCode,
+                'orgCode':orgCode,
+                'isMulti':false
+            }
+            
+            this.supplierSelection.showSupplierSelection(param, function(tokens){
+
+                var suppCode = tokens[0].getKey();
+                oInput.setValue(tokens[0].getKey());
+                oInput.setDescription( tokens[0].getText().replace(' ('+suppCode+')', '') );
+            });
+        },
+
 		/* =========================================================== */
 		/* internal methods                                            */
 		/* =========================================================== */
 
 		/**
-		 * Binds the view to the data path.
-		 * @function
+		 * When it routed to this page from the other page.
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-		_onObjectMatched : function (oEvent) {
+		_onRoutedThisPage: function(oEvent){
 			var oArgs = oEvent.getParameter("arguments"),
-				sTenantId = oArgs.tenantId,
-				sLanguageCode = oArgs.languageCode,
-				sMessageCode = oArgs.messageCode;
-			this._bindView("/Message(tenant_id='" + sTenantId + "',language_code='" + sLanguageCode + "',message_code='" + sMessageCode + "')");
-			this._toShowMode();
+				oView = this.getView();
+			this._sTenantId = this.getSessionUserInfo().TENANT_ID;
+			this._sMoldId = oArgs.moldId;
+
+			if(oArgs.moldId === "new"){
+				//It comes Add button pressed from the before page.
+				var oMasterModel = this.getModel("master");
+				/*oMasterModel.setData({
+					tenant_id: this._sTenantId
+				});*/
+                this._toEditMode();
+                var oUiModel = this.getView().getModel("mode");
+                oUiModel.setProperty("/newFlag", true);
+			}else{
+
+				this._bindView("/MoldMasters(tenant_id='" + this._sTenantId + "',mold_id='" + this._sMoldId + "')", "master", [], function(oData){
+                    this._toShowMode();
+                }.bind(this));
+/*
+                this._bindView("/MoldMasterSpec(tenant_id='" + this._sTenantId + "',mold_id='" + this._sMoldId + "')", "mstSpecView", [], function(oData){
+                    
+                });
+
+                var schFilter = [
+                                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                                    new Filter("mold_id", FilterOperator.EQ, this._sMoldId)
+                                ];
+                this._bindView("/MoldSchedule", "schedule", schFilter, function(oData){
+                    
+                });
+
+                this._bindView("/MoldSpec(tenant_id='" + this._sTenantId + "',mold_id='"+this._sMoldId+"')", "spec", [], function(oData){
+                    
+                });*/
+            }
+            
+            oTransactionManager.setServiceModel(this.getModel());
 		},
 
 		/**
@@ -154,51 +387,32 @@ sap.ui.define([
 		 * @param {string} sObjectPath path to the object to be bound
 		 * @private
 		 */
-		_bindView : function (sObjectPath) {
-			var oViewModel = this.getModel("mainObjectView");
-
-			this.getView().bindElement({
-				path: sObjectPath,
-				events: {
-					change: this._onBindingChange.bind(this),
-					dataRequested: function () {
-						oViewModel.setProperty("/busy", true);
-					},
-					dataReceived: function () {
-						oViewModel.setProperty("/busy", false);
-					}
+		_bindView : function (sObjectPath, sModel, aFilter, callback) {
+			var oView = this.getView(),
+				oModel = this.getModel(sModel);
+			oView.setBusy(true);
+			oModel.setTransactionModel(this.getModel());
+			oModel.read(sObjectPath, {
+                filters: aFilter,
+				success: function(oData){
+                    oView.setBusy(false);
+                    callback(oData);
 				}
 			});
 		},
 
-		_onBindingChange : function () {
-			var oView = this.getView(),
-				oViewModel = this.getModel("mainObjectView"),
-				oElementBinding = oView.getElementBinding();
-			// No data for the binding
-			if (!oElementBinding.getBoundContext()) {
-				this.getRouter().getTargets().display("mainObjectNotFound");
-				return;
-			}
-			oViewModel.setProperty("/busy", false);
-		},
-
-		_toEditMode: function(){
-            this._showFormFragment('MainObject_Edit');
-			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", true);
-			this.byId("pageEditButton").setEnabled(false);
-			this.byId("pageDeleteButton").setEnabled(false);
-			this.byId("pageNavBackButton").setEnabled(false);
+        
+        _toEditMode: function(){
+            //this._showFormFragment('MainObject_Edit');
+			var oUiModel = this.getView().getModel("mode");
+                oUiModel.setProperty("/editFlag", true);
 		},
 
 		_toShowMode: function(){
-			this._showFormFragment('MainObject_Show');
-			this.byId("page").setSelectedSection("pageSectionMain");
-			this.byId("page").setProperty("showFooter", false);
-			this.byId("pageEditButton").setEnabled(true);
-			this.byId("pageDeleteButton").setEnabled(true);
-			this.byId("pageNavBackButton").setEnabled(true);
+			//this._showFormFragment('MainObject_Show');
+            
+            var oUiModel = this.getView().getModel("mode");
+                oUiModel.setProperty("/editFlag", false);
 		},
 
 		_oFragments: {},
@@ -207,7 +421,60 @@ sap.ui.define([
             this._loadFragment(sFragmentName, function(oFragment){
 				oPageSubSection.removeAllBlocks();
 				oPageSubSection.addBlock(oFragment);
-			})
+            });
+
+            var oPageSubSection2 = this.byId("pageSubSection2");
+            this._loadFragment(sFragmentName, function(oFragment){
+				oPageSubSection2.removeAllBlocks();
+				oPageSubSection2.addBlock(oFragment);
+            });
+
+            var oPageSubSection3 = this.byId("pageSubSection3");
+            this._loadFragment(sFragmentName, function(oFragment){
+                oPageSubSection3.removeAllBlocks();
+				oPageSubSection3.addBlock(oFragment);
+            });
+/*
+            var mode = sFragmentName.split('_')[1];
+
+            //development plan
+            var oPageSubSection2 = this.byId("pageSubSection2");
+            this._loadFragment("MainObjectDevelopmentPlan_"+mode, function(oFragment){
+				oPageSubSection2.removeAllBlocks();
+				oPageSubSection2.addBlock(oFragment);
+            });  
+
+            var master = this.getModel("master");
+            var budgetType = master.oData.investment_ecst_type_code;
+
+            //ship plan
+            var oPageSubSectionSP = this.byId("pageSubSectionSP");
+            oPageSubSectionSP.removeAllBlocks();
+            if(budgetType == 'S'){
+                this._loadFragment("MainObjectShipPlan_"+mode, function(oFragment){
+                    oPageSubSectionSP.addBlock(oFragment);
+                });  
+            }
+            
+
+            //detail spec
+            var oPageSubSection3 = this.byId("pageSubSection3");
+            var oPageSubSection4 = this.byId("pageSubSection4");
+            oPageSubSection3.removeAllBlocks();
+            oPageSubSection4.removeAllBlocks();
+
+            //mold 인지 press 인지 분기
+            this.itemType = master.oData.mold_item_type_code;
+
+            if(this.itemType == 'P' || this.itemType == 'E'){
+                this._loadFragment("MainObjectDetailSpecPress_"+mode, function(oFragment){
+                    oPageSubSection4.addBlock(oFragment);
+                })  
+            }else{
+                this._loadFragment("MainObjectDetailSpecMold_"+mode, function(oFragment){
+                    oPageSubSection3.addBlock(oFragment);
+                })  
+            }*/
         },
         _loadFragment: function (sFragmentName, oHandler) {
 			if(!this._oFragments[sFragmentName]){
@@ -217,13 +484,32 @@ sap.ui.define([
 					controller: this
 				}).then(function(oFragment){
 					this._oFragments[sFragmentName] = oFragment;
-					if(oHandler) oHandler(oFragment);
+                    if(oHandler) oHandler(oFragment);
 				}.bind(this));
 			}else{
 				if(oHandler) oHandler(this._oFragments[sFragmentName]);
 			}
-		}
+		},
+        handleChangeImpComp: function(oEvent){
 
+            console.group('===============handleChangeImpComp==================');
+
+            var params = oEvent.getParameters();
+
+            var filter = new Filter({
+                            filters: [
+                                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId ),
+                                    new Filter("company_code", FilterOperator.EQ, params.selectedItem.getKey() )
+                                ],
+                                and: true
+                        });
+                        
+            console.log('handleChangeImpComp',filter);
+
+            this.getView().byId("importOrg").getBinding("items").filter(filter, "Application");
+
+            console.groupEnd();
+        },
 
 	});
 });
