@@ -369,9 +369,9 @@ sap.ui.define([
                                 oBomMppingModel.setProperty("/change_reason", oRow.change_reason);
                             }
                             if(oRow.change_info_code === "Old") {
-                                aAsisData.push({material_code : oRow.material_code});
+                                aAsisData.push({material_code : oRow.material_code, material_desc : oRow.material_desc});
                             } else if(oRow.change_info_code === "New") {
-                                aTobeData.push({material_code : oRow.material_code, change_reason : oRow.change_reason});
+                                aTobeData.push({material_code : oRow.material_code, material_desc : oRow.material_desc, change_reason : oRow.remark});
                             }
                         });
                         oBomMppingModel.setProperty("/Asis/", aAsisData);
@@ -493,6 +493,12 @@ sap.ui.define([
             var oBomMappData = oBomMappingModel.getData();
             var aOldData = oBomMappingModel.getProperty("/Asis");
             var aNewData = oBomMappingModel.getProperty("/Tobe");
+            //저장시 material_desc 는 빼야 한다.
+            var aSaveNewData = [];
+            aNewData.forEach(function(oRow) {
+                aSaveNewData.push({material_code : oRow.material_code, change_reason : oRow.change_reason});
+            });
+
             var oInputData = {
                 inputData : {
                     tenant_id            : oBomMappData.tenant_id,
@@ -501,7 +507,7 @@ sap.ui.define([
                     //version_number       : oBomMappData.version_number,
                     user_id              : this.oUerInfo.user_id,
                     //old_tbl              : aOldData,
-                    new_tbl              : aNewData,
+                    new_tbl              : aSaveNewData,
                     department_type_code : oBomMappData.department_type_code,
                     creator_empno        : oBomMappData.creator_empno,
                     eng_change_number    : oBomMappData.eng_change_number,

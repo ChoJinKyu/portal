@@ -410,31 +410,30 @@ public class McstBomMgtServiceV4 implements EventHandler {
         int[] updateOldCounts = jdbc.batchUpdate(v_sql_insertTablePart, batch_part);
         log.info("batch_part : " + updateOldCounts);
 
-        for(SavePartListData v_inData : v_inPartList) {    
-            //프로시저 output 담기
-            SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<OutputData>(){
-                @Override
-                public OutputData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-                    v_result.setReturnCode(v_rs.getString("return_code"));
-                    v_result.setReturnMsg(v_rs.getString("return_msg"));
-                    return v_result;
-                }
-            });
+        //프로시저 output 담기
+        SqlReturnResultSet oTable = new SqlReturnResultSet("O_TABLE", new RowMapper<OutputData>(){
+            @Override
+            public OutputData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                v_result.setReturnCode(v_rs.getString("return_code"));
+                v_result.setReturnMsg(v_rs.getString("return_msg"));
+                return v_result;
+            }
+        });
 
-            List<SqlParameter> paramList = new ArrayList<SqlParameter>();
-            paramList.add(oTable);
-            paramList.add(new SqlParameter("I_USER_ID", Types.NVARCHAR));
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+        paramList.add(oTable);
+        paramList.add(new SqlParameter("I_USER_ID", Types.NVARCHAR));
 
-            //프로시저 call
-            Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
-                @Override
-                public CallableStatement createCallableStatement(Connection connection) throws SQLException {
-                    CallableStatement callableStatement = connection.prepareCall(v_sql_callProcSavePart.toString());
-                    callableStatement.setString("I_USER_ID", context.getInputData().getUserId());
-                    return callableStatement;
-                }
-            }, paramList);
-        }
+        //프로시저 call
+        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+                CallableStatement callableStatement = connection.prepareCall(v_sql_callProcSavePart.toString());
+                callableStatement.setString("I_USER_ID", context.getInputData().getUserId());
+                return callableStatement;
+            }
+        }, paramList);
+        
         // Local Temp Table DROP
         jdbc.execute(v_sql_droptable_part);
 
