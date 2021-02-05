@@ -1,0 +1,13 @@
+/*
+  Object : SP_SE_EVAL_SUPPLIER_SEQ 
+  Description : 평가공급업체 Seq
+  공급업체 평가공급업체 지정시 사용
+  SELECT 'S' || to_varchar(current_date, 'yyyymmdd') || LPAD(SP_SE_EVAL_SUPPLIER_SEQ.NEXTVAL, 5, '0') FROM DUMMY;
+  파일명: SP_SE_EVAL_SUPPLIER_SEQ.hdbsequence
+*/
+
+SEQUENCE SP_SE_EVAL_SUPPLIER_SEQ START WITH 1 MAXVALUE 99999 CYCLE
+RESET BY SELECT IFNULL(MAX(SUBSTR(SUPPLIER_GROUP_CODE, 10, 5)), 0)+1 AS MAX_SEQ
+         FROM   SP_SE_EVAL_SUPPLIER
+         WHERE  INSTR(SUPPLIER_GROUP_CODE,to_varchar(current_date, 'yyyymmdd')) > 0
+;
