@@ -127,7 +127,7 @@ sap.ui.define([
 
         open: function (sSearchObj) {
             this.oSearchObj = sSearchObj;
-            console.log("sSearchObj:" + sSearchObj);
+            //console.log("sSearchObj:" + sSearchObj);
             if (!this.oDialog) {
                 this.openWasRequested = true;
                 return;

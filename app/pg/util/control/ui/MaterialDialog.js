@@ -11,7 +11,8 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text",
     "sap/m/Input",
-    "sap/m/SearchField"
+    "sap/m/SearchField",
+    "sap/m/ComboBox",
 ], function (
     Parent, 
     Renderer, 
@@ -25,11 +26,12 @@ sap.ui.define([
     Label, 
     Text, 
     Input, 
-    SearchField
+    SearchField,
+    ComboBox
     )
     {
     "use strict";
-
+    var that;
     var martrialDialog = Parent.extend("pg.util.control.ui.MartrialDialog", {
 
         metadata: {
@@ -169,24 +171,20 @@ sap.ui.define([
         },
 
         loadData: function () {
-            if (this.oSearchObj.material_code) {
-                this.oMaterialCode.setValue(this.oSearchObj.material_code);
+            if (this.oSearchObj.materialCode) {
+                this.oMaterialCode.setValue(this.oSearchObj.materialCode);
             }
             var sMaterialCode = this.oMaterialCode.getValue();
             var aFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanent_id),
-                new Filter("vendor_pool_code", FilterOperator.EQ, this.oSearchObj.vendor_pool_code)
+                new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId),
             ];
+            
+            if (!!this.oSearchObj.vendorPoolCode) {
+                aFilters.push(new Filter("vendor_pool_code", FilterOperator.EQ, this.oSearchObj.vendorPoolCode));
+            }
 
-            if (sSupplierCode) {
-                aFilters.push(
-                    new Filter({
-                        filters: [
-                            new Filter("material_code", FilterOperator.Contains, "'" + sMaterialCode.toUpperCase() + "'")
-                        ],
-                        and: false
-                    })
-                );
+            if (!!sMaterialCode) {
+                aFilters.push(new Filter("material_code", FilterOperator.Contains, "'" + sMaterialCode.toUpperCase() + "'"));
             }
             
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/vpMaterialDtlView", {

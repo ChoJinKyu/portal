@@ -47,20 +47,6 @@
                     "odataVersion": "2.0",
                     "localUri": "localService/metadata.xml"
                 }
-            },
-            "negoHeaderService": {
-                "uri": "srv-api/odata/v2/sp.negoHeadersService/",
-                "type": "OData",
-                "settings": {
-                    "odataVersion": "2.0"
-                }
-            },
-            "sourcingService": {
-                "uri": "srv-api/odata/v2/sp.sourcingV4Service/",
-                "type": "OData",
-                "settings": {
-                    "odataVersion": "2.0"
-                }
             }
         }
     },
@@ -150,26 +136,6 @@
                 "refreshAfterChange": false,
                 "useBatch": true
                 }
-            },
-            "negoHeder": {
-                "dataSource": "negoHeaderService",
-                "preload": true,
-                "settings": {
-                "defaultBindingMode": "TwoWay",
-                "defaultCountMode": "Inline",
-                "refreshAfterChange": false,
-                "useBatch": true
-                }
-            },
-            "sourcing": {
-                "dataSource": "sourcingService",
-                "preload": true,
-                "settings": {
-                "defaultBindingMode": "TwoWay",
-                "defaultCountMode": "Inline",
-                "refreshAfterChange": false,
-                "useBatch": true
-                }
             }
         },
         "resources": {
@@ -182,7 +148,7 @@
         "resourceRoots": {
             "ext.lib": "../../../../lib",
             "dp": "../../../../dp",
-            "cm": "../../../../cm",
+            "ext.cm": "../../../../cm",
             "ext.pg": "../../../../pg"
         },
         "routing": {
@@ -203,7 +169,7 @@
                     "target": "NetPriceMgtList"
                 },
                 {
-                    "pattern": "NetPriceMgtDetail/{pMode}",
+                    "pattern": "NetPriceMgtDetail/{pMode}/{pAppNum}",
                     "name": "NetPriceMgtDetail",
                     "target": "NetPriceMgtDetail"
                 }
