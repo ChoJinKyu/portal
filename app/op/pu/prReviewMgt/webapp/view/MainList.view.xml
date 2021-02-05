@@ -200,7 +200,7 @@
                         <VBox>
                             <!-- 조직코드 -->
                             <Label text="{I18N>/ORG_CODE}"/>
-                            <MultiComboBox
+                            <!-- <MultiComboBox
                                 selectedKeys="{jSearch>/org_code/values}"
                                 showSecondaryValues="false"
                                 width="100%"
@@ -215,7 +215,12 @@
                                 <items>
                                     <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
                                 </items>
-                            </MultiComboBox>
+                            </MultiComboBox> -->
+                            <MultiInput 
+                                id="orgCode"
+                                showValueHelp="true"
+                                valueHelpRequest=".onValueHelpRequest($event, 'org_code', 'jSearch', {})"
+                            />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>

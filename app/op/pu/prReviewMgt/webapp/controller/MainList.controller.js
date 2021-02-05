@@ -16,7 +16,7 @@ sap.ui.define([
     "cm/util/control/ui/DepartmentDialog",
     "cm/util/control/ui/EmployeeDialog",    
     "dp/util/control/ui/MaterialOrgDialog",
-    "cm/util/control/ui/PlantDialog",
+    "cm/util/control/ui/PurOperationOrgDialog",
 
     "sap/f/LayoutType",
 ], function (BaseController, JSONModel, Validator,
@@ -24,8 +24,8 @@ sap.ui.define([
     Filter, FilterOperator, Sorter, MessageBox, MessageToast, Fragment, 
     DepartmentDialog,
     EmployeeDialog,
-    MaterialOrgDialog, 
-    PlantDialog,
+    MaterialOrgDialog,
+    PurOperationOrgDialog,
     LayoutType
     ) {
     "use strict";
@@ -126,6 +126,7 @@ sap.ui.define([
                     ["requestor_department_code", this.byId("requestorDepartmentCode")], 
                     ["buyer_department_code", this.byId("buyerDepartmentCode")], 
                     ["material_code", this.byId("materialCode")], 
+                    ["org_code", this.byId("orgCode")], 
                 ]
                 .forEach(e => this.convTokenToBind("jSearch", ["/", e[0], "/values"].join(""), e[1].getTokens()), this);
                 // Single
@@ -186,18 +187,22 @@ sap.ui.define([
             // 조직코드
             type == "org_code"
             &&
-            this.dialog(new PlantDialog({
+            this.dialog(new PurOperationOrgDialog({
                 title: "(미정)조직을 선택하세요.)",
-                multiSelection: false,
+                multiSelection: true,
                 items: {
                     filters: [
-                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code)                            
+                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id),
+                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code),
+                        new Filter("process_type_code", FilterOperator.EQ, "OP01")
                     ],
                     sorters: [
-                        new Sorter("plant_name")
+                        new Sorter("org_name")
                     ]
                 }
-            }));
+            }), function(r) {
+                control.setTokens(r.getSource().getTokens());
+            }, control);
 
             (
                 // 요청자부서
