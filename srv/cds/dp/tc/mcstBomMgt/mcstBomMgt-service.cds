@@ -4,6 +4,7 @@ using {dp as mcstPartMapMst} from '../../../../../db/cds/dp/tc/DP_TC_MCST_PROJEC
 using {dp as mcstPartMapDtl} from '../../../../../db/cds/dp/tc/DP_TC_MCST_PROJECT_PART_MAP_DTL-model';
 using {dp as mtlMst} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_MST-model';
 using {dp as mtlOrg} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_ORG-model';
+using {dp as mtlDesc} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_DESC_LNG-model';
 using {dp as uom} from '../../../../../db/cds/dp/mm/DP_MM_UNIT_OF_MEASURE-model';
 using {cm as hrDept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 using {cm as hrEmployee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
@@ -94,7 +95,19 @@ left outer join mcstPartMapMst.Tc_Mcst_Project_Part_Map_Mst pmm
            and pmm.mapping_id = ppl.mapping_id
 left outer join uom.Mm_Unit_Of_Measure muom
             on muom.tenant_id = ppl.tenant_id
-           and muom.uom_code = ppl.uom_code;           
+           and muom.uom_code = ppl.uom_code; 
+
+    view mcstProjectPartMapDtlView as
+        select key pmd.tenant_id
+             , key pmd.mapping_id
+             , key pmd.material_code
+             , mdl.material_desc
+             , pmd.change_info_code
+             , pmd.change_reason
+          from mcstPartMapDtl.Tc_Mcst_Project_Part_Map_Dtl pmd
+left outer join mtlDesc.Mm_Material_Desc_Lng mdl
+            on mdl.tenant_id = pmd.tenant_id
+           and mdl.material_code = pmd.material_code;                     
 
     @readonly
     entity MM_UOM                as

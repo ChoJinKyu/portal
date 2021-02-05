@@ -58,18 +58,18 @@ sap.ui.define([
         , onMultiInputWithEmployeeValuePress: function(oEvent, sInputIdParam){
             var that = this;
             var bMultiSelection = true;
-            var bCloseWhenApplied = true;
+            var bCloseWhenApplied = true; //선택후 닫기
 
             if( sInputIdParam === "changeDeveloper" ) {
                 bMultiSelection = false;
-                bCloseWhenApplied = false;
+                bCloseWhenApplied = false; 
             }
 
             if(!this.oEmployeeMultiSelectionValueHelp || this.oEmployeeMultiSelectionValueHelp.getMultiSelection() !== bMultiSelection ){
                 this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
                     title: "Choose Employees",
                     multiSelection: bMultiSelection,
-                    closeWhenApplied: bCloseWhenApplied,
+                    closeWhenApplied: bCloseWhenApplied,  
                     items: {
                         filters: [
                             new Filter("tenant_id", FilterOperator.EQ, this.getModel("rootModel").getProperty("tenantId"))
@@ -107,7 +107,6 @@ sap.ui.define([
          * Search 버튼 클릭(Filter 추출)
          */
         , onSearch: function (oEvent) {
-            debugger;
             var oFilterModel = this.getModel("filterModel"),
                 oFilterModelData = oFilterModel.getData(),
                 aFilters = [],
@@ -132,7 +131,8 @@ sap.ui.define([
 
             // Approval Title이 있는 경우
             if( sApprovalTitle ) {
-                aFilters.push(new Filter("approval_title", FilterOperator.Contains, sApprovalTitle));
+                aFilters.push(new Filter("approval_title", FilterOperator.Contains,  sApprovalTitle.toUpperCase()));
+                aFilters.push(new Filter("approval_title", FilterOperator.Contains,  sApprovalTitle.toLowerCase()));
             }
             
             // Request Date가 있는 경우
@@ -166,7 +166,6 @@ sap.ui.define([
          * Base Price Progress List 조회
          */
         _getBasePriceList: function(filtersParam) {
-            debugger;
             var oView = this.getView();
             var oModel = this.getModel("basePriceArl");
             filtersParam =  Array.isArray(filtersParam) ? filtersParam : [];
@@ -179,7 +178,6 @@ sap.ui.define([
                 },
                 success : function(data){
                     oView.setBusy(false);
-                    debugger;
 
                     oView.getModel("listModel").setData(data);
                 },
@@ -332,22 +330,40 @@ sap.ui.define([
          * 상세 페이지로 이동
          */
         , onGoDetail: function (oEvent) {
-            MessageBox.show("준비중입니다.");
+            MessageBox.show("준비중입니다. ", {at: "Center Center"});
             return;
 
-            // var oListModel = this.getModel("listModel");
-            // var oBindingContext = oEvent.getSource().getBindingContext("listModel");
+            var oListModel = this.getModel("listModel");
+            var oBindingContext = oEvent.getParameter("rowBindingContext");
 
-            // if( oBindingContext ) {
-            //     var sPath = oBindingContext.getPath();
-            //     var oRootModel = this.getModel("rootModel");
-            //     oRootModel.setProperty("/selectedData", oListModel.getProperty(sPath));
-            // }
+            // 테이블 Row를 클릭했을 경우
+            if( oBindingContext ) {
+                var sPath = oBindingContext.getPath();
+                var oRootModel = this.getModel("rootModel");
+                var oSelectedData = oListModel.getProperty(sPath);
+                oRootModel.setProperty("/selectedData", oSelectedData);
 
-            // this.getRouter().navTo("basePriceDetail");
-        },
+                if( oSelectedData.net_price_type_code === "NPT01"){
+                    this.getRouter().navTo("basePriceDetail");
+                }else if( oSelectedData.net_price_type_code === "NPT02") {
+                    MessageBox.show("준비중입니다. ", {at: "Center Center"});
+                    return;
+                }else if( oSelectedData.net_price_type_code === "NPT03") {
+                    MessageBox.show("준비중입니다. ", {at: "Center Center"});
+                    return;
+                }else if( oSelectedData.net_price_type_code === "NPT04") {
+                    MessageBox.show("준비중입니다. ", {at: "Center Center"});
+                    return;
+                }else if( oSelectedData.net_price_type_code === "NPT05") {
+                    this.getRouter().navTo("internalPriceDetail");
+                }else if( oSelectedData.net_price_type_code === "NPT06") {
+                    MessageBox.show("준비중입니다. ", {at: "Center Center"});
+                }
+            }
 
-        createPopupClose: function (oEvent) {
+        }
+
+        , createPopupClose: function (oEvent) {
              this._spcreateDialog.then(function(oDialog) {
                 oDialog.close();
             });

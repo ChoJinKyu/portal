@@ -1,7 +1,3 @@
-jQuery.sap.registerModulePath("templateGuideModel", "../xx/templateGuide/webapp/model/");
-jQuery.sap.registerModulePath("templateGuideView", "../xx/templateGuide/webapp/view/");
-jQuery.sap.registerModulePath("templateGuideController", "../xx/templateGuide/webapp/controller/");
-
 sap.ui.define([
 	"ext/lib/UIComponent",
     "sap/ui/model/json/JSONModel"

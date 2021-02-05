@@ -376,6 +376,8 @@ sap.ui.define([
                 oDetailsModel = this.getModel("details"),
                 oTable = this.byId("pdActivityLengTable"),
                 v_this = this;
+                
+            oMasterModel.setProperty("/product_activity_code", oMasterModel.getProperty("/product_activity_code").trim());
 
             var oMasterData = oMasterModel.oData;
             var oDetailsData = oDetailsModel.oData;
@@ -402,7 +404,7 @@ sap.ui.define([
                 tenant_id               : oMasterData.tenant_id,
                 product_activity_code   : oMasterData.product_activity_code,
                 description             : oMasterData.description,
-                sequence                : oMasterData.sequence,
+                sequence                : oMasterData.sequence === "" ? "1" : oMasterData.sequence,
                 active_flag             : activeFlg,
                 update_user_id          : this._sLoginUserId,
                 crud_type_code          : CUType
@@ -497,18 +499,6 @@ sap.ui.define([
             
 
             this.validator.clearValueState(this.byId("page"));
-        },
-
-        aaa : function(){
-            console.log("test");
-
-            var master = this.getModel("master");
-            var details = this.getModel("details");
-
-            console.log("master :");
-            console.log(master);
-            console.log("details :");
-            console.log(details);
         }
 	});
 });

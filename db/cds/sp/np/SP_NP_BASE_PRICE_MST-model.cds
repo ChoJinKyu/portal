@@ -13,8 +13,8 @@ entity Np_Base_Price_Mst {
       currency_code         : String(3)      not null    @title: '통화코드' ;	
       base_date             : String(8)                  @title: '기준일자' ;	
       apply_year            : String(4)                  @title: '적용년도' ;	
-      apply_start_mm        : String(2)                  @title: '적용시작월' ;	
-      apply_end_mm          : String(2)                  @title: '적용종료월' ;	
+      apply_start_yyyymm    : String(6)                  @title: '적용시작년월' ;	
+      apply_end_yyyymm      : String(6)                  @title: '적용종료년월' ;	
       base_price            : Decimal(34,10) not null    @title: '기준단가 ' ;	
       base_price_type_code  : String(30)                 @title: '기준단가유형코드' ;	
       pcst                  : Decimal(34,10)             @title: '가공비' ;	

@@ -24,6 +24,7 @@ sap.ui.define([
     "sap/m/Label",
     "cm/util/control/ui/EmployeeDialog",
     "cm/util/control/ui/PlantDialog",
+    "cm/util/control/ui/PurOperationOrgDialog",
     "dp/util/control/ui/MaterialOrgDialog",
     "op/util/control/ui/AccountDialog",
     "op/util/control/ui/CctrDialog",
@@ -34,7 +35,7 @@ sap.ui.define([
 ], function (BaseController, ManagedListModel, ManagedModel, Validator, DateFormatter, NumberFormatter, CodeValueHelp, 
             JSONModel, ODataModel, History, RichTextEditor, Filter, FilterOperator, Sorter,
             Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label,
-            EmployeeDialog, PlantDialog, MaterialOrgDialog, AccountDialog, CctrDialog, CurrencyDialog, UomDialog, WbsDialog, SupplierDialog) {
+            EmployeeDialog, PlantDialog, PurOperationOrgDialog, MaterialOrgDialog, AccountDialog, CctrDialog, CurrencyDialog, UomDialog, WbsDialog, SupplierDialog) {
             
     "use strict";
     
@@ -226,7 +227,6 @@ sap.ui.define([
                     // PR 템플릿 정보 세텅
                     oData.results.some(function(oPrTemplateData){
                         if(oPrTemplateData.pr_template_number === oPrMstData.pr_template_number){
-                            debugger;
                             // 신규등록에서는 템플릿명이 없으므로 값 세팅 해줘야함
                             oPrMstData.pr_template_name =  oPrTemplateData.pr_template_name;
                             oPrMstData.pr_type_name =  oPrTemplateData.pr_type_name;
@@ -381,7 +381,7 @@ sap.ui.define([
             var display_column_flag = oTemplateColumnData.display_column_flag;
             var input_column_flag = oTemplateColumnData.input_column_flag;
             var mandatory_column_flag = oTemplateColumnData.mandatory_column_flag;
-
+            
             if(mandatory_column_flag){
                 hide_column_flag = false;
                 display_column_flag = true;
@@ -575,12 +575,15 @@ sap.ui.define([
                 let aPrDtlData = oViewModel.getProperty("/Pr_Dtl");
                 if(aPrDtlData && aPrDtlData.length > 0){
                     aPrDtlData.forEach(function(itemDtl, idx){
+                        //조직명
+                        itemDtl["org_name_desc"] = (itemDtl.org_name ? itemDtl.org_name: itemDtl.plant_name) + " [" + itemDtl.org_code + "]";
+
                         // 계정정보
                         if(oAccountData.results.length > 0){
                             oAccountData.results.forEach(function(itemAccount, idx){
                                 if(itemAccount.pr_item_number === itemDtl.pr_item_number){
                                     for(var key in itemAccount){
-                                        console.log("##### " + key + " : " + itemAccount[key]);
+                                        //console.log("##### " + key + " : " + itemAccount[key]);
                                         itemDtl[key] = itemAccount[key];
                                     }
                                 }
@@ -592,7 +595,7 @@ sap.ui.define([
                             oServiceData.results.forEach(function(itemService, idx){
                                 if(itemService.pr_item_number === itemDtl.pr_item_number){
                                     for(var key in itemService){
-                                        console.log("##### " + key + " : " + itemService[key]);
+                                        //console.log("##### " + key + " : " + itemService[key]);
                                         itemDtl[key] = itemService[key];
                                     }
                                 }
@@ -785,7 +788,7 @@ sap.ui.define([
             
             this.validator.setModel(oViewModel, "viewModel");
             bReturn = this.validator.validate(this.byId(tableId));
-            console.log("##### bReturn : " + bReturn);
+            console.log("##### _fnTableValidator - bReturn > " + bReturn);
 
             if(!bReturn){
                 MessageToast.show(that.getModel("I18N").getText("/ECM01002"));
@@ -1008,13 +1011,23 @@ sap.ui.define([
                 delivery_request_date = "";
             }
 
+            // 구매조직명칭
+            let sOrgNameDesc = "";
+            if(item.org_name && item.org_name !== ""){
+                sOrgNameDesc = item.org_name + " [" + item.org_code + "]";
+            }else if(item.plant_name && item.plant_name !== ""){
+                sOrgNameDesc = item.plant_name + " [" + item.org_code + "]";
+            }
+
             var oPrDetailData = {
                         tenant_id           : item.tenant_id,
                         company_code        : item.company_code,
                         pr_number           : item.pr_number,
                         pr_item_number      : (item.pr_item_number) ? item.pr_item_number +"" : "",
                         org_type_code       : (item.org_type_code) ? item.org_type_code : "",
-                        org_code            : (item.org_code) ? item.org_code : "", 
+                        org_code            : (item.org_code) ? item.org_code : "",
+                        org_name            : (item.org_name) ? item.org_name : "",
+                        org_name_desc       : sOrgNameDesc,
                         buyer_empno         : (item.buyer_empno) ? item.buyer_empno : "",
                         currency_code       : (item.currency_code) ? item.currency_code : "KRW",
                         estimated_price     : (item.estimated_price && item.estimated_price !== "") ? item.estimated_price+"" : "0", 
@@ -1146,6 +1159,8 @@ sap.ui.define([
             }), function(result) {
                 var oItemData = result.getParameter("item");
                 oSelectedData.org_code = (oItemData.org_code && oItemData.org_code !== "") ? oItemData.org_code:"";
+                oSelectedData.org_name = (oItemData.org_name && oItemData.org_name !== "") ? oItemData.org_name:"";
+                oSelectedData.org_name_desc = (oItemData.org_name && oItemData.org_name !== "") ? oItemData.org_name+" ["+oItemData.org_code+"]":"";
                 oSelectedData.material_code = oItemData.material_code;
                 oSelectedData.pr_desc = (oItemData.material_desc && oItemData.material_desc !== "") ? oItemData.material_desc:"";
                 oSelectedData.pr_unit = (oItemData.base_uom_code && oItemData.base_uom_code !== "") ? oItemData.base_uom_code:"";
@@ -1155,25 +1170,50 @@ sap.ui.define([
                 oViewModel.refresh();
             });
 
+            // 조직코드(플랜트 - 임시로 사용 - 추후 삭제)
+            // action == "plant_code"
+            // &&
+            // this.dialog(new PlantDialog({
+            //     title: "Choose a organization code",
+            //     MultiSelection: false,
+            //     items: {
+            //         filters: [
+            //             new Filter("company_code", FilterOperator.EQ, this.$session.company_code)
+            //         ],
+            //         sorters: [
+            //             new Sorter("plant_name")
+            //         ]
+            //     }
+            // }), function(result) {
+            //     var oItemData = result.getParameter("item");
+            //     if(oItemData.plant_code && oItemData.plant_code !== ""){
+            //         oSelectedData.org_code = oItemData.plant_code;                    
+            //         oViewModel.refresh();
+            //     }
+            // });
+
             // 조직코드
             action == "org_code"
             &&
-            this.dialog(new PlantDialog({
+            this.dialog(new PurOperationOrgDialog({
                 title: "Choose a organization code",
                 MultiSelection: false,
                 items: {
                     filters: [
-                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code)
+                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id),
+                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code),
+                        new Filter("process_type_code", FilterOperator.EQ, "OP01")
                     ],
                     sorters: [
-                        new Sorter("plant_name")
+                        new Sorter("org_name", true)
                     ]
-                },
-                orgCode: ""
+                }
             }), function(result) {
                 var oItemData = result.getParameter("item");
-                if(oItemData.plant_code && oItemData.plant_code !== ""){
-                    oSelectedData.org_code = oItemData.plant_code;                    
+                if(oItemData.org_code && oItemData.org_code !== ""){
+                    oSelectedData.org_code = oItemData.org_code;
+                    oSelectedData.org_name = oItemData.org_name;
+                    oSelectedData.org_name_desc = oItemData.org_name + " [" + oItemData.org_code + "]";                   
                     oViewModel.refresh();
                 }
             });
@@ -1232,6 +1272,8 @@ sap.ui.define([
                     let oPrItemData = {};
                     oPrItemData.pr_item_number = iPrItemNumber;
                     oPrItemData.org_code = (item.org_code && item.org_code !== "") ? item.org_code:"";
+                    oPrItemData.org_name = (item.org_name && item.org_name !== "") ? item.org_name:"";
+                    oPrItemData.org_name_desc = item.org_name + " [" + item.org_code + "]";                    
                     oPrItemData.material_code = item.material_code;
                     oPrItemData.pr_desc = (item.material_desc && item.material_desc !== "") ? item.material_desc:"";
                     oPrItemData.pr_unit = (item.base_uom_code && item.base_uom_code !== "") ? item.base_uom_code:"";
@@ -1273,6 +1315,8 @@ sap.ui.define([
                     var oSelectedData = oViewModel.getProperty(sSelectedPath);
                     
                     oSelectedData.org_code = (oMaterialData.org_code && oMaterialData.org_code !== "") ? oMaterialData.org_code:"";
+                    oSelectedData.org_name = (oMaterialData.org_name && oMaterialData.org_name !== "") ? oMaterialData.org_name:"";
+                    oSelectedData.org_name_desc = oMaterialData.org_name + "[" + oMaterialData.org_code + "]";
                     oSelectedData.material_code = oMaterialData.material_code;
                     oSelectedData.pr_desc = (oMaterialData.material_desc && oMaterialData.material_desc !== "") ? oMaterialData.material_desc:"";
                     oSelectedData.pr_unit = (oMaterialData.base_uom_code && oMaterialData.base_uom_code !== "") ? oMaterialData.base_uom_code:"";
@@ -1331,36 +1375,36 @@ sap.ui.define([
  
 
         //==================== 구매조직코드 검색 Dialog 시작 ====================  
-		onOpenSearchPurOperationOrgDialog: function (oEvent) {
-            sSelectedPath = oEvent.getSource().getBindingContext("viewModel").getPath();
-            var that = this;
+		// onOpenSearchPurOperationOrgDialog: function (oEvent) {
+        //     sSelectedPath = oEvent.getSource().getBindingContext("viewModel").getPath();
+        //     var that = this;
             
-            if(!this.oSearchPurOperationOrgDialog){
-                this.oSearchPurOperationOrgDialog = new PlantDialog({
-                    title: "Choose Organization Code",
-                    multiSelection: false,
-                    items: {
-                        filters: [
-                            new Filter("company_code", FilterOperator.EQ, that.company_code)                            
-                        ],
-                        sorters: [
-                            new Sorter("plant_name")
-                        ]
-                    }
-                });
-                this.oSearchPurOperationOrgDialog.attachEvent("apply", function(oEvent){
-                    var oItemData = oEvent.getParameter("item");
-                    var oViewModel = that.getModel("viewModel");
-                    var oSelectedData = oViewModel.getProperty(sSelectedPath);
+        //     if(!this.oSearchPurOperationOrgDialog){
+        //         this.oSearchPurOperationOrgDialog = new PlantDialog({
+        //             title: "Choose Organization Code",
+        //             multiSelection: false,
+        //             items: {
+        //                 filters: [
+        //                     new Filter("company_code", FilterOperator.EQ, that.company_code)                            
+        //                 ],
+        //                 sorters: [
+        //                     new Sorter("plant_name")
+        //                 ]
+        //             }
+        //         });
+        //         this.oSearchPurOperationOrgDialog.attachEvent("apply", function(oEvent){
+        //             var oItemData = oEvent.getParameter("item");
+        //             var oViewModel = that.getModel("viewModel");
+        //             var oSelectedData = oViewModel.getProperty(sSelectedPath);
 
-                    if(oItemData.plant_code && oItemData.plant_code !== ""){
-                        oSelectedData.org_code = oItemData.plant_code;                    
-                        oViewModel.refresh();
-                    }                    
-                }.bind(that));
-            }
-            this.oSearchPurOperationOrgDialog.open();
-        }, 
+        //             if(oItemData.plant_code && oItemData.plant_code !== ""){
+        //                 oSelectedData.org_code = oItemData.plant_code;                    
+        //                 oViewModel.refresh();
+        //             }                    
+        //         }.bind(that));
+        //     }
+        //     this.oSearchPurOperationOrgDialog.open();
+        // }, 
 
         //==================== WBS 검색 Dialog 시작 ====================  
 		onOpenSearchWbsDialog: function (oEvent) {

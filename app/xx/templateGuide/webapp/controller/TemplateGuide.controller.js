@@ -1,18 +1,6 @@
-// jQuery.sap.registerModulePath("sampleGrpMgrView", "/xx/sampleGrpMgr/webapp/view/");
-// jQuery.sap.registerModulePath("sampleGrpMgrController", "/xx/sampleGrpMgr/webapp/controller/");
-
-// jQuery.sap.registerModulePath("sampleMstMgrView", "/xx/sampleMstMgr/webapp/view/");
-// jQuery.sap.registerModulePath("sampleMstMgrController", "/xx/sampleMstMgr/webapp/controller/");
-
-// jQuery.sap.registerModulePath("templateGuideView", "/xx/templateGuide/webapp/view/");
-// jQuery.sap.registerModulePath("templateGuideController", "/xx/templateGuide/webapp/controller/");
-
 sap.ui.define([
 		"sap/ui/core/mvc/Controller"
 	],
-	/**
-     * @param {typeof sap.ui.core.mvc.Controller} Controller
-     */
 	function (Controller) {
 		"use strict";
 

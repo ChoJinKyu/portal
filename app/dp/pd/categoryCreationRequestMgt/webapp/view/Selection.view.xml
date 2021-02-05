@@ -13,10 +13,11 @@
     height="100%">
 
     <uxap:ObjectPageLayout
+        id="midObjectForm"
         showTitleInHeaderContent="true"
 		showEditHeaderButton="true"
         upperCaseAnchorBar="false"
-        headerContentPinnable="false"
+        headerContentPinnable="true"
         showAnchorBarPopover="false"
         showFooter="true">
 
@@ -43,7 +44,24 @@
                 <!-- Status 시작 -->
 				<layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
 					<Label text="진행상태 :"/>
-                    <ObjectStatus class="sapMObjectStatusLarge" text="{master>/progress_status_code}" state="Error" />
+                    <VBox visible="{= ${master>/request_number}==='new'?true:false}">
+                        <ObjectStatus class="sapMObjectStatusLarge" text="NEW" state="Error" />
+                    </VBox>
+                    <VBox visible="{= ${master>/progress_status_code}==='A'?true:false}">
+                        <ObjectStatus class="sapMObjectStatusLarge" text="{processModel>/0/code_name}" state="Error" />
+                    </VBox>
+                    <VBox visible="{= ${master>/progress_status_code}==='B'?true:false}">
+                        <ObjectStatus class="sapMObjectStatusLarge" text="{processModel>/1/code_name}" state="Error" />
+                    </VBox>
+                    <VBox visible="{= ${master>/progress_status_code}==='C'?true:false}">
+                        <ObjectStatus class="sapMObjectStatusLarge" text="{processModel>/2/code_name}" state="Error" />
+                    </VBox>
+                    <VBox visible="{= ${master>/progress_status_code}==='D'?true:false}">
+                        <ObjectStatus class="sapMObjectStatusLarge" text="{processModel>/3/code_name}" state="Error" />
+                    </VBox>
+                    <VBox visible="{= ${master>/progress_status_code}==='E'?true:false}">
+                        <ObjectStatus class="sapMObjectStatusLarge" text="{processModel>/4/code_name}" state="Error" />
+                    </VBox>
 				</layout:VerticalLayout>
                 <!-- Status 끝 -->
                 
@@ -59,7 +77,7 @@
                                     <co:customControl>
                                         <VBox alignItems="Center">
                                             <core:Icon src="{detailViewModel>/processFlowIcons/0}" color="{detailViewModel>/processFlowColors/0}"/>
-                                            <Text text="{rootModel>/processList/0/code_name}" textAlign="Center" class=""/>
+                                            <Text text="{processModel>/0/code_name}" textAlign="Center" class=""/>
                                         </VBox>
                                     </co:customControl>
                                 </co:MicroProcessFlowItem>
@@ -67,7 +85,7 @@
                                     <co:customControl>
                                         <VBox alignItems="Center">
                                             <core:Icon src="{detailViewModel>/processFlowIcons/1}" color="{detailViewModel>/processFlowColors/1}"/>
-                                            <Text text="{rootModel>/processList/1/code_name}" textAlign="Center" class=""/>
+                                            <Text text="{processModel>/1/code_name}" textAlign="Center" class=""/>
                                         </VBox>
                                     </co:customControl>
                                 </co:MicroProcessFlowItem>
@@ -75,7 +93,7 @@
                                     <co:customControl>
                                         <VBox alignItems="Center">
                                             <core:Icon src="{detailViewModel>/processFlowIcons/2}" color="{detailViewModel>/processFlowColors/2}"/>
-                                            <Text text="{rootModel>/processList/2/code_name}" textAlign="Center" class=""/>
+                                            <Text text="{processModel>/2/code_name}" textAlign="Center" class=""/>
                                         </VBox>
                                     </co:customControl>
                                 </co:MicroProcessFlowItem>
@@ -83,7 +101,23 @@
                                     <co:customControl>
                                         <VBox alignItems="Center">
                                             <core:Icon src="{detailViewModel>/processFlowIcons/3}" color="{detailViewModel>/processFlowColors/3}"/>
-                                            <Text text="{rootModel>/processList/3/code_name}" textAlign="Center" class=""/>
+                                            <Text text="{processModel>/3/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/3}" color="{detailViewModel>/processFlowColors/3}"/>
+                                            <Text text="{processModel>/4/code_name}" textAlign="Center" class=""/>
+                                        </VBox>
+                                    </co:customControl>
+                                </co:MicroProcessFlowItem>
+                                <co:MicroProcessFlowItem stepWidth="2rem" >
+                                    <co:customControl>
+                                        <VBox alignItems="Center">
+                                            <core:Icon src="{detailViewModel>/processFlowIcons/3}" color="{detailViewModel>/processFlowColors/3}"/>
+                                            <Text text="{processModel>/5/code_name}" textAlign="Center" class=""/>
                                         </VBox>
                                     </co:customControl>
                                 </co:MicroProcessFlowItem>
@@ -161,9 +195,8 @@
                                         labelFor="input"
                                         required="true"/>
                                     <VBox>
-                                        <SearchField id="searchField" search=".onSearchPartCategory" visible="{viewModel>/editMode}"/>
-                                        <Text id="searchText" text="{master>/similar_category_code}" visible="{viewModel>/showMode}"/>
-                                        <Input id="similarCategoryCode" placeholder="Input data" visible ="false" />
+                                        <SearchField id="searchField" search=".onSearchPartCategory" value="{master>/similar_category_code}" visible="{viewModel>/editMode}"/>
+                                        <Text id="similarCategoryCode" text="{master>/similar_category_code}" visible="{viewModel>/showMode}"/>
                                     </VBox>
                                 </HBox>
                                 <VBox>
@@ -311,6 +344,7 @@
                 </HBox>
 
                 <HBox visible="{= ${master>/progress_status_code} === 'A' ? true : false}" alignItems="End" justifyContent="End">
+                    <Button id="pageAListButton" type="Transparent" text="{I18N>/LIST}" press=".onPageListButtonPress"/>
                     <Button id="pageEditButton" type="Transparent" text="{I18N>/EDIT}" press=".onPageEditButtonPress" />
                     <Button id="pageSaveButton" type="Transparent" text="{I18N>/DRAFT}" press=".onPageSaveButtonPress('D')" />
                     <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" press=".onPageDeleteButtonPress"/>

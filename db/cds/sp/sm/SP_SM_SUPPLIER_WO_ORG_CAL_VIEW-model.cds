@@ -14,6 +14,7 @@ entity Sm_Supplier_Wo_Org_Cal_View {
         vat_number                    : String(30)  @title : 'VAT등록번호';
         country_code                  : String(2)   @title : '국가코드';
         country_name                  : String(30)  @title : '국가명';
+        eu_flag                       : String(1)   @title : '유럽국가여부';
         zip_code                      : String(20)  @title : '우편번호';
         supplier_local_city           : String(240) @title : '로컬주소(도시)';
         supplier_local_region         : String(240) @title : '로컬주소(지역)';

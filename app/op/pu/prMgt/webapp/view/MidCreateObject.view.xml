@@ -135,15 +135,15 @@
                                         <Text text="{viewModel>pr_item_number}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column width="10em" hAlign="Center">
+                                <table:Column width="15em" hAlign="Center">
                                     <Label text="{I18N>/ORG_CODE}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ORG_CODE/mandatory_column_flag}"/>           
                                     <table:template>
                                         <Input
-                                            value="{viewModel>org_code}"
-                                            maxLength="10"
+                                            value="{viewModel>org_name_desc}"
                                             showValueHelp="true"
                                             valueHelpOnly="true"
                                             valueHelpRequest=".onValueHelpRequest($event, 'org_code', {})" 
+                                            editable="{= !${contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag} }"
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ORG_CODE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
@@ -223,18 +223,12 @@
                                 </table:Column>                              
                                 <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/ESTIMATED_PRICE/display_column_flag}">
                                     <Label text="{path:'I18N>/PRICE'}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ESTIMATED_PRICE/mandatory_column_flag}"/>           
-                                    <table:template>                                        
+                                    <table:template>   
                                         <Input 
-                                            value="{
-                                                parts: [
-                                                    {path: 'viewModel>estimated_price'},
-                                                    {path: 'viewModel>currency_code'}
-                                                ],
-                                                type:'sap.ui.model.type.Currency',
-                                                formatOptions:{showMeasure:false}
-                                            }"
-                                            maxLength="30"
+                                            value="{path: 'viewModel>estimated_price', 
+                                                    type : 'sap.ui.model.odata.type.Decimal'}" 
                                             textAlign="End"
+                                            maxLength="30"
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ESTIMATED_PRICE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>

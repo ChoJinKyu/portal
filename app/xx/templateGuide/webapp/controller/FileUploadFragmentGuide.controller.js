@@ -5,14 +5,11 @@ sap.ui.define([
     "sap/ui/core/format/FileSizeFormat",
     "ext/lib/util/UUID",
     "sap/m/MessageBox",
-    "sap/m/MessageToast",
-    "sap/base/util/deepExtend"
+    "sap/m/MessageToast"
 ],
 	function(Controller, JSONModel, UploadCollectionParameter, FileSizeFormat, UUID, MessageBox, MessageToast) {
     "use strict";
     
-    var _fileGroupId;
-
 	return Controller.extend("xx.templateGuie.controller.FileUploadFragmentGuide", {
         onInit: function(initParam) {
             var that = this;
@@ -26,7 +23,8 @@ sap.ui.define([
                     that.getView().byId("mainPanel").addContent(oFragmentUploadCollection);
                     
                     var initParam = {
-                        fileGroupId : "098239879832998", /* 098239879832998 */
+                        /* fileGroupId : "", // 신규일경우 */
+                        fileGroupId : "098239879832998",
                         oUploadCollection : oFragmentUploadCollection
                     };
 

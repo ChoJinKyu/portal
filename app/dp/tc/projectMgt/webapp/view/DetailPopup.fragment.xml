@@ -44,7 +44,7 @@
                         <t:Column hAlign="Center"> <!-- width="10rem" 컬럼 사이즈 조절  -->
                             <Label text="{I18N>/REG_DATE}" />  
                             <t:template>
-                                 <Text text="{ path : 'popupListModel>project_create_date',
+                                 <Text text="{ path : 'popupListModel>local_create_dtm',
                                               formatter: '.dateFormatter.toUTCDateString'  
                                             }" />         
                             </t:template>                          

@@ -60,10 +60,9 @@ sap.ui.define([
                 }
             };                        
 
-            vpMstList.push({
-                tenant_id: "L2100"
-                ,company_code: "*"
-                ,org_type_code: "BU"
+            vpMstList.push({                
+                //,company_code: "*"
+                 org_type_code: "BU"
                 ,org_code: "BIZ00100"
                 ,vendor_pool_code: 'VP202101080005'
                 ,vendor_pool_local_name : 'SB2O3'
@@ -94,9 +93,8 @@ sap.ui.define([
             });
 
             /*vpMstList.push({
-                tenant_id: "L2100"
-                ,company_code: "*"
-                ,org_type_code: "BU"
+                //company_code: "*"
+                 org_type_code: "BU"
                 ,org_code: "BIZ00300"
                 ,vendor_pool_code: 'VP202101200023'
                 ,vendor_pool_local_name : ' TwSt-H  aN1'
@@ -131,9 +129,8 @@ sap.ui.define([
             //supplier가 있는 경우 에러발생(있을 시 주석)
 
             vpSupplierList.push({
-                tenant_id: "L2100"
-                ,company_code: "*"
-                ,org_type_code: "BU"
+                //company_code: "*"
+                org_type_code: "BU"
                 ,org_code: "BIZ00100"
                 ,vendor_pool_code: 'VP202101080005'
                 ,supplier_code: 'KR07888900'
@@ -154,9 +151,8 @@ sap.ui.define([
             });
 
             vpSupplierList.push({
-                tenant_id: "L2100"
-                , company_code: "*"
-                , org_type_code: "BU"
+                  //company_code: "*"
+                  org_type_code: "BU"
                 , org_code: "BIZ00100"
                 , vendor_pool_code: 'VP202101080005'
                 , supplier_code: 'KR11884600'
@@ -180,10 +176,9 @@ sap.ui.define([
 
                     
             //추가
-            vpItemList.push({
-                tenant_id: "L2100"
-                , company_code: "*"
-                , org_type_code: "BU"
+            vpItemList.push({                
+                //, company_code: "*"
+                  org_type_code: "BU"
                 , org_code: "BIZ00100"
                 , vendor_pool_code: 'VP202101080005'
                 , material_code: '1002327'
@@ -194,9 +189,8 @@ sap.ui.define([
 
             //수정
             vpItemList.push({
-                tenant_id: "L2100"
-                , company_code: "*"
-                , org_type_code: "BU"
+                //, company_code: "*"
+                  org_type_code: "BU"
                 , org_code: "BIZ00100"
                 , vendor_pool_code: 'VP202101080005'
                 , material_code: 'PBTDBN0001'
@@ -208,9 +202,8 @@ sap.ui.define([
             //삭제
             /*
             vpItemList.push({
-                tenant_id: "L2100"
-                , company_code: "*"
-                , org_type_code: "BU"
+                //, company_code: "*"
+                  org_type_code: "BU"
                 , org_code: "BIZ00100"
                 , vendor_pool_code: 'VP202101080047'
                 , material_code: 'TCMACR0013'
@@ -223,9 +216,8 @@ sap.ui.define([
 
             //수정
             vpManagerList.push({
-                tenant_id: "L2100"
-                , company_code: "*"
-                , org_type_code: "BU"
+                // company_code: "*"
+                  org_type_code: "BU"
                 , org_code: "BIZ00100"
                 , vendor_pool_code: 'VP202101080005'
                 , vendor_pool_person_empno: '10044'
@@ -237,9 +229,8 @@ sap.ui.define([
 
             //삭제
             vpManagerList.push({
-                tenant_id: "L2100"
-                , company_code: "*"
-                , org_type_code: "BU"
+                 // company_code: "*"
+                  org_type_code: "BU"
                 , org_code: "BIZ00100"
                 , vendor_pool_code: 'VP202101080005'
                 , vendor_pool_person_empno: '10908'
@@ -250,10 +241,9 @@ sap.ui.define([
             });
 
             //등록
-            vpManagerList.push({
-                tenant_id: "L2100"
-                , company_code: "*"
-                , org_type_code: "BU"
+            vpManagerList.push({                
+                //, company_code: "*"
+                  org_type_code: "BU"
                 , org_code: "BIZ00100"
                 , vendor_pool_code: 'VP202101080005'
                 , vendor_pool_person_empno: '10836'
@@ -383,13 +373,12 @@ sap.ui.define([
             };                        
 
             vpMstList.push({
-                tenant_id: "L2100"
-                ,company_code: "*"
-                ,org_type_code: "BU"
+                //company_code: "*"
+                 org_type_code: "BU"
                 ,org_code: "BIZ00100"
-                //,vendor_pool_code: 'VP202101080005'
-                ,vendor_pool_local_name : 'SB2O6'
-                ,vendor_pool_english_name : 'SB2O6'
+                ,vendor_pool_code: 'VP202102050090'
+                ,vendor_pool_local_name : 'ssb236'
+                ,vendor_pool_english_name : 'ssb236'
                 ,repr_department_code: '11010002'
                 ,operation_unit_code : 'RAW_MATERIAL'
                 ,inp_type_code : "MBLMOB"
@@ -412,13 +401,12 @@ sap.ui.define([
                 ,display_sequence : 0
                 ,register_reason : null
                 ,approval_number : null
-                ,crud_type_code : "C"
+                ,crud_type_code : "U"
             });
 
             /*vpMstList.push({
-                tenant_id: "L2100"
-                ,company_code: "*"
-                ,org_type_code: "BU"
+                //,company_code: "*"
+                 org_type_code: "BU"
                 ,org_code: "BIZ00300"
                 ,vendor_pool_code: 'VP202101200023'
                 ,vendor_pool_local_name : ' TwSt-H  aN1'
@@ -452,20 +440,19 @@ sap.ui.define([
 
             //supplier가 있는 경우 에러발생(있을 시 주석)
 
-            vpSupplierList.push({
-                tenant_id: "L2100"
-                ,company_code: "*"
-                ,org_type_code: "BU"
+            vpSupplierList.push({                
+                //,company_code: "*"
+                 org_type_code: "BU"
                 ,org_code: "BIZ00100"
-                ,vendor_pool_code: 'VP202101080005'
+                ,vendor_pool_code: 'VP202102050090'
                 ,supplier_code: 'KR07888900'
                 //,supeval_target_flag: false   //??협의대상(화면의 어떤항목인지 모름)
                 //,supplier_op_plan_review_flag: false   //??협의대상(화면의 어떤항목인지 모름)
                 ,supeval_control_flag: false
-                ,supeval_control_start_date: "20210104"
-                ,supeval_control_end_date: "20211229"
-                //,supeval_restrict_start_date: "20210104"   //??협의대상(화면의 어떤항목인지 모름)
-                //,supeval_restrict_end_date: "20211229"   //??협의대상(화면의 어떤항목인지 모름)
+                ,supeval_control_start_date: "2021/01-04"
+                ,supeval_control_end_date: "2021.12/29"
+                ,supeval_restrict_start_date: "2021.01.04"   //??협의대상(화면의 어떤항목인지 모름)
+                ,supeval_restrict_end_date: "2021-12-29"   //??협의대상(화면의 어떤항목인지 모름)
                 //,inp_code: "AAA"  //??협의대상(화면의 어떤항목인지 모름)  나중에
                 ,supplier_rm_control_flag: false
                 ,supplier_base_portion_rate: 0.0
@@ -476,19 +463,18 @@ sap.ui.define([
             });
 
             vpSupplierList.push({
-                tenant_id: "L2100"
-                , company_code: "*"
-                , org_type_code: "BU"
+                //, company_code: "*"
+                  org_type_code: "BU"
                 , org_code: "BIZ00100"
-                , vendor_pool_code: 'VP202101080005'
+                , vendor_pool_code: 'VP202102050090'
                 , supplier_code: 'KR11884600'
                 //,supeval_target_flag: false     //??협의대상(화면의 어떤항목인지 모름)
                 //,supplier_op_plan_review_flag: false  //??협의대상(화면의 어떤항목인지 모름)
                 ,supeval_control_flag: false
-                ,supeval_control_start_date: "20210104"
-                ,supeval_control_end_date: "20211229"
-                //,supeval_restrict_start_date: "20210104"  //??협의대상(화면의 어떤항목인지 모름)
-                //,supeval_restrict_end_date: "20211229"   //??협의대상(화면의 어떤항목인지 모름)
+                ,supeval_control_start_date: "2021.01-04"
+                ,supeval_control_end_date: "2021-12-29"
+                ,supeval_restrict_start_date: "2021/01/04"  //??협의대상(화면의 어떤항목인지 모름)
+                ,supeval_restrict_end_date: "2021.12.29"   //??협의대상(화면의 어떤항목인지 모름)
                 //,inp_code: "AAA"   //??협의대상(화면의 어떤항목인지 모름)
                 ,supplier_rm_control_flag: false
                 ,supplier_base_portion_rate: 0.0
@@ -503,11 +489,10 @@ sap.ui.define([
                     
             //추가
             vpItemList.push({
-                tenant_id: "L2100"
-                , company_code: "*"
-                , org_type_code: "BU"
+                //, company_code: "*"
+                  org_type_code: "BU"
                 , org_code: "BIZ00100"
-                , vendor_pool_code: 'VP202101080005'
+                , vendor_pool_code: 'VP202102050090'
                 , material_code: '1002327'
                 , register_reason: null
                 , approval_number: null
@@ -516,11 +501,10 @@ sap.ui.define([
 
             //수정
             vpItemList.push({
-                tenant_id: "L2100"
-                , company_code: "*"
-                , org_type_code: "BU"
+                //, company_code: "*"
+                  org_type_code: "BU"
                 , org_code: "BIZ00100"
-                , vendor_pool_code: 'VP202101080005'
+                , vendor_pool_code: 'VP202102050090'
                 , material_code: 'PBTDBN0001'
                 , register_reason: null
                 , approval_number: null
@@ -530,9 +514,8 @@ sap.ui.define([
             //삭제
             /*
             vpItemList.push({
-                tenant_id: "L2100"
-                , company_code: "*"
-                , org_type_code: "BU"
+                //, company_code: "*"
+                  org_type_code: "BU"
                 , org_code: "BIZ00100"
                 , vendor_pool_code: 'VP202101080047'
                 , material_code: 'TCMACR0013'
@@ -545,11 +528,10 @@ sap.ui.define([
 
             //수정
             vpManagerList.push({
-                tenant_id: "L2100"
-                , company_code: "*"
-                , org_type_code: "BU"
+                //, company_code: "*"
+                  org_type_code: "BU"
                 , org_code: "BIZ00100"
-                , vendor_pool_code: 'VP202101080005'
+                , vendor_pool_code: 'VP202102050090'
                 , vendor_pool_person_empno: '10044'
                 , vendor_pool_person_role_text: '구매담당자'
                 //, approval_number: ''  //안보냄    
@@ -559,11 +541,10 @@ sap.ui.define([
 
             //삭제
             vpManagerList.push({
-                tenant_id: "L2100"
-                , company_code: "*"
-                , org_type_code: "BU"
+                //, company_code: "*"
+                  org_type_code: "BU"
                 , org_code: "BIZ00100"
-                , vendor_pool_code: 'VP202101080005'
+                , vendor_pool_code: 'VP202102050090'
                 , vendor_pool_person_empno: '10908'
                 , vendor_pool_person_role_text: '구매담당자'
                 //, approval_number: ''  //안보냄    
@@ -573,11 +554,10 @@ sap.ui.define([
 
             //등록
             vpManagerList.push({
-                tenant_id: "L2100"
-                , company_code: "*"
-                , org_type_code: "BU"
+                //, company_code: "*"
+                  org_type_code: "BU"
                 , org_code: "BIZ00100"
-                , vendor_pool_code: 'VP202101080005'
+                , vendor_pool_code: 'VP202102050090'
                 , vendor_pool_person_empno: '10836'
                 , vendor_pool_person_role_text: '구매담당자'
                 //, approval_number: ''  //안보냄    

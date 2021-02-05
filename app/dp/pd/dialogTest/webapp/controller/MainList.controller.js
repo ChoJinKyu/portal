@@ -14,7 +14,8 @@ sap.ui.define([
     "dp/util/control/ui/HsCodeDialog",
     "dp/util/control/ui/MaterialClassDialog",
     "dp/util/control/ui/MaterialCommodityDialog",
-    "dp/util/control/ui/MaterialGroupDialog"
+    "dp/util/control/ui/MaterialGroupDialog",
+    "dp/util/control/ui/CategoryDialog",
 ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -22,7 +23,7 @@ sap.ui.define([
     function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, 
             JSONModel, DateFormatter, Filter, FilterOperator, MessageBox, 
             MessageToast, IdeaManagerDialog, HsCodeDialog, MaterialClassDialog,
-            MaterialCommodityDialog, MaterialGroupDialog) {
+            MaterialCommodityDialog, MaterialGroupDialog, CategoryDialog) {
           "use strict";
 
         return BaseController.extend("dp.pd.dialogTest.controller.MainList", {
@@ -254,7 +255,55 @@ sap.ui.define([
 
                 this.oSearchMaterialMultiGroupDialog.open();
                 this.oSearchMaterialMultiGroupDialog.setTokens(this.byId("searchMaterialGroupMultiInput").getTokens());
+            },
+
+
+            //MaterialGroup 싱글 팝업
+            onDialogCategoryPress : function(){
+
+                if(!this.oSearchCategoryDialog){
+                    this.oSearchCategoryDialog = new CategoryDialog({
+                        title: "카테고리 다이얼로그 제목",
+                        multiSelection: false,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                            ]
+                        }
+                    });
+                    this.oSearchCategoryDialog.attachEvent("apply", function(oEvent){ 
+                        console.log(oEvent.getParameter("item"));
+                        this.byId("searchCategoryInput").setValue(oEvent.getParameter("item").category_name);
+                    }.bind(this));
+                }
+
+                this.oSearchCategoryDialog.open();
+
+            },
+
+            //MaterialGroup 멀티 팝업
+            onDialogMultiCategoryPress : function(){
+
+                if(!this.oSearchCategoryMultiDialog){
+                    this.oSearchCategoryMultiDialog = new CategoryDialog({
+                        title: "카테고리 다이얼로그 제목",
+                        multiSelection: true,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                            ]
+                        }
+                    });
+                    this.oSearchCategoryMultiDialog.attachEvent("apply", function(oEvent){ 
+                        this.byId("searchCategoryMultiInput").setTokens(oEvent.getSource().getTokens());
+                    }.bind(this));
+                }
+
+                this.oSearchCategoryMultiDialog.open();
+                this.oSearchCategoryMultiDialog.setTokens(this.byId("searchMaterialGroupMultiInput").getTokens());
             }
+
+
 
 
 

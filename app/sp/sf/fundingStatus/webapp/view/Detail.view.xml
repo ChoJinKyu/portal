@@ -1,0 +1,82 @@
+<mvc:View controllerName="sp.sf.fundingStatus.controller.Detail" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns="sap.m" 
+	xmlns:uxap="sap.uxap" 
+	xmlns:layout="sap.ui.layout" 
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+    xmlns:suiteCom="sap.suite.ui.commons"
+	height="100%">
+
+    <Toolbar>
+        <Title text="자금지원 신청" wrapping="true"/>
+        <ToolbarSpacer/>
+        <OverflowToolbarButton type="Transparent" icon="{viewModel>/App/btnScreen}" text="screen" tooltip="screen change" press="onPressLayoutChange" />
+        <OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press="onPressPageNavBack" />
+    </Toolbar>
+    
+    <IconTabBar
+        id="idIconTabBar"
+        select=".onFilterSelect"
+        expandable="false"
+        expanded="true"
+        class="sapUiResponsiveContentPadding">
+        <items>
+            <IconTabFilter
+                icon="sap-icon://begin"
+                iconColor="Positive"
+                count="{/ProductCollectionStats/Counts/Weight/Ok}"
+                text="신청"
+                key="step1" />
+            <IconTabSeparator icon="sap-icon://open-command-field" />
+            <IconTabFilter
+                icon="sap-icon://begin"
+                iconColor="Positive"
+                count="{/ProductCollectionStats/Counts/Weight/Heavy}"
+                text="심의"
+                key="step2" />
+            <IconTabSeparator icon="sap-icon://open-command-field" />
+            <IconTabFilter
+                icon="sap-icon://begin"
+                iconColor="Positive"
+                count="{/ProductCollectionStats/Counts/Weight/Overweight}"
+                text="담보물"
+                key="step3" />
+            <IconTabSeparator icon="sap-icon://open-command-field" />
+            <IconTabFilter
+                icon="sap-icon://begin"
+                iconColor="Positive"
+                count="{/ProductCollectionStats/Counts/Weight/Overweight}"
+                text="상환계획"
+                key="step4" />
+            <IconTabSeparator icon="sap-icon://open-command-field" />
+            <IconTabFilter
+                icon="sap-icon://begin"
+                iconColor="Positive"
+                count="{/ProductCollectionStats/Counts/Weight/Overweight}"
+                text="계획"
+                key="step5" />
+            <IconTabSeparator icon="sap-icon://open-command-field" />
+            <IconTabFilter
+                icon="sap-icon://begin"
+                iconColor="Positive"
+                count="{/ProductCollectionStats/Counts/Weight/Overweight}"
+                text="실사"
+                key="step6" />
+            <IconTabSeparator icon="sap-icon://open-command-field" />
+            <IconTabFilter
+                icon="sap-icon://begin"
+                iconColor="Positive"
+                count="{/ProductCollectionStats/Counts/Weight/Overweight}"
+                text="상환이행"
+                key="step7" />
+        </items>
+        <content>
+        </content>  
+        
+    </IconTabBar>
+    <mvc:XMLView id="beginView" viewName="sp.sf.fundingStatus.view.Apply"/>
+    
+
+	
+</mvc:View>

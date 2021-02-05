@@ -261,7 +261,8 @@ public class TmpMgr implements EventHandler {
         content += "\n\t\t\tupdateFinished=\".onMainTableUpdateFinished\"";
         content += "\n\t\t\titemPress=\"onItemPress\"";
         content += "\n\t\t\titems=\"{" + JdbcUtils.convertUnderscoreNameToPropertyName((String) result.get(0).get("OWNER_TABLE_ID")) + "G>/MoldMasterSpec}\"";
-        content += "\n\t\t\twidth=\"auto\">";
+        content += "\n\t\t\twidth=\"auto\" ";
+        content += "\n\t\t\t" + (result.get(0).get("FORM_ADTNL_OPTNS") != null ? "fixedColumnCount=\"" + result.get(0).get("FORM_ADTNL_OPTNS") + "\"" : "") + ">";
         content += "\n\t\t\t<headerToolbar>";
         content += "\n\t\t\t\t<OverflowToolbar>";
         content += "\n\t\t\t\t\t<Title text=\"{I18N>/LIST} ({= ${" + JdbcUtils.convertUnderscoreNameToPropertyName((String) result.get(0).get("OWNER_TABLE_ID")) + ">/MoldMasterSpec}.length || 0})\" level=\"H2\"/>";
@@ -278,7 +279,7 @@ public class TmpMgr implements EventHandler {
         String cells = "\n\t\t<items>\n\t\t\t<ColumnListItem type=\"Navigation\">\n\t\t\t\t<cells>";
         for(Row row : result){
             columns += "\n\t\t\t<Column>";
-            columns += "\n\t\t\t\t<Text text=\"" + row.get("COL_ID").toString().replaceAll("_", " ") + "\" />";
+            columns += "\n\t\t\t\t<Text text=\"" + row.get("COL_NAME") + "\" />";
             columns += "\n\t\t\t</Column>";
             cells += "\n\t\t\t\t\t<ObjectIdentifier text=\"{" + JdbcUtils.convertUnderscoreNameToPropertyName((String) row.get("OWNER_TABLE_ID")) + "G>" + ((String)row.get("COL_ID")).toLowerCase() + "}\" />";
             if("DATE".equalsIgnoreCase((String) row.get("DATA_TYPE"))) {
@@ -300,30 +301,44 @@ public class TmpMgr implements EventHandler {
         content += "\n\t\t<f:heading>";
         content += "\n\t\t\t<Title text=\"{i18n>appTitle}\" />";
         content += "\n\t\t</f:heading>";
+        String innerContent ="";
         content += "\n\t\t<f:snappedContent>"; 
         //TO-DO : 각 요소 값 정의 필요. 
-        content += "\n\t\t\t<form:SimpleForm id=\"" + params.get("templateId") + "\" maxContainerCols=\"2\" editable=\"true\" layout=\"ResponsiveGridLayout\" adjustLabelSpan=\"false\" labelSpanL=\"4\" labelSpanM=\"4\" emptySpanL=\"0\" emptySpanM=\"0\" columnsL=\"2\" columnsM=\"2\">";
-        content += "\n\t\t\t\t<form:content id=\"transition\">";
+        innerContent += "\n\t\t\t<form:SimpleForm id=\"" + params.get("templateId") + "[!contentType]" + "\" maxContainerCols=\"2\" editable=\"true\" layout=\"ResponsiveGridLayout\" adjustLabelSpan=\"false\" labelSpanL=\"4\" labelSpanM=\"4\" emptySpanL=\"0\" emptySpanM=\"0\" columnsL=\"2\" columnsM=\"2\">";
+        innerContent += "\n\t\t\t\t<form:content id=\"transition\">";
         
         for(Row row : result){
-            content += "\n\t\t\t\t\t<VBox>";
-            content += "\n\t\t\t\t\t\t<Label text=\"" + row.get("SCR_COL_NAME") + "\"" + ("Y".equals(row.get("SCR_COL_REQUIRE_YN")) ? " required=\"true\"" : "") + " labelFor=\"searchCompanyS\"/>";
+            innerContent += "\n\t\t\t\t\t<VBox>";
+            innerContent += "\n\t\t\t\t\t\t<Label text=\"" + row.get("SCR_COL_NAME") + "\"" + ("Y".equals(row.get("SCR_COL_REQUIRE_YN")) ? " required=\"true\"" : "") + " labelFor=\"" + row.get("COL_ID") + "[!contentType]" + "\"/>";
             switch((String)row.get("SCR_COL_DP_TYPE")){
                 case "MC" :
                     //임시로 추가 옵션 그대로 출력
-                    content += row.get("SCR_COL_ADTNL_OPTNS") ;
-                    content += "\n\t\t\t\t\t\t<layoutData>\n\t\t\t\t\t\t<l:GridData span=\"XL2 L3 M6 S12\" />\n\t\t\t\t\t\t</layoutData>";
+                    innerContent += row.get("SCR_COL_ADTNL_OPTNS") ;
+                    innerContent += "\n\t\t\t\t\t\t<layoutData>\n\t\t\t\t\t\t<l:GridData span=\"XL2 L3 M6 S12\" />\n\t\t\t\t\t\t</layoutData>";
                     break;
                 case "DR" :
-                    content += "\n\t\t\t\t\t\t<DateRangeSelection id=\""+ row.get("COL_ID") + "\" valueFormat = \"yyyyMMdd\" displayFormat=\"yyyy-MM-dd\" placeholder=\"YYYY-MM-DD - YYYY-MM-DD\"" + ("Y".equals(row.get("SCR_COL_REQUIRE_YN")) ? " required=\"true\"" : "") + "/>";
-                    content += "\n\t\t\t\t\t\t<layoutData>\n\t\t\t\t\t\t<l:GridData span=\"XL2 L3 M6 S12\" />\n\t\t\t\t\t\t</layoutData>";
+                    innerContent += "\n\t\t\t\t\t\t<DateRangeSelection id=\""+ row.get("COL_ID") + "[!contentType]" + "\" valueFormat = \"yyyyMMdd\" displayFormat=\"yyyy-MM-dd\" placeholder=\"YYYY-MM-DD - YYYY-MM-DD\"" + ("Y".equals(row.get("SCR_COL_REQUIRE_YN")) ? " required=\"true\"" : "") + "/>";
+                    innerContent += "\n\t\t\t\t\t\t<layoutData>\n\t\t\t\t\t\t<l:GridData span=\"XL2 L3 M6 S12\" />\n\t\t\t\t\t\t</layoutData>";
                     break;
             }
-            content += "\n\t\t\t\t\t</VBox>";
+            innerContent += "\n\t\t\t\t\t</VBox>";
         }
-        content += "\n\t\t\t\t</form:content id=\"transition\">";
+        
+        content += innerContent.replaceAll("\\[!contentType\\]", "S");
+        content += "\n\t\t\t\t</form:content>";
         content += "\n\t\t\t</form:SimpleForm>";
         content += "\n\t\t</f:snappedContent>";
+        content += "\n\t\t<f:expandedContent>";
+        content += innerContent.replaceAll("\\[!contentType\\]", "E");
+        content += "\n\t\t\t\t</form:content>";
+        content += "\n\t\t\t</form:SimpleForm>";
+        content += "\n\t\t</f:expandedContent>";
+        content += "\n\t\t<f:actions>";
+        content += "\n\t\t\t<Button id=\"pageSearchButton\" text=\"{I18N>/SEARCH}\" type=\"Emphasized\" press=\".onPageSearchButtonPress\" />";
+        content += "\n\t\t</f:actions>";
+        content += "\n\t\t<f:navigationActions>";
+        content += "\n\t\t\t<Button icon=\"sap-icon://unfavorite\" type=\"Transparent\" />";
+        content += "\n\t\t</f:navigationActions>";
         content += "\n\t</f:DynamicPageTitle>";
         return content;
     }

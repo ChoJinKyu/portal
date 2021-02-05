@@ -200,7 +200,7 @@
                         <VBox>
                             <!-- 조직코드 -->
                             <Label text="{I18N>/ORG_CODE}"/>
-                            <MultiComboBox
+                            <!-- <MultiComboBox
                                 selectedKeys="{jSearch>/org_code/values}"
                                 showSecondaryValues="false"
                                 width="100%"
@@ -215,7 +215,12 @@
                                 <items>
                                     <core:ListItem key="{util>code}" text="{util>code_name}" additionalText="{util>code}" />
                                 </items>
-                            </MultiComboBox>
+                            </MultiComboBox> -->
+                            <MultiInput 
+                                id="orgCode"
+                                showValueHelp="true"
+                                valueHelpRequest=".onValueHelpRequest($event, 'org_code', 'jSearch', {})"
+                            />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -374,7 +379,7 @@
                             <Text text="{I18N>/PR_NUMBER}" />
                         </Column>
                         <!-- 구매요청 유형 -->
-                        <Column hAlign="Center" width="auto">
+                        <Column hAlign="Center" width="8em">
                             <Text text="{I18N>/PR_TYPE_CODE}" />
                         </Column>
                         <!-- 품목 번호 -->
@@ -431,7 +436,7 @@
                         </Column>
                     </columns>
                     <items>
-                        <ColumnListItem type="Navigation" press=".onColumnListItemPress($event, 'navigation', 'list', { LayoutType: 'TwoColumnsMidExpanded' })">
+                        <ColumnListItem type="Navigation" press=".onColumnListItemPress($event, 'navigation', 'list', {})">
                             <cells>
                                 <!-- 구매요청 번호 -->
                                 <Text text="{list>pr_number}"/>

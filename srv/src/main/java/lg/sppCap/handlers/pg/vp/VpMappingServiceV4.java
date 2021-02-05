@@ -40,6 +40,7 @@ import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.request.ParameterInfo;
 
+import lg.sppCap.frame.user.SppUserSession;
 import cds.gen.pg.vpmappingv4service.*;
 
 @Component
@@ -49,7 +50,10 @@ public class VpMappingServiceV4 implements EventHandler {
     private static final Logger log = LogManager.getLogger();
 
     @Autowired
-    private JdbcTemplate jdbc;   
+    private JdbcTemplate jdbc; 
+    
+    @Autowired
+    SppUserSession sppUserSession;
 
     // Procedure 호출해서 header/Detail 저장
     // Header, Detail 둘다 multi
@@ -130,10 +134,10 @@ public class VpMappingServiceV4 implements EventHandler {
         v_sql_createTableSupplier.append("SUPEVAL_TARGET_FLAG BOOLEAN,");
         v_sql_createTableSupplier.append("SUPPLIER_OP_PLAN_REVIEW_FLAG BOOLEAN,");
         v_sql_createTableSupplier.append("SUPEVAL_CONTROL_FLAG BOOLEAN,");
-        v_sql_createTableSupplier.append("SUPEVAL_CONTROL_START_DATE NVARCHAR(8),");
-        v_sql_createTableSupplier.append("SUPEVAL_CONTROL_END_DATE NVARCHAR(8),");
-        v_sql_createTableSupplier.append("SUPEVAL_RESTRICT_START_DATE NVARCHAR(8),");
-        v_sql_createTableSupplier.append("SUPEVAL_RESTRICT_END_DATE NVARCHAR(8),");
+        v_sql_createTableSupplier.append("SUPEVAL_CONTROL_START_DATE NVARCHAR(10),");
+        v_sql_createTableSupplier.append("SUPEVAL_CONTROL_END_DATE NVARCHAR(10),");
+        v_sql_createTableSupplier.append("SUPEVAL_RESTRICT_START_DATE NVARCHAR(10),");
+        v_sql_createTableSupplier.append("SUPEVAL_RESTRICT_END_DATE NVARCHAR(10),");
         v_sql_createTableSupplier.append("INP_CODE NVARCHAR(30),");
         v_sql_createTableSupplier.append("SUPPLIER_RM_CONTROL_FLAG BOOLEAN,");
         v_sql_createTableSupplier.append("SUPPLIER_BASE_PORTION_RATE DECIMAL,");
@@ -214,8 +218,8 @@ public class VpMappingServiceV4 implements EventHandler {
         if(!v_inMst.isEmpty() && v_inMst.size() > 0){
             for(VpMstType v_inRow : v_inMst){
                 Object[] values = new Object[] {                        
-                    v_inRow.get("tenant_id"),
-                    v_inRow.get("company_code"),
+                    "L2100",//sppUserSession.getTenantId(),
+                    "*",//sppUserSession.getCompanyCode(),
                     v_inRow.get("org_type_code"),
                     v_inRow.get("org_code"),
                     v_inRow.get("vendor_pool_code"),
@@ -262,8 +266,8 @@ public class VpMappingServiceV4 implements EventHandler {
         if(!v_inSupplier.isEmpty() && v_inSupplier.size() > 0){
             for(VpSuppilerType v_inRow : v_inSupplier){
                 Object[] values = new Object[] {                        
-                    v_inRow.get("tenant_id"),
-                    v_inRow.get("company_code"),
+                    "L2100",//sppUserSession.getTenantId(),                    
+                    "*",//sppUserSession.getCompanyCode(),
                     v_inRow.get("org_type_code"),
                     v_inRow.get("org_code"),
                     v_inRow.get("vendor_pool_code"),
@@ -300,8 +304,8 @@ public class VpMappingServiceV4 implements EventHandler {
         if(!v_inItem.isEmpty() && v_inItem.size() > 0){
             for(VpItemType v_inRow : v_inItem){
                 Object[] values = new Object[] {                        
-                    v_inRow.get("tenant_id"),
-                    v_inRow.get("company_code"),
+                    "L2100",//sppUserSession.getTenantId(),
+                    "*",//sppUserSession.getCompanyCode(),
                     v_inRow.get("org_type_code"),
                     v_inRow.get("org_code"),
                     v_inRow.get("vendor_pool_code"),
@@ -328,8 +332,8 @@ public class VpMappingServiceV4 implements EventHandler {
         if(!v_inManager.isEmpty() && v_inManager.size() > 0){
             for(VpManagerType v_inRow : v_inManager){
                 Object[] values = new Object[] {                        
-                    v_inRow.get("tenant_id"),
-                    v_inRow.get("company_code"),
+                    "L2100",//sppUserSession.getTenantId(),
+                    "*",//sppUserSession.getCompanyCode(),
                     v_inRow.get("org_type_code"),
                     v_inRow.get("org_code"),
                     v_inRow.get("vendor_pool_code"),
@@ -376,8 +380,8 @@ public class VpMappingServiceV4 implements EventHandler {
             @Override
             public CallableStatement createCallableStatement(Connection connection) throws SQLException {
                 CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
-                callableStatement.setString("I_USER_ID", context.getInputData().getUserId());
-                callableStatement.setString("I_USER_NO", context.getInputData().getUserNo());
+                callableStatement.setString("I_USER_ID", sppUserSession.getUserId());//context.getInputData().getUserId()
+                callableStatement.setString("I_USER_NO", sppUserSession.getEmployeeNumber());//context.getInputData().getUserNo()
                 return callableStatement;
             }
         }, paramList);
@@ -472,10 +476,10 @@ public class VpMappingServiceV4 implements EventHandler {
         v_sql_createTableSupplier.append("SUPEVAL_TARGET_FLAG BOOLEAN,");
         v_sql_createTableSupplier.append("SUPPLIER_OP_PLAN_REVIEW_FLAG BOOLEAN,");
         v_sql_createTableSupplier.append("SUPEVAL_CONTROL_FLAG BOOLEAN,");
-        v_sql_createTableSupplier.append("SUPEVAL_CONTROL_START_DATE NVARCHAR(8),");
-        v_sql_createTableSupplier.append("SUPEVAL_CONTROL_END_DATE NVARCHAR(8),");
-        v_sql_createTableSupplier.append("SUPEVAL_RESTRICT_START_DATE NVARCHAR(8),");
-        v_sql_createTableSupplier.append("SUPEVAL_RESTRICT_END_DATE NVARCHAR(8),");
+        v_sql_createTableSupplier.append("SUPEVAL_CONTROL_START_DATE NVARCHAR(10),");
+        v_sql_createTableSupplier.append("SUPEVAL_CONTROL_END_DATE NVARCHAR(10),");
+        v_sql_createTableSupplier.append("SUPEVAL_RESTRICT_START_DATE NVARCHAR(10),");
+        v_sql_createTableSupplier.append("SUPEVAL_RESTRICT_END_DATE NVARCHAR(10),");
         v_sql_createTableSupplier.append("INP_CODE NVARCHAR(30),");
         v_sql_createTableSupplier.append("SUPPLIER_RM_CONTROL_FLAG BOOLEAN,");
         v_sql_createTableSupplier.append("SUPPLIER_BASE_PORTION_RATE DECIMAL,");
@@ -560,8 +564,8 @@ public class VpMappingServiceV4 implements EventHandler {
         if(!v_inMst.isEmpty() && v_inMst.size() > 0){
             for(VpMstType v_inRow : v_inMst){
                 Object[] values = new Object[] {                        
-                    v_inRow.get("tenant_id"),
-                    v_inRow.get("company_code"),
+                    "L2100",//sppUserSession.getTenantId(),
+                    "*",//sppUserSession.getCompanyCode(),
                     v_inRow.get("org_type_code"),
                     v_inRow.get("org_code"),
                     v_inRow.get("vendor_pool_code"),
@@ -608,8 +612,8 @@ public class VpMappingServiceV4 implements EventHandler {
         if(!v_inSupplier.isEmpty() && v_inSupplier.size() > 0){
             for(VpSuppilerType v_inRow : v_inSupplier){
                 Object[] values = new Object[] {                        
-                    v_inRow.get("tenant_id"),
-                    v_inRow.get("company_code"),
+                    "L2100",//sppUserSession.getTenantId(),
+                    "*",//sppUserSession.getCompanyCode(),
                     v_inRow.get("org_type_code"),
                     v_inRow.get("org_code"),
                     v_inRow.get("vendor_pool_code"),
@@ -646,8 +650,8 @@ public class VpMappingServiceV4 implements EventHandler {
         if(!v_inItem.isEmpty() && v_inItem.size() > 0){
             for(VpItemType v_inRow : v_inItem){
                 Object[] values = new Object[] {                        
-                    v_inRow.get("tenant_id"),
-                    v_inRow.get("company_code"),
+                    "L2100",//sppUserSession.getTenantId(),
+                    "*",//sppUserSession.getCompanyCode(),
                     v_inRow.get("org_type_code"),
                     v_inRow.get("org_code"),
                     v_inRow.get("vendor_pool_code"),
@@ -674,8 +678,8 @@ public class VpMappingServiceV4 implements EventHandler {
         if(!v_inManager.isEmpty() && v_inManager.size() > 0){
             for(VpManagerType v_inRow : v_inManager){
                 Object[] values = new Object[] {                        
-                    v_inRow.get("tenant_id"),
-                    v_inRow.get("company_code"),
+                    "L2100",//sppUserSession.getTenantId(),
+                    "*",//sppUserSession.getCompanyCode(),
                     v_inRow.get("org_type_code"),
                     v_inRow.get("org_code"),
                     v_inRow.get("vendor_pool_code"),
@@ -795,8 +799,8 @@ public class VpMappingServiceV4 implements EventHandler {
             @Override
             public CallableStatement createCallableStatement(Connection connection) throws SQLException {
                 CallableStatement callableStatement = connection.prepareCall(v_sql_callProc.toString());
-                callableStatement.setString("I_USER_ID", context.getInputData().getUserId());
-                callableStatement.setString("I_USER_NO", context.getInputData().getUserNo());
+                callableStatement.setString("I_USER_ID", sppUserSession.getUserId());//context.getInputData().getUserId()
+                callableStatement.setString("I_USER_NO", sppUserSession.getEmployeeNumber());//context.getInputData().getUserNo()
                 return callableStatement;
             }
         }, paramList);

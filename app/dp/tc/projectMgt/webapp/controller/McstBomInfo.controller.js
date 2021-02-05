@@ -213,6 +213,8 @@ sap.ui.define([
                 this.oSearchMatDialog = new TcMaterialMasterDialog({
                     title: this.I18N.getText("/MATERIAL_CODE"),
                     multiSelection: false,
+                    closeWhenApplied: false,
+                    loadWhenOpen: false,
                     tenantId: this.getModel("detailModel").getProperty("/tenant_id"),
                     company_code: this.getModel("detailModel").getProperty("/company_code"),
                     org_type_code: this.getModel("detailModel").getProperty("/org_type_code"),
@@ -221,18 +223,33 @@ sap.ui.define([
                 });
 
                 this.oSearchMatDialog.attachEvent("apply", function(oSelEvent) {
-                    //oInputCntl.setTokens(oEvent.getSource().getTokens());
+
                     var rtData = oSelEvent.getParameter("item");
-                    let sPath = oInputCntl.getParent().getParent().getRowBindingContext().getPath();
-                    this.getModel("partListModel").setProperty(sPath, {
-                        _row_state_ : "C",
-                        material_code : rtData.material_code,
-                        material_desc : rtData.material_desc,
-                        uom_code : rtData.base_uom_code,
-                        company_code : this.getModel("detailModel").getProperty("/company_code"),
-                        buyer_empno : this.getModel("detailModel").getProperty("/buyer_empno")
-                    });
-                    this.oSearchMatDialog = null;
+
+                    //duplication checking
+                    var aPartList = this.getModel("partListModel").getProperty("/PartListView");
+                    var bDupl = false;
+                    $.each(aPartList, function(nIdx, oRow) {
+                        if(oRow._row_state_ !== "D" && oRow.material_code === rtData.material_code) {
+                            MessageToast.show(this.I18N.getText("/ECM01501", [this.I18N.getText("/MATERIAL_CODE")]), {at: "center center"});
+                            bDupl = true;
+                            return false;
+                        }
+                    }.bind(this));
+                    if(!bDupl) {
+                        let sPath = oInputCntl.getParent().getParent().getRowBindingContext().getPath();
+                        this.getModel("partListModel").setProperty(sPath, {
+                            _row_state_ : "C",
+                            material_code : rtData.material_code,
+                            material_desc : rtData.material_desc,
+                            uom_code : rtData.base_uom_code,
+                            company_code : this.getModel("detailModel").getProperty("/company_code"),
+                            buyer_empno : this.getModel("detailModel").getProperty("/buyer_empno")
+                        });
+                        this.oSearchMatDialog.close();
+                        this.oSearchMatDialog = null;
+                    }
+                    
                 }.bind(this));
 
                 this.oSearchMatDialog.attachEvent("cancel", function(oSelEvent) {
@@ -419,31 +436,31 @@ sap.ui.define([
             var oBomMappData = oBomMappingModel.getData();
             let sItem = "";
             if(!oBomMappData.department_type_code) {
-                sItem = this.I18N.getText("/DEPARTMENT");
+                sItem = this.I18N.getText("/CHARGE_DEPT");
                 //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
                 MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
                 return;
             }
             if(!oBomMappData.creator_empno) {
-                sItem = this.I18N.getText("/PERSON");
+                sItem = this.I18N.getText("/CHARGE_PERSON");
                 //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
                 MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
                 return;
             }
-            if(!oBomMappData.eng_change_number) {
-                sItem = "ECO/ECR No.";
-                //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
-                MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
-                return;
-            }
+            // if(!oBomMappData.eng_change_number) {
+            //     sItem = "ECO/ECR No.";
+            //     //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
+            //     MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
+            //     return;
+            // }
             if(!oBomMappData.change_reason) {
-                sItem = this.I18N.getText("/REASON");
+                sItem = this.I18N.getText("/MAPPING_RSN");
                 //MessageToast.show(this.I18N.getText("/EDP30001", [sItem], {at: "center center"}));
                 MessageToast.show(sItem +" 는(은) 필수 입력값 입니다.", {at : "center center"});
                 return;
             }
 
-            MessageBox.confirm("저장 하시겠습니까?", {
+            MessageBox.confirm(this.I18N.getText("/NCM00001"), {//저장 하시겠습니까?
                 title : "Save",
                 initialFocus : sap.m.MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
@@ -669,7 +686,7 @@ sap.ui.define([
                     return false;
                 }
 
-                if(oRow.eng_change_number) {
+                if(oRow.mapping_id) {
                     MessageToast.show("선택한 데이터 중 이미 Mapping 된 데이터가 있습니다.", {at: "center center"});
                     rtFlag = false;
                     return false;
@@ -721,7 +738,6 @@ sap.ui.define([
                     return false;
                 }
             }.bind(this));
-
             return rs;
         }
     });

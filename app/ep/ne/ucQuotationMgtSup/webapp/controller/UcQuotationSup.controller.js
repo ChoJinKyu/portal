@@ -6,6 +6,7 @@ sap.ui.define([
     "ext/lib/model/ManagedListModel",
     "sap/ui/model/json/JSONModel",
     "ext/lib/util/Validator",
+    "ext/lib/formatter/Formatter",
     "ext/lib/formatter/DateFormatter",
     "ext/lib/formatter/NumberFormatter",
     "sap/ui/model/Filter",
@@ -22,7 +23,7 @@ sap.ui.define([
     "sap/ui/core/Item",
     "sap/ui/richtexteditor/RichTextEditor",
     "sap/ui/model/odata/v2/ODataModel"
-], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, DateFormatter, NumberFormatter,
+], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, Formatter, DateFormatter, NumberFormatter,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast, History,
     ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel) {
     "use strict";
@@ -32,18 +33,10 @@ sap.ui.define([
     return BaseController.extend("ep.ne.ucQuotationMgtSup.controller.UcQuotationSup", {
 
         dateFormatter: DateFormatter,
-
         numberFormatter: NumberFormatter,
-
+        formatter: Formatter,
         validator: new Validator(),
 
-        formatter: (function () {
-            return {
-                toYesNo: function (oData) {
-                    return oData === true ? "YES" : "NO"
-                },
-            }
-        })(),
 
         /* =========================================================== */
         /* lifecycle methods                                           */
@@ -56,13 +49,14 @@ sap.ui.define([
         onInit: function () {
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-            this.setModel(new JSONModel(), "master");
-            this.setModel(new JSONModel(), "details");
+            // this.setModel(new JSONModel(), "master");
+            // this.setModel(new JSONModel(), "details");
             this.setModel(new JSONModel(), "midObjectViewModel");
 
-            this.setModel(new JSONModel(), "ucQuotationSup");
+            // this.setModel(new JSONModel(), "ucQuotationSup");
 
             this.setModel(new JSONModel(), "popUcQuotationSup");
+            this.setModel(new JSONModel(), "popExtraRate");
 
             // oTransactionManager = new TransactionManager();
             // oTransactionManager.addDataModel(this.getModel("master"));
@@ -202,16 +196,126 @@ sap.ui.define([
 		 */
         onPageSaveButtonPress: function (flag) {
             var oView = this.getView(),
-                oMasterModel = this.getModel("master"),
-                oDetailsModel = this.getModel("details"),
+                oViewModel = this.getModel("viewModel"),
                 that = this;
 
-            console.log("details===", oDetailsModel.getData());    
+            
 
-            var input = {};
-            var inputData = {};
+            //var input = {};
+            //var inputData = {};
+            var mstData = [];
             var details = [];
+            var afterDelCnt = 0;
+            var itemSeq = 0;
 
+            mstData.push(oViewModel.getProperty("/ucmaster"));
+            var dtlData = oViewModel.getProperty("/ucdetails");
+            //var supplierData = oViewModel.getProperty("/supplier");
+            //var extraData = oViewModel.getProperty("/extra");
+
+            // inputData = {
+            //     "mst": mstData,
+            //     "dtl": dtlData//,
+            //     //"supplier": supplierData,
+            //     //"extra": extraData
+            // }
+
+            var omst = [];
+            var const_quotation_number_ = "";
+             omst = mstData.map(function(e) { 
+                const_quotation_number_ = e.const_quotation_number;
+                return { 
+                    tenant_id: e.tenant_id, 
+                    company_code: e.company_code,
+                    const_quotation_number: e.const_quotation_number,
+                    const_name: e.const_name,
+                    ep_item_code: e.ep_item_code,
+                    const_start_date: e.const_start_date,
+                    const_end_date: e.const_end_date,
+                    remark: e.remark,
+                    attch_group_number: e.attch_group_number
+
+                };
+            });
+
+            console.log(" omst ::: ", omst);
+
+            this._sConstQuotationNumber
+
+
+            var len = oViewModel.getProperty("/ucdetails").length;
+            // var addDtlData = this.getSchema("UcApprovalDtlDetailView");
+            // addDtlData["tenant_id"] = "L2100";
+            // addDtlData["item_sequence"] = 10 * (len + 1);
+
+
+            var odtl = [];
+            //var len = 0;
+            var delNum = 0;
+            var afterDelCnt = 0;
+            var num = 1;
+
+             var itemSeq = 0;
+            //detail.getData()["LOIRequestDetailView"].map(r => {
+                //itemSeq = len * 10;
+           // })
+
+             odtl = dtlData.map(function(e) { 
+
+                len = num * 10;
+                console.log(" len ::: ", e.index);
+                return { 
+
+                    tenant_id: e.tenant_id, 
+                    company_code: e.company_code,
+                    const_quotation_number:  const_quotation_number_,
+                    const_quotation_item_number: (!e.const_quotation_item_number ? null : parseFloat(e.const_quotation_item_number)),
+                    item_sequence: (e.item_sequence == 0 ? (num++ * 10) : parseFloat(e.item_sequence)), 
+                    const_name: e.const_name,
+                    ep_item_code: e.ep_item_code,
+                    item_desc: e.item_desc,
+                    spec_desc: e.spec_desc,
+                    quotation_quantity: (!e.quotation_quantity ? null : parseFloat(e.quotation_quantity)),
+                    extra_rate: (!e.extra_rate ? 1 : parseFloat(e.extra_rate)),
+                    unit: e.unit,
+                    currency_code: e.currency_code,
+                    material_apply_flag: e.material_apply_flag,
+                    labor_apply_flag: e.labor_apply_flag,
+                    net_price_change_allow_flag: e.net_price_change_allow_flag,
+                    base_material_net_price: (!e.base_material_net_price ? null : parseFloat(e.base_material_net_price)),
+                    base_labor_net_price: (!e.base_labor_net_price ? null : parseFloat(e.base_labor_net_price)),
+                    material_net_price: (!e.material_net_price ? null : parseFloat(e.material_net_price)),
+                    material_amount: (!e.material_amount ? null : parseFloat(e.material_amount)),
+                    labor_net_price: (!e.labor_net_price ? null : parseFloat(e.labor_net_price)),
+                    labor_amount: (!e.labor_amount ? null : parseFloat(e.labor_amount)),
+                    sum_amount: (!e.sum_amount ? null : parseFloat(e.sum_amount)),
+                    remark: e.remark,
+                    net_price_contract_document_no: e.net_price_contract_document_no,
+                    net_price_contract_degree: (!e.net_price_contract_degree ? null : parseFloat(e.net_price_contract_degree)),
+                    net_price_contract_item_number: e.net_price_contract_item_number,
+                    supplier_item_create_flag: e.supplier_item_create_flag
+                };
+
+
+                // if (r["_row_state_"] == "D") {
+                //         delNum = delNum + 1;
+                //         afterDelCnt++;
+                //     }
+            });
+
+            console.log(" odtl ::: ", odtl);
+
+            var input = {
+                inputData: {
+                    ucMasterData: [],
+                    ucDetailData: []
+                }
+            };
+
+            input.inputData.ucMasterData = omst;
+            input.inputData.ucDetailData = odtl;
+
+            //console.log("inputData ---> " , inputData);
 
             // return;
 
@@ -246,80 +350,72 @@ sap.ui.define([
             // }
 
 
-            oDetailsModel.getData().map(r => {
+            // oDetailsModel.getData().map(r => {
+
+            //     console.log("const_quotation_number ---> " , r["const_quotation_number"] == "undefined" ? 0 : r["const_quotation_number"]);
+            //     console.log("const_quotation_item_number ---> " , r["const_quotation_item_number"]);
+            //     console.log("item_sequence ---> " , r["item_sequence"]);
+            //     console.log("ep_item_code ---> " , r["ep_item_code"]);
+            //     console.log("item_desc ---> " , r["item_desc"]);
+            //     console.log("spec_desc ---> " , r["spec_desc"]);
+            //     console.log("quotation_quantity ---> " , r["quotation_quantity"]);
+            //     console.log("unit ---> " , r["unit"]);
+            //     console.log("material_apply_flag ---> " , r["material_apply_flag"]);
+            //     console.log("labor_apply_flag ---> " , r["labor_apply_flag"]);
+            //     console.log("net_price_change_allow_flag ---> " , r["net_price_change_allow_flag"]);
+            //     console.log("base_material_net_price ---> " , r["base_material_net_price"]);
+            //     console.log("material_net_price ---> " , r["material_net_price"]);
+            //     console.log("material_amount ---> " , r["material_amount"]);
+            //     console.log("labor_net_price ---> " , r["labor_net_price"]);
+            //     console.log("labor_amount ---> " , r["labor_amount"]);
+            //     console.log("sum_amount ---> " , r["sum_amount"]);
+            //     console.log("currency_code ---> " , r["currency_code"]);
+            //     console.log("extra_rate ---> " , r["extra_rate"]);
+            //     console.log("net_price_contract_document_no ---> " , r["net_price_contract_document_no"]);
+            //     console.log("net_price_contract_degree ---> " , r["net_price_contract_degree"]);
+            //     console.log("net_price_contract_item_number ---> " , r["net_price_contract_item_number"]);
+            //     console.log("supplier_item_create_flag ---> " , r["supplier_item_create_flag"]);
+            //     console.log("remark ---> " , r["remark"]);
+
+
+               
+
                 
-                //console.log("net_price_contract_start_date ---> " , that.getFormatDate(r["net_price_contract_start_date"]));
-                //console.log("net_price_contract_end_date ---> " , that.getFormatDate(r["net_price_contract_end_date"]));
+            //     details.push({
+            //             tenant_id: r["tenant_id"],
+            //             company_code: r["company_code"],
+            //             const_quotation_number: '0000871814',//(r["const_quotation_number"] == undefined ? '' : r["const_quotation_number"]),
+            //             item_sequence: (!r["item_sequence"] ? 10 : parseFloat(String(itemSeq))),
+            //             ep_item_code: r["ep_item_code"],
+            //             item_desc: r["item_desc"],
+            //             spec_desc: r["spec_desc"],
+            //             quotation_quantity: (!r["quotation_quantity"] ? null : r["quotation_quantity"]),
+            //             unit: r["unit"],
+            //             material_apply_flag: r["material_apply_flag"],
+            //             labor_apply_flag: r["labor_apply_flag"],
+            //             net_price_change_allow_flag: (!r["net_price_change_allow_flag"] ? false : r["net_price_change_allow_flag"]),
+            //             base_material_net_price: (!r["base_material_net_price"] ? null : parseFloat(r["base_material_net_price"])),
+            //             base_labor_net_price: (!r["base_labor_net_price"] ? null : parseFloat(r["base_labor_net_price"])),
+            //             material_net_price: (!r["material_net_price"] ? null : parseFloat(r["material_net_price"])),
+            //             material_amount: (!r["material_amount"] ? null : parseFloat(r["material_amount"])),
+            //             labor_net_price: (!r["labor_net_price"] ? null : parseFloat(r["labor_net_price"])),
+            //             labor_amount: (!r["labor_amount"] ? null : parseFloat(r["labor_amount"])),
+            //             sum_amount: (!r["sum_amount"] ? null: parseFloat(r["sum_amount"])),
+            //             currency_code: r["currency_code"],
+            //             extra_rate: (!r["extra_rate"] ? null : parseFloat(r["extra_rate"])),
+            //             net_price_contract_document_no: r["net_price_contract_document_no"],
+            //             net_price_contract_degree: (!r["net_price_contract_degree"] ? null : parseInt(r["net_price_contract_degree"])),
+            //             net_price_contract_item_number: r["net_price_contract_item_number"],
+            //             supplier_item_create_flag: (!r["supplier_item_create_flag"] ? false : r["supplier_item_create_flag"]),
+            //             remark:  (r["remark"] == null ? '' : r["remark"])
 
-
-                console.log("show.... ---> " , (r["const_quotation_number"] == undefined ? '' : r["const_quotation_number"]));
-
-                console.log("tenant_id ---> " , r["tenant_id"]);
-                console.log("company_code ---> " , r["company_code"]);
-
-                
-
-                console.log("const_quotation_number ---> " , r["const_quotation_number"] == "undefined" ? 0 : r["const_quotation_number"]);
-                console.log("const_quotation_item_number ---> " , r["const_quotation_item_number"]);
-                console.log("item_sequence ---> " , r["item_sequence"]);
-                console.log("ep_item_code ---> " , r["ep_item_code"]);
-                console.log("item_desc ---> " , r["item_desc"]);
-                console.log("spec_desc ---> " , r["spec_desc"]);
-                console.log("quotation_quantity ---> " , r["quotation_quantity"]);
-                console.log("unit ---> " , r["unit"]);
-                console.log("material_apply_flag ---> " , r["material_apply_flag"]);
-                console.log("labor_apply_flag ---> " , r["labor_apply_flag"]);
-                console.log("net_price_change_allow_flag ---> " , r["net_price_change_allow_flag"]);
-                console.log("base_material_net_price ---> " , r["base_material_net_price"]);
-                console.log("material_net_price ---> " , r["material_net_price"]);
-                console.log("material_amount ---> " , r["material_amount"]);
-                console.log("labor_net_price ---> " , r["labor_net_price"]);
-                console.log("labor_amount ---> " , r["labor_amount"]);
-                console.log("sum_amount ---> " , r["sum_amount"]);
-                console.log("currency_code ---> " , r["currency_code"]);
-                console.log("extra_rate ---> " , r["extra_rate"]);
-                console.log("net_price_contract_document_no ---> " , r["net_price_contract_document_no"]);
-                console.log("net_price_contract_degree ---> " , r["net_price_contract_degree"]);
-                console.log("net_price_contract_item_number ---> " , r["net_price_contract_item_number"]);
-                console.log("supplier_item_create_flag ---> " , r["supplier_item_create_flag"]);
-                console.log("remark ---> " , r["remark"]);
-                
-                details.push({
-                        tenant_id: r["tenant_id"],
-                        company_code: r["company_code"],
-                        const_quotation_number: '0000871814',//(r["const_quotation_number"] == undefined ? '' : r["const_quotation_number"]),
-                        //const_quotation_item_number: (r["const_quotation_item_number"] == undefined ? '' : r["const_quotation_item_number"]),
-                        item_sequence: (r["item_sequence"] == undefined ? 10 : r["item_sequence"]),
-                        ep_item_code: r["ep_item_code"],
-                        item_desc: r["item_desc"],
-                        spec_desc: r["spec_desc"],
-                        quotation_quantity: (r["quotation_quantity"] == undefined ? 0 : r["quotation_quantity"]),
-                        unit: r["unit"],
-                        material_apply_flag: r["material_apply_flag"],
-                        labor_apply_flag: r["labor_apply_flag"],
-                        net_price_change_allow_flag: (r["net_price_change_allow_flag"] == null ? false : r["net_price_change_allow_flag"]),
-                        base_material_net_price: (r["base_material_net_price"] == undefined ? 0 : r["base_material_net_price"]),
-                        base_labor_net_price: (r["base_labor_net_price"] == undefined ? 0 : r["base_labor_net_price"]),
-                        material_net_price: (r["material_net_price"] == undefined ? 0 : Number(r["material_net_price"])),
-                        material_amount: (r["material_amount"] == undefined ? 0 : r["material_amount"]),
-                        labor_net_price: (r["labor_net_price"] == undefined ? 0 : Number(r["labor_net_price"])),
-                        labor_amount: (r["labor_amount"] == undefined ? 0 : r["labor_amount"]),
-                        sum_amount: (r["sum_amount"] == undefined ? 0: r["sum_amount"]),
-                        currency_code: r["currency_code"],
-                        extra_rate: (r["extra_rate"] == undefined ? 0 : r["extra_rate"]),
-                        net_price_contract_document_no: r["net_price_contract_document_no"],
-                        net_price_contract_degree: (r["net_price_contract_degree"] == undefined ? 0 : Number(r["net_price_contract_degree"])),
-                        net_price_contract_item_number: r["net_price_contract_item_number"],
-                        supplier_item_create_flag: (r["supplier_item_create_flag"] == undefined ? false : r["supplier_item_create_flag"]),
-                        remark:  (r["remark"] == null ? '' : r["remark"])
-
-                        //delivery_request_date: that.getFormatDate(r["delivery_request_date"]),
+            //             //delivery_request_date: that.getFormatDate(r["delivery_request_date"]),
 
                         
-                    });
+            //         });
 
-                    console.log("details ---> " , details);
-            });
+            //         console.log("details ---> " , details);
+            // });
 
 
 
@@ -346,11 +442,11 @@ sap.ui.define([
             //     //"details": detailData
             // }
 
-            console.log("input====", JSON.stringify(details));
+            //console.log("input====", JSON.stringify(inputData));
 
-            input.inputData = details;
+            //input.inputData = inputData;
 
-            console.log("input====", JSON.stringify(input));
+            console.log("input====", input);
 
             // if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
             // 	MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
@@ -374,33 +470,28 @@ sap.ui.define([
                             contentType: "application/json",
                             success: function (data) {
 
-                                //console.log("#########Success#####", data.value[0].savedkey);
+                                console.log("#########Success#####", data);
                                 oView.setBusy(false);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
           //                      that.validator.clearValueState(that.byId("midObjectForm"));
 
+                            // Detail 조회
+                            // oDetailsModel.read("/UcQuotationDtlView", {
+                            //     filters: [
+                            //         new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                            //         new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
+                            //         new Filter("const_quotation_number", FilterOperator.EQ, this._sConstQuotationNumber)
+                            //     ],
+                            //     success: function (oData) {
+                            //         console.log(" UcQuotationDtlView ::: ", oData.results);
+                            //         oView.getModel("details").setData(oData.results);
+                            //         oView.setBusy(false);
+                            //         // loi_status = oData.quotation_status_code;
+                            //         oView.getModel("details").updateBindings(true);
+                            //         that._toShowMode();
+                            //     }
 
-                                var sObjectPath = "/UcQuotationDtlView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',const_quotation_number='" + this._sConstQuotationNumber + "')";
-                                var oMasterModel = that.getModel("details");
-                                oView.setBusy(true);
-                                oMasterModel.setTransactionModel(that.getModel());
-                                oMasterModel.read(sObjectPath, {
-                                    success: function (oData) {
-                                        oView.setBusy(details);
-                                        oView.getModel("master").updateBindings(true);
-                                        that._toShowMode();
-                                    }
-                                });
-
-                                //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-
-                                // if (flag == "D") {
-                                //     that._toEditMode();
-                                // } else {
-                                //     that._toShowMode();
-                                // }
-
-                                console.log("master=======", oView.getModel("master"));
+                            // });
 
                             },
                             error: function (e) {
@@ -437,18 +528,31 @@ sap.ui.define([
 		 * @private
 		 */
         _onRoutedThisPage: function (oEvent) {
-            var oArgs = oEvent.getParameter("arguments"),
-                oView = this.getView();
+            // var oArgs = oEvent.getParameter("arguments"),
+            //     oView = this.getView();
 
+            // this._sTenantId = oArgs.tenantId;
+            // this._sCompanyCode = oArgs.companyCode;
+            // this._sConstQuotationNumber = oArgs.constQuotationNumber;
+            // // this._sLoiItemNumber = oArgs.loiItemNumber;
+            // // this._sLoiSelectionNumber = oArgs.loiSelectionNumber;
+            // // this._sLoiNumber = oArgs.loiNumber;
+            // // this._sQuotationNumber = oArgs.quotationNumber;
+            // // this._sQuotationItemNumber = oArgs.quotationItemNumber;
+            
+
+
+
+            var oArgs = oEvent.getParameter("arguments"),
+                oView = this.getView(),
+                oModel = this.getModel(),
+                oViewModel = this.getModel("viewModel"),
+                that = this;
             this._sTenantId = oArgs.tenantId;
             this._sCompanyCode = oArgs.companyCode;
             this._sConstQuotationNumber = oArgs.constQuotationNumber;
-            // this._sLoiItemNumber = oArgs.loiItemNumber;
-            // this._sLoiSelectionNumber = oArgs.loiSelectionNumber;
-            // this._sLoiNumber = oArgs.loiNumber;
-            // this._sQuotationNumber = oArgs.quotationNumber;
-            // this._sQuotationItemNumber = oArgs.quotationItemNumber;
             this.getModel("midObjectViewModel").setProperty("/viewConstQuotationNumber", oArgs.constQuotationNumber);
+
 
             console.log("##getOwnerComponent==", this.getOwnerComponent().getRootControl().byId("fcl"));
 
@@ -458,93 +562,20 @@ sap.ui.define([
 
             console.log("####################22222");
 
-            // var loiDtlArr = [];
+            //각 모델의 스키마 생성
+            var mstModel = this.getSchema("UcQuotationListView");
+            console.log("mstModel333=================", mstModel);
 
-            // var tenantIdArr = oArgs.tenantId.split(","),
-            //     companyCodeArr = oArgs.companyCode.split(","),
-            //     loiWriteNumberArr = oArgs.loiWriteNumber.split(","),
-            //     loiItemNumberArr = oArgs.loiItemNumber.split(",");
+            oViewModel.setProperty("/ucmaster", mstModel);
+            var dtlModel = this.getSchema("UcQuotationDtlView");
+            console.log("dtlModel333=================", dtlModel);
 
-            // loiItemNumberArr.forEach(function (item, index) {
-            //     console.log("item==", item);
-            //     console.log("index==", index);
-            //     var arr = {
-            //         "tenant_id": tenantIdArr[0],
-            //         "company_code": companyCodeArr[0],
-            //         "loi_write_number": loiWriteNumberArr[0],
-            //         "loi_item_number": item,
-            //     };
-            //     loiDtlArr[index] = arr;
+            oViewModel.setProperty("/ucdetails", dtlModel);
 
-            // });
-
-            // var quotationArr = [];
-
-            // var quotationNumberArr = oArgs.quotationNumber.split(","),
-            //     quotationItemNumberArr = oArgs.quotationItemNumber.split(",");
-
-            // quotationNumberArr.forEach(function (item, index) {
-            //     var arr = {
-            //         "quotation_number": item,
-            //         "quotation_item_number": ""
-            //     };
-            //     quotationArr[index] = arr;
-
-            // });
-
-            // quotationItemNumberArr.forEach(function (item, index) {
-            //     quotationArr[index]["quotation_item_number"] = item;
-            // });
-
-            // // loiWriteNumberArr.forEach(function (item, index) {
-            // //     loiDtlArr[index]["loi_write_number"] = item;
-            // // });
-
-            // // loiItemNumberArr.forEach(function (item, index) {
-            // //     loiDtlArr[index]["loi_item_number"] = item;
-            // // });
-
-            // console.log("loiDtlArr==", loiDtlArr);
-            // console.log("quotationArr==", quotationArr);
-
-            // this._sLoiDtlArr = loiDtlArr;
-
-
-            // var input = {
-            //     inputData: {
-            //         loiRfqType: [],
-            //         loiDtlType: []
-            //     }
-            // };
-
-            // input.inputData.loiRfqType = quotationArr;
-            // input.inputData.loiDtlType = loiDtlArr;
-
-            // console.log("input==", JSON.stringify(input));
-
-            // var url = "ep/po/loiPublishMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SupplySelectionResult";
-
-            // $.ajax({
-            //     url: url,
-            //     type: "POST",
-            //     data: JSON.stringify(input),
-            //     contentType: "application/json",
-            //     success: function (data) {
-            //         console.log("#########Success#####", data);
-            //         oView.setBusy(false);
-            //         oView.getModel("details").setData(data.value);
-            //         console.log("details11=======", oView.getModel("details").getData());
-            //         // oView.getModel("details").updateBindings(true);
-            //         //console.log("details22=======", oView.getModel("details"));
-            //     },
-            //     error: function (e) {
-            //         console.log("error====", e);
-            //     }
-            // });
 
             if (oArgs.constQuotationNumber == "new") {
                 //It comes Add button pressed from the before page.
-                this.getModel("midObjectViewModel").setProperty("/isAddedMode", true);
+                this.getModel("contModel").setProperty("/isAddedMode", true);
 
                 console.log("###신규저장");
 
@@ -554,28 +585,13 @@ sap.ui.define([
                 var day = ("0" + date.getDate()).slice(-2);
                 var toDate = year + "-" + month + "-" + day;
 
-                //this.getView().byId("createDate").setText(toDate);
+                oViewModel.setProperty("/ucmst", mstModel);
+                oViewModel.setProperty("/ucdtl", []);
+                //.setProperty("/supplier", []);
+                //oViewModel.setProperty("/extra", []);
 
-                var oMasterModel = this.getModel("master");
-                oMasterModel.setData({
-                    "tenant_id": this._sTenantId,
-                    "company_code": this._sCompanyCode,
-                    "loi_selection_number": "",
-                    "loi_selection_status_code": "122030",
-                    "loi_selection_status_name": "작성중",
-                    "special_note": "",
-                    "attch_group_number": "",
-                    "approval_number": "",
-                    "buyer_empno": "9586",
-                    "buyer_name": "**민",
-                    "purchasing_department_code": "50008948",
-                    "purchasing_department_name": "첨단소재.구매2.공사구매팀(청주P)",
-                    "supplier_selection_date": date,
-                    "remark": "",
-                    "org_type_code": "",
-                    "org_code": "",
-                    "user_id": "9586"
-                }, "/LoiVendorSelection");
+                console.log("ucmst=", oViewModel.getProperty("/ucmst"));
+                console.log("ucdtl=", oViewModel.getProperty("/ucdtl"));
 
                 this._toEditMode();
             } else {
@@ -584,20 +600,25 @@ sap.ui.define([
                 this.getModel("midObjectViewModel").setProperty("/isAddedMode", false);
                 var loi_status = "";
 
-                var oView = this.getView();
-                var oMasterModel = this.getModel();
+                // var oView = this.getView();
+                // var oMasterModel = this.getModel();
+                // var oDetailsModel = this.getModel();
                 oView.setBusy(true);
+                var omst = [];
 
                 // Master 조회
-                oMasterModel.read("/UcQuotationListView", {
+                oModel.read("/UcQuotationListView", {
                     filters: [
                         new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
                         new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
                         new Filter("const_quotation_number", FilterOperator.EQ, this._sConstQuotationNumber)
                     ],
                     success: function (oData) {
-                        console.log(" UcQuotationListView ::: ", oData.results[0]);
-                        oView.getModel("master").setData(oData.results[0]);
+                        
+                        console.log(" UcQuotationListView ::: ", oData.results);
+
+                        // oView.getModel("master").setData(oData.results[0]);
+                        oViewModel.setProperty("/ucmaster", oData.results[0]);
                         oView.setBusy(false);
                         loi_status = oData.quotation_status_code;
                         that._toShowMode();
@@ -605,8 +626,9 @@ sap.ui.define([
 
                 });
 
+
                 // Detail 조회
-                oMasterModel.read("/UcQuotationDtlView", {
+                oModel.read("/UcQuotationDtlView", {
                     filters: [
                         new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
                         new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
@@ -614,7 +636,8 @@ sap.ui.define([
                     ],
                     success: function (oData) {
                         console.log(" UcQuotationDtlView ::: ", oData.results);
-                        oView.getModel("details").setData(oData.results);
+                        //oView.getModel("details").setData(oData.results);
+                        oViewModel.setProperty("/ucdetails", oData.results);
                         oView.setBusy(false);
                         // loi_status = oData.quotation_status_code;
                         // that._toShowMode();
@@ -622,6 +645,35 @@ sap.ui.define([
 
                 });
             }
+        },
+
+
+        getSchema: function (entityName) {
+
+            var mstModel = {};
+
+            var oRootModel = this.getModel();
+            var jsonMetadata = new JSONModel();
+            jsonMetadata.setData(oRootModel.getServiceMetadata());
+
+            var findMetadata = jsonMetadata.getData().dataServices.schema[0].entityType.filter(d => {
+                return d["name"] == entityName;
+            });
+
+            for (var field of findMetadata[0].property) {
+                var fieldName = field["name"];
+                var fieldType = field["type"];
+                var defaultValue = null;
+                if (fieldType == "Edm.String") {
+                    defaultValue = "";
+                }
+                // console.log("fieldName=", fieldName);
+                // console.log("defaultValue=", defaultValue);
+                mstModel[fieldName] = defaultValue;
+
+            }
+
+            return mstModel;
         },
 
         // '221010'	'BM등록요청'
@@ -632,8 +684,13 @@ sap.ui.define([
 
         _toEditMode: function () {
             this.getModel("midObjectViewModel").setProperty("/isEditMode", true);
-            var oMasterModel = this.getModel("master")
-            var statusCode = oMasterModel.getData().quotation_status_code;
+            this.getModel("midObjectViewModel").setProperty("/isShowMode", false);
+            // var oMasterModel = this.getModel("master")
+            // var statusCode = oMasterModel.getData().quotation_status_code;
+
+            var oViewModel = this.getModel("viewModel")
+            var statusCode = oViewModel.getProperty("/ucmaster").quotation_status_code;
+
             this._showFormFragment('UcQuotationSup_Edit');
             // this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);
@@ -672,8 +729,12 @@ sap.ui.define([
         },
 
         _toShowMode: function () {
-            var oMasterModel = this.getModel("master");
-            var statusCode = oMasterModel.getData().quotation_status_code;
+            // var oMasterModel = this.getModel("master");
+            // var statusCode = oMasterModel.getData().quotation_status_code;
+
+
+            var oViewModel = this.getModel("viewModel")
+            var statusCode = oViewModel.getProperty("/ucmaster").quotation_status_code;
             console.log("statusCode=", statusCode);
             this.getModel("midObjectViewModel").setProperty("/isEditMode", false);
             this._showFormFragment('UcQuotationSup_Show');
@@ -801,41 +862,16 @@ sap.ui.define([
 
         onMidTableAddButtonPress: function () {
 
-            var [tId, mName] = arguments;
-            var table = this.byId(tId);
-            var model = this.getView().getModel(mName);
-
-
-
-            console.log("onMidTableAddButtonPress  model----> " ,model.oData.tenant_id);
-            console.log("onMidTableAddButtonPress  model----> " ,model.oData.ep_item_code);
-            // var sPath = oEvent.getSource().getBindingContext("listModel").getPath(),
-            //     oRecord = this.getModel("listModel").getProperty(sPath);
-
-            // var saveLoiVos = {
-            //     "tenant_id": oRecord.tenant_id,
-            //     "company_code": oRecord.company_code,
-            //     "loi_write_number": oRecord.loi_write_number,
-            //     "loi_item_number": oRecord.loi_item_number,
-            //     "supplier_opinion": ""
-            // }
-            // this.getModel("loiVos").setData(saveLoiVos);
-            // console.log("####sloiVos====", this.getModel("loiVos"));
             var oView = this.getView(),
-                oMasterModel = this.getModel("master");
+                oModel = this.getModel(),
+                oViewModel = this.getModel("viewModel"),
+                that = this;
 
-                console.log("oMasterModel.getData() ---> ",oMasterModel.getData());
+            var mstData = oViewModel.getProperty("/ucmaster");
 
-
-
-var tenantId = oMasterModel.getData().tenant_id;
-            if (tenantId.indexOf(",") > -1) {
-                tenantId = tenantId.split(",")[0];
-            }
-            var companyCode = oMasterModel.getData().company_code;
-            if (companyCode.indexOf(",") > -1) {
-                companyCode = companyCode.split(",")[0];
-            }
+            console.log("mstData.tenant_id  ------> " , mstData.tenant_id);
+            console.log("mstData.company_code  ------> " , mstData.company_code);
+            console.log("mstData.const_quotation_number  ------> " , mstData.const_quotation_number);
 
 
             if (!this._contractItemDialog) {
@@ -849,20 +885,16 @@ var tenantId = oMasterModel.getData().tenant_id;
                 }.bind(this));
             }
 
-            //this._contractItemDialog.then(function (contractItemDialog) {
             this._contractItemDialog.then((function (contractItemDialog) {
                 contractItemDialog.open();
 
-
-
-                var oMasterModel = this.getModel();
                 oView.setBusy(true);
 
                 // Master 조회
-                oMasterModel.read("/GetUcApprovalDtlView", {
+                oModel.read("/GetUcApprovalDtlView", {
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, tenantId),
-                        new Filter("company_code", FilterOperator.EQ, companyCode)//,
+                        new Filter("tenant_id", FilterOperator.EQ, mstData.tenant_id),
+                        new Filter("company_code", FilterOperator.EQ, mstData.company_code)//,
                         //new Filter("const_quotation_number", FilterOperator.EQ, this._sConstQuotationNumber)
                     ],
                     success: function (oData) {
@@ -874,16 +906,9 @@ var tenantId = oMasterModel.getData().tenant_id;
 
                 });
 
+                oView.byId("searchPopEpItemCode").setSelectedKey(mstData.ep_item_code); 
+                oView.byId("searchTenantId").setText(mstData.tenant_id);
 
-
-
-
-
-                oView.byId("searchPopEpItemCode").setSelectedKey(model.oData.ep_item_code);
-                oView.byId("searchTenantId").setText(model.oData.org_code);
-                //console.log("#saveSupplierOpinion=", oView.byId("saveSupplierOpinion").getValue());
-  //              this.getModel("contModel").setProperty('/ep_item_code', model.oData.ep_item_code);
-                 //oMasterModel.setProperty("/master/"+index+"/material_net_price", this.numberFormatter.toNumberString(sum_val));
 
             }).bind(this));
 
@@ -893,25 +918,133 @@ var tenantId = oMasterModel.getData().tenant_id;
             var oView = this.getView();
             var oTable = this.byId("popTable"),
                 oModel = this.getView().getModel("popUcQuotationSup"),
+                oViewModel = this.getModel("viewModel"),
                 oSelected = oTable.getSelectedIndices();
+            var dtlData = oViewModel.getProperty("/ucdetails");
+            var table = this.byId("mainTable");
             var input = [];
+
+
+
+            dtlData.forEach(function (item, index) {
+                input.push(dtlData[index]);
+            });
+            
+            var document_no = "";
+            var degree = "";
+            var item_number = "";
+            var document_no_ = "";
+            var degree_ = "";
+            var item_number_ = "";
 
             if (oSelected.length > 0) {
                 
                 console.log("oSelected.length ---> " , oSelected.length);
+                console.log("dtlData ---> " , dtlData.length );
                 oSelected.some(function (chkIdx, index) {
-                    console.log("chkIdx========", oModel.getData()[chkIdx]);
-                    input.push(oModel.getData()[chkIdx]);                    
+                    // console.log("chkIdx========", oModel.getData()[chkIdx]);
+                    // console.log("net_price_contract_document_no========", oModel.getData()[chkIdx].net_price_contract_document_no);
+                    // console.log("net_price_contract_degree========", oModel.getData()[chkIdx].net_price_contract_degree);
+                    // console.log("net_price_contract_item_number========", oModel.getData()[chkIdx].net_price_contract_item_number);
+
+                    document_no_ = (!oModel.getData()[chkIdx].net_price_contract_document_no ? '' : oModel.getData()[chkIdx].net_price_contract_document_no); 
+                    degree_ = (!oModel.getData()[chkIdx].net_price_contract_degree ? 0 : oModel.getData()[chkIdx].net_price_contract_degree);
+                    item_number_ = (!oModel.getData()[chkIdx].net_price_contract_item_number ? '' : oModel.getData()[chkIdx].net_price_contract_item_number);
+
+if(dtlData.length > 0){
+                    dtlData.map(r => {
+                        
+                        document_no = (!r["net_price_contract_document_no"] ? '' : r["net_price_contract_document_no"]); 
+                        degree = (!r["net_price_contract_degree"] ? 0 : r["net_price_contract_degree"]);
+                        item_number = (!r["net_price_contract_item_number"] ? '' : r["net_price_contract_item_number"]);
+
+                        
+
+                        // console.log("document_no========", document_no);
+                        // console.log("degree========", degree);
+                        // console.log("item_number========", item_number);
+
+                        // console.log("document_no11========", document_no_);
+                        // console.log("degree11========", degree_);
+                        // console.log("item_number11========", item_number_);
+
+                        // if (!((document_no == document_no_) && (degree == degree_) && (item_number == item_number_))){
+                        //     input.push(oModel.getData()[chkIdx]); 
+                        // }
+
+                        if (document_no.includes(document_no_) && degree.includes(degree_) && item_number.includes(item_number_)) {
+                            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2========", item_number_);
+
+                            input.splice(chkIdx, 1);
+                            return;
+                            //sel = chkIdx;
+                        }
+                    });
+}else{
+    input.push(oModel.getData()[chkIdx]); 
+}
+                    // omst = mstData.map(function(e) { 
+                    //     const_quotation_number_ = e.const_quotation_number;
+                    //     return { 
+                    //         tenant_id: e.tenant_id, 
+                    //         company_code: e.company_code,
+                    //         const_quotation_number: e.const_quotation_number,
+                    //         const_name: e.const_name,
+                    //         ep_item_code: e.ep_item_code,
+                    //         const_start_date: e.const_start_date,
+                    //         const_end_date: e.const_end_date,
+                    //         remark: e.remark,
+                    //         attch_group_number: e.attch_group_number
+
+                    //     };
+                    // });
+                   
+                   
+                     input.push(oModel.getData()[chkIdx]);  
+                     
+                     
                 });
             }
+
+
+            
+
+
             console.log("input========", input);
-            oView.getModel("details").setData(input);
+            oViewModel.setProperty("/ucdetails", input);
+
+
+            input.forEach(function (item, index) {
+                //input.push(dtlData[index]);
+                console.log("idx11=", index);
+                
+                if(input[index].item_sequence == 0){
+                    input[index].row_state= "C";
+                    console.log("idx=", input[index].item_sequence);
+                }
+                
+            });
+
+            // oViewModel.forEach(function (idx) {
+            //      console.log("idx=", idx);
+            //     // if (dtlData[idx]["row_state"] == "C") {
+            //     //     dtlData.splice(idx, 1);
+            //     // } else {
+            //     //     dtlData[idx]["row_state"] = "D";
+            //     // }
+
+            //     dtlData[idx]["row_state"] = "D";
+            // });
 
             this.byId("dialogContractItem").close();
         },
 
         onExitContractItem: function () {
             this.byId("dialogContractItem").close();
+        },
+
+        onExtraRate: function () {
+            this.byId("dialogExtraRate").close();
         },
 
         _checkNumber : function (oEvent) {
@@ -989,7 +1122,115 @@ var tenantId = oMasterModel.getData().tenant_id;
 
         },
 
+        onTableExtraRatePress: function () {
 
+            var oView = this.getView(),
+                oModel = this.getModel(),
+                oViewModel = this.getModel("viewModel"),
+                that = this;
+
+            var mstData = oViewModel.getProperty("/ucmaster");
+
+            console.log("mstData.tenant_id  ------> " , mstData.tenant_id);
+            console.log("mstData.company_code  ------> " , mstData.company_code);
+            console.log("mstData.net_price_contract_title  ------> " , mstData.net_price_contract_title);
+
+
+            if (!this._extraRateDialog) {
+                this._extraRateDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "ep.ne.ucQuotationMgtSup.view.ExtraRate",
+                    controller: this
+                }).then(function (extraRateDialog) {
+                    oView.addDependent(extraRateDialog);
+                    return extraRateDialog;
+                }.bind(this));
+            }
+
+            this._extraRateDialog.then((function (extraRateDialog) {
+                extraRateDialog.open();
+
+                oView.setBusy(true);
+
+                // Master 조회
+                oModel.read("/UcApprovalExtraRateView", {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, mstData.tenant_id),
+                        new Filter("company_code", FilterOperator.EQ, mstData.company_code)//,
+                        //new Filter("const_quotation_number", FilterOperator.EQ, this._sConstQuotationNumber)
+                    ],
+                    success: function (oData) {
+                        console.log(" UcApprovalExtraRateView ::: ", oData.results);
+                        oView.getModel("popExtraRate").setData(oData.results);
+                        oView.setBusy(false);
+
+                    }
+
+                });
+
+                //oView.byId("searchNetPriceContractDocumentNo").setText(mstData.net_price_contract_title); 
+                oView.byId("searchNetPriceContractTitle").setText(mstData.net_price_contract_title);
+
+
+            }).bind(this));
+
+        },
+
+
+
+        onExtraRateApply: function (oEvent) {
+            var oView = this.getView();
+            var oTable = this.byId("popRateTable"),
+                oModel = this.getView().getModel("popExtraRate"),
+                oViewModel = this.getModel("viewModel"),
+                oSelected = oTable.getSelectedIndices();
+            var dtlData = oViewModel.getProperty("/ucdetails");
+            var input = [];
+
+            console.log("oModel  ------> " , oModel);
+
+            this.byId("dialogExtraRate").close();
+        },
+
+        onItemInfoDeleteButtonPress: function () {
+            var table = this.byId("mainTable"),
+                oViewModel = this.getModel("viewModel"),
+                oDtlData = oViewModel.getProperty("/ucdetails");
+
+            table.getSelectedIndices().reverse().forEach(function (idx) {
+                if (oDtlData[idx]["row_state"] == "C") {
+                    oDtlData.splice(idx, 1);
+                } else {
+                    oDtlData[idx]["row_state"] = "D";
+                }
+            });
+
+             console.log("oDtlData=", oDtlData);
+            oViewModel.setProperty("/ucdetails", oDtlData);
+            this.byId("mainTable").clearSelection();
+        },
+
+
+        onSegmentChange: function (oEvent) {
+            console.log("onSegmentChange  ------> ");
+
+            //var [event, field] = arguments;
+
+            console.log("event  ------> ", oEvent.getParameter("item").getKey());
+            //console.log("val  ------> ", val);
+
+            if(oEvent.getParameter("item").getKey() == false){
+                    console.log("false  ------> ");
+            }
+        }
+
+        // onStatusSelectionChange: function (oEvent) {
+        //     var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
+        //         seSurffix = sSurffix === "E" ? "S" : "E",
+        //         oSearchStatus = this.getView().byId("searchStatus" + seSurffix);
+
+        //     oSearchStatus.setSelectedKey(oEvent.getParameter("item").getKey());
+        // },
 
     });
 });

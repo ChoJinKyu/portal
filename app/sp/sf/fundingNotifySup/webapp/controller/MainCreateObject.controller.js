@@ -190,8 +190,6 @@ sap.ui.define([
                 return;
             };
 
-
-            
             procRequest = {
                 funding_appl_number: oPramDataModel.getProperty("/funding_appl_number")
                 , funding_notify_number: urlPram.fundingNotifyNumber
@@ -215,8 +213,6 @@ sap.ui.define([
                 , collateral_attch_group_number: ""
                 , funding_status_code : ofunding_status_code
             };
-
-            
 
             if(!ofunding_status_code || ofunding_status_code=="110"|| ofunding_status_code=="120"|| ofunding_status_code=="230"){
                 this._ajaxCall("ProcRequest", procRequest);
@@ -651,9 +647,18 @@ sap.ui.define([
         //odataV4 호출
         _ajaxCall : function(procUrl, parmData) {
             var that = this,
-                oI18n = this.getView().getModel("I18N");
+                oI18n = this.getView().getModel("I18N"),
+                messageContent;
+            
+            if(procUrl==="ProcSaveTemp" || procUrl==="ProcSaveInvPlan"){
+                messageContent=oI18n.getProperty("/NCM00001");
+            }else if(procUrl==="ProcRequest"){
+                messageContent="제출 하시겠습니까?";
+            }else if(procUrl==="ProcDelInvPlan" || procUrl==="ProcDelInvPlanDtl" ){
+                messageContent="삭제 하시겠습니까?";
+            };
 
-            MessageBox.confirm(oI18n.getProperty("/NCM00001"), {
+            MessageBox.confirm(messageContent, {
             title: "Comfirmation",
             initialFocus: sap.m.MessageBox.Action.CANCEL,
             onClose: function (sButton) {

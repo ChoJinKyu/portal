@@ -4,8 +4,8 @@ select
     ,dtl.item_desc                                                  --품목명
     ,dtl.spec_desc	                                                --규격설명
     ,dtl.unit	                                                    --단위
-    ,coalesce(dtl.material_net_price, 0) as material_net_price	    --자재단가
-    ,coalesce(dtl.labor_net_price, 0) as labor_net_price 	        --노무단가
+    ,dtl.material_net_price	                                        --자재단가
+    ,dtl.labor_net_price 	                                        --노무단가
     ,mst.net_price_contract_title	                                --단가계약제목
     ,mst.net_price_contract_start_date	                            --단가계약시작일자
     ,mst.net_price_contract_end_date	                            --단가계약종료일자
@@ -29,6 +29,7 @@ select
     ,dtl.update_user_id
     ,dtl.system_create_dtm
     ,dtl.system_update_dtm
+    , 0 as item_sequence
 from ep_uc_approval_dtl as dtl
 join ep_uc_approval_mst as mst
 on dtl.tenant_id = mst.tenant_id

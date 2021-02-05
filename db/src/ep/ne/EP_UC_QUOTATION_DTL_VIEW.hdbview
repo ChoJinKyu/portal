@@ -9,7 +9,7 @@ select
     dtl.item_desc,
     dtl.spec_desc,
     dtl.quotation_quantity,
-    dtl.extra_rate,
+    coalesce(dtl.extra_rate, 1) as extra_rate,
     dtl.unit,
     dtl.currency_code,
     coalesce(dtl.currency_code, '') as currency_name,

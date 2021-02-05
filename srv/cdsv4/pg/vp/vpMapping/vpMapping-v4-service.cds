@@ -57,10 +57,10 @@ service VpMappingV4Service {
         supeval_target_flag          : Boolean;
         supplier_op_plan_review_flag : Boolean;
         supeval_control_flag         : Boolean;
-        supeval_control_start_date   : String(8);
-        supeval_control_end_date     : String(8);
-        supeval_restrict_start_date  : String(8);
-        supeval_restrict_end_date    : String(8);
+        supeval_control_start_date   : String(10);
+        supeval_control_end_date     : String(10);
+        supeval_restrict_start_date  : String(10);
+        supeval_restrict_end_date    : String(10);
         inp_code                     : String(30);
         supplier_rm_control_flag     : Boolean;
         supplier_base_portion_rate   : Decimal;

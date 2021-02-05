@@ -37,9 +37,28 @@
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
+                        
                         <VBox>
                             <Label text="{I18N>/APPLICATION_PERIOD}:" labelFor="searchDateS"></Label>
-                            <DateRangeSelection id="searchDateS" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
+                            <DateRangeSelection 
+                                id="searchDateS" 
+                                displayFormat="yyyy-MM-dd" 
+                                placeholder="YYYY-MM-DD - YYYY-MM-DD"
+                                dateValue="{
+                                    path:'viewModel>/cond/BT/funding_appl_date/value1',
+                                    type:'sap.ui.model.odata.type.DateTime',
+                                    constraints : {
+                                        displayFormat: 'Date'
+                                    }
+                                }"
+                                secondDateValue="{
+                                    path:'viewModel>/cond/BT/funding_appl_date/value2',
+                                    type:'sap.ui.model.odata.type.DateTime',
+                                    constraints : {
+                                        displayFormat: 'Date'
+                                    }
+                                }"
+                            />
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>

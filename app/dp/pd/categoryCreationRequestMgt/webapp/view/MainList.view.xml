@@ -78,7 +78,6 @@
                 </HBox> 
             </f:DynamicPageHeader>
         </f:header>
-
         <f:content>
             <t:Table id="mainTable"
             selectionMode="None"
@@ -91,29 +90,15 @@
             }"
             visibleRowCountMode="Auto"
             cellClick=".onCellClickPress" >
-            <!-- 
-            selectionMode="None"
-            selectionMode="MultiSelect"
-            fixedColumnCount="3"
-            cellClick=".onCellClickPress"
-            columnResize="onColumnResize" 
-            rowSelectionChange=".onCheck"-->
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
-                    <Title id="mainTableTitle" text="{I18N>/PART_CATEGORY_CREATION_REQUEST} {= ${list>/pdPartCategoryCreationRequest}.length > 0 ? '(' + ${list>/pdPartCategoryCreationRequest}.length + ')' : ''}" level="H2"/>
+                    <Title id="mainTableTitle" text="{I18N>/PART_CATEGORY_CREATION_REQUEST} ({=(${list>/pdPartCategoryCreationRequestView})?${list>/pdPartCategoryCreationRequestView}.length:0})" level="H2"/>
                     <ToolbarSpacer/>
                     <Button text="{I18N>/CREATE}" id="buttonCreateIdea" press=".onCreate"  type="Transparent"/>
-                    
-                    <!-- <Button text="TEST" id="testButton" press=".onTestPress"  type="Transparent"/> -->
-
                     <ToolbarSeparator/>
                     <Button text="임시 추가생성버튼" id="buttonAddCreate" press=".onAddCreate"  type="Transparent"/>
                     <Button id="gTableExportButton" text="" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />
-                    <!-- <Button icon="sap-icon://action-settings" press=".onPersoButtonPressed" >
-                        <layoutData>
-                            <OverflowToolbarLayoutData priority="NeverOverflow" />
-                        </layoutData>
-                    </Button> -->
+                    
                 </OverflowToolbar>
             </t:extension>
             <t:rowSettingsTemplate>
@@ -122,25 +107,25 @@
                 <t:Column id="category_group_code" width="5rem">
                     <Label text="{I18N>/TYPE_NAME}" textAlign="Center" width="100%"/>
                     <t:template>
-                        <Text text="{list>category_group_code}"/>
+                        <Text text="{list>category_group_code}" textAlign="Center"/>
                     </t:template>
                 </t:Column>
                 <t:Column id="progress_status_name" width="8rem">
                     <Label text="{I18N>/PROGRESS_STATUS}" textAlign="Center" width="100%"/>
                     <t:template>
-                        <Text text="{list>progress_status_name}"/>
+                        <Text text="{list>progress_status_code}" textAlign="Center"/>
                     </t:template>
                 </t:Column>
                 <t:Column id="request_number" width="8rem">
                     <Label text="{I18N>/REQUEST_NUMBER}" textAlign="Center" width="100%"/>
                     <t:template>
-                        <Text text="{list>request_number}"/>
+                        <Text text="{list>request_number}" textAlign="Center"/>
                     </t:template>
                 </t:Column>
                 <t:Column id="request_title">
                     <Label text="{I18N>/REQUEST_TITLE}" textAlign="Center" width="100%"/>
                     <t:template>
-                        <Text text="{list>request_title}"/>
+                        <Text text="{list>request_title}" textAlign="Center"/>
                     </t:template>
                 </t:Column>  
                 <t:Column id="request_category_name" width="10rem">
@@ -160,7 +145,7 @@
                 <t:Column id="request_date_time" width="7rem">
                     <Label text="{I18N>/REQUEST_DATE}" textAlign="Center" width="100%"/>
                     <t:template>
-                        <Text text="{path : 'list>request_date_time', formatter: '.dateFormatter.toDateString'}"></Text>
+                        <Text text="{path : 'list>request_date_time', formatter: '.dateFormatter.toDateString'}" textAlign="Right" />
                     </t:template>
                 </t:Column>
                 <t:Column id="create_category_name" width="10rem">
@@ -172,13 +157,13 @@
                 <t:Column id="creator_empno" width="10rem">
                     <Label text="{path:'I18N>/CATEGORY_CREATOR', formatter:'I18NFormatter'}" textAlign="Center" width="100%"/>
                     <t:template>
-                        <Text text="{list>category_creator}({list>creator_empno})" />
+                        <Text text="{list>category_creator}({list>creator_empno})" textAlign="Right" />
                     </t:template>
                 </t:Column>
                 <t:Column id="local_update_dtm" width="10rem">
                     <Label text="{I18N>/LOCAL_UPDATE_DTM}" textAlign="Center" width="100%"/>
                     <t:template>
-                        <Text text="{path : 'list>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"></Text>
+                        <Text text="{path : 'list>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}" textAlign="Right" />
                     </t:template>
                 </t:Column>
                 <t:Column label="" width="2rem" >
@@ -194,8 +179,6 @@
         <f:footer>
             <OverflowToolbar>
                 <ToolbarSpacer />
-				<!-- <Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
-				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/> -->
             </OverflowToolbar>
         </f:footer>
     </f:DynamicPage>

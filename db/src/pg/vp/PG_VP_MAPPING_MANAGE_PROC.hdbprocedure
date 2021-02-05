@@ -185,10 +185,10 @@ BEGIN
 				,SUPEVAL_TARGET_FLAG
 				,SUPPLIER_OP_PLAN_REVIEW_FLAG
 				,SUPEVAL_CONTROL_FLAG
-				,SUPEVAL_CONTROL_START_DATE
-				,SUPEVAL_CONTROL_END_DATE
-				,SUPEVAL_RESTRICT_START_DATE
-				,SUPEVAL_RESTRICT_END_DATE
+				,REPLACE( REPLACE( REPLACE( SUPEVAL_CONTROL_START_DATE,'-',''),'.',''),'/','') AS SUPEVAL_CONTROL_START_DATE
+				,REPLACE( REPLACE( REPLACE( SUPEVAL_CONTROL_END_DATE,'-',''),'.',''),'/','') AS SUPEVAL_CONTROL_END_DATE
+				,REPLACE( REPLACE( REPLACE( SUPEVAL_RESTRICT_START_DATE,'-',''),'.',''),'/','') AS SUPEVAL_RESTRICT_START_DATE
+				,REPLACE( REPLACE( REPLACE( SUPEVAL_RESTRICT_END_DATE,'-',''),'.',''),'/','') AS SUPEVAL_RESTRICT_END_DATE
 				,INP_CODE
 				,SUPPLIER_RM_CONTROL_FLAG
 				,SUPPLIER_BASE_PORTION_RATE
@@ -568,8 +568,8 @@ BEGIN
 				,loop_mst.ORG_TYPE_CODE
 				,loop_mst.ORG_CODE
 				,V_NEW_VENDOR_POOL_CODE
-				,TRIM( ' ' FROM loop_mst.VENDOR_POOL_LOCAL_NAME )
-				,TRIM( ' ' FROM loop_mst.VENDOR_POOL_ENGLISH_NAME )
+				,UPPER(TRIM( ' ' FROM loop_mst.VENDOR_POOL_LOCAL_NAME ))
+				,UPPER(TRIM( ' ' FROM loop_mst.VENDOR_POOL_ENGLISH_NAME ))
 				,TRIM( ' ' FROM loop_mst.REPR_DEPARTMENT_CODE )			   
 				,TRIM( ' ' FROM loop_mst.OPERATION_UNIT_CODE )
 				,TRIM( ' ' FROM loop_mst.INP_TYPE_CODE )
@@ -701,8 +701,8 @@ BEGIN
 					
 					
 					UPDATE  PG_VP_VENDOR_POOL_MST MST
-                    SET     VENDOR_POOL_LOCAL_NAME				= TRIM( ' ' FROM loop_mst.VENDOR_POOL_LOCAL_NAME )
-                            ,VENDOR_POOL_ENGLISH_NAME 			= TRIM( ' ' FROM loop_mst.VENDOR_POOL_ENGLISH_NAME )
+                    SET      VENDOR_POOL_LOCAL_NAME				= UPPER(TRIM( ' ' FROM loop_mst.VENDOR_POOL_LOCAL_NAME ))
+                            ,VENDOR_POOL_ENGLISH_NAME 			= UPPER(TRIM( ' ' FROM loop_mst.VENDOR_POOL_ENGLISH_NAME ))
                             ,REPR_DEPARTMENT_CODE 				= TRIM( ' ' FROM loop_mst.REPR_DEPARTMENT_CODE )			   
                             ,OPERATION_UNIT_CODE 				= TRIM( ' ' FROM loop_mst.OPERATION_UNIT_CODE )
                             ,INP_TYPE_CODE 						= TRIM( ' ' FROM loop_mst.INP_TYPE_CODE )
@@ -925,7 +925,15 @@ BEGIN
                             SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00010'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 						ELSE
 							IF V_SUPPLIER_JOB_GUBUN = 'TMP' THEN
-							    INSERT INTO  PG_VP_VENDOR_POOL_SUPPLIER_TMP
+							    /****************************************************
+						        Sprint2까지 TEMP에 저장 안하도록 DTL 강제함.
+						        Sprint3에서 제거 예정
+						          Sprint3시작 시 해당 if문 안에서
+						         -> INSERT INTO  PG_VP_VENDOR_POOL_SUPPLIER_TMP 살리고
+						         -> INSERT INTO  PG_VP_VENDOR_POOL_SUPPLIER_DTL 삭제
+						        ****************************************************/
+							    
+							    /*INSERT INTO  PG_VP_VENDOR_POOL_SUPPLIER_TMP
 							    (
 								    	 TENANT_ID                          ,COMPANY_CODE                        ,ORG_TYPE_CODE
 										,ORG_CODE                           ,VENDOR_POOL_CODE                    ,SUPPLIER_CODE
@@ -951,6 +959,49 @@ BEGIN
 							    		,loop_sup.SUPPLIER_CODE
 							    		,I_USER_NO
             							,NULL
+							    		--,IFNULL( loop_sup.SUPEVAL_TARGET_FLAG, FALSE)
+										--,IFNULL( loop_sup.SUPPLIER_OP_PLAN_REVIEW_FLAG, FALSE)
+										,IFNULL( loop_sup.SUPEVAL_CONTROL_FLAG, FALSE)
+										,TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_START_DATE )
+										,TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_END_DATE )
+										--,TRIM( ' ' FROM loop_sup.SUPEVAL_RESTRICT_START_DATE )
+										--,TRIM( ' ' FROM loop_sup.SUPEVAL_RESTRICT_END_DATE )
+										--,TRIM( ' ' FROM loop_sup.INP_CODE )
+										,IFNULL( loop_sup.SUPPLIER_RM_CONTROL_FLAG, FALSE)
+										,loop_sup.SUPPLIER_BASE_PORTION_RATE
+										--,loop_sup.APPROVAL_NUMBER
+										,NOW()
+										,I_USER_ID
+										,NOW()
+										,NOW()
+										,I_USER_ID
+										,NOW()
+							    )
+							    ;*/
+							    
+							    INSERT INTO  PG_VP_VENDOR_POOL_SUPPLIER_DTL
+							    (
+								    	 TENANT_ID                          ,COMPANY_CODE                        ,ORG_TYPE_CODE
+										,ORG_CODE                           ,VENDOR_POOL_CODE                    ,SUPPLIER_CODE
+										--,SUPEVAL_TARGET_FLAG
+										--,SUPPLIER_OP_PLAN_REVIEW_FLAG       
+										,SUPEVAL_CONTROL_FLAG			     ,SUPEVAL_CONTROL_START_DATE         
+										,SUPEVAL_CONTROL_END_DATE           
+										--,SUPEVAL_RESTRICT_START_DATE		 
+										--,SUPEVAL_RESTRICT_END_DATE          
+										--,INP_CODE                          
+										,SUPPLIER_RM_CONTROL_FLAG		     ,SUPPLIER_BASE_PORTION_RATE         
+										--,APPROVAL_NUMBER --승인된 DTL의 APPR번호 재 요청할 때도 값을 넘겨야하는지
+										,LOCAL_CREATE_DTM                    ,CREATE_USER_ID         		
+										,SYSTEM_CREATE_DTM                  ,LOCAL_UPDATE_DTM                    ,UPDATE_USER_ID
+										,SYSTEM_UPDATE_DTM
+							    ) VALUES (
+							    		 loop_sup.TENANT_ID
+							    		,loop_sup.COMPANY_CODE
+							    		,loop_sup.ORG_TYPE_CODE
+							    		,loop_sup.ORG_CODE
+							    		,loop_sup.VENDOR_POOL_CODE
+							    		,loop_sup.SUPPLIER_CODE
 							    		--,IFNULL( loop_sup.SUPEVAL_TARGET_FLAG, FALSE)
 										--,IFNULL( loop_sup.SUPPLIER_OP_PLAN_REVIEW_FLAG, FALSE)
 										,IFNULL( loop_sup.SUPEVAL_CONTROL_FLAG, FALSE)

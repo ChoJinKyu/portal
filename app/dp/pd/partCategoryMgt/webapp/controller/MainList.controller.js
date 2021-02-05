@@ -12,7 +12,14 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/f/LayoutType",
     "ext/lib/util/Multilingual",
-], function (BaseController, JSONModel, TreeListModel, DateFormatter, Validator, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast, LayoutType, Multilingual) {
+    "sap/ui/core/ValueState",
+	"sap/m/Dialog",
+	"sap/m/DialogType",
+	"sap/m/Button",
+    "sap/m/ButtonType",
+    "sap/m/Text"
+], function (BaseController, JSONModel, TreeListModel, DateFormatter, Validator, Filter, FilterOperator, Fragment, Sorter, MessageBox, MessageToast,
+     LayoutType, Multilingual, ValueState, Dialog, DialogType, Button, ButtonType, Text) {
         "use strict";
 
         return BaseController.extend("dp.pd.partCategoryMgt.controller.MainList", {
@@ -88,13 +95,25 @@ sap.ui.define([
                 this.getView().byId("treeTable").collapseAll();
             },
 
-            onMainTableCreate2ButtonPress: function(e){
-                this.getRouter().navTo("selectionPage", {
-                    tenantId: this.tenantId,
-                    categoryGroupCode: this.categoryGroupCode,
-                    requestNumber: "new"
-                }, true);
+            onMainTableCreate2ButtonPress: function () {
+                if (!this.oInfoMessageDialog) {
+                    this.oInfoMessageDialog = new Dialog({
+                        type: DialogType.Message,
+                        title: "Information",
+                        state: ValueState.Information,
+                        content: new Text({ text: "메뉴별 이동은 Sprint4에서..." }),
+                        beginButton: new Button({
+                            type: ButtonType.Emphasized,
+                            text: "OK",
+                            press: function () {
+                                this.oInfoMessageDialog.close();
+                            }.bind(this)
+                        })
+                    });
+                }
+                this.oInfoMessageDialog.open();
             }
+
 
         });
     }

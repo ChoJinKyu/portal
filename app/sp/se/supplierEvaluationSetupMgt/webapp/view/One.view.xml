@@ -438,9 +438,10 @@ xmlns:flex="sap.f"
                                                 </Column>
                                             </columns>
                                             <items>
-                                                <ColumnListItem type="{= 
+                                                <!-- {= 
                                                     ${DetailView>/isEditMode} ? 'Navigation' : 'Inactive' 
-                                                }"
+                                                } -->
+                                                <ColumnListItem type="Navigation"
                                                 
                                                  press=".onNavTwo">
                                                     <cells>

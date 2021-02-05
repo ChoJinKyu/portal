@@ -30,8 +30,8 @@
                     "odataVersion": "2.0"
                 }
             },
-            "currency": {
-                "uri": "srv-api/odata/v2/cm.CurrencyMgtService/",
+            "common": {
+                "uri": "srv-api/odata/v2/cm.util.CommonService/",
                 "type": "OData",
                 "settings": {
                 "odataVersion": "2.0"
@@ -104,12 +104,12 @@
                 },
                 "dataSource": "buyer"
             },
-            "currency": {
+            "common": {
                 "type": "sap.ui.model.odata.v2.ODataModel",
                 "settings": {
                     "odataVersion": "2.0"
                 },
-                "dataSource": "currency"
+                "dataSource": "common"
             }
 		},
 		"resources": {

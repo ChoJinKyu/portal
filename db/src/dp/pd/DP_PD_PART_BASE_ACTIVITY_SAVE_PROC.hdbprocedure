@@ -36,6 +36,7 @@ BEGIN
     DECLARE V_ACTIVITY_CODE NVARCHAR(40);
     DECLARE V_SEQUENCE DECIMAL;
     DECLARE V_ORG_SEQUENCE DECIMAL;
+    DECLARE V_CNT INTEGER;
 
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
@@ -61,6 +62,31 @@ BEGIN
 
     /*  CRUD_TYPE가 'D' 인 Data 삭제 */
     IF :CRUD_TYPE = 'D' THEN
+    
+        SELECT COUNT(*)	
+        INTO   V_CNT		
+        FROM   DUMMY			
+        WHERE  EXISTS			
+                (   SELECT A.ACTIVITY_CODE	
+                    FROM   DP_PD_PART_BASE_ACTIVITY A, DP_PD_PART_ACTIVITY_TEMPLATE B
+                    WHERE  A.TENANT_ID = V_TENANT_ID	
+                    AND    A.ACTIVITY_CODE = V_ACTIVITY_CODE	
+                    AND    B.TENANT_ID = A.TENANT_ID	
+                    AND    B.ACTIVITY_CODE = A.ACTIVITY_CODE	
+                    AND    B.TENANT_ID = A.TENANT_ID	
+                    AND    B.ACTIVITY_CODE = A.ACTIVITY_CODE	
+                )
+        ;	
+
+        IF V_CNT > 0 THEN
+            RETURN;
+        END IF;
+        
+        DELETE FROM DP_PD_PART_BASE_ACTIVITY_CATEGORY C
+        WHERE  C.TENANT_ID = V_TENANT_ID
+        AND    C.ACTIVITY_CODE = V_ACTIVITY_CODE
+        ;
+ 
         DELETE FROM DP_PD_PART_BASE_ACTIVITY_LNG D
         WHERE  D.TENANT_ID = V_TENANT_ID
         AND    D.ACTIVITY_CODE = V_ACTIVITY_CODE
@@ -112,8 +138,14 @@ BEGIN
             AND    M.ACTIVITY_CODE = V_ACTIVITY_CODE
             ;
 
-            ELSE
-            INSERT INTO DP_PD_PART_BASE_ACTIVITY M
+        ELSE
+
+             SELECT 'PAT' || TO_NCHAR(NOW(), 'YYMMDD') || LPAD(DP_PD_PART_CATEGORY_SEQ.NEXTVAL, 4, '0') 
+             INTO   V_ACTIVITY_CODE
+             FROM   DUMMY
+             ;
+
+             INSERT INTO DP_PD_PART_BASE_ACTIVITY M
                       ( TENANT_ID
                         ,ACTIVITY_CODE
                         ,SEQUENCE
@@ -127,7 +159,7 @@ BEGIN
                         ,SYSTEM_UPDATE_DTM
                       )
                  SELECT M.TENANT_ID
-                        ,M.ACTIVITY_CODE
+                        ,V_ACTIVITY_CODE
                         ,(SELECT COALESCE(MAX(SEQUENCE), 0) + 1 FROM DP_PD_PART_BASE_ACTIVITY WHERE TENANT_ID = M.TENANT_ID)
                         ,M.DESCRIPTION
                         ,M.ACTIVE_FLAG
@@ -145,7 +177,7 @@ BEGIN
         /*  I_D Table의 Data 일괄 삭제 */
         DELETE FROM DP_PD_PART_BASE_ACTIVITY_LNG D
         WHERE ( D.TENANT_ID,D.ACTIVITY_CODE,D.LANGUAGE_CD ) IN
-            ( SELECT id.TENANT_ID, id.ACTIVITY_CODE, id.LANGUAGE_CD
+            ( SELECT id.TENANT_ID, V_ACTIVITY_CODE, id.LANGUAGE_CD
                 FROM :I_D id
                WHERE id.CRUD_TYPE_CODE = 'D'
             )
@@ -155,7 +187,7 @@ BEGIN
         MERGE INTO DP_PD_PART_BASE_ACTIVITY_LNG D
             USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE_CODE IN ('C','U')  ) id
             ON ( D.TENANT_ID = id.TENANT_ID
-                AND D.ACTIVITY_CODE = id.ACTIVITY_CODE
+                AND D.ACTIVITY_CODE = V_ACTIVITY_CODE
                 AND D.LANGUAGE_CD = id.LANGUAGE_CD )
 
         WHEN MATCHED THEN
@@ -177,7 +209,7 @@ BEGIN
                     ,SYSTEM_UPDATE_DTM
                 )
             VALUES ( id.TENANT_ID
-                    ,id.ACTIVITY_CODE
+                    ,V_ACTIVITY_CODE
                     ,id.LANGUAGE_CD
                     ,id.CODE_NAME
                     ,NOW()
@@ -192,7 +224,7 @@ BEGIN
         /*  I_C Table의 Data 일괄 삭제 */
         DELETE FROM DP_PD_PART_BASE_ACTIVITY_CATEGORY C
         WHERE ( C.TENANT_ID,C.ACTIVITY_CODE,C.CATEGORY_GROUP_CODE,C.CATEGORY_CODE ) IN
-            ( SELECT ic.TENANT_ID, ic.ACTIVITY_CODE, ic.CATEGORY_GROUP_CODE, ic.CATEGORY_CODE
+            ( SELECT ic.TENANT_ID, V_ACTIVITY_CODE, ic.CATEGORY_GROUP_CODE, ic.CATEGORY_CODE
                 FROM :I_C ic
                WHERE ic.CRUD_TYPE_CODE = 'D'
             )
@@ -202,7 +234,7 @@ BEGIN
         MERGE INTO DP_PD_PART_BASE_ACTIVITY_CATEGORY C
             USING ( SELECT * FROM :I_C WHERE :I_C.CRUD_TYPE_CODE IN ('C','U')  ) ic
             ON ( C.TENANT_ID = ic.TENANT_ID
-                AND C.ACTIVITY_CODE = ic.ACTIVITY_CODE
+                AND C.ACTIVITY_CODE = V_ACTIVITY_CODE
                 AND C.CATEGORY_GROUP_CODE = ic.CATEGORY_GROUP_CODE
                 AND C.CATEGORY_CODE = ic.CATEGORY_CODE )
 
@@ -236,7 +268,7 @@ BEGIN
                     ,SYSTEM_UPDATE_DTM
                 )
             VALUES ( ic.TENANT_ID
-                    ,ic.ACTIVITY_CODE
+                    ,V_ACTIVITY_CODE
                     ,ic.CATEGORY_GROUP_CODE
                     ,ic.CATEGORY_CODE
                     ,ic.S_GRADE_STANDARD_DAYS	

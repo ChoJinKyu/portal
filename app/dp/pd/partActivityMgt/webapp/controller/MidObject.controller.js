@@ -155,7 +155,7 @@ sap.ui.define([
 				"activity_code": this._sActivityCode,
 				"language_code": "",
 				"code_name": ""			
-			}, "/PdPartBaseActivityLng");
+			}, "/PdPartBaseActivityLng", 0);
 		},
 
 		onLngTableDeleteButtonPress: function(){
@@ -412,7 +412,8 @@ sap.ui.define([
 
 			if(this._sActivityCode == "new"){
 				//It comes Add button pressed from the before page.
-				this.getModel("contModel").setProperty("/createMode", true);
+                this.getModel("contModel").setProperty("/createMode", true);
+                
 
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
@@ -504,8 +505,7 @@ sap.ui.define([
             this.byId("pageCancelButton").setEnabled(true);
             this.byId("pageDeleteButton").setEnabled(true);
 			this.byId("lngTableAddButton").setEnabled(true);
-            this.byId("lngTableDeleteButton").setEnabled(true);
-                      
+            this.byId("lngTableDeleteButton").setEnabled(true);                      
             
             this.getView().getModel("contModel").setProperty("/editMode", true);
             this.getView().getModel("contModel").setProperty("/readMode", false);

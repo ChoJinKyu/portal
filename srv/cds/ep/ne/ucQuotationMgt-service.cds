@@ -8,6 +8,7 @@ using { ep as ucQuotationListView} from '../../../../db/cds/ep/ne/EP_UC_QUOTATIO
 using { ep as ucQuotationDtlView} from '../../../../db/cds/ep/ne/EP_UC_QUOTATION_DTL_VIEW-model';
 using { ep as getUcApprovalDtlView} from '../../../../db/cds/ep/ne/EP_GET_UC_APPROVAL_DTL_VIEW-model';
 using { ep as getItemClassView} from '../../../../db/cds/ep/ne/EP_UC_ITEM_CLASS-model';
+using { ep as ucApprovalExtraRateView} from '../../../../db/cds/ep/ne/EP_UC_APPROVAL_EXTRA_RATE_VIEW-model';
 
 
 namespace ep;
@@ -23,6 +24,7 @@ service UcQuotationMgtService {
     entity UcQuotationListView as projection on ucQuotationListView.Uc_Quotation_List_View;
     entity UcQuotationDtlView as projection on ucQuotationDtlView.Uc_Quotation_Dtl_View;
     entity GetUcApprovalDtlView as projection on getUcApprovalDtlView.Get_Uc_Approval_Dtl_View;
+    entity UcApprovalExtraRateView as projection on ucApprovalExtraRateView.Uc_Approval_Extra_Rate_View;
     entity GetUcItemClassView as projection on getItemClassView.Uc_Item_Class;
 
 

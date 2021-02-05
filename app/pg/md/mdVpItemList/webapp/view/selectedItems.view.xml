@@ -13,7 +13,9 @@
                 path: 'tblModel>/right',
                 sorter: [
                     {path: 'spmd_category_code', descending: false}, 
-                    {path: 'spmd_character_code', descending: false}
+                    {path: 'spmd_category_sort_sequence', descending: false}, 
+                    {path: 'spmd_character_code', descending: false}, 
+                    {path: 'spmd_character_sort_seq', descending: false}
                 ]}"
             visibleRowCount="15"
 		    noData="Please drag-and-drop Character here."

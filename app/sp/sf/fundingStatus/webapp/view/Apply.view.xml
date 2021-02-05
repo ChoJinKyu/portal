@@ -1,0 +1,278 @@
+<mvc:View controllerName="sp.sf.fundingStatus.controller.Apply" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns="sap.m" 
+	xmlns:uxap="sap.uxap" 
+	xmlns:layout="sap.ui.layout" 
+    xmlns:form="sap.ui.layout.form"
+    xmlns:richtexteditor="sap.ui.richtexteditor"
+	xmlns:core="sap.ui.core"
+    height="100%">
+    
+	<uxap:ObjectPageLayout id="page"
+		toggleHeaderOnTitleClick="false"
+		alwaysShowContentHeader = "true"
+		preserveHeaderStateOnScroll="true"
+        headerContentPinnable="false"
+        isChildPage="true"
+		upperCaseAnchorBar="false"
+		showTitleInHeaderContent="true"
+		showEditHeaderButton="true" 
+        showFooter="true">
+        
+		<uxap:headerTitle>
+			<!-- 타이틀 영역 -->
+			<uxap:ObjectPageDynamicHeaderTitle>
+				<uxap:snappedTitleOnMobile>
+					<Title text="자금지원 신청" />
+				</uxap:snappedTitleOnMobile>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+            <!-- <layout:VerticalLayout> -->
+                <FlexBox id="headerContentId" height="30px" alignItems="Start" justifyContent="Start" >
+                    <VBox>
+                        <Label text="Supplier Code :"  class="sapUiLargeMarginBegin" />
+                        <Label text="KR007289" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                        <Label text="대표자명 :"  class="sapUiLargeMarginBegin" />
+                        <Label text="김대표" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                    </VBox>
+                    <VBox>
+                        <Label text="사업자번호 :" class="sapUiLargeMarginBegin" />
+                        <Label text="609-81-07658" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                        <Label text="대표자 Mail Address :" class="sapUiLargeMarginBegin" />
+                        <Label text="rep@supplier.com" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                    </VBox>
+                    <VBox>
+                        <Label text="Supplier Name :"  class="sapUiLargeMarginBegin" />
+                        <Label text="(주) 유창" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                        <Label text="전화번호 :"  class="sapUiLargeMarginBegin" />
+                        <Label text="02-2222-4545" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                    </VBox>
+                    <VBox>
+                        <Label text="주소 :" class="sapUiLargeMarginBegin" />
+                        <Label text="서울시 영등포구 문래동 112-11" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                        <Label text="협력회 여부 :" class="sapUiLargeMarginBegin" />
+                        <Label text="Y" class="sapUiTinyMarginBegin sapUiLargeMarginEnd" design="Bold"/>
+                    </VBox>
+                </FlexBox>          
+            <!-- </layout:VerticalLayout> -->
+		</uxap:headerContent>
+
+		<uxap:sections>
+			<!-- General Infomation -->
+			<uxap:ObjectPageSection id="genaralTab" titleUppercase="true" title="기본정보">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSection1">
+                        <form:SimpleForm
+                            maxContainerCols="2"
+                            editable="true"
+                            layout="ResponsiveGridLayout"
+                            adjustLabelSpan="false"
+                            labelSpanL="4"
+                            labelSpanM="4"
+                            emptySpanL="0"
+                            emptySpanM="0"
+                            columnsL="2"
+                            columnsM="2">
+                            <form:content>
+                                <VBox>
+                                    <Label text="거래사업부 :"/>
+                                    <ComboBox 
+                                        id="transactionDivision"
+                                        editable="false"
+                                        fieldGroupIds="newAppl"
+                                        required="true" 
+                                        selectedKey="{applicationSup>/org_code}"
+                                        items="{transactionDivision>/}" width="100%">
+                                        <items>
+                                            <core:Item key="{transactionDivision>org_code}" text="{transactionDivision>org_code} :  {transactionDivision>org_name}" />
+                                        </items>
+                                    </ComboBox>
+                                    
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="LG 구매팀 :" required="true"/>
+                                    <Input 
+                                        id="purchasingDepartmentName" 
+                                        fieldGroupIds="newRequest"
+                                        required="true" 
+                                        value="{
+                                            path: 'applicationSup>/purchasing_department_name',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 100
+                                            }
+                                        }"/>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="전년도매출액(백만원) :" required="true"/>
+                                    <Input 
+                                        type="Number"
+                                        fieldGroupIds="newRequest"
+                                        required="true" 
+                                        value="{
+                                            path: 'applicationSup>/pyear_sales_amount', 
+                                            type: 'sap.ui.model.type.Integer'
+                                        }"
+                                    />
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="주거래은행 :" required="true"/>
+                                    <Input 
+                                        fieldGroupIds="newRequest"
+                                        required="true"
+                                        value="{
+                                            path: 'applicationSup>/main_bank_name',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 100
+                                            }
+                                        }"/>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="신청금액(원) :" required="true"/>
+                                    <Input 
+                                        type="Number"
+                                        fieldGroupIds="newRequest"
+                                        required="true"
+                                        value="{
+                                            path: 'applicationSup>/funding_appl_amount', 
+                                            type: 'sap.ui.model.type.Integer'
+                                        }" />
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M6 S12" linebreak="true" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="희망년월 :" required="true"/>
+                                    <DatePicker 
+                                        required="true"
+                                        fieldGroupIds="newRequest"
+                                        displayFormat='yyyy-MM'
+                                        valueFormat ="yyyy-MM"
+                                        change="onCheckDatePicker"
+                                        value="{applicationSup>/funding_hope_yyyymm}"/>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="상환방법 :" required="true"/>
+                                    <!-- selectedKey="{applicationSup>/repayment_method_code}" -->
+                                    <ComboBox 
+                                        id="search_repayment_method_code" 
+                                        editable="false"
+                                        width="100%"
+                                        items="{
+                                                    path : 'util>/Code',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'SP_SF_REPAYMENT_METHOD_CODE'}
+                                                    ]
+                                                }"
+
+                                        selectedKey="{applicationSup>/repayment_method_code}"
+                                    >
+                                        <core:Item key="{util>code}" text="{util>code_name}" />
+                                    </ComboBox>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="신청자 :" required="true"/>
+                                    <Input
+                                        fieldGroupIds="newRequest"
+                                        required="true"
+                                        value="{
+                                            path: 'applicationSup>/appl_user_name',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 240
+                                            }
+                                        }"/>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                <VBox>
+                                    <Label text="전화번호 :" required="true"/>
+                                    <Input
+                                        fieldGroupIds="newRequest"
+                                        required="true"
+                                        change="onCheckPhone"
+                                        value="{
+                                            path: 'applicationSup>/appl_user_tel_number',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 15
+                                            }
+                                        }"/>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                                
+                                <VBox>
+                                    <Label text="Mail Address :" required="true"/>
+                                    <Input
+                                        id="inputEmail"
+                                        fieldGroupIds="newRequest"
+                                        required="true"
+                                        change="onCheckEmail"
+                                        value="{
+                                            path: 'applicationSup>/appl_user_email_address',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 240
+                                            }
+                                        }"/>
+                                    <layoutData>
+                                        <layout:GridData span="XL2 L2 M6 S12" />
+                                    </layoutData>
+                                </VBox>
+                            </form:content>
+                        </form:SimpleForm>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection id="reasonTab" titleUppercase="true" title="지원사유">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection id="pageSubSection2">
+						<Text text="2"/>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection id="investmentPlanTab" titleUppercase="true" title="투자계획">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <Text text="3"/>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection id="collateralTab" titleUppercase="true" title="담보물">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <Text text="4"/>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+		</uxap:sections>
+	</uxap:ObjectPageLayout>
+</mvc:View>

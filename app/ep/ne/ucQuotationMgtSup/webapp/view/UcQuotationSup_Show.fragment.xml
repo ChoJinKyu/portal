@@ -11,7 +11,7 @@
         <form:SimpleForm id="ucUcQuotationSupForm1Show" editable="false"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
                 <Label text="* 공사명" design="Bold" class="sapMLabelNoText"/>
-                <Text text="{master>/const_name}" width="100%"/>
+                <Text text="{viewModel>/ucmaster/const_name}" width="100%"/>
             </VBox>
         </form:SimpleForm>
 
@@ -19,7 +19,7 @@
         
             <VBox alignContent="Center">
                 <Label text="* 대분류(공종)" textAlign="left" design="Bold" class="sapMLabelNoText" />
-                <Text text="{master>/supplier_code}" />
+                <Text text="{viewModel>/ucmaster/supplier_code}" />
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>    
@@ -31,7 +31,7 @@
                 <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
                 <Text text="{master>/const_end_date}" /> -->
                 <Text text="{
-                                            path: 'master>/const_start_date',
+                                            path: 'viewModel>/ucmaster/const_start_date',
                                             type: 'sap.ui.model.type.Date',
                                             formatOptions: {
                                                 pattern: 'yyyy/MM/dd'
@@ -41,7 +41,7 @@
 
                 <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
                 <Text text="{
-                                            path: 'master>/const_end_date',
+                                            path: 'viewModel>/ucmaster/const_end_date',
                                             type: 'sap.ui.model.type.Date',
                                             formatOptions: {
                                                 pattern: 'yyyy/MM/dd'
@@ -60,7 +60,7 @@
         
             <VBox alignContent="Center">
                 <Label text="* 물량검토자" design="Bold" class="sapMLabelNoText"/>
-                <Text text="{master>/const_person_empno}" />  
+                <Text text="{viewModel>/ucmaster/const_person_empno}" />  
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>     
@@ -68,7 +68,7 @@
             
             <VBox alignContent="Center">
                 <Label text="* 구매담당자" design="Bold" class="sapMLabelNoText"/>
-                <Text text="{master>/buyer_empno}" />  
+                <Text text="{viewModel>/ucmaster/buyer_empno}" />  
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>     
@@ -81,7 +81,7 @@
                 <Label  text="* 비고" 
                             design="Bold" 
                             class="sapUiSmallMarginBottom"/>
-                <Text text="{master>/remark}" />            
+                <Text text="{viewModel>/ucmaster/remark}" />            
             </VBox>
         </form:SimpleForm>       
 

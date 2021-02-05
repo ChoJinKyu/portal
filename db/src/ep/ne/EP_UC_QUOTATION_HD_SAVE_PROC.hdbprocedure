@@ -1,62 +1,340 @@
 PROCEDURE EP_UC_QUOTATION_HD_SAVE_PROC 
 (
-    IN I_TABLE TABLE(   TENANT_ID NVARCHAR(5), 
-                        COMPANY_CODE NVARCHAR(10), 
-                        CONST_QUOTATION_NUMBER NVARCHAR(30), 
-                        CONST_QUOTATION_ITEM_NUMBER NVARCHAR(30),
-                        ITEM_SEQUENCE DECIMAL,
-                        EP_ITEM_CODE NVARCHAR(50),
-                        ITEM_DESC NVARCHAR(200),
-                        SPEC_DESC NVARCHAR(1000),
-                        QUOTATION_QUANTITY DECIMAL,
-                        EXTRA_RATE DECIMAL,
-                        UNIT NVARCHAR(3),
-                        CURRENCY_CODE NVARCHAR(15),
-                        MATERIAL_APPLY_FLAG BOOLEAN,
-                        LABOR_APPLY_FLAG BOOLEAN,
-                        NET_PRICE_CHANGE_ALLOW_FLAG BOOLEAN,
-                        BASE_MATERIAL_NET_PRICE DECIMAL,
-                        BASE_LABOR_NET_PRICE DECIMAL,
-                        MATERIAL_NET_PRICE DECIMAL,
-                        MATERIAL_AMOUNT DECIMAL,
-                        LABOR_NET_PRICE DECIMAL,
-                        LABOR_AMOUNT DECIMAL,
-                        SUM_AMOUNT DECIMAL,
-                        REMARK NVARCHAR(3000),
-                        NET_PRICE_CONTRACT_DOCUMENT_NO NVARCHAR(50),
-                        NET_PRICE_CONTRACT_DEGREE DECIMAL,
-                        NET_PRICE_CONTRACT_ITEM_NUMBER NVARCHAR(50),
-                        SUPPLIER_ITEM_CREATE_FLAG BOOLEAN
+    IN I_M_TABLE TABLE( TENANT_ID                   NVARCHAR(5)			
+                        ,COMPANY_CODE               NVARCHAR(10)    
+                        ,CONST_QUOTATION_NUMBER     NVARCHAR(30)    
+                        ,ORG_CODE                   NVARCHAR(10)    
+                        ,ORG_NAME                   NVARCHAR(10)    
+                        ,CONST_NAME                 NVARCHAR(200)   
+                        ,EP_ITEM_CODE               NVARCHAR(200)   
+                        ,CONST_START_DATE           Date            
+                        ,CONST_END_DATE             Date            
+                        ,QUOTATION_STATUS_CODE      NVARCHAR(30)    
+                        ,QUOTATION_STATUS_NAME      NVARCHAR(30)    
+                        ,SUPPLIER_CODE              NVARCHAR(30)    
+                        ,BUYER_EMPNO                NVARCHAR(30)    
+                        ,BUYER_NAME                 NVARCHAR(30)    
+                        ,CONST_PERSON_EMPNO         NVARCHAR(30)    
+                        ,CONST_PERSON_NAME          NVARCHAR(30)    
+                        ,PURCHASING_DEPARTMENT_CODE NVARCHAR(50)    
+                        ,PURCHASING_DEPARTMENT_NAME NVARCHAR(50)    
+                        ,PR_NUMBER                  NVARCHAR(50)    
+                        ,QUOTATION_WRITE_DATE       Date            
+                        ,REMARK                     NVARCHAR(3000)  
+                        ,CURRENCY_CODE              NVARCHAR(15)    
+                        ,ATTCH_GROUP_NUMBER         NVARCHAR(100)   
+                        ,SUPPLIER_WRITE_FLAG        Boolean         
+                        ,COMPLETION_FLAG            Boolean         
+                        ,COMPLETION_DATE            Date            
+                        ,FACILITY_PERSON_EMPNO      NVARCHAR(30)    
+                        ,FACILITY_PERSON_NAME       NVARCHAR(30)    
+                        ,FACILITY_DEPARTMENT_CODE   NVARCHAR(50)    
+                        ,COMPLETION_ATTCH_GROUP_NUMBER    NVARCHAR(50)
+                        ,LOCAL_CREATE_DTM SECONDDATE
+                        ,LOCAL_UPDATE_DTM SECONDDATE
+                        ,CREATE_USER_ID NVARCHAR(255)
+                        ,UPDATE_USER_ID NVARCHAR(255)
+                        ,SYSTEM_CREATE_DTM SECONDDATE
+                        ,SYSTEM_UPDATE_DTM SECONDDATE
+                        ,ROW_STATE NVARCHAR(1)      
     ),
-    OUT O_TABLE_MESSAGE EP_PO_PROC_OUT_TYPE
+    IN I_D_TABLE TABLE( TENANT_ID                        NVARCHAR(5) 
+                        ,COMPANY_CODE                     NVARCHAR(10)
+                        ,CONST_QUOTATION_NUMBER           NVARCHAR(30)
+                        ,CONST_QUOTATION_ITEM_NUMBER      NVARCHAR(50)
+                        ,ITEM_SEQUENCE                    DECIMAL   
+                        ,EP_ITEM_CODE                     NVARCHAR(50)
+                        ,ITEM_DESC                        NVARCHAR(200)
+                        ,SPEC_DESC                        NVARCHAR(1000)
+                        ,QUOTATION_QUANTITY               DECIMAL   
+                        ,EXTRA_RATE                       DECIMAL   
+                        ,UNIT                             NVARCHAR(3) 
+                        ,CURRENCY_CODE                    NVARCHAR(15)
+                        ,CURRENCY_NAME                    NVARCHAR(15)
+                        ,MATERIAL_APPLY_FLAG              BOOLEAN   
+                        ,LABOR_APPLY_FLAG                 BOOLEAN   
+                        ,NET_PRICE_CHANGE_ALLOW_FLAG      BOOLEAN   
+                        ,BASE_MATERIAL_NET_PRICE          DECIMAL   
+                        ,BASE_LABOR_NET_PRICE             DECIMAL   
+                        ,MATERIAL_NET_PRICE               DECIMAL   
+                        ,MATERIAL_AMOUNT                  DECIMAL   
+                        ,LABOR_NET_PRICE                  DECIMAL   
+                        ,LABOR_AMOUNT                     DECIMAL   
+                        ,SUM_AMOUNT                       DECIMAL   
+                        ,REMARK                           NVARCHAR(3000)
+                        ,NET_PRICE_CONTRACT_DOCUMENT_NO   NVARCHAR(50)
+                        ,NET_PRICE_CONTRACT_DEGREE        DECIMAL 
+                        ,NET_PRICE_CONTRACT_ITEM_NUMBER   NVARCHAR(50)
+                        ,SUPPLIER_ITEM_CREATE_FLAG        BOOLEAN   
+                        ,LOCAL_CREATE_DTM SECONDDATE
+                        ,LOCAL_UPDATE_DTM SECONDDATE
+                        ,CREATE_USER_ID NVARCHAR(255)
+                        ,UPDATE_USER_ID NVARCHAR(255)
+                        ,SYSTEM_CREATE_DTM SECONDDATE
+                        ,SYSTEM_UPDATE_DTM SECONDDATE
+                        ,ROW_STATE NVARCHAR(1)    
+    ),   
+    OUT O_M_TABLE TABLE(   
+                        TENANT_ID                   NVARCHAR(5)			
+                        ,COMPANY_CODE               NVARCHAR(10)    
+                        ,CONST_QUOTATION_NUMBER     NVARCHAR(30)    
+                        ,ORG_CODE                   NVARCHAR(10)    
+                        ,ORG_NAME                   NVARCHAR(10)    
+                        ,CONST_NAME                 NVARCHAR(200)   
+                        ,EP_ITEM_CODE               NVARCHAR(200)   
+                        ,CONST_START_DATE           Date            
+                        ,CONST_END_DATE             Date            
+                        ,QUOTATION_STATUS_CODE      NVARCHAR(30)    
+                        ,QUOTATION_STATUS_NAME      NVARCHAR(30)    
+                        ,SUPPLIER_CODE              NVARCHAR(30)    
+                        ,BUYER_EMPNO                NVARCHAR(30)    
+                        ,BUYER_NAME                 NVARCHAR(30)    
+                        ,CONST_PERSON_EMPNO         NVARCHAR(30)    
+                        ,CONST_PERSON_NAME          NVARCHAR(30)    
+                        ,PURCHASING_DEPARTMENT_CODE NVARCHAR(50)    
+                        ,PURCHASING_DEPARTMENT_NAME NVARCHAR(50)    
+                        ,PR_NUMBER                  NVARCHAR(50)    
+                        ,QUOTATION_WRITE_DATE       Date            
+                        ,REMARK                     NVARCHAR(3000)  
+                        ,CURRENCY_CODE              NVARCHAR(15)    
+                        ,ATTCH_GROUP_NUMBER         NVARCHAR(100)   
+                        ,SUPPLIER_WRITE_FLAG        Boolean         
+                        ,COMPLETION_FLAG            Boolean         
+                        ,COMPLETION_DATE            Date            
+                        ,FACILITY_PERSON_EMPNO      NVARCHAR(30)    
+                        ,FACILITY_PERSON_NAME       NVARCHAR(30)    
+                        ,FACILITY_DEPARTMENT_CODE   NVARCHAR(50)    
+                        ,COMPLETION_ATTCH_GROUP_NUMBER    NVARCHAR(50)
+                        ,LOCAL_CREATE_DTM SECONDDATE
+                        ,LOCAL_UPDATE_DTM SECONDDATE
+                        ,CREATE_USER_ID NVARCHAR(255)
+                        ,UPDATE_USER_ID NVARCHAR(255)
+                        ,SYSTEM_CREATE_DTM SECONDDATE
+                        ,SYSTEM_UPDATE_DTM SECONDDATE
+                        ,ROW_STATE NVARCHAR(1)               
+    ),
+    OUT O_D_TABLE TABLE(   
+                        TENANT_ID                        NVARCHAR(5) 
+                        ,COMPANY_CODE                     NVARCHAR(10)
+                        ,CONST_QUOTATION_NUMBER           NVARCHAR(30)
+                        ,CONST_QUOTATION_ITEM_NUMBER      NVARCHAR(50)
+                        ,ITEM_SEQUENCE                    DECIMAL   
+                        ,EP_ITEM_CODE                     NVARCHAR(50)
+                        ,ITEM_DESC                        NVARCHAR(200)
+                        ,SPEC_DESC                        NVARCHAR(1000)
+                        ,QUOTATION_QUANTITY               DECIMAL   
+                        ,EXTRA_RATE                       DECIMAL   
+                        ,UNIT                             NVARCHAR(3) 
+                        ,CURRENCY_CODE                    NVARCHAR(15)
+                        ,CURRENCY_NAME                    NVARCHAR(15)
+                        ,MATERIAL_APPLY_FLAG              BOOLEAN   
+                        ,LABOR_APPLY_FLAG                 BOOLEAN   
+                        ,NET_PRICE_CHANGE_ALLOW_FLAG      BOOLEAN   
+                        ,BASE_MATERIAL_NET_PRICE          DECIMAL   
+                        ,BASE_LABOR_NET_PRICE             DECIMAL   
+                        ,MATERIAL_NET_PRICE               DECIMAL   
+                        ,MATERIAL_AMOUNT                  DECIMAL   
+                        ,LABOR_NET_PRICE                  DECIMAL   
+                        ,LABOR_AMOUNT                     DECIMAL   
+                        ,SUM_AMOUNT                       DECIMAL   
+                        ,REMARK                           NVARCHAR(3000)
+                        ,NET_PRICE_CONTRACT_DOCUMENT_NO   NVARCHAR(50)
+                        ,NET_PRICE_CONTRACT_DEGREE        DECIMAL 
+                        ,NET_PRICE_CONTRACT_ITEM_NUMBER   NVARCHAR(50)
+                        ,SUPPLIER_ITEM_CREATE_FLAG        BOOLEAN   
+                        ,LOCAL_CREATE_DTM SECONDDATE
+                        ,LOCAL_UPDATE_DTM SECONDDATE
+                        ,CREATE_USER_ID NVARCHAR(255)
+                        ,UPDATE_USER_ID NVARCHAR(255)
+                        ,SYSTEM_CREATE_DTM SECONDDATE
+                        ,SYSTEM_UPDATE_DTM SECONDDATE
+                        ,ROW_STATE NVARCHAR(1)   
+         
+    )
 )
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 
 AS
 BEGIN
- 
-    MERGE INTO EP_UC_QUOTATION_DTL AS DTL
-        USING :I_TABLE A
-        ON	A.TENANT_ID = DTL.TENANT_ID
-        AND A.COMPANY_CODE = DTL.COMPANY_CODE
-        AND A.CONST_QUOTATION_NUMBER = DTL.CONST_QUOTATION_NUMBER
-        AND A.CONST_QUOTATION_ITEM_NUMBER = DTL.CONST_QUOTATION_ITEM_NUMBER
+    --DECLARE V_M_CREATE_ROW_COUNT INT DEFAULT 0;
+    DECLARE V_M_UPDATE_ROW_COUNT INT DEFAULT 0;
+    DECLARE V_M_DELETE_ROW_COUNT INT DEFAULT 0;
+    DECLARE V_D_CREATE_ROW_COUNT INT DEFAULT 0;
+    DECLARE V_D_UPDATE_ROW_COUNT INT DEFAULT 0;
+    DECLARE V_D_DELETE_ROW_COUNT INT DEFAULT 0;  
 
-    WHEN MATCHED THEN
-        UPDATE 
-        SET QUOTATION_QUANTITY          = A.QUOTATION_QUANTITY
-           ,MATERIAL_NET_PRICE          = A.MATERIAL_NET_PRICE
-           ,MATERIAL_AMOUNT             =A.MATERIAL_AMOUNT
-           ,LABOR_NET_PRICE             = A.LABOR_NET_PRICE
-           ,LABOR_AMOUNT                = A.LABOR_AMOUNT
-           ,SUM_AMOUNT                  = A.SUM_AMOUNT
-           ,LOCAL_UPDATE_DTM            = CURRENT_TIMESTAMP
-           ,UPDATE_USER_ID              = 'ADMIN'
-           ,SYSTEM_UPDATE_DTM           = CURRENT_TIMESTAMP
-    WHEN NOT MATCHED THEN
-        INSERT 
-            (TENANT_ID
+    --CUD처리후 조회할 KEY
+    DECLARE V_TENANT_ID NVARCHAR(5);
+    DECLARE V_COMPANY_CODE NVARCHAR(10);
+    DECLARE V_CONST_QUOTATION_NUMBER NVARCHAR(30);
+    DECLARE V_CONST_QUOTATION_ITEM_NUMBER NVARCHAR(30);
+
+
+    SELECT 
+    TENANT_ID, COMPANY_CODE, CONST_QUOTATION_NUMBER
+    INTO V_TENANT_ID, V_COMPANY_CODE, V_CONST_QUOTATION_NUMBER
+    FROM :I_M_TABLE;
+
+    SELECT 
+    TENANT_ID, COMPANY_CODE, CONST_QUOTATION_NUMBER, CONST_QUOTATION_ITEM_NUMBER
+    INTO V_TENANT_ID, V_COMPANY_CODE, V_CONST_QUOTATION_NUMBER ,V_CONST_QUOTATION_ITEM_NUMBER
+    FROM :I_D_TABLE;
+      
+
+    -- 마스터
+    --SELECT COUNT(*) INTO V_M_CREATE_ROW_COUNT 
+    --FROM :I_M_TABLE
+    --WHERE ROW_STATE = 'C';
+
+    SELECT COUNT(*) INTO V_M_UPDATE_ROW_COUNT 
+    FROM :I_M_TABLE
+    WHERE ROW_STATE = 'U';
+    
+    SELECT COUNT(*) INTO V_M_DELETE_ROW_COUNT 
+    FROM :I_M_TABLE
+    WHERE ROW_STATE = 'D';    
+
+    IF (V_M_DELETE_ROW_COUNT > 0) THEN
+
+        DELETE FROM EP_UC_QUOTATION_MST B
+        WHERE (B.TENANT_ID, B.COMPANY_CODE, B.CONST_QUOTATION_NUMBER)
+        IN (SELECT A.TENANT_ID, A.COMPANY_CODE, A.CONST_QUOTATION_NUMBER
+        FROM :I_M_TABLE A
+        WHERE ROW_STATE = 'D');
+
+        DELETE FROM EP_UC_QUOTATION_DTL B
+        WHERE (B.TENANT_ID, B.COMPANY_CODE, B.CONST_QUOTATION_NUMBER,B.CONST_QUOTATION_ITEM_NUMBER)
+        IN (SELECT A.TENANT_ID, A.COMPANY_CODE, A.CONST_QUOTATION_NUMBER,A.CONST_QUOTATION_ITEM_NUMBER
+        FROM :I_D_TABLE A
+        WHERE ROW_STATE = 'D');
+
+        --할증삭제
+        DELETE FROM EP_UC_QUOTATION_EXTRA B
+        WHERE (B.TENANT_ID, B.COMPANY_CODE, B.CONST_QUOTATION_NUMBER,B.CONST_QUOTATION_ITEM_NUMBER)
+        IN (SELECT A.TENANT_ID, A.COMPANY_CODE, A.CONST_QUOTATION_NUMBER,A.CONST_QUOTATION_ITEM_NUMBER
+        FROM :I_D_TABLE A
+        WHERE ROW_STATE = 'D');
+
+    END IF;
+
+    IF (V_M_UPDATE_ROW_COUNT > 0) THEN
+
+        UPDATE EP_UC_QUOTATION_MST B
+        SET (
+              CONST_NAME                  
+            , EP_ITEM_CODE               
+            , CONST_START_DATE            
+            , CONST_END_DATE              
+            , REMARK   
+            , ATTCH_GROUP_NUMBER
+            , COMPLETION_FLAG       
+            , COMPLETION_DATE     
+            , FACILITY_PERSON_EMPNO       
+            , FACILITY_DEPARTMENT_CODE 
+            , COMPLETION_ATTCH_GROUP_NUMBER                    
+            , LOCAL_UPDATE_DTM                  
+            , UPDATE_USER_ID                    
+            , SYSTEM_UPDATE_DTM    
+        ) 
+        = (SELECT 
+             CONST_NAME                  
+            , EP_ITEM_CODE               
+            , CONST_START_DATE            
+            , CONST_END_DATE              
+            , REMARK
+            , ATTCH_GROUP_NUMBER
+            , COMPLETION_FLAG       
+            , COMPLETION_DATE     
+            , FACILITY_PERSON_EMPNO       
+            , FACILITY_DEPARTMENT_CODE 
+            , COMPLETION_ATTCH_GROUP_NUMBER                              
+            , CURRENT_TIMESTAMP                  
+            , UPDATE_USER_ID                    
+            , CURRENT_TIMESTAMP  
+        FROM :I_M_TABLE A
+        WHERE A.TENANT_ID = B.TENANT_ID
+        AND A.COMPANY_CODE = B.COMPANY_CODE
+        AND A.CONST_QUOTATION_NUMBER = B.CONST_QUOTATION_NUMBER
+        AND A.ROW_STATE = 'U')
+        WHERE EXISTS ( SELECT 0
+        FROM :I_M_TABLE A
+        WHERE A.TENANT_ID = B.TENANT_ID
+        AND A.COMPANY_CODE = B.COMPANY_CODE
+        AND A.CONST_QUOTATION_NUMBER = B.CONST_QUOTATION_NUMBER
+        AND A.ROW_STATE = 'U' );
+
+    END IF;
+
+
+    -- 품목정보
+    SELECT COUNT(*) INTO V_D_CREATE_ROW_COUNT 
+    FROM :I_D_TABLE
+    WHERE ROW_STATE = 'C';
+
+    SELECT COUNT(*) INTO V_D_UPDATE_ROW_COUNT 
+    FROM :I_D_TABLE
+    WHERE ROW_STATE = 'U';
+    
+    SELECT COUNT(*) INTO V_D_DELETE_ROW_COUNT 
+    FROM :I_D_TABLE
+    WHERE ROW_STATE = 'D';    
+
+    IF (V_D_DELETE_ROW_COUNT > 0) THEN
+
+        DELETE FROM EP_UC_QUOTATION_DTL B
+        WHERE (B.TENANT_ID, B.COMPANY_CODE, B.CONST_QUOTATION_NUMBER, B.CONST_QUOTATION_ITEM_NUMBER)
+        IN (SELECT A.TENANT_ID, A.COMPANY_CODE, A.CONST_QUOTATION_NUMBER, A.CONST_QUOTATION_ITEM_NUMBER
+        FROM :I_D_TABLE A
+        WHERE ROW_STATE = 'D');
+
+    END IF;
+
+
+    IF (V_D_UPDATE_ROW_COUNT > 0) THEN
+
+        UPDATE EP_UC_QUOTATION_DTL B
+        SET (
+             QUOTATION_QUANTITY          
+            , MATERIAL_NET_PRICE          
+            , MATERIAL_AMOUNT             
+            , LABOR_NET_PRICE             
+            , LABOR_AMOUNT                
+            , SUM_AMOUNT                                          
+            , LOCAL_UPDATE_DTM                  
+            , UPDATE_USER_ID                    
+            , SYSTEM_UPDATE_DTM    
+        ) 
+        = (SELECT 
+             QUOTATION_QUANTITY          
+            , MATERIAL_NET_PRICE          
+            , MATERIAL_AMOUNT             
+            , LABOR_NET_PRICE             
+            , LABOR_AMOUNT                
+            , SUM_AMOUNT                            
+            , CURRENT_TIMESTAMP                  
+            , UPDATE_USER_ID                    
+            , CURRENT_TIMESTAMP  
+            FROM :I_D_TABLE A
+            WHERE A.TENANT_ID = B.TENANT_ID
+            AND A.COMPANY_CODE = B.COMPANY_CODE
+            AND A.CONST_QUOTATION_NUMBER = B.CONST_QUOTATION_NUMBER
+            AND A.CONST_QUOTATION_ITEM_NUMBER = B.CONST_QUOTATION_ITEM_NUMBER
+            AND A.ROW_STATE = 'U')
+        WHERE EXISTS ( SELECT 0
+        FROM :I_D_TABLE A
+        WHERE A.TENANT_ID = B.TENANT_ID
+        AND A.COMPANY_CODE = B.COMPANY_CODE
+        AND A.CONST_QUOTATION_NUMBER = B.CONST_QUOTATION_NUMBER
+        AND A.CONST_QUOTATION_ITEM_NUMBER = B.CONST_QUOTATION_ITEM_NUMBER
+        AND A.ROW_STATE = 'U' );
+
+    END IF;
+
+    IF (V_D_CREATE_ROW_COUNT > 0) THEN
+
+        INSERT INTO EP_UC_QUOTATION_DTL (
+            TENANT_ID
             , COMPANY_CODE
             , CONST_QUOTATION_NUMBER
             , CONST_QUOTATION_ITEM_NUMBER
@@ -83,48 +361,62 @@ BEGIN
             , NET_PRICE_CONTRACT_DEGREE
             , NET_PRICE_CONTRACT_ITEM_NUMBER
             , SUPPLIER_ITEM_CREATE_FLAG
-            , LOCAL_CREATE_DTM
-            , LOCAL_UPDATE_DTM
-            , CREATE_USER_ID
-            , UPDATE_USER_ID
-            , SYSTEM_CREATE_DTM
-            , SYSTEM_UPDATE_DTM)
-        VALUES
-            ( A.TENANT_ID
-            , A.COMPANY_CODE
-            , A.CONST_QUOTATION_NUMBER
-            , EP_CONST_QUOTATION_ITEM_NUMBER_SEQ.NEXTVAL
-            , A.ITEM_SEQUENCE
-            , A.EP_ITEM_CODE
-            , A.ITEM_DESC
-            , A.SPEC_DESC
-            , A.QUOTATION_QUANTITY
-            , A.EXTRA_RATE
-            , A.UNIT
-            , A.CURRENCY_CODE
-            , A.MATERIAL_APPLY_FLAG
-            , A.LABOR_APPLY_FLAG
-            , A.NET_PRICE_CHANGE_ALLOW_FLAG
-            , A.BASE_MATERIAL_NET_PRICE
-            , A.BASE_LABOR_NET_PRICE
-            , A.MATERIAL_NET_PRICE
-            , A.MATERIAL_AMOUNT
-            , A.LABOR_NET_PRICE
-            , A.LABOR_AMOUNT
-            , A.SUM_AMOUNT
-            , A.REMARK
-            , A.NET_PRICE_CONTRACT_DOCUMENT_NO
-            , A.NET_PRICE_CONTRACT_DEGREE
-            , A.NET_PRICE_CONTRACT_ITEM_NUMBER
-            , A.SUPPLIER_ITEM_CREATE_FLAG
-            , CURRENT_TIMESTAMP
-            , CURRENT_TIMESTAMP
-            , 'ADMIN'
-            , 'ADMIN'
-            , CURRENT_TIMESTAMP
-            , CURRENT_TIMESTAMP)
-    ;
+            , LOCAL_CREATE_DTM                  
+            , LOCAL_UPDATE_DTM                  
+            , CREATE_USER_ID                    
+            , UPDATE_USER_ID                    
+            , SYSTEM_CREATE_DTM                 
+            , SYSTEM_UPDATE_DTM    
+        )
+        SELECT 
+            TENANT_ID
+            , COMPANY_CODE
+            , CONST_QUOTATION_NUMBER
+            , CONST_QUOTATION_ITEM_NUMBER
+            , ITEM_SEQUENCE
+            , EP_ITEM_CODE
+            , ITEM_DESC
+            , SPEC_DESC
+            , QUOTATION_QUANTITY
+            , EXTRA_RATE
+            , UNIT
+            , CURRENCY_CODE
+            , MATERIAL_APPLY_FLAG
+            , LABOR_APPLY_FLAG
+            , NET_PRICE_CHANGE_ALLOW_FLAG
+            , BASE_MATERIAL_NET_PRICE
+            , BASE_LABOR_NET_PRICE
+            , MATERIAL_NET_PRICE
+            , MATERIAL_AMOUNT
+            , LABOR_NET_PRICE
+            , LABOR_AMOUNT
+            , SUM_AMOUNT
+            , REMARK
+            , NET_PRICE_CONTRACT_DOCUMENT_NO
+            , NET_PRICE_CONTRACT_DEGREE
+            , NET_PRICE_CONTRACT_ITEM_NUMBER
+            , SUPPLIER_ITEM_CREATE_FLAG  
+            , CURRENT_TIMESTAMP                  
+            , CURRENT_TIMESTAMP                  
+            , CREATE_USER_ID                    
+            , UPDATE_USER_ID                    
+            , CURRENT_TIMESTAMP                 
+            , CURRENT_TIMESTAMP                       
+            FROM :I_D_TABLE        
+            WHERE ROW_STATE = 'C';   
 
-    O_TABLE_MESSAGE =  select 'OK' as returnCode, 'Success Saved!' as returnMessage, '' as savedKey from dummy;
+    END IF;   
 
-END
+    O_M_TABLE = SELECT A.*, '' AS ROW_STATE FROM EP_UC_QUOTATION_LIST_VIEW AS A
+    WHERE TENANT_ID = V_TENANT_ID
+    AND COMPANY_CODE = V_COMPANY_CODE
+    AND CONST_QUOTATION_NUMBER = V_CONST_QUOTATION_NUMBER;
+
+    O_D_TABLE = SELECT A.*, '' AS ROW_STATE FROM EP_UC_QUOTATION_DTL_VIEW AS A
+    WHERE TENANT_ID = V_TENANT_ID
+    AND COMPANY_CODE = V_COMPANY_CODE
+    AND CONST_QUOTATION_NUMBER = V_CONST_QUOTATION_NUMBER
+    AND CONST_QUOTATION_ITEM_NUMBER = V_CONST_QUOTATION_ITEM_NUMBER;
+    
+
+END;

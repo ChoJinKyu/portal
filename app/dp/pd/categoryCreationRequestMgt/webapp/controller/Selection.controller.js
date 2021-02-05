@@ -25,11 +25,11 @@ sap.ui.define([
     "ext/lib/formatter/NumberFormatter",
     "ext/lib/model/TreeListModel",
     "sap/ui/thirdparty/jquery",
-    "sap/m/SegmentedButtonItem"
+    "ext/lib/core/service/ODataV2ServiceProvider",
 ], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, DateFormatter,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast, History,
     ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel, FilterType ,NumberFormatter,
-    TreeListModel, jQuery, SegmentedButtonItem) {
+    TreeListModel, jQuery, ODataV2ServiceProvider) {
     "use strict";
 
     var oTransactionManager;
@@ -59,11 +59,13 @@ sap.ui.define([
             this.loginUserId = "TestUser";
             this.loginUserName = "TestUser";
             this.tenant_id = "L2101";
+            this.language_cd = "KO"
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedModel(), "master");
             this.setModel(new ManagedModel(), "details");
+            this.setModel(new ManagedModel(), "processModel");
 
 			var oViewModel = new JSONModel({
                     showMode: true,                    
@@ -75,10 +77,27 @@ sap.ui.define([
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("master"));
             oTransactionManager.addDataModel(this.getModel("details"));
+            oTransactionManager.addDataModel(this.getModel("processModel"));
 
             this.getRouter().getRoute("selectionPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this.enableMessagePopover();
+            this._setProcessStatus();
+        },
+
+        _setProcessStatus : function(){
+            var aFilters = [
+                new Filter("tenant_id", "EQ", "L1100"),
+                new Filter("group_code", "EQ", "DP_PD_PROGRESS_STATUS"),
+                new Filter("language_cd", "EQ", this.language_cd)
+            ];
+
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/cm.util.CommonService/").read("/Code", {
+                    filters: aFilters,
+                    success: function(oData){
+                    this.getModel("processModel").setData(oData.results);
+                }.bind(this)
+            });
         },
 
         /**
@@ -184,8 +203,6 @@ sap.ui.define([
                 }
             }
            
-            //var requestDesc = this.byId("requestDesc").getValue();
-            //request_desc             : this.htmlEncoding(requestDesc, this.byId("requestDesc").getId()),
             var pdMstVal = {
                 tenant_id                : oMasterData.tenant_id,
                 request_number           : oMasterData.request_number,
@@ -232,7 +249,7 @@ sap.ui.define([
 
             input.inputData.pdDtl = pdDtlVal;
      
-            //if(this.validator.validate(this.byId("midObjectForm")) !== true) return;
+            if(this.validator.validate(this.byId("midObjectForm")) !== true) return;
 
             var url = "srv-api/odata/v4/dp.creationRequestV4Service/PdCreationRequestSaveProc";
 
@@ -253,7 +270,8 @@ sap.ui.define([
                                 if(rst.return_code =="OK"){
                                     sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     if(flag == "D"){
-                                        v_this.onSearch(rst.return_msg );
+                                         sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                        v_this.onPageNavBackButtonPress();
                                     }else if(flag == "R"){
                                         sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         v_this.onPageNavBackButtonPress();
@@ -269,7 +287,9 @@ sap.ui.define([
                                             initialFocus : sap.m.MessageBox.Action.CANCEL,
                                             onClose : function(sButton) {
                                                 if (sButton === MessageBox.Action.OK) {
-                                                    sap.m.MessageToast.show("왕부장님 화면");
+                                                    v_this.onMoveAddCreate();
+                                                } else {
+                                                    v_this.onPageNavBackButtonPress();
                                                 }
                                             }
                                         });
@@ -290,6 +310,13 @@ sap.ui.define([
 				}
             });
             this.validator.clearValueState(this.byId("midObjectForm"));
+        },
+
+        onMoveAddCreate: function (oEvent) {
+            this.getRouter().navTo("addCreatePage", {
+                tenantId: this._sTenantId,
+                requestNumber: this._sRequestNumber
+            }, true);
         },
 
         /**
@@ -431,10 +458,6 @@ sap.ui.define([
 
         },
 
-        htmlEncoding: function (value, sId) {
-            return btoa(unescape(encodeURIComponent(value)))
-        },
-
         _toShowMode: function () {
             var oMasterModel = this.getModel("master");
             var oDetailsModel = this.getModel("details");
@@ -531,8 +554,8 @@ sap.ui.define([
         selectPartCategoryValue: function (oEvent) {
             var row = this.getView().getModel("tree").getObject(oEvent.getParameters().rowContext.sPath);
 
-            this.getView().byId("searchField").setValue(row.category_name);
-            this.getView().byId("similarCategoryCode").setValue(row.category_code);
+            this.byId("searchField").setValue( "[" + row.category_code + " ] " + row.category_name);
+            this.byId("similarCategoryCode").setText( "[" + row.category_code + " ] " + row.category_name);
 
             this.partCategoryPopupClose();
         },

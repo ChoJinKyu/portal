@@ -94,22 +94,14 @@ sap.ui.define([
 
         _initControlData : function(bEnbaled){
             var oModel = this.getModel("mainPageView"),
-            oI18nModel = this.getModel("I18N"),
             oCallByAppModel = this.getModel("callByAppModel"),
             bBizNoCheck = oCallByAppModel.getProperty("/bizNoCheck"),
             bEditable = oCallByAppModel.getProperty("/isEditable"),
             sGubun = oCallByAppModel.getProperty("/gubun"),
             sMode = oCallByAppModel.getProperty("/mode"),
-            sProgress = oCallByAppModel.getProperty("/progress");
+            sProgress = oCallByAppModel.getProperty("/progressCode");
 
-            //var isEditable = (sMode !== "R") && bEdit; //수정이나 생성인 경우만 input visible
-            
-            //title 설정
-            var sTitleMode = oI18nModel.getText("/DETAIL");
-            if(sMode === "C")sTitleMode = oI18nModel.getText("/REGISTER");
-            else if(sMode === "U")sTitleMode = oI18nModel.getText("/EDIT");
-            var sTitle = oI18nModel.getText("/MAKER_MASTER") + " " + sTitleMode;
-            oModel.setProperty("/title", sTitle);
+            oModel.setProperty("/navButtonType", sGubun !== "MA" ? "Back" : "Unstyled");//Transparent , Default
             
             //활성화 설정
             oModel.setProperty("/visible", {
@@ -122,12 +114,12 @@ sap.ui.define([
                 btn_list : sMode === "R",
                 btn_cancel : sMode !== "R", 
                 btn_request : sMode !== "R", 
-                btn_edit : sMode === "R" && sGubun === "MA", // "MR"에서 오는 경우는 edit 기능 없음.
-                section_bizno_chk : (sGubun === "MM" && sMode === "C") || (sGubun === "MR" && sProgress == "REQUEST"),
+                btn_edit : sMode === "R" && sGubun !== "MR", // "MR"에서 오는 경우는 edit 기능 없음.
+                section_bizno_chk : (sGubun === "MM" && sMode === "C") || (sGubun === "MR" && sProgress === "REQUEST"),
                 section_approval_line : sGubun !== "MA" && sMode !== "R",
                 section_change_history : sMode === "R",
                 message_strip_biz_chk : sMode === "C" && bBizNoCheck,
-                message_strip : sMode === "R" && !bEditable
+                message_strip : sMode === "R" && !bEditable && sGubun !== "MR"//"MR"에서 오는 경우는 사용안함.
             });
 
             //if(sMode !== "U"){ //생성이나 상세보기로 넘어왔을때 데이터 모델 초기화를 위한...
@@ -141,6 +133,7 @@ sap.ui.define([
             //}
 
         },
+
 
         _initMasterData : function(){
             var oWriteModel = this.getModel("writeModel");
@@ -209,8 +202,9 @@ sap.ui.define([
             oCallByAppModel.setProperty("/isEditable", sGubun === "MA");
             oCallByAppModel.setProperty("/bizNoCheck", sGubun === "MA"); //타모듈등록 외엔 business no check를 해주어야 한다.
             this.setModel(oCallByAppModel, "callByAppModel");
+            
+            this._initControlData(sGubun === "MA");
 
-            this._initControlData(false);
             if(sMode === "R"){
                 this._CheckTaxIDFunction();
             }
@@ -225,50 +219,57 @@ sap.ui.define([
         onNavigationBackPress: function(e){
 
             //portal에 있는 toolPage 
-            var oToolPage = this.getView().oParent.oParent.oParent.oParent.oParent.oContainer.oParent;;
+            var oToolPage = this.getView().oParent.oParent.oParent.oParent.oParent.oContainer.oParent,
+            oCallByAppModel = this.getModel("callByAppModel"),
+            sGubun = oCallByAppModel.getProperty("/gubun");
 
-            /* 
-            //이동하려는 app의 component name,url
-            if(oMode == "NW"){
-                var sComponent = "sp.sc.scQBMgt",
-                    sUrl = "../sp/sc/scQBMgt/webapp";
-            }else{
-                var sComponent = "sp.sc.scQBCreate",
-                    sUrl = "../sp/sc/scQBCreate/webapp";
-            } */
-
-            var sComponent = "sp.sm.makerMasterList",
-            sUrl = "../sp/sm/makerMasterList/webapp";
-            
-            Component.load({
-                name: sComponent,
-                url: sUrl
-            }).then(function (oComponent) {
-                var oContainer = new ComponentContainer({
-                    name: sComponent,
-                    async: true,
-                    url: sUrl
-                });
-                oToolPage.removeAllMainContents();
-                oToolPage.addMainContent(oContainer);
+            if(sGubun !== "MA"){
+                //이동하려는 app의 component name,url
+                if(sGubun === "MM"){
+                    var sComponent = "sp.sm.makerMasterList",
+                        sUrl = "../sp/sm/makerMasterList/webapp";
+                }else{
+                    var sComponent = "sp.sm.makerRegistrationRequest",
+                        sUrl = "../sp/sm/makerRegistrationRequest/webapp";
+                } 
                 
-            }).catch(function (e) {
-                MessageToast.show("error");
-            });
+                Component.load({
+                    name: sComponent,
+                    url: sUrl
+                }).then(function (oComponent) {
+                    var oContainer = new ComponentContainer({
+                        name: sComponent,
+                        async: true,
+                        url: sUrl
+                    });
+                    oToolPage.removeAllMainContents();
+                    oToolPage.addMainContent(oContainer);
+                    
+                }).catch(function (e) {
+                    MessageToast.show("error");
+                });
+            }
         },
 
+        
         onNavigationCancelPress : function(e){
             var oCallByAppModel = this.getModel("callByAppModel"),
+            sGubun = oCallByAppModel.getProperty("/gubun"),
             sMode = oCallByAppModel.getProperty("/mode");
 
             if(sMode === "U"){
+                
                 oCallByAppModel.setProperty("/mode", "R");
-                oCallByAppModel.setProperty("/isEditable", false);
-                oCallByAppModel.setProperty("/bizNoCheck",false);
+                //oCallByAppModel.setProperty("/isEditable", false);
+                //oCallByAppModel.setProperty("/bizNoCheck",false);
+                this._setTitle("R");
                 this._initControlData(false);
                 this._fnGetMasterData();
             }else{
-                this.onNavigationBackPress();
+                if(sGubun === "MA"){
+                    this._initMasterData();
+                    this._initControlData(true);
+                }else this.onNavigationBackPress();
             }
         },
 
@@ -287,17 +288,35 @@ sap.ui.define([
             var oCallByAppModel = this.getModel("callByAppModel"),
             oViewModel = this.getModel("viewModel"),
             oWriteModel = this.getModel("writeModel"),
+            checkResult = oWriteModel.getProperty("/businessNoCheckList/0"),
+            bSupplierRole = checkResult.supplier_role === "Y",
+            bMakerRole = checkResult.maker_role === "Y",
+            sProgress = oCallByAppModel.getProperty("/progressCode"),
+            sGubun = oCallByAppModel.getProperty("/gubun"),
+            sMode = oCallByAppModel.getProperty("/mode"),
             that = this;
+
+            var sServiceName = "/MakerView";
+            var sFilterName = "maker_code";
+            
+            if(bSupplierRole && !bMakerRole){
+                sServiceName = "/supplierWithoutOrgView"; //tenant_id, tax_id
+                sFilterName = "supplier_code";
+            }
+            if(!bSupplierRole && !bMakerRole){
+                sServiceName = "/MakerRegistrationRequestView"; //if(sGubun === "MR" && !bSupplierRole && !bMakerRole && sProgress === "REQUEST")s
+            }
 
             var aFilters = [
                 new Filter("tenant_id"    , FilterOperator.EQ, oCallByAppModel.getProperty("/tenantId")),
                 new Filter("maker_code"   , FilterOperator.EQ, oCallByAppModel.getProperty("/makerCode"))
-            ];           
+            ];   
+                  
             
             var sExpand  = "dtls,tplm";
 
             var oServiceModel = this.getModel();
-                oServiceModel.read("/MakerView",{
+                oServiceModel.read(sServiceName,{
                     filters : aFilters,
                     //urlParameters : { "$expand" : sExpand },                    
                     success : function(data){
@@ -325,6 +344,17 @@ sap.ui.define([
 
         },
 
+
+        _setTitle : function(sMode){
+            var sTitleMode = this.getModel("I18N").getText("/DETAIL");
+            if(sMode === "U")sTitleMode = this.getModel("I18N").getText("/EDIT");
+            if(sMode === "C")sTitleMode = this.getModel("I18N").getText("/REGISTER");
+            var sTitle = this.getModel("I18N").getText("/MAKER_MASTER") + " " + sTitleMode;
+
+            this.byId("mainPage").setTitle(sTitle);
+        },
+
+
         _setVisiableVatNumber : function(sEuFlag){
             
             var oMainPageModel = this.getModel("mainPageView");
@@ -350,7 +380,7 @@ sap.ui.define([
             var bMakerRole = checkResult.maker_role === "Y";
             var sGubun = oCallByAppModel.getProperty("/gubun");
             var sMode = oCallByAppModel.getProperty("/mode");
-            var sProgress = oCallByAppModel.getProperty("/progress");
+            var sProgress = oCallByAppModel.getProperty("/progressCode");
             var sMessageStripType ="Success";
 
             if(sMode === "C"){
@@ -367,22 +397,25 @@ sap.ui.define([
                     oWriteModel.setProperty("/generalInfo/tax_id", oCallByAppModel.getProperty("/taxId"));
                     oViewModel.setProperty("/generalInfo" , oWriteModel.getProperty("/generalInfo"));
                 }else{
-                    oCallByAppModel.setProperty("/makerCode", checkResult.business_partner_code);
                     this._fnGetMasterData();
                 }
 
             }else{
 
-                if(sGubun == "MM"){
-                    //수정은 무조건 bMakerRole == true 임. 고려안해도 된다. 그래도 테스트는 해보자..
+                if(sGubun === "MM"){
+                    //수정은 무조건 bMakerRole === true 임. 고려안해도 된다. 그래도 테스트는 해보자..
                     var bFlag = !bSupplierRole && bMakerRole;
                     oCallByAppModel.setProperty("/isEditable", bFlag);
                     this._initControlData(bFlag);
-                }else if(sGubun == "MR"){
+                }else if(sGubun === "MR"){
+                    //maker, supplier role 모두 없는경우 등록진행가능.
                     var bFlag = !bSupplierRole && !bMakerRole && sProgress === "REQUEST";
 
                     if(sProgress === "REQUEST"){
-                        oCallByAppModel.setProperty("/mode", "U");
+                        if(!bSupplierRole && !bMakerRole)oCallByAppModel.setProperty("/mode", "U");  
+                        else sMessageStripType = "Warning"; //둘중 하나만 N일때는...?? warning가 맞나>
+
+                        oWriteModel.setProperty("/businessNoCheckList/0/messageStripType", sMessageStripType);                                           
                     }
 
                     oCallByAppModel.setProperty("/isEditable", bFlag);
@@ -414,9 +447,16 @@ sap.ui.define([
 				datatype: "json",
 				contentType: "application/json",
 				success: function(data){
-                    oWriteModel.setProperty("/businessNoCheckList", data.value);
-                    oCallByAppModel.setProperty("/bizNoCheck", true);
-                    that._controlViewAfterCheckTaxId();
+                    var resultData = data.value;
+                    if(resultData.length > 0){
+                        oWriteModel.setProperty("/businessNoCheckList", resultData);
+                        oCallByAppModel.setProperty("/makerCode", resultData[0].business_partner_code);
+                        oCallByAppModel.setProperty("/bizNoCheck", true);
+                        that._controlViewAfterCheckTaxId();
+                    }else{
+                        alert("_CheckTaxIDFunction return data: " +resultData);
+                    }
+                    
 				},
 				error: function(req){
                     //console.log(req);
@@ -454,6 +494,7 @@ sap.ui.define([
             oCallByAppModel.setProperty("/mode", "U");
             oCallByAppModel.setProperty("/isEditable", true);
             this._initControlData(true);
+            this._setTitle("U");
 
         },
 

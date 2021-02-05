@@ -303,12 +303,12 @@
                     </t:Column>
                     <t:Column label="{I18N>/STATUS}" width="5rem">    
                         <t:template>
-                            <Text text="{list>confirmed_status_name}" wrapping="false" />
+                            <lib-m:ColorfulText id="testColor" color="red" text="{list>confirmed_status_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <t:Column label="{I18N>/SPMD_CHAR_001}" id="attrItem1" width="6.5em" visible="false" >    
                         <t:template>
-                            <Text text="{list>attrItemName1}" wrapping="false" />
+                            <lib-m:ColorfulText id="testColor2" text="{list>attrItemName1}" wrapping="false" />
                             <!-- <Text text="{list>spmd_attr_info_001}" wrapping="false" /> -->
                         </t:template>
                     </t:Column>

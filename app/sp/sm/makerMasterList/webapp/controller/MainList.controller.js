@@ -258,9 +258,11 @@ sap.ui.define([
             var sPath = oEvent.getSource().getBindingContextPath(),//getBindingContext().getPath(), oEvent.getSource().getBindingContext("list").getPath()
                 oRecord = this.getModel().getProperty(sPath);//this.getModel("list").getProperty(sPath);
 
+            if(oRecord.tax_id){
                 var inputModel = new JSONModel();
-                inputModel.setData({gubun : "MM", mode : "R", tenantId : oRecord.tenant_id, taxId : oRecord.tax_id, makerCode : oRecord.maker_code});
+                inputModel.setData({gubun : "MM", mode : "R", tenantId : oRecord.tenant_id, taxId : oRecord.tax_id, makerCode : ""}); //oRecord.maker_code
                 this._fnMoveMakerMasterCreate(inputModel);
+            }
         },
 
         onPressBtnCreate : function(){

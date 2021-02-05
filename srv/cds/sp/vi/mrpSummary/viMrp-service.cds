@@ -1,22 +1,22 @@
 using {sp.Vi_Mrp_Summary as MrpSummary} from '../../../../../db/cds/sp/vi/SP_VI_MRP_SUMMARY-model.cds';
-using {dp.Mm_Material_Mst as materialMst} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_MST-model';
-using {dp.Mm_Material_Org as materialOrg} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_ORG-model';
-using {dp.Mm_Material_Class as materialCalss} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_CLASS-model';
-using {cm.Code_Dtl as codeDtl} from '../../../../../db/cds/cm/CM_CODE_DTL-model';
-/*using {dp.Mm_Mtl_Commodity_View as materialCmdt} from '../../../../../db/cds/dp/mm/DP_MM_MTL_COMMODITY_VIEW-model'; */
-
+using {dp.Mm_Material_Mst as MaterialMst} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_MST-model';
+using {dp.Mm_Material_Org as OrgMtl} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_ORG-model';
+using {dp.Mm_Material_Class_View as MaterialClass} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_CLASS_VIEW-model';
+using {dp.Mm_Material_Group_View as MaterialGroup} from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_GROUP_VIEW-model';
+using {cm.Code_View as CodeDtl} from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
 
 namespace sp;
-
-@path : '/sp.MrpSummaryService'
-@readonly
+@path : '/sp.MrpService'
 service MrpService {
+    
+    @readonly
     view MrpView as
         select
             key mrp.tenant_id,
             key mrp.plant_code,
             key mrp.material_code,
-                mmm.material_type_code,
+                mmm.material_group_code,
+                mmg.material_group_name,                
                 mmo.user_item_type_code as uit : String(10),
                 mmm.material_class_code,
                 mmc.material_class_name,
@@ -35,29 +35,37 @@ service MrpService {
                 mrp.mm_12_req_qty,
                 mmm.material_desc,
                 mmm.base_uom_code       as uom : String(3),
-                mmm.material_spec
+                mmm.material_spec,
+                mmm.material_type_code
         from MrpSummary mrp
-        join materialMst mmm
+        join MaterialMst mmm
             on(
                 mrp.tenant_id = mmm.tenant_id
                 and mrp.material_code = mmm.material_code
             )
-        join materialOrg mmo
+        join OrgMtl mmo
             on(
                 mrp.tenant_id = mmo.tenant_id
                 and mrp.plant_code = mmo.org_code
                 and mrp.material_code = mmo.material_code
             )
-        left outer join materialCalss mmc
+        left outer join MaterialClass mmc
             on(
                 mmm.tenant_id = mmc.tenant_id
                 and mmm.material_class_code = mmc.material_class_code
+                and mmc.language_code = 'KO'
             )
-        left outer join codeDtl cd
+        left outer join CodeDtl cd
             on(
                 mmm.tenant_id = cd.tenant_id
                 and mmm.material_type_code = cd.code
                 and cd.group_code = 'MATERIAL_TYPE_CODE'
+                and cd.language_cd = 'KO'
             )
-    };
-
+        left outer join MaterialGroup mmg
+            on(
+                mmm.tenant_id = mmg.tenant_id
+                and mmm.material_group_code = mmg.material_group_code
+                and mmg.language_code = 'KO'
+            )
+};
