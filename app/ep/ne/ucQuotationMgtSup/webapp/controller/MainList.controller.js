@@ -157,24 +157,15 @@ sap.ui.define([
         /* =========================================================== */
 
 		/**
-		 * When it routed to this page from the other page.
-		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
-		 * @private
-		 */
-        // _onRoutedThisPage: function () {
-        //     //this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
-        //     this.byId("pageSearchButton").firePress();
-        // },
-
-		/**
 		 * Internal helper method to apply both filter and search state together on the list binding
 		 * @param {sap.ui.model.Filter[]} aSearchFilters An array of filters for the search
 		 * @private
 		 */
         _applySearch: function (aSearchFilters) {
-            var oView = this.getView();
-            //var oListModel = this.getModel("listModel");
-            var oModel = this.getModel();
+            var oView = this.getView(),
+                oModel = this.getModel(),
+                oViewModel = this.getModel("viewModel");
+
             oView.setBusy(true);
 
             // Master 조회
@@ -185,7 +176,9 @@ sap.ui.define([
                 ],
                 success: function (oData) {
                     console.log("oData====", oData);
-                    oView.getModel("listModel").setData(oData.results);
+                    //oViewModel.getModel("listModel").setData(oData.results);
+
+                    oViewModel.setProperty("/list", oData.results);
                     oView.setBusy(false);
                 }
             });

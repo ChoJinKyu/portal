@@ -112,7 +112,7 @@
             <t:Table id="mainTable"
             selectionMode="None"
             
-            rows="{listModel>/}"
+            rows="{viewModel>/list}"
             cellClick=".onCellClickPress"
             rowSelectionChange=".onCheck"
             visibleRowCountMode="Auto"
@@ -120,7 +120,7 @@
             columnResize="onColumnResize">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
-                <Title text="공사물량현황 {= ${listModel>/}.length > 0 ? '(' + ${listModel>/}.length + ')' : ''}" level="H2"/>
+                <Title text="공사물량현황 {= ${viewModel>/list}.length > 0 ? '(' + ${viewModel>/list}.length + ')' : ''}" level="H2"/>
                 <ToolbarSpacer/>
                 
                 <ToolbarSeparator/>
@@ -137,20 +137,20 @@
                 <t:Column id="mainConstQuotationNumber" width="12rem">
                 <Label text="견적서번호" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{listModel>const_quotation_number}"/>
+                    <Text text="{viewModel>const_quotation_number}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainConstName" width="35rem">
                 <Label text="공사명" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{listModel>const_name}"/>
+                    <Text text="{viewModel>const_name}"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="mainConstStartDate" width="10rem" hAlign="Center">
                 <Label text="공사시작일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
-                                path: 'listModel>const_start_date',
+                                path: 'viewModel>const_start_date',
                                 formatter: '.dateFormatter.toDateString'
                             }"/>
                 </t:template>
@@ -159,7 +159,7 @@
                 <Label text="공사종료일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
-                                path: 'listModel>const_end_date',
+                                path: 'viewModel>const_end_date',
                                 formatter: '.dateFormatter.toUTCDateString'
                             }"/>
                 </t:template>
@@ -167,7 +167,7 @@
                 <t:Column id="mainQuotationStatusCode" width="12rem">
                 <Label text="진행상태" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{listModel>quotation_status_name}"/>
+                    <Text text="{viewModel>quotation_status_name}"/>
                 </t:template>
                 </t:Column>                                                                                                                     
             </t:columns>
