@@ -154,11 +154,10 @@
                     <Text text="{list>sequence}"/>
                 </t:template>
                 </t:Column>  
-                <t:Column id="active_flag" hAlign="Center">
+                <t:Column id="active_flag_val" hAlign="Center">
                 <Label text="{I18N>/STATUS}" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>active_flag}"/>
-                    <Text text="{= !!${list>active_flag} ? 'Active' : 'Inactive'}" wrapping="false" />
+                    <Text text="{list>active_flag_val}"/>                    
                 </t:template>
                 </t:Column>                
                 <t:Column id="local_update_dtm" hAlign="Center">
