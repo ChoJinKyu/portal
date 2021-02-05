@@ -97,17 +97,30 @@ left outer join uom.Mm_Unit_Of_Measure muom
             on muom.tenant_id = ppl.tenant_id
            and muom.uom_code = ppl.uom_code; 
 
-    view mcstProjectPartMapDtlView as
-        select key pmd.tenant_id
-             , key pmd.mapping_id
-             , key pmd.material_code
+    view mcstProjectPartMapMstView as
+        select key pmm.tenant_id
+             , key pmm.mapping_id
+             , DP_TC_GET_USER_INFO_FUNC (pmm.tenant_id
+                                        ,pmm.creator_empno
+                                        ,'N'
+                                        ) AS creator_person_info: String(100)     /*주관담당자이름*/    
+             , pmm.department_type_code
+             , pmm.creator_empno
+             , pmm.eng_change_number
+             , pmm.change_reason
+             , pmd.material_code             
              , mdl.material_desc
              , pmd.change_info_code
-             , pmd.change_reason
-          from mcstPartMapDtl.Tc_Mcst_Project_Part_Map_Dtl pmd
+             , pmd.change_reason AS remark: String(1000)
+          from mcstPartMapMst.Tc_Mcst_Project_Part_Map_Mst pmm
+     left join mcstPartMapDtl.Tc_Mcst_Project_Part_Map_Dtl pmd
+            on pmd.tenant_id = pmm.tenant_id
+           and pmd.mapping_id = pmm.mapping_id
 left outer join mtlDesc.Mm_Material_Desc_Lng mdl
             on mdl.tenant_id = pmd.tenant_id
-           and mdl.material_code = pmd.material_code;                     
+           and mdl.material_code = pmd.material_code
+           and mdl.language_code = 'KO';
+
 
     @readonly
     entity MM_UOM                as
