@@ -54,7 +54,7 @@ service BasePriceAprlService {
                 sup.org_type_code,
                 sup.org_code,
                 sup.chain_code,
-                sup.approval_title,
+                upper(sup.approval_title) as approval_title : String(240),
                 sup.approval_contents,
                 sup.approve_status_code,
                 cd02.code_name as approve_status_code_nm  : String(240),
