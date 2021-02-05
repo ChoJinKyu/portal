@@ -21,6 +21,7 @@ entity Sm_Maker_Reg_Req_Cal_View {
         maker_english_name                : String(240) @title : '제조사영문명';
         country_code                      : String(2)   @title : '국가코드';
         country_name                      : String(30)  @title : '국가명';
+        eu_flag                           : String(1)   @title : '유럽국가여부';
         vat_number                        : String(30)  @title : 'VAT등록번호';
         zip_code                          : String(20)  @title : '우편번호';
         maker_local_city                  : String(240) @title : '로컬주소(도시)';
