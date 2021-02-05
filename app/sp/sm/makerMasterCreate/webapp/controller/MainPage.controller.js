@@ -316,11 +316,12 @@ sap.ui.define([
             sGubun = oCallByAppModel.getProperty("/gubun"),
             sMode = oCallByAppModel.getProperty("/mode");
 
-            var sMakerRequestTypeCode = (sGubun !== "MR" && sMode === "C") ? "NEW" : "CHANGE";
+            var sMakerRequestTypeCode = (sGubun === "MM" && sMode !== "C") ? "CHANGE" : "NEW";
             //sMakerProgressStatusCode = (sGubun === "MR" && sProgress === "REQUEST") ? "REQUEST" : "APPROVAL";
             var sRequestorEmpno = "3167";//oUserSessionModel.gtProperty("/EMPLOYEE_NUMBER");
 
-            if(sProgress === "REQUEST" && sGubun !== "MR")sMakerProgressStatusCode = "APPROVAL";
+            if(sMakerProgressStatusCode === "REQUEST" && sMode !== "MA")sMakerProgressStatusCode = "APPROVAL";
+
 
             var inputInfo = {
                 InputData : { 
@@ -404,7 +405,7 @@ sap.ui.define([
 
                 var oRequestData = this._fnSetRequestData(sAction);
                 MessageBox.confirm(sConfirmMsg, {
-                    title : "Create",
+                    title : sTitle,
                     initialFocus : sap.m.MessageBox.Action.CANCEL,
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
@@ -437,6 +438,7 @@ sap.ui.define([
         _fnGetMasterData : function(){
 
             var oCallByAppModel = this.getModel("callByAppModel"),
+            oModel = this.getModel("mainPageView"),
             oViewModel = this.getModel("viewModel"),
             oWriteModel = this.getModel("writeModel"),
             checkResult = oWriteModel.getProperty("/businessNoCheckList/0"),
@@ -512,6 +514,10 @@ sap.ui.define([
 
                         oViewModel.setProperty("/generalInfo" , oResultData);   
                         oWriteModel.setProperty("/generalInfo" , oResultData); 
+
+
+                        //체크가 화면에서 가능한 경우는 마스터 조회후 체크 초기화
+                        if(oModel.getProperty("/visible/section_bizno_chk") && oModel.getProperty("/enabled/btn_check"))
                         oCallByAppModel.setProperty("/bizNoCheck", false);
                     
                         that._setVisiableVatNumber(oResultData.eu_flag);
