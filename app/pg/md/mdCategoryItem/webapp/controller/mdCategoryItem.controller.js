@@ -253,7 +253,7 @@ sap.ui.define([
             var aFilters = [];
             var aSorter = [];
             // aFilters.push(new Filter("spmd_category_code", FilterOperator.EQ, this.aSearchCategoryCd));
-            debugger;
+            
             aSorter.push(new Sorter("spmd_character_sort_seq", false));
             var tenant_combo = this.getView().byId("searchTenantCombo").getSelectedKey(),   
                 bizunit_combo = this.getView().byId("searchChain").getSelectedKey(),       

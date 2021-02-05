@@ -232,6 +232,7 @@ sap.ui.define([
 
         setItemList: function (oData) {
             var dataArr = oData.value;
+            // this.byId("testColor").setFontColor("blue");
 
             //treeList-item visible
             if(oData.value.length>0){
@@ -267,12 +268,14 @@ sap.ui.define([
                             var item = JSON.parse(itemArr);
                             var index = "attrItemName"+j;
                             dataArr[i][index]= item.itemName; 
+                            this.byId("testColor2").setFontColor("blue");
                             
 
                         }
                         
                     }
                 }
+                
             }
 
             

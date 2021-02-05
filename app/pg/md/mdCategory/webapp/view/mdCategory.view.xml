@@ -54,7 +54,7 @@
                     </VBox>
                     <VBox>   
                         <Label text="{I18N>/BUSINESS_UNIT}" labelFor="searchChain" required="true"></Label>
-                        <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" >
+                        <ComboBox id="searchChain" width="100%" selectedKey="" >
                         <!-- <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" items="{
                                 path: 'org>/Org_Unit',
                                 filters: [
