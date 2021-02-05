@@ -942,5 +942,14 @@ sap.ui.define([
             
             this.getRouter().navTo("basePriceList");
         }
+
+
+        , onOnlyNumber : function (val){
+            var regex= /^[0-9]/g;
+            if( !regex.test(val) ){
+                MessageBox.show("숫자만입력가능합니다.");
+                return;
+            }
+        }
   });
 });

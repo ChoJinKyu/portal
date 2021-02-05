@@ -948,18 +948,15 @@ sap.ui.define([
             this.getRouter().navTo("basePriceList");
         }
 
-        , fPointCheck : function (val){  //f 는 객체, val은 변수값, point는 소수점 자리수
-            var t = val;
-            var point = 4;
-            if(t.indexOf('.') != -1){
-                var t_length = t.substring(t.indexOf('.') + 1);
-                if(t_length.length > 5){
-                    alert('소수 첫째자리까지만 입력됩니다.');
-                    return false;
-                }
-                return true;
+        /**
+         *  숫자만 입력 
+         */
+        , onOnlyNumber : function (val){
+            var regex= /^[0-9]/g;
+            if( !regex.test(val) ){
+                MessageBox.show("숫자만 입력 가능합니다.");
+                return;
             }
         }
-
   });
 });
