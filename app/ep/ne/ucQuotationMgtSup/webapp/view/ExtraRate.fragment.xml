@@ -64,25 +64,25 @@
                             </t:extension>
     
                             <t:columns>
-                                <t:Column id="popEpItemCode" width="8rem" hAlign="Center">
+                                <t:Column id="popExtraClassName" width="8rem" hAlign="Center">
                                 <Label text="할증구분" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{popExtraRate>extra_class_name}"/>
                                 </t:template>
                                 </t:Column>
-                                <t:Column id="popItemDesc" width="15rem">
+                                <t:Column id="popExtraName" width="15rem">
                                 <Label text="할증명" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{popExtraRate>extra_name}"/>
                                 </t:template>
                                 </t:Column>
-                                <t:Column id="popSpecDesc" width="15rem">
+                                <t:Column id="popApplyExtraRate" width="15rem">
                                 <Label text="할증요율-적용기분" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{popExtraRate>apply_extra_rate}" />
                                 </t:template>
                                 </t:Column> 
-                                <t:Column id="popUnit" width="10rem">
+                                <t:Column id="popApplyExtraDesc" width="10rem">
                                 <Label text="할증비고" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{popExtraRate>apply_extra_desc}"/>

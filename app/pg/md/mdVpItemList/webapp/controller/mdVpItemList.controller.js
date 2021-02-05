@@ -181,7 +181,6 @@ sap.ui.define([
             var tenant_combo = this.getView().byId("searchTenantCombo").getSelectedKey(),
                 sChain = this.getView().byId("searchChain").getSelectedKey(),
                 sVpCode = this.getView().byId("search_Vp_Code").getValue(),
-                sDeptCode = this.getView().byId("search_Dept").getSelectedKey(),
 			    sStatusflag = this.getView().byId("search_statusflag").getSelectedKey();
             var aSearchFilters = [];
 
@@ -204,11 +203,7 @@ sap.ui.define([
                         +"?$filter=tenant_id eq '"+tenant_combo+"' and "
                         +"org_code eq '"+ sChain +"'";//+"' and "
                         //+"vendor_pool_code eq '"+ sVpCode +"'"; //path 변경해야함
-
-                        
-			// if (sDeptCode && sDeptCode.length > 0) {
-            //     url = url +" and repr_department_code eq '"+ sDeptCode +"'"; 
-            // }            
+         
 			// if (sStatusflag && sStatusflag.length > 0) {
             //     url = url +" and confirmed_status_code eq '"+ sStatusflag +"'"; 
             // }
@@ -232,7 +227,6 @@ sap.ui.define([
 
         setItemList: function (oData) {
             var dataArr = oData.value;
-            // this.byId("testColor").setFontColor("blue");
 
             //treeList-item visible
             if(oData.value.length>0){
@@ -267,10 +261,9 @@ sap.ui.define([
                             }
                             var item = JSON.parse(itemArr);
                             var index = "attrItemName"+j;
-                            dataArr[i][index]= item.itemName; 
-                            this.byId("testColor2").setFontColor("blue");
-                            
-
+                            var colorIndex = "attrItemColor"+j;
+                            dataArr[i][index] = item.itemName;
+                            dataArr[i][colorIndex] = item.fontColor;
                         }
                         
                     }
@@ -307,6 +300,67 @@ sap.ui.define([
 
         onMainTablecollapseAll: function(e){
             this.getView().byId("treeTable").collapseAll();
+        },
+
+        onMainTableConfirmButtonPress: function(){
+
+            var oTable = this.byId("treeTable"),
+                oModel = this.getModel("list"),
+                that = this;
+                
+            var selectedItems = oTable.getSelectedIndices();
+            if(selectedItems.length<1){
+                MessageToast.show("한개이상 선택해주세요.");
+                return;
+            }else{
+                var param = {};
+                var items = [];
+                for(var i = 0 ; i < selectedItems.length; i++){
+                    debugger;
+                    var oContext = oTable.getContextByIndex(selectedItems[i]);
+                    var sPath = oContext.getPath();
+                    var oData = oTable.getBinding().getModel().getProperty(sPath);
+                    if(oData.drill_state != "leaf"){
+                        MessageToast.show("leaf node를 선택해주세요.");
+                        return;
+                    }
+                    if(oData.confirmed_status_code != "200"){
+                        MessageToast.show("임시저장 상태만 선택해주세요.");
+                        return;
+                    }
+                    
+                    items.push({
+                        tenant_id: oData.tenant_id,
+                        company_code: oData.company_code,
+                        org_type_code: oData.org_type_code,
+                        org_code: oData.org_code,
+                        vendor_pool_code: oData.vendor_pool_code
+                    });
+
+                }            
+
+                var url = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingStatusMultiProc";
+                param.items = items;
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    data : JSON.stringify(param),
+                    contentType: "application/json",
+                    success: function(data){
+                        if(data.rsltCd=="000"){
+                            MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                            that.onSearch();
+                        }else{
+                            alert("["+data.rsltCd+"] ["+data.rsltMesg+"]");
+                        }
+                        
+                    },
+                    error: function(req){
+					    alert("Ajax Error => "+req.status);
+                    }
+                });
+
+            }
         },
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////

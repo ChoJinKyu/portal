@@ -1,5 +1,6 @@
 sap.ui.define([
     "./App.controller",
+    "ext/lib/util/SppUserSessionUtil",
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -11,7 +12,7 @@ sap.ui.define([
     "sap/ui/core/ComponentContainer",
     "ext/lib/formatter/DateFormatter",
     "ext/lib/formatter/NumberFormatter",
-    "cm/util/control/ui/EmployeeDialog",
+    "ext/cm/util/control/ui/EmployeeDialog",
     "dp/util/control/ui/MaterialMasterDialog",
     "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
@@ -19,6 +20,7 @@ sap.ui.define([
 ],
     function (
         BaseController, 
+        SppUserSessionUtil,
         JSONModel, 
         Filter, 
         FilterOperator, 
@@ -46,7 +48,7 @@ sap.ui.define([
                 that = this;
                 this.setModel(new ManagedListModel(), "list");
                 this.setModel(new JSONModel(), "detailModel");
-                this.getRouter().getRoute("NetPriceMgtList").attachPatternMatched(this._onRoutedThisPage, this);
+                //this.getRouter().getRoute("NetPriceMgtList").attachPatternMatched(this._onRoutedThisPage, this);
             },
 
             _onRoutedThisPage: function() {
@@ -155,14 +157,16 @@ sap.ui.define([
 
                 if (oBindingContext) {
                     this.getRouter().navTo("NetPriceMgtDetail", {
-                        "pMode" : "R"
+                        "pMode" : "R",
+                        "pAppNum":  oSelectedData.approval_number
                     });
                 }
             },
             
             fnCreate: function() {
                 this.getRouter().navTo("NetPriceMgtDetail", {
-                    "pMode" : "C"
+                    "pMode" : "C",
+                    "pAppNum" : "0"
                 });
             },
 

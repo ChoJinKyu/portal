@@ -5,6 +5,7 @@ SELECT pat.tenant_id,
       pat.description,
       pat.sequence,
       pat.active_flag,
+      case when pat.active_flag = True then 'Active' else 'Inactive' end active_flag_val,
       pat.update_user_id,
       pat.local_update_dtm
        FROM dp_pd_part_base_activity pat

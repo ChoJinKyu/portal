@@ -13,6 +13,9 @@
   <DataSource id="CM_HR_EMPLOYEE">
     <resourceUri>CM_HR_EMPLOYEE</resourceUri>
   </DataSource>
+  <DataSource id="SP_SM_COUNTRY_MST">
+    <resourceUri>SP_SM_COUNTRY_MST</resourceUri>
+  </DataSource>
 </dataSources>
 <calculationViews>
   <calculationView xsi:type="Calculation:ProjectionView" id="Maker_Request">
@@ -295,192 +298,317 @@
     <joinAttribute name="TENANT_ID"/>
     <joinAttribute name="REQUESTOR_DEPARTMENT_CODE"/>
   </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Supplier_Country_Mst">
+    <viewAttributes>
+      <viewAttribute id="TENANT_ID"/>
+      <viewAttribute id="COUNTRY_CODE"/>
+      <viewAttribute id="COUNTRY_ISO_CODE"/>
+      <viewAttribute id="COUNTRY_NAME"/>
+      <viewAttribute id="REGION_NAME"/>
+      <viewAttribute id="ISO_FLAG"/>
+      <viewAttribute id="EU_FLAG"/>
+      <viewAttribute id="ENABLE_FLAG"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="SP_SM_COUNTRY_MST"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="TENANT_ID"/>
+      <viewAttribute id="MAKER_REQUEST_SEQUENCE"/>
+      <viewAttribute id="MAKER_REQUEST_TYPE_CODE"/>
+      <viewAttribute id="MAKER_PROGRESS_STATUS_CODE"/>
+      <viewAttribute id="REQUESTOR_EMPNO"/>
+      <viewAttribute id="REQUESTOR_LOCAL_NAME"/>
+      <viewAttribute id="REQUESTOR_KOREAN_NAME"/>
+      <viewAttribute id="REQUESTOR_ENGLISH_NAME"/>
+      <viewAttribute id="REQUESTOR_DEPARTMENT_CODE"/>
+      <viewAttribute id="REQUESTOR_DEPARTMENT_LOCAL_NAME"/>
+      <viewAttribute id="REQUESTOR_DEPARTMENT_KOREAN_NAME"/>
+      <viewAttribute id="REQUESTOR_DEPARTMENT_ENGLISH_NAME"/>
+      <viewAttribute id="TAX_ID"/>
+      <viewAttribute id="MAKER_CODE"/>
+      <viewAttribute id="MAKER_LOCAL_NAME"/>
+      <viewAttribute id="MAKER_ENGLISH_NAME"/>
+      <viewAttribute id="COUNTRY_CODE"/>
+      <viewAttribute id="COUNTRY_NAME"/>
+      <viewAttribute id="EU_FLAG"/>
+      <viewAttribute id="VAT_NUMBER"/>
+      <viewAttribute id="ZIP_CODE"/>
+      <viewAttribute id="MAKER_LOCAL_CITY"/>
+      <viewAttribute id="MAKER_LOCAL_REGION"/>
+      <viewAttribute id="MAKER_LOCAL_ADDRESS"/>
+      <viewAttribute id="MAKER_LOCAL_FULL_ADDRESS"/>
+      <viewAttribute id="MAKER_ENGLISH_CITY"/>
+      <viewAttribute id="MAKER_ENGLISH_REGION"/>
+      <viewAttribute id="MAKER_ENGLISH_ADDRESS"/>
+      <viewAttribute id="MAKER_ENGLISH_FULL_ADDRESS"/>
+      <viewAttribute id="AFFILIATE_CODE"/>
+      <viewAttribute id="AFFILIATE_NAME"/>
+      <viewAttribute id="COMPANY_CLASS_CODE"/>
+      <viewAttribute id="COMPANY_CLASS_NAME"/>
+      <viewAttribute id="REPRESENT_NAME"/>
+      <viewAttribute id="COMPANY_TEL_NUMBER"/>
+      <viewAttribute id="COMPANY_EMAIL_ADDRESS"/>
+      <viewAttribute id="MAKER_STATUS_CODE"/>
+      <viewAttribute id="MAKER_STATUS_NAME"/>
+      <viewAttribute id="BIZ_CERTI_ATTCH_NUMBER"/>
+      <viewAttribute id="ATTCH_NUMBER_2"/>
+      <viewAttribute id="ATTCH_NUMBER_3"/>
+      <viewAttribute id="LOCAL_CREATE_DTM"/>
+      <viewAttribute id="LOCAL_UPDATE_DTM"/>
+      <viewAttribute id="CREATE_USER_ID"/>
+      <viewAttribute id="UPDATE_USER_ID"/>
+      <viewAttribute id="SYSTEM_CREATE_DTM"/>
+      <viewAttribute id="SYSTEM_UPDATE_DTM"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TENANT_ID" source="TENANT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_REQUEST_SEQUENCE" source="MAKER_REQUEST_SEQUENCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_REQUEST_TYPE_CODE" source="MAKER_REQUEST_TYPE_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_PROGRESS_STATUS_CODE" source="MAKER_PROGRESS_STATUS_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REQUESTOR_EMPNO" source="REQUESTOR_EMPNO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REQUESTOR_DEPARTMENT_CODE" source="REQUESTOR_DEPARTMENT_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REQUESTOR_DEPARTMENT_LOCAL_NAME" source="REQUESTOR_DEPARTMENT_LOCAL_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REQUESTOR_DEPARTMENT_KOREAN_NAME" source="REQUESTOR_DEPARTMENT_KOREAN_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REQUESTOR_DEPARTMENT_ENGLISH_NAME" source="REQUESTOR_DEPARTMENT_ENGLISH_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TAX_ID" source="TAX_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_CODE" source="SUPPLIER_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_LOCAL_NAME" source="SUPPLIER_LOCAL_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_ENGLISH_NAME" source="SUPPLIER_ENGLISH_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNTRY_CODE" source="COUNTRY_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNTRY_NAME" source="COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VAT_NUMBER" source="VAT_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ZIP_CODE" source="ZIP_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_LOCAL_CITY" source="LOCAL_ADDRESS_1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_LOCAL_REGION" source="LOCAL_ADDRESS_2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_LOCAL_ADDRESS" source="LOCAL_ADDRESS_3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_LOCAL_FULL_ADDRESS" source="LOCAL_FULL_ADDRESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_ENGLISH_CITY" source="ENGLISH_ADDRESS_1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_ENGLISH_REGION" source="ENGLISH_ADDRESS_2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_ENGLISH_ADDRESS" source="ENGLISH_ADDRESS_3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_ENGLISH_FULL_ADDRESS" source="ENGLISH_FULL_ADDRESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AFFILIATE_CODE" source="AFFILIATE_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AFFILIATE_NAME" source="AFFILIATE_CODE_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CLASS_CODE" source="COMPANY_CLASS_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CLASS_NAME" source="COMPANY_CLASS_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REPRESENT_NAME" source="REPRE_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_TEL_NUMBER" source="TEL_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_EMAIL_ADDRESS" source="EMAIL_ADDRESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_STATUS_CODE" source="SUPPLIER_STATUS_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAKER_STATUS_NAME" source="SUPPLIER_STATUS_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BIZ_CERTI_ATTCH_NUMBER" source="BIZ_CERTI_ATTCH_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATTCH_NUMBER_2" source="ATTCH_NUMBER_2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ATTCH_NUMBER_3" source="ATTCH_NUMBER_3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCAL_CREATE_DTM" source="LOCAL_CREATE_DTM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCAL_UPDATE_DTM" source="LOCAL_UPDATE_DTM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CREATE_USER_ID" source="CREATE_USER_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UPDATE_USER_ID" source="UPDATE_USER_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_CREATE_DTM" source="SYSTEM_CREATE_DTM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_UPDATE_DTM" source="SYSTEM_UPDATE_DTM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REQUESTOR_LOCAL_NAME" source="EMPLOYEE_LOCAL_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REQUESTOR_KOREAN_NAME" source="EMPLOYEE_KOREAN_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REQUESTOR_ENGLISH_NAME" source="EMPLOYEE_ENGLISH_NAME"/>
+    </input>
+    <input node="Supplier_Country_Mst">
+      <mapping xsi:type="Calculation:AttributeMapping" target="EU_FLAG" source="EU_FLAG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TENANT_ID" source="TENANT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNTRY_CODE" source="COUNTRY_CODE"/>
+    </input>
+    <joinAttribute name="TENANT_ID"/>
+    <joinAttribute name="COUNTRY_CODE"/>
+  </calculationView>
 </calculationViews>
-<logicalModel id="Join_2">
+<logicalModel id="Join_3">
   <attributes>
     <attribute id="TENANT_ID" key="true" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="TENANT_ID"/>
-      <keyMapping columnObjectName="Join_2" columnName="TENANT_ID"/>
+      <keyMapping columnObjectName="Join_3" columnName="TENANT_ID"/>
     </attribute>
     <attribute id="MAKER_REQUEST_SEQUENCE" key="true" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MAKER_REQUEST_SEQUENCE"/>
-      <keyMapping columnObjectName="Join_2" columnName="MAKER_REQUEST_SEQUENCE"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_REQUEST_SEQUENCE"/>
     </attribute>
     <attribute id="MAKER_REQUEST_TYPE_CODE" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MAKER_REQUEST_TYPE_CODE"/>
-      <keyMapping columnObjectName="Join_2" columnName="MAKER_REQUEST_TYPE_CODE"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_REQUEST_TYPE_CODE"/>
     </attribute>
     <attribute id="MAKER_PROGRESS_STATUS_CODE" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MAKER_PROGRESS_STATUS_CODE"/>
-      <keyMapping columnObjectName="Join_2" columnName="MAKER_PROGRESS_STATUS_CODE"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_PROGRESS_STATUS_CODE"/>
     </attribute>
     <attribute id="REQUESTOR_EMPNO" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="REQUESTOR_EMPNO"/>
-      <keyMapping columnObjectName="Join_2" columnName="REQUESTOR_EMPNO"/>
+      <keyMapping columnObjectName="Join_3" columnName="REQUESTOR_EMPNO"/>
     </attribute>
     <attribute id="REQUESTOR_LOCAL_NAME" order="6" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="REQUESTOR_LOCAL_NAME"/>
-      <keyMapping columnObjectName="Join_2" columnName="EMPLOYEE_LOCAL_NAME"/>
+      <descriptions defaultDescription="EMPLOYEE_LOCAL_NAME"/>
+      <keyMapping columnObjectName="Join_3" columnName="REQUESTOR_LOCAL_NAME"/>
     </attribute>
     <attribute id="REQUESTOR_KOREAN_NAME" order="7" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="REQUESTOR_KOREAN_NAME"/>
-      <keyMapping columnObjectName="Join_2" columnName="EMPLOYEE_KOREAN_NAME"/>
+      <descriptions defaultDescription="EMPLOYEE_KOREAN_NAME"/>
+      <keyMapping columnObjectName="Join_3" columnName="REQUESTOR_KOREAN_NAME"/>
     </attribute>
     <attribute id="REQUESTOR_ENGLISH_NAME" order="8" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="REQUESTOR_ENGLISH_NAME"/>
-      <keyMapping columnObjectName="Join_2" columnName="EMPLOYEE_ENGLISH_NAME"/>
+      <descriptions defaultDescription="EMPLOYEE_ENGLISH_NAME"/>
+      <keyMapping columnObjectName="Join_3" columnName="REQUESTOR_ENGLISH_NAME"/>
     </attribute>
     <attribute id="REQUESTOR_DEPARTMENT_CODE" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="REQUESTOR_DEPARTMENT_CODE"/>
-      <keyMapping columnObjectName="Join_2" columnName="REQUESTOR_DEPARTMENT_CODE"/>
+      <keyMapping columnObjectName="Join_3" columnName="REQUESTOR_DEPARTMENT_CODE"/>
     </attribute>
     <attribute id="REQUESTOR_DEPARTMENT_LOCAL_NAME" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="REQUESTOR_DEPARTMENT_LOCAL_NAME"/>
-      <keyMapping columnObjectName="Join_2" columnName="REQUESTOR_DEPARTMENT_LOCAL_NAME"/>
+      <keyMapping columnObjectName="Join_3" columnName="REQUESTOR_DEPARTMENT_LOCAL_NAME"/>
     </attribute>
     <attribute id="REQUESTOR_DEPARTMENT_KOREAN_NAME" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="REQUESTOR_DEPARTMENT_KOREAN_NAME"/>
-      <keyMapping columnObjectName="Join_2" columnName="REQUESTOR_DEPARTMENT_KOREAN_NAME"/>
+      <keyMapping columnObjectName="Join_3" columnName="REQUESTOR_DEPARTMENT_KOREAN_NAME"/>
     </attribute>
     <attribute id="REQUESTOR_DEPARTMENT_ENGLISH_NAME" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="REQUESTOR_DEPARTMENT_ENGLISH_NAME"/>
-      <keyMapping columnObjectName="Join_2" columnName="REQUESTOR_DEPARTMENT_ENGLISH_NAME"/>
+      <keyMapping columnObjectName="Join_3" columnName="REQUESTOR_DEPARTMENT_ENGLISH_NAME"/>
     </attribute>
     <attribute id="TAX_ID" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="TAX_ID"/>
-      <keyMapping columnObjectName="Join_2" columnName="TAX_ID"/>
+      <keyMapping columnObjectName="Join_3" columnName="TAX_ID"/>
     </attribute>
     <attribute id="MAKER_CODE" order="14" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MAKER_CODE"/>
-      <keyMapping columnObjectName="Join_2" columnName="SUPPLIER_CODE"/>
+      <descriptions defaultDescription="SUPPLIER_CODE"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_CODE"/>
     </attribute>
     <attribute id="MAKER_LOCAL_NAME" order="15" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MAKER_LOCAL_NAME"/>
-      <keyMapping columnObjectName="Join_2" columnName="SUPPLIER_LOCAL_NAME"/>
+      <descriptions defaultDescription="SUPPLIER_LOCAL_NAME"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_LOCAL_NAME"/>
     </attribute>
     <attribute id="MAKER_ENGLISH_NAME" order="16" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MAKER_ENGLISH_NAME"/>
-      <keyMapping columnObjectName="Join_2" columnName="SUPPLIER_ENGLISH_NAME"/>
+      <descriptions defaultDescription="SUPPLIER_ENGLISH_NAME"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_ENGLISH_NAME"/>
     </attribute>
     <attribute id="COUNTRY_CODE" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="COUNTRY_CODE"/>
-      <keyMapping columnObjectName="Join_2" columnName="COUNTRY_CODE"/>
+      <keyMapping columnObjectName="Join_3" columnName="COUNTRY_CODE"/>
     </attribute>
     <attribute id="COUNTRY_NAME" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="COUNTRY_NAME"/>
-      <keyMapping columnObjectName="Join_2" columnName="COUNTRY_NAME"/>
+      <keyMapping columnObjectName="Join_3" columnName="COUNTRY_NAME"/>
     </attribute>
-    <attribute id="VAT_NUMBER" order="19" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="EU_FLAG" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="EU_FLAG"/>
+      <keyMapping columnObjectName="Join_3" columnName="EU_FLAG"/>
+    </attribute>
+    <attribute id="VAT_NUMBER" order="20" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="VAT_NUMBER"/>
-      <keyMapping columnObjectName="Join_2" columnName="VAT_NUMBER"/>
+      <keyMapping columnObjectName="Join_3" columnName="VAT_NUMBER"/>
     </attribute>
-    <attribute id="ZIP_CODE" order="20" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ZIP_CODE" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ZIP_CODE"/>
-      <keyMapping columnObjectName="Join_2" columnName="ZIP_CODE"/>
+      <keyMapping columnObjectName="Join_3" columnName="ZIP_CODE"/>
     </attribute>
-    <attribute id="MAKER_LOCAL_CITY" order="21" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MAKER_LOCAL_CITY"/>
-      <keyMapping columnObjectName="Join_2" columnName="LOCAL_ADDRESS_1"/>
+    <attribute id="MAKER_LOCAL_CITY" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCAL_ADDRESS_1"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_LOCAL_CITY"/>
     </attribute>
-    <attribute id="MAKER_LOCAL_REGION" order="22" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MAKER_LOCAL_REGION"/>
-      <keyMapping columnObjectName="Join_2" columnName="LOCAL_ADDRESS_2"/>
+    <attribute id="MAKER_LOCAL_REGION" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCAL_ADDRESS_2"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_LOCAL_REGION"/>
     </attribute>
-    <attribute id="MAKER_LOCAL_ADDRESS" order="23" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MAKER_LOCAL_ADDRESS"/>
-      <keyMapping columnObjectName="Join_2" columnName="LOCAL_ADDRESS_3"/>
+    <attribute id="MAKER_LOCAL_ADDRESS" order="24" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCAL_ADDRESS_3"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_LOCAL_ADDRESS"/>
     </attribute>
-    <attribute id="MAKER_LOCAL_FULL_ADDRESS" order="24" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MAKER_LOCAL_FULL_ADDRESS"/>
-      <keyMapping columnObjectName="Join_2" columnName="LOCAL_FULL_ADDRESS"/>
+    <attribute id="MAKER_LOCAL_FULL_ADDRESS" order="25" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCAL_FULL_ADDRESS"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_LOCAL_FULL_ADDRESS"/>
     </attribute>
-    <attribute id="MAKER_ENGLISH_CITY" order="25" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MAKER_ENGLISH_CITY"/>
-      <keyMapping columnObjectName="Join_2" columnName="ENGLISH_ADDRESS_1"/>
+    <attribute id="MAKER_ENGLISH_CITY" order="26" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ENGLISH_ADDRESS_1"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_ENGLISH_CITY"/>
     </attribute>
-    <attribute id="MAKER_ENGLISH_REGION" order="26" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MAKER_ENGLISH_REGION"/>
-      <keyMapping columnObjectName="Join_2" columnName="ENGLISH_ADDRESS_2"/>
+    <attribute id="MAKER_ENGLISH_REGION" order="27" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ENGLISH_ADDRESS_2"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_ENGLISH_REGION"/>
     </attribute>
-    <attribute id="MAKER_ENGLISH_ADDRESS" order="27" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MAKER_ENGLISH_ADDRESS"/>
-      <keyMapping columnObjectName="Join_2" columnName="ENGLISH_ADDRESS_3"/>
+    <attribute id="MAKER_ENGLISH_ADDRESS" order="28" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ENGLISH_ADDRESS_3"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_ENGLISH_ADDRESS"/>
     </attribute>
-    <attribute id="MAKER_ENGLISH_FULL_ADDRESS" order="28" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MAKER_ENGLISH_FULL_ADDRESS"/>
-      <keyMapping columnObjectName="Join_2" columnName="ENGLISH_FULL_ADDRESS"/>
+    <attribute id="MAKER_ENGLISH_FULL_ADDRESS" order="29" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ENGLISH_FULL_ADDRESS"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_ENGLISH_FULL_ADDRESS"/>
     </attribute>
-    <attribute id="AFFILIATE_CODE" order="29" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="AFFILIATE_CODE" order="30" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="AFFILIATE_CODE"/>
-      <keyMapping columnObjectName="Join_2" columnName="AFFILIATE_CODE"/>
+      <keyMapping columnObjectName="Join_3" columnName="AFFILIATE_CODE"/>
     </attribute>
-    <attribute id="AFFILIATE_NAME" order="30" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="AFFILIATE_NAME"/>
-      <keyMapping columnObjectName="Join_2" columnName="AFFILIATE_CODE_NAME"/>
+    <attribute id="AFFILIATE_NAME" order="31" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AFFILIATE_CODE_NAME"/>
+      <keyMapping columnObjectName="Join_3" columnName="AFFILIATE_NAME"/>
     </attribute>
-    <attribute id="COMPANY_CLASS_CODE" order="31" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="COMPANY_CLASS_CODE" order="32" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="COMPANY_CLASS_CODE"/>
-      <keyMapping columnObjectName="Join_2" columnName="COMPANY_CLASS_CODE"/>
+      <keyMapping columnObjectName="Join_3" columnName="COMPANY_CLASS_CODE"/>
     </attribute>
-    <attribute id="COMPANY_CLASS_NAME" order="32" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="COMPANY_CLASS_NAME" order="33" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="COMPANY_CLASS_NAME"/>
-      <keyMapping columnObjectName="Join_2" columnName="COMPANY_CLASS_NAME"/>
+      <keyMapping columnObjectName="Join_3" columnName="COMPANY_CLASS_NAME"/>
     </attribute>
-    <attribute id="REPRESENT_NAME" order="33" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="REPRESENT_NAME"/>
-      <keyMapping columnObjectName="Join_2" columnName="REPRE_NAME"/>
+    <attribute id="REPRESENT_NAME" order="34" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REPRE_NAME"/>
+      <keyMapping columnObjectName="Join_3" columnName="REPRESENT_NAME"/>
     </attribute>
-    <attribute id="COMPANY_TEL_NUMBER" order="34" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="COMPANY_TEL_NUMBER"/>
-      <keyMapping columnObjectName="Join_2" columnName="TEL_NUMBER"/>
+    <attribute id="COMPANY_TEL_NUMBER" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TEL_NUMBER"/>
+      <keyMapping columnObjectName="Join_3" columnName="COMPANY_TEL_NUMBER"/>
     </attribute>
-    <attribute id="COMPANY_EMAIL_ADDRESS" order="35" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="COMPANY_EMAIL_ADDRESS"/>
-      <keyMapping columnObjectName="Join_2" columnName="EMAIL_ADDRESS"/>
+    <attribute id="COMPANY_EMAIL_ADDRESS" order="36" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="EMAIL_ADDRESS"/>
+      <keyMapping columnObjectName="Join_3" columnName="COMPANY_EMAIL_ADDRESS"/>
     </attribute>
-    <attribute id="MAKER_STATUS_CODE" order="36" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MAKER_STATUS_CODE"/>
-      <keyMapping columnObjectName="Join_2" columnName="SUPPLIER_STATUS_CODE"/>
+    <attribute id="MAKER_STATUS_CODE" order="37" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SUPPLIER_STATUS_CODE"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_STATUS_CODE"/>
     </attribute>
-    <attribute id="MAKER_STATUS_NAME" order="37" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MAKER_STATUS_NAME"/>
-      <keyMapping columnObjectName="Join_2" columnName="SUPPLIER_STATUS_NAME"/>
+    <attribute id="MAKER_STATUS_NAME" order="38" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SUPPLIER_STATUS_NAME"/>
+      <keyMapping columnObjectName="Join_3" columnName="MAKER_STATUS_NAME"/>
     </attribute>
-    <attribute id="BIZ_CERTI_ATTCH_NUMBER" order="38" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="BIZ_CERTI_ATTCH_NUMBER" order="39" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BIZ_CERTI_ATTCH_NUMBER"/>
-      <keyMapping columnObjectName="Join_2" columnName="BIZ_CERTI_ATTCH_NUMBER"/>
+      <keyMapping columnObjectName="Join_3" columnName="BIZ_CERTI_ATTCH_NUMBER"/>
     </attribute>
-    <attribute id="ATTCH_NUMBER_2" order="39" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ATTCH_NUMBER_2" order="40" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ATTCH_NUMBER_2"/>
-      <keyMapping columnObjectName="Join_2" columnName="ATTCH_NUMBER_2"/>
+      <keyMapping columnObjectName="Join_3" columnName="ATTCH_NUMBER_2"/>
     </attribute>
-    <attribute id="ATTCH_NUMBER_3" order="40" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ATTCH_NUMBER_3" order="41" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ATTCH_NUMBER_3"/>
-      <keyMapping columnObjectName="Join_2" columnName="ATTCH_NUMBER_3"/>
+      <keyMapping columnObjectName="Join_3" columnName="ATTCH_NUMBER_3"/>
     </attribute>
-    <attribute id="LOCAL_CREATE_DTM" order="41" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="LOCAL_CREATE_DTM" order="42" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="LOCAL_CREATE_DTM"/>
-      <keyMapping columnObjectName="Join_2" columnName="LOCAL_CREATE_DTM"/>
+      <keyMapping columnObjectName="Join_3" columnName="LOCAL_CREATE_DTM"/>
     </attribute>
-    <attribute id="LOCAL_UPDATE_DTM" order="42" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="LOCAL_UPDATE_DTM" order="43" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="LOCAL_UPDATE_DTM"/>
-      <keyMapping columnObjectName="Join_2" columnName="LOCAL_UPDATE_DTM"/>
+      <keyMapping columnObjectName="Join_3" columnName="LOCAL_UPDATE_DTM"/>
     </attribute>
-    <attribute id="CREATE_USER_ID" order="43" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CREATE_USER_ID" order="44" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CREATE_USER_ID"/>
-      <keyMapping columnObjectName="Join_2" columnName="CREATE_USER_ID"/>
+      <keyMapping columnObjectName="Join_3" columnName="CREATE_USER_ID"/>
     </attribute>
-    <attribute id="UPDATE_USER_ID" order="44" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="UPDATE_USER_ID" order="45" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="UPDATE_USER_ID"/>
-      <keyMapping columnObjectName="Join_2" columnName="UPDATE_USER_ID"/>
+      <keyMapping columnObjectName="Join_3" columnName="UPDATE_USER_ID"/>
     </attribute>
-    <attribute id="SYSTEM_CREATE_DTM" order="45" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="SYSTEM_CREATE_DTM" order="46" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SYSTEM_CREATE_DTM"/>
-      <keyMapping columnObjectName="Join_2" columnName="SYSTEM_CREATE_DTM"/>
+      <keyMapping columnObjectName="Join_3" columnName="SYSTEM_CREATE_DTM"/>
     </attribute>
-    <attribute id="SYSTEM_UPDATE_DTM" order="46" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="SYSTEM_UPDATE_DTM" order="47" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SYSTEM_UPDATE_DTM"/>
-      <keyMapping columnObjectName="Join_2" columnName="SYSTEM_UPDATE_DTM"/>
+      <keyMapping columnObjectName="Join_3" columnName="SYSTEM_UPDATE_DTM"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -499,26 +627,26 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="377" y="112"/>
+      <upperLeftCorner x="486.7187982146582" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Maker_Request" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="536"/>
+      <upperLeftCorner x="92.00000000000006" y="696.9999964237213"/>
       <rectangleSize height="30" width="198"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Department" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="422" y="376"/>
+      <upperLeftCorner x="411.7444332894298" y="536.9999976158142"/>
       <rectangleSize height="30" width="212"/>
     </shape>
     <shape expanded="true" modelObjectName="Employee" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="340" y="536"/>
+      <upperLeftCorner x="340.00000000000006" y="696.9999964237213"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="137" y="376"/>
+      <upperLeftCorner x="137.66666666666669" y="536.9999976158142"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Maker_Request" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
@@ -530,7 +658,7 @@
       <rectangleSize width="200"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="377" y="217"/>
+      <upperLeftCorner x="164.33333333333337" y="376.9999988079071"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
@@ -540,6 +668,23 @@
     <shape modelObjectName="Department" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="426" y="30"/>
       <rectangleSize width="253"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Supplier_Country_Mst" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="534.7075694136157" y="376.9999988079071"/>
+      <rectangleSize height="30" width="196"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="486.7187982146582" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Supplier_Country_Mst" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="464" y="34"/>
+      <rectangleSize width="203.154296875"/>
     </shape>
   </shapes>
 </layout>

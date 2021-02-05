@@ -31,7 +31,7 @@
                     "odataVersion": "2.0"
                 }
             },
-            "supplierUtilService": {
+            "supplierService": {
                 "uri": "srv-api/odata/v2/sp.supplierViewService/",
                 "type": "OData",
                 "settings": {
@@ -89,6 +89,16 @@
             },
             "util": {
                 "dataSource": "commonUtilService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "useBatch": true
+                }
+            },
+            "supplier": {
+                "dataSource": "supplierService",
                 "preload": true,
                 "settings": {
                     "defaultBindingMode": "TwoWay",

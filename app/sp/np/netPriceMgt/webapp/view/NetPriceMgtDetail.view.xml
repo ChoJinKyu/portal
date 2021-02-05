@@ -10,6 +10,7 @@
     xmlns:t="sap.ui.table"
     xmlns:co="sap.suite.ui.commons"
     xmlns:rte="sap.ui.richtexteditor"
+    xmlns:dnd="sap.ui.core.dnd"
     height="100%">
 
     <uxap:ObjectPageLayout
@@ -25,7 +26,7 @@
 				<uxap:expandedHeading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBack" />
-                        <Title text="{I18N>/NEW_BASE_PRICE}" wrapping="true"/>
+                        <Title text="{I18N>/NEW_BASE_PRICE}" />
                     </HBox>
 				</uxap:expandedHeading>
 			</uxap:ObjectPageDynamicHeaderTitle>
@@ -35,16 +36,16 @@
 			<FlexBox wrap="Wrap">
                 <!-- Requester 시작 -->
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
-                    <ObjectStatus title="{I18N>/APPROVAL_NUMBER}" text=""/>
-                    <ObjectStatus title="{I18N>/REQUESTOR}" text=""/>
-                    <ObjectStatus title="{I18N>/REQUEST_DATE}" text=""/>
+                    <ObjectStatus id="approvalNumber" title="{I18N>/APPROVAL_NUMBER}" text="{detailModel>/approvalNumber}"/>
+                    <ObjectStatus id="requetor" title="{I18N>/REQUESTOR}" text="{detailModel>/requestorEmpno}"/>
+                    <ObjectStatus id="requestDate" title="{I18N>/REQUEST_DATE}" text="{detailModel>/requestDate}"/>
                 </layout:VerticalLayout>
                 <!-- Requester 끝 -->
 
                 <!-- Status 시작 -->
 				<layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
 					<Label text="{I18N>/STATUS} :"/>
-                    <ObjectStatus class="sapMObjectStatusLarge" text="" state="Error" />
+                    <ObjectStatus id="status" class="sapMObjectStatusLarge" text="{detailModel>/status}" state="Error" />
 				</layout:VerticalLayout>
                 <!-- Status 끝 -->
 
@@ -96,38 +97,114 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
-                            <VBox>
-                                <HBox alignItems="Center">
-                                    <Label
-                                        text="{I18N>/TITLE}"
-                                        class="sapUiTinyMarginEnd"
-                                        textAlign="Left"
-                                        labelFor="input"
-                                        required="true"/>
-                                    <Input
-                                        width="20rem"
-                                        placeholder=""
-                                        editable="{detailViewModel>/viewMode}"
-                                        value="{detailModel>/approval_title}">
-                                    </Input>
-                                </HBox>
-                                <VBox>
-                                    <Label text="{I18N>/DESCRIPTION}" required="true"/>
-                                    <!-- Text Editor 시작 -->
-                                    <!-- <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
-                                    </layout:VerticalLayout> -->
-                                    <rte:RichTextEditor 
-                                        width="100%" 
-                                        height="200px" 
-                                        value="{detailModel>/approval_request_desc}" 
-                                        customToolbar="true" 
-                                        showGroupFont="true" 
-                                        showGroupLink="true" 
-                                        showGroupInsert="true"
-                                        editable="{detailViewModel>/viewMode}" />
-                                    <!-- Text Editor 끝 -->
-                                </VBox>
-                            </VBox>
+                            <form:SimpleForm
+                                layout="ResponsiveGridLayout"
+                                adjustLabelSpan="false">
+                                <form:content>
+                                    <HBox>
+                                        <VBox>
+                                            <Label text="{I18N>/TITLE}" class="sapUiTinyMarginEnd" textAlign="Left" labelFor="input" required="true"/>
+                                            <Input width="20rem" placeholder="" editable="{detailViewModel>/viewMode}" value="{detailModel>/approval_title}" />
+                                        </VBox>
+                                        <layoutData>
+                                            <layout:GridData span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                    </HBox>
+                                    <HBox>
+                                        <VBox>
+                                            <Label text="Document Type" class="sapUiTinyMarginEnd" textAlign="Left" labelFor="input" required="true"/>
+                                            <ComboBox id="net_price_document_type_code"
+                                                width="100%"
+                                                items="{
+                                                        path: 'util>/Code',
+                                                        filters: [
+                                                            {path: 'group_code', operator: 'EQ', value1: 'SP_DOCUMENT_TYPE'}
+                                                        ]
+                                                    }" selectedKey="{detailModel>company_code}" change="cChanged">
+                                                <items>
+                                                    <core:Item key="{util>code}" text="{util>code_name}" />
+                                                </items>
+                                            </ComboBox>
+                                            <layoutData>
+                                                <layout:GridData span="XL2 L2 M2 S12" />
+                                            </layoutData>
+                                        </VBox>
+                                        <VBox>
+                                            <Label text="Document Source" class="sapUiTinyMarginEnd" textAlign="Left" labelFor="input" required="true"/>
+                                            <ComboBox id="net_price_source_code"
+                                                width="100%"
+                                                items="{
+                                                        path: 'util>/Code',
+                                                        filters: [
+                                                            {path: 'group_code', operator: 'EQ', value1: 'NET_PRICE_SOURCE_CODE'}
+                                                        ]
+                                                    }">
+                                                <items>
+                                                    <core:Item key="{util>code}" text="{util>code_name}" />
+                                                </items>
+                                            </ComboBox>
+                                            <layoutData>
+                                                <layout:GridData span="XL2 L2 M2 S12" />
+                                            </layoutData>
+                                        </VBox>
+                                        <VBox>
+                                            <Label text="Net Price Type" class="sapUiTinyMarginEnd" textAlign="Left" labelFor="input" required="true"/>
+                                            <ComboBox id="net_price_type_code"
+                                                width="100%"
+                                                items="{
+                                                        path: 'util>/Code',
+                                                        filters: [
+                                                            {path: 'group_code', operator: 'EQ', value1: 'SP_NET_PRICE_TYPE'}
+                                                        ]
+                                                    }">
+                                                <items>
+                                                    <core:Item key="{util>code}" text="{util>code_name}" />
+                                                </items>
+                                            </ComboBox>
+                                            <layoutData>
+                                                <layout:GridData span="XL2 L2 M2 S12" />
+                                            </layoutData>
+                                        </VBox>
+                                        <layoutData>
+                                            <layout:GridData span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                    </HBox>
+                                    <HBox>
+                                        <VBox>
+                                            <Label text="{I18N>/EFFECTIVE_START_DATE}" class="sapUiTinyMarginEnd" textAlign="Left" labelFor="input" required="true"/>
+                                            <DatePicker id="effective_start_date" displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" editable="true" navigate="onclickDate" value="9999-12-31"/>
+                                            <layoutData>
+                                                <layout:GridData span="XL2 L2 M2 S12" />
+                                            </layoutData>
+                                        </VBox>
+                                        <VBox>
+                                            <Label text="{I18N>/EFFECTIVE_END_DATE}" class="sapUiTinyMarginEnd" textAlign="Left" labelFor="input" required="true"/>
+                                            <DatePicker id="effective_end_date" displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" editable="true" navigate="onclickDate" value="9999-12-31"/>
+                                            <layoutData>
+                                                <layout:GridData span="XL2 L2 M2 S12" />
+                                            </layoutData>
+                                        </VBox>
+                                        <layoutData>
+                                            <layout:GridData span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                    </HBox>
+                                    <HBox>
+                                        <VBox>
+                                            <Label text="{I18N>/DESCRIPTION}" required="true"/>
+                                            <rte:RichTextEditor width="100%" height="200px" value="{detailModel>/approval_request_desc}" 
+                                                customToolbar="true" 
+                                                showGroupFont="true" 
+                                                showGroupLink="true" 
+                                                showGroupInsert="true"
+                                                editable="{detailViewModel>/viewMode}" />
+                                            <!-- Text Editor 끝 -->
+                                        </VBox>
+                                        <layoutData>
+                                            <layout:GridData span="XL12 L12 M12 S12" />
+                                        </layoutData>
+                                    </HBox>
+                                </form:content>
+                            </form:SimpleForm>
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
                 </uxap:subSections>
@@ -140,36 +217,86 @@
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
                             <VBox>
-                                <HBox alignItems="Center">
-                                    <Label
-                                        text="{I18N>/TITLE}"
-                                        class="sapUiTinyMarginEnd"
-                                        textAlign="Left"
-                                        labelFor="input"
-                                        required="true"/>
-                                    <Input
-                                        width="20rem"
-                                        placeholder=""
-                                        editable="{detailViewModel>/viewMode}"
-                                        value="{detailModel>/approval_title}">
-                                    </Input>
-                                </HBox>
-                                <VBox>
-                                    <Label text="{I18N>/DESCRIPTION}" required="true"/>
-                                    <!-- Text Editor 시작 -->
-                                    <!-- <layout:VerticalLayout id="idVerticalLayout" class="sapUiContentPadding" width="100%">
-                                    </layout:VerticalLayout> -->
-                                    <rte:RichTextEditor 
-                                        width="100%" 
-                                        height="200px" 
-                                        value="{detailModel>/approval_request_desc}" 
-                                        customToolbar="true" 
-                                        showGroupFont="true" 
-                                        showGroupLink="true" 
-                                        showGroupInsert="true"
-                                        editable="{detailViewModel>/viewMode}" />
-                                    <!-- Text Editor 끝 -->
-                                </VBox>
+                                <t:Table 
+                                    id="generalInfoTbl"
+                                    selectionMode="MultiToggle"
+                                    rows="{generalInfoList>/GeneralView}"
+                                    rowSelectionChange=".onRowSelectionChange"
+                                    fixedColumnCount="3"
+                                    visibleRowCountMode="Auto">
+                                    <t:extension>
+                                        <OverflowToolbar class="sapFDynamicPageAlignContent">
+                                            <ToolbarSpacer />
+                                            <Button text="{I18N>/UPLOAD}" type="Transparent" press=".onDeveloping" visible="{detailViewModel>/viewMode}" />
+                                            <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" visible="{detailViewModel>/viewMode}" />
+                                            <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteBasePrice" visible="{detailViewModel>/viewMode}" />
+                                        </OverflowToolbar>
+                                    </t:extension>
+                                    <t:columns>
+                                        <t:Column id="mainColumnState" hAlign="Center" width="40px" >
+                                            <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                                            <t:template>
+                                                <ObjectStatus icon="{path: 'generalInfoList>_row_state_', formatter: '.formatter.toModelStateColumnIcon'}" />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="10rem">
+                                            <Label text="{I18N>/OPERATION_ORG}" textAlign="Center" />
+                                            <t:template>
+                                                <Text text="{generalInfoList>org_code}" />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="10rem">
+                                            <Label text="{I18N>/MATERIAL_CODE}" textAlign="Center" />
+                                            <t:template>
+                                                <Input type="Text" showValueHelp="true" valueHelpRequest=".vhMaterialCode" value="{path: 'generalInfoList>material_code'}"  />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="10rem">
+                                            <Label text="{I18N>/DESCRIPTION}" textAlign="Center" />
+                                            <t:template>
+                                                <Text text="{generalInfoList>material_desc}"  />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="10rem">
+                                            <Label text="{I18N>/SUPPLIER} Code" textAlign="Center" />
+                                            <t:template>
+                                                <Input type="Text" showValueHelp="true" valueHelpRequest=".vhSupplierCode" value="{path: 'generalInfoList>supplier_code'}"  />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="10rem">
+                                            <Label text="{I18N>/SUPPLIER} Name" textAlign="Center" />
+                                            <t:template>
+                                                <Text text="{generalInfoList>supplier_local_name}"  />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="10rem">
+                                            <Label text="{I18N>/SUPPLIER} (Eng)Name" textAlign="Center" />
+                                            <t:template>
+                                                <Text text="{generalInfoList>supplier_english_name}"  />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="10rem">
+                                            <Label text="SD Mapping" textAlign="Center" />
+                                            <t:template>
+                                                <Text text="{generalInfoList>sd_mapping_no}"  />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="10rem">
+                                            <Label text="SD File" textAlign="Center" />
+                                            <t:template>
+                                                <Text text="{generalInfoList>sd_file_group_no}"  />
+                                            </t:template>
+                                        </t:Column>
+                                        <t:Column hAlign="Center" width="10rem">
+                                            <Label text="{I18N>/VENDOR_POOL_CODE}" textAlign="Center" />
+                                            <t:template>
+                                                <Input type="Text" showValueHelp="true" valueHelpRequest=".vhVendorPoolCode" value="{path: 'generalInfoList>vendor_pool_code'}"  />
+                                            </t:template>
+                                        </t:Column>
+
+                                        
+                                    </t:columns>
+                                </t:Table>
                             </VBox>
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
@@ -184,9 +311,9 @@
 						<uxap:blocks>
                             <VBox>
                                 <t:Table 
+                                    id="basePriceTbl"
                                     selectionMode="MultiToggle"
-                                    rows="{detailModel>/details}"
-                                    rowSelectionChange=".onRowSelectionChange"
+                                    rows="{generalInfoList>/basePriceView}"
                                     fixedColumnCount="3"
                                     visibleRowCountMode="Auto">
                                     <t:extension>
@@ -194,16 +321,22 @@
                                             <ToolbarSpacer />
                                             <Button text="{I18N>/UPLOAD}" type="Transparent" press=".onDeveloping" visible="{detailViewModel>/viewMode}" />
                                             <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" visible="{detailViewModel>/viewMode}" />
-                                            <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteDetailRow" visible="{detailViewModel>/viewMode}" />
+                                            <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteBasePrice" visible="{detailViewModel>/viewMode}" />
                                         </OverflowToolbar>
                                     </t:extension>
                                     <t:columns>
+                                        <t:Column id="mainColumnState2" hAlign="Center" width="40px" >
+                                            <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                                            <t:template>
+                                                <ObjectStatus icon="{path: 'generalInfoList>_row_state_', formatter: '.formatter.toModelStateColumnIcon'}" />
+                                            </t:template>
+                                        </t:Column>
                                         <t:Column hAlign="Center" width="18rem">
                                             <Label text="{I18N>/COMPANY}" textAlign="Center" />
                                             <t:template>
                                                 <ComboBox width="100%" 
                                                     editable="{= ${detailViewModel>/viewMode} &amp;&amp; ${rootModel>/config/DP_VI_COMPANY_EDITABLE_FLAG} === 'Y' ? true : false}"
-                                                    selectedKey="{detailModel>company_code}" 
+                                                    selectedKey="{generalInfoList>company_code}" 
                                                     items="{
                                                         path: 'org>/Company',
                                                         filters: [
@@ -257,14 +390,6 @@
                                     rowSelectionChange=".onRowSelectionChange"
                                     fixedColumnCount="3"
                                     visibleRowCountMode="Auto">
-                                    <t:extension>
-                                        <OverflowToolbar class="sapFDynamicPageAlignContent">
-                                            <ToolbarSpacer />
-                                            <Button text="{I18N>/UPLOAD}" type="Transparent" press=".onDeveloping" visible="{detailViewModel>/viewMode}" />
-                                            <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" visible="{detailViewModel>/viewMode}" />
-                                            <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteDetailRow" visible="{detailViewModel>/viewMode}" />
-                                        </OverflowToolbar>
-                                    </t:extension>
                                     <t:columns>
                                         <t:Column hAlign="Center" width="18rem">
                                             <Label text="{I18N>/COMPANY}" textAlign="Center" />
@@ -348,73 +473,87 @@
 						<uxap:blocks>
                             <!-- Approval & Reference 시작 -->
                             <VBox>
-                            <Table id="ApprovalTable"
-                                    growing="true"
-                                    growingThreshold="20"
-                                    class="sapFDynamicPageAlignContent"
-                                    mode="None"
-                                    width="auto"
-                                    items="{appdetailModel>/undefined}"
-                                    >
-                                <headerToolbar>
-                                    <OverflowToolbar>
-                                    <Label text="Approval Line"/>
-                                    </OverflowToolbar>
-                                </headerToolbar>
-                                <columns>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="3rem" >
-                                        <Text text="No." />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="6em" >
-                                        <Text text="Type" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" width="16em" >
-                                        <Text text="Name/Dept" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center"  >
-                                        <Text text="Comment" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" width="6em" >
-                                        <Text text="Status" />
-                                    </Column>
-                                    <Column minScreenWidth="Tablet" hAlign="Center" width="8em" >
-                                        <Text text="Add / Delete" />
-                                    </Column>
-                                </columns>
-                                <items>
-                                    <ColumnListItem>
-                                        <cells>
-                                            <!-- <ObjectIdentifier title="{Name}" text="{ProductId}"/> -->
-                                            <Text text="{appdetailModel>no}" />
-                                            <ComboBox  width="100%"
-                                                selectedKey="{appdetailModel>type}"
-                                                enabled="{appdetailModel>editMode}"
-                                                items="{
-                                                    path: 'org>/Org_Company',
-                                                    filters: [
-                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L1100'}
-                                                    ],
-                                                    sorter: { path: 'company_code'},
-                                                    templateShareable:false
-                                                }"
-                                                >
-                                            <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
-                                            </ComboBox>
-                                            <SearchField enabled="{appdetailModel>editMode}" search=".onSearch" width="100%" placeholder="Search employee" value="{appdetailModel>nameDept}"/>
-                                            <Text text="{appdetailModel>status}" />
-                                            <Text text="{appdetailModel>comment}" />
-                                            <Button icon="{appdetailModel>arrowUp}" press=".onSortUp(${appdetailModel>no})" tooltip="sort" visible="{= ${appdetailModel>arrowUp}===''?false:true }"></Button>
-                                            <Button icon="{appdetailModel>arrowDown}" press=".onSortDown(${appdetailModel>no})"  visible="{= ${appdetailModel>arrowDown}===''?false:true }" tooltip="sort"></Button>
-                                            <Button icon="sap-icon://delete" press=".setApprovalRemoveRow(${appdetailModel>no})" tooltip="삭제" visible="{appdetailModel>trashShow}"></Button>
-                                        </cells>
-                                    </ColumnListItem>
-                                </items>
-                            </Table>
+                                <Table id="ApproverTable"       
+                                        growing="true"
+                                        growingThreshold="20"
+                                        class="sapFDynamicPageAlignContent" 
+                                        updateFinished=".onListMainTableUpdateFinished"
+                                        mode="SingleSelectMaster"
+                                        width="auto"
+                                        items="{approver>/Approvers}">
+                                    <headerToolbar>
+                                        <OverflowToolbar>
+                                            <Label text="Approval Line"/> 
+                                            <ObjectStatus icon="sap-icon://move" text="" tooltip="드래그앤드랍으로 승인라인을 변경할 수 있습니다." /> 
+                                        </OverflowToolbar>
+                                    </headerToolbar>
+                                    <columns>
+                                        <Column id="approver_empno" hAlign="Center" visible="false" width="3em" >
+                                            <Text text="approver_empno" />
+                                        </Column>
+                                        <Column id="no" hAlign="Center"  width="3.5em" >
+                                            <Text text="{I18N>/SEQUENCE}" />
+                                        </Column>
+                                        <Column id="type" hAlign="Center" width="10em" >
+                                            <Text text="{I18N>/TYPE}" />
+                                        </Column>
+                                        <Column id="nameDept" hAlign="Center" width="20em" >
+                                            <HBox><Text text="{I18N>/NAME}" /><Text text="/" /><Text text="{I18N>/DEPARTMENT}" /></HBox>
+                                        </Column>
+                                        <Column id="approver_status" hAlign="Center" width="12em" >
+                                            <Text text="{I18N>/STATUS}" />
+                                        </Column> 
+                                        <Column id="comment" hAlign="Center" >
+                                            <Text text="{I18N>/COMMENT}" />
+                                        </Column>
+                                        <Column id="add" hAlign="Center" width="5em" >
+                                            <Text text="{I18N>/ROW_ADD}"  />
+                                        </Column>					
+                                        <Column id="delete" hAlign="Center" width="5em" >
+                                            <Text text="{I18N>/ROW_DELETE}" />
+                                        </Column>					
+                                    </columns>
+                                    <dragDropConfig>
+                                        <dnd:DragDropInfo
+                                            sourceAggregation="items" 
+                                            targetAggregation="items" 
+                                            dropPosition="Between" 
+                                            dragStart="onDragStartTable" 
+                                            drop="onDragDropTable"   /> 
+                                        
+                                    </dragDropConfig>					
+                                    <items>
+                                        <ColumnListItem type="Active" press=".onItemPress">
+                                            <cells>
+                                                <Text text="{approver>approver_empno}"  />
+                                                <Text text="{approver>approve_sequence}" />
+                                                <ComboBox width="100%"
+                                                    selectedKey="{approver>approver_type_code}" 
+                                                    items="{ path : 'util>/Code',
+                                                                filters : [
+                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2100'},
+                                                                    {path : 'group_code', operator : 'EQ', value1 : 'CM_APPROVER_TYPE'}
+                                                                ],
+                                                                sorter: { path: 'sort_no'} 
+                                                            }"
+                                                    enabled="{approver>selRow}" >  
+                                                    <core:Item key="{util>code}" text="{util>code_name}" />
+                                                </ComboBox>
+                                                <Input value="{approver>approver_name}" placeholder="Search employee"
+                                                    enabled="{approver>selRow}"
+                                                    showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
+                                                </Input>
+                                                <Text text="{approver>approve_status_code}" />
+                                                <Text text="{approver>approve_comment}" />
+                                                <Button icon="sap-icon://sys-add" press=".onApproverAdd(${approver>approve_sequence})" tooltip="add" />
+                                                <Button icon="sap-icon://delete" press=".setApproverRemoveRow(${approver>approve_sequence})" tooltip="delete" />
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
 
-                            <Text text="Referrer" />
-                            <Input value="{detailModel>/abc}"
-                                showValueHelp="true"
-                                valueHelpRequest=".onOpenMaterialCode" />
+                                <Text text="Referrer" />
+                                <Input value="{detailModel>/abc}" showValueHelp="true" valueHelpRequest=".onOpenMaterialCode" />
                             </VBox>
                             <!-- Approval & Reference 끝 -->
 						</uxap:blocks>
@@ -428,6 +567,10 @@
         <uxap:footer>
 			<OverflowToolbar visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}">
 				<ToolbarSpacer />
+                <Button
+                    text="{I18N>/SAVE}"
+                    visible="{= ${detailViewModel>/viewMode}}"
+                    press=".onTmpSave" />
                 <Button
                     text="{I18N>/CHANGE_DEVELOPER}"
                     visible="{= ${detailViewModel>/viewMode}}"

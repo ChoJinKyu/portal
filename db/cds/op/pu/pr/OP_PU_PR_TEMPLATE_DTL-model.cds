@@ -14,11 +14,11 @@ entity Pu_Pr_Template_Dtl {
             on tplm.tenant_id = tenant_id 
             and tplm.pr_template_number  =  pr_template_number;  
 
-
         hide_column_flag    : Boolean       not null @cds.on.insert: false  @title: '숨김컬럼여부' ;	
         display_column_flag : Boolean       not null @cds.on.insert: false  @title: '조회컬럼여부' ;	
         mandatory_column_flag : Boolean     not null @cds.on.insert: false  @title: '필수컬럼여부' ;	
-        input_column_flag   : Boolean       not null @cds.on.insert: false  @title: '입력컬럼여부' ;	
+        input_column_flag   : Boolean       not null @cds.on.insert: false  @title: '입력컬럼여부' ;
+        default_value       : String(100)                                   @title: '기본값' ;	
         use_flag            : Boolean       not null @cds.on.insert: false  @title: '사용여부' ;			
     }	
 

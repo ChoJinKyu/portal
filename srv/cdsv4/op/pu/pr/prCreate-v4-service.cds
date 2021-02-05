@@ -65,7 +65,6 @@ service PrCreateV4Service {
         wbs_code : String;
         asset_number : String;
         order_number : String;
-        service_desc : String;
         org_name : String;
         org_name_desc : String;
     };

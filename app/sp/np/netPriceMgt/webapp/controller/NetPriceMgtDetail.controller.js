@@ -1,5 +1,6 @@
 sap.ui.define([
     "./App.controller",
+    "ext/lib/util/SppUserSessionUtil",
     "ext/lib/model/ManagedListModel",
     "ext/lib/model/TransactionManager",
     "ext/lib/util/Validator",
@@ -13,66 +14,114 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
+    "sap/m/Token",
     "dp/util/control/ui/MaterialMasterDialog",
-    "sap/m/Token"
+    "ext/pg/util/control/ui/MaterialDialog",
+    "ext/pg/util/control/ui/SupplierDialog",
+    "ext/pg/util/control/ui/VendorPoolDialog"
 ],
-    function (BaseController, ManagedListModel, TransactionManager, Validator, Formatter, DateFormatter,
-        JSONModel, ODataModel, RichTextEditor, MessageBox, Fragment, Filter, FilterOperator, MessageToast, MaterialMasterDialog, Token) {
+    function (
+        BaseController,
+        SppUserSessionUtil, 
+        ManagedListModel, 
+        TransactionManager, 
+        Validator, 
+        Formatter, 
+        DateFormatter,
+        JSONModel, 
+        ODataModel, 
+        RichTextEditor, 
+        MessageBox, 
+        Fragment, 
+        Filter, 
+        FilterOperator, 
+        MessageToast, 
+        Token, 
+        MaterialMasterDialog, 
+        MatrialDialog,
+        SupplierDialog,
+        VendorPoolDialog
+    ) {
         "use strict";
 
         var sSelectedDialogPath, sTenantId, oOpenDialog;
-
+        var that;
         return BaseController.extend("sp.np.netPriceMgt.controller.BasePriceDetail", {
             dateFormatter: DateFormatter,
+            formatter: Formatter,
+
+            /*========================================= Init : Start ===============================*/
 
             onInit: function () {
+                that = this;
                 // Router설정. Detail 화면이 호출될 때마다 _getBasePriceDetail 함수 호출
                 this.oRouter = this.getOwnerComponent().getRouter();
                 this.oRouter.getRoute("NetPriceMgtDetail").attachPatternMatched(this._onRoutedThisPage, this);
 
+                this.getView().setModel(new ManagedListModel(), "approver");
                 this.setModel(new JSONModel(), "detailModel");
                 this.setModel(new JSONModel(), "detailViewModel");
+
+                //마스터정보 리스트
+                this.setModel(new JSONModel(), "masterInfoList");
+                //일반정보 리스트, 기준단가목록 같이 사용
+                this.setModel(new ManagedListModel(), "generalInfoList");
+                //협상이력
+                this.setModel(new ManagedListModel(), "negotitaionList");
+                
+                this.netPriceDocumentTypeCode = this.byId("net_price_document_type_code");
+                this.netPriceDocumentTypeCode.onAfterRendering = function(oEvent) {
+                    console.log("net_price_document_type_code onload!!!!" + oEvent);
+                };
+                
                 //this.setRichEditor();
             },
 
             /**
              * Base Price Detail 데이터 조회
             */
-            _onRoutedThisPage: function () {
+            _onRoutedThisPage: function (oEvent) {
+                var args = oEvent.getParameter("arguments");
+                //console.log("pMode", oEvent.getParameter("arguments"));
+
                 var oView = this.getView();
                 var oRootModel = this.getModel("rootModel");
                 var oDetailModel = this.getModel("detailModel");
+                var generalInfoModel = this.getModel("generalInfoList");
                 var oDetailViewModel = this.getModel("detailViewModel");
-                var oSelectedData = oRootModel.getProperty("/selectedData");
                 var oApproverModel = this.getModel("approver");
+                generalInfoModel.setProperty("/entityName", "GeneralView");
+                generalInfoModel.setProperty("/GeneralView", null);
+
                 oDetailModel.setData({});
-                //console.log(oRootModel.getProperty("/selectedData"));
                 // Approval Line 초기화 시작
-                //oApproverModel.setProperty("/entityName", "Approvers");
-                //oApproverModel.setProperty("/Approvers", null);
-
+                oApproverModel.setProperty("/entityName", "Approvers");
+                oApproverModel.setProperty("/Approvers", null);
+                
                 var oReferMulti = this.byId("referMulti");
-
+                
                 if (oReferMulti) {
                     oReferMulti.removeAllTokens();
                 }
                 // Approval Line 초기화 끝
-
+                
                 // 리스트 또는 품의진행상태조회에서 선택해서 넘어오는 경우
-                if (oSelectedData) {
+                
+                if (args.pMode === "R") {
                     oDetailModel.setData({});
                     oDetailViewModel.setProperty("/viewMode", false);
 
                     var aMasterFilters = [];
-                    aMasterFilters.push(new Filter("tenant_id", FilterOperator.EQ, oSelectedData.tenant_id));
-                    //aMasterFilters.push(new Filter("approval_number", FilterOperator.EQ, oSelectedData.approval_number));
-                    aMasterFilters.push(new Filter("approval_number", FilterOperator.EQ, "Temp*BUBIZ00000-0001"));
+                    aMasterFilters.push(new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID));
+                    aMasterFilters.push(new Filter("language_code", FilterOperator.EQ, "'" + SppUserSessionUtil.getUserInfo().LANGUAGE_CODE + "'"));
+                    aMasterFilters.push(new Filter("approval_number", FilterOperator.EQ, args.pAppNum));
 
                     oView.setBusy(true);
 
                     // Master 조회
-                    this._readData("/NpApprovalDetailMasterView", aMasterFilters, {}, function (data) {
+                    this._readData("detail", "/MasterView", aMasterFilters, {}, function (data) {
                         console.log("master info:", data);
+                        oView.setBusy(false);
 
                         // Process에 표시될 상태 및 아이콘 데이터 세팅
                         //this.onSetProcessFlowStateAndIcon(oDetailViewModel, oMaster.approve_status_code);
@@ -82,13 +131,14 @@ sap.ui.define([
                     // 기준단가 기본 데이터 세팅
                     var oToday = new Date();
                     var oNewBasePriceData = {
-                        "tenant_id": oRootModel.getProperty("/tenantId"),
-                        "approval_number": "",
-                        "approval_title": "",
-                        "approval_type_code": oRootModel.getProperty("/selectedApprovalType"),   // V10: 신규, V20: 변경
-                        "approve_status_code": "DR",    // DR: Draft
-                        "requestor_empno": "5457",
-                        //"request_date": this._changeDateString(oToday),
+                        "tenantId": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                        "approvalNumber": "N/A",
+                        "approvalTitle": "",
+                        //"approval_type_code": oRootModel.getProperty("/selectedApprovalType"),   // V10: 신규, V20: 변경
+                        //"approve_status_code": "DR",    // DR: Draft
+                        "status": oRootModel.getProperty("/processList/0/code_name"),
+                        "requestorEmpno": SppUserSessionUtil.getUserInfo().EMPLOYEE_NUMBER,
+                        "requestDate": this.getOwnerComponent()._changeDateString(oToday),
                         "details": []
                     };
                     oDetailModel.setData(oNewBasePriceData);
@@ -97,20 +147,23 @@ sap.ui.define([
 
                     // 저장된 Approver가 없는 경우 Line 추가
                     this.onApproverAdd(0);
-
+     
+                    oDetailModel.setProperty("/approval_status_code", "10");
                     // Process에 표시될 상태 및 아이콘 데이터 세팅
-                    this.onSetProcessFlowStateAndIcon(oDetailViewModel, oNewBasePriceData.approve_status_code);
+                   // this.onSetProcessFlowStateAndIcon(oDetailViewModel, oNewBasePriceData.approve_status_code);
                 }
 
                 // 생성버튼에서 선택한 유형(신규, 변경)의 Fragment 세팅
-                this._setTableFragment(oRootModel.getProperty("/selectedApprovalType"));
+                //this._setTableFragment(oRootModel.getProperty("/selectedApprovalType"));
             },
+            /*========================================= Init : End ===============================*/
 
+            /*========================================= oData : Start ===============================*/
             /**
-         * OData 호출
-         */
-            _readData: function (sCallUrlParam, aFiltersParam, oUrlParametersParam, fCallbackParam) {
-                var oModel = this.getModel("detailService");
+             * OData 호출
+             */
+            _readData: function (sModelParam ,sCallUrlParam, aFiltersParam, oUrlParametersParam, fCallbackParam) {
+                var oModel = this.getModel(sModelParam);
                 var oView = this.getView();
 
                 oModel.read(sCallUrlParam, {
@@ -123,7 +176,114 @@ sap.ui.define([
                     }
                 });
             },
+            
+            _bindView: function (sObjectPath, sModel, aFilter, callback) {
+                var oView = this.getView(),
+                    oModel = this.getModel(sModel);
+                    oView.setBusy(true);
+                oModel.setTransactionModel(this.getModel());
+                oModel.read(sObjectPath, {
+                    filters: aFilter,
+                    success: function (oData) {
+                        oView.setBusy(false);
+                        callback(oData);
+                    }
+                });
+            },
+            /*========================================= oData : End ===============================*/
+            
+            cChanged: function() {
+                console.log("cChanged!!!");
+            },
+            
+            
+            /*========================================= ValueHelp : Start ===============================*/
+            vhMaterialCode: function(oEvent) {
+                console.log("change1:" + oEvent.oSource.getProperty("selectedKey"));
+                that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+                var generalInfoModel = this.getModel("generalInfoList");
+                if (!this.gMatrialDialog) {
+                    this.gMatrialDialog = new MatrialDialog({
+                        title: "Choose Supplier",
+                        multiSelection: false,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", "EQ", "L2100")
+                            ]
+                        }
+                    });
 
+                    this.gMatrialDialog.attachEvent("apply", function (oEvent) {
+                        //console.log("달라지기 있기 없기 sPath:" + that.sPath);
+                        //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.material_code);
+                        generalInfoModel.setProperty(that.sPath + "/material_code", oEvent.mParameters.item.material_code);
+                    }.bind(this));
+                }
+
+                //searObject : 태넌트아이디, 검색 인풋아이디
+                var sSearchObj = {};
+                sSearchObj.tanentId = SppUserSessionUtil.getUserInfo().TENANT_ID;
+                this.gMatrialDialog.open(sSearchObj);
+            },
+
+            vhSupplierCode: function(oEvent) {
+                console.log("change1:" + oEvent.oSource.getProperty("selectedKey"));
+                that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+                var generalInfoModel = this.getModel("generalInfoList");
+                if (!this.gSupplierDialog) {
+                    this.gSupplierDialog = new SupplierDialog({
+                        title: "Choose Supplier",
+                        multiSelection: false,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", "EQ", SppUserSessionUtil.getUserInfo().TENANT_ID)
+                            ]
+                        }
+                    });
+
+                    this.gSupplierDialog.attachEvent("apply", function (oEvent) {
+                        //console.log("달라지기 있기 없기 sPath:" + that.sPath);
+                        //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.material_code);
+                        generalInfoModel.setProperty(that.sPath + "/supplier_code", oEvent.mParameters.item.supplier_code);
+                    }.bind(this));
+                }
+
+                //searObject : 태넌트아이디, 검색 인풋아이디
+                var sSearchObj = {};
+                sSearchObj.tanentId = SppUserSessionUtil.getUserInfo().TENANT_ID;
+                this.gSupplierDialog.open(sSearchObj);
+            },
+
+            vhVendorPoolCode: function(oEvent) {
+                console.log("change1:" + oEvent.oSource.getProperty("selectedKey"));
+                that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+                var generalInfoModel = this.getModel("generalInfoList");
+                if (!this.gVendorPoolDialog) {
+                    this.gVendorPoolDialog = new VendorPoolDialog({
+                        title: "Choose Supplier",
+                        multiSelection: false,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", "EQ", SppUserSessionUtil.getUserInfo().TENANT_ID)
+                            ]
+                        }
+                    });
+
+                    this.gVendorPoolDialog.attachEvent("apply", function (oEvent) {
+                        //console.log("달라지기 있기 없기 sPath:" + that.sPath);
+                        //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.material_code);
+                        generalInfoModel.setProperty(that.sPath + "/vendor_pool_code", oEvent.mParameters.item.supplier_code);
+                    }.bind(this));
+                }
+
+                //searObject : 태넌트아이디, 검색 인풋아이디
+                var sSearchObj = {};
+                sSearchObj.tanentId = SppUserSessionUtil.getUserInfo().TENANT_ID;
+                this.gVendorPoolDialog.open(sSearchObj);
+            },
+
+            /*========================================= ValueHelp : End ===============================*/
+            
             onSetStatus: function (sStatusCodeParam) {
                 var oRootModel = this.getModel("rootModel");
 
@@ -150,8 +310,8 @@ sap.ui.define([
             },
 
             onApproverAdd: function (oParam) {
-                console.log("//// onApproverAdd", oParam);
-                var approver = this.getView().getModel('approver');
+                //console.log("//// onApproverAdd", oParam);
+                var approver = this.getView().getModel("approver");
                 approver.addRecord({
                     "tenant_id": this.tenant_id,
                     "approval_number": this.approval_number,
@@ -189,7 +349,7 @@ sap.ui.define([
                         approver.getData().Approvers[i].selRow = false;
                     }
                 }
-                console.log(" setSelectedApproval ", approver);
+                //console.log(" setSelectedApproval ", approver);
                 this.getModel("approver").refresh(true);
             },
 
@@ -256,54 +416,38 @@ sap.ui.define([
                 return oMaster;
             },
 
+            /*========================================= BasePrice Action : Start ===============================*/
+
             /**
              * Base Price 라인 추가
              */
             onAddBasePrice: function () {
-                var oDetailModel = this.getModel("detailModel");
-                var aDetails = oDetailModel.getProperty("/details");
-                var oToday = new Date();
-                var aPrice = [{ market_code: "1", local_create_dtm: oToday, local_update_dtm: oToday },
-                { market_code: "2", local_create_dtm: oToday, local_update_dtm: oToday }];
-
-                // 화학일 경우 Domestic, Export 구분이 없어서 데이터 하나만 세팅. market_code는 0으로 
-                if (sTenantId === "L2100") {
-                    aPrice = [{ market_code: "0", local_create_dtm: oToday, local_update_dtm: oToday }];
-                }
-
-                aDetails.push({
-                    base_date: oToday,
-                    company_code: "LGCKR",
-                    purOrg: this.getModel("rootModel").getProperty("/purOrg/LGCKR"),
-                    org_code: "",
-                    org_type_code: "PU",
-                    au_code: "10",
-                    base_price_ground_code: "10",
-                    local_create_dtm: oToday,
-                    local_update_dtm: oToday,
-                    prices: aPrice
-                });
-                oDetailModel.refresh();
+                var generalInfoModel = this.getModel("generalInfoList");
+                generalInfoModel.addRecord({
+                    "_row_state_": "C",
+                    "tenant_id": this.tenant_id,
+                    "selRow": true,
+                }, "/GeneralView", 0); // 드래그가 도착한 위치에 내가 선택한 아이템  담기 
+                
+                generalInfoModel.refresh();
             },
 
             /**
              * detail 선택 데이터 체크
              */
             onRowSelectionChange: function (oEvent) {
-                var oDetailModel = this.getModel("detailModel"),
+                var generalInfoModel = this.getModel("generalInfoList"),
                     oParameters = oEvent.getParameters(),
                     bSelectAll = !!oParameters.selectAll;
 
                 // 전체 선택일 경우
                 if (bSelectAll || oParameters.rowIndex === -1) {
-                    var aDetails = oDetailModel.getProperty("/details");
+                    var aDetails = generalInfoModel.getProperty("/GeneralView");
                     aDetails.forEach(function (oDetail) {
                         oDetail.checked = bSelectAll;
                     });
-                }
-                // 단독 선택일 경우
-                else {
-                    var oDetail = oDetailModel.getProperty(oParameters.rowContext.getPath());
+                } else {// 단독 선택일 경우
+                    var oDetail = generalInfoModel.getProperty(oParameters.rowContext.getPath());
                     oDetail.checked = !oDetail.checked;
                 }
             },
@@ -311,21 +455,16 @@ sap.ui.define([
             /**
              * 체크된 detail 데이터 삭제
              */
-            onDeleteDetailRow: function (oEvent) {
-                var oDetailModel = this.getModel("detailModel"),
-                    aDetails = oDetailModel.getProperty("/details"),
-                    oDetailTable = oEvent.getSource().getParent().getParent();
-
-                for (var i = aDetails.length - 1; 0 <= i; i--) {
-                    if (aDetails[i].checked) {
-                        aDetails.splice(i, 1);
-                    }
-                }
-
-                oDetailModel.refresh();
-                oDetailTable.clearSelection();
+            onDeleteBasePrice: function () {
+                var table = this.byId("basePriceTbl"),
+                    model = this.getModel("generalInfoList");
+                table.getSelectedIndices().reverse().forEach(function (idx) {
+                    model.markRemoved(idx);
+                });
             },
 
+            /*========================================= BasePrice Action : End ===============================*/
+            
             /**
              * key값 추출
              */
@@ -339,7 +478,98 @@ sap.ui.define([
 
                 return oKey;
             },
+            
+            /*========================================= Footer Button Action ===============================*/
 
+            onTmpSave: function() {
+                
+                // MessageBox.confirm("Are You Save Data?", {
+                //     title : "Comfirmation",
+                //     initialFocus : sap.m.MessageBox.Action.CANCEL,
+                //     onClose : function(sButton) {
+                //         if (sButton === MessageBox.Action.OK) {
+                            
+                //         }
+                //     }
+                // });
+
+                var procObj = {};
+                var generalList = [];
+                procObj = {
+                    "param" : {
+                        "master" : {
+                            "tenant_id"                       : SppUserSessionUtil.getUserInfo().TENANT_ID,
+                            "company_code"                    : SppUserSessionUtil.getUserInfo().COMPANY_CODE,
+                            "org_type_code"                   : "PL",
+                            "org_code"                        : "5100",
+                            "approval_number"                 : null,				/* 없으면 Insert (undefined, null, ''), 존재하면 Update*/
+                            "approval_title"                  : "Insert Test",
+                            "approval_contents"               : "Insert Test....",
+                            "attch_group_number"              : "temp00",
+                            "net_price_document_type_code"    : "A",
+                            "net_price_source_code"           : "B",
+                            "buyer_empno"                     : "emp00",
+                            "tentprc_flag"                    : true
+                        },
+                        "general" : [
+                            {
+                                "item_sequence"                    : 1             /* (_row_state_ 값에 따라) [C] 불필요, [U,D] 는 필수 */
+                                ,"line_type_code"                  : "lineType"
+                                ,"material_code"                   : "material" 
+                                ,"payterms_code"                   : "payterms"
+                                ,"supplier_code"                   : "supplier"
+                                ,"effective_start_date"            : null
+                                ,"effective_end_date"              : null
+                                ,"surrogate_type_code"             : "surrogate"
+                                ,"currency_code"                   : "KRW"
+                                ,"net_price"                       : 100
+                                ,"vendor_pool_code"                : "VPCODE"
+                                ,"market_code"                     : "market"
+                                ,"net_price_approval_reason_code"  : "reason"
+                                ,"maker_code"                      : "maker"
+                                ,"incoterms"                       : "ico"
+                                ,"_row_state_"                     : "C"		     /* C, U, D */
+                            }
+                        ]
+                    }
+                }
+
+                // this.generalInfoTbl = this.byId("generalInfoTbl");
+                // this.generalInfoList = that.generalInfoTbl.getModel("generalInfoList").getProperty("/GeneralView");
+                // console.log("generalInfoList : " + this.generalInfoList);
+                // procObj.param.general = this.generalInfoList;
+
+                $.ajax({
+                    url: "srv-api/odata/v4/sp.netpriceApprovalDetailV4Service/ApprovalSaveProc",
+                    type: "POST",
+                    data: JSON.stringify(procObj),
+                    contentType: "application/json",
+                    success: function (data) {
+                        console.log('data:', data);
+                        //console.log('data:', data.value[0]);
+                       
+                    },
+                    error: function (e) {
+                        var eMessage = "callProcError",
+                            errorType,
+                            eMessageDetail;
+                       
+                        //sMsg = oBundle.getText("returnMsg", [v_returnModel.return_msg]);
+                        if (e.responseJSON.error.message == undefined || e.responseJSON.error.message == null) {
+                            eMessage = "callProcError";
+                            eMessageDetail = "callProcError";
+                        } else {
+                            eMessage = e.responseJSON.error.message.substring(0, 8);
+                            eMessageDetail = e.responseJSON.error.message.substring(9);
+                            errorType = e.responseJSON.error.message.substring(0, 1);
+                            console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                            
+                        }
+
+                        console.log(eMessageDetail);
+                    }
+                });
+            },
             /**
              * 저장
              */

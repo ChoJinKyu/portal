@@ -35,7 +35,7 @@
 							</VBox>
 							<VBox>
 								<Label text="{I18N>/REQUEST_DATE}:" labelFor="searchRequestDate"/>
-								<DateRangeSelection id="searchRequestDate" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
+								<DateRangeSelection id="searchRequestDate" displayFormat="yyyy-MM-dd" change=".onhandleChangeDate" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
 								<layoutData>
 									<layout:GridData span="XL2 L4 M6 S12" linebreakM="true"/>
 								</layoutData>
@@ -74,7 +74,7 @@
 							</VBox>
 							<VBox>
 								<Label text="{I18N>/REQUEST_DATE}:" labelFor="searchRequestDate"/>
-								<DateRangeSelection id="searchRequestDateE" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
+								<DateRangeSelection id="searchRequestDateE" displayFormat="yyyy-MM-dd" change=".onhandleChangeDate" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
 								<layoutData>
 									<layout:GridData span="XL2 L4 M6 S12" linebreakM="true"/>
 								</layoutData>
@@ -140,8 +140,8 @@
 						<ColumnListItem type="Navigation" press=".onGoDetail">
 							<cells>
 								<Text text="{maker_request_type_code}"/>
-								<Text text="{requestor_local_name}"/>
-								<Text text="{requestor_department_local_name}"/>
+								<Text text="{=${USER_SESSION>/LANGUAGE_CODE} === 'KO' ? ${requestor_korean_name} : ${requestor_english_name} }"/>
+								<Text text="{=${USER_SESSION>/LANGUAGE_CODE} === 'KO'? ${requestor_department_korean_name} : ${requestor_department_english_name}}" />
                                 <Text text="{path: 'local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { pattern: 'YYYY-MM-dd', UTC: true }}"/>
 								<Text text="{tax_id}"/>
 								<Text text="{maker_local_name}"/>

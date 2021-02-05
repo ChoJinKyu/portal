@@ -64,9 +64,6 @@ sap.ui.define([
             // call the base controller's init function
             BaseController.prototype["op.init"].apply(this, arguments);
 
-            // 품의내용 Text editor
-            this._fnSetRichEditor();
-
             // view에서 사용할 메인 Model
             this.setModel(new JSONModel(), "detailModel"); 
             this.setModel(new JSONModel(), "viewModel"); 
@@ -75,7 +72,9 @@ sap.ui.define([
             this.getRouter().getRoute("midModify").attachPatternMatched(this._onObjectMatched, this);
         },
         
-        onBeforeRendering : function(){            
+        onBeforeRendering : function(){     
+            // 품의내용 Text editor
+            this._fnSetRichEditor();       
         },
 
         onAfterRendering: function () {
@@ -169,14 +168,14 @@ sap.ui.define([
          */
         _fnSetRichEditor : function (){ 
             var that = this,
-                sHtmlValue = "";            
-            var oApprovalLayout = this.getView().byId("idApprovalContentsTextEditor");
-            var oApprovalRTE = oApprovalLayout.getContent()[0];
+                sHtmlValue = "<p> </p>";            
+            var oApprovalLayout = this.getView().byId("idApprovalContentsRTE");
+            //var oApprovalRTE = oApprovalLayout.getContent()[0];
 
             if(!that.oApprovalRichTextEditor){
                 sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
                     function (RTE, EditorType) {
-                        that.oApprovalRichTextEditor = new RTE("prCreateApprovalContentsRTE", {
+                        that.oApprovalRichTextEditor = new RTE(that.getView().getId() + "PrCreateRTE", {
                             editorType: EditorType.TinyMCE4,
                             width: "100%",
                             height: "200px",
@@ -192,7 +191,7 @@ sap.ui.define([
                         oApprovalLayout.addContent(that.oApprovalRichTextEditor);
                 });
             } else {
-                that.oApprovalRichTextEditor.setValue("");
+                that.oApprovalRichTextEditor.setValue("<p> </p>");
             }                
         },
 
@@ -480,6 +479,8 @@ sap.ui.define([
                         let approval_contents = data.results[0].approval_contents;
                         if(approval_contents && approval_contents !== ""){
                             that.oApprovalRichTextEditor.setValue(approval_contents);
+                        }else{
+                            that.oApprovalRichTextEditor.setValue("<p> </p>");
                         }
                     }
                 },
@@ -1041,7 +1042,7 @@ sap.ui.define([
                         delivery_request_date: delivery_request_date,
                         purchasing_group_code: (item.purchasing_group_code) ? item.purchasing_group_code : "",
                         price_unit          : (item.price_unit && item.price_unit !== "") ? item.price_unit+"" : "1",
-                        pr_progress_status_code: (item.pr_progress_status_code && item.pr_progress_status_code != "") ? item.pr_progress_status_code : "",
+                        pr_progress_status_code: "",
                         remark              : (item.remark) ? item.remark : "",
                         sloc_code           : (item.sloc_code) ? item.sloc_code : "",
                         supplier_code       : (item.supplier_code) ? item.supplier_code : "",
@@ -1099,6 +1100,30 @@ sap.ui.define([
             var that=this;
             var oViewModel = this.getModel("viewModel");
             var oSelectedData = oViewModel.getProperty(sSelectedPath);
+            
+
+            // WBS 코드
+            action == "wbs_code"
+            &&
+            this.dialog(new WbsDialog({
+                title: "Choose a WBS code",
+                MultiSelection: false,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", "EQ", this.$session.tenant_id),
+                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code)
+                    ],
+                    sorters: [
+                        new Sorter("wbs_code")
+                    ]
+                }
+            }), function(result) {
+                var oItemData = result.getParameter("item");
+                if(oItemData.wbs_code && oItemData.wbs_code !== ""){
+                    oSelectedData.wbs_code = oItemData.wbs_code;                    
+                    oViewModel.refresh();
+                }            
+            });
 
             // 계정코드
             action == "account_code"
@@ -1108,7 +1133,11 @@ sap.ui.define([
                 MultiSelection: false,
                 items: {
                     filters: [
-                        new Filter("tenant_id", "EQ", this.$session.tenant_id)
+                        new Filter("tenant_id", "EQ", this.$session.tenant_id),
+                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code)
+                    ],
+                    sorters: [
+                        new Sorter("account_code")
                     ]
                 }
             }), function(result) {
@@ -1130,7 +1159,11 @@ sap.ui.define([
                 MultiSelection: false,
                 items: {
                     filters: [
-                        new Filter("tenant_id", "EQ", this.$session.tenant_id)
+                        new Filter("tenant_id", "EQ", this.$session.tenant_id),
+                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code)
+                    ],
+                    sorters: [
+                        new Sorter("cctr_code")
                     ]
                 }
             }), function(result) {
@@ -1149,7 +1182,8 @@ sap.ui.define([
                 MultiSelection: false,
                 items: {
                     filters: [
-                        new Filter("tenant_id", "EQ", this.$session.tenant_id)
+                        new Filter("tenant_id", "EQ", this.$session.tenant_id),
+                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code)
                     ],
                     sorters: [
                         new Sorter("material_code")
@@ -1205,7 +1239,7 @@ sap.ui.define([
                         new Filter("process_type_code", FilterOperator.EQ, "OP01")
                     ],
                     sorters: [
-                        new Sorter("org_name", true)
+                        new Sorter("org_code")
                     ]
                 }
             }), function(result) {
@@ -1227,6 +1261,9 @@ sap.ui.define([
                 items: {
                     filters: [
                         new Filter("tenant_id", "EQ", this.$session.tenant_id)
+                    ],
+                    sorters: [
+                        new Sorter("currency_code")
                     ]
                 }
             }), function(result) {
@@ -1328,50 +1365,6 @@ sap.ui.define([
             }
             this.oSearchMultiMaterialMasterDialog.open();
         },
-        
-        /**
-         * Material Code Dialog에서 Checkbox 선택 시
-         */
-        // onSelectMaterialCode: function (oEvent) {
-        //     var oMaterialCodeModel = this.getModel("materialCodeModel");
-        //     var oParameters = oEvent.getParameters();
-
-        //     oMaterialCodeModel.setProperty(oParameters.listItems[0].getBindingContext("materialCodeModel").getPath()+"/checked", oParameters.selected);
-        // },
-
-        /**
-         * Material Code 선택 후 apply
-         */
-        // onMaterialDetailApply: function (oEvent) {
-        //     var aMaterialCode = this.getModel("materialCodeModel").getProperty("/materialCode");
-        //     var oDetailModel = this.getModel("detailModel");
-        //     var oSelectedDetail = oDetailModel.getProperty(sSelectedPath);
-        //     var bChecked = false;
-
-        //     for( var i=0; i<aMaterialCode.length; i++ ) {
-        //         var oMaterialCode = aMaterialCode[i];
-
-        //         if( oMaterialCode.checked ) {
-        //             oSelectedDetail.material_code = oMaterialCode.material_code;
-
-        //             delete oMaterialCode.checked;
-        //             bChecked = true;
-
-        //             break;
-        //         }
-        //     }
-
-        //     // 선택된 Material Code가 있는지 경우
-        //     if( bChecked ) {
-        //         oDetailModel.refresh();
-        //         this.onClose(oEvent);
-        //     }
-        //     // 선택된 Material Code가 없는 경우
-        //     else {
-        //         MessageBox.error("추가할 데이터를 선택해 주십시오.");
-        //     }
-        // },
-        //==================== Material Code Dialog 끝 ====================
  
 
         //==================== 구매조직코드 검색 Dialog 시작 ====================  
@@ -1794,7 +1787,7 @@ sap.ui.define([
 
 				MessageToast.show("Method Upload is called (" + uploadInfo + ")");
 				MessageBox.information("Uploaded " + uploadInfo);
-				oTextArea.setValue("");
+				oTextArea.setValue("<p> </p>");
 			}
 		},
 

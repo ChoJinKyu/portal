@@ -434,12 +434,16 @@
                         <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
                             <Text text="{I18N>/PR_DATE}" />
                         </Column>
+                        <!-- 진행상태 -->
+                        <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
+                            <Text text="(미정)진행상태" />
+                        </Column>
                     </columns>
                     <items>
                         <ColumnListItem type="Navigation" press=".onColumnListItemPress($event, 'navigation', 'list', {})">
                             <cells>
                                 <!-- 구매요청 번호 -->
-                                <Text text="{list>pr_number}"/>
+                                <Text text="{list>pr_number}" width="10em"/>
                                 <!-- 구매요청 유형 -->
                                 <Text text="{list>pr_type_name}"/>
                                 <!-- 품목 번호 -->
@@ -447,7 +451,7 @@
                                 <!-- 조직코드 -->
                                 <Text text="{list>org_code}"/>
                                 <!-- 자재코드 -->
-                                <Text text="{list>material_code}"/>
+                                <Text text="{list>material_code}" width="10em"/>
                                 <!-- 구매요청 품명 -->                            
                                 <Text text="{list>pr_desc}"/>
                                 <!-- 단위 -->
@@ -456,7 +460,7 @@
                                 <Text text="{
                                     path: 'list>pr_quantity', 
                                     formatter: '.numberFormatter.toNumberString'
-                                }"/>
+                                }" width="10em"/>
                                 <!-- 잔여수량 -->
                                 <Text text="{
                                     path: 'list>remain_quantity', 
@@ -483,6 +487,15 @@
                                     path: 'list>request_date',
                                     formatter: '.dateFormatter.toUTCDateString'
                                 }"/>
+                                <!-- 진행상태 -->
+                                <!-- <Text text="{path: 'list>pr_progress_status_name'}"/> -->
+                                <ObjectStatus
+                                    text="{path: 'list>pr_progress_status_name'}"
+                                    inverted="true"
+                                    active="false"
+                                    icon="sap-icon://message-information"
+                                    state="Information" 
+                                />
                             </cells>
                         </ColumnListItem>
                     </items>

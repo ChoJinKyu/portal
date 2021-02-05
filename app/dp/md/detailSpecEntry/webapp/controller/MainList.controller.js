@@ -20,15 +20,18 @@ sap.ui.define([
     'sap/m/Label',
     'sap/m/Token',
     'sap/m/SearchField',
-    "ext/lib/util/Validator"
-], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, Label, Token, SearchField, Validator) {
+    "ext/lib/util/Validator",
+    "ext/lib/util/SppUserSession"
+], function (BaseController, History, JSONModel, ManagedListModel, DateFormatter, TablePersoController, MainListPersoService, 
+    Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, 
+    Label, Token, SearchField, Validator, SppUserSession) {
 	"use strict";
 
 	return BaseController.extend("dp.md.detailSpecEntry.controller.MainList", {
 
         dateFormatter: DateFormatter,
-        
         validator: new Validator(),
+        userInfo: {},
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -40,7 +43,12 @@ sap.ui.define([
 		 */
 		onInit : function () {
 			var oViewModel,
-				oResourceBundle = this.getResourceBundle();
+                oResourceBundle = this.getResourceBundle();
+                
+            var sppUserSession = new SppUserSession();
+            this.setModel(sppUserSession.getModel(),'USER_SESSION');
+            
+            this.userInfo = this.getSessionUserInfo();
 
 			// Model used to manipulate control states
 			oViewModel = new JSONModel({
@@ -104,7 +112,7 @@ sap.ui.define([
             
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, this.userInfo.TENANT_ID ),
                                     new Filter("company_code", FilterOperator.EQ, companyCode)
                                 ],
                                 and: true
@@ -378,6 +386,7 @@ sap.ui.define([
 
             var params = oEvent.getParameters();
             var divisionFilters = [];
+            var self = this;
 
             if(params.selectedItems.length > 0){
 
@@ -385,14 +394,14 @@ sap.ui.define([
 
                     divisionFilters.push(new Filter({
                                 filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, self.userInfo.TENANT_ID ),
                                     new Filter("company_code", FilterOperator.EQ, item.getKey() )
                                 ],
                                 and: true
                             }));
                 });
             }else{
-                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101' ));
+                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, self.userInfo.TENANT_ID ));
             }
 
             var filter = new Filter({
@@ -494,16 +503,16 @@ sap.ui.define([
             }
 
             var aCols = this.oColModel.getData().cols;
-
+            var self = this;
             
             this.getView().addDependent(this._oValueHelpDialog);
 
             this._oValueHelpDialog.getTableAsync().then(function (oTable) {
 
-                var _filter = new Filter("tenant_id", FilterOperator.EQ, 'L2101' );
+                var _filter = new Filter("tenant_id", FilterOperator.EQ, self.userInfo.TENANT_ID );
                 
-                oTable.setModel(this.getOwnerComponent().getModel());
-                oTable.setModel(this.oColModel, "columns");
+                oTable.setModel(self.getOwnerComponent().getModel());
+                oTable.setModel(self.oColModel, "columns");
                 
                 if (oTable.bindRows) {
                     oTable.bindAggregation("rows", path);
@@ -520,7 +529,7 @@ sap.ui.define([
                     });
                     oTable.getBinding("items").filter(_filter);
                 }
-                this._oValueHelpDialog.update();
+                self._oValueHelpDialog.update();
 
             }.bind(this));
 
@@ -584,7 +593,7 @@ sap.ui.define([
 				and: false
             }));
             
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101' ));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.userInfo.TENANT_ID ));
 
 			this._filterTable(new Filter({
 				filters: aFilters,

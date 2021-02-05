@@ -13,7 +13,7 @@ sap.ui.define([
         manifest: "json"
         },
 
-        init : function () {
+        init : function () { 
             // call the base component's init function
             UIComponent.prototype.init.apply(this, arguments);
 
@@ -27,6 +27,24 @@ sap.ui.define([
 
             var oRootModel = this.getModel("rootModel");
             oRootModel.setSizeLimit(10000);
+
+
+            // 품의 유형
+            var oCodeModel = this.getModel("codeMgt");
+            var aOrgDivFilter = [];
+                aOrgDivFilter.push(new Filter("tenant_id", FilterOperator.Contains, oRootModel.getProperty("/tenantId")));
+                aOrgDivFilter.push(new Filter("group_code", FilterOperator.Contains, 'SP_VI_NET_PRICE_TYPE_CODE'));
+            oCodeModel.read("/CodeLanguages", {
+                filters : aOrgDivFilter,
+                success : function(data){
+                    if( data && data.results ) {
+                        oRootModel.setProperty("/type_code", data.results);                        
+                    }
+                },
+                error : function(data){
+                    console.log("error", data);
+                }
+            });
             
             // 사업부 조회
             var oOrgModel = this.getModel("orgCode");

@@ -18,6 +18,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
+                loadWhenOpen: { type: "boolean", group: "Misc", defaultValue: false },
                 aaa: { type: "string", group: "Appearance", defaultValue: "50em"},
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "50em"},
                 keyField: { type: "string", group: "Misc", defaultValue: "uom_code" },

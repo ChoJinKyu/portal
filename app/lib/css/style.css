@@ -1145,8 +1145,25 @@ html.sap-desktop .sapMToggleBtnPressed, .sapMToggleBtnPressed:not(.sapMBtnDisabl
     border-radius: .25rem;
     border: 1px solid #DAE3ED;
     margin-bottom: .5rem;
-    float: left;
-    margin-right: 1rem;
+}
+
+.sapMUCItemIcon {
+    color: #8996A3;
+    margin-top: .7rem;
+}
+
+:focus {
+    outline: none !important;
+}
+
+.sapMUCButtonContainer {
+    align-self: center;
+}
+
+
+
+.sapMLnk:hover:not(.sapMLnkDsbl) {
+    color: #12A6BE;
 }
 
 .sapMObjStatus {

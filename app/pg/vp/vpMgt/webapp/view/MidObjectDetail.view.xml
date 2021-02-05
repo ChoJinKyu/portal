@@ -190,17 +190,6 @@
                                         <layout:GridData span="XL1 L1 M1 S12" />
                                     </layoutData> 
                                 </VBox>
-                                <VBox id="v_general_maker_material_code_mngt_flag">
-                                    <Label text="Maker P/N" design="Bold" required="true" width="8rem"/> 
-                                        <Switch id="general_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
-                                            <layoutData>
-                                                <FlexItemData growFactor="1" />
-                                            </layoutData>
-                                        </Switch> 
-                                    <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12" />
-                                    </layoutData> 
-                                </VBox>                                  
                                 <VBox id="v_general_sd_exception_flag">
                                     <Label text="{I18N>/SD_FLAG}" design="Bold" required="true"/> 
                                         <Switch id="general_sd_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
@@ -212,6 +201,17 @@
                                         <layout:GridData span="XL1 L1 M1 S12" />
                                     </layoutData> 
                                 </VBox> 
+                                <VBox id="v_general_maker_material_code_mngt_flag">
+                                    <Label text="Maker P/N" design="Bold" required="true" width="8rem"/> 
+                                        <Switch id="general_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                            <layoutData>
+                                                <FlexItemData growFactor="1" />
+                                            </layoutData>
+                                        </Switch> 
+                                    <layoutData>
+                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                    </layoutData> 
+                                </VBox>                                   
                                 <VBox id="v_general_vendor_pool_apply_exception_flag">
                                     <Label text="{I18N>/VP_EXCEPTION_FLAG}" design="Bold" required="true" width="8rem"/> 
                                         <Switch id="general_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
@@ -346,7 +346,7 @@
                                         <Text text="{suplist>supplier_company_code}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="Supplier Operation ORG" width="8em" filterProperty="supplier_company_name">
+                                <table:Column label="{I18N>/COMPANY}" width="8em" filterProperty="supplier_company_name">
                                     <table:template>
                                         <Text text="{suplist>supplier_company_name}" wrapping="false" />
                                     </table:template>
@@ -366,22 +366,41 @@
                                         <!-- <Text text="{suplist>supeval_control_flag}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/EVAL_CONTROL_START_DATE}" width="8em" filterProperty="supeval_control_start_date">
+                                <table:Column label="{I18N>/EVAL_CONTROL_START_DATE}" width="10em" filterProperty="supeval_control_start_date">
                                     <table:template>
                                         <!-- <DatePicker  
                                         placeholder="Date" 
                                         value="{path: 'suplist>/supeval_control_start_date',type: 'sap.ui.model.odata.type.DateTime'}" 
                                         valueFormat="yyyyMMdd" 
                                         displayFormat="yyyy-MM-dd"/> -->
-                                    <DatePicker 
-                                     value="{ path: 'suplist>supeval_control_start_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyyyMMdd' } }" />
+                                    <!-- <DatePicker 
+                                     value="{ path: 'suplist>supeval_control_start_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyyyMMdd' } }" 
+                                     displayFormat="yyyy-MM-dd"
+                                     valueFormat="yyyy-MM-dd"
+                                     /> -->
+                                     <DatePicker 
+                                     value="{ path: 'suplist>supeval_control_start_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                formatOptions: {
+                                                    pattern: 'yyyy-MM-dd'
+                                                } 
+                                            }" 
+                                     displayFormat="yyyy-MM-dd"
+                                     valueFormat="yyyy-MM-dd"
+                                     />
                                         <!-- <Text text="{suplist>supeval_control_start_date}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/EVAL_CONTROL_END_DATE}" width="8em" filterProperty="supeval_control_end_date">
+                                <table:Column label="{I18N>/EVAL_CONTROL_END_DATE}" width="10em" filterProperty="supeval_control_end_date">
                                     <table:template>
                                         <DatePicker 
-                                     value="{ path: 'suplist>supeval_control_end_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyyyMMdd' } }" />
+                                     value="{ path: 'suplist>supeval_control_end_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                formatOptions: {
+                                                    pattern: 'yyyy-MM-dd'
+                                                } 
+                                            }" 
+                                     displayFormat="yyyy-MM-dd"
+                                     valueFormat="yyyy-MM-dd"
+                                     />
                                         
                                     </table:template>
                                 </table:Column>

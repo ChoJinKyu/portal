@@ -141,7 +141,7 @@ sap.ui.define([
         },
         
         onCreateActivity : function(){
-
+            console.log("onCreateActivity");
             var that = this;
             var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
 			this.getRouter().navTo("midPage", {
@@ -160,12 +160,13 @@ sap.ui.define([
         onExportPress : function(_oEvent){
             var sTableId = _oEvent.getSource().getParent().getParent().getId();
             if (!sTableId) { return; }
-
             var oTable = this.byId(sTableId);
-            //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+
             var sFileName = "Product Activity_"+ this._getDTtype();
             var oData = this.getModel("list").getProperty("/PdProdActivityTemplateView"); //binded Data
-            // var oData = oTable.getModel().getProperty("/Uom");
+
+            console.log(oData);
+
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
                 table: oTable,

@@ -233,22 +233,86 @@ sap.ui.define([
         onDialogTreeCreate: function () {
             var oView = this.getView();
 
-            if (!this.treeDialog) {
-                this.treeDialog = Fragment.load({
-                    id: oView.getId(),
-                    name: "pg.vp.vpMgt.view.DialogCreateTree",
-                    controller: this
-                }).then(function (tDialog) {
-                    // connect dialog to the root view of this component (models, lifecycle)
-                    oView.addDependent(tDialog);
-                    return tDialog;
-                });
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
+
+            // var aSearchFilters = [];
+
+
+            if (sSurffix === "S") {
+                var s_Operation_ORG_S = this.getView().byId("search_Operation_ORG_S").getSelectedKey();
+                var s_Operation_UNIT_S = this.getView().byId("search_Operation_UNIT_S").getSelectedKey();
+
+
+                if (s_Operation_ORG_S && s_Operation_ORG_S.length > 0 && s_Operation_UNIT_S && s_Operation_UNIT_S.length > 0) {
+
+                    if (!this.treeDialog) {
+                        this.treeDialog = Fragment.load({
+                            id: oView.getId(),
+                            name: "pg.vp.vpMgt.view.DialogCreateTree",
+                            controller: this
+                        }).then(function (tDialog) {
+                            // connect dialog to the root view of this component (models, lifecycle)
+                            oView.addDependent(tDialog);
+                            return tDialog;
+                        });
+                    }
+                    this.treeDialog.then(function (tDialog) {
+                        tDialog.open();
+                        this.onDialogTreeSearch();
+                        // this.onAfterDialog();
+                    }.bind(this));   
+                }
+                else {
+                    MessageToast.show("필수값을 입력 하세요.");
+                }
             }
-            this.treeDialog.then(function (tDialog) {
-                tDialog.open();
-                this.onDialogTreeSearch();
-                // this.onAfterDialog();
-            }.bind(this));
+            else if (sSurffix === "E") {
+
+                var s_Operation_ORG_E = this.getView().byId("search_Operation_ORG_E").getSelectedKey();
+                var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
+
+                if (s_Operation_ORG_E && s_Operation_ORG_E.length > 0 && s_Operation_UNIT_E && s_Operation_UNIT_E.length > 0) {
+
+                    if (!this.treeDialog) {
+                        this.treeDialog = Fragment.load({
+                            id: oView.getId(),
+                            name: "pg.vp.vpMgt.view.DialogCreateTree",
+                            controller: this
+                        }).then(function (tDialog) {
+                            // connect dialog to the root view of this component (models, lifecycle)
+                            oView.addDependent(tDialog);
+                            return tDialog;
+                        });
+                    }
+                    this.treeDialog.then(function (tDialog) {
+                        tDialog.open();
+                        this.onDialogTreeSearch();
+                        // this.onAfterDialog();
+                    }.bind(this));                    
+
+                }
+                else {
+                    MessageToast.show("필수값을 입력 하세요.");
+                }
+
+            }
+
+            // if (!this.treeDialog) {
+            //     this.treeDialog = Fragment.load({
+            //         id: oView.getId(),
+            //         name: "pg.vp.vpMgt.view.DialogCreateTree",
+            //         controller: this
+            //     }).then(function (tDialog) {
+            //         // connect dialog to the root view of this component (models, lifecycle)
+            //         oView.addDependent(tDialog);
+            //         return tDialog;
+            //     });
+            // }
+            // this.treeDialog.then(function (tDialog) {
+            //     tDialog.open();
+            //     this.onDialogTreeSearch();
+            //     // this.onAfterDialog();
+            // }.bind(this));
         },
 
         createTreePopupClose: function (oEvent) {
@@ -927,7 +991,7 @@ sap.ui.define([
             var svendor_pool_desc = this.getView().byId("pop_vendor_pool_desc").getValue().trim();
 
             if (pop_d_state == "leaf") {
-                var srepr_department_code = this.getView().byId("pop_repr_department_name").getValue().trim();
+                var srepr_department_code = this.getView().byId("pop_repr_department_code").getValue().trim();
                 var sindustry_class_code = this.getView().byId("pop_industry_class_code").getSelectedKey();
                 var sinp_type_code = this.getView().byId("pop_inp_type_code").getSelectedKey();
                 var splan_base = this.getView().byId("pop_plan_base").getSelectedKey();
@@ -992,8 +1056,8 @@ sap.ui.define([
                     , vendor_pool_local_name: svendor_pool_local_name
                     , vendor_pool_english_name: svendor_pool_english_name
                     , vendor_pool_desc: svendor_pool_desc
-                    // , repr_department_code: srepr_department_code
-                    , repr_department_code: "11010002"
+                    , repr_department_code: srepr_department_code
+                    // , repr_department_code: "11010002"
                     , industry_class_code: sindustry_class_code
                     , inp_type_code: sinp_type_code
                     , mtlmob_base_code: splan_base
@@ -1007,8 +1071,6 @@ sap.ui.define([
                     // "local_update_dtm": "2020-11-09T00:00:00Z",
                     , dom_oversea_netprice_diff_rate: parseFloat(sdom_oversea_netprice_diff_rate)
                     , domestic_net_price_diff_rate: parseFloat(sdomestic_net_price_diff_rate)
-
-
                 });
 
                 inputInfo.inputData.vpMst = vpMstList;

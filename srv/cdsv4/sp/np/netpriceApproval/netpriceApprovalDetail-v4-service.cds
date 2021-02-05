@@ -29,7 +29,7 @@ namespace sp;
 service NpApprovalDetailV4Service {
 
     /* 기본 Result */
-    type DefaultResultType : {
+    type BaseResultType : {
         return_code      : String(2);
         return_msg       : String(5000);
     };
@@ -100,10 +100,8 @@ service NpApprovalDetailV4Service {
     /**
     
     */
-    type SaveResultType : {
-        return_code      : String(2);
-        return_msg       : String(5000);
-        approval_number  : String(5000);
+    type SaveResultType : BaseResultType {
+        approval_number  : String(30);
     };
 
 
@@ -114,14 +112,19 @@ service NpApprovalDetailV4Service {
 
     /* 상태 변경 Proc Parameter */
     type StatusChangeParamType : {
-        tenant_id           : String(5) ; // 'L1100'
-        company_code        : String(10); // '회사코드'
-        approval_number     : String(50); // '품의번호'
+        tenant_id           : String(5) ; // L1100
+        company_code        : String(10); // 회사코드
+        approval_number     : String(50); // 품의번호
+        approve_status_code : String(30); // 품의상태코드
     }
 
+    /**
+    
+    */
+    type StatusChangeResultType : BaseResultType {
+    };
 
-
-    action ApprovalStatusChagneProc( param : StatusChangeParamType ) returns DefaultResultType;
+    action ApprovalStatusChangeProc( param : StatusChangeParamType ) returns StatusChangeResultType;
 
 
 
@@ -135,8 +138,14 @@ service NpApprovalDetailV4Service {
         approval_number   : String(50)    ; // '품의번호'
     }
 
+    /**
+    
+    */
+    type DeleteResultType : BaseResultType {
+    };
 
-    action ApprovalDeleteProc( param : StatusChangeParamType ) returns DefaultResultType;
+
+    action ApprovalDeleteProc( param : StatusChangeParamType ) returns DeleteResultType;
 
 
 }

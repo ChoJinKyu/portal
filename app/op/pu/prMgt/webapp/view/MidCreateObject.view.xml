@@ -97,7 +97,7 @@
                             
                                 <HBox alignItems="Center">
                                     <Label text="{I18N>/APPROVAL_CONTENTS}" class="sapUiTinyMarginEnd" width="5em" textAlign="Left" />
-                                    <layout:VerticalLayout id="idApprovalContentsTextEditor" class="sapUiTinyMarginEnd" width="60em"></layout:VerticalLayout>
+                                    <layout:VerticalLayout id="idApprovalContentsRTE" class="sapUiTinyMarginEnd" width="60em"></layout:VerticalLayout>
                                 </HBox>                         
                         </layout:VerticalLayout> 
                         
@@ -287,7 +287,7 @@
                                         <Input value="{viewModel>wbs_code}"
                                             showValueHelp="true"
                                             valueHelpOnly="true"
-                                            valueHelpRequest=".onOpenSearchWbsDialog"
+                                            valueHelpRequest=".onValueHelpRequest($event, 'wbs_code', {})" 
                                             textAlign="Begin"
                                             maxLength="30"
                                             required="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/WBS_CODE/mandatory_column_flag}"/>

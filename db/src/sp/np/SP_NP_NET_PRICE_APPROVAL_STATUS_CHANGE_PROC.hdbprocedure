@@ -24,7 +24,8 @@ BEGIN
     *********** 변수 선언 **********************************************************
     *******************************************************************************/
 
-    DECLARE V_CURRENT_STATUS_CODE NVARCHAR(10);
+    DECLARE V_CURRENT_STATUS_CODE             NVARCHAR(10);
+    DECLARE V_NET_PRICE_DOCUMENT_TYPE_CODE    NVARCHAR(30);
 
 
 
@@ -63,11 +64,20 @@ BEGIN
             SIGNAL V_USER_EXCEPTION;
         END;
 
-        SELECT APPROVE_STATUS_CODE
+        SELECT CAM.APPROVE_STATUS_CODE
+              ,NAM.NET_PRICE_DOCUMENT_TYPE_CODE
           INTO V_CURRENT_STATUS_CODE
-          FROM CM_APPROVAL_MST 
-         WHERE TENANT_ID          = :I_TENANT_ID
-           AND APPROVAL_NUMBER    = :I_APPROVAL_NUMBER
+              ,V_NET_PRICE_DOCUMENT_TYPE_CODE
+          FROM CM_APPROVAL_MST  CAM
+         INNER JOIN SP_NP_NET_PRICE_APPROVAL_MST NAM
+            ON NAM.TENANT_ID          = CAM.TENANT_ID
+           AND NAM.COMPANY_CODE       = CAM.COMPANY_CODE
+           AND NAM.ORG_TYPE_CODE      = CAM.ORG_TYPE_CODE
+           AND NAM.ORG_CODE           = CAM.ORG_CODE
+           AND NAM.APPROVAL_NUMBER    = CAM.APPROVAL_NUMBER
+
+         WHERE CAM.TENANT_ID          = :I_TENANT_ID
+           AND CAM.APPROVAL_NUMBER    = :I_APPROVAL_NUMBER
         ;
     END;
 
@@ -81,6 +91,7 @@ BEGIN
     'AP'	'Approved'          : Approval Request 또는 In-Approval 상태에서만 가능
     'RJ'	'Rejected'          : Approval Request 또는 In-Approval 상태에서만 가능
     */
+
     IF I_APPROVE_STATUS_CODE NOT IN ('DR', 'AR', 'IA', 'AP', 'RJ') THEN
         O_RETURN_CODE = 'NG010';
         O_RETURN_MSG  = '변경하시려는 상태코드가 잘못되었습니다.';
@@ -128,7 +139,18 @@ BEGIN
 
 
     ELSEIF I_APPROVE_STATUS_CODE = 'AP' THEN
+        -- 단가마스터, 단가품의 마스터 저장
+        IF V_NET_PRICE_DOCUMENT_TYPE_CODE = 'I' THEN
+            /* 단가 등록
+              0. 해당 기간에 포함되는 건이 2건 이상이면, Exception 발생
+              1. 동일한 시작일자가 존재하면, Update
+              2. 동일한 시작일자가 아닌, 기간에 포함되는 건이면, 종료일자를 시작일자 하루 전으로 Update, 신규 Insert
+            */
+        ELSEIF V_NET_PRICE_DOCUMENT_TYPE_CODE = 'C' THEN
+            /* 단가 무조건 Insert
+            */
 
+        END IF;
 
     ELSEIF I_APPROVE_STATUS_CODE = 'RJ' THEN
 

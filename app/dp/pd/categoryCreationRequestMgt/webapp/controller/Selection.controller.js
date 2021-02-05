@@ -174,7 +174,7 @@ sap.ui.define([
             var oDetailsData = oDetailsModel.oData;
             var oDetailsTable = this.byId("detailsTable");
 
-            var progressCode, CUType;
+            var progressCode, CUType, statsCode;
 
             if (this._sRequestNumber !== "new"){
                 CUType = "U";
@@ -186,6 +186,7 @@ sap.ui.define([
                     }
                     progressCode = "A";
                 }else if( flag == "R"){
+                    statsCode = "SUBMIT";
                     progressCode = "B";
                 }else if( flag == "J") {
                     progressCode = "E";
@@ -193,12 +194,16 @@ sap.ui.define([
                     progressCode = "C";
                 }else if( flag == "C") {
                     progressCode = "D";
+                }else if( flag == "DL") {
+                    CUType = "D";
                 }
             } else {
                 CUType = "C";
+                statsCode = "DRAFT";
                 if( flag == "D"){
                     progressCode = "A";
                 }else if( flag == "R"){
+                    statsCode = "SUBMIT";
                     progressCode = "B"
                 }
             }
@@ -252,10 +257,18 @@ sap.ui.define([
             if(this.validator.validate(this.byId("midObjectForm")) !== true) return;
 
             var url = "srv-api/odata/v4/dp.creationRequestV4Service/PdCreationRequestSaveProc";
+            var title, confirm;
+            if(flag!="DL") {
+                title = this.getModel("I18N").getText("/SAVE");
+                confirm = this.getModel("I18N").getText("/NCM00001");
+            } else {
+                title = this.getModel("I18N").getText("/DELETE");
+                confirm = this.getModel("I18N").getText("/NCM00003");
+            }
 
 			oTransactionManager.setServiceModel(this.getModel());
-			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
-				title : this.getModel("I18N").getText("/SAVE"),
+			MessageBox.confirm(confirm, {
+				title : title,
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
@@ -280,6 +293,9 @@ sap.ui.define([
                                         v_this.onPageNavBackButtonPress();
                                     }else if(flag == "A"){
                                         sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                        v_this.onPageNavBackButtonPress();
+                                    }else if(flag == "DL"){
+                                        sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01002"));
                                         v_this.onPageNavBackButtonPress();
                                     }else if(flag == "C"){
                                         MessageBox.confirm("검토 완료되었습니다. \n Category를 생성을 진행하시겠습니까?", {
@@ -314,8 +330,8 @@ sap.ui.define([
 
         onMoveAddCreate: function (oEvent) {
             this.getRouter().navTo("addCreatePage", {
-                tenantId: this._sTenantId,
-                requestNumber: this._sRequestNumber
+                requestNumber: this._sRequestNumber,
+                categoryGroupCode: this._sCategoryGroupCode
             }, true);
         },
 
@@ -468,15 +484,16 @@ sap.ui.define([
             //this.byId("page").setProperty("showFooter", true);
             
             this.byId("pageNavBackButton").setVisible(true);
-            // if(this.statusGloCode =="DRAFT" || this.statusGloCode =="REQUEST REWRITING"){
-            //     this.byId("pageEditButton").setEnabled(true);
-            // }else{
-            //     this.byId("pageEditButton").setEnabled(false);
-            // }
-            // this.byId("pageSaveButton").setEnabled(false);
-            // this.byId("pageCancelButton").setEnabled(false);
-            // this.byId("pageListButton").setEnabled(true);
-            // this.byId("pageSubmitButton").setEnabled(false);
+            this.byId("pageEditButton").setEnabled(true);
+            
+            this.byId("pageNSaveButton").setEnabled(false);
+            this.byId("pageASaveButton").setEnabled(false);
+            this.byId("pageNCancelButton").setEnabled(false);
+            this.byId("pageACancelButton").setEnabled(false);
+            this.byId("pageNListButton").setEnabled(true);
+            this.byId("pageAListButton").setEnabled(true);
+            this.byId("pageNSubmitButton").setEnabled(false);
+            this.byId("pageASubmitButton").setEnabled(false);
         },
         
         _toEditMode: function () {
@@ -485,11 +502,15 @@ sap.ui.define([
             var oMasterModel = this.getModel("master")
             //this.byId("page").setProperty("showFooter", true);
             this.byId("pageNavBackButton").setVisible(false);
-            // this.byId("pageEditButton").setEnabled(false);
-            // this.byId("pageSaveButton").setEnabled(true);
-            // this.byId("pageCancelButton").setEnabled(true);
-            // this.byId("pageListButton").setEnabled(false);
-            // this.byId("pageSubmitButton").setEnabled(true);
+            this.byId("pageEditButton").setEnabled(false);
+            this.byId("pageNSaveButton").setEnabled(true);
+            this.byId("pageASaveButton").setEnabled(true);
+            this.byId("pageNCancelButton").setEnabled(true);
+            this.byId("pageACancelButton").setEnabled(true);
+            this.byId("pageNListButton").setEnabled(false);
+            this.byId("pageAListButton").setEnabled(false);
+            this.byId("pageNSubmitButton").setEnabled(true);
+            this.byId("pageASubmitButton").setEnabled(true);
         },
 
         onSearchPartCategory: function (oEvent) {
@@ -554,10 +575,16 @@ sap.ui.define([
         selectPartCategoryValue: function (oEvent) {
             var row = this.getView().getModel("tree").getObject(oEvent.getParameters().rowContext.sPath);
 
-            this.byId("searchField").setValue( "[" + row.category_code + " ] " + row.category_name);
-            this.byId("similarCategoryCode").setText( "[" + row.category_code + " ] " + row.category_name);
+            if(row.drill_state !== "leaf"){
+                MessageToast.show("Leaf Category만 선택할 수 있습니다.");
+                return;
+            } else {
+                this.byId("searchField").setValue( "[" + row.category_code + " ] " + row.category_name);
+                this.byId("similarCategoryCode").setText( "[" + row.category_code + " ] " + row.category_name);
 
-            this.partCategoryPopupClose();
+                this.partCategoryPopupClose();
+            }
+            
         },
        
         

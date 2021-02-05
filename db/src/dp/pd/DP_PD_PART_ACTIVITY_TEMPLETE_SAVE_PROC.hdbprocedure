@@ -28,6 +28,7 @@ SQL SECURITY INVOKER
 
 AS
 BEGIN
+    DECLARE V_CNT INTEGER;
     DECLARE V_TENANT_ID NVARCHAR(5);
     DECLARE V_COMPANY_CODE NVARCHAR(10);
     DECLARE V_ORG_TYPE_CODE NVARCHAR(2);
@@ -93,8 +94,29 @@ BEGIN
 
     IF :CRUD_TYPE = 'D' THEN
     /* DP_PD_ACTIVITY_MAPPING 에 존재하는 경우, 삭제할 수 없다는 메세지 Return => 메세지박스 처리 */
- 
-    
+        SELECT COUNT(*)	
+        INTO   V_CNT		
+        FROM   DUMMY			
+        WHERE  EXISTS			
+                (   SELECT A.ACTIVITY_CODE	
+                    FROM   DP_PD_PART_ACTIVITY_TEMPLATE A, DP_PD_ACTIVITY_MAPPING B
+                    WHERE  A.TENANT_ID = V_TENANT_ID
+                    AND    A.COMPANY_CODE = V_COMPANY_CODE
+                    AND    A.ORG_TYPE_CODE = V_ORG_TYPE_CODE
+                    AND    A.ORG_CODE = V_ORG_CODE
+                    AND    A.ACTIVITY_CODE = V_ACTIVITY_CODE	
+                    AND    A.TENANT_ID =B.TENANT_ID
+                    AND    A.COMPANY_CODE = B.COMPANY_CODE
+                    AND    A.ORG_TYPE_CODE = B.ORG_TYPE_CODE
+                    AND    A.ORG_CODE = B.ORG_CODE
+                    AND    A.ACTIVITY_CODE = B.ACTIVITY_CODE	
+                )
+        ;	
+        IF V_CNT > 0 THEN
+            O_MSG = SELECT 'NG' RETURN_CODE, 'You cannot delete mapping data.' RETURN_MSG FROM DUMMY;
+            RETURN;
+        END IF;
+
         DELETE FROM DP_PD_PART_BASE_ACTIVITY_LNG D
         WHERE  D.TENANT_ID = V_TENANT_ID
         AND    D.ACTIVITY_CODE = V_ACTIVITY_CODE

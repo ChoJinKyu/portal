@@ -855,8 +855,7 @@ sap.ui.define([
         //     if(!this.oCctrMultiSelectionValueHelp){
         //         this.oCctrMultiSelectionValueHelp = new CctrDialog({
         //             title: "Choose Cctrs",
-        //             multiSelection: true,
-        //             effectiveDate: this.getFormatDate( new Date()),
+        //             multiSelection: true,                   
         //             items: {
         //                 filters: [
         //                     new Filter("tenant_id", FilterOperator.EQ, "L2100"),

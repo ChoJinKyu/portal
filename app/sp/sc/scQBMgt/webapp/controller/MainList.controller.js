@@ -569,6 +569,17 @@ sap.ui.define([
                 // 기존 끝
 
                 var oBinding = e.getParameters().bindingParams;
+                var oFilters = [];
+
+                // 첫조회 시 데이터 안나오게
+                if(!this._firstFlag){
+                    this._firstFlag = true;
+                    oFilters.push(new Filter("nego_document_number", "EQ", ""));
+                    oBinding.filters = oFilters;
+                    return;
+                }
+
+                
                 var filterTitle = this.byId("inputFilterTitle").getValue();
                 var filterNegoNo = this.byId("inputFilterNegoNo").getValue();
                 var filterNegoType = this.byId("filterNegotiationType");
@@ -577,7 +588,6 @@ sap.ui.define([
                 var filterAwardStatus = this.byId("comboAwardStatus");
                 var filterBuyer = this.byId("inputFilterBuyer");
                 
-                var oFilters = [];
                 var oFilter = new Filter("nego_document_title", "Contains", filterTitle);
                 oFilters.push(oFilter);
                 oFilters.push(new Filter("nego_document_number", "Contains", filterNegoNo));
@@ -645,8 +655,9 @@ sap.ui.define([
                 for(var i=0; i<oBuyerTokens.length; i++){
                     var oToken = oBuyerTokens[i];
                     oText = oToken.mProperties.text;
-                    oFilters.push(new Filter("buyer_empno", "EQ", oText));
-                    console.log( "oToken.mProperties.text ====== ", oToken.mProperties.text);
+                    oKey = oToken.mProperties.key;
+                    oFilters.push(new Filter("buyer_empno", "EQ", oKey));
+                    console.log( "oToken.mProperties.text ====== ", oKey);
                 }
                 
 

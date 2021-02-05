@@ -1,4 +1,5 @@
 namespace op;	
+using util from '../../../cm/util/util-model';
 
 @cds.persistence.exists
 entity Pu_Pr_Mst_View {	
@@ -25,6 +26,8 @@ entity Pu_Pr_Mst_View {
         erp_pr_type_code        : String(30)                @title: 'ERP구매요청유형코드' ;	
         erp_pr_number           : String(50)                @title: 'ERP구매요청번호' ;	
         approval_contents       : LargeString               @title: '품의내용' ;
+
         pr_progress_status_cnt  : Integer                   @title: '구매진행건수' ;
         pr_dtl_cnt              : Integer                   @title: '구매요청건수' ;
     }	
+extend Pu_Pr_Mst_View with util.Managed;    

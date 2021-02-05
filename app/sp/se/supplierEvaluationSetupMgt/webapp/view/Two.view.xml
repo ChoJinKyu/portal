@@ -87,6 +87,7 @@
 
                                                         fieldGroupIds="required"
                                                         required="true"
+                                                        
                                                         />      
                                                 <!--  평가 비율 -->
                                                 <Label text="{I18N>/EVALUATION_RATE}"/>                                                
@@ -98,6 +99,7 @@
 
                                                         fieldGroupIds="required"
                                                         required="true"
+                                                        enabled="{= ${TwoView>/isEditMode}}"
                                                         />
                                                         
                                                 <!-- Column2. 평가 유형 명 -->
@@ -110,6 +112,7 @@
 
                                                         fieldGroupIds="required"
                                                         required="true"
+                                                        enabled="{= ${TwoView>/isEditMode}}"
                                                         />
                                                 
                                                  <!-- 사용여부  -->
@@ -200,10 +203,13 @@
                                                 width="100%" 
                                                 placeholder="EVALUATION_GRADE"
                                                 value="{TwoView>evaluation_grade}"
-                                                enabled="{= ${TwoView>/isCreateMode} === true ? true : ${TwoView>tansaction_code} === 'I' ? true : false}" 
-                                                
+                                                enabled="{=
+                                                                ${TwoView>/isEditMode}
+                                                            }"
+                                                editable="{= ${TwoView>/isCreateMode} === true ? true : ${TwoView>tansaction_code} === 'I' ? true : false}"
                                                 fieldGroupIds="required"
                                                 required="true"
+                                                
                                                 
                                                 />
                                                 <Input   
@@ -216,6 +222,7 @@
                                                 fieldGroupIds="required"
                                                 required="true"
                                                 change="onChangeEdit"
+                                                enabled="{= ${TwoView>/isEditMode}}"
                                                 />
                                                 <Input   
                                                 width="100%" 
@@ -227,6 +234,7 @@
                                                 fieldGroupIds="required"
                                                 required="true"
                                                 change="onChangeEdit"
+                                                enabled="{= ${TwoView>/isEditMode}}"
                                                 />
                                                 <ComboBox selectedKey="{TwoView>inp_apply_code}" width="100%" items="{
                                                             path: 'common>/Code',
@@ -240,7 +248,11 @@
                                                             }"
                                                             fieldGroupIds="required"          
                                                             required="true"
-                                                            change="onChangeEdit">
+                                                            change="onChangeEdit"
+                                                            enabled="{=
+                                                                ${TwoView>/isEditMode}
+                                                              }"
+                                                            >
                                                             <items>
                                                                 <core:Item key="{common>code}" text="{common>code_name}" />
                                                             </items>

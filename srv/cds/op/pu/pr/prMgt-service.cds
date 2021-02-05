@@ -5,6 +5,7 @@ using {op.Pu_Pr_Mst_View as prMstView}              from '../../../../../db/cds/
 using {op.Pu_Pr_Dtl as prDtl}                       from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL-model';
 using {op.Pu_Pr_Account as prAccounts }             from '../../../../../db/cds/op/pu/pr/OP_PU_PR_ACCOUNT-model';
 using {op.Pu_Pr_Service as prServices }             from '../../../../../db/cds/op/pu/pr/OP_PU_PR_SERVICE-model';
+using {op.Pu_Pr_Template_Mst as prTMst}             from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_MST-model';
 using {op.Pu_Pr_Template_Map as prTMap}             from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_MAP-model';
 using {op.Pu_Pr_Template_Lng as prTLng}             from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_LNG-model';
 using {cm.Code_Lng as cdLng}                        from '../../../../../db/cds/cm/CM_CODE_LNG-model';
@@ -59,6 +60,12 @@ service PrMgtService {
                 erp_pr_type_code,
                 erp_pr_number,
                 approval_contents,
+                local_create_dtm     ,    
+                local_update_dtm     ,    
+                create_user_id       , 
+                update_user_id       , 
+                system_create_dtm    , 
+                system_update_dtm    , 
                 pr_dtl_cnt,
                 pr_progress_status_cnt,
                 CONCAT(
@@ -238,6 +245,25 @@ service PrMgtService {
 
     entity Pr_TDtl    as projection on op.Pu_Pr_Template_Dtl;
     entity Pr_TLng    as projection on op.Pu_Pr_Template_Lng;
+    
+    view Pr_TLngView as
+        Select 
+            key tenant_id                  ,  //: String(5)      not null @title: '테넌트ID' ;	
+            key pr_template_number         ,  //: String(10)     not null @title: '구매요청템플릿번호' ;
+                erp_interface_flag         ,  //: Boolean        not null @cds.on.insert:false @title: 'ERP인터페이스여부' ;	
+                default_template_number    ,  //: String(10)          @title: '기본템플릿번호' ;	
+                use_flag                   ,  //: Boolean        not null @cds.on.insert:false @title: '사용여부' ;	
+                approval_flag              ,  //: Boolean        not null @cds.on.insert:false @title: '품의여부' ;	
+                default_template_flag      ,  //: Boolean      not null @cds.on.insert:false @title: '기본템플릿여부' ; 
+                (
+                    select pr_template_name from Pr_TLng
+                    where   tenant_id           = prTMst.tenant_id
+                        and pr_template_number  = prTMst.pr_template_number
+                        and language_code = 'KO'
+                ) as pr_template_name     : String(100)
+        from prTMst ;
+
+
 
     // 간단한 View 생성
     view Pr_TMapView as

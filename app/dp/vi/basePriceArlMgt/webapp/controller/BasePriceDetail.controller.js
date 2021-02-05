@@ -15,10 +15,11 @@ sap.ui.define([
     "./MaterialOrgDialog",
     "sp/util/control/ui/SupplierDialog",
     "dpmd/util/controller/EmployeeDeptDialog",
-    "sap/m/Token"
+    "sap/m/Token",
+    "sap/ui/richtexteditor/RichTextEditor"
 ],
   function (BaseController, ManagedListModel, TransactionManager, Validator, Formatter, DateFormatter, JSONModel, ODataModel,
-        MessageBox, Fragment, Filter, FilterOperator, MessageToast, MaterialOrgDialog, SupplierDialog, EmployeeDeptDialog, Token) {
+        MessageBox, Fragment, Filter, FilterOperator, MessageToast, MaterialOrgDialog, SupplierDialog, EmployeeDeptDialog, Token, RichTextEditor) {
     "use strict";
 
     var _sSelectedDialogPath, _sTenantId;
@@ -98,6 +99,37 @@ sap.ui.define([
             oDetailViewModelParam.setProperty("/processFlowIcons", aProcessFlowIcon);
         },
 
+        onRichTextEditorRendering : function () {
+            var that = this;
+            var sId = that.getView().getId();
+            var oEditor = sap.ui.getCore().byId(sId+"myRTE");
+            
+            if( oEditor ) {
+                oEditor.destroy();
+            }
+
+            setTimeout(function () {
+                sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
+				function (RTE, EditorType) {
+					var oRichTextEditor = new RTE(sId+"myRTE", {
+						editorType: EditorType.TinyMCE4,
+						width: "100%",
+                        height: "200px",
+                        visible: "{detailViewModel>/viewMode}",
+						customToolbar: true,
+						showGroupFont: true,
+						showGroupLink: true,
+						showGroupInsert: true,
+                        value: "{detailModel>/approval_contents}",
+						ready: function () {
+							this.addButtonGroup("styleselect").addButtonGroup("table");
+						}
+					});
+					that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
+            });
+            }, 1000);
+        },
+
         onInit: function () {
             var oRootModel = this.getOwnerComponent().getModel("rootModel");
             _sTenantId = oRootModel.getProperty("/tenantId");
@@ -120,7 +152,7 @@ sap.ui.define([
             // Currency 데이터 조회 시작
             var oCurrencyODataModel = this.getOwnerComponent().getModel("currencyODataModel");
             oCurrencyODataModel.read("/Currency", {
-                filters : [],
+                filters : [new Filter("tenant_id", FilterOperator.EQ, _sTenantId)],
                 success : function(data){
                     if( data && data.results ) {
                         oDetailViewModel.setProperty("/currency", data.results);
@@ -135,7 +167,8 @@ sap.ui.define([
             // Basis 데이터 조회 시작
             var oCommonODataModel = this.getOwnerComponent().getModel("commonODataModel");
             oCommonODataModel.read("/Code", {
-                filters : [new Filter("group_code", FilterOperator.EQ, "DP_VI_BASE_PRICE_GROUND_CODE")],
+                filters : [new Filter("tenant_id", FilterOperator.EQ, _sTenantId),
+                            new Filter("group_code", FilterOperator.EQ, "DP_VI_BASE_PRICE_GROUND_CODE")],
                 success : function(data){
                     if( data && data.results ) {
                         oDetailViewModel.setProperty("/basis", data.results);
@@ -149,7 +182,8 @@ sap.ui.define([
 
             // 변경사유 데이터 조회 시작
             oCommonODataModel.read("/Code", {
-                filters : [new Filter("group_code", FilterOperator.EQ, "DP_VI_CHANGE_REASON_CODE")],
+                filters : [new Filter("tenant_id", FilterOperator.EQ, _sTenantId),
+                        new Filter("group_code", FilterOperator.EQ, "DP_VI_CHANGE_REASON_CODE")],
                 success : function(data){
                     if( data && data.results ) {
                         oDetailViewModel.setProperty("/changeReason", data.results);
@@ -182,6 +216,8 @@ sap.ui.define([
             var oRootModel = this.getModel("rootModel");
             var oApproverModel = this.getModel("approver");
             var oSelectedData = oRootModel.getProperty("/selectedData");
+
+            this.onRichTextEditorRendering();
 
             // Approval Line 초기화 시작
             oApproverModel.setProperty("/entityName", "Approvers");
@@ -322,6 +358,10 @@ sap.ui.define([
             }else
             // Create 버튼으로 넘어오는 경우
             {
+                // if( !oRootModel.getProperty("/bCheckInner") ) {
+                //     this.onGoToList();
+                // }
+
                 // 기준단가 기본 데이터 세팅
                 var oToday = new Date();
                 var oNewBasePriceData = {
@@ -331,6 +371,10 @@ sap.ui.define([
                                     "approval_type_code": oRootModel.getProperty("/selectedApprovalType"),   // V10: 신규, V20: 변경
                                     "approve_status_code": "",    
                                     "requestor_empno": "5457",
+                                    "requestor_local_nm": "**용",
+                                    "requestor_job_title": "책임",
+                                    "requestor_dept_local_nm": "학위과정파견팀",
+                                    "approval_contents": "",
                                     "request_date": this._changeDateString(oToday),
                                     "details": []};
                 oDetailModel.setData(oNewBasePriceData);
@@ -480,7 +524,7 @@ sap.ui.define([
                 oDefault.change_reason_code = "10";
             }            
 
-            aDetails.push(oDefault);
+            aDetails.unshift(oDefault);
             oDetailModel.refresh();
         },
 
@@ -883,6 +927,7 @@ sap.ui.define([
         onGoToList: function () {
             var oRootModel = this.getModel("rootModel");
             oRootModel.setProperty("/selectedData", null);
+            oRootModel.setProperty("/bCheckInner", true);
 
             this.getRouter().navTo("basePriceList");
         },
@@ -920,6 +965,8 @@ sap.ui.define([
 
             this._oFamilyMaterialDialog.then(function(oDialog) {
                 oDialog.open();
+                var oDialogModel = this.getModel("dialogModel");
+                oDialogModel.setProperty("/familyMaterialCode", null);
                 //this._getFamilyMaterialCodeDialogData([new Filter("company_code", FilterOperator.EQ, oSelectedDetail.company_code)]);
                 //this.byId("familyMaterialCodeTable").(sQueryParam);
             }.bind(this));
@@ -1028,23 +1075,23 @@ sap.ui.define([
                 oDetail.supplier_local_name = oSelectedData.supplier_local_name;
 
                 for( var i=0; i<3; i++ ) {
-                    oDetail.prices[i].new_base_price = parseFloat(oSelectedData.new_base_price);
-                    oDetail.prices[i].new_base_price_currency_code = oSelectedData.new_base_price_currency_code;
+                    oDetail.prices[i].new_base_price = parseFloat(oSelectedData.current_price);
+                    oDetail.prices[i].new_base_price_currency_code = oSelectedData.prices[i].current_price_currency_code;
                 }
             }else {
                 var oMarketCodeConfig = this.getModel("rootModel").getProperty("/config");
 
                 if( oSelectedData.market_code === "2" && oMarketCodeConfig.DP_VI_MARKETCODE2_DISPLAY_FLAG === "Y" ) {
-                    oDetail.prices[2].new_base_price = parseFloat(oSelectedData.new_base_price);
-                    oDetail.prices[2].new_base_price_currency_code = oSelectedData.new_base_price_currency_code;
+                    oDetail.prices[2].new_base_price = parseFloat(oSelectedData.prices[2].current_price);
+                    oDetail.prices[2].new_base_price_currency_code = oSelectedData.prices[2].current_price_currency_code;
                 }
                 if( oSelectedData.market_code === "1" &&  oMarketCodeConfig.DP_VI_MARKETCODE1_DISPLAY_FLAG === "Y" ) {
-                    oDetail.prices[1].new_base_price = parseFloat(oSelectedData.new_base_price);
-                    oDetail.prices[1].new_base_price_currency_code = oSelectedData.new_base_price_currency_code;
+                    oDetail.prices[1].new_base_price = parseFloat(oSelectedData.prices[1].current_price);
+                    oDetail.prices[1].new_base_price_currency_code = oSelectedData.prices[1].current_price_currency_code;
                 }
                 if( oSelectedData.market_code === "0" &&  oMarketCodeConfig.DP_VI_MARKETCODE0_DISPLAY_FLAG === "Y" ) {
-                    oDetail.prices[0].new_base_price = parseFloat(oSelectedData.new_base_price);
-                    oDetail.prices[0].new_base_price_currency_code = oSelectedData.new_base_price_currency_code;
+                    oDetail.prices[0].new_base_price = parseFloat(oSelectedData.prices[0].current_price);
+                    oDetail.prices[0].new_base_price_currency_code = oSelectedData.prices[0].current_price_currency_code;
                 }
             }
 

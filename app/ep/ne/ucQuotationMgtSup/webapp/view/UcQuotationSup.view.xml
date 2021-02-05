@@ -363,7 +363,7 @@
                                                     class="sapUiSmallMarginBottom"/>
                                         <HBox>
                                             
-                                            <DatePicker placeholder="Date" id="completionDatePicker" value="{path: 'viewModel>/ucmaster/const_start_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+                                            <DatePicker placeholder="Date" id="completionDatePicker" value="{path: 'viewModel>/ucmaster/completion_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
 
                                             <Text text="{
                                                 path: 'viewModel>/ucmaster/completion_date',

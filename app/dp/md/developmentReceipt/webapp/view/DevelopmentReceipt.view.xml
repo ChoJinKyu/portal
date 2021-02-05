@@ -19,7 +19,10 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{i18n>appTitle}" />
+                    <HBox alignItems="Center">
+                        <Button icon="sap-icon://unfavorite" type="Transparent" />
+                        <Title text="{i18n>appTitle}" />
+                    </HBox>
                 </f:heading>
                 <f:expandedContent>
                     <HBox>
@@ -171,9 +174,6 @@
                 <f:actions>
                     <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
                 </f:actions>
-                <f:navigationActions>
-                    <Button icon="sap-icon://unfavorite" type="Transparent" />
-                </f:navigationActions>
             </f:DynamicPageTitle>
         </f:title>
         <!-- DynamicPage Header -->

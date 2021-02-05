@@ -45,7 +45,10 @@ sap.ui.define([
             this.setModel(new JSONModel(), "updateModel");
             let oGlobalData = {tenant_id : "L2100", user_id : "A60262"};
             this.getOwnerComponent().getModel("globalModel").setData(oGlobalData);
-            //this.getRouter().getRoute("ProjectMgtList").attachPatternMatched(this._getProjectMgtList, this);
+            //this.getRouter().getRoute("ProjectMgtList").attachPatternMatched(this.onPatternMatched, this);
+        }
+
+        , onPatternMatched: function() {
         }
 
         /**

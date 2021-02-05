@@ -109,7 +109,7 @@
                         <OverflowToolbar>
                             <Title id="title" text="Part Category List" level="H2"/> 
                             <ToolbarSpacer/>
-                            <Button id="mainTableCreate2Button" text="Creation Request" type="Transparent" press=".onMainTableCreate2ButtonPress" enabled="{= ${master>/indices} === 2 ? ${sm>/screen} === 'M' ? true : false : false}"  />
+                            <!-- <Button id="mainTableCreate2Button" text="Creation Request" type="Transparent" press=".onMainTableCreate2ButtonPress" enabled="{= ${master>/indices} === 2 ? ${sm>/screen} === 'M' ? true : false : false}"  /> -->
                             <Button id="mainTableCreate0Button" text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press=".onMainTableCreate0ButtonPress" enabled="{= ${master>/indices} === 0 ? ${sm>/screen} === 'M' ? true : false : false}"  />
                             <Button id="mainTableCreate1Button" text="{I18N>/CREATE_LOWER_LEVEL}" type="Transparent" press=".onMainTableCreate1ButtonPress" enabled="{= ${master>/indices} === 1 ? ${master>/level} === 0 ? ${sm>/screen} === 'M' ? true : false : false : false}" />
                             <!-- <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" enabled="{= ${master>/indices} > 0 ? ${sm>/screen} === 'M' ? true : false : false}"/> -->

@@ -12,7 +12,7 @@ sap.ui.define([
   function (BaseController, JSONModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, EmployeeDialog, ExcelUtil) {
     "use strict";
 
-    var sSelectedPath, sTenantId, oDialogInfo, toggleButtonId = "";
+    var _sTenantId, _toggleButtonId = "";
 
     return BaseController.extend("dp.vi.basePriceArlMgt.controller.BasePriceList", {
         dateFormatter: DateFormatter,
@@ -39,11 +39,11 @@ sap.ui.define([
 
         onInit: function () {
             var oRootModel = this.getOwnerComponent().getModel("rootModel");
-            sTenantId = oRootModel.getProperty("/tenantId");
+            _sTenantId = oRootModel.getProperty("/tenantId");
 
             // 초기 filter값 세팅
             var oToday = new Date();
-            var oFilter = {tenantId: sTenantId,
+            var oFilter = {tenantId: _sTenantId,
                         dateValue: new Date(this._changeDateString(new Date(oToday.getFullYear(), oToday.getMonth(), oToday.getDate() - 30), "-")),
                         secondDateValue: new Date(this._changeDateString(oToday, "-"))};
             // 기준단가 목록 테이블 모델 세팅                        
@@ -79,7 +79,7 @@ sap.ui.define([
         onSearch: function (oEvent) {
             var oFilterModel = this.getModel("filterModel");
             var oFilterModelData = oFilterModel.getData();
-            var aFilters = [];
+            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, this.getModel("rootModel").getProperty("/tenantId"))];
             var aType = oFilterModelData.type || [];
             var aStatus = oFilterModelData.status || [];
             var sApprovalNumber = oFilterModelData.approvalNumber;
@@ -88,6 +88,9 @@ sap.ui.define([
             var oDateValue = oFilterModelData.dateValue;
             var oSecondDateValue = oFilterModelData.secondDateValue;
             var aRequestors = this.byId("multiInputWithEmployeeValueHelp").getTokens();
+
+            this.getModel("rootModel").setProperty("/bCheckInner", false);
+            this.getModel("rootModel").setProperty("/selectedData", null);
 
             // 품의유형이 있는 경우
             if( 0<aType.length ) {
@@ -181,15 +184,15 @@ sap.ui.define([
         onGoDetail: function (oEvent) {
             var oListModel = this.getModel("listModel");
             var oBindingContext = oEvent.getParameter("rowBindingContext");
+            var oRootModel = this.getModel("rootModel");
 
             // 테이블 Row를 클릭했을 경우
             if( oBindingContext ) {
                 var sPath = oBindingContext.getPath();
-                var oRootModel = this.getModel("rootModel");
                 var oSelectedData = oListModel.getProperty(sPath);
                 oRootModel.setProperty("/selectedData", oSelectedData);
 
-                this.getModel("rootModel").setProperty("/selectedApprovalType", oSelectedData.approval_type_code);
+                oRootModel.setProperty("/selectedApprovalType", oSelectedData.approval_type_code);
             }
             // 생성버튼 클릭했을 경우
             else {
@@ -197,10 +200,11 @@ sap.ui.define([
                   return;
                 }
 
-                this.getModel("rootModel").setProperty("/selectedData", {});
+                oRootModel.setProperty("/selectedData", {});
             }
 
-            toggleButtonId = "";
+            _toggleButtonId = "";
+            oRootModel.setProperty("/bCheckInner", true);
             this.getRouter().navTo("basePriceDetail");
         },
 
@@ -273,7 +277,7 @@ sap.ui.define([
         onToggleHandleChange: function (oEvent) {
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
             var isPressedId = oEvent.getSource().getId();
-            toggleButtonId = isPressedId;
+            _toggleButtonId = isPressedId;
 
             for (var i = 0; i < groupId.length; i++) {
                 if (groupId[i].getId() != isPressedId) {
@@ -289,14 +293,14 @@ sap.ui.define([
         handleConfirm: function (oEvent) {
             var approvalTarget = "";
             
-            if( !toggleButtonId ){       
+            if( !_toggleButtonId ){       
                 MessageBox.error("품의서 유형을 선택해주세요");
                 return;
             }
             else{
-                if(toggleButtonId.indexOf("newVI") > -1){
+                if(_toggleButtonId.indexOf("newVI") > -1){
                     approvalTarget = "VI10";
-                }else if(toggleButtonId.indexOf("changeVI") > -1){
+                }else if(_toggleButtonId.indexOf("changeVI") > -1){
                     approvalTarget = "VI20";
                 }
             }
@@ -309,7 +313,7 @@ sap.ui.define([
 
         createPopupClose: function (oEvent) {
              this._createDialog.then(function(oDialog) {
-                toggleButtonId = "";
+                _toggleButtonId = "";
                 oDialog.close();
             });
         },

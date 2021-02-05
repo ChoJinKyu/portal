@@ -47,7 +47,7 @@
                 <!-- base Info 시작 -->
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
                     <ObjectStatus title="{I18N>/APPROVAL_NO}" text=""/>
-                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/create_user_id}"/>
+                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{detailModel>/create_user}"/> 
                     <ObjectStatus title="{I18N>/REQUEST_DATE}" text="{path:'detailModel>/local_update_dtm', formatter: '.dateFormatter.toDateString'}"/>
                     <ObjectStatus title="{I18N>/BUSINESS_UNIT}" text="{detailModel>/bizunit_name}"/>
                 </layout:VerticalLayout>
@@ -190,7 +190,7 @@
                                             <Label text="{I18N>/SP_APPLY_END_DATE_YYYYMM}" textAlign="Center" width="100%" required="true"/>
                                             <t:template>
                                                 <DatePicker editable="{= ${detailModel>management} === '관리' }" displayFormat="y-MM" 
-                                                            value="{ path: 'detailModel>apply_end_date' }" />
+                                                            value="{ path: 'detailModel>apply_end_date' }" change=".onChangeEndData" />
                                             </t:template>
                                         </t:Column>
                                     <t:Column hAlign="Left" width="10rem">
@@ -231,7 +231,7 @@
                                                         path: 'detailModel>org_Plant'
                                                         }">
                                                 <items>
-                                                    <core:Item key="{detailModel>plant_code}" text="{detailModel>plant_code}" />
+                                                    <core:Item key="{detailModel>plant_code}" text="{detailModel>plant_code}[{detailModel>plant_name}]" />
                                                 </items>
                                             </ComboBox>
                                         </t:template>
@@ -298,7 +298,8 @@
                                     <t:Column hAlign="Left" width="8rem">
                                         <Label text="{I18N>/BASE_PRICE}" textAlign="Center" width="100%" required="true"/>
                                         <t:template>
-                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>base_price}"/>
+                                            <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>base_price}" 
+                                                type="Number" change=".onOnlyNumber(${detailModel>base_price})"/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">

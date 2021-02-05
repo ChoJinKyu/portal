@@ -127,7 +127,6 @@ public class PrCreateV4 implements EventHandler {
         .append("WBS_CODE NVARCHAR(30),")
         .append("ASSET_NUMBER NVARCHAR(30),")
         .append("ORDER_NUMBER NVARCHAR(30),")
-        .append("SERVICE_DESC NVARCHAR(100),")
         .append("UPDATE_USER_ID NVARCHAR(255)")
         .append(")"); 
 
@@ -135,7 +134,7 @@ public class PrCreateV4 implements EventHandler {
         String v_sql_dropTableD = "DROP TABLE #LOCAL_TEMP_D";
 
         String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_M VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
-        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
+        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";        
         
         StringBuffer v_sql_callProc = new StringBuffer();
         v_sql_callProc.append("CALL OP_PU_PR_CREATE_SAVE_PROC ( ")
@@ -225,7 +224,6 @@ public class PrCreateV4 implements EventHandler {
                                 v_inRow.getWbsCode(),
                                 v_inRow.getAssetNumber(),
                                 v_inRow.getOrderNumber(),
-                                v_inRow.getServiceDesc(),
                                 v_inputData.getUpdateUserId()
                             };
                             batchD.add(values);

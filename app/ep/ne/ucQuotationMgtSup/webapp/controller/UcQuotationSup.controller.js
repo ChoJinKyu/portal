@@ -230,15 +230,16 @@ sap.ui.define([
                     const_quotation_number: e.const_quotation_number,
                     const_name: e.const_name,
                     ep_item_code: e.ep_item_code,
-                    const_start_date: e.const_start_date,
-                    const_end_date: e.const_end_date,
+                    const_start_date: that.getFormatDate(e.const_start_date),
+                    const_end_date: that.getFormatDate(e.const_end_date),
                     remark: e.remark,
-                    attch_group_number: e.attch_group_number
+                    attch_group_number: e.attch_group_number,
+                    row_state: 'U',
 
                 };
             });
 
-            console.log(" omst ::: ", omst);
+            console.log(" omst ::: ", omst);//that.getFormatDate(r["delivery_request_date"]),
 
             this._sConstQuotationNumber
 
@@ -269,7 +270,7 @@ sap.ui.define([
                     tenant_id: e.tenant_id, 
                     company_code: e.company_code,
                     const_quotation_number:  const_quotation_number_,
-                    const_quotation_item_number: (!e.const_quotation_item_number ? null : parseFloat(e.const_quotation_item_number)),
+                    const_quotation_item_number: (!e.const_quotation_item_number ? null : e.const_quotation_item_number),
                     item_sequence: (e.item_sequence == 0 ? (num++ * 10) : parseFloat(e.item_sequence)), 
                     const_name: e.const_name,
                     ep_item_code: e.ep_item_code,
@@ -277,11 +278,12 @@ sap.ui.define([
                     spec_desc: e.spec_desc,
                     quotation_quantity: (!e.quotation_quantity ? null : parseFloat(e.quotation_quantity)),
                     extra_rate: (!e.extra_rate ? 1 : parseFloat(e.extra_rate)),
-                    unit: e.unit,
+                    unit: (!e.unit ? null : e.unit),
                     currency_code: e.currency_code,
-                    material_apply_flag: e.material_apply_flag,
-                    labor_apply_flag: e.labor_apply_flag,
-                    net_price_change_allow_flag: e.net_price_change_allow_flag,
+                    currency_name: (!e.currency_name ? null : e.currency_name),
+                    material_apply_flag: (!e.material_apply_flag ? false : e.material_apply_flag),
+                    labor_apply_flag: (!e.labor_apply_flag ? false : e.labor_apply_flag),
+                    net_price_change_allow_flag: (!e.net_price_change_allow_flag ? false : e.net_price_change_allow_flag),
                     base_material_net_price: (!e.base_material_net_price ? null : parseFloat(e.base_material_net_price)),
                     base_labor_net_price: (!e.base_labor_net_price ? null : parseFloat(e.base_labor_net_price)),
                     material_net_price: (!e.material_net_price ? null : parseFloat(e.material_net_price)),
@@ -293,7 +295,8 @@ sap.ui.define([
                     net_price_contract_document_no: e.net_price_contract_document_no,
                     net_price_contract_degree: (!e.net_price_contract_degree ? null : parseFloat(e.net_price_contract_degree)),
                     net_price_contract_item_number: e.net_price_contract_item_number,
-                    supplier_item_create_flag: e.supplier_item_create_flag
+                    supplier_item_create_flag: (!e.supplier_item_create_flag ? false : e.supplier_item_create_flag),
+                    row_state: (!e.const_quotation_item_number ? 'C' : 'U')
                 };
 
 
@@ -1222,7 +1225,7 @@ if(dtlData.length > 0){
             if(oEvent.getParameter("item").getKey() == false){
                     console.log("false  ------> ");
             }
-        }
+        },
 
         // onStatusSelectionChange: function (oEvent) {
         //     var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
@@ -1231,6 +1234,21 @@ if(dtlData.length > 0){
 
         //     oSearchStatus.setSelectedKey(oEvent.getParameter("item").getKey());
         // },
+
+
+        getFormatDate: function (date) {
+
+            if (!date) {
+                return '';
+            }
+
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return year + '-' + month + '-' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        },
 
     });
 });

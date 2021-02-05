@@ -73,6 +73,8 @@
                 selectionMode="Single"
                 rows="{dialogModel>/familyMaterialCode}"
                 selectionBehavior="Row"
+                visibleRowCountMode="Auto"
+                minAutoRowCount="7"
                 rowSelectionChange=".onSelectFamilyMaterialCode"
                 fixedColumnCount="3">
                 <table:extension>
@@ -93,7 +95,7 @@
                         </table:template>
                     </table:Column>
                     <table:Column hAlign="Center" width="6rem">
-                        <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" />
+                        <Label text="{I18N>/VI_APPROVE_ORG_CODE}" textAlign="Center" />
                         <table:template>
                             <Text text="{dialogModel>org_code}" />
                         </table:template>

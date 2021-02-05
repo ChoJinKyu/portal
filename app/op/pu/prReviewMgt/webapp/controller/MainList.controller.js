@@ -72,14 +72,20 @@ sap.ui.define([
                     values: []
                 },
                 // 자재코드
-                material_code: null,
+                material_code: {
+                    FilterOperator: FilterOperator.Any,
+                    values: []
+                },
                 // 구매요청 품명
                 pr_desc: {
                     FilterOperator: FilterOperator.Contains,
                     values: []
                 },
                 // 구매요청 생성자
-                requestor_empno: null,
+                requestor_empno: {
+                    FilterOperator: FilterOperator.Any,
+                    values: []
+                },
                 // 요청자부서
                 requestor_department_code: {
                     FilterOperator: FilterOperator.Any,
@@ -127,11 +133,11 @@ sap.ui.define([
                     ["buyer_department_code", this.byId("buyerDepartmentCode")], 
                     ["material_code", this.byId("materialCode")], 
                     ["org_code", this.byId("orgCode")], 
+                    ["requestor_empno", this.byId("requestorEmpno")], 
                 ]
                 .forEach(e => this.convTokenToBind("jSearch", ["/", e[0], "/values"].join(""), e[1].getTokens()), this);
                 // Single
                 [
-                    ["requestor_empno", this.byId("requestorEmpno")], 
                     ["buyer_empno", this.byId("buyerEmpno")], 
                 ]
                 .forEach(e => {
@@ -197,7 +203,7 @@ sap.ui.define([
                         new Filter("process_type_code", FilterOperator.EQ, "OP01")
                     ],
                     sorters: [
-                        new Sorter("org_name")
+                        new Sorter("org_code")
                     ]
                 }
             }), function(r) {
@@ -221,17 +227,26 @@ sap.ui.define([
                     ]
                 }
             }), function(r) {
-                // Set Token
                 control.setTokens(r.getSource().getTokens());
             }, control);
 
-            (
-                // 요청자명
-                type == "requestor_empno"
-                ||
-                // 구매담당자
-                type == "buyer_empno"
-            )
+            // 요청자명
+            type == "requestor_empno"
+            &&
+            this.dialog(new EmployeeDialog({
+                title: "(미정)사원을 선택하세요",
+                multiSelection: true,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
+                    ]
+                }
+           }), function(r) {
+                control.setTokens(r.getSource().getTokens());
+            }, control);
+
+            // 구매담당자
+            type == "buyer_empno"
             &&
             this.dialog(new EmployeeDialog({
                 title: "(미정)사원을 선택하세요",
@@ -307,10 +322,10 @@ sap.ui.define([
                 message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다.\n확인시 자동으로 본인 담당으로 변경됩니다.\n";
             }
             // 잔량이 없는 PR은 선택이 불가능하다 = 요청수량 0
-            // if (items.filter(e => (+e.pr_quantity) <= 0 || !e).length > 0) {
-            //     MessageBox.alert("(메세지)요청수량(잔량)이 없는 PR 은 선택 할 수 없습니다.");
-            //     return;
-            // }
+            if (items.filter(e => (+e.pr_quantity) <= 0 || !e).length > 0) {
+                MessageBox.alert("(메세지)요청수량(잔량)이 없는 PR 은 선택 할 수 없습니다.");
+                return;
+            }
 
             // Transaction
             (
@@ -344,6 +359,12 @@ sap.ui.define([
                                     onAfterOpen: (function() {
                                         this.setModel(new JSONModel({
                                             "reason": {
+                                                title: 
+                                                    action == 'CLOSING'
+                                                    ? '(미정)마감'
+                                                    : action == 'CHANGE'
+                                                    ? '(미정)구매담당자변경'
+                                                    : '(미정)재작성요청',
                                                 action: action,
                                                 buyerEmpno: "",
                                                 processedReason: ""
