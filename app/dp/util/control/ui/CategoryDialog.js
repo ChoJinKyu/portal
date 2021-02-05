@@ -96,13 +96,13 @@ sap.ui.define([
                 ];
 
                 if(sCateGroupCode){
-                    aFilters.push(new Filter("tolower(company_code)", FilterOperator.Contains, "'" + sCateGroupCode.toLowerCase().replace("'","''") + "'"));
+                    aFilters.push(new Filter("tolower(category_group_code)", FilterOperator.Contains, "'" + sCateGroupCode.toLowerCase().replace("'","''") + "'"));
                 }                
 
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.partBaseActivityService/").read("/PdPartBaseActivityCategoryPopView", {
                 filters: aFilters,
                 sorters: [
-                    new Sorter("category_group_code", true)
+                    new Sorter("category_code", true)
                 ],
                 success: function(oData){
                     var aRecords = oData.results;
