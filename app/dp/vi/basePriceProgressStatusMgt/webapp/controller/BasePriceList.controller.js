@@ -232,7 +232,7 @@ sap.ui.define([
                     }));
 
                     // Price 조회
-                    this._readData("/Base_Price_Arl_Price", aPriceFilters, {"$orderby": "approval_number,item_sequence"}, function (pricesData) {
+                    this._readData("/Base_Price_Arl_Price", aPriceFilters, {"$orderby": "approval_number,item_sequence,market_code"}, function (pricesData) {
                         var aPrices = pricesData.results;
                         var aPricesLen = aPrices.length;
                         var aListLen = aList.length;
@@ -244,7 +244,8 @@ sap.ui.define([
                             for( var p=0; p<aPricesLen; p++ ) {
                                 if( oBasePrice.approval_number === aPrices[p].approval_number &&
                                     oBasePrice.item_sequence === aPrices[p].item_sequence ) {
-                                    oBasePrice.prices.push(aPrices[p]);
+                                    oBasePrice.prices = oBasePrice.prices ? oBasePrice.prices : [{}, {}, {}];
+                                    oBasePrice.prices[aPrices[p].market_code] = aPrices[p];
                                 }
                             }
                         }

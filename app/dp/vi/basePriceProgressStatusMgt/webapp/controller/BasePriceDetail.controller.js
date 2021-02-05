@@ -117,7 +117,7 @@ sap.ui.define([
             // Currency 데이터 조회 시작
             var oCurrencyODataModel = this.getOwnerComponent().getModel("currencyODataModel");
             oCurrencyODataModel.read("/Currency", {
-                filters : [],
+                filters : [new Filter("tenant_id", FilterOperator.EQ, _sTenantId)],
                 success : function(data){
                     if( data && data.results ) {
                         oDetailViewModel.setProperty("/currency", data.results);
@@ -132,7 +132,8 @@ sap.ui.define([
             // Basis 데이터 조회 시작
             var oCommonODataModel = this.getOwnerComponent().getModel("commonODataModel");
             oCommonODataModel.read("/Code", {
-                filters : [new Filter("group_code", FilterOperator.EQ, "DP_VI_BASE_PRICE_GROUND_CODE")],
+                filters : [new Filter("tenant_id", FilterOperator.EQ, _sTenantId),
+                            new Filter("group_code", FilterOperator.EQ, "DP_VI_BASE_PRICE_GROUND_CODE")],
                 success : function(data){
                     if( data && data.results ) {
                         oDetailViewModel.setProperty("/basis", data.results);
@@ -146,7 +147,8 @@ sap.ui.define([
 
             // 변경사유 데이터 조회 시작
             oCommonODataModel.read("/Code", {
-                filters : [new Filter("group_code", FilterOperator.EQ, "DP_VI_CHANGE_REASON_CODE")],
+                filters : [new Filter("tenant_id", FilterOperator.EQ, _sTenantId),
+                        new Filter("group_code", FilterOperator.EQ, "DP_VI_CHANGE_REASON_CODE")],
                 success : function(data){
                     if( data && data.results ) {
                         oDetailViewModel.setProperty("/changeReason", data.results);

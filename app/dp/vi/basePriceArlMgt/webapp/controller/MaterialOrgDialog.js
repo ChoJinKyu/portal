@@ -19,7 +19,6 @@ sap.ui.define([
 ], function (Parent, Renderer, ODataV2ServiceProvider, JSONModel, Filter, FilterOperator, Sorter, 
             GridData, VBox, Column, Label, Text, Input, ComboBox, Item, CodeComboBox, MessageToast) {
     "use strict";
-    var _oPurOrg = {}, _that;
 
     var MaterialOrgDialog = Parent.extend("dp.vi.basePriceArlMgt.controller.MaterialOrgDialog", {
         
@@ -40,9 +39,6 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-            _that = this;
-
-            _oPurOrg = this.getProperty("purOrg");
             this.tenantId = this.getProperty("tenantId");
             this.oSearchCode = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_CODE") });
             this.oSearchDesc = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_DESC") });
@@ -65,7 +61,7 @@ sap.ui.define([
                     entityName: 'Company'
                 },
                 required:true,
-                change: this._onChangeCompany
+                change: this._onChangeCompany.bind(this)
             });
 
             this.oSearchCompany.setSelectedKey(this.getProperty("companyCode"));
@@ -90,7 +86,7 @@ sap.ui.define([
                 });
             }
 
-            this._onChangeCompany();
+            this._onChangeCompany.apply(this);
 
             this.oSearchUIT = new CodeComboBox({
                 showSecondaryValues:true,
@@ -247,9 +243,9 @@ sap.ui.define([
 
         _onChangeCompany: function (oEvent) {
             var sSelectedCompany = oEvent ? oEvent.getSource().getSelectedKey() : this.getProperty("companyCode");
-            var aPurOrg = _oPurOrg[sSelectedCompany];
+            var aPurOrg = this.getProperty("purOrg")[sSelectedCompany];
             //var oPlantComboBox = this.getParent().getParent().getAggregation("fields")[1].getAggregation("items")[1];
-            var oPlantComboBox = _that.oSearchOrg;
+            var oPlantComboBox = this.oSearchOrg;
             oPlantComboBox.removeAllItems();
             oPlantComboBox.setSelectedKey("");
 

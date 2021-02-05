@@ -275,7 +275,7 @@
                             <Text text="{listModel>prices/0/new_base_price_currency_code}" textAlign="Center" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column headerSpan="3" width="7rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column headerSpan="3" width="7rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
@@ -286,25 +286,35 @@
                                     formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
                         </t:template>
                         </t:Column>
-                    <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
                         </t:multiLabels>
                         <t:template>
-                            <Text text="{listModel>prices/0/new_base_price}" textAlign="Right" width="100%" />
+                            <Text text="{
+                                parts: [
+                                    {path: 'listModel>prices/2/new_base_price'},
+                                    {path: 'listModel>prices/2/new_base_price_currency_code'}
+                                ],
+                                type: 'sap.ui.model.type.Currency',
+                                formatOptions: {
+                                    showMeasure: false
+                                }
+                            }" 
+                            textAlign="End" width="100%" />
                         </t:template>
                         </t:Column>
-                    <t:Column width="6rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column width="6rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                             <Label text="{I18N>/DOMESTIC}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
                         </t:multiLabels>
                         <t:template>
-                            <Text text="{listModel>prices/0/new_base_price_currency_code}" textAlign="Center" width="100%" />
+                            <Text text="{listModel>prices/2/new_base_price_currency_code}" textAlign="Center" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column headerSpan="3" width="7rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column headerSpan="3" width="7rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                             <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
@@ -315,16 +325,26 @@
                                     formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                                 <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/NEW_BASE_PRICE}" textAlign="Center" width="100%" />
                         </t:multiLabels>
                         <t:template>
-                            <Text text="{listModel>prices/1/new_base_price}" textAlign="Right" width="100%" />
+                            <Text text="{
+                                parts: [
+                                    {path: 'listModel>prices/1/new_base_price'},
+                                    {path: 'listModel>prices/1/new_base_price_currency_code'}
+                                ],
+                                type: 'sap.ui.model.type.Currency',
+                                formatOptions: {
+                                    showMeasure: false
+                                }
+                            }" 
+                            textAlign="End" width="100%" />
                         </t:template>
                     </t:Column>
-                    <t:Column width="6rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
+                    <t:Column width="6rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <t:multiLabels>
                             <Label text="{I18N>/EXPORT}" textAlign="Center" width="100%" />
                             <Label text="{I18N>/CURRENCY_CODE}" textAlign="Center" width="100%" />
