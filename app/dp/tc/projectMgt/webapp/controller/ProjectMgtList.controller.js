@@ -620,11 +620,13 @@ sap.ui.define([
             };
             var oProjectData = this._fnGetEntityFromMetadata(oParam);
             oProjectData.mcst_excl_flag = this.getModel("updateModel").getProperty("/mcst_excl_flag");
-            if(oProjectData.mcst_excl_flag) {
-                oProjectData.mcst_excl_reason = this.getModel("updateModel").getProperty("/mcst_excl_reason");
-            } else {
-                oProjectData.mcst_excl_reason = "";    
-            } 
+            oProjectData.mcst_excl_reason = this.getModel("updateModel").getProperty("/mcst_excl_reason");
+
+            // if(oProjectData.mcst_excl_flag) {
+            //     oProjectData.mcst_excl_reason = this.getModel("updateModel").getProperty("/mcst_excl_reason");
+            // } else {
+            //     oProjectData.mcst_excl_reason = "";    
+            // } 
                 
             var oKey = {
                 tenant_id : oProjectData.tenant_id,
