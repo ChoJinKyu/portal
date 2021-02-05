@@ -22,6 +22,7 @@ sap.ui.define([
         metadata: {
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "70em"},
+                closeWhenApplied: {type: "boolean", group: "Misc", defaultValue: true},
                 keyField: { type: "string", group: "Misc", defaultValue: "material_code" },
                 textField: { type: "string", group: "Misc", defaultValue: "material_desc" },
                 searchCode: { type: "string", group: "Misc", defaultValue: ""},
@@ -60,18 +61,6 @@ sap.ui.define([
                 this.oDialog.setContentHeight(this.getProperty("contentHeight"));
 
             this.oDialog.attachEvent("searchPress", function(oEvent){
-                /*var sCode = this.oSearchCode.getValue(),
-                    sDesc = this.oSearchDesc.getValue(),
-                    sSpec = this.oSearchSpec.getValue();
-
-                if(!sCode && !sDesc && !sSpec) {
-                    MessageToast.show("조회조건 중 하나는 입력해 주세요.", {at: "center center"});
-                    debugger;
-                    if(this.oDialog.oTable.getBusy()) {
-                        this.oDialog.oTable.setBusy(false);
-                    }
-                    return ;
-                }*/
                 this.loadData();
             }.bind(this));
 
@@ -166,9 +155,9 @@ sap.ui.define([
                 sDesc = this.oSearchDesc.getValue(),
                 sSpec = this.oSearchSpec.getValue();
 
-            /*if(!sCode && !sDesc && !sSpec) {
+            if(!sCode && !sDesc && !sSpec) {
                 return;
-            }*/
+            }
 
             var aFilters = [
                     new Filter("tenant_id", FilterOperator.EQ, this.getProperty("tenantId")),

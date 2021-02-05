@@ -213,6 +213,7 @@ sap.ui.define([
                 this.oSearchMatDialog = new TcMaterialMasterDialog({
                     title: this.I18N.getText("/MATERIAL_CODE"),
                     multiSelection: false,
+                    closeWhenApplied: false,
                     tenantId: this.getModel("detailModel").getProperty("/tenant_id"),
                     company_code: this.getModel("detailModel").getProperty("/company_code"),
                     org_type_code: this.getModel("detailModel").getProperty("/org_type_code"),
@@ -221,18 +222,33 @@ sap.ui.define([
                 });
 
                 this.oSearchMatDialog.attachEvent("apply", function(oSelEvent) {
-                    //oInputCntl.setTokens(oEvent.getSource().getTokens());
+
                     var rtData = oSelEvent.getParameter("item");
-                    let sPath = oInputCntl.getParent().getParent().getRowBindingContext().getPath();
-                    this.getModel("partListModel").setProperty(sPath, {
-                        _row_state_ : "C",
-                        material_code : rtData.material_code,
-                        material_desc : rtData.material_desc,
-                        uom_code : rtData.base_uom_code,
-                        company_code : this.getModel("detailModel").getProperty("/company_code"),
-                        buyer_empno : this.getModel("detailModel").getProperty("/buyer_empno")
-                    });
-                    this.oSearchMatDialog = null;
+
+                    //duplication checking
+                    var aPartList = this.getModel("partListModel").getProperty("/PartListView");
+                    var bDupl = false;
+                    $.each(aPartList, function(nIdx, oRow) {
+                        if(oRow._row_state_ !== "D" && oRow.material_code === rtData.material_code) {
+                            MessageToast.show(this.I18N.getText("/ECM01501", [this.I18N.getText("/MATERIAL_CODE")]), {at: "center center"});
+                            bDupl = true;
+                            return false;
+                        }
+                    }.bind(this));
+                    if(!bDupl) {
+                        let sPath = oInputCntl.getParent().getParent().getRowBindingContext().getPath();
+                        this.getModel("partListModel").setProperty(sPath, {
+                            _row_state_ : "C",
+                            material_code : rtData.material_code,
+                            material_desc : rtData.material_desc,
+                            uom_code : rtData.base_uom_code,
+                            company_code : this.getModel("detailModel").getProperty("/company_code"),
+                            buyer_empno : this.getModel("detailModel").getProperty("/buyer_empno")
+                        });
+                        this.oSearchMatDialog.close();
+                        this.oSearchMatDialog = null;
+                    }
+                    
                 }.bind(this));
 
                 this.oSearchMatDialog.attachEvent("cancel", function(oSelEvent) {
@@ -721,7 +737,6 @@ sap.ui.define([
                     return false;
                 }
             }.bind(this));
-
             return rs;
         }
     });
