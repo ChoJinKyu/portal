@@ -450,7 +450,7 @@
                                                     }">
                                     <Label text="{I18N>/PR_PROGRESS_STATUS}" />           
                                     <table:template>
-                                        <Text text="{detailModel>pr_progress_status_name}"/>
+                                        <Text text="{detailModel>pr_progress_status_name}"  textAlign="Begin" width="100%"/>
                                     </table:template>
                                 </table:Column> 
 
@@ -461,7 +461,7 @@
                                                     }">
                                     <Label text="{I18N>/REMARK}" />           
                                     <table:template>
-                                        <Text text="{detailModel>remark}"/>
+                                        <Text text="{detailModel>remark}"  textAlign="Begin" width="100%"/>
                                     </table:template>
                                 </table:Column> 
 
@@ -541,7 +541,7 @@
                                 <table:Column  hAlign="Center" >
                                     <Label text="{I18N>/ACCOUNT_CODE}"/>
                                     <table:template>
-                                        <Text text="{detailModel>account_code} [{detailModel>account_name}]"/>
+                                        <Text text="{detailModel>account_code} [{detailModel>account_name}]"  textAlign="Begin" width="100%"/>
                                     </table:template>
                                 </table:Column>
 
@@ -552,7 +552,7 @@
                                                     }">
                                     <Label text="{I18N>/CCTR_CODE}"/>
                                     <table:template>
-                                        <Text text="{detailModel>cctr_code} [{detailModel>cctr_name}]"/>
+                                        <Text text="{detailModel>cctr_code} [{detailModel>cctr_name}]"  textAlign="Begin" width="100%"/>
                                     </table:template>
                                 </table:Column>
 
@@ -563,7 +563,7 @@
                                                     }">
                                     <Label text="{I18N>/WBS_CODE}"/>
                                     <table:template>
-                                        <Text text="{detailModel>wbs_code} [{detailModel>wbs_name}]"/>
+                                        <Text text="{detailModel>wbs_code} [{detailModel>wbs_name}]"  textAlign="Begin" width="100%"/>
                                     </table:template>
                                 </table:Column>
 
@@ -573,7 +573,7 @@
                                                     }">
                                     <Label text="{I18N>/ASSET}"/>
                                     <table:template>
-                                        <Text text="{detailModel>asset_number} [{detailModel>asset_name}]"/>
+                                        <Text text="{detailModel>asset_number} [{detailModel>asset_name}]"  textAlign="Begin" width="100%"/>
                                     </table:template>
                                 </table:Column>
 
@@ -584,7 +584,7 @@
                                                     }">
                                     <Label text="{I18N>/ORDER}"/>
                                     <table:template>
-                                        <Text text="{detailModel>order_number} [{detailModel>order_name}]"/>
+                                        <Text text="{detailModel>order_number} [{detailModel>order_name}]"  textAlign="Begin" width="100%"/>
                                     </table:template>
                                 </table:Column>
 
@@ -645,7 +645,7 @@
                                                     }">
                                     <Label text="{I18N>/SERVICE_DESC}"/>
                                     <table:template>
-                                        <Text text="{detailModel>service_desc}"/>
+                                        <Text text="{detailModel>service_desc}" textAlign="Begin" width="100%"/>
                                     </table:template>
                                 </table:Column>
 
