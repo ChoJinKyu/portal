@@ -102,8 +102,14 @@
                         </VBox>
                        </form:content>
                     <form:content>
-                    <HBox>
-                        <t:Table id="popTable"
+                    
+                        
+                        
+                      
+                         </form:content>
+                  </form:SimpleForm>
+
+                  <t:Table id="popTable"
                             selectionMode="MultiToggle"
                             rows="{
                                 path: 'popUcQuotationSup>/'
@@ -188,12 +194,6 @@
                                 
                             </t:columns>
                             </t:Table>
-                         <layoutData>
-                            <layout:GridData span="XL12 L12 M12 S12" />
-                        </layoutData> 
-                       </HBox>
-                         </form:content>
-                  </form:SimpleForm>
             </VBox>       
       
         <ToolbarSpacer/>

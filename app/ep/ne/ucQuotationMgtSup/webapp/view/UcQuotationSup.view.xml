@@ -6,7 +6,8 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:t="sap.ui.table"
     xmlns:sc="sap.suite.ui.commons"
-	xmlns:core="sap.ui.core"
+    xmlns:core="sap.ui.core"
+    xmlns:lib-m="ext.lib.control.m"
     xmlns:richtexteditor="sap.ui.richtexteditor"
 	height="100%">
 
@@ -50,7 +51,7 @@
                     <ObjectStatus
                         id="createUser"         
                         title="작성자 "
-                        text="{master>/buyer_name}"/>
+                        text="{viewModel>/ucmaster/buyer_name}"/>
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -58,21 +59,21 @@
                         id="createDate"
                         title="작성일자 "
                         text="{
-                                path: 'master>/quotation_write_date',
+                                path: 'viewModel>/ucmaster/quotation_write_date',
                                 formatter: '.dateFormatter.toUTCDateString'
                             }" />
 
                     <ObjectStatus
                         id="createDepartment"
                         title="단가운영단위(플랜트) "
-                        text="{master>/org_code}"/>
+                        text="{viewModel>/ucmaster/org_code}"/>
                     </layout:VerticalLayout>
 
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                         <Label text="Status :"/>
                     <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{master>/quotation_status_name}"
+                        text="{viewModel>/ucmaster/quotation_status_name}"
                         state="Error" />
                 </layout:VerticalLayout>
 
@@ -146,7 +147,7 @@
                             <t:Table id="mainTable"
                             selectionMode="MultiToggle"
                             rows="{
-                                path: 'details>/',
+                                path: 'viewModel>/ucdetails/',
                                 sorter: { 
                                     path: 'system_create_dtm',
                                     descending: true 
@@ -158,52 +159,61 @@
                             columnResize="onColumnResize">
                             <t:extension>
                                 <OverflowToolbar class="sapFDynamicPageAlignContent">
-                                <!-- <Title text="업체선정결과 {= ${details>/}.length > 0 ? '(' + ${details>/}.length + ')' : ''}" level="H2"/> -->
+                                
                                 <ToolbarSpacer/>
-                                <Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress('mainTable', 'master')" />
+                                <Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress()" />
                                 <!-- <Button text="exam"  press=".onVosButtonPress" /> -->
-								<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onMidTableDeleteButtonPress('mainTable', 'details', 'LOIRequestDetailView')" />
+								<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onItemInfoDeleteButtonPress" />
                                 </OverflowToolbar>
                             </t:extension>
-    
+                            
                             <t:columns>
+                                <t:Column id="dtlColumnState" hAlign="Center" width="4em" >
+                                    <ObjectStatus icon="sap-icon://document" text="State" visible="true" />
+                                    <t:template>
+                                        <ObjectStatus icon="{
+                                            path: 'viewModel>row_state',
+                                            formatter: '.formatter.toModelStateColumnIcon'
+                                        }" />
+                                    </t:template>
+                                </t:Column>
                                 <t:Column id="mainItemSequence" width="6rem" hAlign="Center">
                                 <Label text="품목순번" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{details>item_sequence}"/>
+                                    <Text text="{viewModel>item_sequence}"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainEpItemCode" width="8rem" hAlign="Center">
                                 <Label text="품목코드" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{details>ep_item_code}"/>
+                                    <Text text="{viewModel>ep_item_code}"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainItemDesc" width="20rem"  hAlign="Left">
                                 <Label text="품목명" textAlign="Left" width="100%"/>
                                 <t:template>
-                                    <Text text="{details>item_desc}" />
+                                    <Text text="{viewModel>item_desc}" />
                                 </t:template>
                                 </t:Column> 
                                 <t:Column id="mainSpecDesc" width="20rem"  hAlign="Left">
                                 <Label text="규격" textAlign="Left" width="100%"/>
                                 <t:template>
-                                    <Text text="{details>spec_desc}"/>
+                                    <Text text="{viewModel>spec_desc}"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainUnit" width="4rem" hAlign="Center">
                                 <Label text="단위" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{details>unit}"/>
+                                    <Text text="{viewModel>unit}"/>
                                 </t:template>
                                 </t:Column>
                                 
                                 <t:Column id="mainQuotationQuantity" width="4rem" hAlign="Center">
                                 <Label text="수량" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{details>quotation_quantity}"/>
+                                    <Text text="{viewModel>quotation_quantity}"/>
                                     <Input value="{
-                                                        path: 'details>quotation_quantity',
+                                                        path: 'viewModel>quotation_quantity',
                                                         type: 'sap.ui.model.type.Integer',
                                                         constraints: {
                                                             minimum: '0',
@@ -216,14 +226,16 @@
                                 <t:Column id="mainExtraRate" width="4rem" hAlign="Center">
                                 <Label text="할증" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{details>extra_rate}"/>
+                                    <!-- <Text text="{viewModel>extra_rate}"/> -->
+                                    <Link text="{viewModel>extra_rate}" press="onTableExtraRatePress" enabled="{= ${viewModel>labor_net_price} > 0 ? true : false }" />                
+               
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainMaterialNetPrice" width="8rem" hAlign="Right">
                                 <Label text="자재단가" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Input value="{
-                                                        path: 'details>material_net_price',
+                                                        path: 'viewModel>material_net_price',
                                                         type: 'sap.ui.model.type.Integer',
                                                         constraints: {
                                                             minimum: '0',
@@ -239,7 +251,7 @@
                                 <t:template>
                                     <!-- <Text text="{details>material_amount}"/> -->
                                     <Text  text="{
-                                                    path: 'details>material_amount',
+                                                    path: 'viewModel>material_amount',
                                                     formatter: '.numberFormatter.toNumberString'
                                                 }"
                                                 vAlign="Right"/> 
@@ -249,7 +261,7 @@
                                 <Label text="노무단가" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Input value="{
-                                                        path: 'details>labor_net_price',
+                                                        path: 'viewModel>labor_net_price',
                                                         type: 'sap.ui.model.type.Integer',
                                                         constraints: {
                                                             minimum: '0',
@@ -263,7 +275,7 @@
                                 <Label text="노무금액" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text  text="{
-                                                    path: 'details>labor_amount',
+                                                    path: 'viewModel>labor_amount',
                                                     formatter: '.numberFormatter.toNumberString'
                                                 }"
                                                 vAlign="Right"/> 
@@ -274,7 +286,7 @@
                                 <Label text="합계금액" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text  text="{
-                                                    path: 'details>sum_amount',
+                                                    path: 'viewModel>sum_amount',
                                                     formatter: '.numberFormatter.toNumberString'
                                                 }"
                                                 vAlign="Right"/> 
@@ -283,14 +295,14 @@
                                 <t:Column id="mainRemark" width="10rem" hAlign="Left">
                                 <Label text="비고" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{details>remark}"/>          
+                                    <Text text="{viewModel>remark}"/>          
                                 </t:template>
                                 </t:Column> 
                                 
                                 <t:Column id="mainLoiPublishStatusCode" width="10rem" hAlign="Center">
                                 <Label text="단가계약그룹번호" textAlign="Center" width="100%" tooltip="LOI발행상태"/>
                                 <t:template>
-                                    <Text text="{details>net_price_contract_document_no}"/>
+                                    <Text text="{viewModel>net_price_contract_document_no}"/>
                                 </t:template>
                                 </t:Column> 
                                 
@@ -304,6 +316,116 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
+
+            <!-- 원가내역 시작 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="원가내역">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <!-- Approval & Reference 시작 -->
+                            <HBox>
+        
+                            </HBox>
+                            <!-- Approval & Reference 끝 -->
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- 원가내역 끝 -->
+
+            <!-- 준공정보 시작 -->
+			<uxap:ObjectPageSection titleUppercase="false" title="준공정보">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                        <VBox id="midCompletionForm">
+                            <VBox alignContent="Center">
+                                    <Label text="준공여부" textAlign="left" design="Bold" class="sapMLabelNoText" />
+
+                                    <SegmentedButton 
+                                        id="search_completionflag"
+                                        selectedKey="{viewModel>/ucmaster/completion_flag}" 
+                                        selectionChange=".onSegmentChange"
+                                        
+                                        width="100%">
+                                        <items>
+                                            <SegmentedButtonItem text="Yes" width="6em" key="true"/>
+                                            <SegmentedButtonItem text="No" width="6em" key="false"/>
+                                        </items>
+                                    </SegmentedButton>
+                                </VBox>   
+
+                            
+                                <form:SimpleForm id="completionForm1Show" editable="false"> 
+                                    <VBox alignContent="Center" alignItems="Stretch"> 
+                                        <Label  text="* 준공일자" 
+                                                    design="Bold" 
+                                                    class="sapUiSmallMarginBottom"/>
+                                        <HBox>
+                                            
+                                            <DatePicker placeholder="Date" id="completionDatePicker" value="{path: 'viewModel>/ucmaster/const_start_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+
+                                            <Text text="{
+                                                path: 'viewModel>/ucmaster/completion_date',
+                                                type: 'sap.ui.model.type.Date',
+                                                formatOptions: {
+                                                    pattern: 'yyyy/MM/dd'
+                                                }                                        
+                                            }"  
+                                            class="sapUiTinyMarginBegin"/>     
+                                        </HBox> 
+                                    </VBox>
+                                    <VBox alignContent="Center" alignItems="Stretch"> 
+                                        <Label  text="* 시설담당자" 
+                                                    design="Bold" 
+                                                    class="sapUiSmallMarginBottom"/>
+                                        <HBox>
+
+                                        <lib-m:CodePicker id="searchRequestorS"
+                                            placeholder="Enter a employee name"
+                                            keyField="employee_number"
+                                            textField="user_local_name"
+                                            suggestionItems="{
+                                                path: '/',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                ],
+                                                serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                                entityName: 'Employee'
+                                            }">
+                                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                                keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                                        </lib-m:CodePicker>    
+                                        <Text text="{viewModel>/ucmaster/facility_person_name}" 
+                                            visible="false"/>  
+                                        </HBox>          
+                                    </VBox>
+                                </form:SimpleForm>   
+
+                                <form:SimpleForm id="completionForm2Show" editable="false"> 
+                                    <UploadCollection
+                                        id="UploadCollection2"
+                                        maximumFilenameLength="55"
+                                        maximumFileSize="10"
+                                        multiple="true"
+                                        sameFilenameAllowed="true"
+                                        instantUpload="false"
+                                        noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                        change="onChange"
+                                        fileDeleted="onFileDeleted"
+                                        filenameLengthExceed="onFilenameLengthExceed"
+                                        fileSizeExceed="onFileSizeExceed"
+                                        typeMissmatch="onTypeMissmatch"
+                                        uploadComplete="onUploadComplete"
+                                        beforeUploadStarts="onBeforeUploadStarts" />
+                                </form:SimpleForm>   
+
+                            </VBox>      
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- 준공정보 끝 -->
 
             <!-- 결재라인 시작 -->
 			<uxap:ObjectPageSection titleUppercase="false" title="결재라인">
