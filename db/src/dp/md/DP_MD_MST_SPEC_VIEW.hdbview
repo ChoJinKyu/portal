@@ -1,5 +1,7 @@
 view DP_MD_MST_SPEC_VIEW as
 SELECT             
+    c.user_id session_user_id,
+    c.language_code session_language_code,
     '['||a.company_code||'] '||(select company_name from cm_org_company where company_code=a.company_code) company_name 
     , '['||a.org_code||'] '||(select org_name from CM_PUR_OPERATION_ORG t1
 		left join CM_PUR_ORG_TYPE_MAPPING t2
