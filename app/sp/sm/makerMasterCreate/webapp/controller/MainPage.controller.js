@@ -317,10 +317,10 @@ sap.ui.define([
             sMode = oCallByAppModel.getProperty("/mode");
 
             var sMakerRequestTypeCode = (sGubun !== "MR" && sMode === "C") ? "NEW" : "CHANGE";
-            //(var sMakerProgressStatusCode = sGubun === "MR" && sProgress === "REQUEST") ? "REQUEST" : "APPROVAL";
+            //sMakerProgressStatusCode = (sGubun === "MR" && sProgress === "REQUEST") ? "REQUEST" : "APPROVAL";
             var sRequestorEmpno = "3167";//oUserSessionModel.gtProperty("/EMPLOYEE_NUMBER");
 
-            
+            if(sProgress === "REQUEST" && sGubun !== "MR")sMakerProgressStatusCode = "APPROVAL";
 
             var inputInfo = {
                 InputData : { 
@@ -329,7 +329,7 @@ sap.ui.define([
                         {
                             tenant_id: "L2100",					
                             maker_request_sequence: null,			
-                            maker_request_type_code: sMakerProgressStatusCode,			 
+                            maker_request_type_code: sMakerRequestTypeCode,			 
                             maker_progress_status_code: sMakerProgressStatusCode,     	
                             requestor_empno: sRequestorEmpno,                	
                             tax_id: oGeneralInfo["tax_id"],                         	
@@ -375,18 +375,60 @@ sap.ui.define([
 
         },
 
-        _fnRequestMakerMaster : function(){
+        _fnRequestMakerMaster : function(sAction){
 
-            var oCallByAppModel = this.getModel("callByAppModel"),
-            oViewModel = this.getModel("viewModel"),
-            oWriteModel = this.getModel("writeModel"),
-            checkResult = oWriteModel.getProperty("/businessNoCheckList/0"),
-            bSupplierRole = checkResult.supplier_role === "Y",
-            bMakerRole = checkResult.maker_role === "Y",
-            sProgress = oCallByAppModel.getProperty("/progressCode"),
-            sGubun = oCallByAppModel.getProperty("/gubun"),
-            sMode = oCallByAppModel.getProperty("/mode"),
-            that = this;
+            var that= this;
+            var oCallByAppModel = this.getModel("callByAppModel");
+            var sConfirmMsg = this.getModel("I18N").getText("/NCM00001");
+            var sGubun = oCallByAppModel.getProperty("/gubun");
+            var sMode = oCallByAppModel.getProperty("/mode");
+            var sProgress = oCallByAppModel.getProperty("/progressCode");
+
+            
+            var sTitle = "Create";
+            // || sProgress === "REQUEST"
+            if(sAction === "REJECT"){
+                sTitle = "Reject";
+                sConfirmMsg = "반려하시겠습니까?";
+            }else{
+                if(sMode === "U" && sGubun === "MM"){
+                    sTitle = "Modify";
+                    sConfirmMsg = this.getModel("I18N").getText("/NPG00007");
+                }
+            }
+            
+            
+
+           // this.validator.setModel(this.getModel("writeModel"), "writeModel");
+            //if(this.validator.validate(this.byId("page")) === true) {
+
+                var oRequestData = this._fnSetRequestData(sAction);
+                MessageBox.confirm(sConfirmMsg, {
+                    title : "Create",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            that._fnCallAjax(
+                            oRequestData,
+                            "upsertMakerRestnReqProc",
+                            function(result){
+                                debugger;
+                                //oView.setBusy(false);
+                                if(result && result.value && result.value.length > 0){// && result.value[0].return_code === "OK") {
+                                    alert(result.value[0].returnmessage);
+                                    //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                    //that.onNavigationBackPress();
+                                }
+                            }
+                        );
+                        }
+                    }.bind(this)
+                });
+           /* }else{
+                 
+                console.log("checkRequire");
+                return;
+            }*/
         },
 
          /**
@@ -680,106 +722,11 @@ sap.ui.define([
         },
 
         onRequestButtonPress : function(){
-            var that= this;
-            var oCallByAppModel = this.getModel("callByAppModel");
-            var sConfirmMsg = this.getModel("I18N").getText("/NCM00001");
-            var sGubun = oCallByAppModel.getProperty("/gubun");
-            var sMode = oCallByAppModel.getProperty("/mode");
-            var sProgress = oCallByAppModel.getProperty("/progressCode");
-
-            // || sProgress === "REQUEST"
-            if(sMode === "U")sConfirmMsg = this.getModel("I18N").getText("/NPG00007");
-
-           // this.validator.setModel(this.getModel("writeModel"), "writeModel");
-            //if(this.validator.validate(this.byId("page")) === true) {
-
-                var oRequestData = this._fnSetRequestData("REQUEST");
-                MessageBox.confirm(sConfirmMsg, {
-                    title : "Create",
-                    initialFocus : sap.m.MessageBox.Action.CANCEL,
-                    onClose : function(sButton) {
-                        if (sButton === MessageBox.Action.OK) {
-                            that._fnCallAjax(
-                            oRequestData,
-                            "upsertMakerRestnReqProc",
-                            function(result){
-                                debugger;
-                                //oView.setBusy(false);
-                                if(result && result.value && result.value.length > 0){// && result.value[0].return_code === "OK") {
-                                    alert(result.value[0].returnmessage);
-                                    //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                    //that.onNavigationBackPress();
-                                }
-                            }
-                        );
-                        }
-                    }.bind(this)
-                });
-           /* }else{
-                 
-                console.log("checkRequire");
-                return;
-            }*/
+            this._fnRequestMakerMaster("REQUEST");
         },
 
-        onPageDeleteButtonPress: function () {
-
-            var oWriteModel = this.getModel("writeModel");
-            var oView = this.getView();
-            var that = this;
-
-            var sendData = {}, aInputData=[];
-
-
-            var oDeletingKey = {
-                tenant_id: oWriteModel.getProperty("/tenantId"),
-                company_code:oWriteModel.getProperty("/company_code"),
-                pr_number: oWriteModel.getProperty("/pr_number"),      
-                pr_create_status_code: oWriteModel.getProperty("/pr_create_status_code")                
-            } ;
-
-
-            aInputData.push(oDeletingKey);
-            sendData.inputData = aInputData;
-
-
-            MessageBox.confirm("Are you sure to delete?", {
-				title : "Comfirmation",
-				initialFocus : sap.m.MessageBox.Action.CANCEL,
-				onClose : function(sButton) {
-					if (sButton === MessageBox.Action.OK) {
-						// me.getView().getBindingContext().delete('$direct').then(function () {
-						// 		me.onNavBack();
-						// 	}, function (oError) {
-						// 		MessageBox.error(oError.message);
-                        // 	});
-                        
-                         // Call ajax
-                        that._fnCallAjax(
-                            sendData,
-                            "DeletePrProc",
-                            function(result){
-                                oView.setBusy(false);
-                                if(result && result.value && result.value.length > 0 && result.value[0].return_code === "0000") {
-                                    that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                    that.onNavigationBackPress();
-                                }
-                            }
-                        );
-					};
-				}
-            });
-
-
-            // if (oNextUIState.layout === 'TwoColumnsMidExpanded') {
-            //     this.getView().getModel('mainListView').setProperty("/headerExpandFlag", false);
-            // }
-
-            //var oItem = oEvent.getSource();
-            //oItem.setNavigated(true);
-            //var oParent = oItem.getParent();
-            // store index of the item clicked, which can be used later in the columnResize event
-            //this.iIndex = oParent.indexOfItem(oItem);
+        onRejectButtonPress : function(){
+            this._fnRequestMakerMaster("REJECT");
         },
 
         _fnCallAjax: function (sendData, targetName , callback) {            
