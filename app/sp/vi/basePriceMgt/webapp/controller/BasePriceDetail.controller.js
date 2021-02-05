@@ -19,11 +19,12 @@ sap.ui.define([
     "dp/util/control/ui/MaterialMasterDialog",
     "cm/util/control/ui/EmployeeDialog",
     "dpmd/util/controller/EmployeeDeptDialog",
-    "ext/lib/util/ExcelUtil"
+    "ext/lib/util/ExcelUtil",
+    "ext/lib/util/Multilingual"
 ],
   function (BaseController, ManagedListModel, TransactionManager, Validator, Formatter, DateFormatter,
         JSONModel, ODataModel, RichTextEditor, MessageBox, Fragment, Filter, FilterOperator, MessageToast, MaterialOrgDialog, Token
-        , SupplierDialog, MaterialMasterDialog, EmployeeDialog,EmployeeDeptDialog,ExcelUtil) {
+        , SupplierDialog, MaterialMasterDialog, EmployeeDialog,EmployeeDeptDialog,ExcelUtil, Multilingual) {
     "use strict";
 
     var sSelectedDialogPath, sTenantId, oOpenDialog;
@@ -38,11 +39,14 @@ sap.ui.define([
             var oRootModel = this.getOwnerComponent().getModel("rootModel");
             sTenantId = oRootModel.getProperty("/tenantId");
 
+            this.setModel(new Multilingual().getModel(), "I18N");
+
             // 해당 View(BasePriceDetail)에서 사용할 메인 Model 생성
             this.setModel(new JSONModel(), "detailModel");
             this.setModel(new JSONModel(), "metaldetailMdoel");
             this.setModel(new JSONModel(), "refererModel");
             this.setModel(new JSONModel(), "approverModel");
+            this.setModel(new JSONModel(), "detailViewModel");
             this.setModel(new JSONModel(), "excelModel");
 
             //관리 시세 combobox 데이터 하드코딩
@@ -275,12 +279,13 @@ sap.ui.define([
         
             if(!this.oSupplierWithOrgValueHelp){
                 this.oSupplierWithOrgValueHelp = new SupplierDialog({
+                    multiSelection: false,
+                    loadWhenOpen: false,
                     items: {
                         filters: [
                             new Filter("tenant_id", FilterOperator.EQ, RootTenantId)
                         ]
-                    }, 
-                    multiSelection: false
+                    }
                 });
                 
                 this.oSupplierWithOrgValueHelp.attachEvent("apply", function(oEvent){
@@ -297,7 +302,6 @@ sap.ui.define([
           * Material Code Dailog 호출
           */
         , onMaterialMasterMultiDialogPress: function (oEvent) {
-            debugger;
              var oRootModel = this.getModel("rootModel");
              var oDetailModel = this.getModel("detailModel");
              var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
@@ -308,6 +312,8 @@ sap.ui.define([
                  this.oSearchMultiMaterialOrgDialog = new MaterialOrgDialog({
                      title: "Choose MaterialMaster",
                      multiSelection: false,
+                     closeWhenApplied: true,
+                     loadWhenOpen: false,
                      tenantId: sTenantId,
                      items: {
                          filters:[
@@ -318,7 +324,6 @@ sap.ui.define([
 
                  this.oSearchMultiMaterialOrgDialog.attachEvent("apply", function(oEvent) {
                     var oSelectedDialogItem = oEvent.getParameter("item");
-                    debugger;
                     this._oDetail.material_code = oSelectedDialogItem.material_code;
                     this._oDetail.material  = oSelectedDialogItem.material_desc;
                     this._oDetail.vendor_pool_code = oSelectedDialogItem.vendor_pool_code;
@@ -348,12 +353,14 @@ sap.ui.define([
 
             if(!this.oEmployeeDialog){
                 this.oEmployeeDialog = new EmployeeDialog({
+                    multiSelection: false,
+                    closeWhenApplied: true,
+                    loadWhenOpen: false,
                     items: {
                         filters: [
                             new Filter("tenant_id", FilterOperator.EQ, RootTenantId)
                         ]
-                    }, 
-                    multiSelection: false
+                    }
                 });
 
                 this.oEmployeeDialog.attachEvent("apply", function(oEvent){
@@ -621,7 +628,6 @@ sap.ui.define([
                     MessageBox.show("적용종료일자가가 적용시작일자보다 적습니다.");
                     return;
                 }
-                
 
                 var t = String(aPriceResult[i].base_price);
                 if(t.indexOf('.') != -1){
@@ -630,23 +636,7 @@ sap.ui.define([
                         MessageBox.show('소수 네자리까지만 입력됩니다.');
                         return;
                     }
-                }
-
-                // if (!aPriceResult[i].vendor_pool_code){
-                //     MessageBox.show("협력사풀은 필수입니다. ");
-                //     return;
-                // }
-
-                // if (!aPriceResult[i].base_price){
-                //     MessageBox.show("base_price 필수 ");
-                //     return;
-                // }
-
-                // if (!aPriceResult[i].bizunit_code){
-                //     MessageBox.show("bizunit_code 필수 ");
-                //     return;
-                // }
-                    
+                }                    
             }
 
             /**
@@ -715,41 +705,41 @@ sap.ui.define([
         /**
          * Base Price Detail 데이터 조회
         */
-        , _getBasePriceDetail: function () {
+        , _getBasePriceDetail: function () { 
             var oView = this.getView();
             var oDetailViewModel = this.getModel("detailViewModel");
-            var oDetailModel = this.getModel("detailModel");
             var oRootModel = this.getModel("rootModel");
+
+            var oDetailModel = this.getModel("detailModel");
             var oApprModel = this.getModel("approverModel");
+            var oRefererModel = this.getModel("refererModel");
+            var oRefererModel = this.getModel("metaldetailMdoel");
+           
+            //Main 화면에서 가져온 데이터
             var oSelectedData = oRootModel.getProperty("/selectedData");
 
-            sTenantId = oRootModel.getProperty("/tenantId");
-
             // 리스트에서 선택해서 넘어오는 경우
-            if( oSelectedData && oSelectedData.tenant_id ) {
+            if(oSelectedData) {
                 var that = this;
-                var oModel = this.getModel();
+                var oModel = this.getModel("basePriceArl");
                 var aFilters = [];
-                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oSelectedData.tenant_id));
-                aFilters.push(new Filter("approval_number", FilterOperator.EQ, oSelectedData.approval_number));
+                    aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oSelectedData.tenant_id));
+                    aFilters.push(new Filter("approval_number", FilterOperator.EQ, oSelectedData.approval_number));
+                    aFilters.push(new Filter("approval_number", FilterOperator.EQ, oSelectedData.net_price_type_code));
+                    aFilters.push(new Filter("approval_number", FilterOperator.EQ, oSelectedData.chain_code));
 
                 oView.setBusy(true);
 
-                oModel.read("/Base_Price_Arl_Master", {
+                oModel.read("/Base_Price_Aprl_Master", {
                     filters : aFilters,
                     success : function(data){
                         oView.setBusy(false);
-                        oDetailViewModel.setProperty("/viewMode", false);
-
-                        if( data && data.results && 0<data.results.length ) {
-                            var oMaster = that._returnDataRearrange(data.results[0]);
-
-                            oDetailModel.setData(oMaster);
-                            oDetailViewModel.setProperty("/detailsLength", oMaster.details.length);
-                        }else {
-                            oDetailModel.setData(null);
-                            oDetailViewModel.setProperty("/detailsLength", 0);
-                        }
+                        oDetailViewModel.setProperty("/viewMode", true);
+                        oDetailModel.setData(data.results[0]);
+                        console.log("oDetailModel");
+                        console.log(oDetailModel);
+                        console.log("oDetailViewModel");
+                        console.log(oDetailViewModel);
                     }.bind(this),
                     error : function(data){
                         oView.setBusy(false);
@@ -777,14 +767,37 @@ sap.ui.define([
                 oApprModel.setData(oNewApproverData);
                 this.getModel("approverModel").setProperty("/appr_type",[{code : "10", text:"승인자"},{code : "20", text:"합의자"}]);
 
-            
-                //oDetailViewModel.setProperty("/detailsLength", 0);
-                //oDetailViewModel.setProperty("/viewMode", true);
+            }
+        }
 
-                //this._setTableFragment(oRootModel.getProperty("/selectedApprovalType"));
+        /**
+         * 상태 Text 변환
+         */
+        , onSetStatusText: function (sStatusCodeParam) {
+            var oRootModel = this.getOwnerComponent().getModel("rootModel");;
+            var sReturnValue = "";
+
+            if( oRootModel ) {
+                var aProcessList = oRootModel.getProperty("/processList");
+                
+                if( aProcessList ) {
+                    sReturnValue = this.getModel("I18N").getProperty("/NEW");
+
+                    if( sStatusCodeParam === "DR" ) {
+                        sReturnValue = aProcessList[0].code_name;
+                    }else if( sStatusCodeParam === "AR" ) {
+                        sReturnValue = aProcessList[1].code_name;
+                    }else if( sStatusCodeParam === "IA" ) {
+                        sReturnValue = aProcessList[2].code_name;
+                    }else if( sStatusCodeParam === "AP" ) {
+                        sReturnValue = aProcessList[3].code_name;
+                    }else if( sStatusCodeParam === "RJ" ) {
+                        sReturnValue = aProcessList[4].code_name;
+                    }
+                }
             }
 
-            //this.setRichEditor();
+            return sReturnValue;
         }
 
         /**
@@ -892,6 +905,7 @@ sap.ui.define([
             if(!this.oEmployeeMultiSelectionValueHelp){
                this.oEmployeeMultiSelectionValueHelp = new EmployeeDeptDialog({
                     title: "Choose Referer",
+                    loadWhenOpen: false,
                     multiSelection: true,
                     items: {
                         filters: [
