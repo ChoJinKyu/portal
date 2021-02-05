@@ -15,17 +15,18 @@ sap.ui.define([
     "sap/m/DatePicker",
 ], function (Parent, Renderer, ServiceProvider, DateFormatter, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input, DatePicker) {
     "use strict";
-
+    
     var CctrDialog = Parent.extend("op.util.control.ui.CctrDialog", {
         
         dateFormatter: DateFormatter,
 
         metadata: {
             properties: {
+                loadWhenOpen: { type: "boolean", group: "Misc", defaultValue: false },
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},                
                 keyField:  { type: "string", group: "Misc", defaultValue: "cctr_code" },
                 textField: { type: "string", group: "Misc", defaultValue: "cctr_name" },
-                effectiveDate: { type: "date", group: "Misc", defaultValue: "2020-01-01" },
+                effectiveDate: { type: "date", group: "Misc", defaultValue: "" },
                 items: { type: "sap.ui.core.Control"}
             }
         },
@@ -36,8 +37,14 @@ sap.ui.define([
 
         createSearchFilters: function(){
 
+
+            var oDate = this.getProperty("effectiveDate") === '' ? this.dateFormatter.toDateString(new Date()) : this.getProperty("effectiveDate") ;
+
+            //this.dateFormatter.toDateString(new Date())
+
+
             this.oSearcheffectiveDate = new DatePicker({
-                                                value: this.getProperty("effectiveDate"),
+                                                value: oDate,
                                                 dateDisplayFormat:"yyyy-MM-dd",
                                                 valueFormat:"yyyy-MM-dd"
                                             });
@@ -84,12 +91,12 @@ sap.ui.define([
                                             formatter: '.dateFormatter.toDateString'
                                             } })
                 }),
-                 new Column({
-                    width: "10%",
-                    hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/LANGUAGE_CODE")}),
-                    template: new Text({text: "{language_code}"})
-                }),                
+                //  new Column({
+                //     width: "10%",
+                //     hAlign: "Center",
+                //     label: new Label({text: this.getModel("I18N").getText("/LANGUAGE_CODE")}),
+                //     template: new Text({text: "{language_code}"})
+                // }),                
                 new Column({
                     width: "15%",
                     hAlign: "Center",
@@ -108,7 +115,7 @@ sap.ui.define([
         loadData: function(){
             var sKeyword = this.oSearchKeyword.getValue(),
                 aFilters = [
-                        // new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                           new Filter("language_code", FilterOperator.EQ, "KO")
                     ],
                 oFilters = this.getProperty("items").filters || [],
                 aSorters = this.getProperty("items").sorters || [];

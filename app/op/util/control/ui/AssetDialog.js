@@ -18,6 +18,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
+                loadWhenOpen: { type: "boolean", group: "Misc", defaultValue: false },
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},                
                 keyField:  { type: "string", group: "Misc", defaultValue: "asset_number" },
                 textField: { type: "string", group: "Misc", defaultValue: "asset_name" },

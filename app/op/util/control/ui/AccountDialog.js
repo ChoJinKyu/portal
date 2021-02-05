@@ -18,6 +18,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
+                loadWhenOpen: { type: "boolean", group: "Misc", defaultValue: false },
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},                
                 keyField:  { type: "string", group: "Misc", defaultValue: "account_code" },
                 textField: { type: "string", group: "Misc", defaultValue: "account_name" },
@@ -43,12 +44,12 @@ sap.ui.define([
         createTableColumns: function(){
             this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/ACCOUT"));
             return [
-                new Column({
-                    width: "20%",
-                    hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/LANGUAGE_CODE")}),
-                    template: new Text({text: "{language_code}"})
-                }),
+                // new Column({
+                //     width: "20%",
+                //     hAlign: "Center",
+                //     label: new Label({text: this.getModel("I18N").getText("/LANGUAGE_CODE")}),
+                //     template: new Text({text: "{language_code}"})
+                // }),
 
                 new Column({
                     width: "20%",
@@ -68,7 +69,7 @@ sap.ui.define([
         loadData: function(){
             var sKeyword = this.oSearchKeyword.getValue(),
                 aFilters = [
-                        // new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                        new Filter("language_code", FilterOperator.EQ, "KO")
                     ],
                 oFilters = this.getProperty("items").filters || [],
                 aSorters = this.getProperty("items").sorters || [];
