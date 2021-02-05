@@ -95,6 +95,7 @@
                                             <VBox>
                                                 <MessageStrip
                                                     class="forMakerMasterMessageStrip sapUiMediumMarginBottom sapUiTinyMarginTop"
+                                                    visible="{mainPageView>/visible/message_strip_biz_chk_info}"
                                                     text="{I18N>/NSP00101}"
                                                     showIcon="true"
                                                     showCloseButton="false"/>
@@ -656,6 +657,7 @@
                             <Button type="Transparent" id="btn_list"  visible="{mainPageView>/visible/btn_list}" text="{I18N>/LIST}"   press=".onNavigationBackPress" />  
                             <Button type="Transparent" id="btn_cancel"  visible="{mainPageView>/visible/btn_cancel}" text="{I18N>/CANCEL}"   press=".onNavigationCancelPress" />  
                             <Button type="Emphasized"  id="btn_edit" visible="{mainPageView>/visible/btn_edit}" enabled="{mainPageView>/enabled/btn_edit}" text="{I18N>/EDIT}"  press=".onEditButtonPress"/>
+                            <Button type="Emphasized" id="btn_reject"  visible="{mainPageView>/visible/btn_reject}" enabled="{mainPageView>/enabled/btn_reject}" text="{I18N>/REJECT}"   press=".onRejectButtonPress" />
                             <Button type="Emphasized" id="btn_request"  visible="{mainPageView>/visible/btn_request}" enabled="{mainPageView>/enabled/btn_request}" text="{I18N>/REQUEST}"   press=".onRequestButtonPress" />
                             
                         </OverflowToolbar>

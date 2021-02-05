@@ -33,6 +33,42 @@ sap.ui.define([
 	return BaseController.extend("sp.sm.makerMasterCreate.controller.MainPage", {
 
         dateFormatter: DateFormatter,
+        _masterData : {
+            affiliate_code: "Y",
+            affiliate_name: "",
+            company_class_code: "",
+            company_class_name: "",
+            company_email_address: "",
+            company_tel_number: "",
+            country_code: "",
+            country_name: "",
+            create_user_id: "",
+            eu_flag: "",
+            local_create_dtm: "",
+            local_update_dtm: "",
+            maker_code: "",
+            maker_english_address: "",
+            maker_english_city: "",
+            maker_english_full_address: "",
+            maker_english_name: "",
+            maker_english_region: "",
+            maker_local_address: "",
+            maker_local_city: "",
+            maker_local_full_address: "",
+            maker_local_name: "",
+            maker_local_region: "",
+            maker_status_code: "",
+            maker_status_name: "",
+            old_maker_code: "",
+            represent_name: "",
+            system_create_dtm: "",
+            system_update_dtm: "",
+            tax_id: "",
+            tenant_id: "",
+            update_user_id: "",
+            vat_number: "",
+            zip_code: ""
+        },
         
         
 		/* =========================================================== */
@@ -109,16 +145,18 @@ sap.ui.define([
                 vbox_vat_number : true, //false : visible 처리할때...단, false로 할경우 영역을 없앨수없다.
                 maker_code : sGubun === "MA", //타모듈일 경우만 input visible
                 tax_id : sGubun === "MA", //타모듈일 경우만 input visible
-                country_code : bEditable && (sMode === "C"), //생성일때만 
+                country_code : bEditable && (sMode === "C") || (sGubun === "MR" && sProgress === "REQUEST" && bEditable), //생성일때만 
                 isEditable :  bEditable && sMode !== "R", //R이고 U가 아닐때는 input.비활성화
                 btn_list : sMode === "R",
                 btn_cancel : sMode !== "R", 
                 btn_request : sMode !== "R", 
+                btn_reject : sMode !== "R" && sGubun === "MR", 
                 btn_edit : sMode === "R" && sGubun !== "MR", // "MR"에서 오는 경우는 edit 기능 없음.
                 section_bizno_chk : (sGubun === "MM" && sMode === "C") || (sGubun === "MR" && sProgress === "REQUEST"),
                 section_approval_line : sGubun !== "MA" && sMode !== "R",
                 section_change_history : sMode === "R",
-                message_strip_biz_chk : sMode === "C" && bBizNoCheck,
+                message_strip_biz_chk_info : !(sGubun === "MR" && sProgress === "REQUEST"),
+                message_strip_biz_chk : sMode === "C" && bBizNoCheck || (sGubun === "MR" && sProgress === "REQUEST"),
                 message_strip : sMode === "R" && !bEditable && sGubun !== "MR"//"MR"에서 오는 경우는 사용안함.
             });
 
@@ -126,6 +164,7 @@ sap.ui.define([
                 oModel.setProperty("/enabled", {
                     vat_number : false ,
                     btn_request : bBizNoCheck && bEnbaled,
+                    btn_reject : bBizNoCheck && bEnbaled,
                     btn_edit : bBizNoCheck && bEnbaled,
                     btn_check : sGubun !== "MR",
                     tax_id_chk : sGubun !== "MR"
@@ -134,6 +173,7 @@ sap.ui.define([
 
         },
 
+        
 
         _initMasterData : function(){
             var oWriteModel = this.getModel("writeModel");
@@ -142,43 +182,7 @@ sap.ui.define([
                 list : []
             }); 
 
-            oWriteModel.setProperty("/generalInfo", {
-                affiliate_code: "Y",
-                affiliate_name: "",
-                company_class_code: "",
-                company_class_name: "",
-                company_email_address: "",
-                company_tel_number: "",
-                country_code: "",
-                country_name: "",
-                create_user_id: "",
-                eu_flag: "",
-                local_create_dtm: "",
-                local_update_dtm: "",
-                maker_code: "",
-                maker_english_address: "",
-                maker_english_city: "",
-                maker_english_full_address: "",
-                maker_english_name: "",
-                maker_english_region: "",
-                maker_local_address: "",
-                maker_local_city: "",
-                maker_local_full_address: "",
-                maker_local_name: "",
-                maker_local_region: "",
-                maker_status_code: "",
-                maker_status_name: "",
-                old_maker_code: "",
-                represent_name: "",
-                system_create_dtm: "",
-                system_update_dtm: "",
-                tax_id: "",
-                tenant_id: "",
-                update_user_id: "",
-                vat_number: "",
-                zip_code: ""
-            });
-
+            oWriteModel.setProperty("/generalInfo", this._masterData);
         },
 
 
@@ -214,6 +218,7 @@ sap.ui.define([
         onChangeCountry : function(oEvent){
             var oSelectedItem = sap.ui.getCore().byId(oEvent.getSource().getSelectedItemId()).getBindingContext().getObject();
             this._setVisiableVatNumber(oSelectedItem["eu_flag"]);
+            //this._setVisiableVatNumber();
         },
 
         onNavigationBackPress: function(e){
@@ -296,10 +301,12 @@ sap.ui.define([
             sMode = oCallByAppModel.getProperty("/mode"),
             that = this;
 
+            var oServiceModel = this.getModel();
             var sServiceName = "/MakerView";
             var sFilterName = "maker_code";
             
             if(bSupplierRole && !bMakerRole){
+                oServiceModel = this.getModel("supplier");
                 sServiceName = "/supplierWithoutOrgView"; //tenant_id, tax_id
                 sFilterName = "supplier_code";
             }
@@ -309,38 +316,73 @@ sap.ui.define([
 
             var aFilters = [
                 new Filter("tenant_id"    , FilterOperator.EQ, oCallByAppModel.getProperty("/tenantId")),
-                new Filter("maker_code"   , FilterOperator.EQ, oCallByAppModel.getProperty("/makerCode"))
+                new Filter(sFilterName   , FilterOperator.EQ, oCallByAppModel.getProperty("/makerCode"))
             ];   
                   
             
             var sExpand  = "dtls,tplm";
 
-            var oServiceModel = this.getModel();
-                oServiceModel.read(sServiceName,{
-                    filters : aFilters,
-                    //urlParameters : { "$expand" : sExpand },                    
-                    success : function(data){
-                        if(data && data.results.length > 0){
-                            var oResultData = data.results[0];
-                            oViewModel.setProperty("/generalInfo" , oResultData);   
-                            oWriteModel.setProperty("/generalInfo" , oResultData); 
-                            oCallByAppModel.setProperty("/bizNoCheck", false);
+            //var oServiceModel = this.getModel();
+            oServiceModel.read(sServiceName,{
+                filters : aFilters,
+                //urlParameters : { "$expand" : sExpand },                    
+                success : function(data){
+                    if(data && data.results.length > 0){
+                        var oResultData = data.results[0];
                         
-                            that._setVisiableVatNumber(oResultData.eu_flag);
-                        }else{
-                            alert("조회된 내역이 없습니다.");
+                        /*if(bSupplierRole && !bMakerRole){
 
-                            //조회가 안된경우 수정이나 요청 불가.
-                            oViewModel.setProperty("/generalInfo" , oWriteModel.getProperty("/generalInfo"));  
-                            that._initControlData(false)
-                        }
+                            oResultData["maker_code"] = oResultData["supplier_code"];
+                            oResultData["maker_english_address"] = oResultData["supplier_english_address"];
+                            oResultData["maker_english_city"] = oResultData["supplier_english_city"];
+                            oResultData["maker_english_full_address"] = oResultData["supplier_english_full_address"];
+                            oResultData["maker_english_name"] = oResultData["supplier_english_name"];
+                            oResultData["maker_english_region"] = oResultData["supplier_english_region"];
+                            oResultData["maker_local_address"] = oResultData["supplier_local_address"];
+                            oResultData["maker_local_city"] = oResultData["supplier_local_city"];
+                            oResultData["maker_local_full_address"] = oResultData["supplier_local_full_address"];
+                            oResultData["maker_local_name"] = oResultData["supplier_local_name"];
+                            oResultData["maker_local_region"] = oResultData["supplier_local_region"];
+                            oResultData["maker_status_code"] = oResultData["supplier_status_code"];
+                            oResultData["maker_status_name"] = oResultData["supplier_status_name"];
+                            oResultData["old_maker_code"] = oResultData["old_supplier_code"];
 
-                        //oCodeMasterTable.setBusy(false);
-                    },
-                    error : function(data){
-                        //oCodeMasterTable.setBusy(false);
+                            delete oResultData["supplier_code"];
+                            delete oResultData["supplier_english_address"];
+                            delete oResultData["supplier_english_city"];
+                            delete oResultData["supplier_english_full_address"];
+                            delete oResultData["supplier_english_name"];
+                            delete oResultData["supplier_english_region"];
+                            delete oResultData["supplier_local_address"];
+                            delete oResultData["supplier_local_city"];
+                            delete oResultData["supplier_local_full_address"];
+                            delete oResultData["supplier_local_name"];
+                            delete oResultData["supplier_local_region"];
+                            delete oResultData["supplier_status_code"];
+                            delete oResultData["supplier_status_name"];
+                            delete oResultData["old_supplier_code"];
+
+                        }*/
+
+                        oViewModel.setProperty("/generalInfo" , oResultData);   
+                        oWriteModel.setProperty("/generalInfo" , oResultData); 
+                        oCallByAppModel.setProperty("/bizNoCheck", false);
+                    
+                        that._setVisiableVatNumber(oResultData.eu_flag);
+                    }else{
+                        alert("조회된 내역이 없습니다.");
+
+                        //조회가 안된경우 수정이나 요청 불가.
+                        oViewModel.setProperty("/generalInfo" , oWriteModel.getProperty("/generalInfo"));  
+                        that._initControlData(false)
                     }
-                });
+
+                    //oCodeMasterTable.setBusy(false);
+                },
+                error : function(data){
+                    //oCodeMasterTable.setBusy(false);
+                }
+            });
 
         },
 
@@ -359,8 +401,30 @@ sap.ui.define([
             
             var oMainPageModel = this.getModel("mainPageView");
             var oWriteModel = this.getModel("writeModel");
-
             var bEuFlag = (sEuFlag !== undefined) ? (sEuFlag === "Y") : (oWriteModel.getProperty("/generalInfo/eu_flag") === "Y");
+
+            /* var aFilters = [
+                new Filter("tenant_id"    , FilterOperator.EQ, "L2100"),
+                new Filter("country_code"   , FilterOperator.EQ, "KR")
+            ];
+
+            var mParameters = {
+                filters : aFilters , // your Filter Array
+                success : function (oData, oResponse) {
+
+                },
+                error: function (oError) {
+
+                }
+              };
+
+            this.getView().getModel().read("/MakerCountryManagement",mParameters); 
+            
+            var bEuFlag = sEuFlag === "Y";
+            */
+
+
+            
             
             oMainPageModel.setProperty("/enabled/vat_number", bEuFlag); //enabled 상태만 변경할때...
             if(!bEuFlag)oWriteModel.setProperty("/generalInfo/vat_number", ""); //유럽국가인 경우만 입력 가능하므로 아닌경우 초기화
