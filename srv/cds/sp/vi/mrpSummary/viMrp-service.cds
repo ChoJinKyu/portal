@@ -8,6 +8,7 @@ using {cm.Code_View as CodeDtl} from '../../../../../db/cds/cm/CM_CODE_VIEW-mode
 namespace sp;
 @path : '/sp.MrpService'
 service MrpService {
+    
     @readonly
     view MrpView as
         select
