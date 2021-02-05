@@ -47,7 +47,6 @@ PROCEDURE OP_PU_PR_CREATE_SAVE_PROC (
                             WBS_CODE NVARCHAR(30),
                             ASSET_NUMBER NVARCHAR(30),
                             ORDER_NUMBER NVARCHAR(30),
-                            SERVICE_DESC NVARCHAR(100),
 							UPDATE_USER_ID NVARCHAR(255)
         ),
         OUT O_RTN_MSG TABLE( RETURN_CODE NVARCHAR(4),
@@ -64,7 +63,7 @@ BEGIN
 	DECLARE V_TENANT_ID NVARCHAR(5);
 	DECLARE V_COMPANY_CODE NVARCHAR(10);
 	DECLARE V_PR_NUMBER NVARCHAR(50);
-    DECLARE V_PR_NUMBER_SEQNO BIGINT;    
+    DECLARE V_PR_NUMBER_SEQNO BIGINT;
     DECLARE V_REQUEST_DATE DATE;
 
     /* 상세자료 cursor */
@@ -96,7 +95,6 @@ BEGIN
                 WBS_CODE ,
                 ASSET_NUMBER ,
                 ORDER_NUMBER ,
-                SERVICE_DESC ,
 				UPDATE_USER_ID 
         FROM :I_D_TABLE DTL
         ;
@@ -259,7 +257,6 @@ BEGIN
     
 	
     /* Cursor 실행 */
-
 	FOR curDtl AS curDtlList DO
 		INSERT INTO OP_PU_PR_DTL (
 			TENANT_ID  ,
@@ -376,9 +373,11 @@ BEGIN
                 CURRENT_TIMESTAMP
             );
         END IF;
+    END FOR;
 
-        IF (:curDtl.SERVICE_DESC IS NOT NULL AND :curDtl.SERVICE_DESC != '') THEN 
-            INSERT INTO OP_PU_PR_SERVICE (
+    /* 거래유형이 공사이면, SERVICE 등록 */
+    IF (:I_M_TABLE.PR_TYPE_CODE_2[1] IS NOT NULL AND :I_M_TABLE.PR_TYPE_CODE_2[1] = 'TC20003') THEN
+        INSERT INTO OP_PU_PR_SERVICE (
                 TENANT_ID  ,
                 COMPANY_CODE,
                 PR_NUMBER ,
@@ -396,27 +395,26 @@ BEGIN
                 UPDATE_USER_ID,
                 SYSTEM_CREATE_DTM,
                 SYSTEM_UPDATE_DTM
-            ) VALUES (
-                :V_TENANT_ID , 
+        )
+        SELECT  :V_TENANT_ID , 
                 :V_COMPANY_CODE,
                 :V_PR_NUMBER ,
-                curDtl.PR_ITEM_NUMBER,
+                PR_ITEM_NUMBER,
                 1 ,
-                curDtl.SERVICE_DESC,
-                curDtl.PR_QUANTITY,
-                curDtl.PR_UNIT,
-                curDtl.ESTIMATED_PRICE,
-                IFNULL(curDtl.PR_QUANTITY, 0) * IFNULL(curDtl.ESTIMATED_PRICE, 0),
-                curDtl.CURRENCY_CODE,
+                PR_DESC,
+                PR_QUANTITY,
+                PR_UNIT,
+                ESTIMATED_PRICE,
+                IFNULL(ESTIMATED_PRICE, 0) * IFNULL(PR_QUANTITY, 0) / IFNULL(PRICE_UNIT, 1)  ,
+                CURRENCY_CODE,
                 CURRENT_TIMESTAMP,
                 CURRENT_TIMESTAMP,
-                curDtl.UPDATE_USER_ID,
-                curDtl.UPDATE_USER_ID,
+                UPDATE_USER_ID,
+                UPDATE_USER_ID,
                 CURRENT_TIMESTAMP,
                 CURRENT_TIMESTAMP
-            );
-        END IF;
-	END FOR;        
+        FROM :I_D_TABLE DTL;
+    END IF;
 
 	--COMMIT;
     O_RTN_MSG = SELECT '0000' RETURN_CODE, 'Successfully Saved.' RETURN_MSG FROM DUMMY;
