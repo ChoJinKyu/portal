@@ -244,7 +244,7 @@ sap.ui.define([
 
         _onSearchPress: function(oEvent){
             this.fireEvent("searchPress");
-            this.oTable.setBusy(true);
+            // this.oTable.setBusy(true);
         },
 
         _onTableItemSelect: function(oEvent){
