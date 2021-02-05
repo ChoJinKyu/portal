@@ -436,20 +436,20 @@
                         </Column>
                     </columns>
                     <items>
-                        <ColumnListItem type="Navigation" press=".onColumnListItemPress($event, 'navigation', 'list', { LayoutType: 'TwoColumnsMidExpanded' })">
+                        <ColumnListItem type="Navigation" press=".onColumnListItemPress($event, 'navigation', 'list', {})">
                             <cells>
                                 <!-- 구매요청 번호 -->
-                                <Text text="{list>pr_number}" width="7em"/>
+                                <Text text="{list>pr_number}"/>
                                 <!-- 구매요청 유형 -->
-                                <Text text="{list>pr_type_name}" width="10em"/>
+                                <Text text="{list>pr_type_name}"/>
                                 <!-- 품목 번호 -->
                                 <Text text="{list>pr_item_number}"/>
                                 <!-- 조직코드 -->
-                                <Text text="{list>org_code}" width="5em"/>
+                                <Text text="{list>org_code}"/>
                                 <!-- 자재코드 -->
-                                <Text text="{list>material_code}" width="5em"/>
+                                <Text text="{list>material_code}"/>
                                 <!-- 구매요청 품명 -->                            
-                                <Text text="{list>pr_desc}" width="10em"/>
+                                <Text text="{list>pr_desc}"/>
                                 <!-- 단위 -->
                                 <Text text="{list>pr_unit}"/>
                                 <!-- 요청수량 -->
@@ -475,9 +475,9 @@
                                 <!-- 통화 -->
                                 <Text text="{list>currency_code}"/>
                                 <!-- 구매담당자 -->
-                                <Text text="{list>buyer_name}" width="5em"/>
+                                <Text text="{list>buyer_name}"/>
                                 <!-- 구매요청자 -->
-                                <Text text="{list>requestor_name}" width="5em"/>
+                                <Text text="{list>requestor_name}"/>
                                 <!-- 구매요청 일자 -->
                                 <Text text="{
                                     path: 'list>request_date',

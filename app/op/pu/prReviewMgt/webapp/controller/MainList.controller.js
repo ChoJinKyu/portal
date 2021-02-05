@@ -263,7 +263,7 @@ sap.ui.define([
         onColumnListItemPress: function () {
 
             var [ event, type, model, ...args ] = arguments,
-                layout = args[args.length-1].LayoutType,
+                layout = this.getOwnerComponent().getHelper().getNextUIState(1).layout,
                 record = this.getModel(model).getProperty(event.getSource().getBindingContextPath());
 
             // 조회조건접힘처리

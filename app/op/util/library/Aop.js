@@ -88,7 +88,7 @@ sap.ui.define([
                 var [event, type, ...args] = f.arguments = Array.prototype.slice.call(f.arguments);
 
                 type == "navigation" && setTimeout((() => {
-                    this.getModel("fcl").setProperty("/layout", args[args.length - 1].LayoutType);
+                    this.getModel("fcl").setProperty("/layout", this.getOwnerComponent().getHelper().getNextUIState(1).layout);
                 }).bind(this), 0);
 
                 return Aop.next.call(this, f);

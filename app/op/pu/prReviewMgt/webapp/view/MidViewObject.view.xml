@@ -370,17 +370,17 @@
                                         <ColumnListItem type="Navigation">
                                             <cells>
                                                 <!-- 코스트센터 -->
-                                                <Text text="[{accounts>cctr_code}] {accounts>cctr_name}" width="15em" textAlign="Left" />
+                                                <Text text="[{accounts>cctr_code}] {accounts>cctr_name}"/>
                                                 <!-- 계정코드 -->
-                                                <Text text="[{accounts>account_code}] {accounts>account_name}" width="15em" textAlign="Left" />
+                                                <Text text="[{accounts>account_code}] {accounts>account_name}"/>
                                                 <!-- WBS코드 -->
-                                                <Text text="[{accounts>wbs_code}] {accounts>wbs_name}" width="15em" textAlign="Left" />
+                                                <Text text="[{accounts>wbs_code}] {accounts>wbs_name}"/>
                                                 <!-- 오더번호 -->
-                                                <Text text="[{accounts>order_number}] {accounts>order_name}" width="15em" textAlign="Left" />
+                                                <Text text="[{accounts>order_number}] {accounts>order_name}"/>
                                                 <!-- 자산번호 -->
-                                                <Text text="[{accounts>asset_number}] {accounts>asset_name}" width="15em" textAlign="Left" />
+                                                <Text text="[{accounts>asset_number}] {accounts>asset_name}"/>
                                                 <!-- 계정지정범주 -->
-                                                <Text text="[{accounts>account_assignment_category_code}] {accounts>account_assignment_category_name}" width="15em" textAlign="Left" />
+                                                <Text text="[{accounts>account_assignment_category_code}] {accounts>account_assignment_category_name}"/>
                                             </cells>
                                         </ColumnListItem>
                                     </items>
