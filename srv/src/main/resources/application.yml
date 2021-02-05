@@ -14,10 +14,15 @@ app:
 
 logging:
   level:
+    root: info
     org:
       springframework:
         jdbc:
-          core: TRACE
-
-
-
+          core: trace
+    lg:
+      sppCap:
+        frame:
+          handler:
+            CustomAuthenticatedHandler: debug
+          i18n: debug
+        handlers: trace

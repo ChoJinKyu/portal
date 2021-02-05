@@ -12,7 +12,7 @@ public class StringUtil {
 	/**
 	 * Logger for this class
 	 */
-    protected final static Logger log = LoggerFactory.getLogger(StringUtil.class);
+    private final static Logger log = LoggerFactory.getLogger(StringUtil.class);
 
 	/**
 	 *

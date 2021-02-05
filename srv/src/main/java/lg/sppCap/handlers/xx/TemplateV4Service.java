@@ -30,7 +30,7 @@ import lg.sppCap.frame.handler.BaseEventHandler;
 @ServiceName(TemplateV4Service_.CDS_NAME)
 public class TemplateV4Service extends BaseEventHandler {
 
-    Logger log = LoggerFactory.getLogger(TemplateV4Service_.class);
+    private final static Logger log = LoggerFactory.getLogger(TemplateV4Service.class);
     
     @Autowired
     @Qualifier(TemplateV4Service_.CDS_NAME)
@@ -39,7 +39,8 @@ public class TemplateV4Service extends BaseEventHandler {
     @Transactional(rollbackFor = SQLException.class)
     @Before(event = SetDepartmentAndEmployeesContext.CDS_NAME)
     public void beforeSaveSampleMultiEnitylProc(SetDepartmentAndEmployeesContext context) {
-        log.debug("Inside of before handler  : {}", context.toString());
+        if(log.isTraceEnabled())
+            log.trace("Inside of before handler  : {}", context.toString());
 
         Department oDepartment = context.getDepartment();
         Collection<Employee> aEmployees = context.getEmployees();
@@ -49,7 +50,8 @@ public class TemplateV4Service extends BaseEventHandler {
     @Transactional(rollbackFor = SQLException.class)
     @On(event = SetDepartmentAndEmployeesContext.CDS_NAME)
     public void onSaveSampleMultiEnitylProc(SetDepartmentAndEmployeesContext context) {
-        log.debug("Inside of on handler  : {}", context.toString());
+        if(log.isTraceEnabled())
+            log.trace("Inside of on handler  : {}", context.toString());
 
         Department oDepartment = context.getDepartment();
         Collection<Employee> aEmployees = context.getEmployees();
@@ -59,11 +61,13 @@ public class TemplateV4Service extends BaseEventHandler {
         for(Employee oEmployee: aEmployees){
             cqnUpdate = Update.entity(Employee_.CDS_NAME).data(oEmployee);
             oResult = templateV4CdsService.run(cqnUpdate);
-            log.debug("updated an employee  : {}", oResult.toJson());
+            if(log.isDebugEnabled())
+                log.debug("updated an employee  : {}", oResult.toJson());
         }
         cqnUpdate = Update.entity(Department_.CDS_NAME).data(oDepartment);
         oResult = templateV4CdsService.run(cqnUpdate);
-        log.debug("updated a department : {}", oResult.toJson());
+        if(log.isDebugEnabled())
+            log.debug("updated a department : {}", oResult.toJson());
 
         context.setResult("OK");
         context.setCompleted();

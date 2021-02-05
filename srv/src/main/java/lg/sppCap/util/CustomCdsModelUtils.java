@@ -38,7 +38,7 @@ import com.sap.cds.services.utils.model.Privilege;
  */
 public class CustomCdsModelUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomCdsModelUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(CustomCdsModelUtils.class);
 
     private CustomCdsModelUtils() {
         // hidden
@@ -62,7 +62,7 @@ public class CustomCdsModelUtils {
         try (InputStream is = classloader.getResourceAsStream(resourcePathToCSN)) {
             CdsModel csnModel = CdsModelReader.read(new BufferedInputStream(is), true);
 
-            logger.info("Loaded CDS model from CSN resource path '{}'", resourcePathToCSN);
+            log.info("Loaded CDS model from CSN resource path '{}'", resourcePathToCSN);
             return csnModel;
 
         } catch (Exception e) { // NOSONAR

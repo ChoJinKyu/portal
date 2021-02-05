@@ -263,10 +263,16 @@ sap.ui.define([
                         delete oData["department"]["children"]["__deferred"];
                         delete oData["department"]["children"];
                         delete oData["department"]["company"]["__deferred"];
+                        delete oData["department"]["company"];
                         delete oData["department"]["parent"]["__deferred"];
+                        delete oData["department"]["parent"];
                         delete oData["department"]["__metadata"];
                         delete oData["employees"][0]["department"];
                         delete oData["employees"][0]["__metadata"];
+                        if(oData["employees"][1]){
+                            delete oData["employees"][1]["department"];
+                            delete oData["employees"][1]["__metadata"];
+                        }
                         var oXhr = ServiceProvider.getServiceByUrl("srv-api/odata/v4/xx.TemplateV4Service");
                         oXhr.ajax({
                             url: "srv-api/odata/v4/xx.TemplateV4Service/SetDepartmentAndEmployees",

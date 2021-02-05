@@ -24,7 +24,7 @@ import lg.sppCap.frame.handler.BaseEventHandler;
 @ServiceName(TemplateService_.CDS_NAME)
 public class TemplateService extends BaseEventHandler {
 
-    Logger log = LoggerFactory.getLogger(TemplateService.class);
+    private final static Logger log = LoggerFactory.getLogger(TemplateService.class);
     
     @Before(event = {CdsService.EVENT_READ}, entity = Message_.CDS_NAME)
     public void beforeGetMessageContents(EventContext context) {

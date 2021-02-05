@@ -15,22 +15,22 @@ import org.springframework.web.servlet.ModelAndView;
 @Component
 public class CertificationInterceptor implements HandlerInterceptor{
 
-    private final static Logger logger = LoggerFactory.getLogger(CertificationInterceptor.class);
+    private final static Logger log = LoggerFactory.getLogger(CertificationInterceptor.class);
  
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        logger.info("pre handle of {} ", request.getRequestURI());
+        log.info("pre handle of {} ", request.getRequestURI());
         return true;
     }
  
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        logger.info("post handle of {} ", request.getRequestURI());
+        log.info("post handle of {} ", request.getRequestURI());
     }
  
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        logger.info("after completion of {} ", request.getRequestURI());
+        log.info("after completion of {} ", request.getRequestURI());
     }
  
 }

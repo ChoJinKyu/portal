@@ -17,18 +17,22 @@ import org.springframework.stereotype.Component;
 @ServiceName(value = "*", type = ApplicationService.class)
 public class ApplicationServiceHandler implements EventHandler {
 
-    private final static Logger logger = LoggerFactory.getLogger(ApplicationServiceHandler.class);
+    private final static Logger log = LoggerFactory.getLogger(ApplicationServiceHandler.class);
 
     public ApplicationServiceHandler(){
-        logger.info("constructor for ApplicationServiceHandler");
+        if(log.isDebugEnabled()){
+            log.debug("constructor for ApplicationServiceHandler");
+        }
     }
     
     @Before(event = { CdsService.EVENT_CREATE, CdsService.EVENT_READ, CdsService.EVENT_UPDATE, CdsService.EVENT_DELETE, CdsService.EVENT_UPSERT })
 	@HandlerOrder(OrderConstants.Before.CHECK_ENTITY_FITS)
 	private void checkEntityFitsService(EventContext context) {
-        logger.info(String.format("qualifier : %s", context.getTarget().getQualifier()));
-        logger.info(String.format("qualifiedName : %s", context.getTarget().getQualifiedName()));
-        logger.info(String.format("service.name : %s", context.getService().getName()));
+        if(log.isDebugEnabled()){
+            log.debug(String.format("qualifier : %s", context.getTarget().getQualifier()));
+            log.debug(String.format("qualifiedName : %s", context.getTarget().getQualifiedName()));
+            log.debug(String.format("service.name : %s", context.getService().getName()));
+        }
 	}
 
 	// Restriction annotations from underlying projected entities are added to the service entity by the compiler provided that no restrictions are defined already.
@@ -36,7 +40,9 @@ public class ApplicationServiceHandler implements EventHandler {
 	@Before(event = "*")
 	@HandlerOrder(OrderConstants.Before.CHECK_AUTHORIZATION)
 	private void checkAuthorization(EventContext context) {
-        logger.info(String.format("isPrivileged : %s", context.getUserInfo().isPrivileged() ));
+        if(log.isDebugEnabled()){
+            log.debug(String.format("isPrivileged : %s", context.getUserInfo().isPrivileged() ));
+        }
     }
     
 }

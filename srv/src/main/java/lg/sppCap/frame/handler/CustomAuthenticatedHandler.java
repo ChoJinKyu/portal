@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @ServiceName(value = "*", type = ApplicationService.class)
 public class CustomAuthenticatedHandler implements EventHandler {
 
-    Logger log = LoggerFactory.getLogger(CustomAuthenticatedHandler.class);
+    private final static Logger log = LoggerFactory.getLogger(CustomAuthenticatedHandler.class);
     
 	// Restriction annotations from underlying projected entities are added to the service entity by the compiler provided that no restrictions are defined already.
 	// So the authorization has to be tested only on service level.
@@ -28,31 +28,30 @@ public class CustomAuthenticatedHandler implements EventHandler {
 	@HandlerOrder(OrderConstants.Before.CHECK_AUTHORIZATION)
 	private void checkAuthorization(EventContext context) {
         // privileged users just skip authorization checks
-        UserInfo userInfo = context.getUserInfo();
+        if(log.isTraceEnabled()){
+            UserInfo userInfo = context.getUserInfo();
+            log.trace("UserInfo.isPrivileged : {}", userInfo.isPrivileged());
+            log.trace("UserInfo.isAuthenticated : {}", userInfo.isAuthenticated());
+            log.trace("UserInfo.isSystemUser : {}", userInfo.isSystemUser());
+            log.trace("UserInfo.getId : {}", userInfo.getId());
+            log.trace("UserInfo.getName : {}", userInfo.getName());
+            userInfo.getRoles().forEach((role) -> {
+                log.trace("UserInfo.getRoles : {}", role);
+            });
+            userInfo.getAttributes().forEach((key, value) -> {
+                log.trace("UserInfo.getAttributes : key={}, value={}", key, value);
+            });
+            userInfo.getAdditionalAttributes().forEach((key, value) -> {
+                log.trace("UserInfo.getAdditionalAttributes : key={}, value={}", key, value);
+            });
+            userInfo.getUnrestrictedAttributes().forEach((attr) -> {
+                log.trace("UserInfo.getUnrestrictedAttributes : {}", attr);
+            });
+            log.trace("context.getEvent() : {}", context.getEvent());
 
-        log.info("UserInfo.getTenant : {}", userInfo.getTenant());
-        log.info("UserInfo.isPrivileged : {}", userInfo.isPrivileged());
-        log.info("UserInfo.isAuthenticated : {}", userInfo.isAuthenticated());
-        log.info("UserInfo.isSystemUser : {}", userInfo.isSystemUser());
-        log.info("UserInfo.getId : {}", userInfo.getId());
-        log.info("UserInfo.getName : {}", userInfo.getName());
-        userInfo.getRoles().forEach((role) -> {
-            log.info("UserInfo.getRoles : {}", role);
-        });
-        userInfo.getAttributes().forEach((key, value) -> {
-            log.info("UserInfo.getAttributes : key={}, value={}", key, value);
-        });
-        userInfo.getAdditionalAttributes().forEach((key, value) -> {
-            log.info("UserInfo.getAdditionalAttributes : key={}, value={}", key, value);
-        });
-        userInfo.getUnrestrictedAttributes().forEach((attr) -> {
-            log.info("UserInfo.getUnrestrictedAttributes : {}", attr);
-        });
-        
-        log.info("context.getEvent() : {}", context.getEvent());
-		final String serviceName = ((ApplicationService) context.getService()).getDefinition().getQualifiedName();
-
-        log.info("context.getService()..getQualifiedName() : {}", serviceName);
+            final String serviceName = ((ApplicationService) context.getService()).getDefinition().getQualifiedName();
+            log.trace("context.getService()..getQualifiedName() : {}", serviceName);
+        }
         
     }
     
