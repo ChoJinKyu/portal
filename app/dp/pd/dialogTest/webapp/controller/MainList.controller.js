@@ -273,7 +273,7 @@ sap.ui.define([
                     });
                     this.oSearchCategoryDialog.attachEvent("apply", function(oEvent){ 
                         console.log(oEvent.getParameter("item"));
-                     //   this.byId("searchCategoryInput").setValue(oEvent.getParameter("item").material_group_name);
+                        this.byId("searchCategoryInput").setValue(oEvent.getParameter("item").category_name);
                     }.bind(this));
                 }
 
