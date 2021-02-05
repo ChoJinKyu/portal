@@ -517,8 +517,8 @@ sap.ui.define([
                         //,supeval_target_flag: false   //??협의대상(화면의 어떤항목인지 모름)
                         //,supplier_op_plan_review_flag: false   //??협의대상(화면의 어떤항목인지 모름)
                         ,supeval_control_flag: this.currnetSppObj[i].supeval_control_flag
-                        ,supeval_control_start_date: this.currnetSppObj[i].supeval_control_start_date
-                        ,supeval_control_end_date: this.currnetSppObj[i].supeval_control_end_date
+                        ,supeval_control_start_date: this.currnetSppObj[i].supeval_control_start_date.toJSON().substring(0, 10)
+                        ,supeval_control_end_date: this.currnetSppObj[i].supeval_control_end_date.toJSON().substring(0, 10)
                         //,supeval_restrict_start_date: "20210104"   //??협의대상(화면의 어떤항목인지 모름)
                         //,supeval_restrict_end_date: "20211229"   //??협의대상(화면의 어떤항목인지 모름)
                         //,inp_code: "AAA"  //??협의대상(화면의 어떤항목인지 모름)  
