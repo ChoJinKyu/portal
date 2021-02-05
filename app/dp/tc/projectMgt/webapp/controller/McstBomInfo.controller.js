@@ -202,6 +202,18 @@ sap.ui.define([
 			this.byId("tblPartListTable").clearSelection();
         },
         
+        onMatCodeChange: function(oEvent) {
+            //debugger;
+            var oCnxt = oEvent.getSource().getBindingContext("partListModel")
+            if(oCnxt.getObject("material_code")) {
+                oCnxt.getModel()
+                oCnxt.getModel().setProperty(oCnxt.getPath()+"/material_desc", "");
+                oCnxt.getModel().setProperty(oCnxt.getPath()+"/uom_code", "");
+                oCnxt.getModel().setProperty(oCnxt.getPath()+"/material_reqm_quantity", "");
+            }
+
+        },
+
         onMaterialCodeValueHelpPress: function(oEvent) {
             var oInputCntl;
             oEvent.getSource().getParent().getAggregation("items").forEach(function(oCntl) {
@@ -323,48 +335,50 @@ sap.ui.define([
             var oTable = this.byId("tblPartListTable");
             oTable.setBusy(true);
             let oDataModel = this.getModel("mcstBomMgtModel");//McstBomMgtService V2 OData Service
-            let oKey = {tenant_id : oCnxt.getObject("tenant_id"), mapping_id : oCnxt.getObject("mapping_id")};
-            let sReadPath = oDataModel.createKey("/mcstProjectPartMapMst", oKey);
-            oDataModel.read(sReadPath, {
-                //filters : aFilters,
-                urlParameters : { "$expand" : "mappping_dtl,creator_person_info" },
+            //let oKey = {tenant_id : oCnxt.getObject("tenant_id"), mapping_id : oCnxt.getObject("mapping_id")};
+            //let sReadPath = oDataModel.createKey("/mcstProjectPartMapDtlView", oKey);
+            var aFilters = [
+                new Filter("tenant_id", FilterOperator.EQ, oCnxt.getObject("tenant_id")),
+                new Filter("mapping_id", FilterOperator.EQ, oCnxt.getObject("mapping_id"))
+            ];
+            oDataModel.read("/mcstProjectPartMapMstView", {
+                filters : aFilters,
+                //urlParameters : { "$expand" : "mappping_dtl,creator_person_info" },
                 success : function(data){
                     oTable.setBusy(false);
-                    console.log("mcstProjectPartMapMst", data);
-
-                    if( data.hasOwnProperty("mapping_id") ) {
-                        //this._openBomMappingDialog(oBomMappingModel);
+                    console.log("mcstProjectPartMapDtlView", data);
+                    //debugger;
+                    if( data.results && data.results.length > 0 ) {
                         this.setModel(new JSONModel, "bomMappingModel");
-                        let oBomMppingModel = this.getModel("bomMappingModel");
-                        oBomMppingModel.setProperty("/tenant_id", data.tenant_id);
-
-                        oBomMppingModel.setProperty("/project_code", oCnxt.getProperty("project_code"));
-                        oBomMppingModel.setProperty("/model_code", oCnxt.getProperty("model_code"));
-                        oBomMppingModel.setProperty("/version_number", oCnxt.getProperty("version_number"));
-
-                        oBomMppingModel.setProperty("/mapping_id", data.mapping_id);
-                        oBomMppingModel.setProperty("/department_type_code", data.department_type_code);
-                        oBomMppingModel.setProperty("/creator_empno", data.creator_empno);
-                        oBomMppingModel.setProperty("/creator_local_name", data.creator_person_info.user_local_name);
-                        oBomMppingModel.setProperty("/eng_change_number", data.eng_change_number);
-                        oBomMppingModel.setProperty("/change_reason", data.change_reason);
-
+                        var oBomMppingModel = this.getModel("bomMappingModel");
                         var aAsisData = [];
-                        var aTobeData = [];
-                        if(data.mappping_dtl) {
-                            data.mappping_dtl.results.forEach(function(oDtl) {
-                                if(oDtl.change_info_code === "Old") {
-                                    aAsisData.push({material_code : oDtl.material_code});
-                                } else if(oDtl.change_info_code === "New") {
-                                    aTobeData.push({material_code : oDtl.material_code, change_reason : oDtl.change_reason});
-                                }
-                            });
-                        }
-                        
+                        var aTobeData = []; 
+                        data.results.forEach(function(oRow, nIdx) {
+                            if(nIdx === 0) {
+                                oBomMppingModel.setProperty("/tenant_id", oRow.tenant_id);
+
+                                oBomMppingModel.setProperty("/project_code", oCnxt.getProperty("project_code"));
+                                oBomMppingModel.setProperty("/model_code", oCnxt.getProperty("model_code"));
+                                oBomMppingModel.setProperty("/version_number", oCnxt.getProperty("version_number"));
+
+                                oBomMppingModel.setProperty("/mapping_id", oRow.mapping_id);
+                                oBomMppingModel.setProperty("/department_type_code", oRow.department_type_code);
+                                oBomMppingModel.setProperty("/creator_empno", oRow.creator_empno);
+                                oBomMppingModel.setProperty("/creator_local_name", oRow.creator_person_info);
+                                oBomMppingModel.setProperty("/eng_change_number", oRow.eng_change_number);
+                                oBomMppingModel.setProperty("/change_reason", oRow.change_reason);
+                            }
+                            if(oRow.change_info_code === "Old") {
+                                aAsisData.push({material_code : oRow.material_code});
+                            } else if(oRow.change_info_code === "New") {
+                                aTobeData.push({material_code : oRow.material_code, change_reason : oRow.change_reason});
+                            }
+                        });
                         oBomMppingModel.setProperty("/Asis/", aAsisData);
                         oBomMppingModel.setProperty("/Tobe/", aTobeData);
                         this._openBomMappingDialog(oBomMppingModel);
                     }
+
                 }.bind(this),
                 error : function(data){
                     oTable.setBusy(false);

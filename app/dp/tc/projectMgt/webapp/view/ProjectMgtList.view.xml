@@ -333,27 +333,7 @@
                                 <layout:GridData span="XL1 L1 M1 S1" />
                             </layoutData>
                         </Label>
-                        <!--
-                        <SearchField value="{filterModel>/buyer_name/value}" >
-                            <layoutData>
-                                <layout:GridData span="XL2 L2 M2 S2" />
-                            </layoutData>
-                        </SearchField>
-                        -->
                         <VBox>
-                            
-                            <!-- <Input id="inputWithEmployeeValueHelp" value="{filterModel>/buyer_name/value}"
-                                showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
-                            </Input>
-                            <cm-ui:EmployeeDialog id="employeeDialog" 
-                                title="{I18N>/EMPLOYEE} {I18N>/FIND}"
-                                closeWhenApplied="true"
-                                items="{
-                                    filters: [
-                                    ]
-                                }"
-                                apply=".onEmployeeDialogApplyPress"
-                            /> -->
                             <MultiInput id="multiInputWithEmployeeValueHelp"
                                 placeholder="Choose employees from the ValueHelp"
                                 showValueHelp="true" valueHelpRequest=".onMultiInputWithEmployeeValuePress($event, 'multiInputWithEmployeeValueHelp')">
@@ -424,61 +404,61 @@
                     </OverflowToolbar>
                 </t:extension>
                 <t:columns>
-                    <t:Column hAlign="Left" width="8rem">
+                    <t:Column hAlign="Left" width="6rem">
                         <Label text="{I18N>/COMPANY}" textAlign="Center" width="100%"/>
                         <t:template>
                             <Text text="{listModel>company_code}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Begin" width="10rem">
+                    <t:Column hAlign="Begin" width="8rem">
                         <Label text="{I18N>/BUSINESS_DIVISION}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>bizdivision_text}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Left" width="10rem">
+                    <t:Column hAlign="Left" width="8rem">
                         <Label text="{I18N>/PRODUCT_GROUP}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>product_group_text}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Left" width="12rem">
+                    <t:Column hAlign="Left" width="8rem">
                         <Label text="{I18N>/CUSTOMER_NAME}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>customer_local_name}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Center" width="5rem">
+                    <t:Column hAlign="Center" width="3rem">
                         <Label text="{I18N>/GRADE}" />
                         <t:template>
                             <Text text="{listModel>project_grade_text}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Center"  width="12rem">
+                    <t:Column hAlign="Center"  width="10rem">
                         <Label text="{I18N>/PROJECT_CODE}" />
                         <t:template>
                             <Text text="{listModel>project_code}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Left"  width="15rem">
+                    <t:Column hAlign="Left"  width="12rem">
                         <Label text="{I18N>/PROJECT_NAME}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>project_name}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Center"  width="12rem">
-                        <Label text="{I18N>/QUOTE_PROJECT_CODE}" />
+                    <t:Column hAlign="Left"  width="12rem">
+                        <Label text="{I18N>/QUOTE_PROJECT_CODE}" textAlign="Center" width="100%"/>
                         <t:template>
                             <Text text="{listModel>quotation_project_code}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Center"  width="15rem">
+                    <t:Column hAlign="Center"  width="10rem">
                         <Label text="{I18N>/REPR_MODEL_CODE}" textAlign="Center" width="100%" />
                         <t:template>
                             <Text text="{listModel>model_code}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Center"  width="7rem">
+                    <t:Column hAlign="Center"  width="6rem">
                         <Label text="{I18N>/MASSPROD_DATE}" />
                         <t:template>
                             <Text text="{
@@ -499,7 +479,7 @@
                             <Text text="{listModel>project_status_text}" />
                         </t:template>
                     </t:Column>
-                    <t:Column hAlign="Center"  width="6rem">
+                    <t:Column hAlign="Center"  width="4rem">
                         <Label text="{I18N>/EVENT}" />
                         <t:template>
                             <Text text="{listModel>develope_event_code}" />

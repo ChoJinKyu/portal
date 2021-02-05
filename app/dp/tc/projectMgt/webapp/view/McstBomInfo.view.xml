@@ -261,26 +261,27 @@
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Left" width="8%" >
-                        <Label text="자재코드" required="true" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/MATERIAL_CODE}" required="true" textAlign="Center" width="100%"/>
                         <t:template>
                             <HBox justifyContent="Begin">
                                 <Text text="{partListModel>material_code}" textAlign="Left" width="100%" visible="{= ${partListModel>_row_state_} === 'C' ? false : true }" />
                                 <Input placeholder="Choose codes from the ValueHelp"
                                             value="{partListModel>material_code}"
                                             showValueHelp="true"
+                                            change=".onMatCodeChange"
                                             valueHelpRequest=".onMaterialCodeValueHelpPress"
                                             visible="{= ${partListModel>_row_state_} === 'C' ? true : false }" />
                             </HBox>
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Left" width="auto" >
-                        <Label text="자재설명" required="true" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/MATERIAL_DESC}" required="true" textAlign="Center" width="100%"/>
                         <t:template>
 							<Text text="{partListModel>material_desc}"/>
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Left" width="10em" >
-                        <Label text="단위" required="true" textAlign="Center" width="100%"/>
+                        <Label text="{I18N>/UNIT}" required="true" textAlign="Center" width="100%"/>
                         <t:template>
                             <HBox justifyContent="Begin">
                                 <Text text="{partListModel>uom_name}" textAlign="Center" visible="{= ${partListModel>_row_state_} === 'C' ? false : true }"/>
@@ -304,20 +305,20 @@
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="End" width="8em" >
-                        <Label text="소요량" required="true" textAlign="Center" width="100%" />
+                        <Label text="{I18N>/REQ_QTY}" required="true" textAlign="Center" width="100%" />
                         <t:template>
                             <HBox justifyContent="End">
-                                <Text text="{
+                                <!-- <Text text="{
                                         path : 'partListModel>material_reqm_quantity',
                                         formatter : '.numberFormatter.toNumberString'
                                       }"
-                                    textAlign="End" visible="{= ${partListModel>_row_state_} === 'C' ? false : true }"/>
-                                <Input value="{partListModel>material_reqm_quantity}" visible="{= ${partListModel>_row_state_} === 'C' ? true : false }"/>
+                                    textAlign="End" visible="{= ${partListModel>_row_state_} === 'C' ? false : true }"/> -->
+                                <Input type="Number" textAlign="End" value="{partListModel>material_reqm_quantity}" />
                             </HBox>
 						</t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="8em" >
-                        <Label text="변경정보" />
+                        <Label text="{I18N>/CHANGE_INFO}" />
                         <t:template>
                             <tnt:InfoLabel
                                 text="{partListModel>change_info_text}"
@@ -336,8 +337,8 @@
                             </HBox>
 						</t:template>
                     </t:Column>
-                    <t:Column hAlign="Center" width="15%" >
-                        <Label text="{I18N>/MAPPING_RSN}" />
+                    <t:Column hAlign="Left" width="15%" >
+                        <Label text="{I18N>/MAPPING_RSN}" textAlign="Center" width="100%"/>
                         <t:template>
                             <!-- <Text text="{partListModel>eng_change_number}"/> -->
                             <Link
