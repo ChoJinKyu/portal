@@ -164,7 +164,15 @@ using {pg.Vp_Vendor_Pool_Mst} from '../../pg/vp/PG_VP_VENDOR_POOL_MST-model.cds'
 // } where process_type_code = 'SP03' and use_flag = TRUE;
 
 @cds.autoexpose  // Sc_Pur_Operation_Org = Pur_Org_Type_View[process_type_code='SP03:견적입찰'] + Pur_Operation_Org + Code_Lng[group_code='CM_ORG_TYPE_CODE']
-entity Sc_Vp_Vendor_Pool_Mst as select from Vp_Vendor_Pool_Mst;
+entity Sc_Vp_Vendor_Pool_Mst as select from Vp_Vendor_Pool_Mst
+    excluding {
+        local_create_dtm,
+        local_update_dtm,
+        create_user_id,
+        update_user_id,
+        system_create_dtm,
+        system_update_dtm
+    };
 
 /* 
 // #조직 유형 뷰

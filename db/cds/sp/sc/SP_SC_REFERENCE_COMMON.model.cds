@@ -115,6 +115,16 @@ define view Sc_Award_Method_Code_View as
     }
     where group_code = 'SP_SC_AWARD_METHOD_CODE';
 
+@cds.autoexpose  // SP_SC_SPEC_CODE : Specification
+define view Sc_Spec_Code_View as
+    select from codeMst.Code_Dtl as cd {
+        key cd.tenant_id,
+        key cd.code      as specification_code,
+            cd.sort_no,
+            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name as specification_name
+    }
+    where group_code = 'SP_SC_SPEC_CODE';
+
 @cds.autoexpose  // OP_INCOTERMS : 인커텀즈 코드[예:]
 define view Sc_Incoterms_View as
     select from codeMst.Code_Dtl {

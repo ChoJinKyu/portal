@@ -3,6 +3,7 @@ namespace sp;
 /* Transaction Association */
 using util from '../../cm/util/util-model';
 using {sp.Sc_Nego_Item_Prices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
+using {sp.Sc_Nego_Item_Non_Price} from '../../sp/sc/SP_SC_NEGO_ITEM_NON_PRICE-model';
 using {dp as materialMst} from '../../dp/mm/DP_MM_MATERIAL_MST-model';
 
 /* Master Association */
@@ -48,6 +49,9 @@ entity Sc_Nego_Headers {
         Items                           : Composition of many Sc_Nego_Item_Prices
                                               on  Items.tenant_id      = $self.tenant_id
                                               and Items.nego_header_id = $self.nego_header_id;
+        ItemsNonPrice                   : Composition of many Sc_Nego_Item_Non_Price
+                                              on  ItemsNonPrice.tenant_id      = $self.tenant_id
+                                              and ItemsNonPrice.nego_header_id = $self.nego_header_id;
         reference_nego_header_id        : type of nego_header_id @title : '참조협상헤더ID';
         previous_nego_header_id         : Integer64          @title : '기존협상헤더ID';
         operation_org_code              : String(10)         @title : '운영조직코드';
@@ -306,9 +310,11 @@ view Sc_Nego_Workbench_View as select from Sc_Nego_Item_Prices as Items {
 };
 
 view Sc_Nego_Workbench_View2 as select from Sc_Nego_Headers_View as Header {
-    Key Items.tenant_id                        ,
-    Key Items.nego_header_id                   ,
-    Key Items.nego_item_number                 ,
+    Key Header.tenant_id                        ,
+    Key Header.nego_header_id                   ,
+    Key Items.tenant_id   as items_tenant_id   ,
+    Key Items.nego_header_id  as     items_nego_header_id            ,
+    Key Items.nego_item_number  as   items_nego_item_number            ,
         Header.nego_document_number            ,
         Header.nego_document_round             ,
         Header.nego_progress_status_code       ,
