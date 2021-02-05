@@ -7,7 +7,7 @@
     xmlns:lib-m="ext.lib.control.m"
     xmlns:cm-ui="cm.util.control.ui"
 >
-    <Dialog id="reason" class="sapUiSmallMargin" title="(미정)마감사유"  afterOpen=".onAfterOpen($event, 'default', {})">
+    <Dialog id="reason" class="sapUiSmallMargin" title="{fragment>/reason/title}"  afterOpen=".onAfterOpen($event, 'default', {})">
         <VBox class="sapUiSmallMargin" >
             <form:SimpleForm>
                 <Label text="{I18N>/BUYER}" visible="{= ${fragment>/reason/action} === 'CHANGE'}"/>

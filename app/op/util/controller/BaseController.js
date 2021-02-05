@@ -179,7 +179,7 @@ sap.ui.define([
                             Object
                                 .keys(handlers)
                                 .forEach(h => that[id][h] = undefined);
-                        }, 0);
+                        }, 100);
                         return settled ? mDeferred[settled](value) : value;
                     }, that[id]);
                 });
@@ -197,7 +197,7 @@ sap.ui.define([
                     console.log(">>>>>>> release");
                     Dialog.close();
                     Dialog.destroy();
-                    delete this.dialog[key];
+                    this.dialog[key] && delete this.dialog[key];
                 }, 0);
                 return arguments;
             }).bind(this);

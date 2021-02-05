@@ -49,7 +49,13 @@ sap.ui.define([
                         company_code, 
                         pr_number, 
                         pr_item_number 
-                    }), "accounts", "Pr_ReviewDtlAcctView");
+                    }), "accounts", "Pr_ReviewDtlAcctView")
+                    .done((function(r){
+                        // Get Hold of page
+                        setTimeout((function(){
+                            this.getView().byId("page")._scrollTo(0);
+                        }).bind(this), 0)
+                    }).bind(this))
                 }, this);
         },
         onButtonPress: function () {
