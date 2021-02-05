@@ -94,6 +94,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onMainTablePersoRefresh : function() {
+            console.log("onMainTablePersoRefresh");
 			MainListPersoService.resetPersData();
 			this._oTPC.refresh();
 		},
@@ -159,12 +160,13 @@ sap.ui.define([
         onExportPress : function(_oEvent){
             var sTableId = _oEvent.getSource().getParent().getParent().getId();
             if (!sTableId) { return; }
-
             var oTable = this.byId(sTableId);
-            //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+
             var sFileName = "Product Activity_"+ this._getDTtype();
             var oData = this.getModel("list").getProperty("/PdProdActivityTemplateView"); //binded Data
-            // var oData = oTable.getModel().getProperty("/Uom");
+
+            console.log(oData);
+
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
                 table: oTable,
@@ -245,7 +247,7 @@ sap.ui.define([
 			// init and activate controller
 			// 개인화 - UI 테이블의 경우만 해당
             this._oTPC = new TablePersoController({
-                customDataKey: "persoKey",
+                customDataKey: "productActivityMgt",
                 persoService: MainListPersoService            
             }).setTable(this.byId("mainTable"));
         },

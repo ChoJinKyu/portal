@@ -125,7 +125,7 @@
                     <t:Column hAlign="Center">
                         <Text text="{I18N>/STATUS}" wrapping="false"/>
                         <t:template>
-                            <Text text="{= ${list>active_flag} === true ? 'Active' : 'Inactive'}" wrapping="false"/>  
+                            <Text text="{list>active_flag_val}" wrapping="false"/>  
                         </t:template>
                     </t:Column>
 

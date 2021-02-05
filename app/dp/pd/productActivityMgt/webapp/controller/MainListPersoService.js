@@ -4,43 +4,43 @@ sap.ui.define(["jquery.sap.global"],
         var i = 0;            
         var _columns = [           
             {
-                id: "partBaseActivityMgt-mainList-mainColumnProductActivityCode",
+                id: "productActivityMgt-mainList-mainColumnProductActivityCode",
                 order: i++,
                 text: "제품 Activity 코드",
                 visible: true
             },
             {
-                id: "partBaseActivityMgt-mainList-mainColumnActivityName",
+                id: "productActivityMgt-mainList-mainColumnActivityName",
                 order: i++,
                 text: "제품 Activity 명",
                 visible: true
             },            
             {
-                id: "partBaseActivityMgt-mainList-mainColumnDescription",
+                id: "productActivityMgt-mainList-mainColumnDescription",
                 order: i++,
                 text: "설명",
                 visible: true
             },
             {
-                id: "partBaseActivityMgt-mainList-mainColumnSequence",
+                id: "productActivityMgt-mainList-mainColumnSequence",
                 order: i++,
                 text: "순번",
                 visible: true
             },            
             {
-                id: "partBaseActivityMgt-mainList-mainColumnActiveFlagVal",
+                id: "productActivityMgt-mainList-mainColumnActiveFlagVal",
                 order: i++,
                 text: "Status",
                 visible: true
             },            
             {
-                id: "partBaseActivityMgt-mainList-mainColumnLocalUpdateDtm",
+                id: "productActivityMgt-mainList-mainColumnLocalUpdateDtm",
                 order: i++,
                 text: "수정일시",
                 visible: true
             },
             {
-                id: "partBaseActivityMgt-mainList-mainColumnUpdateUserId",
+                id: "productActivityMgt-mainList-mainColumnUpdateUserId",
                 order: i++,
                 text: "수정자",
                 visible: true
