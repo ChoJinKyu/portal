@@ -251,22 +251,19 @@ sap.ui.define([
         _getSearchStates: function () {
             var sTitle, searchDateS, aSearchFilters = [],
                 sFromDate = this.byId("searchDateS").getFrom(),
-                sToDate = this.byId("searchDateS").getTo(),
-                sStartDate = this.byId("searchDateS").getValue().substring(0, 10),
-                sEndDate = this.byId("searchDateS").getValue().substring(13);
-
-
+                sToDate = this.byId("searchDateS").getTo();
+            
             if (!!(sTitle = this.byId("searchTitle").getValue())) {
                 aSearchFilters.push(new Filter("tolower(funding_notify_title)", FilterOperator.Contains, "'"+sTitle.toLowerCase().replace("'","''")+"'"));
             };
 
-            if (!!sFromDate || !!sToDate) {
+            if(!!sFromDate || !!sToDate){
                 aSearchFilters.push(new Filter({
                     filters: [
-                        new Filter("funding_notify_start_date", FilterOperator.BT, sStartDate, sEndDate),
-                        new Filter("funding_notify_end_date", FilterOperator.BT, sStartDate, sEndDate)
+                        new Filter("funding_notify_start_date", FilterOperator.BT, sFromDate, new Date(sToDate.toString())),
+                        new Filter("funding_notify_end_date", FilterOperator.BT, sFromDate, new Date(sToDate.toString()))
                     ],
-                    and: false
+                    // and : false
                 }));
             }
             
