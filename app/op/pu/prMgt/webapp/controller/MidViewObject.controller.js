@@ -1,5 +1,6 @@
 sap.ui.define([
-    "ext/lib/controller/BaseController",
+    // "ext/lib/controller/BaseController",
+    "op/util/controller/BaseController",
     "ext/lib/util/Multilingual",    
 	"sap/ui/core/routing/History",
     "sap/ui/model/json/JSONModel",
@@ -44,6 +45,9 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () { 
+
+             // call the base controller's init function
+            BaseController.prototype["op.init"].apply(this, arguments);
 
 			var oViewModel = new JSONModel({
 					busy : true,
