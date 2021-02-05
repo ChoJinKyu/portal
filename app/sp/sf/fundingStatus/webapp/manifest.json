@@ -140,7 +140,7 @@
                 {
                     "name": "Apply",
                     "pattern": "Apply/:fundingApplNumber:/:supplierCode:/:fundingStatusCode:",
-                    "target": ["Apply"]
+                    "target": ["Master", "Detail"]
                 }
             ],
 			"targets": {
@@ -166,8 +166,8 @@
 				"Apply": {
 					"viewType": "XML",
 					"transition": "slide",
-					"viewName": "FundingApply",
-					"viewId": "FundingApply",
+					"viewName": "Apply",
+					"viewId": "Apply",
                     "viewLevel": 2,
 					"clearControlAggregation": true,
 					"controlAggregation": "midColumnPages"
