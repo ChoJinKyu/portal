@@ -51,8 +51,22 @@
                         <VBox>
                             <Label text="협력사 :" labelFor="searchDateS" />
                             <ComboBox id="sSupplierCode">
-                                <core:Item key="KR01818401" text="한국유나이티드제약(주)" />
                                 <core:Item key="KR01820600" text="BST상사" />
+                                <core:Item key="KR01818401" text="한국유나이티드제약(주)" />
+                                <core:Item key="KR00533800" text="세운철강(주)" />
+                                <core:Item key="KR00616400" text="신혁기업사" />
+                                <core:Item key="KR00687500" text="희성정밀(주)" />
+                                <core:Item key="KR00818700" text="서울반도체(주)" />
+                                <core:Item key="KR00862700" text="로옴세미컨덕터코리아 주식회사" />
+                                <core:Item key="KR00941200" text="(주)필룩스" />
+                                <core:Item key="KR01077700" text="코웰패션 주식회사" />
+                                <core:Item key="KR01079700" text="(주)연호전자" />
+                                <core:Item key="KR01093000" text="한국태양유전(주)" />
+                                <core:Item key="KR01100100" text="(주)오성사창원공장" />
+                                <core:Item key="KR01112100" text="(주)일해" />
+                                <core:Item key="KR01114200" text="성철사(주)" />
+                                <core:Item key="KR01357200" text="교세라커넥터코리아판매(주)" />
+                                <core:Item key="KR01731200" text="(주)블루콤" />
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
