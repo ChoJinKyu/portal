@@ -192,24 +192,6 @@ sap.ui.define([
                     // new Filter({ path:"org_type_code", operator:"EQ", value1 : oUserInfo.orgTypeCode }),
                 ];
 
-                //필수입력체크
-                // var aControls = oView.getControlsByFieldGroupId("searchRequired"),
-                //     bValid = this._isValidControl(aControls);
-
-                // if(!bValid){
-                //     return;
-                // }
-
-                //미리 세팅해둔 경로를 바탕으로 Filter를 생성한다.
-                /**
-                 * EQ {
-                 *    Field
-                 * }
-                 * Contains {
-                 *    Field
-                 * }
-                 */
-
                 for(var operator in oCondData){
                     if(oCondData.hasOwnProperty(operator)){
                         for(var field in oCondData[operator]){
@@ -285,6 +267,7 @@ sap.ui.define([
                 
                 oNavParam.fundingApplNumber = oRowData.funding_appl_number;
                 oNavParam.supplierCode = oRowData.supplier_code;
+                oNavParam.fundingStatusCode = oRowData.funding_status_code;
 
                 this.getOwnerComponent().getRouter().navTo("Detail", oNavParam);
             }

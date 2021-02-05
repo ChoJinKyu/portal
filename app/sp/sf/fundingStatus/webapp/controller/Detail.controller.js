@@ -35,13 +35,49 @@ sap.ui.define([
             onPressPageNavBack : function(){
                 this.getOwnerComponent().getRouter().navTo("Master");
             },
+            
+
+            onPressLayoutChange : function(oEvent){
+                var oControl, oView, oViewModel, sLayout, sIcon, sBtnScreenText;
+
+                oControl = oEvent.getSource();
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
+                sIcon = oControl.getIcon();
+
+                if(sIcon === "sap-icon://full-screen"){
+                    sLayout = "MidColumnFullScreen";
+                    sBtnScreenText = "sap-icon://exit-full-screen";
+                }else{
+                    sLayout = "TwoColumnsMidExpanded";
+                    sBtnScreenText = "sap-icon://full-screen";
+                }
+
+                oViewModel.setProperty("/App/layout", sLayout);
+                oViewModel.setProperty("/App/btnScreen", sBtnScreenText);
+                
+                
+            },
 
             onFilterSelect : function(oEvent){
-                
-                if(oEvent.getParameters().key==="step1"){
-                    this.byId("beginView").setVisible(true)
+                var sPramModel = this.getModel("viewModel").getProperty("/Args"),
+                    statusCode = sPramModel.fundingStatusCode;
+
+                if(oEvent){
+                    if(oEvent.getParameters().key==="step1"){
+                        this.byId("beginView").setVisible(true)
+                        this.getOwnerComponent().getRouter().navTo("Apply", sPramModel);
+                    }else{
+                        this.byId("beginView").setVisible(false)
+                    }
                 }else{
-                    this.byId("beginView").setVisible(false)
+                    if(statusCode=="110" || statusCode=="120" ){
+                        this.byId("beginView").setVisible(true)
+                        this.getOwnerComponent().getRouter().navTo("Apply");
+                    }else{
+                        this.byId("beginView").setVisible(false)
+                    }
+
                 }
             },
             
@@ -49,7 +85,6 @@ sap.ui.define([
              * Detail PatternMatched
              */
             _onPatternMatched: function (e) {
-                debugger;
                 var oArgs, oComponent, oViewModel,
                     oView, aControls, oTable, oDetailData;
 
@@ -73,10 +108,12 @@ sap.ui.define([
                 oDetailData.Header = {};
                 oViewModel.setProperty("/Detail", oDetailData);
                 oViewModel.setProperty("/App/layout", "TwoColumnsMidExpanded");
+                oViewModel.setProperty("/App/btnScreen", "sap-icon://full-screen");
                 
                 var oMasterPage, oDynamicPage;
 
-                // this._readHeader();
+                
+                this.onFilterSelect();
                 
             },
             

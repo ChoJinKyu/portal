@@ -240,7 +240,7 @@
                     <!-- 상태 -->
                     <t:Column label="상태" width="10%" hAlign="Center">    
                         <t:template>
-                            <Text text="{viewModel>funding_status_code}" tooltip="{funding_status_code}" wrapping="false" />
+                            <Text text="{viewModel>funding_status_name}" tooltip="{funding_status_code}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 사업부 -->

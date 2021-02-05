@@ -45,22 +45,22 @@ sap.ui.define([
 
             // this._onComCodeListView(oAppSupModel);
             // this._onTransactionDivision(oAppSupModel);
-            // this.getRouter().getRoute("Apply").attachPatternMatched(this._onRoutedThisPage, this);
+            this.getRouter().getRoute("Apply").attachPatternMatched(this._onRoutedThisPage, this);
 
         },
 
         onAfterRendering: function (oEvent) {
-            debugger;
             this.getModel("viewModel");
-        }
+        },
 
         /**
          * When it routed to this page from the other page.
          * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
          * @private
          */
-        // _onRoutedThisPage: function (oEvent) {
-        //     debugger;
-        // }
+        _onRoutedThisPage: function (oEvent) {
+            alert("??");
+            debugger;
+        }
     })
 });
