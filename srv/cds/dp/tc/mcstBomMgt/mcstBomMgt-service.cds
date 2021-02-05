@@ -94,7 +94,20 @@ left outer join mcstPartMapMst.Tc_Mcst_Project_Part_Map_Mst pmm
            and pmm.mapping_id = ppl.mapping_id
 left outer join uom.Mm_Unit_Of_Measure muom
             on muom.tenant_id = ppl.tenant_id
-           and muom.uom_code = ppl.uom_code;           
+           and muom.uom_code = ppl.uom_code; 
+
+    view mcstProjectPartMapDtlView as
+        select key pmd.tenant_id
+             , key pmd.mapping_id
+             , key pmd.material_code
+             , msi.material_desc
+             , msi.material_spec
+             , pmd.change_info_code
+             , pmd.change_reason
+          from mcstPartMapDtl.Tc_Mcst_Project_Part_Map_Dtl pmd
+left outer join mtlMst.Mm_Material_Mst msi
+            on msi.tenant_id = pmd.tenant_id
+           and msi.material_code = pmd.material_code;                     
 
     @readonly
     entity MM_UOM                as
