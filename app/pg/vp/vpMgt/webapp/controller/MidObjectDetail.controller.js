@@ -342,8 +342,10 @@ sap.ui.define([
                 sModel.setProperty(sPath + "/supplier_code", oEvent.mParameters.item.supplier_code);
                 sModel.setProperty(sPath + "/supplier_local_name", oEvent.mParameters.item.supplier_local_name);
                 sModel.setProperty(sPath + "/supplier_english_name", oEvent.mParameters.item.supplier_english_name);
-                sModel.setProperty(sPath + "/supplier_company_code", oEvent.mParameters.item.supplier_company_code);
-                sModel.setProperty(sPath + "/supplier_company_name", oEvent.mParameters.item.supplier_company_name);
+                sModel.setProperty(sPath + "/supplier_company_code", oEvent.mParameters.item.company_code);
+                sModel.setProperty(sPath + "/supplier_company_name", oEvent.mParameters.item.company_name);
+                sModel.setProperty(sPath + "/supplier_status_code", oEvent.mParameters.item.supplier_register_status_code);
+
 
             }.bind(this));
         
@@ -505,11 +507,12 @@ sap.ui.define([
             if (this.currnetSppObj.length > 0) {
                 for (var i = 0; i < this.currnetSppObj.length; i++) {
                     vpSupplierList.push({
-                        tenant_id: this.currnetSppObj[i].tenant_id
-                        ,company_code: this.currnetSppObj[i].company_code
-                        ,org_type_code: this.currnetSppObj[i].org_type_code
-                        ,org_code: this.currnetSppObj[i].org_code
-                        ,vendor_pool_code: this.currnetSppObj[i].vendor_pool_code
+                        tenant_id: generaloDataRst.tenant_id //auto set
+                        ,company_code: this.currnetSppObj[i].supplier_company_code
+                        ,org_type_code: generaloDataRst.org_type_code
+                        ,org_code: generaloDataRst.org_code
+                        // ,vendor_pool_code: this.currnetSppObj[i].vendor_pool_code
+                        ,vendor_pool_code: generaloDataRst.vendor_pool_code
                         ,supplier_code: this.currnetSppObj[i].supplier_code
                         //,supeval_target_flag: false   //??협의대상(화면의 어떤항목인지 모름)
                         //,supplier_op_plan_review_flag: false   //??협의대상(화면의 어떤항목인지 모름)
@@ -536,11 +539,11 @@ sap.ui.define([
             if (this.currnetMetObj.length > 0) {
                 for (var i = 0; i < this.currnetMetObj.length; i++) {
                     vpItemList.push({
-                            tenant_id: this.currnetMetObj[i].tenant_id
+                            tenant_id: generaloDataRst.tenant_id //auto set
                             , company_code: this.currnetMetObj[i].company_code
-                            , org_type_code: this.currnetMetObj[i].org_type_code
-                            , org_code: this.currnetMetObj[i].org_code
-                            , vendor_pool_code: this.currnetMetObj[i].vendor_pool_code
+                            , org_type_code: generaloDataRst.org_type_code
+                            , org_code: generaloDataRst.org_code
+                            , vendor_pool_code: generaloDataRst.vendor_pool_code
                             , material_code: this.currnetMetObj[i].material_code
                             , register_reason: this.currnetMetObj[i].register_reason
                             , approval_number: this.currnetMetObj[i].approval_number
@@ -556,11 +559,11 @@ sap.ui.define([
             if (this.currnetManObj.length > 0) {
                 for (var i = 0; i < this.currnetManObj.length; i++) {
                     vpManagerList.push({
-                            tenant_id: this.currnetManObj[i].tenant_id
+                            tenant_id: generaloDataRst.tenant_id //auto set
                             , company_code: this.currnetManObj[i].company_code
-                            , org_type_code: this.currnetManObj[i].org_type_code
-                            , org_code: this.currnetManObj[i].org_code
-                            , vendor_pool_code: this.currnetManObj[i].vendor_pool_code
+                            , org_type_code: generaloDataRst.org_type_code
+                            , org_code: generaloDataRst.org_code
+                            , vendor_pool_code: generaloDataRst.vendor_pool_code
                             , material_code: this.currnetManObj[i].material_code
                             , register_reason: this.currnetManObj[i].register_reason
                             , approval_number: this.currnetManObj[i].approval_number
@@ -568,7 +571,7 @@ sap.ui.define([
                             , vendor_pool_person_role_text: this.currnetManObj[i].vendor_pool_person_role_text
                             //, approval_number: ''  //안보냄    
                             //, register_reason: ''  //안보냄    
-                            , crud_type_code : this.currnetManObj[i].crud_type_code                                
+                            , crud_type_code : this.currnetManObj[i]._row_state_                                
                     })
                 }
             }
@@ -1030,8 +1033,8 @@ sap.ui.define([
                     that.getView().byId("general_vendor_pool_apply_exception_flag").setState(generaloDataRst.vendor_pool_apply_exception_flag);
                     that.getView().byId("general_equipment_grade_code").setSelectedKey(generaloDataRst.equipment_grade_code);
                     that.getView().byId("general_equipment_type_code").setSelectedKey(generaloDataRst.equipment_type_code);
-                    that.getView().byId("general_dom_oversea_netprice_diff_rate").setValue(generaloDataRst.domestic_net_price_diff_rate);
-                    that.getView().byId("general_domestic_net_price_diff_rate").setValue(generaloDataRst.dom_oversea_netprice_diff_rate);
+                    that.getView().byId("general_dom_oversea_netprice_diff_rate").setValue(generaloDataRst.dom_oversea_netprice_diff_rate);
+                    that.getView().byId("general_domestic_net_price_diff_rate").setValue(generaloDataRst.domestic_net_price_diff_rate);
 				}
 			});
         },
