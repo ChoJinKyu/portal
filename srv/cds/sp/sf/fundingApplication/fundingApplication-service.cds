@@ -92,6 +92,7 @@ service FundingApplicationService {
             ,fa.company_code                    //
             ,fa.org_type_code                   //
             ,fa.org_code                        //
+            ,org.org_name as org_name : String	//조직명
             ,fa.funding_appl_date               //자금지원 신청 일자
             ,fa.purchasing_department_name      //구매부서명(LG구매팀)
             ,fa.pyear_sales_amount              //전년매출금액
@@ -120,11 +121,16 @@ service FundingApplicationService {
 			,supp.tel_number                            //전화번호
             ,supp.mobile_phone_number                   //폰번호
         from sp.Sf_Funding_Application as fa
+        left outer join cm_pur_operation_org org 
+        on fa.tenant_id = org.tenant_id 
+        and fa.company_code = org.company_code
+        and fa.org_type_code = org.org_type_code
+        and fa.org_code = org.org_code
         left outer join codeView cv_m           //상환방법 공통코드 조인
-        on   cv_m.tenant_id  = fa.tenant_id
-        and  cv_m.group_code = 'SP_SF_REPAYMENT_METHOD'
-        and  cv_m.code       = fa.repayment_method_code
-        and  cv_m.language_cd = 'KO'
+        on cv_m.tenant_id  = fa.tenant_id
+        and cv_m.group_code = 'SP_SF_REPAYMENT_METHOD_CODE'
+        and cv_m.code       = fa.repayment_method_code
+        and cv_m.language_cd = 'KO'
         left outer join sp.Sm_Supplier_Mst as supp
         on fa.tenant_id = supp.tenant_id
         and fa.supplier_code = supp.supplier_code
