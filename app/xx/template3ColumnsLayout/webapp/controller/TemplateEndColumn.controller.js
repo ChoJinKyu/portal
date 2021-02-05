@@ -3,6 +3,7 @@ sap.ui.define([
 	"ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
 	"sap/ui/model/json/JSONModel",
+	"ext/lib/core/service/ServiceProvider",
     "ext/lib/util/Validator",
 	"ext/lib/formatter/Formatter",
 	"ext/lib/formatter/DateFormatter",
@@ -19,7 +20,7 @@ sap.ui.define([
 	"ext/lib/control/m/CodeComboBox",
 	"cm/util/control/ui/EmployeeDialog",
 	"sap/ui/core/Item",
-], function (BaseController, ManagedModel, ManagedListModel, JSONModel, Validator, Formatter, DateFormatter, 
+], function (BaseController, ManagedModel, ManagedListModel, JSONModel, ServiceProvider, Validator, Formatter, DateFormatter, 
         Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
         ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, CodeComboBox, EmployeeDialog, Item) {
 	"use strict";
@@ -255,6 +256,28 @@ sap.ui.define([
 					if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
                         
+                        var oData = {};
+                        oData["department"] = this.getModel("department").getProperty("/");
+                        oData["employees"] = this.updatedEmployees || [];
+
+                        delete oData["department"]["children"]["__deferred"];
+                        delete oData["department"]["children"];
+                        delete oData["department"]["company"]["__deferred"];
+                        delete oData["department"]["parent"]["__deferred"];
+                        delete oData["department"]["__metadata"];
+                        delete oData["employees"][0]["department"];
+                        delete oData["employees"][0]["__metadata"];
+                        var oXhr = ServiceProvider.getServiceByUrl("srv-api/odata/v4/xx.TemplateV4Service");
+                        oXhr.ajax({
+                            url: "srv-api/odata/v4/xx.TemplateV4Service/SetDepartmentAndEmployees",
+                            method: "POST",
+                            data: JSON.stringify(oData)
+                        }).then(function(e){
+                            oView.setBusy(false);
+                        }).catch(function(e){
+                            debugger;
+                            oView.setBusy(false);
+                        });
 
 						// oTransactionManager.submit({
 						// 	success: function(ok){
@@ -265,7 +288,7 @@ sap.ui.define([
 						// 	}
 						// });
 					};
-				}
+				}.bind(this)
 			});
 
 		},
@@ -388,7 +411,6 @@ sap.ui.define([
             this.isEmployeeChanged = true;
             if(!this.updatedEmployees) this.updatedEmployees = [];
             this.updatedEmployees.push(oEvent.getParameter("context").getObject());
-            debugger;
         },
 
 	});
