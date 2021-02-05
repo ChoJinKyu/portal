@@ -54,7 +54,7 @@ sap.ui.define([
             oComponent = this.getOwnerComponent();
             oViewModel = oComponent.getModel("viewModel");
             
-            oViewModel.setProperty("/App/layout", "TwoColumnsMidExpanded");     
+            oViewModel.setProperty("/App/layout", "TwoColumnsBeginExpanded");     
             
             this.scenario_number = oEvent.getParameter("arguments")["scenario_number"],
 
