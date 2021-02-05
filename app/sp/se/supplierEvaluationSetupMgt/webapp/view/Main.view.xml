@@ -44,33 +44,31 @@
                                             <smartFilterBar:controlConfiguration>
 
                                                 <!-- 회사 -->
-                                            <smartFilterBar:ControlConfiguration 
-                                            key="org_code" index="1" 
-                                            label="{I18N>/OPERATION_ORG}" groupId="_BASIC" 
-                                            visibleInAdvancedArea="true" 
-                                            mandatory="mandatory">
-                                                <smartFilterBar:customControl>
+                                                <smartFilterBar:ControlConfiguration 
+                                                key="org_code" index="1" 
+                                                label="{I18N>/OPERATION_ORG}" groupId="_BASIC" 
+                                                visibleInAdvancedArea="true" 
+                                                mandatory="mandatory">
+                                                    <smartFilterBar:customControl>
+                                                        <ComboBox id="tenant_combo" 
+                                                        selectedKey="BIZ00000"
+                                                        />
+                                                                                    
+                                                        <!-- <ComboBox id="tenant_combo" 
+                                                            items="{/SupEvalOrgView}" 
+                                                            selectedKey="L2100" 
+                                                            selectionChange="onChangeTenant">
+                                                            <core:Item key="{org_code}" text="{org_name}"/>
+                                                        </ComboBox> -->
+                                                    </smartFilterBar:customControl>
                                                 
-                                                     <ComboBox id="tenant_combo" 
-                                                     selectedKey="one" 
-                                                     />
-                                                                                  
-                                                    <!-- <ComboBox id="tenant_combo" 
-                                                        items="{/SupEvalOrgView}" 
-                                                        selectedKey="L2100" 
-                                                        selectionChange="onChangeTenant">
-                                                        <core:Item key="{org_code}" text="{org_name}"/>
-                                                    </ComboBox> -->
-
-                                                </smartFilterBar:customControl>
-                                                
-                                            </smartFilterBar:ControlConfiguration>                                 
+                                                </smartFilterBar:ControlConfiguration>                                 
 
                                             </smartFilterBar:controlConfiguration>
-
+<!-- 
                                             <smartFilterBar:layoutData>
                                                 <FlexItemData shrinkFactor="0"/>
-                                            </smartFilterBar:layoutData>
+                                            </smartFilterBar:layoutData> -->
 
                                         </smartFilterBar:SmartFilterBar> 
 

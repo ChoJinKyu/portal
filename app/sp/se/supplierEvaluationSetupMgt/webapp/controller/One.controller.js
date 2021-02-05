@@ -110,8 +110,12 @@ sap.ui.define([
                 oView = this.getView();
                 oViewModel = oView.getModel("DetailView");
                 oTable = oEvent.getSource().getParent().getParent().getParent();
+
+                var oComponent = this.getOwnerComponent();
                 // oTable = this.byId("managerTable");
-                bSelect = oTable.getId() === "container-supplierEvaluationSetupMgt---detail--beginView--managerTable";
+                //var bTwoViewEditCheck = oComponent.byId("detail").byId("beginView").byId("managerTable");
+
+                bSelect = oTable.getId() === oComponent.byId("detail").byId("beginView").byId("managerTable").getId();
                 
                 if(bSelect)
                 ListData = oViewModel.getProperty("/manager");
@@ -696,6 +700,8 @@ sap.ui.define([
         onTableCancle : function(oEvent){
                 var oView;
                 var oTable = oEvent.getSource().getParent().getParent().getParent();
+                var oComponent = this.getOwnerComponent();
+                
                 oView = this.getView();
                 MessageBox.warning(i18nModel.getProperty("/NPG00013"),{
                     actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
@@ -704,10 +710,10 @@ sap.ui.define([
                             return;
                         }
 
-                        if(oTable.getId() === "container-supplierEvaluationSetupMgt---detail--beginView--quantitativeTable")
-                        this._readQttiveItemListView();
+                        if(oTable.getId() === oComponent.byId("detail").byId("beginView").byId("managerTable").getId())
+                        this._readManagerListView();                        
                         else
-                        this._readManagerListView();
+                        this._readQttiveItemListView();
 
                         oTable.removeSelections(true);
                     }.bind(this)
