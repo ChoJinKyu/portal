@@ -10,12 +10,14 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/ui/core/Component",
     "sap/ui/core/ComponentContainer",
-    "ext/lib/util/ExcelUtil"
+    "ext/lib/util/ExcelUtil",
+    "ext/lib/util/SppUserSession",
+    "sap/ui/core/library"
 
-], function (BaseController, Multilingual, JSONModel, DateFormatter, Filter, FilterOperator, Sorter, MessageBox, MessageToast, Component, ComponentContainer, ExcelUtil) {
+], function (BaseController, Multilingual, JSONModel, DateFormatter, Filter, FilterOperator, Sorter, MessageBox, MessageToast, Component, ComponentContainer, ExcelUtil, SppUserSession, CoreLibrary) {
     "use strict";
 
-
+    var ValueState = CoreLibrary.ValueState;
     return BaseController.extend("sp.sm.makerRegistrationRequest.controller.MainList", {
 
         dateFormatter: DateFormatter,
@@ -41,13 +43,11 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            //Process filter model
             var oView = this.getView(),
                 oModel = this.getOwnerComponent().getModel(),
                 oI18NModel = this.getOwnerComponent().getModel("I18N"),
                 that = this;
             this.setModel(new JSONModel(), "progressModel");
-            console.log();
 
             oModel.read("/MakerRegistrationRequestProgressTypeView", {
                 filters: [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
@@ -67,7 +67,6 @@ sap.ui.define([
             this.setModel(new JSONModel(), "countModel");
             this._getListCount();
 
-
         },
 
         /**
@@ -81,6 +80,7 @@ sap.ui.define([
                 sRequestDate = this.byId("searchRequestDate"),
                 oDateValue = sRequestDate.getDateValue(),
                 oSecondDateValue = sRequestDate.getSecondDateValue();
+
 
             if (sProgress) aFilters.push(new Filter("maker_progress_status_code", FilterOperator.Contains, sProgress));
             if (sTaxId) {
@@ -162,6 +162,15 @@ sap.ui.define([
             }).catch(function (e) {
                 MessageToast.show("error");
             });
+        },
+        onhandleChangeDate: function (oEvent) {
+            var bValid = oEvent.getParameter("valid"),
+                oEventSource = oEvent.getSource();
+            if (bValid) {
+                oEventSource.setValueState(ValueState.None);
+            } else {
+                oEventSource.setValueState(ValueState.Error);
+            }
         }
 
 
