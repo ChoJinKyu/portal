@@ -379,7 +379,7 @@
                             <Text text="{I18N>/PR_NUMBER}" />
                         </Column>
                         <!-- 구매요청 유형 -->
-                        <Column hAlign="Center" width="auto">
+                        <Column hAlign="Center" width="8em">
                             <Text text="{I18N>/PR_TYPE_CODE}" />
                         </Column>
                         <!-- 품목 번호 -->
@@ -439,17 +439,17 @@
                         <ColumnListItem type="Navigation" press=".onColumnListItemPress($event, 'navigation', 'list', { LayoutType: 'TwoColumnsMidExpanded' })">
                             <cells>
                                 <!-- 구매요청 번호 -->
-                                <Text text="{list>pr_number}"/>
+                                <Text text="{list>pr_number}" width="7em"/>
                                 <!-- 구매요청 유형 -->
-                                <Text text="{list>pr_type_name}"/>
+                                <Text text="{list>pr_type_name}" width="10em"/>
                                 <!-- 품목 번호 -->
                                 <Text text="{list>pr_item_number}"/>
                                 <!-- 조직코드 -->
-                                <Text text="{list>org_code}"/>
+                                <Text text="{list>org_code}" width="5em"/>
                                 <!-- 자재코드 -->
-                                <Text text="{list>material_code}"/>
+                                <Text text="{list>material_code}" width="5em"/>
                                 <!-- 구매요청 품명 -->                            
-                                <Text text="{list>pr_desc}"/>
+                                <Text text="{list>pr_desc}" width="10em"/>
                                 <!-- 단위 -->
                                 <Text text="{list>pr_unit}"/>
                                 <!-- 요청수량 -->
@@ -475,9 +475,9 @@
                                 <!-- 통화 -->
                                 <Text text="{list>currency_code}"/>
                                 <!-- 구매담당자 -->
-                                <Text text="{list>buyer_name}"/>
+                                <Text text="{list>buyer_name}" width="5em"/>
                                 <!-- 구매요청자 -->
-                                <Text text="{list>requestor_name}"/>
+                                <Text text="{list>requestor_name}" width="5em"/>
                                 <!-- 구매요청 일자 -->
                                 <Text text="{
                                     path: 'list>request_date',
