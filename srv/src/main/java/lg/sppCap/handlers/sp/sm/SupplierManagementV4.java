@@ -23,7 +23,10 @@ import org.springframework.jdbc.core.SqlReturnResultSet;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import cds.gen.sp.suppliermanagementv4service.*;
+import cds.gen.sp.suppliermanagementv4service.MakerRestnReq;
+import cds.gen.sp.suppliermanagementv4service.SupplierManagementV4Service_;
+import cds.gen.sp.suppliermanagementv4service.UpsertMakerRestnReqProcContext;
+import cds.gen.sp.suppliermanagementv4service.UpsertOutType;
 
 @Component
 @ServiceName(SupplierManagementV4Service_.CDS_NAME)
