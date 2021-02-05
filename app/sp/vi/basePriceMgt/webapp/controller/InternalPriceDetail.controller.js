@@ -74,7 +74,6 @@ sap.ui.define([
             var oCurrModel =this.getModel("currModel");
             oCurrModel.setSizeLimit(1000);
             oView.setBusy(true);
-            debugger;
 
             // 통화 조회
             var oCurryModel =  this.getOwnerComponent().getModel("currencyODataModel");
@@ -212,7 +211,44 @@ sap.ui.define([
                 //oDetailData.apply_end_data = oDetailData.apply_start_date;
                 oDetailModel.setProperty(sSelectedPath+"/apply_end_date", oDetailData.apply_start_date);
                 oDetailModel.refresh();
-            }            
+            }         
+            var nAfterBase_year = Number(oDetailData.base_year) + 1;
+            var StartData = this.getFormatDateYYYYMM(oDetailData.apply_start_date);
+            if( StartData < oDetailData.base_year+"01"){
+                MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
+                oDetailData.apply_start_date = "";
+                return;
+
+            }else if( StartData >= String(nAfterBase_year)+"01"){
+                MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
+                oDetailData.apply_start_date = "";
+                return;
+            }
+
+        }
+
+
+        /**
+         * 시세의 경우 적용시작월 선택시 적종종료월이 적용시작월로 픽스(수정불가)
+         */
+        , onChangeEndData : function(oEvent) {
+            var oDetailModel = this.getModel("detailModel");
+            var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
+            var oDetailData = oDetailModel.getProperty(sSelectedPath);
+
+            var nAfterBase_year = Number(oDetailData.base_year) + 1;
+            var EndData = this.getFormatDateYYYYMM(oDetailData.apply_end_date);
+            if( EndData < oDetailData.base_year+"01"){
+                MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
+                oDetailData.apply_end_date = "";
+                return;
+
+            }else if( EndData >= String(nAfterBase_year)+"01"){
+                MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
+                oDetailData.apply_end_date = "";
+                return;
+            }
+
         }
 
         /**
@@ -331,7 +367,6 @@ sap.ui.define([
           * Material Code Dailog 호출
           */
         , onMaterialMasterMultiDialogPress: function (oEvent) {
-            debugger;
              var oRootModel = this.getModel("rootModel");
              var oDetailModel = this.getModel("detailModel");
              var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
@@ -353,7 +388,6 @@ sap.ui.define([
 
                  this.oSearchMultiMaterialOrgDialog.attachEvent("apply", function(oEvent) {
                     var oSelectedDialogItem = oEvent.getParameter("item");
-                    debugger;
                     this._oDetail.material_code = oSelectedDialogItem.material_code;
                     this._oDetail.material  = oSelectedDialogItem.material_desc;
                     this._oDetail.vendor_pool_code = oSelectedDialogItem.vendor_pool_code;
@@ -783,6 +817,7 @@ sap.ui.define([
                                     "approval_title": "",
                                     "approval_status_code": "00",
                                     "create_user_id": "5453", 
+                                    "create_user": "**영",
                                     "company_code" : "LGCKR",
                                     "bizunit_code" : "BIZ00100",
                                     "bizunit_name" : "석유화학",

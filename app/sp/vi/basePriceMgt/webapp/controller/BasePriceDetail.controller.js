@@ -250,9 +250,45 @@ sap.ui.define([
                 //oDetailData.apply_end_data = oDetailData.apply_start_date;
                 oDetailModel.setProperty(sSelectedPath+"/apply_end_date", oDetailData.apply_start_date);
                 oDetailModel.refresh();
-            }            
+            }         
+            var nAfterBase_year = Number(oDetailData.base_year) + 1;
+            var StartData = this.getFormatDateYYYYMM(oDetailData.apply_start_date);
+            if( StartData < oDetailData.base_year+"01"){
+                MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
+                oDetailData.apply_start_date = "";
+                return;
+
+            }else if( StartData >= String(nAfterBase_year)+"01"){
+                MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
+                oDetailData.apply_start_date = "";
+                return;
+            }
+
         }
 
+
+        /**
+         * 시세의 경우 적용시작월 선택시 적종종료월이 적용시작월로 픽스(수정불가)
+         */
+        , onChangeEndData : function(oEvent) {
+            var oDetailModel = this.getModel("detailModel");
+            var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
+            var oDetailData = oDetailModel.getProperty(sSelectedPath);
+
+            var nAfterBase_year = Number(oDetailData.base_year) + 1;
+            var EndData = this.getFormatDateYYYYMM(oDetailData.apply_end_date);
+            if( EndData < oDetailData.base_year+"01"){
+                MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
+                oDetailData.apply_end_date = "";
+                return;
+
+            }else if( EndData >= String(nAfterBase_year)+"01"){
+                MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
+                oDetailData.apply_end_date = "";
+                return;
+            }
+
+        }
 
         /**
          * 법인 변경시 플랜트 데이터 변경 
@@ -261,6 +297,7 @@ sap.ui.define([
             var oDetailModel = this.getModel("detailModel");
             var sSelectedPath = oEvent.getSource().getBindingContext("detailModel").getPath();
             var rootData = oDetailModel.getProperty(sSelectedPath);
+
             oDetailModel.setProperty(sSelectedPath+"/org_Plant",this.getModel("rootModel").getProperty("/org_Plant"));
             
             oDetailModel.setProperty(sSelectedPath+"/org_Plant", this.getModel("rootModel").getProperty("/org_Plant/"+oDetailModel.getProperty(sSelectedPath+"/corporation")));
@@ -618,14 +655,15 @@ sap.ui.define([
                     MessageBox.show("가격단위는 필수입니다. ");
                     return;
                 }
-            
-                if (aPriceResult[i].apply_start_yyyymm < String(date).substring(0,6) ){
-                    MessageBox.show("적용시작일자가 현재월보다 이전월입니다.");
-                    return;
-                }
 
-                if (aPriceResult[i].apply_end_yyyymm < aPriceResult[i].apply_start_yyyymm ){
-                    MessageBox.show("적용종료일자가가 적용시작일자보다 적습니다.");
+
+                var nAfterBase_year = Number(aPriceResult[i].base_year) + 1;
+                if( aPriceResult[i].apply_start_yyyymm < aPriceResult[i].base_year+"01"){
+                    MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
+                    return;
+                    
+                }else if( aPriceResult[i].apply_start_yyyymm > String(nAfterBase_year)+"01"){
+                    MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
                     return;
                 }
 
@@ -755,6 +793,7 @@ sap.ui.define([
                                     "approval_title": "",
                                     "approval_status_code": "00",
                                     "create_user_id": "5453", 
+                                    "create_user": "**영",
                                     "company_code" : "LGCKR",
                                     "bizunit_code" : "BIZ00100",
                                     "bizunit_name" : "석유화학",

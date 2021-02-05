@@ -204,7 +204,6 @@ sap.ui.define([
             }
 
              if(true) {
-                 debugger;
                 var sDetailUrl = "/Base_Price_Aprl_Material";
 
                 ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/sp.BasePriceArlService/").read(sDetailUrl, {
