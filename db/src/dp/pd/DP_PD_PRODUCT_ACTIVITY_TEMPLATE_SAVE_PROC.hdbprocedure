@@ -53,7 +53,7 @@ BEGIN
 
         SELECT COUNT(*)	
         INTO   V_CNT		
-        FROM   DUMMY A			
+        FROM   DUMMY			
         WHERE  EXISTS			
                 (   SELECT A.PRODUCT_ACTIVITY_CODE	
                     FROM   DP_PD_PRODUCT_ACTIVITY_TEMPLATE A, DP_PD_ACTIVITY_MAPPING B
