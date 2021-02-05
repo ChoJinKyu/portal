@@ -141,10 +141,8 @@ BEGIN
             , UOM_CODE
             , MATERIAL_REQM_QUANTITY
             , BUYER_EMPNO
-            --, SUPPLIER_CODE
             , CHANGE_INFO_CODE
             , DIRECT_REGISTER_FLAG
-            --, MAPPING_ID
             , LOCAL_CREATE_DTM
             , LOCAL_UPDATE_DTM
             , CREATE_USER_ID
