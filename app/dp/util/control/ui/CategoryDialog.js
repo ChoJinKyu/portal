@@ -89,7 +89,7 @@ sap.ui.define([
         loadData: function(oThis){
 
                var that = this,
-                sCateGroupCode = this.oCateGroupCode._lastValue                
+                sCateGroupCode = this.oCateGroupCode._lastValue,                
 
                 aFilters = [
                     new Filter("tenant_id", FilterOperator.EQ, "L2101")
