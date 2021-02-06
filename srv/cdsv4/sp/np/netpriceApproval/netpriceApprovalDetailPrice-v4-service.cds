@@ -49,8 +49,8 @@ service NpApprovalDetailPriceV4Service {
         supplier_name                   : String(240)   ; 
         material_code                   : String(40)    ; 
         market_code                     : String(30)    ; 
-        curr_currency_code              : String(3)     ; 
-        curr_net_price                  : Decimal       ; 
+        currency_code                   : String(3)     ; 
+        base_price                      : Decimal(34,10); 
     };
 
     /* */
@@ -63,8 +63,6 @@ service NpApprovalDetailPriceV4Service {
     /*  */
     type ResultType : {
         outDetails      : array of outTableType;
-        return_code     : String(2);
-        return_msg      : String(5000);
     };
 
     action ApprovalPriceInfoProc( param : ParamType ) returns ResultType;

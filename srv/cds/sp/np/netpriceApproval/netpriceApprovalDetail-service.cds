@@ -125,14 +125,6 @@ service NpApprovalDetailService {
             ON ssi.TENANT_ID         = pam.tenant_id
            AND ssi.COMPANY_CODE      = pam.company_code
 
-        /*
-        INNER JOIN (SELECT a.tenant_id 
-					       ,a.code AS language_code
-                       FROM CM_CODE_DTL a
-                      WHERE a.group_code = 'CM_LANG_CODE'
-                    ) clc  /* 공통코드 언어코드(EN,KO) /
-			ON clc.tenant_id         = pam.tenant_id
-        */
         INNER JOIN CM_APPROVAL_MST          cam
             ON cam.tenant_id         = pam.tenant_id
            AND cam.approval_number   = pam.approval_number
