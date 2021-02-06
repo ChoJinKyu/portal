@@ -200,23 +200,26 @@ public class BasePriceArlValidationV4 {
         if (!basePriceArlDetails.isEmpty() && basePriceArlDetails.size() > 0){
             for (BasePriceArlDtlType basePriceArlDetail : basePriceArlDetails) {
                 if (isDebug) {
-                    System.out.println("\t# tenant_id : "              + basePriceArlDetail.getTenantId());
-                    System.out.println("\t# approval_number : "        + basePriceArlDetail.getApprovalNumber());
-                    System.out.println("\t# item_sequence : "          + basePriceArlDetail.getItemSequence());
-                    System.out.println("\t# company_code : "           + basePriceArlDetail.getCompanyCode());
-                    System.out.println("\t# org_type_code : "          + basePriceArlDetail.getOrgTypeCode());
-                    System.out.println("\t# org_code : "               + basePriceArlDetail.getOrgCode());
-                    System.out.println("\t# material_code : "          + basePriceArlDetail.getMaterialCode());
-                    System.out.println("\t# base_uom_code : "          + basePriceArlDetail.getBaseUomCode());
-                    System.out.println("\t# supplier_code : "          + basePriceArlDetail.getSupplierCode());
-                    System.out.println("\t# base_date : "              + basePriceArlDetail.getBaseDate());
-                    System.out.println("\t# base_price_ground_code : " + basePriceArlDetail.getBasePriceGroundCode());
-                    System.out.println("\t\t# change_reason_code : "   + basePriceArlDetail.getChangeReasonCode());
+                    System.out.println("\t# tenant_id : "                    + basePriceArlDetail.getTenantId());
+                    System.out.println("\t# approval_number : "             + basePriceArlDetail.getApprovalNumber());
+                    System.out.println("\t# item_sequence : "               + basePriceArlDetail.getItemSequence());
+                    System.out.println("\t# company_code : "                + basePriceArlDetail.getCompanyCode());
+                    System.out.println("\t# org_type_code : "               + basePriceArlDetail.getOrgTypeCode());
+                    System.out.println("\t# org_code : "                    + basePriceArlDetail.getOrgCode());
+                    System.out.println("\t# material_code : "               + basePriceArlDetail.getMaterialCode());
+                    System.out.println("\t# base_uom_code : "               + basePriceArlDetail.getBaseUomCode());
+                    System.out.println("\t# supplier_code : "               + basePriceArlDetail.getSupplierCode());
+                    System.out.println("\t# base_date : "                   + basePriceArlDetail.getBaseDate());
+                    System.out.println("\t# base_price_ground_code : "      + basePriceArlDetail.getBasePriceGroundCode());
+                    System.out.println("\t# change_reason_code : "          + basePriceArlDetail.getChangeReasonCode());
+                    System.out.println("\t# repr_material_code : "          + basePriceArlDetail.getReprMaterialCode());
+                    System.out.println("\t# repr_material_supplier_code : " + basePriceArlDetail.getReprMaterialSupplierCode());
+                    System.out.println("\t# repr_material_org_code : "      + basePriceArlDetail.getReprMaterialOrgCode());
 
-                    System.out.println("\t# local_create_dtm : "       + basePriceArlDetail.getLocalCreateDtm());
-                    System.out.println("\t# local_update_dtm : "       + basePriceArlDetail.getLocalUpdateDtm());
-                    System.out.println("\t# create_user_id : "         + basePriceArlDetail.getCreateUserId());
-                    System.out.println("\t# update_user_id : "         + basePriceArlDetail.getUpdateUserId());
+                    System.out.println("\t# local_create_dtm : "            + basePriceArlDetail.getLocalCreateDtm());
+                    System.out.println("\t# local_update_dtm : "            + basePriceArlDetail.getLocalUpdateDtm());
+                    System.out.println("\t# create_user_id : "              + basePriceArlDetail.getCreateUserId());
+                    System.out.println("\t# update_user_id : "              + basePriceArlDetail.getUpdateUserId());
                     System.out.println("\t# --------------------------------------------------------------------------------------------");
                 }
 

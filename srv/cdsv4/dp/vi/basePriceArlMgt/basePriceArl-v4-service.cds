@@ -51,18 +51,21 @@ service BasePriceArlV4Service {
     };
 
     type BasePriceArlDtlType : {
-        tenant_id              : String(5);
-        approval_number        : String(30);
-        item_sequence          : Decimal;
-        company_code           : String(10);
-        org_type_code          : String(2);
-        org_code               : String(10);
-        material_code          : String(40);
-        base_uom_code          : String(3);
-        supplier_code          : String(10);
-        base_date              : Date;
-        base_price_ground_code : String(30);
-        change_reason_code     : String(30);
+        tenant_id                   : String(5);
+        approval_number             : String(30);
+        item_sequence               : Decimal;
+        company_code                : String(10);
+        org_type_code               : String(2);
+        org_code                    : String(10);
+        material_code               : String(40);
+        base_uom_code               : String(3);
+        supplier_code               : String(10);
+        base_date                   : Date;
+        base_price_ground_code      : String(30);
+        change_reason_code          : String(30);
+        repr_material_code          : String(40);
+        repr_material_supplier_code : String(10);
+        repr_material_org_code      : String(10);
 
         local_create_dtm       : DateTime;
         local_update_dtm       : DateTime;

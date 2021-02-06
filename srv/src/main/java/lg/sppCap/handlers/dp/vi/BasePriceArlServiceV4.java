@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.math.BigDecimal;
 
+import org.apache.http.util.TextUtils;
+
 // Log
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -207,6 +209,12 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
                     } else {
                         item_sequence = basePriceArlDetail.getItemSequence();
                     }
+
+                    // Null if blank characters
+                    if (TextUtils.isEmpty(basePriceArlDetail.getChangeReasonCode())) basePriceArlDetail.setChangeReasonCode(null);
+                    if (TextUtils.isEmpty(basePriceArlDetail.getReprMaterialCode())) basePriceArlDetail.setReprMaterialCode(null);
+                    if (TextUtils.isEmpty(basePriceArlDetail.getReprMaterialSupplierCode())) basePriceArlDetail.setReprMaterialSupplierCode(null);
+                    if (TextUtils.isEmpty(basePriceArlDetail.getReprMaterialOrgCode())) basePriceArlDetail.setReprMaterialOrgCode(null);
 
                     /** 
                      * BasePriceArlPriceType
@@ -525,22 +533,25 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
             // 4. BasePriceArlDtlType 관련 테이블    
             StringBuffer v_sql_createTable_BasePriceArlDetail = new StringBuffer();
             v_sql_createTable_BasePriceArlDetail.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_DETAIL (");
-            v_sql_createTable_BasePriceArlDetail.append("  TENANT_ID               NVARCHAR(5),");
-            v_sql_createTable_BasePriceArlDetail.append("  APPROVAL_NUMBER         NVARCHAR(30),");
-            v_sql_createTable_BasePriceArlDetail.append("  ITEM_SEQUENCE           DECIMAL(34),");
-            v_sql_createTable_BasePriceArlDetail.append("  COMPANY_CODE            NVARCHAR(10),");
-            v_sql_createTable_BasePriceArlDetail.append("  ORG_TYPE_CODE           NVARCHAR(2),");
-            v_sql_createTable_BasePriceArlDetail.append("  ORG_CODE                NVARCHAR(10),");
-            v_sql_createTable_BasePriceArlDetail.append("  MATERIAL_CODE           NVARCHAR(40),");
-            v_sql_createTable_BasePriceArlDetail.append("  BASE_UOM_CODE           NVARCHAR(3),");
-            v_sql_createTable_BasePriceArlDetail.append("  SUPPLIER_CODE           NVARCHAR(10),");
-            v_sql_createTable_BasePriceArlDetail.append("  BASE_DATE               DATE,");
-            v_sql_createTable_BasePriceArlDetail.append("  BASE_PRICE_GROUND_CODE  NVARCHAR(30),");
-            v_sql_createTable_BasePriceArlDetail.append("  CHANGE_REASON_CODE      NVARCHAR(30),");
-            v_sql_createTable_BasePriceArlDetail.append("  LOCAL_CREATE_DTM        SECONDDATE,");
-            v_sql_createTable_BasePriceArlDetail.append("  LOCAL_UPDATE_DTM        SECONDDATE,");
-            v_sql_createTable_BasePriceArlDetail.append("  CREATE_USER_ID          NVARCHAR(255),");
-            v_sql_createTable_BasePriceArlDetail.append("  UPDATE_USER_ID          NVARCHAR(255)");
+            v_sql_createTable_BasePriceArlDetail.append("  TENANT_ID                    NVARCHAR(5),");
+            v_sql_createTable_BasePriceArlDetail.append("  APPROVAL_NUMBER              NVARCHAR(30),");
+            v_sql_createTable_BasePriceArlDetail.append("  ITEM_SEQUENCE                DECIMAL(34),");
+            v_sql_createTable_BasePriceArlDetail.append("  COMPANY_CODE                 NVARCHAR(10),");
+            v_sql_createTable_BasePriceArlDetail.append("  ORG_TYPE_CODE                NVARCHAR(2),");
+            v_sql_createTable_BasePriceArlDetail.append("  ORG_CODE                     NVARCHAR(10),");
+            v_sql_createTable_BasePriceArlDetail.append("  MATERIAL_CODE                NVARCHAR(40),");
+            v_sql_createTable_BasePriceArlDetail.append("  BASE_UOM_CODE                NVARCHAR(3),");
+            v_sql_createTable_BasePriceArlDetail.append("  SUPPLIER_CODE                NVARCHAR(10),");
+            v_sql_createTable_BasePriceArlDetail.append("  BASE_DATE                    DATE,");
+            v_sql_createTable_BasePriceArlDetail.append("  BASE_PRICE_GROUND_CODE       NVARCHAR(30),");
+            v_sql_createTable_BasePriceArlDetail.append("  CHANGE_REASON_CODE           NVARCHAR(30),");
+            v_sql_createTable_BasePriceArlDetail.append("  REPR_MATERIAL_CODE           NVARCHAR(40),");
+            v_sql_createTable_BasePriceArlDetail.append("  REPR_MATERIAL_SUPPLIER_CODE  NVARCHAR(10),");
+            v_sql_createTable_BasePriceArlDetail.append("  REPR_MATERIAL_ORG_CODE       NVARCHAR(10),");
+            v_sql_createTable_BasePriceArlDetail.append("  LOCAL_CREATE_DTM             SECONDDATE,");
+            v_sql_createTable_BasePriceArlDetail.append("  LOCAL_UPDATE_DTM             SECONDDATE,");
+            v_sql_createTable_BasePriceArlDetail.append("  CREATE_USER_ID               NVARCHAR(255),");
+            v_sql_createTable_BasePriceArlDetail.append("  UPDATE_USER_ID               NVARCHAR(255)");
             v_sql_createTable_BasePriceArlDetail.append(")");
             jdbc.execute(v_sql_createTable_BasePriceArlDetail.toString());
 
@@ -608,7 +619,7 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
         String v_sql_insert_BasePriceArlMaster   = "INSERT INTO #LOCAL_TEMP_MASTER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insert_BasePriceArlApprover = "INSERT INTO #LOCAL_TEMP_APPROVER VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insert_BasePriceArlReferer  = "INSERT INTO #LOCAL_TEMP_REFERER VALUES (?, ?, ?, ?, ?, ?, ?)";
-        String v_sql_insert_BasePriceArlDetail   = "INSERT INTO #LOCAL_TEMP_DETAIL VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insert_BasePriceArlDetail   = "INSERT INTO #LOCAL_TEMP_DETAIL VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insert_BasePriceArlPrice    = "INSERT INTO #LOCAL_TEMP_PRICE VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         List<Object[]> v_batchInsert_BasePriceArlMaster   = new ArrayList<Object[]>();
@@ -717,6 +728,9 @@ public class BasePriceArlServiceV4 extends BaseEventHandler {
                         basePriceArlDetail.get("base_date"),
                         basePriceArlDetail.get("base_price_ground_code"),
                         basePriceArlDetail.get("change_reason_code"),
+                        basePriceArlDetail.get("repr_material_code"),
+                        basePriceArlDetail.get("repr_material_supplier_code"),
+                        basePriceArlDetail.get("repr_material_org_code"),
                         basePriceArlDetail.get("local_create_dtm"),
                         basePriceArlDetail.get("local_update_dtm"),
                         basePriceArlDetail.get("create_user_id"),
