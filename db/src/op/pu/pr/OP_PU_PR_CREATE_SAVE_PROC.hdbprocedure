@@ -328,52 +328,58 @@ BEGIN
             curDtl.UPDATE_USER_ID,
             CURRENT_TIMESTAMP,
             CURRENT_TIMESTAMP
-        );	
-        
-        IF (:curDtl.WBS_CODE IS NOT NULL AND :curDtl.WBS_CODE != '') THEN 
-            INSERT INTO OP_PU_PR_ACCOUNT (
-                TENANT_ID  ,
-                COMPANY_CODE,
-                PR_NUMBER ,
-                PR_ITEM_NUMBER ,
-                ACCOUNT_SEQUENCE ,
-                SERVICE_SEQUENCE ,
-                ACCOUNT_CODE,
-                CCTR_CODE,
-                WBS_CODE,
-                ASSET_NUMBER,
-                ORDER_NUMBER,
-                PR_QUANTITY ,
-                DISTRB_RATE ,
-                LOCAL_CREATE_DTM,
-                LOCAL_UPDATE_DTM,
-                CREATE_USER_ID,
-                UPDATE_USER_ID,
-                SYSTEM_CREATE_DTM,
-                SYSTEM_UPDATE_DTM
-            ) VALUES (
-                :V_TENANT_ID , 
-                :V_COMPANY_CODE,
-                :V_PR_NUMBER ,
-                curDtl.PR_ITEM_NUMBER,
-                1 ,
-                NULL ,
-                curDtl.ACCOUNT_CODE,
-                curDtl.CCTR_CODE,
-                curDtl.WBS_CODE,
-                curDtl.ASSET_NUMBER,
-                curDtl.ORDER_NUMBER,
-                curDtl.PR_QUANTITY,
-                NULL,
-                CURRENT_TIMESTAMP,
-                CURRENT_TIMESTAMP,
-                curDtl.UPDATE_USER_ID,
-                curDtl.UPDATE_USER_ID,
-                CURRENT_TIMESTAMP,
-                CURRENT_TIMESTAMP
-            );
-        END IF;
+        );
     END FOR;
+
+   
+    /* 계정정보 등록 */
+    INSERT INTO OP_PU_PR_ACCOUNT (
+        TENANT_ID  ,
+        COMPANY_CODE,
+        PR_NUMBER ,
+        PR_ITEM_NUMBER ,
+        ACCOUNT_SEQUENCE ,
+        SERVICE_SEQUENCE ,
+        ACCOUNT_CODE,
+        CCTR_CODE,
+        WBS_CODE,
+        ASSET_NUMBER,
+        ORDER_NUMBER,
+        PR_QUANTITY ,
+        DISTRB_RATE ,
+        LOCAL_CREATE_DTM,
+        LOCAL_UPDATE_DTM,
+        CREATE_USER_ID,
+        UPDATE_USER_ID,
+        SYSTEM_CREATE_DTM,
+        SYSTEM_UPDATE_DTM
+    )
+    SELECT 
+        :V_TENANT_ID , 
+        :V_COMPANY_CODE,
+        :V_PR_NUMBER ,
+        TMP_D.PR_ITEM_NUMBER,
+        1 ,
+        NULL ,
+        TMP_D.ACCOUNT_CODE,
+        TMP_D.CCTR_CODE,
+        TMP_D.WBS_CODE,
+        TMP_D.ASSET_NUMBER,
+        TMP_D.ORDER_NUMBER,
+        TMP_D.PR_QUANTITY,
+        NULL,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP,
+        TMP_D.UPDATE_USER_ID,
+        TMP_D.UPDATE_USER_ID,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+    FROM :I_D_TABLE TMP_D
+    WHERE ( (TMP_D.ACCOUNT_CODE IS NOT NULL AND TMP_D.ACCOUNT_CODE != '')
+            OR (TMP_D.CCTR_CODE IS NOT NULL AND TMP_D.CCTR_CODE != '')
+            OR (TMP_D.WBS_CODE IS NOT NULL AND TMP_D.WBS_CODE != '')
+            OR (TMP_D.ORDER_NUMBER IS NOT NULL AND TMP_D.ORDER_NUMBER != '') );
+
 
     /* 거래유형이 공사이면, SERVICE 등록 */
     IF (:I_M_TABLE.PR_TYPE_CODE_2[1] IS NOT NULL AND :I_M_TABLE.PR_TYPE_CODE_2[1] = 'TC20003') THEN
