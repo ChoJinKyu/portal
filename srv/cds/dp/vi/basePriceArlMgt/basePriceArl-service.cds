@@ -1,3 +1,12 @@
+/**
+* 1. 개요 : 개발VI품의서 관련 서비스
+* 2. 이력
+* ----------------------------------------------------------------------
+*    날짜          작성자      내용
+* ----------------------------------------------------------------------
+*    2020-02-06    한기호      최초 작성
+*/
+
 using {cm.Approval_Mst as arlMasterSuper} from '../../../../../db/cds/cm/CM_APPROVAL_MST-model';
 using {cm.Approver as arlApprover} from '../../../../../db/cds/cm/CM_APPROVER-model';
 using {cm.Referer as arlReferer} from '../../../../../db/cds/cm/CM_REFERER-model';
@@ -283,24 +292,14 @@ service BasePriceArlService {
                 dtl.base_uom_code,
                 dtl.supplier_code,
                 sup.supplier_local_name,
-                // (
-                //     select case
-                //                when
-                //                    'KO' = 'EN'
-                //                then
-                //                    supplier_english_name
-                //                else
-                //                    supplier_local_name
-                //            end as supplier_name from supplierMst
-                //     where
-                //             tenant_id     = dtl.tenant_id
-                //         and supplier_code = dtl.supplier_code
-                // ) as supplier_nm               : String(240),
                 dtl.base_date,
                 dtl.base_price_ground_code,
                 cd01.code_name as base_price_ground_code_nm : String(240),
                 dtl.change_reason_code,
                 cd02.code_name as change_reason_nm : String(240),
+                dtl.repr_material_code,
+                dtl.repr_material_supplier_code,
+                dtl.repr_material_org_code,
                 dtl.local_create_dtm,
                 dtl.local_update_dtm,
                 dtl.create_user_id,

@@ -2,15 +2,24 @@ FUNCTION DP_VI_APPROVAL_NUMBER_FUNC (p_tenant_id NVARCHAR(5))
     RETURNS D_RETURN NVARCHAR(50)
     LANGUAGE SQLSCRIPT
 AS
+    /**
+    * 1. 개요 : 개발VI품의서의 품의번호 채번
+    * 2. 실행 : SELECT DP_VI_APPROVAL_NUMBER_FUNC('L2100') FROM DUMMY;
+    * 3. 이력
+    * ----------------------------------------------------------------------
+    *    날짜          작성자      내용
+    * ----------------------------------------------------------------------
+    *    2020-02-06    한기호      최초 작성
+    */
 BEGIN
 
     SELECT 
-        'V' || REPLACE(CAST(CURRENT_DATE AS NVARCHAR), '-', '') || IFNULL(LPAD(RIGHT(MAX(APPROVAL_NUMBER), 4) + 1, 4, 0), '0001')
+        'V' || TO_VARCHAR(CURRENT_DATE, 'YYYYMMDD') || IFNULL(LPAD(RIGHT(MAX(APPROVAL_NUMBER), 4) + 1, 4, 0), '0001')
     INTO
         D_RETURN
     FROM 
         DP_VI_BASE_PRICE_ARL_MST 
     WHERE 
-        TENANT_ID = :p_tenant_id AND APPROVAL_NUMBER LIKE 'V' || REPLACE(CAST(CURRENT_DATE AS NVARCHAR), '-', '') || '%';
+        TENANT_ID = :p_tenant_id AND APPROVAL_NUMBER LIKE 'V' || TO_VARCHAR(CURRENT_DATE, 'YYYYMMDD') || '%';
 
 END;
