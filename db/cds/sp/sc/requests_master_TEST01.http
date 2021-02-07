@@ -232,6 +232,7 @@ Content-Type: application/json
     , {"nego_type_name": "RFQ", "locale": "en"}
     , {"nego_type_name": "要求报价", "locale": "zh-Hans_KR"}
     , {"nego_type_name": "要求报价", "locale": "zh"}
+    , {"nego_type_name": "要求报价", "locale": "zh_CN"}       // <== CAP 표준 https://cap.cloud.sap/docs/guides/i18n#normalized-locales
     , {"nego_type_name": "견적 요청(빈로케일)", "locale": ""}
     , {"nego_type_name": "견적 요청(빈로케일)", "locale": " "}
     ]
