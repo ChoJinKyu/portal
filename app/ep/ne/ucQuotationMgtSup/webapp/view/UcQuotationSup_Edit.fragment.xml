@@ -47,12 +47,13 @@
             <VBox alignContent="Center">
                 <Label text="* 공사기간" design="Bold" class="sapMLabelNoText"/>
                 <!-- <DatePicker placeholder="Start Date ..." id="searchFromDatePicker"/> -->
+                <HBox>
                 <DatePicker placeholder="Date" id="searchFromDatePicker" value="{path: 'viewModel>/ucmaster/const_start_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
 
                 <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
                 <!-- <DatePicker placeholder="End Date ..." id="searchToDatePicker"/>   -->
                 <DatePicker placeholder="Date" id="searchToDatePicker" value="{path: 'viewModel>/ucmaster/const_end_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
-                
+                </HBox>
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>     
@@ -64,7 +65,7 @@
 
             <VBox alignContent="Center">
                 <Label text="* 물량검토자" design="Bold" class="sapMLabelNoText"/>
-                <Text text="{viewModel>/ucmaster/const_person_empno}" />  
+                <Text text="{viewModel>/ucmaster/const_person_name}" />  
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>     
@@ -72,7 +73,7 @@
             
             <VBox alignContent="Center">
                 <Label text="* 구매담당자" design="Bold" class="sapMLabelNoText"/>
-                <Text text="{viewModel>/ucmaster/const_person_empno}" />  
+                <Text text="{viewModel>/ucmaster/buyer_name}" />  
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>     

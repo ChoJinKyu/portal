@@ -124,7 +124,30 @@ public class UcQuotationMgtV4Service implements EventHandler {
                                     .append("SYSTEM_CREATE_DTM SECONDDATE, ")
                                     .append("SYSTEM_UPDATE_DTM SECONDDATE, ")   
                                     .append("ROW_STATE NVARCHAR(1) ") 
-								.append(")");
+                                .append(")");
+                                
+        StringBuffer v_sql_createTableR = new StringBuffer();
+		v_sql_createTableR.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_R_UC ( ")
+									.append("TENANT_ID NVARCHAR(5), ")
+                                    .append("COMPANY_CODE NVARCHAR(10), ")
+                                    .append("CONST_QUOTATION_NUMBER NVARCHAR(30), ")
+                                    .append("CONST_QUOTATION_ITEM_NUMBER NVARCHAR(50), ")
+                                    .append("APPLY_EXTRA_SEQUENCE DECIMAL, ")
+                                    .append("NET_PRICE_CONTRACT_DOCUMENT_NO NVARCHAR(50), ")
+                                    .append("NET_PRICE_CONTRACT_DEGREE DECIMAL, ")
+                                    .append("NET_PRICE_CONTRACT_EXTRA_SEQ DECIMAL, ")
+                                    .append("EXTRA_NUMBER NVARCHAR(30), ")
+                                    .append("EXTRA_CLASS_NUMBER NVARCHAR(30), ")
+                                    .append("EXTRA_RATE DECIMAL, ")
+                                    .append("REMARK NVARCHAR(3000), ")
+                                    .append("LOCAL_CREATE_DTM SECONDDATE, ")
+                                    .append("LOCAL_UPDATE_DTM SECONDDATE, ")
+                                    .append("CREATE_USER_ID NVARCHAR(255), ")
+                                    .append("UPDATE_USER_ID NVARCHAR(255), ")
+                                    .append("SYSTEM_CREATE_DTM SECONDDATE, ")
+                                    .append("SYSTEM_UPDATE_DTM SECONDDATE, ")   
+                                    .append("ROW_STATE NVARCHAR(1) ") 
+                                .append(")");
 
         // String v_sql_dropTableD = "DROP TABLE #LOCAL_TEMP_EP_UC_QUOTATION_HD_SAVE_PROC";                                        
 		// String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_EP_UC_QUOTATION_HD_SAVE_PROC VALUES (?, ?, ?, ?, ?,?, ?, ?, ?, ?,?, ?, ?, ?, ?,?, ?, ?, ?, ?,?, ?, ?, ?, ?,?,?)";
@@ -132,14 +155,19 @@ public class UcQuotationMgtV4Service implements EventHandler {
         
         String v_sql_dropableH = "DROP TABLE #LOCAL_TEMP_H_UC";
         String v_sql_dropableD = "DROP TABLE #LOCAL_TEMP_D_UC";
+        String v_sql_dropableR = "DROP TABLE #LOCAL_TEMP_R_UC";
 
         String v_sql_insertTableH = "INSERT INTO #LOCAL_TEMP_H_UC VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D_UC VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insertTableR = "INSERT INTO #LOCAL_TEMP_R_UC VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        String v_sql_callProc = "CALL EP_UC_QUOTATION_HD_SAVE_PROC(I_M_TABLE => #LOCAL_TEMP_H_UC, I_D_TABLE => #LOCAL_TEMP_D_UC, O_M_TABLE => ?, O_D_TABLE => ?)";
+        String v_sql_callProc = "CALL EP_UC_QUOTATION_HD_SAVE_PROC(I_M_TABLE => #LOCAL_TEMP_H_UC, I_D_TABLE => #LOCAL_TEMP_D_UC, I_R_TABLE => #LOCAL_TEMP_R_UC, O_M_TABLE => ?, O_D_TABLE => ?, O_R_TABLE => ?)";
 
         Collection<UcMasterData> v_inHeaders = context.getInputData().getUcMasterData();
         Collection<UcDetailData> v_inDetails = context.getInputData().getUcDetailData();
+        Collection<UcQuotationExtraData> v_inRate = context.getInputData().getUcQuotationExtraData();
+
+        
 
 
 
@@ -147,6 +175,7 @@ public class UcQuotationMgtV4Service implements EventHandler {
         SaveReturnType v_result = SaveReturnType.create();
         Collection<UcMasterData> v_resultM = new ArrayList<>();
         Collection<UcDetailData> v_resultD = new ArrayList<>();
+        Collection<UcQuotationExtraData> v_resultR = new ArrayList<>();
 
   
 
@@ -156,6 +185,7 @@ public class UcQuotationMgtV4Service implements EventHandler {
         // Local Temp Table 생성
         jdbc.execute(v_sql_createTableH.toString());
         jdbc.execute(v_sql_createTableD.toString());
+        jdbc.execute(v_sql_createTableR.toString());
 
 
 
@@ -193,37 +223,43 @@ public class UcQuotationMgtV4Service implements EventHandler {
                 log.info("master ---->  facility_person_name="+v_inRow.get("facility_person_name"));
                 log.info("master ---->  facility_department_code="+v_inRow.get("facility_department_code"));
                 log.info("master ---->  completion_attch_group_number="+v_inRow.get("completion_attch_group_number"));
+                log.info("master ---->  local_create_dtm="+v_inRow.get("local_create_dtm"));
+                log.info("master ---->  local_update_dtm="+v_inRow.get("local_update_dtm"));
+                log.info("master ---->  create_user_id="+v_inRow.get("create_user_id"));
+                log.info("master ---->  update_user_id="+v_inRow.get("update_user_id"));
+                log.info("master ---->  system_create_dtm="+v_inRow.get("system_create_dtm"));
+                log.info("master ---->  system_update_dtm="+v_inRow.get("system_update_dtm"));
                 log.info("master ---->  row_state="+v_inRow.get("row_state"));
                 Object[] values = new Object[] {
-                    v_inRow.get("tenant_id                  "),	
-                    v_inRow.get("company_code               "), 
-                    v_inRow.get("const_quotation_number     "), 
-                    v_inRow.get("org_code                   "), 
-                    v_inRow.get("org_name                   "), 
-                    v_inRow.get("const_name                 "), 
-                    v_inRow.get("ep_item_code               "), 
-                    v_inRow.get("const_start_date           "), 
-                    v_inRow.get("const_end_date             "), 
-                    v_inRow.get("quotation_status_code      "), 
-                    v_inRow.get("quotation_status_name      "), 
-                    v_inRow.get("supplier_code              "), 
-                    v_inRow.get("buyer_empno                "), 
-                    v_inRow.get("buyer_name                 "), 
-                    v_inRow.get("const_person_empno         "), 
-                    v_inRow.get("const_person_name          "), 
-                    v_inRow.get("purchasing_department_code "), 
-                    v_inRow.get("purchasing_department_name "), 
-                    v_inRow.get("pr_number                  "), 
-                    v_inRow.get("quotation_write_date       "), 
-                    v_inRow.get("remark                     "), 
-                    v_inRow.get("currency_code              "), 
-                    v_inRow.get("attch_group_number         "), 
-                    v_inRow.get("supplier_write_flag        "), 
-                    v_inRow.get("completion_flag            "), 
-                    v_inRow.get("completion_date            "), 
-                    v_inRow.get("facility_person_empno      "), 
-                    v_inRow.get("facility_person_name       "), 
-                    v_inRow.get("facility_department_code   "), 
+                    v_inRow.get("tenant_id"),	
+                    v_inRow.get("company_code"), 
+                    v_inRow.get("const_quotation_number"), 
+                    v_inRow.get("org_code"), 
+                    v_inRow.get("org_name"), 
+                    v_inRow.get("const_name"), 
+                    v_inRow.get("ep_item_code"), 
+                    v_inRow.get("const_start_date"), 
+                    v_inRow.get("const_end_date"), 
+                    v_inRow.get("quotation_status_code"), 
+                    v_inRow.get("quotation_status_name"), 
+                    v_inRow.get("supplier_code"), 
+                    v_inRow.get("buyer_empno"), 
+                    v_inRow.get("buyer_name"), 
+                    v_inRow.get("const_person_empno"), 
+                    v_inRow.get("const_person_name"), 
+                    v_inRow.get("purchasing_department_code"), 
+                    v_inRow.get("purchasing_department_name"), 
+                    v_inRow.get("pr_number"), 
+                    v_inRow.get("quotation_write_date"), 
+                    v_inRow.get("remark"), 
+                    v_inRow.get("currency_code"), 
+                    v_inRow.get("attch_group_number"), 
+                    v_inRow.get("supplier_write_flag"), 
+                    v_inRow.get("completion_flag"), 
+                    v_inRow.get("completion_date"), 
+                    v_inRow.get("facility_person_empno"), 
+                    v_inRow.get("facility_person_name"), 
+                    v_inRow.get("facility_department_code"), 
                     v_inRow.get("completion_attch_group_number"),
                     v_inRow.get("local_create_dtm"),               
                     v_inRow.get("local_update_dtm"),               
@@ -271,37 +307,43 @@ public class UcQuotationMgtV4Service implements EventHandler {
                 log.info("net_price_contract_degree="+v_inRow.get("net_price_contract_degree"));
                 log.info("net_price_contract_item_number="+v_inRow.get("net_price_contract_item_number"));
                 log.info("supplier_item_create_flag="+v_inRow.get("supplier_item_create_flag"));
+                log.info("local_create_dtm="+v_inRow.get("local_create_dtm"));
+                log.info("local_update_dtm="+v_inRow.get("local_update_dtm"));
+                log.info("create_user_id="+v_inRow.get("create_user_id"));
+                log.info("update_user_id="+v_inRow.get("update_user_id"));
+                log.info("system_create_dtm="+v_inRow.get("system_create_dtm"));
+                log.info("system_update_dtm="+v_inRow.get("system_update_dtm"));
                 log.info("row_state="+v_inRow.get("row_state"));
 
                 Object[] values = new Object[] {
-                    v_inRow.get("tenant_id                       "),
-                    v_inRow.get("company_code                    "),
-                    v_inRow.get("const_quotation_number          "),
-                    v_inRow.get("const_quotation_item_number     "),
-                    v_inRow.get("item_sequence                   "),
-                    v_inRow.get("ep_item_code                    "),
-                    v_inRow.get("item_desc                       "),
-                    v_inRow.get("spec_desc                       "),
-                    v_inRow.get("quotation_quantity              "),
-                    v_inRow.get("extra_rate                      "),
-                    v_inRow.get("unit                            "),
-                    v_inRow.get("currency_code                   "),
-                    v_inRow.get("currency_name                   "),
-                    v_inRow.get("material_apply_flag             "),
-                    v_inRow.get("labor_apply_flag                "),
-                    v_inRow.get("net_price_change_allow_flag     "),
-                    v_inRow.get("base_material_net_price         "),
-                    v_inRow.get("base_labor_net_price            "),
-                    v_inRow.get("material_net_price              "),
-                    v_inRow.get("material_amount                 "),
-                    v_inRow.get("labor_net_price                 "),
-                    v_inRow.get("labor_amount                    "),
-                    v_inRow.get("sum_amount                      "),
-                    v_inRow.get("remark                          "),
-                    v_inRow.get("net_price_contract_document_no  "),
-                    v_inRow.get("net_price_contract_degree       "),
-                    v_inRow.get("net_price_contract_item_number  "),
-                    v_inRow.get("supplier_item_create_flag       "),
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("company_code"),
+                    v_inRow.get("const_quotation_number"),
+                    v_inRow.get("const_quotation_item_number"),
+                    v_inRow.get("item_sequence"),
+                    v_inRow.get("ep_item_code"),
+                    v_inRow.get("item_desc"),
+                    v_inRow.get("spec_desc"),
+                    v_inRow.get("quotation_quantity"),
+                    v_inRow.get("extra_rate"),
+                    v_inRow.get("unit"),
+                    v_inRow.get("currency_code"),
+                    v_inRow.get("currency_name"),
+                    v_inRow.get("material_apply_flag"),
+                    v_inRow.get("labor_apply_flag"),
+                    v_inRow.get("net_price_change_allow_flag"),
+                    v_inRow.get("base_material_net_price"),
+                    v_inRow.get("base_labor_net_price"),
+                    v_inRow.get("material_net_price"),
+                    v_inRow.get("material_amount"),
+                    v_inRow.get("labor_net_price"),
+                    v_inRow.get("labor_amount"),
+                    v_inRow.get("sum_amount"),
+                    v_inRow.get("remark"),
+                    v_inRow.get("net_price_contract_document_no"),
+                    v_inRow.get("net_price_contract_degree"),
+                    v_inRow.get("net_price_contract_item_number"),
+                    v_inRow.get("supplier_item_create_flag"),
                     v_inRow.get("local_create_dtm"),               
                     v_inRow.get("local_update_dtm"),               
                     v_inRow.get("create_user_id"),                 
@@ -315,6 +357,57 @@ public class UcQuotationMgtV4Service implements EventHandler {
         }    
 
         int[] updateCountsD = jdbc.batchUpdate(v_sql_insertTableD, batchD);
+
+        //  EXTRA Rate Temp Table에 insert
+        List<Object[]> batchR = new ArrayList<Object[]>();
+        if(!v_inRate.isEmpty() && v_inRate.size() > 0){
+            for(UcQuotationExtraData v_inRow : v_inRate){
+                log.info("tenant_id="+v_inRow.get("tenant_id"));
+                log.info("company_code="+v_inRow.get("company_code"));
+                log.info("const_quotation_number="+v_inRow.get("const_quotation_number"));
+                log.info("const_quotation_item_number="+v_inRow.get("const_quotation_item_number"));
+                log.info("apply_extra_sequence="+v_inRow.get("apply_extra_sequence"));
+                log.info("net_price_contract_document_no="+v_inRow.get("net_price_contract_document_no"));
+                log.info("net_price_contract_degree="+v_inRow.get("net_price_contract_degree"));
+                log.info("net_price_contract_extra_seq="+v_inRow.get("net_price_contract_extra_seq"));
+                log.info("extra_number="+v_inRow.get("extra_number"));
+                log.info("extra_class_number="+v_inRow.get("extra_class_number"));
+                log.info("extra_rate="+v_inRow.get("extra_rate"));
+                log.info("remark="+v_inRow.get("remark"));
+                log.info("local_create_dtm="+v_inRow.get("local_create_dtm"));
+                log.info("local_update_dtm="+v_inRow.get("local_update_dtm"));
+                log.info("create_user_id="+v_inRow.get("create_user_id"));
+                log.info("update_user_id="+v_inRow.get("update_user_id"));
+                log.info("system_create_dtm="+v_inRow.get("system_create_dtm"));
+                log.info("system_update_dtm="+v_inRow.get("system_update_dtm"));
+                log.info("row_state="+v_inRow.get("row_state"));
+
+                Object[] values = new Object[] {
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("company_code"),
+                    v_inRow.get("const_quotation_number"),
+                    v_inRow.get("const_quotation_item_number"),
+                    v_inRow.get("apply_extra_sequence"),
+                    v_inRow.get("net_price_contract_document_no"),
+                    v_inRow.get("net_price_contract_degree"),
+                    v_inRow.get("net_price_contract_extra_seq"),
+                    v_inRow.get("extra_number"),
+                    v_inRow.get("extra_class_number"),
+                    v_inRow.get("extra_rate"),
+                    v_inRow.get("remark"),
+                    v_inRow.get("local_create_dtm"),               
+                    v_inRow.get("local_update_dtm"),               
+                    v_inRow.get("create_user_id"),                 
+                    v_inRow.get("update_user_id"),                 
+                    v_inRow.get("system_create_dtm"),              
+                    v_inRow.get("system_update_dtm"),     
+                    v_inRow.get("row_state")
+                };
+                batchR.add(values);
+            }
+        }
+
+        int[] updateCountsR = jdbc.batchUpdate(v_sql_insertTableR, batchR);
 
 
         boolean delFlag = false;
@@ -410,10 +503,39 @@ public class UcQuotationMgtV4Service implements EventHandler {
             }
         });
 
+        SqlReturnResultSet oRTable = new SqlReturnResultSet("O_M_TABLE", new RowMapper<UcQuotationExtraData>(){
+            @Override
+            public UcQuotationExtraData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                UcQuotationExtraData v_row = UcQuotationExtraData.create();
+                v_row.setTenantId(v_rs.getString("tenant_id"));
+                v_row.setCompanyCode(v_rs.getString("company_code"));
+                v_row.setConstQuotationNumber(v_rs.getString("const_quotation_number"));
+                v_row.setConstQuotationItemNumber(v_rs.getString("const_quotation_item_number"));
+                v_row.setApplyExtraSequence(v_rs.getBigDecimal("apply_extra_sequence"));
+                v_row.setNetPriceContractDocumentNo(v_rs.getString("net_price_contract_document_no"));
+                v_row.setNetPriceContractDegree(v_rs.getLong("net_price_contract_degree"));
+                v_row.setNetPriceContractExtraSeq(v_rs.getBigDecimal("net_price_contract_extra_seq"));
+                v_row.setExtraNumber(v_rs.getString("extra_number"));
+                v_row.setExtraClassNumber(v_rs.getString("extra_class_number"));
+                v_row.setExtraRate(v_rs.getBigDecimal("extra_rate"));
+                v_row.setRemark(v_rs.getString("remark"));
+                v_row.setLocalCreateDtm(v_rs.getDate("local_create_dtm").toInstant());
+                v_row.setLocalUpdateDtm(v_rs.getDate("local_update_dtm").toInstant());
+                v_row.setCreateUserId(v_rs.getString("create_user_id"));
+                v_row.setUpdateUserId(v_rs.getString("update_user_id"));
+                v_row.setSystemCreateDtm(v_rs.getDate("system_create_dtm").toInstant());
+                v_row.setSystemUpdateDtm(v_rs.getDate("system_update_dtm").toInstant());
+                v_row.setRowState(v_rs.getString("row_state"));
+                v_resultR.add(v_row);
+                return v_row;
+            }
+        });
+
 
         List<SqlParameter> paramList = new ArrayList<SqlParameter>();
         paramList.add(oMTable);
         paramList.add(oDTable);
+        paramList.add(oRTable);
 
 
  
@@ -432,11 +554,11 @@ public class UcQuotationMgtV4Service implements EventHandler {
         // Local Temp Table DROP
         jdbc.execute(v_sql_dropableH);
         jdbc.execute(v_sql_dropableD);
-        // jdbc.execute(v_sql_dropableS);
-        // jdbc.execute(v_sql_dropableE);
+        jdbc.execute(v_sql_dropableR);
 
         v_result.setUcMasterData(v_resultM);
         v_result.setUcDetailData(v_resultD);
+        v_result.setUcQuotationExtraData(v_resultR);
 
         context.setResult(v_result);            
         context.setCompleted();          

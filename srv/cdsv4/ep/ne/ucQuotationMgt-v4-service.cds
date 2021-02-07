@@ -113,12 +113,12 @@ service UcQuotationMgtV4Service {
     type saveReturnType {
         ucMasterData    : array of UcMasterData;
         ucDetailData    : array of UcDetailData;
-        //ucCompletionData    : array of UcCompletionData;
+        ucQuotationExtraData    : array of UcQuotationExtraData;
     //savedSuppliers : array of SavedSuppliers;
     };
 
     action SaveUcQuotationDtlProc(inputData : saveReturnType) returns saveReturnType;
  
-    action SaveUcQuotationExtraProc(inputData : array of UcQuotationExtraData) returns UcQuotationExtraData;
+    //action SaveUcQuotationExtraProc(inputData : array of UcQuotationExtraData) returns UcQuotationExtraData;
 
 }

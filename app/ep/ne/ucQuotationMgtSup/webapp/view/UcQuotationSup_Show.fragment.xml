@@ -30,7 +30,8 @@
                 <!-- <Text text="{master>/const_start_date}" />
                 <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
                 <Text text="{master>/const_end_date}" /> -->
-                <Text text="{
+                <HBox>
+                    <Text text="{
                                             path: 'viewModel>/ucmaster/const_start_date',
                                             type: 'sap.ui.model.type.Date',
                                             formatOptions: {
@@ -48,7 +49,7 @@
                                             }                                        
                                         }"  
                                         class="sapUiTinyMarginBegin"/> 
-
+                </HBox>
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>     
@@ -60,7 +61,7 @@
         
             <VBox alignContent="Center">
                 <Label text="* 물량검토자" design="Bold" class="sapMLabelNoText"/>
-                <Text text="{viewModel>/ucmaster/const_person_empno}" />  
+                <Text text="{viewModel>/ucmaster/const_person_name}" />  
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>     
@@ -68,7 +69,7 @@
             
             <VBox alignContent="Center">
                 <Label text="* 구매담당자" design="Bold" class="sapMLabelNoText"/>
-                <Text text="{viewModel>/ucmaster/buyer_empno}" />  
+                <Text text="{viewModel>/ucmaster/buyer_name}" />  
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>     

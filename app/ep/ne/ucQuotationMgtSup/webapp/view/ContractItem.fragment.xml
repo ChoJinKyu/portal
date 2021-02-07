@@ -13,7 +13,7 @@
                         <VBox>
                             <Label
                                 text="대분류(공종): "
-                                labelFor="searchConstName">
+                                labelFor="searchPopEpItemCode">
                             </Label>
                             <ComboBox   
                                 id="searchPopEpItemCode"
@@ -36,9 +36,9 @@
                         <VBox>
                             <Label
                                 text="단가운영단위(플랜트): "
-                                labelFor="searchTenantId">
+                                labelFor="searchPopTenantId">
                             </Label>
-                            <Text id="searchTenantId" />                               
+                            <Text id="searchPopTenantId" />                               
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M12 S12" />
                             </layoutData>
@@ -78,9 +78,9 @@
                         <VBox>
                             <Label
                                 text="품목명: "
-                                labelFor="searchConstName3">
+                                labelFor="searchPopItemDesc">
                             </Label>
-                            <Input id="searchConstName3" 
+                            <Input id="searchPopItemDesc" 
                                 placeholder="Search Item name"/>
                             <layoutData>
                                 <layout:GridData
@@ -91,9 +91,9 @@
                         <VBox>
                             <Label
                                 text="계약명: "
-                                labelFor="searchConstName4">
+                                labelFor="searchPopNetPriceContractTitle">
                             </Label>
-                            <Input id="searchConstName4" 
+                            <Input id="searchPopNetPriceContractTitle" 
                                 placeholder="Search Contract name"/>
                             <layoutData>
                                 <layout:GridData

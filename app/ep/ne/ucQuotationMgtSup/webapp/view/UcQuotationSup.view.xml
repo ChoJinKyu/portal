@@ -66,7 +66,7 @@
                     <ObjectStatus
                         id="createDepartment"
                         title="단가운영단위(플랜트) "
-                        text="{viewModel>/ucmaster/org_code}"/>
+                        text="{viewModel>/ucmaster/org_name}"/>
                     </layout:VerticalLayout>
 
                     <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -149,8 +149,8 @@
                             rows="{
                                 path: 'viewModel>/ucdetails/',
                                 sorter: { 
-                                    path: 'system_create_dtm',
-                                    descending: true 
+                                    path: 'item_sequence',
+                                    descending: false 
                                 }                   
                             }"
                             cellClick=".onCellClick"
@@ -168,8 +168,8 @@
                             </t:extension>
                             
                             <t:columns>
-                                <t:Column id="dtlColumnState" hAlign="Center" width="4em" >
-                                    <ObjectStatus icon="sap-icon://document" text="State" visible="true" />
+                                <t:Column id="dtlColumnState" hAlign="Center" width="2em" >
+                                    <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
                                     <t:template>
                                         <ObjectStatus icon="{
                                             path: 'viewModel>row_state',
@@ -211,7 +211,13 @@
                                 <t:Column id="mainQuotationQuantity" width="4rem" hAlign="Center">
                                 <Label text="수량" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{viewModel>quotation_quantity}"/>
+                                    <HBox>
+                                    <Text  text="{
+                                                    path: 'viewModel>quotation_quantity',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                }"
+                                                vAlign="Right"
+                                                visible="{midObjectViewModel>/isShowMode}"/>
                                     <Input value="{
                                                         path: 'viewModel>quotation_quantity',
                                                         type: 'sap.ui.model.type.Integer',
@@ -220,21 +226,30 @@
                                                             maximum: '1000000000000'
                                                         }
                                                     }" textAlign="Right" 
-                                            liveChange=".onLiveChange"/>  
+                                            change=".onQuantityChange"
+                                            visible="{=!${midObjectViewModel>/isShowMode}}"/>  
+                                    </HBox>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainExtraRate" width="4rem" hAlign="Center">
                                 <Label text="할증" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <!-- <Text text="{viewModel>extra_rate}"/> -->
-                                    <Link text="{viewModel>extra_rate}" press="onTableExtraRatePress" enabled="{= ${viewModel>labor_net_price} > 0 ? true : false }" />                
+                                    <Link text="{viewModel>extra_rate}" press=".onTableExtraRatePress($event)" enabled="{= ${viewModel>labor_net_price} > 0 ? true : false }" />                
                
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainMaterialNetPrice" width="8rem" hAlign="Right">
                                 <Label text="자재단가" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Input value="{
+                                    <HBox> 
+                                        <Text  text="{
+                                                    path: 'viewModel>material_net_price',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                }"
+                                                vAlign="Right"
+                                                visible="{midObjectViewModel>/isShowMode}"/>
+                                        <Input value="{
                                                         path: 'viewModel>material_net_price',
                                                         type: 'sap.ui.model.type.Integer',
                                                         constraints: {
@@ -242,14 +257,14 @@
                                                             maximum: '1000000000000'
                                                         }
                                                     }" textAlign="Right" 
-                                            liveChange="._checkNumber"/>   
-                                    
+                                            change=".onMaterialChange"
+                                            visible="{=!${midObjectViewModel>/isShowMode}}"/>   
+                                    </HBox>
                                 </t:template>
                                 </t:Column>  
                                 <t:Column id="mainMaterialAmount" width="8rem" hAlign="Right">
                                 <Label text="자재금액" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <!-- <Text text="{details>material_amount}"/> -->
                                     <Text  text="{
                                                     path: 'viewModel>material_amount',
                                                     formatter: '.numberFormatter.toNumberString'
@@ -260,7 +275,14 @@
                                 <t:Column id="mainLaborNetPrice" width="8rem" hAlign="Right">
                                 <Label text="노무단가" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Input value="{
+                                    <HBox>    
+                                        <Text  text="{
+                                                    path: 'viewModel>labor_net_price',
+                                                    formatter: '.numberFormatter.toNumberString'
+                                                }"
+                                                vAlign="Right"
+                                                visible="{midObjectViewModel>/isShowMode}"/>
+                                        <Input value="{
                                                         path: 'viewModel>labor_net_price',
                                                         type: 'sap.ui.model.type.Integer',
                                                         constraints: {
@@ -268,7 +290,9 @@
                                                             maximum: '1000000000000'
                                                         }
                                                     }" textAlign="Right" 
-                                            liveChange="._checkNumber"/>   
+                                            change=".onLaborChange"
+                                            visible="{=!${midObjectViewModel>/isShowMode}}"/> 
+                                    </HBox>  
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainLaborAmount" width="8rem" hAlign="Right">
@@ -318,19 +342,19 @@
 
 
             <!-- 원가내역 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="원가내역">
+			<!-- <uxap:ObjectPageSection titleUppercase="false" title="원가내역">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
-                            <!-- Approval & Reference 시작 -->
+
                             <HBox>
         
                             </HBox>
-                            <!-- Approval & Reference 끝 -->
+
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
                 </uxap:subSections>
-            </uxap:ObjectPageSection>
+            </uxap:ObjectPageSection> -->
             <!-- 원가내역 끝 -->
 
             <!-- 준공정보 시작 -->
@@ -344,6 +368,7 @@
 
                                     <SegmentedButton 
                                         id="search_completionflag"
+                                        enabled="{=!${midObjectViewModel>/isShowMode}}"
                                         selectedKey="{viewModel>/ucmaster/completion_flag}" 
                                         selectionChange=".onSegmentChange"
                                         
@@ -363,7 +388,9 @@
                                                     class="sapUiSmallMarginBottom"/>
                                         <HBox>
                                             
-                                            <DatePicker placeholder="Date" id="completionDatePicker" value="{path: 'viewModel>/ucmaster/completion_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+                                            <DatePicker placeholder="Date" id="completionDatePicker" value="{path: 'viewModel>/ucmaster/completion_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"
+                                                visible="{=!${midObjectViewModel>/isShowMode}}"
+                                                />
 
                                             <Text text="{
                                                 path: 'viewModel>/ucmaster/completion_date',
@@ -372,7 +399,7 @@
                                                     pattern: 'yyyy/MM/dd'
                                                 }                                        
                                             }"  
-                                            class="sapUiTinyMarginBegin"/>     
+                                            class="sapUiTinyMarginBegin" visible="{midObjectViewModel>/isShowMode}"/>          
                                         </HBox> 
                                     </VBox>
                                     <VBox alignContent="Center" alignItems="Stretch"> 
@@ -382,22 +409,25 @@
                                         <HBox>
 
                                         <lib-m:CodePicker id="searchRequestorS"
-                                            placeholder="Enter a employee name"
+                                            placeholder="Employee name"
                                             keyField="employee_number"
                                             textField="user_local_name"
                                             suggestionItems="{
-                                                path: '/',
+                                                path: 'viewModel>/ucmaster/facility_person_name',
                                                 filters: [
                                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                                 ],
                                                 serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
                                                 entityName: 'Employee'
-                                            }">
+                                            }"
+                                            visible="{=!${midObjectViewModel>/isShowMode}}"
+                                            >
                                             <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
-                                                keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                                                keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" 
+                                                />
                                         </lib-m:CodePicker>    
                                         <Text text="{viewModel>/ucmaster/facility_person_name}" 
-                                            visible="false"/>  
+                                            visible="{midObjectViewModel>/isShowMode}"/> 
                                         </HBox>          
                                     </VBox>
                                 </form:SimpleForm>   
@@ -428,19 +458,17 @@
             <!-- 준공정보 끝 -->
 
             <!-- 결재라인 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="결재라인">
+			<!-- <uxap:ObjectPageSection titleUppercase="false" title="결재라인">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
-                            <!-- Approval & Reference 시작 -->
                             <HBox>
         
                             </HBox>
-                            <!-- Approval & Reference 끝 -->
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
                 </uxap:subSections>
-            </uxap:ObjectPageSection>
+            </uxap:ObjectPageSection> -->
             <!-- 결재라인 끝 -->
 
 		</uxap:sections>
@@ -458,10 +486,8 @@
                 <Button id="pageEditButton" type="Transparent" text="Edit" press=".onPageEditButtonPress" />
                 <Button id="pageSaveButton" type="Emphasized" text="Draft" press=".onPageSaveButtonPress('D')" />
                 <Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
-                <Button id="pageDeleteButton" type="Transparent" text="Delete" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>                
+                <!-- <Button id="pageDeleteButton" type="Transparent" text="Delete" press=".onPageDeleteButtonPress" visible="{= ${editMode>/newcheck} === 'new' ? false : true}"/>                 -->
                 <Button id="pageRequestButton" type="Emphasized" text="Request" press=".onPageSaveButtonPress('R')" />
-                <Button id="pageByPassButton" type="Emphasized" text="ByPass" press=".onPageSaveButtonPress('B')" />
-				
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
