@@ -51,6 +51,7 @@ sap.ui.define([
             this.setModel(new ManagedModel(), "spec");
             this.setModel(new ManagedModel(), "tmpCcDpMdSpec");
             this.setModel(new ManagedModel(), "tmpCcDpMdSpecG");
+            this.setModel(new ManagedModel(), "tmpCcDpMdSpecExt");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.aDataModels.length = 0;
@@ -141,7 +142,8 @@ sap.ui.define([
 
 			var oView = this.getView(),
                 me = this,
-                oModel = this.getModel("tmpCcDpMdSpec");
+                oModel = this.getModel("tmpCcDpMdSpec"),
+                oModelExt = this.getModel("tmpCcDpMdSpecExt");
 
             if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
@@ -183,6 +185,8 @@ sap.ui.define([
                                 oView.setBusy(false);
                             }.bind(this)
                         });
+                        //var data = oModelExt.getData();
+
 					};
 				}
 			});
@@ -347,7 +351,7 @@ sap.ui.define([
             }
 
             var tenantId = this._sTenantId;
-            debugger
+            //debugger
             this._loadTemplate(tenantId, templateId, sectionId);
         },
         _loadTemplate: function(tenant_id, templateId, sectionId){
@@ -362,8 +366,29 @@ sap.ui.define([
             var appModel = this.getView().getModel("tmpCcDpMdSpec");
             appModel.setTransactionModel(this.getModel("tmpMgr"));
             appModel.read("/tmpCcDpMdSpec('"+this._sMoldId+"')", {
-
+                
             });
+
+            var extModel = this.getView().getModel("tmpCcDpMdSpecExt");
+            var that = this;
+            extModel.setTransactionModel(this.getModel("tmpMgr"));
+            extModel.read("/tmpCcDpMdSpecExt", {
+                filters: [new sap.ui.model.Filter("MOLD_ID", sap.ui.model.FilterOperator.EQ, this._sMoldId)],
+                success: function(oData){
+                    var data = oData.results
+                    var newData = {};
+                    var val="";
+                    
+                    for(var attr of data){
+                        val = attr["CHAR_VALUE"] || attr["NUM_VALUE"] || attr["DATE_VALUE"]  
+                        newData[attr["COL_ID"]] = val;
+                    }
+                    that.getModel("tmpCcDpMdSpecExt").setData(newData);
+                    debugger
+                }
+            });
+
+            //debugger
 
             // var gridModel = this.getView().getModel("tmpCcDpMdSpecG");
             // gridModel.setTransactionModel(this.getModel("tmpMgr"));
