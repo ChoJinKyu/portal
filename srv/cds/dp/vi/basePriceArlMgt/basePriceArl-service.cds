@@ -15,6 +15,7 @@ using {dp.VI_Base_Price_Arl_Dtl as arlDetail} from '../../../../../db/cds/dp/vi/
 using {dp.VI_Base_Price_Arl_Price as arlPrice} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_PRICE-model';
 using {dp.VI_Base_Price_Arl_requestor_his as arlRequestorHis} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_ARL_REQUESTOR_HIS-model';
 using {dp.VI_Base_Price_Mst as priceMaster} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_MST-model';
+using {dp.VI_Base_Price_Mst_View as priceMasterVw} from '../../../../../db/cds/dp/vi/DP_VI_BASE_PRICE_MST_VIEW-model';
 using {cm.Code_Dtl as codeDtl} from '../../../../../db/cds/cm/CM_CODE_DTL-model';
 using {cm.Code_Lng as codeLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model';
 using {cm.Org_Tenant as tenant} from '../../../../../db/cds/cm/CM_ORG_TENANT-model';
@@ -32,6 +33,47 @@ namespace dp;
 
 @path : '/dp.BasePriceArlService'
 service BasePriceArlService {
+
+    entity Price_Master_Vw             as 
+        select from priceMasterVw as mst
+        left outer join materialMst as mtr
+            on mst.tenant_id = mtr.tenant_id
+            and mst.material_code = mtr.material_code
+        left join org as porg
+            on porg.tenant_id = mst.tenant_id
+            and porg.company_code = mst.company_code
+            and porg.org_type_code = mst.org_type_code
+            and porg.org_code = mst.org_code
+        left outer join comp as comp
+            on mst.tenant_id = comp.tenant_id
+            and mst.company_code = comp.company_code
+        {
+            key mst.tenant_id,
+            key mst.company_code,
+            key mst.org_type_code,
+            key mst.org_code,
+            key mst.material_code,
+            key mst.supplier_code,
+                comp.company_name,
+                porg.org_name,
+                mtr.material_desc,
+                mtr.material_spec,
+                mst.nn_net_price,
+                mst.nn_currency_code,
+                mst.nn_start_date,
+                mst.nb_base_price,
+                mst.nb_currency_code,
+                mst.nb_base_date,
+                mst.vb_base_price,
+                mst.vb_currency_code,
+                mst.vb_base_date,
+                mst.first_purchasing_net_price,
+                mst.first_pur_netprice_curr_cd,
+                mst.first_pur_netprice_str_dt
+        };
+    
+    // annotate Price_Master_Vw with {
+    // };
 
     entity Base_Price_Mst              as
         select from priceMaster as pm
