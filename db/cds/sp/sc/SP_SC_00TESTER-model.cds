@@ -215,6 +215,17 @@ entity Sc_Contacts {
   name : String;
   emails : Composition of many Sc_EmailAddresses on emails.contact=$self;
 }
+/* 
+CREATE COLUMN TABLE "8BF87896D3244B1B999EDBA857B1C829"."SP_SC_CONTACTS"(
+	"ID" NVARCHAR(36) NOT NULL,
+	"NAME" NVARCHAR(5000),
+	PRIMARY KEY (
+		"ID"
+	)
+)
+WITH ASSOCIATIONS( JOIN "8BF87896D3244B1B999EDBA857B1C829"."SP_SC_EMAILADDRESSES" AS "EMAILS" ON  emails . contact_ID  =  ID  )
+UNLOAD PRIORITY 5 AUTO MERGE;
+ */
 entity Sc_EmailAddresses {
   key contact : Association to Sc_Contacts;
   key ID  : UUID;
@@ -222,6 +233,43 @@ entity Sc_EmailAddresses {
   address : String;
   primary : Boolean;
 }
+/* 
+CREATE COLUMN TABLE "8BF87896D3244B1B999EDBA857B1C829"."SP_SC_EMAILADDRESSES"(
+	"ID" NVARCHAR(36) NOT NULL,
+	"KIND" NVARCHAR(5000),
+	"ADDRESS" NVARCHAR(5000),
+	"PRIMARY" BOOLEAN,
+	"CONTACT_ID" NVARCHAR(36) NOT NULL,
+	PRIMARY KEY (
+		"ID",
+		"CONTACT_ID"
+	)
+)
+WITH ASSOCIATIONS( JOIN "8BF87896D3244B1B999EDBA857B1C829"."SP_SC_CONTACTS" AS "CONTACT" ON  contact . ID  =  contact_ID  )
+UNLOAD PRIORITY 5 AUTO MERGE;
+ */
+
+entity Sc_Contacts2 {
+  key ID : UUID;
+  name : String;
+  emails : array of {
+    kind : String;
+    address : String;
+    primary : Boolean;
+  };
+}
+/* 
+CREATE COLUMN TABLE "8BF87896D3244B1B999EDBA857B1C829"."SP_SC_CONTACTS2"(
+	"ID" NVARCHAR(36) NOT NULL,
+	"NAME" NVARCHAR(5000),
+	"EMAILS" NCLOB MEMORY THRESHOLD 1000,
+	PRIMARY KEY (
+		"ID"
+	)
+)
+UNLOAD PRIORITY 5 AUTO MERGE;
+ */
+
 
 // https://cap.cloud.sap/docs/guides/domain-models#verticalization
 // entity ChangeNotes { // Fail

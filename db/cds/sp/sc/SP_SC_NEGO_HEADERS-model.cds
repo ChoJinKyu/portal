@@ -348,7 +348,8 @@ view Sc_Nego_Workbench_View2 as select from Sc_Nego_Headers_View as Header {
         Items.price_submission_no              ,
         Items.price_submisstion_status         ,
         Header.local_create_dtm                ,
-        Items.interface_source                  
+        Items.interface_source                 ,
+        Items
 };
     
 // annotate Sc_Nego_Workbench_View with @( 

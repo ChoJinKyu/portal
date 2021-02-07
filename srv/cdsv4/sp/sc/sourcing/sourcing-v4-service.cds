@@ -53,10 +53,11 @@ service SourcingV4Service {
     };
     
     ///////////////////////////////////////////// Nego Non-Price /////////////////////////////////////////////
-    entity NegoItemNonPrice    @(title : '협상비가격정보')     as projection on Sc_Nego_Item_Non_Price;
+    entity NegoItemNonPrice    @(title : '협상비가격정보')     as projection on Sc_Nego_Item_Non_Price{ *,
+        Header : redirected to NegoHeadersView
+    };
     entity NegoItemNonPriceDtl @(title : '협상비가격정보상세') as projection on Sc_Nego_Item_Non_Price_Dtl;
     
-
 
     // view NegoHeadersView as select from Sc_Nego_Headers_View;
 

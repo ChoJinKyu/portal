@@ -3,12 +3,7 @@ using {sp.Sc_Nego_Headers as negoHeaders} from '../../../../../db/cds/sp/sc/SP_S
 using {sp.Sc_Nego_Item_Prices as negoItemPrices} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 using {sp.Sc_Nego_Suppliers as negoSuppliers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 using {sp.Sc_Nego_Headers_New_Record_View as negoHeadersNewRecordView} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW-model';
-using {sp.Sc_Outcome_Code as scOutcomeCode,
-       sp.Sc_Nego_Type_Code as scNegoTypeCode,
-       sp.Sc_Award_Type_Code_View as scAwardTypeCodeView,
-       sp.Sc_Award_Type_Code_View1 as scAwardTypeCodeView1,
-       sp.Sc_Nego_Prog_Status_Code_View as scNegoProgStatusCodeView,
-} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_MASTERS-model';
+
 // using {sp.Sc_Outcome_Code2 as scOutcomeCode2} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_MASTERS-model';
 // using {localized.Sc_Outcome_Code as scOutcomeCodeLocalized} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_MASTERS-model'; //작동안함
 
@@ -16,6 +11,7 @@ using {
     sp.Sc_Nego_Outcom as scNegoOutcom,
     // sp.Sc_salesOrderCountryOwnAndGer as scSalesOrderCountryOwnAndGer,
     sp.Sc_Contacts as scContacts,
+    sp.Sc_Contacts2,
     sp.Sc_Tester00 as scTester00,
     sp.Sc_Language as scLanguage,
     // sp.Sc_Nego_Headers_Test01 as negoHeadersTest01,
@@ -28,7 +24,8 @@ namespace sp;
 @path : '/sp.sourcingTest01V4Service'
 service SourcingTest01V4Service {
 
-    entity Contacts @(title : '아웃컴테스트')                       as projection on scContacts;
+    entity ScContacts  @(title : '아웃컴테스트')                         as projection on scContacts;
+    entity ScContacts2 @(title : '아웃컴테스트2')                       as projection on Sc_Contacts2;
     // entity SalesOrderCountryOwnAndGer @(title : '아웃컴테스트')                 as projection on scSalesOrderCountryOwnAndGer;
     entity ScNegoOutcom @(title : '아웃컴테스트')                   as projection on scNegoOutcom;
     // entity NegoHeadersTest01                                  as projection on negoHeadersTest01;
@@ -51,8 +48,6 @@ service SourcingTest01V4Service {
     // // @odata.draft.enabled
     // entity ScOutcomeCode                                      as projection on scOutcomeCode;
     // entity ScNegoTypeCode                                     as projection on scNegoTypeCode;
-    entity ScAwardTypeCodeView                                as projection on scAwardTypeCodeView;
-    entity ScAwardTypeCodeView1                               as projection on scAwardTypeCodeView1;
 
     entity ScTestSessionContext                               as projection on Sc_Test_Session_Context;
     // entity ScNegoProgStatusCodeView                           as projection on scNegoProgStatusCodeView;

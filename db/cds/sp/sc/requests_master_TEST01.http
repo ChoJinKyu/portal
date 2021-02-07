@@ -262,6 +262,14 @@ Content-Type: application/json
     "nego_type_name": null
 }
 
+
+
+
+#################################################
+# OData Main Test #1
+#   Inline Array Of {} => NCLOB
+#################################################
+
 ### Single Template Insert
 PUT {{reviews-service}}/ScOutcomeCode2(tenant_id='L2100',nego_type_code='RFQ',outcome_code='010')?
 Cookie: {{cookie}}
@@ -281,3 +289,37 @@ Content-Type: application/json
 #         "message": "Invalid CQN: Element 'local_update_dtm' does not exist in entity 'sp.SourcingTest01V4Service.ScOutcomeCode2'"
 #     }
 # }
+
+
+
+
+### Single Template Update
+PUT {{reviews-service}}/ScOutcomeCode(tenant_id='L2100',nego_type_code='RFQ',outcome_code='010')?
+&$select=*
+&$expand=*
+Cookie: {{cookie}}
+Content-Type: application/json
+
+{
+   "tenant_id": "L2100",
+    "nego_type_code": "RFQ",
+    "outcome_code": "010",
+    "sort_no": 0,
+    "nego_type_name": "RFQ (견적계획)",
+    "local_create_dtm": "2021-01-21T13:17:01Z",
+    "local_update_dtm": "2021-01-21T13:17:01Z",
+    "create_user_id": "anonymous",
+    "update_user_id": "anonymous",
+    "system_create_dtm": "2021-01-21T04:17:01Z",
+    "system_update_dtm": "2021-01-21T04:17:01Z",
+    "texts": [ {"nego_type_name": "견적 요청", "locale": "ko"}
+    , {"nego_type_name": "견적 요청", "locale": "ko_KR"}
+    , {"nego_type_name": "RFQ", "locale": "en_US"}
+    , {"nego_type_name": "RFQ", "locale": "en"}
+    , {"nego_type_name": "要求报价", "locale": "zh-Hans_KR"}
+    , {"nego_type_name": "要求报价", "locale": "zh"}
+    , {"nego_type_name": "要求报价", "locale": "zh_CN"}       // <== CAP 표준 https://cap.cloud.sap/docs/guides/i18n#normalized-locales
+    , {"nego_type_name": "견적 요청(빈로케일)", "locale": ""}
+    , {"nego_type_name": "견적 요청(빈로케일)", "locale": " "}
+    ]
+}

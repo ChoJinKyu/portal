@@ -58,7 +58,9 @@ service SourcingService {
     };
     
     ///////////////////////////////////////////// Nego Non-Price /////////////////////////////////////////////
-    entity NegoItemNonPrice    @(title : '협상비가격정보')     as projection on Sc_Nego_Item_Non_Price;
+    entity NegoItemNonPrice    @(title : '협상비가격정보')     as projection on Sc_Nego_Item_Non_Price{ *,
+        Header : redirected to NegoHeadersView
+    };
     entity NegoItemNonPriceDtl @(title : '협상비가격정보상세') as projection on Sc_Nego_Item_Non_Price_Dtl;
     
 
@@ -72,12 +74,13 @@ service SourcingService {
         // SP_SC_MY_SESSION( ).tenant_id as my_tenant_id :String(5)
         // SP_SC_SESSION_LOCAL_FUNC(TENANT_ID: wv.tenant_id).locale_lg as locale_lg :String(2)
         
-        OP_PU_PR_TEMPLATE_NUMBERS_FUNC( wv.tenant_id, '' ) as  pr_template_numbers1: String(1000)
+        OP_PU_PR_TEMPLATE_NUMBERS_FUNC( wv.tenant_id, 'TCT1001' ) as  pr_template_numbers1: String(1000)
         from Sc_Nego_Workbench_View as wv
     ;
     
     // #V2 Header =+ Items 미작동 | Items =+ Header 작동 
     // view NegoItemPricesStatusView as select from Sc_Nego_Item_Prices distinct {
+        /* 
     view NegoItemPricesStatusView as select from Sc_Nego_Item_Prices {
         key tenant_id,
         key nego_header_id,
@@ -91,7 +94,20 @@ service SourcingService {
 		    Header.nego_progress_status.nego_progress_status_name,
 		    Header.award_progress_status.award_progress_status_name
     };
-
+ */
+    entity NegoItemPricesStatusView as projection on Sc_Nego_Item_Prices {
+        key tenant_id,
+        key nego_header_id,
+        key nego_item_number,
+		    pr_approve_number,
+		    Header.nego_document_number,
+		    Header.nego_document_round,
+		    Header.nego_progress_status_code,
+		    Header.award_progress_status_code,
+		    Header.reply_times,
+		    Header.nego_progress_status.nego_progress_status_name,
+		    Header.award_progress_status.award_progress_status_name
+    };
         
     // where tenant_id = SP_SC_MY_SESSION( ).tenant_id
 /* 
