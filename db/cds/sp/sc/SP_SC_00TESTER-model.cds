@@ -215,6 +215,8 @@ entity Sc_Contacts {
   name : String;
   emails : Composition of many Sc_EmailAddresses on emails.contact=$self;
 }
+extend Sc_Contacts with util.Managed;
+
 /* 
 CREATE COLUMN TABLE "8BF87896D3244B1B999EDBA857B1C829"."SP_SC_CONTACTS"(
 	"ID" NVARCHAR(36) NOT NULL,
@@ -258,6 +260,7 @@ entity Sc_Contacts2 {
     primary : Boolean;
   };
 }
+extend Sc_Contacts2 with util.Managed;
 /* 
 CREATE COLUMN TABLE "8BF87896D3244B1B999EDBA857B1C829"."SP_SC_CONTACTS2"(
 	"ID" NVARCHAR(36) NOT NULL,
