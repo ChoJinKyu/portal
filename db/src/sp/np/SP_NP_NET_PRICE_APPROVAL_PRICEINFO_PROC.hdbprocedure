@@ -1,26 +1,39 @@
 PROCEDURE SP_NP_NET_PRICE_APPROVAL_PRICEINFO_PROC (
-     IN   I_TENANT_ID                    NVARCHAR(20)
-    ,IN   I_LANGUAGE_CODE                NVARCHAR(2)
-	,IN   I_DETAILS				         TABLE (
+     IN     I_TENANT_ID                     NVARCHAR(20)
+    ,IN     I_LANGUAGE_CODE                 NVARCHAR(2)
+	,IN     I_DETAILS				        TABLE (
 	                                        		TENANT_ID	                    	NVARCHAR(5)
 	                                        	,	COMPANY_CODE                     	NVARCHAR(10)
 	                                        	,	ORG_TYPE_CODE						NVARCHAR(2)
-	                                            ,	ORG_CODE							NVARCHAR(10)
+                                                ,	ORG_CODE							NVARCHAR(10)
+                                                ,	APPROVAL_NUMBER						NVARCHAR(50)
+                                                ,	ITEM_SEQUENCE						BIGINT
 	                                            ,	SUPPLIER_CODE                       NVARCHAR(10)
 	                                            ,	MATERIAL_CODE                       NVARCHAR(40)
 	                                            ,	MARKET_CODE							NVARCHAR(30)
-	                                            )
-	,OUT  O_DETAILS                     TABLE (
+                                                )
+    ,OUT    O_RETURN_CODE                   NVARCHAR(5)
+    ,OUT    O_RETURN_MSG                    NVARCHAR(4000)
+	,OUT    O_DETAILS                       TABLE (
 	                                        		TENANT_ID	                    	NVARCHAR(5)
 	                                        	,	COMPANY_CODE                     	NVARCHAR(10)
 	                                        	,	ORG_TYPE_CODE						NVARCHAR(2)
-	                                            ,	ORG_CODE							NVARCHAR(10)
+                                                ,	ORG_CODE							NVARCHAR(10)
+                                                ,	APPROVAL_NUMBER						NVARCHAR(50)
+                                                ,	ITEM_SEQUENCE						BIGINT
                                                 ,	SUPPLIER_CODE                       NVARCHAR(10)  
                                                 ,	SUPPLIER_NAME                       NVARCHAR(240)         
 	                                            ,	MATERIAL_CODE                       NVARCHAR(40)
                                                 ,	MARKET_CODE							NVARCHAR(30)
                                                 ,	CURRENCY_CODE						NVARCHAR(3)
                                                 ,	BASE_PRICE							DECIMAL(34,10)
+                                                ,	BASE_PRICE_TYPE_CODE				NVARCHAR(30)
+                                                ,   PYEAR_DEC_BASE_CURRENCY_CODE        NVARCHAR(3)
+                                                ,   PYEAR_DEC_BASE_PRICE				DECIMAL(34,10)
+                                                ,   PYEAR_DEC_CI_RATE				    DECIMAL(34,10)
+                                                ,   QUARTER_BASE_CURRENCY_CODE          NVARCHAR(3)
+                                                ,   QUARTER_BASE_PRICE				    DECIMAL(34,10)
+                                                ,   QUARTER_CI_RATE				        DECIMAL(34,10)
 	                                            )
 )
 LANGUAGE SQLSCRIPT
@@ -28,35 +41,72 @@ SQL SECURITY INVOKER
 AS
 BEGIN
      
-			O_DETAILS =
-				SELECT		it.tenant_id 
-						,	it.company_code
-                        ,	it.org_type_code
-                        ,	it.org_code
-                        ,	it.supplier_code
-                        ,   sm.supplier_local_name as supplier_name
-						,	it.material_code
-                        ,	it.market_code
-                        ,   bpm.currency_code
-                        ,   bpm.base_price
+    /* 사용자 정의 Exception */
+    DECLARE V_USER_EXCEPTION CONDITION FOR SQL_ERROR_CODE 19999;
 
-		    	FROM    :I_DETAILS as it 
-		    
-		    	LEFT JOIN SP_NP_BASE_PRICE_MST bpm             /*  기준단가 마스터 */
-		               ON it.tenant_id              = bpm.tenant_id
-                      AND it.company_code           = bpm.company_code
-                      AND it.org_type_code          = bpm.org_type_code
-                      AND it.org_code               = bpm.org_code
-                      AND it.supplier_code          = bpm.supplier_code
-                      AND it.material_code          = bpm.material_code
-                      AND it.market_code            = bpm.market_code
-                      AND bpm.apply_start_yyyymm   <= TO_VARCHAR (NOW(), 'YYYYMM')
-                      AND bpm.apply_end_yyyymm     >= TO_VARCHAR (NOW(), 'YYYYMM')
-                      AND bpm.use_flag = true
+    /* 사용자 정의 Exception시, 종료 처리 : 이전 Exception Catch 부분에서 결과 메시지 등록 됨. */
+    DECLARE EXIT HANDLER FOR V_USER_EXCEPTION
+    BEGIN
+        -- 아무것도 하지 않습니다.
+    END;
 
-		        LEFT JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요  */
-                	   ON it.tenant_id        = sm.tenant_id
-                      AND it.supplier_code    = sm.supplier_code
-			;
-                                   
+    BEGIN
+        /* 해당 Block에서 Exception 발생시, 사용자 정의 Exception 발생 시킴. */
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            O_RETURN_CODE = 'E';
+            O_RETURN_MSG  = '조회오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
+            SIGNAL V_USER_EXCEPTION;
+        END;
+
+        O_DETAILS =
+            SELECT		it.tenant_id 
+                    ,	it.company_code
+                    ,	it.org_type_code
+                    ,	it.org_code
+                    ,	it.approval_number
+                    ,	it.item_sequence   
+                    ,	it.supplier_code
+                    ,   sm.supplier_local_name as supplier_name
+                    ,	it.material_code
+                    ,	it.market_code
+                    ,   bpm.currency_code
+                    ,   bpm.base_price
+                    ,   pad.base_price_type_code
+                    ,   pad.pyear_dec_base_currency_code
+                    ,   pad.pyear_dec_base_price
+                    ,   pad.pyear_dec_ci_rate
+                    ,   pad.quarter_base_currency_code
+                    ,   pad.quarter_base_price
+                    ,   pad.quarter_ci_rate
+
+            FROM    :I_DETAILS as it 
+        
+            LEFT JOIN SP_NP_NET_PRICE_APPROVAL_DTL pad      /*  단가품의 상세 */
+                   ON it.tenant_id              = pad.tenant_id
+                  AND it.company_code           = pad.company_code
+                  AND it.org_type_code          = pad.org_type_code
+                  AND it.org_code               = pad.org_code
+                  AND it.approval_number        = pad.approval_number
+                  AND it.item_sequence          = pad.item_sequence
+
+            LEFT JOIN SP_NP_BASE_PRICE_MST bpm              /*  기준단가 마스터 */
+                   ON it.tenant_id              = bpm.tenant_id
+                  AND it.company_code           = bpm.company_code
+                  AND it.org_type_code          = bpm.org_type_code
+                  AND it.org_code               = bpm.org_code
+                  AND it.supplier_code          = bpm.supplier_code
+                  AND it.material_code          = bpm.material_code
+                  AND it.market_code            = bpm.market_code
+                  AND bpm.apply_start_yyyymm   <= TO_VARCHAR (NOW(), 'YYYYMM')
+                  AND bpm.apply_end_yyyymm     >= TO_VARCHAR (NOW(), 'YYYYMM')
+                  AND bpm.use_flag = true
+
+            LEFT JOIN SP_SM_SUPPLIER_MST sm                 /*  SUPPLIER  */
+                   ON it.tenant_id              = sm.tenant_id
+                  AND it.supplier_code          = sm.supplier_code
+        ;
+        O_RETURN_CODE = 'OK';
+        O_RETURN_MSG  = '';
+    END;                          
 END

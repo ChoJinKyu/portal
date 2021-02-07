@@ -34,23 +34,34 @@ service NpApprovalDetailPriceV4Service {
         company_code                    : String(10)    ; // '회사코드'
         org_type_code                   : String(2)     ; // '구매운영조직유형'
         org_code                        : String(10)    ; // '구매운영조직코드'
+        approval_number                 : String(50)    ; 
+        item_sequence                   : Integer64     ;   
         supplier_code                   : String(15)    ; 
         material_code                   : String(40)    ; 
         market_code                     : String(30)    ; 
     }
 
-    /* */
+    /*  */
     type outTableType : {
         tenant_id                       : String(5)     ; // 'L1100'
         company_code                    : String(10)    ; // '회사코드'
         org_type_code                   : String(2)     ; // '구매운영조직유형'
         org_code                        : String(10)    ; // '구매운영조직코드'
+        approval_number                 : String(50)    ; 
+        item_sequence                   : Integer64     ;   
         supplier_code                   : String(15)    ; 
         supplier_name                   : String(240)   ; 
         material_code                   : String(40)    ; 
         market_code                     : String(30)    ; 
         currency_code                   : String(3)     ; 
         base_price                      : Decimal(34,10); 
+        base_price_type_code            : String(30)    ; 
+        pyear_dec_base_currency_code    : String(3)     ;
+        pyear_dec_base_price            : Decimal(34,10); 
+        pyear_dec_ci_rate               : Decimal(34,10); 
+        quarter_base_currency_code      : String(3)     ;
+        quarter_base_price              : Decimal(34,10);
+        quarter_ci_rate                 : Decimal(34,10);
     };
 
     /* */
@@ -62,6 +73,8 @@ service NpApprovalDetailPriceV4Service {
 
     /*  */
     type ResultType : {
+        return_code     : String(5);
+        return_msg      : String(4000);
         outDetails      : array of outTableType;
     };
 

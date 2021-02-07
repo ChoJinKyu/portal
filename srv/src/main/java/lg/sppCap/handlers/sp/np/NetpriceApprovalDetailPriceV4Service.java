@@ -62,6 +62,8 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
                         .append(" I_TENANT_ID => ?")
                         .append(",I_LANGUAGE_CODE => ?")
                         .append(",I_DETAILS => ").append( detailTableName )
+                        .append(",O_RETURN_CODE => ?")
+                        .append(",O_RETURN_MSG => ?")
                         .append(",O_DETAILS => ? ")
                         .append(")");
 
@@ -69,22 +71,35 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
             paramList.add(new SqlParameter("I_TENANT_ID"                    , Types.VARCHAR));       
             paramList.add(new SqlParameter("I_LANGUAGE_CODE"                , Types.VARCHAR));    
 
+            paramList.add(new SqlOutParameter("O_RETURN_CODE"               , Types.VARCHAR));
+            paramList.add(new SqlOutParameter("O_RETURN_MSG"                , Types.VARCHAR));
+
             SqlReturnResultSet oReturnTable = new SqlReturnResultSet("O_DETAILS", new RowMapper<OutTableType>(){
                 @Override
                 public OutTableType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
 
                     OutTableType v_row = OutTableType.create();
                     try{
-                        v_row.setTenantId(v_rs.getString("tenant_id"));
-                        v_row.setCompanyCode(v_rs.getString("company_code"));
-                        v_row.setOrgTypeCode(v_rs.getString("org_type_code"));
-                        v_row.setOrgCode(v_rs.getString("org_code"));
-                        v_row.setSupplierCode(v_rs.getString("supplier_code"));
-                        v_row.setSupplierName(v_rs.getString("supplier_name"));
-                        v_row.setMaterialCode(v_rs.getString("material_code"));
-                        v_row.setMarketCode(v_rs.getString("market_code"));
-                        v_row.setCurrencyCode(v_rs.getString("currency_code"));
-                        v_row.setBasePrice(v_rs.getBigDecimal("base_price"));
+                        v_row.setTenantId           (v_rs.getString("tenant_id"));
+                        v_row.setCompanyCode        (v_rs.getString("company_code"));
+                        v_row.setOrgTypeCode        (v_rs.getString("org_type_code"));
+                        v_row.setOrgCode            (v_rs.getString("org_code"));
+                        v_row.setApprovalNumber     (v_rs.getString("approval_number"));
+                        v_row.setItemSequence       (v_rs.getLong("item_sequence"));
+                        v_row.setSupplierCode       (v_rs.getString("supplier_code"));
+                        v_row.setSupplierName       (v_rs.getString("supplier_name"));
+                        v_row.setMaterialCode       (v_rs.getString("material_code"));
+                        v_row.setMarketCode         (v_rs.getString("market_code"));
+                        v_row.setCurrencyCode       (v_rs.getString("currency_code"));
+                        v_row.setBasePrice          (v_rs.getBigDecimal("base_price"));
+                        v_row.setBasePriceTypeCode  (v_rs.getString("base_price_type_code"));
+
+                        v_row.setPyearDecBaseCurrencyCode  (v_rs.getString("pyear_dec_base_currency_code"));
+                        v_row.setPyearDecBasePrice  (v_rs.getBigDecimal("pyear_dec_base_price"));
+                        v_row.setPyearDecCiRate     (v_rs.getBigDecimal("pyear_dec_ci_rate"));
+                        v_row.setQuarterBaseCurrencyCode  (v_rs.getString("quarter_base_currency_code"));
+                        v_row.setQuarterBasePrice   (v_rs.getBigDecimal("quarter_base_price"));
+                        v_row.setQuarterCiRate      (v_rs.getBigDecimal("quarter_ci_rate"));
 
                         v_outTableArr.add(v_row);
 
@@ -95,6 +110,7 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
                     return v_row;
                 }
             });
+            
             paramList.add(oReturnTable);
 
 /*
@@ -127,6 +143,11 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
 
             log.info(">>>>>>>>>>>>>>> ResultMap : {}", resultMap );
 
+            String resultCode = (String)resultMap.get("O_RETURN_CODE");
+            String resultMsg  = (String)resultMap.get("O_RETURN_MSG");
+
+            vResult.setReturnCode(resultCode);
+            vResult.setReturnMsg(resultMsg);
             vResult.setOutDetails(v_outTableArr);
 
         }finally{
@@ -157,6 +178,8 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
                     .append(",COMPANY_CODE                NVARCHAR(10)")
                     .append(",ORG_TYPE_CODE               NVARCHAR(2)")
                     .append(",ORG_CODE                    NVARCHAR(10)")
+                    .append(",APPROVAL_NUMBER			  NVARCHAR(50)")
+                    .append(",ITEM_SEQUENCE				  BIGINT")
                     .append(",SUPPLIER_CODE               NVARCHAR(10)")
                     .append(",MATERIAL_CODE               NVARCHAR(40)")
                     .append(",MARKET_CODE                 NVARCHAR(30)")
@@ -164,7 +187,7 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
                     .toString()
                     );
 
-        String insertSql = "INSERT INTO " + tableName + " VALUES (?,?,?,?,? ,?,?)";
+        String insertSql = "INSERT INTO " + tableName + " VALUES (?,?,?,?,? ,?,?,?,?)";
 
         //Local Temp Table에 insert                        
         List<Object[]> batchDtl = new ArrayList<Object[]>();
@@ -173,18 +196,17 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
                 batchDtl.add( new Object[] {                        
                      vRow.get("tenant_id")                  
                     ,vRow.get("company_code")                 
-                    ,vRow.get("org_type_code")   
-                    ,vRow.get("org_code")                  
+                    ,vRow.get("org_type_code")
+                    ,vRow.get("org_code")
+                    ,vRow.get("approval_number")
+                    ,vRow.get("item_sequence")     
                     ,vRow.get("supplier_code")                  
                     ,vRow.get("material_code")           
                     ,vRow.get("market_code")                     	
-                    	
                 });
             }
         }
         jdbc.batchUpdate(insertSql, batchDtl);  
         return tableName;
     }
-
-
 }
