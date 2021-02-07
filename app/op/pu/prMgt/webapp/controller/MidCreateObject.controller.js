@@ -14,6 +14,7 @@ sap.ui.define([
 	"sap/ui/model/FilterOperator",
     "sap/ui/model/Sorter",
     "sap/ui/core/Fragment",
+    "sap/ui/core/ValueState",
     "sap/f/LayoutType",
     "sap/m/MessageBox",
     "sap/m/MessageToast", 
@@ -27,15 +28,17 @@ sap.ui.define([
     "cm/util/control/ui/PurOperationOrgDialog",
     "dp/util/control/ui/MaterialOrgDialog",
     "op/util/control/ui/AccountDialog",
+    "op/util/control/ui/AssetDialog",
     "op/util/control/ui/CctrDialog",
     "op/util/control/ui/CurrencyDialog",
+    "op/util/control/ui/OrderDialog",
     "op/util/control/ui/UomDialog",
     "op/util/control/ui/WbsDialog",
     "sp/util/control/ui/SupplierDialog"
 ], function (BaseController, ManagedListModel, ManagedModel, Validator, DateFormatter, NumberFormatter, CodeValueHelp, 
             JSONModel, ODataModel, History, RichTextEditor, Filter, FilterOperator, Sorter,
-            Fragment ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label,
-            EmployeeDialog, PlantDialog, PurOperationOrgDialog, MaterialOrgDialog, AccountDialog, CctrDialog, CurrencyDialog, UomDialog, WbsDialog, SupplierDialog) {
+            Fragment, ValueState ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label,
+            EmployeeDialog, PlantDialog, PurOperationOrgDialog, MaterialOrgDialog, AccountDialog, AssetDialog, CctrDialog, CurrencyDialog, OrderDialog, UomDialog, WbsDialog, SupplierDialog) {
             
     "use strict";
     
@@ -779,8 +782,8 @@ sap.ui.define([
          */
         _fnTableValidator: function(tableId){
             var oView = this.getView(),
-                that = this;
-            
+                that = this; 
+            var oDisplayData = this.getModel("contModel").getProperty("/DisplayFlag");            
             var oViewModel = this.getModel("viewModel");
             var oViewData = $.extend(true, {}, oViewModel.getData());
 
@@ -792,43 +795,96 @@ sap.ui.define([
             console.log("##### _fnTableValidator - bReturn > " + bReturn);
 
             if(!bReturn){
-                MessageToast.show(that.getModel("I18N").getText("/ECM01002"));
+                //MessageToast.show(that.getModel("I18N").getText("/ECM01002"));
+                //MessageToast.show("필수 값을 입력해 주세요.");
                 bReturn = true;
             }
 
+            var sI18N_ECM01002 = that.getModel("I18N").getText("/ECM01002") + "\r\n";
+            var msg = that.getModel("I18N").getText("/ECM01002") + "\r\n";
+            var oTable = oView.byId(tableId);
+            var aViewDataPrDtl = oViewData.Pr_Dtl;
+            if(aViewDataPrDtl.length > 0){
+                aViewDataPrDtl.some(function(itemDtl, idx){                    
+                    var oMetadata = itemDtl["__metadata"] || {};
 
-            // var oTable = oView.byId(tableId);
-            // var aViewDataPrDtl = oViewData.Pr_Dtl;
-            // if(aViewDataPrDtl.length > 0){
-            //     aViewDataPrDtl.some(function(item, idx){
-            //         if(item["org_code"] === null || item["org_code"] === ""){
-            //             var msg = that.getModel("I18N").getText("/ECM01002");
-            //             msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/ORG_CODE") + ")";
-            //             MessageToast.show(msg);
-            //             bReturn = false;
-            //             return bReturn;
-            //         }
-            //         if(item["pr_desc"] === null || item["pr_desc"] === ""){
-            //             var msg = that.getModel("I18N").getText("/ECM01002");
-            //             msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/PR_ITEM_NAME") + ")";
-            //             MessageToast.show(msg);
-            //             bReturn = false;
-            //             return bReturn;
-            //         }
-            //         if(item["price_unit"] !== null && item["price_unit"] !== "" && item["price_unit"] > 10000){
-            //             var msg = that.getModel("I18N").getText("/LIMIT_EXCEEDED");
-            //             msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/PRICE_UNIT") + ")";
-            //             MessageToast.show(msg);
-            //             bReturn = false;
-            //             return bReturn;
-            //         }
+                    for(var key in itemDtl){
+                        let sI18NText = that.getModel("I18N").getText("/" + key.toUpperCase());
+                        let oDisplayFlaDtl = oDisplayData.OP_PU_PR_DTL[key.toUpperCase()];
+                        let oDisplayFlaSer = oDisplayData.OP_PU_PR_SERVICE[key.toUpperCase()];
+                        let oDisplayFlaAcc = oDisplayData.OP_PU_PR_ACCOUNT[key.toUpperCase()];
+                        if(oDisplayFlaDtl && oDisplayFlaDtl.mandatory_column_flag && itemDtl[key] === ""){
+                            msg += "\r\n- " + (idx+1) + "번째 열의 " + (sI18NText?sI18NText:key.toUpperCase()); 
+                            oMetadata._valueStates[key] = {
+                                valueState: ValueState.Error,
+                                valueStateText: sI18N_ECM01002
+                            };                     
+                            bReturn = false;
+                        }else if(oDisplayFlaSer && oDisplayFlaSer.mandatory_column_flag && itemDtl[key] === ""){
+                            msg += "\r\n- " + (idx+1) + "번째 열의 " + that.getModel("I18N").getText("/" + key.toUpperCase());   
+                            oMetadata._valueStates[key] = {
+                                valueState: ValueState.Error,
+                                valueStateText: sI18N_ECM01002
+                            };                     
+                            bReturn = false;
+                        }else if(oDisplayFlaAcc && oDisplayFlaAcc.mandatory_column_flag && itemDtl[key] === ""){
+                            msg += "\r\n- " + (idx+1) + "번째 열의 " + that.getModel("I18N").getText("/" + key.toUpperCase());   
+                            oMetadata._valueStates[key] = {
+                                valueState: ValueState.Error,
+                                valueStateText: sI18N_ECM01002
+                            }; 
+                            bReturn = false;
+                        }
+                    }
 
-            //         console.log("item : " + item.key + " : " + item.value);
-            //         for(var key in item){
-            //             console.log("item : " + key.toUpperCase() + " : " + item[key]);                        
-            //         }
-            //     });
-            // }
+
+
+                    // let keyName = item.key;
+                    // let oDisplayFlag = oDisplayData[keyName.toUpperCase()];
+
+                    // if(oDisplayFlag.mandatory_column_flag && item[keyName] === ""){
+                    //     msg += "\r\n- " + (idx+1) + "번째 열의 " + that.getModel("I18N").getText("/" + keyName.toUpperCase());            
+                    //     bReturn = false;
+                    //     return true;
+                    // }
+
+                    // if(item["org_code"] === null || item["org_code"] === ""){
+                    //     msg += "\r\n- " + (idx+1) + "번째 열의 " + that.getModel("I18N").getText("/ORG_CODE");            
+                    //     bReturn = false;
+                    //     return true;
+                    // }
+
+
+                    // if(item["pr_desc"] === null || item["pr_desc"] === ""){
+                    //     var msg = that.getModel("I18N").getText("/ECM01002");
+                    //     msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/PR_ITEM_NAME") + ")";
+                    //     MessageToast.show(msg);
+                    //     bReturn = false;
+                    //     return bReturn;
+                    // }
+                    // if(item["price_unit"] !== null && item["price_unit"] !== "" && item["price_unit"] > 10000){
+                    //     var msg = that.getModel("I18N").getText("/LIMIT_EXCEEDED");
+                    //     msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/PRICE_UNIT") + ")";
+                    //     MessageToast.show(msg);
+                    //     bReturn = false;
+                    //     return bReturn;
+                    // }
+
+                    // console.log("item : " + item.key + " : " + item.value);
+                    // for(var key in item){
+                    //     console.log("item : " + key.toUpperCase() + " : " + item[key]);                        
+                    // }
+                });
+
+                if(!bReturn){
+                    MessageBox.error(msg, {
+                        actions: MessageBox.Action.CLOSE
+                    });
+                }                
+            } else {
+                MessageToast.show("품목을 추가해 주세요.");
+                bReturn = false;
+            }
 
             return bReturn;
 
@@ -855,7 +911,6 @@ sap.ui.define([
             //     // }
                 
             // });
-
         },
 
 
@@ -1081,17 +1136,6 @@ sap.ui.define([
         onCancelButtonPress: function () {
             this._fnNavigationMainPage();
         },
-        
-        /**
-         * Dialog Close
-         */
-        // onClose: function (oEvent) {
-        //     var sFragmentName = oEvent.getSource().data("fragmentName");
-        //     this[sFragmentName].then(function(oDialog) {
-        //         oDialog.close();
-        //     });
-        // },
-
 
         //==================== OP 공통 Dialog 호출 ====================
         onValueHelpRequest: function() {
@@ -1101,6 +1145,51 @@ sap.ui.define([
             var oViewModel = this.getModel("viewModel");
             var oSelectedData = oViewModel.getProperty(sSelectedPath);
             
+            // Asset number
+            action == "asset_number"
+            &&
+            this.dialog(new AssetDialog({
+                title: "Choose a Asset number",
+                MultiSelection: false,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id),
+                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code)
+                    ],
+                    sorters: [
+                        new Sorter("asset_number")
+                    ]
+                }
+            }), function(result) {
+                var oItemData = result.getParameter("item");
+                if(oItemData.asset_number && oItemData.asset_number !== ""){
+                    oSelectedData.asset_number = oItemData.asset_number;                    
+                    oViewModel.refresh();
+                }            
+            });
+
+            // Order number
+            action == "order_number"
+            &&
+            this.dialog(new OrderDialog({
+                title: "Choose a Order number",
+                MultiSelection: false,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id),
+                        new Filter("company_code", FilterOperator.EQ, this.$session.company_code)
+                    ],
+                    sorters: [
+                        new Sorter("order_number")
+                    ]
+                }
+            }), function(result) {
+                var oItemData = result.getParameter("item");
+                if(oItemData.order_number && oItemData.order_number !== ""){
+                    oSelectedData.order_number = oItemData.order_number;                    
+                    oViewModel.refresh();
+                }            
+            });
 
             // WBS 코드
             action == "wbs_code"
