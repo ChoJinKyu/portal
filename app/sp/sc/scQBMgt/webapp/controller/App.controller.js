@@ -9,6 +9,9 @@ sap.ui.define([
 
 		return Controller.extend("sp.sc.scQBMgt.controller.App", {
 			onInit: function () {
+                // apply content density mode to root view
+                this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
+                
                 this.getOwnerComponent().getRouter().navTo("mainPage", {} );
 
 			}

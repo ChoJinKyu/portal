@@ -447,7 +447,7 @@
                                                 entitySet="NegoHeaders>/Items" 
                                                 tableBindingPath="NegoHeaders>/Items"
                                                 beforeRebindTable="beforeRebindTable"
-                                                
+                                                ignoreFromPersonalisation="_row_state_,Suppliers"
                                                 requestAtLeastFields="pr_number,pr_approve_number,line_type_code,material_code,material_desc,specification,bpa_price,detail_net_price,recommend_info,group_id,vendor_pool_code,specific_supplier_count,request_quantity,uom_code,maturity_date,currency_code,response_currency_code,exrate_type_code,exrate_date,bidding_start_net_price,bidding_start_net_price,bidding_target_net_price,current_price"
 
                                                 initiallyVisibleFields="pr_number,pr_approve_number,line_type_code,material_code,material_desc,specification,bpa_price,detail_net_price,recommend_info,group_id,vendor_pool_code,specific_supplier_count,request_quantity,uom_code,maturity_date,currency_code,response_currency_code,exrate_type_code,exrate_date,bidding_start_net_price,bidding_start_net_price,bidding_target_net_price,current_price"
@@ -506,12 +506,12 @@
                                                             </t:template>
                                                         </t:Column>
                                                         <t:Column width="5rem" hAlign="Center" >
-                                                            <Label text="{I18N>SUPPLIERS_TITLE}" />
+                                                            <Label text="{I18N>/SUPPLIERS_TITLE}" />
                                                             <t:template>
                                                                 <Button icon="sap-icon://account" press="onLoadSuppliers" />
                                                             </t:template>
                                                         </t:Column>
-                                                        <t:Column width="20rem" hAlign="Center">
+                                                        <t:Column width="11rem" hAlign="Center">
                                                             <Label text="Operating Org" required="true" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center" >
@@ -770,12 +770,13 @@
                                                             <Label text="납기요청일" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <!-- <DatePicker 
+                                                                    <DatePicker 
                                                                             valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd" visible="{=${propInfo>/isEditMode}}"
                                                                             value="{path: 'NegoHeaders>/maturity_date', type: 'sap.ui.model.odata.type.Date', 
-                                                                                    formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" /> -->
+                                                                                    formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" />
                                                                     <!-- <Input value="{NegoHeaders>maturity_date}" visible="{=${propInfo>/isEditMode}}"/> -->
-                                                                    <Text text="{NegoHeaders>maturity_date}" />
+                                                                    <Text text="{path: 'NegoHeaders>/maturity_date', type: 'sap.ui.model.odata.type.Date', 
+                                                                        formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>

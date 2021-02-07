@@ -36,7 +36,7 @@
                         <ColumnListItem >
                             <cells>
                                 <Text text="Currency"/>
-                                <ComboBox items="{
+                                <ComboBox id="comboBoxCurrency" items="{
                                         path: 'common>/Currency', 
                                         templateShareable:true, 
                                         filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}],
@@ -73,7 +73,7 @@
                                 <Text text="납기 요청일"/>
                                 <DatePicker id="datePickerMaturitydate"
                                     valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd" 
-                                    value="{path: 'NegoHeaders>/maturity_date', type: 'sap.ui.model.odata.type.Date', 
+                                    value="{type: 'sap.ui.model.odata.type.Date', 
                                             formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" />
                             </cells>
                         </ColumnListItem>
