@@ -245,6 +245,15 @@ sap.ui.define([
             var sRequestDepartment = this.getView().byId("searchRequestDepartmentS").getValue(),
                 sRequestor = this.getView().byId("searchRequestorS").getValue();
 
+            var found1 = sRequestDepartment.match(/\((.*?)\)/);
+            if (found1) {
+                sRequestDepartment = found1[1];
+            }
+            var found2 = sRequestor.match(/\((.*?)\)/);
+            if (found2) {
+                sRequestor = found2[1];
+            }
+
             var aSearchFilters = [];
 
             if (sLoiNumber.length > 0) {
@@ -266,11 +275,11 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("request_date", FilterOperator.BT, this.getFormatDate(requestFromDate), this.getFormatDate(requestToDate)));
             }
 
-            if(sRequestDepartment && sRequestDepartment.length > 0){
-                aSearchFilters.push(new Filter("tolower(request_department_code)", FilterOperator.Contains, "'"+sRequestDepartment.toLowerCase()+"'"));
+            if (sRequestDepartment && sRequestDepartment.length > 0) {
+                aSearchFilters.push(new Filter("request_department_code", FilterOperator.EQ, sLoiNumber));
             }
-            if(sRequestor && sRequestor.length > 0){
-                aSearchFilters.push(new Filter("tolower(requestor_empno)", FilterOperator.Contains, "'"+sRequestor.toLowerCase()+"'"));
+            if (sRequestor && sRequestor.length > 0) {
+                aSearchFilters.push(new Filter("requestor_empno", FilterOperator.EQ, sLoiNumber));
             }
 
             if (status) {
