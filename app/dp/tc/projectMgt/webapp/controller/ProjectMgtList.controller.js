@@ -45,10 +45,15 @@ sap.ui.define([
             this.setModel(new JSONModel(), "updateModel");
             let oGlobalData = {tenant_id : "L2100", user_id : "A60262"};
             this.getOwnerComponent().getModel("globalModel").setData(oGlobalData);
-            //this.getRouter().getRoute("ProjectMgtList").attachPatternMatched(this.onPatternMatched, this);
+            this.getRouter().getRoute("ProjectMgtList").attachPatternMatched(this.onPatternMatched, this);
         }
 
-        , onPatternMatched: function() {
+        , onPatternMatched: function(oEvent) {
+            //최초 조회를 default 로 하진 않지만, step progress 중 목록보기로 온 경우 재조회 하여 data refresh 한다.
+            var aListData = this.getModel("listModel").getData();
+            if(aListData.results && aListData.results.length > 0) {
+                this.onSearch();
+            }
         }
 
         /**
@@ -284,12 +289,13 @@ sap.ui.define([
          * @param {object} _oTable
          */
         , _getSelectedIndex: function(_oTable) {
+            var oI18nModel = this.getModel("I18N");
             if(!_oTable) { alert("invalid Table!"); }
             
             var iIdx = _oTable.getSelectedIndex();
             
             if(iIdx < 0) {
-                MessageToast.show("데이터가 선택되지 않았습니다.", {at: "center center"});
+                MessageToast.show(oI18nModel.getText("/NCM01008"), {at: "center center"});//데이터를 선택해 주세요.
                 return -1;
             }
             return iIdx;
@@ -437,7 +443,7 @@ sap.ui.define([
         , onGoalPopClose: function (oEvent) {
             this._oDialogTableSelect.then(function (oDialog) {
                 //this.getView().byId("detailPopupTable").clearSelection();
-                var oTable = sap.ui.core.Fragment.byId("fragmentProjectSelection","detailPopupTable")
+                var oTable = sap.ui.core.Fragment.byId("fragmentProjectSelection","detailPopupTable");
                 if(oTable) {
                     oTable.clearSelection();
                 }
@@ -458,8 +464,9 @@ sap.ui.define([
         * 재료비 작성
         */
         , onDialogCreatePress: function (oEvent) {
-            MessageBox.confirm("작성 하시겠습니까?", {
-                title : "작성",
+            var oI18nModel = this.getModel("I18N");
+            MessageBox.confirm(oI18nModel.getText("/NDP40004", [oI18nModel.getText("/WRITE")]), {
+                title : oI18nModel.getText("/WRITE"),
                 initialFocus : MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
                     if (sButton === MessageBox.Action.OK) {
@@ -515,14 +522,13 @@ sap.ui.define([
                         detailParam.version_number = data.version_number;
                         this._goCreateView(detailParam);
                     } else {
-                        //MessageToast.show("생성 실패 하였습니다.", {at: "Center Center"});
                         MessageToast.show(data.return_msg, {at: "Center Center"});
                     }
                 }.bind(this),
                 error: function(e){
                     console.log("error", e);
                     let eMessage = JSON.parse(e.responseText).error.message;
-                    MessageBox.show("생성 실패 하였습니다.\n\n" + "["+eMessage+"]", {at: "Center Center"});
+                    MessageBox.show("failed.\n\n" + "["+eMessage+"]", {at: "Center Center"});
                 }
             });
 
@@ -609,49 +615,57 @@ sap.ui.define([
         }
 
         , onExcludeCalSavePress: function() {
+            var oI18nModel = this.getModel("I18N");
             var oApplyData = this.getModel("updateModel").getProperty("/");
             if(oApplyData.mcst_excl_flag && !oApplyData.mcst_excl_reason) {
-                MessageToast.show("제외 사유를 입력하세요.", {at: "center center"});
+                MessageToast.show(oI18nModel.getText("/EDP40001", oI18nModel.getText("/EXCLUSION_REASON")), {at: "center center"});//{0}을(를) 입력하세요.
                 return;
             }
             
-            let oParam = {
-                oODataModel : this.getModel(),
-                inData : oApplyData,// 저장할 데이터 row
-                sEntityName : "Project",
-                bOnlyField : true
-            };
-            var oProjectData = this._fnGetEntityFromMetadata(oParam);
-            oProjectData.mcst_excl_flag = this.getModel("updateModel").getProperty("/mcst_excl_flag");
-            oProjectData.mcst_excl_reason = this.getModel("updateModel").getProperty("/mcst_excl_reason");
+            MessageBox.confirm(oI18nModel.getText("/NCM00001"), {
+                title : "Save",
+                initialFocus : sap.m.MessageBox.Action.CANCEL,
+                onClose : function(sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        let oParam = {
+                            oODataModel : this.getModel(),
+                            inData : oApplyData,// 저장할 데이터 row
+                            sEntityName : "Project",
+                            bOnlyField : true
+                        };
+                        var oProjectData = this._fnGetEntityFromMetadata(oParam);
+                        oProjectData.mcst_excl_flag = this.getModel("updateModel").getProperty("/mcst_excl_flag");
+                        oProjectData.mcst_excl_reason = this.getModel("updateModel").getProperty("/mcst_excl_reason");
 
-            // if(oProjectData.mcst_excl_flag) {
-            //     oProjectData.mcst_excl_reason = this.getModel("updateModel").getProperty("/mcst_excl_reason");
-            // } else {
-            //     oProjectData.mcst_excl_reason = "";    
-            // } 
-                
-            var oKey = {
-                tenant_id : oProjectData.tenant_id,
-                company_code : oProjectData.company_code,
-                project_code : oProjectData.project_code,
-                model_code : oProjectData.model_code
-            }
-            var oDataModel = this.getModel();
-            var sCreatePath = oDataModel.createKey("/Project", oKey);
+                        // if(oProjectData.mcst_excl_flag) {
+                        //     oProjectData.mcst_excl_reason = this.getModel("updateModel").getProperty("/mcst_excl_reason");
+                        // } else {
+                        //     oProjectData.mcst_excl_reason = "";    
+                        // } 
+                            
+                        var oKey = {
+                            tenant_id : oProjectData.tenant_id,
+                            company_code : oProjectData.company_code,
+                            project_code : oProjectData.project_code,
+                            model_code : oProjectData.model_code
+                        }
+                        var oDataModel = this.getModel();
+                        var sCreatePath = oDataModel.createKey("/Project", oKey);
 
-            oDataModel.update(sCreatePath, oProjectData, {
-                success: function(data){
-                    MessageBox.show("적용되었습니다.", {at: "Center Center"});
-                    this.onSearch();
-                    this.byId("dialogExclusion").close();
+                        oDataModel.update(sCreatePath, oProjectData, {
+                            success: function(data){
+                                MessageToast.show(oI18nModel.getText("/NCM01001"), {at: "Center Center"});//
+                                this.onSearch();
+                                this.byId("dialogExclusion").close();
 
-                }.bind(this),
-                error: function(data){
-                    console.log('error',data)
-                }
+                            }.bind(this),
+                            error: function(data){
+                                console.log('error',data)
+                            }
+                        });            
+                    }
+                }.bind(this)
             });
-            
         }
 
         /**
