@@ -245,7 +245,7 @@
                                                         path: 'detailModel>org_Plant'
                                                         }">
                                                 <items>
-                                                    <core:Item key="{detailModel>plant_code}" text="{detailModel>plant_code}" />
+                                                    <core:Item key="{detailModel>plant_code}" text="{detailModel>plant_code}[{detailModel>plant_name}]" />
                                                 </items>
                                             </ComboBox>
                                         </t:template>
@@ -299,7 +299,7 @@
                                         <Label text="{I18N>/BASE_PRICE}" textAlign="Center" width="100%" required="true"/>
                                         <t:template>
                                             <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>base_price}" 
-                                                type="Number" change=".onOnlyNumber(${detailModel>base_price})"/>
+                                                type="Number" change=""/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">

@@ -542,6 +542,12 @@ sap.ui.define([
             var oApproverModel = this.getModel("approverModel");
             var oApproverData = oApproverModel.getData();
             var aApproverList = oApproverData.details;
+
+            if(aApproverList.length === 0){
+                 MessageBox.show("결재자가 없습니다. ");
+                 return;
+            }
+
             aApproverList.forEach(function(oPrice, idx) {
                 var oNewApproverObj = {};
                     oNewApproverObj['tenant_id'] = oData.tenant_id;
@@ -557,7 +563,16 @@ sap.ui.define([
                     oNewApproverObj['create_user_id'] = oData.create_user_id;
                     oNewApproverObj['update_user_id'] = oData.create_user_id;
                 aViApproverType.push(oNewApproverObj);
+
+                for (var i=0; i<=aViApproverType.length-1; i++){
+                    if (!aApproverList[idx].empNo){
+                        MessageBox.show("결재자가 없습니다. ");
+                        return;
+                    }
+                }
             });
+
+            
 
             /**
              * SP_VI_BASE_PRICE_APRL_INSERT_PROC -> SP_VI_BASE_PRICE_APRL_REFERER_TYPE
@@ -599,6 +614,12 @@ sap.ui.define([
             var aPriceResult = [];
             var aPriceData = oData.details;
             var oRootModel = this.getModel("rootModel");
+
+            if(aPriceData.length === 0){
+                MessageBox.show("기준단가 목록이 필요합니다. ");
+                return;
+            }
+
             aPriceData.forEach(function(oPrice, idx) {
                 var strArray = aPriceData[idx].apply_start_date.replace(" ","");
                     strArray = strArray.split('.');
@@ -675,6 +696,12 @@ sap.ui.define([
 
                 if (!aPriceData[i].supply_plant){
                     MessageBox.show("공급업체코드는 필수입니다. ");
+                    return;
+                }
+
+                var OnlyNumber = this.onOnlyNumber(aPriceData[i].base_uom_code);
+                if(OnlyNumber){
+                    MessageBox.show("숫자만 입력 가능합니다.");
                     return;
                 }
             
@@ -979,12 +1006,16 @@ sap.ui.define([
         }
 
 
+        /**
+         *  숫자만 입력 
+         */
         , onOnlyNumber : function (val){
             var regex= /^[0-9]/g;
             if( !regex.test(val) ){
-                MessageBox.show("숫자만입력가능합니다.");
-                return;
+                //MessageBox.show("숫자만 입력 가능합니다.");
+                return true;
             }
+            return false;
         }
   });
 });

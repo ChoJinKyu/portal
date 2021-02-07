@@ -115,6 +115,41 @@ sap.ui.define([
             let today = new Date();
             let year = today.getFullYear();
             
+            var sApply_start_date = "";
+            var sApply_end_date = "";
+            var sBusiness_division = "";
+            var sCorporation = "";
+            var sPlant = "";
+            var sSupplier_code = "";
+            var sSupplier = "";
+            var sMaterial_code = "";
+            var sMaterial = "";
+            var sVendor_pool_code = "";
+            var sVendor_pool = "";
+            var sCurrency = "";
+            var sBase_uom_code = "";
+            var sBase_price = "";
+            var sBuyer = "";
+
+            // if(!aDetails[0].apply_start_date){
+
+            //     sApply_start_date = aDetails[0].apply_start_date;
+            //     sApply_end_date = aDetails[0].apply_end_date;
+            //     sBusiness_division = aDetails[0].business_division;
+            //     sCorporation = aDetails[0].corporation;
+            //     sPlant = aDetails[0].plant;
+            //     sSupplier_code = aDetails[0].supplier_code;
+            //     sSupplier = aDetails[0].supplier;
+            //     sMaterial_code = aDetails[0].material_code;
+            //     sMaterial = aDetails[0].material;
+            //     sVendor_pool_code = aDetails[0].vendor_pool_code;
+            //     sVendor_pool = aDetails[0].vendor_pool;
+            //     sCurrency = aDetails[0].currency;
+            //     sBase_uom_code = aDetails[0].base_uom_code;
+            //     sBase_price = aDetails[0].base_price;
+            //     sBuyer = aDetails[0].buyer;
+            // }
+
 
             aDetails.push({
                         row_state : "edit", 
@@ -122,21 +157,21 @@ sap.ui.define([
                         line_no : line_no,
                         management : selected,
                         base_year : year,
-                        apply_start_date : "",
-                        apply_end_date : "",
-                        business_division : "",
-                        corporation : "",
-                        plant : "",
-                        supplier_code : "",
-                        supplier : "",
-                        material_code : "",
-                        material : "",
-                        vendor_pool_code : "",
-                        vendor_pool : "",
-                        currency : "",
-                        base_uom_code : "",
-                        base_price : "",
-                        buyer : ""
+                        apply_start_date : sApply_start_date,
+                        apply_end_date : sApply_end_date,
+                        business_division : sBusiness_division,
+                        corporation : sCorporation,
+                        plant : sPlant,
+                        supplier_code : sSupplier_code,
+                        supplier : sSupplier,
+                        material_code : sMaterial_code,
+                        material : sMaterial,
+                        vendor_pool_code : sVendor_pool_code,
+                        vendor_pool : sVendor_pool,
+                        currency : sCurrency,
+                        base_uom_code : sBase_uom_code,
+                        base_price : sBase_price,
+                        buyer : sBuyer
                         });
             oModel.refresh();
 
@@ -265,7 +300,6 @@ sap.ui.define([
             }
 
         }
-
 
         /**
          * 시세의 경우 적용시작월 선택시 적종종료월이 적용시작월로 픽스(수정불가)
@@ -498,16 +532,14 @@ sap.ui.define([
             var aViMst = [oViMst];
 
             if (!oViMst.approval_title){
-                    MessageBox.show("품의서 제목은 필수입니다.");
-                    return;
+                MessageBox.show("품의서 제목은 필수입니다.");
+                return;
             }
 
             if (!oViMst.approval_contents){
-                    MessageBox.show("품의서 설명은 필수입니다.");
-                    return;
+                MessageBox.show("품의서 설명은 필수입니다.");
+                return;
             }
-
-
             /**
              * SP_VI_BASE_PRICE_APRL_INSERT_PROC -> SP_VI_BASE_PRICE_APRL_APPROVER_TYPE
              */
@@ -515,6 +547,10 @@ sap.ui.define([
             var oApproverModel = this.getModel("approverModel");
             var oApproverData = oApproverModel.getData();
             var aApproverList = oApproverData.details;
+            if(aApproverList.length === 0){
+                 MessageBox.show("결재자가 없습니다. ");
+                 return;
+            }
             aApproverList.forEach(function(oPrice, idx) {
                 var oNewApproverObj = {};
                     oNewApproverObj['tenant_id'] = oData.tenant_id;
@@ -530,7 +566,15 @@ sap.ui.define([
                     oNewApproverObj['create_user_id'] = oData.create_user_id;
                     oNewApproverObj['update_user_id'] = oData.create_user_id;
                 aViApproverType.push(oNewApproverObj);
-            });
+
+                    for (var i=0; i<=aViApproverType.length-1; i++){
+                        if (!aApproverList[idx].empNo){
+                            MessageBox.show("결재자가 없습니다. ");
+                            return;
+                        }
+                    }
+                    
+                });
 
             /**
              * SP_VI_BASE_PRICE_APRL_INSERT_PROC -> SP_VI_BASE_PRICE_APRL_REFERER_TYPE
@@ -572,6 +616,11 @@ sap.ui.define([
             var aPriceResult = [];
             var aPriceData = oData.details;
             var oRootModel = this.getModel("rootModel");
+            if(aPriceData.length === 0){
+                MessageBox.show("기준단가 목록이 필요합니다. ");
+                return;
+            }
+            
             aPriceData.forEach(function(oPrice, idx) {
                 var strArray = aPriceData[idx].apply_start_date.replace(" ","");
                     strArray = strArray.split('.');
@@ -620,7 +669,7 @@ sap.ui.define([
                 aPriceResult.push(oNewPriceObj);
             });
 
-             for (var i=0; i<=aPriceResult.length-1; i++){
+            for (var i=0; i<=aPriceResult.length-1; i++){
                 if (!aPriceResult[i].bizdivision_code){
                     MessageBox.show("사업부코드는 필수입니다.");
                     return;
@@ -655,7 +704,11 @@ sap.ui.define([
                     MessageBox.show("가격단위는 필수입니다. ");
                     return;
                 }
-
+                var OnlyNumber = this.onOnlyNumber(aPriceData[i].base_uom_code);
+                if(OnlyNumber){
+                    MessageBox.show("숫자만 입력 가능합니다.");
+                    return;
+                }
 
                 var nAfterBase_year = Number(aPriceResult[i].base_year) + 1;
                 if( aPriceResult[i].apply_start_yyyymm < aPriceResult[i].base_year+"01"){
@@ -993,9 +1046,10 @@ sap.ui.define([
         , onOnlyNumber : function (val){
             var regex= /^[0-9]/g;
             if( !regex.test(val) ){
-                MessageBox.show("숫자만 입력 가능합니다.");
-                return;
+                //MessageBox.show("숫자만 입력 가능합니다.");
+                return true;
             }
+            return false;
         }
   });
 });

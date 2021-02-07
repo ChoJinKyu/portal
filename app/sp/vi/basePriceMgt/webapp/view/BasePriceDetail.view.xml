@@ -300,7 +300,7 @@
                                         <Label text="{I18N>/BASE_PRICE}" textAlign="Center" width="100%" required="true"/>
                                         <t:template>
                                             <Input editable="{= ${detailModel>row_state} === 'edit' }" value="{detailModel>base_price}" 
-                                                type="Number" change=".onOnlyNumber(${detailModel>base_price})"/>
+                                                type="Number" change=""/>
                                         </t:template>
                                     </t:Column>
                                     <t:Column hAlign="Left" width="8rem">
