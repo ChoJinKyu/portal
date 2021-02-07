@@ -145,13 +145,13 @@ entity Sc_Pur_Operation_Org as
 /******************* For NegoHeaders-operation_unit_code ***************************/
 /******************* For NegoItemPrices-operation_unit_code ************************/
 /* 
-// #Sc_Pur_Operation_Org == Pur_Org_Type_Mapping[process_type_code='SP03:견적입찰'] = Pur_Operation_Org =+ Code_Lng[group_code='CM_ORG_TYPE_CODE']
+// #Sc_Vp_Vendor_Pool_Mst == Pur_Org_Type_Mapping[process_type_code='SP03:견적입찰'] = Vp_Vendor_Pool_Mst =+ Code_Lng[group_code='CM_ORG_TYPE_CODE']
 // #How to use : as association
-using { sp.Sc_Pur_Operation_Org } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
-        operation_org : association to Sc_Pur_Operation_Org 
-            on operation_org.tenant_id = $projection.tenant_id
-            and operation_org.company_code = $projection.company_code
-            and operation_org.operation_org_code = $projection.operation_unit_code
+using { sp.Sc_Vp_Vendor_Pool_Mst } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+        vendor_pool_mst : association to Sc_Pur_Operation_Org 
+            on vendor_pool_mst.tenant_id = $projection.tenant_id
+            and vendor_pool_mst.company_code = $projection.company_code
+            and vendor_pool_mst.operation_org_code = $projection.operation_unit_code
             ; 
 */
 
@@ -163,8 +163,48 @@ using {pg.Vp_Vendor_Pool_Mst} from '../../pg/vp/PG_VP_VENDOR_POOL_MST-model.cds'
 //     key org_type_code
 // } where process_type_code = 'SP03' and use_flag = TRUE;
 
-@cds.autoexpose  // Sc_Pur_Operation_Org = Pur_Org_Type_View[process_type_code='SP03:견적입찰'] + Pur_Operation_Org + Code_Lng[group_code='CM_ORG_TYPE_CODE']
-entity Sc_Vp_Vendor_Pool_Mst as select from Vp_Vendor_Pool_Mst
+@cds.autoexpose  
+entity Sc_Vp_Vendor_Pool_Mst as select from Vp_Vendor_Pool_Mst VPM
+    inner join Pur_Org_Type_Mapping as POTM
+        on ( POTM.tenant_id = VPM.tenant_id
+            and map(POTM.company_code,'*','*',VPM.company_code) = POTM.company_code                  //10,000,000,000 8951 ms
+            and POTM.org_type_code = VPM.org_type_code
+            ) 
+            and POTM.use_flag = TRUE
+            and POTM.process_type_code = 'SP03'
+    {
+        KEY VPM.tenant_id                         ,
+        KEY VPM.company_code                      ,
+        KEY VPM.org_code                          ,
+        KEY VPM.vendor_pool_code                  ,
+            VPM.org_type_code                     ,
+            map( substring($user.locale,1,2), 'en', VPM.vendor_pool_english_name, VPM.vendor_pool_local_name ) 
+                as vendor_pool_name : Vp_Vendor_Pool_Mst:vendor_pool_local_name ,
+            // VPM.vendor_pool_local_name            ,
+            // VPM.vendor_pool_english_name          ,
+            VPM.repr_department_code              ,
+            VPM.operation_unit_code               ,
+            VPM.inp_type_code                     ,
+            VPM.mtlmob_base_code                  ,
+            VPM.regular_evaluation_flag           ,
+            VPM.industry_class_code               ,
+            VPM.sd_exception_flag                 ,
+            VPM.vendor_pool_apply_exception_flag  ,
+            VPM.maker_material_code_mngt_flag     ,
+            VPM.domestic_net_price_diff_rate      ,
+            VPM.dom_oversea_netprice_diff_rate    ,
+            VPM.equipment_grade_code              ,
+            VPM.equipment_type_code               ,
+            VPM.vendor_pool_use_flag              ,
+            VPM.vendor_pool_desc                  ,
+            VPM.vendor_pool_history_desc          ,
+            VPM.parent_vendor_pool_code           ,
+            VPM.leaf_flag                         ,
+            VPM.level_number                      ,
+            VPM.display_sequence                  ,
+            VPM.register_reason                   ,
+            VPM.approval_number
+    }
     excluding {
         local_create_dtm,
         local_update_dtm,
