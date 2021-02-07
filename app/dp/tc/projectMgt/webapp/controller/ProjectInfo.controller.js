@@ -7,18 +7,21 @@ sap.ui.define([
   "ext/lib/util/Multilingual",
   "sap/ui/model/Filter",
   "sap/ui/model/FilterOperator",
-  "sap/m/MessageBox"
+  "sap/m/MessageBox",
+  "sap/m/MessageToast"
 ],
-  function (BaseController, JSONModel, ManagedListModel, DateFormatter, NumberFormatter, Multilingual, Filter, FilterOperator, MessageBox) {
+  function (BaseController, JSONModel, ManagedListModel, DateFormatter, NumberFormatter, Multilingual, Filter, FilterOperator, MessageBox, MessageToast) {
     "use strict";
 
     return BaseController.extend("dp.tc.projectMgt.controller.ProjectInfo", {
          dateFormatter: DateFormatter
         , numberFormatter: NumberFormatter
-
+        , oUerInfo : {user_id : "A60262"}
+        , I18N : null
         , onInit: function () {
             let oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
+            this.I18N = this.getModel("I18N");
             // this.setModel(new JSONModel(), "detailModel");
             // this.setModel(new JSONModel(), "eventsModel");
             // this.setModel(new JSONModel(), "priceModel")
@@ -110,16 +113,17 @@ sap.ui.define([
                     console.log("_sendSaveData", data);
                     //debugger;
                     if(data.return_code === "OK") {
-                        MessageBox.show("적용되었습니다.", {at: "Center Center"});
+                        //MessageBox.show("적용되었습니다.", {at: "Center Center"});
+                        MessageToast.show(this.I18N.getText("/NCM01001"), {at: "center center"});//저장하였습니다.
                         this._getProjectDetail();
                     } else {
-                        MessageBox.show("저장 실패 하였습니다.", {at: "Center Center"});
+                        MessageBox.show(this.I18N.getText("/ECM01502", this.I18N.getText("/SAVE")), {at: "center center"});//{0} 처리에 실패하였습니다.
                     }
                 }.bind(this),
                 error: function(e){
                     console.log("error", e);
                     let eMessage = JSON.parse(e.responseText).error.message;
-                    MessageBox.show("저장 실패 하였습니다.\n\n" + "["+eMessage+"]", {at: "Center Center"});
+                    MessageBox.show(this.I18N.getText("/ECM01502", this.I18N.getText("/SAVE")) + "["+eMessage+"]", {at: "center center"});
                 }
             });
         }
@@ -190,28 +194,6 @@ sap.ui.define([
             });
 
             var aPriceResult = [];
-            /*$.each(aPriceData.datas, function(idx, oPrice) {
-                if(oData.hasOwnProperty(oPrice.addition_type_code.toLowerCase())) {
-                    var aAddition = oData[oPrice.addition_type_code.toLowerCase()].results;
-                    $.each(Object.keys(oPrice), function(idx2, sKey) {
-                        $.each(aAddition, function(idx3, oAddition) {
-                            if(!oAddition.addition_type_code) {
-                                    return true;
-                            } else if(oAddition.period_code === sKey) {
-                                aPriceResult.push({
-                                    tenant_id           : oAddition.tenant_id,
-                                    project_code        : oAddition.project_code,
-                                    model_code          : oAddition.model_code,
-                                    addition_type_code  : oAddition.addition_type_code,
-                                    period_code         : oAddition.period_code,
-                                    addition_type_value : oPrice[sKey]                                
-                                });
-                                return false;
-                            }
-                        });
-                    })
-                }
-            });*/
             aPriceData.datas.forEach(function(oPrice, idx) {
                 var aKeys = Object.keys(oPrice);
                 aKeys.forEach(function(sKey, idx2) {
@@ -252,7 +234,7 @@ sap.ui.define([
                     tcPjtSimilarModel : aSimModelResult,
                     tcPjtAddInfo      : aPriceResult,
                     tcPjtBaseExrate   : aBaseExtractResult,
-                    user_id           : "A60262"                   
+                    user_id           : this.oUerInfo.user_id
                 }
             };
 
@@ -266,8 +248,8 @@ sap.ui.define([
          * 저장
          */
         , onSavePress: function (oEvent) {
-            MessageBox.confirm("저장 하시겠습니까?", {
-                title : "저장",
+            MessageBox.confirm(this.I18N.getText("/NCM00001"), {//저장 하시겠습니까?
+                title : "Save",
                 initialFocus : MessageBox.Action.CANCEL,
                 onClose : function(sButton) {
                     if (sButton === MessageBox.Action.OK) {
@@ -330,14 +312,16 @@ sap.ui.define([
                 if(oMtlmob[0].hasOwnProperty("uom_code")) {
                     oMtlmob.unshift({"period_code" : "uom_code", "addition_type_value" : oMtlmob[0].uom_code});
                 }
-                oMtlmob.unshift({"period_code" : "구분", "addition_type_value" : "예상물동", "addition_type_copde" : oMtlmob.addition_type_copde});
+                //oMtlmob.unshift({"period_code" : "구분", "addition_type_value" : "예상물동", "addition_type_copde" : oMtlmob.addition_type_copde});
+                oMtlmob.unshift({"period_code" : this.I18N.getText("/APPLY_TYPE"), "addition_type_value" : this.I18N.getText("/ESTIMATED_MTLMOB"), "addition_type_copde" : oMtlmob.addition_type_copde});
                 aPriceData = this._reCompositData(oMtlmob, "period_code", "addition_type_value");
             }
             if(oSalesPrice.length > 0) {
                 if(oSalesPrice[0].hasOwnProperty("uom_code")) {
                     oSalesPrice.unshift({"period_code" : "uom_code", "addition_type_value" : oSalesPrice[0].uom_code});
                 }
-                oSalesPrice.unshift({"period_code" : "구분", "addition_type_value" : "판가"});
+                //oSalesPrice.unshift({"period_code" : "구분", "addition_type_value" : "판가"});
+                oSalesPrice.unshift({"period_code" : this.I18N.getText("/APPLY_TYPE"), "addition_type_value" : this.I18N.getText("/SALES_PRICE")});
                 if(!aPriceData.hasOwnProperty("datas")) {
                     aPriceData = this._reCompositData(oSalesPrice, "period_code", "addition_type_value");
                 } else {
@@ -348,7 +332,8 @@ sap.ui.define([
                 if(oPrcsCost[0].hasOwnProperty("uom_code")) {
                     oPrcsCost.unshift({"period_code" : "uom_code", "addition_type_value" : oPrcsCost[0].uom_code});
                 }
-                oPrcsCost.unshift({"period_code" : "구분", "addition_type_value" : "가공비"});
+                //oPrcsCost.unshift({"period_code" : "구분", "addition_type_value" : "가공비"});
+                oPrcsCost.unshift({"period_code" : this.I18N.getText("/APPLY_TYPE"), "addition_type_value" : this.I18N.getText("/PROCESSING_COST")});
                 if(!aPriceData.hasOwnProperty("datas")) {
                     aPriceData = this._reCompositData(oPrcsCost, "period_code", "addition_type_value");
                 } else {
@@ -360,7 +345,8 @@ sap.ui.define([
                 if(oSgna[0].hasOwnProperty("uom_code")) {
                     oSgna.unshift({"period_code" : "uom_code", "addition_type_value" : oSgna[0].uom_code});
                 }
-                oSgna.unshift({"period_code" : "구분", "addition_type_value" : "판관비"});
+                //oSgna.unshift({"period_code" : "구분", "addition_type_value" : "판관비"});
+                oSgna.unshift({"period_code" : this.I18N.getText("/APPLY_TYPE"), "addition_type_value" : this.I18N.getText("/SGNA")});
                 if(!aPriceData.hasOwnProperty("datas")) {
                     aPriceData = this._reCompositData(oSgna, "period_code", "addition_type_value");
                 } else {
@@ -376,7 +362,8 @@ sap.ui.define([
                 this._factoryTableColumns("tblPrice_edit", false);
             }
             //환율
-            var aExchange = this._reCompositMultiRowData(oBaseExtra, "currency_code", "period_code", "exrate", {"name" : "구분", "data" : "currency_code"});
+            //var aExchange = this._reCompositMultiRowData(oBaseExtra, "currency_code", "period_code", "exrate", {"name" : "구분", "data" : "currency_code"});
+            var aExchange = this._reCompositMultiRowData(oBaseExtra, "currency_code", "period_code", "exrate", {"name" : this.I18N.getText("/APPLY_TYPE"), "data" : "currency_code"});
             this.setModel(new JSONModel(aExchange), "exchangeModel");
             this._factoryTableColumns("tblExchange", true);
             this._factoryTableColumns("tblExchange_edit", false);
@@ -434,16 +421,16 @@ sap.ui.define([
                     newObj.uom_code = oData.uom_code;
                 }
                 if(sKey === "uom_code") {
-                    aCols.push({name: sKey, text: "단위"});//다국어 처리 필요
+                    aCols.push({name: sKey, text: this.I18N.getText("/UNIT")});//단위
                 } else {
                     aCols.push({name: sKey, text: sKey});
                 }
-            });
+            }.bind(this));
             if(Object.keys(newObj).length > 0 && newObj.constructor === Object) {
                 aDatas.push(newObj);
             }
             if(aCols.length === 0) {
-                aCols.push({name: '구분', text: '구분'});
+                aCols.push({name: this.I18N.getText("/APPLY_TYPE"), text: this.I18N.getText("/APPLY_TYPE")});
             }
             return {columns: aCols, datas: aDatas};
         }
@@ -491,7 +478,7 @@ sap.ui.define([
                                     });
                                 } else {
                                     //return new sap.m.Input({value : "{"+ sModelName +">" + column.name + "}"})
-                                    if(column.name === "구분") {// 나중에 별도 property 값을 적용해서 구분하게 변경 할 것.
+                                    if(column.name === this.I18N.getText("/APPLY_TYPE")) {// 구분
                                         return new sap.m.Text({text : "{"+ sModelName +">" + column.name + "}"})
                                     } else if(column.name === "uom_code") {
 

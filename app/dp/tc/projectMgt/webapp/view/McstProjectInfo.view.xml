@@ -60,7 +60,7 @@
                         key="3" />
                 </items>
                 <content>
-                    <VBox width="100%" class="sapUiTinyMarginTop">
+                    <VBox width="100%">
                         <form:SimpleForm  
                             editable="true"
                             layout="ResponsiveGridLayout"
@@ -168,16 +168,18 @@
                             </VBox>
 
                             <!--Image-->
+                            <VBox class="sapUiSmallMarginTop">
                             <Image 
                                 ariaDetails="detailsActiveImage" class="sapUiLargeMarginBegin"
                                 src="https://www.lgchem.com/upload/file/lifein-lgchem/BGT_main.jpg"
                                 decorative="false"
                                 width="10em"
                                 height="10em">            
+                            </Image>
                                 <layoutData>
                                     <layout:GridData span="XL4 L4 M4 S12" />
-                                </layoutData>                    
-                            </Image>
+                                </layoutData>
+                            </VBox>
                             </form:content>
                         </form:SimpleForm>
                     </VBox>                        

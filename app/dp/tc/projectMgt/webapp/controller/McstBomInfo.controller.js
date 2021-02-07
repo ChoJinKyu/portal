@@ -187,7 +187,9 @@ sap.ui.define([
                 let sPath = oCnxt.getPath();
                 let oRow = oTable.getModel("partListModel").getProperty(sPath);
                 if(oRow.mapping_id) {
-                    MessageToast.show("맵핑된 데이터가 있습니다. 맵핑 삭제 후 데이터 삭제가 가능합니다.", {at: "center center"});
+                    // MessageToast.show("맵핑된 데이터가 있습니다. 맵핑 삭제 후 데이터 삭제가 가능합니다.", {at: "center center"});
+                    MessageToast.show(this.I18N.getText("/NDP40001"), {at: "center center"});//이미 매핑된 자재가 있습니다. 매핑정보를 먼저 삭제하십시오.
+
                     validFlag = false;
                     return false;
                 }
@@ -243,7 +245,7 @@ sap.ui.define([
                     var bDupl = false;
                     $.each(aPartList, function(nIdx, oRow) {
                         if(oRow._row_state_ !== "D" && oRow.material_code === rtData.material_code) {
-                            MessageToast.show(this.I18N.getText("/ECM01501", [this.I18N.getText("/MATERIAL_CODE")]), {at: "center center"});
+                            MessageToast.show(this.I18N.getText("/ECM01501", [this.I18N.getText("/MATERIAL_CODE")]), {at: "center center"});//{0} 이(가) 이미 등록되어 있습니다.
                             bDupl = true;
                             return false;
                         }
@@ -326,12 +328,12 @@ sap.ui.define([
             if(this.getModel("bomMappingModel")) {
                 this.getModel("bomMappingModel").setData({});
             }
-            var sNum = oEvent.getSource().getText();
+            //var sNum = oEvent.getSource().getText();
+            // if(!sNum) {
+            //     MessageToast.show("Need Change Code!", {at : "center center"});
+            //     return;
+            // }
             var oCnxt = oEvent.getSource().getParent().getRowBindingContext();
-            if(!sNum) {
-                MessageToast.show("Need Change Code!", {at : "center center"});
-                return;
-            }
             var oTable = this.byId("tblPartListTable");
             oTable.setBusy(true);
             let oDataModel = this.getModel("mcstBomMgtModel");//McstBomMgtService V2 OData Service
@@ -701,26 +703,30 @@ sap.ui.define([
                 nNewCnt = oRow.change_info_code === "New" ? nNewCnt + 1 : nNewCnt;
 
                 if(oRow.change_info_code != "Old" && oRow.change_info_code != "New") {
-                    MessageToast.show("선택한 데이터의 변경정보를 확인해 주세요.", {at: "center center"});
+                    //MessageToast.show("선택한 데이터의 변경정보를 확인해 주세요.", {at: "center center"});
+                    MessageToast.show(this.I18N.getText("/NDP40003"), {at: "center center"});//변경정보가 New&Old인 자재만 매핑할 수 있습니다.(1:N 또는 N:1 매핑가능)
                     rtFlag = false;
                     return false;
                 }
 
                 if(oRow.mapping_id) {
-                    MessageToast.show("선택한 데이터 중 이미 Mapping 된 데이터가 있습니다.", {at: "center center"});
+                    //MessageToast.show("선택한 데이터 중 이미 Mapping 된 데이터가 있습니다.", {at: "center center"});
+                    MessageToast.show(this.I18N.getText("/NDP40002"), {at: "center center"});//이미 매핑된 자재가 있습니다.
                     rtFlag = false;
                     return false;
                 }
 
                 if(nOldCnt > 1 && nNewCnt > 1) {
-                    MessageToast.show("Mapping 대상 데이터의 Old/New 모두 복수 선택될 수 없습니다.", {at: "center center"});
+                    //MessageToast.show("Mapping 대상 데이터의 Old/New 모두 복수 선택될 수 없습니다.", {at: "center center"});
+                    MessageToast.show(this.I18N.getText("/NDP40003"), {at: "center center"});//변경정보가 New&Old인 자재만 매핑할 수 있습니다.(1:N 또는 N:1 매핑가능)
                     rtFlag = false;
                     return false;
                 }
-            });
+            }.bind(this));
 
             if(rtFlag && (nOldCnt === 0 || nNewCnt === 0)) {
-                MessageToast.show("Mapping 대상 데이터의 Old/New 는 최소 하나 이상이어야 합니다.", {at: "center center"});
+                //MessageToast.show("Mapping 대상 데이터의 Old/New 는 최소 하나 이상이어야 합니다.", {at: "center center"});
+                MessageToast.show(this.I18N.getText("/NDP40003"), {at: "center center"});//변경정보가 New&Old인 자재만 매핑할 수 있습니다.(1:N 또는 N:1 매핑가능)
                 rtFlag = false;
             }
 
