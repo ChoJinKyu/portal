@@ -78,8 +78,8 @@ sap.ui.define([
             },
             onPressAriba: function(e){
                 MessageToast.show("BP사와 FM사에서 Interface 업무항목 정의 작업중입니다.");
-                debugger;
-                return;
+                // debugger;
+                // return;
                 var oModel = this.getView().getModel();
                 async function _read(oModel){
                     var promise = jQuery.Deferred();	
@@ -94,6 +94,28 @@ sap.ui.define([
                     });
                     return promise;	
                 };
+
+
+                // var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/Sc_Nego_Prog_Status_Code_View";
+                var url = "pg/mi/miPrice/webapp/srv-api/odata/v4/pg.marketIntelligenceService/MIMaterialPriceManagementView";
+                
+                    var ak = $.ajax({
+                        url: url,
+                        type: "GET",
+                        async: false,
+                        contentType: "application/json",
+                        success: function(data){
+                            // this.oRead = data.value;
+                            
+                                this._NegoStatusCode = data.value;
+                            debugger;
+                            return data.value;
+                        },
+                        error: function(e){
+                            
+                        }
+                    }, this);
+                
 
                 // async function _readR(oModel){
                 //     var result = await _read(oModel);
@@ -506,6 +528,7 @@ sap.ui.define([
 
             },
             beforeRebindTable:function(e){
+                
                 // test 시작
                 // var oView = this.getView();
                 // var url = "sp/sc/scQBMgt/webapp/srv-api/odata/v4/sp.sourcingV4Service/NegoItemPrices?&$expand=Header($expand=nego_progress_status,award_progress_status)";
