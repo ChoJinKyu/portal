@@ -126,6 +126,9 @@ service NpApprovalDetailService {
                	    AND cd.code        = MAP(pam.tentprc_flag,false,'N',true,'T')
 			    )  AS net_price_type_name 
 
+            ,   pam.effective_start_date
+            ,   pam.effective_end_date
+
         FROM SP_NP_NET_PRICE_APPROVAL_MST   pam
         
         INNER JOIN CM_SPP_USER_SESSION_VIEW  ssi
