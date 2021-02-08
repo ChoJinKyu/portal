@@ -417,7 +417,7 @@
                     text="(미정)공사물량"
                     type="Transparent"
                     press=".onButtonPress($event, 'service', ${detail>/Pr_ReviewDtlView}, {
-                        action: 'XXXXX',
+                        action: 'undefined',
                         service: 'op.prReviewMgtV4Service',
                         entry: 'CallPrReviewSaveProc'
                     })"
@@ -427,7 +427,8 @@
                     text="(미정)변경이력"
                     type="Transparent"
                     press=".onButtonPress($event, 'service', ${detail>/Pr_ReviewDtlView}, {
-                        action: 'XXXXX',
+                        action: 'CHANGE_HISTORY',
+                        title: '(미정)변경이력',
                         service: 'op.prReviewMgtV4Service',
                         entry: 'CallPrReviewSaveProc'
                     })"
@@ -437,7 +438,7 @@
                     text="(미정)발주이력"
                     type="Transparent"
                     press=".onButtonPress($event, 'service', ${detail>/Pr_ReviewDtlView}, {
-                        action: 'XXXXX',
+                        action: 'undefined',
                         service: 'op.prReviewMgtV4Service',
                         entry: 'CallPrReviewSaveProc'
                     })"
@@ -447,7 +448,7 @@
                     text="(미정)사용실적"
                     type="Transparent"
                     press=".onButtonPress($event, 'service', ${detail>/Pr_ReviewDtlView}, {
-                        action: 'XXXXX',
+                        action: 'undefined',
                         service: 'op.prReviewMgtV4Service',
                         entry: 'CallPrReviewSaveProc'
                     })"

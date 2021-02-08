@@ -354,6 +354,7 @@
                                                     maxLength : 240
                                                 }
                                             }" 
+                                            fieldGroupIds="detailRequired"
                                             editable="{=
                                                 ${viewModel>/App/EditMode}
                                             }"
@@ -367,6 +368,7 @@
                                                     maxLength : 100
                                                 }
                                             }" 
+                                            fieldGroupIds="detailRequired"
                                             editable="{=
                                                 ${viewModel>/App/EditMode}
                                             }"
@@ -380,6 +382,7 @@
                                                     maxLength : 100
                                                 }
                                             }"
+                                            fieldGroupIds="detailRequired"
                                             editable="{=
                                                 ${viewModel>/App/EditMode}
                                             }"
@@ -393,6 +396,7 @@
                                                     scale : 0
                                                 }
                                             }" 
+                                            fieldGroupIds="detailRequired"
                                             editable="{=
                                                 ${viewModel>/App/EditMode}
                                             }"

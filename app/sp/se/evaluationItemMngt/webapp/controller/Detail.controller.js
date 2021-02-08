@@ -129,12 +129,14 @@ sap.ui.define([
              */
             , _onPatternMatched: function (e) {
                 var oArgs, oComponent, oViewModel,
-                    oView, aControls, oTable, oDetailData;
+                    oView, aControls, oTable, oDetailData,
+                    sAppLayout;
 
                 oArgs = e.getParameter("arguments");
                 oComponent = this.getOwnerComponent();
                 oViewModel = oComponent.getModel("viewModel");
                 oView = this.getView();
+                sAppLayout = oViewModel.getProperty("/App/layout");
 
                 oMasterPage = oComponent.byId("Master");
                 if(oMasterPage){
@@ -146,8 +148,12 @@ sap.ui.define([
                 if(!oDetailData){
                     oDetailData = {};
                 }
+
+                
+
                 if( oArgs.new === "Y" ){
                     // 신규건인지 확인
+                    // oViewModel.setProperty("/App/layout", sAppLayout === "OneColumn" ? "TwoColumnsBeginExpanded" : sAppLayout);
                     oViewModel.setProperty("/App/layout", "TwoColumnsBeginExpanded");
                     aControls = oView.getControlsByFieldGroupId("newRequired");
                     this._clearValueState(aControls);
@@ -157,7 +163,7 @@ sap.ui.define([
                     oViewModel.setProperty("/Detail", oDetailData);
 
                     if(oDynamicPage){
-                        oDynamicPage.setHeaderExpanded(true);
+                        oDynamicPage.setHeaderExpanded(false);
                     }
                     return;
                 }
@@ -168,7 +174,7 @@ sap.ui.define([
                 }
                 oDetailData.Header = {};
                 oViewModel.setProperty("/Detail", oDetailData);
-                oViewModel.setProperty("/App/layout", "TwoColumnsMidExpanded");
+                oViewModel.setProperty("/App/layout", sAppLayout === "OneColumn" ? "TwoColumnsMidExpanded" : sAppLayout);
                 
                 var oMasterPage, oDynamicPage;
 

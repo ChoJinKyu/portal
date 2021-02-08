@@ -125,7 +125,7 @@ sap.ui.define([
 
         open: function (sSearchObj) {
             this.oSearchObj = sSearchObj;
-            console.log("sSearchObj:" + sSearchObj);
+
             if (!this.oDialog) {
                 this.openWasRequested = true;
                 return;
@@ -135,6 +135,7 @@ sap.ui.define([
             //     this.oSupplierCodePop.setValue(null);
             //     this.oSupplierCodePop.setValue(this.oSearchObj.supplierCode);
             // }
+
             //this.loadData();
             this.oDialog.open();
         }

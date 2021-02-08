@@ -7,6 +7,8 @@ using sp.Sf_Funding_Invest_Plan_Dtl from '../../../../../db/cds/sp/sf/SP_SF_FUND
 //조직코드 프로세스 매핑
 using { cm.Pur_Operation_Org as cm_pur_operation_org } from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';          //조직정보
 using { cm.Pur_Org_Type_Mapping as cm_pur_org_type_mapping } from '../../../../../db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model'; //프로세스타입 정보
+using { cm.Org_Unit as cm_org_unit } from '../../../../../db/cds/cm/CM_ORG_UNIT-model'; //본부코드 마스터
+
 
 //서플라이어 마스터
 using sp.Sm_Supplier_Mst from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';
@@ -26,9 +28,28 @@ service FundingApplicationService {
     entity SfFundingInvestPlanDtl as projection on sp.Sf_Funding_Invest_Plan_Dtl;
 
 
+
     //************************************************
     // 조회관련 뷰
     //************************************************
+    //----------------------본부코드 조회 콤보 쿼리----------------------
+    view BizUnitCodeListView as
+        select	
+            distinct 
+              key op.bizunit_code
+            , ou.bizunit_name as bizunit_name : String
+        from cm_pur_operation_org as op
+        inner join cm_pur_org_type_mapping as tm 
+        on op.tenant_id = tm.tenant_id
+        and op.org_type_code = tm.org_type_code
+        left outer join cm_org_unit as ou
+        on op.bizunit_code = ou.bizunit_code
+        where map(tm.company_code, '*', op.company_code, tm.company_code) = op.company_code
+        and tm.process_type_code = 'SP07'
+        and op.use_flag = true
+        and op.bizunit_code is not null
+        ;
+
     //----------------------거래사업부(조직코드) 콤보 쿼리----------------------
     /*
     * Param: 
@@ -46,7 +67,8 @@ service FundingApplicationService {
             ,op.plant_code
             ,op.affiliate_code
             ,op.bizdivision_code
-            ,op.bizunit_code
+            ,op.bizunit_code            //본부코드
+            ,ou.bizunit_name as bizunit_name : String            //본부명
             ,op.au_code
             ,op.hq_au_code
             ,op.use_flag
@@ -54,8 +76,11 @@ service FundingApplicationService {
         inner join cm_pur_org_type_mapping as tm 
         on op.tenant_id = tm.tenant_id
         and op.org_type_code = tm.org_type_code
+        left outer join cm_org_unit as ou
+        on op.bizunit_code = ou.bizunit_code
         where map(tm.company_code, '*', op.company_code, tm.company_code) = op.company_code
         and tm.process_type_code = 'SP07'
+        and op.use_flag = true
         ;
 
 
@@ -71,7 +96,7 @@ service FundingApplicationService {
               key tenant_id
              ,key group_code
              ,key code
-             ,code_name
+             ,code_name as code_name : String
              ,language_cd
              ,sort_no
         from codeView
@@ -88,11 +113,16 @@ service FundingApplicationService {
              key fa.funding_appl_number         //자금지원 신청 번호
             ,fa.funding_notify_number           //자금지원 공고 번호
             ,fa.supplier_code                   //공급업체 코드
-            ,fa.tenant_id                       //
-            ,fa.company_code                    //
-            ,fa.org_type_code                   //
-            ,fa.org_code                        //
+            //------------조직정보------------
+            ,fa.tenant_id                       //테넌트ID
+            ,fa.company_code                    //법인코드
+            ,fa.org_type_code                   //조직유형코드
+            ,fa.org_code                        //조직코드
             ,org.org_name as org_name : String	//조직명
+            ,org.plant_code                     //플랜트코드
+            ,org.bizdivision_code               //사업부코드
+            ,org.bizunit_code                   //본부코드
+            ,ou.bizunit_name as bizunit_name : String                    //본부명
             ,fa.funding_appl_date               //자금지원 신청 일자
             ,fa.purchasing_department_name      //구매부서명(LG구매팀)
             ,fa.pyear_sales_amount              //전년매출금액
@@ -121,11 +151,13 @@ service FundingApplicationService {
 			,supp.tel_number                            //전화번호
             ,supp.mobile_phone_number                   //폰번호
         from sp.Sf_Funding_Application as fa
-        left outer join cm_pur_operation_org org 
+        left outer join cm_pur_operation_org as org 
         on fa.tenant_id = org.tenant_id 
         and fa.company_code = org.company_code
         and fa.org_type_code = org.org_type_code
         and fa.org_code = org.org_code
+        left outer join cm_org_unit as ou
+        on org.bizunit_code = ou.bizunit_code
         left outer join codeView cv_m           //상환방법 공통코드 조인
         on cv_m.tenant_id  = fa.tenant_id
         and cv_m.group_code = 'SP_SF_REPAYMENT_METHOD_CODE'
@@ -248,6 +280,8 @@ service FundingApplicationService {
             ,appl.company_code                          //회사코드
             ,appl.org_type_code                         //조직유형코드
             ,appl.org_code								//조직코드
+            ,org.bizunit_code                           //본부코드
+            ,ou.bizunit_name as bizunit_name : String   //본부명
             ,org.org_name as org_name : String			//조직명
             ,appl.supplier_code							//업체코드
             ,supp.supplier_local_name as supplier_name : String	//업체명
@@ -258,24 +292,26 @@ service FundingApplicationService {
             ,appl.funding_appl_date						//자금지원 신청일자
             ,appl.purchasing_department_name			//부서명
             ,appl.funding_appl_amount					//신청금액
-        from sp.Sf_Funding_Application appl
-        inner join sp.Sf_Funding_Notify ntfy        //공고정보 조인
+        from sp.Sf_Funding_Application as appl
+        inner join sp.Sf_Funding_Notify as ntfy        //공고정보 조인
         on appl.funding_notify_number = ntfy.funding_notify_number
         and appl.tenant_id = ntfy.tenant_id
-        inner join sp.Sm_Supplier_Mst supp          //협력사정보 조인
+        inner join sp.Sm_Supplier_Mst as supp          //협력사정보 조인
         on appl.tenant_id = supp.tenant_id
         and appl.supplier_code = supp.supplier_code
-        left outer join cm_pur_operation_org org 
+        left outer join cm_pur_operation_org as org 
         on appl.tenant_id = org.tenant_id
         and appl.company_code = org.company_code
         and appl.org_type_code = org.org_type_code
         and appl.org_code = org.org_code
-        left outer join codeView cvStep             //단계명 공통코드 조인
+        left outer join cm_org_unit as ou
+        on org.bizunit_code = ou.bizunit_code
+        left outer join codeView as cvStep             //단계명 공통코드 조인
         on   cvStep.tenant_id  = appl.tenant_id
         and  cvStep.group_code = 'SP_SF_FUNDING_STEP_CODE'
         and  cvStep.code       = appl.funding_step_code
         and  cvStep.language_cd = 'KO'
-        left outer join codeView cvStatus           //상태명 공통코드 조인
+        left outer join codeView as cvStatus           //상태명 공통코드 조인
         on   cvStatus.tenant_id  = appl.tenant_id
         and  cvStatus.group_code = 'SP_SF_FUNDING_STATUS_CODE'
         and  cvStatus.code       = appl.funding_status_code

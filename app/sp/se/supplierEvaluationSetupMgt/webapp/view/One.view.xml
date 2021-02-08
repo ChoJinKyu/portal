@@ -109,13 +109,13 @@ xmlns:flex="sap.f"
                                                             ]
                                                             }" 
                                                             editable="{=${DetailView>/isEditMode}}"
-                                                            enabled="{=${DetailView>/isEditMode}}"
                                                             selectedKeys="{DetailView>/vpOperationUnit/vendor_pool_operation_unit_code}"
                                                             fieldGroupIds="required"
                                                             required="true"    
                                                             selectionChange="onCheckLevel" 
                                                             
                                                             >
+                                                            <!-- enabled="{=${DetailView>/isEditMode}}" -->
                                                              <!-- selectionChange="onCheckLevel"      -->
                                                         <items>
                                                             <core:ListItem key="{common>code}" text="{common>code_name}" additionalText="{common>code}"/>
@@ -149,11 +149,12 @@ xmlns:flex="sap.f"
                                                         editable="{=${DetailView>/isEditMode}}"
                                                         fieldGroupIds="required"
                                                         required="true"   
-                                                        enabled="{=
-                                                                ${DetailView>/isEditMode}
-                                                              }"                                                     
+                                                                                                            
                                                         />
 
+                                                            <!-- enabled="{=
+                                                                ${DetailView>/isEditMode}
+                                                              }"  -->
                                                                 <!-- <lib-m:CodePicker id="searchCountryPicker"
                                                                 placeholder="Enter a Country name"
                                                                 keyField="user_local_name"
@@ -289,13 +290,14 @@ xmlns:flex="sap.f"
                                                                 {path: 'group_code', operator: 'EQ', value1: 'SP_SE_EVAL_EXECUTE_ROLE_CODE'}
                                                             ]
                                                             }"
-                                                            enabled="{DetailView>/isEditMode}"
+                                                            
                                                             editable="{=
                                                                 ${DetailView>/isEditMode}
                                                             }"
                                                             fieldGroupIds="required"
                                                             required="true"   
                                                             >
+                                                            <!-- enabled="{DetailView>/isEditMode}" -->
                                                             <items>
                                                                 <core:Item key="{common>code}" text="{common>code_name}" />
                                                             </items>
@@ -309,20 +311,22 @@ xmlns:flex="sap.f"
                                                             fieldGroupIds="required"
                                                             required="true" 
                                                             change="onChangeEdit"  
-
-                                                            enabled="{= ${DetailView>/isEditMode}}"
-                                                            editable="{=
-                                                                {= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}
-                                                            }"
-                                                            
+                                                            enabled="true"      
+                                                            editable="{= 
+                                                            ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false
+                                                            }"                                              
                                                             >
                                                             <!-- enabled="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}" -->
+                                                                
+                                                            
+                                                            
                                                         </Input>
                                                           <Text text="{DetailView>department_local_name}"  required="true" 
-                                                              blocked="{=
+                                                              
+                                                              />     
+                                                              <!-- blocked="{=
                                                                 !${DetailView>/isEditMode}
-                                                              }" 
-                                                              />                      
+                                                              }"                   -->
                                                     </cells>
                                                 </ColumnListItem>
                                             </items>
@@ -463,24 +467,19 @@ xmlns:flex="sap.f"
                                                     <cells>
                                                         <Text
                                                                 text="{DetailView>evaluation_type_code}" 
-                                                                blocked="{=
+                                                                />
+                                                                <!-- blocked="{=
                                                                 !${DetailView>/isEditMode}
-                                                              }"/>
+                                                              }" -->
                                                         <Text
                                                                 text="{DetailView>evaluation_type_name}" 
-                                                                blocked="{=
-                                                                !${DetailView>/isEditMode}
-                                                              }"/>
+                                                                />
                                                         <Text
                                                                 text="{DetailView>evaluation_type_distrb_score_rate}"
-                                                                blocked="{=
-                                                                !${DetailView>/isEditMode}
-                                                              }" />
+                                                                 />
                                                         <Text
                                                                 text="{= ${DetailView>use_flag}? 'Y' : 'N' }"
-                                                                blocked="{=
-                                                                !${DetailView>/isEditMode}
-                                                              }"/>  
+                                                                />  
                                                     </cells>
                                                 </ColumnListItem>
                                             </items>
@@ -567,10 +566,11 @@ xmlns:flex="sap.f"
                                                             fieldGroupIds="required"
                                                             required="true"   
                                                             change="onChangeEdit"
-                                                            blocked="{=
-                                                                !${DetailView>/isEditMode}
-                                                              }"
+                                                            
                                                             />
+                                                            <!-- blocked="{=
+                                                                !${DetailView>/isEditMode}
+                                                              }" -->
                                                         <Input   
                                                             width="100%" 
                                                             placeholder="QUANTITATIVE_ITEM_NAME"
@@ -581,9 +581,7 @@ xmlns:flex="sap.f"
                                                             fieldGroupIds="required"
                                                             required="true"
                                                             change="onChangeEdit"
-                                                            blocked="{=
-                                                                !${DetailView>/isEditMode}
-                                                              }"
+                                                            
                                                             />
 
                                                             
@@ -600,9 +598,7 @@ xmlns:flex="sap.f"
                                                             fieldGroupIds="required"
                                                             required="true"
                                                             change="onChangeEdit"
-                                                            enabled="{=
-                                                                ${DetailView>/isEditMode}
-                                                              }">
+                                                            enabled="true">
                                                             <items>
                                                                 <core:Item key="{common>code}" text="{common>code_name}" />
                                                             </items>
@@ -620,9 +616,7 @@ xmlns:flex="sap.f"
                                                             fieldGroupIds="required"
                                                             required="true"
                                                             change="onChangeEdit"
-                                                            enabled="{=
-                                                                ${DetailView>/isEditMode}
-                                                              }">
+                                                            enabled="true">
                                                             <items>
                                                                 <core:Item key="{common>code}" text="{common>code_name}" />
                                                             </items>
@@ -635,10 +629,6 @@ xmlns:flex="sap.f"
                                                                 ${DetailView>/isEditMode}  
                                                             }"
                                                             change="onChangeEdit"
-                                                            blocked="{=
-                                                                !${DetailView>/isEditMode}
-                                                              }"
-                                                            
                                                             />     
                                                         <Input   
                                                             width="100%" 
@@ -650,9 +640,7 @@ xmlns:flex="sap.f"
                                                             fieldGroupIds="required"
                                                             required="true"
                                                             change="onChangeEdit"
-                                                            blocked="{=
-                                                                !${DetailView>/isEditMode}
-                                                              }"
+                                                           
                                                         />             
                                                     </cells>
                                                 </ColumnListItem>

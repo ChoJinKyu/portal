@@ -391,8 +391,8 @@
                                     formatter: '.dateFormatter.toUTCDateString'
                                 }"/>
                                 <!-- 진행상태 -->
-                                <!-- <Text text="{path: 'list>pr_progress_status_name'}"/> -->
                                 <ObjectStatus
+                                    visible="{= !!${list>pr_progress_status_name}}"
                                     text="{path: 'list>pr_progress_status_name'}"
                                     inverted="true"
                                     active="false"
@@ -407,19 +407,6 @@
         </f:content>
         <!-- DynamicPage Footer -->
         <f:footer>
-            <OverflowToolbar>
-                <ToolbarSpacer />
-				<Button text="Save" type="Emphasized" press=".onPageSaveButtonPress" />
-				<Button text="Cancel" type="Transparent" press=".onPageCancelEditButtonPress"/>
-                 <ToolbarSpacer />
-                <Button
-                    icon="sap-icon://alert"
-                    type="Reject"
-                    text="{= ${message>/}.length }"
-                    visible="{= ${message>/}.length > 0 }"
-                    ariaHasPopup="Dialog"
-                    press=".onMessagePopoverPress" />
-            </OverflowToolbar>
         </f:footer>
     </f:DynamicPage>
 </mvc:View>

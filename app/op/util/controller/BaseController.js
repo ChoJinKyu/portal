@@ -143,9 +143,14 @@ sap.ui.define([
             // Load
             Fragment.load($.extend({}, {
                 id: view.getId(),
-                controller: (this[id] = {})
+                controller: (this[id] = {
+                    dateFormatter: DateFormatter,
+                    numberFormatter: NumberFormatter,
+                    onExcel: this.onExcel.bind(this)
+                })
             }, properties))
             .then(function(f) {
+
                 // Fragment 추가
                 view.addDependent(f);
 
@@ -238,6 +243,7 @@ sap.ui.define([
 
             var mDeferred = $.Deferred();
             (function(){
+                this.getView().setBusy(true);
                 var oDeferred = $.Deferred();
                 $.ajax({
                     url: [
@@ -272,6 +278,9 @@ sap.ui.define([
                 MessageBox.alert(e.responseText);
                 mDeferred.reject(e);
             })
+            .always((function() {
+                this.getView().setBusy(false);
+            }).bind(this));
             return mDeferred.promise();
         },
 
@@ -295,9 +304,17 @@ sap.ui.define([
             }).call(this)
             // 성공시
             .done((function (oData) {
-                this.getView().setModel(new JSONModel({
-                    [(() => entity)()]: !isSingle ? oData.results : oData.results[0]
-                }), model);
+                if (!this.getView().getModel(model)) {
+                    this.getView().setModel(new JSONModel({
+                        [(() => entity)()]: !isSingle ? oData.results : oData.results[0]
+                    }), model);
+                }
+                else {
+                    this
+                        .getView()
+                        .getModel(model)
+                        .setProperty("/"+entity,  !isSingle ? oData.results : oData.results[0]);
+                }
                 mDeferred.resolve(oData);
             }).bind(this))
             // 실패시

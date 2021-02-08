@@ -13,6 +13,7 @@ namespace dp;
 service PartActivityService {
     entity pdPartactivityTemplateView as projection on PartActivityTemplateView.Pd_Part_Activity_Template_View ;
     entity PdPartActivityTemplate as projection on partActivityTemplate.Pd_Part_Activity_Template;
+    entity PdSelectAnActivityView as projection on partActivityTemplate.Pd_Select_An_Activity_View;
     entity pdActivityMapping as projection on activityMapping.Pd_Activity_Mapping;
     entity PdPartBaseActivityLng as projection on PartBaseActivityLng.Pd_Part_Base_Activity_Lng;
     entity PdPartBaseActivity as projection on partBaseActivity.Pd_Select_An_Activity_View;

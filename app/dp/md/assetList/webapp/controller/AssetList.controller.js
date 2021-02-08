@@ -130,15 +130,13 @@ sap.ui.define([
                 oModel = this.getModel("SegmentedItem") ,
                 codeName = this.getModel('I18N').getText("/ALL")
                 ;
-            console.log("codeName >>>>", codeName);
-             var aSearchFilters = [];
+            var aSearchFilters = [];
                 aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
                 aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'DP_MD_ASSET_STATUS'));
 
 
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel("util"));
-            console.log(oModel);
             oModel.read("/Code", {
                 filters: aSearchFilters,
                 success: function (oData) {     
@@ -314,22 +312,23 @@ sap.ui.define([
 		 * @private
 		 */
         _applySearch: function (aTableSearchState) {
+            console.log("aTableSearchState >>>>>" , aTableSearchState)
+            this.setModel(new ManagedListModel(), "list");
             var oView = this.getView(),
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/MoldMstView", {
+            oModel.read("/Assets", {
                 filters: aTableSearchState,
                 success: function (oData) {
-                    this.validator.clearValueState(this.byId("moldMstTable"));
-                    oView.setBusy(false);
+                   // oView.setBusy(false);
                 }.bind(this)
             });
         },
 
         _getSearchStates: function () {
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
-                //company = this.getView().byId("searchCompany" + sSurffix).getSelectedKeys(),
+                company = this.getView().byId("searchCompany" + sSurffix).getSelectedKeys(),
                 plant = this.getView().byId("searchPlant" + sSurffix).getSelectedKeys(),
                 // status = this.getView().byId("searchStatus" + sSurffix).getSelectedKey(),
                 // //status = Element.registry.get(statusSelectedItemId).getText(),
@@ -346,10 +345,22 @@ sap.ui.define([
             var aTableSearchState = [];
             var companyFilters = [];
             var plantFilters = [];
+            var compFilters = [];
 
-            aTableSearchState.push(new Filter("mold_purchasing_type_code", FilterOperator.EQ, "L"));
+             if (company.length > 0) {
 
-            
+                company.forEach(function (item) {
+                    compFilters.push(new Filter("company_code", FilterOperator.EQ, item));
+                });
+
+                aTableSearchState.push(
+                    new Filter({
+                        filters: compFilters,
+                        and: false
+                    })
+                );
+            }
+           
 
             if (plant.length > 0) {
 

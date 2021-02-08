@@ -84,11 +84,11 @@ sap.ui.define([
                 oComboOrgCode = this.byId("orgCode");
                 oUserInfo = this._getUserSession();
                 aFilters = [
-                    new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                    new Filter("company_code", "EQ", oUserInfo.companyCode),
-                    new Filter("evaluation_op_unt_person_empno", "EQ", oUserInfo.evalPersonEmpno)
+                    // new Filter("tenant_id", "EQ", oUserInfo.tenantId),
+                    // new Filter("company_code", "EQ", oUserInfo.companyCode),
+                    // new Filter("evaluation_op_unt_person_empno", "EQ", oUserInfo.evalPersonEmpno)
                 ];
-
+                oComboOrgCode.setSelectedKey();
                 oComboOrgCode.bindItems({
                     path : "/UserEvalOrgView",
                     filters : aFilters,
@@ -105,6 +105,7 @@ sap.ui.define([
 
                         aResults = oData.results;
                         if(!aResults.length){
+                            this._bindUnitComboItem(sOrgCode);
                             return;
                         }
                         sOrgCode = aResults[0].org_code;
@@ -133,7 +134,11 @@ sap.ui.define([
                     new Filter("evaluation_op_unt_person_empno", "EQ", oUserInfo.evalPersonEmpno),
                     new Filter("org_code", "EQ", sOrgCode)
                 ];
-
+                oComboUnitCode.setSelectedKey();
+                if(!sOrgCode){
+                    this._bindEavluTypeItem();
+                    return;
+                }
                 oComboUnitCode.bindItems({
                     path : "/UserEvalUnitView",
                     filters : aFilters,
@@ -154,6 +159,7 @@ sap.ui.define([
 
                         aResults = oData.results;
                         if(!aResults.length){
+                            this._bindEavluTypeItem(sOrgCode, sEvalOperationUnitCode);
                             return;
                         }
                         sEvalOperationUnitCode = aResults[0].evaluation_operation_unit_code;
@@ -183,7 +189,11 @@ sap.ui.define([
                     new Filter("org_code", "EQ", sOrgCode),
                     new Filter("use_flag", "EQ", true)
                 ];
-
+                oBtnEavluType.setSelectedKey();
+                oBtnEavluType.removeAllItems();
+                if(!sEvaluOperationUnitCode || !sOrgCode){
+                    return;
+                }
                 oBtnEavluType.bindItems({
                     path : "/UserEvalType",
                     filters : aFilters,
@@ -706,9 +716,9 @@ sap.ui.define([
                 oResourceBundle = oI18nModel.getResourceBundle();
                 aTreeData = oViewModel.getProperty("/Tree/list");
 
-                ExcelUtil.fnExportExcel({
+                ExcelUtil.fnExportGridTable({
                     fileName : oResourceBundle.getText("appTitle"),
-                    table : oTable,
+                    column : oTable,
                     data : aTreeData
                 });
             }

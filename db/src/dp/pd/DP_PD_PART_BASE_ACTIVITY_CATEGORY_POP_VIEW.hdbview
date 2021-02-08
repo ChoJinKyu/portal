@@ -13,6 +13,7 @@ SELECT X.TENANT_ID
       ,SUBSTR(X.PATH, 3) AS PATH
       ,X.SEQUENCE
       ,X.active_flag
+      ,case when X.active_flag = True then 'Active' else 'Inactive' end active_flag_val
 
  FROM HIERARCHY_ANCESTORS_AGGREGATE (
   SOURCE HIERARCHY (
