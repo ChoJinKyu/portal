@@ -8,6 +8,7 @@ using from './moldApprovalList/moldApproval-service';
 using from './moldApprovalList/participatingSupplierSelectionApproval-service';
 using from './moldApprovalList/moldRecepitApproval-service';
 using from './assetList/assetList-service';
+using from './remodelRepairMgtList/rrMgtList-service';
 //Util
 using from './util/moldItemSelection-service';
 using from './util/supplierSelection-service';

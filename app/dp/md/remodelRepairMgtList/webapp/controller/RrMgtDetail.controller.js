@@ -78,13 +78,10 @@ sap.ui.define([
             this.process.setDrawProcessUI(this, "rrMgtProcess" , "C", 0);
 
         },
-
         _onObjectMatched : function(oEvent){ 
             var oArgs = oEvent.getParameter("arguments");
             console.log("param>>>>> " , oArgs);
         } ,
-
-
         onPageNavBackButtonPress: function () {
             this.getRouter().navTo("rrMgtList", {}, true); 
         },
