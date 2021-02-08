@@ -134,6 +134,13 @@ sap.ui.define([
                         return false;
                     }
                     oControl.setValueState(ValueState.None);
+                }else if(sEleName === "sap.m.ComboBox"){
+                    if(!sValue && oControl.getValue()){
+                        oControl.setValueState(ValueState.Error);
+                        oControl.setValueStateText("옳바른 값을 선택해 주십시오.");
+                        oControl.focus();
+                        return false;
+                    }
                 }
 
                 return true;
