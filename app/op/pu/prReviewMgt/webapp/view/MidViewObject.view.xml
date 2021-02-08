@@ -121,7 +121,7 @@
                                     <Label text="(미정)품목"/>
                                     <Text text="{detail>/Pr_ReviewDtlView/pr_type_name_3}" width="20em" textAlign="Left" />
                                     <Label text="(미정)구매요청템플릿"/>
-                                    <Text text="{detail>/Pr_ReviewDtlView/pr_template_number}" width="20em" textAlign="Left" />
+                                    <Text text="{detail>/Pr_ReviewDtlView/pr_template_name}" width="20em" textAlign="Left" />
                             </form:SimpleForm>
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
@@ -163,12 +163,12 @@
                             
                                 <core:Title text="(미정)담당자정보"/>
                                 <Label text="(미정)구매요청자"/>
-                                <Text text="[{detail>/Pr_ReviewDtlView/requestor_department_name}] {detail>/Pr_ReviewDtlView/requestor_name}" width="20em" textAlign="Left" 
-                                    visible="{= !!${detail>/Pr_ReviewDtlView/requestor_department_name}}"
+                                <Text text="{detail>/Pr_ReviewDtlView/requestor_name} / {detail>/Pr_ReviewDtlView/requestor_department_name}" width="20em" textAlign="Left" 
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/requestor_name}}"
                                 />
                                 <Label text="(미정)구매담당자"/>
-                                <Text text="[{detail>/Pr_ReviewDtlView/buyer_department_name}] {detail>/Pr_ReviewDtlView/buyer_name}" width="20em" textAlign="Left"
-                                    visible="{= !!${detail>/Pr_ReviewDtlView/buyer_department_name}}"
+                                <Text text="{detail>/Pr_ReviewDtlView/buyer_name} / {detail>/Pr_ReviewDtlView/buyer_department_name}" width="20em" textAlign="Left"
+                                    visible="{= !!${detail>/Pr_ReviewDtlView/buyer_name}}"
                                 />
 
                                 <Label text="(미정)요청자명"/>
@@ -377,17 +377,29 @@
                                         <ColumnListItem type="Navigation">
                                             <cells>
                                                 <!-- 코스트센터 -->
-                                                <Text text="[{accounts>cctr_code}] {accounts>cctr_name}"/>
+                                                <Text text="[{accounts>cctr_code}] {accounts>cctr_name}"
+                                                    visible="{=!!${accounts>cctr_code}}"
+                                                />
                                                 <!-- 계정코드 -->
-                                                <Text text="[{accounts>account_code}] {accounts>account_name}"/>
+                                                <Text text="[{accounts>account_code}] {accounts>account_name}"
+                                                    visible="{=!!${accounts>account_code}}"
+                                                />
                                                 <!-- WBS코드 -->
-                                                <Text text="[{accounts>wbs_code}] {accounts>wbs_name}"/>
+                                                <Text text="[{accounts>wbs_code}] {accounts>wbs_name}"
+                                                    visible="{=!!${accounts>wbs_code}}"
+                                                />
                                                 <!-- 오더번호 -->
-                                                <Text text="[{accounts>order_number}] {accounts>order_name}"/>
+                                                <Text text="[{accounts>order_number}] {accounts>order_name}"
+                                                    visible="{=!!${accounts>order_number}}"
+                                                />
                                                 <!-- 자산번호 -->
-                                                <Text text="[{accounts>asset_number}] {accounts>asset_name}"/>
+                                                <Text text="[{accounts>asset_number}] {accounts>asset_name}"
+                                                    visible="{=!!${accounts>asset_number}}"
+                                                />
                                                 <!-- 계정지정범주 -->
-                                                <Text text="[{accounts>account_assignment_category_code}] {accounts>account_assignment_category_name}"/>
+                                                <Text text="[{accounts>account_assignment_category_code}] {accounts>account_assignment_category_name}"
+                                                    visible="{=!!${accounts>account_assignment_category_code}}"
+                                                />
                                             </cells>
                                         </ColumnListItem>
                                     </items>

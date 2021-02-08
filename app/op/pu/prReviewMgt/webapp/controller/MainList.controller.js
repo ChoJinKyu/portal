@@ -327,7 +327,7 @@ sap.ui.define([
                 message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다\n확인시 자동으로 본인 담당으로 변경됩니다\n";
             }
             // 잔량이 없는 PR은 선택이 불가능하다 = 요청수량 0
-            if (items.filter(e => (+e.pr_quantity) <= 0 || !e).length > 0) {
+            if ((action == "RFQ" || action == "BIDDING") && items.filter(e => (+e.pr_quantity) <= 0 || !e).length > 0) {
                 MessageBox.alert("(메세지)요청수량(잔량)이 없는 PR 은 선택 할 수 없습니다");
                 return;
             }
