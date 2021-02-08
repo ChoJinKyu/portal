@@ -82,7 +82,7 @@ service PrReviewMgtService {
             ,mst.pr_create_system_code  // 구매요청생성시스템코드
             ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_SYSTEM_CODE', mst.pr_create_system_code, 'KO') as pr_create_system_name : String(240)  // 구매요청생성시스템
             ,dtl.pr_progress_status_code  // 구매요청진행상태코드
-            ,cm_get_code_name_func(dtl.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', dtl.pr_progress_status_code, 'KO') as pr_progress_status_name : String(240)  // 구매요청진행상태코드
+            ,cm_get_code_name_func(dtl.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', ifnull(nullif(dtl.pr_progress_status_code, ''), 'INIT'), 'KO') as pr_progress_status_name : String(240)  // 구매요청진행상태코드
 
             ,dtl.approval_date  // 결재일자
             ,dtl.remark  // 비고
