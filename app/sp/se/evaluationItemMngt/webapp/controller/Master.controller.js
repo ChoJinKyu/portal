@@ -217,7 +217,9 @@ sap.ui.define([
                         var aResults, sEvaluTypeCode, bNewFlg;
 
                         aResults = oData.results;
+                        bNewFlg = false;
                         if(!aResults.length){
+                            oViewModel.setProperty("/Btn/UserEvalType", bNewFlg);
                             return;
                         }
                         if(aResults[0].new_flag === "Y"){
