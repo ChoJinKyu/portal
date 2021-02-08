@@ -87,7 +87,7 @@ sap.ui.define([
                 : model.getData();
 
             // Filter: keyword 쪽은 보완 필요
-            return Object.keys(jData)
+            return Object.keys(jData.filters || jData)
                 // EQ, BT 만 해당
                 .filter(
                     path => 
@@ -221,10 +221,6 @@ sap.ui.define([
                     mDeferred.reject(release());
                 }, this)
                 .open();
-            // // Token
-            // control 
-            // && 
-            // Dialog.setTokens(control.getTokens());
 
             // Token
             control 

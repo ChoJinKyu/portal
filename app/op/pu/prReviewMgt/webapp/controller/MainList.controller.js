@@ -96,6 +96,11 @@ sap.ui.define([
                     FilterOperator: FilterOperator.BT,
                     values: [ uStart, uToday ]
                 },
+                // 확정일자
+                confirmed_date: {
+                    FilterOperator: FilterOperator.BT,
+                    values: [ uStart, uToday ]
+                },
                 // 구매담당자 
                 buyer_empno: this.$session.employee_number,
                 // 구매담당자부서

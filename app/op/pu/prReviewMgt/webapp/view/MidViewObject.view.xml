@@ -28,25 +28,22 @@
 				</uxap:expandedHeading>
                 <uxap:navigationActions>
                     <!-- 전체화면 -->
-                    <!-- visible="{= ${midObjectView>/screen} !== 'Full' }" -->
                     <OverflowToolbarButton 
                         icon="sap-icon://full-screen" 
                         type="Transparent"
                         tooltip="Enter Full Screen Mode"
-                        visible="true"
+                        visible="{= ${fcl>/layout} !== 'MidColumnFullScreen'}"
                         press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Full', column: 'two' })"
                     /> 
                     <!-- 전체화면해제 -->
-                    <!-- visible="{= ${midObjectView>/screen} === 'Full' }" -->
                     <OverflowToolbarButton 
                         icon="sap-icon://exit-full-screen" 
                         type="Transparent"
                         tooltip="Exit Full Screen Mode" 
-                        visible="true"
+                        visible="{= ${fcl>/layout} === 'MidColumnFullScreen'}"
                         press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Exit', column: 'two' })"
                     /> 
                     <!-- 뒤로가기 -->
-                    <!-- visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }" -->
                     <OverflowToolbarButton 
                         icon="sap-icon://decline" 
                         type="Transparent"
@@ -264,10 +261,10 @@
                                     width="20em" 
                                     textAlign="Left"
                                 />
-                                <Label text="(미정)결재일자"/>
+                                <Label text="(미정)확정일자"/>
                                 <Text 
                                     text="{
-                                        path: 'detail>/Pr_ReviewDtlView/approval_date',
+                                        path: 'detail>/Pr_ReviewDtlView/confirmed_date',
                                         formatter: '.dateFormatter.toUTCDateString'
                                     }"
                                     width="20em" 
@@ -276,7 +273,7 @@
                                 <Label text="(미정)변경일자"/>
                                 <Text 
                                     text="{
-                                        path: 'detail>/Pr_ReviewDtlView/locale_update_dtm',
+                                        path: 'detail>/Pr_ReviewDtlView/local_update_dtm',
                                         formatter: '.dateFormatter.toUTCDateString'
                                     }"
                                     width="20em" 
