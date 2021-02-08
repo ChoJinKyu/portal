@@ -22,16 +22,47 @@ service TemplateService {
     entity ControlOptionDetails as projection on controlOption.Control_Option_Dtl;
 
     entity Tenant as projection on xx.Tenant;
-    entity Company as projection on xx.Company;
-    entity Plant as projection on xx.Plant;
-    entity Department as projection on xx.Department;
-    entity Employee as projection on xx.Employee;
 
-    entity Currency_View as projection on Currency;
-    entity Country_View as projection on Country;
-    entity Code_View as projection on Code;
+    entity Currency_View as projection on Currency; //OData navigation property
+    entity Country_View as projection on Country;   //OData navigation property
+    entity Code_View as projection on Code;         //OData navigation property
 
-    entity CompanyView as projection on xx.Company_View;
+
+    entity Company @(restrict: [
+        { grant: ['READ', 'WRITE'], where: 'tenant_id = $user.TENANT_ID'}
+    ]) as select from xx.Company {
+            *,
+            tenant.tenant_name,
+            currency.currency_code_name as currency_name,
+            country.country_name,
+            language.code_name as language_name
+        };
+
+    entity Plant @(restrict: [
+        { grant: ['READ', 'WRITE'], where: 'tenant_id = $user.TENANT_ID'}
+    ]) as select from xx.Plant {
+            *,
+            parent.company_name
+        };
+
+    entity Department @(restrict: [
+        { grant: ['READ', 'WRITE'], where: 'tenant_id = $user.TENANT_ID'}
+    ]) as select from xx.Department {
+            *,
+            company.company_name,
+            parent.department_name as parent_department_name,
+            parent.department_korean_name as parent_department_korean_name,
+            parent.department_english_name as parent_department_english_name
+        };
+
+    entity Employee @(restrict: [
+        { grant: ['READ', 'WRITE'], where: 'tenant_id = $user.TENANT_ID'}
+    ]) as select from xx.Employee {
+            *,
+            department.department_name as department_name,
+            department.department_korean_name as department_korean_name,
+            department.department_english_name as department_english_name
+        };
 
 }
 
