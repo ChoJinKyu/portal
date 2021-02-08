@@ -45,6 +45,8 @@ sap.ui.define([
 
             // this._onComCodeListView(oAppSupModel);
             // this._onTransactionDivision(oAppSupModel);
+            // this.getOwnerComponent().getModel("viewModel").setProperty("/detail/checkModel", []);
+            this._onComCodeListView();
             this.getRouter().getRoute("Apply").attachPatternMatched(this._onRoutedThisPage, this);
 
         },
@@ -59,8 +61,112 @@ sap.ui.define([
          * @private
          */
         _onRoutedThisPage: function (oEvent) {
-            var sParmaModel=this.getModel("viewModel");
-            
+                      
         }
+
+        //동적 체크박스 
+        , _onComCodeListView: function () {
+            var that = this,
+                sParmaModel=this.getModel("viewModel"),
+                oDataModel = this.getOwnerComponent().getModel(),
+                sTenant_id = "L1100",
+                sGroup_code = "SP_SF_FUNDING_REASON_CODE",
+                sChain_code = "SP",
+                aFilters = [];
+
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
+            aFilters.push(new Filter("group_code", FilterOperator.EQ, sGroup_code));
+            aFilters.push(new Filter("language_cd", FilterOperator.EQ, "KO"));
+
+            oDataModel.read("/ComCodeListView", {
+                //Filter : 테넌트, 언어, 콤보내용
+                filters: aFilters,
+                success: function (oData) {
+                    for (var i = 0; i < oData.results.length; i++) {
+                        that.byId("checkBoxContent").addItem(new CheckBox({ text: oData.results[i].code + ". " + oData.results[i].code_name, editable:false ,selected: "{viewModel>/detailControll/checkModel/" + i + "}" }));
+                    };
+                },
+                error: function (oError) {
+                    
+                }
+            });
+        },
+
+        onOpenInvestmentDtl: function(oEvent){
+            var oView = this.getView(),
+                oModel = this.getModel("viewModel"),
+                oDataModel = this.getOwnerComponent().getModel(),
+                bFilters = [],
+                cFilters = [],
+                that = this,
+                rowPath,
+                sInvestment_plan_sequence;
+
+                rowPath = oEvent.getSource().getParent().getBindingContext("viewModel").getPath()
+                sInvestment_plan_sequence = this.getModel("viewModel").getProperty(rowPath + "/investment_plan_sequence")
+                
+
+            if (!this.pDialog) {
+                this.pDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "sp.sf.fundingStatus.view.InvestPlan",
+                    controller: this
+                }).then(function (oDialog) {
+                    // connect dialog to the root view of this component (models, lifecycle)
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
+            };
+            
+            bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, oModel.getProperty("/Detail/Apply").funding_appl_number));
+            bFilters.push(new Filter("investment_plan_sequence", FilterOperator.EQ, sInvestment_plan_sequence));
+
+            this.pDialog.then(function (oDialog) {
+                
+                //투자계획 팝업 마스터 조회
+                oDataModel.read("/InvestPlanMstView", {
+                    filters: bFilters,
+                    success: function (oRetrievedResult) {
+                        
+                        that.getModel("viewModel").setProperty("/Detail/Apply/popUpInvestPlanMst", oRetrievedResult.results[0]);
+
+                        cFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, oRetrievedResult.results[0].funding_appl_number));
+                        cFilters.push(new Filter("investment_plan_sequence", FilterOperator.EQ, oRetrievedResult.results[0].investment_plan_sequence));
+
+                        //투자계획 팝업 디테일 조회
+                        oDataModel.read("/InvestPlanDtlView", {
+                            filters: cFilters,
+                            success: function (Result) {
+                                that.getModel("viewModel").setProperty("/Detail/Apply/popUpInvestPlanDtl", Result.results);
+                            },
+                            error: function (oError) {
+
+                            }
+                        })
+                    },
+                    error: function (oError) {
+
+                    }
+                });
+                oDialog.open();
+            });
+        }
+
+        , onCreatePopupClose: function(){
+            this.byId("investmentPlanDetails").close();
+        }
+        // , _formatChange: function(sValue){
+        //     var test;
+            
+        //     if(sValue){
+        //         test = sValue.toString().subString(0,4);
+        //     }else{
+        //         test = sValue;
+        //     }
+
+
+        //     return test;
+        // }
+        
     })
 });

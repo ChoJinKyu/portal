@@ -196,7 +196,8 @@ sap.ui.define([
 		 */
         _onRoutedThisPage: function () {
             this.getModel("mainListView").setProperty("/headerExpanded", true);
-             this.byId("pageSearchButton").firePress();
+            
+            // this.byId("pageSearchButton").firePress();
         },
 
 		/**

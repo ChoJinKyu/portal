@@ -1,6 +1,7 @@
 sap.ui.define([
 	    "./BaseController",					
-        "sap/ui/model/Filter",						
+        "sap/ui/model/Filter",
+        "sap/ui/model/FilterOperator",
         "sap/ui/model/Sorter",			
         "sap/m/MessageBox",
         "ext/lib/util/Multilingual",
@@ -11,7 +12,7 @@ sap.ui.define([
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function ( Controller, Filter, Sorter, MessageBox, 
+    function ( Controller, Filter, FilterOperator, Sorter, MessageBox, 
         Multilingual, ListItem, SegmentedButtonItem, 
         CalculationBuilderVariable ) {
         "use strict";
@@ -65,17 +66,19 @@ sap.ui.define([
 
                 if(oEvent){
                     if(oEvent.getParameters().key==="step1"){
-                        this.byId("beginView").setVisible(true)
-                        this.getOwnerComponent().getRouter().navTo("Apply", sPramModel);
+                        this.byId("beginView").setVisible(true);
+                        this.onReadApply();
+                        // this.getOwnerComponent().getRouter().navTo("Apply", sPramModel);
                     }else{
-                        this.byId("beginView").setVisible(false)
+                        this.byId("beginView").setVisible(false);
                     }
                 }else{
                     if(statusCode=="110" || statusCode=="120" ){
-                        this.byId("beginView").setVisible(true)
-                        this.getOwnerComponent().getRouter().navTo("Apply", sPramModel);
+                        this.byId("beginView").setVisible(true);
+                        this.onReadApply();
+                        // this.getOwnerComponent().getRouter().navTo("Apply", sPramModel);
                     }else{
-                        this.byId("beginView").setVisible(false)
+                        this.byId("beginView").setVisible(false);
                     }
 
                 }
@@ -106,6 +109,8 @@ sap.ui.define([
                 }
                 
                 oDetailData.Header = {};
+
+                oViewModel.setProperty("/detailControll",{checkModel : []});
                 oViewModel.setProperty("/Detail", oDetailData);
                 oViewModel.setProperty("/App/layout", "TwoColumnsMidExpanded");
                 oViewModel.setProperty("/App/btnScreen", "sap-icon://full-screen");
@@ -136,7 +141,66 @@ sap.ui.define([
                     }.bind(this)
                 });
 
+            },
+
+            onReadApply : function(){
+                var sParmaModel=this.getModel("viewModel"),
+                    oDataModel = this.getModel(),
+                    oComponent = this.getOwnerComponent(),
+                    aFilters = [],
+                    bFilters=[],
+                    aArr = [],
+                    aChecked,
+                    aCheckedData,
+                    that=this;
+
+                aFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, sParmaModel.getProperty("/Args").fundingApplNumber));
+                aFilters.push(new Filter("supplier_code", FilterOperator.EQ, sParmaModel.getProperty("/Args").supplierCode));
+                
+                oDataModel.read("/FundingApplDataView", {
+                    filters: aFilters,
+                    success: function (oRetrievedResult) {
+                        aCheckedData = that.getModel("viewModel").getProperty("/detailControll/checkModel") || [];
+                        var oMasterPage = oComponent.byId("Master");
+                        if(oMasterPage){
+                            oMasterPage.byId("page").setHeaderExpanded(false);
+                        }
+
+                        if(!!oRetrievedResult.results[0]){
+                            sParmaModel.setProperty("/Detail/Apply", oRetrievedResult.results[0]);
+                            aChecked = oRetrievedResult.results[0].funding_reason_code.split(",");
+                            aChecked.forEach(function (item) {
+                                aArr.push(!!item);
+                            });
+                        }else{
+                            aArr = aCheckedData.map(function (item) {
+                                return false;
+                            });
+                        };
+                        that.getModel("viewModel").setProperty("/detailControll",{checkModel : []});
+                        that.getModel("viewModel").setProperty("/detailControll/checkModel", aArr);
+                        
+                        bFilters.push(new Filter("funding_appl_number", FilterOperator.EQ, oRetrievedResult.results[0].funding_appl_number));
+
+                        oDataModel.read("/InvestPlanMstListView", {
+                            //Filter : 공고번호, sub 정보
+                            filters: bFilters,
+                            success: function (oRetrievedResult) {
+                                that.getModel("viewModel").setProperty("/Detail/Apply/investPlanMst", oRetrievedResult.results);
+                                
+                            },
+                            error: function (oError) {
+                                MessageBox.alert("에러 입니다.");
+                            }
+                        });
+                    },
+                    error: function (oError) {
+                        // oAppView.setBusy(false);
+                    }
+                });  
             }
+
+            
             
 		});
 	});

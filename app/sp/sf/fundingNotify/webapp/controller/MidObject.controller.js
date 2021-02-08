@@ -72,7 +72,7 @@ sap.ui.define([
 
         
         onMainSendMailButtonPress: function(){
-            alert("준비중");
+            alert(" 추후적용 예정입니다.");
         },
 
         // onRichTextEditorRendering : function () {
