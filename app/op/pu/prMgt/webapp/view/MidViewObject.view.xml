@@ -211,8 +211,8 @@
                                     <Label text="{I18N>/ORG_CODE}" />           
                                     <table:template>
                                         <Text text="{ parts: [
-                                                            {path: 'detailModel>plant_name'},
-                                                            {path: 'detailModel>org_code'}
+                                                            {path: 'detailModel>org_code'},
+                                                            {path: 'detailModel>plant_name'}
                                                             ],
                                                        formatter: '.uiControlSet.toKeyValueDisp'}" hAlign="Begin" />
                                     </table:template>
@@ -292,11 +292,7 @@
                                                     }">
                                     <Label text="{I18N>/BUYER}"/>           
                                     <table:template>
-                                        <Text text="{ parts: [
-                                                            {path: 'detailModel>user_local_name'},
-                                                            {path: 'detailModel>buyer_empno'}
-                                                            ],
-                                                       formatter: '.uiControlSet.toKeyValueDisp'}"/>
+                                        <Text text="{detailModel>user_local_name}"/>
                                     </table:template>
                                 </table:Column> 
 
@@ -307,7 +303,11 @@
                                                     }">
                                     <Label text="{I18N>/PURCHASING_GROUP_CODE}"/>           
                                     <table:template>
-                                        <Text text="{detailModel>purchasing_group_code}"/>
+                                        <Text text="{ parts: [
+                                                            {path: 'detailModel>purchasing_group_code'},
+                                                            {path: 'detailModel>purchasing_group_name'}
+                                                            ],
+                                                       formatter: '.uiControlSet.toKeyValueDisp'}"/>
                                     </table:template>
                                 </table:Column>
 
@@ -356,7 +356,11 @@
                                                     }">
                                     <Label text="{I18N>/MATERIAL_GROUP_CODE}" />           
                                     <table:template>
-                                        <Text text="{detailModel>material_group_code}"/>
+                                        <Text text="{ parts: [
+                                                            {path: 'detailModel>material_group_code'},
+                                                            {path: 'detailModel>material_group_name'}
+                                                            ],
+                                                       formatter: '.uiControlSet.toKeyValueDisp'}"/>
                                     </table:template>
                                 </table:Column> 
 
@@ -373,23 +377,16 @@
 
                                 <table:Column   width="10em" hAlign="Center"
                                                 visible="{
-                                                    path: 'OPUI>/DTL-MATERIAL_GROUP_CODE',
-                                                    formatter: '.uiControlSet.toColumnVisible'
-                                                    }">
-                                    <Label text="{I18N>/MATERIAL_GROUP_CODE}" />           
-                                    <table:template>
-                                        <Text text="{detailModel>material_group_code}"/>
-                                    </table:template>
-                                </table:Column> 
-
-                                <table:Column   width="10em" hAlign="Center"
-                                                visible="{
                                                     path: 'OPUI>/DTL-SUPPLIER_CODE',
                                                     formatter: '.uiControlSet.toColumnVisible'
                                                     }">
                                     <Label text="{I18N>/SUPPLIER}" />           
                                     <table:template>
-                                        <Text text="{detailModel>supplier_local_name} [{detailModel>supplier_code}]"/>
+                                        <Text text="{ parts: [
+                                                            {path: 'detailModel>supplier_code'},
+                                                            {path: 'detailModel>supplier_local_name'}
+                                                            ],
+                                                       formatter: '.uiControlSet.toKeyValueDisp'}"/>
                                     </table:template>
                                 </table:Column> 
 
@@ -400,11 +397,7 @@
                                                     }">
                                     <Label text="{I18N>/REQUESTOR}" />           
                                     <table:template>
-                                        <Text text="{ parts: [
-                                                            {path: 'detailModel>requestor_empno'},
-                                                            {path: 'detailModel>requestor_name'}
-                                                            ],
-                                                       formatter: '.uiControlSet.toKeyValueDisp'}"/>
+                                        <Text text="{detailModel>requestor_name}"/>
                                     </table:template>
                                 </table:Column> 
 
@@ -553,7 +546,11 @@
                                 <table:Column  hAlign="Center" >
                                     <Label text="{I18N>/ACCOUNT_CODE}"/>
                                     <table:template>
-                                        <Text text="{detailModel>account_code} [{detailModel>account_name}]"  textAlign="Begin" width="100%"/>
+                                        <Text text="{ parts: [
+                                                            {path: 'detailModel>account_code'},
+                                                            {path: 'detailModel>account_name'}
+                                                            ],
+                                                       formatter: '.uiControlSet.toKeyValueDisp'}"  textAlign="Begin" width="100%"/>
                                     </table:template>
                                 </table:Column>
 
@@ -564,7 +561,11 @@
                                                     }">
                                     <Label text="{I18N>/CCTR_CODE}"/>
                                     <table:template>
-                                        <Text text="{detailModel>cctr_code} [{detailModel>cctr_name}]"  textAlign="Begin" width="100%"/>
+                                        <Text text="{ parts: [
+                                                            {path: 'detailModel>cctr_code'},
+                                                            {path: 'detailModel>cctr_name'}
+                                                            ],
+                                                       formatter: '.uiControlSet.toKeyValueDisp'}"  textAlign="Begin" width="100%"/>
                                     </table:template>
                                 </table:Column>
 
@@ -575,7 +576,11 @@
                                                     }">
                                     <Label text="{I18N>/WBS_CODE}"/>
                                     <table:template>
-                                        <Text text="{detailModel>wbs_code} [{detailModel>wbs_name}]"  textAlign="Begin" width="100%"/>
+                                        <Text text="{ parts: [
+                                                            {path: 'detailModel>wbs_code'},
+                                                            {path: 'detailModel>wbs_name'}
+                                                            ],
+                                                       formatter: '.uiControlSet.toKeyValueDisp'}"  textAlign="Begin" width="100%"/>
                                     </table:template>
                                 </table:Column>
 
@@ -585,7 +590,11 @@
                                                     }">
                                     <Label text="{I18N>/ASSET}"/>
                                     <table:template>
-                                        <Text text="{detailModel>asset_number} [{detailModel>asset_name}]"  textAlign="Begin" width="100%"/>
+                                        <Text text="{ parts: [
+                                                            {path: 'detailModel>asset_number'},
+                                                            {path: 'detailModel>asset_name'}
+                                                            ],
+                                                      formatter: '.uiControlSet.toKeyValueDisp'}"  textAlign="Begin" width="100%"/>
                                     </table:template>
                                 </table:Column>
 
@@ -596,7 +605,11 @@
                                                     }">
                                     <Label text="{I18N>/ORDER}"/>
                                     <table:template>
-                                        <Text text="{detailModel>order_number} [{detailModel>order_name}]"  textAlign="Begin" width="100%"/>
+                                        <Text text="{ parts: [
+                                                            {path: 'detailModel>order_number'},
+                                                            {path: 'detailModel>order_name'}
+                                                            ],
+                                                       formatter: '.uiControlSet.toKeyValueDisp'}"  textAlign="Begin" width="100%"/>
                                     </table:template>
                                 </table:Column>
 
@@ -609,7 +622,6 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
             <!-- Account 정보 끝 -->
-
 
             <!-- Service 정보 시작 -->
             <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/SERVICE_INFO}" visible="{= ${detailModel>/service}.length > 0 ? true : false}">
@@ -743,6 +755,7 @@
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">                    
                             <UploadCollection
                                 id="UploadCollectionOuter"
+                                uploadButtonInvisible="true"
                                 maximumFilenameLength="55"
                                 maximumFileSize="10"
                                 multiple="true"
@@ -763,6 +776,7 @@
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">                    
                             <UploadCollection
                                 id="UploadCollectionInner"
+                                uploadButtonInvisible="true"
                                 maximumFilenameLength="55"
                                 maximumFileSize="10"
                                 multiple="true"
