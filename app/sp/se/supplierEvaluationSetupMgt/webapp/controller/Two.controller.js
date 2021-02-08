@@ -40,7 +40,7 @@ sap.ui.define([
 
         }
         , _onDetailMatched: function (oEvent) {
-            var oArgs, oComponent, oViewModel, oHeader;
+            var oArgs, oComponent, oViewModel, oHeader, sAppLayout;
             var oView = this.getView();
 
             this.getView().getModel("TwoView").setProperty("/",{
@@ -53,9 +53,12 @@ sap.ui.define([
             oArgs = oEvent.getParameter("arguments");
             oComponent = this.getOwnerComponent();
             oViewModel = oComponent.getModel("viewModel");
-            
-            oViewModel.setProperty("/App/layout", "TwoColumnsBeginExpanded");     
-            
+            sAppLayout = oViewModel.getProperty("/App/layout");
+
+            //oViewModel.setProperty("/App/layout", "TwoColumnsBeginExpanded");     
+            oViewModel.setProperty("/App/layout", sAppLayout === "OneColumn" ? "TwoColumnsBeginExpanded" : sAppLayout);
+                
+
             this.scenario_number = oEvent.getParameter("arguments")["scenario_number"],
 
             this.tenant_id = oEvent.getParameter("arguments")["tenant_id"],
