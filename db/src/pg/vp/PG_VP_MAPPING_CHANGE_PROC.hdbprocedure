@@ -1081,6 +1081,7 @@ BEGIN
                     
                     V_ITEM_LOOP_PARAM := '';
 				    V_ITEM_LOOP_PARAM := '[ITEM INFO] V_ITEM_LOOP_INDEX: '||V_ITEM_LOOP_INDEX||' ,CRUD_TYPE_CODE: '||IFNULL(loop_itm.CRUD_TYPE_CODE, ' ')||' ,MATERIAL_CODE: '||IFNULL(loop_itm.MATERIAL_CODE, ' ')
+				    	||' ,TENANT_ID: '||IFNULL(loop_itm.TENANT_ID, ' ')||' ,COMPANY_CODE: '||IFNULL(loop_itm.COMPANY_CODE, ' ')||' ,ORG_TYPE_CODE: '||IFNULL(loop_itm.ORG_TYPE_CODE, ' ')||' ,ORG_CODE: '||IFNULL(loop_itm.ORG_CODE, ' ')
 				    	||' ,VENDOR_POOL_MAPPING_USE_FLAG: '||IFNULL(loop_itm.VENDOR_POOL_MAPPING_USE_FLAG, ' ')||' ,REGISTER_REASON: '||IFNULL(loop_itm.REGISTER_REASON, ' ')||' ,APPROVAL_NUMBER: '||IFNULL(loop_itm.APPROVAL_NUMBER, ' ');
                     
                     IF V_MASTER_LOOP_PARAM IS NULL THEN
