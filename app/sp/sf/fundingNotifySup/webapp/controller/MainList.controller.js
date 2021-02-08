@@ -60,9 +60,9 @@ sap.ui.define([
 
         },
 
-        onRenderedFirst: function () {
-            this.byId("pageSearchButton").firePress();
-        },
+        // onRenderedFirst: function () {
+        //     this.byId("pageSearchButton").firePress();
+        // },
 
         /* =========================================================== */
         /* event handlers                                              */
@@ -210,7 +210,7 @@ sap.ui.define([
 		 */
         _onRoutedThisPage: function () {
             this.getModel("mainListView").setProperty("/headerExpanded", true);
-            this.byId("pageSearchButton").firePress();
+            // this.byId("pageSearchButton").firePress();
         },
 
 		/**
