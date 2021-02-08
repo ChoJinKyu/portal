@@ -61,7 +61,7 @@ sap.ui.define([
         onButtonPress: function () {
 
             var [ event, type, item, ...args ] = arguments;
-            var { action, service, entry, tId } = args[args.length-1];
+            var { action, service, entry, tId, title } = args[args.length-1];
             var message, value;
             var table = this.byId(tId);
 
@@ -152,7 +152,31 @@ sap.ui.define([
                 });
             }).call(this);
 
-            action != 'CLOSING_CANCEL'
+            // 변경이력
+            action == 'CHANGE_HISTORY'
+            &&
+            this.fragment("history", {
+                name: "op.pu.prReviewMgt.view.History"
+            }, {
+                onAfterOpen: (function() {
+                    this.setModel(new JSONModel({ 
+                        title: title,
+                        Pr_ReviewDtlHistView: []
+                    }), "history");
+                    var { tenant_id, company_code, pr_number, pr_item_number } = this.key;
+                    this.search(new JSONModel({ 
+                        tenant_id, 
+                        company_code, 
+                        pr_number, 
+                        pr_item_number 
+                    }), "history", "Pr_ReviewDtlHistView");
+                }).bind(this),
+                onClose: function() {
+                    return ;
+                }
+            }, this);
+
+            action == 'undefined'
             &&
             MessageBox.alert("준비중 입니다");
         }
