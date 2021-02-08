@@ -183,12 +183,12 @@ sap.ui.define([
                 }),
                 new Column({
                     width: "25%",
-                    label: new Label({text: this.getModel("I18N").getText("/ITEM_DESC")}),
+                    label: new Label({text: this.getModel("I18N").getText("/ITEM_DESC"), textAlign:"Center", width:"100%"}),
                     template: new Text({text: "{ep_item_name}", wrapping:false})
                 }),
                 new Column({
                     width: "25%",
-                    label: new Label({text: this.getModel("I18N").getText("/SPECIFICATION")}),
+                    label: new Label({text: this.getModel("I18N").getText("/SPECIFICATION"), textAlign:"Center", width:"100%"}),
                     template: new Text({text: "{spec_desc}", wrapping:false})
                 }),
                 new Column({
