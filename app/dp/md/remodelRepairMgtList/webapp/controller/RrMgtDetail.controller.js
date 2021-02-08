@@ -82,6 +82,19 @@ sap.ui.define([
             var oArgs = oEvent.getParameter("arguments");
             console.log("param>>>>> " , oArgs);
         } ,
+
+        _srchDetail : function(){
+            var oModel = this.getModel("rrMgt");
+              oModel.setTransactionModel(this.getModel());
+
+            oModel.read("/remodelRepairDetail(tenant_id='" + this.getSessionUserInfo().TENANT_ID + "',company_code='" + this.company_code + "')", {
+                filters: [],
+                success: function (oData) {
+
+                }
+            });            
+        },
+
         onPageNavBackButtonPress: function () {
             this.getRouter().navTo("rrMgtList", {}, true); 
         },
