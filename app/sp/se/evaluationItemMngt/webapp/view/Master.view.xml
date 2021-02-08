@@ -56,7 +56,7 @@
                 
                 <f:actions>
                     <!-- 조회 -->
-                    <Button text="{I18N>/DISPLAY}" type="Emphasized" press="onPressSearch"/>
+                    <!-- <Button text="{I18N>/DISPLAY}" type="Emphasized" press="onPressSearch"/> -->
                 </f:actions>
             </f:DynamicPageTitle>
         </f:title>
@@ -126,11 +126,19 @@
                         <Label text="{I18N>/EVAL_ITEM_NM}" />
                         <Input 
                             value="{viewModel>/cond/Contains/evaluation_article_name}"
+                            submit="onPressSearch"
                         />
                         <layoutData>
                             <layout:GridData span="L2 M6 S12" />
                         </layoutData>
                     </VBox>
+                    <FlexBox alignItems="End" justifyContent="End">
+                        <!-- <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" /> -->
+                        <Button text="{I18N>/DISPLAY}" type="Emphasized" press="onPressSearch"/>
+                        <layoutData>
+                            <layout:GridData span="XL12 L12 M12 S12" />
+                        </layoutData>
+                    </FlexBox>
                 </form:SimpleForm>
             </f:DynamicPageHeader>
         </f:header>
