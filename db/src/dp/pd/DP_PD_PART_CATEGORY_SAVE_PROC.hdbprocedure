@@ -47,7 +47,7 @@ BEGIN
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		ROLLBACK;
-		O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
+		O_MSG = SELECT  'NG' RETURN_CODE, V_CATEGORY_CODE ||'-'|| ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
     END;
 
     SELECT TENANT_ID, CATEGORY_GROUP_CODE,
@@ -59,6 +59,9 @@ BEGIN
     INTO   V_TENANT_ID, V_CATEGORY_GROUP_CODE, V_CATEGORY_CODE, V_SEQUENCE
     FROM   :I_M
     ;
+/* Input 임시테이블 관리 */
+
+
 
 /* 카테고리그룹코드를 사용하는 ORG_CODE 관리하는 Data를 CM_CODE에서 관리 */
     SELECT MAX(OM.ORG_TYPE_CODE), MIN(OO.ORG_CODE)
@@ -159,6 +162,7 @@ BEGIN
                         ,CATEGORY_CODE
                         ,CATEGORY_GROUP_CODE
                         ,SEQUENCE
+                        ,PARENT_CATEGORY_CODE
                         ,ACTIVE_FLAG
                         ,LOCAL_CREATE_DTM
                         ,LOCAL_UPDATE_DTM
@@ -171,6 +175,7 @@ BEGIN
                         ,V_CATEGORY_CODE
                         ,M.CATEGORY_GROUP_CODE
                         ,(SELECT COALESCE(MAX(SEQUENCE), 0) + 1 FROM DP_PD_PART_CATEGORY WHERE TENANT_ID = M.TENANT_ID)
+                        ,M.PARENT_CATEGORY_CODE
                         ,M.ACTIVE_FLAG
                         ,NOW()
                         ,NOW()

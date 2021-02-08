@@ -5,8 +5,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.sap.cds.services.request.ModifiableUserInfo;
 import com.sap.cds.services.request.UserInfo;
@@ -34,6 +36,7 @@ public class SppMockUserInfoProvider implements UserInfoProvider {
     public UserInfo get() {
 
         Map<String, List<String>> attributes = new HashMap<String, List<String>>();
+        Set<String> roles = new HashSet<String>();
         String userName = "anonymous";
 
         JSONParser parser = new JSONParser();
@@ -58,11 +61,20 @@ public class SppMockUserInfoProvider implements UserInfoProvider {
 
                 }else{
                     attributes.put((String) key, new ArrayList<>(Arrays.asList((String) jsonUserInfo.get(key))));
-                }                
+                }
+
+                if("USER_ID".equals((String) key)){
+                    userName = (String) jsonUserInfo.get(key);
+                }else if("ROLES".equals((String) key)){
+                    JSONArray jsonArray = (JSONArray) jsonUserInfo.get(key);
+                    for(int i = 0; i < jsonArray.size(); i++){
+                        roles.add((String) jsonArray.get(i));
+                    }
+                }
 
             }
 
-            userName = (String) jsonUserInfo.get("USER_ID");
+            //userName = (String) jsonUserInfo.get("USER_ID");
         } catch (IOException | ParseException e) {
             log.error("Please check MockUser.json file. Path : /srv/src/main/resources/");
             e.printStackTrace();
@@ -77,8 +89,11 @@ public class SppMockUserInfoProvider implements UserInfoProvider {
         }        
 
         ModifiableUserInfo modifiableUserInfo = UserInfo.create();
-        modifiableUserInfo.setAttributes(attributes);
         modifiableUserInfo.setName(userName);
+        modifiableUserInfo.setRoles(roles);
+        modifiableUserInfo.setAttributes(attributes);
+        modifiableUserInfo.setIsAuthenticated(true);
+        
         return modifiableUserInfo;
 
         //return UserInfo.create().setAttributes(attributes);

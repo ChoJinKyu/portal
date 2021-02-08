@@ -26,7 +26,7 @@ PROCEDURE SP_NP_NET_PRICE_APPROVAL_PRICEINFO_PROC (
 	                                            ,	MATERIAL_CODE                       NVARCHAR(40)
                                                 ,	MARKET_CODE							NVARCHAR(30)
                                                 ,	CURRENCY_CODE						NVARCHAR(3)
-                                                ,	BASE_PRICE							DECIMAL(34,10)
+                                                ,	NET_PRICE							DECIMAL(34,10)
                                                 ,	BASE_PRICE_TYPE_CODE				NVARCHAR(30)
                                                 ,   PYEAR_DEC_BASE_CURRENCY_CODE        NVARCHAR(3)
                                                 ,   PYEAR_DEC_BASE_PRICE				DECIMAL(34,10)
@@ -34,6 +34,12 @@ PROCEDURE SP_NP_NET_PRICE_APPROVAL_PRICEINFO_PROC (
                                                 ,   QUARTER_BASE_CURRENCY_CODE          NVARCHAR(3)
                                                 ,   QUARTER_BASE_PRICE				    DECIMAL(34,10)
                                                 ,   QUARTER_CI_RATE				        DECIMAL(34,10)
+
+                                                ,   BASE_DATE                           DATE
+                                                ,	BASE_CURRENCY_CODE					NVARCHAR(3)
+                                                ,	BASE_PRICE							DECIMAL(34,10)
+                                                ,   BASE_APPLY_START_YYYYMM             NVARCHAR(6)
+                                                ,   BASE_APPLY_END_YYYYMM               NVARCHAR(6)
 	                                            )
 )
 LANGUAGE SQLSCRIPT
@@ -70,8 +76,10 @@ BEGIN
                     ,   sm.supplier_local_name as supplier_name
                     ,	it.material_code
                     ,	it.market_code
-                    ,   bpm.currency_code
-                    ,   bpm.base_price
+
+                    ,   pad.currency_code
+                    ,   pad.net_price
+
                     ,   pad.base_price_type_code
                     ,   pad.pyear_dec_base_currency_code
                     ,   pad.pyear_dec_base_price
@@ -79,6 +87,13 @@ BEGIN
                     ,   pad.quarter_base_currency_code
                     ,   pad.quarter_base_price
                     ,   pad.quarter_ci_rate
+
+                    /*  LGC 표시항목 */
+                    ,   bpm.base_date
+                    ,   bpm.currency_code as base_currency_code 
+                    ,   bpm.base_price
+                    ,   bpm.apply_start_yyyymm as base_apply_start_yyyymm
+                    ,   bpm.apply_end_yyyymm as base_apply_end_yyyymm
 
             FROM    :I_DETAILS as it 
         

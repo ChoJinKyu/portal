@@ -8,6 +8,7 @@ entity Md_Repair_Mst_Asset_View {
         org_code                        : String(10)  not null  @title:'조직코드';
     key repair_request_number           : String(100) not null  @title:'수선요청번호';
         repair_type_code                : String(30)            @title:'수선유형코드';
+        repair_type_name                : String(30)            @title:'수선유형명';
         mold_id                         : String(100) not null  @title:'금형ID';
         asset_number                    : String(100)           @title:'자산번호';
         mold_number                     : String(40)  not null  @title:'부품번호';
@@ -27,9 +28,10 @@ entity Md_Repair_Mst_Asset_View {
         mold_item_type_code             : String(30)            @title:'금형품목유형코드';
         mold_item_type_name             : String(30)            @title:'금형품목유형명';
         repair_factor                   : String(30)            @title:'수선요인';
+        eco_number                      : String(45)            @title:'ECO번호';
         currency_code                   : String(30)            @title:'통화코드';
         repair_quotation_amount         : Decimal               @title:'수선견적금액';
         repair_amount                   : Decimal               @title:'수선금액';
         investment_ecst_type_code       : String(30)            @title:'투자비용유형코드';
-        account_code                    : String(10)            @title:'ACCOUNT_CODE';
+        account_code                    : String(10)            @title:'계정코드';
 }

@@ -14,6 +14,7 @@ sap.ui.define([
                     layout : "OneColumn",
                     EditMode : false
                 });
+                this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
             }
 		});
 	});

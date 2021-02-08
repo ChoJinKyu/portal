@@ -1,5 +1,6 @@
 sap.ui.define([
     "ext/lib/control/ui/CodeValueHelp",
+    "ext/lib/util/SppUserSessionUtil",  
     "ext/lib/control/m/CodeComboBox",
     "ext/lib/control/DummyRenderer",
     "ext/lib/core/service/ODataV2ServiceProvider",
@@ -13,7 +14,7 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text",
     "sap/m/Input"
-], function (Parent, CodeComboBox, Renderer, ODataV2ServiceProvider, ManagedModel, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
+], function (Parent, SppUserSessionUtil, CodeComboBox, Renderer, ODataV2ServiceProvider, ManagedModel, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
     var oServiceModel = ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/sp.supplierViewService/");
@@ -34,7 +35,8 @@ sap.ui.define([
 
         createSearchFilters: function(){
             var oThis = this;
-            var oFilter = { tenantId : new Filter("tenant_id", FilterOperator.EQ, "L2100"), 
+            var sTenantId = SppUserSessionUtil.getUserInfo().TENANT_ID ? SppUserSessionUtil.getUserInfo().TENANT_ID : "L2100";
+            var oFilter = { tenantId : new Filter("tenant_id", FilterOperator.EQ, sTenantId), 
                             languageCd : new Filter("language_cd", FilterOperator.EQ, "KO")};
 
             this.getProperty("title") ? this.getProperty("title") : this.setProperty("title" , this.getModel("I18N").getText("/SELECT_SUPPLIER"));
@@ -263,7 +265,8 @@ sap.ui.define([
 
         loadSupplierData : function(oThis){
             var that = oThis,
-            cFilters = that.getProperty("items") && that.getProperty("items").filters || [new Filter("tenant_id", FilterOperator.EQ, "L2100")];
+            sTenantId = SppUserSessionUtil.getUserInfo().TENANT_ID ? SppUserSessionUtil.getUserInfo().TENANT_ID : "L2100";
+            var cFilters = that.getProperty("items") && that.getProperty("items").filters || [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
             that.oDialog.setModel(new ManagedModel(), "SUPPLIERVIEW");
 
             //if(!that.getModel("SUPPLIERVIEW").getProperty("/company")){
@@ -320,8 +323,8 @@ sap.ui.define([
             
         },
         loadData: function(obj){
-
-            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
+            var sTenantId = SppUserSessionUtil.getUserInfo().TENANT_ID ? SppUserSessionUtil.getUserInfo().TENANT_ID : "L2100";
+            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)],
                 aSorters = [new Sorter("supplier_code", true)],
                 sSupplierCode = this.oSupplierCode.getValue(),
                 sSupplierName = this.oSupplierName.getValue(),

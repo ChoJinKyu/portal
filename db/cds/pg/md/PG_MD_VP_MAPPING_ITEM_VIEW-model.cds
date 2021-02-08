@@ -92,4 +92,8 @@ entity Md_Vp_Mapping_Item_View(language_code : String) {
         spmd_attr_info_048           : String(1000)@title : 'spmd_attr_info_048';
         spmd_attr_info_049           : String(1000)@title : 'spmd_attr_info_049';
         spmd_attr_info_050           : String(1000)@title : 'spmd_attr_info_050';
+        local_create_dtm             : DateTime    @title : '로컬등록시간';
+        local_update_dtm             : DateTime    @title : '로컬수정시간';
+        create_user_id               : String(255) @title : '등록사용자ID';
+        update_user_id               : String(255) @title : '변경사용자ID';
 }

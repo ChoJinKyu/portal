@@ -78,12 +78,32 @@ sap.ui.define([
             this.process.setDrawProcessUI(this, "rrMgtProcess" , "C", 0);
 
         },
-
         _onObjectMatched : function(oEvent){ 
             var oArgs = oEvent.getParameter("arguments");
-            console.log("param>>>>> " , oArgs);
+            console.log("param>>>>> " , oArgs); 
+            this._srchDetail(oArgs);
         } ,
 
+        _srchDetail : function(oArgs){
+            var oModel = this.getModel("rrMgt");
+              oModel.setTransactionModel(this.getModel());
+
+            var filter = [
+                new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID),
+                new Filter("mold_id", FilterOperator.EQ, oArgs.mold_id)
+            ];
+
+            if( oArgs.request_number != "New"){
+                filter.push(new Filter("repair_request_number", FilterOperator.EQ,  oArgs.request_number));
+            };
+
+            oModel.read("/remodelRepairDetail", {
+                filters: filter,
+                success: function (oData) {
+                    console.log("oData>>>>> " , oData);
+                }
+            });
+        },
 
         onPageNavBackButtonPress: function () {
             this.getRouter().navTo("rrMgtList", {}, true); 

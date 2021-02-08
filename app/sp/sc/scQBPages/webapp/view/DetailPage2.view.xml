@@ -199,7 +199,7 @@
                                                                         <HBox alignContent="Center" alignItems="Center" width="100%" class="sapUiSmallMarginEnd">
                                                                             <VBox width="100px">
                                                                                 <Label text="Max Round Count" width="120px"  required="true" class="sapMLabelNoText"/>
-                                                                                <Input value="3" width="100%" />
+                                                                                <Input value="" width="100%" />
                                                                             </VBox>
                                                                             <VBox>
                                                                                 <Label text=""  class="sapMLabelNoText"/>
@@ -211,7 +211,7 @@
                                                                             </VBox>
                                                                             <VBox>
                                                                                 <Label text=""  class="sapMLabelNoText"/>
-                                                                                <Input value="5" width="100px" />
+                                                                                <Input value="" width="100px" />
                                                                             </VBox>
                                                                             <VBox>
                                                                                 <Label text=""  class="sapMLabelNoText"/>
@@ -509,7 +509,7 @@
                                                     <VBox width="25%">
                                                         <Label  text="Contact Point" 
                                                                 class="sapMLabelNoText"/>
-                                                        <Input placeholder="사용자 이름" width="90%" showValueHelp="true" class=" " />
+                                                        <Input id="inputContactPoint" placeholder="사용자 이름" width="90%" showValueHelp="true" valueHelpRequest=".onPressBuyerPop" />
                                                     </VBox>
                                                     <!-- <VBox width="15%" /> -->
                                                     <VBox width="25%">
