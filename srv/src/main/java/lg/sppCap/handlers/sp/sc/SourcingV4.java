@@ -338,8 +338,8 @@ public class SourcingV4 implements EventHandler {
                     v_inRow.get("target_amount"),
                     v_inRow.get("supplier_participation_flag"),
                     v_inRow.get("partial_allow_flag"),
-                    v_inRow.get("bidding_result_open_status_code"),
-                    v_inRow.get("local_create_dtm")/* ,
+                    v_inRow.get("bidding_result_open_status_code")/*,
+                    v_inRow.get("local_create_dtm"),
                     v_inRow.get("local_update_dtm"),
                     v_inRow.get("create_user_id"),
                     v_inRow.get("update_user_id"),
@@ -350,6 +350,7 @@ public class SourcingV4 implements EventHandler {
             }
         }
         int[] updateCounts_negoheaders = jdbc.batchUpdate(v_sql_insertTable_negoheaders.toString(), batch_negoheaders);
+        
 
 		// insert local temp table : negoitemprices
         List<Object[]> batch_negoitemprices = new ArrayList<Object[]>();
