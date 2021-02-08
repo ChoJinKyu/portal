@@ -109,14 +109,6 @@ entity Sc_Nego_Headers {
                               and negotiation_style.nego_type_code         = $self.nego_type_code
                               and negotiation_style.negotiation_style_code = $self.negotiation_style_code
                             @title : '협상유형&협상스타일 Navi.';
-        //    by_step_bidding_flag : String(1)   @title: '단계별입찰여부' ;
-        //    round_bidding_flag : String(1)   @title: '회차입찰여부' ;
-        //    nego_round_largest_times : Integer   @title: '협상회차최대횟수' ;
-        //    next_round_auto_creation_flag : String(1)   @title: '다음회차자동생성여부' ;
-        //    bidding_progress_hour_count : Integer   @title: '입찰진행시개수' ;
-        //    price_condition_code : String(15)   @title: '가격조건코드' ;
-        //    bidding_auto_closing_hour_cnt : Integer   @title: '입찰자동마감시간수' ;
-        //    last_bid_af_auto_close_hours : Integer   @title: '최종입찰후자동마감시개수' ;
         close_date_ext_enabled_hours    : Integer            @title : '마감일자동연장가능시간수';
         close_date_ext_enabled_count    : Integer            @title : '마감일자동연장가능횟수';
         actual_extension_count          : Integer            @title : '실제연장횟수';
@@ -147,11 +139,38 @@ entity Sc_Nego_Headers {
         target_amount_config_flag       : String(1)          @title : '목표금액설정여부';
         target_currency                 : String(5)          @title : '목표통화';
         target_amount                   : PriceAmountT       @( title: '목표금액', Measures.ISOCurrency: target_currency);
+        supplier_participation_flag     : String(1)          @title : '공급업체참여여부' @description : 'UI:Intention of Supplier Participation';
+        partial_allow_flag              : String(1)          @title : '부분허용여부'     @description : 'UI:Partial Quotation';
+        bidding_result_open_status_code : String(30)         @title : '입찰결과오픈상태코드';
+        max_round_count                      : Integer       @title : 'Max Round Count' @description : 'UI:Max Round Count';
+        auto_round                           : String(1)     @title : 'Auto Round' @description : 'UI:Auto Round';
+        auto_round_terms                     : Integer       @title : 'Auto Round Terms' @description : 'UI:Auto Round Terms';
+        previous_round                       : String(1)     @title : 'Previous Round' @description : 'UI:Previous Round';
+        number_of_award_supplier             : Integer       @title : 'Number of Award Supplier' @description : 'UI:Number of Award Supplier';
+        order_rate                           : Decimal(28,2) @title : 'Order Rate' @description : 'UI:Order Rate';
+        // intention_of_supplier_participation  : String(30)    @title : 'Intention of Supplier Participation';
+        // partial_quotation                    : String(30)    @title : 'Partial Quotation';                            
+        bid_conference                       : String(1)     @title : 'Bid Conference' @description : 'UI:Bid Conference';
+        bid_conference_date                  : DateTime      @title : 'Bid Conference Date' @description : 'UI:Bid Conference Date';
+        bid_conference_place                 : String(1000)  @title : 'Bid Conference Place' @description : 'UI:Bid Conference Place';
+        contact_point_empno                  : type of Sc_Employee_View : employee_number @title : 'Contact Point 사번' @description : 'UI:Phone';
+        contact_point : Association to Sc_Employee_View    //UseCase        
+                            on contact_point.tenant_id = $self.tenant_id
+                              and contact_point.employee_number = $self.contact_point_empno;
+        phone_no                             : String(30)    @title : 'Phone No' @description : 'UI:Phone No';
+
+        //    by_step_bidding_flag : String(1)   @title: '단계별입찰여부' ;
+        //    round_bidding_flag : String(1)   @title: '회차입찰여부' ;
+        //    nego_round_largest_times : Integer   @title: '협상회차최대횟수' ;
+        //    next_round_auto_creation_flag : String(1)   @title: '다음회차자동생성여부' ;
+        //    bidding_progress_hour_count : Integer   @title: '입찰진행시개수' ;
+        //    price_condition_code : String(15)   @title: '가격조건코드' ;
+        //    bidding_auto_closing_hour_cnt : Integer   @title: '입찰자동마감시간수' ;
+        //    last_bid_af_auto_close_hours : Integer   @title: '최종입찰후자동마감시개수' ;
         //    award_supplier_option_mtd_cd : String(100)   @title: '낙찰공급업체선택방법코드' ;
         //    award_supplier_count : Integer   @title: '낙찰공급업체건수' ;
         //    purchasing_ord_portion_rate_val : String(100)   @title: '구매주문분배비율문자값' ;
-        supplier_participation_flag     : String(1)          @title : '공급업체참여여부';
-        partial_allow_flag              : String(1)          @title : '부분허용여부';
+
         //    orientation_execution_flag : String(1)   @title: '오리엔테이션실행여부' ;
         //    ot_contact_employee_no : String(30)   @title: '오리엔테이션담당자사원번호' ;
         //    orientation_contact_phone_no : String(30)   @title: '오리엔테이션담당자전화번호' ;
@@ -159,7 +178,6 @@ entity Sc_Nego_Headers {
         //    orientation_location_desc : String(1000)   @title: '오리엔테이션위치설명' ;
         //    interface_source_code : String(30)   @title: '인터페이스소스코드' ;
         //    reference_info : String(256)   @title: '참조정보' ;
-        bidding_result_open_status_code : String(30)         @title : '입찰결과오픈상태코드';
 //    bidding_info_buyer_open_date : Date   @title: '입찰정보바이어오픈일자' ;
 //    bidding_info_supplier_open_date : Date   @title: '입찰정보공급업체오픈일자' ;
 //    bidding_info_pur_contact_empno : String(30)   @title: '입찰정보구매연락사번' ;
