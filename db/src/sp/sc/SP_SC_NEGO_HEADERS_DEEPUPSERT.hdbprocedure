@@ -168,7 +168,7 @@ BEGIN
             , update_user_id
             , system_create_dtm
             , system_update_dtm
-        ) SELECT * FROM :LT_NEGO_HEADER
+        ) SELECT * FROM :vt_nego_header
         ;
 
         UPSERT SP_SC_NEGO_ITEM_PRICES(
