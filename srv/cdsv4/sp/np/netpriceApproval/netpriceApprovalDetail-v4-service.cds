@@ -145,7 +145,7 @@ service NpApprovalDetailV4Service {
     };
 
 
-    action ApprovalDeleteProc( param : StatusChangeParamType ) returns DeleteResultType;
+    action ApprovalDeleteProc( param : DeleteParamType ) returns DeleteResultType;
 
 
 }
