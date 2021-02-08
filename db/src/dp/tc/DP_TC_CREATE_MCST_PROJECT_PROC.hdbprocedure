@@ -345,6 +345,7 @@ BEGIN
               	 , VERSION_NUMBER
               	 , ADDITION_TYPE_CODE
               	 , PERIOD_CODE
+                 , UOM_CODE
               	 , ADDITION_TYPE_VALUE
               	 , LOCAL_CREATE_DTM
               	 , LOCAL_UPDATE_DTM
@@ -359,6 +360,7 @@ BEGIN
                  , v_new_ver_num
                  , loop_add_info.ADDITION_TYPE_CODE
                  , loop_add_info.PERIOD_CODE
+                 , ifnull(loop_add_info.UOM_CODE, '-')
                  , loop_add_info.ADDITION_TYPE_VALUE
                  , CURRENT_TIMESTAMP
                  , CURRENT_TIMESTAMP
