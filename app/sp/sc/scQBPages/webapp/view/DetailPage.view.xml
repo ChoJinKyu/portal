@@ -134,7 +134,7 @@
                                                                 <!-- <RadioButton text="Sealed (Purchaser : X,Supplier :X)" />
                                                                 <RadioButton text="Blind (Purchaser : O,Supplier :X)" /> -->
                                                             </RadioButtonGroup>
-                                                            <Text text="{NegoHeaders>/negotiation_style_code}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
+                                                            <Text text="{NegoHeaders>/negotiation_style/negotiation_style_name}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                                         
                                                         </VBox>
 
