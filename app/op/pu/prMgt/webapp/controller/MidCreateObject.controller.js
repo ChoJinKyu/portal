@@ -809,66 +809,54 @@ sap.ui.define([
                     var oMetadata = itemDtl["__metadata"] || {};
 
                     for(var key in itemDtl){
-                        let sI18NText = that.getModel("I18N").getText("/" + key.toUpperCase());
-                        let oDisplayFlaDtl = oDisplayData.OP_PU_PR_DTL[key.toUpperCase()];
-                        let oDisplayFlaSer = oDisplayData.OP_PU_PR_SERVICE[key.toUpperCase()];
-                        let oDisplayFlaAcc = oDisplayData.OP_PU_PR_ACCOUNT[key.toUpperCase()];
-                        if(oDisplayFlaDtl && oDisplayFlaDtl.mandatory_column_flag && itemDtl[key] === ""){
-                            msg += "\r\n- " + (idx+1) + "번째 열의 " + (sI18NText?sI18NText:key.toUpperCase()); 
-                            oMetadata._valueStates[key] = {
-                                valueState: ValueState.Error,
-                                valueStateText: sI18N_ECM01002
-                            };                     
+                        let sI18NKey = key.toUpperCase();
+                        let sI18NText = that.getModel("I18N").getText("/" + sI18NKey);                        
+                        if(!sI18NText) {
+                            switch ( key.toUpperCase() ) {
+                                case 'PR_QUANTITY':
+                                    sI18NKey = 'REQUEST_QUANTITY';
+                                    break;
+                                case 'PR_UNIT':
+                                    sI18NKey = 'UNIT';
+                                    break;
+                                case 'ESTIMATED_PRICE':
+                                    sI18NKey = 'PRICE';
+                                    break;
+                                case 'CCTR_CODE':
+                                    sI18NKey = 'COST_CENTER';
+                                    break;
+                                case 'SLOC_CODE':
+                                    sI18NKey = 'STORAGE_LOCATION';
+                                    break;
+                                default:
+                                    sI18NKey = key.toUpperCase();
+                            }
+                            sI18NText = that.getModel("I18N").getText("/" + sI18NKey); 
+                            if(!sI18NText){
+                                sI18NText = key.toUpperCase();
+                            }
+                        }
+
+                        let oDisplayFlagDtl = oDisplayData.OP_PU_PR_DTL[key.toUpperCase()];
+                        let oDisplayFlagSer = oDisplayData.OP_PU_PR_SERVICE[key.toUpperCase()];
+                        let oDisplayFlagAcc = oDisplayData.OP_PU_PR_ACCOUNT[key.toUpperCase()];
+                        if(oDisplayFlagDtl && oDisplayFlagDtl.mandatory_column_flag 
+                                && (itemDtl[key] === null || itemDtl[key] === "") ){
+                            msg += "\r\n - " + (idx+1) + "번째 열의 " + sI18NText; 
                             bReturn = false;
-                        }else if(oDisplayFlaSer && oDisplayFlaSer.mandatory_column_flag && itemDtl[key] === ""){
-                            msg += "\r\n- " + (idx+1) + "번째 열의 " + that.getModel("I18N").getText("/" + key.toUpperCase());   
-                            oMetadata._valueStates[key] = {
-                                valueState: ValueState.Error,
-                                valueStateText: sI18N_ECM01002
-                            };                     
+                            // oMetadata._valueStates[key] = {
+                            //     valueState : ValueState.Error
+                            // }
+                        }else if(oDisplayFlagSer && oDisplayFlagSer.mandatory_column_flag 
+                                && (itemDtl[key] === null || itemDtl[key] === "") ){
+                            msg += "\r\n - " + (idx+1) + "번째 열의 " + sI18NText;
                             bReturn = false;
-                        }else if(oDisplayFlaAcc && oDisplayFlaAcc.mandatory_column_flag && itemDtl[key] === ""){
-                            msg += "\r\n- " + (idx+1) + "번째 열의 " + that.getModel("I18N").getText("/" + key.toUpperCase());   
-                            oMetadata._valueStates[key] = {
-                                valueState: ValueState.Error,
-                                valueStateText: sI18N_ECM01002
-                            }; 
+                        }else if(oDisplayFlagAcc && oDisplayFlagAcc.mandatory_column_flag 
+                                && (itemDtl[key] === null || itemDtl[key] === "") ){
+                            msg += "\r\n - " + (idx+1) + "번째 열의 " + sI18NText;
                             bReturn = false;
                         }
                     }
-
-
-
-                    // let keyName = item.key;
-                    // let oDisplayFlag = oDisplayData[keyName.toUpperCase()];
-
-                    // if(oDisplayFlag.mandatory_column_flag && item[keyName] === ""){
-                    //     msg += "\r\n- " + (idx+1) + "번째 열의 " + that.getModel("I18N").getText("/" + keyName.toUpperCase());            
-                    //     bReturn = false;
-                    //     return true;
-                    // }
-
-                    // if(item["org_code"] === null || item["org_code"] === ""){
-                    //     msg += "\r\n- " + (idx+1) + "번째 열의 " + that.getModel("I18N").getText("/ORG_CODE");            
-                    //     bReturn = false;
-                    //     return true;
-                    // }
-
-
-                    // if(item["pr_desc"] === null || item["pr_desc"] === ""){
-                    //     var msg = that.getModel("I18N").getText("/ECM01002");
-                    //     msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/PR_ITEM_NAME") + ")";
-                    //     MessageToast.show(msg);
-                    //     bReturn = false;
-                    //     return bReturn;
-                    // }
-                    // if(item["price_unit"] !== null && item["price_unit"] !== "" && item["price_unit"] > 10000){
-                    //     var msg = that.getModel("I18N").getText("/LIMIT_EXCEEDED");
-                    //     msg += "\r\n(" + (idx+1) + "번째 열의" + that.getModel("I18N").getText("/PRICE_UNIT") + ")";
-                    //     MessageToast.show(msg);
-                    //     bReturn = false;
-                    //     return bReturn;
-                    // }
 
                     // console.log("item : " + item.key + " : " + item.value);
                     // for(var key in item){
@@ -886,31 +874,49 @@ sap.ui.define([
                 bReturn = false;
             }
 
-            return bReturn;
 
 
-            // var aColumns = oTable.getColumns();
-            // aColumns.forEach(function(oCol, idx){
-            //     var sLabelText = oCol.getLabel().getText();
-            //     console.log("sLabelText : " + sLabelText);
+            var oTable = this.byId(tableId);
+            var aColumns = oTable.getColumns();
+            var oBinding = oTable.getBindingInfo("rows");
 
-            //     var oControl = oCol.getTemplate();
+            aColumns.forEach(function(oCol, idx){
+                var sLabelText = oCol.getLabel().getText();
+                console.log("##### sLabelText : " + sLabelText);
 
-            //     if(oControl){
-            //         if(that.validator.validate(oControl) !== true){
-            //             MessageToast.show(that.getModel("I18N").getText("/NCM005"));
-            //             return;
-            //         }
-            //     }
+                var oTemplate = oCol.getTemplate();
 
-            //     // if(oControl && oControl.getProperty("required")){
-            //     //     if(this.validator.validate(oControl) !== true){
-            //     //         MessageToast.show(this.getModel("I18N").getText("/NCM005"));
-            //     //         return;
-            //     //     }
-            //     // }
+                var oTemplateBindingInfo = oTemplate.getBindingInfo("value");
+                var oTemplateRequired = oTemplate.getBindingInfo("required");
+
+                if(oTemplateBindingInfo){
+                    var oTemplateBindingInfoPath = oTemplateBindingInfo.parts[0].path;
+                    console.log("##### oTemplateBindingInfoPath > " + oTemplateBindingInfoPath);
+
+                    var oTemplateRequiredPath = oTemplateBindingInfo.parts[0].path;
+                    console.log("##### oTemplateRequiredPath > " + oTemplateRequiredPath);
+
+                }
+               
+
+                // if(oControl){
+                //     if(that.validator.validate(oControl) !== true){
+                //         MessageToast.show(that.getModel("I18N").getText("/NCM005"));
+                //         return;
+                //     }
+                // }
+
+                // if(oControl && oControl.getProperty("required")){
+                //     if(this.validator.validate(oControl) !== true){
+                //         MessageToast.show(this.getModel("I18N").getText("/NCM005"));
+                //         return;
+                //     }
+                // }
                 
-            // });
+            });
+            
+
+            return bReturn;
         },
 
 
@@ -1097,7 +1103,7 @@ sap.ui.define([
                         delivery_request_date: delivery_request_date,
                         purchasing_group_code: (item.purchasing_group_code) ? item.purchasing_group_code : "",
                         price_unit          : (item.price_unit && item.price_unit !== "") ? item.price_unit+"" : "1",
-                        pr_progress_status_code: "",
+                        pr_progress_status_code: "INIT",
                         remark              : (item.remark) ? item.remark : "",
                         sloc_code           : (item.sloc_code) ? item.sloc_code : "",
                         supplier_code       : (item.supplier_code) ? item.supplier_code : "",

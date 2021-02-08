@@ -161,20 +161,19 @@
                                 <table:Column width="18em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_DESC/display_column_flag}">
                                     <Label text="{I18N>/PR_ITEM_NAME}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_DESC/mandatory_column_flag}"/>           
                                     <table:template>
-                                        <Input value="{viewModel>pr_desc}"  textAlign="Begin" maxLength="100" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_DESC/mandatory_column_flag}"/>
+                                        <Input value="{viewModel>pr_desc}"  textAlign="Begin" maxLength="100" 
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_DESC/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>       
                                 <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/display_column_flag}">
                                     <Label text="{I18N>/REQUEST_QUANTITY}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/mandatory_column_flag}"/>
                                     <table:template>
-                                        <Input type="Float"
+                                        <Input 
                                             value="{path: 'viewModel>pr_quantity', 
                                                     type : 'sap.ui.model.odata.type.Decimal'}" 
                                             textAlign="End"
                                             maxLength="30"
-                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/mandatory_column_flag}"
-                                            valueState="{viewModel>__metadata/_valueStates/pr_quantity/valueState}" 
-                                            valueStateText="{viewModel>__metadata/_valueStates/pr_quantity/valueStateText}"/>
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>                                     
                                 <table:Column width="7em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_UNIT/display_column_flag}">
@@ -230,9 +229,7 @@
                                             value="{path: 'viewModel>estimated_price', 
                                                     type : 'sap.ui.model.odata.type.Decimal'}" 
                                             textAlign="End"
-                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ESTIMATED_PRICE/mandatory_column_flag}"
-                                            valueState="{viewModel>__metadata/_valueStates/estimated_price/valueState}" 
-                                            valueStateText="{viewModel>__metadata/_valueStates/estimated_price/valueStateText}"/>
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ESTIMATED_PRICE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column  width="7em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/CURRENCY_CODE/display_column_flag}">
@@ -254,7 +251,7 @@
                                                     {path: 'viewModel>price_unit'},
                                                     {path: 'viewModel>currency_code'}
                                                 ],
-                                                type:'sap.ui.model.type.Currency',
+                                                type:'sap.ui.model.type.Integer',
                                                 formatOptions:{showMeasure:false}
                                             }"
                                             maxLength="6"
@@ -358,8 +355,7 @@
                                     <table:template>
                                         <Input value="{viewModel>remark}" 
                                             maxLength="2000"
-                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/REMARK/mandatory_column_flag}" 
-                                            valueState="{form>__metadata/_valueStates/remark/valueState}" valueStateText="{form>__metadata/_valueStates/remark/valueStateText}"/>                                            
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/REMARK/mandatory_column_flag}"/>                                            
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/ITEM_CATEGORY_CODE/display_column_flag}">
