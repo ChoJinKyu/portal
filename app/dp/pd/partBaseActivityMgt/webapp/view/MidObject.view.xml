@@ -253,6 +253,7 @@
 						<table:Table id="cateTable" selectionMode="{= ${contModel>/readMode}?'None':'MultiToggle'}" 
                             cellClick=".onCellClick" rowSelectionChange=".onCheck" enableColumnReordering="false"
                             filter="filterPrice"
+                            visibleRowCount="20"
                             rows="{category>/PdPartBaseActivityCategoryView}">
                             <table:extension>
                                 <OverflowToolbar visible="{contModel>/editMode}">			
