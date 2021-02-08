@@ -8,9 +8,9 @@ namespace dp;
 service RrMgtListService {
 
     view remodelRepairDetail as 
-        select key item.tenant_id 
-            , key item.mold_id 
-            , key item.repair_request_number 
+        select key mst.tenant_id 
+            , key mst.mold_id 
+            , item.repair_request_number 
             , item.create_user_id 
             , item.repair_request_date 
             , item.repair_desc 
