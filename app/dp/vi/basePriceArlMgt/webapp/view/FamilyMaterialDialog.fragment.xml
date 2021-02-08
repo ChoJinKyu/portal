@@ -137,8 +137,8 @@
                         <table:template>
                             <Text text="{
                                 parts: [
-                                    {path: 'dialogModel>prices/0/current_price'},
-                                    {path: 'dialogModel>prices/0/current_price_currency_code'}
+                                    {path: 'dialogModel>nn_net_price_0'},
+                                    {path: 'dialogModel>nn_currency_code_0'}
                                 ],
                                 type: 'sap.ui.model.type.Currency',
                                 formatOptions: {
@@ -151,14 +151,14 @@
                     <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <Label text="{I18N>/PUR_CURRENCY}" textAlign="Center" />
                         <table:template>
-                            <Text text="{dialogModel>prices/0/current_price_currency_code}" />
+                            <Text text="{dialogModel>nn_currency_code_0}" />
                         </table:template>
                     </table:Column>
                     <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <Label text="{I18N>/PUR_START_DATE}" textAlign="Center" />
                         <table:template>
                             <Text text="{
-                                path: 'dialogModel>prices/0/current_price_start_date',
+                                path: 'dialogModel>nn_start_date_0',
                                 formatter: '.dateFormatter.toDateString'}" />
                         </table:template>
                     </table:Column>
@@ -167,8 +167,8 @@
                         <table:template>
                             <Text text="{
                                 parts: [
-                                    {path: 'dialogModel>prices/0/base_price'},
-                                    {path: 'dialogModel>prices/0/base_price_currency_code'}
+                                    {path: 'dialogModel>nb_base_price_0'},
+                                    {path: 'dialogModel>nb_currency_code_0'}
                                 ],
                                 type: 'sap.ui.model.type.Currency',
                                 formatOptions: {
@@ -181,14 +181,14 @@
                     <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <Label text="{I18N>/CURRENT_CURRENCY}" textAlign="Center" />
                         <table:template>
-                            <Text text="{dialogModel>prices/0/base_price_currency_code}" />
+                            <Text text="{dialogModel>nb_currency_code_0}" />
                         </table:template>
                     </table:Column>
                     <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <Label text="{I18N>/CURRENT_BASE_DATE}" textAlign="Center" />
                         <table:template>
                             <Text text="{
-                                path: 'dialogModel>prices/0/base_date',
+                                path: 'dialogModel>nb_base_date_0',
                                 formatter: '.dateFormatter.toDateString'}" />
                         </table:template>
                     </table:Column>
@@ -197,8 +197,8 @@
                         <table:template>
                             <Text text="{
                                 parts: [
-                                    {path: 'dialogModel>prices/0/new_base_price'},
-                                    {path: 'dialogModel>prices/0/new_base_price_currency_code'}
+                                    {path: 'dialogModel>vb_base_price_0'},
+                                    {path: 'dialogModel>vb_currency_code_0'}
                                 ],
                                 type: 'sap.ui.model.type.Currency',
                                 formatOptions: {
@@ -211,14 +211,14 @@
                     <table:Column width="6rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <Label text="{I18N>/DEVELOPMENT_CURRENCY}" textAlign="Center" />
                         <table:template>
-                            <Text text="{dialogModel>prices/0/new_base_price_currency_code}" />
+                            <Text text="{dialogModel>vb_currency_code_0}" />
                         </table:template>
                     </table:Column>
                     <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                         <Label text="{I18N>/DEVELOPMENT_START_DATE}" textAlign="Center" />
                         <table:template>
                             <Text text="{
-                                path: 'dialogModel>prices/0/new_base_price_start_date',
+                                path: 'dialogModel>vb_base_date_0',
                                 formatter: '.dateFormatter.toDateString'}" />
                         </table:template>
                     </table:Column>
@@ -233,8 +233,8 @@
                         <table:template>
                             <Text text="{
                                 parts: [
-                                    {path: 'dialogModel>prices/2/current_price'},
-                                    {path: 'dialogModel>prices/2/current_price_currency_code'}
+                                    {path: 'dialogModel>nn_net_price_2'},
+                                    {path: 'dialogModel>nn_currency_code_2'}
                                 ],
                                 type: 'sap.ui.model.type.Currency',
                                 formatOptions: {
@@ -250,7 +250,7 @@
                             <Label text="{I18N>/PUR_CURRENCY}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{dialogModel>prices/2/current_price_currency_code}" />
+                            <Text text="{dialogModel>nn_currency_code_2}" />
                         </table:template>
                     </table:Column>
                     <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -260,7 +260,7 @@
                         </table:multiLabels>
                         <table:template>
                             <Text text="{
-                                path: 'dialogModel>prices/2/current_price_start_date',
+                                path: 'dialogModel>nn_start_date_2',
                                 formatter: '.dateFormatter.toDateString'}" />
                         </table:template>
                     </table:Column>
@@ -272,8 +272,8 @@
                         <table:template>
                             <Text text="{
                                 parts: [
-                                    {path: 'dialogModel>prices/2/base_price'},
-                                    {path: 'dialogModel>prices/2/base_price_currency_code'}
+                                    {path: 'dialogModel>nb_base_price_2'},
+                                    {path: 'dialogModel>nb_currency_code_2'}
                                 ],
                                 type: 'sap.ui.model.type.Currency',
                                 formatOptions: {
@@ -289,7 +289,7 @@
                             <Label text="{I18N>/CURRENT_CURRENCY}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{dialogModel>prices/2/base_price_currency_code}" />
+                            <Text text="{dialogModel>nb_currency_code_2}" />
                         </table:template>
                     </table:Column>
                     <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -299,7 +299,7 @@
                         </table:multiLabels>
                         <table:template>
                             <Text text="{
-                                path: 'dialogModel>prices/2/base_date',
+                                path: 'dialogModel>nb_base_date_2',
                                 formatter: '.dateFormatter.toDateString'}" />
                         </table:template>
                     </table:Column>
@@ -311,8 +311,8 @@
                         <table:template>
                             <Text text="{
                                 parts: [
-                                    {path: 'dialogModel>prices/2/new_base_price'},
-                                    {path: 'dialogModel>prices/2/new_base_price_currency_code'}
+                                    {path: 'dialogModel>vb_base_price_2'},
+                                    {path: 'dialogModel>vb_currency_code_2'}
                                 ],
                                 type: 'sap.ui.model.type.Currency',
                                 formatOptions: {
@@ -328,7 +328,7 @@
                             <Label text="{I18N>/DEVELOPMENT_CURRENCY}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{dialogModel>prices/2/new_base_price_currency_code}" />
+                            <Text text="{dialogModel>vb_currency_code_2}" />
                         </table:template>
                     </table:Column>
                     <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -338,7 +338,7 @@
                         </table:multiLabels>
                         <table:template>
                             <Text text="{
-                                path: 'dialogModel>prices/2/new_base_price_start_date',
+                                path: 'dialogModel>vb_base_date_2',
                                 formatter: '.dateFormatter.toDateString'}" />
                         </table:template>
                     </table:Column>
@@ -353,8 +353,8 @@
                         <table:template>
                             <Text text="{
                                 parts: [
-                                    {path: 'dialogModel>prices/1/current_price'},
-                                    {path: 'dialogModel>prices/1/current_price_currency_code'}
+                                    {path: 'dialogModel>nn_net_price_1'},
+                                    {path: 'dialogModel>nn_currency_code_1'}
                                 ],
                                 type: 'sap.ui.model.type.Currency',
                                 formatOptions: {
@@ -370,7 +370,7 @@
                             <Label text="{I18N>/PUR_CURRENCY}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{dialogModel>prices/1/current_price_currency_code}" />
+                            <Text text="{dialogModel>nn_currency_code_1}" />
                         </table:template>
                     </table:Column>
                     <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -380,7 +380,7 @@
                         </table:multiLabels>
                         <table:template>
                             <Text text="{
-                                path: 'dialogModel>prices/1/current_price_start_date',
+                                path: 'dialogModel>nn_start_date_1',
                                 formatter: '.dateFormatter.toDateString'}" />
                         </table:template>
                     </table:Column>
@@ -392,8 +392,8 @@
                         <table:template>
                             <Text text="{
                                 parts: [
-                                    {path: 'dialogModel>prices/1/base_price'},
-                                    {path: 'dialogModel>prices/1/base_price_currency_code'}
+                                    {path: 'dialogModel>nb_base_price_1'},
+                                    {path: 'dialogModel>nb_currency_code_1'}
                                 ],
                                 type: 'sap.ui.model.type.Currency',
                                 formatOptions: {
@@ -409,7 +409,7 @@
                             <Label text="{I18N>/CURRENT_CURRENCY}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{dialogModel>prices/1/base_price_currency_code}" />
+                            <Text text="{dialogModel>nb_currency_code_1}" />
                         </table:template>
                     </table:Column>
                     <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -419,7 +419,7 @@
                         </table:multiLabels>
                         <table:template>
                             <Text text="{
-                                path: 'dialogModel>prices/1/base_date',
+                                path: 'dialogModel>nb_base_date_1',
                                 formatter: '.dateFormatter.toDateString'}" />
                         </table:template>
                     </table:Column>
@@ -431,8 +431,8 @@
                         <table:template>
                             <Text text="{
                                 parts: [
-                                    {path: 'dialogModel>prices/1/new_base_price'},
-                                    {path: 'dialogModel>prices/1/new_base_price_currency_code'}
+                                    {path: 'dialogModel>vb_base_price_1'},
+                                    {path: 'dialogModel>vb_currency_code_1'}
                                 ],
                                 type: 'sap.ui.model.type.Currency',
                                 formatOptions: {
@@ -448,7 +448,7 @@
                             <Label text="{I18N>/DEVELOPMENT_CURRENCY}" textAlign="Center" />
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{dialogModel>prices/1/new_base_price_currency_code}" />
+                            <Text text="{dialogModel>vb_currency_code_1}" />
                         </table:template>
                     </table:Column>
                     <table:Column width="8rem" hAlign="Center" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -458,7 +458,7 @@
                         </table:multiLabels>
                         <table:template>
                             <Text text="{
-                                path: 'dialogModel>prices/1/new_base_price_start_date',
+                                path: 'dialogModel>vb_base_date_1',
                                 formatter: '.dateFormatter.toDateString'}" />
                         </table:template>
                     </table:Column>
