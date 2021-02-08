@@ -23,6 +23,7 @@ BEGIN
     DECLARE V_EVALUATION_ARTICLE_CODE NVARCHAR(15) = '';
 
     /* SQL Error 처리 */
+    DECLARE VE_INPUT_LEN_ERR CONDITION FOR SQL_ERROR_CODE 10000;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 
     SELECT  IFNULL(I_USER_ID,'SYSTEM') INTO I_USER_ID FROM DUMMY;
@@ -44,14 +45,22 @@ BEGIN
     INTO   V_EVALUATION_ARTICLE_CODE
     FROM   DUMMY;
     
+    
     /*Evaluation Item Insert*/
     BEGIN
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
-        
-            O_MSG = SELECT  'NG' RETURN_CODE, 'Insert Evaluation Item Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')' RETURN_MSG FROM  DUMMY;
+            :O_MSG.INSERT(('NG','Insert Evaluation Item Processing error. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE  || ')'),1);
             RESIGNAL;
         END;
+
+        IF IFNULL(:I_EVALUATION_ARTICLE_NAME,'X') = 'X' THEN
+            SIGNAL VE_INPUT_LEN_ERR SET MESSAGE_TEXT = 'Evaluation Article Name is null. Please Check.';
+        END IF;
+
+        IF LENGTH(:I_EVALUATION_ARTICLE_NAME) > 240 THEN
+            SIGNAL VE_INPUT_LEN_ERR SET MESSAGE_TEXT = 'Evaluation Article Name is over length. Please Check.';
+        END IF;
 
         INSERT INTO SP_SE_EVAL_ITEM_MST
         (TENANT_ID
@@ -94,5 +103,5 @@ BEGIN
     END;
     
     COMMIT;
-    O_MSG = SELECT 'OK' RETURN_CODE, 'Successfully Saved.' RETURN_MSG FROM DUMMY;
+    :O_MSG.INSERT(('OK','Successfully Saved.'),1);
 END;
