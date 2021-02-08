@@ -157,7 +157,7 @@
                             <layoutData><layout:GridData span="XL3 L3 M3 S12"/></layoutData>                                
                         </VBox>
                         <VBox>
-                            <Label text="{I18N>/LOCAL_CREATE_DTM}" labelFor="datepicker_creation_date"></Label>
+                            <Label text="{I18N>/LOCAL_CREATE_DATE}" labelFor="datepicker_creation_date"></Label>
                             <DateRangeSelection 
                             id="datepicker_creation_date" value="{mainListViewModel>/searchArea/local_create_dtm}" 
                             showFooter="true" placeholder="yyyy/MM/dd - yyyy/MM/dd" displayFormat="yyyy/MM/dd" 
@@ -172,7 +172,7 @@
                             <layoutData><layout:GridData span="XL3 L3 M3 S12"/></layoutData>                                
                         </VBox>
                         <VBox>
-                            <Label text="{I18N>/LOCAL_UPDATE_DTM}" labelFor="datepicker_update_date"></Label>
+                            <Label text="{I18N>/LOCAL_UPDATE_DATE}" labelFor="datepicker_update_date"></Label>
                             <DateRangeSelection 
                             id="datepicker_update_date" value="{mainListViewModel>/searchArea/local_update_dtm}"
                             showFooter="true" placeholder="yyyy/MM/dd - yyyy/MM/dd" displayFormat="yyyy/MM/dd" 
@@ -301,7 +301,7 @@
                                 <core:CustomData key="p13nData"
                                 value='\{"columnKey": "local_create_dtm", "leadingProperty": "local_create_dtm", "sortProperty": "local_create_dtm", "filterProperty": "local_create_dtm", "columnIndex": 8, "type":"date"}'/>
                                 </customData>
-                                    <Text text="{I18N>/LOCAL_CREATE_DTM}"></Text>
+                                    <Text text="{I18N>/LOCAL_CREATE_DATE}"></Text>
                             </Column>
 
                             <Column minScreenWidth ="" demandPopin="false" importance="High">
@@ -317,7 +317,7 @@
                                 <core:CustomData key="p13nData"
                                 value='\{"columnKey": "local_update_dtm", "leadingProperty": "local_update_dtm", "sortProperty": "local_update_dtm", "filterProperty": "local_update_dtm", "columnIndex": 10, "type":"date"}'/>
                                 </customData>
-                                    <Text text="{I18N>/LOCAL_UPDATE_DTM}"></Text>
+                                    <Text text="{I18N>/LOCAL_UPDATE_DATE}"></Text>
                             </Column>
 
                             <Column minScreenWidth ="" demandPopin="false" importance="High">

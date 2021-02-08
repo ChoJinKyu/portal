@@ -34,42 +34,6 @@ sap.ui.define([
 
         dateFormatter: DateFormatter,
         validator: new Validator(),
-        _masterData : {
-            affiliate_code: "Y",
-            affiliate_name: "",
-            company_class_code: "",
-            company_class_name: "",
-            company_email_address: "",
-            company_tel_number: "",
-            country_code: "",
-            country_name: "",
-            create_user_id: "",
-            eu_flag: "",
-            local_create_dtm: "",
-            local_update_dtm: "",
-            maker_code: "",
-            maker_english_address: "",
-            maker_english_city: "",
-            maker_english_full_address: "",
-            maker_english_name: "",
-            maker_english_region: "",
-            maker_local_address: "",
-            maker_local_city: "",
-            maker_local_full_address: "",
-            maker_local_name: "",
-            maker_local_region: "",
-            maker_status_code: "",
-            maker_status_name: "",
-            old_maker_code: "",
-            represent_name: "",
-            system_create_dtm: "",
-            system_update_dtm: "",
-            tax_id: "",
-            tenant_id: "",
-            update_user_id: "",
-            vat_number: "",
-            zip_code: ""
-        },
         
         
 		/* =========================================================== */
@@ -185,7 +149,42 @@ sap.ui.define([
                 list : []
             }); 
 
-            oWriteModel.setProperty("/generalInfo", this._masterData);
+            oWriteModel.setProperty("/generalInfo", {
+                affiliate_code: "Y",
+                affiliate_name: "",
+                company_class_code: "",
+                company_class_name: "",
+                company_email_address: "",
+                company_tel_number: "",
+                country_code: "",
+                country_name: "",
+                create_user_id: "",
+                eu_flag: "",
+                local_create_dtm: "",
+                local_update_dtm: "",
+                maker_code: "",
+                maker_english_address: "",
+                maker_english_city: "",
+                maker_english_full_address: "",
+                maker_english_name: "",
+                maker_english_region: "",
+                maker_local_address: "",
+                maker_local_city: "",
+                maker_local_full_address: "",
+                maker_local_name: "",
+                maker_local_region: "",
+                maker_status_code: "",
+                maker_status_name: "",
+                old_maker_code: "",
+                represent_name: "",
+                system_create_dtm: "",
+                system_update_dtm: "",
+                tax_id: "",
+                tenant_id: "",
+                update_user_id: "",
+                vat_number: "",
+                zip_code: ""
+            });
         },
 
 
@@ -234,12 +233,22 @@ sap.ui.define([
             
         },
 
-        onChangeCountry : function(oEvent){
+        onChangeCombobox : function(oEvent){
+            var oWriteModel = this.getModel("writeModel");
+            var oGeneralInfo = oWriteModel.getProperty("/generalInfo");
+            var sPath = oEvent.getSource().getBindingPath("selectedKey");
             var oSelectedItem = sap.ui.getCore().byId(oEvent.getSource().getSelectedItemId()).getBindingContext().getObject();
-            this._setVisiableVatNumber(oSelectedItem["eu_flag"]);
-            //this._setVisiableVatNumber();
-        },
 
+            if(sPath.indexOf("country_code") > -1){
+                oWriteModel.setProperty("/generalInfo/country_name", oSelectedItem["country_name"]);
+                this._setVisiableVatNumber(oSelectedItem["eu_flag"]);
+            }else if(sPath.indexOf("maker_status_code") > -1){
+                oWriteModel.setProperty("/generalInfo/maker_status_name", oSelectedItem["code_name"]);
+            }else if(sPath.indexOf("company_class_code") > -1){
+                oWriteModel.setProperty("/generalInfo/company_class_name", oSelectedItem["code_name"]);
+            }
+        },
+        
         onNavigationBackPress: function(e){
 
             //portal에 있는 toolPage 
@@ -309,10 +318,6 @@ sap.ui.define([
             oUserSessionModel = this.getModel("USER_SESSION");
             
             var oGeneralInfo = oWriteModel.getProperty("/generalInfo"),
-            checkResult = oWriteModel.getProperty("/businessNoCheckList/0"),
-            bSupplierRole = checkResult.supplier_role === "Y",
-            bMakerRole = checkResult.maker_role === "Y",
-            sProgress = oCallByAppModel.getProperty("/progressCode"),
             sGubun = oCallByAppModel.getProperty("/gubun"),
             sMode = oCallByAppModel.getProperty("/mode");
 
@@ -389,19 +394,18 @@ sap.ui.define([
             var sTitle = "Create";
             // || sProgress === "REQUEST"
             if(sAction === "REJECT"){
-                sTitle = "Reject";
-                sConfirmMsg = "반려하시겠습니까?";
+                sTitle = this.getModel("I18N").getText("/REJECT");
+                sConfirmMsg = this.getModel("I18N").getText("/NSP00103");
             }else{
                 if(sMode === "U" && sGubun === "MM"){
-                    sTitle = "Modify";
+                    sTitle = this.getModel("I18N").getText("/EDIT");
                     sConfirmMsg = this.getModel("I18N").getText("/NPG00007");
                 }
             }
-            
-            
 
-           // this.validator.setModel(this.getModel("writeModel"), "writeModel");
-            //if(this.validator.validate(this.byId("page")) === true) {
+            var result = {returnmessage:"success", return_code : "OK"};
+            this.validator.setModel(this.getModel("writeModel"), "writeModel");
+            if(this.validator.validate(this.byId("page")) === true) {
 
                 var oRequestData = this._fnSetRequestData(sAction);
                 MessageBox.confirm(sConfirmMsg, {
@@ -409,27 +413,27 @@ sap.ui.define([
                     initialFocus : sap.m.MessageBox.Action.CANCEL,
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
-                            that._fnCallAjax(
-                            oRequestData,
-                            "upsertMakerRestnReqProc",
-                            function(result){
-                                debugger;
-                                //oView.setBusy(false);
-                                if(result && result.value && result.value.length > 0){// && result.value[0].return_code === "OK") {
-                                    alert(result.value[0].returnmessage);
-                                    //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                    //that.onNavigationBackPress();
-                                }
-                            }
-                        );
+                            that.onNavigationCancelPress();
+                            // that._fnCallAjax(
+                            // oRequestData,
+                            // "upsertMakerRestnReqProc",
+                            // function(result){
+                            //     debugger;
+                            //     //oView.setBusy(false);
+                            //     if(result && result.value && result.value.length > 0){// && result.value[0].return_code === "OK") {
+                            //         alert(result.value[0].returnmessage);
+                            //         //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                            //         //that.onNavigationBackPress();
+                            //     }
+                            // });
                         }
                     }.bind(this)
                 });
-           /* }else{
+           }else{
                  
                 console.log("checkRequire");
                 return;
-            }*/
+            }
         },
 
          /**

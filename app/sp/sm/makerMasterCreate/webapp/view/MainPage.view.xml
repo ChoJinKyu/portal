@@ -234,7 +234,7 @@
                                             </VBox>
                                             <VBox>
                                                 <Label design="Bold" text="{I18N>/COUNTRY}" required="{mainPageView>/required}"/>
-                                                <ComboBox id="combobox_country_code" width="100%" change=".onChangeCountry" visible="{mainPageView>/visible/country_code}"
+                                                <ComboBox id="combobox_country_code" width="100%" change=".onChangeCombobox" visible="{mainPageView>/visible/country_code}"
                                                         placeholder=" " required="{mainPageView>/required}"
                                                         selectedKey="{writeModel>/generalInfo/country_code}" 
                                                         items="{
@@ -268,7 +268,7 @@
                                             </VBox>
                                             <VBox>
                                                 <Label design="Bold" text="{I18N>/STATUS}" required="{mainPageView>/required}"/>
-                                                <ComboBox id="combobox_maker_status_code" width="100%"  change=".onChangeCountry" visible="{mainPageView>/visible/isEditable}"
+                                                <ComboBox id="combobox_maker_status_code" width="100%"  change=".onChangeCombobox" visible="{mainPageView>/visible/isEditable}"
                                                         placeholder=" "  required="{mainPageView>/required}"
                                                         selectedKey="{writeModel>/generalInfo/maker_status_code}" 
                                                         items="{
@@ -417,7 +417,7 @@
                                             </VBox>
                                             <VBox>
                                                 <Label design="Bold" text="{I18N>/COMPANY_CLASS}" required="{mainPageView>/required}"/>
-                                                <ComboBox id="combobox_company_class_code" width="100%"  visible="{mainPageView>/visible/isEditable}"
+                                                <ComboBox id="combobox_company_class_code" width="100%" change=".onChangeCombobox" visible="{mainPageView>/visible/isEditable}"
                                                         placeholder=" " required="{mainPageView>/required}" 
                                                         selectedKey="{writeModel>/generalInfo/company_class_code}" 
                                                         items="{
