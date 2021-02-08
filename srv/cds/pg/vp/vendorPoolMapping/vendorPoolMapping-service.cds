@@ -382,6 +382,7 @@ service VpMappingService {
                     ,key mst.org_code                               
                     ,key mst.vendor_pool_code                       
                     ,key mst.supplier_code                          
+                    ,mst.org_type_name
                     ,mst.supplier_local_name                        
                     ,mst.supplier_english_name                      
                     ,mst.supplier_company_code                      
@@ -402,6 +403,10 @@ service VpMappingService {
                     ,mst.vendor_pool_level3_name
                     ,mst.vendor_pool_level4_name
                     ,mst.vendor_pool_level5_name
+                    ,mst.supplier_flag
+                    ,mst.maker_flag
+                    ,mst.supplier_old_supplier_code
+                    ,mst.maker_old_supplier_code
                     ,mst.vendor_pool_mapping_use_flag               
                     ,mst.register_reason                            
                     ,mst.approval_number                            
