@@ -267,6 +267,11 @@ sap.ui.define([
                 oDetailsModel = this.getModel("details"),
                 v_this = this;
             var oData = oDetailsModel.oData;
+
+            
+            if(this.validator.validate(this.byId("midObjectForm")) !== true) return;
+            if(this.validator.validate(this.byId("midObjectForm3")) !== true) return;
+
             var statsCode = "DRAFT";
             var CUType = "C";            
                 var inputData = {
@@ -348,7 +353,6 @@ sap.ui.define([
                 crd_type_code                        : CUType
             }
 
-            if(this.validator.validate(this.byId("midObjectForm")) !== true) return;
 
             var url = "srv-api/odata/v4/dp.SupplierIdeaMgtV4Service/SaveIdeaProc";
             
