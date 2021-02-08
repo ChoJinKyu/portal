@@ -104,7 +104,12 @@ sap.ui.define([
 
             
             oModel.setProperty("/navButtonType", sGubun !== "MA" ? "Back" : "Unstyled");//Transparent , Default
-            oModel.setProperty("/required", true);//sGubun !== "MA"
+            oModel.setProperty("/required", 
+                {
+                    basic : sGubun !== "MA",
+                    vat_number : false
+                }
+            );
 
             //활성화 설정
             oModel.setProperty("/visible", {
@@ -457,9 +462,7 @@ sap.ui.define([
             checkResult = oWriteModel.getProperty("/businessNoCheckList/0"),
             bSupplierRole = checkResult.supplier_role === "Y",
             bMakerRole = checkResult.maker_role === "Y",
-            sProgress = oCallByAppModel.getProperty("/progressCode"),
-            sGubun = oCallByAppModel.getProperty("/gubun"),
-            sMode = oCallByAppModel.getProperty("/mode"),
+            sTypeCode = oCallByAppModel.getProperty("/typeCode"),
             that = this;
 
             var oServiceModel = this.getModel();
@@ -471,7 +474,7 @@ sap.ui.define([
                 sServiceName = "/supplierWithoutOrgView"; //tenant_id, tax_id
                 sFilterName = "supplier_code";
             }
-            if(!bSupplierRole && !bMakerRole){
+            if((!bSupplierRole && !bMakerRole) || (sTypeCode === "CHANGE")){
                 sServiceName = "/MakerRegistrationRequestView"; //if(sGubun === "MR" && !bSupplierRole && !bMakerRole && sProgress === "REQUEST")
                 sFilterName = "tax_id";
                 sFilterValue = oCallByAppModel.getProperty("/taxId");
@@ -567,8 +570,10 @@ sap.ui.define([
 
         _setVisiableVatNumber : function(sEuFlag){
             
-            var oMainPageModel = this.getModel("mainPageView");
-            var oWriteModel = this.getModel("writeModel");
+            var oMainPageModel = this.getModel("mainPageView"),
+            oCallByAppModel = this.getModel("callByAppModel"),
+            oWriteModel = this.getModel("writeModel");
+            var sGubun = oCallByAppModel.getProperty("/gubun");
             var bEuFlag = (sEuFlag !== undefined) ? (sEuFlag === "Y") : (oWriteModel.getProperty("/generalInfo/eu_flag") === "Y");
 
             //euFlag가 없는 경우 모델에서 가져오는 경우를 만들어 보자....
@@ -584,7 +589,11 @@ sap.ui.define([
 			}); */
 
             oMainPageModel.setProperty("/enabled/vat_number", bEuFlag); //enabled 상태만 변경할때...
+            oMainPageModel.setProperty("/required/vat_number", bEuFlag && sGubun !=="MA"); //enabled 상태만 변경할때...
             if(!bEuFlag)oWriteModel.setProperty("/generalInfo/vat_number", ""); //유럽국가인 경우만 입력 가능하므로 아닌경우 초기화
+
+
+            
             //oMainPageModel.setProperty("/visible/vbox_vat_number", bEuFlag); //영역은 남겨둘때...
             //영역 자체를 없앨때...
             //if(bEuFlag)$($("#"+this.byId("vbox_vat_number").getId()).parent()).show();

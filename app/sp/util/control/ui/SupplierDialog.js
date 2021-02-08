@@ -1,6 +1,7 @@
 sap.ui.define([
     "ext/lib/control/ui/CodeValueHelp",
     "ext/lib/control/DummyRenderer",
+    "ext/lib/util/SppUserSessionUtil",  
     "ext/lib/model/v2/ODataModel",
     "ext/lib/model/ManagedModel",
 	"sap/ui/model/Filter",
@@ -12,7 +13,7 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text",
     "sap/m/Input"
-], function (Parent, Renderer, ODataModel, ManagedModel, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
+], function (Parent, Renderer, SppUserSessionUtil, ODataModel, ManagedModel, Filter, FilterOperator, Sorter, GridData, VBox, Column, Label, Text, Input) {
     "use strict";
 
      var oServiceModel = new ODataModel({
@@ -148,7 +149,8 @@ sap.ui.define([
 
          loadSupplierData : function(oThis){
             var that = oThis,
-            cFilters = that.getProperty("items") && that.getProperty("items").filters || [new Filter("tenant_id", FilterOperator.EQ, "L2100")];
+            sTenantId = SppUserSessionUtil.getUserInfo().TENANT_ID ? SppUserSessionUtil.getUserInfo().TENANT_ID : "L2100";
+            var cFilters = that.getProperty("items") && that.getProperty("items").filters || [new Filter("tenant_id", FilterOperator.EQ, sTenantId)];
             that.oDialog.setModel(new ManagedModel(), "SUPPLIERVIEW");
 
             //if(!that.getModel("SUPPLIERVIEW").getProperty("/supplierStatus")){
@@ -170,7 +172,8 @@ sap.ui.define([
         },
 
         loadData: function(){
-            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
+            var sTenantId = SppUserSessionUtil.getUserInfo().TENANT_ID ? SppUserSessionUtil.getUserInfo().TENANT_ID : "L2100";
+            var aFilters = [new Filter("tenant_id", FilterOperator.EQ, sTenantId)],
                 aSorters = [new Sorter("supplier_code", true)],
                 sSupplierCode = this.oSupplierCode.getValue(),
                 sSupplierName = this.oSupplierName.getValue(),
