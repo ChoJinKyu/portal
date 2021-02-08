@@ -602,7 +602,7 @@ sap.ui.define([
             var oTable = this.byId(sTableId);
             var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
             var oData = oTable.getModel('list').getProperty("/MoldMstView");//binded Data
-
+/*
             //CM_YN code list
             var aCtxtMoldFamilyFlag = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='CM_YN')").getProperty("/"));
             var aMoldFamilyFlag = aCtxtMoldFamilyFlag.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='CM_YN')").getModel().getProperty("/"+sCtxt));
@@ -638,7 +638,43 @@ sap.ui.define([
             //DP_MD_MOLD_SIZE code List
             var aCtxtMoldSize = Object.keys(this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_MOLD_SIZE')").getProperty("/"));
             var aMoldSize = aCtxtMoldSize.map(sCtxt => this.getModel("util").getContext("/Code(tenant_id='L2101,group_id='DP_MD_MOLD_SIZE')").getModel().getProperty("/"+sCtxt));
-
+*/
+            //Code Model Context
+            var aCtxtCode = Object.keys(this.getModel("util").getContext("/Code").getProperty("/"));
+            //CM_CHAIN_CD, CM_LANG_CODE code list
+            var aMoldFamilyFlag = [], aMoldProductionTypeCode = [], aMoldItemTypeCode = [], aMoldTypeCode = [], aMoldLocationTypeCode = [],
+                aMoldCostAnalysisCode = [], aMoldPurchasingTypeCode = [], aMoldStructure = [], aMoldSize = [];
+            aCtxtCode.forEach(function(sCtxt) {
+                let oCtxt = this.getModel("util").getContext("/Code").getProperty("/"+sCtxt);
+                if(oCtxt.group_code === "CM_YN") {
+                    aMoldFamilyFlag.push(oCtxt);
+                }
+                if(oCtxt.group_code === "DP_MD_PROD_TYPE") {
+                    aMoldProductionTypeCode.push(oCtxt);
+                }
+                if(oCtxt.group_code === "DP_MD_ITEM_TYPE") {
+                    aMoldItemTypeCode.push(oCtxt);
+                }
+                if(oCtxt.group_code === "DP_MD_MOLD_TYPE") {
+                    aMoldTypeCode.push(oCtxt);
+                }
+                if(oCtxt.group_code === "DP_MD_ED_TYPE") {
+                    aMoldLocationTypeCode.push(oCtxt);
+                }
+                if(oCtxt.group_code === "DP_MD_COST_ANALYSIS_TYPE") {
+                    aMoldCostAnalysisCode.push(oCtxt);
+                }
+                if(oCtxt.group_code === "DP_MD_PURCHASE_TYPE") {
+                    aMoldPurchasingTypeCode.push(oCtxt);
+                }
+                if(oCtxt.group_code === "DP_MD_MOLD_STRUCTURE") {
+                    aMoldStructure.push(oCtxt);
+                }
+                if(oCtxt.group_code === "DP_MD_MOLD_SIZE") {
+                    aMoldSize.push(oCtxt);
+                }
+            }.bind(this));
+            
             //optional object param
             //aListItem - 코드목록, sBindName - Table 칼럼에 바인딩한 property, sKeyName - 코드목록의 key, sTextName - 코드목록의 text
             var oOption = [

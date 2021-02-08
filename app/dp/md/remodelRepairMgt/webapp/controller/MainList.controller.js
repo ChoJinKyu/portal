@@ -308,8 +308,9 @@ sap.ui.define([
                 //eDType = this.getView().byId("searchEDType").getSelectedKey(),
                 description = this.getView().byId("searchDescription").getValue(),
                 model = this.getView().byId("searchModel").getValue(),
-                moldNo = this.getView().byId("searchPart").getValue(),
-                familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
+                moldNo = this.getView().byId("searchPart").getValue()//,
+                //familyPartNo = this.getView().byId("searchFamilyPartNo").getValue()
+                ;
 
             var aTableSearchState = [];
             var companyFilters = [];
@@ -394,7 +395,7 @@ sap.ui.define([
             if (description && description.length > 0) {
                 aTableSearchState.push(new Filter("tolower(spec_name)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));
             }
-            if (familyPartNo && familyPartNo.length > 0) {
+            /*if (familyPartNo && familyPartNo.length > 0) {
                 aTableSearchState.push(new Filter({
                     filters: [
                         new Filter("family_part_number_1", FilterOperator.Contains, familyPartNo.toUpperCase()),
@@ -405,7 +406,7 @@ sap.ui.define([
                     ],
                     and: false
                 }));
-            }
+            }*/
             return aTableSearchState;
 		},
 

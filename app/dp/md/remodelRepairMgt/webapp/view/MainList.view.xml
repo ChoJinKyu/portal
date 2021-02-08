@@ -82,7 +82,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Request {I18N>/STATUS}"></Label>
+                                <Label text="{I18N>/STATUS}"></Label>
                                 <SegmentedButton id="searchRequestStatusE" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                                     <items>
                                         <SegmentedButtonItem text="All" key="" />
@@ -102,8 +102,8 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="LG {I18N>/DATE}" labelFor="searchLGDateE"></Label>
-                                    <DateRangeSelection id="searchLGDateE" width="100%" change="creationDateChange"/>
+                                <!--<Label text="LG {I18N>/DATE}" labelFor="searchLGDateE"></Label>
+                                    <DateRangeSelection id="searchLGDateE" width="100%" change="creationDateChange"/>-->
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -208,8 +208,8 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="LG {I18N>/DATE}" labelFor="searchLGDateS"></Label>
-                                    <DateRangeSelection id="searchLGDateS" width="100%" change="creationDateChange"/>
+                                <!--<Label text="LG {I18N>/DATE}" labelFor="searchLGDateS"></Label>
+                                    <DateRangeSelection id="searchLGDateS" width="100%" change="creationDateChange"/>-->
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -246,8 +246,8 @@
                 <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="ECO No"></Label>
-                            <Input id="searchEcoNo" width="100%"/>
+                            <Label text="Specification Number"></Label>
+                            <Input id="searchSpecificationNumber" width="100%"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
                             </layoutData>
@@ -259,13 +259,13 @@
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <VBox>
+                        <!--<VBox>
                             <Label text="Repair Supplier"></Label>
                             <Input id="searchRepairSupplier" width="100%"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
-                        </VBox>
+                        </VBox>-->
                         <VBox>
                             <Label text="Type " labelFor="searchType"></Label>
                             <MultiComboBox   id="searchItemType" width="100%"
@@ -286,13 +286,13 @@
                             </layoutData>
                         </VBox>
                         
-                        <VBox>
+                        <!--<VBox>
                             <Label text="Family Part No" labelFor="searchFamilyPartNo"></Label>
                             <Input id="searchFamilyPartNo" width="100%"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
                             </layoutData>
-                        </VBox>
+                        </VBox>-->
                         <VBox>
                             <Label text="{I18N>/MODEL}" labelFor="searchModel"></Label>
                             <Input id="searchModel" 
@@ -308,7 +308,7 @@
                                 <core:Item key="{model}" text="{model}" />
                             </Input>
                             <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -353,7 +353,7 @@
                             <Label text="Requester" labelFor="searchRequester"></Label>
                             <Input id="searchRequester" width="100%"/>
                             <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                     </form:content>
@@ -405,16 +405,22 @@
                             <Text id="org_code" text="{list>org_code}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldModelColumn" width="10em" >
-                        <Label text="{I18N>/MODEL}" wrapping="true"/>
+                    <table:Column width="13em">
+                        <Label text="Request No" wrapping="true"/>
                         <table:template>
-                            <Text id="model" text="{list>model}"/>
+                            <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldDescriptionColumn" width="10em">
-                        <Label text="{I18N>/DESCRIPTION}" wrapping="true"/>
+                    <table:Column width="13em">
+                        <Label text="Order Sheet No" wrapping="true"/>
                         <table:template>
-                            <Text id="spec_name" text="{list>spec_name}"/>
+                            <Text text="{list>mold_progress_status_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="4em">
+                        <Label text="{I18N>/TYPE}" wrapping="true"/>
+                        <table:template>
+                            <Text text="{list>mold_sequence}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetNoColumn" width="12em">
@@ -435,52 +441,34 @@
                             <Text id="mold_sequence" text="{list>mold_sequence}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="4em">
-                        <Label text="{I18N>/TYPE}" wrapping="true"/>
-                        <table:template>
-                            <Text text="{list>mold_sequence}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column id="moldItemTypeColumn" width="9em" hAlign="Center">
-                        <Label text="Item Type" required="true" wrapping="true"/>
-                        <table:template>
-                            <Text id="mold_item_type_code" text="{list>mold_item_type_code}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column id="moldRequesterColumn" width="12em" hAlign="Center">
-                        <Label text="Requester" wrapping="true"/>
-                        <table:template>
-                            <Text id="mold_develope_requestor_name" text="{list>mold_develope_requestor_name}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column width="13em">
-                        <Label text="Order Sheet No" wrapping="true"/>
-                        <table:template>
-                            <Text text="{list>mold_progress_status_name}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column id="moldStatusColumn" width="13em">
-                        <Label text="Request {I18N>/STATUS}" wrapping="true"/>
-                        <table:template>
-                            <Text id="mold_progress_status_name" text="{list>mold_progress_status_name}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column width="13em">
-                        <Label text="Request No" wrapping="true"/>
-                        <table:template>
-                            <Text text="{list>mold_progress_status_name}"/>
-                        </table:template>
-                    </table:Column>
                     <table:Column id="moldRequestDateColumn" width="10em" hAlign="Center">
                         <Label text="Request {I18N>/DATE}" wrapping="true"/>
                         <table:template>
                             <Text id="local_create_dtm" text="{path: 'list>local_create_dtm', formatter: '.dateFormatter.toDateString'}"/>
                         </table:template>
                     </table:Column>
+                    <table:Column id="moldStatusColumn" width="13em">
+                        <Label text="{I18N>/STATUS}" wrapping="true"/>
+                        <table:template>
+                            <Text id="mold_progress_status_name" text="{list>mold_progress_status_name}"/>
+                        </table:template>
+                    </table:Column>
                     <table:Column width="13em">
                         <Label text="Title" wrapping="true"/>
                         <table:template>
                             <Text text="{list>mold_progress_status_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldModelColumn" width="10em" >
+                        <Label text="{I18N>/MODEL}" wrapping="true"/>
+                        <table:template>
+                            <Text id="model" text="{list>model}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldDescriptionColumn" width="10em">
+                        <Label text="{I18N>/DESCRIPTION}" wrapping="true"/>
+                        <table:template>
+                            <Text id="spec_name" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="5em" hAlign="Center">
@@ -501,32 +489,20 @@
                             <TextArea value="{list>remark}" rows="2" width="100%" editable="false" />
                         </table:template>
                     </table:Column>
+                    <table:Column id="moldRequesterColumn" width="12em" hAlign="Center">
+                        <Label text="Requester" wrapping="true"/>
+                        <table:template>
+                            <Text id="mold_develope_requestor_name" text="{list>mold_develope_requestor_name}"/>
+                        </table:template>
+                    </table:Column>
                     <table:Column width="13em">
-                        <Label text="Receipt estimation Status" wrapping="true"/>
+                        <Label text="Family Part No" wrapping="true"/>
                         <table:template>
                             <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="10em" hAlign="Center">
-                        <Label text="LGE Review Req {I18N>/DATE}" wrapping="true"/>
-                        <table:template>
-                            <Text text="{path: 'list>local_create_dtm', formatter: '.dateFormatter.toDateString'}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column width="7em" hAlign="Center">
-                        <Label text="Estimate Amount" wrapping="true"/>
-                        <table:template>
-                            <Text text="{path: 'list>provisional_budget_amount', formatter: '.numberFormatter.toNumberString'}" textAlign="Right" />
-                        </table:template>
-                    </table:Column>
-                    <table:Column width="7em" hAlign="Center">
-                        <Label text="Req Amount" wrapping="true"/>
-                        <table:template>
-                            <Text text="{path: 'list>provisional_budget_amount', formatter: '.numberFormatter.toNumberString'}" textAlign="Right" />
-                        </table:template>
-                    </table:Column>
                     <table:Column width="13em">
-                        <Label text="Supplier Name" wrapping="true"/>
+                        <Label text="Tool Type" wrapping="true"/>
                         <table:template>
                             <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
@@ -543,6 +519,36 @@
                             </core:Icon>
                         </table:template>
                     </table:Column>
+                    <table:Column id="moldProjectNameColumn" width="20em">
+                        <Label text="Factor" wrapping="true"/>
+                        <table:template>
+                            <Text id="pdm_project_name" text="{list>pdm_project_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="13em">
+                        <Label text="Specification Number" wrapping="true"/>
+                        <table:template>
+                            <Text text="{list>mold_progress_status_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="crrencyColumn" width="6em" hAlign="Center">
+                        <Label text="Currency"/>
+                        <table:template>
+                            <Text id="currency" text="{list>book_currency_code}" textAlign="Center"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="7em" hAlign="Center">
+                        <Label text="Estimate Amount" wrapping="true"/>
+                        <table:template>
+                            <Text text="{path: 'list>provisional_budget_amount', formatter: '.numberFormatter.toNumberString'}" textAlign="Right" />
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="7em" hAlign="Center">
+                        <Label text="Req Amount" wrapping="true"/>
+                        <table:template>
+                            <Text text="{path: 'list>provisional_budget_amount', formatter: '.numberFormatter.toNumberString'}" textAlign="Right" />
+                        </table:template>
+                    </table:Column>
                     <table:Column width="13em">
                         <Label text="Investment/Cost" wrapping="true"/>
                         <table:template>
@@ -551,6 +557,30 @@
                     </table:Column>
                     <table:Column width="13em">
                         <Label text="Account" wrapping="true"/>
+                        <table:template>
+                            <Text text="{list>mold_progress_status_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="13em">
+                        <Label text="Receipt estimation Status" wrapping="true"/>
+                        <table:template>
+                            <Text text="{list>mold_progress_status_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <!--<table:Column id="moldItemTypeColumn" width="9em" hAlign="Center">
+                        <Label text="Item Type" required="true" wrapping="true"/>
+                        <table:template>
+                            <Text id="mold_item_type_code" text="{list>mold_item_type_code}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10em" hAlign="Center">
+                        <Label text="LGE Review Req {I18N>/DATE}" wrapping="true"/>
+                        <table:template>
+                            <Text text="{path: 'list>local_create_dtm', formatter: '.dateFormatter.toDateString'}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="13em">
+                        <Label text="Supplier Name" wrapping="true"/>
                         <table:template>
                             <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
@@ -567,18 +597,6 @@
                             <Text id="pdm_project_code" text="{list>pdm_project_code}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="crrencyColumn" width="6em" hAlign="Center">
-                        <Label text="Currency"/>
-                        <table:template>
-                            <Text id="currency" text="{list>book_currency_code}" textAlign="Center"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column id="moldProjectNameColumn" width="20em">
-                        <Label text="Factor" wrapping="true"/>
-                        <table:template>
-                            <Text id="pdm_project_name" text="{list>pdm_project_name}"/>
-                        </table:template>
-                    </table:Column>
                     <table:Column id="moldFamilyPartNo1Column" width="12em" hAlign="Center">
                         <Label text="Remarks" wrapping="true"/>
                         <table:template>
@@ -592,19 +610,7 @@
                         </table:template>
                     </table:Column>
                     <table:Column width="13em">
-                        <Label text="Specification Number" wrapping="true"/>
-                        <table:template>
-                            <Text text="{list>mold_progress_status_name}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column width="13em">
                         <Label text="Spare Part" wrapping="true"/>
-                        <table:template>
-                            <Text text="{list>mold_progress_status_name}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column width="13em">
-                        <Label text="Family Part No" wrapping="true"/>
                         <table:template>
                             <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
@@ -620,7 +626,7 @@
                         <table:template>
                             <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
-                    </table:Column>
+                    </table:Column>-->
                 </table:columns>
             </table:Table>
         </f:content>
