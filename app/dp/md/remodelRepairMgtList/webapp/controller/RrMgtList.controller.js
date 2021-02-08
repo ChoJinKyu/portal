@@ -120,9 +120,6 @@ sap.ui.define([
             this.getView().byId("searchPlantE").setSelectedKeys(['A040']);
             
         },
-
-        
-
         _onRoutedThisPage : function(){
             this.getModel("remodelRepairMgtListView").setProperty("/headerExpanded", true);
             this._segmentSrch();
@@ -304,10 +301,9 @@ sap.ui.define([
 		 * @param {sap.m.ObjectListItem} oItem selected Item
 		 * @private
 		 */
-        showAssetDetail: function (oItem) {
+        showDetail: function (oItem) {
             var that = this;
-            that.getRouter().navTo("assetDetail", {
-                tenantId:'new',
+            that.getRouter().navTo("rrMgtDetail", {
                 moldId:'code'
             });
            
@@ -353,8 +349,6 @@ sap.ui.define([
             var plantFilters = [];
 
             aTableSearchState.push(new Filter("mold_purchasing_type_code", FilterOperator.EQ, "L"));
-
-            
 
             if (plant.length > 0) {
 

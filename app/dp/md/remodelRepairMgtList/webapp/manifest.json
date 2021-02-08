@@ -151,6 +151,9 @@
             "css": [
                 {
                     "uri": "css/style.css"
+                },
+                {
+                    "uri" : "../../util/css/style.css"
                 }
             ]
         },
@@ -180,6 +183,13 @@
                     "target": [
                         "rrMgtList"
                     ]
+                },
+                {
+                    "pattern": "rrMgtDetail/{moldId}",
+                    "name": "rrMgtDetail",
+                    "target": [
+                        "rrMgtDetail"
+                    ]
                 }
             ],
             "targets": {
@@ -187,6 +197,11 @@
                     "viewName": "RrMgtList",
                     "viewId": "rrMgtList",
                     "viewLevel": 1 
+                },
+                "rrMgtDetail": {
+                    "viewName": "RrMgtDetail",
+                    "viewId": "rrMgtDetail",
+                    "viewLevel": 2 
                 },
                 "notFound": {
                     "viewName": "NotFound",
