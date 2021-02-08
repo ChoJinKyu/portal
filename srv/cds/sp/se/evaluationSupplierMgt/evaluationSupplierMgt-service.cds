@@ -13,9 +13,9 @@ service EvalSupplierService {
 
     //Org Condition
     view organizationView as
-    select org.tenant_id,
-           org.company_code,
-           org.org_code,
+    select Key org.tenant_id,
+           Key org.company_code,
+           Key org.org_code,
            org.org_name
     from   orgTypeMap ma,
            OprationOrg org
