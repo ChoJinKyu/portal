@@ -50,18 +50,18 @@ service NpApprovalService {
     view NpApprovalListView as
         SELECT
                    ssi.LANGUAGE_CODE as language_code
-             , key pam.tenant_id
-             , key pam.company_code
-             , key pam.org_type_code
-             , key pam.org_code	                    /* operating org */
-             , key pam.approval_number
+             , key cam.tenant_id
+             ,     cam.company_code
+             ,     cam.org_type_code
+             ,     cam.org_code	                    /* operating org */
+             , key cam.approval_number
 
              , (SELECT org.org_name
                   FROM CM_PUR_OPERATION_ORG  org
-                 WHERE org.tenant_id     = pam.tenant_id
-                   AND org.company_code  = pam.company_code
-                   AND org.org_type_code = pam.org_type_code
-                   AND org.org_code      = pam.org_code
+                 WHERE org.tenant_id     = cam.tenant_id
+                   AND org.company_code  = cam.company_code
+                   AND org.org_type_code = cam.org_type_code
+                   AND org.org_code      = cam.org_code
 			   ) AS org_name : String
 
              , cam.approval_title                   /* title */
@@ -98,20 +98,14 @@ service NpApprovalService {
  
              , pam.local_create_dtm AS creation_date   /* creation date */
 
-             , pam.detailes
+            /* , pam.detailes  */
 
           FROM SP_NP_NET_PRICE_APPROVAL_MST   pam
          INNER JOIN CM_SPP_USER_SESSION_VIEW  ssi
             ON ssi.TENANT_ID         = pam.tenant_id
+            /*
            AND ssi.COMPANY_CODE      = pam.company_code
-        /*
-         INNER JOIN (SELECT a.tenant_id 
-					       ,a.code AS language_code
-                       FROM CM_CODE_DTL a
-                      WHERE a.group_code = 'CM_LANG_CODE'
-                     ) clc   공통코드 언어코드(EN,KO)
-			ON clc.tenant_id         = pam.tenant_id
-         */
+           */
          INNER JOIN CM_APPROVAL_MST          cam
             ON cam.tenant_id         = pam.tenant_id
            AND cam.approval_number   = pam.approval_number

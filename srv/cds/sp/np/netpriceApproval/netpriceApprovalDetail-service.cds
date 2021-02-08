@@ -56,17 +56,17 @@ service NpApprovalDetailService {
     view MasterView as
         SELECT
                 key pam.tenant_id
-             ,  key pam.company_code
-             ,  key pam.org_type_code
-             ,  key pam.org_code	                            /* operating org */
+             ,      cam.company_code
+             ,      cam.org_type_code
+             ,      cam.org_code	                            /* operating org */
              ,  key pam.approval_number                         /* Approval No. */
 
              ,  (SELECT org.org_name
                    FROM CM_PUR_OPERATION_ORG  org
                   WHERE org.tenant_id     = pam.tenant_id
-                    AND org.company_code  = pam.company_code
-                    AND org.org_type_code = pam.org_type_code
-                    AND org.org_code      = pam.org_code
+                    AND org.company_code  = cam.company_code
+                    AND org.org_type_code = cam.org_type_code
+                    AND org.org_code      = cam.org_code
 			    ) AS org_name : String                          /* org */
 
 
@@ -133,8 +133,9 @@ service NpApprovalDetailService {
         
         INNER JOIN CM_SPP_USER_SESSION_VIEW  ssi
             ON ssi.TENANT_ID         = pam.tenant_id
+        /*
            AND ssi.COMPANY_CODE      = pam.company_code
-
+        */
         INNER JOIN CM_APPROVAL_MST          cam
             ON cam.tenant_id         = pam.tenant_id
            AND cam.approval_number   = pam.approval_number
