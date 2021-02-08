@@ -59,9 +59,43 @@ BEGIN
     INTO   V_TENANT_ID, V_CATEGORY_GROUP_CODE, V_CATEGORY_CODE, V_SEQUENCE
     FROM   :I_M
     ;
+
 /* Input 임시테이블 관리 */
-
-
+    INSERT INTO DP_PD_PART_CATEGORY_ACTIVITY_TEMP
+        ( TENANT_ID
+            ,COMPANY_CODE
+            ,ORG_TYPE_CODE
+            ,ORG_CODE
+            ,ACTIVITY_CODE
+            ,CATEGORY_GROUP_CODE
+            ,CATEGORY_CODE
+            ,S_GRADE_STANDARD_DAYS	
+            ,A_GRADE_STANDARD_DAYS	
+            ,B_GRADE_STANDARD_DAYS	
+            ,C_GRADE_STANDARD_DAYS	
+            ,D_GRADE_STANDARD_DAYS	
+            ,ACTIVE_FLAG
+            ,CRUD_TYPE_CODE
+            ,NEW_CATEGORY_CODE
+        )
+    SELECT
+        TENANT_ID, 
+        V_COMPANY_CODE,
+        V_ORG_TYPE_CODE,
+        V_ORG_CODE,
+        ACTIVITY_CODE,
+        CATEGORY_GROUP_CODE,
+        CATEGORY_CODE,
+        S_GRADE_STANDARD_DAYS,
+        A_GRADE_STANDARD_DAYS,
+        B_GRADE_STANDARD_DAYS,
+        C_GRADE_STANDARD_DAYS,
+        D_GRADE_STANDARD_DAYS,
+        ACTIVE_FLAG,
+        CRUD_TYPE_CODE,
+        V_CATEGORY_CODE 
+      FROM :I_SD
+        ;
 
 /* 카테고리그룹코드를 사용하는 ORG_CODE 관리하는 Data를 CM_CODE에서 관리 */
     SELECT MAX(OM.ORG_TYPE_CODE), MIN(OO.ORG_CODE)
@@ -88,7 +122,6 @@ BEGIN
     V_COMPANY_CODE := 'LGESL';
 
     IF :CRUD_TYPE IN ('D', 'U') THEN
-
         SELECT SEQUENCE 
         INTO   V_ORG_SEQUENCE 
         FROM   DP_PD_PART_CATEGORY 
@@ -96,7 +129,6 @@ BEGIN
         AND    CATEGORY_GROUP_CODE = V_CATEGORY_GROUP_CODE
         AND    CATEGORY_CODE = V_CATEGORY_CODE
         ;
-
     END IF;
 
     /*  CRUD_TYPE가 'D' 인 Data 삭제 */
@@ -120,7 +152,6 @@ BEGIN
         ; 
 
     ELSE
-
         IF :CRUD_TYPE = 'U' THEN
 
             IF V_ORG_SEQUENCE > V_SEQUENCE THEN
