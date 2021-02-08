@@ -1,6 +1,6 @@
 PROCEDURE OP_PU_PR_REVIEW_SAVE_PROC (
                                      IN I_JOB_TYPE NVARCHAR(30)
-                                    ,IN I_PR_ITEM_TBL TABLE(TRANSACTION_CODE NVARCHAR(1)  -- I:신규, U:수정, D:삭제(전체를 받는지 변경된거만 받는지 확인)
+                                    ,IN I_PR_ITEM_TBL TABLE(TRANSACTION_CODE NVARCHAR(1)  -- I:신규, U:수정, D:삭제(화면에서 체크된거만 받아서 사용안함)
                                                            ,TENANT_ID NVARCHAR(5)
                                                            ,COMPANY_CODE NVARCHAR(10)
                                                            ,PR_NUMBER NVARCHAR(50)
