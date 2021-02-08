@@ -30,7 +30,7 @@ sap.ui.define([
     "ext/dp/util/control/ui/MaterialMasterDialog",
     "ext/pg/util/control/ui/VendorPoolDialog",
     "ext/pg/util/control/ui/SupplierDialog",
-    "ext/pg/util/control/ui/MatrialDialog",
+    "ext/pg/util/control/ui/MaterialDialog",
     "ext/lib/util/Validator"
 ],
 	/**
@@ -68,7 +68,7 @@ sap.ui.define([
         MaterialMasterDialog,
         VendorPoolDialog,
         SupplierDialog,
-        MatrialDialog,
+        MaterialDialog,
         Validator
     ) {
         "use strict";

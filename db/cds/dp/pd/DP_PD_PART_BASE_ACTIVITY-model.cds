@@ -32,6 +32,7 @@ entity Pd_Part_Base_Activity_Category_Pop_View {
         path                  : String;
         sequence              : Decimal;
         active_flag           : Boolean;
+        active_flag_val       : String;
 };
 
 @cds.persistence.exists
@@ -50,12 +51,4 @@ entity Pd_Part_Base_Activity_Category_View {
         d_grade_standard_days : Integer;
         update_user_id        : String;
         local_update_dtm      : DateTime;
-};
-
-@cds.persistence.exists
-entity Pd_Select_An_Activity_View {
-    key tenant_id             : String;
-    key activity_code         : String;
-        activity_name         : String;
-        active_flag           : Boolean;
 };

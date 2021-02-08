@@ -584,6 +584,8 @@ sap.ui.define([
         // Data 조회
         loadData: function () {
 
+            this.oDialog.oTable.setBusy(true);
+
             var aFilters = [];
             var aTempFilters = [];
             var sSupplierCode,
@@ -607,7 +609,6 @@ sap.ui.define([
 
 
             // 조회조건에서 가져오는 value
-          
             if (!!this.oSupplierCode.getValue()) {
                 sSupplierCode = this.oSupplierCode.getValue();
             }
@@ -677,6 +678,7 @@ sap.ui.define([
                 success: function (oData) {
                     var aRecords = oData.results;
                     this.oDialog.setData(aRecords, false);
+                    this.oDialog.oTable.setBusy(false);
                 }.bind(this)
             });
         },
@@ -723,8 +725,6 @@ sap.ui.define([
                             that.oVendorPoolLvl3.setEnabled(false);
                             that.oVendorPoolLvl4.setEnabled(false);
                             that.oVendorPoolLvl5.setEnabled(false);
-                            
-                            //that.oVendorPoolLvl2.oParent.setVisible(false);
                             break;
 
                         case "2" : 
@@ -788,7 +788,7 @@ sap.ui.define([
             // dialog가 호출될 때 넘어오는 인자
             this.oSearchObj = sSearchObj;
             this.oSearchObj.tanentId = "L2100";
-            console.log("sSearchObj:" + sSearchObj);
+
             if(!this.oDialog) {
                 this.openWasRequested = true;
                 return;

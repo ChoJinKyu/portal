@@ -1,12 +1,7 @@
 PROCEDURE SP_NP_NET_PRICE_APPROVAL_DELETE_PROC (
 /*
-    단가품의 저장처리
-      1. 기본값 체크 및 데이터 정합성 체크
-      2. Approval Master 데이터 저장 처리
-        - Approval Number가 없으면, 신규 Approval Number 신규 체번 후, Master데이터 Inster
-        - Approval Number가 존재하면, Update
-      3. Approval Detail 데이터 저장 처리
-        - row_state에 따라, CUD 처리
+    단가품의 삭제처리
+
 */
      IN   I_TENANT_ID                      NVARCHAR(20)
     ,IN   I_COMPANY_CODE                   NVARCHAR(10)
@@ -27,8 +22,6 @@ BEGIN
     *******************************************************************************/
 
     DECLARE V_CURRENT_STATUS_CODE NVARCHAR(10);
-
-
 
 
     /*******************************************************************************
@@ -81,8 +74,6 @@ BEGIN
     END IF;
 
 
-
-
     BEGIN
         /* 해당 Block에서 Exception 발생시, 사용자 정의 Exception 발생 시킴. */
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -92,8 +83,14 @@ BEGIN
             SIGNAL V_USER_EXCEPTION;
         END;
 
+
+
+
         -- TODO :: 첨부파일 삭제
 
+
+
+        
 
         -- 단가품의 상세 삭제
         DELETE FROM SP_NP_NET_PRICE_APPROVAL_DTL

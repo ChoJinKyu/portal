@@ -99,8 +99,10 @@
 
                                                         fieldGroupIds="required"
                                                         required="true"
-                                                        enabled="{= ${TwoView>/isEditMode}}"
+                                                        enabled="true"
                                                         />
+
+                                                        <!-- enabled="{= ${TwoView>/isEditMode}}" -->
                                                         
                                                 <!-- Column2. 평가 유형 명 -->
                                                 <Label text="{I18N>/EVALUATION_TYPE_NAME}"/>
@@ -112,7 +114,7 @@
 
                                                         fieldGroupIds="required"
                                                         required="true"
-                                                        enabled="{= ${TwoView>/isEditMode}}"
+                                                        enabled="true"
                                                         />
                                                 
                                                  <!-- 사용여부  -->
@@ -203,9 +205,7 @@
                                                 width="100%" 
                                                 placeholder="EVALUATION_GRADE"
                                                 value="{TwoView>evaluation_grade}"
-                                                enabled="{=
-                                                                ${TwoView>/isEditMode}
-                                                            }"
+                                                enabled="true"
                                                 editable="{= ${TwoView>/isCreateMode} === true ? true : ${TwoView>tansaction_code} === 'I' ? true : false}"
                                                 fieldGroupIds="required"
                                                 required="true"
@@ -222,7 +222,7 @@
                                                 fieldGroupIds="required"
                                                 required="true"
                                                 change="onChangeEdit"
-                                                enabled="{= ${TwoView>/isEditMode}}"
+                                                enabled="true"
                                                 />
                                                 <Input   
                                                 width="100%" 
@@ -234,7 +234,7 @@
                                                 fieldGroupIds="required"
                                                 required="true"
                                                 change="onChangeEdit"
-                                                enabled="{= ${TwoView>/isEditMode}}"
+                                                enabled="true"
                                                 />
                                                 <ComboBox selectedKey="{TwoView>inp_apply_code}" width="100%" items="{
                                                             path: 'common>/Code',
@@ -249,9 +249,7 @@
                                                             fieldGroupIds="required"          
                                                             required="true"
                                                             change="onChangeEdit"
-                                                            enabled="{=
-                                                                ${TwoView>/isEditMode}
-                                                              }"
+                                                            enabled="true"
                                                             >
                                                             <items>
                                                                 <core:Item key="{common>code}" text="{common>code_name}" />
