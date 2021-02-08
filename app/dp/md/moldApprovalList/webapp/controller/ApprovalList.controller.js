@@ -117,7 +117,7 @@ sap.ui.define([
         onAfterRendering: function () {
             
             this.getModel().setDeferredGroups(["delete"]);
-            this.byId("pageSearchButton").firePress();
+            //this.byId("pageSearchButton").firePress();
             return;
         },
 

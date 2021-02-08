@@ -289,23 +289,6 @@ sap.ui.define([
             this._applySearch(aTableSearchState);
         },
 
-
-
-        /**
-		 * Shows the selected item on the object page
-		 * On phones a additional history entry is created
-		 * @param {sap.m.ObjectListItem} oItem selected Item
-		 * @private
-		 */
-        showAssetDetail: function (oItem) {
-            var that = this;
-            that.getRouter().navTo("assetDetail", {
-                tenantId:'new',
-                moldId:'code'
-            });
-           
-        },
-
 		/**
 		 * Internal helper method to apply both filter and search state together on the list binding
 		 * @param {sap.ui.model.Filter[]} aTableSearchState An array of filters for the search
@@ -321,7 +304,7 @@ sap.ui.define([
             oModel.read("/Assets", {
                 filters: aTableSearchState,
                 success: function (oData) {
-                   // oView.setBusy(false);
+                   oView.setBusy(false);
                 }.bind(this)
             });
         },
@@ -330,32 +313,28 @@ sap.ui.define([
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
                 company = this.getView().byId("searchCompany" + sSurffix).getSelectedKeys(),
                 plant = this.getView().byId("searchPlant" + sSurffix).getSelectedKeys(),
-                // status = this.getView().byId("searchStatus" + sSurffix).getSelectedKey(),
-                // //status = Element.registry.get(statusSelectedItemId).getText(),
-                // receiptFromDate = this.getView().byId("searchCreationDate" + sSurffix).getDateValue(),
-                // receiptToDate = this.getView().byId("searchCreationDate" + sSurffix).getSecondDateValue(),
-                // itemType = this.getView().byId("searchItemType").getSelectedKeys(),
-                // productionType = this.getView().byId("searchProductionType").getSelectedKeys(),
-                // eDType = this.getView().byId("searchEDType").getSelectedKey(),
-                description = this.getView().byId("searchDescription").getValue(),
+                status = this.getView().byId("searchAssetsStatus" + sSurffix).getSelectedKey(),
+                signal = this.getView().byId("searchSignal"+ sSurffix).getSelectedKey(),
                 model = this.getView().byId("searchModel").getValue(),
-                moldNo = this.getView().byId("searchMoldNumber").getValue();
+                moldNo = this.getView().byId("searchMoldNumber").getValue(),
+                description = this.getView().byId("searchDescription").getValue(),
+                assetNumber = this.getView().byId("searchAssetNumber").getValue(),
+                secondVendor = this.getView().byId("searchSecondVendor").getValue(),
+                thirdVendor = this.getView().byId("searchThirdVendor").getValue();
                 // familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
 
             var aTableSearchState = [];
-            var companyFilters = [];
-            var plantFilters = [];
-            var compFilters = [];
+
 
              if (company.length > 0) {
-
+                var _tempFilters = [];
                 company.forEach(function (item) {
-                    compFilters.push(new Filter("company_code", FilterOperator.EQ, item));
+                    _tempFilters.push(new Filter("company_code", FilterOperator.EQ, item));
                 });
 
                 aTableSearchState.push(
                     new Filter({
-                        filters: compFilters,
+                        filters: _tempFilters,
                         and: false
                     })
                 );
@@ -363,46 +342,60 @@ sap.ui.define([
            
 
             if (plant.length > 0) {
-
+                var _tempFilters = [];
                 plant.forEach(function (item) {
-                    plantFilters.push(new Filter("org_code", FilterOperator.EQ, item));
+                    _tempFilters.push(new Filter("org_code", FilterOperator.EQ, item));
                 });
 
                 aTableSearchState.push(
                     new Filter({
-                        filters: plantFilters,
+                        filters: _tempFilters,
                         and: false
                     })
                 );
             }
 
             if (status) {
-                aTableSearchState.push(new Filter("mold_progress_status_code", FilterOperator.EQ, status));
+                aTableSearchState.push(new Filter("asset_status_code", FilterOperator.EQ, status));
             }
+
+            // 관련 테이블 정의가 되지 않은 관계로 추후 반영
+            // if (signal) {
+            //     aTableSearchState.push(new Filter("signal", FilterOperator.EQ, status));
+            // }
             
-            
-            if (model && model.length > 0) {
+            if (model) {
                 aTableSearchState.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + model.toLowerCase() + "'"));
             }
-            if (moldNo && moldNo.length > 0) {
+            if (moldNo) {
                 aTableSearchState.push(new Filter("mold_number", FilterOperator.Contains, moldNo.toUpperCase()));
             }
-            if (description && description.length > 0) {
-                aTableSearchState.push(new Filter("tolower(spec_name)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));
+            if (description) {
+                aTableSearchState.push(new Filter("tolower(class_desc)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));
             }
-            
+            if (assetNumber) {
+                aTableSearchState.push(new Filter("tolower(asset_number)", FilterOperator.Contains, "'" + assetNumber.toLowerCase() + "'"));
+            }
+            if (secondVendor) {
+                aTableSearchState.push(new Filter("tolower(secondary_supplier_name)", FilterOperator.Contains, "'" + secondVendor.toLowerCase() + "'"));
+            }
+            if (thirdVendor) {
+                aTableSearchState.push(new Filter("tolower(tertiary_supplier_name)", FilterOperator.Contains, "'" + thirdVendor.toLowerCase() + "'"));
+            }
             return aTableSearchState;
         },
-
+        
+        /**
+        * @private 
+        * @see (멀티박스)리스트 moldNumber 항목선택시 remodelRepairMgtList 컴포넌트 디테일로 이동
+        */
         handleLinkPress: function (){
             var pull_url = window.location.href;
-            var targetPath = "/dp/md/remodelRepairMgtList/webapp/#/rrMgtDetail/code"
             var complete_url;
+            var targetPath = "/dp/md/remodelRepairMgtList/webapp/#/rrMgtDetail/code"
             complete_url=pull_url.split(pull_url.substring(pull_url.indexOf("/dp"),pull_url.length));
             complete_url[0] = complete_url[0]+targetPath;
             window.location.href=complete_url[0];
-            
-            
         },
         
         _doInitTablePerso: function () {
