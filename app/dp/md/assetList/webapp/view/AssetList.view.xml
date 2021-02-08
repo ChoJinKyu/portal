@@ -246,12 +246,12 @@
                     selectionMode="MultiToggle"
                     fixedColumnCount="5"
                     visibleRowCountMode="Auto"
-                    rows="{list>/MoldMstView}"
+                    rows="{list>/Assets}"
                     cellClick=".onCellClick"
                     rowSelectionChange=".onCheck">
                 <table:extension>
                     <OverflowToolbar>
-                        <Title text="List ({= ${list>/MoldMstView}.length || 0})" level="H2"/>
+                        <Title text="List ({= ${list>/Assets}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
                         <!-- Add the Personalization button -->
                         <Button id="changeSuppButton"   type="Transparent" text="Change Supp."        press=".onChangeSuppButtonButtonPress"  />

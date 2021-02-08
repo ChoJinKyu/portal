@@ -11,7 +11,8 @@ service AssetListService {
 
 view Assets as
     select 
-        ma.tenant_id,
+        key ma.tenant_id,
+        key ma.mold_id,
         mst.company_code,
         mst.org_code,
         mst.model,
