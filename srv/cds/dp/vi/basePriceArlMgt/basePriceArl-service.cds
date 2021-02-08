@@ -341,7 +341,7 @@ service BasePriceArlService {
             and dtl.supplier_code = sup01.supplier_code
         left outer join supplierMst as sup02
             on dtl.tenant_id = sup02.tenant_id
-            and dtl.supplier_code = sup02.supplier_code
+            and dtl.repr_material_supplier_code = sup02.supplier_code
         left outer join codeLng as cd01
             on cd01.tenant_id = dtl.tenant_id
             and cd01.group_code = 'DP_VI_BASE_PRICE_GROUND_CODE'
