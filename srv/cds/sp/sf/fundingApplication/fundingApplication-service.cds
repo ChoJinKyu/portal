@@ -82,6 +82,7 @@ service FundingApplicationService {
         and op.company_code = supOrg.company_code
         and op.org_type_code = supOrg.org_type_code
         and op.org_code = supOrg.org_code
+        and supOrg.supplier_type_code = 'RAW_MATERIAL'
         left outer join cm_org_unit as ou
         on op.bizunit_code = ou.bizunit_code
         where map(tm.company_code, '*', op.company_code, tm.company_code) = op.company_code
