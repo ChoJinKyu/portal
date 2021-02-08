@@ -85,6 +85,7 @@ service PrReviewMgtService {
             ,cm_get_code_name_func(dtl.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', ifnull(nullif(dtl.pr_progress_status_code, ''), 'INIT'), 'KO') as pr_progress_status_name : String(240)  // 구매요청진행상태코드
 
             ,dtl.approval_date  // 결재일자
+            ,dtl.confirmed_date  // 확정일자
             ,dtl.remark  // 비고
             ,dtl.attch_group_number  // 첨부파일그룹번호
             ,dtl.delete_flag  // 삭제여부
@@ -175,6 +176,7 @@ service PrReviewMgtService {
             ,dtl.request_date  // 생성일자 - 요청일자
             ,dtl.delivery_request_date  // 납품요청일자
             ,dtl.approval_date  // 결재일자
+            ,dtl.confirmed_date  // 확정일자
             ,dtl.local_update_dtm  // 변경일자 - 로컬수정시간
 
             ,dtl.supplier_code  // 공급업체코드

@@ -198,12 +198,13 @@ BEGIN
                                ,PD.PR_ITEM_NUMBER
                                ,:I_JOB_TYPE AS JOB_TYPE_CODE
                                ,CASE WHEN :I_JOB_TYPE = 'CHANGE' THEN PD.BUYER_EMPNO
-                                     WHEN :I_JOB_TYPE IN ('CLOSING', 'CLOSING_CANCEL') THEN TO_CHAR(PD.CLOSING_FLAG)
+                                     WHEN :I_JOB_TYPE IN ('CLOSING', 'CLOSING_CANCEL') THEN PD.PR_PROGRESS_STATUS_CODE
+                                     --WHEN :I_JOB_TYPE IN ('CLOSING', 'CLOSING_CANCEL') THEN TO_CHAR(PD.CLOSING_FLAG)
                                      ELSE :I_JOB_TYPE
                                 END AS BEFORE_DESC
                                ,CASE WHEN :I_JOB_TYPE = 'CHANGE' THEN :I_BUYER_EMPNO
-                                     WHEN :I_JOB_TYPE = 'CLOSING' THEN 'true'
-                                     WHEN :I_JOB_TYPE = 'CLOSING_CANCEL' THEN 'false'
+                                     --WHEN :I_JOB_TYPE = 'CLOSING' THEN 'true'
+                                     --WHEN :I_JOB_TYPE = 'CLOSING_CANCEL' THEN 'false'
                                      ELSE :I_JOB_TYPE
                                 END AS AFTER_DESC
                                ,:I_PROCESSED_REASON AS REMARK
@@ -219,9 +220,8 @@ BEGIN
         v_insert_idx = :v_insert_idx + 1;
         :v_history_tbl.INSERT(:v_history_tmp, :v_insert_idx);
         /* 이력정보를 가지고 있다가 작업 종료시 Update 함. - End */
-
         
-        --IF (l_pr_item.TRANSACTION_CODE = 'U') THEN  -- I:신규, U:수정, D:삭제
+        --IF (l_pr_item.TRANSACTION_CODE = 'U') THEN  -- I:신규, U:수정, D:삭제  -- TRANSACTION_CODE 사용안함.
 
                 IF (:I_JOB_TYPE = 'REWRITE') THEN
 
@@ -314,7 +314,7 @@ BEGIN
 
                         UPDATE OP_PU_PR_DTL PD
                         SET  PD.CLOSING_FLAG      = TRUE
-                            --,PD.PR_PROGRESS_STATUS_CODE = 'INIT'  -- 어떻게 처리할까?
+                            ,PD.PR_PROGRESS_STATUS_CODE = 'CLOSING'
                             ,PD.LOCAL_UPDATE_DTM  = :v_update_dtm
                             ,PD.UPDATE_USER_ID    = :I_EMPLOYEE_NUMBER
                             ,PD.SYSTEM_UPDATE_DTM = :v_update_dtm
@@ -537,6 +537,6 @@ BEGIN
     /**** Business Logic - End ****/
 
     --COMMIT;
-    O_MSG_TBL = SELECT 'OK' AS RETURN_CODE, 'It has been processed successfully.' AS RETURN_MSG FROM DUMMY;
+    O_MSG_TBL = SELECT 'OK' AS RETURN_CODE, '(메세지)It has been processed successfully.' AS RETURN_MSG FROM DUMMY;
 
 END;
