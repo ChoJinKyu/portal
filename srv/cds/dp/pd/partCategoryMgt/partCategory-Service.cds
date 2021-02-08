@@ -1,6 +1,8 @@
 using { dp as PartCategory } from '../../../../../db/cds/dp/pd/DP_PD_PART_CATEGORY-model';
 using {dp as partCategoryLng} from '../../../../../db/cds/dp/pd/DP_PD_PART_CATEGORY_LNG-model';	
 using { dp as getCmCodeCombo } from '../../../../../db/cds/dp/pd/DP_PD_GET_CM_CODE_COMBO_VIEW-model';
+using { dp as activityStdDayView } from '../../../../../db/cds/dp/pd/DP_PD_ACTIVITY_STANDARD_DAY_VIEW-model';
+using {dp as creationRequest} from '../../../../../db/cds/dp/pd/DP_PD_PART_CATEGORY_CREATION_REQUEST-model';	
 
 namespace dp;
 @path : '/dp.PartCategoryService'
@@ -11,5 +13,7 @@ service PartCategoryService {
     entity pdPartParentCategoryView as projection on PartCategory.Pd_Part_Parent_Category_View ;
     entity PdPartCategory as projection on PartCategory.Pd_Part_Category;
     entity PdGetCmCodeCombo as projection on getCmCodeCombo.Pd_Get_Cm_Code_Combo_View;
+    entity pdActivityStdDayView as projection on activityStdDayView.Pd_Activity_Standard_Day_View;
+    entity pdPartCategoryCreationRequestView as projection on creationRequest.Pd_Part_Category_Creation_Request_View ;
 
 }
