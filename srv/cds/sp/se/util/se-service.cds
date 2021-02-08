@@ -5,6 +5,7 @@ using { sp.Se_Eval_Type as evalType } from '../../../../../db/cds/sp/se/SP_SE_EV
 using { sp.Se_Operation_Unit_Mst as opUnitMst } from '../../../../../db/cds/sp/se/SP_SE_OPERATION_UNIT_MST-model';
 using { sp.Se_Eval_Item_Export_Tree_View as exportTreeView} from '../../../../../db/cds/sp/se/SP_SE_EVAL_ITEM_EXPORT_TREE_VIEW-model';
 using { sp.Se_Copy_T as copyT} from '../../../../../db/cds/sp/se/SP_SE_COPY_T-model';
+using { sp.Se_Eval_Item_Mst as evalItemMst } from '../../../../../db/cds/sp/se/SP_SE_EVAL_ITEM_MST-model';
 
 namespace sp;
 @path : '/sp.evaluationUtilService'
@@ -53,7 +54,28 @@ service EvaluationUtilService{
 
     /* User's Eval Type :평가유형 */
     @readonly
-    entity UserEvalType as projection on evalType;
+    view UserEvalTypeView as 
+    SELECT key a.tenant_id
+          ,key a.company_code
+          ,key a.org_type_code
+          ,key a.org_code
+          ,key a.evaluation_operation_unit_code
+          ,key a.evaluation_type_code
+          ,a.evaluation_type_name
+          ,a.evaluation_type_distrb_score_rate
+          ,a.use_flag
+          ,(SELECT CASE WHEN COUNT(*) > 0 THEN 'N' ELSE 'Y' END AS flag
+          	FROM   evalItemMst b
+          	WHERE  b.tenant_id     = a.tenant_id
+          	AND    b.company_code  = a.company_code
+          	AND    b.org_type_code = a.org_type_code
+          	AND    b.org_code      = a.org_code
+          	AND    b.evaluation_operation_unit_code = a.evaluation_operation_unit_code
+          	AND    b.evaluation_type_code = a.evaluation_type_code
+          ) AS new_flag : String(1)
+    FROM   evalType a;
+
+    //entity UserEvalType as projection on evalType;
 
     /* Eval Item List View */
     @readonly
