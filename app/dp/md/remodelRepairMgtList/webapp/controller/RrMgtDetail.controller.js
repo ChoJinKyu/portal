@@ -64,20 +64,26 @@ sap.ui.define([
                 busy: true,
                 delay: 0
             });
-            //this.getRouter().getRoute("assetDetail").attachPatternMatched(this._onRoutedThisPage, this);
+            this.getRouter().getRoute("rrMgtDetail").attachPatternMatched(this._onObjectMatched, this);
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-            this.setModel(new ManagedListModel(), "schedule");
-
+          //  this.setModel(new ManagedListModel(), "schedule");
+            this.setModel(new ManagedModel(), "rrMgt");
             oTransactionManager = new TransactionManager();
             oTransactionManager.aDataModels.length = 0;
 
-            oTransactionManager.addDataModel(this.getModel("schedule"));
+          //  oTransactionManager.addDataModel(this.getModel("schedule"));
 
             this.process.setDrawProcessUI(this, "rrMgtProcess" , "C", 0);
 
         },
+
+        _onObjectMatched : function(oEvent){ 
+            var oArgs = oEvent.getParameter("arguments");
+            console.log("param>>>>> " , oArgs);
+        } ,
+
 
         onPageNavBackButtonPress: function () {
             this.getRouter().navTo("rrMgtList", {}, true); 
