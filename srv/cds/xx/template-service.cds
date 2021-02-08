@@ -3,7 +3,6 @@ using from '../../../db/cds/xx/template/XX_MESSAGE-model';
 using {xx as controlOption} from '../../../db/cds/xx/template/XX_CONTROL_OPTION_DTL-model';
 using from '../../../db/cds/xx/template/XX_TENANT-model';
 using from '../../../db/cds/xx/template/XX_COMPANY-model';
-using from '../../../db/cds/xx/template/XX_COMPANY_VIEW-model';
 using from '../../../db/cds/xx/template/XX_PLANT-model';
 using from '../../../db/cds/xx/template/XX_DEPARTMENT-model';
 using from '../../../db/cds/xx/template/XX_EMPLOYEE-model';
@@ -22,11 +21,6 @@ service TemplateService {
     entity ControlOptionDetails as projection on controlOption.Control_Option_Dtl;
 
     entity Tenant as projection on xx.Tenant;
-
-    entity Currency_View as projection on Currency; //OData navigation property
-    entity Country_View as projection on Country;   //OData navigation property
-    entity Code_View as projection on Code;         //OData navigation property
-
 
     entity Company @(restrict: [
         { grant: ['READ', 'WRITE'], where: 'tenant_id = $user.TENANT_ID'}
@@ -63,6 +57,10 @@ service TemplateService {
             department.department_korean_name as department_korean_name,
             department.department_english_name as department_english_name
         };
+
+    entity Currency_View as projection on Currency; //OData navigation property
+    entity Country_View as projection on Country;   //OData navigation property
+    entity Code_View as projection on Code;         //OData navigation property
 
 }
 
