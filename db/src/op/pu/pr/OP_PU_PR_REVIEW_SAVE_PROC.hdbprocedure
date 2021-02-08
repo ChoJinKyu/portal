@@ -37,6 +37,7 @@ BEGIN
     /* History 관리 변수 - Start */
     DECLARE v_insert_idx INT = 0;
     DECLARE v_update_dtm SECONDDATE;
+	DECLARE v_bf_pr_progress_status_code NVARCHAR(50);
     DECLARE v_history_tmp TABLE(TENANT_ID NVARCHAR(5)
                                ,COMPANY_CODE NVARCHAR(10)
                                ,PR_NUMBER NVARCHAR(50)
@@ -343,6 +344,26 @@ BEGIN
                         SIGNAL status_check SET MESSAGE_TEXT = '(메세지)마감된 상태만 취소 가능합니다.';
                     END IF;
 
+                    -- 마감취소시 마감전의 진행상태 가져오기
+                    -- 마감취소(CLOSING_CANCEL)를 하려면 이전(최종) 작업이 마감(CANCEL)이어야한다. 그래서 MAX의 이전내역(BEFORE_DESC)이 마감전의 진행상태이다.
+                    SELECT IFNULL(NULLIF(PH.BEFORE_DESC, ''), 'INIT')
+                    INTO   v_bf_pr_progress_status_code
+                    FROM   OP_PU_PR_DTL_HIS PH
+                    WHERE  PH.TENANT_ID      = l_pr_item.TENANT_ID
+                    AND    PH.COMPANY_CODE   = l_pr_item.COMPANY_CODE
+                    AND    PH.PR_NUMBER      = l_pr_item.PR_NUMBER
+                    AND    PH.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
+                    AND    PH.SEQUENCE = (
+                                          SELECT MAX(SEQUENCE)
+                                          FROM   OP_PU_PR_DTL_HIS H
+                                          WHERE  H.TENANT_ID      = PH.TENANT_ID
+                                          AND    H.COMPANY_CODE   = PH.COMPANY_CODE
+                                          AND    H.PR_NUMBER      = PH.PR_NUMBER
+                                          AND    H.PR_ITEM_NUMBER = PH.PR_ITEM_NUMBER
+                                          AND    H.JOB_TYPE_CODE  = 'CLOSING'
+                                         )
+                    ;
+
                     BEGIN
                         DECLARE EXIT HANDLER FOR SQLEXCEPTION
                         BEGIN
@@ -350,10 +371,11 @@ BEGIN
                         END;
 
                         UPDATE OP_PU_PR_DTL PD
-                        SET  PD.CLOSING_FLAG      = FALSE
-                            ,PD.LOCAL_UPDATE_DTM  = :v_update_dtm
-                            ,PD.UPDATE_USER_ID    = :I_EMPLOYEE_NUMBER
-                            ,PD.SYSTEM_UPDATE_DTM = :v_update_dtm
+                        SET  PD.CLOSING_FLAG            = FALSE
+                            ,PD.PR_PROGRESS_STATUS_CODE = :v_bf_pr_progress_status_code
+                            ,PD.LOCAL_UPDATE_DTM        = :v_update_dtm
+                            ,PD.UPDATE_USER_ID          = :I_EMPLOYEE_NUMBER
+                            ,PD.SYSTEM_UPDATE_DTM       = :v_update_dtm
                         WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
