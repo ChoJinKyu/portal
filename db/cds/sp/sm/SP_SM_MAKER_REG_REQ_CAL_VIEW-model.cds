@@ -7,6 +7,7 @@ entity Sm_Maker_Reg_Req_Cal_View {
     key maker_request_sequence            : Integer64   @title : '제조사요청순번';
         maker_request_type_code           : String(30)  @title : '제조사요청타입코드';
         maker_progress_status_code        : String(30)  @title : '제조사진행상태코드';
+        maker_progress_status_name        : String(240) @title : '제조사진행상태명';
         requestor_empno                   : String(30)  @title : '요청자사번';
         requestor_local_name              : String(240) @title : '요청자로컬명';
         requestor_korean_name             : String(240) @title : '요청자한글명';
