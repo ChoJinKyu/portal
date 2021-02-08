@@ -180,6 +180,7 @@ sap.ui.define([
             //filters
             var tenant_combo = this.getView().byId("searchTenantCombo").getSelectedKey(),
                 sChain = this.getView().byId("searchChain").getSelectedKey(),
+                sVpName = this.getView().byId("search_Vp_Name").getValue(),
                 sVpCode = this.getView().byId("search_Vp_Code").getValue(),
 			    sStatusflag = this.getView().byId("search_statusflag").getSelectedKey();
             var aSearchFilters = [];
@@ -197,14 +198,13 @@ sap.ui.define([
                         +"?$filter=tenant_id eq '"+tenant_combo+"' and "
                         +"org_code eq '"+ sChain +"'"; 
             
-            if(sVpCode.length > 0){             
+            if(sVpName.length > 0){             
                 url = url +" and vendor_pool_code eq '"+ this.searchVpVode +"'"; 
             }
          
 			// if (sStatusflag != "" && sStatusflag.length > 0) {
             //     url = url +" and confirmed_status_code eq '"+ sStatusflag +"'"; 
             // }
-
 
             jQuery.ajax({
                 url: url, 
@@ -213,11 +213,11 @@ sap.ui.define([
                 // filters: aSearchFilters,    
                 // sorters: [new Sorter("hierarchy_rank")],
                 success: function(oData){ 
-                    if(sVpCode.length>0 || sStatusflag.length > 0){
+                    if(oData.value.length >0 && (sVpName.length > 0 || sStatusflag.length > 0)){
                         var url2 = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemView('KO')/Set"
                             +"?$filter=tenant_id eq '"+tenant_combo+"' and "
                             +"org_code eq '"+ sChain +"' ";
-                        if(sVpCode.length > 0){ 
+                        if( sVpName.length > 0){ 
                             var pathCode = oData.value[0].vendor_pool_path_code;
                             var parentCode = pathCode.split("^");
 
@@ -261,7 +261,11 @@ sap.ui.define([
                         this.byId("title").setText(this.getModel("I18N").getText("/LIST") +" ("+oData.value.length+")");
                         this.setItemList(oData);
                     }
-                }.bind(this)   
+                }.bind(this),
+                error: function(data){  
+                    console.log('error',data)  
+
+                }
                                      
             });
             
@@ -420,7 +424,11 @@ sap.ui.define([
         onDialogTreeSearch: function (event) {
 
             var treeVendor = [];
-
+            var search_Vp_Name = this.byId("search_Vp_Name").getValue();
+            if(search_Vp_Name != null || search_Vp_Name !=""){
+                this.byId("treepop_vendor_pool_local_name").setValue(search_Vp_Name);
+            }
+            
             if (!!this.byId("treepop_vendor_pool_local_name").getValue()) {
                 treeVendor.push(new Filter({
                     path: 'keyword',
