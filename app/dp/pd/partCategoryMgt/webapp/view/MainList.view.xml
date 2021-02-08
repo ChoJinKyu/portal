@@ -18,7 +18,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{i18n>appTitle}" />
+                    <Title text="{I18N>/PART} {I18N>/CATEGORY} {I18N>/MANAGEMENT}" />
                 </f:heading>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -107,17 +107,17 @@
                     }">
                     <t:extension>
                         <OverflowToolbar>
-                            <Title id="title" text="Part Category List" level="H2"/> 
+                            <Title id="title" text="{I18N>/PART} {I18N>/CATEGORY} {I18N>/LIST}" level="H2"/> 
                             <ToolbarSpacer/>
                             <!-- <Button id="mainTableCreate2Button" text="Creation Request" type="Transparent" press=".onMainTableCreate2ButtonPress" enabled="{= ${master>/indices} === 2 ? ${sm>/screen} === 'M' ? true : false : false}"  /> -->
                             <Button id="mainTableCreate0Button" text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press=".onMainTableCreate0ButtonPress" enabled="{= ${master>/indices} === 0 ? ${sm>/screen} === 'M' ? true : false : false}"  />
                             <Button id="mainTableCreate1Button" text="{I18N>/CREATE_LOWER_LEVEL}" type="Transparent" press=".onMainTableCreate1ButtonPress" enabled="{= ${master>/indices} === 1 ? ${master>/level} === 0 ? ${sm>/screen} === 'M' ? true : false : false : false}" />
                             <!-- <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" enabled="{= ${master>/indices} > 0 ? ${sm>/screen} === 'M' ? true : false : false}"/> -->
-                            <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress" enabled="{= ${master>/indices} > 0 ? ${sm>/screen} === 'M' ? true : false : false}"/>
+                            <!-- <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress" enabled="{= ${master>/indices} > 0 ? ${sm>/screen} === 'M' ? true : false : false}"/> -->
                             <ToolbarSeparator/>
                             <Button id="mainTableButtonAllOpen" text="{I18N>/EXPAND}" type="Transparent" press=".onMainTableexpandAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
                             <Button id="mainTableButtonAllClose" text="{I18N>/COLLAPSE}" type="Transparent" press=".onMainTablecollapseAll" enabled="{=${sm>/screen} === 'M' ? true : false}"  />
-                            <ToolbarSeparator/>
+                            <!-- <ToolbarSeparator/> -->
                         </OverflowToolbar>
                     </t:extension>
                     
@@ -127,9 +127,20 @@
                                 <Text text="{tree>category_code}" wrapping="false" />
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/CATEGORY_GROUP}">    
+                        <t:Column label="{I18N>/SORT}" width="5%">    
+                            <t:template>
+                                <Text text="{tree>sequence}" wrapping="false" />
+                            </t:template>
+                        </t:Column>
+                        
+                        <t:Column label="{I18N>/CATEGORY_NAME}">    
                             <t:template>
                                 <Text text="{tree>category_name}" wrapping="false" />
+                            </t:template>
+                        </t:Column>
+                        <t:Column label="{I18N>/CATEGORY_GROUP}" width="10%">    
+                            <t:template>
+                                <Text text="{tree>category_group_code}" wrapping="false" />
                             </t:template>
                         </t:Column>
                         <t:Column label="{I18N>/STATUS}" hAlign="Center">    
