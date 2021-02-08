@@ -4,6 +4,7 @@
 	xmlns:dnd="sap.ui.core.dnd"
 	xmlns:layout="sap.ui.layout" 
 	xmlns="sap.m"
+    xmlns:lib-m="ext.lib.control.m"
 	xmlns:f="sap.f"
 	xmlns:t="sap.ui.table"
 	xmlns:core="sap.ui.core"
@@ -42,13 +43,13 @@
                 <t:Column hAlign="Center" width="10rem">
                     <Label text="{I18N>/SPMD_CATEGORY_CODE}" textAlign="Center" />
                     <t:template>
-                        <Text text="{tblModel>spmd_category_code}"/>
+                        <lib-m:ColoredText color="{tblModel>rgb_font_color_code}" text="{tblModel>spmd_category_code}" />
                     </t:template>
                 </t:Column>
                 <t:Column>
-                    <Label text="{I18N>/SPMD_CATEGORY_NAME}" textAlign="Center" width="100%" />
+                    <Label text="{I18N>/SPMD_CATEGORY_CODE_NAME}" textAlign="Center" width="100%" />
                     <t:template>
-                        <Text text="{tblModel>spmd_category_code_name}" />
+                        <lib-m:ColoredText color="{tblModel>rgb_font_color_code}" text="{tblModel>spmd_category_code_name}" />
                     </t:template>
                 </t:Column>
             </t:columns>

@@ -47,6 +47,9 @@ service BasePriceArlService {
         left outer join comp as comp
             on mst.tenant_id = comp.tenant_id
             and mst.company_code = comp.company_code
+        left outer join supplierMst as sup
+            on mst.tenant_id = sup.tenant_id
+            and mst.supplier_code = sup.supplier_code
         {
             key mst.tenant_id,
             key mst.company_code,
@@ -58,18 +61,47 @@ service BasePriceArlService {
                 porg.org_name,
                 mtr.material_desc,
                 mtr.material_spec,
-                mst.nn_net_price,
-                mst.nn_currency_code,
-                mst.nn_start_date,
-                mst.nb_base_price,
-                mst.nb_currency_code,
-                mst.nb_base_date,
-                mst.vb_base_price,
-                mst.vb_currency_code,
-                mst.vb_base_date,
-                mst.first_purchasing_net_price,
-                mst.first_pur_netprice_curr_cd,
-                mst.first_pur_netprice_str_dt
+                mtr.base_uom_code,
+                sup.supplier_local_name,
+
+                mst.nn_net_price_0,
+                mst.nn_currency_code_0,
+                mst.nn_start_date_0,
+                mst.nb_base_price_0,
+                mst.nb_currency_code_0,
+                mst.nb_base_date_0,
+                mst.vb_base_price_0,
+                mst.vb_currency_code_0,
+                mst.vb_base_date_0,
+                mst.first_purchasing_net_price_0,
+                mst.first_pur_netprice_curr_cd_0,
+                mst.first_pur_netprice_str_dt_0,
+
+                mst.nn_net_price_1,
+                mst.nn_currency_code_1,
+                mst.nn_start_date_1,
+                mst.nb_base_price_1,
+                mst.nb_currency_code_1,
+                mst.nb_base_date_1,
+                mst.vb_base_price_1,
+                mst.vb_currency_code_1,
+                mst.vb_base_date_1,
+                mst.first_purchasing_net_price_1,
+                mst.first_pur_netprice_curr_cd_1,
+                mst.first_pur_netprice_str_dt_1,
+
+                mst.nn_net_price_2,
+                mst.nn_currency_code_2,
+                mst.nn_start_date_2,
+                mst.nb_base_price_2,
+                mst.nb_currency_code_2,
+                mst.nb_base_date_2,
+                mst.vb_base_price_2,
+                mst.vb_currency_code_2,
+                mst.vb_base_date_2,
+                mst.first_purchasing_net_price_2,
+                mst.first_pur_netprice_curr_cd_2,
+                mst.first_pur_netprice_str_dt_2
         };
     
     // annotate Price_Master_Vw with {

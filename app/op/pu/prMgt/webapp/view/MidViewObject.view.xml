@@ -210,7 +210,11 @@
                                                     }">
                                     <Label text="{I18N>/ORG_CODE}" />           
                                     <table:template>
-                                        <Text text="{detailModel>plant_name} [{detailModel>org_code}]" hAlign="Begin" />
+                                        <Text text="{ parts: [
+                                                            {path: 'detailModel>plant_name'},
+                                                            {path: 'detailModel>org_code'}
+                                                            ],
+                                                       formatter: '.uiControlSet.toKeyValueDisp'}" hAlign="Begin" />
                                     </table:template>
                                 </table:Column>
 
@@ -288,7 +292,11 @@
                                                     }">
                                     <Label text="{I18N>/BUYER}"/>           
                                     <table:template>
-                                        <Text text="{detailModel>user_local_name} [{detailModel>buyer_empno}]"/>
+                                        <Text text="{ parts: [
+                                                            {path: 'detailModel>user_local_name'},
+                                                            {path: 'detailModel>buyer_empno'}
+                                                            ],
+                                                       formatter: '.uiControlSet.toKeyValueDisp'}"/>
                                     </table:template>
                                 </table:Column> 
 
@@ -387,12 +395,16 @@
 
                                 <table:Column   width="10em" hAlign="Center"
                                                 visible="{
-                                                    path: 'OPUI>/DTL-BUYER_EMPNO',
+                                                    path: 'OPUI>/DTL-REQUESTOR_NAME',
                                                     formatter: '.uiControlSet.toColumnVisible'
                                                     }">
                                     <Label text="{I18N>/REQUESTOR}" />           
                                     <table:template>
-                                        <Text text="{detailModel>user_local_name} [{detailModel>buyer_empno}]"/>
+                                        <Text text="{ parts: [
+                                                            {path: 'detailModel>requestor_empno'},
+                                                            {path: 'detailModel>requestor_name'}
+                                                            ],
+                                                       formatter: '.uiControlSet.toKeyValueDisp'}"/>
                                     </table:template>
                                 </table:Column> 
 
