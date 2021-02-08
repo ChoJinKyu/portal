@@ -736,7 +736,7 @@ sap.ui.define([
                     "tenant_id": oObj.tenant_id,
                     "nego_header_id": Number(this.getCheckObject(oObj,"nego_header_id",-1)),
                     "nego_item_number": oObj.nego_item_number,
-                    "item_supplier_sequence": this.getCheckObject(oObj,"item_supplier_sequence", "-1"),
+                    "item_supplier_sequence": this.getCheckObject(oObj,"item_supplier_sequence", ""),
                     "operation_org_code": oObj.operation_org_code,
                     "operation_unit_code": oObj.operation_unit_code,
                     "nego_supplier_register_type_code": "S",
@@ -889,7 +889,7 @@ sap.ui.define([
 
                     "tenant_id": oTemp.tenant_id,
                     "nego_header_id"     : Number(this.getCheckObject(oTemp,"nego_header_id",-1)),
-                    "nego_item_number"     : "0000" + itemNumberTemp,
+                    "nego_item_number"     : "TBD00" + itemNumberTemp,
                     "operation_unit_code"     : "",
                     "award_progress_status_code"     : "",
                     "line_type_code"     : "",
@@ -1401,72 +1401,76 @@ sap.ui.define([
                 console.log( ":<<< getNegoItemObject >>> " );
                 var negoitemprices = [];
                 var negosuppliers = [];
-                oModel.forEach(element => {
-                    if( element.hasOwnProperty("_row_state_") && element._row_state_ === sFlag ) {
+                // oModel.forEach(element => {
+                oModel.forEach(function(element, index, array){
+                    // if( element.hasOwnProperty("_row_state_") && element._row_state_ === sFlag ) {
+                    var createIdTemp = "";//(element._row_state_ === "C") ? "TBD00" +(index+1) : "";
 
-                        var oItem = {
-                            tenant_id                    : this.getCheckObject(element,"tenant_id",""),
-                            nego_header_id               : this.getCheckObject(element,"nego_header_id",-1),
-                            nego_item_number             : this.getCheckObject(element,"nego_item_number","-1"),
-                            operation_org_code           : this.getCheckObject(element,"operation_org_code",""),
-                            operation_unit_code          : this.getCheckObject(element,"operation_unit_code",""),
-                            award_progress_status_code   : this.getCheckObject(element,"award_progress_status_code",""),
-                            line_type_code               : this.getCheckObject(element,"line_type_code",""),
-                            material_code                : this.getCheckObject(element,"material_code",""),
-                            material_desc                : this.getCheckObject(element,"material_desc",""),
-                            specification                : this.getCheckObject(element,"specification",""),
-                            bpa_price                    : this.getCheckObject(element,"bpa_price",0),
-                            detail_net_price             : this.getCheckObject(element,"detail_net_price",0),
-                            recommend_info               : this.getCheckObject(element,"recommend_info",""),
-                            group_id                     : this.getCheckObject(element,"group_id",""),
-                            // sparts_supply_type           : element.sparts_supply_type,
-                            location                     : this.getCheckObject(element,"location",""),
-                            purpose                      : this.getCheckObject(element,"purpose",""),
-                            reason                       : this.getCheckObject(element,"reason,",""),
-                            request_date                 : this.getCheckObject(element,"request_date",new Date()),
-                            attch_code                   : this.getCheckObject(element,"attch_code",""),
-                            supplier_provide_info        : this.getCheckObject(element,"supplier_provide_info",""),
-                            incoterms_code               : this.getCheckObject(element,"incoterms_code",""),
-                            excl_flag                    : this.getCheckObject(element,"excl_flag",""),
-                            specific_supplier_count      : this.getCheckObject(element,"specific_supplier_count",0),
-                            vendor_pool_code             : this.getCheckObject(element,"vendor_pool_code",""),
-                            request_quantity             : this.getCheckObject(element,"request_quantity",0),
-                            uom_code                     : this.getCheckObject(element,"uom_code",""),
-                            maturity_date                : this.getCheckObject(element,"maturity_date",new Date()),
-                            currency_code                : this.getCheckObject(element,"currency_code",""),
-                            response_currency_code       : this.getCheckObject(element,"response_currency_code",""),
-                            exrate_type_code             : this.getCheckObject(element,"exrate_type_code",""),
-                            exrate_date                  : this.getCheckObject(element,"exrate_date",new Date()),
-                            bidding_start_net_price      : this.getCheckObject(element,"bidding_start_net_price",0),
-                            bidding_start_net_price_flag : this.getCheckObject(element,"bidding_start_net_price_flag", false),
-                            bidding_target_net_price     : this.getCheckObject(element,"bidding_target_net_price",0),
-                            current_price                : this.getCheckObject(element,"current_price",0),
-                            note_content                 : this.getCheckObject(element,"note_content",""),
-                            pr_number                    : this.getCheckObject(element,"pr_number",""),
-                            pr_approve_number            : this.getCheckObject(element,"pr_approve_number",""),
-                            req_submission_status        : this.getCheckObject(element,"req_submission_status",""),
-                            req_reapproval               : this.getCheckObject(element,"req_reapproval",""),
-                            requisition_flag             : this.getCheckObject(element,"requisition_flag",""),
-                            price_submission_no          : this.getCheckObject(element,"price_submission_no",""),
-                            price_submisstion_status     : this.getCheckObject(element,"price_submisstion_status",""),
-                            interface_source             : this.getCheckObject(element,"interface_source",""),
-                            requestor_empno              : this.getCheckObject(element,"requestor_empno",""),
-                            budget_department_code       : this.getCheckObject(element,"budget_department_code",""),
-                            request_department_code      : this.getCheckObject(element,"request_department_code","")
-                        };
-                        negoitemprices.push(oItem);
-                    }
+                    var oItem = {
+                        tenant_id                    : this.getCheckObject(element,"tenant_id",""),
+                        nego_header_id               : this.getCheckObject(element,"nego_header_id",-1),
+                        nego_item_number             : this.getCheckObject(element,"nego_item_number",createIdTemp) ,
+                        // nego_item_number             : (element._row_state_ === "C") ? createIdTemp : this.getCheckObject(element,"nego_item_number","") ,
+                        operation_org_code           : this.getCheckObject(element,"operation_org_code",""),
+                        operation_unit_code          : this.getCheckObject(element,"operation_unit_code",""),
+                        award_progress_status_code   : this.getCheckObject(element,"award_progress_status_code",""),
+                        line_type_code               : this.getCheckObject(element,"line_type_code",""),
+                        material_code                : this.getCheckObject(element,"material_code",""),
+                        material_desc                : this.getCheckObject(element,"material_desc",""),
+                        specification                : this.getCheckObject(element,"specification",""),
+                        bpa_price                    : this.getCheckObject(element,"bpa_price",0),
+                        detail_net_price             : this.getCheckObject(element,"detail_net_price",0),
+                        recommend_info               : this.getCheckObject(element,"recommend_info",""),
+                        group_id                     : this.getCheckObject(element,"group_id",""),
+                        // sparts_supply_type           : element.sparts_supply_type,
+                        location                     : this.getCheckObject(element,"location",""),
+                        purpose                      : this.getCheckObject(element,"purpose",""),
+                        reason                       : this.getCheckObject(element,"reason,",""),
+                        request_date                 : this.getCheckObject(element,"request_date",new Date()),
+                        attch_code                   : this.getCheckObject(element,"attch_code",""),
+                        supplier_provide_info        : this.getCheckObject(element,"supplier_provide_info",""),
+                        incoterms_code               : this.getCheckObject(element,"incoterms_code",""),
+                        excl_flag                    : this.getCheckObject(element,"excl_flag",""),
+                        specific_supplier_count      : this.getCheckObject(element,"specific_supplier_count",0),
+                        vendor_pool_code             : this.getCheckObject(element,"vendor_pool_code",""),
+                        request_quantity             : this.getCheckObject(element,"request_quantity",0),
+                        uom_code                     : this.getCheckObject(element,"uom_code",""),
+                        maturity_date                : this.getCheckObject(element,"maturity_date",new Date()),
+                        currency_code                : this.getCheckObject(element,"currency_code",""),
+                        response_currency_code       : this.getCheckObject(element,"response_currency_code",""),
+                        exrate_type_code             : this.getCheckObject(element,"exrate_type_code",""),
+                        exrate_date                  : this.getCheckObject(element,"exrate_date",new Date()),
+                        bidding_start_net_price      : this.getCheckObject(element,"bidding_start_net_price",0),
+                        bidding_start_net_price_flag : this.getCheckObject(element,"bidding_start_net_price_flag", false),
+                        bidding_target_net_price     : this.getCheckObject(element,"bidding_target_net_price",0),
+                        current_price                : this.getCheckObject(element,"current_price",0),
+                        note_content                 : this.getCheckObject(element,"note_content",""),
+                        pr_number                    : this.getCheckObject(element,"pr_number",""),
+                        pr_approve_number            : this.getCheckObject(element,"pr_approve_number",""),
+                        req_submission_status        : this.getCheckObject(element,"req_submission_status",""),
+                        req_reapproval               : this.getCheckObject(element,"req_reapproval",""),
+                        requisition_flag             : this.getCheckObject(element,"requisition_flag",""),
+                        price_submission_no          : this.getCheckObject(element,"price_submission_no",""),
+                        price_submisstion_status     : this.getCheckObject(element,"price_submisstion_status",""),
+                        interface_source             : this.getCheckObject(element,"interface_source",""),
+                        requestor_empno              : this.getCheckObject(element,"requestor_empno",""),
+                        budget_department_code       : this.getCheckObject(element,"budget_department_code",""),
+                        request_department_code      : this.getCheckObject(element,"request_department_code","")
+                    };
+                    negoitemprices.push(oItem);
+                    // }
 
                     var oSuplpiers = element.Suppliers;
                     oSuplpiers.forEach(element2 => {
 
-                        if( element2.hasOwnProperty("_row_state_") && element2._row_state_ === sFlag ) {
+                        // if( element2.hasOwnProperty("_row_state_") && element2._row_state_ === sFlag ) {
 
                             var oSupplierItem = {
                                 tenant_id                        : this.getCheckObject(element2,"tenant_id",""),
                                 nego_header_id                   : this.getCheckObject(element2,"nego_header_id",-1),
-                                nego_item_number                 : this.getCheckObject(element2,"nego_item_number","-1"),
-                                item_supplier_sequence           : this.getCheckObject(element2,"item_supplier_sequence","-1"),
+                                nego_item_number                 : oItem.nego_item_number,//this.getCheckObject(element2,"nego_item_number", createIdTemp ),
+                                // nego_item_number                 : (sFlag === "C") ? createIdTemp : this.getCheckObject(element,"nego_item_number","") ,
+                                item_supplier_sequence           : this.getCheckObject(element2,"item_supplier_sequence",""),
                                 operation_org_code               : this.getCheckObject(element2,"operation_org_code",""),
                                 operation_unit_code              : this.getCheckObject(element2,"operation_unit_code",""),
                                 nego_supplier_register_type_code : this.getCheckObject(element2,"nego_supplier_register_type_code",""),
@@ -1484,9 +1488,9 @@ sap.ui.define([
                                 note_content                     : this.getCheckObject(element2,"note_content","")
                             };
                             negosuppliers.push(oSupplierItem);
-                        }
+                        // }
                     });
-                });
+                }.bind(this));
                 
                 return {negoitemprices : negoitemprices,
                         negosuppliers : negosuppliers};
