@@ -38,7 +38,6 @@
                             <layout:GridData span="XL2 L3 M6 S12" />
                         </layoutData>
                     </VBox>
-                    
                 </f:snappedContent>
                 
                 <f:actions>

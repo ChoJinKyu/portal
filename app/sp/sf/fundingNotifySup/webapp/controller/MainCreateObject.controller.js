@@ -153,6 +153,7 @@ sap.ui.define([
             aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, urlPram.fundingNotifyNumber));
             
             this._onObjectRead(aFilters);
+            this.onPageNavBackButtonPress();
             MessageToast.show(oI18n.getText("/NCM01001"));
         },
 
@@ -224,6 +225,16 @@ sap.ui.define([
 
         //신청서 제출 성공 후
         onAfterProcRequest: function(){
+             var urlPram = this.getModel("contModel").getProperty("/oArgs"),
+                aFilters =[],
+                oI18n = this.getView().getModel("I18N");
+
+            aFilters.push(new Filter("supplier_code", FilterOperator.EQ, urlPram.supplierCode));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, urlPram.tenantId));
+            aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, urlPram.fundingNotifyNumber));
+            
+            this._onObjectRead(aFilters);
+            this.onPageNavBackButtonPress();
             MessageToast.show("제출 성공하였습니다.");
         },
 
@@ -383,7 +394,6 @@ sap.ui.define([
                     sInvestment_plan_sequence = this.getModel("applicationSup").getProperty("/popUpInvestPlanMst").investment_plan_sequence
                 }
 
-
             if (!this.pDialog) {
                 this.pDialog = Fragment.load({
                     id: oView.getId(),
@@ -499,7 +509,6 @@ sap.ui.define([
 
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
             aFilters.push(new Filter("group_code", FilterOperator.EQ, sGroup_code));
-            //aFilters.push(new Filter("chain_code", FilterOperator.EQ, sChain_code));
             aFilters.push(new Filter("language_cd", FilterOperator.EQ, "KO"));
 
             oAppSupModel.read("/ComCodeListView", {
