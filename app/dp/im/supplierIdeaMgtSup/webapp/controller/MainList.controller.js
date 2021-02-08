@@ -175,7 +175,7 @@ sap.ui.define([
                 success: function (oData) {
                     //console.log("oData====", oData);
                     oView.setBusy(false);
-                }
+            }
             });
             oView.setBusy(false);
         },

@@ -59,7 +59,7 @@
                                     <ComboBox
                                         id="groupCategoryCombo"
                                         selectedKey="{master>/category_group_code}"
-                                        editable="false"
+                                        editable="false" 
                                         items="{
                                             path: 'common>/Code',
                                             filters: [
@@ -75,20 +75,22 @@
                                 <VBox>
                                     <Label text="{I18N>/PARENT_CATEGORY_CODE}: " labelFor="pGroupCategory"   required="true"></Label>
                                     <Input id="pGroupCategory"  width="80%"   visible="{viewModel>/editMode}"
-                                        placeholder="{I18N>/PARENT_CATEGORY_CODE} {I18N>/NAME}" value="{PdPartCategory>/parent_category_code}"/>
-                                    <Text id="pGroupCategoryTxt" width="80%" textAlign="Left"  text="{PdPartCategory>/parent_category_code}" visible="{viewModel>/showMode}"/>
+                                        placeholder="{I18N>/PARENT_CATEGORY_CODE} {I18N>/NAME}" value="{PdPartCategoryModel>/parent_category_code}"/>
+                                    <Text id="pGroupCategoryTxt" width="80%" textAlign="Left"  text="{PdPartCategoryModel>/parent_category_code}" visible="{viewModel>/showMode}"/>
                                 </VBox>
                                 <VBox>
                                     <Label text="{I18N>/SEQUENCE}: " labelFor="sequence" required="true" ></Label>
-                                    <Input id="sequence"  width="5em"   visible="{viewModel>/editMode}"
-                                        placeholder="{I18N>/SEQUENCE} {I18N>/NAME}" value="{PdPartCategory>/sequence}"/>
-                                    <Text id="sequenceTxt" width="80%" textAlign="Left"  text="{PdPartCategory>/sequence}" visible="{viewModel>/showMode}"/>
+                                    <MaskInput id="sequence" mask="999" placeholderSymbol=" " width="60%"   visible="{viewModel>/editMode}"
+                                        placeholder="{I18N>/SEQUENCE}" value="{PdPartCategoryModel>/sequence}"/>
+                                    <Text id="sequenceTxt" width="80%" textAlign="Left"  text="{PdPartCategoryModel>/sequence}" visible="{viewModel>/showMode}"/>
+
+                
                                 </VBox>
                             </layout:Grid>
                             
                             <VBox>
                                 <Label text="{I18N>/STATUS}: " labelFor="statusButton"></Label>
-                                <SegmentedButton id="statusButton" selectedKey="{PdPartCategory>/active_flag}" class="sapUiSmallMarginBottom" width="100%" >
+                                <SegmentedButton id="statusButton" selectedKey="{PdPartCategoryModel>/active_flag}" class="sapUiSmallMarginBottom" width="100%" >
                                     <items>
                                         <SegmentedButtonItem text="Active" key="true" width="5rem" />
                                         <SegmentedButtonItem text="Inactive" key="false" width="5rem" />
@@ -117,22 +119,22 @@
                             width="70%">
 							<headerToolbar>
 								<OverflowToolbar>
-									<!-- <ToolbarSpacer/>
+									<ToolbarSpacer/>
                                     <Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Emphasized" press=".onAdd" 
-                                        enabled="{= ${midObjectView>/mode} !== 'R'}"/>
-									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onDelete('midTable', 'details', 'MenuLng')"
-                                        enabled="{= ${midObjectView>/mode} !== 'R'}"/> -->
+                                        enabled="{viewModel>/editMode}"/>
+									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onDelete"
+                                        enabled="{viewModel>/editMode}"/>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
-								<Column id="midStateColumn2" minScreenWidth="Small" hAlign="Center" width="40px" >
+								<Column minScreenWidth="Small" hAlign="Center" width="40px" >
 									<!-- <Text text="S" /> -->
 								</Column>
-								<Column id="midLanguageCodeColumn2" minScreenWidth="Small" hAlign="Center">
+								<Column minScreenWidth="Small" hAlign="Center" width="150px">
 									<Text text="{I18N>/LANGUAGE}" />
 								</Column>
-                                <Column id="midMenuNameColumn2" minScreenWidth="Small" hAlign="Center">
-									<Text text="{I18N>/MANAGEMENT_NAME}" />
+                                <Column minScreenWidth="Small" hAlign="Center">
+									<Text text="{I18N>/CATEGORY_NAME}" />
 								</Column>
 							</columns>
 							<items>
@@ -171,194 +173,202 @@
 			<uxap:ObjectPageSection id="pageSectionMain5" titleUppercase="false" title="{I18N>/STANDARD_DAYS}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection5" >
-						
-			<t:Table
-				id="table1"
-				selectionMode="NONE"
-				ariaLabelledBy="title"
-				rows="{pdActivityStdDayView>/}"
-				visibleRowCount="5"
-				enableColumnFreeze="true"
-                showColumnVisibilityMenu="true">
-                <!-- 
-				selectionMode="MultiToggle"
-				selectionMode="MultiToggle" -->
-				<t:extension>
-					<OverflowToolbar style="Clear">
-						<Title id="title" text="{I18N>/STANDARD_DAYS}"/>
-					</OverflowToolbar>
-				</t:extension>
-				<t:columns>
-					<t:Column
-						width="8rem"
-						sortProperty="pjtType"
-						filterProperty="pjtType">
-						<Label text="PJT Type" textAlign="Center" width="100%"/>
-						<t:template>
-							<Text text="{pdActivityStdDayView>part_project_type_name}"/>
-						</t:template>
-					</t:Column>
-					<t:Column
-						width="10rem"
-						sortProperty="prodActivityName"
-						filterProperty="prodActivityName">
-						<Label text="{I18N>/PROD_ACTIVITY_NAME}" textAlign="Center" width="100%"/>
-						<t:template>
-							<Text text="{pdActivityStdDayView>activity_name}"/>
-						</t:template>
-					</t:Column>
-					<t:Column
-						width="8rem"
-						sortProperty="roleName"
-						filterProperty="roleName">
-						<Label text="{I18N>/ROLE_NAME}" textAlign="Center" width="100%"/>
-						<t:template>
-							<Text text="{pdActivityStdDayView>actual_role}"/>
-						</t:template>
-					</t:Column>
-					<t:Column
-						sortProperty="Use"
-						filterProperty="Use"
-						headerSpan="6">
-						<t:multiLabels>
-							<Label text="Copy Form" textAlign="Center" width="100%"/>
-							<Label text="Use" textAlign="Center" width="100%"/>
-						</t:multiLabels>
-						<t:template>
-                            <ComboBox selectedKey="{pdActivityStdDayView>active_flag}"  enabled="false" width="20em">
-                                <core:Item key="true" text="Y"/>
-                                <core:Item key="false" text="N"/>
-                            </ComboBox>
-						</t:template>
-					</t:Column>
-					<t:Column
-						sortProperty="S"
-						filterProperty="S">
-						<t:multiLabels>
-							<Label text="Copy Form"/>
-							<Label text="S" textAlign="Center" width="100%"/>
-						</t:multiLabels>
-						<t:template>
-							<Text text="{pdActivityStdDayView>s_grade_standard_days}"/>
-						</t:template>
-					</t:Column>
-					<t:Column
-						sortProperty="A"
-						filterProperty="A">
-						<t:multiLabels>
-							<Label text="Copy Form"/>
-							<Label text="A" textAlign="Center" width="100%"/>
-						</t:multiLabels>
-						<t:template>
-							<Text text="{pdActivityStdDayView>a_grade_standard_days}"/>
-						</t:template>
-					</t:Column>
-					<t:Column
-						sortProperty="B"
-						filterProperty="B">
-						<t:multiLabels>
-							<Label text="Copy Form"/>
-							<Label text="B" textAlign="Center" width="100%"/>
-						</t:multiLabels>
-						<t:template>
-							<Text text="{pdActivityStdDayView>b_grade_standard_days}"/>
-						</t:template>
-					</t:Column>
-					<t:Column
-						sortProperty="C"
-						filterProperty="C">
-						<t:multiLabels>
-							<Label text="Copy Form"/>
-							<Label text="C" textAlign="Center" width="100%"/>
-						</t:multiLabels>
-						<t:template>
-							<Text text="{pdActivityStdDayView>c_grade_standard_days}"/>
-						</t:template>
-					</t:Column>
-					<t:Column
-						sortProperty="D"
-						filterProperty="D">
-						<t:multiLabels>
-							<Label text="Copy Form"/>
-							<Label text="D" textAlign="Center" width="100%"/>
-						</t:multiLabels>
-						<t:template>
-							<Text text="{pdActivityStdDayView>d_grade_standard_days}"/>
-						</t:template>
-					</t:Column>
-					<t:Column
-						sortProperty="Use"
-						filterProperty="Use"
-						headerSpan="6">
-						<t:multiLabels>
-							<Label text="Target" textAlign="Center" width="100%"/>
-							<Label text="Use" textAlign="Center" width="100%"/>
-						</t:multiLabels>
-						<t:template>
-                            <ComboBox selectedKey="{pdActivityStdDayView>active_flag}"  width="20em">
-                                <core:Item key="true" text="Y"/>
-                                <core:Item key="false" text="N"/>
-                            </ComboBox>
-						</t:template>
-					</t:Column>
-					<t:Column
-						sortProperty="S"
-						filterProperty="S">
-						<t:multiLabels>
-							<Label text="Target"/>
-							<Label text="S" textAlign="Center" width="100%"/>
-						</t:multiLabels>
-						<t:template>
-							<Input value="{pdActivityStdDayView>s_grade_standard_days}"/>
-						</t:template>
-					</t:Column>
-					<t:Column
-						sortProperty="A"
-						filterProperty="A">
-						<t:multiLabels>
-							<Label text="Target"/>
-							<Label text="A" textAlign="Center" width="100%"/>
-						</t:multiLabels>
-						<t:template>
-							<Input value="{pdActivityStdDayView>a_grade_standard_days}"/>
-						</t:template>
-					</t:Column>
-					<t:Column
-						sortProperty="B"
-						filterProperty="B">
-						<t:multiLabels>
-							<Label text="Target"/>
-							<Label text="B" textAlign="Center" width="100%"/>
-						</t:multiLabels>
-						<t:template>
-							<Input value="{pdActivityStdDayView>b_grade_standard_days}"/>
-						</t:template>
-					</t:Column>
-					<t:Column
-						sortProperty="C"
-						filterProperty="C">
-						<t:multiLabels>
-							<Label text="Target"/>
-							<Label text="C" textAlign="Center" width="100%"/>
-						</t:multiLabels>
-						<t:template>
-							<Input value="{pdActivityStdDayView>c_grade_standard_days}"/>
-						</t:template>
-					</t:Column>
-					<t:Column
-						sortProperty="D"
-						filterProperty="D">
-						<t:multiLabels>
-							<Label text="Target"/>
-							<Label text="D" textAlign="Center" width="100%"/>
-						</t:multiLabels>
-						<t:template>
-							<Input value="{pdActivityStdDayView>d_grade_standard_days}"/>
-						</t:template>
-                    </t:Column>
-                    
-				</t:columns>
-			</t:Table>
+                                    
+                        <t:Table
+                            id="tableSd"
+                            selectionMode="None"
+                            ariaLabelledBy="title"
+                            rows="{pdActivityStdDayView>/}"
+                            visibleRowCount="5"
+                            enableColumnFreeze="true"
+                            showColumnVisibilityMenu="true">
+                            <!-- 
+                            selectionMode="MultiToggle"
+                            selectionMode="MultiToggle" -->
+                            <t:extension>
+                                <OverflowToolbar style="Clear">
+                                    <Label
+                                        text="Copy Form: "
+                                        class="sapUiTinyMarginEnd"
+                                        textAlign="Left"
+                                        labelFor="input"
+                                        required="true"/>
+                                    <VBox>
+                                        <SearchField id="searchField" search=".onSearchPartCategory" value="{master>/similar_category_code}" enabled="{viewModel>/editMode}"/>
+                                    </VBox>
+                                </OverflowToolbar>
+                            </t:extension>
+                            <t:columns>
+                                <t:Column
+                                    width="8rem"
+                                    sortProperty="pjtType"
+                                    filterProperty="pjtType">
+                                    <Label text="PJT Type" textAlign="Center" width="100%"/>
+                                    <t:template>
+                                        <Text text="{pdActivityStdDayView>part_project_type_name}"/>
+                                    </t:template>
+                                </t:Column>
+                                <t:Column
+                                    width="10rem"
+                                    sortProperty="prodActivityName"
+                                    filterProperty="prodActivityName">
+                                    <Label text="{I18N>/PROD_ACTIVITY_NAME}" textAlign="Center" width="100%"/>
+                                    <t:template>
+                                        <Text text="{pdActivityStdDayView>activity_name}"/>
+                                    </t:template>
+                                </t:Column>
+                                <t:Column
+                                    width="8rem"
+                                    sortProperty="roleName"
+                                    filterProperty="roleName">
+                                    <Label text="{I18N>/ROLE_NAME}" textAlign="Center" width="100%"/>
+                                    <t:template>
+                                        <Text text="{pdActivityStdDayView>actual_role}"/>
+                                    </t:template>
+                                </t:Column>
+                                <t:Column
+                                    sortProperty="Use"
+                                    filterProperty="Use"
+                                    headerSpan="6">
+                                    <t:multiLabels>
+                                        <Label text="Copy Form" textAlign="Center" width="100%"/>
+                                        <Label text="Use" textAlign="Center" width="100%"/>
+                                    </t:multiLabels>
+                                    <t:template>
+                                        <ComboBox selectedKey="{pdActivityStdDayView>active_flag_ori}"  enabled="false" width="20em">
+                                            <core:Item key="true" text="Y"/>
+                                            <core:Item key="false" text="N"/>
+                                        </ComboBox>
+                                    </t:template>
+                                </t:Column>
+                                <t:Column
+                                    sortProperty="S"
+                                    filterProperty="S">
+                                    <t:multiLabels>
+                                        <Label text="Copy Form"/>
+                                        <Label text="S" textAlign="Center" width="100%"/>
+                                    </t:multiLabels>
+                                    <t:template>
+                                        <Text text="{pdActivityStdDayView>s_grade_standard_days_ori}"/>
+                                    </t:template>
+                                </t:Column>
+                                <t:Column
+                                    sortProperty="A"
+                                    filterProperty="A">
+                                    <t:multiLabels>
+                                        <Label text="Copy Form"/>
+                                        <Label text="A" textAlign="Center" width="100%"/>
+                                    </t:multiLabels>
+                                    <t:template>
+                                        <Text text="{pdActivityStdDayView>a_grade_standard_days_ori}"/>
+                                    </t:template>
+                                </t:Column>
+                                <t:Column
+                                    sortProperty="B"
+                                    filterProperty="B">
+                                    <t:multiLabels>
+                                        <Label text="Copy Form"/>
+                                        <Label text="B" textAlign="Center" width="100%"/>
+                                    </t:multiLabels>
+                                    <t:template>
+                                        <Text text="{pdActivityStdDayView>b_grade_standard_days_ori}"/>
+                                    </t:template>
+                                </t:Column>
+                                <t:Column
+                                    sortProperty="C"
+                                    filterProperty="C">
+                                    <t:multiLabels>
+                                        <Label text="Copy Form"/>
+                                        <Label text="C" textAlign="Center" width="100%"/>
+                                    </t:multiLabels>
+                                    <t:template>
+                                        <Text text="{pdActivityStdDayView>c_grade_standard_days_ori}"/>
+                                    </t:template>
+                                </t:Column>
+                                <t:Column
+                                    sortProperty="D"
+                                    filterProperty="D">
+                                    <t:multiLabels>
+                                        <Label text="Copy Form"/>
+                                        <Label text="D" textAlign="Center" width="100%"/>
+                                    </t:multiLabels>
+                                    <t:template>
+                                        <Text text="{pdActivityStdDayView>d_grade_standard_days_ori}"/>
+                                    </t:template>
+                                </t:Column>
+                                <t:Column
+                                    sortProperty="Use"
+                                    filterProperty="Use"
+                                    headerSpan="6">
+                                    <t:multiLabels>
+                                        <Label text="Target" textAlign="Center" width="100%"/>
+                                        <Label text="Use" textAlign="Center" width="100%"/>
+                                    </t:multiLabels>
+                                    <t:template>
+                                        <ComboBox selectedKey="{pdActivityStdDayView>active_flag}"  width="20em">
+                                            <core:Item key="true" text="Y"/>
+                                            <core:Item key="false" text="N"/>
+                                        </ComboBox>
+                                    </t:template>
+                                </t:Column>
+                                <t:Column
+                                    sortProperty="S"
+                                    filterProperty="S">
+                                    <t:multiLabels>
+                                        <Label text="Target"/>
+                                        <Label text="S" textAlign="Center" width="100%"/>
+                                    </t:multiLabels>
+                                    <t:template>
+                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>s_grade_standard_days}"  placeholder="0" />
+                                    </t:template>
+                                </t:Column>
+                                <t:Column
+                                    sortProperty="A"
+                                    filterProperty="A">
+                                    <t:multiLabels>
+                                        <Label text="Target"/>
+                                        <Label text="A" textAlign="Center" width="100%"/>
+                                    </t:multiLabels>
+                                    <t:template>
+                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>a_grade_standard_days}" placeholder="0" />
+                                    </t:template>
+                                </t:Column>
+                                <t:Column
+                                    sortProperty="B"
+                                    filterProperty="B">
+                                    <t:multiLabels>
+                                        <Label text="Target"/>
+                                        <Label text="B" textAlign="Center" width="100%"/>
+                                    </t:multiLabels>
+                                    <t:template>
+                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>b_grade_standard_days}"  placeholder="0" />
+                                    </t:template>
+                                </t:Column>
+                                <t:Column
+                                    sortProperty="C"
+                                    filterProperty="C">
+                                    <t:multiLabels>
+                                        <Label text="Target"/>
+                                        <Label text="C" textAlign="Center" width="100%"/>
+                                    </t:multiLabels>
+                                    <t:template>
+                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>c_grade_standard_days}"   placeholder="0" />
+                                    </t:template>
+                                </t:Column>
+                                <t:Column
+                                    sortProperty="D"
+                                    filterProperty="D">
+                                    <t:multiLabels>
+                                        <Label text="Target"/>
+                                        <Label text="D" textAlign="Center" width="100%"/>
+                                    </t:multiLabels>
+                                    <t:template>
+                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>d_grade_standard_days}"  placeholder="0" />
+                                    </t:template>
+                                </t:Column>
+                                
+                            </t:columns>
+                        </t:Table>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
@@ -376,12 +386,12 @@
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
                 
-                <Button id="pageEditButton" type="Transparent" text="{I18N>/EDIT}" press=".onPageEditButtonPress" />
-				<Button id="pageSaveButton" type="Transparent" text="{I18N>/TEMP_SAVE}" press=".onPageSaveButtonPress('T')" />
+                <!-- <Button id="pageEditButton" type="Transparent" text="{I18N>/EDIT}" press=".onPageEditButtonPress" /> -->
+				<Button id="pageSaveButton" type="Transparent" text="{I18N>/SAVE}" press=".onPageSaveButtonPress()" />
 				<Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelButtonPress"/>
-				<Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" press=".onPageSaveButtonPress('D')"/>
+				<!-- <Button id="pageDeleteButton" type="Transparent" text="{I18N>/DELETE}" press=".onPageSaveButtonPress('D')"/> -->
 				<Button id="pageListButton" type="Transparent" text="{I18N>/LIST}" press=".onPageListButtonPress"/>
-                <Button id="pageSubmitButton" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSaveButtonPress('R')" />
+                <!-- <Button id="pageSubmitButton" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSaveButtonPress('R')" /> -->
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

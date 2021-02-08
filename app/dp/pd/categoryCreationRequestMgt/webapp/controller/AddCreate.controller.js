@@ -24,10 +24,12 @@ sap.ui.define([
     "sap/ui/model/FilterType",
     "dp/util/control/ui/IdeaManagerDialog",
     "ext/lib/formatter/NumberFormatter",
-    "ext/lib/core/service/ODataV2ServiceProvider"
+    "ext/lib/core/service/ODataV2ServiceProvider",
+    "ext/lib/model/TreeListModel"
 ], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, DateFormatter,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast, History,
-    ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel,FilterType,IdeaManagerDialog,NumberFormatter,ODataV2ServiceProvider) {
+    ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel,FilterType,IdeaManagerDialog,NumberFormatter,ODataV2ServiceProvider
+    , TreeListModel) {
     "use strict";
 
     var oTransactionManager;
@@ -42,7 +44,11 @@ sap.ui.define([
         loginUserId: new String,
         loginUserName: new String,
         tenant_id: new String,
-
+        category_code: new String,
+        category_group_code: new String,
+        request_category_name: new String,
+        similar_category_code: new String,
+        pdPartCategoryLngArr: new Array,
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -56,14 +62,14 @@ sap.ui.define([
             //로그인 세션 작업완료시 수정
             this.loginUserId = "TestUser";
             this.loginUserName = "TestUser";
-            this.tenant_id = "L2100";
+            this.tenant_id = "L2101";
             this.viewType = false;
 
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedModel(), "master");
-            this.setModel(new ManagedModel(), "PdPartCategory");
+            this.setModel(new ManagedModel(), "PdPartCategoryModel");
             this.setModel(new ManagedModel(), "pdPartCategoryLng");
             this.setModel(new ManagedModel(), "pdActivityStdDayView");
 
@@ -78,7 +84,7 @@ sap.ui.define([
             
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("master"));
-            oTransactionManager.addDataModel(this.getModel("PdPartCategory"));
+            oTransactionManager.addDataModel(this.getModel("PdPartCategoryModel"));
             oTransactionManager.addDataModel(this.getModel("pdPartCategoryLng"));
             oTransactionManager.addDataModel(this.getModel("pdActivityStdDayView"));
 
@@ -96,16 +102,13 @@ sap.ui.define([
             var oArgs = oEvent.getParameter("arguments"),
                 oView = this.getView();
             console.log(oArgs);
-            this._sTenantId = oArgs.tenantId;
-            this._sCategoryGroupCode = oArgs.categoryGroupCode;
-            this._sRequestNumber = oArgs.requestNumber;
-            this._sCategory_code = oArgs.categoryCode;
-
-
+            this._sRequestNumber = oArgs.requestNumber;         
+            this.category_code =   oArgs.categoryCode;
+            
             //세션에서 받아서 넣어 주어야 함
             this._sLanguageCd = "KO";
             //테스트용
-            this._sCategory_code = "PC2012300001";
+            // this.category_code = "PC2012300001";
 
 
             if( oArgs.categoryCode =="new"){
@@ -116,7 +119,7 @@ sap.ui.define([
             var oMasterModel = this.getModel("master");
             oMasterModel.setProperty("/pdPartCategoryCreationRequestView", {});
 
-            var oPdPartCategory = this.getModel("PdPartCategory");
+            var oPdPartCategory = this.getModel("PdPartCategoryModel");
             var oPdPartCategoryLng = this.getModel("pdPartCategoryLng");
             var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
 
@@ -135,9 +138,14 @@ sap.ui.define([
 		 */
         onSearch: function (requestNumber) {
             var oView = this.getView();
-            var sObjectPath = "/pdPartCategoryCreationRequestView(tenant_id='" + this._sTenantId + "',request_number='" + requestNumber + "',category_group_code='" + this._sCategoryGroupCode+ "')";
+
+            var sObjectPath = "/pdPartCategoryCreationRequestView(tenant_id='" + this.tenant_id + "',request_number='" + requestNumber + "')";
             var oMasterModel = this.getModel("master");
-            var v_this = this;
+            var v_this = this;            
+            var oPdPartCategory = this.getModel("PdPartCategoryModel");
+            var oPdPartCategoryLng = this.getModel("pdPartCategoryLng");
+            var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
+
 
             //테스트 에러로 
             //oView.setBusy(true);
@@ -146,170 +154,286 @@ sap.ui.define([
                 success: function (oData) {
                     console.log("master");
                     console.log(oData);
+                    v_this.category_group_code = oData.category_group_code;
+                    v_this.request_category_name = oData.request_category_name;
+                    v_this.similar_category_code = oData.similar_category_code;
+                    v_this.onSearchAfter(v_this.category_code);
                     oView.setBusy(false);
                 }
             });
             
-            if(!this.viewType){
-
-                var oPdPartCategory = this.getModel("PdPartCategory");
-                var oPdPartCategoryLng = this.getModel("pdPartCategoryLng");
-                var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
-                
-                var aFilters = [];
-                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId ));
-                aFilters.push(new Filter("category_group_code", FilterOperator.EQ, this._sCategoryGroupCode));
-                aFilters.push(new Filter("category_code", FilterOperator.EQ, this._sCategory_code));
-
-                ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.PartCategoryService/").read("/PdPartCategory", {
-                    filters: aFilters,
-                    success: function (oData) {
-                        console.log("PdPartCategory");
-                        console.log(oData);
-                        //var oModel = new sap.ui.model.json.JSONModel(oData.results[0]);
-
-                        this.getModel("PdPartCategory").setData(oData.results);
-                    }.bind(this)
-                });
-
-        
-                var aFilters2 = [];
-                aFilters2.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId ));
-                aFilters2.push(new Filter("category_group_code", FilterOperator.EQ, this._sCategoryGroupCode));
-                aFilters2.push(new Filter("category_code", FilterOperator.EQ, this._sCategory_code));
-                // aFilters2.push(new Filter("language_cd", FilterOperator.EQ, this._sLanguageCd));
-
-                
-
-                ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.PartCategoryService/").read("/pdPartCategoryLng", {
-                    filters: aFilters2,
-                    success: function (oData) {
-                        console.log("pdPartCategoryLng");
-                        console.log(oData);
-                        this.getModel("pdPartCategoryLng").setData(oData.results);
-                        
-                    }.bind(this)
-                });
-
-                
-        
-                var aFilters3 = [];
-                aFilters3.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId ));
-                aFilters3.push(new Filter("category_group_code", FilterOperator.EQ, this._sCategoryGroupCode));
-                // aFilters3.push(new Filter("category_group_code", FilterOperator.EQ, this._sCategoryGroupCode));
-                // aFilters3.push(new Filter("category_code", FilterOperator.EQ, this._sCategory_code));
-
-                //test용
-                aFilters3.push(new Filter("category_code", FilterOperator.EQ, "PC2012300007"));
-
-                
-
-                ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.activityStdDayService/").read("/pdActivityStdDayView", {
-                    filters: aFilters3,
-                    success: function (oData) {
-                        console.log("pdActivityStdDayView");
-                        console.log(oData);
-                        this.getModel("pdActivityStdDayView").setData(oData.results);
-                        
-                    }.bind(this)
-                });
-
             
+            if(this.viewType){
                 v_this._toShowMode();
+            }else{
+                v_this._toEditMode();
             }
             
 
         },
 
+        onSearchAfter: function (category_code) {
+            var oView = this.getView();
+            var v_this = this;            
+            var oPdPartCategory = this.getModel("PdPartCategoryModel");
+            var oPdPartCategoryLng = this.getModel("pdPartCategoryLng");
+            var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
+           
+            console.log("category_code:::;"+category_code);
+            var aFilters = [];
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.tenant_id ));
+            aFilters.push(new Filter("category_group_code", FilterOperator.EQ, this.category_group_code));
+            aFilters.push(new Filter("category_code", FilterOperator.EQ, category_code));
+
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.PartCategoryService/").read("/PdPartCategory", {
+                filters: aFilters,
+                success: function (oData) {
+                    console.log("PdPartCategory");
+                    console.log(oData);
+                    //var oModel = new sap.ui.model.json.JSONModel(oData.results[0]);
+
+                    this.getModel("PdPartCategoryModel").setData(oData.results);
+                }.bind(this)
+            });
+
+    
+            var aFilters2 = [];
+            aFilters2.push(new Filter("tenant_id", FilterOperator.EQ, this.tenant_id ));
+            aFilters2.push(new Filter("category_group_code", FilterOperator.EQ, this.category_group_code));
+            aFilters2.push(new Filter("category_code", FilterOperator.EQ, category_code));
+            // aFilters2.push(new Filter("language_cd", FilterOperator.EQ, this._sLanguageCd));
+            //test
+            aFilters2.push(new Filter("category_code", FilterOperator.EQ, "PC2012300001"));
+
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.PartCategoryService/").read("/pdPartCategoryLng", {
+                filters: aFilters2,
+                success: function (oData) {
+                    console.log("pdPartCategoryLng");
+                    console.log(oData);
+                    if( this.category_code =="new"){
+                        oData.results = [{
+                            "tenant_id": this.tenant_id,
+                            "category_group_code": this.category_group_code,
+                            "category_code": "new",
+                            "language_cd": "KO",
+                            "code_name": this.request_category_name,
+                            "local_create_dtm": "",
+                            "local_update_dtm": "",
+                            "create_user_id": "",
+                            "update_user_id": "",
+                            "system_create_dtm": "",
+                            "system_update_dtm": ""
+                        }];
+                    }
+                    this.getModel("pdPartCategoryLng").setData(oData.results);
+                    this.pdPartCategoryLngArr = oData.results;
+                }.bind(this)
+            });
+
+            if(this.similar_category_code==null || this.similar_category_code =="" || this.similar_category_code == undefined){
+                this.similar_category_code = "new";
+            }
+            this.onSearchPdActivityStdDayView(this.similar_category_code);
+                
+        },
+
+        onSearchPdActivityStdDayView: function (similar_category_code) {
+            var oView = this.getView();
+            var v_this = this;
+            var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
+           
+            //테스트  pdPartCategoryCreationRequestView 에서 데이터를 가져오지 못하므로 임시 작업 
+            similar_category_code = "PC2012300037";
+
+            var aFilters3 = [];
+            aFilters3.push(new Filter("tenant_id", FilterOperator.EQ, this.tenant_id ));
+            aFilters3.push(new Filter("category_group_code", FilterOperator.EQ, this.category_group_code));
+            aFilters3.push(new Filter("category_code", FilterOperator.EQ, similar_category_code ));
+            // aFilters3.push(new Filter("category_code", FilterOperator.EQ, this.similar_category_code ));
+
+            console.log(aFilters3);
+
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.activityStdDayService/").read("/pdActivityStdDayView", {
+                filters: aFilters3,
+                success: function (oData) {
+                    console.log("pdActivityStdDayView");
+                    console.log(oData);
+                    this.getModel("pdActivityStdDayView").setData(oData.results);
+                    
+                }.bind(this)
+            });
+            
+        },
+
+        
+        /**
+         * 리스트 레코드 추가
+         * @public
+         */
+        onAdd: function () {
+            this.pdPartCategoryLngArr.push({
+                "tenant_id": this.tenant_id,
+                "category_group_code": this.category_group_code,
+                "category_code": "new",
+                "language_cd": "KO",
+                "code_name": "",
+                "local_create_dtm": "",
+                "local_update_dtm": "",
+                "create_user_id": "",
+                "update_user_id": "",
+                "system_create_dtm": "",
+                "system_update_dtm": ""
+            });
+            this.getModel("pdPartCategoryLng").setData(this.pdPartCategoryLngArr);
+            
+        },
+
+        onDelete: function () {
+            var oTable = this.byId("midTable2"),
+                oModel = this.getModel("pdPartCategoryLng"),
+                aItems = oTable.getSelectedItems(),
+                aIndices = [];
+            var v_this = this;
+            var cntArr = [];
+            aItems.forEach(function (oItem) {
+                // aIndices.push(oItem.getBindingContext("pdPartCategoryLng") )  ;
+                cntArr.push( oItem.getBindingContext("pdPartCategoryLng").sPath.split("/")[1] );
+
+            });
+            for(var i=cntArr.length-1; i > -1; i--){
+                v_this.pdPartCategoryLngArr.splice( cntArr[i]  , 1);
+            }
+            this.getModel("pdPartCategoryLng").setData(v_this.pdPartCategoryLngArr);
+            oTable.removeSelections(true);
+
+            console.log(v_this.pdPartCategoryLngArr);
+        },
+
+
+
 		/**
 		 * Event handler for saving page changes
 		 * @public
 		 */
-        onPageSaveButtonPress: function (flag) {
+        onPageSaveButtonPress: function () {
             
+            console.log("onPageSaveButtonPress start");
             var oView = this.getView(),
-                oDetailsModel = this.getModel("details"),
                 v_this = this;
-            var oData = oDetailsModel.oData;
-            var statsCode = "DRAFT";
-            var CUType = "C";            
-                var inputData = {
-                    inputdata : {}
-                };
-            if (this._sRequestNumber !== "new"){
-                CUType = "U";
-                /*
-                    진행상태에 대한 정의가 필요 하며 정의에 따른 진행상태 셋팅 필요
-                    idea_progress_status_code
-                    업체에서 SUBMIT인 경우 정의 필요
-                */
-                if( flag == "T"){
-                    if(!oDetailsModel.isChanged() ) {
-                        MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-                        return;
-                    }
-                    statsCode = "DRAFT";
-                }else if( flag == "R"){
-                    statsCode = "SUBMIT";
-                }
-            }if( flag == "D"){
-                CUType = "D";
-                statsCode = "DELETE";
-            }
-            if(oData.vi_amount=="" ||  oData.vi_amount==null || parseInt(oData.vi_amount) == undefined || parseInt(oData.vi_amount) == NaN){
-                oData.vi_amount = "0";
-            }
-            if(oData.monthly_mtlmob_quantity=="" || oData.monthly_mtlmob_quantity==null || parseInt(oData.monthly_mtlmob_quantity) == undefined || parseInt(oData.monthly_mtlmob_quantity) == NaN){
-                oData.monthly_mtlmob_quantity = "0";
-            }
-            if(oData.monthly_purchasing_amount=="" || oData.monthly_purchasing_amount==null || parseInt(oData.monthly_purchasing_amount) == undefined || parseInt(oData.monthly_purchasing_amount) == NaN){
-                oData.monthly_purchasing_amount = "0";
-            }
-            if(oData.annual_purchasing_amount=="" || oData.annual_purchasing_amount==null || parseInt(oData.annual_purchasing_amount) == undefined || parseInt(oData.annual_purchasing_amount) == NaN){
-                oData.annual_purchasing_amount = "0";
-            }
-
-            inputData.inputdata = {
-                tenant_id                            : oData.tenant_id                  ,
-                company_code                         : oData.company_code               ,
-                idea_number                          : oData.idea_number                ,
-                idea_title                           : oData.idea_title                 ,
-                idea_progress_status_code            : statsCode                         ,
-
-                supplier_code                        : oData.supplier_code              ,
-                idea_create_user_id                  : this.loginUserId                 ,
-                bizunit_code                         : oData.bizunit_code               ,
-                idea_product_group_code              : oData.idea_product_group_code    ,
-                idea_type_code                       : oData.idea_type_code             ,
-
-                idea_period_code                     : oData.idea_period_code           ,
-                idea_manager_empno                   : oData.idea_manager_empno         ,
-                idea_part_desc                       : oData.idea_part_desc             ,
-                current_proposal_contents            : oData.current_proposal_contents  ,
-                change_proposal_contents             : oData.change_proposal_contents   ,
                 
-                idea_contents                        : oData.idea_contents              ,
-                attch_group_number                   : oData.attch_group_number         ,
-                create_user_id                       : this.loginUserId                 ,
-                update_user_id                       : this.loginUserId                 ,
-                material_code                        : oData.material_code         ,
-                
-                purchasing_uom_code                  : oData.purchasing_uom_code         ,
-                currency_code                        : oData.currency_code         ,
-                vi_amount                            : oData.vi_amount         ,
-                monthly_mtlmob_quantity              : oData.monthly_mtlmob_quantity         ,
-                monthly_purchasing_amount            : oData.monthly_purchasing_amount         ,
-                
-                annual_purchasing_amount             : oData.annual_purchasing_amount         ,
-                perform_contents                     : oData.perform_contents         ,
-                crd_type_code                        : CUType
-            }
-
             if(this.validator.validate(this.byId("midObjectForm")) !== true) return;
-
-            var url = "srv-api/odata/v4/dp.SupplierIdeaMgtV4Service/SaveIdeaProc";
             
-            // console.log(inputData);
+
+            var oPdPartCategory = this.getModel("PdPartCategoryModel");
+            var oPdPartCategoryLng = this.getModel("pdPartCategoryLng");
+            var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
+            var oTableLang = this.byId("midTable2");
+            
+
+            // if (this.category_code =! "new"){
+            //     CUType = "U";
+            //     if(!oPdPartCategory.isChanged() ) {
+            //         MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+            //         return;
+            //     }
+            // }
+
+            var oData = oPdPartCategory.oData;
+            var CUType = "C";
+
+            console.log("onPageSaveButtonPress 11111111");
+            console.log(oData);
+            console.log(this.byId("statusButton").getSelectedKey());
+            var pdMstVal = {
+					tenant_id       : this.tenant_id,
+                    category_group_code   : this.category_group_code,
+                    category_code     : "new",
+                    parent_category_code        : oData.parent_category_code,
+                    sequence     : oData.sequence.trim(),
+
+                    active_flag  : this.getView().byId("statusButton").getSelectedKey(),
+                    update_user_id  : this.loginUserId,
+                    crud_type_code  : CUType
+            };
+
+            var input = {
+                inputData : {
+                    crud_type : CUType,
+                    pdMst : pdMstVal,
+                    pdDtl: [],
+                    pdSD: []
+                }
+            };
+            var pdDtlVal = [];
+            
+            console.log("onPageSaveButtonPress 222222222");
+            console.log(this.pdPartCategoryLngArr);
+            for (var i = 0; i <  this.pdPartCategoryLngArr.length; i++) {
+                pdDtlVal.push({
+                    tenant_id: this.pdPartCategoryLngArr[i].tenant_id,
+                    category_group_code: this.pdPartCategoryLngArr[i].category_group_code,
+                    category_code: this.pdPartCategoryLngArr[i].category_code,
+                    langauge_cd: this.pdPartCategoryLngArr[i].language_cd,
+                    code_name: this.pdPartCategoryLngArr[i].code_name,
+                    
+                    update_user_id: this.loginUserId,
+                    crud_type_code: CUType
+                });
+            }
+            input.inputData.pdDtl = pdDtlVal;
+
+            
+            var pdSDVal = [];
+            
+            console.log("onPageSaveButtonPress 212121212121");
+            var oTableSd = this.byId("tableSd");
+            var oDataSd = oPdActivityStdDayView.oData;
+            console.log(oPdActivityStdDayView);
+            console.log(oTableSd);
+            
+            for (var i = 0; i < oDataSd.length; i++) {
+                
+                if(oDataSd[i].s_grade_standard_days=="" ||  oDataSd[i].s_grade_standard_days==null || parseInt(oDataSd[i].s_grade_standard_days) == undefined || parseInt(oDataSd[i].s_grade_standard_days) == NaN){
+                    oDataSd[i].s_grade_standard_days = "0";
+                }
+                if(oDataSd[i].a_grade_standard_days=="" ||  oDataSd[i].a_grade_standard_days==null || parseInt(oDataSd[i].a_grade_standard_days) == undefined || parseInt(oDataSd[i].a_grade_standard_days) == NaN){
+                    oDataSd[i].a_grade_standard_days = "0";
+                }
+                if(oDataSd[i].b_grade_standard_days=="" ||  oDataSd[i].b_grade_standard_days==null || parseInt(oDataSd[i].b_grade_standard_days) == undefined || parseInt(oDataSd[i].b_grade_standard_days) == NaN){
+                    oDataSd[i].b_grade_standard_days = "0";
+                }
+                if(oDataSd[i].c_grade_standard_days=="" ||  oDataSd[i].c_grade_standard_days==null || parseInt(oDataSd[i].c_grade_standard_days) == undefined || parseInt(oDataSd[i].c_grade_standard_days) == NaN){
+                    oDataSd[i].c_grade_standard_days = "0";
+                }
+                if(oDataSd[i].d_grade_standard_days=="" ||  oDataSd[i].d_grade_standard_days==null || parseInt(oDataSd[i].d_grade_standard_days) == undefined || parseInt(oDataSd[i].d_grade_standard_days) == NaN){
+                    oDataSd[i].d_grade_standard_days = "0";
+                }
+                pdSDVal.push({
+                    tenant_id: oDataSd[i].tenant_id,
+                    activity_code: oDataSd[i].activity_code,
+                    category_group_code: oDataSd[i].category_group_code,
+                    category_code: oDataSd[i].category_code,                    
+                    s_grade_standard_days: oDataSd[i].s_grade_standard_days,
+
+                    a_grade_standard_days: oDataSd[i].a_grade_standard_days,
+                    b_grade_standard_days: oDataSd[i].b_grade_standard_days,
+                    c_grade_standard_days: oDataSd[i].c_grade_standard_days,
+                    d_grade_standard_days: oDataSd[i].d_grade_standard_days,
+
+                    active_flag: oDataSd[i].active_flag.toString(),
+                    update_user_id: this.loginUserId,
+                    crud_type_code: CUType
+                });
+            }
+            input.inputData.pdSD = pdSDVal;
+
+
+            console.log("onPageSaveButtonPress 3333333333");
+            
+
+            var url = "srv-api/odata/v4/dp.partCategoryV4Service/PdPartCategorySaveProc";
+            
+            console.log(input);
 			oTransactionManager.setServiceModel(this.getModel());
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
@@ -320,19 +444,13 @@ sap.ui.define([
                         $.ajax({
                             url: url,
                             type: "POST",
-                            data: JSON.stringify(inputData),
+                            data: JSON.stringify(input),
                             contentType: "application/json",
                             success: function (rst) {
-                                // console.log(rst);
-                                if(rst.return_code =="S"){
+                                console.log(rst);
+                                if(rst.return_code =="OK"){
                                     sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
-                                    if( flag == "T"){
-                                        v_this.onSearch(rst.return_msg );
-                                    }else if( flag == "R"){
-                                        v_this.onPageNavBackButtonPress();
-                                    }else if( flag == "D"){
-                                        v_this.onPageNavBackButtonPress();
-                                    }
+                                    v_this.onPageNavBackButtonPress();
                                 }else{
                                     // console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
@@ -340,9 +458,9 @@ sap.ui.define([
                             },
                             error: function (rst) {
                                     // console.log("eeeeee");
-                                    // console.log(rst);
+                                    console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
-                                    v_this.onSearch(rst.return_msg );
+                                    // v_this.onSearch(rst.return_msg );
                             }
                         });
 					};
@@ -362,12 +480,9 @@ sap.ui.define([
             this.byId("page").setProperty("showFooter", true);
             
             this.byId("pageNavBackButton").setVisible(true);
-            this.byId("pageEditButton").setEnabled(true);
             this.byId("pageSaveButton").setEnabled(false);
             this.byId("pageCancelButton").setEnabled(false);
             this.byId("pageListButton").setEnabled(true);
-            this.byId("pageSubmitButton").setEnabled(false);
-            this.byId("pageDeleteButton").setEnabled(false);
         },
         
         _toEditMode: function () {
@@ -376,14 +491,9 @@ sap.ui.define([
             var oMasterModel = this.getModel("master")
             this.byId("page").setProperty("showFooter", true);
             this.byId("pageNavBackButton").setVisible(false);
-            this.byId("pageEditButton").setEnabled(false);
             this.byId("pageSaveButton").setEnabled(true);
-            if (this._sRequestNumber !== "new"){
-                this.byId("pageDeleteButton").setEnabled(true);
-            }
             this.byId("pageCancelButton").setEnabled(true);
             this.byId("pageListButton").setEnabled(false);
-            this.byId("pageSubmitButton").setEnabled(true);
         },
 
         
@@ -476,8 +586,85 @@ sap.ui.define([
             }else{
                 oEvent.getSource().setText("Yes");
             }
-        },
+        }
 
+
+        
+        , onSearchPartCategory: function (oEvent) {
+            var oButton = oEvent.getSource(),
+                oView = this.getView();
+
+            if (!this.treeDialog) {
+                this.treeDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.pd.categoryCreationRequestMgt.view.PartCategory",
+                    controller: this
+                }).then(function (tDialog) {
+                    oView.addDependent(tDialog);
+                    return tDialog;
+                }.bind(this));
+            }
+
+            this.treeDialog.then(function (tDialog) {
+                tDialog.open();
+                this.onDialogTreeSearch();
+            }.bind(this));
+        }
+
+        , onDialogTreeSearch: function (oEvent) {
+
+            var treeFilter = [];
+
+
+            treeFilter.push(new Filter({
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, "L2101"),
+                    new Filter("category_group_code", FilterOperator.EQ, "CO")
+                ],
+                and: false
+            }));
+            
+            this.treeListModel = new TreeListModel(this.getView().getModel());
+            this.treeListModel
+                .read("/pdPartCategoryView", {
+                     filters: treeFilter
+                })
+                // 성공시
+                .then((function (jNodes) {
+                    this.getView().setModel(new JSONModel({
+                        "pdPartCategoryView": {
+                            "nodes": jNodes
+                        }
+                    }), "tree");
+                }).bind(this))
+                // 실패시
+                .catch(function (oError) {
+                })
+                // 모래시계해제
+                .finally((function () {
+                }).bind(this));
+
+        }
+
+        , selectPartCategoryValue: function (oEvent) {
+            
+            if( oEvent.getParameters().rowContext.sPath != undefined){
+                var row = this.getView().getModel("tree").getObject(oEvent.getParameters().rowContext.sPath);
+                console.log( row);
+                this.getView().byId("searchField").setValue( "[" + row.category_code + " ] " + row.category_name);
+                // this.getView().byId("similarCategoryCode").setValue( "[" + row.category_code + " ] " + row.category_name);
+                console.log(this.getView().byId("searchField").getValue());
+                this.onSearchPdActivityStdDayView(row.category_code);
+            }
+
+            this.partCategoryPopupClose();
+        }
+        
+        , partCategoryPopupClose: function (oEvent) {
+            this.byId("PartCategory").close();
+        }
+
+        
         
     });
 });
