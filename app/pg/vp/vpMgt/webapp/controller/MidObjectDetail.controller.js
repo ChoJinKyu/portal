@@ -346,7 +346,7 @@ sap.ui.define([
                 sModel.setProperty(sPath + "/supplier_english_name", oEvent.mParameters.item.supplier_english_name);
                 sModel.setProperty(sPath + "/supplier_company_code", oEvent.mParameters.item.company_code);
                 sModel.setProperty(sPath + "/supplier_company_name", oEvent.mParameters.item.company_name);
-                sModel.setProperty(sPath + "/supplier_status_code", oEvent.mParameters.item.supplier_register_status_code);
+                // sModel.setProperty(sPath + "/inactive_status_code", oEvent.mParameters.item.inactive_status_code);
 
 
             }.bind(this));
@@ -443,7 +443,7 @@ sap.ui.define([
 		 */
         onDetailSaveButtonPress: function(){
 			 MessageToast.show("Do 1st Proc!");
-
+            var doSave =  true;
              var oModel = this.getModel("vpMappingProc"),
                 oView = this.getView(),   
                 oBundle = this.getView().getModel("i18n").getResourceBundle(),                
@@ -467,7 +467,34 @@ sap.ui.define([
                         user_no: "testerNo"
                     }
                 };   
-            //_general_info Data add    
+            //_general_info Data add  
+            
+            var eval_flag = this.getView().byId("general_regular_evaluation_flag").getSelectedKey();
+            var mngt_flag = this.getView().byId("general_maker_material_code_mngt_flag").getSelectedKey();
+            var sd_flag = this.getView().byId("general_sd_exception_flag").getSelectedKey();
+            var vp_flag = this.getView().byId("general_vendor_pool_apply_exception_flag").getSelectedKey();
+
+            if(eval_flag == "true"){
+                eval_flag = true;
+            }else{
+                eval_flag = false;
+            }
+            if(mngt_flag == "true"){
+                mngt_flag = true;
+            }else{
+                mngt_flag = false;
+            }
+            if(sd_flag == "true"){
+                sd_flag = true;
+            }else{
+                sd_flag = false;
+            }
+            if(vp_flag == "true"){
+                vp_flag = true;
+            }else{
+                vp_flag = false;
+            }                        
+
             vpMstList.push({
                 tenant_id: generaloDataRst.tenant_id //auto set
                 ,company_code: generaloDataRst.company_code //auto set
@@ -480,11 +507,15 @@ sap.ui.define([
                 ,operation_unit_code : generaloDataRst.operation_unit_code  //auto set
                 ,inp_type_code : this.getView().byId("general_inp_type_code").getSelectedKey()//  view value set
                 ,mtlmob_base_code : this.getView().byId("general_plan_base").getSelectedKey()//  view value set
-                ,regular_evaluation_flag : this.getView().byId("general_regular_evaluation_flag").getState()//  view value set
+                // ,regular_evaluation_flag : this.getView().byId("general_regular_evaluation_flag").getState()//  view value set
+                ,regular_evaluation_flag : eval_flag//  view value set
                 ,industry_class_code : this.getView().byId("general_industry_class_code").getSelectedKey()//  view value set
-                ,sd_exception_flag : this.getView().byId("general_sd_exception_flag").getState()//  view value set
-                ,vendor_pool_apply_exception_flag : this.getView().byId("general_vendor_pool_apply_exception_flag").getState()//  view value set
-                ,maker_material_code_mngt_flag : this.getView().byId("general_maker_material_code_mngt_flag").getState()//  view value set
+                // ,sd_exception_flag : this.getView().byId("general_sd_exception_flag").getState()//  view value set
+                // ,vendor_pool_apply_exception_flag : this.getView().byId("general_vendor_pool_apply_exception_flag").getState()//  view value set
+                // ,maker_material_code_mngt_flag : this.getView().byId("general_maker_material_code_mngt_flag").getState()//  view value set                
+                ,sd_exception_flag : sd_flag//  view value set
+                ,vendor_pool_apply_exception_flag : vp_flag//  view value set
+                ,maker_material_code_mngt_flag : mngt_flag//  view value set
                 ,domestic_net_price_diff_rate : parseFloat(this.getView().byId("general_domestic_net_price_diff_rate").getValue())// view value set
                 ,dom_oversea_netprice_diff_rate : parseFloat(this.getView().byId("general_dom_oversea_netprice_diff_rate").getValue())// view value set
                 // ,domestic_net_price_diff_rate : 10.0// view value set
@@ -521,6 +552,13 @@ sap.ui.define([
                     var startDate = this.currnetSppObj[i].supeval_control_start_date;
                     var endDate = this.currnetSppObj[i].supeval_control_end_date;
 
+                    if(startDate && !endDate || !startDate && endDate){
+
+                        MessageToast.show("통제시작일과 통제종료일을 확인해 주세요"); 
+                        doSave =  false;
+                        
+                    }
+
                     if(startDate){
 
                         startDate = this.currnetSppObj[i].supeval_control_start_date.toJSON().substring(0, 10)
@@ -556,6 +594,7 @@ sap.ui.define([
                         ,register_reason: this.currnetSppObj[i].register_reason
                         ,approval_number: this.currnetSppObj[i].approval_number
                         ,crud_type_code : this.currnetSppObj[i]._row_state_   
+                        
                     })
                 }
             }
@@ -608,6 +647,10 @@ sap.ui.define([
             inputInfo.inputData.vpSupplier = vpSupplierList;   
             inputInfo.inputData.vpItem = vpItemList;                   
             inputInfo.inputData.vpManager = vpManagerList;
+
+            if(!doSave){
+                return false;
+            }
 
             $.ajax({
                 url: urlInfo,
@@ -1053,12 +1096,59 @@ sap.ui.define([
                     } else {
                         that.byId("v_general_plan_base").setVisible(false);
                     }
+                    var eval_flag;
+                    var mngt_flag;
+                    var sd_flag;
+                    var vp_flag;
+
+                    if (generaloDataRst.regular_evaluation_flag !== null) {
+                        if(generaloDataRst.regular_evaluation_flag){
+                            eval_flag = "true"
+                        }else{
+                            eval_flag = "false"
+                        }
+                        // eval_flag = generaloDataRst.regular_evaluation_flag ? "true" : "false"  ;
+                    }else{
+                        eval_flag = "false";
+                    }
+
+                    if (generaloDataRst.maker_material_code_mngt_flag !== null) {
+                        if(generaloDataRst.maker_material_code_mngt_flag){
+                            mngt_flag = "true"
+                        }else{
+                            mngt_flag = "false"
+                        }
+                        // mngt_flag = generaloDataRst.regular_evaluation_flag ? "true" : "false"  ;
+                    }else{
+                        mngt_flag = "false";
+                    }
+
+                    if (generaloDataRst.sd_exception_flag !== null) {
+                        if(generaloDataRst.sd_exception_flag){
+                            sd_flag = "true"
+                        }else{
+                            sd_flag = "false"
+                        }                        
+                        // sd_flag = generaloDataRst.regular_evaluation_flag ? "true" : "false"  ;
+                    }else{
+                        sd_flag = "false";
+                    }
+                    if (generaloDataRst.vendor_pool_apply_exception_flag !== null) {
+                        if(generaloDataRst.vendor_pool_apply_exception_flag){
+                            vp_flag = "true"
+                        }else{
+                            vp_flag = "false"
+                        }                         
+                        // vp_flag = generaloDataRst.regular_evaluation_flag ? "true" : "false"  ;
+                    }else{
+                        vp_flag = "false";
+                    }
                     
                     that.getView().byId("general_plan_base").setSelectedKey(generaloDataRst.mtlmob_base_code);
-                    that.getView().byId("general_regular_evaluation_flag").setState(generaloDataRst.regular_evaluation_flag);
-                    that.getView().byId("general_maker_material_code_mngt_flag").setState(generaloDataRst.maker_material_code_mngt_flag);
-                    that.getView().byId("general_sd_exception_flag").setState(generaloDataRst.sd_exception_flag);
-                    that.getView().byId("general_vendor_pool_apply_exception_flag").setState(generaloDataRst.vendor_pool_apply_exception_flag);
+                    that.getView().byId("general_regular_evaluation_flag").setSelectedKey(eval_flag);
+                    that.getView().byId("general_maker_material_code_mngt_flag").setSelectedKey(mngt_flag);
+                    that.getView().byId("general_sd_exception_flag").setSelectedKey(sd_flag);
+                    that.getView().byId("general_vendor_pool_apply_exception_flag").setSelectedKey(vp_flag);
                     that.getView().byId("general_equipment_grade_code").setSelectedKey(generaloDataRst.equipment_grade_code);
                     that.getView().byId("general_equipment_type_code").setSelectedKey(generaloDataRst.equipment_type_code);
                     that.getView().byId("general_dom_oversea_netprice_diff_rate").setValue(generaloDataRst.dom_oversea_netprice_diff_rate);
