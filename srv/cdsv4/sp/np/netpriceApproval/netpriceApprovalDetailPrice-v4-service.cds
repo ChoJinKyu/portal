@@ -54,7 +54,7 @@ service NpApprovalDetailPriceV4Service {
         material_code                   : String(40)    ; 
         market_code                     : String(30)    ; 
         currency_code                   : String(3)     ; 
-        base_price                      : Decimal(34,10); 
+        net_price                       : Decimal(34,10); 
         base_price_type_code            : String(30)    ; 
         pyear_dec_base_currency_code    : String(3)     ;
         pyear_dec_base_price            : Decimal(34,10); 
@@ -62,6 +62,11 @@ service NpApprovalDetailPriceV4Service {
         quarter_base_currency_code      : String(3)     ;
         quarter_base_price              : Decimal(34,10);
         quarter_ci_rate                 : Decimal(34,10);
+        base_date                       : Date;
+        base_currency_code              : String(3)     ; 
+        base_price                      : Decimal(34,10); 
+        base_apply_start_yyyymm         : String(6)     ; 
+        base_apply_end_yyyymm           : String(6)     ;                          
     };
 
     /* */
