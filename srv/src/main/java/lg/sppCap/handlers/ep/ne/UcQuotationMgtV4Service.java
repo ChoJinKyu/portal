@@ -24,13 +24,7 @@ import org.springframework.jdbc.core.SqlReturnResultSet;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import cds.gen.ep.ucquotationmgtv4service.SaveReturnType;
-import cds.gen.ep.ucquotationmgtv4service.SaveUcQuotationDtlProcContext;
-import cds.gen.ep.ucquotationmgtv4service.SaveUcQuotationExtraProcContext;
-import cds.gen.ep.ucquotationmgtv4service.UcDetailData;
-import cds.gen.ep.ucquotationmgtv4service.UcMasterData;
-import cds.gen.ep.ucquotationmgtv4service.UcQuotationExtraData;
-import cds.gen.ep.ucquotationmgtv4service.UcQuotationMgtV4Service_;
+import cds.gen.ep.ucquotationmgtv4service.*;
 
 @Component
 @ServiceName(UcQuotationMgtV4Service_.CDS_NAME)
