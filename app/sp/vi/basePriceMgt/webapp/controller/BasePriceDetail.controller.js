@@ -670,28 +670,30 @@ sap.ui.define([
             });
 
             for (var i=0; i<=aPriceResult.length-1; i++){
-                if (!aPriceResult[i].bizdivision_code){
-                    MessageBox.show("사업부코드는 필수입니다.");
+
+                //적용시작월 체크
+                var nAfterBase_year = Number(aPriceResult[i].base_year) + 1;
+                if( aPriceResult[i].apply_start_yyyymm < aPriceResult[i].base_year+"01"){
+                    MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
+                    return;
+                //적용종료월 체크
+                }else if( aPriceResult[i].apply_start_yyyymm > String(nAfterBase_year)+"01"){
+                    MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
                     return;
                 }
-
-                if (!aPriceResult[i].material_code){
-                    MessageBox.show("자재코드는 필수입니다.");
+                
+                if (!aPriceResult[i].bizdivision_code){
+                    MessageBox.show("사업부는 필수입니다.");
                     return;
                 }
 
                 if (!aPriceResult[i].company_code){
-                    MessageBox.show("컴퍼니코드는 필수입니다");
-                    return;
-                }
-
-                if (!aPriceResult[i].currency_code){
-                    MessageBox.show("통화코드는 필수입니다. ");
+                    MessageBox.show("법인는 필수입니다");
                     return;
                 }
 
                 if (!aPriceResult[i].plant_code){
-                    MessageBox.show("플랜트코드는 필수입니다. ");
+                    MessageBox.show("플랜트는 필수입니다. ");
                     return;
                 }
 
@@ -700,26 +702,28 @@ sap.ui.define([
                     return;
                 }
 
-                if (!aPriceData[i].base_uom_code){
-                    MessageBox.show("가격단위는 필수입니다. ");
+                if (!aPriceResult[i].material_code){
+                    MessageBox.show("자재코드는 필수입니다.");
                     return;
                 }
-                var OnlyNumber = this.onOnlyNumber(aPriceData[i].base_uom_code);
+
+                if (!aPriceResult[i].currency_code){
+                    MessageBox.show("통화는 필수입니다. ");
+                    return;
+                }    
+
+                //기준단가 널처리 
+                if (!aPriceData[i].base_price){
+                    MessageBox.show("기준단가는 필수입니다. ");
+                    return;
+                } 
+                //가준단가 숫자처리
+                var OnlyNumber = this.onOnlyNumber(aPriceData[i].base_price);
                 if(OnlyNumber){
                     MessageBox.show("숫자만 입력 가능합니다.");
                     return;
                 }
-
-                var nAfterBase_year = Number(aPriceResult[i].base_year) + 1;
-                if( aPriceResult[i].apply_start_yyyymm < aPriceResult[i].base_year+"01"){
-                    MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
-                    return;
-                    
-                }else if( aPriceResult[i].apply_start_yyyymm > String(nAfterBase_year)+"01"){
-                    MessageBox.show("해당년에 월만 입력할수있습니다.", {at: "Center Center"});
-                    return;
-                }
-
+                //기준단가 소수점 체크
                 var t = String(aPriceResult[i].base_price);
                 if(t.indexOf('.') != -1){
                     var t_length = t.substring(t.indexOf('.') + 1);
@@ -727,7 +731,13 @@ sap.ui.define([
                         MessageBox.show('소수 네자리까지만 입력됩니다.');
                         return;
                     }
-                }                    
+                } 
+                
+                if (!aPriceResult[i].buyer_empno){
+                    MessageBox.show("구매담당자는 필수입니다. ");
+                    return;
+                }
+                
             }
 
             /**
@@ -811,13 +821,13 @@ sap.ui.define([
 
             // 리스트에서 선택해서 넘어오는 경우
             if(oSelectedData) {
-                var that = this;
+                debugger;
                 var oModel = this.getModel("basePriceArl");
                 var aFilters = [];
                     aFilters.push(new Filter("tenant_id", FilterOperator.EQ, oSelectedData.tenant_id));
                     aFilters.push(new Filter("approval_number", FilterOperator.EQ, oSelectedData.approval_number));
-                    aFilters.push(new Filter("approval_number", FilterOperator.EQ, oSelectedData.net_price_type_code));
-                    aFilters.push(new Filter("approval_number", FilterOperator.EQ, oSelectedData.chain_code));
+                    aFilters.push(new Filter("net_price_type_code", FilterOperator.EQ, oSelectedData.net_price_type_code));
+                    aFilters.push(new Filter("chain_code", FilterOperator.EQ, oSelectedData.chain_code));
 
                 oView.setBusy(true);
 
