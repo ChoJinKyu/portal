@@ -23,6 +23,7 @@
                     <Title text="Remodel/Repair Management List" />
                 </f:heading>
                 <f:snappedContent>
+                    <!-- 초기 search 접혀있을때 -->
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox height="4em">
@@ -65,43 +66,39 @@
                                 </layoutData>
                             </VBox>
                             <VBox height="4em">
-                                <Label text="{path:'I18N>/ASSETS_STATUS', formatter:'I18NFormatter'}"></Label>
+                                <Label text="{path:'I18N>/STATUS', formatter:'I18NFormatter'}"></Label>
                                     <SegmentedButton 
                                         id="searchAssetsStatusS" 
                                         selectedKey="" 
                                         width="100%" 
-                                        items="{path :'SegmentedItem>/Code',
-                                                sorter: {path: 'sort_no'}
-                                    }">
-                                        <items>
-                                            <SegmentedButtonItem width="5em" text="{SegmentedItem>code_name}" key="{SegmentedItem>code}"/>
+                                        items="{path :'util>/Code',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                                    ,  {path: 'group_code', operator: 'EQ', value1: 'DP_MD_REPAIR_REQUEST_STATUS'}
+                                                ],
+                                                sorter: {path: 'sort_no'} }">
+                                        <items> 
+                                            <SegmentedButtonItem width="5em" text="{util>code_name}" key="{util>code}"/>
                                         </items>
                                     </SegmentedButton>
                               
                                 <layoutData>
-                                    <layout:GridData span="XL4 L4 M12 S12" />
+                                    <layout:GridData span="XL3 L3 M12 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox height="4em">
-                                <Label text="{path:'I18N>/SIGNAL', formatter:'I18NFormatter'}"></Label>
-                                    <SegmentedButton 
-                                        id="searchSignalS" 
-                                        selectedKey="" 
-                                        width="100%" >
-                                        <items>
-                                            <SegmentedButtonItem width="5em" text="Light" key=""/>
-                                            <SegmentedButtonItem width="5em" text="Heavy" key=""/>
-                                            <SegmentedButtonItem width="5em" text="Replace" key=""/>
-                                        </items>
-                                    </SegmentedButton>
+                             <VBox height="4em">
+                                <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchRequestDateS" required="true"></Label>
+                                <DateRangeSelection id="searchRequestDateS" width="100%" change="handleChange"/>
                                 <layoutData>
-                                    <layout:GridData span="XL2 L2 M12 S12" />
+                                    <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
+                           
                         </form:content>
                     </form:SimpleForm>
                 </f:snappedContent>
                 <f:expandedContent>
+                     <!-- 초기 search 펼쳐있을때 -->
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox height="4em">
@@ -143,47 +140,40 @@
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox height="4em">
-                                <Label text="{path:'I18N>/ASSETS_STATUS', formatter:'I18NFormatter'}"></Label>
+                           <VBox height="4em">
+                                <Label text="{path:'I18N>/STATUS', formatter:'I18NFormatter'}"></Label>
                                     <SegmentedButton 
                                         id="searchAssetsStatusE" 
                                         selectedKey="" 
                                         width="100%" 
-                                        items="{path :'SegmentedItem>/Code',
-                                                sorter: {path: 'sort_no'}
-                                    }">
-                                        <items>
-                                            <SegmentedButtonItem width="5em" text="{SegmentedItem>code_name}" key="{SegmentedItem>code}"/>
+                                        items="{path :'util>/Code',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                                    ,  {path: 'group_code', operator: 'EQ', value1: 'DP_MD_REPAIR_REQUEST_STATUS'}
+                                                ],
+                                                sorter: {path: 'sort_no'} }">
+                                        <items> 
+                                            <SegmentedButtonItem width="5em" text="{util>code_name}" key="{util>code}"/>
                                         </items>
                                     </SegmentedButton>
                               
                                 <layoutData>
-                                    <layout:GridData span="XL4 L4 M12 S12" />
+                                    <layout:GridData span="XL3 L3 M12 S12" />
                                 </layoutData>
                             </VBox>
                             <VBox height="4em">
-                                <Label text="{path:'I18N>/SIGNAL', formatter:'I18NFormatter'}"></Label>
-                                    <SegmentedButton 
-                                        id="searchSignalE" 
-                                        selectedKey="" 
-                                        width="100%" >
-                                        <items>
-                                            <SegmentedButtonItem width="5em" text="Light" key=""/>
-                                            <SegmentedButtonItem width="5em" text="Heavy" key=""/>
-                                            <SegmentedButtonItem width="5em" text="Replace" key=""/>
-                                        </items>
-                                    </SegmentedButton>
+                                <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchRequestDateE" required="true"></Label>
+                                <DateRangeSelection id="searchRequestDateE" width="100%" change="handleChange"/>
                                 <layoutData>
-                                    <layout:GridData span="XL2 L2 M12 S12" />
+                                    <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
-                            </VBox>
-                            
+                            </VBox>                       
                         </form:content>
                     </form:SimpleForm>
                 </f:expandedContent>
                 <f:actions>
                     <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
-                    <Button text="DETAIL" type="Emphasized" press=".showAssetDetail" />
+                    <Button id="detailMove" text="임시상세" type="Emphasized" press=".showDetail" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -224,19 +214,26 @@
                             </layoutData>
                         </VBox>
                         <VBox height="4em">
-                            <Label text="{path:'I18N>/2ND_VENDOR', formatter:'I18NFormatter'}" labelFor="searchSecondVendor"></Label>
-                            <Input id="searchSecondVendor" placeholder="Input data"/>
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
-                        <VBox height="4em">
-                            <Label text="{path:'I18N>/3RD_VENDOR', formatter:'I18NFormatter'}" labelFor="searchThirdVendor"></Label>
-                            <Input id="searchThirdVendor" placeholder="Input data"/>
-                            <layoutData>
-                                <layout:GridData span="XL3 L3 M6 S12" />
-                            </layoutData>
-                        </VBox>
+                                <Label text="{path:'I18N>/RECEIPT_ESTIMATION_STATUS', formatter:'I18NFormatter'}"></Label>
+                                    <SegmentedButton 
+                                        id="searchReceiptEstimationStatusE" 
+                                        selectedKey="" 
+                                        width="100%" 
+                                        items="{path :'util>/Code',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                                    ,  {path: 'group_code', operator: 'EQ', value1: 'DP_MD_REPAIR_PROGRESS_STATUS'}
+                                                ],
+                                                sorter: {path: 'sort_no'} }">
+                                        <items> 
+                                            <SegmentedButtonItem width="5em" key="{util>code}" text="{util>code_name}"/>
+                                        </items>
+                                    </SegmentedButton>
+                              
+                                <layoutData>
+                                    <layout:GridData span="XL6 L6 M12 S12" />
+                                </layoutData>
+                            </VBox>
                     </form:content>
                 </form:SimpleForm>
             </f:DynamicPageHeader>
@@ -265,59 +262,59 @@
                     </OverflowToolbar>
                 </table:extension>                             
                 <table:columns >
-                    
-                    <table:Column id="assetDivisionColumn" width="4.5em" hAlign="Center">
-                        <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" wrapping="true"/>
+                    <table:Column id="rrMgtDivisionColumn" width="4.5em" hAlign="Center">
+                        <Label text="{path:'I18N>/DIVISION', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="org_code" text="{list>org_code}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetModelColumn" width="10em" >
+                    <table:Column id="rrMgtModelColumn" width="10em" >
                         <Label text="{path:'I18N>/MODEL', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="model" text="{list>model}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetMoldNoColumn" width="12em">
+                    <table:Column id="rrMgtMoldNoColumn" width="12em">
                         <Label text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="mold_number" text="{list>mold_number}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetSeqColumn" width="3em" hAlign="Center">
+                    <table:Column id="rrMgtSeqColumn" width="3em" hAlign="Center">
                         <Label text="{path:'I18N>/SEQUENCE', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="mold_sequence" text="{list>mold_sequence}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetDescriptionColumn" width="10em">
+                    <table:Column id="rrMgtDescriptionColumn" width="10em">
                         <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="spec_name" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetSecondVendorColumn" width="13em">
-                        <Label text="2nd Vendor" wrapping="true"/>
+                    <table:Column id="rrMgtRequestNoColumn" width="13em">
+                        <Label text="Request No" wrapping="true"/>
                         <table:template>
-                            <Input id="assetSecondVendor"/>
+                            <Input id="rrMgtRequestNo"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetThirdVendorColumn" width="13em">
-                        <Label text="3rd Vendor" wrapping="true"/>
+                    <!-- Request/Receipt Date -->
+                    <table:Column id="rrMgtRequestReceiptDateColumn" width="13em">
+                        <Label text="Request/Receipt Date" wrapping="true"/>
                         <table:template>
-                            <Input id="assetThirdVendor"/>
+                            <Input id="rrMgtRequestReceiptDate"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetProdVendorColumn" width="10em">
-                        <Label text="Prod Vendor" wrapping="true"/>
+                    <table:Column id="rrMgtTitleColumn" width="10em">
+                        <Label text="Title" wrapping="true"/>
                         <table:template>
-                            <Text id="prod_vendor" text="{list>spec_name}"/>
+                            <Text id="rrMgtTitle" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetProdVendorNameColumn" width="10em">
-                        <Label text="Prod Vendor Name" wrapping="true"/>
+                    <table:Column id="rrMgtStatusColumn" width="10em">
+                        <Label text="Status" wrapping="true"/>
                         <table:template>
-                            <Text id="prod_vendor_name" text="{list>spec_name}"/>
+                            <Text id="rrMgtStatus" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetOrderVendorNameColumn" width="10em">
