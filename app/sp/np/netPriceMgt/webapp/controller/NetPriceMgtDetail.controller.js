@@ -121,19 +121,21 @@ sap.ui.define([
 
                     // Master 조회
                     this._readData("detail", "/MasterView", aMasterFilters, {}, function (data) {
-                        //console.log("MasterView:", data);
+                        console.log("MasterView:", data);
                         if (data.results.length > 0) {
                             var result = data.results[0];
                             
                             var oNewBasePriceData = {
-                                "tenantId": SppUserSessionUtil.getUserInfo().TENANT_ID,
-                                "approvalNumber": result.approval_number,
-                                "approvalTitle": result.approval_title,
+                                "tenant_d": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                                "approval_number": result.approval_number,
+                                "approval_title": result.approval_title,
                                 //"approval_type_code": oRootModel.getProperty("/selectedApprovalType"),   // V10: 신규, V20: 변경
                                 "approve_status_code": result.approve_status_code,    // DR: Draft
                                 "status": oRootModel.getProperty("/processList/0/code_name"),
-                                "requestorEmpno": result.requestor_empnm,
-                                "requestDate": this.getOwnerComponent()._changeDateString(oToday),
+                                "requestor_empno": result.requestor_empnm,
+                                "request_date": this.getOwnerComponent()._changeDateString(oToday),
+                                "net_price_document_type_code": result.net_price_document_type_code,
+                                "net_price_source_code": result.net_price_source_code,
                                 "details": []
                             };
                             oDetailModel.setData(oNewBasePriceData);
@@ -157,14 +159,15 @@ sap.ui.define([
                     // 기준단가 기본 데이터 세팅
                     var oToday = new Date();
                     var oNewBasePriceData = {
-                        "tenantId": SppUserSessionUtil.getUserInfo().TENANT_ID,
-                        "approvalNumber": "N/A",
-                        "approvalTitle": "",
+                        "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                        "approval_number": "N/A",
+                        "approval_title": "",
                         //"approval_type_code": oRootModel.getProperty("/selectedApprovalType"),   // V10: 신규, V20: 변경
                         //"approve_status_code": "DR",    // DR: Draft
                         "status": oRootModel.getProperty("/processList/0/code_name"),
-                        "requestorEmpno": SppUserSessionUtil.getUserInfo().EMPLOYEE_NUMBER,
-                        "requestDate": this.getOwnerComponent()._changeDateString(oToday),
+                        "requestor_empno": SppUserSessionUtil.getUserInfo().EMPLOYEE_NUMBER,
+                        "request_date": this.getOwnerComponent()._changeDateString(oToday),
+                        "net_price_document_type_code": result.net_price_document_type_code,
                         "details": []
                     };
                     oDetailModel.setData(oNewBasePriceData);

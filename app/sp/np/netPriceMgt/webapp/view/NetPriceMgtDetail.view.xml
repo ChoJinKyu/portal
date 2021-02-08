@@ -36,9 +36,9 @@
 			<FlexBox wrap="Wrap">
                 <!-- Requester 시작 -->
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
-                    <ObjectStatus id="approvalNumber" title="{I18N>/APPROVAL_NUMBER}" text="{detailModel>/approvalNumber}"/>
-                    <ObjectStatus id="requetor" title="{I18N>/REQUESTOR}" text="{detailModel>/requestorEmpno}"/>
-                    <ObjectStatus id="requestDate" title="{I18N>/REQUEST_DATE}" text="{detailModel>/requestDate}"/>
+                    <ObjectStatus id="approval_number" title="{I18N>/APPROVAL_NUMBER}" text="{detailModel>/approval_number}"/>
+                    <ObjectStatus id="requetor" title="{I18N>/REQUESTOR}" text="{detailModel>/requestor_empno}"/>
+                    <ObjectStatus id="request_date" title="{I18N>/REQUEST_DATE}" text="{detailModel>/request_date}"/>
                 </layout:VerticalLayout>
                 <!-- Requester 끝 -->
 
@@ -104,7 +104,7 @@
                                     <HBox>
                                         <VBox>
                                             <Label text="{I18N>/TITLE}" class="sapUiTinyMarginEnd" textAlign="Left" labelFor="input" required="true"/>
-                                            <Input width="20rem" placeholder="" editable="{detailViewModel>/viewMode}" value="{detailModel>/approvalTitle}" />
+                                            <Input width="20rem" placeholder="" editable="{detailViewModel>/viewMode}" value="{detailModel>/approval_title}" />
                                         </VBox>
                                         <layoutData>
                                             <layout:GridData span="XL12 L12 M12 S12" />
@@ -120,7 +120,7 @@
                                                         filters: [
                                                             {path: 'group_code', operator: 'EQ', value1: 'SP_DOCUMENT_TYPE'}
                                                         ]
-                                                    }" selectedKey="{detailModel>company_code}" change="cChanged">
+                                                    }" selectedKey="{detailModel>/net_price_document_type_code}">
                                                 <items>
                                                     <core:Item key="{util>code}" text="{util>code_name}" />
                                                 </items>
@@ -138,7 +138,7 @@
                                                         filters: [
                                                             {path: 'group_code', operator: 'EQ', value1: 'NET_PRICE_SOURCE_CODE'}
                                                         ]
-                                                    }">
+                                                    }" selectedKey="{detailModel>/net_price_source_code}">
                                                 <items>
                                                     <core:Item key="{util>code}" text="{util>code_name}" />
                                                 </items>
@@ -156,7 +156,7 @@
                                                         filters: [
                                                             {path: 'group_code', operator: 'EQ', value1: 'SP_NET_PRICE_TYPE'}
                                                         ]
-                                                    }">
+                                                    }" selectedKey="{detailModel>/net_price_type_code}">
                                                 <items>
                                                     <core:Item key="{util>code}" text="{util>code_name}" />
                                                 </items>
