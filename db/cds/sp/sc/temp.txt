@@ -88,20 +88,6 @@ curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' 
   --data-raw '{"deepdeletenegoheader":{"negoheaders":[{"tenant_id":"L2100","nego_header_id":4}],"negoitemprices":[],"negosuppliers":[]}}' \
 
 
-curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepUpsertNegoHeader' \
-  -H 'Content-Type: application/json' \
-  --data-raw '{"deepupsertnegoheader":{"negoheaders":[{"tenant_id":"L2100","nego_header_id":4,"reference_nego_header_id":null,"previous_nego_header_id":null,"operation_org_code":null,"operation_unit_code":"2070","reference_nego_document_number":4,"nego_document_round":1,"nego_document_number":"4-1","nego_document_title":"원재료 Negotiation 2021-004","nego_document_desc":"현재Sprint#1에서 간단히 테스트를 위한 정보를 입력하였습니다.","nego_progress_status_code":"090","award_progress_status_code":"010","reply_times":null,"supplier_count":3,"nego_type_code":"RFQ","outcome_code":"TP","negotiation_output_class_code":"Tentative Price","buyer_empno":"8041","buyer_department_code":null,"immediate_apply_flag":null,"open_date":"\/Date(1610393357000)\/","closing_date":"\/date(1610393357000)\/","auto_rfq":null,"items_count":2,"negotiation_style_code":"blind","close_date_ext_enabled_hours":6,"close_date_ext_enabled_count":3,"actual_extension_count":1,"remaining_hours":null,"note_content":{"type":"Buffer","data":[195,172,194,181,194,156,195,170,194,179,194,160,195,172,194,157,194,152,32,195,173,194,146,194,136,195,172,194,167,194,136,32,195,172,194,181,194,156,195,172,194,160,194,128,195,172,194,157,194,152,32,195,171,194,139,194,168,195,170,194,176,194,128]},"award_type_code":"010","award_method_code":"lps","target_amount_config_flag":null,"target_currency":null,"target_amount":null,"supplier_participation_flag":null,"partial_allow_flag":"n","bidding_result_open_status_code":null,"local_create_dtm":"\/date(1610393357000)\/","local_update_dtm":"\/date(1610393357000)\/","create_user_id":"anonymous","update_user_id":"anonymous","system_create_dtm":"\/date(1610393357000)\/","system_update_dtm":"\/date(1610393357000)\/"}],"negoitemprices":[],"negosuppliers":[]}}' \
-
-
-
-
-
-curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepUpsertNegoHeader' \
-  -H 'Content-Type: application/json' \
-  --data-raw '{"deepupsertnegoheader":{"negoheaders":[{"tenant_id":"L2100","nego_header_id":4,"reference_nego_header_id":null,"previous_nego_header_id":null,"operation_org_code":null,"operation_unit_code":"2070","reference_nego_document_number":4,"nego_document_round":1,"nego_document_number":"4-1","nego_document_title":"원재료 Negotiation 2021-004","nego_document_desc":"현재Sprint#1에서 간단히 테스트를 위한 정보를 입력하였습니다.","nego_progress_status_code":"090","award_progress_status_code":"010","reply_times":null,"supplier_count":3,"nego_type_code":"RFQ","outcome_code":"TP","negotiation_output_class_code":"Tentative Price","buyer_empno":"8041","buyer_department_code":null,"immediate_apply_flag":null,"open_date":"2021-02-01T00:00:00.000Z","closing_date":"2021-02-01T00:00:00.000Z","auto_rfq":null,"items_count":2,"negotiation_style_code":"blind","close_date_ext_enabled_hours":6,"close_date_ext_enabled_count":3,"actual_extension_count":1,"remaining_hours":null,"note_content":"w6zCtcKcw6rCs8Kgw6zCncKYIMOtwpLCiMOswqfCiCDDrMK1wpzDrMKgwoDDrMKdwpggw6vCi8Kow6rCsMKA","award_type_code":"010","award_method_code":"lps","target_amount_config_flag":null,"target_currency":null,"target_amount":null,"supplier_participation_flag":null,"partial_allow_flag":"n","bidding_result_open_status_code":null,"local_create_dtm":"2021-02-01T00:00:00.000+0900","local_update_dtm":"2021-02-01T00:00:00.000+0900","create_user_id":"anonymous","update_user_id":"anonymous","system_create_dtm":"2021-02-01T00:00:00.000Z","system_update_dtm":"2021-02-01T00:00:00.000Z"}],"negoitemprices":[],"negosuppliers":[]}}' \
-
-
-
 
 2002  General_Hook_Up
 2003  General_환경 설비
@@ -118,3 +104,70 @@ curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepUpsertNegoHeader' 
 curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepUpsertNegoHeader' \
   -H 'Content-Type: application/json' \
   --data-raw '{"deepupsertnegoheader":{"negoheaders":[{"tenant_id":"L2100","nego_header_id":100,"reference_nego_header_id":0,"previous_nego_header_id":0,"operation_org_code":"","operation_unit_code":"","reference_nego_document_number":0,"nego_document_round":0,"nego_document_number":"","nego_document_title":"저장 테스트1","nego_document_desc":"","nego_progress_status_code":"","award_progress_status_code":"","reply_times":0,"supplier_count":0,"nego_type_code":"RFQ","outcome_code":"","negotiation_output_class_code":"BPA","buyer_empno":"","buyer_department_code":"","immediate_apply_flag":"Y","open_date":"2021-02-08T02:10:21.270Z","closing_date":"2021-02-13T02:10:21.270Z","auto_rfq":"","items_count":0,"negotiation_style_code":"","close_date_ext_enabled_hours":0,"close_date_ext_enabled_count":0,"actual_extension_count":0,"remaining_hours":0,"note_content":"","award_type_code":"","award_method_code":"","target_amount_config_flag":"","target_currency":"","target_amount":0,"supplier_participation_flag":"","partial_allow_flag":"","bidding_result_open_status_code":""}],"negoitemprices":[],"negosuppliers":[]}}' \
+
+
+
+user: sppCap $ gitpull 
+Script started, file is /home/user/projects/gitpull.log
+Updating 3f20251fa..bb8fbad52
+Fast-forward
+ app/dp/md/assetList/webapp/controller/AssetDetail.controller.js         |  88 ----------
+ app/dp/md/assetList/webapp/controller/AssetList.controller.js           |  11 +-
+ app/dp/md/assetList/webapp/manifest.json                                |  13 --
+ app/dp/md/assetList/webapp/view/AssetDetail.view.xml                    | 445 ------------------------------------------------
+ app/dp/md/assetList/webapp/view/AssetList.view.xml                      |   4 +-
+ app/dp/pd/categoryCreationRequestMgt/webapp/view/Selection.view.xml     |   5 +-
+ app/op/pu/prMgt/webapp/controller/MidCreateObject.controller.js         | 157 ++++++++---------
+ app/op/pu/prMgt/webapp/view/MidCreateObject.view.xml                    |  18 +-
+ app/op/pu/prReviewMgt/webapp/controller/MainList.controller.js          |   5 +
+ app/op/pu/prReviewMgt/webapp/view/MainList.view.xml                     |   4 +-
+ app/op/pu/prReviewMgt/webapp/view/MidViewObject.view.xml                |  13 +-
+ app/op/pu/prReviewMgt/webapp/view/Reason.fragment.xml                   |  31 +---
+ app/op/util/controller/BaseController.js                                |   6 +-
+ app/op/util/controller/ExcelUtil.js                                     | 579 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ app/pg/md/mdVpItemList/webapp/controller/mdVpItemList.controller.js     |  48 +++---
+ app/sp/np/netPriceMgt/webapp/controller/NetPriceMgtDetail.controller.js |  28 +--
+ app/sp/np/netPriceMgt/webapp/controller/NetPriceMgtList.controller.js   |   6 +-
+ app/sp/np/netPriceMgt/webapp/view/NetPriceMgtDetail.view.xml            |  61 +++++--
+ app/sp/se/evaluationItemMngt/webapp/controller/App.controller.js        |   1 +
+ app/sp/se/evaluationItemMngt/webapp/controller/BaseController.js        |   7 +
+ app/sp/se/evaluationItemMngt/webapp/controller/MainListPersoService.js  |   7 +-
+ app/sp/se/evaluationItemMngt/webapp/view/App.view.xml                   |   2 -
+ app/sp/se/evaluationItemMngt/webapp/view/Detail.view.xml                |   3 +
+ app/sp/se/evaluationItemMngt/webapp/view/Master.view.xml                |  76 +++++++--
+ db/cds/dp/md/DP_MD_REPAIR_ITEM-model.cds                                |   1 -
+ db/cds/sp/se/SP_SE_EVAL_TARGET_SUPPLIER-model.cds                       |   6 +-
+ db/cds/sp/sm/SP_SM_MAKER_REG_REQ_CAL_VIEW-model.cds                     |   1 +
+ db/cds/xx/sampleV2Test/XX_SAMPLE_V2_D-model.cds                         |   8 +
+ db/cds/xx/sampleV2Test/XX_SAMPLE_V2_H-model.cds                         |  15 ++
+ db/cds/xx/sampleV2Test/XX_SAMPLE_V2_M-model.cds                         |  10 ++
+ db/cds/xx/sampleV2Test/XX_SAMPLE_V2_T-model.cds                         |   8 +
+ db/src/dp/md/DP_MD_REPAIR_REQ_NUM_SEQ.hdbsequence                       |   1 +
+ db/src/dp/pd/DP_PD_PART_CATEGORY_SAVE_PROC.hdbprocedure                 |  54 ++++--
+ db/src/op/pu/pr/OP_PU_PR_CREATE_SAVE_PROC.hdbprocedure                  |  86 +++++++++-
+ db/src/op/pu/pr/OP_PU_PR_REVIEW_SAVE_PROC.hdbprocedure                  |  32 +++-
+ db/src/pg/vp/PG_VP_MAPPING_CHANGE_PROC.hdbprocedure                     |  20 ++-
+ db/src/pg/vp/PG_VP_MAPPING_MANAGE_PROC.hdbprocedure                     |  20 ++-
+ db/src/sp/sm/SP_SM_MAKER_REG_REQ_CAL_VIEW.hdbcalculationview            | 389 +++++++++++++++++++++++++++++-------------
+ pom.xml                                                                 |   2 +-
+ srv/.settings/org.eclipse.core.resources.prefs                          |   1 +
+ srv/cds/pg/vp/vendorPoolMapping/vendorPoolMapping-service.cds           |  48 +++++-
+ srv/cds/sp/np/netpriceApproval/netpriceApprovalDetail-service.cds       |  26 ++-
+ srv/cds/sp/se/evaluationSupplierMgt/evaluationSupplierMgt-service.cds   |  15 ++
+ srv/cds/xx/sampleV2Test-service.cds                                     |  28 +++
+ srv/cds/xx/xx_index.cds                                                 |   3 +-
+ 45 files changed, 1470 insertions(+), 922 deletions(-)
+ delete mode 100644 app/dp/md/assetList/webapp/controller/AssetDetail.controller.js
+ delete mode 100644 app/dp/md/assetList/webapp/view/AssetDetail.view.xml
+ create mode 100644 app/op/util/controller/ExcelUtil.js
+ create mode 100644 db/cds/xx/sampleV2Test/XX_SAMPLE_V2_D-model.cds
+ create mode 100644 db/cds/xx/sampleV2Test/XX_SAMPLE_V2_H-model.cds
+ create mode 100644 db/cds/xx/sampleV2Test/XX_SAMPLE_V2_M-model.cds
+ create mode 100644 db/cds/xx/sampleV2Test/XX_SAMPLE_V2_T-model.cds
+ create mode 100644 db/src/dp/md/DP_MD_REPAIR_REQ_NUM_SEQ.hdbsequence
+ create mode 100644 srv/cds/xx/sampleV2Test-service.cds
+Script done, file is /home/user/projects/gitpull.log
+-rw-rw-r-- 1 user group 405336 Feb  8 04:40 /home/user/projects/cmd.log
+-rw-rw-r-- 1 user group 402489 Feb  8 04:40 /home/user/projects/cmd.processed.log
+-rw-r--r-- 1 user group   5398 Feb  8 05:41 /home/user/projects/gitpull.log
+user: sppCap $ 
