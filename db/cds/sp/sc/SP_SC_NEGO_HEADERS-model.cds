@@ -147,7 +147,8 @@ entity Sc_Nego_Headers {
         auto_round_terms                     : Integer       @title : 'Auto Round Terms' @description : 'UI:Auto Round Terms';
         previous_round                       : String(1)     @title : 'Previous Round' @description : 'UI:Previous Round';
         number_of_award_supplier             : Integer       @title : 'Number of Award Supplier' @description : 'UI:Number of Award Supplier';
-        order_rate                           : Decimal(28,2) @title : 'Order Rate' @description : 'UI:Order Rate';
+        order_rate_list                      : array of { index: Integer; order_rate: Decimal(5,2); } 
+                                                             @title : 'Order Rate' @description : 'UI:[List]Order Rate';
         // intention_of_supplier_participation  : String(30)    @title : 'Intention of Supplier Participation';
         // partial_quotation                    : String(30)    @title : 'Partial Quotation';                            
         bid_conference                       : String(1)     @title : 'Bid Conference' @description : 'UI:Bid Conference';

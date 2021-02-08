@@ -53,7 +53,7 @@ BEGIN
     /***********************************************************************************/
     v_app_user := SESSION_CONTEXT('APPLICATIONUSER');
 
-    LT_NEGO_HEADER = SELECT 
+    vt_nego_header = SELECT 
               NH.tenant_id
             , map(NH.nego_header_id, -1, NEW_NH.nego_header_id          , NH.nego_header_id          ) as nego_header_id
             , map(-1, NH.nego_header_id     , NEW_NH.reference_nego_header_id
@@ -104,7 +104,7 @@ BEGIN
             left outer many to one join SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW NEW_NH ON NH.tenant_id = NEW_NH.tenant_id
             left outer many to one join SP_SC_NEGO_HEADERS_NEW_REVISION_VIEW NEW_RV ON NH.tenant_id = NEW_RV.tenant_id AND NH.nego_header_id = NEW_RV.nego_header_id
             ;
-    SELECT TOP 1 tenant_id, Nego_header_id INTO v_tenant_id, v_nego_header_id FROM :LT_NEGO_HEADER;
+    SELECT TOP 1 tenant_id, Nego_header_id INTO v_tenant_id, v_nego_header_id FROM :vt_nego_header;
 
     BEGIN PARALLEL EXECUTION
 /* 
