@@ -103,7 +103,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageEditModeButtonPress: function(oEvent){
-            if(oEvent.getSource().getPressed()){
+            if(oEvent.getSource().getEditMode()){
                 var cancelEdit = function(){
                         if(this.getModel("endPageViewModel").getProperty("/isAddedMode") == true){
                             this.onPageNavBackButtonPress.call(this);
@@ -266,7 +266,7 @@ sap.ui.define([
         // },
 		
         // onEmployeeListItemPress: function(oEvent){
-        //     if(this.byId('pageEditModeButton').getPressed() === true){
+        //     if(this.byId('pageEditModeButton').getEditMode() === true){
         //         var oModel = this.getView().getElementBinding().getModel(),
         //             aItems = this.getList().getItems(),
         //             selectedPaths = oEvent.getParameter("listItem").getBindingContextPath();
