@@ -221,7 +221,7 @@ sap.ui.define([
 
             if(!this.oSearchCategoryDialog){
                 this.oSearchCategoryDialog = new CategoryDialog({
-                    title: "카테고리 다이얼로그 제목",
+                    title: "Category",
                     multiSelection: false,
                     items: {
                         filters: [
@@ -287,7 +287,7 @@ sap.ui.define([
             
             var cateActiveFlg = "false";
 
-            if (oMasterData.active_flag === true) {
+            if (oMasterData.active_flag === "true") {
                 activeFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
             }            
 
