@@ -82,7 +82,7 @@ service NpApprovalDetailService {
             ,   (SELECT cd.code_name
                    FROM CM_CODE_LNG AS cd
                   WHERE cd.tenant_id   = cam.tenant_id
-                    AND cd.group_code  = 'SP_NET_PRICE_APPR_STATUS'
+                    AND cd.group_code  = 'CM_APPROVE_STATUS'
                     AND cd.language_cd = ssi.LANGUAGE_CODE
                	    AND cd.code        = cam.approve_status_code
 			    )  AS approve_status_name : String
@@ -324,6 +324,7 @@ service NpApprovalDetailService {
             ,   pad.currency_code
             ,   pad.net_price
 
+            /*  LGD 표시항목 */
             ,   pad.base_price_type_code                /*  기준단가유형코드    */
             ,   pad.pyear_dec_base_currency_code        /*  전년12월기준통화코드    */	
             ,   pad.pyear_dec_base_price                /*  전년12월기준단가    */	
@@ -332,8 +333,36 @@ service NpApprovalDetailService {
             ,   pad.quarter_base_price                  /*  분기기준단가    */	
             ,   pad.quarter_ci_rate                     /*  분기CI비율    */	
    
-        FROM SP_NP_NET_PRICE_APPROVAL_DTL   pad
+            /*  LGC 표시항목 */
 
+            /*
+            ,   bpm.base_date
+            ,   bpm.base_price
+
+
+            ,   IFNULL(bpm.currency_code,'')  as base_currency_code	            : String
+            ,   IFNULL(bpm.apply_start_yyyymm,'')  as base_apply_start_yyyymm	: String
+            ,   IFNULL(bpm.apply_end_yyyymm,'')  as base_apply_end_yyyymm	    : String
+            
+            ,   bpm.currency_code as base_currency_code : String
+            ,   bpm.apply_start_yyyymm as base_apply_start_yyyymm : String
+            ,   bpm.apply_end_yyyymm as base_apply_end_yyyymm : String
+            */
+
+        FROM SP_NP_NET_PRICE_APPROVAL_DTL   pad
+  /* 
+        LEFT JOIN SP_NP_BASE_PRICE_MST bpm             기준단가 마스터 
+                   ON pad.tenant_id              = bpm.tenant_id
+                  AND pad.company_code           = bpm.company_code
+                  AND pad.org_type_code          = bpm.org_type_code
+                  AND pad.org_code               = bpm.org_code
+                  AND pad.supplier_code          = bpm.supplier_code
+                  AND pad.material_code          = bpm.material_code
+                  AND pad.market_code            = bpm.market_code
+                  AND bpm.apply_start_yyyymm   <= TO_VARCHAR (NOW(), 'YYYYMM')
+                  AND bpm.apply_end_yyyymm     >= TO_VARCHAR (NOW(), 'YYYYMM')
+                  AND bpm.use_flag = true
+*/
         LEFT JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
                 ON pad.tenant_id        = sm.tenant_id
                AND pad.supplier_code    = sm.supplier_code
