@@ -24,7 +24,18 @@
                         <ColumnListItem >
                             <cells>
                                 <Text text="Specification"/>
-                                <ComboBox id="comboBoxSpecification" value="" ></ComboBox>
+                                <ComboBox id="comboBoxSpecification" items="{
+                                        path: '/Sc_Spec_Code_View', 
+                                        templateShareable:true, 
+                                        filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}],
+                                        sorter: {
+                                            path: 'sort_no',
+                                            descending: false
+                                        }}" 
+                                    showSecondaryValues= "true"
+                                    width="100%" required="true">
+                                    <core:ListItem key="{specification_code}" text="{specification_name}" additionalText="{specification_code}"/>
+                                </ComboBox>
                             </cells>
                         </ColumnListItem>
                         <ColumnListItem >
