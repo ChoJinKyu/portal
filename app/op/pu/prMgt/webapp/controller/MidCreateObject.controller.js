@@ -1290,6 +1290,7 @@ sap.ui.define([
                 oSelectedData.org_code = (oItemData.org_code && oItemData.org_code !== "") ? oItemData.org_code:"";
                 oSelectedData.org_name = (oItemData.org_name && oItemData.org_name !== "") ? oItemData.org_name:"";
                 oSelectedData.org_name_desc = (oItemData.org_name && oItemData.org_name !== "") ? oItemData.org_name+" ["+oItemData.org_code+"]":"";
+                oSelectedData.org_type_code = (oItemData.org_type_code && oItemData.org_type_code !== "") ? oItemData.org_type_code:"";
                 oSelectedData.material_code = oItemData.material_code;
                 oSelectedData.pr_desc = (oItemData.material_desc && oItemData.material_desc !== "") ? oItemData.material_desc:"";
                 oSelectedData.pr_unit = (oItemData.base_uom_code && oItemData.base_uom_code !== "") ? oItemData.base_uom_code:"";
