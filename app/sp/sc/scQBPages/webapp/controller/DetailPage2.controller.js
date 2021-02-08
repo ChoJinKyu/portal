@@ -322,7 +322,7 @@ sap.ui.define([
                     // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers,specification_fk),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._header_id + "'";
                     
                     // var url = this.srvUrl+"NegoHeadersView?&$expand=Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._header_id + "'";
-                    var headerExpandString = "ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map";
+                    var headerExpandString = "ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map,contact_point";
                     var itemsExpandString = "Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department)";
                     var url = this.srvUrl+"NegoHeadersView?&$expand="+headerExpandString + "," + itemsExpandString+"&$filter=nego_document_number eq '" + this._header_id + "'";
 
@@ -425,8 +425,15 @@ sap.ui.define([
                                 // this.onNavBack();
             },
             onPageDeleteButtonPress: function() {
-                this._CallDeleteProc();
-                // this._CallInsertProc();
+                MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
+					title : this.getModel("I18N").getText("/DELETE"),
+					initialFocus : sap.m.MessageBox.Action.CANCEL,
+					onClose : function(sButton) {
+						if (sButton === MessageBox.Action.OK) {
+                            this._CallDeleteProc();
+						}
+					}.bind(this)
+				});
             },
             onPageEditButtonPress: function() {
                 this.getView().getModel("propInfo").setProperty("/isEditMode", true );
@@ -434,73 +441,15 @@ sap.ui.define([
             },
             onPageSaveButtonPress: function() {
                 
-                // MessageBox.confirm( "개발진행 중입니다. Sprint#2" , {});
-
-                // return;
-                console.log( this.getView().getModel("NegoHeaders").getData());
-                var oModel = this.getView().getModel("NegoHeaders");
-
-                this._CallInsertProc();
-            //     var oModel = this.getView().getModel(),
-            //     oView = this.getView(),
-            //   //  table = this.byId("mainTable"),
-            //     that = this;
-
-            //     var oItem = oView.getModel("NegoHeaders").getData();
-
-            //     // oItem.tenant_id = oItem.tenant_id;
-                
-            //     // oItem.nego_document_title = oView.byId("inputTitle").getValue();//oItemTemp.nego_document_title;
-
-            //     // var pathTemp = "/NegoHeaders(tenant_id='L2100',nego_header_id=1)";
-
-            //     var path = oModel.createKey("/NegoHeaders", {
-            //                         tenant_id:          oItem.tenant_id,
-            //                         nego_header_id:   oItem.nego_header_id
-            //                     });
-
-            //     // nego_header_id : type 때문에 강제로 string 으로 넘겨야함.        
-            //     oItem.nego_header_id = String(oItem.nego_header_id); 
-            //     oItem.open_date = new Date(oView.byId("searchOpenDatePicker").getDateValue());
-            //     oItem.closing_date = new Date(oView.byId("searchEndDatePicker").getDateValue());
-            //     oItem.close_date_ext_enabled_hours = Number(oItem.close_date_ext_enabled_hours);
-            //     oItem.close_date_ext_enabled_count = Number(oItem.close_date_ext_enabled_count);
-
-            //     oItem.negotiation_style_code = oView.byId("rbg1").getSelectedIndex() === 0 ? "Sealed" : "Blind";
-            //     oItem.immediate_apply_flag = oView.byId("checkbox_immediate_apply_flag").getSelected() ? 'Y' : 'N';
-
-            //     console.log( "path :: " + path);
-            //     console.log( oItem);
-                                
-            //     // oView.getModel().createEntry("/MIMaterialPriceManagement", b);
-            //     oModel.update( path , oItem , {
-                  
-            //         method: "PUT",
-            //         success: function (oData) {
-
-            //             console.log( "success!!!!");
-            //             // oItem.__entity = sPath;
-            //             // that.onPageSearchButtonPress();
-            //             // that.onBeforeRebindTable();
-            //             // oModel.refresh(true);
-            //             MessageToast.show(" success !! ");
-            //             oView.getModel("NegoHeaders").refresh(true);
-
-            //             oView.getModel("propInfo").setProperty("/isEditMode", false );
-
-            //             // that.byId("pageSearchButton").firePress();
-            //         },
-            //         error: function (aa, bb){
-            //             console.log( "error!!!!");
-            //             console.log(  aa  );
-            //             MessageToast.show(" error !! ");
-            //             // MessageToast.show(that.getModel("I18N").getText("/EPG00002")); 
-                        
-            //         }
-            //     });
-
-
-                // this.testUpdate();
+                MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+					title : this.getModel("I18N").getText("/SAVE"),
+					initialFocus : sap.m.MessageBox.Action.CANCEL,
+					onClose : function(sButton) {
+						if (sButton === MessageBox.Action.OK) {
+                            this._CallInsertProc();
+						}
+					}.bind(this)
+				});
                 
             },
 
@@ -1581,6 +1530,7 @@ sap.ui.define([
                         // sap.m.MessageToast.show(i18nModel.getText("/NCM01002"));
                         // that.getRouter().navTo("main", {}, true);
                         // that._resetView();
+                        MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
                         //refresh
                         oModel.refresh(true);
                         // console.log('data:', data);
@@ -1614,20 +1564,27 @@ sap.ui.define([
                 };
                 console.log(inputInfo);
 
-                return;
+                // return;
                 $.ajax({
                     url: urlInfo,
                     type: "POST",
                     data: JSON.stringify(inputInfo),
                     contentType: "application/json",
                     success: function (data) {
-                        // sap.m.MessageToast.show(i18nModel.getText("/NCM01002"));
-                        // that.getRouter().navTo("main", {}, true);
-                        // that._resetView();
-                        //refresh
-                        oModel.refresh(true);
-                        // console.log('data:', data);
-                    },
+                        // MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
+                        MessageBox.confirm(this.getModel("I18N").getText("/NCM01002"), {
+                            title : this.getModel("I18N").getText("/CONFIRM"),
+                            initialFocus : sap.m.MessageBox.Action.CANCEL,
+                            onClose : function(sButton) {
+                                if (sButton === MessageBox.Action.OK) {
+                                    this.onNavBack();
+                                }
+                            }.bind(this)
+                        });
+
+                        
+
+                    }.bind(this),
                     error: function (e) {
                         // sap.m.MessageToast.show(i18nModel.getText("/EPG00001"));
                         // v_returnModel = oView.getModel("returnModel").getData().data;
