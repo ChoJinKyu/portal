@@ -28,6 +28,7 @@ PROCEDURE SP_NP_NET_PRICE_APPROVAL_SAVE_PROC (
     ,IN   I_DETAILS                           TABLE (
                                                ITEM_SEQUENCE                      NVARCHAR(20)
 
+                                              ,ORG_CODE                           NVARCHAR(10)
                                               ,LINE_TYPE_CODE                     NVARCHAR(30)
                                               ,MATERIAL_CODE                      NVARCHAR(40)
                                               ,PAYTERMS_CODE                      NVARCHAR(30)
@@ -189,9 +190,11 @@ BEGIN
         
             INSERT INTO SP_NP_NET_PRICE_APPROVAL_MST (
                    TENANT_ID
+                   /*
                  , COMPANY_CODE
                  , ORG_TYPE_CODE
                  , ORG_CODE
+                   */
                  , APPROVAL_NUMBER
                  -- APPROVE_STATUS_CODE  상태 코드 추가 되어야 함.
                  , NET_PRICE_DOCUMENT_TYPE_CODE
@@ -214,9 +217,11 @@ BEGIN
                  , SYSTEM_UPDATE_DTM
             ) VALUES (
                    I_TENANT_ID                       -- TENANT_ID
+                   /*
                  , I_COMPANY_CODE                    -- COMPANY_CODE
                  , I_ORG_TYPE_CODE                   -- ORG_TYPE_CODE
                  , I_ORG_CODE                        -- ORG_CODE
+                   */
                  , V_APPROVAL_NUMBER                 -- APPROVAL_NUMBER
                  , I_NET_PRICE_DOCUMENT_TYPE_CODE    -- NET_PRICE_DOCUMENT_TYPE_CODE
                  , I_NET_PRICE_SOURCE_CODE           -- NET_PRICE_SOURCE_CODE
@@ -282,9 +287,11 @@ BEGIN
                  , SYSTEM_UPDATE_DTM              = NOW()
                  
              WHERE TENANT_ID           = I_TENANT_ID
+             /*
                AND COMPANY_CODE        = I_COMPANY_CODE
                AND ORG_TYPE_CODE       = I_ORG_TYPE_CODE
                AND ORG_CODE            = I_ORG_CODE
+             */
                AND APPROVAL_NUMBER     = V_APPROVAL_NUMBER
             ;
         END;
@@ -303,15 +310,19 @@ BEGIN
        
         DELETE FROM SP_NP_NET_PRICE_APPROVAL_DTL 
          WHERE (TENANT_ID
+               /*
                ,COMPANY_CODE
                ,ORG_TYPE_CODE
                ,ORG_CODE
+               */
                ,APPROVAL_NUMBER
                ,ITEM_SEQUENCE ) IN (SELECT 
                                            I_TENANT_ID
+                                           /*
                                          , I_COMPANY_CODE
                                          , I_ORG_TYPE_CODE
                                          , I_ORG_CODE
+                                         */
                                          , V_APPROVAL_NUMBER
                                          , DTL.ITEM_SEQUENCE
                                       FROM :I_DETAILS   DTL
@@ -332,6 +343,7 @@ BEGIN
          --Update Item
          MERGE INTO SP_NP_NET_PRICE_APPROVAL_DTL  T
          USING (SELECT ITEM_SEQUENCE
+                      ,ORG_CODE
                       ,LINE_TYPE_CODE
                       ,MATERIAL_CODE
                       ,PAYTERMS_CODE
@@ -350,15 +362,18 @@ BEGIN
                 WHERE _ROW_STATE_ = 'U'
                ) I
          ON (    T.TENANT_ID          = I_TENANT_ID
+             /*
              AND T.COMPANY_CODE       = I_COMPANY_CODE
              AND T.ORG_TYPE_CODE      = I_ORG_TYPE_CODE
              AND T.ORG_CODE           = I_ORG_CODE
+             */
              AND T.APPROVAL_NUMBER    = V_APPROVAL_NUMBER
              AND T.ITEM_SEQUENCE      = I.ITEM_SEQUENCE
             )
          WHEN MATCHED THEN
              UPDATE
-             SET    T.LINE_TYPE_CODE                   = I.LINE_TYPE_CODE
+             SET    T.ORG_CODE                         = I.ORG_CODE
+                   ,T.LINE_TYPE_CODE                   = I.LINE_TYPE_CODE
                    ,T.MATERIAL_CODE                    = I.MATERIAL_CODE
                    ,T.PAYTERMS_CODE                    = I.PAYTERMS_CODE
                    ,T.SUPPLIER_CODE                    = I.SUPPLIER_CODE
@@ -390,8 +405,10 @@ BEGIN
        
         INSERT INTO SP_NP_NET_PRICE_APPROVAL_DTL (
                TENANT_ID
+
              , COMPANY_CODE
              , ORG_TYPE_CODE
+
              , ORG_CODE
              , APPROVAL_NUMBER
              , ITEM_SEQUENCE
@@ -420,9 +437,11 @@ BEGIN
         )
         SELECT 
                I_TENANT_ID
+               
              , I_COMPANY_CODE
              , I_ORG_TYPE_CODE
-             , I_ORG_CODE
+             
+             , DTL.ORG_CODE
              , V_APPROVAL_NUMBER
              , SEQ.MAX_ITEM_SEQUENCE + ROW_NUMBER()OVER(PARTITION BY SEQ.MAX_ITEM_SEQUENCE ORDER BY SEQ.MAX_ITEM_SEQUENCE)
 
@@ -451,9 +470,11 @@ BEGIN
              ,(SELECT IFNULL(MAX(ITEM_SEQUENCE), 0) AS MAX_ITEM_SEQUENCE
                  FROM SP_NP_NET_PRICE_APPROVAL_DTL
                 WHERE TENANT_ID        = I_TENANT_ID
+                /*
                   AND COMPANY_CODE     = I_COMPANY_CODE
                   AND ORG_TYPE_CODE    = I_ORG_TYPE_CODE
                   AND ORG_CODE         = I_ORG_CODE
+                */
                   AND APPROVAL_NUMBER  = V_APPROVAL_NUMBER
               ) SEQ
          WHERE DTL._ROW_STATE_ = 'C'

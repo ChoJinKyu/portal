@@ -42,6 +42,7 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
     private final LocalTempTableLayout SAVE_PROC_LOCAL_TEMP_TABLE_DETAIL_LAYOUT
                     = new LocalTempTableLayout("#APPROVAL_SAVE_PROC_LOCAL_TEMP_DETAIL")
                     .append("ITEM_SEQUENCE"                   ,"NVARCHAR(20)")
+                    .append("ORG_CODE"                        ,"NVARCHAR(10)")
                     .append("LINE_TYPE_CODE"                  ,"NVARCHAR(30)")
                     .append("MATERIAL_CODE"                   ,"NVARCHAR(40)")
                     .append("PAYTERMS_CODE"                   ,"NVARCHAR(30)")
