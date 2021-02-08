@@ -146,7 +146,7 @@
 								<Text text="{tax_id}"/>
 								<Text text="{maker_local_name}"/>
 								<Text text="{maker_english_name}"/>
-								<tnt:InfoLabel text="{maker_progress_status_code}" colorScheme="{path: 'maker_progress_status_code', formatter: '.onStatusColor'}" displayOnly="true"/>
+								<tnt:InfoLabel text="{maker_progress_status_name}" colorScheme="{path: 'maker_progress_status_code', formatter: '.onStatusColor'}" displayOnly="true"/>
 							</cells>
 						</ColumnListItem>
 					</items>

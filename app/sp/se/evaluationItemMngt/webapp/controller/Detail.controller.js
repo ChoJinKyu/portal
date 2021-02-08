@@ -87,10 +87,10 @@ sap.ui.define([
                     groupCode : "SP_SE_QTTIVE_UOM_CODE"
                 });
 
-                this._setBindCommonItems({
-                    id : "comboNodeType",
-                    groupCode : "SP_SE_EVAL_NODE_TYPE_CD"
-                });
+                // this._setBindCommonItems({
+                //     id : "comboNodeType",
+                //     groupCode : "SP_SE_EVAL_NODE_TYPE_CD"
+                // });
                 
             }
             /***
@@ -115,6 +115,56 @@ sap.ui.define([
 
                 this._setBindItems({
                     id : oParam.id,
+                    path : "common>/Code",
+                    template : oTemplate,
+                    sorter : [
+                        new Sorter("sort_no")
+                    ],
+                    filters : aFilters
+                    
+                });
+            }
+            , _setComboNodeType : function(oArgs, oDetailData){
+                var oUserInfo, aFilters, oTemplate;
+                oUserInfo = this._getUserSession();
+                aFilters = [];
+
+                aFilters = [
+                    new Filter("tenant_id", "EQ", oUserInfo.tenantId),
+                    new Filter("group_code", "EQ", "SP_SE_EVAL_NODE_TYPE_CD"),
+                    new Filter("language_cd", "EQ", "KO")
+                ];
+                /***
+                 * <2021.02.08 수정사항>
+                1. Evaluation Item Popup창 수정사항
+                1). 신규: 평가항목군<EVAL>만 나옴.
+                2.) 동일레벨 :
+                hierarchy_level이 0인 경우 평가항목군<EVAL>만 나옴.
+                hierarchy_level이 0보다 큰 경우 서브항목군<SUBEVAL>/평가항목<ITEM>이 나옴.
+                3) 하위레벨.
+                평가항목군<EVAL>이 나오면 안됨.
+                4). hierarchy_level이 4인 경우 하위레벨을 만들 수 없음.(Msg Code : ESP00002)
+
+                2. 평가항목군/서브항목군인 경우 정렬을 변경하여 저장 할 수 있도록 수정.
+                 */
+                if(
+                    (oArgs.level === "same" && oDetailData && oDetailData.hierarchy_level === 0) ||
+                    oArgs.level === "new"
+                ){
+                    aFilters.push( new Filter("code", "EQ", "EVAL") );
+                }else if(
+                    (oArgs.level === "low" && oDetailData && oDetailData.hierarchy_level === 3) ||
+                    (oArgs.level === "same" && oDetailData && oDetailData.hierarchy_level === 4)
+                ){
+                    aFilters.push( new Filter("code", "EQ", "ITEM") );
+                }else{
+                    aFilters.push( new Filter("code", "NE", "EVAL") );
+                }
+
+                oTemplate = new ListItem({ key : "{common>code}", text : "{common>code_name}", additionalText : "{common>code}" });
+
+                this._setBindItems({
+                    id : "comboNodeType",
                     path : "common>/Code",
                     template : oTemplate,
                     sorter : [
@@ -163,8 +213,9 @@ sap.ui.define([
                     oViewModel.setProperty("/Detail", oDetailData);
 
                     if(oDynamicPage){
-                        oDynamicPage.setHeaderExpanded(false);
+                        oDynamicPage.setHeaderExpanded(true);
                     }
+                    this._setComboNodeType(oArgs, oDetailData.Header);
                     return;
                 }
 

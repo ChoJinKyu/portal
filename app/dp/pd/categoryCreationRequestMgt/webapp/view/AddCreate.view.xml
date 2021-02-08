@@ -74,13 +74,13 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="{I18N>/PARENT_CATEGORY_CODE}: " labelFor="pGroupCategory"   required="true"></Label>
-                                    <Input id="pGroupCategory"  width="80%"   visible="{viewModel>/editMode}"
+                                    <Input id="pGroupCategory"  width="80%"   visible="{viewModel>/editMode}"  required="true"
                                         placeholder="{I18N>/PARENT_CATEGORY_CODE} {I18N>/NAME}" value="{PdPartCategoryModel>/parent_category_code}"/>
                                     <Text id="pGroupCategoryTxt" width="80%" textAlign="Left"  text="{PdPartCategoryModel>/parent_category_code}" visible="{viewModel>/showMode}"/>
                                 </VBox>
                                 <VBox>
                                     <Label text="{I18N>/SEQUENCE}: " labelFor="sequence" required="true" ></Label>
-                                    <MaskInput id="sequence" mask="999" placeholderSymbol=" " width="60%"   visible="{viewModel>/editMode}"
+                                    <MaskInput id="sequence" mask="999" placeholderSymbol=" " width="60%"   visible="{viewModel>/editMode}"  required="true"
                                         placeholder="{I18N>/SEQUENCE}" value="{PdPartCategoryModel>/sequence}"/>
                                     <Text id="sequenceTxt" width="80%" textAlign="Left"  text="{PdPartCategoryModel>/sequence}" visible="{viewModel>/showMode}"/>
 

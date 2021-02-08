@@ -234,7 +234,7 @@ sap.ui.define([
                     sSearchObj.tanentId = "L2100"; // 세션임시값
                     sSearchObj.languageCd = "KO";  // 세션임시값
                     if(!!that.oOperationOrgComb.getSelectedKey()){
-                        sSearchObj.orgUnitCode = that.oOperationOrgComb.getSelectedKey();
+                        sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey();
                     }
                     if(!!that.oOperationUnitComb.getSelectedKey()){
                         sSearchObj.orgUnitCode = that.oOperationUnitComb.getSelectedKey();
@@ -588,7 +588,7 @@ sap.ui.define([
 
             if(!!this.oDepartmentCode.getValue()) {
                 sDepartmentCode = that.oDepartmentCode.getValue();
-                //aFilters.push(new Filter("department_code", FilterOperator.EQ, sDepartmentCode));
+                aFilters.push(new Filter("repr_department_code", FilterOperator.EQ, sDepartmentCode));
             }
 
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/vpInfoDrillAllView", {

@@ -1,8 +1,8 @@
-using { dp as moldSpec } from '../../../../../db/cds/dp/md/DP_MD_SPEC-model';
-using { dp as moldSchedule } from '../../../../../db/cds/dp/md/DP_MD_SCHEDULE-model';
-using { dp as moldMst } from '../../../../../db/cds/dp/md/DP_MD_MST-model';
-using { dp as moldMstSpecView } from '../../../../../db/cds/dp/md/DP_MD_MST_SPEC_VIEW-model';
 using { dp as repairMstAssetView } from '../../../../../db/cds/dp/md/DP_MD_REPAIR_MST_ASSET_VIEW-model';
+using { dp as repairItem } from '../../../../../db/cds/dp/md/DP_MD_REPAIR_ITEM-model';
+using { dp as moldMst } from '../../../../../db/cds/dp/md/DP_MD_MST-model';
+using { dp as moldAsset } from '../../../../../db/cds/dp/md/DP_MD_ASSET-model';
+using { dp as moldMstSpecView } from '../../../../../db/cds/dp/md/DP_MD_MST_SPEC_VIEW-model';
 
 using {cm as orgMapping} from '../../../../../db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model';
 using {cm as Org} from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
@@ -11,11 +11,11 @@ namespace dp;
 @path : '/dp.RemodelRepairMgtService'
 service RemodelRepairMgtService {
 
-    entity MoldSpec as projection on moldSpec.Md_Spec;
-    entity MoldSchedule as projection on moldSchedule.Md_Schedule;
-    entity MoldMasters as projection on moldMst.Md_Mst;
-    entity MoldMasterSpec as projection on moldMstSpecView.Md_Mst_Spec_View;
     entity RepairMstAssetView as projection on repairMstAssetView.Md_Repair_Mst_Asset_View;
+    entity RepairItem as projection on repairItem.Md_Repair_Item;
+    entity MoldMasters as projection on moldMst.Md_Mst;
+    entity MoldAsset as projection on moldAsset.Md_Asset;
+    entity MoldMasterSpec as projection on moldMstSpecView.Md_Mst_Spec_View;
 
     view Divisions as
     select key a.tenant_id       
