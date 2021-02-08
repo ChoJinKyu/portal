@@ -36,7 +36,7 @@ service FundingApplicationService {
     view BizUnitCodeListView as
         select	
             distinct 
-              op.bizunit_code
+              key op.bizunit_code
             , ou.bizunit_name as bizunit_name : String
         from cm_pur_operation_org as op
         inner join cm_pur_org_type_mapping as tm 
