@@ -34,6 +34,7 @@ entity Pd_Part_Category_Creation_Request_View {
         request_date_time                    : DateTime;
         attch_group_number                   : String;
         progress_status_code                 : String;
+        progress_status_name                 : String;
         creator_empno                        : String;
         category_creator                     : String;
         create_category_code                 : String;
