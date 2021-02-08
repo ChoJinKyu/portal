@@ -104,7 +104,7 @@
                                     <HBox>
                                         <VBox>
                                             <Label text="{I18N>/TITLE}" class="sapUiTinyMarginEnd" textAlign="Left" labelFor="input" required="true"/>
-                                            <Input width="20rem" placeholder="" editable="{detailViewModel>/viewMode}" value="{detailModel>/approval_title}" />
+                                            <Input id="approval_title" width="20rem" placeholder="" editable="{detailViewModel>/viewMode}" value="{detailModel>/approval_title}" />
                                         </VBox>
                                         <layoutData>
                                             <layout:GridData span="XL12 L12 M12 S12" />
@@ -191,7 +191,7 @@
                                     <HBox>
                                         <VBox>
                                             <Label text="{I18N>/DESCRIPTION}" required="true"/>
-                                            <rte:RichTextEditor width="100%" height="200px" value="{detailModel>/approval_request_desc}" 
+                                            <rte:RichTextEditor id="approval_contents" width="100%" height="200px" value="{detailModel>/approval_request_desc}" 
                                                 customToolbar="true" 
                                                 showGroupFont="true" 
                                                 showGroupLink="true" 
@@ -527,7 +527,7 @@
                                                             filters: [
                                                                 {path: 'group_code', operator: 'EQ', value1: 'OP_INCOTERMS'}
                                                             ]
-                                                        }" selectedKey="{generalInfoList>incoterms_code}">
+                                                        }" selectedKey="{generalInfoList>incoterms}">
                                                     <items>
                                                         <core:Item key="{util>code}" text="{util>code_name}" />
                                                     </items>

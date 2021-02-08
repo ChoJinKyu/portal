@@ -35,26 +35,27 @@ sap.ui.define([
             if (oRootModel === undefined) {
                 this.setModel(new JSONModel(oBasePriceArlMgtRootData), "rootModel");
                 oRootModel = this.getModel("rootModel");
-                // 상태값 조회(품의서 진행 상태) 시작
-                var aFilters = [];
-                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID));
-                aFilters.push(new Filter("group_code", FilterOperator.EQ, "CM_APPROVE_STATUS"));
-    
-                this.getModel("util").read("/Code", {
-                    filters: aFilters,
-                    urlParameters: {
-                        "$orderby": "sort_no"
-                    },
-                    success: function (data) {
-                        if (data) {
-                            oRootModel.setProperty("/processList", data.results);
-                        }
-                    }.bind(this),
-                    error: function (data) {
-                        console.log("error", data);
-                    }
-                });
             }
+
+            // 상태값 조회(품의서 진행 상태) 시작
+            var aFilters = [];
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID));
+            aFilters.push(new Filter("group_code", FilterOperator.EQ, "CM_APPROVE_STATUS"));
+
+            this.getModel("util").read("/Code", {
+                filters: aFilters,
+                urlParameters: {
+                    "$orderby": "sort_no"
+                },
+                success: function (data) {
+                    if (data) {
+                        oRootModel.setProperty("/processList", data.results);
+                    }
+                }.bind(this),
+                error: function (data) {
+                    console.log("error", data);
+                }
+            });
         },
 
          /**
