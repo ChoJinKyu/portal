@@ -117,14 +117,14 @@ service NpApprovalDetailService {
 
             ,   cam.approval_contents
 
-            ,   MAP(pam.tentprc_flag,false,'N',true,'T') as net_price_type_code
+            ,   MAP(pam.tentprc_flag,false,'N',true,'T') as net_price_type_code :String
             ,   (SELECT cd.code_name
                    FROM CM_CODE_LNG AS cd
                   WHERE cd.tenant_id   = cam.tenant_id
                     AND cd.group_code  = 'SP_NET_PRICE_TYPE'
                     AND cd.language_cd = ssi.LANGUAGE_CODE
                	    AND cd.code        = MAP(pam.tentprc_flag,false,'N',true,'T')
-			    )  AS net_price_type_name 
+			    )  AS net_price_type_name : String
 
             ,   pam.effective_start_date
             ,   pam.effective_end_date
