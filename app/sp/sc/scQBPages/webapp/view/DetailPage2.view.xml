@@ -329,9 +329,9 @@
                                                     <VBox width="25%">
                                                         <Label  text="Award Type" 
                                                                 class="sapMLabelNoText"/> 
-                                                        <Select width="90%" selectedKey="1" class=" " change="selectAwardTypeChange"> 
-                                                            <core:Item key="1" text="Award by Lines" />
-                                                            <core:Item key="2" text="Award by Total Amount" />
+                                                        <Select width="90%" selectedKey="{NegoHeaders>/award_type_code}" class=" " change="selectAwardTypeChange"> 
+                                                            <core:Item key="010" text="Award by Lines" />
+                                                            <core:Item key="020" text="Award by Total Amount" />
                                                         </Select > 
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
