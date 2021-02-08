@@ -15,6 +15,8 @@ entity Se_Eval_Target_Supplier {
       delivery_quantity              : Decimal              @title: '납품수량' ;	
       person_confirm_flag            : Boolean              @title: '담당자확인여부' ;	
       evaluation_excl_flag           : Boolean              @title: '평가제외여부' ;	
-      evaluation_excl_reason         : String(1000)         @title: '평가제외사유' ;	
-}	
+      evaluation_excl_reason         : String(1000)         @title: '평가제외사유' ;
+      vendor_pool_code               : String(20)           @title: '협력사풀코드' ;
+      vendor_pool_path_name          : String(500)          @title: '협력사풀경로명' ;
+}
 extend Se_Eval_Target_Supplier with util.Managed;	
