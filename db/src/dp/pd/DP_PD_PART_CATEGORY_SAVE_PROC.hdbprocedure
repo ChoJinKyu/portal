@@ -15,7 +15,20 @@ PROCEDURE DP_PD_PART_CATEGORY_SAVE_PROC (
                     CODE_NAME NVARCHAR(240),
                     UPDATE_USER_ID NVARCHAR(255),
                     CRUD_TYPE_CODE NVARCHAR(1) ),
-    OUT O_MSG TABLE(RETURN_CODE NVARCHAR(2), RETURN_MSG NVARCHAR(5000) )
+    IN  I_SD TABLE ( TENANT_ID NVARCHAR(5), 
+                    CATEGORY_GROUP_CODE NVARCHAR(30),
+                    CATEGORY_CODE NVARCHAR(40),
+                    PART_PROJECT_TYPE_CODE NVARCHAR(30),
+                    ACTIVITY_CODE NVARCHAR(40),
+                    S_GRADE_STANDARD_DAYS INTEGER,
+                    A_GRADE_STANDARD_DAYS INTEGER,
+                    B_GRADE_STANDARD_DAYS INTEGER,
+                    C_GRADE_STANDARD_DAYS INTEGER,
+                    D_GRADE_STANDARD_DAYS INTEGER,
+                    ACTIVE_FLAG BOOLEAN,
+                    UPDATE_USER_ID NVARCHAR(255),
+                    CRUD_TYPE_CODE NVARCHAR(1) ),
+                    OUT O_MSG TABLE(RETURN_CODE NVARCHAR(2), RETURN_MSG NVARCHAR(5000) )
 )
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER
@@ -23,7 +36,12 @@ SQL SECURITY INVOKER
 AS
 BEGIN
     DECLARE V_TENANT_ID NVARCHAR(5);
+    DECLARE V_COMPANY_CODE NVARCHAR(10);
+    DECLARE V_ORG_TYPE_CODE NVARCHAR(2);
+    DECLARE V_ORG_CODE NVARCHAR(10);
+    DECLARE V_ACTIVITY_CODE NVARCHAR(40);
     DECLARE V_CATEGORY_GROUP_CODE NVARCHAR(30);
+    DECLARE V_PART_PROJECT_TYPE_CODE NVARCHAR(30);
     DECLARE V_CATEGORY_CODE NVARCHAR(40);
     DECLARE V_SEQUENCE DECIMAL;
     DECLARE V_ORG_SEQUENCE DECIMAL;
@@ -33,7 +51,7 @@ BEGIN
 		ROLLBACK;
 		O_MSG = SELECT  'NG' RETURN_CODE, ::SQL_ERROR_CODE||'-'||::SQL_ERROR_MESSAGE RETURN_MSG FROM  DUMMY;
     END;
-      
+
     SELECT TENANT_ID, CATEGORY_GROUP_CODE,
            CASE WHEN CATEGORY_CODE = 'new' THEN
                      'PC' || TO_NCHAR(NOW(), 'YYMMDD') || LPAD(DP_PD_PART_CATEGORY_SEQ.NEXTVAL, 4, '0')
@@ -44,6 +62,12 @@ BEGIN
     FROM   :I_M
     ;
 
+    V_COMPANY_CODE := 'LGESL';
+    V_ORG_TYPE_CODE := 'BU';
+    V_ORG_CODE := 'BIZ20000';
+    V_ORG_CODE := 'PRD';
+    V_PART_PROJECT_TYPE_CODE := 'PRD';
+
     IF :CRUD_TYPE IN ('D', 'U') THEN
 
         SELECT SEQUENCE 
@@ -53,7 +77,7 @@ BEGIN
         AND    CATEGORY_GROUP_CODE = V_CATEGORY_GROUP_CODE
         AND    CATEGORY_CODE = V_CATEGORY_CODE
         ;
-   
+
     END IF;
 
     /*  CRUD_TYPE가 'D' 인 Data 삭제 */
@@ -139,7 +163,7 @@ BEGIN
                         ,NOW()
                         ,NOW()
                 FROM :I_M M
-            ;                
+            ;
 
         END IF;
 
@@ -192,6 +216,74 @@ BEGIN
                     ,NOW()
                 )
         ; 
+
+        /*  I_SD Table의 Data 일괄 추가,수정 */
+        MERGE INTO DP_PD_PART_CATEGORY_ACTIVITY C
+            USING ( SELECT * FROM :I_SD WHERE :I_SD.CRUD_TYPE_CODE IN ('C','U')  ) isd
+            ON ( C.TENANT_ID = isd.TENANT_ID
+                AND C.COMPANY_CODE = V_COMPANY_CODE
+                AND C.ORG_TYPE_CODE = V_ORG_TYPE_CODE
+                AND C.ORG_CODE = V_ORG_CODE
+                AND C.ACTIVITY_CODE = V_ACTIVITY_CODE
+                AND C.PART_PROJECT_TYPE_CODE = V_PART_PROJECT_TYPE_CODE
+                AND C.CATEGORY_GROUP_CODE = isd.CATEGORY_GROUP_CODE
+                AND C.CATEGORY_CODE = isd.CATEGORY_CODE )
+
+        WHEN MATCHED THEN
+            UPDATE
+            SET  C.S_GRADE_STANDARD_DAYS = isd.S_GRADE_STANDARD_DAYS
+                ,C.A_GRADE_STANDARD_DAYS = isd.A_GRADE_STANDARD_DAYS	
+                ,C.B_GRADE_STANDARD_DAYS = isd.B_GRADE_STANDARD_DAYS	
+                ,C.C_GRADE_STANDARD_DAYS = isd.C_GRADE_STANDARD_DAYS	
+                ,C.D_GRADE_STANDARD_DAYS = isd.D_GRADE_STANDARD_DAYS	
+                ,C.ACTIVE_FLAG = isd.ACTIVE_FLAG	
+                ,C.LOCAL_UPDATE_DTM = NOW()
+                ,C.UPDATE_USER_ID = isd.UPDATE_USER_ID
+                ,C.SYSTEM_UPDATE_DTM = NOW()
+        WHEN NOT MATCHED THEN
+            INSERT ( TENANT_ID
+                    ,COMPANY_CODE
+                    ,ORG_TYPE_CODE
+                    ,ORG_CODE
+                    ,ACTIVITY_CODE
+                    ,CATEGORY_GROUP_CODE
+                    ,CATEGORY_CODE
+                    ,PART_PROJECT_TYPE_CODE
+                    ,S_GRADE_STANDARD_DAYS	
+                    ,A_GRADE_STANDARD_DAYS	
+                    ,B_GRADE_STANDARD_DAYS	
+                    ,C_GRADE_STANDARD_DAYS	
+                    ,D_GRADE_STANDARD_DAYS	
+                    ,ACTIVE_FLAG
+                    ,LOCAL_CREATE_DTM
+                    ,LOCAL_UPDATE_DTM
+                    ,CREATE_USER_ID
+                    ,UPDATE_USER_ID
+                    ,SYSTEM_CREATE_DTM
+                    ,SYSTEM_UPDATE_DTM
+                )
+            VALUES ( isd.TENANT_ID
+                    ,V_COMPANY_CODE
+                    ,V_ORG_TYPE_CODE
+                    ,V_ORG_CODE
+                    ,V_ACTIVITY_CODE
+                    ,isd.CATEGORY_GROUP_CODE
+                    ,isd.CATEGORY_CODE
+                    ,V_PART_PROJECT_TYPE_CODE
+                    ,isd.S_GRADE_STANDARD_DAYS	
+                    ,isd.A_GRADE_STANDARD_DAYS	
+                    ,isd.B_GRADE_STANDARD_DAYS	
+                    ,isd.C_GRADE_STANDARD_DAYS	
+                    ,isd.D_GRADE_STANDARD_DAYS	
+                    ,isd.ACTIVE_FLAG
+                    ,NOW()
+                    ,NOW()
+                    ,isd.UPDATE_USER_ID
+                    ,isd.UPDATE_USER_ID
+                    ,NOW()
+                    ,NOW()
+                )
+        ;
 
     END IF;
     
