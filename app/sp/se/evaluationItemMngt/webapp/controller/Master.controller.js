@@ -178,7 +178,7 @@ sap.ui.define([
              * 1. 세션유저 정보를 가지고 아이템을 구성한다.
              * 2. 첫번째 아이템으로 선택해준다.
              */
-            , _bindEavluTypeItem : function(sOrgCode, sEvaluOperationUnitCode ){
+            , _bindEavluTypeItem : function(sOrgCode, sEvaluOperationUnitCode, sSelectedKey ){
                 var oBtnEavluType, aFilters, oUserInfo, oComponent, oViewModel;
 
                 oBtnEavluType = this.byId("evaluType");
@@ -192,6 +192,7 @@ sap.ui.define([
                     new Filter("org_code", "EQ", sOrgCode),
                     new Filter("use_flag", "EQ", true)
                 ];
+
                 oBtnEavluType.setSelectedKey();
                 oBtnEavluType.removeAllItems();
                 oViewModel.setProperty("/Btn/UserEvalType", false);
@@ -224,7 +225,11 @@ sap.ui.define([
                         }
                         sEvaluTypeCode = aResults[0].evaluation_type_code;
 
-                        oBtnEavluType.setSelectedKey(sEvaluTypeCode);
+                        if(sSelectedKey){
+                            oBtnEavluType.setSelectedKey(sSelectedKey);
+                        }else{
+                            oBtnEavluType.setSelectedKey(sEvaluTypeCode);
+                        }
                     },
                     error : function(){
                         
@@ -450,11 +455,17 @@ sap.ui.define([
                     "nodes": [],
                     "list": []
                 });
-                    var aTableFilter = [
+                var aTableFilter = [
                     new Filter({ path:"tenant_id", operator : "EQ", value1 : oUserInfo.tenantId }),
                     new Filter({ path:"company_code", operator:"EQ", value1 : oUserInfo.companyCode }),
                     new Filter({ path:"org_type_code", operator:"EQ", value1 : oUserInfo.orgTypeCode })
                 ];
+
+                this._bindEavluTypeItem(
+                    oCondData.EQ.org_code, 
+                    oCondData.EQ.evaluation_operation_unit_code, 
+                    oCondData.EQ.evaluation_type_code
+                );
 
                 if(oCondData.EQ.org_code){
                     aTableFilter.push(

@@ -252,7 +252,9 @@ BEGIN
             ON ( C.TENANT_ID = V_TENANT_ID
                 AND C.COMPANY_CODE = V_COMPANY_CODE
                 AND C.ORG_TYPE_CODE = V_ORG_TYPE_CODE
-                AND C.ACTIVITY_CODE = V_ACTIVITY_CODE
+                AND C.ORG_TYPE_CODE = isd.ORG_CODE
+                AND C.ACTIVITY_CODE = isd.ACTIVITY_CODE
+                AND C.PART_PROJECT_TYPE_CODE = isd.PART_PROJECT_TYPE_CODE
                 AND C.CATEGORY_GROUP_CODE = V_CATEGORY_GROUP_CODE
                 AND C.CATEGORY_CODE = V_CATEGORY_CODE )
 
@@ -293,7 +295,7 @@ BEGIN
                     ,V_COMPANY_CODE
                     ,V_ORG_TYPE_CODE
                     ,isd.ORG_CODE
-                    ,V_ACTIVITY_CODE
+                    ,isd.ACTIVITY_CODE
                     ,V_CATEGORY_GROUP_CODE
                     ,V_CATEGORY_CODE
                     ,isd.PART_PROJECT_TYPE_CODE
