@@ -210,67 +210,97 @@
                 
                 <t:columns>
                     <!-- 평가항목 -->
-                    <t:Column label="{I18N>/EVAL_ITEM}" name="evaluation_article_name" width="20em">    
+                    <t:Column label="{I18N>/EVAL_ITEM}" name="" width="20em">    
                         <t:template>
                             <Text text="{viewModel>evaluation_article_name}" tooltip="{viewModel>evaluation_article_name}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_article_name"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 평가운영단위 -->
-                    <t:Column label="{I18N>/EVAL_OP_UNT}" name="evaluation_operation_unit_name" width="7em" hAlign="Center">    
+                    <t:Column label="{I18N>/EVAL_OP_UNT}" name="" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>evaluation_operation_unit_name}" tooltip="{viewModel>evaluation_operation_unit_name}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_operation_unit_name"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 평가유형명 -->
-                    <t:Column label="{I18N>/EVALUATION_TYPE_NAME}" name="evaluation_type_name" width="7em" hAlign="Center">    
+                    <t:Column label="{I18N>/EVALUATION_TYPE_NAME}" name="" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>evaluation_type_name}" tooltip="{viewModel>evaluation_type_name}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_type_name"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 평가수행방식 -->
-                    <t:Column label="{I18N>/EVAL_EXEC_MODE}" name="evaluation_execute_mode_name" width="7em" hAlign="Center">    
+                    <t:Column label="{I18N>/EVAL_EXEC_MODE}" name="" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>evaluation_execute_mode_name}" tooltip="{viewModel>evaluation_execute_mode_name}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_execute_mode_name"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 평가항목구분-->
-                    <t:Column label="{I18N>/EVAL_ITEM_TYPE}" name="evaluation_article_type_name" width="7em" hAlign="Center">    
+                    <t:Column label="{I18N>/EVAL_ITEM_TYPE}" name="" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>evaluation_article_type_name}" tooltip="{viewModel>evaluation_article_type_name}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_article_type_name"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 배점유형 -->
-                    <t:Column label="{I18N>/DISTRB_SCOR_TYPE}" name="evaluation_distrb_scr_type_name" width="7em" hAlign="Center">    
+                    <t:Column label="{I18N>/DISTRB_SCOR_TYPE}" name="" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>evaluation_distrb_scr_type_name}" tooltip="{viewModel>evaluation_distrb_scr_type_name}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_distrb_scr_type_name"/>
+                        </t:customData>
                     </t:Column>
                     <!-- Scale유형 -->
-                    <t:Column label="{I18N>/SCLE_TYPE}" name="evaluation_result_input_type_name" width="7em" hAlign="Center">    
+                    <t:Column label="{I18N>/SCLE_TYPE}" name="" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>evaluation_result_input_type_name}" tooltip="{viewModel>evaluation_result_input_type_name}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_result_input_type_name"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 평가항목설명 -->
-                    <t:Column label="{I18N>/EVAL_ITEM_DESC}" name="evaluation_article_desc" width="20em">    
+                    <t:Column label="{I18N>/EVAL_ITEM_DESC}" name="" width="20em">    
                         <t:template>
                             <Text text="{viewModel>evaluation_article_desc}" tooltip="{viewModel>evaluation_article_desc}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_article_desc"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 정렬 -->
-                    <t:Column label="{I18N>/SORT}" name="sort_sequence" width="5em" hAlign="Center">    
+                    <t:Column label="{I18N>/SORT}" name="" width="5em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>sort_sequence}" tooltip="{viewModel>sort_sequence}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="sort_sequence"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 작성자 -->
-                    <t:Column label="{I18N>/WRITER}" name="writer" width="8em" hAlign="Center">    
+                    <t:Column label="{I18N>/WRITER}" name="" width="8em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>writer}" tooltip="{viewModel>writer}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="writer"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 작성일자 -->
-                    <t:Column label="{I18N>/WRITE_DATE}" name="write_tm" width="8em" hAlign="Center">    
+                    <t:Column label="{I18N>/WRITE_DATE}" width="8em" hAlign="Center">    
                         <t:template>
                             <Text text="{
                                 path:'viewModel>write_tm',
@@ -287,6 +317,7 @@
                             }" wrapping="false" />
                         </t:template>
                         <t:customData>
+                            <core:CustomData key="property" value="write_tm"/>
                             <core:CustomData key="type" value="date"/>
                         </t:customData>
                     </t:Column>
