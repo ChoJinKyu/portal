@@ -76,7 +76,7 @@ sap.ui.define([
             });
 
             this.onSetMenuItem();
-            this.onSearch();
+            // this.onSearch();
         },
 
         /** 회사(tenant_id)값으로 법인, 사업본부 combobox item filter 기능
@@ -191,17 +191,18 @@ sap.ui.define([
 			if (sChain.length == 0) {
                 MessageToast.show("사업본부를 설정해주세요.");
                 return;
-			}
-			// if (sVpCode.length == 0) {
-            //     MessageToast.show("Vendor Pool을 설정해주세요.");
-            //     return;
-            // }
-            // new Filter("vendor_pool_path_code", FilterOperator.Contains, '벤더풀코드');
-            var url = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemView('KO')/Set"
-                        +"?$filter=tenant_id eq '"+tenant_combo+"' and "
-                        +"org_code eq '"+ sChain +"' and "
-                        // +"vendor_pool_code eq '"+ this.searchVpVode +"'"; //path 변경해야함  
-                        +"vendor_pool_code eq '"+ this.searchVpVode +"'";
+            }
+            
+            if(sVpCode.length == 0){
+                var url = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemView('KO')/Set"
+                            +"?$filter=tenant_id eq '"+tenant_combo+"' and "
+                            +"org_code eq '"+ sChain +"'"; 
+            }else{               
+                var url = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemView('KO')/Set"
+                            +"?$filter=tenant_id eq '"+tenant_combo+"' and "
+                            +"org_code eq '"+ sChain +"' and "
+                            +"vendor_pool_code eq '"+ this.searchVpVode +"'"; 
+            }
          
 			// if (sStatusflag && sStatusflag.length > 0) {
             //     url = url +" and confirmed_status_code eq '"+ sStatusflag +"'"; 
@@ -216,24 +217,29 @@ sap.ui.define([
                 // sorters: [new Sorter("hierarchy_rank")],
                 success: function(oData){ 
                     debugger;
-                    var pathCode = oData.value[0].vendor_pool_path_code
+                    var pathCode = oData.value[0].vendor_pool_path_code;
                     var parentCode = pathCode.split("^");
                     var url2 = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemView('KO')/Set"
                         +"?$filter=tenant_id eq '"+tenant_combo+"' and "
                         +"org_code eq '"+ sChain +"' and ";
+
                     if(parentCode.length>0){
                         for(var idx=0; idx<parentCode.length; idx++){
                             if(idx>0){
-                               url2 = url2 +"or contains(vendor_pool_path_code,'"+parentCode[idx]+"') ";
+                                if(idx==parentCode.length-1){
+                                    url2= url2 +"or contains(vendor_pool_path_code,'"+parentCode[idx]+"') ";
+                                }else{
+                                    url2 = url2 +"or vendor_pool_code eq '"+parentCode[idx]+"' ";
+                                }
                             }else{
-                               url2 = url2 +"contains(vendor_pool_path_code,'"+parentCode[idx]+"') ";
+                                if(parentCode.length==1){
+                                    url2 = url2 +"contains(vendor_pool_path_code,'"+parentCode[idx]+"') ";
+                                }else{                                    
+                                    url2 = url2 +"vendor_pool_code eq '"+parentCode[idx]+"' ";
+                                }
                             }
                         }
                     }
-                    // var url = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemView('KO')/Set"
-                    //             +"?$filter=tenant_id eq '"+tenant_combo+"' and "
-                    //             +"org_code eq '"+ sChain +"' and " //+"'";
-                    //             +"contains(vendor_pool_path_code,'"+parentCode+"') ";
 
                     //path_code추출
                     jQuery.ajax({
@@ -248,8 +254,6 @@ sap.ui.define([
                         }.bind(this)   
                                             
                     });
-                    // this.byId("title").setText(this.getModel("I18N").getText("/LIST") +" ("+oData.value.length+")");
-                    // this.setItemList(oData);
 
                 }.bind(this)   
                                      
@@ -529,7 +533,7 @@ sap.ui.define([
                     this.getModel("tblModel").setProperty("/left",oData.value);
                     
                     jQuery.ajax({
-                        url: "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemIngView(language_code='EN')/Set?$orderby=spmd_category_sort_sequence asc,spmd_character_sort_seq asc&$filter=trim(vendor_pool_code) eq '"+vpCode+"'", 
+                        url: "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemIngView(language_code='KO')/Set?$orderby=spmd_category_sort_sequence asc,spmd_character_sort_seq asc&$filter=trim(vendor_pool_code) eq '"+vpCode+"'", 
                         contentType: "application/json",
                         success: function(oData2){ 
                             this.getModel("tblModel").setProperty("/right",oData2.value);
