@@ -222,19 +222,19 @@
 		</layoutData>
     </VBox>
     <VBox height="3.5rem"><Label text="MOLD_CORE_MATERIAL_NAME"/>
-		<Input value="{tmpCcDpMdSpecExt>/MOLD_CORE_MATERIAL_NAME}"/>
+		<Input value="{tmpCcDpMdSpecDisplay>/MOLD_CORE_MATERIAL_NAME}"/>
 		<layoutData>
 			<l:GridData span="XL4 L4 M4 S6" />
 		</layoutData>
 	</VBox>
     <VBox height="3.5rem"><Label text="MOLD_SPEC_REGISTER_DATE"/>
-		<Input value="{tmpCcDpMdSpecExt>/MOLD_SPEC_REGISTER_DATE}"/>
+		<Input value="{tmpCcDpMdSpecDisplay>/MOLD_SPEC_REGISTER_DATE}"/>
 		<layoutData>
 			<l:GridData span="XL4 L4 M4 S6" />
 		</layoutData>
 	</VBox>
     <VBox height="3.5rem"><Label text="REQUEST_LIFE_SHOT_COUNT"/>
-		<Input value="{tmpCcDpMdSpecExt>/REQUEST_LIFE_SHOT_COUNT}"/>
+		<Input value="{tmpCcDpMdSpecDisplay>/REQUEST_LIFE_SHOT_COUNT}"/>
 		<layoutData>
 			<l:GridData span="XL4 L4 M4 S6" />
 		</layoutData>
