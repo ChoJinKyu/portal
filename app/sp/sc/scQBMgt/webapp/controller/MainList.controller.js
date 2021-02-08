@@ -597,7 +597,7 @@ sap.ui.define([
                 // 첫조회 시 데이터 안나오게
                 if(!this._firstFlag){
                     this._firstFlag = true;
-                    oFilters.push(new Filter("nego_document_number", "EQ", ""));
+                    oFilters.push(new Filter("nego_header_id", "EQ", ""));
                     oBinding.filters = oFilters;
                     return;
                 }
