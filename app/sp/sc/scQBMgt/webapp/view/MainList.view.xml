@@ -343,7 +343,8 @@
         </f:header>
         <f:content>
             <smartTable:SmartTable id="sTable1" entitySet="NegoWorkbenchView"
-                ignoreFromPersonalisation="tenant_id,nego_item_number,nego_header_id,nego_progress_status_code,award_progress_status_code,award_type_code,buyer_empno_code,negotiation_style_code" 
+                ignoreFromPersonalisation="tenant_id,nego_item_number,nego_header_id,nego_progress_status_code,award_progress_status_code,award_type_code,buyer_empno,negotiation_style_code,
+                negotiation_output_class_code,nego_type_code,outcome_code,request_department_code,requestor_empno,buyer_department_code"
                 ignoredFields=""
                 smartFilterId="smartFilterBar" tableType="Table" 
                 useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true" 
@@ -478,13 +479,13 @@
                                     <Text text="{items_count}" wrapping="false" class="AlignR" />
                                 </t:template>   
                             </t:Column> 
-                            <t:Column width="10rem" hAlign="Center" sortProperty="nego_type_code" filterProperty="nego_type_code">
+                            <t:Column width="10rem" hAlign="Center" sortProperty="nego_type_name" filterProperty="nego_type_name">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "nego_type_code", "leadingProperty": "nego_type_code", "sortProperty": "nego_type_code", "filterProperty": "nego_type_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "nego_type_name", "leadingProperty": "nego_type_name", "sortProperty": "nego_type_name", "filterProperty": "nego_type_name"}'/>
                                 </t:customData>
                                 <Label text="Negotiation Type"  />
                                 <t:template>
-                                    <Text text="{nego_type_code}" wrapping="false" />
+                                    <Text text="{nego_type_name}" wrapping="false" />
                                 </t:template> 
                             </t:Column> 
                             <t:Column width="8rem" hAlign="Center" sortProperty="negotiation_style_name" filterProperty="negotiation_style_name">
@@ -505,13 +506,13 @@
                                     <Text text="{bidding_result_open_status_code}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
-                            <t:Column width="12rem" hAlign="Center" sortProperty="negotiation_output_class_code" filterProperty="negotiation_output_class_code">
+                            <t:Column width="12rem" hAlign="Center" sortProperty="outcome_name" filterProperty="outcome_name">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "negotiation_output_class_code", "leadingProperty": "negotiation_output_class_code", "sortProperty": "negotiation_output_class_code", "filterProperty": "negotiation_output_class_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "outcome_name", "leadingProperty": "outcome_name", "sortProperty": "outcome_name", "filterProperty": "outcome_name"}'/>
                                 </t:customData>
                                 <Label text="Outcome" />
                                 <t:template>
-                                    <Text text="{negotiation_output_class_code}" wrapping="false" />
+                                    <Text text="{outcome_name}" wrapping="false" />
                                 </t:template> 
                             </t:Column> 
                             <t:Column  width="10rem" hAlign="Center" sortProperty="pr_approve_number" filterProperty="pr_approve_number">
@@ -559,23 +560,23 @@
                                     <Text text="{material_desc}" wrapping="false" class="AlignL" width="100%"/>
                                 </t:template> 
                             </t:Column>
-                            <t:Column width="8rem" hAlign="Center" sortProperty="requestor_empno" filterProperty="requestor_empno">
+                            <t:Column width="8rem" hAlign="Center" sortProperty="requestor_empno_name" filterProperty="requestor_empno_name">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "requestor_empno", "leadingProperty": "requestor_empno", "sortProperty": "requestor_empno", "filterProperty": "requestor_empno"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "requestor_empno_name", "leadingProperty": "requestor_empno_name", "sortProperty": "requestor_empno_name", "filterProperty": "requestor_empno_name"}'/>
                                 </t:customData>
                                 <Label text="요청자" />
                                 <t:template>
-                                    <Text text="{requestor_empno}" wrapping="false" class="AlignL"/>
+                                    <Text text="{requestor_empno_name}" wrapping="false" class="AlignL"/>
                                 </t:template> 
                             </t:Column>
 
-                            <t:Column width="10rem" hAlign="Center" sortProperty="request_department_code" filterProperty="request_department_code">
+                            <t:Column width="10rem" hAlign="Center" sortProperty="request_department_name" filterProperty="request_department_name">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "request_department_code", "leadingProperty": "request_department_code", "sortProperty": "request_department_code", "filterProperty": "request_department_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "request_department_name", "leadingProperty": "request_department_name", "sortProperty": "request_department_name", "filterProperty": "request_department_name"}'/>
                                 </t:customData>
                                 <Label text="요청 부서" />
                                 <t:template>
-                                    <Text text="{request_department_code}" wrapping="false" />
+                                    <Text text="{request_department_name}" wrapping="false" />
                                 </t:template>  
                             </t:Column>
 
@@ -611,13 +612,13 @@
                                 </t:template>  
                             </t:Column>  -->
                             
-                            <t:Column width="14rem" hAlign="Center" sortProperty="buyer_department_code" filterProperty="buyer_department_code">
+                            <t:Column width="14rem" hAlign="Center" sortProperty="buyer_department_name" filterProperty="buyer_department_name">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "buyer_department_code", "leadingProperty": "buyer_department_code", "sortProperty": "buyer_department_code", "filterProperty": "buyer_department_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "buyer_department_name", "leadingProperty": "buyer_department_name", "sortProperty": "buyer_department_name", "filterProperty": "buyer_department_name"}'/>
                                 </t:customData>
                                 <Label text="Department" />
                                 <t:template>
-                                    <Text text="{buyer_department_code}" wrapping="false" />
+                                    <Text text="{buyer_department_name}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
                             
