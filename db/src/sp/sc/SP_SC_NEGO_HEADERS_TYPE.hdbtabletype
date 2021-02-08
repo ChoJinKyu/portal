@@ -37,11 +37,11 @@ target_currency NVARCHAR(5),
 target_amount DECIMAL(28,5),
 supplier_participation_flag NVARCHAR(1),
 partial_allow_flag NVARCHAR(1),
-bidding_result_open_status_code NVARCHAR(30),
+bidding_result_open_status_code NVARCHAR(30)/* ,
 local_create_dtm SECONDDATE NOT NULL,
 local_update_dtm SECONDDATE NOT NULL,
 create_user_id NVARCHAR(255) NOT NULL,
 update_user_id NVARCHAR(255) NOT NULL,
 system_create_dtm SECONDDATE NOT NULL,
-system_update_dtm SECONDDATE NOT NULL
+system_update_dtm SECONDDATE NOT NULL */
 );

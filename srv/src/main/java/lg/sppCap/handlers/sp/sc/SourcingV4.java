@@ -1,5 +1,6 @@
 package lg.sppCap.handlers.sp.sc;              //Custom
 
+import com.sap.cds.ql.Delete;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
@@ -57,15 +58,133 @@ public class SourcingV4 implements EventHandler {
 
         // create temp table: local_temp_negoheaders
         StringBuffer v_sql_createTable_negoheaders = new StringBuffer();
-		v_sql_createTable_negoheaders.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOHEADERS AS ( SELECT * FROM SP_SC_NEGO_HEADERS WHERE 1=0 )");
+        // v_sql_buf.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOHEADERS AS ( SELECT * FROM SP_SC_NEGO_HEADERS WHERE 1=0 )");
+        v_sql_createTable_negoheaders.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOHEADERS AS (        ")
+                .append("  SELECT                                                                 ")
+                .append("       tenant_id                                                         ")
+                .append("     , nego_header_id                                                    ")
+                .append("     , reference_nego_header_id                                          ")
+                .append("     , previous_nego_header_id                                           ")
+                .append("     , operation_org_code                                                ")
+                .append("     , operation_unit_code                                               ")
+                .append("     , reference_nego_document_number                                    ")
+                .append("     , nego_document_round                                               ")
+                .append("     , nego_document_number                                              ")
+                .append("     , nego_document_title                                               ")
+                .append("     , nego_document_desc                                                ")
+                .append("     , nego_progress_status_code                                         ")
+                .append("     , award_progress_status_code                                        ")
+                .append("     , reply_times                                                       ")
+                .append("     , supplier_count                                                    ")
+                .append("     , nego_type_code                                                    ")
+                .append("     , outcome_code                                                      ")
+                .append("     , negotiation_output_class_code                                     ")
+                .append("     , buyer_empno                                                       ")
+                .append("     , buyer_department_code                                             ")
+                .append("     , immediate_apply_flag                                              ")
+                .append("     , open_date                                                         ")
+                .append("     , closing_date                                                      ")
+                .append("     , auto_rfq                                                          ")
+                .append("     , items_count                                                       ")
+                .append("     , negotiation_style_code                                            ")
+                .append("     , close_date_ext_enabled_hours                                      ")
+                .append("     , close_date_ext_enabled_count                                      ")
+                .append("     , actual_extension_count                                            ")
+                .append("     , remaining_hours                                                   ")
+                .append("     , note_content                                                      ")
+                .append("     , award_type_code                                                   ")
+                .append("     , award_method_code                                                 ")
+                .append("     , target_amount_config_flag                                         ")
+                .append("     , target_currency                                                   ")
+                .append("     , target_amount                                                     ")
+                .append("     , supplier_participation_flag                                       ")
+                .append("     , partial_allow_flag                                                ")
+                .append("     , bidding_result_open_status_code                                   ")
+                .append("  FROM SP_SC_NEGO_HEADERS WHERE 1=0 )                                    ");
 
 		// create temp table: local_temp_negoitemprices
         StringBuffer v_sql_createTable_negoitemprices = new StringBuffer();
-		v_sql_createTable_negoitemprices.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOITEMPRICES AS ( SELECT * FROM SP_SC_NEGO_ITEM_PRICES WHERE 1=0 )");
+        // v_sql_buf.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOITEMPRICES AS ( SELECT * FROM SP_SC_NEGO_ITEM_PRICES WHERE 1=0 )");
+        v_sql_createTable_negoitemprices.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOITEMPRICES AS (  ")
+                .append("    SELECT                                                           ")
+                .append("      tenant_id                                                      ")
+                .append("    , nego_header_id                                                 ")
+                .append("    , nego_item_number                                               ")
+                .append("    , company_code                                                   ")
+                .append("    , operation_org_type_code                                        ")
+                .append("    , operation_org_code                                             ")
+                .append("    , operation_unit_code                                            ")
+                .append("    , award_progress_status_code                                     ")
+                .append("    , line_type_code                                                 ")
+                .append("    , material_code                                                  ")
+                .append("    , material_desc                                                  ")
+                .append("    , specification                                                  ")
+                .append("    , bpa_price                                                      ")
+                .append("    , detail_net_price                                               ")
+                .append("    , recommend_info                                                 ")
+                .append("    , group_id                                                       ")
+                .append("    , location                                                       ")
+                .append("    , purpose                                                        ")
+                .append("    , reason                                                         ")
+                .append("    , request_date                                                   ")
+                .append("    , attch_code                                                     ")
+                .append("    , supplier_provide_info                                          ")
+                .append("    , incoterms_code                                                 ")
+                .append("    , payment_terms_code                                             ")
+                .append("    , market_code                                                    ")
+                .append("    , excl_flag                                                      ")
+                .append("    , specific_supplier_count                                        ")
+                .append("    , vendor_pool_code                                               ")
+                .append("    , request_quantity                                               ")
+                .append("    , uom_code                                                       ")
+                .append("    , maturity_date                                                  ")
+                .append("    , currency_code                                                  ")
+                .append("    , response_currency_code                                         ")
+                .append("    , exrate_type_code                                               ")
+                .append("    , exrate_date                                                    ")
+                .append("    , bidding_start_net_price                                        ")
+                .append("    , bidding_start_net_price_flag                                   ")
+                .append("    , bidding_target_net_price                                       ")
+                .append("    , current_price                                                  ")
+                .append("    , note_content                                                   ")
+                .append("    , pr_number                                                      ")
+                .append("    , pr_approve_number                                              ")
+                .append("    , req_submission_status                                          ")
+                .append("    , req_reapproval                                                 ")
+                .append("    , requisition_flag                                               ")
+                .append("    , price_submission_no                                            ")
+                .append("    , price_submisstion_status                                       ")
+                .append("    , interface_source                                               ")
+                .append("    , budget_department_code                                         ")
+                .append("    , requestor_empno                                                ")
+                .append("    , request_department_code                                        ")
+                .append("    FROM SP_SC_NEGO_ITEM_PRICES WHERE 1=0 )                          ");
 
-		// create temp table: local_temp_negosuppliers
+        // create temp table: local_temp_negosuppliers
         StringBuffer v_sql_createTable_negosuppliers = new StringBuffer();
-		v_sql_createTable_negosuppliers.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOSUPPLIERS AS ( SELECT * FROM SP_SC_NEGO_SUPPLIERS WHERE 1=0 )");
+        // v_sql_buf.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOSUPPLIERS AS ( SELECT * FROM SP_SC_NEGO_SUPPLIERS WHERE 1=0 )");
+        v_sql_createTable_negosuppliers.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOSUPPLIERS AS ( ")
+                .append("    SELECT                                                         ")
+                .append("    , tenant_id                                                    ")
+                .append("    , nego_header_id                                               ")
+                .append("    , nego_item_number                                             ")
+                .append("    , item_supplier_SEQUENCE                                       ")
+                .append("    , operation_org_code                                           ")
+                .append("    , operation_unit_code                                          ")
+                .append("    , nego_supplier_register_type_code                             ")
+                .append("    , evaluation_type_code                                         ")
+                .append("    , nego_supeval_type_code                                       ")
+                .append("    , supplier_code                                                ")
+                .append("    , supplier_name                                                ")
+                .append("    , supplier_type_code                                           ")
+                .append("    , excl_flag                                                    ")
+                .append("    , excl_reason_DESC                                             ")
+                .append("    , include_flag                                                 ")
+                .append("    , nego_target_include_reason_DESC                              ")
+                .append("    , only_maker_flat                                              ")
+                .append("    , contact                                                      ")
+                .append("    , note_content                                                 ")
+                .append("    FROM SP_SC_NEGO_SUPPLIERS WHERE 1=0 )                          ");
 
         // // drop temp table:
         String v_sql_dropTable_negoheaders =          "drop table #local_temp_negoheaders";
@@ -75,17 +194,20 @@ public class SourcingV4 implements EventHandler {
 		// insert temp table: master
         StringBuffer v_sql_insertTable_negoheaders= new StringBuffer();
 		v_sql_insertTable_negoheaders.append("insert into #local_temp_negoheaders values ");
-        v_sql_insertTable_negoheaders.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        // v_sql_insertTable_negoheaders.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        v_sql_insertTable_negoheaders.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		// insert table: scenario
         StringBuffer v_sql_insertTable_negoitemprices= new StringBuffer();
 		v_sql_insertTable_negoitemprices.append("insert into #local_temp_negoitemprices values ");
-		v_sql_insertTable_negoitemprices.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		// v_sql_insertTable_negoitemprices.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		v_sql_insertTable_negoitemprices.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		// insert temp table: company
         StringBuffer v_sql_insertTable_negosuppliers= new StringBuffer();
 		v_sql_insertTable_negosuppliers.append("insert into #local_temp_negosuppliers values ");
-        v_sql_insertTable_negosuppliers.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        // v_sql_insertTable_negosuppliers.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        v_sql_insertTable_negosuppliers.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		// call procedure
         StringBuffer v_sql_callProc = new StringBuffer();
@@ -118,7 +240,7 @@ public class SourcingV4 implements EventHandler {
         */
 		Collection<ReturnMsg>	v_result		= new ArrayList<>();
 
-        TyDeepUpsertNegoheader v_deepupsertnegoheader = context.getDeepupsertnegoheader();
+        // TyDeepUpsertNegoheader v_deepupsertnegoheader = context.getDeepupsertnegoheader();
         Collection<TyNegoHeader> v_negoheaders = context.getDeepupsertnegoheader().getNegoheaders();
         Collection<TyNegoItemPrice> v_negoitemprices = context.getDeepupsertnegoheader().getNegoitemprices();
         Collection<TyNegoSupplier> v_negosuppliers = context.getDeepupsertnegoheader().getNegosuppliers();

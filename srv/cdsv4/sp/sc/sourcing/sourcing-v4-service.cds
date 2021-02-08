@@ -225,6 +225,18 @@ service SourcingV4Service {
     action deepInsertNegoHeader(  deepinsertnegoheader : tyDeepInsertNegoheader  ) returns array of ReturnMsg;
     action deepUpsertNegoHeader(  deepupsertnegoheader : tyDeepUpsertNegoheader  ) returns array of ReturnMsg;
     action deepDeleteNegoHeader(  deepdeletenegoheader : tyDeepDeleteNegoheader  ) returns array of ReturnMsg;
+
+/* Reference Runtime Object(HANA, JAVA) Tree
+/sppCap/db//src/main/java/lg/sppCap/handlers/sp/sc/SourcingV4.java
+    /sppCap/db/src/sp/sc/SP_SC_NEGO_HEADERS_DEEPUPSERT.hdbprocedure
+        /sppCap/db/src/sp/sc/SP_SC_NEGO_HEADERS_TYPE.hdbtabletype
+        /sppCap/db/src/sp/sc/SP_SC_NEGO_ITEMPRICES_TYPE.hdbtabletype
+        /sppCap/db/src/sp/sc/SP_SC_NEGO_SUPPLIERS_TYPE.hdbtabletype
+    /sppCap/db/src/sp/sc/SP_SC_NEGO_HEADERS_DEEPDELETE.hdbprocedure
+        /sppCap/db/src/sp/sc/SP_SC_NEGO_HEADERS_KEY_TYPE.hdbtabletype
+        /sppCap/db/src/sp/sc/SP_SC_NEGO_ITEMPRICES_KEY_TYPE.hdbtabletype
+        /sppCap/db/src/sp/sc/SP_SC_NEGO_SUPPLIERS_KEY_TYPE.hdbtabletype
+*/
     // @odata.draft.enabled
 
     //////////////////////////////////////////////////////////////////////////////
