@@ -344,11 +344,11 @@ sap.ui.define([
                 
                 purchasing_uom_code                  : oData.purchasing_uom_code         ,
                 currency_code                        : oData.currency_code         ,
-                vi_amount                            : oData.vi_amount         ,
-                monthly_mtlmob_quantity              : oData.monthly_mtlmob_quantity         ,
-                monthly_purchasing_amount            : oData.monthly_purchasing_amount         ,
+                vi_amount                            : oData.vi_amount.trim()         ,
+                monthly_mtlmob_quantity              : oData.monthly_mtlmob_quantity.trim()         ,
+                monthly_purchasing_amount            : oData.monthly_purchasing_amount.trim()         ,
                 
-                annual_purchasing_amount             : oData.annual_purchasing_amount         ,
+                annual_purchasing_amount             : oData.annual_purchasing_amount.trim()         ,
                 perform_contents                     : oData.perform_contents         ,
                 crd_type_code                        : CUType
             }
