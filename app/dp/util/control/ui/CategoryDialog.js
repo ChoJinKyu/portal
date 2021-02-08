@@ -81,7 +81,7 @@ sap.ui.define([
                 new Column({
                     width: "20%",
                     label: new Label({text: this.getModel("I18N").getText("/STATUS")}),
-                    template: new Text({text: "{active_flag}"})
+                    template: new Text({text: "{active_flag_val}"})
                 })               
             ];
         },
