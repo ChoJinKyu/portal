@@ -84,13 +84,12 @@
                             <!-- 순번 -->
                             <Text text="{history>sequence}"/>
                             <!-- 작업일 -->
-                            <!-- <Text 
+                            <Text 
                                 text="{
                                     path: 'history>local_update_dtm',
-                                    formatter: '.dateFormatter.toUTCDateString'
+                                    formatter: '.dateFormatter.toUTCDateTimeString'
                                 }"
-                            /> -->
-                            <Text text="{history>local_update_dtm}"/>
+                            />
                             <!-- 작업유형 -->
                             <Text text="{history>job_type_name}"/>
                             <!-- 변경전 -->
