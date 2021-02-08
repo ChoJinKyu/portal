@@ -1,9 +1,6 @@
 sap.ui.define(["jquery.sap.global"],
     function (jQuery) {
         "use strict";
-        var _columns = [
-            
-        ];
 
         // Very simple page-context personalization
         // persistence service, not for productive use!
@@ -11,7 +8,7 @@ sap.ui.define(["jquery.sap.global"],
 
             oData: {
                 _persoSchemaVersion: "1.0",
-                aColumns: _columns
+                aColumns: []
             },
 
             getPersData: function () {
@@ -39,7 +36,7 @@ sap.ui.define(["jquery.sap.global"],
                 var oDeferred = new jQuery.Deferred();
                 var oInitialData = {
                     _persoSchemaVersion: "1.0",
-                    aColumns: _columns
+                    aColumns: []
                 };
 
                 //set personalization

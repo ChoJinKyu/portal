@@ -142,6 +142,7 @@
                                 <ComboBox 
                                     id="comboEvaluDisScrType"
                                     width="100%"
+                                    fieldGroupIds="detailRequired"
                                     selectedKey="{viewModel>/Detail/Header/evaluation_distrb_scr_type_cd}"
                                     editable="{viewModel>/App/EditMode}"
                                 />
@@ -155,6 +156,7 @@
                                 <ComboBox  
                                     id="comboEvaluResultInputType"
                                     width="100%"
+                                    fieldGroupIds="detailRequired"
                                     selectedKey="{viewModel>/Detail/Header/evaluation_result_input_type_cd}"
                                     editable="{viewModel>/App/EditMode}"
                                 />
@@ -168,6 +170,7 @@
                                 <ComboBox 
                                     id="comboQttItemUom"
                                     width="100%"
+                                    fieldGroupIds="detailRequired"
                                     selectedKey="{viewModel>/Detail/Header/qttive_item_uom_code}"
                                     editable="{=
                                         ${viewModel>/App/EditMode} &amp;&amp;
