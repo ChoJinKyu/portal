@@ -444,11 +444,9 @@ sap.ui.define([
             } else if (sRole === "100006") {
                 aFilters.push(new Filter("maker_role", FilterOperator.EQ, "Y"));
             }
-            if (sRegisterStatus === "QUALIFICATION") {
-                aFilters.push(new Filter("business_partner_register_status_code", FilterOperator.EQ, "QUAA"));
-            } else if (sRegisterStatus === "REGISTRATION") {
-                aFilters.push(new Filter("business_partner_register_status_code", FilterOperator.EQ, "REGA"));
-            }
+            if (sRegisterStatus) {
+                aFilters.push(new Filter("business_partner_register_progress_code", FilterOperator.EQ, sRegisterStatus));
+            } 
 
             if (sStatus) aFilters.push(new Filter("business_partner_status_code", FilterOperator.EQ, sStatus));
 

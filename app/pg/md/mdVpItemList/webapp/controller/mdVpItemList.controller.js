@@ -193,18 +193,15 @@ sap.ui.define([
                 return;
             }
             
-            if(sVpCode.length == 0){
-                var url = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemView('KO')/Set"
-                            +"?$filter=tenant_id eq '"+tenant_combo+"' and "
-                            +"org_code eq '"+ sChain +"'"; 
-            }else{               
-                var url = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemView('KO')/Set"
-                            +"?$filter=tenant_id eq '"+tenant_combo+"' and "
-                            +"org_code eq '"+ sChain +"' and "
-                            +"vendor_pool_code eq '"+ this.searchVpVode +"'"; 
+            var url = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemView('KO')/Set"
+                        +"?$filter=tenant_id eq '"+tenant_combo+"' and "
+                        +"org_code eq '"+ sChain +"'"; 
+            
+            if(sVpCode.length > 0){             
+                url = url +" and vendor_pool_code eq '"+ this.searchVpVode +"'"; 
             }
          
-			// if (sStatusflag && sStatusflag.length > 0) {
+			// if (sStatusflag != "" && sStatusflag.length > 0) {
             //     url = url +" and confirmed_status_code eq '"+ sStatusflag +"'"; 
             // }
 
@@ -216,45 +213,54 @@ sap.ui.define([
                 // filters: aSearchFilters,    
                 // sorters: [new Sorter("hierarchy_rank")],
                 success: function(oData){ 
-                    debugger;
-                    var pathCode = oData.value[0].vendor_pool_path_code;
-                    var parentCode = pathCode.split("^");
-                    var url2 = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemView('KO')/Set"
-                        +"?$filter=tenant_id eq '"+tenant_combo+"' and "
-                        +"org_code eq '"+ sChain +"' and ";
+                    if(sVpCode.length>0 || sStatusflag.length > 0){
+                        var url2 = "pg/md/mdVpItemList/webapp/srv-api/odata/v4/pg.MdCategoryV4Service/MdVpMappingItemView('KO')/Set"
+                            +"?$filter=tenant_id eq '"+tenant_combo+"' and "
+                            +"org_code eq '"+ sChain +"' ";
+                        if(sVpCode.length > 0){ 
+                            var pathCode = oData.value[0].vendor_pool_path_code;
+                            var parentCode = pathCode.split("^");
 
-                    if(parentCode.length>0){
-                        for(var idx=0; idx<parentCode.length; idx++){
-                            if(idx>0){
-                                if(idx==parentCode.length-1){
-                                    url2= url2 +"or contains(vendor_pool_path_code,'"+parentCode[idx]+"') ";
-                                }else{
-                                    url2 = url2 +"or vendor_pool_code eq '"+parentCode[idx]+"' ";
-                                }
-                            }else{
-                                if(parentCode.length==1){
-                                    url2 = url2 +"contains(vendor_pool_path_code,'"+parentCode[idx]+"') ";
-                                }else{                                    
-                                    url2 = url2 +"vendor_pool_code eq '"+parentCode[idx]+"' ";
+                            if(parentCode.length>0){
+                                for(var idx=0; idx<parentCode.length; idx++){
+                                    if(idx>0){
+                                        if(idx==parentCode.length-1){
+                                            url2= url2 +"or contains(vendor_pool_path_code,'"+parentCode[idx]+"')) ";
+                                        }else{
+                                            url2 = url2 +"or vendor_pool_code eq '"+parentCode[idx]+"' ";
+                                        }
+                                    }else{
+                                        if(parentCode.length==1){
+                                            url2 = url2 +"and (contains(vendor_pool_path_code,'"+parentCode[idx]+"')) ";
+                                        }else{                                    
+                                            url2 = url2 +"and (vendor_pool_code eq '"+parentCode[idx]+"' ";
+                                        }
+                                    }
                                 }
                             }
                         }
+                        if (sStatusflag != "" && sStatusflag.length > 0) {
+                            url2 = url2 +"and (confirmed_status_code eq '"+ sStatusflag +"' "
+                                        +"or confirmed_status_code eq null)";
+                        }
+                        //path_code추출
+                        jQuery.ajax({
+                            url: url2, 
+                            contentType: "application/json",
+                            type: "GET",
+                            success: function(oData2){
+                                //path_code추출
+                                this.byId("title").setText(this.getModel("I18N").getText("/LIST") +" ("+oData2.value.length+")");
+
+
+                                this.setItemList(oData2);
+                            }.bind(this)   
+                                                
+                        });
+                    }else{
+                        this.byId("title").setText(this.getModel("I18N").getText("/LIST") +" ("+oData.value.length+")");
+                        this.setItemList(oData);
                     }
-
-                    //path_code추출
-                    jQuery.ajax({
-                        url: url2, 
-                        contentType: "application/json",
-                        type: "GET",
-                        success: function(oData2){ 
-                            debugger;
-                            //path_code추출
-                            this.byId("title").setText(this.getModel("I18N").getText("/LIST") +" ("+oData2.value.length+")");
-                            this.setItemList(oData2);
-                        }.bind(this)   
-                                            
-                    });
-
                 }.bind(this)   
                                      
             });
@@ -529,7 +535,6 @@ sap.ui.define([
                     +"org_code eq '"+ orgCode +"'",
                 contentType: "application/json",
                 success: function(oData){ 
-
                     this.getModel("tblModel").setProperty("/left",oData.value);
                     
                     jQuery.ajax({
