@@ -10,6 +10,7 @@ entity Vp_Vendor_Pool_Supplier_Popup_View(p_language_code: String, p_tenant_id: 
     key org_code: String(10) @title: '운영조직코드'; 
     key vendor_pool_code: String(20) @title: '협력사풀코드';
     key supplier_code: String(15) @title: '공급업체코드';
+    org_type_name      : String(240) @title: '운영조직유형명'; 
     supplier_local_name: String(240) @title: '공급업체로컬명'; 
     supplier_english_name: String(240) @title: '공급업체영문명'; 
     supplier_company_code: String(10) @title: '공급업체 회사코드';
