@@ -199,7 +199,7 @@ sap.ui.define([
             type == "org_code"
             &&
             this.dialog(new PurOperationOrgDialog({
-                title: "(미정)조직을 선택하세요.)",
+                title: "(미정)조직을 선택하세요",
                 multiSelection: true,
                 items: {
                     filters: [
@@ -319,16 +319,16 @@ sap.ui.define([
             // 아래의 모든 작업은 진행상태가 결재완료(30), 생성완료(50) 상태에서만 가능하다.
             if (items.filter(e => !(e.pr_create_status_code == "30" || e.pr_create_status_code == "50")).length > 0) {
                 // 결재완료, 생성완료만 선택가능합니다.
-                MessageBox.alert("(메세지)결재완료, 생성완료만 처리 할 수 있습니다.");
+                MessageBox.alert("(메세지)결재완료, 생성완료만 처리 할 수 있습니다");
                 return ;
             }
             // 구매담당자가 본인이 아닐 경우 Confirm 메시지 띄움.
             if (items.filter(e => (e.buyer_empno != this.$session.employee_number)).length > 0) {
-                message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다.\n확인시 자동으로 본인 담당으로 변경됩니다.\n";
+                message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다\n확인시 자동으로 본인 담당으로 변경됩니다\n";
             }
             // 잔량이 없는 PR은 선택이 불가능하다 = 요청수량 0
             if (items.filter(e => (+e.pr_quantity) <= 0 || !e).length > 0) {
-                MessageBox.alert("(메세지)요청수량(잔량)이 없는 PR 은 선택 할 수 없습니다.");
+                MessageBox.alert("(메세지)요청수량(잔량)이 없는 PR 은 선택 할 수 없습니다");
                 return;
             }
 
@@ -401,11 +401,11 @@ sap.ui.define([
                                     onCommit: function() {
                                         var [event, action, value, ...args] = arguments;
                                         if (value.action == 'CHANGE' && !value.buyerEmpno) {
-                                            MessageBox.alert("(미정)구매담당자를 선택하세요.");
+                                            MessageBox.alert("(미정)구매담당자를 선택하세요");
                                             return false;
                                         }
                                         if (!value.processedReason) {
-                                            MessageBox.alert("(미정)사유를 입력하세요.");
+                                            MessageBox.alert("(미정)사유를 입력하세요");
                                             return false;
                                         }
                                         return value;
@@ -440,6 +440,9 @@ sap.ui.define([
                                         this.search("jSearch", "list", "Pr_ReviewListView");
                                         // main 화면으로 복귀
                                         this.getModel("fcl").setProperty("/layout", LayoutType.OneColumn);
+                                        this.getRouter().navTo("mainPage", {
+                                            layout: LayoutType.OneColumn
+                                        });
                                     }).bind(this));
                                 });
                             }
@@ -466,6 +469,9 @@ sap.ui.define([
                                     this.search("jSearch", "list", "Pr_ReviewListView");
                                     // main 화면으로 복귀
                                     this.getModel("fcl").setProperty("/layout", LayoutType.OneColumn);
+                                    this.getRouter().navTo("mainPage", {
+                                        layout: LayoutType.OneColumn
+                                    });
                                 }).bind(this));
                             }
                         }
