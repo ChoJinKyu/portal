@@ -199,11 +199,12 @@
                                                                         <HBox alignContent="Center" alignItems="Center" width="100%" class="sapUiSmallMarginEnd">
                                                                             <VBox width="100px">
                                                                                 <Label text="Max Round Count" width="120px"  required="true" class="sapMLabelNoText"/>
-                                                                                <Input value="" width="100%" />
+                                                                                <Input value="" width="100%" visible="{=${propInfo>/isEditMode}}"/>
+                                                                                <Text text="" width="100%" visible="{=!${propInfo>/isEditMode}}"/>
                                                                             </VBox>
                                                                             <VBox>
                                                                                 <Label text=""  class="sapMLabelNoText"/>
-                                                                                <CheckBox class=""/>
+                                                                                <CheckBox class="" editable="{=${propInfo>/isEditMode}}"/>
                                                                             </VBox>
                                                                             <VBox>
                                                                                 <Label text=""  class="sapMLabelNoText"/>
@@ -211,7 +212,8 @@
                                                                             </VBox>
                                                                             <VBox>
                                                                                 <Label text=""  class="sapMLabelNoText"/>
-                                                                                <Input value="" width="100px" />
+                                                                                <Input value="" width="100px"  visible="{=${propInfo>/isEditMode}}"  />
+                                                                                <Text text="" width="100px" visible="{=!${propInfo>/isEditMode}}"/>
                                                                             </VBox>
                                                                             <VBox>
                                                                                 <Label text=""  class="sapMLabelNoText"/>
@@ -220,12 +222,13 @@
                                                                             <VBox class=" sapUiLargeMarginBegin">
                                                                                 <Label text="Previous Round" class="sapMLabelNoText"/>
                                                                                 <SegmentedButton id="prSegmentButton"  selectedKey="true"
-                                                                                                    class="sapUiSmallMarginEnd" >
+                                                                                                    class="sapUiSmallMarginEnd" visible="{=${propInfo>/isEditMode}}">
                                                                                     <items>
                                                                                         <SegmentedButtonItem key="true" text="Yes"/>
                                                                                         <SegmentedButtonItem key="false" text="No" />
                                                                                     </items>
-                                                                                </SegmentedButton>   
+                                                                                </SegmentedButton>  
+                                                                                <Text text="true" visible="{=!${propInfo>/isEditMode}}"/>
                                                                             </VBox>
                                                                         </HBox>
                                                                     </HBox>
@@ -864,7 +867,7 @@
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center" >
                                                                     <MultiInput id="multiinput_purOperationOrg_code" visible="{=${propInfo>/isEditMode}}" 
-                                                                        tokens="{/processTypes}" value="{NegoHeaders>operation_unit_code} : {NegoHeaders>operation_unit_name}"
+                                                                        tokens="{}" value="{NegoHeaders>operation_unit_code} : {NegoHeaders>operation_unit_name}"
                                                                         showValueHelp="true" valueHelpRequest=".onOperationOrgPress" textAlign="Center">
                                                                         <tokens>
                                                                             <Token key="{key}" text="{text}" />
