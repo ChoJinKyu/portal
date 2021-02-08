@@ -612,7 +612,7 @@
                             
                             <t:Column width="10rem" hAlign="Center" sortProperty="open_date" filterProperty="open_date">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "open_date", "leadingProperty": "open_date", "sortProperty": "open_date", "filterProperty": "open_date"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "open_date", "leadingProperty": "open_date", "sortProperty": "open_date", "filterProperty": "open_date", "type": "datetime"}'/>
                                 </t:customData>
                                 <Label text="Open Date" />
                                 <t:template>
@@ -625,7 +625,7 @@
                             
                             <t:Column width="10rem" hAlign="Center" sortProperty="closing_date" filterProperty="closing_date">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "closing_date", "leadingProperty": "closing_date", "sortProperty": "closing_date", "filterProperty": "closing_date"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "closing_date", "leadingProperty": "closing_date", "sortProperty": "closing_date", "filterProperty": "closing_date", "type":"datetime"}'/>
                                 </t:customData>
                                 <Label text="Close Date" />
                                 <t:template>
@@ -693,7 +693,7 @@
                             </t:Column> 
                             <t:Column width="10rem" hAlign="Center" sortProperty="local_create_dtm" filterProperty="local_create_dtm">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "local_create_dtm", "leadingProperty": "local_create_dtm", "sortProperty": "local_create_dtm", "filterProperty": "local_create_dtm"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "local_create_dtm", "leadingProperty": "local_create_dtm", "sortProperty": "local_create_dtm", "filterProperty": "local_create_dtm", "type":"datetime"}'/>
                                 </t:customData>
                                 <Label text="Create Date" />
                                 <t:template>

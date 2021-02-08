@@ -60,9 +60,184 @@ BEGIN
         ;
  */
 
-        UPSERT SP_SC_NEGO_HEADERS     SELECT *, NOW(), NOW(), :APP_USER, :APP_USER, NOW(), NOW() FROM :I_TABLE_NEGOHEADERS;
-        UPSERT SP_SC_NEGO_ITEM_PRICES SELECT *, NOW(), NOW(), :APP_USER, :APP_USER, NOW(), NOW() FROM :I_TABLE_NEGOITEMPRICES;
-        UPSERT SP_SC_NEGO_SUPPLIERS   SELECT *, NOW(), NOW(), :APP_USER, :APP_USER, NOW(), NOW() FROM :I_TABLE_NEGOSUPPLIERS;
+        UPSERT SP_SC_NEGO_HEADERS ( 
+              tenant_id
+            , nego_header_id
+            , reference_nego_header_id
+            , previous_nego_header_id
+            , operation_org_code
+            , operation_unit_code
+            , reference_nego_document_number
+            , nego_document_round
+            , nego_document_number
+            , nego_document_title
+            , nego_document_desc
+            , nego_progress_status_code
+            , award_progress_status_code
+            , reply_times
+            , supplier_count
+            , nego_type_code
+            , outcome_code
+            , negotiation_output_class_code
+            , buyer_empno
+            , buyer_department_code
+            , immediate_apply_flag
+            , open_date
+            , closing_date
+            , auto_rfq
+            , items_count
+            , negotiation_style_code
+            , close_date_ext_enabled_hours
+            , close_date_ext_enabled_count
+            , actual_extension_count
+            , remaining_hours
+            , note_content
+            , award_type_code
+            , award_method_code
+            , target_amount_config_flag
+            , target_currency
+            , target_amount
+            , supplier_participation_flag
+            , partial_allow_flag
+            , bidding_result_open_status_code
+            , local_create_dtm
+            , local_update_dtm
+            , create_user_id
+            , update_user_id
+            , system_create_dtm
+            , system_update_dtm
+        ) SELECT 
+              tenant_id
+            , nego_header_id
+            , reference_nego_header_id
+            , previous_nego_header_id
+            , operation_org_code
+            , operation_unit_code
+            , reference_nego_document_number
+            , nego_document_round
+            , nego_document_number
+            , nego_document_title
+            , nego_document_desc
+            , nego_progress_status_code
+            , award_progress_status_code
+            , reply_times
+            , supplier_count
+            , nego_type_code
+            , outcome_code
+            , negotiation_output_class_code
+            , buyer_empno
+            , buyer_department_code
+            , immediate_apply_flag
+            , open_date
+            , closing_date
+            , auto_rfq
+            , items_count
+            , negotiation_style_code
+            , close_date_ext_enabled_hours
+            , close_date_ext_enabled_count
+            , actual_extension_count
+            , remaining_hours
+            , note_content
+            , award_type_code
+            , award_method_code
+            , target_amount_config_flag
+            , target_currency
+            , target_amount
+            , supplier_participation_flag
+            , partial_allow_flag
+            , bidding_result_open_status_code
+            -- , * 
+            , NOW(), NOW(), :APP_USER, :APP_USER, NOW(), NOW() FROM :I_TABLE_NEGOHEADERS;
+
+
+        UPSERT SP_SC_NEGO_ITEM_PRICES(
+              tenant_id
+            , nego_header_id
+            , nego_item_number
+            , company_code
+            , operation_org_type_code
+            , operation_org_code
+            , operation_unit_code
+            , award_progress_status_code
+            , line_type_code
+            , material_code
+            , material_desc
+            , specification
+            , bpa_price
+            , detail_net_price
+            , recommend_info
+            , group_id
+            , location
+            , purpose
+            , reason
+            , request_date
+            , attch_code
+            , supplier_provide_info
+            , incoterms_code
+            , payment_terms_code
+            , market_code
+            , excl_flag
+            , specific_supplier_count
+            , vendor_pool_code
+            , request_quantity
+            , uom_code
+            , maturity_date
+            , currency_code
+            , response_currency_code
+            , exrate_type_code
+            , exrate_date
+            , bidding_start_net_price
+            , bidding_start_net_price_flag
+            , bidding_target_net_price
+            , current_price
+            , note_content
+            , pr_number
+            , pr_approve_number
+            , req_submission_status
+            , req_reapproval
+            , requisition_flag
+            , price_submission_no
+            , price_submisstion_status
+            , interface_source
+            , budget_department_code
+            , requestor_empno
+            , request_department_code
+            , local_create_dtm
+            , local_update_dtm
+            , create_user_id
+            , update_user_id
+            , system_create_dtm
+            , system_update_dtm
+        ) SELECT *, NOW(), NOW(), :APP_USER, :APP_USER, NOW(), NOW() FROM :I_TABLE_NEGOITEMPRICES;
+
+
+        UPSERT SP_SC_NEGO_SUPPLIERS(
+              tenant_id
+            , nego_header_id
+            , nego_item_number
+            , item_supplier_SEQUENCE
+            , operation_org_code
+            , operation_unit_code
+            , nego_supplier_register_type_code
+            , evaluation_type_code
+            , nego_supeval_type_code
+            , supplier_code
+            , supplier_name
+            , supplier_type_code
+            , excl_flag
+            , excl_reason_DESC
+            , include_flag
+            , nego_target_include_reason_desc
+            , only_maker_flat
+            , contact
+            , note_content
+            , local_create_dtm
+            , local_upDATE_dtm
+            , create_user_id
+            , upDATE_user_id
+            , system_create_dtm
+            , system_upDATE_dtm
+        ) SELECT *, NOW(), NOW(), :APP_USER, :APP_USER, NOW(), NOW() FROM :I_TABLE_NEGOSUPPLIERS;
     END;
 
     -- # ERROR TEST # SELECT 1/:v_int FROM DUMMY;

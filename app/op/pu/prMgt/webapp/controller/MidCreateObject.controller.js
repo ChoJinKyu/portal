@@ -77,10 +77,13 @@ sap.ui.define([
         
         onBeforeRendering : function(){     
             // 품의내용 Text editor
-            this._fnSetRichEditor();       
+            this._fnSetRichEditor();
         },
 
-        onAfterRendering: function () {
+        onAfterRendering: function (){
+            setTimeout((function(){
+                this.getView().byId("idPrCreatePage")._scrollTo(0);                
+            }).bind(this), 0);
         },
 
         /**
@@ -161,6 +164,7 @@ sap.ui.define([
             if(this.edit_mode === "NEW" || this.edit_mode === "COPY"){
                 this.pr_number = "NEW";
                 oPrMstData.pr_number = "NEW";
+                oPrMstData.pr_create_status_name = "NEW"
                 oPrMstData.request_date = new Date();
                 oViewModel.setProperty("/PrMst", oPrMstData);
             }
@@ -733,8 +737,12 @@ sap.ui.define([
                 that = this;
 
             if(this.validator.validate(this.byId("pageSectionMain")) !== true){
-                MessageToast.show(this.getModel("I18N").getText("/NCM005"));
+                MessageToast.show(this.getModel("I18N").getText("/ECM01002"));
                 return;
+            }  
+            
+            if(!this._fnTableValidator("pritemTable")){
+                return false;
             }
             
 			MessageBox.confirm("저장 후에는 변경이 불가합니다.\r\n\r\n저장 하시겠습니까 ? ", {
@@ -758,7 +766,9 @@ sap.ui.define([
             var oPrItemTable = oView.byId("pritemTable");
             
             if(this.validator.validate(this.byId("pageSectionMain")) !== true){
-                MessageToast.show(this.getModel("I18N").getText("/ECM01002"));
+                MessageBox.error(this.getModel("I18N").getText("/ECM01002"), {
+                    actions: MessageBox.Action.CLOSE
+                });
                 return;
             }  
             
@@ -789,7 +799,7 @@ sap.ui.define([
 
             let bReturn=true;
 
-            
+            /*
             this.validator.setModel(oViewModel, "viewModel");
             bReturn = this.validator.validate(this.byId(tableId));
             console.log("##### _fnTableValidator - bReturn > " + bReturn);
@@ -799,6 +809,7 @@ sap.ui.define([
                 //MessageToast.show("필수 값을 입력해 주세요.");
                 bReturn = true;
             }
+            */
 
             var sI18N_ECM01002 = that.getModel("I18N").getText("/ECM01002") + "\r\n";
             var msg = that.getModel("I18N").getText("/ECM01002") + "\r\n";
@@ -870,7 +881,9 @@ sap.ui.define([
                     });
                 }                
             } else {
-                MessageToast.show("품목을 추가해 주세요.");
+                MessageBox.error("품목을 1건 이상 추가해 주세요.", {
+                    actions: MessageBox.Action.CLOSE
+                });
                 bReturn = false;
             }
 
@@ -1069,7 +1082,7 @@ sap.ui.define([
                         company_code        : item.company_code,
                         pr_number           : item.pr_number,
                         pr_item_number      : (item.pr_item_number) ? item.pr_item_number +"" : "",
-                        org_type_code       : (item.org_type_code) ? item.org_type_code : "",
+                        org_type_code       : (item.org_type_code) ? item.org_type_code : "PL",
                         org_code            : (item.org_code) ? item.org_code : "",
                         org_name            : (item.org_name) ? item.org_name : "",
                         org_name_desc       : sOrgNameDesc,

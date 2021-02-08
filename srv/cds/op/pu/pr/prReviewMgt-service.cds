@@ -1,8 +1,8 @@
 namespace op;
 
 using {op.Pu_Pr_Mst as prMst} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_MST-model';
-
 using {op.Pu_Pr_Dtl as prDtl} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL-model';
+
 using {cm.Code_View as cdView} from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
 using {cm.Hr_Employee as hrEmployee} from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 
@@ -19,6 +19,7 @@ using {dp.Mm_Material_Org as mtlOrg } from '../../../../../db/cds/dp/mm/DP_MM_MA
 using {op.Pu_Pr_Account as prAcct}   from '../../../../../db/cds/op/pu/pr/OP_PU_PR_ACCOUNT-model';
 using {op.Pu_Pr_Dtl_His as prDtlHis} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL_HIS-model';
 
+using {op.Pu_Pr_Template_Lng as prTLng} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_TEMPLATE_LNG-model';
 using {op.Pu_Account_Mst as acctMst} from '../../../../../db/cds/op/pu/account/OP_PU_ACCOUNT_MST-model';
 using {op.Pu_Asset_Mst as assetMst}  from '../../../../../db/cds/op/pu/asset/OP_PU_ASSET_MST-model';
 using {op.Pu_Cctr_Mst as cctrMst}    from '../../../../../db/cds/op/pu/cctr/OP_PU_CCTR_MST-model';
@@ -134,6 +135,7 @@ service PrReviewMgtService {
             ,mst.pr_type_code_3  // 구매요청품목코드
             ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_TYPE_CODE_3', mst.pr_type_code_3, 'KO') as pr_type_name_3 : String(240)  // 품목
             ,mst.pr_template_number  // 구매요청템플릿번호
+            ,tmp.pr_template_name : String(100)  // 구매요청템플릿명
             ,mst.pr_create_system_code  // 구매요청생성시스템코드
             ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_SYSTEM_CODE', mst.pr_create_system_code, 'KO') as pr_create_system_name : String(240)  // 구매요청생성시스템
 
@@ -192,6 +194,12 @@ service PrReviewMgtService {
         on  dtl.tenant_id    = mst.tenant_id
         and dtl.company_code = mst.company_code
         and dtl.pr_number    = mst.pr_number
+
+        // 구매요청템플릿명
+        left outer join prTLng tmp
+        on  tmp.tenant_id     = mst.tenant_id
+        and tmp.language_code = 'KO'
+        and tmp.pr_template_number = mst.pr_template_number
 
         // 요청자 부서
         left outer join hrEmployee hrEmp

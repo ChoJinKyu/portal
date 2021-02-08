@@ -23,23 +23,34 @@
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="3" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="{I18N>/OPERATION_ORG}"></Label>
-                                <ComboBox id="operation_org_s"
-                                    width="100%"
+                                <Label text="Company Name" labelFor="search_company_s" required="true"></Label>     
+                                <MultiComboBox id="search_company_s" width="100%" required="true" 
                                     items="{
-                                            path: 'vendorPool>/VpOperationOrg',
+                                                path: 'org>/Org_Company',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                ]
+                                            }" selectionFinish="handleSelectionFinishComp">
+                                    <items>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Operation ORG" labelFor="search_operation_org_s" required="true"></Label>
+                                <MultiComboBox id="search_operation_org_s" width="100%" required="true"
+                                        items="{
+                                            path: 'purOrg>/Pur_Operation_Org',
                                             filters: [
                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                             ]
-                                        }"
-                                    selectionChange=".operationOrgChg">
+                                        }" selectionFinish="handleSelectionFinishOrg">
                                     <items>
-                                        <core:Item key="{vendorPool>operation_org_code}" text="{vendorPool>operation_org_name}" />
+                                        <core:Item key="{purOrg>code}" text="[{purOrg>code}] {purOrg>type}" />
                                     </items>
-                                </ComboBox>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L2 M2 S12" />
-                                </layoutData>
+                                </MultiComboBox>
+                                <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>                                   
                             </VBox>
                             <VBox>
                                 <Label text="{I18N>/STATUS}"></Label>
@@ -68,25 +79,36 @@
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
-                                <Label text="{I18N>/OPERATION_ORG}"></Label>
-                                <ComboBox id="operation_org_e"
-                                    width="100%"
+                                <Label text="Company" labelFor="search_company_e" required="true"></Label>
+                                <MultiComboBox id="search_company_e" width="100%" required="true" 
                                     items="{
-                                            path: 'vendorPool>/VpOperationOrg',
+                                                path: 'org>/Org_Company',
+                                                filters: [
+                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                ]
+                                            }" selectionFinish="handleSelectionFinishComp">
+                                    <items>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="Operation ORG" labelFor="search_operation_org_e" required="true"></Label>
+                                <MultiComboBox id="search_operation_org_e" width="100%" required="true"
+                                        items="{
+                                            path: 'purOrg>/Pur_Operation_Org',
                                             filters: [
                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                             ]
-                                        }"
-                                    selectionChange=".operationOrgChg">
+                                        }" selectionFinish="handleSelectionFinishOrg">
                                     <items>
-                                        <core:Item key="{vendorPool>operation_org_code}" text="{vendorPool>operation_org_name}" />
+                                        <core:Item key="{purOrg>code}" text="[{purOrg>code}] {purOrg>type}" />
                                     </items>
-                                </ComboBox>
-                                <layoutData>
-                                    <layout:GridData span="XL2 L2 M2 S12" />
-                                </layoutData>
+                                </MultiComboBox>
+                                <layoutData><layout:GridData span="XL2 L2 M2 S12"/></layoutData>
                             </VBox>
-                            <VBox>
+                             <VBox>
                                 <Label text="{I18N>/STATUS}"></Label>
                                 <ComboBox id="status_e"
                                     width="100%"
@@ -175,9 +197,7 @@
                     <OverflowToolbar class="sapFDynamicPageAlignContent">
                         <Title text="{I18N>/BASE_PRICE_LIST} ({= ${list>/NpApprovalListView}.length || 0})" level="H2"/>
                         <ToolbarSpacer />
-                        <!-- <Button icon="sap-icon://excel-attachment" />
-                        <Button icon="sap-icon://group-2" />
-                        <Button icon="sap-icon://action-settings" /> -->
+                        <Button text="Create" type="Transparent" press=".fnCreate" />
                     </OverflowToolbar>
                 </t:extension>
                 <t:columns>

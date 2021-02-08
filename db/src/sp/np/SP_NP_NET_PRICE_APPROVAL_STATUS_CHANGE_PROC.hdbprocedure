@@ -126,42 +126,6 @@ BEGIN
 
     END IF;
 
-
-    /*
-     * 변경 하려는 상태코드 별, 데이터체크 및 추가작업
-    */
-
-    IF I_APPROVE_STATUS_CODE = 'DR' THEN
-
-
-    ELSEIF I_APPROVE_STATUS_CODE = 'AR' THEN
-
-
-    ELSEIF I_APPROVE_STATUS_CODE = 'IA' THEN
-
-
-    ELSEIF I_APPROVE_STATUS_CODE = 'AP' THEN
-        -- 단가마스터, 단가품의 마스터 저장
-        IF V_NET_PRICE_DOCUMENT_TYPE_CODE = 'I' THEN
-            /* 단가 등록
-              0. 해당 기간에 포함되는 건이 2건 이상이면, Exception 발생
-
-              1. 동일한 시작일자가 존재하면, Update
-              
-              2. 동일한 시작일자가 아닌, 기간에 포함되는 건이면, 종료일자를 시작일자 하루 전으로 Update, 신규 Insert
-            */
-        ELSEIF V_NET_PRICE_DOCUMENT_TYPE_CODE = 'C' THEN
-            /* 단가 무조건 Insert
-            */
-
-        END IF;
-
-    ELSEIF I_APPROVE_STATUS_CODE = 'RJ' THEN
-
-
-    END IF;
-
-
     /*
      * 공통 결재마스터 상태코드 Update
     */
@@ -183,6 +147,41 @@ BEGIN
            AND APPROVAL_NUMBER       = I_APPROVAL_NUMBER
         ;
     END;
+
+
+
+    /*
+     * 변경 하려는 상태코드 별, 데이터체크 및 추가작업
+    */
+
+    IF I_APPROVE_STATUS_CODE = 'DR' THEN
+
+
+    ELSEIF I_APPROVE_STATUS_CODE = 'AR' THEN
+
+
+    ELSEIF I_APPROVE_STATUS_CODE = 'IA' THEN
+
+
+    ELSEIF I_APPROVE_STATUS_CODE = 'AP' THEN
+    
+        SP_NP_APPR_APPROVED_PROC ( I_TENANT_ID
+                                  ,I_APPROVAL_NUMBER
+                                  ,V_NET_PRICE_DOCUMENT_TYPE_CODE
+                                  ,I_USER_ID
+                                  ,O_RETURN_CODE
+                                  ,O_RETURN_MSG
+        );
+
+        IF O_RETURN_CODE != 'OK' THEN
+            SIGNAL V_USER_EXCEPTION;
+        END IF;
+
+    ELSEIF I_APPROVE_STATUS_CODE = 'RJ' THEN
+
+
+    END IF;
+
 
 
     O_RETURN_CODE = 'OK';

@@ -47,8 +47,8 @@ sap.ui.define([
 			
             this.setModel(new ManagedModel(), "master");
             this.setModel(new ManagedModel(), "mstSpecView");
-			this.setModel(new ManagedListModel(), "schedule");
             this.setModel(new ManagedModel(), "spec");
+			this.setModel(new ManagedListModel(), "history");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.aDataModels.length = 0;

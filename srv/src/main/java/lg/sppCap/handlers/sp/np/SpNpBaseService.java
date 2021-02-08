@@ -3,8 +3,10 @@ package lg.sppCap.handlers.sp.np;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -32,6 +34,27 @@ public class SpNpBaseService {
 
     @Autowired
     protected SppUserSession userSession;
+
+
+
+    /**
+     * object 를 받아서, LocalDate로 변환
+     * 
+     * @param obj   : 현재는 java.sql.Date만 받지만, 향후는 Object를 받아, Class Type에 따라, 분기하여, 변환 될수 있게 수정 되어야 함.
+     * @return
+     */
+    //protected LocalDate toLocalDate(Object obj){
+    protected LocalDate toLocalDate(java.sql.Date obj){
+        if(obj == null){
+            return null;
+        }
+        /*
+        if(obj instanceof java.sql.Date){
+            return ((java.sql.Date)obj).toLocalDate();
+        }
+        */
+        return obj.toLocalDate();
+    }
 
     protected boolean isNotEmpty(Object value) {
         return !isEmpty(value);

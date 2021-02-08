@@ -201,6 +201,8 @@ sap.ui.define([
             },
             filterSearch: function (e) {
 
+                
+                this._searchFlag = "X";
 
                 // // 수정 작업일 때
                 // if(this._screenFlag == "U" ){
@@ -257,8 +259,17 @@ sap.ui.define([
                     filter_category_name = e.getParameters()[0].selectionSet[1].getValue();
                     filter_create_date = e.getParameters()[0].selectionSet[2].getValue();
                 }
-
+                filter_category_name = filter_category_name.trim(); //좌우 공백 제거
+                
                 var tab = this.getView().byId("treeTable");
+                tab.collapseAll();
+                if(e == "R"){
+                    tab.expandToLevel(1);  // 생성 및 수정 시, 펼치기
+                }else{
+                    tab.expandToLevel(0);
+                }
+                
+                
                 this.getView().getModel().refresh();
                 var oBinding = tab.getBinding("rows");
                 var oFilters = [];
@@ -325,32 +336,36 @@ sap.ui.define([
                     }
 
                     oBinding.filter(resultFilters, sap.ui.model.FilterType.Application);
-                    tab.collapseAll();
+                    
+                    // tab.collapseAll();
+                    
+                    
+                    
                 });
 
-                this.getView().byId("treeTable").getBinding("rows").attachDataReceived(function (data, aa) {
-                    firstRowCount = 0;
-                    var secondRowCount = 0;
-                    for (var i = 0; i < data.mParameters.data.results.length; i++) {
-                        var oRow = data.mParameters.data.results[i];
-                        for (var j = 0; j < initModel.length; j++) {
-                            var initRow = initModel[j];
-                            if (initRow.node_id == oRow.node_id) {
-                                break;
-                            }
-                            if (initModel.length == j + 1) {
-                                initModel.push(oRow);
-                            }
-                        }
-                    }
+                // this.getView().byId("treeTable").getBinding("rows").attachDataReceived(function (data, aa) {
+                //     firstRowCount = 0;
+                //     var secondRowCount = 0;
+                //     for (var i = 0; i < data.mParameters.data.results.length; i++) {
+                //         var oRow = data.mParameters.data.results[i];
+                //         for (var j = 0; j < initModel.length; j++) {
+                //             var initRow = initModel[j];
+                //             if (initRow.node_id == oRow.node_id) {
+                //                 break;
+                //             }
+                //             if (initModel.length == j + 1) {
+                //                 initModel.push(oRow);
+                //             }
+                //         }
+                //     }
 
-                    if (this._expande == true || this._expande == false) {
-                        return;
-                    } else {
-                        var resultCount = data.mParameters.data.results.length;
-                    }
+                //     if (this._expande == true || this._expande == false) {
+                //         return;
+                //     } else {
+                //         var resultCount = data.mParameters.data.results.length;
+                //     }
 
-                }.bind(this));
+                // }.bind(this));
 
                 //기존 끝
 
@@ -535,6 +550,7 @@ sap.ui.define([
                     oModel.refresh(true);
 
                     var tab = this.getView().byId("treeTable");
+                    
                     // this.getView().byId("treeTable").collapseAll(); 
                     // MICategoryHierarchyStructure(tenant_id='L2100',category_code='T32')
                     var cPath = "/MICategoryHierarchyStructure(tenant_id='L2100',category_code='" + this._category_code
@@ -670,6 +686,7 @@ sap.ui.define([
                     var smData = smModel.getData();
                     smData.screen = "M";
                     smModel.setData(smData);
+                    debugger;
                 }
 
 
@@ -1189,8 +1206,22 @@ sap.ui.define([
             },
             onAfterRendering: function (e) {
 
+                if (!this._firstFlag) {
+                    var oTreeTable = this.getView().byId("treeTable");
+                    var oBinding = oTreeTable.getBinding("rows");
 
 
+
+                    var oFilter1 = new sap.ui.model.Filter("filter_category_code", sap.ui.model.FilterOperator.Contains, "");
+
+
+                    oBinding.filter([oFilter1], sap.ui.model.FilterType.Application);
+
+                    this._firstFlag="X";
+                    
+                }
+
+                
                 //  oMultilingual.attachEvent("ready", function(oEvent){
 
                 //     var oi18nModel = oEvent.getParameter("model");
@@ -1231,6 +1262,7 @@ sap.ui.define([
 
                     var oLength = this.getView().byId("treeTable").getRows().length;
                     console.log("onAfterRendering, row:", oLength);
+                    
 
                 } else {
                     afterFlag = 1;
@@ -1240,6 +1272,7 @@ sap.ui.define([
 
 
                 // alert(afterFlag);
+                debugger;
                 if (afterFlag == -1 || this._lflag == "X") {
                     return;
                 }
@@ -1248,13 +1281,10 @@ sap.ui.define([
                 // this.getView().byId("treeTable").getBinding("rows").filter( resultFilters , sap.ui.model.FilterType.Application); 
                 this.filterSearch("R");
                 this._lflag = "X";
-                if (e != "D") {
-                    this.getView().byId("treeTable").expandToLevel(1);
-                }
+                // if (e != "D") {
+                //     this.getView().byId("treeTable").expandToLevel(1);
+                // }
 
-                // this.getView().byId("treeTable").getBinding().attachDataReceived(function(){
-                //     console.log("aaa : ",this.getView().getModel("I18N"));
-                // }, this);
 
                 return;
 

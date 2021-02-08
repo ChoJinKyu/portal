@@ -103,7 +103,7 @@ entity Sc_Nego_Headers {
         //    cancel_date : Date   @title: '취소일자' ;
         auto_rfq                        : String(1)          @title : 'Auto RFQ';
         items_count                     : Integer            @title : '품목수';
-        negotiation_style_code          : String(30)         @title : '협상스타일코드';
+        negotiation_style_code          : String(30)         @title : '협상스타일코드' @description : 'UI:Bid Style|Quote Style';
         negotiation_style : Association to one Sc_Negotiation_Style_Map
                             on    negotiation_style.tenant_id              = $self.tenant_id
                               and negotiation_style.nego_type_code         = $self.nego_type_code
@@ -300,6 +300,7 @@ view Sc_Nego_Workbench_View as select from Sc_Nego_Item_Prices as Items {
         Items.request_department_code                                                             ,
         Items.request_department.department_name as request_department_name                       ,
         Header.award_type_code                                                                    ,
+        Header.award_type.award_type_name as award_type_name                                      ,
         Header.buyer_empno                                                                        ,
         Header.buyer_employee.employee_name as buyer_empno_name                                   ,
         Header.buyer_department_code                                                              ,

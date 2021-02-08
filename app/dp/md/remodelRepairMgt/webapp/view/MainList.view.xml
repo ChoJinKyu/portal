@@ -247,7 +247,7 @@
                     <form:content>
                         <VBox>
                             <Label text="Specification Number"></Label>
-                            <Input id="searchSpecificationNumber" width="100%"/>
+                            <Input id="searchEcoNumber" width="100%"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
                             </layoutData>
@@ -267,20 +267,20 @@
                             </layoutData>
                         </VBox>-->
                         <VBox>
-                            <Label text="Type " labelFor="searchType"></Label>
-                            <MultiComboBox   id="searchItemType" width="100%"
+                            <Label text="Type " labelFor="searchRepairType"></Label>
+                            <ComboBox   id="searchRepairType" width="100%"
                                         selectedKey=""
                                         items="{
                                             path : 'util>/Code',
                                             filters : [
                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_REPAIR_TYPE'}
                                             ],
                                             sorter: { path: 'sort_no'}
                                         }"
                             >
                                 <core:Item key="{util>code}" text="{util>code_name}" />
-                            </MultiComboBox>
+                            </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -365,12 +365,12 @@
                     selectionMode="None"
                     fixedColumnCount="12"
                     visibleRowCountMode="Auto"
-                    rows="{list>/MoldMstView}"
+                    rows="{list>/RepairMstAssetView}"
                     cellClick=".onMainTableItemPress"
                     rowSelectionChange=".onCheck">
                 <table:extension>
                     <OverflowToolbar>
-                        <Title text="List ({= ${list>/MoldMstView}.length || 0})" level="H2"/>
+                        <Title text="List ({= ${list>/RepairMstAssetView}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
                         <!-- Add the Personalization button -->
                         <Button id="moldMstTableBindButton"   type="Transparent" text="New"    press=".onMainTableNewButtonPress"   />
@@ -390,7 +390,7 @@
                         <Label text=" "/>
                         <table:template>
                             <CheckBox id="chk" selected="{list>chk}" select=".setIdSelect"
-                            visible="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>set_progress_status} === 'DEV_RCV') ? true : false }" />
+                            visible="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>repair_progress_status_code} === 'DEV_RCV') ? true : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldCompanyColumn" width="4em" hAlign="Center">
@@ -406,27 +406,21 @@
                         </table:template>
                     </table:Column>
                     <table:Column width="13em">
-                        <Label text="Request No" wrapping="true"/>
-                        <table:template>
-                            <Text text="{list>mold_progress_status_name}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column width="13em">
                         <Label text="Order Sheet No" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>mold_progress_status_name}"/>
+                            <Text text="{list>repair_request_number}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="4em">
                         <Label text="{I18N>/TYPE}" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>mold_sequence}"/>
+                            <Text text="{list>repair_type_code}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetNoColumn" width="12em">
                         <Label text="Asset No" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>mold_number}"/>
+                            <Text text="{list>asset_number}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldNoColumn" width="12em">
@@ -444,19 +438,19 @@
                     <table:Column id="moldRequestDateColumn" width="10em" hAlign="Center">
                         <Label text="Request {I18N>/DATE}" wrapping="true"/>
                         <table:template>
-                            <Text id="local_create_dtm" text="{path: 'list>local_create_dtm', formatter: '.dateFormatter.toDateString'}"/>
+                            <Text id="repair_request_date" text="{path: 'list>repair_request_date', formatter: '.dateFormatter.toDateString'}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldStatusColumn" width="13em">
                         <Label text="{I18N>/STATUS}" wrapping="true"/>
                         <table:template>
-                            <Text id="mold_progress_status_name" text="{list>mold_progress_status_name}"/>
+                            <Text id="repair_progress_status_name" text="{list>repair_progress_status_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="13em">
                         <Label text="Title" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>mold_progress_status_name}"/>
+                            <Text text="{list>repair_desc}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldModelColumn" width="10em" >
@@ -468,13 +462,13 @@
                     <table:Column id="moldDescriptionColumn" width="10em">
                         <Label text="{I18N>/DESCRIPTION}" wrapping="true"/>
                         <table:template>
-                            <Text id="spec_name" text="{list>spec_name}"/>
+                            <Text id="class_desc" text="{list>class_desc}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="5em" hAlign="Center">
                         <Label text="Prod Supplier"/>
                         <table:template>
-                            <Text text="{list>set_id}"/>
+                            <Text text="{list>production_supplier_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="20em" hAlign="Center">
@@ -486,25 +480,25 @@
                     <table:Column width="20em" hAlign="Center">
                         <Label text="Suppliers Remark" wrapping="true"/>
                         <table:template>
-                            <TextArea value="{list>remark}" rows="2" width="100%" editable="false" />
+                            <TextArea value="{list>repair_reason}" rows="2" width="100%" editable="false" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldRequesterColumn" width="12em" hAlign="Center">
                         <Label text="Requester" wrapping="true"/>
                         <table:template>
-                            <Text id="mold_develope_requestor_name" text="{list>mold_develope_requestor_name}"/>
+                            <Text id="create_user_id" text="{list>create_user_id}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="13em">
                         <Label text="Family Part No" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>mold_progress_status_name}"/>
+                            <Text text="{list>family_part_numbers}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="13em">
                         <Label text="Tool Type" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>mold_progress_status_name}"/>
+                            <Text text="{list>mold_item_type_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldAttachColumn" width="8em" hAlign="Center">
@@ -522,52 +516,52 @@
                     <table:Column id="moldProjectNameColumn" width="20em">
                         <Label text="Factor" wrapping="true"/>
                         <table:template>
-                            <Text id="pdm_project_name" text="{list>pdm_project_name}"/>
+                            <Text id="repair_factor" text="{list>repair_factor}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="13em">
                         <Label text="Specification Number" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>mold_progress_status_name}"/>
+                            <Text text="{list>eco_number}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="crrencyColumn" width="6em" hAlign="Center">
                         <Label text="Currency"/>
                         <table:template>
-                            <Text id="currency" text="{list>book_currency_code}" textAlign="Center"/>
+                            <Text id="currency" text="{list>currency_code}" textAlign="Center"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="7em" hAlign="Center">
                         <Label text="Estimate Amount" wrapping="true"/>
                         <table:template>
-                            <Text text="{path: 'list>provisional_budget_amount', formatter: '.numberFormatter.toNumberString'}" textAlign="Right" />
+                            <Text text="{path: 'list>repair_quotation_amount', formatter: '.numberFormatter.toNumberString'}" textAlign="Right" />
                         </table:template>
                     </table:Column>
                     <table:Column width="7em" hAlign="Center">
                         <Label text="Req Amount" wrapping="true"/>
                         <table:template>
-                            <Text text="{path: 'list>provisional_budget_amount', formatter: '.numberFormatter.toNumberString'}" textAlign="Right" />
+                            <Text text="{path: 'list>repair_amount', formatter: '.numberFormatter.toNumberString'}" textAlign="Right" />
                         </table:template>
                     </table:Column>
                     <table:Column width="13em">
                         <Label text="Investment/Cost" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>mold_progress_status_name}"/>
+                            <Text text="{list>investment_ecst_type_code}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="13em">
                         <Label text="Account" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>mold_progress_status_name}"/>
+                            <Text text="{list>account_code}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="13em">
+                    <!--<table:Column width="13em">
                         <Label text="Receipt estimation Status" wrapping="true"/>
                         <table:template>
                             <Text text="{list>mold_progress_status_name}"/>
                         </table:template>
                     </table:Column>
-                    <!--<table:Column id="moldItemTypeColumn" width="9em" hAlign="Center">
+                    <table:Column id="moldItemTypeColumn" width="9em" hAlign="Center">
                         <Label text="Item Type" required="true" wrapping="true"/>
                         <table:template>
                             <Text id="mold_item_type_code" text="{list>mold_item_type_code}"/>

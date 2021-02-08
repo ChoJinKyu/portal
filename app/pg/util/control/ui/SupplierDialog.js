@@ -194,8 +194,8 @@ sap.ui.define([
                     // Pop 내부에 값을 올려주기 위해 구성
                     this.oSupplierDialogPop.setContentWidth("300px");
                     var sSearchObj = {};
-                    sSearchObj.tanentId = "L2100"; // 세션임시값
-                    sSearchObj.languageCd = "KO";  // 세션임시값
+                    //sSearchObj.tanentId = "L2100"; // 세션임시값
+                    //sSearchObj.languageCd = "KO";  // 세션임시값
                     sSearchObj.companyCode = that.oCompany.getValue();
                     sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey();
 
@@ -236,12 +236,12 @@ sap.ui.define([
 
                     this.oMaterialDialogPop.setContentWidth("300px");
                     var sSearchObj = {};
-                    sSearchObj.tanentId = "L2100"; //세션 임시값
-                    sSearchObj.languageCd = "CN";  //세션 임시값
+                    //sSearchObj.tanentId = "L2100"; //세션 임시값
+                    //sSearchObj.languageCd = "CN";  //세션 임시값
                     sSearchObj.companyCode = that.oCompany.getValue();
                     sSearchObj.materialCode = that.oMaterialCode.getValue();
-                    sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey()
-                    sSearchObj.orgUnitCode = that.oOperationUnitComb.getSelectedKey()
+                    sSearchObj.orgCode = that.oOperationOrgComb.getSelectedKey();
+                    //sSearchObj.orgUnitCode = that.oOperationUnitComb.getSelectedKey();
 
                     this.oMaterialDialogPop.open(sSearchObj);
 
@@ -612,7 +612,7 @@ sap.ui.define([
             }
 
             if (!!this.oOperationUnitComb.getSelectedKey()) {
-                aFilters.push(new Filter("operation_unit_code", FilterOperator.EQ, this.oOperationUnitComb.getSelectedKey()));
+                //aFilters.push(new Filter("operation_unit_code", FilterOperator.EQ, this.oOperationUnitComb.getSelectedKey()));
             }
 
 

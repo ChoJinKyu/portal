@@ -9,7 +9,7 @@ service RrMgtListService {
 
     view remodelRepairDetail as 
         select key mst.tenant_id 
-            , mst.mold_id 
+            , key mst.mold_id 
             , item.repair_request_number 
             , item.create_user_id 
             , item.repair_request_date 

@@ -127,7 +127,7 @@ sap.ui.define([
 					});
 					that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
             });
-            }, 1000);
+            }, 1500);
         },
 
         onInit: function () {
@@ -270,9 +270,13 @@ sap.ui.define([
                             // item_sequence 데이터 타입을 int로 변경
                             oDetail.item_sequence = parseInt(oDetail.item_sequence);
 
+                            if( oDetail.base_date ) {
+                                oDetail.base_date = this._changeDateString(oDetail.base_date, "-");
+                            }
+
                             // metatdata 삭제
                             delete oDetail.__metadata;
-                        });
+                        }.bind(this));
 
                         aPriceFilters.push(new Filter({
                             filters: aItemSequenceFilter,
@@ -292,27 +296,30 @@ sap.ui.define([
                                 for( var k=0; k<aDetails.length; k++ ) {
                                     if( aDetails[k].item_sequence === oPrice.item_sequence ) {
                                         aDetails[k].prices = aDetails[k].prices ? aDetails[k].prices : [{}, {}, {}];
+
+                                        // new_base_price, current_base_price, first_purchasing_net_price 데이터 타입을 float로 변경
+                                        if( oPrice.new_base_price ) {
+                                            oPrice.new_base_price = parseFloat(oPrice.new_base_price);
+                                        }
+                                        if( oPrice.current_base_price ) {
+                                            oPrice.current_base_price = parseFloat(oPrice.current_base_price);
+                                        }
+                                        if( oPrice.first_purchasing_net_price ) {
+                                            oPrice.first_purchasing_net_price = parseFloat(oPrice.first_purchasing_net_price);
+                                        }
+                                        if( oPrice.first_pur_netprice_str_dt ) {
+                                            oPrice.first_pur_netprice_str_dt = this._changeDateString(oPrice.first_pur_netprice_str_dt, "-");
+                                        }
+
                                         aDetails[k].prices[oPrice.market_code] = oPrice;
                                         break;
                                     }
-                                }
-
-                                // new_base_price, current_base_price, first_purchasing_net_price 데이터 타입을 int로 변경
-                                // 저장, 수정할 때 데이터 타입이 Decimal
-                                if( oPrice.new_base_price ) {
-                                    oPrice.new_base_price = parseFloat(oPrice.new_base_price);
-                                }
-                                if( oPrice.current_base_price ) {
-                                    oPrice.current_base_price = parseFloat(oPrice.current_base_price);
-                                }
-                                if( oPrice.first_purchasing_net_price ) {
-                                    oPrice.first_purchasing_net_price = parseFloat(oPrice.first_purchasing_net_price);
                                 }
                             }
 
                             oDetailModel.refresh();
                             oView.setBusy(false);
-                        });
+                        }.bind(this));
                     }.bind(this));
 
                     // Approver 조회
@@ -493,9 +500,9 @@ sap.ui.define([
                     oDetailModel.setProperty(sSelectedPath+"/prices/" + i + "/new_base_price_currency_code", null);
                 }
             }else {
-                oDetailModel.setProperty(sSelectedPath+"/family_material_code", null);
-                oDetailModel.setProperty(sSelectedPath+"/family_supplier_code", null);
-                oDetailModel.setProperty(sSelectedPath+"/family_supplier_name", null);
+                oDetailModel.setProperty(sSelectedPath+"/repr_material_code", null);
+                oDetailModel.setProperty(sSelectedPath+"/repr_material_supplier_code", null);
+                oDetailModel.setProperty(sSelectedPath+"/repr_material_supplier_name", null);
             }
 
             if( oDetailModel.getProperty("/approval_type_code") === "VI10" ) {
@@ -511,17 +518,19 @@ sap.ui.define([
             var oDetailModel = this.getModel("detailModel");
             var aDetails = oDetailModel.getProperty("/details");
             var aPrice = [{market_code: "0"}, {market_code: "1"}, {market_code: "2"}];
-            var oDefault = {base_date:new Date((new Date().getFullYear()-1)+"-12-31"), 
-                        company_code: "LGCKR",
-                        purOrg: this.getModel("rootModel").getProperty("/purOrg/LGCKR"),
-                        org_code: "",
-                        org_type_code: "PU",
-                        base_price_ground_code: "COST",
-                        prices: aPrice
+            var oDefault = {
+                            company_code: "LGCKR",
+                            purOrg: this.getModel("rootModel").getProperty("/purOrg/LGCKR"),
+                            org_code: "",
+                            org_type_code: "PU",
+                            base_price_ground_code: "COST",
+                            prices: aPrice
                         };
 
             if( oDetailModel.getProperty("/approval_type_code") === "VI20" ) {
                 oDefault.change_reason_code = "10";
+            }else {
+                oDefault.base_date = (new Date().getFullYear()-1)+"-12-31";
             }            
 
             aDetails.unshift(oDefault);
@@ -610,11 +619,9 @@ sap.ui.define([
                     delete oDetail.system_create_dtm;
                     delete oDetail.system_update_dtm;
                     delete oDetail.purOrg;
-                    delete oDetail.family_material_code;
-                    delete oDetail.family_supplier_code;
-                    delete oDetail.family_supplier_name;
+                    delete oDetail.repr_material_supplier_name;
                     delete oDetail.change_reason_nm;
-                    oDetail.base_date = this._changeDateString(oDetail.base_date, "-");
+                    //oDetail.base_date = this._changeDateString(oDetail.base_date, "-");
 
                     // DB에 저장된 config에 따라 필요없는 데이터 삭제
                     if( oMarketCodeConfig.DP_VI_MARKETCODE2_DISPLAY_FLAG !== "Y" ) {
@@ -634,9 +641,9 @@ sap.ui.define([
                         delete oPrice.system_create_dtm;
                         delete oPrice.system_update_dtm;
 
-                        if( oPrice.first_pur_netprice_str_dt ) {
-                            oPrice.first_pur_netprice_str_dt = this._changeDateString(oPrice.first_pur_netprice_str_dt, "-");
-                        }
+                        // if( oPrice.first_pur_netprice_str_dt ) {
+                        //     oPrice.first_pur_netprice_str_dt = this._changeDateString(oPrice.first_pur_netprice_str_dt, "-");
+                        // }
                     }.bind(this));
                 }.bind(this));
             }
@@ -719,6 +726,11 @@ sap.ui.define([
                 MessageBox.error("품의제목은(는) 필수 입력값 입니다. 품의제목을(를) 입력하세요.");
                 return false;
             }
+
+            if( !oDetail.approval_contents ) {
+                oDetail.approval_contents = this.byId("idVerticalLayout").getContent()[0].getValue();
+            }
+
             if( !oDetail.approval_contents ) {
                 MessageBox.error("품의설명은(는) 필수 입력값 입니다. 품의설명을(를) 입력하세요.");
                 return false;
@@ -1012,44 +1024,14 @@ sap.ui.define([
 
             oDialog.setBusy(true);
 
-            oModel.read("/Base_Price_Mst", {
+            oModel.read("/Price_Master_Vw", {
                 filters : aFilters,
                 urlParameters: {
-                    "$orderby": "tenant_id,company_code,org_code,org_type_code,material_code,supplier_code,item_sequence"
+                    "$orderby": "tenant_id,company_code,org_code,org_type_code,material_code,supplier_code"
                 },
                 success: function(data) {
-                    var aFmailyMaterialCodes = data.results;
-                    var aReMakeFmailyMaterialCodes = [];
-                    var oReMakeFmailyMaterialCode;
-                    var aKeys = [];
-
-                    aFmailyMaterialCodes.forEach(function (oFmailyMaterialCode) {
-                        var oPrice = {};
-                        var sKey = oFmailyMaterialCode.tenant_id + oFmailyMaterialCode.company_code + oFmailyMaterialCode.org_code +
-                                    oFmailyMaterialCode.org_type_code + oFmailyMaterialCode.material_code + oFmailyMaterialCode.supplier_code;
-
-                        if( -1 === aKeys.indexOf(sKey) ) {
-                            oReMakeFmailyMaterialCode = $.extend(true, {}, oFmailyMaterialCode);
-                            oReMakeFmailyMaterialCode.prices = [{}, {}, {}];
-                            aReMakeFmailyMaterialCodes.push(oReMakeFmailyMaterialCode);
-                        }
-
-                        oPrice.market_code = oFmailyMaterialCode.market_code;
-                        oPrice.current_price = oFmailyMaterialCode.new_base_price;
-                        oPrice.current_price_currency_code = oFmailyMaterialCode.new_base_price_currency_code;
-                        oPrice.current_price_start_date = oFmailyMaterialCode.base_date;
-                        oPrice.base_price = oFmailyMaterialCode.first_purchasing_net_price;
-                        oPrice.base_price_currency_code = oFmailyMaterialCode.first_pur_netprice_curr_cd;
-                        oPrice.base_date = oFmailyMaterialCode.base_date;
-                        oPrice.new_base_price = oFmailyMaterialCode.new_base_price;
-                        oPrice.new_base_price_currency_code = oFmailyMaterialCode.new_base_price_currency_code;
-                        //oPrice.new_base_price_start_date = oFmailyMaterialCode.base_date;
-
-                        oReMakeFmailyMaterialCode.prices[oPrice.market_code] = oPrice;
-                    });
-
                     var oDialogModel = this.getModel("dialogModel");
-                    oDialogModel.setProperty("/familyMaterialCode", aReMakeFmailyMaterialCodes);
+                    oDialogModel.setProperty("/familyMaterialCode", data.results);
 
                     oDialog.setBusy(false);
                 }.bind(this),
@@ -1069,35 +1051,33 @@ sap.ui.define([
             var oSelectedData = this.getModel("dialogModel").getProperty(sPath);
             var oDetailModel = this.getModel("detailModel");
             var oDetail = oDetailModel.getProperty(_sSelectedDialogPath);
+            var oMarketCodeConfig = this.getModel("rootModel").getProperty("/config");
 
             if( oDetailModel.getProperty("/approval_type_code") === "VI10" ) {
-                oDetail.supplier_code = oSelectedData.supplier_code;
-                oDetail.supplier_local_name = oSelectedData.supplier_local_name;
-
-                for( var i=0; i<3; i++ ) {
-                    oDetail.prices[i].new_base_price = parseFloat(oSelectedData.current_price);
-                    oDetail.prices[i].new_base_price_currency_code = oSelectedData.prices[i].current_price_currency_code;
+                if( oMarketCodeConfig["DP_VI_MARKETCODE2_DISPLAY_FLAG"] === "Y" ) {
+                    oDetail.prices[2].new_base_price = parseFloat(oSelectedData["nn_net_price_2"]) || parseFloat(oSelectedData["nn_net_price_1"]);
+                    oDetail.prices[2].new_base_price_currency_code = oSelectedData["nn_currency_code_2"] || oSelectedData["nn_currency_code_1"];
+                }
+                if( oMarketCodeConfig["DP_VI_MARKETCODE1_DISPLAY_FLAG"] === "Y" ) {
+                    oDetail.prices[1].new_base_price = parseFloat(oSelectedData["nn_net_price_1"]) || parseFloat(oSelectedData["nn_net_price_2"]);
+                    oDetail.prices[1].new_base_price_currency_code = oSelectedData["nn_currency_code_1"] || oSelectedData["nn_currency_code_2"];
+                }
+                if( oMarketCodeConfig["DP_VI_MARKETCODE0_DISPLAY_FLAG"] === "Y" ) {
+                    oDetail.prices[0].new_base_price = parseFloat(oSelectedData["nn_net_price_0"]);
+                    oDetail.prices[0].new_base_price_currency_code = oSelectedData["nn_currency_code_0"];
                 }
             }else {
-                var oMarketCodeConfig = this.getModel("rootModel").getProperty("/config");
-
-                if( oSelectedData.market_code === "2" && oMarketCodeConfig.DP_VI_MARKETCODE2_DISPLAY_FLAG === "Y" ) {
-                    oDetail.prices[2].new_base_price = parseFloat(oSelectedData.prices[2].current_price);
-                    oDetail.prices[2].new_base_price_currency_code = oSelectedData.prices[2].current_price_currency_code;
-                }
-                if( oSelectedData.market_code === "1" &&  oMarketCodeConfig.DP_VI_MARKETCODE1_DISPLAY_FLAG === "Y" ) {
-                    oDetail.prices[1].new_base_price = parseFloat(oSelectedData.prices[1].current_price);
-                    oDetail.prices[1].new_base_price_currency_code = oSelectedData.prices[1].current_price_currency_code;
-                }
-                if( oSelectedData.market_code === "0" &&  oMarketCodeConfig.DP_VI_MARKETCODE0_DISPLAY_FLAG === "Y" ) {
-                    oDetail.prices[0].new_base_price = parseFloat(oSelectedData.prices[0].current_price);
-                    oDetail.prices[0].new_base_price_currency_code = oSelectedData.prices[0].current_price_currency_code;
+                for( var k=0; k<3; k++ ) {
+                    if( oMarketCodeConfig["DP_VI_MARKETCODE"+k+"_DISPLAY_FLAG"] === "Y" ) {
+                        oDetail.prices[k].new_base_price = parseFloat(oSelectedData["nn_net_price_"+k]);
+                        oDetail.prices[k].new_base_price_currency_code = oSelectedData["nn_currency_code_"+k];
+                    }
                 }
             }
 
-            oDetail.family_material_code = oSelectedData.material_code;
-            oDetail.family_supplier_code = oSelectedData.supplier_code;
-            oDetail.family_supplier_name = oSelectedData.supplier_local_name;
+            oDetail.repr_material_code = oSelectedData.material_code;
+            oDetail.repr_material_supplier_code = oSelectedData.supplier_code;
+            oDetail.repr_material_supplier_name = oSelectedData.supplier_local_name;
 
             oDetailModel.refresh();
 
@@ -1175,20 +1155,22 @@ sap.ui.define([
                     if( sTypeFlag === "Change" ) {
                         this._oDetail.supplier_code = oSelectedDialogItem.supplier_code;
                         this._oDetail.supplier_local_name = oSelectedDialogItem.supplier_local_name;
-                        this._oDetail.base_date = oSelectedDialogItem.base_date;
-                        this._oDetail.base_price_ground_code = oSelectedDialogItem.base_price_ground_code;
-
+                        this._oDetail.base_date = this._changeDateString(oSelectedDialogItem["nn_start_date_1"], "-");
                         this._oDetail.prices = this._oDetail.prices ? this._oDetail.prices : [{}, {}, {}];
-                        this._oDetail.prices[oSelectedDialogItem.market_code] = {
-                            market_code: oSelectedDialogItem.market_code,
-                            current_base_price: parseFloat(oSelectedDialogItem.first_purchasing_net_price),
-                            current_base_price_currency_code: oSelectedDialogItem.first_pur_netprice_curr_cd,
-                            //new_base_price: parseFloat(oSelectedDialogItem.new_base_price),
-                            //new_base_price_currency_code: oSelectedDialogItem.new_base_price_currency_code,
-                            first_pur_netprice_str_dt: oSelectedDialogItem.first_pur_netprice_str_dt,
-                            first_purchasing_net_price: parseFloat(oSelectedDialogItem.first_purchasing_net_price),
-                            first_pur_netprice_curr_cd: oSelectedDialogItem.first_pur_netprice_curr_cd
-                        };
+
+                        var oMarketCodeConfig = this.getModel("rootModel").getProperty("/config");
+
+                        for( var k=0; k<3; k++ ) {
+                             if( oMarketCodeConfig["DP_VI_MARKETCODE"+k+"_DISPLAY_FLAG"] === "Y" ) {
+                                //this._oDetail.prices[k].base_date = oSelectedDialogItem["nn_start_date_"+k];
+                                this._oDetail.prices[k].current_base_price = oSelectedDialogItem["nn_net_price_"+k] ? parseFloat(oSelectedDialogItem["nn_net_price_"+k]) : oSelectedDialogItem["nn_net_price_"+k];
+                                this._oDetail.prices[k].current_base_price_currency_code = oSelectedDialogItem["nn_currency_code_"+k];
+
+                                this._oDetail.prices[k].first_purchasing_net_price = oSelectedDialogItem["first_purchasing_net_price_"+k] ? parseFloat(oSelectedDialogItem["first_purchasing_net_price_"+k]) : oSelectedDialogItem["first_purchasing_net_price_"+k];
+                                this._oDetail.prices[k].first_pur_netprice_curr_cd = oSelectedDialogItem["first_pur_netprice_curr_cd_"+k];
+                                this._oDetail.prices[k].first_pur_netprice_str_dt = oSelectedDialogItem["first_pur_netprice_str_dt_"+k] ? this._changeDateString(oSelectedDialogItem["first_pur_netprice_str_dt_"+k], "-") : oSelectedDialogItem["first_pur_netprice_str_dt_"+k];
+                            }
+                        }
                     }
 
                     oEvent.getSource().close();
@@ -1564,8 +1546,8 @@ sap.ui.define([
         },
 
        onMultiInputWithEmployeeValuePressReferer: function(){ 
-            if(!this.oEmployeeMultiSelectionValueHelp){
-               this.oEmployeeMultiSelectionValueHelp = new EmployeeDeptDialog({
+            if(!this.oEmployeeMultiSelectionValueHelpReferer){
+               this.oEmployeeMultiSelectionValueHelpReferer = new EmployeeDeptDialog({
                     title: "Choose Referer",
                     multiSelection: true,
                     items: {
@@ -1574,13 +1556,13 @@ sap.ui.define([
                         ]
                     }
                 });
-                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+                this.oEmployeeMultiSelectionValueHelpReferer.attachEvent("apply", function(oEvent){
                     this.byId("referMulti").setTokens(oEvent.getSource().getTokens());
                  
                 }.bind(this));
             }
-            this.oEmployeeMultiSelectionValueHelp.open();
-            this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("referMulti").getTokens());
+            this.oEmployeeMultiSelectionValueHelpReferer.open();
+            this.oEmployeeMultiSelectionValueHelpReferer.setTokens(this.byId("referMulti").getTokens());
         },
 
 

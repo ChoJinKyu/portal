@@ -189,8 +189,16 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox visible="{mainPageView>/visible/vbox_maker_code}">
-                                                <Label design="Bold" text="{I18N>/MAKER_CODE}" required="{mainPageView>/required}"/>
-                                                <Input id="input_maker_code" value="{writeModel>/generalInfo/maker_code}" visible="{mainPageView>/visible/maker_code}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/MAKER_CODE}" required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_maker_code"
+                                                    value="{
+                                                        path: 'writeModel>/generalInfo/maker_code',
+                                                        type: 'sap.ui.model.type.String',
+                                                        constraints: {
+                                                            maxLength: 10
+                                                        }
+                                                    }" 
+                                                    visible="{mainPageView>/visible/maker_code}" required="{mainPageView>/required/basic}"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/maker_code',
                                                         type:'sap.ui.model.odata.type.String'
@@ -200,8 +208,16 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/TAX_ID}" required="{mainPageView>/required}"/>
-                                                <Input id="input_tax_id" value="{writeModel>/generalInfo/tax_id}" visible="{mainPageView>/visible/tax_id}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/TAX_ID}" required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_tax_id" 
+                                                    value="{
+                                                        path: 'writeModel>/generalInfo/tax_id',
+                                                        type: 'sap.ui.model.type.String',
+                                                        constraints: {
+                                                            maxLength: 30
+                                                        }
+                                                    }" 
+                                                    visible="{mainPageView>/visible/tax_id}" required="{mainPageView>/required/basic}"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/tax_id',
                                                         type:'sap.ui.model.odata.type.String'
@@ -211,8 +227,16 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/MAKER_LOCAL_NAME}" required="{mainPageView>/required}"/>
-                                                <Input id="input_maker_local_name" value="{writeModel>/generalInfo/maker_local_name}" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/MAKER_LOCAL_NAME}" required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_maker_local_name" 
+                                                    value="{
+                                                        path: 'writeModel>/generalInfo/maker_local_name',
+                                                        type: 'sap.ui.model.type.String',
+                                                        constraints: {
+                                                            maxLength: 240
+                                                        }
+                                                    }" 
+                                                    visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required/basic}"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/maker_local_name',
                                                         type:'sap.ui.model.odata.type.String'
@@ -222,8 +246,18 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/MAKER_ENGLISH_NAME}" required="{mainPageView>/required}"/>
-                                                <Input id="input_maker_english_name" value="{writeModel>/generalInfo/maker_english_name}" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required}"/>
+
+                                                <Label design="Bold" text="{I18N>/MAKER_ENGLISH_NAME}" required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_maker_english_name" 
+                                                value="{
+                                                    path: 'writeModel>/generalInfo/maker_english_name', 
+                                                    type: 'sap.ui.model.type.String',
+                                                    constraints: {
+                                                        search: '^((?![ㄱ-ㅎ가-힣]).)*$',
+                                                        maxLength: 240
+                                                    }
+                                                }"
+                                                    visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required/basic}"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/maker_english_name',
                                                         type:'sap.ui.model.odata.type.String'
@@ -233,9 +267,9 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/COUNTRY}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/COUNTRY}" required="{mainPageView>/required/basic}"/>
                                                 <ComboBox id="combobox_country_code" width="100%" change=".onChangeCombobox" visible="{mainPageView>/visible/country_code}"
-                                                        placeholder=" " required="{mainPageView>/required}"
+                                                        placeholder=" " required="{mainPageView>/required/basic}"
                                                         selectedKey="{writeModel>/generalInfo/country_code}" 
                                                         items="{
                                                         path: '/MakerCountryManagement',
@@ -256,8 +290,16 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox id="vbox_vat_number" visible="{mainPageView>/visible/vbox_vat_number}">
-                                                <Label design="Bold" text="{I18N>/VAT_NUMBER}" required="{mainPageView>/enabled/vat_number}"/>
-                                                <Input id="input_vat_number" value="{writeModel>/generalInfo/vat_number}" enabled ="{mainPageView>/enabled/vat_number}" visible="{mainPageView>/visible/country_code}"  required="{mainPageView>/visible/country_code}"/>
+                                                <Label design="Bold" text="{I18N>/VAT_NUMBER}" required="{mainPageView>/required/vat_number}"/>
+                                                <Input id="input_vat_number" 
+                                                    value="{
+                                                        path: 'writeModel>/generalInfo/vat_number',
+                                                        type: 'sap.ui.model.type.String',
+                                                        constraints: {
+                                                            maxLength: 30
+                                                        }
+                                                    }" 
+                                                    enabled ="{mainPageView>/enabled/vat_number}" visible="{mainPageView>/visible/country_code}"  required="{mainPageView>/required/required/vat_number}"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/vat_number',
                                                         type:'sap.ui.model.odata.type.String'
@@ -267,9 +309,9 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/STATUS}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/STATUS}" required="{mainPageView>/required/basic}"/>
                                                 <ComboBox id="combobox_maker_status_code" width="100%"  change=".onChangeCombobox" visible="{mainPageView>/visible/isEditable}"
-                                                        placeholder=" "  required="{mainPageView>/required}"
+                                                        placeholder=" "  required="{mainPageView>/required/basic}"
                                                         selectedKey="{writeModel>/generalInfo/maker_status_code}" 
                                                         items="{
                                                         path: '/BusinessPartnerStatusView',
@@ -290,8 +332,16 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/ZIP_CODE}" required="{mainPageView>/required}"/>
-                                                <Input id="input_zip_code" value="{writeModel>/generalInfo/zip_code}" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/ZIP_CODE}" required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_zip_code" 
+                                                    value="{
+                                                        path: 'writeModel>/generalInfo/zip_code',
+                                                        type: 'sap.ui.model.type.String',
+                                                        constraints: {
+                                                            maxLength: 20
+                                                        }
+                                                    }" 
+                                                    visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required/basic}"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/isEdit',
                                                         type:'sap.ui.model.odata.type.String'
@@ -301,9 +351,16 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/MAKER_LOCAL_CITY}" required="{mainPageView>/required}"/>
-                                                <Input id="input_maker_local_city" value="{writeModel>/generalInfo/maker_local_city}" 
-                                                    change=".onChangeAddress" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/MAKER_LOCAL_CITY}" required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_maker_local_city" 
+                                                    value="{
+                                                        path: 'writeModel>/generalInfo/maker_local_city',
+                                                        type: 'sap.ui.model.type.String',
+                                                        constraints: {
+                                                            maxLength: 240
+                                                        }
+                                                    }"
+                                                    change=".onChangeAddress" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required/basic}"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/maker_local_city',
                                                         type:'sap.ui.model.odata.type.String'
@@ -313,9 +370,16 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/MAKER_LOCAL_REGION}" required="{mainPageView>/required}"/>
-                                                <Input id="input_maker_local_region" value="{writeModel>/generalInfo/maker_local_region}" 
-                                                    change=".onChangeAddress" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/MAKER_LOCAL_REGION}" required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_maker_local_region" 
+                                                    value="{
+                                                        path: 'writeModel>/generalInfo/maker_local_region',
+                                                        type: 'sap.ui.model.type.String',
+                                                        constraints: {
+                                                            maxLength: 240
+                                                        }
+                                                    }"
+                                                    change=".onChangeAddress" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required/basic}"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/maker_local_region',
                                                         type:'sap.ui.model.odata.type.String'
@@ -325,9 +389,16 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/MAKER_LOCAL_ADDRESS}" required="{mainPageView>/required}"/>
-                                                <Input id="input_maker_local_address" value="{writeModel>/generalInfo/maker_local_address}" 
-                                                    change=".onChangeAddress" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/MAKER_LOCAL_ADDRESS}" required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_maker_local_address" 
+                                                    value="{
+                                                        path: 'writeModel>/generalInfo/maker_local_address',
+                                                        type: 'sap.ui.model.type.String',
+                                                        constraints: {
+                                                            maxLength: 240
+                                                        }
+                                                    }"
+                                                    change=".onChangeAddress" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required/basic}"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/maker_local_address',
                                                         type:'sap.ui.model.odata.type.String'
@@ -337,8 +408,8 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/MAKER_LOCAL_FULL_ADDRESS}" required="{mainPageView>/required}"/>
-                                                <Input id="input_maker_local_full_address" value="{writeModel>/generalInfo/maker_local_full_address}" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required}"
+                                                <Label design="Bold" text="{I18N>/MAKER_LOCAL_FULL_ADDRESS}" required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_maker_local_full_address" value="{writeModel>/generalInfo/maker_local_full_address}" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required/basic}"
                                                     placeholder="City + Region + Address 입력된 정보로 시스템에서 자동으로 생성" enabled="false"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/maker_local_full_address',
@@ -349,9 +420,17 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/MAKER_ENGLISH_CITY}" required="{mainPageView>/required}"/>
-                                                <Input id="input_maker_english_city" value="{writeModel>/generalInfo/maker_english_city}" 
-                                                    change=".onChangeAddress" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/MAKER_ENGLISH_CITY}" required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_maker_english_city" 
+                                                    value="{
+                                                        path: 'writeModel>/generalInfo/maker_english_city', 
+                                                        type: 'sap.ui.model.type.String',
+                                                        constraints: {
+                                                            search: '^((?![ㄱ-ㅎ가-힣]).)*$',
+                                                            maxLength: 240
+                                                        }
+                                                    }"
+                                                    change=".onChangeAddress" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required/basic}"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/maker_english_city',
                                                         type:'sap.ui.model.odata.type.String'
@@ -361,9 +440,17 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/MAKER_ENGLISH_REGION}" required="{mainPageView>/required}"/>
-                                                <Input id="input_maker_english_region" value="{writeModel>/generalInfo/maker_english_region}" 
-                                                    change=".onChangeAddress" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/MAKER_ENGLISH_REGION}" required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_maker_english_region"
+                                                    value="{
+                                                        path: 'writeModel>/generalInfo/maker_english_region', 
+                                                        type: 'sap.ui.model.type.String',
+                                                        constraints: {
+                                                            search: '^((?![ㄱ-ㅎ가-힣]).)*$',
+                                                            maxLength: 240
+                                                        }
+                                                    }"
+                                                    change=".onChangeAddress" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required/basic}"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/maker_english_region',
                                                         type:'sap.ui.model.odata.type.String'
@@ -373,9 +460,17 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/MAKER_ENGLISH_ADDRESS}" required="{mainPageView>/required}"/>
-                                                <Input id="input_maker_english_address" value="{writeModel>/generalInfo/maker_english_address}" 
-                                                    change=".onChangeAddress" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/MAKER_ENGLISH_ADDRESS}" required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_maker_english_address"
+                                                    value="{
+                                                    path: 'writeModel>/generalInfo/maker_english_address', 
+                                                    type: 'sap.ui.model.type.String',
+                                                    constraints: {
+                                                        search: '^((?![ㄱ-ㅎ가-힣]).)*$',
+                                                        maxLength: 240
+                                                    }
+                                                }"
+                                                    change=".onChangeAddress" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required/basic}"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/maker_english_address',
                                                         type:'sap.ui.model.odata.type.String'
@@ -385,8 +480,8 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/MAKER_ENGLISH_FULL_ADDRESS}" required="{mainPageView>/required}"/>
-                                                <Input id="input_maker_english_full_address" value="{writeModel>/generalInfo/maker_english_full_address}" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required}"
+                                                <Label design="Bold" text="{I18N>/MAKER_ENGLISH_FULL_ADDRESS}" required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_maker_english_full_address" value="{writeModel>/generalInfo/maker_english_full_address}" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required/basic}"
                                                     placeholder="Address + Region + City 입력된 정보로 시스템에서 자동으로 생성" enabled="false"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/maker_english_full_address',
@@ -397,9 +492,9 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/AFFILIATE}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/AFFILIATE}" required="{mainPageView>/required/basic}"/>
                                                 <SegmentedButton id="SegmentButton_affiliate_code"  selectedKey="{writeModel>/generalInfo/affiliate_code}"
-                                                         selectionChange="onSelectionChange"
+                                                         selectionChange=".onSelectionChange"
                                                          class="sapUiSmallMarginEnd"                 
                                                          visible="{mainPageView>/visible/isEditable}">
                                                     <items>
@@ -416,9 +511,9 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/COMPANY_CLASS}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/COMPANY_CLASS}" required="{mainPageView>/required/basic}"/>
                                                 <ComboBox id="combobox_company_class_code" width="100%" change=".onChangeCombobox" visible="{mainPageView>/visible/isEditable}"
-                                                        placeholder=" " required="{mainPageView>/required}" 
+                                                        placeholder=" " required="{mainPageView>/required/basic}" 
                                                         selectedKey="{writeModel>/generalInfo/company_class_code}" 
                                                         items="{
                                                         path: '/MakerCompanyClassCodeView',
@@ -439,8 +534,16 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/REPRESENTATIVE}" required="{mainPageView>/required}"/>
-                                                <Input id="input_represent_name" value="{writeModel>/generalInfo/represent_name}" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/REPRESENTATIVE}" required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_represent_name" 
+                                                    value="{
+                                                        path: 'writeModel>/generalInfo/represent_name',
+                                                        type: 'sap.ui.model.type.String',
+                                                        constraints: {
+                                                            maxLength: 30
+                                                        }
+                                                    }"
+                                                    visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required/basic}"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/represent_name',
                                                         type:'sap.ui.model.odata.type.String'
@@ -450,8 +553,16 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/COMPANY_TEL_NUMBER}"  required="{mainPageView>/required}"/>
-                                                <Input id="input_company_tel_number" value="{writeModel>/generalInfo/company_tel_number}" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/COMPANY_TEL_NUMBER}"  required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_company_tel_number" type="sap.m.InputType.Tel"
+                                                    value="{
+                                                        path: 'writeModel>/generalInfo/company_tel_number',
+                                                        type: 'sap.ui.model.type.String',
+                                                        constraints: {
+                                                            maxLength: 50
+                                                        }
+                                                    }"
+                                                    visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required/basic}"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/company_tel_number',
                                                         type:'sap.ui.model.odata.type.String'
@@ -461,8 +572,17 @@
                                                 </layoutData>
                                             </VBox>
                                             <VBox>
-                                                <Label design="Bold" text="{I18N>/COMPANY_EMAIL_ADDRESS}" required="{mainPageView>/required}"/>
-                                                <Input id="input_company_email_address" value="{writeModel>/generalInfo/company_email_address}" visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required}"/>
+                                                <Label design="Bold" text="{I18N>/COMPANY_EMAIL_ADDRESS}" required="{mainPageView>/required/basic}"/>
+                                                <Input id="input_company_email_address"  type="sap.m.InputType.Email"
+                                                    value="{
+                                                        path: 'writeModel>/generalInfo/company_email_address', 
+                                                        type: 'sap.ui.model.type.String',
+                                                        constraints: {
+                                                            search: '\\S+@\\S+\\.\\S+',
+                                                            maxLength: 240
+                                                        }
+                                                    }"
+                                                    visible="{mainPageView>/visible/isEditable}" required="{mainPageView>/required/basic}"/>
                                                 <Text text="{
                                                         path:'viewModel>/generalInfo/company_email_address',
                                                         type:'sap.ui.model.odata.type.String'
@@ -508,7 +628,7 @@
                         <uxap:ObjectPageSection titleUppercase="false" visible="{mainPageView>/visible/section_change_history}" title="{I18N>/CHANGE_HISTORY}">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
-                                <Label text="sprint3 공통모듈 개발후 적용예정" />
+                                <Label text="Sprint#3에 적용됩니다." />
                                     <!-- Participating Supplier Table -->
                                     <!-- <table:Table id="pritemTable"
                                             selectionMode="None"
@@ -650,7 +770,7 @@
                         <uxap:ObjectPageSection titleUppercase="false" visible="{mainPageView>/visible/section_approval_line}" title="{I18N>/APPROVAL_LINE}">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
-                                <Label text="sprint3 공통모듈 개발후 적용예정" />
+                                <Label text="Sprint#3에 적용됩니다." />
                                 </uxap:ObjectPageSubSection>
                             </uxap:subSections>
                         </uxap:ObjectPageSection>

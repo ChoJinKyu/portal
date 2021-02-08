@@ -4,7 +4,7 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout" >
     
-    <Dialog id="investmentPlanDetails" class="sapUiSmallMargin" title="투자계획상세내용" contentWidth="80%" >
+    <Dialog id="investmentPlanDetails" class="sapUiSmallMargin" title="투자계획상세내용" resizable="true" contentWidth="80%" >
         <content>  
             <VBox class="sapUiSmallMargin">
                 <form:SimpleForm
@@ -242,8 +242,10 @@
         </content>
 
         <ToolbarSpacer/>
-        <HBox justifyContent="End" >
-            <Button text="닫기" type="Transparent" press=".onCreatePopupClose"/>
-        </HBox>
+        <!-- <HBox justifyContent="End" > -->
+            <endButton>
+                <Button text="닫기" type="Transparent" press=".onCreatePopupClose"/>
+            </endButton>
+        <!-- </HBox> -->
     </Dialog>
 </core:FragmentDefinition>

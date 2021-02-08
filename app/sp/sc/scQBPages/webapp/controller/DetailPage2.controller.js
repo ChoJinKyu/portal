@@ -18,13 +18,14 @@ sap.ui.define([
         "sap/m/Text",
         "cm/util/control/ui/PurOperationOrgDialog",
         "../controller/NonPriceInf",
-        "sap/ui/core/format/NumberFormat"
+        "sap/ui/core/format/NumberFormat",
+        "cm/util/control/ui/EmployeeDialog"
         // "sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType" , RTE, EditorType
 	],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-	function (BaseController, Filter, FilterOperator,MessageBox,MessageToast, Multilingual, JSONModel,SupplierSelection,Formatter,MaterialMasterDialog,BPDialog,Component, HashChanger, ComponentContainer, SimpleChangeDialog, Text,PurOperationOrgDialog,NonPriceInf, NumberFormat) {
+	function (BaseController, Filter, FilterOperator,MessageBox,MessageToast, Multilingual, JSONModel,SupplierSelection,Formatter,MaterialMasterDialog,BPDialog,Component, HashChanger, ComponentContainer, SimpleChangeDialog, Text, PurOperationOrgDialog, NonPriceInf, NumberFormat, EmployeeDialog) {
         "use strict";
         
 		return BaseController.extend("sp.sc.scQBPages.controller.DetailPage2", {
@@ -233,8 +234,7 @@ sap.ui.define([
 
                 return result;
             },
-            _onRouteMatched: function (e) 
-            {
+            _onRouteMatched: function (e) {
                 var that = this;
                 var oView = this.getView();
 
@@ -289,7 +289,17 @@ sap.ui.define([
                 {
                     oView.getModel("propInfo").setProperty("/isEditMode", true );
 
-                    oView.getModel("NegoHeaders").setProperty("/nego_type_code", this._type );
+                    debugger;
+                    var oType ; // Type Text
+                    if(this._type == "TSB"){
+                        oType = "2-Step Bidding";
+                    }else if(this._type == "CPB"){
+                        oType = "Competitive Bidding";
+                    }
+
+                    oView.getModel("NegoHeaders").setProperty("/nego_type_code", oType );
+
+                    
                     oView.getModel("NegoHeaders").setProperty("/local_create_dtm", new Date() );
                     oView.getModel("NegoHeaders").setProperty("/negotiation_output_class_code", this.getOutComeName(outcome) );
                     oView.getModel("NegoHeaders").setProperty("/nego_progress_status/nego_progress_status_code", '090' );
@@ -1537,6 +1547,33 @@ sap.ui.define([
                 this._awardNumberClear(0);
                 this._supplierNumberModel("1");
                 this.byId("selectNumberSupplier").setSelectedKey("1");
+            },
+            onPressBuyerPop: function(e){
+                
+                var oId = e.oSource.sId;
+                var oInput = this.byId(oId);
+
+                if(!this._EmployeeDialog){
+                    this._EmployeeDialog = new EmployeeDialog({
+                        title: "Choose Employees",
+                        closeWhenApplied: false,  //다이얼로그 자동 닫힘 기능을 off 하였을 경우
+                        multiSelection: false,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                            ]
+                        }
+                    });
+                    this._EmployeeDialog.attachEvent("apply", function(oEvent){
+                        // oInput.setTokens(oEvent.getSource().getTokens());
+                        var oItem = oEvent.getParameters("item").item;
+                        oInput.setValue(oItem.user_local_name);
+                        oEvent.getSource().close(); //직접 닫아야 합니다.
+                    }.bind(this));
+                }
+                this._EmployeeDialog.open();
+                // this._EmployeeDialog.setTokens(this.byId("multiInputWithEmployeeValueHelp").getTokens());
+
             }
             
 		});

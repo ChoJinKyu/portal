@@ -467,9 +467,11 @@ sap.ui.define([
                     if (oItem.getCells()[1].getValue() > oItem.getCells()[2].getValue()) {
                         debugger;
                         oItem.getCells()[1].setValueState("Error");
-                        oItem.getCells()[1].setValueStateText("'Response Value From'은 'Response Value To'보다 클 수 없습니다.");
+                        // oItem.getCells()[1].setValueStateText("'Response Value From'은 'Response Value To'보다 클 수 없습니다.");
+                        oItem.getCells()[1].setValueStateText("'Response Value From' must be less than 'Response Value To'");
                         oItem.getCells()[2].setValueState("Error");
-                        oItem.getCells()[2].setValueStateText("'Response Value From'은 'Response Value To'보다 클 수 없습니다.");
+                        oItem.getCells()[2].setValueStateText("'Response Value From' must be less than 'Response Value To'");
+                        
                         flag = false;
                         console.log("from : to =====", oItem.getCells()[1].getValue(), " : ", oItem.getCells()[2].getValue());
                     }
