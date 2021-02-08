@@ -95,9 +95,17 @@ sap.ui.define([
                 sMatrialNamePop = this.oMatrialNamePop.getValue(),
                 sMatrialSpecPop = this.oMatrialSpecPop.getValue();
 
-            //aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
-            //aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.languageCd));
-            //aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oSearchObj.orgCode));
+            if (!!this.oSearchObj.tanentId) {
+                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
+            }
+            
+            if (!!this.oSearchObj.languageCd) {
+                aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.languageCd));
+            }
+
+            if (!!this.oSearchObj.orgCode) {
+                aFilters.push(new Filter("bizunit_code", FilterOperator.EQ, this.oSearchObj.orgCode));
+            }
 
             if (!!sMatrialCodePop) {
                 aFilters.push(new Filter("material_code", FilterOperator.Contains, "'" + sMatrialCodePop.toUpperCase() + "'"));
@@ -111,7 +119,7 @@ sap.ui.define([
                 aFilters.push(new Filter("material_spec", FilterOperator.Contains, sMatrialSpecPop.toUpperCase()));
             }
 
-
+        
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/VpMaterialMst", {
                 filters: aFilters,
                 sorters: [
