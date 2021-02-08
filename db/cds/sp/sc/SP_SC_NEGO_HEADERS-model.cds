@@ -114,12 +114,12 @@ entity Sc_Nego_Headers {
         actual_extension_count          : Integer            @title : '실제연장횟수';
         remaining_hours                 : Decimal(28, 2)     @title : '잔여시간';
         note_content                    : LargeBinary        @title : '노트내용';
-        award_type_code                 : Sc_Award_Type_Code_View:award_type_code @title : '낙찰유형코드';
+        award_type_code                 : Sc_Award_Type_Code_View:award_type_code @title : '낙찰유형코드' @description : 'UI:Award Type';
         award_type : Association to Sc_Award_Type_Code_View
                             on    award_type.tenant_id       = $self.tenant_id
                               and award_type.award_type_code = $self.award_type_code 
                             @title : '낙찰유형 Navi.';
-        award_method_code               : Sc_Award_Method_Code_View:award_method_code @title : '낙찰방법코드';
+        award_method_code               : Sc_Award_Method_Code_View:award_method_code @title : '낙찰방법코드' @description : 'UI:Award Method';
         // nego_award_method : Association to one Sc_Nego_Award_Method_Code
         //                     on nego_award_method.tenant_id       = $self.tenant_id
         //                       and nego_award_method.nego_parent_type.nego_types.nego_type_code = $self.nego_type_code
@@ -136,9 +136,9 @@ entity Sc_Nego_Headers {
                               and award_method_map.award_type_code = $self.award_type_code
                               and award_method_map.award_method_code = $self.award_method_code
                             @title : '협상유형&낙찰유형&낙찰방법 Navi.';
-        target_amount_config_flag       : String(1)          @title : '목표금액설정여부';
+        target_amount_config_flag       : String(1)          @title : '목표금액설정여부' @description : 'UI:Target Price Setup 여부';
         target_currency                 : String(5)          @title : '목표통화';
-        target_amount                   : PriceAmountT       @( title: '목표금액', Measures.ISOCurrency: target_currency);
+        target_amount                   : PriceAmountT       @( title: '목표금액', Measures.ISOCurrency: target_currency) @description : 'UI:Target Total Amount';
         supplier_participation_flag     : String(1)          @title : '공급업체참여여부' @description : 'UI:Intention of Supplier Participation';
         partial_allow_flag              : String(1)          @title : '부분허용여부'     @description : 'UI:Partial Quotation';
         bidding_result_open_status_code : String(30)         @title : '입찰결과오픈상태코드';
