@@ -607,6 +607,14 @@ sap.ui.define([
                 aFilters.push(new Filter("company_code", FilterOperator.EQ, this.oSearchObj.companyCode)); 
             }
 
+            if (!!this.oOperationOrgComb.getSelectedKey()) {
+                aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oOperationOrgComb.getSelectedKey()));
+            }
+
+            if (!!this.oOperationUnitComb.getSelectedKey()) {
+                aFilters.push(new Filter("operation_unit_code", FilterOperator.EQ, this.oOperationUnitComb.getSelectedKey()));
+            }
+
 
             // 조회조건에서 가져오는 value
             if (!!this.oSupplierCode.getValue()) {
