@@ -5,6 +5,7 @@
     xmlns:v="sap.ui.comp.valuehelpdialog"
     xmlns:core="sap.ui.core"
     xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:u="sap.ui.unified"
     >
      <!-- <m:VBox class="sapUiSmallMargin">
         <m:VBox>
@@ -100,7 +101,9 @@
                             <content>
                                 <Title text="첨부파일" level="H2"/>
                                 <ToolbarSpacer />
-                                <Button  text="Add File" type="Transparent" press="" />
+                                <u:FileUploader uploadComplete="handleUploadComplete" change=".createConfirmBox" style="Transparent" buttonText="Add File"
+                                                                    buttonOnly="true" iconOnly="false" />
+                                <!-- <Button  text="Add File" type="Transparent" press="" /> -->
                                 <!-- <Button  text="Delete" type="Transparent" press=".onNonPriceItemDelete" /> -->
                             </content>
                         </OverflowToolbar>
