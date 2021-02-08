@@ -85,7 +85,8 @@ sap.ui.define([
         , _isValidControl : function(aControls){
             var oMessageManager = sap.ui.getCore().getMessageManager(),
                 bAllValid = false,
-                oI18n = this.getView().getModel("I18N");
+                oI18n = this.getView().getModel("I18N"),
+                oContext;
                 
             oMessageManager.removeAllMessages();
             bAllValid = aControls.every(function(oControl){
@@ -96,6 +97,7 @@ sap.ui.define([
                     case "sap.m.Input":
                     case "sap.m.TextArea":
                         sValue = oControl.getValue();
+                        oContext = oControl.getBinding("value");
                         break;
                     case "sap.m.ComboBox":
                         sValue = oControl.getSelectedKey();
@@ -121,6 +123,19 @@ sap.ui.define([
                         oControl.setValueState(ValueState.None);
                     }
                 }
+                
+                if(oContext){
+                    try{
+                        oContext.getType().validateValue(sValue);
+                    }catch(e){
+                        oControl.setValueState(ValueState.Error);
+                        oControl.setValueStateText(e.message);
+                        oControl.focus();
+                        return false;
+                    }
+                    oControl.setValueState(ValueState.None);
+                }
+
                 return true;
             });
 
