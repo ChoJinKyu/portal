@@ -338,9 +338,12 @@ service BasePriceArlService {
         left outer join materialMst as mtr
             on dtl.tenant_id = mtr.tenant_id
             and dtl.material_code = mtr.material_code
-        left outer join supplierMst as sup
-            on dtl.tenant_id = sup.tenant_id
-            and dtl.supplier_code = sup.supplier_code
+        left outer join supplierMst as sup01
+            on dtl.tenant_id = sup01.tenant_id
+            and dtl.supplier_code = sup01.supplier_code
+        left outer join supplierMst as sup02
+            on dtl.tenant_id = sup02.tenant_id
+            and dtl.supplier_code = sup02.supplier_code
         left outer join codeLng as cd01
             on cd01.tenant_id = dtl.tenant_id
             and cd01.group_code = 'DP_VI_BASE_PRICE_GROUND_CODE'
@@ -365,7 +368,7 @@ service BasePriceArlService {
                 mtr.material_spec,
                 dtl.base_uom_code,
                 dtl.supplier_code,
-                sup.supplier_local_name,
+                sup01.supplier_local_name,
                 dtl.base_date,
                 dtl.base_price_ground_code,
                 cd01.code_name as base_price_ground_code_nm : String(240),
@@ -373,6 +376,7 @@ service BasePriceArlService {
                 cd02.code_name as change_reason_nm : String(240),
                 dtl.repr_material_code,
                 dtl.repr_material_supplier_code,
+                sup02.supplier_local_name as repr_material_supplier_local_name : String(240),
                 dtl.repr_material_org_code,
                 dtl.local_create_dtm,
                 dtl.local_update_dtm,
@@ -383,7 +387,8 @@ service BasePriceArlService {
         };
 
     annotate Base_Price_Arl_Detail with {
-        base_price_ground_code_nm @title : '기준단가근거명'  @description : '기준단가근거코드 이름';
+        base_price_ground_code_nm         @title : '기준단가근거명'  @description : '기준단가근거코드 이름';
+        repr_material_supplier_local_name @title : '대표자재공급사로컬이름'  @description : '대표자재 공급사로컬 이름';
     };
 
     entity Base_Price_Arl_Price         as
