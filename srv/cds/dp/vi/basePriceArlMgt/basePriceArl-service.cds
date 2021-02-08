@@ -61,6 +61,7 @@ service BasePriceArlService {
                 porg.org_name,
                 mtr.material_desc,
                 mtr.material_spec,
+                mtr.base_uom_code,
                 sup.supplier_local_name,
 
                 mst.nn_net_price_0,
