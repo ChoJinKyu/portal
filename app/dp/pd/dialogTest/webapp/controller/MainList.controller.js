@@ -16,6 +16,7 @@ sap.ui.define([
     "dp/util/control/ui/MaterialCommodityDialog",
     "dp/util/control/ui/MaterialGroupDialog",
     "dp/util/control/ui/CategoryDialog",
+    "dp/util/control/ui/ActivityCodeDialog"
 ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -23,7 +24,7 @@ sap.ui.define([
     function (BaseController, Multilingual, TransactionManager, ManagedListModel, Validator, 
             JSONModel, DateFormatter, Filter, FilterOperator, MessageBox, 
             MessageToast, IdeaManagerDialog, HsCodeDialog, MaterialClassDialog,
-            MaterialCommodityDialog, MaterialGroupDialog, CategoryDialog) {
+            MaterialCommodityDialog, MaterialGroupDialog, CategoryDialog, ActivityCodeDialog) {
           "use strict";
 
         return BaseController.extend("dp.pd.dialogTest.controller.MainList", {
@@ -244,7 +245,7 @@ sap.ui.define([
                         multiSelection: true,
                         items: {
                             filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                                new Filter("tenant_id", FilterOperator.EQ, "L2101")
                             ]
                         }
                     });
@@ -258,7 +259,7 @@ sap.ui.define([
             },
 
 
-            //MaterialGroup 싱글 팝업
+            //Category 싱글 팝업
             onDialogCategoryPress : function(){
 
                 if(!this.oSearchCategoryDialog){
@@ -267,7 +268,7 @@ sap.ui.define([
                         multiSelection: false,
                         items: {
                             filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                                new Filter("tenant_id", FilterOperator.EQ, "L2101")
                             ]
                         }
                     });
@@ -281,7 +282,7 @@ sap.ui.define([
 
             },
 
-            //MaterialGroup 멀티 팝업
+            //Category 멀티 팝업
             onDialogMultiCategoryPress : function(){
 
                 if(!this.oSearchCategoryMultiDialog){
@@ -300,7 +301,52 @@ sap.ui.define([
                 }
 
                 this.oSearchCategoryMultiDialog.open();
-                this.oSearchCategoryMultiDialog.setTokens(this.byId("searchMaterialGroupMultiInput").getTokens());
+                this.oSearchCategoryMultiDialog.setTokens(this.byId("searchCategoryMultiInput").getTokens());
+            },
+
+            //ActivityCode 싱글 팝업
+            onDialogActivityPress : function(){
+
+                if(!this.oSearchActivityDialog){
+                    this.oSearchActivityDialog = new ActivityCodeDialog({
+                        title: "엑티비티 다이얼로그 제목",
+                        multiSelection: false,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, "L2101")
+                            ]
+                        }
+                    });
+                    this.oSearchActivityDialog.attachEvent("apply", function(oEvent){ 
+                        console.log(oEvent.getParameter("item"));
+                        this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_name);
+                    }.bind(this));
+                }
+
+                this.oSearchActivityDialog.open();
+
+            },
+
+            //ActivityCode 멀티 팝업
+            onDialogMultiActivityPress : function(){
+
+                if(!this.oSearchActivityMultiDialog){
+                    this.oSearchActivityMultiDialog = new ActivityCodeDialog({
+                        title: "엑티비티 다이얼로그 제목",
+                        multiSelection: true,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, "L2101")
+                            ]
+                        }
+                    });
+                    this.oSearchActivityMultiDialog.attachEvent("apply", function(oEvent){ 
+                        this.byId("searchActivityMultiInput").setTokens(oEvent.getSource().getTokens());
+                    }.bind(this));
+                }
+
+                this.oSearchActivityMultiDialog.open();
+                this.oSearchActivityMultiDialog.setTokens(this.byId("searchActivityMultiInput").getTokens());
             }
 
 

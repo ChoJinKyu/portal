@@ -183,6 +183,34 @@
                             </layoutData>
                         </VBox>
 
+                        <VBox>
+                            <Label text="ActivityCode Dialog(Single)" labelFor="searchActivityInput"></Label>
+                                <Input 
+                                    id="searchActivityInput"
+                                    placeholder="ActivityCode Dialog(Single)"
+                                    showValueHelp="true"
+                                    valueHelpRequest=".onDialogActivityPress"/>
+                                <layoutData>
+                                    <layout:GridData 
+                                        moveForward="XL1 L1 M1 S1"
+                                        span="XL5 L5 M5 S10" />
+                                </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="ActivityCode Dialog(Multi)" labelFor="searchActivityMultiInput"></Label>
+                                <MultiInput 
+                                    id="searchActivityMultiInput"
+                                    placeholder="ActivityCode Dialog(Multi)"
+                                    showValueHelp="true" 
+                                    valueHelpRequest=".onDialogMultiActivityPress">
+                                </MultiInput>
+                            <layoutData>
+                                <layout:GridData 
+                                    moveForward="XL1 L1 M1 S1"
+                                    span="XL5 L5 M5 S10" />
+                            </layoutData>
+                        </VBox>
+
 
 
                     </form:content>
