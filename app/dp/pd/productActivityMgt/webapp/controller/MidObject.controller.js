@@ -305,7 +305,7 @@ sap.ui.define([
 					"activity_name": "",
 					"description": "",
 					"sequence": "",
-					"active_flag": "false",
+					"active_flag": "true",
                 }, "/PdProdActivityTemplateView");
                 
                 var oDetailsModel = this.getModel("details");
@@ -342,9 +342,15 @@ sap.ui.define([
                 
 				oMasterModel.setTransactionModel(this.getModel());
 				oMasterModel.read(sObjectPath, {
-					success: function(oData){
-						oView.setBusy(false);
-					}
+					success: function (rData, reponse) {
+                        console.log(rData);
+                                if(rData.active_flag === true){
+                                    rData.active_flag = "true";
+                                }else{
+                                    rData.active_flag = "false";
+                                }
+                            oMasterModel.setData(rData);
+                    }
                 });
 			
                 var oDetailsModel = this.getModel("details");
