@@ -187,13 +187,13 @@ public class SourcingV4 implements EventHandler {
                 .append("    FROM SP_SC_NEGO_SUPPLIERS WHERE 1=0 )                          ");
 
         // // drop temp table:
-        String v_sql_dropTable_negoheaders =          "drop table #local_temp_negoheaders";
-        String v_sql_dropTable_negoitemprices =       "drop table #local_temp_negoitemprices";
-        String v_sql_dropTable_negosuppliers =        "drop table #local_temp_negosuppliers";
+        String v_sql_dropTable_negoheaders =          "drop table #LOCAL_TEMP_NEGOHEADERS";
+        String v_sql_dropTable_negoitemprices =       "drop table #LOCAL_TEMP_NEGOITEMPRICES";
+        String v_sql_dropTable_negosuppliers =        "drop table #LOCAL_TEMP_NEGOSUPPLIERS";
 
 		// insert temp table: master
         StringBuffer v_sql_insertTable_negoheaders= new StringBuffer();
-		v_sql_insertTable_negoheaders.append("insert into #local_temp_negoheaders ( ")
+		v_sql_insertTable_negoheaders.append("insert into #LOCAL_TEMP_NEGOHEADERS ( ")
         // .append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                 .append("       tenant_id                                                         ")  //#01
                 .append("     , nego_header_id                                                    ")  //#02
@@ -239,13 +239,13 @@ public class SourcingV4 implements EventHandler {
 
 		// insert table: scenario
         StringBuffer v_sql_insertTable_negoitemprices= new StringBuffer();
-		v_sql_insertTable_negoitemprices.append("insert into #local_temp_negoitemprices values ");
+		v_sql_insertTable_negoitemprices.append("insert into #LOCAL_TEMP_NEGOITEMPRICES values ");
 		// v_sql_insertTable_negoitemprices.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		v_sql_insertTable_negoitemprices.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		// insert temp table: company
         StringBuffer v_sql_insertTable_negosuppliers= new StringBuffer();
-		v_sql_insertTable_negosuppliers.append("insert into #local_temp_negosuppliers values ");
+		v_sql_insertTable_negosuppliers.append("insert into #LOCAL_TEMP_NEGOSUPPLIERS values ");
         // v_sql_insertTable_negosuppliers.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         v_sql_insertTable_negosuppliers.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
@@ -254,9 +254,9 @@ public class SourcingV4 implements EventHandler {
 		v_sql_callProc.append("call sp_sc_nego_headers_deepupsert(");
         // append: in table => local temp table
         // v_sql_callProc.append("i_tenant_id => ?, ");
-		v_sql_callProc.append("i_table_negoheaders    => #local_temp_negoheaders    , ");
-		v_sql_callProc.append("i_table_negoitemprices => #local_temp_negoitemprices , ");
-        v_sql_callProc.append("i_table_negosuppliers  => #local_temp_negosuppliers  , ");
+		v_sql_callProc.append("i_table_negoheaders    => #LOCAL_TEMP_NEGOHEADERS    , ");
+		v_sql_callProc.append("i_table_negoitemprices => #LOCAL_TEMP_NEGOITEMPRICES , ");
+        v_sql_callProc.append("i_table_negosuppliers  => #LOCAL_TEMP_NEGOSUPPLIERS  , ");
 		// append: out table => local temp table
 		v_sql_callProc.append("o_table_message => ? ");
 		// append: end
@@ -523,23 +523,23 @@ curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' 
 		v_sql_createTable_negosuppliers.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_NEGOSUPPLIERS AS ( SELECT tenant_id, nego_header_id, nego_item_number, item_supplier_sequence FROM SP_SC_NEGO_SUPPLIERS WHERE 1=0 )");
 
         // // drop temp table:
-        String v_sql_dropTable_negoheaders =          "drop table #local_temp_negoheaders";
-        String v_sql_dropTable_negoitemprices =       "drop table #local_temp_negoitemprices";
-        String v_sql_dropTable_negosuppliers =        "drop table #local_temp_negosuppliers";
+        String v_sql_dropTable_negoheaders =          "DROP TABLE #LOCAL_TEMP_NEGOHEADERS";
+        String v_sql_dropTable_negoitemprices =       "DROP TABLE #LOCAL_TEMP_NEGOITEMPRICES";
+        String v_sql_dropTable_negosuppliers =        "DROP TABLE #LOCAL_TEMP_NEGOSUPPLIERS";
 
 		// insert temp table: master
         StringBuffer v_sql_insertTable_negoheaders= new StringBuffer();
-		v_sql_insertTable_negoheaders.append("insert into #local_temp_negoheaders values ");
+		v_sql_insertTable_negoheaders.append("insert into #LOCAL_TEMP_NEGOHEADERS values ");
         v_sql_insertTable_negoheaders.append("(?,?)");
 
 		// insert table: scenario
         StringBuffer v_sql_insertTable_negoitemprices= new StringBuffer();
-		v_sql_insertTable_negoitemprices.append("insert into #local_temp_negoitemprices values ");
+		v_sql_insertTable_negoitemprices.append("insert into #LOCAL_TEMP_NEGOITEMPRICES values ");
 		v_sql_insertTable_negoitemprices.append("(?,?,?)");
 
 		// insert temp table: company
         StringBuffer v_sql_insertTable_negosuppliers= new StringBuffer();
-		v_sql_insertTable_negosuppliers.append("insert into #local_temp_negosuppliers values ");
+		v_sql_insertTable_negosuppliers.append("insert into #LOCAL_TEMP_NEGOSUPPLIERS values ");
         v_sql_insertTable_negosuppliers.append("(?,?,?,?)");
 
 		// call procedure
@@ -547,9 +547,9 @@ curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' 
 		v_sql_callProc.append("call sp_sc_nego_headers_deepdelete(");
         // append: in table => local temp table
         // v_sql_callProc.append("i_tenant_id => ?, ");
-		v_sql_callProc.append("i_table_negoheaders    => #local_temp_negoheaders    , ");
-		v_sql_callProc.append("i_table_negoitemprices => #local_temp_negoitemprices , ");
-        v_sql_callProc.append("i_table_negosuppliers  => #local_temp_negosuppliers  , ");
+		v_sql_callProc.append("i_table_negoheaders    => #LOCAL_TEMP_NEGOHEADERS    , ");
+		v_sql_callProc.append("i_table_negoitemprices => #LOCAL_TEMP_NEGOITEMPRICES , ");
+        v_sql_callProc.append("i_table_negosuppliers  => #LOCAL_TEMP_NEGOSUPPLIERS  , ");
 		// append: out table => local temp table
 		v_sql_callProc.append("o_table_message => ? ");
 		// append: end
