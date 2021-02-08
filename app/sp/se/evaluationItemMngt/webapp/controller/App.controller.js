@@ -16,5 +16,10 @@ sap.ui.define([
                     EditMode : false
                 });
             }
+            , onStateChanged : function(oEvent){
+                var oControl;
+
+                oControl = oEvent.getSource();
+            }
 		});
 	});

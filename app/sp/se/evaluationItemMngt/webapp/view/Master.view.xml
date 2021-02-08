@@ -14,10 +14,10 @@
     <f:DynamicPage 
         id="page"
         toggleHeaderOnTitleClick="true"
+        headerExpanded="{=
+            ${viewModel>/App/layout} === 'OneColumn'
+        }"
     >
-        <!-- headerExpanded="{=
-            ${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'
-        }" -->
         
         <f:title>
             <f:DynamicPageTitle>
