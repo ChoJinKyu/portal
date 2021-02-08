@@ -18,9 +18,13 @@ using {op.Pu_Wbs_Mst as WbsMst}                     from '../../../../../db/cds/
 
 using {cm.Org_Plant as Org_Plant}                   from '../../../../../db/cds/cm/CM_ORG_PLANT-model';
 using {cm.Hr_Employee as employee}                  from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
+using {cm.Org_Purchasing_Group as purchasingGroup}  from '../../../../../db/cds/cm/CM_ORG_PURCHASING_GROUP-model';
 using {cm.User as user}                             from '../../../../../db/cds/cm/CM_USER-model';
 using {cm.Hr_Department as Dept}                    from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
 using {sp.Sm_Supplier_Wo_Org_Cal_View as spWoOrgCalView}    from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_WO_ORG_CAL_VIEW-model';
+using {dp.Mm_Material_Group_View as materialGroup}          from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_GROUP_VIEW-model';
+
+
 
 //  cm.util.OrgService/Plant
 //  cm.util.HrService//Employee
@@ -146,10 +150,18 @@ service PrMgtService {
                        And company_code = prDtl.company_code
                        And plant_code = IFNULL( prDtl.org_code, '') ), '' ) as plant_name : String(240),
                 material_code  , // : String(40)        @title: '자재코드' ;	
-                material_group_code , //: String(10)    @title: '자재그룹코드' ;	
+                material_group_code , //: String(10)    @title: '자재그룹코드' ;
+                IFNULL( ( Select material_group_name 
+                    From materialGroup
+                    Where  tenant_id = prDtl.tenant_id 
+                       And material_group_code = IFNULL( prDtl.org_code, '') ), '' ) as material_group_name : String(100),
+
+
+
                 pr_desc         , //: String(100)       @title: '구매요청내역' ;	
                 pr_quantity    , // : Decimal           @title: '구매요청수량' ;	
                 pr_unit         , //: String(3)         @title: '구매요청단위' ;	
+                // 단위명 선택..
                 requestor_empno , //: String(30)        @title: '요청자사번' ;	
                 requestor_name  , //: String(50)        @title: '요청자명' ;	
                 request_date    , //: Date              @title: '요청일자' ;	
@@ -161,7 +173,13 @@ service PrMgtService {
                     Where  tenant_id = prDtl.tenant_id                       
                        And employee_number = IFNULL( prDtl.buyer_empno, '')  ), '' ) as user_local_name : String(240),
                 buyer_department_code , //: String(30)  @title: '구매부서코드' ;
-                purchasing_group_code , //: String(3)   @title: '구매그룹코드' ;	
+                // 추후 이름 추가..
+                purchasing_group_code , //: String(3)   @title: '구매그룹코드' ;
+                // 구매그룹 명 추가..	
+                 IFNULL( ( Select purchasing_group_name
+                    From purchasingGroup
+                    Where  tenant_id = prDtl.tenant_id                       
+                       And purchasing_group_code = IFNULL( prDtl.purchasing_group_code, '')  ), '' ) as purchasing_group_name : String(30),
                 estimated_price , //: Decimal           @title: '예상가격' ;	
                 currency_code   , //: String(3)         @title: '통화코드' ;	
                 price_unit     , // : Decimal(5,0)        @title: '가격단위' ;	
@@ -177,8 +195,10 @@ service PrMgtService {
                 delete_flag     , //: Boolean   not null   @cds.on.insert: false   @title: '삭제여부' ;	
                 closing_flag    , //: Boolean   not null   @cds.on.insert: false   @title: '마감여부' ;	
                 item_category_code , //: String(2)               @title: '품목범주코드' ;	
-                account_assignment_category_code , //: String(2) @title: '계정지정범주코드' ;	
+                account_assignment_category_code , //: String(2) @title: '계정지정범주코드' ;
+                // 추후 추가.	
                 sloc_code       , //: String(4)                  @title: '저장위치코드' ;	
+                // 추후 추가 
                 IFNULL( supplier_code, '') as supplier_code :String(10) ,   //: String(10)                 @title: '공급업체코드' ;	
                 IFNULL( ( Select supplier_local_name
                     From spWoOrgCalView
