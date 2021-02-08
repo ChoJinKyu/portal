@@ -113,15 +113,41 @@ sap.ui.define([
 
                     var aMasterFilters = [];
                     aMasterFilters.push(new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID));
-                    aMasterFilters.push(new Filter("language_code", FilterOperator.EQ, "'" + SppUserSessionUtil.getUserInfo().LANGUAGE_CODE + "'"));
-                    aMasterFilters.push(new Filter("approval_number", FilterOperator.EQ, args.pAppNum));
+                    //aMasterFilters.push(new Filter("language_code", FilterOperator.EQ, "'" + SppUserSessionUtil.getUserInfo().LANGUAGE_CODE + "'"));
+                    //aMasterFilters.push(new Filter("approval_number", FilterOperator.EQ, args.pAppNum));
+                    aMasterFilters.push(new Filter("approval_number", FilterOperator.EQ, "1"));
 
                     oView.setBusy(true);
 
                     // Master 조회
                     this._readData("detail", "/MasterView", aMasterFilters, {}, function (data) {
-                        console.log("master info:", data);
-                        oView.setBusy(false);
+                        //console.log("MasterView:", data);
+                        if (data.results.length > 0) {
+                            var result = data.results[0];
+                            
+                            var oNewBasePriceData = {
+                                "tenantId": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                                "approvalNumber": result.approval_number,
+                                "approvalTitle": result.approval_title,
+                                //"approval_type_code": oRootModel.getProperty("/selectedApprovalType"),   // V10: 신규, V20: 변경
+                                "approve_status_code": result.approve_status_code,    // DR: Draft
+                                "status": oRootModel.getProperty("/processList/0/code_name"),
+                                "requestorEmpno": result.requestor_empnm,
+                                "requestDate": this.getOwnerComponent()._changeDateString(oToday),
+                                "details": []
+                            };
+                            oDetailModel.setData(oNewBasePriceData);
+
+                            that._readData("detail", "/GeneralView", aMasterFilters, {}, function (data) {
+                                //console.log("GeneralView::", data);
+                                generalInfoModel.setProperty("/GeneralView", data.results);
+                            }.bind(this));
+
+                             
+                            oView.setBusy(false);
+                        } else {
+                            oView.setBusy(false);
+                        }
 
                         // Process에 표시될 상태 및 아이콘 데이터 세팅
                         //this.onSetProcessFlowStateAndIcon(oDetailViewModel, oMaster.approve_status_code);
