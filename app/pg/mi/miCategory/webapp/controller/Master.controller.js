@@ -1212,7 +1212,7 @@ sap.ui.define([
 
 
 
-                    var oFilter1 = new sap.ui.model.Filter("filter_category_code", sap.ui.model.FilterOperator.Contains, "");
+                    var oFilter1 = new sap.ui.model.Filter("category_code", "EQ", "QWERPOIU2A2");
 
 
                     oBinding.filter([oFilter1], sap.ui.model.FilterType.Application);

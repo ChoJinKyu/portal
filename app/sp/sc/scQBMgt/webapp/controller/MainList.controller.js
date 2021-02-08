@@ -594,10 +594,11 @@ sap.ui.define([
                 var oBinding = e.getParameters().bindingParams;
                 var oFilters = [];
 
+                
                 // 첫조회 시 데이터 안나오게
                 if(!this._firstFlag){
                     this._firstFlag = true;
-                    oFilters.push(new Filter("nego_header_id", "EQ", ""));
+                    oFilters.push(new Filter("nego_document_number", "EQ", "99999999"));
                     oBinding.filters = oFilters;
                     return;
                 }

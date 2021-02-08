@@ -102,7 +102,7 @@
                                                         <VBox  class="sapUiMediumMarginTop">
                                                             <Label  text="Title:" required="true" class="nameTitle"  />
                                                             
-                                                            <Input  id="inputTitle" width="100%" value="{NegoHeaders>/nego_document_title}" visible="{=${propInfo>/isEditMode}}"/>
+                                                            <Input  id="inputTitle" width="100%" value="{NegoHeaders>/nego_document_title}" visible="{=${propInfo>/isEditMode}}"  placeholder="최대 300 자까지 입력 할 수 있습니다."/>
                                                             <Text  id="textTitle" text="{NegoHeaders>/nego_document_title}" visible="{=!${propInfo>/isEditMode} }"/>
                                                         </VBox>
                                                     
@@ -498,9 +498,9 @@
                                                 </HBox>
                                                 <HBox width="100%" class="sapUiSmallMarginBottom">
                                                     <VBox width="75%">
-                                                        <Label  text="Bid Conference Place" 
+                                                        <Label  text="Bid Conference Place:" 
                                                                 class="sapMLabelNoText"/>
-                                                        <Input width="97%" class=" "/>
+                                                        <Input width="97%" class=" " placeholder="최대 200 자까지 입력 할 수 있습니다."/>
                                                     </VBox>
                                                     
                                                 </HBox>
@@ -515,7 +515,7 @@
                                                     <VBox width="25%">
                                                         <Label  text="Phone No" 
                                                                 class="sapMLabelNoText"/>
-                                                        <Input width="90%" class=" " id="aa"/>
+                                                        <Input width="90%" class=" " id="aa" type="Number"/>
                                                     </VBox>
                                                 </HBox>
                                             </VBox>
@@ -617,7 +617,7 @@
                                                 <HBox width="100%" class="sapUiSmallMarginBottom  " >
                                                     
                                                     <VBox width="25%" class="">
-                                                        <Label  text="Bid Conference Date" 
+                                                        <Label  text="Bid Conference Date:" 
                                                                 class="sapMLabelNoText"/>
                                                         <Text text="2020/02/05"   />
                                                         <layoutData>
@@ -626,7 +626,7 @@
                                                     </VBox>
                                                     <VBox width="25%" >
                                                         <Label  text="Bid Conference" 
-                                                                class="sapMLabelNoText"/>
+                                                                class="sapMLabelNoText:"/>
                                                         <Text text="true"   />
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
@@ -635,9 +635,9 @@
                                                 </HBox>
                                                 <HBox width="100%" class="sapUiSmallMarginBottom">
                                                     <VBox width="75%">
-                                                        <Label  text="Bid Conference Place" 
+                                                        <Label  text="Bid Conference Place:" 
                                                                 class="sapMLabelNoText"/>
-                                                        <Text text="테스트 예시"   />
+                                                        <Text text=""   />
                                                     </VBox>
                                                     
                                                 </HBox>

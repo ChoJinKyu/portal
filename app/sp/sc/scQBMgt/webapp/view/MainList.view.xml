@@ -49,7 +49,7 @@
                         <smartFilterBar:ControlConfiguration id="filterNegoNo" key="nego_document_number" index="2" label="Negotiation No" 
                             groupId="_BASIC" visibleInAdvancedArea="true" class="" >
                             <smartFilterBar:customControl class="">
-                                <Input id="inputFilterNegoNo"/>
+                                <Input id="inputFilterNegoNo" placeholder="입력 해주세요."/>
                             </smartFilterBar:customControl>
                         </smartFilterBar:ControlConfiguration>
                         <smartFilterBar:ControlConfiguration id="filterOutcome" key="1" index="3" label="Outcome" 
@@ -104,7 +104,7 @@
                         <smartFilterBar:ControlConfiguration id="filterTitle" key="nego_document_title" index="7" label="Title" 
                             groupId="_BASIC" visibleInAdvancedArea="true" class="" >
                             <smartFilterBar:customControl class="">
-                                <Input id="inputFilterTitle"/>
+                                <Input id="inputFilterTitle" placeholder="입력 해주세요."/>
                             </smartFilterBar:customControl>
                         </smartFilterBar:ControlConfiguration>
                         <smartFilterBar:ControlConfiguration id="filterStatus" key="6" index="8" label="Status" 
@@ -343,7 +343,7 @@
         </f:header>
         <f:content>
             <smartTable:SmartTable id="sTable1" entitySet="NegoWorkbenchView"
-                ignoreFromPersonalisation="tenant_id,nego_item_number,nego_header_id,nego_progress_status_code,award_progress_status_code,award_type_code" 
+                ignoreFromPersonalisation="tenant_id,nego_item_number,nego_header_id,nego_progress_status_code,award_progress_status_code,award_type_code,buyer_empno_code,negotiation_style_code" 
                 ignoredFields=""
                 smartFilterId="smartFilterBar" tableType="Table" 
                 useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true" 
@@ -487,13 +487,13 @@
                                     <Text text="{nego_type_code}" wrapping="false" />
                                 </t:template> 
                             </t:Column> 
-                            <t:Column width="8rem" hAlign="Center" sortProperty="negotiation_style_code" filterProperty="negotiation_style_code">
+                            <t:Column width="8rem" hAlign="Center" sortProperty="negotiation_style_name" filterProperty="negotiation_style_name">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "negotiation_style_code", "leadingProperty": "negotiation_style_code", "sortProperty": "negotiation_style_code", "filterProperty": "negotiation_style_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "negotiation_style_name", "leadingProperty": "negotiation_style_name", "sortProperty": "negotiation_style_name", "filterProperty": "negotiation_style_name"}'/>
                                 </t:customData>
                                 <Label text="Quote Style" />
                                 <t:template>
-                                    <Text text="{negotiation_style_code}" wrapping="false" />
+                                    <Text text="{negotiation_style_name}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
                             <t:Column width="8rem" hAlign="Center" sortProperty="bidding_result_open_status_code" filterProperty="bidding_result_open_status_code">
@@ -589,16 +589,27 @@
                                     <Text text="{award_type_name}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
+
+                            <t:Column width="8rem" hAlign="Center" sortProperty="buyer_empno_name" filterProperty="buyer_empno_name" >
+                                <t:customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "buyer_empno_name", "leadingProperty": "buyer_empno_name", "sortProperty": "buyer_empno_name", "filterProperty": "buyer_empno_name"}'/>
+                                </t:customData>
+                                <Label text="Buyer"  />
+                                <t:template>
+                                    <Text text="{buyer_empno_name}" wrapping="false" />
+                                </t:template>  
+                            </t:Column> 
+
                             
-                            <t:Column width="8rem" hAlign="Center" sortProperty="buyer_empno" filterProperty="buyer_empno">
+                            <!-- <t:Column width="8rem" hAlign="Center" sortProperty="buyer_empno" filterProperty="buyer_empno">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "buyer_empno", "leadingProperty": "buyer_empno", "sortProperty": "buyer_empno", "filterProperty": "buyer_empno"}'/>
                                 </t:customData>
                                 <Label text="Buyer"  />
                                 <t:template>
-                                    <Text text="{buyer_empno}" wrapping="false" />
+                                    <Text text="{buyer_empno} - {buyer_empno_name}" wrapping="false" />
                                 </t:template>  
-                            </t:Column> 
+                            </t:Column>  -->
                             
                             <t:Column width="14rem" hAlign="Center" sortProperty="buyer_department_code" filterProperty="buyer_department_code">
                                 <t:customData>
