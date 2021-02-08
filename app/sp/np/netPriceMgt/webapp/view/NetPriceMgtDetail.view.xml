@@ -308,7 +308,19 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/REASON}" textAlign="Center" />
                                             <t:template>
-                                                <Text type="Text" text="{path: 'generalInfoList>net_price_approval_reason_name'}"  />
+                                                <ComboBox
+                                                    width="100%"
+                                                    items="{
+                                                            path: 'util>/Code',
+                                                            filters: [
+                                                                {path: 'group_code', operator: 'EQ', value1: 'SP_NET_PRICE_REASON_CODE'},
+                                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                            ]
+                                                        }" selectedKey="{generalInfoList>net_price_approval_reason_code}">
+                                                    <items>
+                                                        <core:Item key="{util>code}" text="{util>code_name}" />
+                                                    </items>
+                                                </ComboBox>
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -322,7 +334,7 @@
                                                                 {path: 'group_code', operator: 'EQ', value1: 'DP_VI_MARKET_CODE'},
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                                             ]
-                                                        }">
+                                                        }" selectedKey="{generalInfoList>market_code}">
                                                     <items>
                                                         <core:Item key="{util>code}" text="{util>code_name}" />
                                                     </items>
@@ -338,13 +350,27 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/EFFECTIVE_START_DATE}" textAlign="Center" />
                                             <t:template>
-                                                <DatePicker placeholder="Date" value="{path: 'generalInfoList>/effective_start_date',type: 'sap.ui.model.odata.type.DateTime'}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+                                                <DatePicker placeholder="Date" 
+                                                    value="{ path: 'generalInfoList>effective_start_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                        formatOptions: {
+                                                            UTC: true ,
+                                                            format: 'yyyyMMdd',
+                                                            pattern: 'yyyy-MM-dd'
+                                                        } 
+                                                    }" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/EFFECTIVE_END_DATE}" textAlign="Center" />
                                             <t:template>
-                                                <DatePicker placeholder="Date" value="{path: 'generalInfoList>/effective_end_date',type: 'sap.ui.model.odata.type.DateTime'}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"/>
+                                                <DatePicker placeholder="Date" 
+                                                    value="{ path: 'generalInfoList>effective_end_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                        formatOptions: {
+                                                            UTC: true ,
+                                                            format: 'yyyyMMdd',
+                                                            pattern: 'yyyy-MM-dd'
+                                                        } 
+                                                    }" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -466,7 +492,7 @@
                                                                 {path: 'group_code', operator: 'EQ', value1: 'PAYMENT_TERMS'},
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                                             ]
-                                                        }">
+                                                        }" selectedKey="{generalInfoList>payterms_code}">
                                                     <items>
                                                         <core:Item key="{util>code}" text="{util>code_name}" />
                                                     </items>
@@ -502,7 +528,7 @@
                                                                 {path: 'group_code', operator: 'EQ', value1: 'OP_INCOTERMS'},
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
                                                             ]
-                                                        }">
+                                                        }" selectedKey="{generalInfoList>incoterms_code}">
                                                     <items>
                                                         <core:Item key="{util>code}" text="{util>code_name}" />
                                                     </items>
@@ -536,14 +562,15 @@
                                     rows="{generalInfoList>/GeneralView}"
                                     fixedColumnCount="3"
                                     visibleRowCountMode="Auto">
-                                    <!-- <t:extension>
+                                    <t:extension>
                                         <OverflowToolbar class="sapFDynamicPageAlignContent">
                                             <ToolbarSpacer />
-                                            <Button text="{I18N>/UPLOAD}" type="Transparent" press=".onDeveloping" visible="{detailViewModel>/viewMode}" />
                                             <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" visible="{detailViewModel>/viewMode}" />
-                                            <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteBasePrice" visible="{detailViewModel>/viewMode}" />
+                                            <!-- <Button text="{I18N>/UPLOAD}" type="Transparent" press=".onDeveloping" visible="{detailViewModel>/viewMode}" />
+                                            <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" visible="{detailViewModel>/viewMode}" />
+                                            <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteBasePrice" visible="{detailViewModel>/viewMode}" /> -->
                                         </OverflowToolbar>
-                                    </t:extension> -->
+                                    </t:extension>
                                     <t:columns>
                                         <!-- <t:Column id="mainColumnState2" hAlign="Center" width="40px" >
                                             <ObjectStatus icon="sap-icon://document" text="State" visible="false" />

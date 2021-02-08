@@ -349,10 +349,10 @@ BEGIN
                     SELECT IFNULL(NULLIF(PH.BEFORE_DESC, ''), 'INIT')
                     INTO   v_bf_pr_progress_status_code
                     FROM   OP_PU_PR_DTL_HIS PH
-                    WHERE  PH.TENANT_ID      = l_pr_item.TENANT_ID
-                    AND    PH.COMPANY_CODE   = l_pr_item.COMPANY_CODE
-                    AND    PH.PR_NUMBER      = l_pr_item.PR_NUMBER
-                    AND    PH.PR_ITEM_NUMBER = TO_BIGINT(l_pr_item.PR_ITEM_NUMBER)
+                    WHERE  PH.TENANT_ID      = :l_pr_item.TENANT_ID
+                    AND    PH.COMPANY_CODE   = :l_pr_item.COMPANY_CODE
+                    AND    PH.PR_NUMBER      = :l_pr_item.PR_NUMBER
+                    AND    PH.PR_ITEM_NUMBER = TO_BIGINT(:l_pr_item.PR_ITEM_NUMBER)
                     AND    PH.SEQUENCE = (
                                           SELECT MAX(SEQUENCE)
                                           FROM   OP_PU_PR_DTL_HIS H

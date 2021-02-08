@@ -68,7 +68,6 @@ sap.ui.define([
                 var oFilter = [];
                 var operationOrg;
                 var status;
-                var title;
 
                 if (this.sSurffix === "E") {
                     operationOrg = that.byId("operation_org_e").getSelectedKey();
@@ -81,19 +80,16 @@ sap.ui.define([
                 }
 
                 if (!!operationOrg) {
-                    oFilter.push();
                     oFilter.push(new Filter("org_code", FilterOperator.EQ, operationOrg));
                 }
 
                 if (!!status) {
-                    oFilter.push();
                     oFilter.push(new Filter("approve_status_code", FilterOperator.EQ, status));
                 }
                 
-                title = that.byId("search_title");
+                var title = that.byId("search_title").getValue();
                 
                 if (!!title) {
-                    oFilter.push();
                     oFilter.push(new Filter("approve_status_code", FilterOperator.Contains, title));
                 }
 

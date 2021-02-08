@@ -141,7 +141,7 @@ sap.ui.define([
                             oDetailModel.setData(oNewBasePriceData);
 
                             that._readData("detail", "/GeneralView", aMasterFilters, {}, function (data) {
-                                //console.log("GeneralView::", data);
+                                console.log("GeneralView::", data);
                                 generalInfoModel.setProperty("/GeneralView", data.results);
                             }.bind(this));
 
@@ -151,6 +151,7 @@ sap.ui.define([
                             oView.setBusy(false);
                         }
 
+                        oDetailModel.setProperty("/approval_status_code", "10");
                         // Process에 표시될 상태 및 아이콘 데이터 세팅
                         //this.onSetProcessFlowStateAndIcon(oDetailViewModel, oMaster.approve_status_code);
                     }.bind(this));
