@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.handler.EventHandler;
@@ -91,7 +92,7 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
                         v_row.setMaterialCode       (v_rs.getString("material_code"));
                         v_row.setMarketCode         (v_rs.getString("market_code"));
                         v_row.setCurrencyCode       (v_rs.getString("currency_code"));
-                        v_row.setBasePrice          (v_rs.getBigDecimal("base_price"));
+                        v_row.setNetPrice           (v_rs.getBigDecimal("net_price"));
                         v_row.setBasePriceTypeCode  (v_rs.getString("base_price_type_code"));
 
                         v_row.setPyearDecBaseCurrencyCode  (v_rs.getString("pyear_dec_base_currency_code"));
@@ -100,6 +101,12 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
                         v_row.setQuarterBaseCurrencyCode  (v_rs.getString("quarter_base_currency_code"));
                         v_row.setQuarterBasePrice   (v_rs.getBigDecimal("quarter_base_price"));
                         v_row.setQuarterCiRate      (v_rs.getBigDecimal("quarter_ci_rate"));
+
+                        v_row.setBaseDate           (v_rs.getDate("base_date").toLocalDate());
+                        v_row.setBasePrice          (v_rs.getBigDecimal("base_price"));
+                        v_row.setBaseCurrencyCode   (v_rs.getString("base_currency_code"));
+                        v_row.setBaseApplyStartYyyymm   (v_rs.getString("base_apply_start_yyyymm"));
+                        v_row.setBaseApplyEndYyyymm (v_rs.getString("base_apply_end_yyyymm"));
 
                         v_outTableArr.add(v_row);
 

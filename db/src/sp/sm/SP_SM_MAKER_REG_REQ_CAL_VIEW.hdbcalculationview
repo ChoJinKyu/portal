@@ -434,7 +434,7 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <input node="CM_CODE_LNG"/>
-    <filter>&quot;LANGUAGE_CD&quot;=upper(midstr('??LOCALE??', 1,2))</filter>
+    <filter>&quot;LANGUAGE_CD&quot;=upper(midstr('??LOCALE??', 1,2)) and &quot;GROUP_CODE&quot;='SP_SM_APPROVAL_TYPE'</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="Join_4" joinType="leftOuter">
     <viewAttributes>
@@ -757,26 +757,26 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="604.8658600610561" y="112"/>
+      <upperLeftCorner x="604" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Maker_Request" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="856.9999952316284"/>
+      <upperLeftCorner x="92" y="856"/>
       <rectangleSize height="30" width="198"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Department" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="409.35673168424245" y="696.9999964237213"/>
+      <upperLeftCorner x="409" y="696"/>
       <rectangleSize height="30" width="212"/>
     </shape>
     <shape expanded="true" modelObjectName="Employee" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="339.99999999999983" y="856.9999952316284"/>
+      <upperLeftCorner x="339" y="856"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="137.66666666666674" y="696.9999964237213"/>
+      <upperLeftCorner x="137" y="696"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Maker_Request" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
@@ -788,7 +788,7 @@
       <rectangleSize width="200"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="164.33333333333343" y="536.9999976158142"/>
+      <upperLeftCorner x="164" y="536"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
@@ -801,11 +801,11 @@
     </shape>
   
     <shape expanded="true" modelObjectName="Supplier_Country_Mst" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="525.9695074237037" y="536.9999976158142"/>
+      <upperLeftCorner x="525" y="536"/>
       <rectangleSize height="30" width="196"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="191.0000000000001" y="376.9999988079071"/>
+      <upperLeftCorner x="191" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
@@ -818,11 +818,11 @@
     </shape>
   
     <shape expanded="true" modelObjectName="Approval_Lng" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="657.2190047278491" y="376.9999988079071"/>
+      <upperLeftCorner x="657" y="376"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="604.8658600610561" y="217"/>
+      <upperLeftCorner x="604" y="217"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Join_3" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
@@ -831,7 +831,7 @@
     </shape>
     <shape modelObjectName="Approval_Lng" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="523" y="34"/>
-      <rectangleSize width="169.1337890625"/>
+      <rectangleSize width="169"/>
     </shape>
   </shapes>
 </layout>

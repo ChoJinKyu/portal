@@ -261,6 +261,7 @@ entity Sc_Contacts2 {
   };
 }
 extend Sc_Contacts2 with util.Managed;
+
 /* 
 CREATE COLUMN TABLE "8BF87896D3244B1B999EDBA857B1C829"."SP_SC_CONTACTS2"(
 	"ID" NVARCHAR(36) NOT NULL,

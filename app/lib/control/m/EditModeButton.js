@@ -13,7 +13,7 @@ sap.ui.define([
             properties: {
                 textDefault: { type: "string", group: "Appearance" },
                 textPressed: { type: "string", group: "Appearance" },
-                pressed: { type: "boolean", group: "Misc", defaultValue: false },
+                editMode: { type: "boolean", group: "Misc", defaultValue: false },
             }
         },
 
@@ -26,7 +26,7 @@ sap.ui.define([
                     this.setProperty("textDefault", oi18nModel.getText("/EDIT"));
                 if(!this.getProperty("textPressed"))
                     this.setProperty("textPressed", oi18nModel.getText("/EDIT_CANCEL"));
-                if(this.getProperty("pressed") === true){
+                if(this.getProperty("editMode") === true){
                     this.setProperty("text", this.getProperty("textPressed"));
                 }else{
                     this.setProperty("text", this.getProperty("textDefault"));
@@ -34,15 +34,13 @@ sap.ui.define([
             }.bind(this));
         },
 
-        setEditMode: function(pressed){
-            if(pressed){
+        setEditMode: function(bEditMode){
+            if(bEditMode){
                 this.setProperty("text", this.getProperty("textPressed"));
-                this.setProperty("pressed", pressed);
             }else{
                 this.setProperty("text", this.getProperty("textDefault"));
-                this.setProperty("pressed", pressed);
             }
-            
+            this.setProperty("editMode", bEditMode);
         }
 
     });

@@ -75,7 +75,6 @@
                     growing="true"
                     growingThreshold="100"
                     class="sapFDynamicPageAlignContent" 
-                    updateFinished=".onMainTableUpdateFinished"
                     items="{list>/SfFundingNotifyView}"
                     width="auto">
                     <headerToolbar>

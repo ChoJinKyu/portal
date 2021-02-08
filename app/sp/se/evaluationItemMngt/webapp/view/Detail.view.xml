@@ -181,7 +181,7 @@
                                     <layout:GridData span="L6 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox visible="{=${viewModel>/Args/leaf} === 'Y'}">
+                            <VBox>
                                 <!-- 정렬 -->
                                 <Label text="{I18N>/SORT}" required="true"/>
                                 <Input 
@@ -440,7 +440,7 @@
                     text="{I18N>/UPDATE}" 
                     enabled="{=
                         !${viewModel>/App/EditMode} &amp;&amp;
-                        ${viewModel>/Args/leaf} === 'Y'
+                        ${viewModel>/Args/new} !== 'Y'
                     }"
                     type="Transparent" 
                     press="onPressModeChange($event, 'UPDATE')" 

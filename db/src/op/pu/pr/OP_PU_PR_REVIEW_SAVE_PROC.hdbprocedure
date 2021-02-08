@@ -104,7 +104,7 @@ BEGIN
 
     -- Employee Number Check
     IF IFNULL(:I_EMPLOYEE_NUMBER, '-1') = '-1' OR TRIM(' ' FROM :I_EMPLOYEE_NUMBER ) = '' THEN
-        SELECT IFNULL(:I_EMPLOYEE_NUMBER, '100000')
+        SELECT IFNULL(:I_EMPLOYEE_NUMBER, '100000')  -- 임시 by dokim
         INTO   I_EMPLOYEE_NUMBER
         FROM   DUMMY
         ;

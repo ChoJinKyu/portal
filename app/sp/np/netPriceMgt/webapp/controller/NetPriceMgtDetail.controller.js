@@ -64,8 +64,9 @@ sap.ui.define([
 
                 //마스터정보 리스트
                 this.setModel(new JSONModel(), "masterInfoList");
-                //일반정보 리스트, 기준단가목록 같이 사용
+                //일반정보 리스트, 기준단가목록 같이 사용할수 없어서 나눔
                 this.setModel(new ManagedListModel(), "generalInfoList");
+                this.setModel(new ManagedListModel(), "basePriceInfoList");
                 //협상이력
                 this.setModel(new ManagedListModel(), "negotitaionList");
                 
@@ -83,15 +84,19 @@ sap.ui.define([
             _onRoutedThisPage: function (oEvent) {
                 var args = oEvent.getParameter("arguments");
                 //console.log("pMode", oEvent.getParameter("arguments"));
+                this.generalInfoTbl = this.byId("generalInfoTbl");
 
                 var oView = this.getView();
                 var oRootModel = this.getModel("rootModel");
                 var oDetailModel = this.getModel("detailModel");
                 var generalInfoModel = this.getModel("generalInfoList");
+                this.basePriceInfoModel = this.getModel("basePriceInfoList");
                 var oDetailViewModel = this.getModel("detailViewModel");
                 var oApproverModel = this.getModel("approver");
                 generalInfoModel.setProperty("/entityName", "GeneralView");
                 generalInfoModel.setProperty("/GeneralView", null);
+                this.basePriceInfoModel.setProperty("/entityName", "GeneralView");
+                this.basePriceInfoModel.setProperty("/GeneralView", null);
 
                 oDetailModel.setData({});
                 // Approval Line 초기화 시작
@@ -114,8 +119,8 @@ sap.ui.define([
                     var aMasterFilters = [];
                     aMasterFilters.push(new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID));
                     //aMasterFilters.push(new Filter("language_code", FilterOperator.EQ, "'" + SppUserSessionUtil.getUserInfo().LANGUAGE_CODE + "'"));
-                    //aMasterFilters.push(new Filter("approval_number", FilterOperator.EQ, args.pAppNum));
-                    aMasterFilters.push(new Filter("approval_number", FilterOperator.EQ, "1"));
+                    aMasterFilters.push(new Filter("approval_number", FilterOperator.EQ, args.pAppNum));
+                    //aMasterFilters.push(new Filter("approval_number", FilterOperator.EQ, "1"));
 
                     oView.setBusy(true);
 
@@ -130,19 +135,20 @@ sap.ui.define([
                                 "approval_number": result.approval_number,
                                 "approval_title": result.approval_title,
                                 //"approval_type_code": oRootModel.getProperty("/selectedApprovalType"),   // V10: 신규, V20: 변경
-                                "approve_status_code": result.approve_status_code,    // DR: Draft
-                                "status": oRootModel.getProperty("/processList/0/code_name"),
+                                "approval_status_code": result.approve_status_code,    // DR: Draft
+                                "approval_status_name": result.approve_status_name,
                                 "requestor_empno": result.requestor_empnm,
                                 "request_date": this.getOwnerComponent()._changeDateString(oToday),
                                 "net_price_document_type_code": result.net_price_document_type_code,
                                 "net_price_source_code": result.net_price_source_code,
-                                "details": []
+                                "net_price_type_code": result.net_price_type_code
                             };
                             oDetailModel.setData(oNewBasePriceData);
 
                             that._readData("detail", "/GeneralView", aMasterFilters, {}, function (data) {
                                 console.log("GeneralView::", data);
                                 generalInfoModel.setProperty("/GeneralView", data.results);
+                                //this.basePriceInfoModel.setProperty("/GeneralView", data.results);
                             }.bind(this));
 
                              
@@ -151,7 +157,6 @@ sap.ui.define([
                             oView.setBusy(false);
                         }
 
-                        oDetailModel.setProperty("/approval_status_code", "10");
                         // Process에 표시될 상태 및 아이콘 데이터 세팅
                         //this.onSetProcessFlowStateAndIcon(oDetailViewModel, oMaster.approve_status_code);
                     }.bind(this));
@@ -164,12 +169,10 @@ sap.ui.define([
                         "approval_number": "N/A",
                         "approval_title": "",
                         //"approval_type_code": oRootModel.getProperty("/selectedApprovalType"),   // V10: 신규, V20: 변경
-                        //"approve_status_code": "DR",    // DR: Draft
-                        "status": oRootModel.getProperty("/processList/0/code_name"),
+                        "approval_status_code": "DR",    // DR: Draft
+                        "approval_status_name": oRootModel.getProperty("/processList/0/code_name"),
                         "requestor_empno": SppUserSessionUtil.getUserInfo().EMPLOYEE_NUMBER,
-                        "request_date": this.getOwnerComponent()._changeDateString(oToday),
-                        "net_price_document_type_code": result.net_price_document_type_code,
-                        "details": []
+                        "request_date": this.getOwnerComponent()._changeDateString(oToday)
                     };
                     oDetailModel.setData(oNewBasePriceData);
                     oDetailViewModel.setProperty("/detailsLength", 0);
@@ -178,7 +181,7 @@ sap.ui.define([
                     // 저장된 Approver가 없는 경우 Line 추가
                     this.onApproverAdd(0);
      
-                    oDetailModel.setProperty("/approval_status_code", "10");
+                    //oDetailModel.setProperty("/approval_status_code", "DR");
                     // Process에 표시될 상태 및 아이콘 데이터 세팅
                    // this.onSetProcessFlowStateAndIcon(oDetailViewModel, oNewBasePriceData.approve_status_code);
                 }
@@ -509,20 +512,102 @@ sap.ui.define([
                 return oKey;
             },
             
+            /*========================================= Button Action ===============================*/
+            fnAddPrice: function() {
+                var chkFlag = true;
+                var procObj = {};
+                var inDetails = [];
+                
+                procObj = {
+                    "param" : {
+                        "tenant_id"         : SppUserSessionUtil.getUserInfo().TENANT_ID,
+                        "language_code"     : SppUserSessionUtil.getUserInfo().LANGUAGE_CODE,
+                        "inDetails": []
+                    }
+                };
+
+                this.generalInfoList = that.generalInfoTbl.getModel("generalInfoList").getProperty("/GeneralView");
+                console.log("generalInfoList : " + this.generalInfoList);
+                $(this.generalInfoList).each(function(idx, item){
+                    //console.log("item:" + item);
+                    if (!!item.tenant_id && !!item.company_code && !!item.org_type_code && !!item.org_code
+                        && !!item.supplier_code && !!item.material_code && !!item.market_code)  {
+                        var inDetailObj = {};
+                         inDetailObj.tenant_id = SppUserSessionUtil.getUserInfo().TENANT_ID;
+                         inDetailObj.company_code = item.company_code;
+                         inDetailObj.org_type_code = item.org_type_code;
+                         inDetailObj.org_code = item.org_code;
+                         inDetailObj.approval_number = item.approval_number;
+                         inDetailObj.item_sequence = (item.item_sequence === "") ? null : Number(item.item_sequence);
+                         inDetailObj.supplier_code = item.supplier_code;
+                         inDetailObj.material_code = item.material_code;
+                         inDetailObj.market_code = item.market_code;
+                         procObj.param.inDetails.push(inDetailObj);
+                    } else {
+                        //console.log("뭔가 부족한데요");
+                        MessageToast.show("필수값이 부족합니다.");
+                        chkFlag = false;
+                    }
+                });
+
+                if (chkFlag) {
+                    //procObj.param.inDetails = that.generalInfoList;
+                    MessageBox.confirm("Are Add Price Data?", {
+                        title : "Comfirmation",
+                        initialFocus : sap.m.MessageBox.Action.CANCEL,
+                        onClose : function(sButton) {
+                            if (sButton === MessageBox.Action.OK) {
+                                $.ajax({
+                                    url: "srv-api/odata/v4/sp.netpriceApprovalDetailPriceV4Service/ApprovalPriceInfoProc",
+                                    type: "POST",
+                                    data: JSON.stringify(procObj),
+                                    contentType: "application/json",
+                                    success: function (data) {
+                                        console.log('data:', data);
+                                        that.basePriceInfoModel.setProperty("/GeneralView", data.outDetails);
+                                        //console.log('data:', data.value[0]);
+                                    },
+                                    error: function (e) {
+                                        var eMessage = "callProcError",
+                                            errorType,
+                                            eMessageDetail;
+                                    
+                                        if (e.responseJSON.error.message == undefined || e.responseJSON.error.message == null) {
+                                            eMessage = "callProcError";
+                                            eMessageDetail = "callProcError";
+                                        } else {
+                                            eMessage = e.responseJSON.error.message.substring(0, 8);
+                                            eMessageDetail = e.responseJSON.error.message.substring(9);
+                                            errorType = e.responseJSON.error.message.substring(0, 1);
+                                            console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                                            
+                                        }
+
+                                        MessageToast.show(eMessageDetail);
+                                        console.log(eMessageDetail);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            },
+            /*========================================= Button Action ===============================*/
+
+            /**
+             *  yyyyMMdd 포맷으로 반환
+             */
+            getFormatDate: function (date){
+                var year = date.getFullYear();              //yyyy
+                var month = (1 + date.getMonth());          //M
+                month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+                var day = date.getDate();                   //d
+                day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+                return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+            },
             /*========================================= Footer Button Action ===============================*/
 
             onTmpSave: function() {
-                
-                // MessageBox.confirm("Are You Save Data?", {
-                //     title : "Comfirmation",
-                //     initialFocus : sap.m.MessageBox.Action.CANCEL,
-                //     onClose : function(sButton) {
-                //         if (sButton === MessageBox.Action.OK) {
-                            
-                //         }
-                //     }
-                // });
-
                 var procObj = {};
                 var generalList = [];
                 procObj = {
@@ -533,73 +618,101 @@ sap.ui.define([
                             "org_type_code"                   : "PL",
                             "org_code"                        : "5100",
                             "approval_number"                 : null,				/* 없으면 Insert (undefined, null, ''), 존재하면 Update*/
-                            "approval_title"                  : "Insert Test",
-                            "approval_contents"               : "Insert Test....",
+                            "approval_title"                  : that.byId("approval_title").getValue(),
+                            "approval_contents"               : that.byId("approval_contents").getValue(),
                             "attch_group_number"              : "temp00",
-                            "net_price_document_type_code"    : "A",
-                            "net_price_source_code"           : "B",
-                            "buyer_empno"                     : "emp00",
+                            "net_price_document_type_code"    : that.byId("net_price_document_type_code").getSelectedKey(),
+                            "net_price_source_code"           : that.byId("net_price_source_code").getSelectedKey(),
+                            "buyer_empno"                     : SppUserSessionUtil.getUserInfo().EMPLOYEE_NUMBER,
                             "tentprc_flag"                    : true
                         },
                         "general" : [
-                            {
-                                "item_sequence"                    : 1             /* (_row_state_ 값에 따라) [C] 불필요, [U,D] 는 필수 */
-                                ,"line_type_code"                  : "lineType"
-                                ,"material_code"                   : "material" 
-                                ,"payterms_code"                   : "payterms"
-                                ,"supplier_code"                   : "supplier"
-                                ,"effective_start_date"            : null
-                                ,"effective_end_date"              : null
-                                ,"surrogate_type_code"             : "surrogate"
-                                ,"currency_code"                   : "KRW"
-                                ,"net_price"                       : 100
-                                ,"vendor_pool_code"                : "VPCODE"
-                                ,"market_code"                     : "market"
-                                ,"net_price_approval_reason_code"  : "reason"
-                                ,"maker_code"                      : "maker"
-                                ,"incoterms"                       : "ico"
-                                ,"_row_state_"                     : "C"		     /* C, U, D */
-                            }
+                            // {
+                            //     "item_sequence"                    : 1             /* (_row_state_ 값에 따라) [C] 불필요, [U,D] 는 필수 */
+                            //     ,"line_type_code"                  : "lineType"
+                            //     ,"material_code"                   : "material" 
+                            //     ,"payterms_code"                   : "payterms"
+                            //     ,"supplier_code"                   : "supplier"
+                            //     ,"effective_start_date"            : null
+                            //     ,"effective_end_date"              : null
+                            //     ,"surrogate_type_code"             : "surrogate"
+                            //     ,"currency_code"                   : "KRW"
+                            //     ,"net_price"                       : 100
+                            //     ,"vendor_pool_code"                : "VPCODE"
+                            //     ,"market_code"                     : "market"
+                            //     ,"net_price_approval_reason_code"  : "reason"
+                            //     ,"maker_code"                      : "maker"
+                            //     ,"incoterms"                       : "ico"
+                            //     ,"_row_state_"                     : "C"		     /* C, U, D */
+                            // }
                         ]
                     }
                 }
-
-                // this.generalInfoTbl = this.byId("generalInfoTbl");
-                // this.generalInfoList = that.generalInfoTbl.getModel("generalInfoList").getProperty("/GeneralView");
-                // console.log("generalInfoList : " + this.generalInfoList);
-                // procObj.param.general = this.generalInfoList;
-
-                $.ajax({
-                    url: "srv-api/odata/v4/sp.netpriceApprovalDetailV4Service/ApprovalSaveProc",
-                    type: "POST",
-                    data: JSON.stringify(procObj),
-                    contentType: "application/json",
-                    success: function (data) {
-                        console.log('data:', data);
-                        //console.log('data:', data.value[0]);
-                       
-                    },
-                    error: function (e) {
-                        var eMessage = "callProcError",
-                            errorType,
-                            eMessageDetail;
-                       
-                        //sMsg = oBundle.getText("returnMsg", [v_returnModel.return_msg]);
-                        if (e.responseJSON.error.message == undefined || e.responseJSON.error.message == null) {
-                            eMessage = "callProcError";
-                            eMessageDetail = "callProcError";
-                        } else {
-                            eMessage = e.responseJSON.error.message.substring(0, 8);
-                            eMessageDetail = e.responseJSON.error.message.substring(9);
-                            errorType = e.responseJSON.error.message.substring(0, 1);
-                            console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                
+                MessageBox.confirm("Are You Save Data?", {
+                    title : "Comfirmation",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            this.generalInfoList = that.generalInfoTbl.getModel("generalInfoList").getProperty("/GeneralView");
+                            console.log("generalInfoList : " + this.generalInfoList);
                             
+                            $(this.generalInfoList).each(function(idx, item){
+                                var generalInfoObj = {};
+                                generalInfoObj.item_sequence = item.item_sequence;
+                                generalInfoObj.line_type_code = item.line_type_code;
+                                generalInfoObj.material_code = item.material_code;
+                                generalInfoObj.payterms_code = item.payterms_code;
+                                generalInfoObj.supplier_code = item.supplier_code;
+                                generalInfoObj.effective_start_date = that.getFormatDate(item.effective_start_date);
+                                generalInfoObj.effective_end_date = that.getFormatDate(item.effective_end_date);
+                                generalInfoObj.surrogate_type_code = item.surrogate_type_code;
+                                generalInfoObj.currency_code = item.currency_code;
+                                generalInfoObj.net_price = item.net_price;
+                                generalInfoObj.vendor_pool_code = item.vendor_pool_code;
+                                generalInfoObj.market_code = item.market_code;
+                                generalInfoObj.net_price_approval_reason_code = item.net_price_approval_reason_code;
+                                generalInfoObj.maker_code  = item.maker_code;
+                                generalInfoObj.incoterms = item.incoterms;
+                                generalInfoObj._row_state_ = item._row_state_;
+                                procObj.param.general.push(generalInfoObj);
+                            });
+            
+                            $.ajax({
+                                url: "srv-api/odata/v4/sp.netpriceApprovalDetailV4Service/ApprovalSaveProc",
+                                type: "POST",
+                                data: JSON.stringify(procObj),
+                                contentType: "application/json",
+                                success: function (data) {
+                                    console.log('data:', data);
+                                    //console.log('data:', data.value[0]);
+                                
+                                },
+                                error: function (e) {
+                                    var eMessage = "callProcError",
+                                        errorType,
+                                        eMessageDetail;
+                                
+                                    if (e.responseJSON.error.message == undefined || e.responseJSON.error.message == null) {
+                                        eMessage = "callProcError";
+                                        eMessageDetail = "callProcError";
+                                    } else {
+                                        eMessage = e.responseJSON.error.message.substring(0, 8);
+                                        eMessageDetail = e.responseJSON.error.message.substring(9);
+                                        errorType = e.responseJSON.error.message.substring(0, 1);
+                                        console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                                        
+                                    }
+            
+                                    MessageToast.show(eMessageDetail);
+                                    console.log(eMessageDetail);
+                                }
+                            });
                         }
-
-                        console.log(eMessageDetail);
                     }
                 });
             },
+
             /**
              * 저장
              */

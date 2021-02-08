@@ -89,7 +89,23 @@
 
                                                                 <VBox class="sapUiNoMarginBottom">
                                                                     <Label  text="Type"  />
-                                                                    <Text  id="textType" text="{NegoHeaders>/nego_type_code}" />
+                                                                    <Text  id="textType" text="{NegoHeaders>/nego_type/nego_type_name}" />
+                                                                    
+                                                                    <!-- nego type name 위한 temp성 콤보 -->
+                                                                    <ComboBox id="comboBoxTypeTemp" items="{
+                                                                            path: '/Sc_Nego_Type_Code_texts', 
+                                                                            templateShareable:true, 
+                                                                            filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}],
+                                                                            sorter: {
+                                                                                path: 'locale',
+                                                                                descending: true
+                                                                            }
+                                                                        }" 
+                                                                        editable="false" enabled="false" visible="false"
+                                                                        selectedKey="{NegoHeaders>/nego_type_code}" value="{NegoHeaders>/nego_type/nego_type_name}"
+                                                                        width="100%" required="true">
+                                                                        <core:ListItem key="{nego_type_code}" text="{nego_type_name}" />
+                                                                    </ComboBox>
                                                                 </VBox>
 
                                                                 <VBox class="sapUiNoMarginBottom">
@@ -102,17 +118,18 @@
                                                         <VBox  class="sapUiMediumMarginTop">
                                                             <Label  text="Title:" required="true" class="nameTitle"  />
                                                             
-                                                            <Input  id="inputTitle" width="100%" value="{NegoHeaders>/nego_document_title}" visible="{=${propInfo>/isEditMode}}"/>
+                                                            <Input  id="inputTitle" width="100%" value="{NegoHeaders>/nego_document_title}" visible="{=${propInfo>/isEditMode}}"
+                                                                placeholder="최대 300자까지 입력 할 수 있습니다."/>
                                                             <Text  id="textTitle" text="{NegoHeaders>/nego_document_title}" visible="{=!${propInfo>/isEditMode} }"/>
                                                         </VBox>
                                                     
                                                         <VBox class="sapUiMediumMarginTop">
                                                             <Label  text="Description:" class="nameTitle sapUiTinyMarginBottom" />
-                                                            <rte:RichTextEditor id="reDescription" editable="true" editorType="TinyMCE4" width="100%" height="400px" customToolbar="true" 
+                                                            <rte:RichTextEditor id="reDescription" editorType="TinyMCE4" width="100%" height="400px" customToolbar="true" 
                                                                 showGroupFont="true" showGroupLink="true" showGroupInsert="false" value="{NegoHeaders>/nego_document_desc}"
-                                                                visible="{=${propInfo>/isEditMode}}" 
+                                                                editable="{=${propInfo>/isEditMode}}" 
                                                                 />
-                                                            <FormattedText id="formTextDescription" htmlText="{NegoHeaders>/nego_document_desc}" visible="{=!${propInfo>/isEditMode}}"/>
+                                                            <!-- <FormattedText id="formTextDescription" htmlText="{NegoHeaders>/nego_document_desc}" visible="{=!${propInfo>/isEditMode}}"/> -->
                                                         </VBox>
 
                                                         <VBox  width="100%" height="100%" alignItems="Start" class="sapUiMediumMarginTop" >
@@ -133,7 +150,7 @@
                                                                 <!-- <RadioButton text="Sealed (Purchaser : X,Supplier :X)" />
                                                                 <RadioButton text="Blind (Purchaser : O,Supplier :X)" /> -->
                                                             </RadioButtonGroup>
-                                                            <Text text="{NegoHeaders>/negotiation_style_code}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
+                                                            <Text text="{NegoHeaders>/negotiation_style/negotiation_style_name}" visible="{=!${propInfo>/isEditMode}}"  class="sapUiTinyMarginEnd"/>
                                                         
                                                         </VBox>
 
@@ -194,9 +211,9 @@
 
                                                         <VBox  class="sapUiMediumMarginTop">
                                                             <Label  text="Note To Supplier:" class="sapMLabelNoText sapUiTinyMarginBottom"/>
-                                                            <rte:RichTextEditor id="reNoteToSupplier" editable="true" editorType="TinyMCE4" width="100%" height="400px" customToolbar="true" 
-                                                                value="{NegoHeaders>/note_content}" visible="{=${propInfo>/isEditMode}}" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
-                                                            <FormattedText id="formTextNoteToSupplier" htmlText="{NegoHeaders>/note_content}"  visible="{=!${propInfo>/isEditMode}}"/>
+                                                            <rte:RichTextEditor id="reNoteToSupplier" editorType="TinyMCE4" width="100%" height="400px" customToolbar="true" 
+                                                                value="{NegoHeaders>/note_content}" editable="{=${propInfo>/isEditMode}}" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                                            <!-- <FormattedText id="formTextNoteToSupplier" htmlText="{NegoHeaders>/note_content}"  visible="{=!${propInfo>/isEditMode}}"/> -->
                                                         </VBox>
 
                                                         <!-- <smartTable:SmartTable tableType="Table"
@@ -511,20 +528,28 @@
                                                                 <Button icon="sap-icon://account" press="onLoadSuppliers" />
                                                             </t:template>
                                                         </t:Column>
-                                                        <t:Column width="11rem" hAlign="Center">
+                                                        <t:Column width="13rem" hAlign="Center">
                                                             <Label text="Operating Org" required="true" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center" >
-                                                                    <MultiInput id="multiinput_purOperationOrg_code" visible="{=${propInfo>/isEditMode}}" 
-                                                                        tokens="{/processTypes}" value="{NegoHeaders>operation_unit_code} : {NegoHeaders>operation_unit_name}"
-                                                                        showValueHelp="true" valueHelpRequest=".onOperationOrgPress" textAlign="Center">
-                                                                        <tokens>
+                                                                    <Input id="multiinput_purOperationOrg_code" visible="{=${propInfo>/isEditMode}}" 
+                                                                        value="{NegoHeaders>operation_unit_code} : {NegoHeaders>operation_unit_name}"
+                                                                        showValueHelp="true" valueHelpRequest=".onOperationOrgPress" textAlign="Center"
+                                                                        showSuggestion="true" showSecondaryValues="true" suggestionItemSelected=".onSuggesionItemSelectedOprOrg"
+                                                                        suggestionItems="{
+                                                                            path: 'org>/Pur_Operation_Mapping',
+                                                                            templateShareable:true,
+                                                                            sorter: { path: 'org>org_code' }
+                                                                        }"
+                                                                        >
+                                                                        <core:ListItem key="{org>org_code}" text="{org>org_name}"  additionalText="{org>org_code}"/>
+                                                                        <!-- <tokens>
                                                                             <Token key="{key}" text="{text}" />
-                                                                        </tokens>
+                                                                        </tokens> -->
                                                                         <layoutData>
                                                                             <FlexItemData growFactor="1"/>
                                                                         </layoutData>
-                                                                    </MultiInput>
+                                                                    </Input>
                                                                     <!-- <Input value="{NegoHeaders>operation_unit_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/> -->
                                                                     <Text text="{NegoHeaders>operation_unit_code} : {NegoHeaders>operation_unit_name}" visible="{=!${propInfo>/isEditMode}}" textAlign="Center"/>
                                                                 </FlexBox>
@@ -578,8 +603,20 @@
                                                             <Label text="사양/규격" />
                                                             <t:template>
                                                                 <FlexBox >
-                                                                    <!-- <Input showValueHelp="true" value="{NegoHeaders>specification}" visible="{=${propInfo>/isEditMode}}"/> -->
-                                                                    <ComboBox value="{NegoHeaders>specification}" visible="{=${propInfo>/isEditMode}}"></ComboBox>
+                                                                    <ComboBox items="{
+                                                                            path: '/Sc_Spec_Code_View', 
+                                                                            templateShareable:true, 
+                                                                            filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}],
+                                                                            sorter: {
+                                                                                path: 'sort_no',
+                                                                                descending: false
+                                                                            }}" 
+                                                                        showSecondaryValues= "true"
+                                                                        selectedKey="{NegoHeaders>specification_code}" visible="{=${propInfo>/isEditMode}}"
+                                                                        width="100%" required="true">
+                                                                        <core:ListItem key="{specification_code}" text="{specification_name}" additionalText="{specification_code}"/>
+                                                                    </ComboBox>
+                                                                    
                                                                     <Text text="{NegoHeaders>specification}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -772,10 +809,10 @@
                                                                 <FlexBox justifyContent="Center">
                                                                     <DatePicker 
                                                                             valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd" visible="{=${propInfo>/isEditMode}}"
-                                                                            value="{path: 'NegoHeaders>/maturity_date', type: 'sap.ui.model.odata.type.Date', 
+                                                                            value="{path: 'NegoHeaders>maturity_date', type: 'sap.ui.model.odata.type.Date', 
                                                                                     formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" />
                                                                     <!-- <Input value="{NegoHeaders>maturity_date}" visible="{=${propInfo>/isEditMode}}"/> -->
-                                                                    <Text text="{path: 'NegoHeaders>/maturity_date', type: 'sap.ui.model.odata.type.Date', 
+                                                                    <Text text="{path: 'NegoHeaders>maturity_date', type: 'sap.ui.model.odata.type.Date', 
                                                                         formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -1142,10 +1179,10 @@
                     <uxap:footer>
                         <OverflowToolbar>
                             <ToolbarSpacer />
-                            <Button text="Draft" type="Emphasized" press=".onPageSaveButtonPress" />
-                            <Button text="Cancel" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageCancelButtonPress" />
+                            <Button text="{I18N>/TEMP_SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
+                            <Button text="{I18N>/CANCEL}" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageCancelButtonPress" />
                             <Button text="{I18N>/DELETE}" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageDeleteButtonPress" />
-                            <Button text="Edit" visible="{=!${propInfo>/isEditMode}}" type="Transparent" press=".onPageEditButtonPress" />
+                            <Button text="{I18N>/EDIT}" visible="{=!${propInfo>/isEditMode}}" type="Transparent" press=".onPageEditButtonPress" />
                         </OverflowToolbar>
                     </uxap:footer>
                 </uxap:ObjectPageLayout>

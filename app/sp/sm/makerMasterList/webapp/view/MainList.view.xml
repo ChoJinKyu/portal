@@ -25,17 +25,17 @@
                             <form:content>
                                 <VBox>
                                     <Label text="{I18N>/MAKER_CODE}" labelFor="input_maker_code_snapped"></Label>
-                                    <Input id="input_maker_code_snapped" change=".onChangeSearchField" placeholder="Search" value="{mainListViewModel>/searchArea/maker_code}"/>
+                                    <Input id="input_maker_code_snapped" placeholder="Search" value="{mainListViewModel>/searchArea/maker_code}"/>
                                     <layoutData><layout:GridData span="XL3 L3 M3 S12"/></layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label text="{I18N>/MAKER_NAME}" labelFor="input_maker_name_snapped"></Label>
-                                    <Input id="input_maker_name_snapped" change=".onChangeSearchField" placeholder="Search" value="{mainListViewModel>/searchArea/maker_name}"/>
+                                    <Input id="input_maker_name_snapped" placeholder="Search" value="{mainListViewModel>/searchArea/maker_name}"/>
                                     <layoutData><layout:GridData span="XL3 L3 M3 S12"/></layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label text="{I18N>/TAX_ID}" labelFor="input_tax_id_snapped"></Label>
-                                    <Input id="input_tax_id_snapped" change=".onChangeSearchField" placeholder="Search" value="{mainListViewModel>/searchArea/tax_id}"/>
+                                    <Input id="input_tax_id_snapped" placeholder="Search" value="{mainListViewModel>/searchArea/tax_id}"/>
                                     <layoutData><layout:GridData span="XL3 L3 M3 S12"/></layoutData>
                                 </VBox>
                             </form:content>
@@ -46,17 +46,17 @@
                             <form:content>
                                 <VBox>
                                     <Label text="{I18N>/MAKER_CODE}" labelFor="input_maker_code_expanded"></Label>
-                                    <Input id="input_maker_code_expanded" change=".onChangeSearchField" placeholder="Search" value="{mainListViewModel>/searchArea/maker_code}"/>
+                                    <Input id="input_maker_code_expanded" placeholder="Search" value="{mainListViewModel>/searchArea/maker_code}"/>
                                     <layoutData><layout:GridData span="XL3 L3 M3 S12"/></layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label text="{I18N>/MAKER_NAME}" labelFor="input_maker_name_expanded"></Label>
-                                    <Input id="input_maker_name_expanded" change=".onChangeSearchField" placeholder="Search" value="{mainListViewModel>/searchArea/maker_name}"/>
+                                    <Input id="input_maker_name_expanded" placeholder="Search" value="{mainListViewModel>/searchArea/maker_name}"/>
                                     <layoutData><layout:GridData span="XL3 L3 M3 S12"/></layoutData>
                                 </VBox>
                                 <VBox>
                                     <Label text="{I18N>/TAX_ID}" labelFor="input_tax_id_expanded"></Label>
-                                    <Input id="input_tax_id_expanded" change=".onChangeSearchField" placeholder="Search" value="{mainListViewModel>/searchArea/tax_id}"/>
+                                    <Input id="input_tax_id_expanded" placeholder="Search" value="{mainListViewModel>/searchArea/tax_id}"/>
                                     <layoutData><layout:GridData span="XL3 L3 M3 S12"/></layoutData>
                                 </VBox>
                             </form:content>
@@ -80,7 +80,7 @@
                     <form:content>
                         <VBox>
                             <Label text="{I18N>/COUNTRY}" labelFor="combobox_country"></Label>
-                            <ComboBox id="combobox_country" width="100%"  change=".onChangeSearchField"
+                            <ComboBox id="combobox_country" width="100%" 
                                     placeholder="{I18N>/ALL}" 
                                     selectedKey="{mainListViewModel>/searchArea/country_code}" 
                                     items="{
@@ -110,7 +110,7 @@
                         </VBox>
                         <VBox>
                             <Label text="{I18N>/VAT_NUMBER}" labelFor="input_vat_number"></Label>
-                            <Input id="input_vat_number" placeholder="Search" change=".onChangeSearchField" value="{mainListViewModel>/searchArea/vat_number}"/>
+                            <Input id="input_vat_number" placeholder="Search" value="{mainListViewModel>/searchArea/vat_number}"/>
                             <layoutData><layout:GridData span="XL3 L3 M3 S12"/></layoutData>
                         </VBox>
                         <VBox>
@@ -128,7 +128,6 @@
                             </SegmentedButton> -->
                             <!--segmentbtn_maker_status_code에 데이터를 가져와서 빈값을 push 할경우 I18N>/ALL 제대로 안읽혀서 먼저 all을 부른후... -->
                             <SegmentedButton id="segmentbtn_maker_status_code" 
-                                selectionChange=".onChangeSearchField" 
                                 selectedKey="{mainListViewModel>/searchArea/maker_status_code}">
                                 <items>
                                     <SegmentedButtonItem  text="{I18N>/ALL}" key="" width="auto"/>
@@ -153,7 +152,7 @@
                         </VBox>
                         <VBox>
                             <Label text="{I18N>/CREATE_USER_ID}" labelFor="input_create_user"></Label>
-                            <Input id="input_create_user" placeholder="Search" change=".onChangeSearchField" value="{mainListViewModel>/searchArea/create_user_id}"/>
+                            <Input id="input_create_user" placeholder="Search" value="{mainListViewModel>/searchArea/create_user_id}"/>
                             <layoutData><layout:GridData span="XL3 L3 M3 S12"/></layoutData>                                
                         </VBox>
                         <VBox>
@@ -163,12 +162,12 @@
                             showFooter="true" placeholder="yyyy/MM/dd - yyyy/MM/dd" displayFormat="yyyy/MM/dd" 
                             dateValue="{path:'mainListViewModel>/searchArea/st_local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyy/MM/dd' }}"
                             secondDateValue="{path:'mainListViewModel>/searchArea/ed_local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyy/MM/dd' }}"       
-                            change=".onChangeSearchField"/>	
+                            />	
                             <layoutData><layout:GridData span="XL3 L3 M3 S12"/></layoutData>
                         </VBox>
                         <VBox>
                             <Label text="{I18N>/UPDATE_USER_ID}" labelFor="input_last_update_user"></Label>
-                            <Input id="input_last_update_user" placeholder="Search" change=".onChangeSearchField" value="{mainListViewModel>/searchArea/update_user_id}"/>
+                            <Input id="input_last_update_user" placeholder="Search" value="{mainListViewModel>/searchArea/update_user_id}"/>
                             <layoutData><layout:GridData span="XL3 L3 M3 S12"/></layoutData>                                
                         </VBox>
                         <VBox>
@@ -178,7 +177,7 @@
                             showFooter="true" placeholder="yyyy/MM/dd - yyyy/MM/dd" displayFormat="yyyy/MM/dd" 
                             dateValue="{path:'mainListViewModel>/searchArea/st_local_update_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyy/MM/dd' }}"
                             secondDateValue="{path:'master>/ed_local_update_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyy/MM/dd' }}"       
-                            change=".onChangeSearchField"/>	
+                            />	
                             <layoutData><layout:GridData span="XL3 L3 M3 S12"/></layoutData>
                         </VBox>                     
                     </form:content>
@@ -209,7 +208,7 @@
                     class="sapUiResponsiveContentPadding"                    
                     demandPopin="true"
                     requestAtLeastFields="tenant_id"
-                    initiallyVisibleFields="maker_code,maker_local_name,maker_english_name,country_code,tax_id,vat_number,create_user_id,local_create_dtm,update_user_id,local_update_dtm,maker_status_code"
+                    initiallyVisibleFields="maker_code,maker_local_name,maker_english_name,country_code,tax_id,vat_number,create_user_id,local_create_dtm,update_user_id,local_update_dtm,maker_status_name"
                     >
                     <smartTable:customToolbar>
                         <OverflowToolbar design="Transparent">
@@ -323,7 +322,7 @@
                             <Column minScreenWidth ="" demandPopin="false" importance="High">
                                 <customData>
                                 <core:CustomData key="p13nData"
-                                value='\{"columnKey": "maker_status_code", "leadingProperty": "maker_status_code", "sortProperty": "maker_status_code", "filterProperty": "maker_status_code", "columnIndex": 11}'/>
+                                value='\{"columnKey": "maker_status_name", "leadingProperty": "maker_status_name", "sortProperty": "maker_status_name", "filterProperty": "maker_status_name", "columnIndex": 11}'/>
                                 </customData>
                                     <Text text="{I18N>/STATUS}"></Text>
                             </Column>

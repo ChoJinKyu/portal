@@ -90,10 +90,7 @@
                 selectionChange=".onSeletionChange"
                 noDataText="{I18N>/NCM0001}"
                 items="{
-                    path: 'list>/MdCategory',
-                    sorter: {
-                        path: 'spmd_category_sort_sequence'
-                    }
+                    path: 'list>/MdCategory'
 
                 }"
 				class="sapFDynamicPageAlignContent"

@@ -1,4 +1,4 @@
-VIEW Sp_Sc_Nego_Headers_New_Record_VIEW AS
+VIEW Sp_Sc_Nego_Headers_New_Record_View AS
 SELECT OT.TENANT_ID,
   CAST(MAX(IFNULL(NEGO_HEADER_ID,0) +1) AS BIGINT)                                    AS NEGO_HEADER_ID,
   CAST(MAX(IFNULL(NEGO_HEADER_ID,0) +1) AS BIGINT)                                    AS REFERENCE_NEGO_HEADER_ID,
@@ -11,8 +11,8 @@ SELECT OT.TENANT_ID,
 GROUP BY OT.TENANT_ID
 ;
 /*
-key tenant_id                      : String(5) not null @title : '테넌트ID';
-key nego_header_id                 : Integer64 not null @title : '협상헤더ID';
+key tenant_id                  : String(5) not null @title : '테넌트ID';
+key nego_header_id             : Integer64 not null @title : '협상헤더ID';
 reference_nego_header_id       : Integer64          @title : '참조협상헤더ID';
 previous_nego_header_id        : Integer64          @title : '이전협상헤더ID';
 reference_nego_document_number : Integer            @title : '참조협상문서번호';

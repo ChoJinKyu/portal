@@ -9,8 +9,9 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/core/Item",
-    "sap/m/MessageToast"
-], function (EventProvider, I18nModel, ODataModel, SearchField, JSONModel, Token, Filter, FilterOperator, Item, MessageToast) {
+    "sap/m/MessageToast",
+    "sap/m/MessageBox"
+], function (EventProvider, I18nModel, ODataModel, SearchField, JSONModel, Token, Filter, FilterOperator, Item, MessageToast, MessageBox) {
     "use strict";
 
     var that;
@@ -39,7 +40,7 @@ sap.ui.define([
 
         },
         NonPricePopupBeforeClose: function (e) {
-            
+
             that._NPSelectIndex = undefined;
         },
         NonPricePopupBeforeOpen: function (e) {
@@ -48,12 +49,12 @@ sap.ui.define([
             var tab = e.oSource.getContent()[0].getItems()[2].getItems()[0].getContent()[0];
             tab.destroyItems();
             // 조회용
-            
+
             if (that._NPSelectIndex >= 0) {
-                
+
                 console.log("조회 번호", that._NPSelectIndex);
                 var oModel = that.getView().getModel("viewModel");
-                
+
                 var oNPHeader = oModel.oData.NPHeader[that._NPSelectIndex];
                 // var oHeader = oNPHeaderModel.oData
 
@@ -84,29 +85,29 @@ sap.ui.define([
                     var aa = oNPHeader.item[i];
                     var addItem = this._NPFirstLine();
                     var oCells = addItem.getCells();
-                    
+
                     oCells[0].setText(String(i + 1));
 
                     if (h4 == "1") {
-                        
+
                         oCells[1].setValue(aa.v1);
-                        
+
                         oCells[2].setValue(aa.v2);
-                        
+
                         oCells[3].setValue(aa.v3);
 
                     } else if (h4 == "2") {
-                        
+
                         oCells[4].setValue(aa.v1);
-                        
+
                         oCells[5].setValue(aa.v2);
-                        
+
                         oCells[6].setValue(aa.v3);
 
                     } else if (h4 == "3") {
-                        
+
                         oCells[7].setValue(aa.v1);
-                        
+
                         oCells[8].setValue(aa.v2);
                     }
                     tab.addItem(addItem);
@@ -141,7 +142,7 @@ sap.ui.define([
 
             //버튼 생성
 
-            
+
             var CloseButton = new sap.m.Button({
                 // type: sap.m.ButtonType.Emphasized,
                 text: "취소",
@@ -150,7 +151,7 @@ sap.ui.define([
                     this._NPTableClear(e);
                 }.bind(this)
             });
-            
+
             var ApplyButton = new sap.m.Button({
                 type: sap.m.ButtonType.Emphasized,
                 text: "적용",
@@ -168,9 +169,9 @@ sap.ui.define([
                     this._NPTableClear(e);
                 }.bind(this)
             });
-            
+
             that._NonPriceInfPopup.setBeginButton(CloseButton);
-            
+
             that._NonPriceInfPopup.setEndButton(ApplyButton);
         },
         selectNPTypeChange: function (e) {
@@ -180,7 +181,7 @@ sap.ui.define([
             var typeFlag = { type: oKey };
             // that.getView().getModel("NPInfPopupUtil").oData.type = oKey;
 
-            
+
             typeFlagModel.setData(typeFlag);
 
             var tab = e.oSource.getParent().getParent().getParent().getParent().getItems()[2].getItems()[0].getContent()[0];
@@ -228,7 +229,7 @@ sap.ui.define([
         },
         _NPTableArrayAdd: function (NPHeaderData) {
             var oModel = that.getView().getModel("viewModel");
-            
+
             var oNPHeader = oModel.oData.NPHeader;
 
             oNPHeader.push(NPHeaderData);
@@ -237,10 +238,10 @@ sap.ui.define([
         },
         _NPTableArrayUpdate: function (NPHeaderData) {
             var oModel = that.getView().getModel("viewModel");
-            
+
             var oNPHeader = oModel.oData.NPHeader;
 
-            
+
             oNPHeader[that._NPSelectIndex] = NPHeaderData;
 
 
@@ -258,7 +259,7 @@ sap.ui.define([
             console.log("oItems == ", oItems);
             var flag = true;
             var errorObject = []
-            
+
             var oPopupType = that.getView().getModel("NPInfPopupUtil").oData.type;
 
             // Header 부분 입력 값 확인
@@ -305,13 +306,13 @@ sap.ui.define([
 
             // Item 부분 입력 값 확인
             for (var i = 0; i < oItems.length; i++) {
-                
-                
+
+
                 var oItem = oItems[i];
                 var Iflag = true;
                 var oErrorRow = [];
 
-                
+
 
 
                 if (oItems[i].v1.length < 1) {
@@ -451,25 +452,36 @@ sap.ui.define([
                     oCell = oItem.getCells()[3];
 
                     // Date 값 validation check
-                    if(oItem.getCells()[1].isValidValue() == false){
+                    if (oItem.getCells()[1].isValidValue() == false) {
                         oItem.getCells()[1].setValueState("Error");
                         oItem.getCells()[1].setValueStateText("Date Type Check");
                         flag = false;
                         continue;
                     }
-                    if(oItem.getCells()[2].isValidValue() == false){
+                    if (oItem.getCells()[2].isValidValue() == false) {
                         oItem.getCells()[2].setValueState("Error");
                         oItem.getCells()[2].setValueStateText("Date Type Check");
                         flag = false;
                         continue;
                     }
 
-                    if (oItem.getCells()[1].getValue() > oItem.getCells()[2].getValue()) {
-                        debugger;
+                    // if(oItem.getCells()[1].getDateValue() == null || oItem.getCells()[2].getDateValue() == null ){
+                    //     oItem.getCells()[1].setValueState("Error");
+                    //     oItem.getCells()[1].setValueStateText("필수 입력");
+                    //     oItem.getCells()[2].setValueState("Error");
+                    //     oItem.getCells()[2].setValueStateText("필수 입력");
+
+                    //     flag = false;
+                    //     continue;
+                    // }
+
+                    if (oItem.getCells()[1].getDateValue() > oItem.getCells()[2].getDateValue() && oItem.getCells()[1].getDateValue() != null && oItem.getCells()[2].getDateValue() != null) {
                         oItem.getCells()[1].setValueState("Error");
-                        oItem.getCells()[1].setValueStateText("'Response Value From'은 'Response Value To'보다 클 수 없습니다.");
+                        // oItem.getCells()[1].setValueStateText("'Response Value From'은 'Response Value To'보다 클 수 없습니다.");
+                        oItem.getCells()[1].setValueStateText("'Response Value From' must be less than 'Response Value To'");
                         oItem.getCells()[2].setValueState("Error");
-                        oItem.getCells()[2].setValueStateText("'Response Value From'은 'Response Value To'보다 클 수 없습니다.");
+                        oItem.getCells()[2].setValueStateText("'Response Value From' must be less than 'Response Value To'");
+
                         flag = false;
                         console.log("from : to =====", oItem.getCells()[1].getValue(), " : ", oItem.getCells()[2].getValue());
                     }
@@ -509,7 +521,7 @@ sap.ui.define([
 
 
             var typeFlagModel = that.getView().getModel("NPInfPopupUtil");
-            
+
             var typeFlag = typeFlagModel.oData.type;
 
 
@@ -579,23 +591,23 @@ sap.ui.define([
             var oDatePicker = new sap.m.DatePicker();
             oDatePicker.setDisplayFormat("yyyy/MM/dd");
             oDatePicker.setPlaceholder("YYYY/MM/DD");
-            
+
             newLine.addCell(new sap.m.Text({ text: "1" }));
-            
+
             newLine.addCell(oDatePicker.clone());
-            
+
             newLine.addCell(oDatePicker.clone());
-            
+
             newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
-            
+
             newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
-            
+
             newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
-            
+
             newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
-            
+
             newLine.addCell(new sap.m.Input({ value: "" }));
-            
+
             newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
 
             return newLine;
@@ -606,40 +618,40 @@ sap.ui.define([
             var oIndex = e.oSource.getParent().getParent().getItems().length + 1;
 
             var oDatePicker = new sap.m.DatePicker(
-            //     {
-            //     change: function (e) {
-            //         var flag;
-            //         var oId = e.getParameters().id,
-            //             sValue = e.getParameter("value"),
-            //             bValid = e.getParameter("valid");
-            //         var oInput = e.getSource();
-            //         if (bValid) {
-            //             oInput.setValueState("None");
-            //         } else {
-            //             oInput.setValueState("Error");
-            //         }
-            //     }
-            // }
+                //     {
+                //     change: function (e) {
+                //         var flag;
+                //         var oId = e.getParameters().id,
+                //             sValue = e.getParameter("value"),
+                //             bValid = e.getParameter("valid");
+                //         var oInput = e.getSource();
+                //         if (bValid) {
+                //             oInput.setValueState("None");
+                //         } else {
+                //             oInput.setValueState("Error");
+                //         }
+                //     }
+                // }
             );
             oDatePicker.setDisplayFormat("yyyy/MM/dd");
             oDatePicker.setPlaceholder("YYYY/MM/DD");
-            
+
             newLine.addCell(new sap.m.Text({ text: String(oIndex) }));
-            
+
             newLine.addCell(oDatePicker.clone());
-            
+
             newLine.addCell(oDatePicker.clone());
-            
+
             newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
-            
+
             newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
-            
+
             newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
-            
+
             newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
-            
+
             newLine.addCell(new sap.m.Input({ value: "" }));
-            
+
             newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
 
             tab.addItem(newLine);
@@ -662,7 +674,11 @@ sap.ui.define([
         destroy: function () {
             that._NonPriceInfPopup.destroy();
             that._NonPriceInfPopup = undefined;
-        }
+        },
+        createConfirmBox: function () {
+
+            MessageBox.confirm("Sprint#3 에 적용됩니다.", {});
+        },
     });
 
     return NonPriceInf;

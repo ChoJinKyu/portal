@@ -1125,18 +1125,18 @@ sap.ui.define([
                     })
                 );
             }
-
+            if (description && description.length > 0) {
+                aTableSearchState.push(new Filter("tolower(spec_name)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));
+            }
             if (eDType && eDType.length > 0) {
                 aTableSearchState.push(new Filter("mold_location_type_code", FilterOperator.EQ, eDType));
             }
+            
             if (model && model.length > 0) {
                 aTableSearchState.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + model.toLowerCase() + "'"));
             }
             if (moldNo && moldNo.length > 0) {
                 aTableSearchState.push(new Filter("mold_number", FilterOperator.Contains, moldNo.toUpperCase()));
-            }
-            if (description && description.length > 0) {
-                aTableSearchState.push(new Filter("tolower(spec_name)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));
             }
             if (familyPartNo && familyPartNo.length > 0) {
                 aTableSearchState.push(new Filter({

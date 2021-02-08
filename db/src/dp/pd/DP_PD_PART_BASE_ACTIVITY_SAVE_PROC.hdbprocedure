@@ -63,45 +63,46 @@ BEGIN
     /*  CRUD_TYPE가 'D' 인 Data 삭제 */
     IF :CRUD_TYPE = 'D' THEN
     
-        SELECT COUNT(*)	
-        INTO   V_CNT		
-        FROM   DUMMY			
-        WHERE  EXISTS			
-                (   SELECT A.ACTIVITY_CODE	
-                    FROM   DP_PD_PART_BASE_ACTIVITY A, DP_PD_PART_ACTIVITY_TEMPLATE B
-                    WHERE  A.TENANT_ID = V_TENANT_ID	
-                    AND    A.ACTIVITY_CODE = V_ACTIVITY_CODE	
-                    AND    B.TENANT_ID = A.TENANT_ID	
-                    AND    B.ACTIVITY_CODE = A.ACTIVITY_CODE	
-                    AND    B.TENANT_ID = A.TENANT_ID	
-                    AND    B.ACTIVITY_CODE = A.ACTIVITY_CODE	
-                )
-        ;	
+        BEGIN
 
-        IF V_CNT > 0 THEN
-            RETURN;
-        END IF;
-        
-        DELETE FROM DP_PD_PART_BASE_ACTIVITY_CATEGORY C
-        WHERE  C.TENANT_ID = V_TENANT_ID
-        AND    C.ACTIVITY_CODE = V_ACTIVITY_CODE
-        ;
- 
-        DELETE FROM DP_PD_PART_BASE_ACTIVITY_LNG D
-        WHERE  D.TENANT_ID = V_TENANT_ID
-        AND    D.ACTIVITY_CODE = V_ACTIVITY_CODE
-        ;
- 
-        DELETE FROM DP_PD_PART_BASE_ACTIVITY M
-        WHERE  M.TENANT_ID = V_TENANT_ID
-        AND    M.ACTIVITY_CODE = V_ACTIVITY_CODE
-        ;
+            SELECT COUNT(*)	
+            INTO   V_CNT		
+            FROM   DUMMY			
+            WHERE  EXISTS			
+                    (   SELECT A.ACTIVITY_CODE	
+                        FROM   DP_PD_PART_BASE_ACTIVITY A, DP_PD_PART_ACTIVITY_TEMPLATE B
+                        WHERE  A.TENANT_ID = V_TENANT_ID	
+                        AND    A.ACTIVITY_CODE = V_ACTIVITY_CODE	
+                        AND    B.TENANT_ID = A.TENANT_ID	
+                        AND    B.ACTIVITY_CODE = A.ACTIVITY_CODE	
+                    )
+            ;	
 
-        UPDATE DP_PD_PART_BASE_ACTIVITY
-        SET    SEQUENCE = SEQUENCE - 1
-        WHERE  TENANT_ID = V_TENANT_ID
-        AND    SEQUENCE > V_ORG_SEQUENCE
-        ; 
+            IF V_CNT > 0 THEN
+                SIGNAL SQL_ERROR_CODE 10000 SET MESSAGE_TEXT = 'Not Deleted.'; 
+            END IF;
+            
+            DELETE FROM DP_PD_PART_BASE_ACTIVITY_CATEGORY C
+            WHERE  C.TENANT_ID = V_TENANT_ID
+            AND    C.ACTIVITY_CODE = V_ACTIVITY_CODE
+            ;
+    
+            DELETE FROM DP_PD_PART_BASE_ACTIVITY_LNG D
+            WHERE  D.TENANT_ID = V_TENANT_ID
+            AND    D.ACTIVITY_CODE = V_ACTIVITY_CODE
+            ;
+    
+            DELETE FROM DP_PD_PART_BASE_ACTIVITY M
+            WHERE  M.TENANT_ID = V_TENANT_ID
+            AND    M.ACTIVITY_CODE = V_ACTIVITY_CODE
+            ;
+
+            UPDATE DP_PD_PART_BASE_ACTIVITY
+            SET    SEQUENCE = SEQUENCE - 1
+            WHERE  TENANT_ID = V_TENANT_ID
+            AND    SEQUENCE > V_ORG_SEQUENCE
+            ; 
+        END;
 
     ELSE
 

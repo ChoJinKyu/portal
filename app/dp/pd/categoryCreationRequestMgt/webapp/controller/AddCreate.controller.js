@@ -513,11 +513,11 @@ sap.ui.define([
 		 */
         onPageCancelButtonPress: function () {
             this.validator.clearValueState(this.byId("midObjectForm"));
-            if (this._sRequestNumber !== "new"){
-                this._toShowMode();
-            }else{
+            // if (this._sRequestNumber !== "new"){
+            //     this._toShowMode();
+            // }else{
                 this.getRouter().navTo("mainPage", {}, true);
-            }
+            // }
         },
 
 		/**

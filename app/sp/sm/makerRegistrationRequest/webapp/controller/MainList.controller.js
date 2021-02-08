@@ -132,7 +132,7 @@ sap.ui.define([
                 oRecord = this.getModel().getProperty(sPath);//this.getModel("list").getProperty(sPath);
 
             var inputModel = new JSONModel();
-            inputModel.setData({ gubun: "MR", mode: "R", tenantId: oRecord.tenant_id, taxId: oRecord.tax_id, progressCode: oRecord.maker_progress_status_code, makerCode: "" });
+            inputModel.setData({ gubun: "MR", mode: "R", tenantId: oRecord.tenant_id, taxId: oRecord.tax_id, progressCode: oRecord.maker_progress_status_code, makerCode: "", typeCode: oRecord.maker_request_type_code });
             this._fnMoveMakerMasterCreate(inputModel);
         },
         _fnMoveMakerMasterCreate: function (inputModel) {

@@ -10,6 +10,7 @@ sap.ui.define([
 	"sap/m/TablePersoController",
 	"sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    'sap/ui/model/Sorter',
     "sap/m/MessageBox",
     "sap/m/MessageToast",
 	"sap/m/ColumnListItem",
@@ -19,7 +20,7 @@ sap.ui.define([
 	"sap/ui/core/Item",
 	"./Utils"
 ],
-  function (BaseController, Multilingual, Validator, DateFormatter, Formatter, History, JSONModel, ManagedListModel, TablePersoController, Filter, FilterOperator, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, Item, Utils) {
+  function (BaseController, Multilingual, Validator, DateFormatter, Formatter, History, JSONModel, ManagedListModel, TablePersoController, Filter, FilterOperator, Sorter, MessageBox, MessageToast, ColumnListItem, ObjectIdentifier, Text, Input, Item, Utils) {
     "use strict";
 
     return BaseController.extend("pg.md.mdCategory.controller.mdCategory", {
@@ -158,12 +159,16 @@ sap.ui.define([
 				aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, sChain));
 			}
 			
+            var aSorter = [];
+            aSorter.push(new Sorter("spmd_category_sort_sequence"));
+
             this.getView()
                 .setBusy(true)
                 .getModel("list")
                 .setTransactionModel(this.getView().getModel())
                 .read("/MdCategory", {
-				    filters: aSearchFilters,
+                    filters: aSearchFilters,
+                    sorter: aSorter,
                     urlParameters: {
                         "$expand": "org_infos"
                     },
