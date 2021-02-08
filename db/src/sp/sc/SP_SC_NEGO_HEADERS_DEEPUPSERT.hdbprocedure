@@ -15,6 +15,7 @@ BEGIN
 	DECLARE v_int INT = 0;
     DECLARE v_tenant_id NVARCHAR(10);
     DECLARE v_nego_header_id BIGINT;
+    DECLARE v_nego_item_number_max INTEGER;
     DECLARE v_app_user NVARCHAR(255); 
 	DECLARE error_occurred CONDITION FOR SQL_ERROR_CODE 10001;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -48,8 +49,17 @@ BEGIN
     -- IN	I_TABLE_NEGOSUPPLIERS  SP_SC_NEGO_SUPPLIERS_KEY_TYPE,
     
     -- SELECT SESSION_CONTEXT('APPLICATION_USER') INTO APP_USER FROM DUMMY;
-
-
+    
+/* Cleansing Garbage Data
+    DELETE FROM SP_SC_NEGO_HEADERS    WHERE IFNULL(TENANT_ID,'') = '' OR IFNULL(NEGO_HEADER_ID,0) <= 0;
+    DELETE FROM SP_SC_NEGO_ITEM_PRICES WHERE IFNULL(TENANT_ID,'') = '' OR IFNULL(NEGO_HEADER_ID,0) <= 0
+                                         OR IFNULL(NULLIF(SUBSTRING(NEGO_ITEM_NUMBER,1,3),'TBD'),'') = ''
+    ;
+    DELETE FROM SP_SC_NEGO_SUPPLIERS  WHERE IFNULL(TENANT_ID,'') = '' OR IFNULL(NEGO_HEADER_ID,0) <= 0
+                                         OR IFNULL(NULLIF(SUBSTRING(NEGO_ITEM_NUMBER,1,3),'TBD'),'') = ''
+                                         OR IFNULL(ITEM_SUPPLIER_SEQUENCE,'') = ''
+    ;
+ */
     /***********************************************************************************/
     v_app_user := SESSION_CONTEXT('APPLICATIONUSER');
 
@@ -104,7 +114,35 @@ BEGIN
             left outer many to one join SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW NEW_NH ON NH.tenant_id = NEW_NH.tenant_id
             left outer many to one join SP_SC_NEGO_HEADERS_NEW_REVISION_VIEW NEW_RV ON NH.tenant_id = NEW_RV.tenant_id AND NH.nego_header_id = NEW_RV.nego_header_id
             ;
-    SELECT TOP 1 tenant_id, Nego_header_id INTO v_tenant_id, v_nego_header_id FROM :vt_nego_header;
+    SELECT TOP 1 tenant_id, nego_header_id  INTO v_tenant_id, v_nego_header_id FROM :vt_nego_header;
+        -- LEFT OUTER ONE TO ZERO JOIN ( SELECT NEGO_ITEM_NUMBER FROM SP_SC_NEGO_ITEM_PRICES GROUP BY );
+
+    -- # Check Condition : Generate Negotiation Header
+    IF ifnull(v_tenant_id,'') = '' OR ifnull(v_nego_header_id,0) <= 0 THEN
+        SIGNAL error_occurred SET MESSAGE_TEXT = 'Negotiation header could not be determined!';
+    END IF;
+
+    -- # Negotiation Item Prices : MAX()
+    SELECT CAST(MAX(nego_item_number) AS INTEGER) INTO v_nego_item_number_max 
+        FROM sp_sc_nego_item_prices WHERE tenant_id = :v_tenant_id and nego_header_id = :v_nego_header_id;
+
+    vt_nego_item_prices_map = 
+        select NIP.tenant_id        as tenant_id_tmp
+            ,  NIP.nego_header_id   as nego_header_id_tmp
+            ,  NIP.nego_item_number as nego_item_number_tmp
+            ,  :v_tenant_id         as tenant_id
+            ,  :v_nego_header_id    as nego_header_id
+            ,  MAP( SUBSTRING(NIP.nego_item_number,1,3)  -- # 신규(TBD) ItemPrice Key Record 생성
+                , 'TBD', LPAD( CAST( IFNULL(:v_nego_item_number_max,0) 
+                                + row_number() over(partition by NIP.tenant_id, NIP.nego_header_id order by NIP.nego_item_number)
+                               AS INTEGER) , 5, '0')
+                , NIP.nego_item_number ) as nego_item_number
+            ,  NS_MAX.item_supplier_sequence_max as item_supplier_sequence_max
+            FROM :I_TABLE_NEGOITEMPRICES AS NIP LEFT OUTER ONE TO ONE JOIN 
+                (SELECT tenant_id, nego_header_id, nego_item_number, CAST(MAX(item_supplier_sequence) AS INTEGER) item_supplier_sequence_max 
+                 FROM sp_Sc_Nego_Suppliers GROUP BY tenant_id, nego_header_id, nego_item_number) AS NS_MAX
+                 ON NIP.tenant_id = NS_MAX.tenant_id AND NIP.nego_header_id = NS_MAX.nego_header_id AND NIP.nego_item_number = NS_MAX.nego_item_number
+            ;
 
     BEGIN PARALLEL EXECUTION
 /* 
@@ -229,13 +267,10 @@ BEGIN
             , update_user_id
             , system_create_dtm
             , system_update_dtm
-        ) SELECT 
-              IFNULL(NIP.tenant_id, :v_tenant_id)           AS tenant_id
-            , IFNULL(NIP.nego_header_id, :v_nego_header_id) AS nego_header_id
-            , map(nego_item_number
-                    , -1, CAST( IFNULL(NIP_ITEM_MAX.nego_item_number_max,0) 
-                                + row_number() over(partition by NIP.tenant_id, NIP.nego_header_id, NIP.nego_item_number) AS INTEGER) 
-                    , nego_item_number) as nego_item_number
+        ) SELECT
+              IFNULL(V_NIPM.tenant_id       , NIP.tenant_id       ) AS tenant_id
+            , IFNULL(V_NIPM.nego_header_id  , NIP.nego_header_id  ) AS nego_header_id
+            , IFNULL(V_NIPM.nego_item_number, NIP.nego_item_number) AS nego_item_number
             , NIP.company_code
             , NIP.operation_org_type_code
             , NIP.operation_org_code
@@ -286,13 +321,11 @@ BEGIN
             , NIP.request_department_code
             , NOW() local_create_dtm, NOW() local_update_dtm, :v_app_user create_user_id, :v_app_user update_user_id, NOW() system_create_dtm, NOW() system_update_dtm
             FROM :I_TABLE_NEGOITEMPRICES NIP
-            left outer join ( SELECT tenant_id, nego_header_id, CAST(MAX(nego_item_number) AS INTEGER) nego_item_number_max 
-                              FROM SP_SC_NEGO_ITEM_PRICES 
-                              WHERE tenant_id = :v_tenant_id AND nego_header_id = :v_nego_header_id 
-                              GROUP BY tenant_id, nego_header_id ) NIP_ITEM_MAX
-            ON NIP.tenant_id = NIP_ITEM_MAX.tenant_id AND NIP.nego_header_id = NIP_ITEM_MAX.nego_header_id
+            LEFT OUTER ONE TO ONE JOIN :vt_nego_item_prices_map V_NIPM
+            ON  NIP.tenant_id        = V_NIPM.tenant_id_tmp 
+            AND NIP.nego_header_id   = V_NIPM.nego_header_id_tmp
+            AND NIP.nego_item_number = V_NIPM.nego_item_number_tmp
             ;
-
 
         UPSERT SP_SC_NEGO_SUPPLIERS(
               tenant_id
@@ -320,11 +353,35 @@ BEGIN
             , upDATE_user_id
             , system_create_dtm
             , system_upDATE_dtm
-        ) SELECT *
-        , NOW() local_create_dtm, NOW() local_update_dtm, :v_app_user create_user_id, :v_app_user update_user_id, NOW() system_create_dtm, NOW() system_update_dtm
-        FROM :I_TABLE_NEGOSUPPLIERS;
+        ) SELECT 
+              IFNULL(V_NIPM.tenant_id       , NS.tenant_id       ) AS tenant_id
+            , IFNULL(V_NIPM.nego_header_id  , NS.nego_header_id  ) AS nego_header_id
+            , IFNULL(V_NIPM.nego_item_number, NS.nego_item_number) AS nego_item_number
+            , MAP(NS.item_supplier_sequence
+                , '', LPAD(ROW_NUMBER() OVER(PARTITION BY NS.tenant_id, NS.nego_header_id, NS.nego_item_number ORDER BY NS.nego_supplier_register_type_code) ,5 ,'0')
+                , NS.item_supplier_sequence) AS item_supplier_sequence
+            , NS.operation_org_code
+            , NS.operation_unit_code
+            , NS.nego_supplier_register_type_code
+            , NS.evaluation_type_code
+            , NS.nego_supeval_type_code
+            , NS.supplier_code
+            , NS.supplier_name
+            , NS.supplier_type_code
+            , NS.excl_flag
+            , NS.excl_reason_desc
+            , NS.include_flag
+            , NS.nego_target_include_reason_desc
+            , NS.only_maker_flat
+            , NS.contact
+            , NS.note_content
+            , NOW() local_create_dtm, NOW() local_update_dtm, :v_app_user create_user_id, :v_app_user update_user_id, NOW() system_create_dtm, NOW() system_update_dtm
+        FROM :I_TABLE_NEGOSUPPLIERS NS
+            LEFT OUTER ONE TO ONE JOIN :vt_nego_item_prices_map V_NIPM
+            ON NS.tenant_id = V_NIPM.tenant_id_tmp AND NS.nego_header_id = V_NIPM.nego_header_id_tmp AND NS.nego_item_number = V_NIPM.nego_item_number_tmp
+        ;
     END;
 
     -- # ERROR TEST # SELECT 1/:v_int FROM DUMMY;
-    O_TABLE_MESSAGE = SELECT '' AS TENANT_ID, 0 AS NEGO_HEADER_ID, CAST(0 AS INTEGER) AS CODE, 'Successed' AS MESSAGE FROM DUMMY;
+    O_TABLE_MESSAGE = SELECT :v_tenant_id AS TENANT_ID, :v_nego_header_id AS NEGO_HEADER_ID, CAST(0 AS INTEGER) AS CODE, 'Successed' AS MESSAGE FROM DUMMY;
 END;
