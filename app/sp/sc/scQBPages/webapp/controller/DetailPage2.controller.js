@@ -81,7 +81,8 @@ sap.ui.define([
                         negotiation_output_class_code: "", 
                         immediate_apply_flag: "Y",
                         Items: [],
-                        nego_progress_status: {}
+                        nego_progress_status: {},
+                        contact_point: {}
                     },
                     NegoItemPrices: {
                         Suppliers: []
@@ -1757,7 +1758,7 @@ sap.ui.define([
             onPressBuyerPop: function(e){
                 
                 var oId = e.oSource.sId;
-                var oInput = this.byId(oId);
+                var oInput = this.byId("inputContactPoint");
 
                 if(!this._EmployeeDialog){
                     this._EmployeeDialog = new EmployeeDialog({
@@ -1773,6 +1774,8 @@ sap.ui.define([
                     this._EmployeeDialog.attachEvent("apply", function(oEvent){
                         // oInput.setTokens(oEvent.getSource().getTokens());
                         var oItem = oEvent.getParameters("item").item;
+                        this.getView().getModel("NegoHeaders").oData.contact_point = oItem;
+                        this.getView().getModel("NegoHeaders").oData.contact_point.employee_name = this.getView().getModel("NegoHeaders").oData.contact_point.user_local_name;
                         oInput.setValue(oItem.user_local_name);
                         oEvent.getSource().close(); //직접 닫아야 합니다.
                     }.bind(this));

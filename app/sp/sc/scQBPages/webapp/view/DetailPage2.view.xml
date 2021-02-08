@@ -170,12 +170,12 @@
                                                                 <HBox alignContent="Center" alignItems="Center" width="100%" class="sapUiSmallMarginEnd">
                                                                     <VBox width="100px">
                                                                         <Label text="Max Round Count" width="120px"  required="true" class="sapMLabelNoText"/>
-                                                                        <Input value="" width="100%" visible="{=${propInfo>/isEditMode}}"/>
-                                                                        <Text text="" width="100%" visible="{=!${propInfo>/isEditMode}}"/>
+                                                                        <Input value="{NegoHeaders>/max_round_count}" width="100%" visible="{=${propInfo>/isEditMode}}"/>
+                                                                        <Text text="{NegoHeaders>/max_round_count}" width="100%" visible="{=!${propInfo>/isEditMode}}"/>
                                                                     </VBox>
                                                                     <VBox>
                                                                         <Label text=""  class="sapMLabelNoText"/>
-                                                                        <CheckBox class="" editable="{=${propInfo>/isEditMode}}"/>
+                                                                        <CheckBox  selected="{=${NegoHeaders>/auto_round}==='Y'}" class="" editable="{=${propInfo>/isEditMode}}"/>
                                                                     </VBox>
                                                                     <VBox>
                                                                         <Label text=""  class="sapMLabelNoText"/>
@@ -183,8 +183,8 @@
                                                                     </VBox>
                                                                     <VBox>
                                                                         <Label text=""  class="sapMLabelNoText"/>
-                                                                        <Input value="" width="100px"  visible="{=${propInfo>/isEditMode}}"  />
-                                                                        <Text text="" width="100px" visible="{=!${propInfo>/isEditMode}}"/>
+                                                                        <Input value="{NegoHeaders>/auto_round_terms}" width="100px"  visible="{=${propInfo>/isEditMode}}"  />
+                                                                        <Text text="{NegoHeaders>/auto_round_terms}" width="100px" visible="{=!${propInfo>/isEditMode}}"/>
                                                                     </VBox>
                                                                     <VBox>
                                                                         <Label text=""  class="sapMLabelNoText"/>
@@ -192,14 +192,14 @@
                                                                     </VBox>
                                                                     <VBox class=" sapUiLargeMarginBegin">
                                                                         <Label text="Previous Round" class="sapMLabelNoText"/>
-                                                                        <SegmentedButton id="prSegmentButton"  selectedKey="true"
-                                                                                            class="sapUiSmallMarginEnd" visible="{=${propInfo>/isEditMode}}">
+                                                                        <SegmentedButton id="prSegmentButton" selectedKey="{NegoHeaders>/previous_round}" 
+                                                                            visible="{=${propInfo>/isEditMode}}" >
                                                                             <items>
-                                                                                <SegmentedButtonItem key="true" text="Yes"/>
-                                                                                <SegmentedButtonItem key="false" text="No" />
+                                                                                <SegmentedButtonItem key="Y" text="Yes"/>
+                                                                                <SegmentedButtonItem key="N" text="No" />
                                                                             </items>
-                                                                        </SegmentedButton>  
-                                                                        <Text text="true" visible="{=!${propInfo>/isEditMode}}"/>
+                                                                        </SegmentedButton>   
+                                                                        <Text text="{=${NegoHeaders>/previous_round}==='Y' ? 'Yes' : 'No'}" visible="{=!${propInfo>/isEditMode}}" /> 
                                                                     </VBox>
                                                                 </HBox>
                                                             </HBox>
@@ -340,13 +340,13 @@
                                                     <VBox width="25%" class=" "   >
                                                         <Label  text="Target Price Setup " 
                                                                 class="sapMLabelNoText"/>
-                                                        <SegmentedButton   selectedKey="Y"
-                                                                            class=" " >
-                                                            <items class=" " >
-                                                                <SegmentedButtonItem key="Y" text="Yes" width="auto"   class=" "/>
-                                                                <SegmentedButtonItem key="N" text="No" width="auto"  class=" "/>
+                                                        <SegmentedButton selectedKey="{NegoHeaders>/target_amount_config_flag}" >
+                                                            <items>
+                                                                <SegmentedButtonItem key="Y" text="Yes"/>
+                                                                <SegmentedButtonItem key="N" text="No" />
                                                             </items>
                                                         </SegmentedButton>   
+                                                                          
                                                         <layoutData>
                                                             <layout:GridData span="XL2 L4 M6 S12"/>
                                                         </layoutData>
@@ -385,15 +385,15 @@
                                                                 <core:Item key="5" text="5" />
                                                             </Select >
                                                             <Text text="Order Rate ( 1st :  " class="sapUiTinyMarginBeginEnd" />
-                                                            <Input id="inputAwardSup1"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 1 ? true : false }" liveChange="inputAwardSupChange" fieldGroupIds="SupplierNumG1"/>
+                                                            <Input id="inputAwardSup1" value="{NegoHeaders>/order_rate_01}" type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 1 ? true : false }" liveChange="inputAwardSupChange" fieldGroupIds="SupplierNumG1"/>
                                                             <Text text="2nd :  " class="sapUiTinyMarginBeginEnd" />
-                                                            <Input id="inputAwardSup2"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 2 ? true : false }" liveChange="inputAwardSupChange" fieldGroupIds="SupplierNumG1"/>
+                                                            <Input id="inputAwardSup2" value="{NegoHeaders>/order_rate_02}" type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 2 ? true : false }" liveChange="inputAwardSupChange" fieldGroupIds="SupplierNumG1"/>
                                                             <Text text="3rd :  " class="sapUiTinyMarginBeginEnd" />
-                                                            <Input id="inputAwardSup3"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 3 ? true : false }" liveChange="inputAwardSupChange" fieldGroupIds="SupplierNumG1"/>
+                                                            <Input id="inputAwardSup3" value="{NegoHeaders>/order_rate_03}" type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 3 ? true : false }" liveChange="inputAwardSupChange" fieldGroupIds="SupplierNumG1"/>
                                                             <Text text="4th :  " class="sapUiTinyMarginBeginEnd" />
-                                                            <Input id="inputAwardSup4"  type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 4 ? true : false }" liveChange="inputAwardSupChange" fieldGroupIds="SupplierNumG1"/>
+                                                            <Input id="inputAwardSup4" value="{NegoHeaders>/order_rate_04}" type="Number" width="4rem" enabled="{= ${supplierNum>/number} >= 4 ? true : false }" liveChange="inputAwardSupChange" fieldGroupIds="SupplierNumG1"/>
                                                             <Text text="5th :  " class="sapUiTinyMarginBeginEnd" />
-                                                            <Input id="inputAwardSup5"  type="Number" width="4rem" class="sapUiTinyMarginEnd" enabled="{= ${supplierNum>/number} >= 5 ? true : false }" liveChange="inputAwardSupChange" fieldGroupIds="SupplierNumG1"/>
+                                                            <Input id="inputAwardSup5" value="{NegoHeaders>/order_rate_05}" type="Number" width="4rem" class="sapUiTinyMarginEnd" enabled="{= ${supplierNum>/number} >= 5 ? true : false }" liveChange="inputAwardSupChange" fieldGroupIds="SupplierNumG1"/>
                                                             <Text text=") Unit : %" />
                                                         </HBox> 
                                                         <layoutData>
@@ -406,13 +406,12 @@
                                                     <VBox width="25%" class=" "  >
                                                         <Label  text="Participative" 
                                                                 class="sapMLabelNoText"/>
-                                                        <SegmentedButton   selectedKey="true"
-                                                                            class=" " >
+                                                        <SegmentedButton selectedKey="{NegoHeaders>/supplier_participation_flag}" >
                                                             <items>
-                                                                <SegmentedButtonItem key="Y" text="Yes"  />
-                                                                <SegmentedButtonItem key="N" text="No"   />
+                                                                <SegmentedButtonItem key="Y" text="Yes"/>
+                                                                <SegmentedButtonItem key="N" text="No" />
                                                             </items>
-                                                        </SegmentedButton>   
+                                                        </SegmentedButton>     
                                                         <layoutData>
                                                             <layout:GridData span="XL2 L4 M6 S12"/>
                                                         </layoutData>
@@ -420,13 +419,12 @@
                                                     <VBox width="25%" class=" ">
                                                         <Label  text="Partial Quotation" 
                                                                 class="sapMLabelNoText"/> 
-                                                        <SegmentedButton   selectedKey="true"
-                                                                            class=" " >
+                                                        <SegmentedButton selectedKey="{NegoHeaders>/partial_allow_flag}" >
                                                             <items>
-                                                                <SegmentedButtonItem key="Y" text="Yes" />
+                                                                <SegmentedButtonItem key="Y" text="Yes"/>
                                                                 <SegmentedButtonItem key="N" text="No" />
                                                             </items>
-                                                        </SegmentedButton>   
+                                                        </SegmentedButton> 
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
@@ -438,12 +436,10 @@
                                                     <VBox width="25%" class="">
                                                         <Label  text="Bid Conference Date" 
                                                                 class="sapMLabelNoText"/>
-                                                        <DateTimePicker
-                                                            placeholder="YYYY/MM/DD, HH:MM" width="90%"
-                                                            valueFormat="yyyy/MM/ddTHH:mm" displayFormat="yyyy/MM/dd HH:mm" 
-                                                            
-                                                            change="handleChange"
-                                                            class=" "/> 
+                                                        <DateTimePicker placeholder="YYYY/MM/DD, HH:MM" width="90%"
+                                                                        valueFormat="yyyy/MM/ddTHH:mm" displayFormat="yyyy/MM/dd HH:mm" visible="{=${propInfo>/isEditMode}}"
+                                                                        value="{path: 'NegoHeaders>/bid_conference_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                                                formatOptions: { pattern: 'yyyy/MM/dd HH:mm' , UTC: true} }" />
                                                         <layoutData>
                                                             <layout:GridData span="XL2 L4 M6 S12"/>
                                                         </layoutData>
@@ -451,13 +447,12 @@
                                                     <VBox width="25%" >
                                                         <Label  text="Bid Conference" 
                                                                 class="sapMLabelNoText"/>
-                                                        <SegmentedButton  selectedKey="true"
-                                                                            class=" " >
+                                                        <SegmentedButton selectedKey="{NegoHeaders>/bid_conference}" >
                                                             <items>
-                                                                <SegmentedButtonItem key="Y" text="Yes" />
-                                                                <SegmentedButtonItem key="N" text="No"  />
+                                                                <SegmentedButtonItem key="Y" text="Yes"/>
+                                                                <SegmentedButtonItem key="N" text="No" />
                                                             </items>
-                                                        </SegmentedButton>   
+                                                        </SegmentedButton>  
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
@@ -467,7 +462,7 @@
                                                     <VBox width="75%">
                                                         <Label  text="Bid Conference Place:" 
                                                                 class="sapMLabelNoText"/>
-                                                        <Input width="97%" class=" " placeholder="최대 200 자까지 입력 할 수 있습니다."/>
+                                                        <Input width="97%" value="{NegoHeaders>/bid_conference_place}" placeholder="최대 200 자까지 입력 할 수 있습니다."/>
                                                     </VBox>
                                                     
                                                 </HBox>
@@ -476,13 +471,14 @@
                                                     <VBox width="25%">
                                                         <Label  text="Contact Point" 
                                                                 class="sapMLabelNoText"/>
-                                                        <Input id="inputContactPoint" placeholder="사용자 이름" width="90%" showValueHelp="true" valueHelpRequest=".onPressBuyerPop" />
+                                                        <Input id="inputContactPoint" placeholder="사용자 이름" width="90%" showValueHelp="true" valueHelpRequest=".onPressBuyerPop" 
+                                                            value="{NegoHeaders>/contact_point/employee_name}"/>
                                                     </VBox>
                                                     <!-- <VBox width="15%" /> -->
                                                     <VBox width="25%">
                                                         <Label  text="Phone No" 
                                                                 class="sapMLabelNoText"/>
-                                                        <Input width="90%" class=" " id="aa" type="Number"/>
+                                                        <Input value="{NegoHeaders>/phone_no}" width="90%" class=" " id="aa" type="Number"/>
                                                     </VBox>
                                                 </HBox>
                                             </VBox>
@@ -501,7 +497,7 @@
                                                     <VBox width="25%">
                                                         <Label  text="Award Type" 
                                                                 class="sapMLabelNoText"/> 
-                                                        <Text text="Award by Lines - 예시" />
+                                                        <Text text="{NegoHeaders>/award_type/award_type_name}" />
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
@@ -509,14 +505,14 @@
                                                     <VBox width="25%" class=" "   >
                                                         <Label  text="Target Price Setup " 
                                                                 class="sapMLabelNoText"/>
-                                                        <Text text="Yes" />
+                                                        <Text text="{=${NegoHeaders>/target_amount_config_flag}==='Y' ? 'Yes' : 'No'}"  />
                                                         <layoutData>
                                                             <layout:GridData span="XL2 L4 M6 S12"/>
                                                         </layoutData>
                                                     </VBox>
                                                     <VBox width="25%">
                                                         <Label  text="Target Total Amount" visible="true"/> 
-                                                        <Text text="100,000" />
+                                                        <Text text="{NegoHeaders>/target_amount}" />
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
@@ -527,7 +523,7 @@
                                                     <VBox width="25%">
                                                         <Label  text="Award Method" 
                                                                 class="sapMLabelNoText"/> 
-                                                        <Text text="Multi Supplier - 예시" />
+                                                        <Text text="" />
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
@@ -536,7 +532,7 @@
                                                         <Label  text="Number of Award Supplier" 
                                                                 class="sapMLabelNoText"/> 
                                                         <HBox >
-                                                            <Select width="100%" selectedKey="1" change="selectNumberSupplierChange" visible="false"
+                                                            <Select width="100%" change="selectNumberSupplierChange" visible="false" selectedKey="{NegoHeaders>/number_of_award_supplier}"
                                                                 id="selectNumberSupplier2" enabled="{= ${NPInfPopupUtil>/enabled} === false ? false : true}">
                                                                 <core:Item key="1" text="1" />
                                                                 <core:Item key="2" text="2" />
@@ -545,15 +541,15 @@
                                                                 <core:Item key="5" text="5" />
                                                             </Select >
                                                             <Text text="Order Rate ( 1st :  " class="sapUiTinyMarginBeginEnd" />
-                                                            <Text text="20" width="3rem" textAlign="Center"/>
+                                                            <Text text="{NegoHeaders>/order_rate_01}" width="3rem" textAlign="Center"/>
                                                             <Text text="2nd :  " class="sapUiTinyMarginBeginEnd" />
-                                                            <Text text="20" width="3rem" textAlign="Center"/>
+                                                            <Text text="{NegoHeaders>/order_rate_02}" width="3rem" textAlign="Center"/>
                                                             <Text text="3rd :  " class="sapUiTinyMarginBeginEnd" />
-                                                            <Text text="20" width="3rem" textAlign="Center"/>
+                                                            <Text text="{NegoHeaders>/order_rate_03}" width="3rem" textAlign="Center"/>
                                                             <Text text="4th :  " class="sapUiTinyMarginBeginEnd" />
-                                                            <Text text="20" width="3rem" textAlign="Center"/>
+                                                            <Text text="{NegoHeaders>/order_rate_04}" width="3rem" textAlign="Center"/>
                                                             <Text text="5th :  " class="sapUiTinyMarginBeginEnd" />
-                                                            <Text text="20" width="3rem" textAlign="Center"/>
+                                                            <Text text="{NegoHeaders>/order_rate_05}" width="3rem" textAlign="Center"/>
                                                             <Text text=") Unit : %" />
                                                         </HBox> 
                                                         <layoutData>
@@ -561,12 +557,11 @@
                                                         </layoutData>
                                                     </VBox>
                                                 </HBox>
-                                                
                                                 <HBox width="100%" class="sapUiSmallMarginBottom"  >
                                                     <VBox width="25%" class=" "  >
                                                         <Label  text="Participative" 
                                                                 class="sapMLabelNoText"/>
-                                                        <Text text="true"   />
+                                                        <Text text="{=${NegoHeaders>/supplier_participation_flag}==='Y' ? 'Yes' : 'No'}"  />
                                                         <layoutData>
                                                             <layout:GridData span="XL2 L4 M6 S12"/>
                                                         </layoutData>
@@ -574,7 +569,7 @@
                                                     <VBox width="25%" class=" ">
                                                         <Label  text="Partial Quotation" 
                                                                 class="sapMLabelNoText"/> 
-                                                        <Text text="true"   />   
+                                                        <Text text="{=${NegoHeaders>/partial_allow_flag}==='Y' ? 'Yes' : 'No'}"   />  
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
@@ -586,15 +581,16 @@
                                                     <VBox width="25%" class="">
                                                         <Label  text="Bid Conference Date:" 
                                                                 class="sapMLabelNoText"/>
-                                                        <Text text="2020/02/05"   />
+                                                        <Text text="{path: 'NegoHeaders>bid_conference_date', type: 'sap.ui.model.odata.type.Date', 
+                                                                        formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }"  />
                                                         <layoutData>
                                                             <layout:GridData span="XL2 L4 M6 S12"/>
                                                         </layoutData>
                                                     </VBox>
                                                     <VBox width="25%" >
-                                                        <Label  text="Bid Conference" 
-                                                                class="sapMLabelNoText:"/>
-                                                        <Text text="true"   />
+                                                        <Label  text="Bid Conference:" 
+                                                                class="sapMLabelNoText"/>
+                                                        <Text text="{=${NegoHeaders>/bid_conference}==='Y' ? 'Yes' : 'No'}"   />
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
@@ -604,7 +600,7 @@
                                                     <VBox width="75%">
                                                         <Label  text="Bid Conference Place:" 
                                                                 class="sapMLabelNoText"/>
-                                                        <Text text=""   />
+                                                        <Text text="{NegoHeaders>/bid_conference_place}"   /> 
                                                     </VBox>
                                                     
                                                 </HBox>
@@ -613,15 +609,17 @@
                                                     <VBox width="25%">
                                                         <Label  text="Contact Point" 
                                                                 class="sapMLabelNoText"/>
-                                                        <Text text="홍X동"   />
+                                                        <Text text="{NegoHeaders>/contact_point/employee_name}"   />
                                                     </VBox>
                                                     <!-- <VBox width="15%" /> -->
                                                     <VBox width="25%">
                                                         <Label  text="Phone No" 
                                                                 class="sapMLabelNoText"/>
-                                                        <Text text="010XXXXXXXX"   />
+                                                        <Text text="{NegoHeaders>/phone_no}"   />
                                                     </VBox>
                                                 </HBox>
+                                                
+                                                
                                             </VBox>
                                         </form:content>
                                     </form:SimpleForm  >
@@ -763,9 +761,10 @@
                                                 tableBindingPath="NegoHeaders>/Items"
                                                 beforeRebindTable="beforeRebindTable"
                                                 ignoreFromPersonalisation="_row_state_,Suppliers"
-                                                requestAtLeastFields="pr_number,pr_approve_number,line_type_code,material_code,material_desc,specification,bpa_price,detail_net_price,recommend_info,group_id,vendor_pool_code,specific_supplier_count,request_quantity,uom_code,maturity_date,currency_code,response_currency_code,exrate_type_code,exrate_date,bidding_start_net_price,bidding_start_net_price,bidding_target_net_price,current_price"
-
-                                                initiallyVisibleFields="pr_number,pr_approve_number,line_type_code,material_code,material_desc,specification,bpa_price,detail_net_price,recommend_info,group_id,vendor_pool_code,specific_supplier_count,request_quantity,uom_code,maturity_date,currency_code,response_currency_code,exrate_type_code,exrate_date,bidding_start_net_price,bidding_start_net_price,bidding_target_net_price,current_price"
+                                                requestAtLeastFields="pr_number,pr_approve_number,line_type_code,material_code,material_desc,specification,bpa_price,detail_net_price,recommend_info,group_id,vendor_pool_code,specific_supplier_count,request_quantity,uom_code,maturity_date,currency_code,response_currency_code
+                                                ,exrate_type_code,exrate_date,bidding_start_net_price,bidding_start_net_price,bidding_target_net_price,current_price"
+                                                initiallyVisibleFields="pr_number,pr_approve_number,line_type_code,material_code,material_desc,specification,bpa_price,detail_net_price,recommend_info,group_id
+                                                ,vendor_pool_code,specific_supplier_count,request_quantity,uom_code,maturity_date,currency_code,response_currency_code,exrate_type_code,exrate_date,bidding_start_net_price,bidding_start_net_price,bidding_target_net_price,current_price"
                                                 class="sapUiSmallMarginBottom"
                                                 >
                                                 <!-- <smartTable:layoutData>
