@@ -90,7 +90,8 @@
                                                                 <VBox class="sapUiNoMarginBottom">
                                                                     <Label  text="Type"  />
                                                                     <Text  id="textType" text="{NegoHeaders>/nego_type/nego_type_name}" />
-
+                                                                    
+                                                                    <!-- nego type name 위한 temp성 콤보 -->
                                                                     <ComboBox id="comboBoxTypeTemp" items="{
                                                                             path: '/Sc_Nego_Type_Code_texts', 
                                                                             templateShareable:true, 
@@ -100,8 +101,8 @@
                                                                                 descending: true
                                                                             }
                                                                         }" 
-                                                                        editable="false" enabled="false" visible="true"
-                                                                        selectedKey="{NegoHeaders>/nego_type_code}" 
+                                                                        editable="false" enabled="false" visible="false"
+                                                                        selectedKey="{NegoHeaders>/nego_type_code}" value="{NegoHeaders>/nego_type/nego_type_name}"
                                                                         width="100%" required="true">
                                                                         <core:ListItem key="{nego_type_code}" text="{nego_type_name}" />
                                                                     </ComboBox>

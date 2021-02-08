@@ -82,6 +82,7 @@ sap.ui.define([
                         immediate_apply_flag: "Y",
                         Items: [],
                         nego_progress_status: {},
+                        nego_type: {},
                         contact_point: {}
                     },
                     NegoItemPrices: {

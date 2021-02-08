@@ -277,9 +277,7 @@ sap.ui.define([
 
                     oView.byId("checkbox_Immediately").fireSelect();
 
-                    // type 조회하기
-                    var typeTemp = this.getView().byId("comboBoxTypeTemp").getSelectedItem().getProperty("text");
-                    oView.getModel("NegoHeaders").setProperty("/nego_type/nego_type_name", typeTemp );
+                   
 
 
                 }else {                                           // list 조회 모드 일 경우에 조회.
