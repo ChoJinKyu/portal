@@ -80,19 +80,29 @@ sap.ui.define([
         },
         _onObjectMatched : function(oEvent){ 
             var oArgs = oEvent.getParameter("arguments");
-            console.log("param>>>>> " , oArgs);
+            console.log("param>>>>> " , oArgs); 
+            this._srchDetail(oArgs);
         } ,
 
-        _srchDetail : function(){
+        _srchDetail : function(oArgs){
             var oModel = this.getModel("rrMgt");
               oModel.setTransactionModel(this.getModel());
 
-            oModel.read("/remodelRepairDetail(tenant_id='" + this.getSessionUserInfo().TENANT_ID + "',company_code='" + this.company_code + "')", {
-                filters: [],
-                success: function (oData) {
+            var filter = [
+                new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID),
+                new Filter("mold_id", FilterOperator.EQ, oArgs.mold_id)
+            ];
 
+            if( oArgs.request_number != "New"){
+                filter.push(new Filter("repair_request_number", FilterOperator.EQ,  oArgs.request_number));
+            };
+
+            oModel.read("/remodelRepairDetail", {
+                filters: filter,
+                success: function (oData) {
+                    console.log("oData>>>>> " , oData);
                 }
-            });            
+            });
         },
 
         onPageNavBackButtonPress: function () {
