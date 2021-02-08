@@ -113,7 +113,7 @@
                 <t:Column id="progress_status_name" width="8rem">
                     <Label text="{I18N>/PROGRESS_STATUS}" textAlign="Center" width="100%"/>
                     <t:template>
-                        <Text text="{list>progress_status_code}" textAlign="Center"/>
+                        <Text text="{list>progress_status_name}" textAlign="Center"/>
                     </t:template>
                 </t:Column>
                 <t:Column id="request_number" width="8rem">
@@ -139,7 +139,7 @@
                 <t:Column id="requestor" width="7rem">
                     <Label text="{I18N>/REQUESTOR}" textAlign="Center" width="100%"/>
                     <t:template>
-                        <Text text="{list>requestor}"/>
+                        <Text text="{list>requestor_empno}"/>
                     </t:template>
                 </t:Column>
                 <t:Column id="request_date_time" width="7rem">
