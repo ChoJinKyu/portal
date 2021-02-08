@@ -3,6 +3,7 @@ select pa.tenant_id,
       pa.activity_code,				
       STRING_AGG( l.code_name, ' / ' ) as activity_name,
       pa.active_flag
+      ,case when pa.active_flag = True then 'Active' else 'Inactive' end active_flag_val
  from 
 	( select 'L2101' as tenant_id, activity_code, active_flag from dp_pd_part_base_activity -- where tenant_id = 'L2101'
 	   minus

@@ -52,11 +52,3 @@ entity Pd_Part_Base_Activity_Category_View {
         update_user_id        : String;
         local_update_dtm      : DateTime;
 };
-
-@cds.persistence.exists
-entity Pd_Select_An_Activity_View {
-    key tenant_id             : String;
-    key activity_code         : String;
-        activity_name         : String;
-        active_flag           : Boolean;
-};

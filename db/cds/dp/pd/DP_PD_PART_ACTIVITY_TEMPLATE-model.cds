@@ -19,3 +19,12 @@ entity Pd_Part_Activity_Template {
     active_flag : Boolean   @title: '활성여부' ;	
 }	
 extend Pd_Part_Activity_Template with util.Managed;	
+
+@cds.persistence.exists
+entity Pd_Select_An_Activity_View {
+    key tenant_id             : String;
+    key activity_code         : String;
+        activity_name         : String;
+        active_flag           : Boolean;
+        active_flag_val       : String;
+};
