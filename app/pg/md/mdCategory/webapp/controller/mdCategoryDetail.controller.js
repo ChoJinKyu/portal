@@ -192,14 +192,16 @@ sap.ui.define([
                     oMasterModel.removeData();
                     oMasterModel.setTransactionModel(that.getModel());
                     oMasterModel.submitChanges({
-                    success: function (ok) {
-                        
-                        oView.setBusy(false);
-                        that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                        MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
-                                
-                        that.onPageNavBackButtonPress(); 
-                    }
+                        success: function (ok) {
+                            oView.setBusy(false);
+                            that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                            //MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                                    
+                            that.onPageNavBackButtonPress(); 
+                        }.bind(this),
+                        error: function(data){
+                            MessageToast.show(this.I18N.getText("/EPG10001", [this.I18N.getText("/SPMD_CATEGORY_CODE")]), {at: "center center"});
+                        }
                     });
                 };
                 }

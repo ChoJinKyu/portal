@@ -114,10 +114,10 @@ sap.ui.define([
                 tax_id : sGubun === "MA", //타모듈일 경우만 input visible
                 country_code : bEditable && (sMode === "C") || (sGubun === "MR" && sProgress === "REQUEST" && bEditable), //생성일때만 
                 isEditable :  bEditable && sMode !== "R", //R이고 U가 아닐때는 input.비활성화
-                btn_list : sMode === "R",
-                btn_cancel : sMode !== "R", 
-                btn_request : sMode !== "R", 
-                btn_reject : sMode !== "R" && sGubun === "MR", 
+                btn_list : (sGubun !== "MR" && sMode === "R") || (sProgress !== "REQUEST" && sGubun === "MR"), 
+                btn_cancel : (sGubun !== "MR" && sMode !== "R") || (sProgress === "REQUEST" && sGubun === "MR"), 
+                btn_request : (sGubun !== "MR" && sMode !== "R") || (sProgress === "REQUEST" && sGubun === "MR"), 
+                btn_reject : sProgress === "REQUEST" && sGubun === "MR", 
                 btn_edit : sMode === "R" && sGubun !== "MR", // "MR"에서 오는 경우는 edit 기능 없음.
                 section_bizno_chk : (sGubun === "MM" && sMode === "C") || (sGubun === "MR" && sProgress === "REQUEST"),
                 section_approval_line : sGubun !== "MA" && sMode !== "R",
@@ -145,13 +145,9 @@ sap.ui.define([
         _initMasterData : function(){
             var oWriteModel = this.getModel("writeModel");
 
-            oWriteModel.setProperty("/businessNoCheck", {
-                list : []
-            }); 
-
             oWriteModel.setProperty("/generalInfo", {
                 affiliate_code: "Y",
-                affiliate_name: "",
+                affiliate_name: "관계사",
                 company_class_code: "",
                 company_class_name: "",
                 company_email_address: "",
@@ -248,8 +244,14 @@ sap.ui.define([
                 oWriteModel.setProperty("/generalInfo/company_class_name", oSelectedItem["code_name"]);
             }
         },
+
+        onSelectionChange : function(oEvent){
+            var oWriteModel = this.getModel("writeModel");
+            var sAffiliateName = oEvent.getSource().getSelectedKey() === "Y" ? "관계사" : "비관계사";
+            oWriteModel.setProperty("/generalInfo/affiliate_name", sAffiliateName);
+        },
         
-        onNavigationBackPress: function(e){
+        onNavigationBackPress: function(oEvent){
 
             //portal에 있는 toolPage 
             var oToolPage = this.getView().getParent().getParent().getParent().oContainer.getParent(),
@@ -278,20 +280,20 @@ sap.ui.define([
                     oToolPage.removeAllMainContents();
                     oToolPage.addMainContent(oContainer);
                     
-                }).catch(function (e) {
+                }).catch(function (oEvent) {
                     MessageToast.show("error");
                 });
             }
         },
 
         
-        onNavigationCancelPress : function(e){
+        onNavigationCancelPress : function(oEvent){
             var oCallByAppModel = this.getModel("callByAppModel"),
             sGubun = oCallByAppModel.getProperty("/gubun"),
             sMode = oCallByAppModel.getProperty("/mode");
 
             if(sGubun === "MM"){
-                if(sMode === "U"){
+                if(sMode === "U" && oEvent){
                     oCallByAppModel.setProperty("/mode", "R");
                     this._setTitle("R");
                     this._initControlData(false);
@@ -325,7 +327,7 @@ sap.ui.define([
             //sMakerProgressStatusCode = (sGubun === "MR" && sProgress === "REQUEST") ? "REQUEST" : "APPROVAL";
             var sRequestorEmpno = "3167";//oUserSessionModel.gtProperty("/EMPLOYEE_NUMBER");
 
-            if(sMakerProgressStatusCode === "REQUEST" && sMode !== "MA")sMakerProgressStatusCode = "APPROVAL";
+            if(sMakerProgressStatusCode === "REQUEST" && sGubun !== "MA")sMakerProgressStatusCode = "APPROVAL";
 
 
             var inputInfo = {
@@ -355,7 +357,7 @@ sap.ui.define([
                             english_address_3: oGeneralInfo["maker_english_address"],              	
                             english_full_address: oGeneralInfo["maker_english_full_address"],           	
                             affiliate_code: oGeneralInfo["affiliate_code"],                 	
-                            affiliate_code_name: oGeneralInfo["affiliate_code_name"],            	
+                            affiliate_code_name: oGeneralInfo["affiliate_name"],            	
                             company_class_code: oGeneralInfo["company_class_code"],             	
                             company_class_name: oGeneralInfo["company_class_name"],             	
                             repre_name: oGeneralInfo["represent_name"],                    	
@@ -385,47 +387,54 @@ sap.ui.define([
 
             var that= this;
             var oCallByAppModel = this.getModel("callByAppModel");
-            var sConfirmMsg = this.getModel("I18N").getText("/NCM00001");
+            var oI18nModel = this.getModel("I18N");
             var sGubun = oCallByAppModel.getProperty("/gubun");
             var sMode = oCallByAppModel.getProperty("/mode");
-            var sProgress = oCallByAppModel.getProperty("/progressCode");
+            //var sProgress = oCallByAppModel.getProperty("/progressCode");            // || sProgress === "REQUEST"
+            var sProcess = oI18nModel.getText("/CREATE") + " " +oI18nModel.getText("/REQUEST");
 
-            
-            var sTitle = "Create";
-            // || sProgress === "REQUEST"
             if(sAction === "REJECT"){
-                sTitle = this.getModel("I18N").getText("/REJECT");
-                sConfirmMsg = this.getModel("I18N").getText("/NSP00103");
+                sProcess = oI18nModel.getText("/REJECT");
             }else{
                 if(sMode === "U" && sGubun === "MM"){
-                    sTitle = this.getModel("I18N").getText("/EDIT");
-                    sConfirmMsg = this.getModel("I18N").getText("/NPG00007");
+                    sProcess = oI18nModel.getText("/EDIT") + " " +oI18nModel.getText("/REQUEST");
                 }
             }
 
-            var result = {returnmessage:"success", return_code : "OK"};
+            var sConfirmMsg = oI18nModel.getText("/NCM00503", sProcess);
+            var sFailMsg = oI18nModel.getText("/ECM01502", sProcess);
+            var sSuccessMsg = oI18nModel.getText("/NCM02501", sProcess);
             this.validator.setModel(this.getModel("writeModel"), "writeModel");
             if(this.validator.validate(this.byId("page")) === true) {
 
                 var oRequestData = this._fnSetRequestData(sAction);
                 MessageBox.confirm(sConfirmMsg, {
-                    title : sTitle,
+                    title : sProcess,
                     initialFocus : sap.m.MessageBox.Action.CANCEL,
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
-                            that.onNavigationCancelPress();
-                            // that._fnCallAjax(
-                            // oRequestData,
-                            // "upsertMakerRestnReqProc",
-                            // function(result){
-                            //     debugger;
-                            //     //oView.setBusy(false);
-                            //     if(result && result.value && result.value.length > 0){// && result.value[0].return_code === "OK") {
-                            //         alert(result.value[0].returnmessage);
-                            //         //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                            //         //that.onNavigationBackPress();
-                            //     }
-                            // });
+                            
+                            that._fnCallAjax(
+                            oRequestData,
+                            "upsertMakerRestnReqProc",
+                            function(result){
+                                debugger;
+                                //oView.setBusy(false);
+                                if(result && result.value && result.value.length > 0 && result.value[0].returncode === "OK") {
+                                    MessageBox.show(sSuccessMsg, {
+                                        icon: MessageBox.Icon.SUCCESS,
+                                        title: sProcess,
+                                        actions: [MessageBox.Action.OK],
+                                        onClose: function (sButton) {
+                                            if (sButton === MessageBox.Action.OK) {
+                                                that.onNavigationCancelPress(false);
+                                            }
+                                        }
+                                    });
+                                }else{
+                                    MessageBox.show(sFailMsg, {at: "center center"});
+                                }
+                            });
                         }
                     }.bind(this)
                 });
@@ -456,19 +465,21 @@ sap.ui.define([
             var oServiceModel = this.getModel();
             var sServiceName = "/MakerView";
             var sFilterName = "maker_code";
-            
+            var sFilterValue = oCallByAppModel.getProperty("/makerCode");
             if(bSupplierRole && !bMakerRole){
                 oServiceModel = this.getModel("supplier");
                 sServiceName = "/supplierWithoutOrgView"; //tenant_id, tax_id
                 sFilterName = "supplier_code";
             }
             if(!bSupplierRole && !bMakerRole){
-                sServiceName = "/MakerRegistrationRequestView"; //if(sGubun === "MR" && !bSupplierRole && !bMakerRole && sProgress === "REQUEST")s
+                sServiceName = "/MakerRegistrationRequestView"; //if(sGubun === "MR" && !bSupplierRole && !bMakerRole && sProgress === "REQUEST")
+                sFilterName = "tax_id";
+                sFilterValue = oCallByAppModel.getProperty("/taxId");
             }
 
             var aFilters = [
-                new Filter("tenant_id"    , FilterOperator.EQ, oCallByAppModel.getProperty("/tenantId")),
-                new Filter(sFilterName   , FilterOperator.EQ, oCallByAppModel.getProperty("/makerCode"))
+                new Filter("tenant_id" , FilterOperator.EQ, oCallByAppModel.getProperty("/tenantId")),
+                new Filter(sFilterName , FilterOperator.EQ, sFilterValue)
             ];   
                   
             
