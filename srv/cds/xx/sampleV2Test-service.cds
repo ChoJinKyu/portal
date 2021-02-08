@@ -6,7 +6,7 @@ using {xx as MasterF} from '../../../db/cds/xx/sampleMstMgr/XX_SAMPLE_MASTER_FUN
 
 namespace xx;
 @path : '/xx.SampleV2TestService'
-service SampleV2TestService {
+service SampleV2TestService  @(requires: ['SppBasic']){
 
     entity SampleV2Master as projection on Master.Sample_V2_M;
     entity SampleV2Header as projection on Header.Sample_V2_H;
