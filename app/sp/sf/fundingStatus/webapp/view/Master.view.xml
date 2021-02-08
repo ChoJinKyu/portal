@@ -57,7 +57,7 @@
                         <!-- 공고제목 -->
                         <Label text="공고제목"/>
                         <Input 
-                            value="{viewModel>/cond/EQ/funding_notify_title}"
+                            value="{viewModel>/cond/Contains/funding_notify_title}"
                         />
                         <layoutData>
                             <layout:GridData span="XL2 L3 M6 S12" />
@@ -190,73 +190,85 @@
                 
                 <t:columns>
                     <!-- 공고제목 -->
-                    <t:Column label="공고제목" width="10%" hAlign="Left">
+                    <t:Column width="25%" hAlign="Left">
+                        <Label text="공고제목" tooltip="공고제목" wrapping="false" textAlign="Left" width="100%"/>
                         <t:template>
                             <Text text="{viewModel>funding_notify_title}" tooltip="{evaluation_article_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 신청번호 -->
-                    <t:Column label="신청번호" width="10%" hAlign="Center">    
+                    <t:Column width="7%" hAlign="Center">
+                        <Label text="신청번호" tooltip="신청번호" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
                             <Text text="{viewModel>funding_appl_number}" tooltip="{evaluation_operation_unit_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 업체코드 -->
-                    <t:Column label="업체코드" width="10%" hAlign="Center">    
+                    <t:Column width="7%" hAlign="Center">
+                        <Label text="업체코드" tooltip="업체코드" wrapping="false" textAlign="Center" width="100%"/>    
                         <t:template>
                             <Text text="{viewModel>supplier_code}" tooltip="{evaluation_type_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 업체명 -->
-                    <t:Column label="업체명" width="10%" hAlign="Center">    
+                    <t:Column width="10%" hAlign="left">  
+                        <Label text="업체명" tooltip="업체명" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
                             <Text text="{viewModel>supplier_name}" tooltip="{evaluation_execute_mode_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 신청일-->
-                    <t:Column label="신청일" width="10%" hAlign="Center">    
+                    <t:Column width="8%" hAlign="Center">
+                        <Label text="신청일" tooltip="신청일" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
-                            <Text text="{
-                                path:'viewModel>funding_appl_date',
-                                type:'sap.ui.model.odata.type.DateTime',
-                                constraints : {
-                                    displayFormat: 'Date'
-                                }
-                            }" tooltip="{
-                                path:'viewModel>funding_appl_date',
-                                type:'sap.ui.model.odata.type.DateTime',
-                                constraints : {
-                                    displayFormat: 'Date'
-                                }
-                            }" wrapping="false" />
+                            <Text
+                                text="{
+                                    path: 'viewModel>funding_appl_date',
+                                    type: 'sap.ui.model.type.Date',
+                                    formatOptions: {
+                                        pattern: 'yyyy-MM-dd'
+                                    }
+                                }" tooltip="{
+                                    path:'viewModel>funding_appl_date',
+                                    type: 'sap.ui.model.type.Date',
+                                    formatOptions: {
+                                        pattern: 'yyyy-MM-dd'
+                                    }
+                                }" wrapping="false" 
+                            />
                         </t:template>
                     </t:Column>
                     <!-- 단계 -->
-                    <t:Column label="단계" width="10%" hAlign="Center">    
+                    <t:Column width="5%" hAlign="left">
+                        <Label text="단계" tooltip="단계" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
                             <Text text="{viewModel>funding_step_name}" tooltip="{funding_step_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 상태 -->
-                    <t:Column label="상태" width="10%" hAlign="Center">    
+                    <t:Column width="8%" hAlign="left">
+                        <Label text="상태" tooltip="상태" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
                             <Text text="{viewModel>funding_status_name}" tooltip="{funding_status_code}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 사업부 -->
-                    <t:Column label="사업부" width="10%">    
+                    <t:Column width="12%" hAlign="left">  
+                        <Label text="사업부" tooltip="사업부" wrapping="false" textAlign="Left" width="100%"/>  
                         <t:template>
                             <Text text="{viewModel>org_name}" tooltip="{org_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- LG구매팀 -->
-                    <t:Column label="LG구매팀" width="10%" hAlign="Center">    
+                    <t:Column width="10%" hAlign="left">
+                        <Label text="LG구매팀" tooltip="LG구매팀" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
                             <Text text="{viewModel>purchasing_department_name}" tooltip="{purchasing_department_name}" wrapping="false" />
                         </t:template>
                     </t:Column>
                     <!-- 신청금액 -->
-                    <t:Column label="신청금액" width="10%" hAlign="Center">    
+                    <t:Column width="8%" hAlign="Right">
+                        <Label text="신청금액" tooltip="신청금액" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
                             <Text text="{viewModel>funding_appl_amount}" tooltip="{funding_appl_amount}" wrapping="false" />
                         </t:template>

@@ -229,6 +229,9 @@ sap.ui.define([
                         oViewModel.setProperty("/list", oData.results);
                         oView.setBusy(false);
                     }.bind(this)
+                    ,error: function(){
+
+                    }
                 });
 
                 

@@ -122,7 +122,7 @@
                                         path: 'list>local_create_dtm',
                                         type: 'sap.ui.model.type.Date',
                                         formatOptions: {
-                                            UTC: true, format: 'yMd'
+                                            pattern: 'yyyy-MM-dd'
                                         }
                                     }"/>
                                 <HBox justifyContent="Center">
