@@ -85,6 +85,7 @@ sap.ui.define([
                 sExpand += ",project_leader_info,buyer_info,marketing_person_info,planning_person_info,bizdivision_text";
             oDataModel.read("/McstProject", {
                 filters : aFilters,
+                //urlParameters : { "$expand" : sExpand, "$orderby" : "mcst_events/start_date" },
                 urlParameters : { "$expand" : sExpand },
                 success : function(data){
                     //debugger;
@@ -243,7 +244,7 @@ sap.ui.define([
                 }
                 
             });
-            
+
             var oSimModelResult = {
                 tenant_id            : oData.tenant_id,
                 project_code         : oData.project_code,
@@ -314,12 +315,6 @@ sap.ui.define([
                 $.each(oSimilarModelData.results, function(nIdx, oSimModelRow) {
                     if(!oSimModelRow.similar_model_code) {
                         let sItemsNm = this.I18N.getText("/SIMILAR_MODEL") + " " + this.I18N.getText("/MODEL_CODE");
-                        MessageToast.show(this.I18N.getText("/EDP40001", sItemsNm), {at: "center center"});
-                        bChkSimModel = false;
-                        return false;
-                    }
-                    if(!oSimModelRow.code_desc) {
-                        let sItemsNm = this.I18N.getText("/SIMILAR_MODEL") + " " + this.I18N.getText("/MODEL_NAME");
                         MessageToast.show(this.I18N.getText("/EDP40001", sItemsNm), {at: "center center"});
                         bChkSimModel = false;
                         return false;

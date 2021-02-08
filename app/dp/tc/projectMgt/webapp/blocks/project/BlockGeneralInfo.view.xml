@@ -624,13 +624,13 @@
         </t:extension>
         <t:columns>
             <t:Column hAlign="Left" width="15%" >
-                <Label text="{I18N>/MODEL_CODE}" required="true" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/MODEL_CODE}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{similarModel>similar_model_code}" textAlign="Left" width="100%" />
                 </t:template>
             </t:Column>
             <t:Column hAlign="Left" width="auto" >
-                <Label text="{I18N>/MODEL_NAME}" required="true" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/MODEL_NAME}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{similarModel>code_desc}"/>
                 </t:template>
@@ -677,7 +677,7 @@
                 </t:template>
             </t:Column>
             <t:Column hAlign="Left" width="auto" >
-                <Label text="{I18N>/MODEL_NAME}" required="true" textAlign="Center" width="100%"/>
+                <Label text="{I18N>/MODEL_NAME}" textAlign="Center" width="100%"/>
                 <t:template>
                     <Input value="{similarModel>code_desc}"/>
                 </t:template>

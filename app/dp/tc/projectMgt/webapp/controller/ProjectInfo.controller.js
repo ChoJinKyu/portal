@@ -264,12 +264,6 @@ sap.ui.define([
                         bChkSimModel = false;
                         return false;
                     }
-                    if(!oSimModelRow.code_desc) {
-                        let sItemsNm = this.I18N.getText("/SIMILAR_MODEL") + " " + this.I18N.getText("/MODEL_NAME");
-                        MessageToast.show(this.I18N.getText("/EDP40001", sItemsNm), {at: "center center"});
-                        bChkSimModel = false;
-                        return false;
-                    }
                 }.bind(this));
                 return bChkSimModel;
             }
