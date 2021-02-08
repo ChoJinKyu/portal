@@ -210,26 +210,38 @@ sap.ui.define([
 
                 oComponent.getModel("util").read("/UserEvalTypeView",{
                     filters : aFilters,
-                    urlParameters : {
-                        $top : 1
-                    },
+                    // urlParameters : {
+                    //     $top : 1
+                    // },
                     success : function(oData){
-                        var aResults, sEvaluTypeCode;
+                        var aResults, sEvaluTypeCode, bNewFlg;
 
                         aResults = oData.results;
                         if(!aResults.length){
                             return;
                         }
                         if(aResults[0].new_flag === "Y"){
-                            oViewModel.setProperty("/Btn/UserEvalType", true);
+                            bNewFlg = true;
                         }
                         sEvaluTypeCode = aResults[0].evaluation_type_code;
-
+                        
                         if(sSelectedKey){
                             oBtnEavluType.setSelectedKey(sSelectedKey);
+                            aResults.some(function(item){
+                                if(item.evaluation_type_code === sSelectedKey){
+                                    if(item.new_flag === "Y"){
+                                        bNewFlg = true;
+                                    }else{
+                                        bNewFlg = false;
+                                    }
+                                }
+                                return item.evaluation_type_code === sSelectedKey;
+                            });
                         }else{
                             oBtnEavluType.setSelectedKey(sEvaluTypeCode);
                         }
+
+                        oViewModel.setProperty("/Btn/UserEvalType", bNewFlg);
                     },
                     error : function(){
                         
