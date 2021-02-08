@@ -38,7 +38,7 @@
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
                     <ObjectStatus title="요청번호" text="{master>/request_number}"/>
                     <ObjectStatus title="요청자" text="{master>/requestor}"/>
-                    </layout:VerticalLayout>
+                </layout:VerticalLayout>
                 <!-- Requester 끝 -->
 
                 <!-- Status 시작 -->
@@ -196,7 +196,8 @@
                                         required="true"/>
                                     <VBox>
                                         <SearchField id="searchField" search=".onSearchPartCategory" value="{master>/similar_category_code}" visible="{viewModel>/editMode}"/>
-                                        <Text id="similarCategoryCode" text="{master>/similar_category_code}" visible="{viewModel>/showMode}"/>
+                                        <Text id="similarCategoryName" text="{master>/similar_category_code}" visible="{viewModel>/showMode}"/>
+                                        <Input id="similarCategoryCode" value="{master>/similar_category_code}" visible="false"/>
                                     </VBox>
                                 </HBox>
                                 <VBox>

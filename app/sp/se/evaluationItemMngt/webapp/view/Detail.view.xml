@@ -68,6 +68,9 @@
                                     width="100%" 
                                     showSecondaryValues="true"
                                     selectedKey="{viewModel>/Detail/NewHeader/evaluation_article_lvl_attr_cd}"
+                                    editable="{=
+                                        ${viewModel>/Args/level} !== 'new'
+                                    }"
                                 />
                                 <layoutData>
                                     <layout:GridData span="L12 M12 S12" />
@@ -139,6 +142,7 @@
                                 <ComboBox 
                                     id="comboEvaluDisScrType"
                                     width="100%"
+                                    fieldGroupIds="detailRequired"
                                     selectedKey="{viewModel>/Detail/Header/evaluation_distrb_scr_type_cd}"
                                     editable="{viewModel>/App/EditMode}"
                                 />
@@ -152,6 +156,7 @@
                                 <ComboBox  
                                     id="comboEvaluResultInputType"
                                     width="100%"
+                                    fieldGroupIds="detailRequired"
                                     selectedKey="{viewModel>/Detail/Header/evaluation_result_input_type_cd}"
                                     editable="{viewModel>/App/EditMode}"
                                 />
@@ -165,6 +170,7 @@
                                 <ComboBox 
                                     id="comboQttItemUom"
                                     width="100%"
+                                    fieldGroupIds="detailRequired"
                                     selectedKey="{viewModel>/Detail/Header/qttive_item_uom_code}"
                                     editable="{=
                                         ${viewModel>/App/EditMode} &amp;&amp;

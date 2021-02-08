@@ -7,8 +7,6 @@
     <m:App id="app">
         <FlexibleColumnLayout 
             id="flexibleColumnLayout" 
-            stateChange="onStateChanged" 
-            afterBeginColumnNavigate="onNavigateDaetail" 
             backgroundDesign="Solid" 
             layout="{viewModel>/App/layout}"
         >

@@ -15,11 +15,11 @@
       <f:title>
         <f:DynamicPageTitle>
           <f:heading>
-            <Title text="{i18n>appTitle}" />
+            <Title text="{I18N>/TIMEZONE}{I18N>/MANAGEMENT}" />
           </f:heading>
           <!-- 조회 -->
           <f:actions>
-            <Button id="pageSearchButton" text="Search" type="Emphasized" press=".onSearch"/>
+            <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onSearch"/>
           </f:actions>
           <!-- 즐겨찾기 -->
           <f:navigationActions>
@@ -39,7 +39,7 @@
                         <!-- 테넌트 -->
                         <form:fields>
                           <VBox>
-                            <Label text="테넌트" labelFor="searchTenantCombo" required="true"></Label>
+                            <Label text="{I18N>/TENANT}" labelFor="searchTenantCombo" required="true"></Label>
                             <ComboBox
                               id="searchTenantCombo"
                               width="100%"
@@ -56,7 +56,7 @@
                             </ComboBox>
                           </VBox>
                           <VBox>
-                            <Label text="타임존" labelFor="searchTimeZoneInput"></Label>
+                            <Label text="{I18N>/TIMEZONE}" labelFor="searchTimeZoneInput"></Label>
                             <Input id="searchTimeZoneInput"/>
                             <!-- <Label text="타임존" labelFor="searchTimeZoneCombo"></Label> -->
                             <!-- <ComboBox
@@ -74,7 +74,7 @@
                             </ComboBox> -->
                           </VBox>
                           <VBox>
-                            <Label text="국가" labelFor="searchCountryCombo"></Label>
+                            <Label text="{I18N>/COUNTRY}" labelFor="searchCountryCombo"></Label>
                             <ComboBox
                               id="searchCountryCombo"
                               width="100%"
@@ -126,11 +126,11 @@
           columnResize="onColumnResize">
           <t:extension>
             <OverflowToolbar class="sapFDynamicPageAlignContent">
-              <Title text="Time Zone" level="H2"/>
+              <Title text="{I18N>/TIMEZONE}" level="H2"/>
               <ToolbarSpacer/>
-              <Button text="Add" id="buttonMainCreateRow" press=".onAdd('mainTable', 'list', 'TimeZone', ['tenant_id', 'timezone_code', 'timezone_name'])"  type="Transparent"/>
-              <Button text="Delete" id="buttonMainDeleteRow" press=".onDelete('mainTable', 'list')"   type="Transparent"/>
-              <Button text="Save" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/>
+              <Button text="{I18N>/ROW_ADD}" id="buttonMainCreateRow" press=".onAdd('mainTable', 'list', 'TimeZone', ['tenant_id', 'timezone_code', 'timezone_name'])"  type="Transparent"/>
+              <Button text="{I18N>/DELETE}" id="buttonMainDeleteRow" press=".onDelete('mainTable', 'list')"   type="Transparent"/>
+              <Button text="{I18N>/SAVE}" id="buttonMainSaveRow" press=".onSave('mainTable', 'list')"   type="Emphasized"/>
               <ToolbarSeparator/>
               <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                 <layoutData>
@@ -145,7 +145,7 @@
           </t:rowSettingsTemplate>
           <t:columns>
             <t:Column id="mainStateColumn" minScreenWidth="Tablet" hAlign="Center" width="40px">
-              <Label text="S" textAlign="Center" width="100%"/>
+              <Label text="" textAlign="Center" width="100%"/>
               <t:template>
                 <Text text="{list>_row_state_}"></Text>
               </t:template>
@@ -157,19 +157,19 @@
               </t:template>
             </t:Column>
             <t:Column id="mainTimezoneCodeColumn">
-              <Label text="코드" textAlign="Center" width="100%"/>
+              <Label text="{I18N>/CODE}" textAlign="Center" width="100%"/>
               <t:template>
                 <Input value="{list>timezone_code}" valueLiveUpdate="true"/>
               </t:template>
             </t:Column>
             <t:Column id="mainTimezoneNameColumn">
-              <Label text="타임존" textAlign="Center" width="100%"/>
+              <Label text="{I18N>/TIMEZONE}" textAlign="Center" width="100%"/>
               <t:template>
                 <Input value="{list>timezone_name}" valueLiveUpdate="true"/>
               </t:template>
             </t:Column>
             <t:Column id="mainCountryCodeColumn">
-              <Label text="국가" textAlign="Center" width="100%"/>
+              <Label text="{I18N>/COUNTRY}" textAlign="Center" width="100%"/>
               <t:template>
                 <ComboBox
                   width="100%"
@@ -186,7 +186,7 @@
               </t:template>
             </t:Column>
             <t:Column id="mainGmtOffsetColumn">
-              <Label text="GMT" textAlign="Center" width="100%"/>
+              <Label text="{I18N>/GMT}" textAlign="Center" width="100%"/>
               <t:template>
                 <Input value="{list>gmt_offset}" valueLiveUpdate="true"/>
               </t:template>

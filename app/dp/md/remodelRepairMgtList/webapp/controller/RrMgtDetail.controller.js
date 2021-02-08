@@ -32,11 +32,11 @@ sap.ui.define([
     var oRichTextEditor;
     var supplierData = [];
     /**
-     * @description  AssetDetail 
-     * @author       daun.lee
-     * @date         2021.02.02 
+     * @description Remodel/Repair Management List(협력사) 상세 
+     * @date 2021.02.08 
+     * @author jinseon.lee 
      */
-    return BaseController.extend("dp.md.assetList.controller.AssetDetail", {
+    return BaseController.extend("dp.md.remodelRepairMgtList.controller.RrMgtDetail", {
 
         dateFormatter: DateFormatter,
 
@@ -64,23 +64,29 @@ sap.ui.define([
                 busy: true,
                 delay: 0
             });
-            //this.getRouter().getRoute("assetDetail").attachPatternMatched(this._onRoutedThisPage, this);
+            this.getRouter().getRoute("rrMgtDetail").attachPatternMatched(this._onObjectMatched, this);
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-            this.setModel(new ManagedListModel(), "schedule");
-
+          //  this.setModel(new ManagedListModel(), "schedule");
+            this.setModel(new ManagedModel(), "rrMgt");
             oTransactionManager = new TransactionManager();
             oTransactionManager.aDataModels.length = 0;
 
-            oTransactionManager.addDataModel(this.getModel("schedule"));
+          //  oTransactionManager.addDataModel(this.getModel("schedule"));
 
-            this.process.setDrawProcessUI(this, "assetDetailProcess" , "C", 0);
+            this.process.setDrawProcessUI(this, "rrMgtProcess" , "C", 0);
 
         },
 
+        _onObjectMatched : function(oEvent){ 
+            var oArgs = oEvent.getParameter("arguments");
+            console.log("param>>>>> " , oArgs);
+        } ,
+
+
         onPageNavBackButtonPress: function () {
-            this.getRouter().navTo("assetList", {}, true); 
+            this.getRouter().navTo("rrMgtList", {}, true); 
         },
 
         

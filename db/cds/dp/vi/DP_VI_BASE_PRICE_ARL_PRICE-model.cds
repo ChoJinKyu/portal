@@ -10,11 +10,11 @@ entity VI_Base_Price_Arl_Price {
     key approval_number                  : String(30) not null;
     key item_sequence                    : Decimal not null;
     key market_code                      : String(30) not null;
-        new_base_price                   : Decimal(19, 4);
+        new_base_price                   : Decimal(34,10);
         new_base_price_currency_code     : String(3);
-        current_base_price               : Decimal(19, 4);
+        current_base_price               : Decimal(34,10);
         current_base_price_currency_code : String(3);
-        first_purchasing_net_price       : Decimal(19, 4);
+        first_purchasing_net_price       : Decimal(34,10);
         first_pur_netprice_curr_cd       : String(3);
         first_pur_netprice_str_dt        : Date;
         // change_reason_code               : String(30);

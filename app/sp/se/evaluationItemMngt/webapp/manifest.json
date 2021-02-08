@@ -23,6 +23,13 @@
                     "odataVersion": "2.0"
                 }
             },
+            "utilService": {
+                "uri": "srv-api/odata/v2/sp.evaluationUtilService/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "2.0"
+                }
+            },
             
             "commonService": {
                 "uri": "srv-api/odata/v2/cm.util.CommonService/",
@@ -92,7 +99,15 @@
                     "refreshAfterChange": true
                 }
             },
-            
+            "util" : {
+                "dataSource": "utilService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": true
+                }
+            },
             "common" : {
                 "dataSource": "commonService",
                 "preload": true,

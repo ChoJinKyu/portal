@@ -14,10 +14,10 @@
     <f:DynamicPage 
         id="page"
         toggleHeaderOnTitleClick="true"
+        headerExpanded="{=
+            ${viewModel>/App/layout} === 'OneColumn'
+        }"
     >
-        <!-- headerExpanded="{=
-            ${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'
-        }" -->
         
         <f:title>
             <f:DynamicPageTitle>
@@ -56,7 +56,7 @@
                 
                 <f:actions>
                     <!-- 조회 -->
-                    <Button text="{I18N>/DISPLAY}" type="Emphasized" press="onPressSearch"/>
+                    <!-- <Button text="{I18N>/DISPLAY}" type="Emphasized" press="onPressSearch"/> -->
                 </f:actions>
             </f:DynamicPageTitle>
         </f:title>
@@ -104,6 +104,7 @@
                         <SegmentedButton 
                             id="evaluType" 
                             selectedKey="{viewModel>/cond/EQ/evaluation_type_code}"
+                            selectionChange="onSelectionChangeEvaluTypeCode"
                         />
                         <layoutData>
                             <layout:GridData span="L8 M6 S12" />
@@ -125,11 +126,19 @@
                         <Label text="{I18N>/EVAL_ITEM_NM}" />
                         <Input 
                             value="{viewModel>/cond/Contains/evaluation_article_name}"
+                            submit="onPressSearch"
                         />
                         <layoutData>
                             <layout:GridData span="L2 M6 S12" />
                         </layoutData>
                     </VBox>
+                    <FlexBox alignItems="End" justifyContent="End">
+                        <!-- <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" /> -->
+                        <Button text="{I18N>/DISPLAY}" type="Emphasized" press="onPressSearch"/>
+                        <layoutData>
+                            <layout:GridData span="XL12 L12 M12 S12" />
+                        </layoutData>
+                    </FlexBox>
                 </form:SimpleForm>
             </f:DynamicPageHeader>
         </f:header>
@@ -161,6 +170,13 @@
                         <ToolbarSeparator/>
                         <ToolbarSpacer/>
                         <Button 
+                            text="{I18N>/NEW}" type="Transparent" press="onPressCreate($event, 'NewLevel')" 
+                            visible="{=
+                                ${viewModel>/App/layout} !== 'TwoColumnsMidExpanded' &amp;&amp;
+                                ${viewModel>/Btn/UserEvalType}
+                            }"
+                        />
+                        <Button 
                             text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press="onPressCreate($event, 'SameLevel')" 
                             visible="{=${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'}"
                         />
@@ -174,6 +190,12 @@
                         >
                             <menu>
                                 <Menu>
+                                    <MenuItem 
+                                        text="{I18N>/NEW}" press="onPressCreate($event, 'NewLevel')"
+                                        visible="{=
+                                            !!${viewModel>/Btn/UserEvalType}
+                                        }"
+                                    />
                                     <MenuItem text="{I18N>/CREATE_SAME_LEVEL}" press="onPressCreate($event, 'SameLevel')"/>
                                     <MenuItem text="{I18N>/CREATE_LOWER_LEVEL}" press="onPressCreate($event, 'LowLevel')"/>
                                 </Menu>
@@ -188,67 +210,97 @@
                 
                 <t:columns>
                     <!-- 평가항목 -->
-                    <t:Column label="{I18N>/EVAL_ITEM}" name="evaluation_article_name" width="20em">    
+                    <t:Column label="{I18N>/EVAL_ITEM}" name="" width="20em">    
                         <t:template>
                             <Text text="{viewModel>evaluation_article_name}" tooltip="{viewModel>evaluation_article_name}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_article_name"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 평가운영단위 -->
-                    <t:Column label="{I18N>/EVAL_OP_UNT}" name="evaluation_operation_unit_name" width="7em" hAlign="Center">    
+                    <t:Column label="{I18N>/EVAL_OP_UNT}" name="" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>evaluation_operation_unit_name}" tooltip="{viewModel>evaluation_operation_unit_name}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_operation_unit_name"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 평가유형명 -->
-                    <t:Column label="{I18N>/EVALUATION_TYPE_NAME}" name="evaluation_type_name" width="7em" hAlign="Center">    
+                    <t:Column label="{I18N>/EVALUATION_TYPE_NAME}" name="" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>evaluation_type_name}" tooltip="{viewModel>evaluation_type_name}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_type_name"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 평가수행방식 -->
-                    <t:Column label="{I18N>/EVAL_EXEC_MODE}" name="evaluation_execute_mode_name" width="7em" hAlign="Center">    
+                    <t:Column label="{I18N>/EVAL_EXEC_MODE}" name="" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>evaluation_execute_mode_name}" tooltip="{viewModel>evaluation_execute_mode_name}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_execute_mode_name"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 평가항목구분-->
-                    <t:Column label="{I18N>/EVAL_ITEM_TYPE}" name="evaluation_article_type_name" width="7em" hAlign="Center">    
+                    <t:Column label="{I18N>/EVAL_ITEM_TYPE}" name="" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>evaluation_article_type_name}" tooltip="{viewModel>evaluation_article_type_name}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_article_type_name"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 배점유형 -->
-                    <t:Column label="{I18N>/DISTRB_SCOR_TYPE}" name="evaluation_distrb_scr_type_name" width="7em" hAlign="Center">    
+                    <t:Column label="{I18N>/DISTRB_SCOR_TYPE}" name="" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>evaluation_distrb_scr_type_name}" tooltip="{viewModel>evaluation_distrb_scr_type_name}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_distrb_scr_type_name"/>
+                        </t:customData>
                     </t:Column>
                     <!-- Scale유형 -->
-                    <t:Column label="{I18N>/SCLE_TYPE}" name="evaluation_result_input_type_name" width="7em" hAlign="Center">    
+                    <t:Column label="{I18N>/SCLE_TYPE}" name="" width="7em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>evaluation_result_input_type_name}" tooltip="{viewModel>evaluation_result_input_type_name}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_result_input_type_name"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 평가항목설명 -->
-                    <t:Column label="{I18N>/EVAL_ITEM_DESC}" name="evaluation_article_desc" width="20em">    
+                    <t:Column label="{I18N>/EVAL_ITEM_DESC}" name="" width="20em">    
                         <t:template>
                             <Text text="{viewModel>evaluation_article_desc}" tooltip="{viewModel>evaluation_article_desc}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="evaluation_article_desc"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 정렬 -->
-                    <t:Column label="{I18N>/SORT}" name="sort_sequence" width="5em" hAlign="Center">    
+                    <t:Column label="{I18N>/SORT}" name="" width="5em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>sort_sequence}" tooltip="{viewModel>sort_sequence}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="sort_sequence"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 작성자 -->
-                    <t:Column label="{I18N>/WRITER}" name="writer" width="8em" hAlign="Center">    
+                    <t:Column label="{I18N>/WRITER}" name="" width="8em" hAlign="Center">    
                         <t:template>
                             <Text text="{viewModel>writer}" tooltip="{viewModel>writer}" wrapping="false" />
                         </t:template>
+                        <t:customData>
+                            <core:CustomData key="property" value="writer"/>
+                        </t:customData>
                     </t:Column>
                     <!-- 작성일자 -->
-                    <t:Column label="{I18N>/WRITE_DATE}" name="write_tm" width="8em" hAlign="Center">    
+                    <t:Column label="{I18N>/WRITE_DATE}" width="8em" hAlign="Center">    
                         <t:template>
                             <Text text="{
                                 path:'viewModel>write_tm',
@@ -265,6 +317,7 @@
                             }" wrapping="false" />
                         </t:template>
                         <t:customData>
+                            <core:CustomData key="property" value="write_tm"/>
                             <core:CustomData key="type" value="date"/>
                         </t:customData>
                     </t:Column>

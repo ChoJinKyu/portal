@@ -8,7 +8,8 @@ sap.ui.define([
   "sap/m/MessageBox",
   "sap/ui/table/TablePersoController",
   //"../model/formatter",
-  "./timeZonePersoService"
+  "./timeZonePersoService",
+  "ext/lib/util/Multilingual",
 ],
   function (
     BaseController,
@@ -20,7 +21,8 @@ sap.ui.define([
     MessageBox,
     TablePersoController,
     //formatter,
-    timeZonePersoService) {
+    timeZonePersoService,
+    Multilingual) {
     "use strict";
 
     return BaseController.extend("cm.timeZoneMgt.controller.timeZoneMgt", {
@@ -29,6 +31,7 @@ sap.ui.define([
 
       onInit: function () {
         this.getView().setModel(new ManagedListModel(), "list");
+        this.setModel((new Multilingual()).getModel(), "I18N");
         // 개인화 - UI 테이블의 경우만 해당
         this._oTPC = new TablePersoController({
           customDataKey: "timeZoneMgt",

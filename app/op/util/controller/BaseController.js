@@ -1,5 +1,6 @@
 sap.ui.define([
     "ext/lib/controller/BaseController",
+    "ext/lib/util/SppUserSession",
     "ext/lib/util/Multilingual",
     "ext/lib/formatter/DateFormatter",
     "ext/lib/formatter/NumberFormatter",
@@ -13,7 +14,7 @@ sap.ui.define([
     "sap/ui/core/Fragment",
 
     "op/util/library/Aop",
-], function (Controller, Multilingual, DateFormatter, NumberFormatter, ExcelUtil, MessageBox, JSONModel, Filter, FilterOperator, Fragment, Aop) {
+], function (Controller, SppUserSession, Multilingual, DateFormatter, NumberFormatter, ExcelUtil, MessageBox, JSONModel, Filter, FilterOperator, Fragment, Aop) {
     "use strict";
 	return Controller.extend("op.util.controller.BaseController", {
         /////////////////////////////////////////////////////////////
@@ -33,6 +34,18 @@ sap.ui.define([
                 department_name: "석유화학.구매.원재료구매1팀 - 원재료"
             }), "session");
             this.$session = this.getModel("session").getData();
+
+            // this.setModel((new SppUserSession()).getModel(), "session");
+            // this.$session = 
+            //     Object
+            //         .keys(this.getModel("session").getData())
+            //         .filter(function(e) { return typeof e == "string"; })
+            //         .reduce((function(acc, e) { 
+            //             acc[e.toLowerCase()] = this.getModel("session").getData()[e];
+            //             return acc; 
+            //         }).bind(this), {});
+            // this.setModel(new JSONModel(this.$session), "session");
+
             this.getOwnerComponent()["$"+this.getView().getViewName().split("view.")[1]] = 
             this.getView().getController();
             // 다국어
@@ -87,7 +100,7 @@ sap.ui.define([
                 : model.getData();
 
             // Filter: keyword 쪽은 보완 필요
-            return Object.keys(jData)
+            return Object.keys(jData.filters || jData)
                 // EQ, BT 만 해당
                 .filter(
                     path => 
@@ -221,10 +234,6 @@ sap.ui.define([
                     mDeferred.reject(release());
                 }, this)
                 .open();
-            // // Token
-            // control 
-            // && 
-            // Dialog.setTokens(control.getTokens());
 
             // Token
             control 

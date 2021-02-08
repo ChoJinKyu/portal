@@ -43,9 +43,24 @@ service VpMappingService {
 
     entity VpDetailView @(title : '협력사풀 공급업체 View') as projection on vpDetailView.Vp_Vendor_Pool_Detail_View;
 
-    entity VpSupplierDtlView @(title : '협력사풀 공급업체 View') as projection on vpSupplierDtl.Vp_Vendor_Pool_Supplier_View;
+    entity VpSupplierDtlView @(title : '협력사풀 공급업체 View') as projection on vpSupplierDtl.Vp_Vendor_Pool_Supplier_View;    
 
-    entity VpMaterialMst @(title : '협력사풀 품목마스터 View') as projection on vpMaterialMst.Vp_Material_Mst_View;
+    //entity VpMaterialMst @(title : '협력사풀 품목마스터 View') as projection on vpMaterialMst.Vp_Material_Mst_View;
+
+    view VpMaterialMst @(title : '협력사풀 품목마스터 View') as
+        select  key m.bizunit_code,
+                key m.language_cd,
+                key m.tenant_id,
+                key m.company_code,
+                key m.org_type_code,
+                key m.org_code,
+                key m.material_code,
+                m.material_desc
+        from   vpMaterialMst.Vp_Material_Mst_View m
+                join sppUserSession.Spp_User_Session_View ssn
+                on     m.tenant_id    = ssn.TENANT_ID
+                and    m.language_cd  = ssn.LANGUAGE_CODE
+        ; 
     
     view vpMaterialDtlView @(title : 'Vendor Pool Material Mapping View') as
         select key mv.language_cd,
@@ -114,7 +129,34 @@ service VpMappingService {
                 on     md.tenant_id    = ssn.TENANT_ID                
         where  ifnull(md.vendor_pool_mapping_use_flag, true) = true;        
 
-        entity VpSupplierMstView @(title : '공급업체마스터 View') as projection on vpSupplierMst.Vp_Supplier_Mst_View;
+        //entity VpSupplierMstView @(title : '공급업체마스터 View') as projection on vpSupplierMst.Vp_Supplier_Mst_View;
+
+        view VpSupplierMstView @(title : '공급업체마스터 View') as
+        select  key bizunit_code,
+                key language_cd,
+                key tenant_id,
+                key company_code,
+                company_name,
+                key org_type_code,
+                key org_code,
+                key supplier_code,
+                supplier_local_name,
+                supplier_english_name,
+                supplier_type_code,
+                supplier_type_name,
+                inactive_status_code,
+                inactive_status_name,
+                supplier_register_status_code,
+                supplier_register_status_name,
+                supplier_flag,
+                maker_flag,
+                supplier_old_supplier_code,
+                maker_old_supplier_code
+        from   vpSupplierMst.Vp_Supplier_Mst_View m
+                join sppUserSession.Spp_User_Session_View ssn
+                on     m.tenant_id    = ssn.TENANT_ID
+                and    m.language_cd  = ssn.LANGUAGE_CODE
+        ; 
 
         view VpDetailLngView @(title : 'Vendor Pool Detail Language View') as
         select  key mst.tenant_id,

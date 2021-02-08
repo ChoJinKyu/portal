@@ -103,3 +103,18 @@ curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepUpsertNegoHeader' 
 
 
 
+2002  General_Hook_Up
+2003  General_환경 설비
+2004 General_시설물 유지 보수
+2005 General_Layout
+2006 Urgent_Hook Up
+2007  Urgent 환경 설비
+2008 Urgent_시설물 유지 보수
+2009  Urgent_Layout
+260031 Overhaul
+
+{"deepupsertnegoheader":{"negoheaders":[{"tenant_id":"L2100","nego_header_id":0,"reference_nego_header_id":0,"previous_nego_header_id":0,"operation_org_code":"","operation_unit_code":"","reference_nego_document_number":0,"nego_document_round":0,"nego_document_number":"","nego_document_title":"저장 테스트1","nego_document_desc":"","nego_progress_status_code":"","award_progress_status_code":"","reply_times":0,"supplier_count":0,"nego_type_code":"RFQ","outcome_code":"","negotiation_output_class_code":"BPA","buyer_empno":"","buyer_department_code":"","immediate_apply_flag":"Y","open_date":"2021-02-08T02:10:21.270Z","closing_date":"2021-02-13T02:10:21.270Z","auto_rfq":"","items_count":0,"negotiation_style_code":"","close_date_ext_enabled_hours":0,"close_date_ext_enabled_count":0,"actual_extension_count":0,"remaining_hours":0,"note_content":"","award_type_code":"","award_method_code":"","target_amount_config_flag":"","target_currency":"","target_amount":0,"supplier_participation_flag":"","partial_allow_flag":"","bidding_result_open_status_code":""}],"negoitemprices":[],"negosuppliers":[]}}
+
+curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepUpsertNegoHeader' \
+  -H 'Content-Type: application/json' \
+  --data-raw '{"deepupsertnegoheader":{"negoheaders":[{"tenant_id":"L2100","nego_header_id":100,"reference_nego_header_id":0,"previous_nego_header_id":0,"operation_org_code":"","operation_unit_code":"","reference_nego_document_number":0,"nego_document_round":0,"nego_document_number":"","nego_document_title":"저장 테스트1","nego_document_desc":"","nego_progress_status_code":"","award_progress_status_code":"","reply_times":0,"supplier_count":0,"nego_type_code":"RFQ","outcome_code":"","negotiation_output_class_code":"BPA","buyer_empno":"","buyer_department_code":"","immediate_apply_flag":"Y","open_date":"2021-02-08T02:10:21.270Z","closing_date":"2021-02-13T02:10:21.270Z","auto_rfq":"","items_count":0,"negotiation_style_code":"","close_date_ext_enabled_hours":0,"close_date_ext_enabled_count":0,"actual_extension_count":0,"remaining_hours":0,"note_content":"","award_type_code":"","award_method_code":"","target_amount_config_flag":"","target_currency":"","target_amount":0,"supplier_participation_flag":"","partial_allow_flag":"","bidding_result_open_status_code":""}],"negoitemprices":[],"negosuppliers":[]}}' \

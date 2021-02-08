@@ -180,13 +180,6 @@
                     "target": [
                         "assetList"
                     ]
-                },
-                {
-                    "pattern": "assetDetail/{tenantId}/{moldId}",
-                    "name": "assetDetail",
-                    "target": [
-                        "assetDetail"
-                    ]
                 }
             ],
             "targets": {
@@ -195,12 +188,6 @@
                     "viewId": "assetList",
                     "viewLevel": 1,
                     "title": "{i18n>assetListViewTitle}"
-                },
-                "assetDetail": {
-                    "viewName": "AssetDetail",
-                    "viewId": "assetDetail",
-                    "viewLevel": 2,
-                    "title": "{i18n>mainObjectViewTitle}"
                 },
                 "notFound": {
                     "viewName": "NotFound",

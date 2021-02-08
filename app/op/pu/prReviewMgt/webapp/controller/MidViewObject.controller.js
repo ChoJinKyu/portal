@@ -94,7 +94,7 @@ sap.ui.define([
                                     onCommit: function() {
                                         var [event, action, value, ...args] = arguments;
                                         if (!value.processedReason) {
-                                            MessageBox.alert("(미정)사유를 입력하세요.");
+                                            MessageBox.alert("(미정)사유를 입력하세요");
                                             return false;
                                         }
                                         return value;

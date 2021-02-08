@@ -1,5 +1,5 @@
 
-    <mvc:View controllerName="dp.md.assetList.controller.AssetDetail" 
+    <mvc:View controllerName="dp.md.remodelRepairMgtList.controller.RrMgtDetail" 
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:uxap="sap.uxap"
     xmlns:form="sap.ui.layout.form" 
@@ -90,9 +90,7 @@
                       <HBox>
                          <Title text="{I18N>/PROCESS}"/>
                     </HBox>
-                      <HBox id="assetDetailProcess">
-                       
-                    </HBox>
+                      <HBox id="rrMgtProcess"></HBox>
                 </layout:VerticalLayout>
 			</FlexBox>
 		</uxap:headerContent>
@@ -269,58 +267,83 @@
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
 					                    </layoutData>
                                     </VBox>
-                                    <Table id="scheduleTable1E"
-                                            mode="None"
-                                            sticky="HeaderToolbar,ColumnHeaders"
-                                            inset="false"
-                                            class="sapFDynamicPageAlignContent"
-                                            width="auto"
-                                            items="{
-                                                    path : 'util>/Code',
-                                                    filters : [
-                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_DEV_DATE_TYPE'}
-                                                    ]
-                                                }"
-                                            >
-                                        <columns>
-                                            <Column>
-                                                <Label text="Type" wrapping="true" />
-                                            </Column>
-                                            <Column>
-                                                <Label text="Move" wrapping="true" />
-                                            </Column>
-                                            <Column>
-                                                <Label text="Complete" wrapping="true" />
-                                            </Column>
-                                        </columns>
-                                        <items>
-                                            <ColumnListItem>
-                                                <cells>
-                                                    <Select 
-                                                            width="100%"
-                                                            forceSelection="false"
-                                                            selectedKey="{schedule>mold_develope_date_type_code}"
-                                                            items="{
-                                                                        path : 'util>/Code',
-                                                                        filters : [
-                                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_DEV_DATE_TYPE'}
-                                                                        ]
-                                                                    }"
-                                                            editable="false"
-                                                            class="readonlyField"
-                                                    >
-                                                        <core:Item key="{util>code}" text="{util>code_name}" />
-                                                    </Select>
-                                                    <DatePicker valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
-                                                    <DatePicker valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD"/>
-                                                </cells>
-                                            </ColumnListItem>
-                                        </items>
-                                    </Table>
+                                    <VBox height="6em">
+                                        <Label
+                                            text="{path:'I18N>/MOVE_PLAN', formatter:'I18NFormatter'}"
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            required="true"/>
+                                        <DatePicker text="테스트"/>
+                                        <layoutData>
+						                    <layout:GridData span="XL4 L4 M12 S12"/>
+					                    </layoutData>
+                                    </VBox>
+                                    <VBox height="6em">
+                                        <Label
+                                            text="{path:'I18N>/COMPLETE_PLAN', formatter:'I18NFormatter'}"
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            required="true"/>
+                                        <DatePicker text="테스트"/>
+                                        <layoutData>
+						                    <layout:GridData span="XL4 L4 M12 S12"/>
+					                    </layoutData>
+                                    </VBox>
+                                    <VBox height="6em">
+                                        <Label text=""
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            />
+                                      
+                                        <layoutData>
+						                    <layout:GridData span="XL4 L4 M12 S12"/>
+					                    </layoutData>
+                                    </VBox>
+
+                                    <VBox height="6em">
+                                        <Label
+                                            text="{path:'I18N>/MOVE_RESULT', formatter:'I18NFormatter'}"
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            required="true"/>
+                                        <DatePicker text="테스트"/>
+                                        <layoutData>
+						                    <layout:GridData span="XL4 L4 M12 S12"/>
+					                    </layoutData>
+                                    </VBox>
+                                  
+                                    <VBox height="6em">
+                                        <Label
+                                            text="{path:'I18N>/COMPLETE_RESULT', formatter:'I18NFormatter'}"
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            required="true"/>
+                                        <DatePicker text="테스트"/>
+                                        <layoutData>
+						                     <layout:GridData span="XL4 L4 M12 S12"/>
+					                    </layoutData>
+                                    </VBox>
+
+                                    <VBox height="6em">
+                                        <Label
+                                            text=""
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            />
+                                      
+                                        <layoutData>
+						                    <layout:GridData span="XL4 L4 M12 S12"/>
+					                    </layoutData>
+                                    </VBox>
                                 </form:content>
                             </form:SimpleForm>
+                      
                         </VBox>
                             
                             

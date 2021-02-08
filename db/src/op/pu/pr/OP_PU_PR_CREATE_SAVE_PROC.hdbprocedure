@@ -65,8 +65,10 @@ BEGIN
 	DECLARE V_PR_NUMBER NVARCHAR(50);
     DECLARE V_PR_NUMBER_SEQNO BIGINT;
     DECLARE V_REQUEST_DATE DATE;
+    DECLARE V_PR_CREATE_STATUS_CODE NVARCHAR(30);
 
     /* 상세자료 cursor */
+    /*
     DECLARE CURSOR curDtlList FOR
         SELECT 	PR_ITEM_NUMBER ,
 				ORG_TYPE_CODE ,
@@ -96,8 +98,8 @@ BEGIN
                 ASSET_NUMBER ,
                 ORDER_NUMBER ,
 				UPDATE_USER_ID 
-        FROM :I_D_TABLE DTL
-        ;
+        FROM :I_D_TABLE DTL;
+    */
 
     /* SQL Error 처리 */
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -110,6 +112,7 @@ BEGIN
     V_TENANT_ID = :I_M_TABLE.TENANT_ID[1];
     V_COMPANY_CODE = :I_M_TABLE.COMPANY_CODE[1];
     V_REQUEST_DATE = TO_DATE(:I_M_TABLE.REQUEST_DATE[1]);
+    V_PR_CREATE_STATUS_CODE = :I_M_TABLE.PR_CREATE_STATUS_CODE[1];
 
 	
 	/* 구매요청번호 채번 */
@@ -257,6 +260,7 @@ BEGIN
     
 	
     /* Cursor 실행 */
+    /*
 	FOR curDtl AS curDtlList DO
 		INSERT INTO OP_PU_PR_DTL (
 			TENANT_ID  ,
@@ -274,6 +278,7 @@ BEGIN
             REQUESTOR_NAME ,
             REQUEST_DATE,
             DELIVERY_REQUEST_DATE,
+            CONFIRMED_DATE,
             BUYER_EMPNO ,
             PURCHASING_GROUP_CODE,
             ESTIMATED_PRICE ,
@@ -309,6 +314,7 @@ BEGIN
             curDtl.REQUESTOR_NAME,
             V_REQUEST_DATE,
             TO_DATE(curDtl.DELIVERY_REQUEST_DATE),
+            CURRENT_TIMESTAMP,
             curDtl.BUYER_EMPNO,
             curDtl.PURCHASING_GROUP_CODE,
             curDtl.ESTIMATED_PRICE ,
@@ -330,6 +336,82 @@ BEGIN
             CURRENT_TIMESTAMP
         );
     END FOR;
+    */
+
+    /* 품목정보 등록 */
+    INSERT INTO OP_PU_PR_DTL (
+			TENANT_ID  ,
+			COMPANY_CODE,
+			PR_NUMBER ,
+			PR_ITEM_NUMBER ,
+			ORG_TYPE_CODE ,
+			ORG_CODE ,
+			MATERIAL_CODE,
+			MATERIAL_GROUP_CODE,
+			PR_DESC,
+			PR_QUANTITY,
+			PR_UNIT,
+            REQUESTOR_EMPNO ,
+            REQUESTOR_NAME ,
+            REQUEST_DATE,
+            DELIVERY_REQUEST_DATE,
+            CONFIRMED_DATE,
+            BUYER_EMPNO ,
+            PURCHASING_GROUP_CODE,
+            ESTIMATED_PRICE ,
+            CURRENCY_CODE ,
+            PRICE_UNIT ,
+            PR_PROGRESS_STATUS_CODE ,
+            REMARK ,
+            SLOC_CODE, 
+            SUPPLIER_CODE,
+            ITEM_CATEGORY_CODE,
+            ACCOUNT_ASSIGNMENT_CATEGORY_CODE,
+            DELETE_FLAG,
+            CLOSING_FLAG,
+            LOCAL_CREATE_DTM,
+            LOCAL_UPDATE_DTM,
+            CREATE_USER_ID,
+            UPDATE_USER_ID,
+            SYSTEM_CREATE_DTM,
+            SYSTEM_UPDATE_DTM
+    )
+    SELECT  :V_TENANT_ID , 
+            :V_COMPANY_CODE,
+            :V_PR_NUMBER ,
+            TMP_D.PR_ITEM_NUMBER,
+            TMP_D.ORG_TYPE_CODE ,
+            TMP_D.ORG_CODE ,
+            TMP_D.MATERIAL_CODE,
+            TMP_D.MATERIAL_GROUP_CODE,
+            TMP_D.PR_DESC,
+            TMP_D.PR_QUANTITY,
+            TMP_D.PR_UNIT,
+            TMP_D.REQUESTOR_EMPNO,
+            TMP_D.REQUESTOR_NAME,
+            :V_REQUEST_DATE,
+            TO_DATE(TMP_D.DELIVERY_REQUEST_DATE),
+            CASE WHEN :V_PR_CREATE_STATUS_CODE IS NOT NULL AND :V_PR_CREATE_STATUS_CODE = '50' THEN CURRENT_TIMESTAMP ELSE NULL END,
+            TMP_D.BUYER_EMPNO,
+            TMP_D.PURCHASING_GROUP_CODE,
+            TMP_D.ESTIMATED_PRICE ,
+            TMP_D.CURRENCY_CODE ,
+            TMP_D.PRICE_UNIT ,
+            TMP_D.PR_PROGRESS_STATUS_CODE ,
+            TMP_D.REMARK ,
+            TMP_D.SLOC_CODE,
+            TMP_D.SUPPLIER_CODE,
+            TMP_D.ITEM_CATEGORY_CODE,
+            TMP_D.ACCOUNT_ASSIGNMENT_CATEGORY_CODE,
+            FALSE ,
+            FALSE ,       
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP,
+            TMP_D.UPDATE_USER_ID,
+            TMP_D.UPDATE_USER_ID,
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
+    FROM :I_D_TABLE TMP_D;
 
    
     /* 계정정보 등록 */

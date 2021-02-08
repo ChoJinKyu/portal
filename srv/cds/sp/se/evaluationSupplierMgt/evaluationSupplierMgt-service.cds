@@ -1,6 +1,8 @@
 using { sp.Se_Eval_Supplier as eSupplier } from '../../../../../db/cds/sp/se/SP_SE_EVAL_SUPPLIER-model';
 using { pg.Vp_Supplier_Mst_View as vpSupplierMst } from '../../../../../db/cds/pg/vp/PG_VP_SUPPLIER_MST_VIEW-model';
 using { cm.Org_Company as company } from '../../../../../db/cds/cm/CM_ORG_COMPANY-model';
+using { cm.Pur_Org_Type_Mapping as orgTypeMap } from '../../../../../db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model';
+using { cm.Pur_Operation_Org as OprationOrg } from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
 
 namespace sp; 
 @path : '/sp.evalSupplierService'
@@ -8,6 +10,19 @@ service EvalSupplierService {
     
     //Company Condition
     entity Company as projection on company;
+
+    //Org Condition
+    view organizationView as
+    select org.tenant_id,
+           org.company_code,
+           org.org_code,
+           org.org_name
+    from   orgTypeMap ma,
+           OprationOrg org
+    where  ma.tenant_id = org.tenant_id
+    and    ma.company_code = org.company_code
+    and    ma.org_type_code = org.org_type_code
+    ;
 
     //List View
     view ListView as

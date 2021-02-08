@@ -123,7 +123,6 @@
                                     <Button type="Emphasized" text="Add Item" press=".onItemAddRow" />
                                     <Button type="Transparent" text="Add Multiple Item" press=".onItemAddMultiRow" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag}"/>
                                     <Button type="Transparent" text="Copy"  press=".onItemCopyRow" />
-                                    <!-- <Button id="btnItemEditMulti"   type="Transparent" text="Edit Multiple"  press=".onItemEditMultiRow" /> -->
                                     <Button type="Transparent" text="Delete"  press=".onItemDeleteRow" />
                                 </OverflowToolbar>
                             </table:extension>          
@@ -161,20 +160,19 @@
                                 <table:Column width="18em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_DESC/display_column_flag}">
                                     <Label text="{I18N>/PR_ITEM_NAME}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_DESC/mandatory_column_flag}"/>           
                                     <table:template>
-                                        <Input value="{viewModel>pr_desc}"  textAlign="Begin" maxLength="100" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_DESC/mandatory_column_flag}"/>
+                                        <Input value="{viewModel>pr_desc}"  textAlign="Begin" maxLength="100" 
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_DESC/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>       
                                 <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/display_column_flag}">
                                     <Label text="{I18N>/REQUEST_QUANTITY}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/mandatory_column_flag}"/>
                                     <table:template>
-                                        <Input type="Float"
+                                        <Input 
                                             value="{path: 'viewModel>pr_quantity', 
                                                     type : 'sap.ui.model.odata.type.Decimal'}" 
                                             textAlign="End"
                                             maxLength="30"
-                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/mandatory_column_flag}"
-                                            valueState="{viewModel>__metadata/_valueStates/pr_quantity/valueState}" 
-                                            valueStateText="{viewModel>__metadata/_valueStates/pr_quantity/valueStateText}"/>
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_QUANTITY/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>                                     
                                 <table:Column width="7em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_UNIT/display_column_flag}">
@@ -188,20 +186,20 @@
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_UNIT/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>   
-                                <table:Column width="9em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/DELIVERY_REQUEST_DATE/display_column_flag}">
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/DELIVERY_REQUEST_DATE/display_column_flag}">
                                     <Label text="{I18N>/DELIVERY_REQUEST_DATE}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/DELIVERY_REQUEST_DATE/mandatory_column_flag}"/> 
                                     <table:template>
-                                        <DatePicker id="i_delivery_request_date"
-                                                visible="true"
-                                                value="{
-                                                    path:'viewModel>delivery_request_date',
-                                                    type:'sap.ui.model.odata.type.DateTime',
-                                                    formatOptions: {
-                                                        UTC: true,
-                                                        pattern: 'yyyy-MM-dd'
-                                                    }
-                                                }"
-                                                required="{contModel>/DisplayFlag/OP_PU_PR_DTL/DELIVERY_REQUEST_DATE/mandatory_column_flag}"/>
+                                        <DatePicker
+                                            value="{
+                                                path:'viewModel>delivery_request_date',
+                                                type:'sap.ui.model.odata.type.Date',
+                                                formatOptions: {
+                                                    UTC: true,
+                                                    pattern: 'yyyy-MM-dd'
+                                                }
+                                            }"
+                                            placeholder="YYYY-MM-DD"
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/DELIVERY_REQUEST_DATE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>                                      
                                 <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/BUYER_EMPNO/display_column_flag}">
@@ -230,9 +228,7 @@
                                             value="{path: 'viewModel>estimated_price', 
                                                     type : 'sap.ui.model.odata.type.Decimal'}" 
                                             textAlign="End"
-                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ESTIMATED_PRICE/mandatory_column_flag}"
-                                            valueState="{viewModel>__metadata/_valueStates/estimated_price/valueState}" 
-                                            valueStateText="{viewModel>__metadata/_valueStates/estimated_price/valueStateText}"/>
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/ESTIMATED_PRICE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column  width="7em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/CURRENCY_CODE/display_column_flag}">
@@ -247,19 +243,13 @@
                                 </table:Column>   
                                 <table:Column width="7em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/PRICE_UNIT/display_column_flag}">
                                     <Label text="{path:'I18N>/PRICE_UNIT'}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PRICE_UNIT/mandatory_column_flag}"/>           
-                                    <table:template>                                        
+                                    <table:template> 
                                         <Input 
-                                            value="{
-                                                parts: [
-                                                    {path: 'viewModel>price_unit'},
-                                                    {path: 'viewModel>currency_code'}
-                                                ],
-                                                type:'sap.ui.model.type.Currency',
-                                                formatOptions:{showMeasure:false}
-                                            }"
-                                            maxLength="6"
+                                            value="{path: 'viewModel>price_unit', 
+                                                    type : 'sap.ui.model.odata.type.Decimal'}" 
                                             textAlign="End"
-                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PRICE_UNIT/mandatory_column_flag}"/> 
+                                            maxLength="5"
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PRICE_UNIT/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column> 
                                 <table:Column width="9em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ACCOUNT_CODE/display_column_flag}">
@@ -358,8 +348,7 @@
                                     <table:template>
                                         <Input value="{viewModel>remark}" 
                                             maxLength="2000"
-                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/REMARK/mandatory_column_flag}" 
-                                            valueState="{form>__metadata/_valueStates/remark/valueState}" valueStateText="{form>__metadata/_valueStates/remark/valueStateText}"/>                                            
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/REMARK/mandatory_column_flag}"/>                                            
                                     </table:template>
                                 </table:Column>
                                 <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/ITEM_CATEGORY_CODE/display_column_flag}">

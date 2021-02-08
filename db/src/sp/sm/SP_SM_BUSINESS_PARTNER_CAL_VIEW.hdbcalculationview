@@ -414,15 +414,15 @@
   </calculationView>
   <calculationView xsi:type="Calculation:JoinView" id="Join_9_8" joinType="leftOuter" multiJoinNode="Join_9" multiJoinCentralTable="Supplier_Org" multiJoinOrder="Outside In">
     <viewAttributes>
-      <viewAttribute id="TENANT_ID"/>
       <viewAttribute id="COMPANY_CODE"/>
       <viewAttribute id="ORG_CODE"/>
       <viewAttribute id="TYPE_CODE"/>
-      <viewAttribute id="BUSINESS_PARTNER_CODE"/>
       <viewAttribute id="BUSINESS_PARTNER_REGISTER_STATUS_CODE"/>
       <viewAttribute id="BUSINESS_PARTNER_STATUS_CODE"/>
       <viewAttribute id="BUSINESS_PARTNER_REGISTER_PROGRESS_CODE"/>
       <viewAttribute id="BUSINESS_PARTNER_REGISTER_PROGRESS_NAME"/>
+      <viewAttribute id="TENANT_ID"/>
+      <viewAttribute id="BUSINESS_PARTNER_CODE"/>
       <viewAttribute id="BUSINESS_PARTNER_REGISTER_STATUS_NAME"/>
       <viewAttribute id="BUSINESS_PARTNER_STATUS_NAME"/>
       <viewAttribute id="TYPE_NAME"/>
@@ -615,39 +615,39 @@
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="Supplier_Mst" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_9">
-      <upperLeftCorner x="528" y="248"/>
+      <upperLeftCorner x="974" y="297"/>
       <rectangleSize width="291"/>
     </shape>
     <shape modelObjectName="Maker_Role" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_9">
-      <upperLeftCorner x="961" y="344"/>
+      <upperLeftCorner x="-7" y="523"/>
       <rectangleSize width="191"/>
     </shape>
     <shape modelObjectName="Supplier_Role" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_9">
-      <upperLeftCorner x="2054" y="11"/>
+      <upperLeftCorner x="-11" y="-136"/>
       <rectangleSize width="207"/>
     </shape>
     <shape modelObjectName="Bizunit" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_9">
-      <upperLeftCorner x="2019" y="232"/>
+      <upperLeftCorner x="-8" y="289"/>
       <rectangleSize width="166"/>
     </shape>
     <shape modelObjectName="Type_Lng" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_9">
-      <upperLeftCorner x="1220" y="30"/>
-      <rectangleSize width="250"/>
+      <upperLeftCorner x="973" y="516"/>
+      <rectangleSize width="169"/>
     </shape>
     <shape modelObjectName="Status_Lng" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_9">
-      <upperLeftCorner x="1201" y="419"/>
+      <upperLeftCorner x="974" y="82"/>
       <rectangleSize width="169"/>
     </shape>
     <shape modelObjectName="Register_Status_Lng" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_9">
-      <upperLeftCorner x="1610" y="391"/>
+      <upperLeftCorner x="974" y="-136"/>
       <rectangleSize width="184"/>
     </shape>
     <shape modelObjectName="Supplier_Org" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_9">
-      <upperLeftCorner x="434" y="345"/>
+      <upperLeftCorner x="378" y="126"/>
       <rectangleSize width="368"/>
     </shape>
     <shape modelObjectName="Register_Progress_Lng" modelObjectNameSpace="Join_9" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_9">
-      <upperLeftCorner x="1279" y="589"/>
+      <upperLeftCorner x="-12" y="44"/>
       <rectangleSize width="199"/>
     </shape>
   </shapes>

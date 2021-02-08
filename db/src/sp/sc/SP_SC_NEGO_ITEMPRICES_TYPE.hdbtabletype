@@ -49,11 +49,11 @@ price_submisstion_status NVARCHAR(10),
 interface_source NVARCHAR(30),
 budget_department_code NVARCHAR(30),
 requestor_empno NVARCHAR(30),
-request_department_code NVARCHAR(30),
+request_department_code NVARCHAR(30)/* ,
 local_create_dtm SECONDDATE NOT NULL,
 local_update_dtm SECONDDATE NOT NULL,
 create_user_id NVARCHAR(255) NOT NULL,
 update_user_id NVARCHAR(255) NOT NULL,
 system_create_dtm SECONDDATE NOT NULL,
-system_update_dtm SECONDDATE NOT NULL
+system_update_dtm SECONDDATE NOT NULL */
 );

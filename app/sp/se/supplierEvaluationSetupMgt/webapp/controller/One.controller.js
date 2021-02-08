@@ -1140,7 +1140,10 @@ sap.ui.define([
                 oArgs = oEvent.getParameter("arguments");
                 oComponent = this.getOwnerComponent();
                 oViewModel = oComponent.getModel("viewModel");
+                
                 oViewModel.setProperty("/App/layout", "OneColumn");
+               // oViewModel.setProperty("/App/layout", sAppLayout === "OneColumn" ? "TwoColumnsMidExpanded" : sAppLayout);
+                
 
             oView.setBusy(true);
 

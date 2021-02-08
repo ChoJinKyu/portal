@@ -15,6 +15,7 @@ sap.ui.define([
                     btnScreen : "sap-icon://full-screen",
                     EditMode : false
                 });
+                this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
             }
 		});
 	});

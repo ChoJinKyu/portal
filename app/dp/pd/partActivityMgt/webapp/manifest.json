@@ -104,7 +104,7 @@
         },
         "resourceRoots": {
             "ext.lib": "../../../../lib",
-            "dp.util": "../../util"
+            "dp": "../../../../dp"
         },
         "routing": {
             "config": {

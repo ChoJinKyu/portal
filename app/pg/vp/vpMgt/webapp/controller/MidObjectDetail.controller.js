@@ -328,12 +328,14 @@ sap.ui.define([
             // Pop 내부에 값을 올려주기 위해 구성
             this.oDetailSupDialog.setContentWidth("300px");
             var sSearchObj = {};
-            sSearchObj.tanentId = "L2100";
-            sSearchObj.languageCd = "KO";
+            // sSearchObj.tanentId = "L2100";
+            // sSearchObj.languageCd = "KO";
+
             // sSearchObj.supplierCode = that.byId("search_Sup_Code").getValue();
             // sSearchObj.orgCode = that.byId("search_Operation_ORG_E").getSelectedKey();
             // sSearchObj.orgUnitCode = that.byId("search_Operation_UNIT_E").getSelectedKey();
-
+            sSearchObj.orgCode = that._sOrgCode;
+            sSearchObj.orgUnitCode = that._sOperationUnitCode;
             // Pop의 open에 sSearchObj를 인자로 호출 
             this.oDetailSupDialog.open(sSearchObj);
             this.oDetailSupDialog.attachEvent("apply", function (oEvent) {
@@ -364,7 +366,16 @@ sap.ui.define([
                 }
 
             });
-            this.oDetailMaterialDialog.open();
+            var sSearchObj = {};
+            // sSearchObj.tanentId = "L2100";
+            // sSearchObj.languageCd = "KO";
+
+            // sSearchObj.supplierCode = that.byId("search_Sup_Code").getValue();
+            // sSearchObj.orgCode = that.byId("search_Operation_ORG_E").getSelectedKey();
+            // sSearchObj.orgUnitCode = that.byId("search_Operation_UNIT_E").getSelectedKey();
+            sSearchObj.orgCode = that._sOrgCode;
+            
+            this.oDetailMaterialDialog.open(sSearchObj);
             this.oDetailMaterialDialog.attachEvent("apply", function (oEvent) {
                 //console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
                  var sModel = this.getModel("matlist");
@@ -506,6 +517,23 @@ sap.ui.define([
 
             if (this.currnetSppObj.length > 0) {
                 for (var i = 0; i < this.currnetSppObj.length; i++) {
+
+                    var startDate = this.currnetSppObj[i].supeval_control_start_date;
+                    var endDate = this.currnetSppObj[i].supeval_control_end_date;
+
+                    if(startDate){
+
+                        startDate = this.currnetSppObj[i].supeval_control_start_date.toJSON().substring(0, 10)
+
+                    }
+
+                    if(endDate){
+
+                        endDate = this.currnetSppObj[i].supeval_control_end_date.toJSON().substring(0, 10)
+
+                    }
+
+
                     vpSupplierList.push({
                         tenant_id: generaloDataRst.tenant_id //auto set
                         ,company_code: this.currnetSppObj[i].supplier_company_code
@@ -517,8 +545,8 @@ sap.ui.define([
                         //,supeval_target_flag: false   //??협의대상(화면의 어떤항목인지 모름)
                         //,supplier_op_plan_review_flag: false   //??협의대상(화면의 어떤항목인지 모름)
                         ,supeval_control_flag: this.currnetSppObj[i].supeval_control_flag
-                        ,supeval_control_start_date: this.currnetSppObj[i].supeval_control_start_date.toJSON().substring(0, 10)
-                        ,supeval_control_end_date: this.currnetSppObj[i].supeval_control_end_date.toJSON().substring(0, 10)
+                        ,supeval_control_start_date: startDate
+                        ,supeval_control_end_date: endDate
                         //,supeval_restrict_start_date: "20210104"   //??협의대상(화면의 어떤항목인지 모름)
                         //,supeval_restrict_end_date: "20211229"   //??협의대상(화면의 어떤항목인지 모름)
                         //,inp_code: "AAA"  //??협의대상(화면의 어떤항목인지 모름)  
