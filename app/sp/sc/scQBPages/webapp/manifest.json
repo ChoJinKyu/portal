@@ -36,6 +36,13 @@
                 "settings": {
                 "odataVersion": "2.0"
                 }
+            },
+            "org": {
+                "uri": "srv-api/odata/v2/cm.util.OrgService/",
+                "type": "OData",
+                "settings": {
+                "odataVersion": "2.0"
+                }
             }
            
         }
@@ -110,6 +117,13 @@
                     "odataVersion": "2.0"
                 },
                 "dataSource": "common"
+            },
+            "org": {
+                "type": "sap.ui.model.odata.v2.ODataModel",
+                "settings": {
+                    "odataVersion": "2.0"
+                },
+                "dataSource": "org"
             }
 		},
 		"resources": {

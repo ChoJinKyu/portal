@@ -102,17 +102,18 @@
                                                         <VBox  class="sapUiMediumMarginTop">
                                                             <Label  text="Title:" required="true" class="nameTitle"  />
                                                             
-                                                            <Input  id="inputTitle" width="100%" value="{NegoHeaders>/nego_document_title}" visible="{=${propInfo>/isEditMode}}"/>
+                                                            <Input  id="inputTitle" width="100%" value="{NegoHeaders>/nego_document_title}" visible="{=${propInfo>/isEditMode}}"
+                                                                placeholder="최대 300자까지 입력 할 수 있습니다."/>
                                                             <Text  id="textTitle" text="{NegoHeaders>/nego_document_title}" visible="{=!${propInfo>/isEditMode} }"/>
                                                         </VBox>
                                                     
                                                         <VBox class="sapUiMediumMarginTop">
                                                             <Label  text="Description:" class="nameTitle sapUiTinyMarginBottom" />
-                                                            <rte:RichTextEditor id="reDescription" editable="true" editorType="TinyMCE4" width="100%" height="400px" customToolbar="true" 
+                                                            <rte:RichTextEditor id="reDescription" editorType="TinyMCE4" width="100%" height="400px" customToolbar="true" 
                                                                 showGroupFont="true" showGroupLink="true" showGroupInsert="false" value="{NegoHeaders>/nego_document_desc}"
-                                                                visible="{=${propInfo>/isEditMode}}" 
+                                                                editable="{=${propInfo>/isEditMode}}" 
                                                                 />
-                                                            <FormattedText id="formTextDescription" htmlText="{NegoHeaders>/nego_document_desc}" visible="{=!${propInfo>/isEditMode}}"/>
+                                                            <!-- <FormattedText id="formTextDescription" htmlText="{NegoHeaders>/nego_document_desc}" visible="{=!${propInfo>/isEditMode}}"/> -->
                                                         </VBox>
 
                                                         <VBox  width="100%" height="100%" alignItems="Start" class="sapUiMediumMarginTop" >
@@ -194,9 +195,9 @@
 
                                                         <VBox  class="sapUiMediumMarginTop">
                                                             <Label  text="Note To Supplier:" class="sapMLabelNoText sapUiTinyMarginBottom"/>
-                                                            <rte:RichTextEditor id="reNoteToSupplier" editable="true" editorType="TinyMCE4" width="100%" height="400px" customToolbar="true" 
-                                                                value="{NegoHeaders>/note_content}" visible="{=${propInfo>/isEditMode}}" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
-                                                            <FormattedText id="formTextNoteToSupplier" htmlText="{NegoHeaders>/note_content}"  visible="{=!${propInfo>/isEditMode}}"/>
+                                                            <rte:RichTextEditor id="reNoteToSupplier" editorType="TinyMCE4" width="100%" height="400px" customToolbar="true" 
+                                                                value="{NegoHeaders>/note_content}" editable="{=${propInfo>/isEditMode}}" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                                            <!-- <FormattedText id="formTextNoteToSupplier" htmlText="{NegoHeaders>/note_content}"  visible="{=!${propInfo>/isEditMode}}"/> -->
                                                         </VBox>
 
                                                         <!-- <smartTable:SmartTable tableType="Table"
@@ -511,20 +512,28 @@
                                                                 <Button icon="sap-icon://account" press="onLoadSuppliers" />
                                                             </t:template>
                                                         </t:Column>
-                                                        <t:Column width="11rem" hAlign="Center">
+                                                        <t:Column width="13rem" hAlign="Center">
                                                             <Label text="Operating Org" required="true" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center" >
-                                                                    <MultiInput id="multiinput_purOperationOrg_code" visible="{=${propInfo>/isEditMode}}" 
-                                                                        tokens="{/processTypes}" value="{NegoHeaders>operation_unit_code} : {NegoHeaders>operation_unit_name}"
-                                                                        showValueHelp="true" valueHelpRequest=".onOperationOrgPress" textAlign="Center">
-                                                                        <tokens>
+                                                                    <Input id="multiinput_purOperationOrg_code" visible="{=${propInfo>/isEditMode}}" 
+                                                                        value="{NegoHeaders>operation_unit_code} : {NegoHeaders>operation_unit_name}"
+                                                                        showValueHelp="true" valueHelpRequest=".onOperationOrgPress" textAlign="Center"
+                                                                        showSuggestion="true" showSecondaryValues="true" suggestionItemSelected=".onSuggesionItemSelectedOprOrg"
+                                                                        suggestionItems="{
+                                                                            path: 'org>/Pur_Operation_Mapping',
+                                                                            templateShareable:true,
+                                                                            sorter: { path: 'org>org_code' }
+                                                                        }"
+                                                                        >
+                                                                        <core:ListItem key="{org>org_code}" text="{org>org_name}"  additionalText="{org>org_code}"/>
+                                                                        <!-- <tokens>
                                                                             <Token key="{key}" text="{text}" />
-                                                                        </tokens>
+                                                                        </tokens> -->
                                                                         <layoutData>
                                                                             <FlexItemData growFactor="1"/>
                                                                         </layoutData>
-                                                                    </MultiInput>
+                                                                    </Input>
                                                                     <!-- <Input value="{NegoHeaders>operation_unit_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/> -->
                                                                     <Text text="{NegoHeaders>operation_unit_code} : {NegoHeaders>operation_unit_name}" visible="{=!${propInfo>/isEditMode}}" textAlign="Center"/>
                                                                 </FlexBox>
@@ -1142,10 +1151,10 @@
                     <uxap:footer>
                         <OverflowToolbar>
                             <ToolbarSpacer />
-                            <Button text="Draft" type="Emphasized" press=".onPageSaveButtonPress" />
-                            <Button text="Cancel" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageCancelButtonPress" />
+                            <Button text="{I18N>/TEMP_SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
+                            <Button text="{I18N>/CANCEL}" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageCancelButtonPress" />
                             <Button text="{I18N>/DELETE}" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageDeleteButtonPress" />
-                            <Button text="Edit" visible="{=!${propInfo>/isEditMode}}" type="Transparent" press=".onPageEditButtonPress" />
+                            <Button text="{I18N>/Edit}" visible="{=!${propInfo>/isEditMode}}" type="Transparent" press=".onPageEditButtonPress" />
                         </OverflowToolbar>
                     </uxap:footer>
                 </uxap:ObjectPageLayout>
