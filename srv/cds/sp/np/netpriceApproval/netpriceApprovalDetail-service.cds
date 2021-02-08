@@ -117,7 +117,14 @@ service NpApprovalDetailService {
 
             ,   cam.approval_contents
 
-
+            ,   MAP(pam.tentprc_flag,false,'N',true,'T') as net_price_type_code
+            ,   (SELECT cd.code_name
+                   FROM CM_CODE_LNG AS cd
+                  WHERE cd.tenant_id   = cam.tenant_id
+                    AND cd.group_code  = 'SP_NET_PRICE_TYPE'
+                    AND cd.language_cd = ssi.LANGUAGE_CODE
+               	    AND cd.code        = MAP(pam.tentprc_flag,false,'N',true,'T')
+			    )  AS net_price_type_name 
 
         FROM SP_NP_NET_PRICE_APPROVAL_MST   pam
         
@@ -176,7 +183,7 @@ service NpApprovalDetailService {
                    FROM CM_CODE_LNG 
                   WHERE tenant_id = pad.tenant_id
                     AND group_code = 'SP_NET_PRICE_REASON_CODE'
-                    AND language_cd = 'KO'
+                    AND language_cd = ssi.LANGUAGE_CODE
                     AND code = pad.net_price_approval_reason_code
                 ) as net_price_approval_reason_name : String               /*	Reason	*/
 
@@ -185,7 +192,7 @@ service NpApprovalDetailService {
                    FROM CM_CODE_LNG 
                   WHERE tenant_id = pad.tenant_id
                     AND group_code = 'DP_VI_MARKET_CODE'
-                    AND language_cd = 'KO'
+                    AND language_cd = ssi.LANGUAGE_CODE
                     AND code = pad.market_code
                 ) as market_name : String               /*	Market	*/
                  
@@ -197,7 +204,7 @@ service NpApprovalDetailService {
                    FROM CM_CODE_LNG 
                   WHERE tenant_id = pad.tenant_id
                     AND group_code = 'LINE_TYPE'
-                    AND language_cd = 'KO'
+                    AND language_cd = ssi.LANGUAGE_CODE
                     AND code = pad.line_type_code
                 ) as line_type_name : String            /*	Line Type	*/
 
@@ -224,7 +231,7 @@ service NpApprovalDetailService {
                    FROM CM_CODE_LNG 
                   WHERE tenant_id = pad.tenant_id
                     AND group_code = 'SURROGATE'
-                    AND language_cd = 'KO'
+                    AND language_cd = ssi.LANGUAGE_CODE
                     AND code = pad.surrogate_type_code
                 ) as surrogate_type_name : String       /*	Surrogate	*/
 
@@ -236,7 +243,7 @@ service NpApprovalDetailService {
                    FROM CM_CODE_LNG 
                   WHERE tenant_id = pad.tenant_id
                     AND group_code = 'PAYMENT_TERMS'
-                    AND language_cd = 'KO'
+                    AND language_cd = ssi.LANGUAGE_CODE
                     AND code = pad.payterms_code
                 ) as payterms_name : String         /*	Payment Term	*/
 
@@ -250,13 +257,17 @@ service NpApprovalDetailService {
                    FROM CM_CODE_LNG 
                   WHERE tenant_id = pad.tenant_id
                     AND group_code = 'OP_INCOTERMS'
-                    AND language_cd = 'KO'
+                    AND language_cd = ssi.LANGUAGE_CODE
                     AND code = pad.incoterms
                 ) as incoterms_name : String         /*	Incoterms	*/
 
             ,   pad.quality_certi_flag	            /*	부품인정여부	*/
 
         FROM SP_NP_NET_PRICE_APPROVAL_DTL pad
+
+        INNER JOIN CM_SPP_USER_SESSION_VIEW  ssi
+            ON pad.tenant_id        = ssi.TENANT_ID
+           AND pad.company_code     = ssi.COMPANY_CODE
 
         LEFT JOIN SP_NP_NET_PRICE_MST npm             /*  기준단가 마스터 */
                 ON pad.tenant_id        = npm.tenant_id
