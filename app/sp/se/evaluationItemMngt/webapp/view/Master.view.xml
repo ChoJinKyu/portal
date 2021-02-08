@@ -190,7 +190,12 @@
                         >
                             <menu>
                                 <Menu>
-                                    <MenuItem text="{I18N>/NEW}" press="onPressCreate($event, 'NewLevel')"/>
+                                    <MenuItem 
+                                        text="{I18N>/NEW}" press="onPressCreate($event, 'NewLevel')"
+                                        visible="{=
+                                            !!${viewModel>/Btn/UserEvalType}
+                                        }"
+                                    />
                                     <MenuItem text="{I18N>/CREATE_SAME_LEVEL}" press="onPressCreate($event, 'SameLevel')"/>
                                     <MenuItem text="{I18N>/CREATE_LOWER_LEVEL}" press="onPressCreate($event, 'LowLevel')"/>
                                 </Menu>

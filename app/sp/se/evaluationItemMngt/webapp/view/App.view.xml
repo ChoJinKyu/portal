@@ -9,7 +9,6 @@
             id="flexibleColumnLayout" 
             backgroundDesign="Solid" 
             layout="{viewModel>/App/layout}"
-            stateChange="onStateChanged" 
         >
             <!-- <beginColumnPages>
                 <mvc:XMLView id="beginView" viewName="sp.se.evaluationItemMngt.view.Master"/>

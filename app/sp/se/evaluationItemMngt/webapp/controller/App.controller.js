@@ -15,11 +15,7 @@ sap.ui.define([
                     btnScreen : "sap-icon://full-screen",
                     EditMode : false
                 });
-            }
-            , onStateChanged : function(oEvent){
-                var oControl;
-
-                oControl = oEvent.getSource();
+                this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
             }
 		});
 	});
