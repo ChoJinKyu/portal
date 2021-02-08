@@ -352,6 +352,7 @@
                 enableAutoBinding="true" 
                 class="sapUiResponsiveContentPadding sapUiSmallMarginBottom"
                 initiallyVisibleFields=""
+                requestAtLeastFields="nego_type_code,outcome_code"
                 beforeRebindTable="beforeRebindTable">
                     <smartTable:customToolbar>
                         <OverflowToolbar design="Transparent">
@@ -384,7 +385,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "nego_document_number", "leadingProperty": "nego_document_number", "sortProperty": "nego_document_number", "filterProperty": "nego_document_number"}'/>
                                 </t:customData>
-                                <Label text="Negotiation No" />
+                                <Label text="{I18N>/NEGO_DOCUMENT_NUMBER}" />
                                 <t:template >
                                     <ObjectStatus text="{nego_document_number}" active="true" press="onNegoNumberPress" class="AlignL" />
                                 </t:template>
@@ -393,7 +394,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "nego_document_round", "leadingProperty": "nego_document_round", "sortProperty": "nego_document_round", "filterProperty": "nego_document_round"}'/>
                                 </t:customData>
-                                <Label text="Revision"  />
+                                <Label text="{I18N>/NEGO_DOCUMENT_ROUND}"  />
                                 <t:template>
                                     <Text text="{nego_document_round}" wrapping="false" />
                                 </t:template> 
@@ -402,19 +403,16 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "nego_progress_status_name", "leadingProperty": "nego_progress_status_name", "sortProperty": "nego_progress_status_name", "filterProperty": "nego_progress_status_name"}'/>
                                 </t:customData>
-                                <Label text="Negotiation Status" />
+                                <Label text="{I18N>/NEGO_PROGRESS_STATUS_CODE}" />
                                 <t:template>
                                     <Text text="{nego_progress_status_name}" wrapping="false" /> 
-                                    
-                                
-                                    
                                 </t:template>
                             </t:Column> 
                             <t:Column width="10rem" hAlign="Center" sortProperty="award_progress_status_name" filterProperty="award_progress_status_name">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "award_progress_status_name", "leadingProperty": "award_progress_status_name", "sortProperty": "award_progress_status_name", "filterProperty": "award_progress_status_name"}'/>
                                 </t:customData>
-                                <Label text="Award Status" />
+                                <Label text="{I18N>/AWARD_PROGRESS_STATUS_CODE}" />
                                 <t:template>
                                     <Text text="{award_progress_status_name}" wrapping="false" />
                                 </t:template>

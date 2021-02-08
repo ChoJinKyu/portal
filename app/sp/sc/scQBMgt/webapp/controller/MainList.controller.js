@@ -867,7 +867,7 @@ sap.ui.define([
                     pOutcome,
                     pHeader_id;
                 pNegoTypeCode = oRow.nego_type_code;
-                pOutcome = oRow.negotiation_output_class_code;
+                pOutcome = oRow.outcome_code;
                 pHeader_id =  String(oRow.nego_document_number);
 
                 if(pNegoTypeCode == null){
