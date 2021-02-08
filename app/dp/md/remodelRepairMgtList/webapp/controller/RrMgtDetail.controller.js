@@ -64,19 +64,45 @@ sap.ui.define([
                 busy: true,
                 delay: 0
             });
-            //this.getRouter().getRoute("assetDetail").attachPatternMatched(this._onRoutedThisPage, this);
+            this.getRouter().getRoute("rrMgtDetail").attachPatternMatched(this._onObjectMatched, this);
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-            this.setModel(new ManagedListModel(), "schedule");
-
+          //  this.setModel(new ManagedListModel(), "schedule");
+            this.setModel(new ManagedModel(), "rrMgt");
             oTransactionManager = new TransactionManager();
             oTransactionManager.aDataModels.length = 0;
 
-            oTransactionManager.addDataModel(this.getModel("schedule"));
+          //  oTransactionManager.addDataModel(this.getModel("schedule"));
 
             this.process.setDrawProcessUI(this, "rrMgtProcess" , "C", 0);
 
+        },
+        _onObjectMatched : function(oEvent){ 
+            var oArgs = oEvent.getParameter("arguments");
+            console.log("param>>>>> " , oArgs); 
+            this._srchDetail(oArgs);
+        } ,
+
+        _srchDetail : function(oArgs){
+            var oModel = this.getModel("rrMgt");
+              oModel.setTransactionModel(this.getModel());
+
+            var filter = [
+                new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID),
+                new Filter("mold_id", FilterOperator.EQ, oArgs.mold_id)
+            ];
+
+            if( oArgs.request_number != "New"){
+                filter.push(new Filter("repair_request_number", FilterOperator.EQ,  oArgs.request_number));
+            };
+
+            oModel.read("/remodelRepairDetail", {
+                filters: filter,
+                success: function (oData) {
+                    console.log("oData>>>>> " , oData);
+                }
+            });
         },
 
         onPageNavBackButtonPress: function () {

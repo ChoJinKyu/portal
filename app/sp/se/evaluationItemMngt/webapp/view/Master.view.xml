@@ -14,10 +14,10 @@
     <f:DynamicPage 
         id="page"
         toggleHeaderOnTitleClick="true"
-        headerExpanded="{=
+        >
+        <!-- headerExpanded="{=
             ${viewModel>/App/layout} === 'OneColumn'
-        }"
-    >
+        }" -->
         
         <f:title>
             <f:DynamicPageTitle>
@@ -51,6 +51,10 @@
                                 <layout:GridData span="L2 M6 S12" />
                             </layoutData> -->
                         </VBox>
+                        <FlexBox alignItems="End" justifyContent="End">
+                            <!-- <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" /> -->
+                            <Button text="{I18N>/DISPLAY}" type="Emphasized" press="onPressSearch"/>
+                        </FlexBox>
                     <!-- </form:SimpleForm> -->
                 </f:snappedContent>
                 

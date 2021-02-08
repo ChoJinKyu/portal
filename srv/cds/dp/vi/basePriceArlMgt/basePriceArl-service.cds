@@ -47,6 +47,9 @@ service BasePriceArlService {
         left outer join comp as comp
             on mst.tenant_id = comp.tenant_id
             and mst.company_code = comp.company_code
+        left outer join supplierMst as sup
+            on mst.tenant_id = sup.tenant_id
+            and mst.supplier_code = sup.supplier_code
         {
             key mst.tenant_id,
             key mst.company_code,
@@ -58,18 +61,47 @@ service BasePriceArlService {
                 porg.org_name,
                 mtr.material_desc,
                 mtr.material_spec,
-                mst.nn_net_price,
-                mst.nn_currency_code,
-                mst.nn_start_date,
-                mst.nb_base_price,
-                mst.nb_currency_code,
-                mst.nb_base_date,
-                mst.vb_base_price,
-                mst.vb_currency_code,
-                mst.vb_base_date,
-                mst.first_purchasing_net_price,
-                mst.first_pur_netprice_curr_cd,
-                mst.first_pur_netprice_str_dt
+                mtr.base_uom_code,
+                sup.supplier_local_name,
+
+                mst.nn_net_price_0,
+                mst.nn_currency_code_0,
+                mst.nn_start_date_0,
+                mst.nb_base_price_0,
+                mst.nb_currency_code_0,
+                mst.nb_base_date_0,
+                mst.vb_base_price_0,
+                mst.vb_currency_code_0,
+                mst.vb_base_date_0,
+                mst.first_purchasing_net_price_0,
+                mst.first_pur_netprice_curr_cd_0,
+                mst.first_pur_netprice_str_dt_0,
+
+                mst.nn_net_price_1,
+                mst.nn_currency_code_1,
+                mst.nn_start_date_1,
+                mst.nb_base_price_1,
+                mst.nb_currency_code_1,
+                mst.nb_base_date_1,
+                mst.vb_base_price_1,
+                mst.vb_currency_code_1,
+                mst.vb_base_date_1,
+                mst.first_purchasing_net_price_1,
+                mst.first_pur_netprice_curr_cd_1,
+                mst.first_pur_netprice_str_dt_1,
+
+                mst.nn_net_price_2,
+                mst.nn_currency_code_2,
+                mst.nn_start_date_2,
+                mst.nb_base_price_2,
+                mst.nb_currency_code_2,
+                mst.nb_base_date_2,
+                mst.vb_base_price_2,
+                mst.vb_currency_code_2,
+                mst.vb_base_date_2,
+                mst.first_purchasing_net_price_2,
+                mst.first_pur_netprice_curr_cd_2,
+                mst.first_pur_netprice_str_dt_2
         };
     
     // annotate Price_Master_Vw with {
@@ -306,9 +338,12 @@ service BasePriceArlService {
         left outer join materialMst as mtr
             on dtl.tenant_id = mtr.tenant_id
             and dtl.material_code = mtr.material_code
-        left outer join supplierMst as sup
-            on dtl.tenant_id = sup.tenant_id
-            and dtl.supplier_code = sup.supplier_code
+        left outer join supplierMst as sup01
+            on dtl.tenant_id = sup01.tenant_id
+            and dtl.supplier_code = sup01.supplier_code
+        left outer join supplierMst as sup02
+            on dtl.tenant_id = sup02.tenant_id
+            and dtl.supplier_code = sup02.supplier_code
         left outer join codeLng as cd01
             on cd01.tenant_id = dtl.tenant_id
             and cd01.group_code = 'DP_VI_BASE_PRICE_GROUND_CODE'
@@ -333,7 +368,7 @@ service BasePriceArlService {
                 mtr.material_spec,
                 dtl.base_uom_code,
                 dtl.supplier_code,
-                sup.supplier_local_name,
+                sup01.supplier_local_name,
                 dtl.base_date,
                 dtl.base_price_ground_code,
                 cd01.code_name as base_price_ground_code_nm : String(240),
@@ -341,6 +376,7 @@ service BasePriceArlService {
                 cd02.code_name as change_reason_nm : String(240),
                 dtl.repr_material_code,
                 dtl.repr_material_supplier_code,
+                sup02.supplier_local_name as repr_material_supplier_local_name : String(240),
                 dtl.repr_material_org_code,
                 dtl.local_create_dtm,
                 dtl.local_update_dtm,
@@ -351,7 +387,8 @@ service BasePriceArlService {
         };
 
     annotate Base_Price_Arl_Detail with {
-        base_price_ground_code_nm @title : '기준단가근거명'  @description : '기준단가근거코드 이름';
+        base_price_ground_code_nm         @title : '기준단가근거명'  @description : '기준단가근거코드 이름';
+        repr_material_supplier_local_name @title : '대표자재공급사로컬이름'  @description : '대표자재 공급사로컬 이름';
     };
 
     entity Base_Price_Arl_Price         as

@@ -14,8 +14,8 @@ entity Uc_Approval_Mst_View {
         net_price_contract_title       : String(100);
         ep_item_class_code             : String(50);
         ep_item_class_name             : String(100);
-        supplier_code                  : String(10);
-        supplier_name                  : String(240);
+        supplier_code                  : String(100);
+        supplier_name                  : String(500);
         net_price_contract_start_date  : Date;
         net_price_contract_end_date    : Date;
         net_price_contract_status_code : String(30);

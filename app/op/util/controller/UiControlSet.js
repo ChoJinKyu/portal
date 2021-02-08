@@ -5,6 +5,17 @@ sap.ui.define([
 
 	return {
 
+        toKeyValueDisp: function(oKey, oValue){
+             switch(oValue){           
+
+                case "":
+                    return oKey;
+                    break;  
+            }
+            return oKey + " [" + oValue + "]" ;
+        },
+
+
         toControlEditorVisible: function(oStatus){
              switch(oStatus){
             

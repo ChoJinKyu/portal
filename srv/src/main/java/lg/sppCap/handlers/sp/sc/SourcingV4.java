@@ -193,61 +193,21 @@ public class SourcingV4 implements EventHandler {
 
 		// insert temp table: master
         StringBuffer v_sql_insertTable_negoheaders= new StringBuffer();
-		v_sql_insertTable_negoheaders.append("insert into #LOCAL_TEMP_NEGOHEADERS ( ")
+		v_sql_insertTable_negoheaders.append("insert into #LOCAL_TEMP_NEGOHEADERS values ")
         // .append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                .append("       tenant_id                                                         ")  //#01
-                .append("     , nego_header_id                                                    ")  //#02
-                .append("     , reference_nego_header_id                                          ")  //#03
-                .append("     , previous_nego_header_id                                           ")  //#04
-                .append("     , operation_org_code                                                ")  //#05
-                .append("     , operation_unit_code                                               ")  //#06
-                .append("     , reference_nego_document_number                                    ")  //#07
-                .append("     , nego_document_round                                               ")  //#08
-                .append("     , nego_document_number                                              ")  //#09
-                .append("     , nego_document_title                                               ")  //#10
-                .append("     , nego_document_desc                                                ")  //#11
-                .append("     , nego_progress_status_code                                         ")  //#12
-                .append("     , award_progress_status_code                                        ")  //#13
-                .append("     , reply_times                                                       ")  //#14
-                .append("     , supplier_count                                                    ")  //#15
-                .append("     , nego_type_code                                                    ")  //#16
-                .append("     , outcome_code                                                      ")  //#17
-                .append("     , negotiation_output_class_code                                     ")  //#18
-                .append("     , buyer_empno                                                       ")  //#19
-                .append("     , buyer_department_code                                             ")  //#20
-                .append("     , immediate_apply_flag                                              ")  //#21
-                .append("     , open_date                                                         ")  //#22
-                .append("     , closing_date                                                      ")  //#23
-                .append("     , auto_rfq                                                          ")  //#24
-                .append("     , items_count                                                       ")  //#25
-                .append("     , negotiation_style_code                                            ")  //#26
-                .append("     , close_date_ext_enabled_hours                                      ")  //#27
-                .append("     , close_date_ext_enabled_count                                      ")  //#28
-                .append("     , actual_extension_count                                            ")  //#29
-                .append("     , remaining_hours                                                   ")  //#30
-                .append("     , note_content                                                      ")  //#31
-                .append("     , award_type_code                                                   ")  //#32
-                .append("     , award_method_code                                                 ")  //#33
-                .append("     , target_amount_config_flag                                         ")  //#34
-                .append("     , target_currency                                                   ")  //#35
-                .append("     , target_amount                                                     ")  //#36
-                .append("     , supplier_participation_flag                                       ")  //#37
-                .append("     , partial_allow_flag                                                ")  //#38
-                .append("     , bidding_result_open_status_code                                   ")  //#39
-                .append(" ) VALUES                                                                ")
-                .append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            .append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		// insert table: scenario
         StringBuffer v_sql_insertTable_negoitemprices= new StringBuffer();
-		v_sql_insertTable_negoitemprices.append("insert into #LOCAL_TEMP_NEGOITEMPRICES values ");
+		v_sql_insertTable_negoitemprices.append("insert into #LOCAL_TEMP_NEGOITEMPRICES values ")
 		// v_sql_insertTable_negoitemprices.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-		v_sql_insertTable_negoitemprices.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		    .append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		// insert temp table: company
         StringBuffer v_sql_insertTable_negosuppliers= new StringBuffer();
-		v_sql_insertTable_negosuppliers.append("insert into #LOCAL_TEMP_NEGOSUPPLIERS values ");
+		v_sql_insertTable_negosuppliers.append("insert into #LOCAL_TEMP_NEGOSUPPLIERS values ")
         // v_sql_insertTable_negosuppliers.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        v_sql_insertTable_negosuppliers.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            .append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		// call procedure
         StringBuffer v_sql_callProc = new StringBuffer();
@@ -468,6 +428,8 @@ public class SourcingV4 implements EventHandler {
             @Override
             public ReturnMsg mapRow(ResultSet v_rs, int rowNum) throws SQLException {
                 ReturnMsg v_row = ReturnMsg.create();
+                v_row.setTenantId(v_rs.getString("tenant_id"));
+                v_row.setNegoHeaderId(v_rs.getLong("nego_header_id"));
                 v_row.setCode(v_rs.getInt("code"));
                 v_row.setMessage(v_rs.getString("message"));
                 v_result.add(v_row);
@@ -642,6 +604,8 @@ curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' 
             @Override
             public ReturnMsg mapRow(ResultSet v_rs, int rowNum) throws SQLException {
                 ReturnMsg v_row = ReturnMsg.create();
+                v_row.setTenantId(v_rs.getString("tenant_id"));
+                v_row.setNegoHeaderId(v_rs.getLong("nego_header_id"));
                 v_row.setCode(v_rs.getInt("code"));
                 v_row.setMessage(v_rs.getString("message"));
                 v_result.add(v_row);

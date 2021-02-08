@@ -112,11 +112,7 @@
                 selectionChange=".onSeletionChange"
                 noDataText="{I18N>/NCM0001}"
                 items="{
-                    path: 'list>/MdCategoryItem',
-                    sorter: {
-                        path: 'spmd_character_sort_seq'
-                    }
-
+                    path: 'list>/MdCategoryItem'
                 }"
 				class="sapFDynamicPageAlignContent"
                 columnResize="onColumnResize"

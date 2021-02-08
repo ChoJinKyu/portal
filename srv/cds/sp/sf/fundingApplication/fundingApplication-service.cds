@@ -12,6 +12,7 @@ using { cm.Org_Unit as cm_org_unit } from '../../../../../db/cds/cm/CM_ORG_UNIT-
 
 //서플라이어 마스터
 using sp.Sm_Supplier_Mst from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';
+using sp.Sm_Supplier_Org from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_ORG-model';
 
 // 공통코드 뷰
 using { cm.Code_View as codeView } from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
@@ -62,7 +63,8 @@ service FundingApplicationService {
             ,key op.company_code        //company_code 컬럼에 저장될 값
             ,key op.org_type_code       //org_type_code 컬럼에 저장될 값
             ,key op.org_code	        //콤보에 매핑될 value
-            ,op.org_name	            //콤보에 매핑될 text
+            ,key supOrg.supplier_code   //업체코드
+            ,op.org_name as org_name : String	            //콤보에 매핑될 text
             ,op.purchase_org_code
             ,op.plant_code
             ,op.affiliate_code
@@ -76,11 +78,20 @@ service FundingApplicationService {
         inner join cm_pur_org_type_mapping as tm 
         on op.tenant_id = tm.tenant_id
         and op.org_type_code = tm.org_type_code
+        inner join sp.Sm_Supplier_Org as supOrg 
+        on op.tenant_id = supOrg.tenant_id
+        and op.company_code = supOrg.company_code
+        and op.org_type_code = supOrg.org_type_code
+        and op.org_code = supOrg.org_code
+        and supOrg.supplier_type_code = 'RAW_MATERIAL'
         left outer join cm_org_unit as ou
         on op.bizunit_code = ou.bizunit_code
         where map(tm.company_code, '*', op.company_code, tm.company_code) = op.company_code
         and tm.process_type_code = 'SP07'
         and op.use_flag = true
+        //and supOrg.tenant_id = 'L1100'
+        //and supOrg.company_code = 'LGEKR'
+        //and supOrg.supplier_code = 'KR01811302'
         ;
 
 
@@ -130,12 +141,20 @@ service FundingApplicationService {
             ,fa.funding_appl_amount             //자금지원 신청 금액
             ,fa.funding_hope_yyyymm             //자금지원 희망 년월
             ,fa.repayment_method_code           //상환방법 코드
-            ,cv_m.code_name as repayment_method_code_name : String    //상환방법코드명
+            ,cv_m.code_name as repayment_method_code_name : String    //상환방법 코드명
             ,fa.appl_user_name                  //신청자 명 
             ,fa.appl_user_tel_number            //신청자 전화번호
             ,fa.appl_user_email_address         //신청자 email
             ,fa.funding_reason_code             //지원 사유 코드
             ,fa.collateral_type_code            //담보구분 코드
+            ,cv_c.code_name as collateral_type_code_name : String    //담보구분 코드명
+            /*
+            ,CM_GET_CODE_NAME_FUNC (fa.tenant_id
+                                    ,'SP_SF_COLLATERAL_TYPE_CODE'
+                                    ,fa.collateral_type_code
+                                    ,'KO'
+                                    ) AS collateral_type_text: String        //담보구분 코드명
+            */                        
             ,fa.collateral_amount               //담보 금액
             ,fa.collateral_start_date           //담보 시작일자
             ,fa.collateral_end_date             //담보 종료일자
@@ -143,7 +162,7 @@ service FundingApplicationService {
             ,fa.funding_step_code               //자금지원 단계 코드
             ,fa.funding_status_code             //자금지원 상태 코드
             //------------업체정보------------
-            ,supp.supplier_local_name as supplier_name  //업체명
+            ,supp.supplier_local_name as supplier_name : String  //업체명
 			,supp.tax_id                                //사업자번호
 			,supp.local_full_address                    //주소
 			,supp.repre_name                            //대표자명
@@ -158,11 +177,16 @@ service FundingApplicationService {
         and fa.org_code = org.org_code
         left outer join cm_org_unit as ou
         on org.bizunit_code = ou.bizunit_code
-        left outer join codeView cv_m           //상환방법 공통코드 조인
+        left outer join codeView as cv_m           //상환방법 공통코드 조인
         on cv_m.tenant_id  = fa.tenant_id
         and cv_m.group_code = 'SP_SF_REPAYMENT_METHOD_CODE'
         and cv_m.code       = fa.repayment_method_code
         and cv_m.language_cd = 'KO'
+        left outer join codeView as cv_c           //담보구분 공통코드 조인
+        on cv_c.tenant_id  = fa.tenant_id
+        and cv_c.group_code = 'SP_SF_COLLATERAL_TYPE_CODE'
+        and cv_c.code       = fa.collateral_type_code
+        and cv_c.language_cd = 'KO'
         left outer join sp.Sm_Supplier_Mst as supp
         on fa.tenant_id = supp.tenant_id
         and fa.supplier_code = supp.supplier_code
@@ -211,6 +235,7 @@ service FundingApplicationService {
              key pm.funding_appl_number         //자금지원신청번호
             ,key pm.investment_plan_sequence    //시퀀스
             ,pm.investment_type_code            //투자유형코드
+            ,cv_a.code_name as investment_type_code_name : String    //투자유형 코드명
             ,pm.investment_project_name         //과제명
             ,pm.investment_yyyymm               //투자년월
             ,pm.appl_amount                     //신청금액
@@ -227,12 +252,12 @@ service FundingApplicationService {
                         and investment_plan_sequence = pm.investment_plan_sequence
                     ),0) as sum_item_pur_amt : Decimal   //총 구입금액
             ,ap.supplier_code                   //업체코드
-            ,sm.supplier_local_name             //업체명
-            ,ap.tenant_id                       //
-            ,ap.company_code                    //
+            ,sm.supplier_local_name as supplier_local_name : String //업체명
+            ,pm.tenant_id                       //
+            ,pm.company_code                    //
             ,ap.org_type_code                   //
             ,ap.org_code                        //
-            ,org.org_name                       //
+            ,org.org_name as org_name : String  //
         from sp.Sf_Funding_Invest_Plan_Mst pm
         inner join sp.Sf_Funding_Application ap 
         on pm.funding_appl_number = ap.funding_appl_number
@@ -244,6 +269,11 @@ service FundingApplicationService {
         and ap.company_code = org.company_code
         and ap.org_type_code = org.org_type_code
         and ap.org_code = org.org_code
+        left outer join codeView cv_a           //투자유형 공통코드 조인
+        on cv_a.tenant_id  = pm.tenant_id
+        and cv_a.group_code = 'SP_SF_INVESTMENT_TYPE_CODE'
+        and cv_a.code       = pm.investment_type_code
+        and cv_a.language_cd = 'KO'
         where 1=1
         ;
 

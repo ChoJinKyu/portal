@@ -397,7 +397,7 @@
                     press=".onMessagePopoverPress" /> -->
 				<ToolbarSpacer />
                 <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageNavBackButtonPress"/>
-                <Button id="pageSaveButton" enabled="false" type="Transparent" text="{I18N>/TEMP_SAVE}" press=".onPageSaveButtonPress" />
+                <Button id="pageSaveButton" enabled="false" type="Transparent" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
                 <Button id="pageSubmissionButton" enabled="false" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSubmissionButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 //import java.util.Properties;
 
+import com.google.common.collect.Lists;
 import com.sap.cds.feature.xsuaa.XsuaaUserInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +85,18 @@ public class SppUserSession {
         if(this.xsuaaUserInfo.getAttributeValues(attrName) == null || this.xsuaaUserInfo.getAttributeValues(attrName).isEmpty()){
             return "";
         }else{
-            return this.xsuaaUserInfo.getAttributeValues(attrName).toString();
+            
+            if(ATTR_ROLES.equals(attrName)){
+                return this.xsuaaUserInfo.getRoles().toString();
+            }else{
+                
+                if(this.xsuaaUserInfo.getAttributeValues(attrName).size() > 1){
+                    return this.xsuaaUserInfo.getAttributeValues(attrName).toString();
+                }else{ 
+                    return this.xsuaaUserInfo.getAttributeValues(attrName).get(0).toString();
+                }
+            }
+            
         }
     }
 
@@ -153,11 +165,13 @@ public class SppUserSession {
     }
 
     public List<String> getRolesList() {
-        return this.getSppUserAttributeList(ATTR_ROLES);
+        return Lists.newArrayList(this.xsuaaUserInfo.getRoles());
+        //return this.getSppUserAttributeList(ATTR_ROLES);
     }
 
     public Boolean hasRole(String role) {
-        return this.getRolesList().contains(role);
+        return this.xsuaaUserInfo.hasRole(role);
+        //return this.getRolesList().contains(role);
     }
 
     public Map<String, String> getUserSessionInfo(){
@@ -169,6 +183,8 @@ public class SppUserSession {
         Map<String, String> userInfo = new HashMap<String, String>();
         Map<String, List<String>> xsUserInfo = this.xsuaaUserInfo.getAttributes();
         for ( String key : xsUserInfo.keySet() ) {
+            userInfo.put(key, this.getSppUserAttribute(key));
+            /*
             if(xsUserInfo.get(key).isEmpty()){
                 userInfo.put(key, "");
             }else if(xsUserInfo.get(key).size() > 1){
@@ -176,6 +192,7 @@ public class SppUserSession {
             }else{ 
                 userInfo.put(key, xsUserInfo.get(key).get(0));
             }
+            */
         }
 
         if(userInfo.get(ATTR_ENTITY_KEY) == null || userInfo.get(ATTR_ENTITY_KEY).isEmpty()){

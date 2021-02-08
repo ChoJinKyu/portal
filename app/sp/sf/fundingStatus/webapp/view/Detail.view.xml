@@ -9,7 +9,7 @@
 	height="100%">
 
     <Toolbar>
-        <Title text="자금지원 신청" wrapping="true"/>
+        <Title text="자금지원" wrapping="true"/>
         <ToolbarSpacer/>
         <OverflowToolbarButton type="Transparent" icon="{viewModel>/App/btnScreen}" text="screen" tooltip="screen change" press="onPressLayoutChange" />
         <OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press="onPressPageNavBack" />
@@ -20,7 +20,7 @@
         select=".onFilterSelect"
         expandable="false"
         expanded="true"
-        class="sapUiResponsiveContentPadding">
+        class="sapUiResponsiveContentPadding, iconTabBarContent">
         <items>
             <IconTabFilter
                 icon="sap-icon://begin"

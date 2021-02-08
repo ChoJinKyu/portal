@@ -263,19 +263,19 @@
                     </OverflowToolbar>
                 </table:extension>                             
                 <table:columns >
-                    <table:Column id="rrMgtDivisionColumn" width="6em" hAlign="Center" >
+                    <table:Column id="rrMgtDivisionColumn" width="6em" hAlign="Center"  >
                         <Label text="{path:'I18N>/DIVISION', formatter:'I18NFormatter'}" wrapping="true" />
                         <table:template>
                             <Text id="org_code" text="{list>org_code}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="rrMgtModelColumn" width="10em"  >
-                        <Label text="{path:'I18N>/MODEL', formatter:'I18NFormatter'}" wrapping="true"/>
+                    <table:Column id="rrMgtModelColumn" width="10em" hAlign="Center" >
+                        <Label text="{path:'I18N>/MODEL', formatter:'I18NFormatter'}" wrapping="true" />
                         <table:template>
-                            <Text id="model" text="{list>model}"/>
+                            <Text id="model" text="{list>model}" />
                         </table:template>
                     </table:Column>
-                    <table:Column id="rrMgtMoldNoColumn" width="12em" >
+                    <table:Column id="rrMgtMoldNoColumn" width="12em" hAlign="Center">
                         <Label text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="mold_number" text="{list>mold_number}"/>
@@ -287,40 +287,38 @@
                             <Text id="mold_sequence" text="{list>mold_sequence}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="rrMgtDescriptionColumn" width="10em">
+                    <table:Column id="rrMgtDescriptionColumn" width="10em" hAlign="Center">
                         <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="spec_name" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="rrMgtRequestNoColumn" width="13em">
+                    <table:Column id="rrMgtRequestNoColumn" width="13em" hAlign="Center">
                         <Label text="Request No" wrapping="true"/>
                         <table:template>
                             <Input id="rrMgtRequestNo"/>
                         </table:template>
                     </table:Column>
                     <!-- Request/Receipt Date -->
-                    <table:Column id="rrMgtRequestReceiptDateColumn" width="13em">
+                    <table:Column id="rrMgtRequestReceiptDateColumn" width="13em" hAlign="Center">
                         <Label text="Request/Receipt Date" wrapping="true"/>
                         <table:template>
                             <Input id="rrMgtRequestReceiptDate"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="rrMgtTitleColumn" width="10em">
+                    <table:Column id="rrMgtTitleColumn" width="10em"  hAlign="Center" >
                         <Label text="Title" wrapping="true"/>
                         <table:template>
                             <Text id="rrMgtTitle" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="rrMgtStatusColumn" width="10em">
+                    <table:Column id="rrMgtStatusColumn" width="10em"  hAlign="Center" >
                         <Label text="Status" wrapping="true"/>
                         <table:template>
                             <Text id="rrMgtStatus" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetOrderVendorNameColumn" width="10em"  
-                        headerSpan="2"
-                        >
+                    <table:Column id="assetOrderVendorNameColumn" width="10em" headerSpan="2"  hAlign="Center"  >
                         <table:multiLabels>
                             <Label text="Move Date" wrapping="true"/>
                             <Label text="Plan" wrapping="true"/>
@@ -329,16 +327,16 @@
                             <Text id="order_vendor_name" text="{list>Plan}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetAssetsStatusColumn" width="10em"  >
+                    <table:Column id="assetAssetsStatusColumn" width="10em"  hAlign="Center"  >
                         <table:multiLabels>
-                            <Label text="Move Date 시작" wrapping="true"/>
+                            <Label text="Move Date" wrapping="true"/>
                             <Label text="Result" wrapping="true"/>
                         </table:multiLabels>
                         <table:template>
                             <Text id="assets_status" text="{list>Result}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column  width="10em" headerSpan="2" >
+                    <table:Column  width="10em" headerSpan="2"  hAlign="Center"  >
                         <table:multiLabels>
                             <Label text="Complete Date" wrapping="true"/>
                             <Label text="Plan" wrapping="true"/>
@@ -347,82 +345,82 @@
                             <Text text="{list>Plan}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column  width="10em" >
-                        <table:multiLabels>
-                            <Label text="Plan" wrapping="true"/>
-                            <Label text="Result" wrapping="true"/>
+                    <table:Column  width="10em">
+                        <table:multiLabels textAlign="Center"  hAlign="Center" >
+                            <Label text="Complete Date" wrapping="true" />
+                            <Label text="Result" wrapping="true" />
                         </table:multiLabels>
                         <table:template>
                             <Text text="{list>Result}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetAssetTypeColumn" width="10em">
+                    <table:Column id="assetAssetTypeColumn" width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="asset_type" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="10em">
+                    <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/ORDER_SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="10em">
+                    <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/PROD_SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="10em">
+                    <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/LGE_REMARK', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="10em">
+                    <table:Column width="15em"  hAlign="Center" >
                         <Label text="{path:'I18N>/RECEIPT_ESTIMATION_STATUS', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="10em">
+                    <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/ASSETS_STATUS', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="10em">
+                    <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="10em">
+                    <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/ASSET_NO', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="10em">
+                    <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/FAMILY_PART_NO', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="10em">
+                    <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/ESTIMATE_AMOUNT', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="10em">
+                    <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/ORDER_AMOUNT', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="10em">
+                    <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/ORDER_AMOUNT', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text text="{list>spec_name}"/>

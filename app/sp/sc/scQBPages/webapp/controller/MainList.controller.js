@@ -33,6 +33,21 @@ sap.ui.define([
                 var oMultilingual = new Multilingual();
                 this.getView().setModel(oMultilingual.getModel(), "I18N");
 
+                this.getView().getModel().read("/NegoWorkbenchView" , {
+                    // filters: aTableSearchState,
+                    // sorters: [
+                    // 	new Sorter("chain_code"),
+                    // 	new Sorter("message_code"),
+                    //     new Sorter("language_code", true)
+                    // ],
+                    success: function(oData){
+                        // this.validator.clearValueState(this.byId("mainTable"));
+                        // this.byId("mainTable").clearSelection();
+                        // oView.setBusy(false);
+                        this.getView().setModel(oData.value);
+                    }.bind(this)
+                });
+
 
                 // var url = "sp/sc/scQBPages/webapp/srv-api/odata/v4/sp.negoHeadersV4Service/NegoHeaders";
                 // var that = this;

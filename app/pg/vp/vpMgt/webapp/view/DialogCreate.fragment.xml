@@ -318,6 +318,12 @@
                                                 <FlexItemData growFactor="1" />
                                             </layoutData>
                                         </Switch> 
+                                    <!-- <SegmentedButton id="pop_regular_evaluation_flag" >
+                                        <items>
+                                            <SegmentedButtonItem key="true" text="Yes" />
+                                            <SegmentedButtonItem key="false" text="No" />
+                                        </items>
+                                    </SegmentedButton>                                         -->
                                     <layoutData>
                                         <layout:GridData span="XL1 L1 M1 S12" />
                                     </layoutData> 

@@ -233,9 +233,13 @@ sap.ui.define([
                             // item_sequence 데이터 타입을 int로 변경
                             oDetail.item_sequence = parseInt(oDetail.item_sequence);
 
+                            if( oDetail.base_date ) {
+                                oDetail.base_date = this._changeDateString(oDetail.base_date, "-");
+                            }
+
                             // metatdata 삭제
                             delete oDetail.__metadata;
-                        });
+                        }.bind(this));
 
                         aPriceFilters.push(new Filter({
                             filters: aItemSequenceFilter,
@@ -255,27 +259,30 @@ sap.ui.define([
                                 for( var k=0; k<aDetails.length; k++ ) {
                                     if( aDetails[k].item_sequence === oPrice.item_sequence ) {
                                         aDetails[k].prices = aDetails[k].prices ? aDetails[k].prices : [{}, {}, {}];
+
+                                        // new_base_price, current_base_price, first_purchasing_net_price 데이터 타입을 float로 변경
+                                        if( oPrice.new_base_price ) {
+                                            oPrice.new_base_price = parseFloat(oPrice.new_base_price);
+                                        }
+                                        if( oPrice.current_base_price ) {
+                                            oPrice.current_base_price = parseFloat(oPrice.current_base_price);
+                                        }
+                                        if( oPrice.first_purchasing_net_price ) {
+                                            oPrice.first_purchasing_net_price = parseFloat(oPrice.first_purchasing_net_price);
+                                        }
+                                        if( oPrice.first_pur_netprice_str_dt ) {
+                                            oPrice.first_pur_netprice_str_dt = this._changeDateString(oPrice.first_pur_netprice_str_dt, "-");
+                                        }
+
                                         aDetails[k].prices[oPrice.market_code] = oPrice;
                                         break;
                                     }
-                                }
-
-                                // new_base_price, current_base_price, first_purchasing_net_price 데이터 타입을 int로 변경
-                                // 저장, 수정할 때 데이터 타입이 Decimal
-                                if( oPrice.new_base_price ) {
-                                    oPrice.new_base_price = parseFloat(oPrice.new_base_price);
-                                }
-                                if( oPrice.current_base_price ) {
-                                    oPrice.current_base_price = parseFloat(oPrice.current_base_price);
-                                }
-                                if( oPrice.first_purchasing_net_price ) {
-                                    oPrice.first_purchasing_net_price = parseFloat(oPrice.first_purchasing_net_price);
                                 }
                             }
 
                             oDetailModel.refresh();
                             oView.setBusy(false);
-                        });
+                        }.bind(this));
                     }.bind(this));
 
                     // Approver 조회

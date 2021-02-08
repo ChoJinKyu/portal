@@ -298,7 +298,7 @@ sap.ui.define([
                 var sDetailUrl = "/Material_Vw";
 
                 if( this.getProperty("type") === "Change" ) {
-                    sDetailUrl = "/Base_Price_Mst";
+                    sDetailUrl = "/Price_Master_Vw";
                 }
 
                 ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.BasePriceArlService/").read(sDetailUrl, {

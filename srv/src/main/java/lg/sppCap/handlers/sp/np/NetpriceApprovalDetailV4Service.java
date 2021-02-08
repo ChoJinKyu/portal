@@ -48,7 +48,7 @@ public class NetpriceApprovalDetailV4Service extends SpNpBaseService implements 
                     .append("SUPPLIER_CODE"                   ,"NVARCHAR(10)")
                     .append("EFFECTIVE_START_DATE"            ,"NVARCHAR(10)")
                     .append("EFFECTIVE_END_DATE"              ,"NVARCHAR(10)")
-                    .append("SURROGATE_TYPE_CODE"             ,"NVARCHAR(30)")
+                   // .append("SURROGATE_TYPE_CODE"             ,"NVARCHAR(30)")
                     .append("CURRENCY_CODE"                   ,"NVARCHAR(3) ")
                     .append("NET_PRICE"                       ,"DECIMAL     ")
                     .append("VENDOR_POOL_CODE"                ,"NVARCHAR(20)")

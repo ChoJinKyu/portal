@@ -90,7 +90,7 @@ sap.ui.define([
         },
         
         onAfterRendering : function () {
-            this.byId("pageSearchButton").firePress();
+            //this.byId("pageSearchButton").firePress();
 			return;
         },
 
@@ -298,25 +298,24 @@ sap.ui.define([
 		_getSearchStates: function(){
 			var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
                 company = this.getView().byId("searchCompany" + sSurffix).getSelectedKeys(),
-                division = this.getView().byId("searchPlant" + sSurffix).getSelectedKeys(),
+                plant = this.getView().byId("searchPlant" + sSurffix).getSelectedKeys(),
+                requestFromDate = this.getView().byId("searchRequestDate" + sSurffix).getDateValue(),
+                requestToDate = this.getView().byId("searchRequestDate" + sSurffix).getSecondDateValue(),
                 status = this.getView().byId("searchRequestStatus" + sSurffix).getSelectedKey(),
-                //status = Element.registry.get(statusSelectedItemId).getText(),
-                receiptFromDate = this.getView().byId("searchRequestDate" + sSurffix).getDateValue(),
-                receiptToDate = this.getView().byId("searchRequestDate" + sSurffix).getSecondDateValue(),
-                itemType = this.getView().byId("searchItemType").getSelectedKeys(),
-                //productionType = this.getView().byId("searchProductionType").getSelectedKeys(),
-                //eDType = this.getView().byId("searchEDType").getSelectedKey(),
+                ecoNumber = this.getView().byId("searchEcoNumber").getValue(),
                 description = this.getView().byId("searchDescription").getValue(),
+                repairType = this.getView().byId("searchRepairType").getSelectedKey(),
                 model = this.getView().byId("searchModel").getValue(),
-                moldNo = this.getView().byId("searchPart").getValue()//,
-                //familyPartNo = this.getView().byId("searchFamilyPartNo").getValue()
+                moldNo = this.getView().byId("searchPart").getValue(),
+                assetNo = this.getView().byId("searchAssetNo").getValue(),
+                requester = this.getView().byId("searchRequester").getValue()
                 ;
 
             var aTableSearchState = [];
             var companyFilters = [];
-            var divisionFilters = [];
+            var plantFilters = [];
 
-            aTableSearchState.push(new Filter("mold_purchasing_type_code", FilterOperator.EQ, "L"));
+            //aTableSearchState.push(new Filter("mold_purchasing_type_code", FilterOperator.EQ, "L"));
 
             if (company.length > 0) {
 
@@ -332,83 +331,205 @@ sap.ui.define([
                 );
             }
 
-            if (division.length > 0) {
+            if (plant.length > 0) {
 
-                division.forEach(function (item) {
-                    divisionFilters.push(new Filter("org_code", FilterOperator.EQ, item));
+                plant.forEach(function (item) {
+                    plantFilters.push(new Filter("org_code", FilterOperator.EQ, item));
                 });
 
                 aTableSearchState.push(
                     new Filter({
-                        filters: divisionFilters,
+                        filters: plantFilters,
                         and: false
                     })
                 );
             }
 
-            if (receiptFromDate || receiptToDate) {
-                aTableSearchState.push(new Filter("local_create_dtm", FilterOperator.BT, receiptFromDate, receiptToDate));
+            if (requestFromDate || requestToDate) {
+                aTableSearchState.push(new Filter("repair_request_date", FilterOperator.BT, requestFromDate, requestToDate));
             }
             if (status) {
-                aTableSearchState.push(new Filter("mold_progress_status_code", FilterOperator.EQ, status));
+                aTableSearchState.push(new Filter("repair_progress_status_code", FilterOperator.EQ, status));
             }
             
-            if(itemType.length > 0){
-
-                var _itemTypeFilters = [];
-                itemType.forEach(function(item){
-                    _itemTypeFilters.push(new Filter("mold_item_type_code", FilterOperator.EQ, item ));
-                });
-
-                aTableSearchState.push(
-                    new Filter({
-                        filters: _itemTypeFilters,
-                        and: false
-                    })
-                );
+            if (ecoNumber && ecoNumber.length > 0) {
+                aTableSearchState.push(new Filter("tolower(eco_number)", FilterOperator.Contains, "'" + ecoNumber.toLowerCase() + "'"));
             }
-/*
-            if(productionType.length > 0){
-
-                var _productionTypeFilters = [];
-                productionType.forEach(function(item){
-                    _productionTypeFilters.push(new Filter("mold_production_type_code", FilterOperator.EQ, item ));
-                });
-
-                aTableSearchState.push(
-                    new Filter({
-                        filters: _productionTypeFilters,
-                        and: false
-                    })
-                );
+            if (description && description.length > 0) {
+                aTableSearchState.push(new Filter("tolower(class_desc)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));
             }
-
-            if (eDType && eDType.length > 0) {
-                aTableSearchState.push(new Filter("mold_location_type_code", FilterOperator.EQ, eDType));
-            }*/
+            if(repairType.length > 0){
+                aTableSearchState.push(new Filter("repair_type_code", FilterOperator.EQ, repairType));
+            }
             if (model && model.length > 0) {
                 aTableSearchState.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + model.toLowerCase() + "'"));
             }
             if (moldNo && moldNo.length > 0) {
                 aTableSearchState.push(new Filter("mold_number", FilterOperator.Contains, moldNo.toUpperCase()));
             }
-            if (description && description.length > 0) {
-                aTableSearchState.push(new Filter("tolower(spec_name)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));
+            if(assetNo.length > 0){
+                var _assetNoFilters = [];
+                assetNo.forEach(function(item){
+                    _assetNoFilters.push(new Filter("asset_number", FilterOperator.EQ, item ));
+                });
+
+                aTableSearchState.push(
+                    new Filter({
+                        filters: _assetNoFilters,
+                        and: false
+                    })
+                );
             }
-            /*if (familyPartNo && familyPartNo.length > 0) {
-                aTableSearchState.push(new Filter({
-                    filters: [
-                        new Filter("family_part_number_1", FilterOperator.Contains, familyPartNo.toUpperCase()),
-                        new Filter("family_part_number_2", FilterOperator.Contains, familyPartNo.toUpperCase()),
-                        new Filter("family_part_number_3", FilterOperator.Contains, familyPartNo.toUpperCase()),
-                        new Filter("family_part_number_4", FilterOperator.Contains, familyPartNo.toUpperCase()),
-                        new Filter("family_part_number_5", FilterOperator.Contains, familyPartNo.toUpperCase())
-                    ],
-                    and: false
-                }));
-            }*/
+            if (requester && requester.length > 0) {
+                aTableSearchState.push(new Filter("tolower(create_user_id)", FilterOperator.Contains, "'" + requester.toLowerCase() + "'"));
+            }
             return aTableSearchState;
 		},
+
+        onValueHelpRequested: function (oEvent) {
+
+            var path = '';
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.md.remodelRepairMgt.view.ValueHelpDialogModel", this);
+
+            this._oBasicSearchField = new SearchField({
+                showSearchButton: false
+            });
+
+            var oFilterBar = this._oValueHelpDialog.getFilterBar();
+            oFilterBar.setFilterBarExpanded(false);
+            oFilterBar.setBasicSearch(this._oBasicSearchField);
+
+            this.setValuHelpDialog(oEvent);
+
+            var aCols = this.oColModel.getData().cols;
+
+            this.getView().addDependent(this._oValueHelpDialog);
+
+            this._oValueHelpDialog.getTableAsync().then(function (oTable) {
+                var _filter = new Filter("tenant_id", FilterOperator.EQ, "L2101");
+
+                oTable.setModel(this.getOwnerComponent().getModel(this.modelName));
+                oTable.setModel(this.oColModel, "columns");
+
+                if (oTable.bindRows) {
+                    oTable.bindAggregation("rows", this.vhdPath);
+                    oTable.getBinding("rows").filter(_filter);
+                }
+
+                if (oTable.bindItems) {
+                    oTable.bindAggregation("items", this.vhdPath, function () {
+                        return new ColumnListItem({
+                            cells: aCols.map(function (column) {
+                                return new Label({ text: "{" + column.template + "}" });
+                            })
+                        });
+                    });
+                     oTable.getBinding("items").filter(_filter);
+                }
+                this._oValueHelpDialog.update();
+
+            }.bind(this));
+
+
+
+            // debugger
+
+            var oToken = new Token();
+            oToken.setKey(this._oInputModel.getSelectedKey());
+            oToken.setText(this._oInputModel.getValue());
+            this._oValueHelpDialog.setTokens([oToken]);
+            this._oValueHelpDialog.open();
+
+
+        },
+
+        setValuHelpDialog: function(oEvent){
+
+            if(oEvent.getSource().sId.indexOf("searchModel") > -1){
+                //model
+                this._oInputModel = this.getView().byId("searchModel");
+
+                this.oColModel = new JSONModel({
+                    "cols": [
+                        {
+                            "label": "Model",
+                            "template": "model"
+                        }
+                    ]
+                });
+
+                this.modelName = '';
+                this.vhdPath = '/Models';
+                
+                this._oValueHelpDialog.setTitle('Model');
+                this._oValueHelpDialog.setKey('model');
+                this._oValueHelpDialog.setDescriptionKey('model');
+
+            }else if(oEvent.getSource().sId.indexOf("searchPart") > -1){
+                //part
+                this._oInputModel = this.getView().byId("searchPart");
+
+                this.oColModel = new JSONModel({
+                    "cols": [
+                        {
+                            "label": "Part No",
+                            "template": "mold_number"
+                        },
+                        {
+                            "label": "Item Type",
+                            "template": "mold_item_type_name"
+                        },
+                        {
+                            "label": "Description",
+                            "template": "spec_name"
+                        }
+                    ]
+                });
+
+                this.modelName = '';
+                this.vhdPath = "/PartNumbers";
+                this._oValueHelpDialog.setTitle('Part No');
+                this._oValueHelpDialog.setKey('mold_number');
+                this._oValueHelpDialog.setDescriptionKey('spec_name');
+
+            }else if(oEvent.getSource().sId.indexOf("searchRequester") > -1){
+
+                this._oInputModel = this.getView().byId("searchRequester");
+
+                this.oColModel = new JSONModel({
+                    "cols": [
+                        {
+                            "label": "Name",
+                            "template": "create_user_name"
+                        },
+                        {
+                            "label": "ID",
+                            "template": "create_user_id"
+                        }
+                    ]
+                });
+
+                this.modelName = 'dsc';
+                this.vhdPath = '/CreateUsers';
+                this._oValueHelpDialog.setTitle('Requester');
+                this._oValueHelpDialog.setKey('create_user_id');
+                this._oValueHelpDialog.setDescriptionKey('create_user_id');
+            }
+        },
+
+        onValueHelpOkPress: function (oEvent) {
+            var aTokens = oEvent.getParameter("tokens");
+            this._oInputModel.setSelectedKey(aTokens[0].getKey());
+            this._oValueHelpDialog.close();
+        },
+
+        onValueHelpCancelPress: function () {
+            this._oValueHelpDialog.close();
+        },
+
+        onValueHelpAfterClose: function () {
+            this._oValueHelpDialog.destroy();
+        },
 
 		/**
 		 * Event handler for page edit button press
@@ -418,30 +539,6 @@ sap.ui.define([
 			this._toEditMode();
 		},
 
-       
-        onListMainTableAddtButtonPress: function(){
-			var oTable = this.byId("mainTable"),
-                oBinding = oTable.getBinding("items");
-
-            var oContext = oBinding.create({
-                "tenant_id": "L2100",
-                "chain_code": "CM",
-                "language_code": "",
-                "message_code": "",
-                "message_type_code": "",
-                "message_contents": "",
-                "local_create_dtm": "2020-10-13T00:00:00Z",
-                "local_update_dtm": "2020-10-13T00:00:00Z"
-            });
-
-            oContext.created().then(function (oEvent) {
-                oTable.refresh();
-                MessageToast.show("Success to create.");
-            }).catch(function(oEvent){
-                MessageBox.error("Error while creating.");
-            });
-		},
-        
 		/**
 		 * Event handler for refresh event. Keeps filter, sort
 		 * and group settings and refreshes the list binding.
@@ -467,7 +564,7 @@ sap.ui.define([
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/MoldMstView", {
+            oModel.read("/RepairMstAssetView", {
                 filters: aTableSearchState,
                 success: function (oData) {
                     this.validator.clearValueState(this.byId("mainTable"));

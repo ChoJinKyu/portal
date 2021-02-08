@@ -169,9 +169,7 @@
                 <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <Text text="{
-                        path: 'detailModel>base_date',
-                        formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
+                    <Text text="{detailModel>base_date}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
             <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -235,9 +233,7 @@
                     <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <Text text="{
-                        path: 'detailModel>base_date',
-                        formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
+                    <Text text="{detailModel>base_date}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
             <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -306,9 +302,7 @@
                     <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <Text text="{
-                        path: 'detailModel>base_date',
-                        formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
+                    <Text text="{detailModel>base_date}" textAlign="Center" width="100%" />
                 </t:template>
                 </t:Column>
             <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -393,13 +387,13 @@
                 <t:template>
                     <VBox>
                         <Input
-                            value="{detailModel>family_material_code}"
+                            value="{detailModel>repr_material_code}"
                             editable="{detailViewModel>/viewMode}"
                             visible="{= ${detailModel>base_price_ground_code} === ${detailViewModel>/familyMaterialCodeShowCode} &amp;&amp; ${detailViewModel>/viewMode} ? true : false }"
                             showValueHelp="true"
                             valueHelpRequest=".onOpenFamilyMaterialCodeDialog" >
                         </Input>
-                        <Text text="{detailModel>family_material_code}" visible="{= !(${detailModel>base_price_ground_code} === ${detailViewModel>/familyMaterialCodeShowCode} &amp;&amp; ${detailViewModel>/viewMode}) ? true : false }" textAlign="Center" width="100%" />
+                        <Text text="{detailModel>repr_material_code}" visible="{= !(${detailModel>base_price_ground_code} === ${detailViewModel>/familyMaterialCodeShowCode} &amp;&amp; ${detailViewModel>/viewMode}) ? true : false }" textAlign="Center" width="100%" />
                     </VBox>
                 </t:template>
                 </t:Column>
@@ -409,7 +403,7 @@
                     <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <Text text="{detailModel>family_supplier_code}" textAlign="Center" width="100%" />
+                    <Text text="{detailModel>repr_material_supplier_code}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
             <t:Column width="12rem">
@@ -418,7 +412,7 @@
                     <Label text="{I18N>/SUPPLIER_NAME}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <Text text="{detailModel>family_supplier_name}" />
+                    <Text text="{detailModel>repr_material_supplier_name}" />
                 </t:template>
             </t:Column>
             <!-- <t:Column width="12rem">

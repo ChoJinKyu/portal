@@ -26,7 +26,7 @@
 				<uxap:expandedHeading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress" />
-                        <Title text="Part Category Creation Request" wrapping="true" />
+                        <Title text="{I18N>/PART_CATEGORY_CREATION_REQUEST}" wrapping="true" />
                     </HBox>
 				</uxap:expandedHeading>
 			</uxap:ObjectPageDynamicHeaderTitle>
@@ -36,14 +36,14 @@
             <FlexBox wrap="Wrap">
                 <!-- Requester 시작 -->
                 <layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
-                    <ObjectStatus title="요청번호" text="{master>/request_number}"/>
-                    <ObjectStatus title="요청자" text="{master>/requestor}"/>
+                    <ObjectStatus title="{I18N>/REQUEST_NUMBER}" text="{master>/request_number}"/>
+                    <ObjectStatus title="{I18N>/REQUESTOR}" text="{master>/requestor_empno}"/>
                 </layout:VerticalLayout>
                 <!-- Requester 끝 -->
 
                 <!-- Status 시작 -->
 				<layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
-					<Label text="진행상태 :"/>
+					<Label text="{I18N>/PROGRESS}{I18N>/STATUS}:"/>
                     <VBox visible="{= ${master>/request_number}==='new'?true:false}">
                         <ObjectStatus class="sapMObjectStatusLarge" text="NEW" state="Error" />
                     </VBox>
@@ -139,13 +139,14 @@
                             <VBox>
                                 <HBox alignItems="Center">
                                     <Label
-                                        text="카테고리 그룹:"
+                                        text="{I18N>/CATEGORY_GROUP}:"
                                         class="sapUiTinyMarginEnd"
                                         textAlign="Left"
                                         labelFor="input"
                                         required="true"/>
-                                    <VBox>
+                                    <VBox width="100%">
                                         <ComboBox
+                                            width="50%"
                                             visible="{viewModel>/editMode}"
                                             id="categoryGroupCodeCombo"
                                             selectedKey="{master>/category_group_code}"
@@ -160,49 +161,49 @@
                                                 <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
                                             </items>
                                         </ComboBox>
-                                        <Text id="categoryGroupCodeTx" text="{master>/category_group_code}" visible="{viewModel>/showMode}" />
+                                        <Text id="categoryGroupCodeTx" text="{master>/category_group_code}" visible="{viewModel>/showMode}" width="50%"/>
                                     </VBox>
                                 </HBox>
                                 <HBox alignItems="Center">
                                     <Label
-                                        text="요청 명:"
+                                        text="{I18N>/REQUEST_TITLE}:"
                                         class="sapUiTinyMarginEnd"
                                         textAlign="Left"
                                         labelFor="input"
                                         required="true"/>
-                                    <VBox>
-                                        <Input id="requestTitle" value="{master>/request_title}" visible="{viewModel>/editMode}" />
-                                        <Text id="requestTitleTx" text="{master>/request_title}" visible="{viewModel>/showMode}" />
+                                    <VBox width="100%">
+                                        <Input id="requestTitle" value="{master>/request_title}" visible="{viewModel>/editMode}" width="50%"/>
+                                        <Text id="requestTitleTx" text="{master>/request_title}" visible="{viewModel>/showMode}" width="50%"/>
                                     </VBox>
                                 </HBox>
                                 <HBox alignItems="Center">
                                     <Label
-                                        text="요청 카테고리 명:"
+                                        text="{I18N>/REQUEST_CATEGORY_NAME}:"
                                         class="sapUiTinyMarginEnd"
                                         textAlign="Left"
                                         labelFor="input"
                                         required="true"/>
-                                    <VBox>
-                                        <Input id="requestCategoryName" value="{master>/request_category_name}" visible="{viewModel>/editMode}" />
-                                        <Text id="requestCategoryNameTx" text="{master>/request_category_name}" visible="{viewModel>/showMode}" />
+                                    <VBox width="100%">
+                                        <Input id="requestCategoryName" value="{master>/request_category_name}" visible="{viewModel>/editMode}" width="50%" />
+                                        <Text id="requestCategoryNameTx" text="{master>/request_category_name}" visible="{viewModel>/showMode}" width="50%"/>
                                     </VBox>
                                 </HBox>
                                 <HBox alignItems="Center">
                                     <Label
-                                        text="유사 카테고리: "
+                                        text="{I18N>/SIMILAR_CATEGORY_CODE}: "
                                         class="sapUiTinyMarginEnd"
                                         textAlign="Left"
                                         labelFor="input"
                                         required="true"/>
-                                    <VBox>
-                                        <SearchField id="searchField" search=".onSearchPartCategory" value="{master>/similar_category_code}" visible="{viewModel>/editMode}"/>
-                                        <Text id="similarCategoryName" text="{master>/similar_category_code}" visible="{viewModel>/showMode}"/>
+                                    <VBox width="100%">
+                                        <SearchField id="searchField" search=".onSearchPartCategory" value="{master>/similar_category_code}" visible="{viewModel>/editMode}" width="50%"/>
+                                        <Text id="similarCategoryName" text="{master>/similar_category_code}" visible="{viewModel>/showMode}" width="50%"/>
                                         <Input id="similarCategoryCode" value="{master>/similar_category_code}" visible="false"/>
                                     </VBox>
                                 </HBox>
                                 <VBox>
-                                    <Label text="설명: " required="true"/>
-                                    <VBox>
+                                    <Label text="{I18N>/DESCRIPTION}: " required="true"/>
+                                    <VBox width="100%">
                                         <!-- Text Editor 시작 -->
                                         <rte:RichTextEditor 
                                             width="100%" 
@@ -299,10 +300,10 @@
                                         <Text text="UPDATE_USER_ID" />
                                     </Column>
                                     <Column minScreenWidth="Tablet" hAlign="Center">
-                                        <Text text="행추가" />
+                                        <Text text="{I18N>/ROW_ADD}" />
                                     </Column>
                                     <Column minScreenWidth="Tablet" hAlign="Center">
-                                        <Text text="행삭제" />
+                                        <Text text="{I18N>/ROW_DELETE}" />
                                     </Column>
                                 </columns>
                                 <items>

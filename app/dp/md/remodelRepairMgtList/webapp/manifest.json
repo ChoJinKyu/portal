@@ -13,7 +13,7 @@
         "resources": "resources.json",
         "dataSources": {
             "mainService": {
-                "uri": "srv-api/odata/v2/dp.remodelRepairMgtListService/",
+                "uri": "srv-api/odata/v2/dp.RrMgtListService/",
                 "type": "OData",
                 "settings": {
                     "odataVersion": "2.0"
@@ -185,7 +185,7 @@
                     ]
                 },
                 {
-                    "pattern": "rrMgtDetail/{moldId}",
+                    "pattern": "rrMgtDetail/{mold_id}/{request_number}",
                     "name": "rrMgtDetail",
                     "target": [
                         "rrMgtDetail"
@@ -211,7 +211,7 @@
             }
         }
     },
-    "sap.cloud": {
+    "sap.cloud": { 
         "public": true,
         "service": "sppCap_ui_dev"
     }

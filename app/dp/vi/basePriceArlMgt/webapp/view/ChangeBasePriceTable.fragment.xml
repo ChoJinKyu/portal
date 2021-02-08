@@ -122,31 +122,12 @@
                     <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <Text text="{
-                        path: 'detailModel>base_date',
-                        formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
+                    <Text text="{detailModel>base_date}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
             <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                 <Label text="{I18N>/BASE_PRICE}" textAlign="Center" width="100%" />
                 <t:template>
-                    <!--visible="{= !${detailViewModel>/viewMode}}"-->
-                    <!-- <VBox>
-                    <Input 
-                        value="{
-                                parts: [
-                                    {path: 'detailModel>prices/0/current_base_price'},
-                                    {path: 'detailModel>prices/0/current_base_price_currency_code'}
-                                ],
-                                type: 'sap.ui.model.type.Currency',
-                                formatOptions: {
-                                    showMeasure: false
-                                }
-                            }" 
-                        visible="{detailViewModel>/viewMode}"
-                        editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
-                        textAlign="End" />
-                    </VBox> -->
                     <Text text="{
                                 parts: [
                                     {path: 'detailModel>prices/0/current_base_price'},
@@ -163,19 +144,6 @@
             <t:Column width="8rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                 <Label text="{I18N>/BASE_CURRENCY}" textAlign="Center" width="100%" />
                 <t:template>
-                    <!-- <VBox>
-                    <ComboBox
-                        visible="{detailViewModel>/viewMode}"
-                        editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
-                        items="{
-                            path: 'detailViewModel>/currency',
-                            templateShareable:false}"
-                        selectedKey="{detailModel>prices/0/current_base_price_currency_code}">
-                        <items>
-                            <core:Item key="{detailViewModel>currency_code}" text="{detailViewModel>currency_code}" />
-                        </items>
-                    </ComboBox>
-                    </VBox> -->
                     <Text text="{detailModel>prices/0/current_base_price_currency_code}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
@@ -235,30 +203,12 @@
                     <Label text="{I18N>/FIRST_DATE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <Text text="{
-                        path: 'detailModel>prices/0/first_pur_netprice_str_dt',
-                        formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
+                    <Text text="{detailModel>prices/0/first_pur_netprice_str_dt}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
             <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                 <Label text="{I18N>/FIRST_PRICE}" textAlign="Center" width="100%" />
                 <t:template>
-                    <!-- <VBox>
-                    <Input 
-                        value="{
-                                parts: [
-                                    {path: 'detailModel>prices/0/first_purchasing_net_price'},
-                                    {path: 'detailModel>prices/0/first_pur_netprice_curr_cd'}
-                                ],
-                                type: 'sap.ui.model.type.Currency',
-                                formatOptions: {
-                                    showMeasure: false
-                                }
-                            }" 
-                        visible="{detailViewModel>/viewMode}"
-                        editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
-                        textAlign="End" />
-                    </VBox> -->
                     <Text text="{
                                 parts: [
                                     {path: 'detailModel>prices/0/first_purchasing_net_price'},
@@ -275,19 +225,6 @@
             <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE0_DISPLAY_FLAG} === 'Y' ? true : false}">
                 <Label text="{I18N>/FIRST_BASE_CURRENCY}" textAlign="Center" width="100%" />
                 <t:template>
-                    <!-- <VBox>
-                    <ComboBox
-                        visible="{detailViewModel>/viewMode}"
-                        editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
-                        items="{
-                            path: 'detailViewModel>/currency',
-                            templateShareable:false}"
-                        selectedKey="{detailModel>prices/0/first_pur_netprice_curr_cd}">
-                        <items>
-                            <core:Item key="{detailViewModel>currency_code}" text="{detailViewModel>currency_code}" />
-                        </items>
-                    </ComboBox>
-                    </VBox> -->
                     <Text text="{detailModel>prices/0/first_pur_netprice_curr_cd}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
@@ -300,9 +237,7 @@
                     <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <Text text="{
-                        path: 'detailModel>base_date',
-                        formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
+                    <Text text="{detailModel>base_date}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
             <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -311,22 +246,6 @@
                     <Label text="{I18N>/BASE_PRICE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <!-- <VBox>
-                    <Input 
-                        value="{
-                                parts: [
-                                    {path: 'detailModel>prices/2/current_base_price'},
-                                    {path: 'detailModel>prices/2/current_base_price_currency_code'}
-                                ],
-                                type: 'sap.ui.model.type.Currency',
-                                formatOptions: {
-                                    showMeasure: false
-                                }
-                            }" 
-                        visible="{detailViewModel>/viewMode}"
-                        editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
-                        textAlign="End" />
-                    </VBox> -->
                     <Text text="{
                                 parts: [
                                     {path: 'detailModel>prices/2/current_base_price'},
@@ -346,19 +265,6 @@
                     <Label text="{I18N>/BASE_CURRENCY}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <!-- <VBox>
-                    <ComboBox
-                        visible="{detailViewModel>/viewMode}"
-                        editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
-                        items="{
-                            path: 'detailViewModel>/currency',
-                            templateShareable:false}"
-                        selectedKey="{detailModel>prices/2/current_base_price_currency_code}">
-                        <items>
-                            <core:Item key="{detailViewModel>currency_code}" text="{detailViewModel>currency_code}" />
-                        </items>
-                    </ComboBox>
-                    </VBox> -->
                     <Text text="{detailModel>prices/2/current_base_price_currency_code}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
@@ -425,9 +331,7 @@
                     <Label text="{I18N>/FIRST_DATE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <Text text="{
-                        path: 'detailModel>prices/2/first_pur_netprice_str_dt',
-                        formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
+                    <Text text="{detailModel>prices/2/first_pur_netprice_str_dt}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
             <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE2_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -436,22 +340,6 @@
                     <Label text="{I18N>/FIRST_PRICE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <!-- <VBox>
-                    <Input 
-                        value="{
-                                parts: [
-                                    {path: 'detailModel>prices/2/first_purchasing_net_price'},
-                                    {path: 'detailModel>prices/2/first_pur_netprice_curr_cd'}
-                                ],
-                                type: 'sap.ui.model.type.Currency',
-                                formatOptions: {
-                                    showMeasure: false
-                                }
-                            }" 
-                        visible="{detailViewModel>/viewMode}"
-                        editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
-                        textAlign="End" />
-                    </VBox> -->
                     <Text text="{
                                 parts: [
                                     {path: 'detailModel>prices/2/first_purchasing_net_price'},
@@ -471,19 +359,6 @@
                     <Label text="{I18N>/FIRST_BASE_CURRENCY}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <!-- <VBox>
-                    <ComboBox
-                        visible="{detailViewModel>/viewMode}"
-                        editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
-                        items="{
-                            path: 'detailViewModel>/currency',
-                            templateShareable:false}"
-                        selectedKey="{detailModel>prices/2/first_pur_netprice_curr_cd}">
-                        <items>
-                            <core:Item key="{detailViewModel>currency_code}" text="{detailViewModel>currency_code}" />
-                        </items>
-                    </ComboBox>
-                    </VBox> -->
                     <Text text="{detailModel>prices/2/first_pur_netprice_curr_cd}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
@@ -496,10 +371,7 @@
                     <Label text="{I18N>/BASE_DATE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <!-- <Text text="{
-                        path: 'detailModel>base_date',
-                        formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" /> -->
-                    <Text text="{detailModel>prices/1/current_base_price_currency_code}" textAlign="Center" width="100%" />
+                    <Text text="{detailModel>base_date}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
             <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -508,22 +380,6 @@
                     <Label text="{I18N>/BASE_PRICE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <!-- <VBox>
-                    <Input 
-                        value="{
-                                parts: [
-                                    {path: 'detailModel>prices/1/current_base_price'},
-                                    {path: 'detailModel>prices/1/current_base_price_currency_code'}
-                                ],
-                                type: 'sap.ui.model.type.Currency',
-                                formatOptions: {
-                                    showMeasure: false
-                                }
-                            }" 
-                        visible="{detailViewModel>/viewMode}"
-                        editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
-                        textAlign="End" />
-                    </VBox> -->
                     <Text text="{
                                 parts: [
                                     {path: 'detailModel>prices/1/current_base_price'},
@@ -543,19 +399,6 @@
                     <Label text="{I18N>/BASE_CURRENCY}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <!-- <VBox>
-                    <ComboBox
-                        visible="{detailViewModel>/viewMode}"
-                        editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
-                        items="{
-                            path: 'detailViewModel>/currency',
-                            templateShareable:false}"
-                        selectedKey="{detailModel>prices/1/current_base_price_currency_code}">
-                        <items>
-                            <core:Item key="{detailViewModel>currency_code}" text="{detailViewModel>currency_code}" />
-                        </items>
-                    </ComboBox>
-                    </VBox> -->
                     <Text text="{detailModel>prices/1/current_base_price_currency_code}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
@@ -622,9 +465,7 @@
                     <Label text="{I18N>/FIRST_DATE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <Text text="{
-                        path: 'detailModel>prices/1/first_pur_netprice_str_dt',
-                        formatter: '.dateFormatter.toDateString'}" textAlign="Center" width="100%" />
+                    <Text text="{detailModel>prices/1/first_pur_netprice_str_dt}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
             <t:Column width="10rem" visible="{= ${rootModel>/config/DP_VI_MARKETCODE1_DISPLAY_FLAG} === 'Y' ? true : false}">
@@ -633,22 +474,6 @@
                     <Label text="{I18N>/FIRST_PRICE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <!-- <VBox>
-                    <Input 
-                        value="{
-                                parts: [
-                                    {path: 'detailModel>prices/1/first_purchasing_net_price'},
-                                    {path: 'detailModel>prices/1/first_pur_netprice_curr_cd'}
-                                ],
-                                type: 'sap.ui.model.type.Currency',
-                                formatOptions: {
-                                    showMeasure: false
-                                }
-                            }" 
-                        visible="{detailViewModel>/viewMode}"
-                        editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
-                        textAlign="End" />
-                    </VBox> -->
                     <Text text="{
                                 parts: [
                                     {path: 'detailModel>prices/1/first_purchasing_net_price'},
@@ -668,19 +493,6 @@
                     <Label text="{I18N>/FIRST_BASE_CURRENCY}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <!-- <VBox>
-                    <ComboBox
-                        visible="{detailViewModel>/viewMode}"
-                        editable="{= ${detailModel>base_price_ground_code} !== ${detailViewModel>/familyMaterialCodeShowCode} ? true : false }"
-                        items="{
-                            path: 'detailViewModel>/currency',
-                            templateShareable:false}"
-                        selectedKey="{detailModel>prices/1/first_pur_netprice_curr_cd}">
-                        <items>
-                            <core:Item key="{detailViewModel>currency_code}" text="{detailViewModel>currency_code}" />
-                        </items>
-                    </ComboBox>
-                    </VBox> -->
                     <Text text="{detailModel>prices/1/first_pur_netprice_curr_cd}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
@@ -703,13 +515,13 @@
                 <t:template>
                     <VBox>
                         <Input
-                            value="{detailModel>family_material_code}"
+                            value="{detailModel>repr_material_code}"
                             editable="{detailViewModel>/viewMode}"
                             visible="{= ${detailModel>base_price_ground_code} === ${detailViewModel>/familyMaterialCodeShowCode} &amp;&amp; ${detailViewModel>/viewMode} ? true : false }"
                             showValueHelp="true"
                             valueHelpRequest=".onOpenFamilyMaterialCodeDialog" >
                         </Input>
-                        <Text text="{detailModel>family_material_code}" visible="{= !(${detailModel>base_price_ground_code} === ${detailViewModel>/familyMaterialCodeShowCode} &amp;&amp; ${detailViewModel>/viewMode}) ? true : false }" textAlign="Center" width="100%" />
+                        <Text text="{detailModel>repr_material_code}" visible="{= !(${detailModel>base_price_ground_code} === ${detailViewModel>/familyMaterialCodeShowCode} &amp;&amp; ${detailViewModel>/viewMode}) ? true : false }" textAlign="Center" width="100%" />
                     </VBox>
                 </t:template>
                 </t:Column>
@@ -719,7 +531,7 @@
                     <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <Text text="{detailModel>family_supplier_code}" textAlign="Center" width="100%" />
+                    <Text text="{detailModel>repr_material_supplier_code}" textAlign="Center" width="100%" />
                 </t:template>
             </t:Column>
             <t:Column width="12rem">
@@ -728,7 +540,7 @@
                     <Label text="{I18N>/SUPPLIER_NAME}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <Text text="{detailModel>family_supplier_name}" />
+                    <Text text="{detailModel>repr_material_supplier_name}" />
                 </t:template>
             </t:Column>
             <t:Column width="12rem">

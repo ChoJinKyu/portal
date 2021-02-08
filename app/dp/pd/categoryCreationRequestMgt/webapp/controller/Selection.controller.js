@@ -60,6 +60,7 @@ sap.ui.define([
             this.loginUserName = "TestUser";
             this.tenant_id = "L2101";
             this.language_cd = "KO"
+            this.employee_number = "9004";
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
@@ -116,7 +117,7 @@ sap.ui.define([
                 "request_number"    : this._sRequestNumber,
                 "approve_sequence"  : null,
                 "approval_number"   : null,
-                "requestor_empno"   : "Admin",
+                "requestor_empno"   :this.employee_number,
                 "tf_flag"           : true,
                 "approval_comment"  : null,
                 "approve_date_time" : new Date(),
@@ -131,7 +132,7 @@ sap.ui.define([
                 "request_number"    : this._sRequestNumber,
                 "approve_sequence"  : null,
                 "approval_number"   : null,
-                "requestor_empno"   : "Admin",
+                "requestor_empno"   : this.employee_number,
                 "tf_flag"           : true,
                 "approval_comment"  : null,
                 "approve_date_time" : new Date(),
@@ -216,7 +217,7 @@ sap.ui.define([
                 request_title            : oMasterData.request_title,
                 request_category_name    : oMasterData.request_category_name,
                 similar_category_code    : oMasterData.similar_category_code,
-                requestor_empno          : oMasterData.requestor_empno,
+                requestor_empno          : this.employee_number,
                 request_date_time        : oMasterData.request_date_time,
                 request_desc             : oMasterData.request_desc,
                 attch_group_number       : oMasterData.attch_group_number,
@@ -243,7 +244,7 @@ sap.ui.define([
                     request_number : oDetailsData.PdCategoryApprovalType[i].request_number,
                     approve_sequence : oDetailsData.PdCategoryApprovalType[i].approve_sequence,
                     approval_number : oDetailsData.PdCategoryApprovalType[i].approval_number,
-                    requestor_empno : oDetailsData.PdCategoryApprovalType[i].requestor_empno,
+                    requestor_empno : this.employee_number,
                     tf_flag : oDetailsData.PdCategoryApprovalType[i].tf_flag,
                     approval_comment : oDetailsData.PdCategoryApprovalType[i].approval_comment,
                     approve_date_time : oDetailsData.PdCategoryApprovalType[i].approve_date_time,
@@ -375,7 +376,7 @@ sap.ui.define([
                 "request_title": null,
                 "request_category_name": null,
                 "similar_category_code": null,
-                "requestor_empno": this.loginUserId,
+                "requestor_empno": this.employee_number,
                 "request_date_time": new Date(),
                 "request_desc": null,
                 "attch_group_number": null,
@@ -391,7 +392,7 @@ sap.ui.define([
                 "request_number"    : this._sRequestNumber,
                 "approve_sequence"  : null,
                 "approval_number"   : null,
-                "requestor_empno"   : null,
+                "requestor_empno"   : this.employee_number,
                 "tf_flag"           : null,
                 "approval_comment"  : null,
                 "approve_date_time" : new Date(),

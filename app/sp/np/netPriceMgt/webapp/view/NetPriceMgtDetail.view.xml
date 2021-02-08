@@ -45,7 +45,7 @@
                 <!-- Status 시작 -->
 				<layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
 					<Label text="{I18N>/STATUS} :"/>
-                    <ObjectStatus id="status" class="sapMObjectStatusLarge" text="{detailModel>/status}" state="Error" />
+                    <ObjectStatus id="status" class="sapMObjectStatusLarge" text="{detailModel>/approval_status_name}" state="Error" />
 				</layout:VerticalLayout>
                 <!-- Status 끝 -->
 
@@ -56,25 +56,25 @@
                         <co:MicroProcessFlow>
                             <co:content>
                                 <co:MicroProcessFlowItem 
-                                    state="{= ${detailModel>/approval_status_code} === '10' ? 'Error' : 'None'}" 
+                                    state="{= ${detailModel>/approval_status_code} === 'DR' ? 'Error' : 'None'}" 
                                     stepWidth="5rem" 
-                                    icon="{= ${detailModel>/approval_status_code} === '10' ? 'sap-icon://circle-task' : ''}" />
+                                    icon="{= ${detailModel>/approval_status_code} === 'DR' ? 'sap-icon://circle-task' : ''}" />
                                 <co:MicroProcessFlowItem 
-                                    state="{= ${detailModel>/approval_status_code} === '20' ? 'Error' : 'None'}" 
+                                    state="{= ${detailModel>/approval_status_code} === 'AR' ? 'Error' : 'None'}" 
                                     stepWidth="5rem"
-                                    icon="{= ${detailModel>/approval_status_code} === '20' ? 'sap-icon://circle-task' : ''}" />
+                                    icon="{= ${detailModel>/approval_status_code} === 'AR' ? 'sap-icon://circle-task' : ''}" />
                                 <co:MicroProcessFlowItem 
-                                    state="{= ${detailModel>/approval_status_code} === '30' ? 'Error' : 'None'}" 
+                                    state="{= ${detailModel>/approval_status_code} === 'IA' ? 'Error' : 'None'}" 
                                     stepWidth="5rem"
-                                    icon="{= ${detailModel>/approval_status_code} === '30' ? 'sap-icon://circle-task' : ''}" />
+                                    icon="{= ${detailModel>/approval_status_code} === 'IA' ? 'sap-icon://circle-task' : ''}" />
                                 <co:MicroProcessFlowItem 
-                                    state="{= ${detailModel>/approval_status_code} === '40' ? 'Error' : 'None'}" 
+                                    state="{= ${detailModel>/approval_status_code} === 'AP' ? 'Error' : 'None'}" 
                                     stepWidth="5rem"
-                                    icon="{= ${detailModel>/approval_status_code} === '40' ? 'sap-icon://circle-task' : ''}" />
+                                    icon="{= ${detailModel>/approval_status_code} === 'AP' ? 'sap-icon://circle-task' : ''}" />
                                 <co:MicroProcessFlowItem 
-                                    state="{= ${detailModel>/approval_status_code} === '50' ? 'Error' : 'None'}" 
+                                    state="{= ${detailModel>/approval_status_code} === 'RJ' ? 'Error' : 'None'}" 
                                     stepWidth="5rem"
-                                    icon="{= ${detailModel>/approval_status_code} === '50' ? 'sap-icon://circle-task' : ''}" />
+                                    icon="{= ${detailModel>/approval_status_code} === 'RJ' ? 'sap-icon://circle-task' : ''}" />
                             </co:content>
                         </co:MicroProcessFlow>
                     </HBox>
@@ -104,7 +104,7 @@
                                     <HBox>
                                         <VBox>
                                             <Label text="{I18N>/TITLE}" class="sapUiTinyMarginEnd" textAlign="Left" labelFor="input" required="true"/>
-                                            <Input width="20rem" placeholder="" editable="{detailViewModel>/viewMode}" value="{detailModel>/approval_title}" />
+                                            <Input id="approval_title" width="20rem" placeholder="" editable="{detailViewModel>/viewMode}" value="{detailModel>/approval_title}" />
                                         </VBox>
                                         <layoutData>
                                             <layout:GridData span="XL12 L12 M12 S12" />
@@ -191,7 +191,7 @@
                                     <HBox>
                                         <VBox>
                                             <Label text="{I18N>/DESCRIPTION}" required="true"/>
-                                            <rte:RichTextEditor width="100%" height="200px" value="{detailModel>/approval_request_desc}" 
+                                            <rte:RichTextEditor id="approval_contents" width="100%" height="200px" value="{detailModel>/approval_request_desc}" 
                                                 customToolbar="true" 
                                                 showGroupFont="true" 
                                                 showGroupLink="true" 
@@ -525,10 +525,9 @@
                                                     items="{
                                                             path: 'util>/Code',
                                                             filters: [
-                                                                {path: 'group_code', operator: 'EQ', value1: 'OP_INCOTERMS'},
-                                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                                {path: 'group_code', operator: 'EQ', value1: 'OP_INCOTERMS'}
                                                             ]
-                                                        }" selectedKey="{generalInfoList>incoterms_code}">
+                                                        }" selectedKey="{generalInfoList>incoterms}">
                                                     <items>
                                                         <core:Item key="{util>code}" text="{util>code_name}" />
                                                     </items>
@@ -559,134 +558,95 @@
                                 <t:Table 
                                     id="basePriceTbl"
                                     selectionMode="Single"
-                                    rows="{generalInfoList>/GeneralView}"
+                                    rows="{basePriceInfoList>/GeneralView}"
                                     fixedColumnCount="3"
                                     visibleRowCountMode="Auto">
                                     <t:extension>
                                         <OverflowToolbar class="sapFDynamicPageAlignContent">
                                             <ToolbarSpacer />
-                                            <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" visible="{detailViewModel>/viewMode}" />
+                                            <Button text="Add Price" type="Transparent" press=".fnAddPrice" />
                                             <!-- <Button text="{I18N>/UPLOAD}" type="Transparent" press=".onDeveloping" visible="{detailViewModel>/viewMode}" />
                                             <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" visible="{detailViewModel>/viewMode}" />
                                             <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteBasePrice" visible="{detailViewModel>/viewMode}" /> -->
                                         </OverflowToolbar>
                                     </t:extension>
                                     <t:columns>
-                                        <!-- <t:Column id="mainColumnState2" hAlign="Center" width="40px" >
-                                            <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
-                                            <t:template>
-                                                <ObjectStatus icon="{path: 'generalInfoList>_row_state_', formatter: '.formatter.toModelStateColumnIcon'}" />
-                                            </t:template>
-                                        </t:Column> -->
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/COMPANY}" textAlign="Center" />
                                             <t:template>
-                                                <ComboBox width="100%" 
-                                                    editable="{= ${detailViewModel>/viewMode} &amp;&amp; ${rootModel>/config/DP_VI_COMPANY_EDITABLE_FLAG} === 'Y' ? true : false}"
-                                                    selectedKey="{generalInfoList>company_code}" 
-                                                    items="{
-                                                        path: 'org>/Company',
-                                                        filters: [
-                                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                                        ],
-                                                        sorter: { path: 'company_code'},
-                                                        templateShareable:false
-                                                    }"
-                                                    change=".onChangeCompany">
-                                                    <items>
-                                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
-                                                    </items>
-                                                </ComboBox>
-                                            </t:template>
-                                        </t:Column>
-                                        <t:Column hAlign="Center" width="10rem">
-                                            <Label  text="{I18N>/VI_APPROVE_ORG_CODE}" textAlign="Center" />
-                                            <t:template>
-                                                <ComboBox width="100%"
-                                                    selectedKey="{path: 'generalInfoList>org_code',templateShareable:false}" 
-                                                    items="{path: 'detailModel>purOrg',templateShareable:false}">
-                                                    <items>
-                                                        <core:Item key="{detailModel>org_code}" text="[{detailModel>org_code}]{detailModel>org_name}" />
-                                                    </items>
-                                                </ComboBox>
+                                                <Text text="{path: 'basePriceInfoList>company_code'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/MATERIAL_CODE}" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>material_code'}"  />
+                                                <Text text="{path: 'basePriceInfoList>material_code'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>supplier_code'}"  />
-                                            </t:template>
-                                        </t:Column>
-                                        <t:Column hAlign="Center" width="10rem">
-                                            <Label text="{I18N>/SUPPLIER_CODE}" textAlign="Center" />
-                                            <t:template>
-                                                <Text text="{path: 'generalInfoList>supplier_code'}"  />
+                                                <Text text="{path: 'basePriceInfoList>supplier_code'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/SUPPLIER_NAME}" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>supplier_local_name'}"  />
+                                                <Text text="{path: 'basePriceInfoList>supplier_name'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/SUPPLIER_NAME} ENG" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>supplier_english_name'}"  />
+                                                <Text text="{path: 'basePriceInfoList>supplier_english_name'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/CURRENCY}" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>currency_code'}"  />
+                                                <Text text="{path: 'basePriceInfoList>currency_code'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/NET_PRICE}" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>net_price'}"  />
+                                                <Text text="{path: 'basePriceInfoList>net_price'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="BaseCode" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>base_price_type_code'}"  />
+                                                <Text text="{path: 'basePriceInfoList>base_price_type_code'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="(December)Currency" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>pyear_dec_base_currency_code'}"  />
+                                                <Text text="{path: 'basePriceInfoList>pyear_dec_base_currency_code'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="(December)Base Price" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>pyear_dec_base_price'}"  />
+                                                <Text text="{path: 'basePriceInfoList>pyear_dec_base_price'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="(December)Rate" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>pyear_dec_ci_rate'}"  />
+                                                <Text text="{path: 'basePriceInfoList>pyear_dec_ci_rate'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="(Quarter)Currency" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>quarter_base_currency_code'}"  />
+                                                <Text text="{path: 'basePriceInfoList>quarter_base_currency_code'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="(Quarter)Base Price" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>quarter_base_price'}"  />
+                                                <Text text="{path: 'basePriceInfoList>quarter_base_price'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -698,7 +658,7 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="(Consultation)Status" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>consultation_status'}" />
+                                                <Text text="{path: 'basePriceInfoList>consultation_status'}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -909,7 +869,7 @@
 
         <!-- footer 시작 -->
         <uxap:footer>
-			<OverflowToolbar visible="{= ${detailModel>/approval_status_code} === '10' ? true : false}">
+			<OverflowToolbar visible="{= ${detailModel>/approval_status_code} === 'DR' ? true : false}">
 				<ToolbarSpacer />
                 <Button
                     text="{I18N>/SAVE}"
