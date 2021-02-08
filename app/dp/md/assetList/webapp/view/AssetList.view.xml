@@ -281,8 +281,8 @@
                     <table:Column id="assetMoldNoColumn" width="12em">
                         <Label text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text id="mold_number" text="{list>mold_number}"/>
-                        </table:template>
+							<Link id="mold_number" text="{list>mold_number}" press="handleLinkPress"/>
+						</table:template>
                     </table:Column>
                     <table:Column id="assetSeqColumn" width="3em" hAlign="Center">
                         <Label text="{path:'I18N>/SEQUENCE', formatter:'I18NFormatter'}" wrapping="true"/>

@@ -394,7 +394,16 @@ sap.ui.define([
             return aTableSearchState;
         },
 
-        
+        handleLinkPress: function (){
+            var pull_url = window.location.href;
+            var targetPath = "/dp/md/remodelRepairMgtList/webapp/#/rrMgtDetail/code"
+            var complete_url;
+            complete_url=pull_url.split(pull_url.substring(pull_url.indexOf("/dp"),pull_url.length));
+            complete_url[0] = complete_url[0]+targetPath;
+            window.location.href=complete_url[0];
+            
+            
+        },
         
         _doInitTablePerso: function () {
             // init and activate controller
