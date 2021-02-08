@@ -1636,7 +1636,9 @@ sap.ui.define([
                 });
 
             },
-
+            onExport: function () {
+                this.createConfirmBox();
+            },
 
             inputAwardSupChange: function(e){
 

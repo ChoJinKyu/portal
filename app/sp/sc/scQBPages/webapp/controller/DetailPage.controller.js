@@ -1588,6 +1588,9 @@ sap.ui.define([
                     }
                 });
 
+            },
+            onExport: function () {
+                this.createConfirmBox();
             }
             
 		});
