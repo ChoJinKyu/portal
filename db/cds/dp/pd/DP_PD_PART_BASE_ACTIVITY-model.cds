@@ -32,6 +32,7 @@ entity Pd_Part_Base_Activity_Category_Pop_View {
         path                  : String;
         sequence              : Decimal;
         active_flag           : Boolean;
+        active_flag_val       : String;
 };
 
 @cds.persistence.exists
