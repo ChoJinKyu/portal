@@ -658,9 +658,9 @@ sap.ui.define([
                 var filterOutcomeItems = filterOutcome.getSelectedItems();
                 for (var i=0; i<filterOutcomeItems.length; i++){
                     var oItem = filterOutcomeItems[i];
-                    var oKey = oItem.getKey();      //바뀔거같음
-                    var oText = oItem.getText();   //현재
-                    oFilters.push(new Filter("negotiation_output_class_code", "EQ", oText));
+                    var oKey = oItem.getKey();      
+                    var oText = oItem.getText();   
+                    oFilters.push(new Filter("outcome_code", "EQ", oKey));
                 }
 
                 // AwardStatus
