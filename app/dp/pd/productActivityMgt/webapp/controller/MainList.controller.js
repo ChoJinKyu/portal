@@ -184,6 +184,9 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(){
+            this.byId("localUpdateDtmColumn").setVisible(true);
+            this.byId("updateUserIdColumn").setVisible(true);
+
             this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
 		},
 

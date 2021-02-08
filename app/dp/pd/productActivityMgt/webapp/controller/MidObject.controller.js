@@ -71,7 +71,7 @@ sap.ui.define([
 			//this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
 			//this._initTables();
-           // this.enableMessagePopover();
+            this.enableMessagePopover();
 
 
 		}, 
@@ -237,6 +237,31 @@ sap.ui.define([
 		 * @private
          * function : 라우트 이벤트
 		 */
+
+         _onMasterDataChanged: function(oEvent){
+			if(this.getModel("contModel").getProperty("/createMode") == true){
+				var oMasterModel = this.getModel("master");
+                var oLanguagesModel = this.getModel("languages");
+                var oCategoryModel = this.getModel("category");
+
+                var sTenantId = oMasterModel.getProperty("/tenant_id");
+                var sActivityCode = oMasterModel.getProperty("/activity_code");
+
+                var olanguagesData = oLanguagesModel.getData();
+				olanguagesData.PdPartBaseActivityLng.forEach(function(oItem, nIndex){
+					oLanguagesModel.setProperty("/PdPartBaseActivityLng/"+nIndex+"/tenant_id", sTenantId);
+					oLanguagesModel.setProperty("/PdPartBaseActivityLng/"+nIndex+"/activity_code", sActivityCode);
+                });
+               
+                var oCategoryData = oCategoryModel.getData();
+                oCategoryData.PdPartBaseActivityCategoryView.forEach(function(oItem, nIndex){
+					oCategoryModel.setProperty("/PdPartBaseActivityCategoryView/"+nIndex+"/tenant_id", sTenantId);
+					oCategoryModel.setProperty("/PdPartBaseActivityCategoryView/"+nIndex+"/activity_code", sActivityCode);
+				});
+				//oLanguagesModel.setData(olanguagesData);
+			}
+        },
+        
 		_onRoutedThisPage: function(oEvent){
             
             console.log(oEvent);
@@ -260,14 +285,10 @@ sap.ui.define([
 
             this.getView().setBusy(true);
             
-            //Flexible 넓은 화면 레이아웃 일 때 Main List 화면 테이블의 컬럼을 줄이기 위한 설정
-            if(this._slayout === "TwoColumnsMidExpanded" ){
-                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("localUpdateDtmColumn").setVisible(false);
-                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("updateUserIdColumn").setVisible(false);
-            }else{
-                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("localUpdateDtmColumn").setVisible(true);
-                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("updateUserIdColumn").setVisible(true);
-            }
+            //Main List 화면 테이블의 컬럼을 줄이기 위한 설정
+            this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("localUpdateDtmColumn").setVisible(false);
+            this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("updateUserIdColumn").setVisible(false);
+            
 
             //Detail 화면 테이블 데이터 세팅
 			if(this._sControlOptionCode == "new"){
@@ -284,7 +305,7 @@ sap.ui.define([
 					"activity_name": "",
 					"description": "",
 					"sequence": "",
-					"active_flag": true,
+					"active_flag": "false",
                 }, "/PdProdActivityTemplateView");
                 
                 var oDetailsModel = this.getModel("details");
@@ -361,7 +382,7 @@ sap.ui.define([
                 });
                 //detail table detete data 초기화 ;
                 this._detailDeleteData = [];
-
+                console.log(oMasterModel);
                 oView.setBusy(false);
                 this._toShowMode();
             
@@ -375,6 +396,7 @@ sap.ui.define([
          */
 		_toEditMode: function(){
             this.getView().getModel("midObjectViewModel").setProperty("/editMode", true);
+            
 		},
 
         /**
@@ -493,20 +515,15 @@ sap.ui.define([
                                         v_this._toShowMode();                                
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                     }
-                                    // sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
-                                    // v_this._toShowMode();                                
-                                    // v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                    
                                 }else{
                                     console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                    sap.m.MessageToast.show( "error");
                                 }
                             },
                             error: function (rst) {
-                                    console.log("eeeeee");
+                                    console.log("error");
                                     console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
-                                    // v_this.onSearch(rst.return_msg );
+                                    MessageBox.error(rst.return_msg);
                             }
                         });
 					};

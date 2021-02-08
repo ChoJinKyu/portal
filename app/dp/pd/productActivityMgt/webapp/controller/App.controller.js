@@ -58,20 +58,20 @@ sap.ui.define([
 			this.sCurrentControlOptionCode = oArguments.controlOptionCode;
 		},
 
-		onStateChanged: function (oEvent) {
-			var bIsNavigationArrow = oEvent.getParameter("isNavigationArrow"),
-				sLayout = oEvent.getParameter("layout");
+		// onStateChanged: function (oEvent) {
+		// 	var bIsNavigationArrow = oEvent.getParameter("isNavigationArrow"),
+		// 		sLayout = oEvent.getParameter("layout");
 
-			this._updateUIElements();
-			// Replace the URL with the new layout if a navigation arrow was used
-			if (bIsNavigationArrow) {
-				this.oRouter.navTo(this.sCurrentRouteName, {
-					layout: sLayout, 
-					tenantId: this.sCurrentTenantId, 
-					controlOptionCode: this.sCurrentControlOptionCode
-				}, true);
-			}
-		},
+		// 	this._updateUIElements();
+		// 	// Replace the URL with the new layout if a navigation arrow was used
+		// 	if (bIsNavigationArrow) {
+		// 		this.oRouter.navTo(this.sCurrentRouteName, {
+		// 			layout: sLayout, 
+		// 			tenantId: this.sCurrentTenantId, 
+		// 			controlOptionCode: this.sCurrentControlOptionCode
+		// 		}, true);
+		// 	}
+		// },
 
 		// Update the close/fullscreen buttons visibility
 		_updateUIElements: function () {
