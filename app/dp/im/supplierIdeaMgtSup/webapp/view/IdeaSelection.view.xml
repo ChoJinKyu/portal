@@ -102,7 +102,7 @@
                                 <!-- liveChange=".onCellChg"  -->
                                     <Label text="{I18N>/CORPORATION}: " labelFor="ideaCompany"  required="true"></Label>
                                     <Input id="hidIdeaNumber"  visible="false" value="{details>/idea_number}"  />
-                                    <ComboBox id="ideaCompany" width="250em" editable="false"
+                                    <ComboBox id="ideaCompany" width="250em" editable="false"  required="true"
                                         selectedKey="{details>/company_code}"
                                         items="{
                                             path: 'org>/Company',
@@ -125,7 +125,7 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="{I18N>/PRODUCT_GROUP}: " labelFor="ideaGroupCode" required="true" ></Label>
-                                    <ComboBox id="ideaGroupCode" width="250em" editable="{viewModel>/editMode}"
+                                    <ComboBox id="ideaGroupCode" width="250em" editable="{viewModel>/editMode}" required="true"
                                         selectedKey="{details>/idea_product_group_code}"
                                         items="{
                                         path: 'common>/Code',
@@ -147,7 +147,7 @@
                                         text="{I18N>/IDEA} {I18N>/NAME}: "
                                         labelFor="ideaName" required="true">
                                     </Label>
-                                    <Input id="ideaName"  width="80%"  visible="{viewModel>/editMode}"
+                                    <Input id="ideaName"  width="80%"  visible="{viewModel>/editMode}"  required="true"
                                         placeholder="{I18N>/IDEA} {I18N>/NAME}" value="{details>/idea_title}"/>
                                     <Text id="ideaNameTxt" width="80%" textAlign="Left"  text="{master>/idea_title}" visible="{viewModel>/showMode}"/>
                                 </VBox>
@@ -155,7 +155,7 @@
                             <layout:Grid containerQuery="true" defaultSpan="XL2 L4">
                                 <VBox>
                                     <Label text="{I18N>/IDEA} {I18N>/TYPE}: " labelFor="ideaType"  required="true"></Label>
-                                    <ComboBox id="ideaType" width="250em" editable="{viewModel>/editMode}"
+                                    <ComboBox id="ideaType" width="250em" editable="{viewModel>/editMode}" required="true"
                                         selectedKey="{details>/idea_type_code}"
                                         items="{
                                         path: 'common>/Code',
@@ -172,7 +172,7 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="{I18N>/IDEA} {I18N>/PERIOD}: " labelFor="ideaPeriod"  required="true"></Label>
-                                    <ComboBox id="ideaPeriod" width="250em" editable="{viewModel>/editMode}"
+                                    <ComboBox id="ideaPeriod" width="250em" editable="{viewModel>/editMode}" required="true"
                                         selectedKey="{details>/idea_period_code}"
                                         items="{
                                         path: 'common>/Code',
@@ -189,7 +189,7 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="{I18N>/IDEA} {I18N>/MANAGER} : " labelFor="ideaManager" required="true"></Label>
-                                    <Input id="ideaManager"  width="80%"  visible="{viewModel>/editMode}" placeholder="All"
+                                    <Input id="ideaManager"  width="80%"  visible="{viewModel>/editMode}" placeholder="All" required="true"
                                         showValueHelp="true" valueHelpRequest=".onIdeaManagerDialogPress" 
                                                         liveChange=".onNameChk" value="{master>/idea_manager_local_name}" >
                                     </Input>
@@ -254,7 +254,7 @@
                                     </VBox>
                                     <VBox>
                                         <Label text="VI {I18N>/AMOUNT} (KRW): " labelFor="partNo" />
-                                        <Input id="viAmount" type="Number"  width="80%"   visible="{viewModel>/editMode}"
+                                        <MaskInput mask="99999999999" placeholderSymbol=" "  id="viAmount"  width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/vi_amount}" textAlign="Right" />
                                         <Text id="viAmountTxt" width="80%" textAlign="Right"  text="{
                                                         path: 'details>/vi_amount', 
@@ -263,7 +263,7 @@
                                     </VBox>
                                     <VBox>
                                         <Label text="{I18N>/MM} {I18N>/MTLMOB}(EA): " labelFor="partNo" />
-                                        <Input id="monthMtlmob" type="Number"   width="80%"   visible="{viewModel>/editMode}"
+                                        <MaskInput mask="99999999999" placeholderSymbol=" "  id="monthMtlmob"   width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/monthly_mtlmob_quantity}" textAlign="Right"/>
                                         <Text id="monthMtlmobTxt" width="80%" textAlign="Right"  text="{
                                                         path: 'details>/monthly_mtlmob_quantity', 
@@ -272,7 +272,7 @@
                                     </VBox>
                                     <VBox>
                                         <Label text="{I18N>/MM} impact (KRW): " labelFor="partNo" />
-                                        <Input id="mmImpct" type="Number"   width="80%"   visible="{viewModel>/editMode}"
+                                        <MaskInput mask="99999999999" placeholderSymbol=" "  id="mmImpct"   width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/monthly_purchasing_amount}" textAlign="Right"/>
                                         <Text id="mmImpctTxt" width="80%" textAlign="Right"  text="{
                                                         path: 'details>/monthly_purchasing_amount', 
@@ -281,7 +281,7 @@
                                     </VBox>
                                     <VBox>
                                         <Label text="{I18N>/ANNUAL} impact (KRW): " labelFor="partNo" />
-                                        <Input id="annualImpact" type="Number"   width="80%"   visible="{viewModel>/editMode}"
+                                        <MaskInput mask="99999999999" placeholderSymbol=" "  id="annualImpact"   width="80%"   visible="{viewModel>/editMode}"
                                             placeholder="0" value="{details>/annual_purchasing_amount}" textAlign="Right"/>
                                         <Text id="annualImpactTxt" width="80%" textAlign="Right"  text="{
                                                         path: 'details>/annual_purchasing_amount', 
