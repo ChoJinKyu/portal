@@ -393,6 +393,10 @@ sap.ui.define([
                     oI18NModel = oView.getModel("I18N");
                     MessageBox.warning(oI18NModel.getProperty("/ESP00001"));
                     return;
+                }else if(oRowData.hierarchy_level === 4 && sBtnGubun === "LowLevel"){
+                    oI18NModel = oView.getModel("I18N");
+                    MessageBox.warning(oI18NModel.getProperty("/ESP00002"));
+                    return;
                 }
 
                 oViewModel.setProperty("/Detail", {
