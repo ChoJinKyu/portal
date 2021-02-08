@@ -73,8 +73,7 @@
                                 <Text text="납기 요청일"/>
                                 <DatePicker id="datePickerMaturitydate"
                                     valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd" 
-                                    value="{type: 'sap.ui.model.odata.type.Date', 
-                                            formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" />
+                                     />
                             </cells>
                         </ColumnListItem>
                         <ColumnListItem >
@@ -100,8 +99,7 @@
                         <Label  text="Target Total Amount" /> 
                         <DatePicker 
                                     valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd" 
-                                    value="{path: 'NegoHeaders>/maturity_date', type: 'sap.ui.model.odata.type.Date', 
-                                            formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" />
+                                   />
                     </form:SimpleForm>
 
                     <Table sticky="HeaderToolbar,InfoToolbar,ColumnHeaders" mode="MultiSelect" class="sapUiSmallMarginTop" > 

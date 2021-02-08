@@ -281,7 +281,14 @@ sap.ui.define([
                     // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=*&$filter=nego_document_number eq '" + this._header_id + "'";
                     // NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers),nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,negotiation_style,award_type,award_method,award_method_map,award_method_map2,operation_org&$filter=nego_document_number
                     // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers),nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,negotiation_style,award_type,award_method,award_method_map,award_method_map2,operation_org&$filter=nego_document_number eq '" + this._header_id + "'";
-                    var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._header_id + "'";
+                    // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers,specification_fk),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._header_id + "'";
+                    
+                    // var url = this.srvUrl+"NegoHeadersView?&$expand=Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._header_id + "'";
+                    var headerExpandString = "ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map";
+                    var itemsExpandString = "Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department)";
+                    var url = this.srvUrl+"NegoHeadersView?&$expand="+headerExpandString + "," + itemsExpandString+"&$filter=nego_document_number eq '" + this._header_id + "'";
+
+                    console.log( "0000 >>> " + url);
                     
                     $.ajax({
                         url: url,
@@ -378,7 +385,7 @@ sap.ui.define([
                 // this.onNavBack();
             },
             onPageDeleteButtonPress: function() {
-                // this._CallDeleteProc();
+                this._CallDeleteProc();
                 // this._CallInsertProc();
             },
             onPageEditButtonPress: function() {
@@ -1447,8 +1454,8 @@ sap.ui.define([
                             var oSupplierItem = {
                                 tenant_id                        : this.getCheckObject(element2,"tenant_id",""),
                                 nego_header_id                   : this.getCheckObject(element2,"nego_header_id",-1),
-                                nego_item_number                 : this.getCheckObject(element2,"nego_item_number",-1),
-                                item_supplier_sequence           : this.getCheckObject(element2,"item_supplier_sequence",-1),
+                                nego_item_number                 : this.getCheckObject(element2,"nego_item_number","-1"),
+                                item_supplier_sequence           : this.getCheckObject(element2,"item_supplier_sequence","-1"),
                                 operation_org_code               : this.getCheckObject(element2,"operation_org_code",""),
                                 operation_unit_code              : this.getCheckObject(element2,"operation_unit_code",""),
                                 nego_supplier_register_type_code : this.getCheckObject(element2,"nego_supplier_register_type_code",""),
@@ -1486,7 +1493,7 @@ sap.ui.define([
                 var oView = this.getView(),
                     v_returnModel,
                     urlInfo = "srv-api/odata/v4/sp.sourcingV4Service/deepUpsertNegoHeader"; // delete
-                var oModel = oView.getModel("NegoHeaders").getData();
+                var oModel = oView.getModel("NegoHeaders");
 
                 var inputInfo = {
                     "deepupsertnegoheader" : {
@@ -1529,7 +1536,7 @@ sap.ui.define([
             _CallDeleteProc: function () {
                 //return model
                 var that = this;
-                var oModel = this.getView().getModel("NegoHeaders");
+                var oModel = this.getView().getModel("NegoHeaders");//.getData();
                 var oView = this.getView(),
                     v_returnModel,
                     urlInfo = "srv-api/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader"; // delete
@@ -1543,7 +1550,9 @@ sap.ui.define([
                         "negosuppliers" : []
                     }
                 };
-                // console.log(inputInfo);
+                console.log(inputInfo);
+
+                return;
                 $.ajax({
                     url: urlInfo,
                     type: "POST",

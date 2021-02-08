@@ -587,8 +587,20 @@
                                                             <Label text="사양/규격" />
                                                             <t:template>
                                                                 <FlexBox >
-                                                                    <!-- <Input showValueHelp="true" value="{NegoHeaders>specification}" visible="{=${propInfo>/isEditMode}}"/> -->
-                                                                    <ComboBox value="{NegoHeaders>specification}" visible="{=${propInfo>/isEditMode}}"></ComboBox>
+                                                                    <ComboBox items="{
+                                                                            path: '/Sc_Spec_Code_View', 
+                                                                            templateShareable:true, 
+                                                                            filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}],
+                                                                            sorter: {
+                                                                                path: 'sort_no',
+                                                                                descending: false
+                                                                            }}" 
+                                                                        showSecondaryValues= "true"
+                                                                        selectedKey="{NegoHeaders>specification_code}" visible="{=${propInfo>/isEditMode}}"
+                                                                        width="100%" required="true">
+                                                                        <core:ListItem key="{specification_code}" text="{specification_name}" additionalText="{specification_code}"/>
+                                                                    </ComboBox>
+                                                                    
                                                                     <Text text="{NegoHeaders>specification}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -781,10 +793,10 @@
                                                                 <FlexBox justifyContent="Center">
                                                                     <DatePicker 
                                                                             valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd" visible="{=${propInfo>/isEditMode}}"
-                                                                            value="{path: 'NegoHeaders>/maturity_date', type: 'sap.ui.model.odata.type.Date', 
+                                                                            value="{path: 'NegoHeaders>maturity_date', type: 'sap.ui.model.odata.type.Date', 
                                                                                     formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" />
                                                                     <!-- <Input value="{NegoHeaders>maturity_date}" visible="{=${propInfo>/isEditMode}}"/> -->
-                                                                    <Text text="{path: 'NegoHeaders>/maturity_date', type: 'sap.ui.model.odata.type.Date', 
+                                                                    <Text text="{path: 'NegoHeaders>maturity_date', type: 'sap.ui.model.odata.type.Date', 
                                                                         formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -1154,7 +1166,7 @@
                             <Button text="{I18N>/TEMP_SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
                             <Button text="{I18N>/CANCEL}" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageCancelButtonPress" />
                             <Button text="{I18N>/DELETE}" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageDeleteButtonPress" />
-                            <Button text="{I18N>/Edit}" visible="{=!${propInfo>/isEditMode}}" type="Transparent" press=".onPageEditButtonPress" />
+                            <Button text="{I18N>/EDIT}" visible="{=!${propInfo>/isEditMode}}" type="Transparent" press=".onPageEditButtonPress" />
                         </OverflowToolbar>
                     </uxap:footer>
                 </uxap:ObjectPageLayout>
