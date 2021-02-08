@@ -119,8 +119,8 @@ sap.ui.define([
                     var aMasterFilters = [];
                     aMasterFilters.push(new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID));
                     //aMasterFilters.push(new Filter("language_code", FilterOperator.EQ, "'" + SppUserSessionUtil.getUserInfo().LANGUAGE_CODE + "'"));
-                    //aMasterFilters.push(new Filter("approval_number", FilterOperator.EQ, args.pAppNum));
-                    aMasterFilters.push(new Filter("approval_number", FilterOperator.EQ, "1"));
+                    aMasterFilters.push(new Filter("approval_number", FilterOperator.EQ, args.pAppNum));
+                    //aMasterFilters.push(new Filter("approval_number", FilterOperator.EQ, "1"));
 
                     oView.setBusy(true);
 
@@ -135,16 +135,14 @@ sap.ui.define([
                                 "approval_number": result.approval_number,
                                 "approval_title": result.approval_title,
                                 //"approval_type_code": oRootModel.getProperty("/selectedApprovalType"),   // V10: 신규, V20: 변경
-                                "approve_status_code": result.approve_status_code,    // DR: Draft
-                                "status": oRootModel.getProperty("/processList/0/code_name"),
+                                "approval_status_code": result.approve_status_code,    // DR: Draft
+                                "approval_status_name": result.approve_status_name,
                                 "requestor_empno": result.requestor_empnm,
                                 "request_date": this.getOwnerComponent()._changeDateString(oToday),
                                 "net_price_document_type_code": result.net_price_document_type_code,
                                 "net_price_source_code": result.net_price_source_code
                             };
                             oDetailModel.setData(oNewBasePriceData);
-                            oDetailModel.setProperty("/approval_status_code", result.approve_status_code);
-                            oDetailModel.setProperty("/approve_status_name", result.approve_status_name);
 
                             that._readData("detail", "/GeneralView", aMasterFilters, {}, function (data) {
                                 console.log("GeneralView::", data);
@@ -170,8 +168,8 @@ sap.ui.define([
                         "approval_number": "N/A",
                         "approval_title": "",
                         //"approval_type_code": oRootModel.getProperty("/selectedApprovalType"),   // V10: 신규, V20: 변경
-                        //"approve_status_code": "DR",    // DR: Draft
-                        "status": oRootModel.getProperty("/processList/0/code_name"),
+                        "approval_status_code": "DR",    // DR: Draft
+                        "approval_status_name": oRootModel.getProperty("/processList/0/code_name"),
                         "requestor_empno": SppUserSessionUtil.getUserInfo().EMPLOYEE_NUMBER,
                         "request_date": this.getOwnerComponent()._changeDateString(oToday)
                     };
@@ -182,7 +180,7 @@ sap.ui.define([
                     // 저장된 Approver가 없는 경우 Line 추가
                     this.onApproverAdd(0);
      
-                    oDetailModel.setProperty("/approval_status_code", "DR");
+                    //oDetailModel.setProperty("/approval_status_code", "DR");
                     // Process에 표시될 상태 및 아이콘 데이터 세팅
                    // this.onSetProcessFlowStateAndIcon(oDetailViewModel, oNewBasePriceData.approve_status_code);
                 }

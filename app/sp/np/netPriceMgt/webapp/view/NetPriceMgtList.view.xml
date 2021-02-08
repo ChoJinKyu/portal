@@ -197,9 +197,7 @@
                     <OverflowToolbar class="sapFDynamicPageAlignContent">
                         <Title text="{I18N>/BASE_PRICE_LIST} ({= ${list>/NpApprovalListView}.length || 0})" level="H2"/>
                         <ToolbarSpacer />
-                        <!-- <Button icon="sap-icon://excel-attachment" />
-                        <Button icon="sap-icon://group-2" />
-                        <Button icon="sap-icon://action-settings" /> -->
+                        <Button text="Create" type="Transparent" press=".fnCreate" />
                     </OverflowToolbar>
                 </t:extension>
                 <t:columns>

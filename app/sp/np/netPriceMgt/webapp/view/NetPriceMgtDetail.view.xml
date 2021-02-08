@@ -45,7 +45,7 @@
                 <!-- Status 시작 -->
 				<layout:VerticalLayout class="sapUiLargeMarginBeginEnd">
 					<Label text="{I18N>/STATUS} :"/>
-                    <ObjectStatus id="status" class="sapMObjectStatusLarge" text="{detailModel>/approve_status_name}" state="Error" />
+                    <ObjectStatus id="status" class="sapMObjectStatusLarge" text="{detailModel>/approval_status_name}" state="Error" />
 				</layout:VerticalLayout>
                 <!-- Status 끝 -->
 

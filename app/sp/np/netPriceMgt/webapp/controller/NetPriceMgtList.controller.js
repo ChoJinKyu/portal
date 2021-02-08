@@ -224,14 +224,17 @@ sap.ui.define([
                     });
                 }
             },
-            
-            fnCreate: function() {
+
+            /**
+             * 생성페이지로 이동
+             */
+            fnCreate: function (oEvent) {
                 this.getRouter().navTo("NetPriceMgtDetail", {
                     "pMode" : "C",
-                    "pAppNum" : "0"
+                    "pAppNum":  "0"
                 });
             },
-
+           
             vhEmployeeCode: function(){
                 if(!this.oEmployeeMultiSelectionValueHelp){
                     this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
