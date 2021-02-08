@@ -222,7 +222,6 @@ service SourcingV4Service {
     //                             , negoitemprices : array of tyNegoItemPrice
     //                             , negosuppliers  : array of tyNegoSupplier  ) returns array of OutputData;
 
-    action deepInsertNegoHeader(  deepinsertnegoheader : tyDeepInsertNegoheader  ) returns array of ReturnMsg;
     action deepUpsertNegoHeader(  deepupsertnegoheader : tyDeepUpsertNegoheader  ) returns array of ReturnMsg;
     action deepDeleteNegoHeader(  deepdeletenegoheader : tyDeepDeleteNegoheader  ) returns array of ReturnMsg;
 
