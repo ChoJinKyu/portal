@@ -104,6 +104,7 @@
                         <SegmentedButton 
                             id="evaluType" 
                             selectedKey="{viewModel>/cond/EQ/evaluation_type_code}"
+                            selectionChange="onSelectionChangeEvaluTypeCode"
                         />
                         <layoutData>
                             <layout:GridData span="L8 M6 S12" />
@@ -161,6 +162,13 @@
                         <ToolbarSeparator/>
                         <ToolbarSpacer/>
                         <Button 
+                            text="{I18N>/NEW}" type="Transparent" press="onPressCreate($event, 'NewLevel')" 
+                            visible="{=
+                                ${viewModel>/App/layout} !== 'TwoColumnsMidExpanded' &amp;&amp;
+                                ${viewModel>/Btn/UserEvalType}
+                            }"
+                        />
+                        <Button 
                             text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press="onPressCreate($event, 'SameLevel')" 
                             visible="{=${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'}"
                         />
@@ -174,6 +182,7 @@
                         >
                             <menu>
                                 <Menu>
+                                    <MenuItem text="{I18N>/NEW}" press="onPressCreate($event, 'NewLevel')"/>
                                     <MenuItem text="{I18N>/CREATE_SAME_LEVEL}" press="onPressCreate($event, 'SameLevel')"/>
                                     <MenuItem text="{I18N>/CREATE_LOWER_LEVEL}" press="onPressCreate($event, 'LowLevel')"/>
                                 </Menu>

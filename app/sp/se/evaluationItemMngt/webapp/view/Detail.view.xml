@@ -68,6 +68,9 @@
                                     width="100%" 
                                     showSecondaryValues="true"
                                     selectedKey="{viewModel>/Detail/NewHeader/evaluation_article_lvl_attr_cd}"
+                                    editable="{=
+                                        ${viewModel>/Args/level} !== 'new'
+                                    }"
                                 />
                                 <layoutData>
                                     <layout:GridData span="L12 M12 S12" />

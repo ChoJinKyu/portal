@@ -41,6 +41,7 @@ sap.ui.define([
                     "nodes": [],
                     "list": []
                 });
+                oViewModel.setProperty("/Btn",{});
                 
                 this._bindOrgCodeComboItem();
                 this._setEvaluExecuteModeItem();
@@ -84,9 +85,9 @@ sap.ui.define([
                 oComboOrgCode = this.byId("orgCode");
                 oUserInfo = this._getUserSession();
                 aFilters = [
-                    // new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                    // new Filter("company_code", "EQ", oUserInfo.companyCode),
-                    // new Filter("evaluation_op_unt_person_empno", "EQ", oUserInfo.evalPersonEmpno)
+                    new Filter("tenant_id", "EQ", oUserInfo.tenantId),
+                    new Filter("company_code", "EQ", oUserInfo.companyCode),
+                    new Filter("evaluation_op_unt_person_empno", "EQ", oUserInfo.evalPersonEmpno)
                 ];
                 oComboOrgCode.setSelectedKey();
                 oComboOrgCode.bindItems({
@@ -178,10 +179,12 @@ sap.ui.define([
              * 2. 첫번째 아이템으로 선택해준다.
              */
             , _bindEavluTypeItem : function(sOrgCode, sEvaluOperationUnitCode ){
-                var oBtnEavluType, aFilters, oUserInfo;
+                var oBtnEavluType, aFilters, oUserInfo, oComponent, oViewModel;
 
                 oBtnEavluType = this.byId("evaluType");
+                oComponent = this.getOwnerComponent();
                 oUserInfo = this._getUserSession();
+                oViewModel = oComponent.getModel("viewModel");
                 aFilters = [
                     new Filter("tenant_id", "EQ", oUserInfo.tenantId),
                     new Filter("company_code", "EQ", oUserInfo.companyCode),
@@ -191,19 +194,20 @@ sap.ui.define([
                 ];
                 oBtnEavluType.setSelectedKey();
                 oBtnEavluType.removeAllItems();
+                oViewModel.setProperty("/Btn/UserEvalType", false);
                 if(!sEvaluOperationUnitCode || !sOrgCode){
                     return;
                 }
                 oBtnEavluType.bindItems({
-                    path : "/UserEvalType",
+                    path : "util>/UserEvalTypeView",
                     filters : aFilters,
                     template : new SegmentedButtonItem({ 
-                        text : "{evaluation_type_name}", 
-                        key : "{evaluation_type_code}"
+                        text : "{util>evaluation_type_name}", 
+                        key : "{util>evaluation_type_code}"
                     })
                 });
 
-                this.getOwnerComponent().getModel().read("/UserEvalType",{
+                oComponent.getModel("util").read("/UserEvalTypeView",{
                     filters : aFilters,
                     urlParameters : {
                         $top : 1
@@ -214,6 +218,9 @@ sap.ui.define([
                         aResults = oData.results;
                         if(!aResults.length){
                             return;
+                        }
+                        if(aResults[0].new_flag === "Y"){
+                            oViewModel.setProperty("/Btn/UserEvalType", true);
                         }
                         sEvaluTypeCode = aResults[0].evaluation_type_code;
 
@@ -307,11 +314,42 @@ sap.ui.define([
              */
             , onPressCreate : function(oEvent, sBtnGubun){
                 var oNavParam, oTreeTable, aSelectedIdx, oContext, oRowData, oViewModel,
-                    oView, oI18NModel;
+                    oView, oI18NModel, oUserSession, oCondData;
 
                 oTreeTable = this.byId("treeTable");
                 aSelectedIdx = oTreeTable.getSelectedIndices();
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
+                oUserSession = this._getUserSession();
+                oCondData = oViewModel.getProperty("/cond");
 
+                if(sBtnGubun === "NewLevel"){
+                    if(!oCondData.EQ.evaluation_operation_unit_code){
+                        MessageBox.warning("평가운영단위가 없습니다.");
+                        return;
+                    }else if(!oCondData.EQ.evaluation_operation_unit_code){
+                        MessageBox.warning("평가유형이 없습니다.");
+                        return;
+                    }
+                    oViewModel.setProperty("/Detail", {
+                        Header : {
+                            "tenant_id" : oUserSession.tenantId,
+                            "company_code" : oUserSession.companyCode,
+                            "org_type_code" : oUserSession.orgTypeCode,
+                            "org_code" : oUserSession.orgCode,
+                            "evaluation_operation_unit_code" : oCondData.EQ.evaluation_operation_unit_code,
+                            "evaluation_type_code" : oCondData.EQ.evaluation_type_code,
+                        },
+                        NewHeader : {
+                            evaluation_article_lvl_attr_cd : "EVAL"
+                        }
+                    });
+                    this.getOwnerComponent().getRouter().navTo("Detail", {
+                        new : "Y",
+                        level : "new"
+                    });
+                    return;
+                }
                 if(!aSelectedIdx.length){
                     MessageBox.warning("선택된 데이터가 없습니다.");
                     return;
@@ -327,8 +365,6 @@ sap.ui.define([
                 }
                 oContext = oTreeTable.getContextByIndex(aSelectedIdx[0]);
                 oRowData = this._deepCopy( oContext.getObject() );
-                oView = this.getView();
-                oViewModel = oView.getModel("viewModel");
 
                 oRowData.evaluation_execute_mode_code = oRowData.evaluation_execute_mode_code || "QLTVE_EVAL";
                 oRowData.evaluation_article_type_code = oRowData.evaluation_article_type_code || "QLTVE_EVAL";
@@ -734,6 +770,31 @@ sap.ui.define([
                 this._oTPC.openDialog({
                     contentHeight : "30em"
                 });
+            }
+            , onSelectionChangeEvaluTypeCode : function(oEvent){
+                var oControl, oView, oViewModel, bUserEvalType, 
+                    oBinding, aContexts, oSeletedItem, sSelectedKey,
+                    oSeletedData;
+
+                oControl = oEvent.getSource();
+                oView = this.getView();
+                oViewModel = oView.getModel("viewModel");
+                bUserEvalType = false;
+                oBinding = oControl.getBinding("items");
+                aContexts = oBinding.getContexts();
+                sSelectedKey = oControl.getSelectedKey();
+
+                oSeletedItem = aContexts.filter(function(oContext){
+                    var oRowData = oContext.getObject();
+                    return sSelectedKey === oRowData.evaluation_type_code;
+                })[0];
+
+                if(oSeletedItem){
+                    oSeletedData = oSeletedItem.getObject();
+                    bUserEvalType = oSeletedData.new_flag === "Y" ? true : false;
+                }
+
+                oViewModel.setProperty("/Btn/UserEvalType", bUserEvalType);
             }
 
 		});
