@@ -178,7 +178,7 @@ sap.ui.define([
              * 1. 세션유저 정보를 가지고 아이템을 구성한다.
              * 2. 첫번째 아이템으로 선택해준다.
              */
-            , _bindEavluTypeItem : function(sOrgCode, sEvaluOperationUnitCode ){
+            , _bindEavluTypeItem : function(sOrgCode, sEvaluOperationUnitCode, sSelectedKey ){
                 var oBtnEavluType, aFilters, oUserInfo, oComponent, oViewModel;
 
                 oBtnEavluType = this.byId("evaluType");
@@ -192,6 +192,7 @@ sap.ui.define([
                     new Filter("org_code", "EQ", sOrgCode),
                     new Filter("use_flag", "EQ", true)
                 ];
+
                 oBtnEavluType.setSelectedKey();
                 oBtnEavluType.removeAllItems();
                 oViewModel.setProperty("/Btn/UserEvalType", false);
@@ -209,22 +210,40 @@ sap.ui.define([
 
                 oComponent.getModel("util").read("/UserEvalTypeView",{
                     filters : aFilters,
-                    urlParameters : {
-                        $top : 1
-                    },
+                    // urlParameters : {
+                    //     $top : 1
+                    // },
                     success : function(oData){
-                        var aResults, sEvaluTypeCode;
+                        var aResults, sEvaluTypeCode, bNewFlg;
 
                         aResults = oData.results;
+                        bNewFlg = false;
                         if(!aResults.length){
+                            oViewModel.setProperty("/Btn/UserEvalType", bNewFlg);
                             return;
                         }
                         if(aResults[0].new_flag === "Y"){
-                            oViewModel.setProperty("/Btn/UserEvalType", true);
+                            bNewFlg = true;
                         }
                         sEvaluTypeCode = aResults[0].evaluation_type_code;
+                        
+                        if(sSelectedKey){
+                            oBtnEavluType.setSelectedKey(sSelectedKey);
+                            aResults.some(function(item){
+                                if(item.evaluation_type_code === sSelectedKey){
+                                    if(item.new_flag === "Y"){
+                                        bNewFlg = true;
+                                    }else{
+                                        bNewFlg = false;
+                                    }
+                                }
+                                return item.evaluation_type_code === sSelectedKey;
+                            });
+                        }else{
+                            oBtnEavluType.setSelectedKey(sEvaluTypeCode);
+                        }
 
-                        oBtnEavluType.setSelectedKey(sEvaluTypeCode);
+                        oViewModel.setProperty("/Btn/UserEvalType", bNewFlg);
                     },
                     error : function(){
                         
@@ -450,11 +469,17 @@ sap.ui.define([
                     "nodes": [],
                     "list": []
                 });
-                    var aTableFilter = [
+                var aTableFilter = [
                     new Filter({ path:"tenant_id", operator : "EQ", value1 : oUserInfo.tenantId }),
                     new Filter({ path:"company_code", operator:"EQ", value1 : oUserInfo.companyCode }),
                     new Filter({ path:"org_type_code", operator:"EQ", value1 : oUserInfo.orgTypeCode })
                 ];
+
+                this._bindEavluTypeItem(
+                    oCondData.EQ.org_code, 
+                    oCondData.EQ.evaluation_operation_unit_code, 
+                    oCondData.EQ.evaluation_type_code
+                );
 
                 if(oCondData.EQ.org_code){
                     aTableFilter.push(

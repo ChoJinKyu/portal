@@ -75,7 +75,7 @@ sap.ui.define([
             }, true);
 
             this._doInitSearch();
-            //this._doInitTablePerso();
+           
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");

@@ -60,7 +60,7 @@ BEGIN
     FROM   :I_M
     ;
 
-/* 카테고리그룹코드를 사용하는 ORG_CODE 관리하는 Data를 CM_CODE에서 관리 필요 */
+/* 카테고리그룹코드를 사용하는 ORG_CODE 관리하는 Data를 CM_CODE에서 관리 */
     SELECT MAX(OM.ORG_TYPE_CODE), MIN(OO.ORG_CODE)
       INTO   V_ORG_TYPE_CODE, V_ORG_CODE
       FROM   CM_PUR_ORG_TYPE_MAPPING OM,
@@ -82,7 +82,6 @@ BEGIN
        AND   OM.TENANT_ID = 'L2101'
     GROUP BY OM.TENANT_ID
     ;
-
     V_COMPANY_CODE := 'LGESL';
 
     IF :CRUD_TYPE IN ('D', 'U') THEN
@@ -187,7 +186,7 @@ BEGIN
         /*  I_D Table의 Data 일괄 삭제 */
         DELETE FROM DP_PD_PART_CATEGORY_LNG D
         WHERE ( D.TENANT_ID,D.CATEGORY_GROUP_CODE,D.CATEGORY_CODE,D.LANGUAGE_CD ) IN
-            ( SELECT id.TENANT_ID, id.CATEGORY_GROUP_CODE, id.CATEGORY_CODE, id.LANGUAGE_CD
+            ( SELECT id.TENANT_ID, V_CATEGORY_GROUP_CODE, V_CATEGORY_CODE, id.LANGUAGE_CD
                 FROM :I_D id
                WHERE id.CRUD_TYPE_CODE = 'D'
             )
@@ -196,9 +195,9 @@ BEGIN
         /*  I_D Table의 Data 일괄 추가,수정 */
         MERGE INTO DP_PD_PART_CATEGORY_LNG D
             USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE_CODE IN ('C','U')  ) id
-            ON ( D.TENANT_ID = id.TENANT_ID
-                AND D.CATEGORY_GROUP_CODE = id.CATEGORY_GROUP_CODE
-                AND D.CATEGORY_CODE = id.CATEGORY_CODE
+            ON ( D.TENANT_ID = V_TENANT_ID
+                AND D.CATEGORY_GROUP_CODE = V_CATEGORY_GROUP_CODE
+                AND D.CATEGORY_CODE = V_CATEGORY_CODE
                 AND D.LANGUAGE_CD = id.LANGUAGE_CD )
 
         WHEN MATCHED THEN
@@ -220,8 +219,8 @@ BEGIN
                     ,SYSTEM_CREATE_DTM
                     ,SYSTEM_UPDATE_DTM
                 )
-            VALUES ( id.TENANT_ID
-                    ,id.CATEGORY_GROUP_CODE
+            VALUES ( V_TENANT_ID
+                    ,V_CATEGORY_GROUP_CODE
                     ,V_CATEGORY_CODE
                     ,id.LANGUAGE_CD
                     ,id.CODE_NAME
@@ -250,12 +249,14 @@ BEGIN
                        and cg.parent_group_code = 'DP_PD_CATEGORY_GROUP'
                        and cg.parent_code = V_CATEGORY_GROUP_CODE
                   ) isd
-            ON ( C.TENANT_ID = isd.TENANT_ID
+            ON ( C.TENANT_ID = V_TENANT_ID
                 AND C.COMPANY_CODE = V_COMPANY_CODE
                 AND C.ORG_TYPE_CODE = V_ORG_TYPE_CODE
-                AND C.ACTIVITY_CODE = V_ACTIVITY_CODE
-                AND C.CATEGORY_GROUP_CODE = isd.CATEGORY_GROUP_CODE
-                AND C.CATEGORY_CODE = isd.CATEGORY_CODE )
+                AND C.ORG_TYPE_CODE = isd.ORG_CODE
+                AND C.ACTIVITY_CODE = isd.ACTIVITY_CODE
+                AND C.PART_PROJECT_TYPE_CODE = isd.PART_PROJECT_TYPE_CODE
+                AND C.CATEGORY_GROUP_CODE = V_CATEGORY_GROUP_CODE
+                AND C.CATEGORY_CODE = V_CATEGORY_CODE )
 
         WHEN MATCHED THEN
             UPDATE
@@ -290,11 +291,11 @@ BEGIN
                     ,SYSTEM_CREATE_DTM
                     ,SYSTEM_UPDATE_DTM
                 )
-            VALUES ( isd.TENANT_ID
+            VALUES ( V_TENANT_ID
                     ,V_COMPANY_CODE
                     ,V_ORG_TYPE_CODE
                     ,isd.ORG_CODE
-                    ,V_ACTIVITY_CODE
+                    ,isd.ACTIVITY_CODE
                     ,V_CATEGORY_GROUP_CODE
                     ,V_CATEGORY_CODE
                     ,isd.PART_PROJECT_TYPE_CODE

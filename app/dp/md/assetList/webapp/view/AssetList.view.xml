@@ -183,7 +183,6 @@
                 </f:expandedContent>
                 <f:actions>
                     <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
-                    <Button text="DETAIL" type="Emphasized" press=".showAssetDetail" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -265,7 +264,6 @@
                     </OverflowToolbar>
                 </table:extension>                             
                 <table:columns >
-                    
                     <table:Column id="assetDivisionColumn" width="4.5em" hAlign="Center">
                         <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
@@ -308,12 +306,12 @@
                             <Input id="assetThirdVendor"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetProdVendorColumn" width="10em">
+                    <!-- <table:Column id="assetProdVendorColumn" width="10em">
                         <Label text="Prod Vendor" wrapping="true"/>
                         <table:template>
                             <Text id="prod_vendor" text="{list>supplier_code}"/>
                         </table:template>
-                    </table:Column>
+                    </table:Column> -->
                     <table:Column id="assetProdVendorNameColumn" width="10em">
                         <Label text="Prod Vendor Name" wrapping="true"/>
                         <table:template>

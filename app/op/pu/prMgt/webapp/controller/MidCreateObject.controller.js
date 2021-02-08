@@ -876,44 +876,27 @@ sap.ui.define([
 
 
 
-            var oTable = this.byId(tableId);
-            var aColumns = oTable.getColumns();
-            var oBinding = oTable.getBindingInfo("rows");
+            // var oTable = this.byId(tableId);
+            // var aColumns = oTable.getColumns();
+            // var oBinding = oTable.getBindingInfo("rows");
 
-            aColumns.forEach(function(oCol, idx){
-                var sLabelText = oCol.getLabel().getText();
-                console.log("##### sLabelText : " + sLabelText);
+            // aColumns.forEach(function(oCol, idx){
+            //     var sLabelText = oCol.getLabel().getText();
+            //     //console.log("##### sLabelText : " + sLabelText);
 
-                var oTemplate = oCol.getTemplate();
+            //     var oTemplate = oCol.getTemplate();
 
-                var oTemplateBindingInfo = oTemplate.getBindingInfo("value");
-                var oTemplateRequired = oTemplate.getBindingInfo("required");
+            //     var oTemplateBindingInfo = oTemplate.getBindingInfo("value");
+            //     var oTemplateRequired = oTemplate.getBindingInfo("required");
 
-                if(oTemplateBindingInfo){
-                    var oTemplateBindingInfoPath = oTemplateBindingInfo.parts[0].path;
-                    console.log("##### oTemplateBindingInfoPath > " + oTemplateBindingInfoPath);
+            //     if(oTemplateBindingInfo){
+            //         var oTemplateBindingInfoPath = oTemplateBindingInfo.parts[0].path;
+            //         //console.log("##### oTemplateBindingInfoPath > " + oTemplateBindingInfoPath);
 
-                    var oTemplateRequiredPath = oTemplateBindingInfo.parts[0].path;
-                    console.log("##### oTemplateRequiredPath > " + oTemplateRequiredPath);
-
-                }
-               
-
-                // if(oControl){
-                //     if(that.validator.validate(oControl) !== true){
-                //         MessageToast.show(that.getModel("I18N").getText("/NCM005"));
-                //         return;
-                //     }
-                // }
-
-                // if(oControl && oControl.getProperty("required")){
-                //     if(this.validator.validate(oControl) !== true){
-                //         MessageToast.show(this.getModel("I18N").getText("/NCM005"));
-                //         return;
-                //     }
-                // }
-                
-            });
+            //         var oTemplateRequiredPath = oTemplateBindingInfo.parts[0].path;
+            //         //console.log("##### oTemplateRequiredPath > " + oTemplateRequiredPath);
+            //     }
+            // });
             
 
             return bReturn;
@@ -1101,6 +1084,7 @@ sap.ui.define([
                         requestor_empno     : (item.requestor_empno) ? item.requestor_empno : this.$session.employee_number,
                         requestor_name      : (item.requestor_name) ? item.requestor_name : this.$session.employee_name,
                         delivery_request_date: delivery_request_date,
+                        //delivery_request_date: (item.delivery_request_date) ? item.delivery_request_date : "",
                         purchasing_group_code: (item.purchasing_group_code) ? item.purchasing_group_code : "",
                         price_unit          : (item.price_unit && item.price_unit !== "") ? item.price_unit+"" : "1",
                         pr_progress_status_code: "INIT",
@@ -1343,7 +1327,8 @@ sap.ui.define([
                 if(oItemData.org_code && oItemData.org_code !== ""){
                     oSelectedData.org_code = oItemData.org_code;
                     oSelectedData.org_name = oItemData.org_name;
-                    oSelectedData.org_name_desc = oItemData.org_name + " [" + oItemData.org_code + "]";                   
+                    oSelectedData.org_name_desc = oItemData.org_name + " [" + oItemData.org_code + "]";   
+                    oSelectedData.org_type_code = oItemData.org_type_code;                
                     oViewModel.refresh();
                 }
             });

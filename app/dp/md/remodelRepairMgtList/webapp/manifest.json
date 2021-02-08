@@ -185,7 +185,7 @@
                     ]
                 },
                 {
-                    "pattern": "rrMgtDetail/{moldId}",
+                    "pattern": "rrMgtDetail/{mold_id}/{request_number}",
                     "name": "rrMgtDetail",
                     "target": [
                         "rrMgtDetail"
@@ -211,7 +211,7 @@
             }
         }
     },
-    "sap.cloud": {
+    "sap.cloud": { 
         "public": true,
         "service": "sppCap_ui_dev"
     }

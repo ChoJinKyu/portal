@@ -123,7 +123,6 @@
                                     <Button type="Emphasized" text="Add Item" press=".onItemAddRow" />
                                     <Button type="Transparent" text="Add Multiple Item" press=".onItemAddMultiRow" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag}"/>
                                     <Button type="Transparent" text="Copy"  press=".onItemCopyRow" />
-                                    <!-- <Button id="btnItemEditMulti"   type="Transparent" text="Edit Multiple"  press=".onItemEditMultiRow" /> -->
                                     <Button type="Transparent" text="Delete"  press=".onItemDeleteRow" />
                                 </OverflowToolbar>
                             </table:extension>          
@@ -187,20 +186,20 @@
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_UNIT/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>   
-                                <table:Column width="9em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/DELIVERY_REQUEST_DATE/display_column_flag}">
+                                <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/DELIVERY_REQUEST_DATE/display_column_flag}">
                                     <Label text="{I18N>/DELIVERY_REQUEST_DATE}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/DELIVERY_REQUEST_DATE/mandatory_column_flag}"/> 
                                     <table:template>
-                                        <DatePicker id="i_delivery_request_date"
-                                                visible="true"
-                                                value="{
-                                                    path:'viewModel>delivery_request_date',
-                                                    type:'sap.ui.model.odata.type.DateTime',
-                                                    formatOptions: {
-                                                        UTC: true,
-                                                        pattern: 'yyyy-MM-dd'
-                                                    }
-                                                }"
-                                                required="{contModel>/DisplayFlag/OP_PU_PR_DTL/DELIVERY_REQUEST_DATE/mandatory_column_flag}"/>
+                                        <DatePicker
+                                            value="{
+                                                path:'viewModel>delivery_request_date',
+                                                type:'sap.ui.model.odata.type.Date',
+                                                formatOptions: {
+                                                    UTC: true,
+                                                    pattern: 'yyyy-MM-dd'
+                                                }
+                                            }"
+                                            placeholder="YYYY-MM-DD"
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/DELIVERY_REQUEST_DATE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>                                      
                                 <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/BUYER_EMPNO/display_column_flag}">
@@ -244,19 +243,13 @@
                                 </table:Column>   
                                 <table:Column width="7em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/PRICE_UNIT/display_column_flag}">
                                     <Label text="{path:'I18N>/PRICE_UNIT'}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PRICE_UNIT/mandatory_column_flag}"/>           
-                                    <table:template>                                        
+                                    <table:template> 
                                         <Input 
-                                            value="{
-                                                parts: [
-                                                    {path: 'viewModel>price_unit'},
-                                                    {path: 'viewModel>currency_code'}
-                                                ],
-                                                type:'sap.ui.model.type.Integer',
-                                                formatOptions:{showMeasure:false}
-                                            }"
-                                            maxLength="6"
+                                            value="{path: 'viewModel>price_unit', 
+                                                    type : 'sap.ui.model.odata.type.Decimal'}" 
                                             textAlign="End"
-                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PRICE_UNIT/mandatory_column_flag}"/> 
+                                            maxLength="5"
+                                            required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PRICE_UNIT/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column> 
                                 <table:Column width="9em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_ACCOUNT/ACCOUNT_CODE/display_column_flag}">

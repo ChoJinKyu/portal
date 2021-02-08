@@ -140,6 +140,8 @@ sap.ui.define([
                         oControl.setValueStateText("옳바른 값을 선택해 주십시오.");
                         oControl.focus();
                         return false;
+                    }else{
+                        oControl.setValueState(ValueState.None);
                     }
                 }
 

@@ -68,7 +68,7 @@ sap.ui.define([
 		// 		this.oRouter.navTo(this.sCurrentRouteName, {
 		// 			layout: sLayout, 
 		// 			tenantId: this.sCurrentTenantId, 
-		// 			controlOptionCode: this.sCurrentControlOptionCode
+		// 			activityCode: this.sCurrentActivityCode
 		// 		}, true);
 		// 	}
 		// },

@@ -61,7 +61,7 @@ sap.ui.define([
                 oArgs = e.getParameter("arguments");
                 oComponent = this.getOwnerComponent();
                 oViewModel = oComponent.getModel("viewModel");
-
+                
                 if(oArgs.search){
                     this.onPressSearch();
                 }
@@ -227,6 +227,7 @@ sap.ui.define([
                     sorters : aSorter,
                     success: function (oData) {
                         oViewModel.setProperty("/list", oData.results);
+                        
                         oView.setBusy(false);
                     }.bind(this)
                     ,error: function(){
