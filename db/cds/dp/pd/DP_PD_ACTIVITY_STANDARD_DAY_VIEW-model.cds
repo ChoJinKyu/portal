@@ -20,6 +20,12 @@ entity Pd_Activity_Standard_Day_View {
       c_grade_standard_days   : Decimal             @title: '표준일수 c' ;
       d_grade_standard_days   : Decimal             @title: '표준일수 d' ;
       active_flag             : Boolean             @title: '활성여부' ;
+      s_grade_standard_days_ori   : Decimal             @title: '표준일수 s ori' ;
+      a_grade_standard_days_ori   : Decimal             @title: '표준일수 a ori' ;
+      b_grade_standard_days_ori   : Decimal             @title: '표준일수 b ori' ;
+      c_grade_standard_days_ori   : Decimal             @title: '표준일수 c ori' ;
+      d_grade_standard_days_ori   : Decimal             @title: '표준일수 d ori' ;
+      active_flag_ori             : Boolean             @title: '활성여부 ori' ;
       update_user_id          : String(255)         @title: '최종수정자' ;
       local_update_dtm        : DateTime            @title: '최종수정일시' ;
 }
