@@ -41,7 +41,8 @@ entity Pu_Pr_Dtl {
             requestor_name  : String(50)        @title: '요청자명' ;	
             request_date    : Date              @title: '요청일자' ;	
             delivery_request_date : Date        @title: '납품요청일자' ;	
-            approval_date           : Date      @title: '결재일자' ;
+            approval_date   : Date              @title: '결재일자' ;
+            confirmed_date  : Date              @title: '확정일자' ;	
             buyer_empno     : String(30)        @title: '구매담당자사번' ;	
             buyer_department_code : String(30)  @title: '구매부서코드' ;
             purchasing_group_code : String(3)   @title: '구매그룹코드' ;	
