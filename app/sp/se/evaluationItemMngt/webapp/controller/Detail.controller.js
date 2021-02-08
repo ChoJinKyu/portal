@@ -676,7 +676,6 @@ sap.ui.define([
                         "org_code" : oHeader.org_code,
                         "evaluation_operation_unit_code" : oHeader.evaluation_operation_unit_code,
                         "evaluation_type_code" : oHeader.evaluation_type_code,
-                        "parent_evaluation_article_code" : "",
                         "evaluation_article_name" : oNewHeader.evaluation_article_name,
                         "evaluation_article_lvl_attr_cd" : oNewHeader.evaluation_article_lvl_attr_cd,
                         "user_id" : oUserInfo.loginUserId
