@@ -992,49 +992,74 @@ BEGIN
 							    )
 							    ;*/
 							    
-							    INSERT INTO  PG_VP_VENDOR_POOL_SUPPLIER_DTL
-							    (
-								    	 TENANT_ID                          ,COMPANY_CODE                        ,ORG_TYPE_CODE
-										,ORG_CODE                           ,VENDOR_POOL_CODE                    ,SUPPLIER_CODE
-										--,SUPEVAL_TARGET_FLAG
-										--,SUPPLIER_OP_PLAN_REVIEW_FLAG       
-										,SUPEVAL_CONTROL_FLAG			     ,SUPEVAL_CONTROL_START_DATE         
-										,SUPEVAL_CONTROL_END_DATE           
-										--,SUPEVAL_RESTRICT_START_DATE		 
-										--,SUPEVAL_RESTRICT_END_DATE          
-										--,INP_CODE                          
-										,SUPPLIER_RM_CONTROL_FLAG		     ,SUPPLIER_BASE_PORTION_RATE         ,VENDOR_POOL_MAPPING_USE_FLAG
-										--,APPROVAL_NUMBER --승인된 DTL의 APPR번호 재 요청할 때도 값을 넘겨야하는지
-										,LOCAL_CREATE_DTM                    ,CREATE_USER_ID         		
-										,SYSTEM_CREATE_DTM                  ,LOCAL_UPDATE_DTM                    ,UPDATE_USER_ID
-										,SYSTEM_UPDATE_DTM
-							    ) VALUES (
-							    		 loop_sup.TENANT_ID
-							    		,loop_sup.COMPANY_CODE
-							    		,loop_sup.ORG_TYPE_CODE
-							    		,loop_sup.ORG_CODE
-							    		,loop_sup.VENDOR_POOL_CODE
-							    		,loop_sup.SUPPLIER_CODE
-							    		--,IFNULL( loop_sup.SUPEVAL_TARGET_FLAG, FALSE)
-										--,IFNULL( loop_sup.SUPPLIER_OP_PLAN_REVIEW_FLAG, FALSE)
-										,IFNULL( loop_sup.SUPEVAL_CONTROL_FLAG, FALSE)
-										,TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_START_DATE )
-										,TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_END_DATE )
-										--,TRIM( ' ' FROM loop_sup.SUPEVAL_RESTRICT_START_DATE )
-										--,TRIM( ' ' FROM loop_sup.SUPEVAL_RESTRICT_END_DATE )
-										--,TRIM( ' ' FROM loop_sup.INP_CODE )
-										,IFNULL( loop_sup.SUPPLIER_RM_CONTROL_FLAG, FALSE)
-                                        ,loop_sup.SUPPLIER_BASE_PORTION_RATE
-                                        ,true
-										--,loop_sup.APPROVAL_NUMBER
-										,NOW()
-										,I_USER_ID
-										,NOW()
-										,NOW()
-										,I_USER_ID
-										,NOW()
-							    )
-							    ;
+							    /*****************************************************
+							    임시 SUPPLIER 저장(TEMP안거치고 DTL로)
+							    *****************************************************/
+							    IF TRIM( ' ' FROM loop_sup.CRUD_TYPE_CODE )  =  'C' THEN
+								    INSERT INTO  PG_VP_VENDOR_POOL_SUPPLIER_DTL
+								    (
+									    	 TENANT_ID                          ,COMPANY_CODE                        ,ORG_TYPE_CODE
+											,ORG_CODE                           ,VENDOR_POOL_CODE                    ,SUPPLIER_CODE
+											--,SUPEVAL_TARGET_FLAG
+											--,SUPPLIER_OP_PLAN_REVIEW_FLAG       
+											,SUPEVAL_CONTROL_FLAG			     ,SUPEVAL_CONTROL_START_DATE         
+											,SUPEVAL_CONTROL_END_DATE           
+											--,SUPEVAL_RESTRICT_START_DATE		 
+											--,SUPEVAL_RESTRICT_END_DATE          
+											--,INP_CODE                          
+											,SUPPLIER_RM_CONTROL_FLAG		     ,SUPPLIER_BASE_PORTION_RATE         ,VENDOR_POOL_MAPPING_USE_FLAG
+											--,APPROVAL_NUMBER --승인된 DTL의 APPR번호 재 요청할 때도 값을 넘겨야하는지
+											,LOCAL_CREATE_DTM                    ,CREATE_USER_ID         		
+											,SYSTEM_CREATE_DTM                  ,LOCAL_UPDATE_DTM                    ,UPDATE_USER_ID
+											,SYSTEM_UPDATE_DTM
+								    ) VALUES (
+								    		 loop_sup.TENANT_ID
+								    		,loop_sup.COMPANY_CODE
+								    		,loop_sup.ORG_TYPE_CODE
+								    		,loop_sup.ORG_CODE
+								    		,loop_sup.VENDOR_POOL_CODE
+								    		,loop_sup.SUPPLIER_CODE
+								    		--,IFNULL( loop_sup.SUPEVAL_TARGET_FLAG, FALSE)
+											--,IFNULL( loop_sup.SUPPLIER_OP_PLAN_REVIEW_FLAG, FALSE)
+											,IFNULL( loop_sup.SUPEVAL_CONTROL_FLAG, FALSE)
+											,TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_START_DATE )
+											,TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_END_DATE )
+											--,TRIM( ' ' FROM loop_sup.SUPEVAL_RESTRICT_START_DATE )
+											--,TRIM( ' ' FROM loop_sup.SUPEVAL_RESTRICT_END_DATE )
+											--,TRIM( ' ' FROM loop_sup.INP_CODE )
+											,IFNULL( loop_sup.SUPPLIER_RM_CONTROL_FLAG, FALSE)
+	                                        ,loop_sup.SUPPLIER_BASE_PORTION_RATE
+	                                        ,true
+											--,loop_sup.APPROVAL_NUMBER
+											,NOW()
+											,I_USER_ID
+											,NOW()
+											,NOW()
+											,I_USER_ID
+											,NOW()
+								    )
+								    ;
+								ELSEIF TRIM( ' ' FROM loop_sup.CRUD_TYPE_CODE )  =  'U' THEN
+								    UPDATE PG_VP_VENDOR_POOL_SUPPLIER_DTL
+								    SET     SUPEVAL_CONTROL_FLAG			    = IFNULL( loop_sup.SUPEVAL_CONTROL_FLAG, FALSE)     
+								    	   ,SUPEVAL_CONTROL_START_DATE          = TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_START_DATE )
+										   ,SUPEVAL_CONTROL_END_DATE            = TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_END_DATE )
+										   ,SUPPLIER_RM_CONTROL_FLAG            = IFNULL( loop_sup.SUPPLIER_RM_CONTROL_FLAG, FALSE) 
+										   ,SUPPLIER_BASE_PORTION_RATE			= loop_sup.SUPPLIER_BASE_PORTION_RATE
+										   ,LOCAL_UPDATE_DTM       				= NOW()
+										   ,UPDATE_USER_ID         				= I_USER_ID
+										   ,SYSTEM_UPDATE_DTM      				= NOW()
+									WHERE   TENANT_ID           = loop_sup.TENANT_ID
+									AND     COMPANY_CODE        = loop_sup.COMPANY_CODE
+									AND     ORG_TYPE_CODE       = loop_sup.ORG_TYPE_CODE
+									AND     ORG_CODE            = loop_sup.ORG_CODE
+									AND     VENDOR_POOL_CODE    = loop_sup.VENDOR_POOL_CODE
+									AND     SUPPLIER_CODE       = loop_sup.SUPPLIER_CODE
+								    ;
+								END IF;
+								/*****************************************************
+							    임시 SUPPLIER 저장(TEMP안거치고 DTL로) 여기까지
+							    *****************************************************/
 							    
 							    SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
 						    
