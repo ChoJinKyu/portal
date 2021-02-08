@@ -38,7 +38,9 @@ service OrgService {
     entity Pur_Operation as projection on Pur_Operation_Org;
 
     @readonly
-    view Pur_Operation_Mapping as
+    view Pur_Operation_Mapping @(restrict: [
+        { grant: 'READ', where: 'tenant_id = $user.TENANT_ID'}
+    ]) as
         select
             key map.tenant_id,
             key map.company_code,
