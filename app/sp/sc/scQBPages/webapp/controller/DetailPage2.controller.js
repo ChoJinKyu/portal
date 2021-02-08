@@ -278,6 +278,8 @@ sap.ui.define([
                 // &$select=*,Items
                 // &$expand=Items
                 this.getView().getModel("propInfo").setProperty("/mode", e.getParameter("arguments").mode );
+
+                oView.getModel("NegoHeaders").setProperty("/tenant_id", "L2100" );
                 // RFQ, TSB
                 if( this._type == "RFP" || this._type == "TSB"){
                     oView.getModel("propInfo").setProperty("/isNPMode", true );                    
@@ -289,15 +291,15 @@ sap.ui.define([
                 {
                     oView.getModel("propInfo").setProperty("/isEditMode", true );
 
-                    debugger;
-                    var oType ; // Type Text
-                    if(this._type == "TSB"){
-                        oType = "2-Step Bidding";
-                    }else if(this._type == "CPB"){
-                        oType = "Competitive Bidding";
-                    }
+                    // debugger;
+                    // var oType ; // Type Text
+                    // if(this._type == "TSB"){
+                    //     oType = "2-Step Bidding";
+                    // }else if(this._type == "CPB"){
+                    //     oType = "Competitive Bidding";
+                    // }
 
-                    oView.getModel("NegoHeaders").setProperty("/nego_type_code", oType );
+                    oView.getModel("NegoHeaders").setProperty("/nego_type_code", this._type );
 
                     
                     oView.getModel("NegoHeaders").setProperty("/local_create_dtm", new Date() );
@@ -315,7 +317,16 @@ sap.ui.define([
                     // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers)&$filter=nego_document_number eq '" + this._header_id + "'";
                     // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=*&$filter=nego_document_number eq '" + this._header_id + "'";
                     // NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers),nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,negotiation_style,award_type,award_method,award_method_map,award_method_map2,operation_org&$filter=nego_document_number
-                    var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers),nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,negotiation_style,award_type,award_method,award_method_map,award_method_map2,operation_org&$filter=nego_document_number eq '" + this._header_id + "'";
+                    // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers),nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,negotiation_style,award_type,award_method,award_method_map,award_method_map2,operation_org&$filter=nego_document_number eq '" + this._header_id + "'";
+                    // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers),nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,negotiation_style,award_type,award_method,award_method_map,award_method_map2,operation_org&$filter=nego_document_number eq '" + this._header_id + "'";
+                    // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers,specification_fk),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._header_id + "'";
+                    
+                    // var url = this.srvUrl+"NegoHeadersView?&$expand=Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._header_id + "'";
+                    var headerExpandString = "ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map";
+                    var itemsExpandString = "Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department)";
+                    var url = this.srvUrl+"NegoHeadersView?&$expand="+headerExpandString + "," + itemsExpandString+"&$filter=nego_document_number eq '" + this._header_id + "'";
+
+                    console.log( "0000 >>> " + url);
                     $.ajax({
                         url: url,
                         type: "GET",
@@ -330,6 +341,9 @@ sap.ui.define([
                             oView.getModel("NegoHeaders").setProperty("/open_date" , new Date(data.value[0].open_date));
                             oView.getModel("NegoHeaders").setProperty("/closing_date" , new Date(data.value[0].closing_date));
                             oView.getModel("NegoHeaders").setProperty("/local_create_dtm" , new Date(data.value[0].local_create_dtm));
+
+                            oView.getModel("NegoHeaders").setProperty("/nego_document_desc" , decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))) );
+                            oView.getModel("NegoHeaders").setProperty("/note_content" , decodeURIComponent(escape(window.atob(data.value[0].note_content))) );
                             
     
                             oView.getModel("viewModel").updateBindings(true);      
@@ -385,21 +399,34 @@ sap.ui.define([
                 return promise;
             },
             onPageCancelButtonPress: function() {
-                this.getView().getModel("propInfo").setProperty("/isEditMode", false );
-                this.getView().byId("tableLines").setSelectedIndex(-1);
-                // this.getView().getModel("NegoHeaders")
-                // this.getView().getModel("NegoItemPrices")
+                 // console.log("onPageCancelButtonPress :: " + this._)
 
-                // this.getView().setModel(this.viewModel, "viewModel");
-                // this.getView().setModel( new JSONModel(), "NegoHeaders");
-                // this.getView().setModel( new JSONModel(), "NegoItemPrices");
-                // this.getView().setModel( new JSONModel(), "NegoItemSuppliers");
-                // 
-                // this.onNavBack();
+                MessageBox.confirm(this.getModel("I18N").getText("/NCM00007"), {
+					title : this.getModel("I18N").getText("/EDIT_CANCEL"),
+					initialFocus : sap.m.MessageBox.Action.CANCEL,
+					onClose : function(sButton) {
+						if (sButton === MessageBox.Action.OK) {
+                            var oMode = $.sap.negoMode;
+
+                            this.getView().getModel("propInfo").setProperty("/isEditMode", false );
+                            this.getView().byId("tableLines").setSelectedIndex(-1);
+
+                            this.onNavBack();
+
+                            // if( oMode === "NW" ) {
+                            //     this.onNavBack();
+                            // }else {
+                            //     // 초기화
+                            // }
+						}
+					}.bind(this)
+				});
+
+                                // this.onNavBack();
             },
             onPageDeleteButtonPress: function() {
-                // this._CallDeleteProc();
-                this._CallInsertProc();
+                this._CallDeleteProc();
+                // this._CallInsertProc();
             },
             onPageEditButtonPress: function() {
                 this.getView().getModel("propInfo").setProperty("/isEditMode", true );
@@ -407,10 +434,13 @@ sap.ui.define([
             },
             onPageSaveButtonPress: function() {
                 
-                MessageBox.confirm( "개발진행 중입니다. Sprint#2" , {});
+                // MessageBox.confirm( "개발진행 중입니다. Sprint#2" , {});
 
-                return;
+                // return;
+                console.log( this.getView().getModel("NegoHeaders").getData());
+                var oModel = this.getView().getModel("NegoHeaders");
 
+                this._CallInsertProc();
             //     var oModel = this.getView().getModel(),
             //     oView = this.getView(),
             //   //  table = this.byId("mainTable"),
@@ -734,9 +764,9 @@ sap.ui.define([
                 var supplierItem = {
                     "_row_state_" : "C",
                     "tenant_id": oObj.tenant_id,
-                    "nego_header_id": String(oObj.nego_header_id),
+                    "nego_header_id": Number(this.getCheckObject(oObj,"nego_header_id",-1)),
                     "nego_item_number": oObj.nego_item_number,
-                    "item_supplier_sequence": oObj.item_supplier_sequence,
+                    "item_supplier_sequence": this.getCheckObject(oObj,"item_supplier_sequence", ""),
                     "operation_org_code": oObj.operation_org_code,
                     "operation_unit_code": oObj.operation_unit_code,
                     "nego_supplier_register_type_code": "S",
@@ -888,8 +918,8 @@ sap.ui.define([
                     "Suppliers" : [],
 
                     "tenant_id": oTemp.tenant_id,
-                    "nego_header_id"     : Number(oTemp.nego_header_id),
-                    "nego_item_number"     : "0000" + itemNumberTemp,
+                    "nego_header_id"     : Number(this.getCheckObject(oTemp,"nego_header_id",-1)),
+                    "nego_item_number"     : "TBD00" + itemNumberTemp,
                     "operation_unit_code"     : "",
                     "award_progress_status_code"     : "",
                     "line_type_code"     : "",
@@ -1023,6 +1053,7 @@ sap.ui.define([
                 console.log( "selectedIndices: " + selectedIndices );
                 if( selectedIndices.length > 0 ) {
                     // this.supplierSelection.showSupplierSelection(this, e, "L1100", "", true);
+                    this.getView().byId("panel_SuppliersContent").setExpanded(false);
                     this.onMultiInputSupplierWithOrgValuePress(null);
 
                 }else {
@@ -1190,7 +1221,7 @@ sap.ui.define([
                                     // datePickerMaturitydate
                                     // inputCurrentPrice
                                     if( cell.getId().indexOf("comboBoxSpecification") != -1 ) { 
-                                        objTemp.specification = cell.getSelectedKey();
+                                        objTemp.specification_code = cell.getSelectedKey();
                                     }
                                     if( cell.getId().indexOf("inputQuantity") != -1 ) { 
                                         objTemp.request_quantity = Number(cell.getValue());
@@ -1273,7 +1304,7 @@ sap.ui.define([
                     });
 
                     this.oPurOperationOrgMultiSelectionValueHelp.attachEvent("apply", function (oEvent) {
-                        this.byId("multiinput_purOperationOrg_code").setTokens(oEvent.getSource().getTokens());
+                        // this.byId("multiinput_purOperationOrg_code").setTokens(oEvent.getSource().getTokens());
                         var resultTokens = oEvent.getParameter("item");
 
                         // company_code: "*"
@@ -1284,14 +1315,14 @@ sap.ui.define([
                         // purchase_org_code: null
                         // tenant_id: "L1100"
                         // use_flag: true
-                        var oItem = this.getView().getModel("NegoHeaders").getData().Items[this._oIndex];
-                        oItem.operation_unit_code = resultTokens.org_code;
-                        oItem.operation_unit_name = resultTokens.org_name;
+                        // var oItem = this.getView().getModel("NegoHeaders").getData().Items[this._oIndex];
+                        // oItem.operation_unit_code = resultTokens.org_code;
+                        // oItem.operation_unit_name = resultTokens.org_name;
 
-                        this.getView().getModel("NegoHeaders").refresh();
+                        // this.getView().getModel("NegoHeaders").refresh();
 
                         console.log(resultTokens);
-                        console.log(oEvent.getSource().getTokens());
+                        this.setOrgCode( resultTokens );
                         // this.onSupplierResult(resultTokens);
                     }.bind(this));
                 }
@@ -1311,24 +1342,236 @@ sap.ui.define([
                 // this.oPurOperationOrgMultiSelectionValueHelp.open();
             },
 
+            onSuggesionItemSelectedOprOrg: function (e) {
+                console.log("onSuggesionItemSelectedOprOrg ")
+                this._oIndex = e.oSource.getParent().getParent().getIndex();
+
+                var sPath = e.getSource().getParent().getBindingContext("NegoHeaders").getPath();
+
+                this._selectedLineItem = this.getView().getModel("NegoHeaders").getProperty(sPath);
+                this.getView().getModel("NegoItemPrices").setData(this._selectedLineItem);
+                
+                var oSelectedItem = e.getParameter("selectedItem");
+
+                var resultTokens = {
+                    org_code: oSelectedItem.getProperty("key"),
+                    org_name: oSelectedItem.getProperty("text")
+                }
+                this.setOrgCode( resultTokens );
+
+            },
+            /** Operation Org 변경시 항목 처리 */
+            setOrgCode: function (resultTokens) {
+                var oItem = this.getView().getModel("NegoHeaders").getData().Items[this._oIndex];
+                oItem.operation_unit_code = resultTokens.org_code;
+                oItem.operation_unit_name = resultTokens.org_name;
+
+                this.getView().getModel("NegoHeaders").refresh();
+            },
+            htmlEncoding: function (value) {
+                return btoa(unescape(encodeURIComponent(value)))
+            },
+            getCheckObject: function (oObj, oField , returnValue ) {
+                var resultVale;// = (typeof returnValue === "number" ? Number())
+                if( typeof returnValue === "number" ) {
+                    resultVale = Number( oObj[oField] );
+                }else if( typeof returnValue === "object" ){ // date type
+                    resultVale = new Date( oObj[oField] );
+                }else {
+                    if( returnValue === "encoding" ){
+                        resultVale = this.htmlEncoding(oObj[oField]);
+                    }else {
+                        resultVale = oObj[oField];
+                    }                    
+                }
+
+                return oObj.hasOwnProperty(oField) ? resultVale : returnValue;
+
+            },
+            getNegoHeaderObject : function (){
+                var oModel = this.getView().getModel("NegoHeaders").getData();
+                console.log( ":<<< getNegoHeaderObject >>> " );
+                console.log( oModel ); //// nego_document_desc, note_content
+                var negoheader = {
+                    tenant_id                       : oModel.tenant_id,
+                    nego_header_id                  : this.getCheckObject(oModel,"nego_header_id",-1),
+                    reference_nego_header_id        : this.getCheckObject(oModel,"reference_nego_header_id",0),
+                    previous_nego_header_id         : this.getCheckObject(oModel,"previous_nego_header_id",0),
+                    operation_org_code              : this.getCheckObject(oModel,"operation_org_code",""),
+                    operation_unit_code             : this.getCheckObject(oModel,"operation_unit_code",""),
+                    reference_nego_document_number  : this.getCheckObject(oModel,"reference_nego_document_number",0),
+                    nego_document_round             : this.getCheckObject(oModel,"nego_document_round",0),
+                    nego_document_number            : this.getCheckObject(oModel,"nego_document_number",""),
+                    nego_document_title             : this.getCheckObject(oModel,"nego_document_title",""),
+                    nego_document_desc              : this.getCheckObject(oModel,"nego_document_desc","encoding"),  // encoding
+                    nego_progress_status_code       : this.getCheckObject(oModel,"nego_progress_status_code",""),
+                    award_progress_status_code      : this.getCheckObject(oModel,"award_progress_status_code",""),
+                    reply_times                     : this.getCheckObject(oModel,"reply_times",0),
+                    supplier_count                  : this.getCheckObject(oModel,"supplier_count",0),
+                    nego_type_code                  : this.getCheckObject(oModel,"nego_type_code",""),
+                    outcome_code                    : this.getCheckObject(oModel,"outcome_code",""),
+                    negotiation_output_class_code   : this.getCheckObject(oModel,"negotiation_output_class_code",""),
+                    buyer_empno                     : this.getCheckObject(oModel,"buyer_empno",""),
+                    buyer_department_code           : this.getCheckObject(oModel,"buyer_employee",""), // ??
+                    immediate_apply_flag            : this.getCheckObject(oModel,"immediate_apply_flag",""),
+                    open_date                       : this.getCheckObject(oModel,"open_date", new Date()),
+                    closing_date                    : this.getCheckObject(oModel,"closing_date", new Date()),
+                    auto_rfq                        : this.getCheckObject(oModel,"auto_rfq",""),
+                    items_count                     : this.getCheckObject(oModel,"items_count",0),
+                    negotiation_style_code          : this.getCheckObject(oModel,"negotiation_style_code",""),
+                    close_date_ext_enabled_hours    : Number(this.getCheckObject(oModel,"close_date_ext_enabled_hours",0)),
+                    close_date_ext_enabled_count    : Number(this.getCheckObject(oModel,"close_date_ext_enabled_count",0)),
+                    actual_extension_count          : Number(this.getCheckObject(oModel,"actual_extension_count",0)),
+                    remaining_hours                 : this.getCheckObject(oModel,"remaining_hours",0),
+                    note_content                    : this.getCheckObject(oModel,"note_content","encoding"),  // encoding
+                    award_type_code                 : this.getCheckObject(oModel,"oModel.award_type_code",""),
+                    award_method_code               : this.getCheckObject(oModel,"award_method_code",""),
+                    target_amount_config_flag       : this.getCheckObject(oModel,"target_amount_config_flag",""),
+                    target_currency                 : this.getCheckObject(oModel,"target_currency",""),
+                    target_amount                   : this.getCheckObject(oModel,"target_amount",0),
+                    supplier_participation_flag     : this.getCheckObject(oModel,"supplier_participation_flag",""),
+                    partial_allow_flag              : this.getCheckObject(oModel,"partial_allow_flag",""),
+                    bidding_result_open_status_code : this.getCheckObject(oModel,"bidding_result_open_status_code","")
+
+                    // local_create_dtm                : new Date(),
+                    // local_update_dtm                : new Date(),
+                    // create_user_id                  : "A60252",
+                    // update_user_id                  : "A60252",
+                    // system_create_dtm               : new Date(),
+                    // system_update_dtm               : new Date()
+                };
+                return negoheader;
+            },
+
+            getNegoItemObject : function ( sFlag ){     // oFlag : C (생성), U(수정), D(삭제)
+                var oModel = this.getView().getModel("NegoHeaders").getData().Items;
+                console.log( ":<<< getNegoItemObject >>> " );
+                var negoitemprices = [];
+                var negosuppliers = [];
+                // oModel.forEach(element => {
+                oModel.forEach(function(element, index, array){
+                    // if( element.hasOwnProperty("_row_state_") && element._row_state_ === sFlag ) {
+                    var createIdTemp = "";//(element._row_state_ === "C") ? "TBD00" +(index+1) : "";
+
+                    var oItem = {
+                        tenant_id                    : this.getCheckObject(element,"tenant_id",""),
+                        nego_header_id               : this.getCheckObject(element,"nego_header_id",-1),
+                        nego_item_number             : this.getCheckObject(element,"nego_item_number",createIdTemp) ,
+                        // nego_item_number             : (element._row_state_ === "C") ? createIdTemp : this.getCheckObject(element,"nego_item_number","") ,
+                        operation_org_code           : this.getCheckObject(element,"operation_org_code",""),
+                        operation_unit_code          : this.getCheckObject(element,"operation_unit_code",""),
+                        award_progress_status_code   : this.getCheckObject(element,"award_progress_status_code",""),
+                        line_type_code               : this.getCheckObject(element,"line_type_code",""),
+                        material_code                : this.getCheckObject(element,"material_code",""),
+                        material_desc                : this.getCheckObject(element,"material_desc",""),
+                        specification                : this.getCheckObject(element,"specification",""),
+                        bpa_price                    : this.getCheckObject(element,"bpa_price",0),
+                        detail_net_price             : this.getCheckObject(element,"detail_net_price",0),
+                        recommend_info               : this.getCheckObject(element,"recommend_info",""),
+                        group_id                     : this.getCheckObject(element,"group_id",""),
+                        // sparts_supply_type           : element.sparts_supply_type,
+                        location                     : this.getCheckObject(element,"location",""),
+                        purpose                      : this.getCheckObject(element,"purpose",""),
+                        reason                       : this.getCheckObject(element,"reason,",""),
+                        request_date                 : this.getCheckObject(element,"request_date",new Date()),
+                        attch_code                   : this.getCheckObject(element,"attch_code",""),
+                        supplier_provide_info        : this.getCheckObject(element,"supplier_provide_info",""),
+                        incoterms_code               : this.getCheckObject(element,"incoterms_code",""),
+                        excl_flag                    : this.getCheckObject(element,"excl_flag",""),
+                        specific_supplier_count      : this.getCheckObject(element,"specific_supplier_count",0),
+                        vendor_pool_code             : this.getCheckObject(element,"vendor_pool_code",""),
+                        request_quantity             : this.getCheckObject(element,"request_quantity",0),
+                        uom_code                     : this.getCheckObject(element,"uom_code",""),
+                        maturity_date                : this.getCheckObject(element,"maturity_date",new Date()),
+                        currency_code                : this.getCheckObject(element,"currency_code",""),
+                        response_currency_code       : this.getCheckObject(element,"response_currency_code",""),
+                        exrate_type_code             : this.getCheckObject(element,"exrate_type_code",""),
+                        exrate_date                  : this.getCheckObject(element,"exrate_date",new Date()),
+                        bidding_start_net_price      : this.getCheckObject(element,"bidding_start_net_price",0),
+                        bidding_start_net_price_flag : this.getCheckObject(element,"bidding_start_net_price_flag", false),
+                        bidding_target_net_price     : this.getCheckObject(element,"bidding_target_net_price",0),
+                        current_price                : this.getCheckObject(element,"current_price",0),
+                        note_content                 : this.getCheckObject(element,"note_content",""),
+                        pr_number                    : this.getCheckObject(element,"pr_number",""),
+                        pr_approve_number            : this.getCheckObject(element,"pr_approve_number",""),
+                        req_submission_status        : this.getCheckObject(element,"req_submission_status",""),
+                        req_reapproval               : this.getCheckObject(element,"req_reapproval",""),
+                        requisition_flag             : this.getCheckObject(element,"requisition_flag",""),
+                        price_submission_no          : this.getCheckObject(element,"price_submission_no",""),
+                        price_submisstion_status     : this.getCheckObject(element,"price_submisstion_status",""),
+                        interface_source             : this.getCheckObject(element,"interface_source",""),
+                        requestor_empno              : this.getCheckObject(element,"requestor_empno",""),
+                        budget_department_code       : this.getCheckObject(element,"budget_department_code",""),
+                        request_department_code      : this.getCheckObject(element,"request_department_code","")
+                    };
+                    negoitemprices.push(oItem);
+                    // }
+
+                    var oSuplpiers = element.Suppliers;
+                    oSuplpiers.forEach(element2 => {
+
+                        // if( element2.hasOwnProperty("_row_state_") && element2._row_state_ === sFlag ) {
+
+                            var oSupplierItem = {
+                                tenant_id                        : this.getCheckObject(element2,"tenant_id",""),
+                                nego_header_id                   : this.getCheckObject(element2,"nego_header_id",-1),
+                                nego_item_number                 : oItem.nego_item_number,//this.getCheckObject(element2,"nego_item_number", createIdTemp ),
+                                // nego_item_number                 : (sFlag === "C") ? createIdTemp : this.getCheckObject(element,"nego_item_number","") ,
+                                item_supplier_sequence           : this.getCheckObject(element2,"item_supplier_sequence",""),
+                                operation_org_code               : this.getCheckObject(element2,"operation_org_code",""),
+                                operation_unit_code              : this.getCheckObject(element2,"operation_unit_code",""),
+                                nego_supplier_register_type_code : this.getCheckObject(element2,"nego_supplier_register_type_code",""),
+                                evaluation_type_code             : this.getCheckObject(element2,"evaluation_type_code",""),
+                                nego_supeval_type_code           : this.getCheckObject(element2,"nego_supeval_type_code",""),
+                                supplier_code                    : this.getCheckObject(element2,"supplier_code",""),
+                                supplier_name                    : this.getCheckObject(element2,"supplier_name",""),
+                                supplier_type_code               : this.getCheckObject(element2,"supplier_type_code",""),
+                                excl_flag                        : this.getCheckObject(element2,"excl_flag",""),
+                                excl_reason_desc                 : this.getCheckObject(element2,"excl_reason_desc",""),
+                                include_flag                     : this.getCheckObject(element2,"include_flag",""),
+                                nego_target_include_reason_desc  : this.getCheckObject(element2,"nego_target_include_reason_desc",""),
+                                only_maker_flat                  : this.getCheckObject(element2,"only_maker_flat",""),
+                                contact                          : this.getCheckObject(element2,"contact",""),
+                                note_content                     : this.getCheckObject(element2,"note_content","")
+                            };
+                            negosuppliers.push(oSupplierItem);
+                        // }
+                    });
+                }.bind(this));
+                
+                return {negoitemprices : negoitemprices,
+                        negosuppliers : negosuppliers};
+            },
+
             //Insert 프로시저 호출
             _CallInsertProc: function () {
+                // this.getNegoHeaderObject();
+
+                // console.log(  this.getNegoItemObject() );
+                // return;
+
                 //return model
                 var that = this;
-                var oModel = this.getView().getModel("NegoHeaders");
                 var oView = this.getView(),
                     v_returnModel,
-                    urlInfo = "srv-api/odata/v4/sp.sourcingV4Service/deepInsertNegoHeader"; // delete
+                    urlInfo = "srv-api/odata/v4/sp.sourcingV4Service/deepUpsertNegoHeader"; // delete
+                var oModel = oView.getModel("NegoHeaders");
+
                 var inputInfo = {
-                    "deepinsertnegoheader" : {
+                    "deepupsertnegoheader" : {
                         "negoheaders": [
-                            { "tenant_id": oModel.getProperty("/tenant_id"), "nego_header_id":  oModel.getProperty("/nego_header_id") }
+                            // { "tenant_id": oModel.tenant_id, "nego_header_id":  oModel.nego_header_id}
+                            // oModel
+                            this.getNegoHeaderObject()
                         ],
-                        "negoitemprices" : [],
-                        "negosuppliers" : []
+                        "negoitemprices" : this.getNegoItemObject("C").negoitemprices,
+                        "negosuppliers" : this.getNegoItemObject("C").negosuppliers
                     }
                 };
-                // console.log(inputInfo);
+                console.log(inputInfo);
+
+                // return;
+
                 $.ajax({
                     url: urlInfo,
                     type: "POST",
@@ -1355,7 +1598,7 @@ sap.ui.define([
             _CallDeleteProc: function () {
                 //return model
                 var that = this;
-                var oModel = this.getView().getModel("NegoHeaders");
+                var oModel = this.getView().getModel("NegoHeaders");//.getData();
                 var oView = this.getView(),
                     v_returnModel,
                     urlInfo = "srv-api/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader"; // delete
@@ -1369,7 +1612,9 @@ sap.ui.define([
                         "negosuppliers" : []
                     }
                 };
-                // console.log(inputInfo);
+                console.log(inputInfo);
+
+                return;
                 $.ajax({
                     url: urlInfo,
                     type: "POST",
@@ -1391,6 +1636,8 @@ sap.ui.define([
                 });
 
             },
+
+
             inputAwardSupChange: function(e){
 
                 var oId = e.getParameters().id;

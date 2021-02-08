@@ -89,7 +89,7 @@
 
                                                                 <VBox class="sapUiNoMarginBottom">
                                                                     <Label  text="Type"  />
-                                                                    <Text  id="textType" text="{NegoHeaders>/nego_type_code}" />
+                                                                    <Text  id="textType" text="{NegoHeaders>/nego_type/nego_type_name}" />
                                                                 </VBox>
 
                                                                 <VBox class="sapUiNoMarginBottom">
