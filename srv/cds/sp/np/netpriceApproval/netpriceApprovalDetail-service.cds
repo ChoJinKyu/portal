@@ -57,17 +57,18 @@ service NpApprovalDetailService {
         SELECT
                 key pam.tenant_id
              ,      cam.company_code
-             ,      cam.org_type_code
-             ,      cam.org_code	                            /* operating org */
+             //,      cam.org_type_code
+             //,      cam.org_code	                            /* operating org */
              ,  key pam.approval_number                         /* Approval No. */
 
+             /* 
              ,  (SELECT org.org_name
                    FROM CM_PUR_OPERATION_ORG  org
                   WHERE org.tenant_id     = pam.tenant_id
                     AND org.company_code  = cam.company_code
                     AND org.org_type_code = cam.org_type_code
                     AND org.org_code      = cam.org_code
-			    ) AS org_name : String                          /* org */
+			    ) AS org_name : String                       /  org */
 
 
             ,   cam.requestor_empno                             /* requestor */
