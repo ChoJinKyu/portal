@@ -72,6 +72,19 @@ service RrMgtListService {
                         and l.code = mst.mold_production_type_code
                         and l.tenant_id = mst.tenant_id
                 )  as mold_production_type_code_nm : String(240),
+                mst.mold_item_type_code,
+                (
+                    select l.code_name from codeLng.Code_Lng l 
+                     join sppUserSession.Spp_User_Session_View ses
+                        on (
+                            l.tenant_id = ses.TENANT_ID
+                            and l.language_cd = ses.LANGUAGE_CODE
+                        )
+                    where
+                            l.group_code  = 'DP_MD_ITEM_TYPE'
+                        and l.code        = mst.mold_item_type_code
+                        and l.tenant_id   = mst.tenant_id
+                ) as mold_item_type_code_nm       : String(240),
                 mst.mold_mfger_code,
                 sup.supplier_local_name as mold_mfger_code_nm : String(240), 
                 mst.supplier_code,
