@@ -99,7 +99,21 @@ public class SourcingV4 implements EventHandler {
                 .append("     , target_amount                                                     ")  //#36
                 .append("     , supplier_participation_flag                                       ")  //#37
                 .append("     , partial_allow_flag                                                ")  //#38
-                .append("     , bidding_result_open_status_code                                   ")  //#39
+                .append("     , max_round_count                                                   ")  //#39
+                .append("     , auto_round                                                        ")  //#40
+                .append("     , auto_round_terms                                                  ")  //#41
+                .append("     , previous_round                                                    ")  //#42
+                .append("     , number_of_award_supplier                                          ")  //#43
+                .append("     , order_rate_01                                                     ")  //#44
+                .append("     , order_rate_02                                                     ")  //#45
+                .append("     , order_rate_03                                                     ")  //#46
+                .append("     , order_rate_04                                                     ")  //#47
+                .append("     , order_rate_05                                                     ")  //#48
+                .append("     , bid_conference                                                    ")  //#49
+                .append("     , bid_conference_date                                               ")  //#50
+                .append("     , bid_conference_place                                              ")  //#51
+                .append("     , contact_point_empno                                               ")  //#52
+                .append("     , phone_no                                                          ")  //#53
                 .append("  FROM SP_SC_NEGO_HEADERS WHERE 1=0 )                                    ");
 
 		// create temp table: local_temp_negoitemprices

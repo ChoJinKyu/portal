@@ -171,7 +171,7 @@ entity Sc_Nego_Item_Prices {
         excl_flag                    : String(1)                                  @title : '제외여부';
         //    ship_to_location_id : String(30)   @title: '납품처위치코드' ;
         specific_supplier_count      : Integer                                    @title : 'Specific Supplier 개수'  @description : 'UI:Specific Supplier (숫자)';
-        vendor_pool_code             : String(100)                                @title : '협력사풀코드';
+        vendor_pool_code             : String(100)                                @title : '협력사풀코드' @description : 'TBD:마스터매핑필요';
         request_quantity             : Decimal(28,3)                              @title : '요청수량'  @description : 'UI:Quantity (수량)';
         uom_code                     : String(3)                                  @title : 'UOM코드'  @description : 'UI:UOM';
         maturity_date                : DateTime                                   @title : '만기일자'  @description : 'UI:납기 요청일';

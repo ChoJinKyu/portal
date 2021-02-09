@@ -7,7 +7,7 @@
 # Cloud Container Service : sppCap
 @serviceUrl = https://lg-clu-lgcommondev-msa1-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com
 # Local PC[DB+AP] : cds serve all --with-mocks --in-memory?
-@serviceUrl = http://localhost:4004
+@serviceUrlNode = http://localhost:4004
 # Cloud Container Service : sppCap New V4 
 @serviceUrl = https://biztech-partners-co---ltd-lg-common-dev-dev-po-sppcap-srv-dev.cfapps.jp10.hana.ondemand.com/odata/v4
 # Cloud Container Service : sppCap New V2
@@ -26,6 +26,7 @@
 @reviews-serviceV2 = {{serviceUrlV2}}/sp.sourcingService
 # Odata v4 service
 @reviews-service = {{serviceUrl}}/sp.sourcingV4Service
+@reviews-serviceNode = {{serviceUrlNode}}/sp.sourcingV4Service
 
 #################################################
 # OData Service Configuration
@@ -116,3 +117,11 @@ Accept: application/json
 Accept-Language: en-US
 # Accept-Datetime: 12
 # Accept-Language: ko-KR
+
+
+
+### Multi Select V4
+GET {{reviews-serviceNode}}/NegoWorkbenchView?&$top=5
+# &$
+Accept-Language: ko
+Accept: application/json; odata.metadata=full

@@ -99,7 +99,7 @@ service SourcingV4Service {
         outcome_code                    : type of Sc_Nego_Headers : outcome_code;
         negotiation_output_class_code   : type of Sc_Nego_Headers : negotiation_output_class_code;
         buyer_empno                     : type of Sc_Nego_Headers : buyer_empno;
-        buyer_department_code           : type of Sc_Nego_Headers : buyer_department_code;
+        buyer_department_code           : type of Sc_Nego_Headers : buyer_department_code;  
         immediate_apply_flag            : type of Sc_Nego_Headers : immediate_apply_flag;
         open_date                       : type of Sc_Nego_Headers : open_date;
         closing_date                    : type of Sc_Nego_Headers : closing_date;
@@ -119,6 +119,26 @@ service SourcingV4Service {
         supplier_participation_flag     : type of Sc_Nego_Headers : supplier_participation_flag;
         partial_allow_flag              : type of Sc_Nego_Headers : partial_allow_flag;
         bidding_result_open_status_code : type of Sc_Nego_Headers : bidding_result_open_status_code;
+
+        //// 20210209 추가 - 입찰 전용 필드
+        // negotiation_style_code          : type of Sc_Nego_Headers : negotiation_style_code;       // #견적&입찰공통#Bid Style	--# 기존필드
+        max_round_count                 : type of Sc_Nego_Headers : max_round_count;              // Max Round Count	
+        auto_round                      : type of Sc_Nego_Headers : auto_round;                   // Auto Round	
+        auto_round_terms                : type of Sc_Nego_Headers : auto_round_terms;             // Minute(Auto Round Terms)	
+        previous_round                  : type of Sc_Nego_Headers : previous_round;               // Previous Round	
+        // award_type_code                 : type of Sc_Nego_Headers : award_type_code;              // #견적&입찰공통#Award Type	--# 기존필드
+        // award_method_code               : type of Sc_Nego_Headers : award_method_code;            // #견적&입찰공통#Award Method	--# 기존필드
+        number_of_award_supplier        : type of Sc_Nego_Headers : number_of_award_supplier;     // Number of Award Supplier	
+        order_rate_01                   : type of Sc_Nego_Headers : order_rate_01;                // ..05	Order Rate	
+        // target_amount_config_flag       : type of Sc_Nego_Headers : target_amount_config_flag;    // #견적&입찰공통#Target Price Setup 여부	--# 기존필드
+        // target_amount                   : type of Sc_Nego_Headers : target_amount;                // #견적&입찰공통#Target Total Amount	--# 기존필드
+        // supplier_participation_flag     : type of Sc_Nego_Headers : supplier_participation_flag;  // #견적&입찰공통#Intention of Supplier Participation  	
+        // partial_allow_flag              : type of Sc_Nego_Headers : partial_allow_flag;           // #견적&입찰공통#Partial Quotation	
+        bid_conference                  : type of Sc_Nego_Headers : bid_conference;               // Bid Conference	
+        bid_conference_date             : type of Sc_Nego_Headers : bid_conference_date;          // Bid Conference Date	
+        bid_conference_place            : type of Sc_Nego_Headers : bid_conference_place;         // Bid Conference Place	
+        contact_point_empno             : type of Sc_Nego_Headers : contact_point_empno;          // Contact Point	
+        phone_no                        : type of Sc_Nego_Headers : phone_no;                     // Phone No	
     };
 
     type tyNegoItemPrice {
@@ -144,6 +164,8 @@ service SourcingV4Service {
         attch_code                   : type of Sc_Nego_Item_Prices : attch_code;
         supplier_provide_info        : type of Sc_Nego_Item_Prices : supplier_provide_info;
         incoterms_code               : type of Sc_Nego_Item_Prices : incoterms_code;
+        payment_terms_code           : type of Sc_Nego_Item_Prices : payment_terms_code;
+        market_code                  : type of Sc_Nego_Item_Prices : market_code;
         excl_flag                    : type of Sc_Nego_Item_Prices : excl_flag;
         specific_supplier_count      : type of Sc_Nego_Item_Prices : specific_supplier_count;
         vendor_pool_code             : type of Sc_Nego_Item_Prices : vendor_pool_code;
@@ -263,86 +285,102 @@ service SourcingV4Service {
     // @(title:'UI:Workbench 뷰',description:'Nego(Header+ItemPrices) 정형뷰',readonly) 
     // @(title:'Nego(Header+ItemPrices) 정형뷰',description:'UI:Workbench 정형뷰',readonly)  
     entity NegoWorkbenchView2 as projection on Sc_Nego_Workbench_View2;
+    
     view NegoWorkbenchView3 as select from Sc_Nego_Headers_View {
-    Key tenant_id                        ,
-    Key nego_header_id                   ,
-    Key Items.tenant_id   as items_tenant_id   ,
-    Key Items.nego_header_id  as     items_nego_header_id            ,
-    Key Items.nego_item_number  as   items_nego_item_number          ,
-        nego_document_number                                         ,
-        nego_document_round                                          ,
-        nego_progress_status_code                                    ,
-        award_progress_status_code                                   ,
-        reply_times                                                  ,
-        supplier_count                                               ,
-        supplier_participation_flag                                  ,
-        remaining_hours                                              ,
-        nego_document_title                                          ,
-        items_count                                                  ,
-        nego_type_code                                               ,
-        negotiation_style_code                                       ,
-        bidding_result_open_status_code                              ,
-        negotiation_output_class_code                                ,
-        Items.pr_approve_number                                      ,
-        Items.req_submission_status                                  ,
-        Items.req_reapproval                                         ,
-        Items.material_code                                          ,
-        Items.material_desc                                          ,
-        Items.requestor_empno                                        ,
-        Items.request_department_code                                ,
-        award_type_code                                              ,
-        buyer_empno                                                  ,
-        buyer_department_code                                        ,
-        open_date                                                    ,
-        closing_date                                                 ,
-        close_date_ext_enabled_hours                                 ,
-        close_date_ext_enabled_count                                 ,
-        actual_extension_count                                       ,
-        Items.requisition_flag                                       ,
-        Items.price_submission_no                                    ,
-        Items.price_submisstion_status                               ,
-        local_create_dtm                                             ,
+    key tenant_id                                                                                   ,
+    key nego_header_id                                                                              ,
+    key ifnull(Items.nego_item_number,'') as nego_item_number :Sc_Nego_Item_Prices: nego_item_number,
+        nego_document_number                                                                        ,
+        nego_document_round                                                                         ,
+        nego_progress_status_code                                                                   ,
+        award_progress_status_code                                                                  ,
+        reply_times                                                                                 ,
+        supplier_count                                                                              ,
+        supplier_participation_flag                                                                 ,
+        remaining_hours                                                                             ,
+        nego_document_title                                                                         ,
+        items_count                                                                                 ,
+        nego_type_code                                                                              ,
+        negotiation_style_code                                                                      ,
+        bidding_result_open_status_code                                                             ,
+        negotiation_output_class_code                                                               ,
+        Items.pr_approve_number                                                                     ,
+        Items.req_submission_status                                                                 ,
+        Items.req_reapproval                                                                        ,
+        Items.material_code                                                                         ,
+        Items.material_desc                                                                         ,
+        Items.requestor_empno                                                                       ,
+        Items.request_department_code                                                               ,
+        award_type_code                                                                             ,
+        buyer_empno                                                                                 ,
+        buyer_department_code                                                                       ,
+        open_date                                                                                   ,
+        closing_date                                                                                ,
+        close_date_ext_enabled_hours                                                                ,
+        close_date_ext_enabled_count                                                                ,
+        actual_extension_count                                                                      ,
+        Items.requisition_flag                                                                      ,
+        Items.price_submission_no                                                                   ,
+        Items.price_submisstion_status                                                              ,
+        local_create_dtm                                                                            ,
         Items.interface_source                   
     };
+    annotate NegoWorkbenchView3 @(Common.SemanticKey: [nego_item_number]);
 
-    // annotate NegoWorkbenchView with @( 
-    //         title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가',readonly
-    // ) {
-    //     nego_document_number             @description:'UI:Negotiation No'         ;
-    //     nego_document_round              @description:'UI:Revision'               ;
-    //     nego_progress_status_code        @description:'UI:Negotiation Status'     ;
-    //     award_progress_status_code       @description:'UI:Award Status'           ;
-    //     reply_times                      @description:'UI:회신횟수'                   ;
-    //     supplier_count                   @description:'UI:협력사수'                   ;
-    //     supplier_participation_flag      @description:'UI:Participation'          ;
-    //     remaining_hours                  @description:'UI:잔여시간'                   ;
-    //     nego_document_title              @description:'UI:Title'                  ;
-    //     items_count                      @description:'UI:품목수'                    ;
-    //     nego_type_code                   @description:'UI:Negotiation Type'       ;
-    //     negotiation_style_code           @description:'UI:Quote Style'            ;
-    //     bidding_result_open_status_code  @description:'UI:Bid Open Status'        ;
-    //     negotiation_output_class_code    @description:'UI:Outcome'                ;
-    //     pr_approve_number                @description:'UI:Req Submission No'      ;
-    //     req_submission_status            @description:'UI:Req Submission Status'  ;
-    //     req_reapproval                   @description:'UI:Req Reapproval'         ;
-    //     material_code                    @description:'UI:Part No'                ;
-    //     material_desc                    @description:'UI:Description'            ;
-    //     requestor_empno                  @description:'UI:요청자'                    ;
-    //     request_department_code          @description:'UI:요청 부서'                  ;
-    //     award_type_code                  @description:'UI:Award Type'             ;
-    //     buyer_empno                      @description:'UI:Buyer'                  ;
-    //     buyer_department_code            @description:'UI:Department'             ;
-    //     open_date                        @description:'UI:Open Date'              ;
-    //     closing_date                     @description:'UI:Close Date'             ;
-    //     close_date_ext_enabled_hours     @description:'UI:Extention Period'       ;
-    //     close_date_ext_enabled_count     @description:'UI:Extention Times'        ;
-    //     actual_extension_count           @description:'UI:Actual Extension Times' ;
-    //     requisition_flag                 @description:'UI:Requisition Flag'       ;
-    //     price_submission_no              @description:'UI:Price Submission No'    ;
-    //     price_submisstion_status         @description:'UI:Price Submission Status';
-    //     local_create_dtm                 @description:'UI:Create Date'            ;
-    //     interface_source                 @description:'UI:Interface Source'       ;
-    // };
+    annotate NegoWorkbenchView with @( 
+            title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가',readonly,
+            UI: {
+                LineItem: [ 
+                    {$Type: 'UI.DataField', Value: nego_document_number, "@UI.Importance":#High},
+                    {$Type: 'UI.DataField', Value: nego_document_round, "@UI.Importance": #High},
+                    {$Type: 'UI.DataField', Value: nego_progress_status_code, "@UI.Importance": #High},
+                    {$Type: 'UI.DataField', Value: award_progress_status_code, "@UI.Importance": #Medium},			
+                    {$Type: 'UI.DataField', Value: reply_times, "@UI.Importance": #High},
+                    {$Type: 'UI.DataField', Value: supplier_count, "@UI.Importance": #Medium},			
+                ],
+                PresentationVariant: {
+                    SortOrder: [ {$Type: 'Common.SortOrderType', Property: nego_document_number, Descending: true}, {$Type: 'Common.SortOrderType', Property: nego_document_round, Descending: true} ]
+                }
+            }
+
+    ) {
+
+        
+        nego_document_number             @description:'UI:Negotiation No'         ;
+        nego_document_round              @description:'UI:Revision'               ;
+        nego_progress_status_code        @description:'UI:Negotiation Status'     ;
+        award_progress_status_code       @description:'UI:Award Status'           ;
+        reply_times                      @description:'UI:회신횟수'                   ;
+        supplier_count                   @description:'UI:협력사수'                   ;
+        supplier_participation_flag      @description:'UI:Participation'          ;
+        remaining_hours                  @description:'UI:잔여시간'                   ;
+        nego_document_title              @description:'UI:Title'                  ;
+        items_count                      @description:'UI:품목수'                    ;
+        nego_type_code                   @description:'UI:Negotiation Type'       ;
+        negotiation_style_code           @description:'UI:Quote Style'            ;
+        bidding_result_open_status_code  @description:'UI:Bid Open Status'        ;
+        negotiation_output_class_code    @description:'UI:Outcome'                ;
+        pr_approve_number                @description:'UI:Req Submission No'      ;
+        req_submission_status            @description:'UI:Req Submission Status'  ;
+        req_reapproval                   @description:'UI:Req Reapproval'         ;
+        material_code                    @description:'UI:Part No'                ;
+        material_desc                    @description:'UI:Description'            ;
+        requestor_empno                  @description:'UI:요청자'                    ;
+        request_department_code          @description:'UI:요청 부서'                  ;
+        award_type_code                  @description:'UI:Award Type'             ;
+        buyer_empno                      @description:'UI:Buyer'                  ;
+        buyer_department_code            @description:'UI:Department'             ;
+        open_date                        @description:'UI:Open Date'              ;
+        closing_date                     @description:'UI:Close Date'             ;
+        close_date_ext_enabled_hours     @description:'UI:Extention Period'       ;
+        close_date_ext_enabled_count     @description:'UI:Extention Times'        ;
+        actual_extension_count           @description:'UI:Actual Extension Times' ;
+        requisition_flag                 @description:'UI:Requisition Flag'       ;
+        price_submission_no              @description:'UI:Price Submission No'    ;
+        price_submisstion_status         @description:'UI:Price Submission Status';
+        local_create_dtm                 @description:'UI:Create Date'            ;
+        interface_source                 @description:'UI:Interface Source'       ;
+    };
 
 
     // Test End
