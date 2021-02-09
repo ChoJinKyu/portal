@@ -113,15 +113,6 @@ sap.ui.define([
         onPageNavBackButtonPress: function () {
             var sPreviousHash = History.getInstance().getPreviousHash();
             this.getRouter().navTo("mainList", {}, true);
-			// if (sPreviousHash !== undefined) {
-            //     // eslint-disable-next-line sap-no-history-manipulation
-            //     // this.getRoute().navTo("mainList");
-			// 	history.go(-1);
-			// } else {
-			// 	this.getRouter().navTo("mainList", {}, true);
-			// }
-            // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-            // this.getRouter().navTo("mainObject");
         },
 
         onApplicationPeriodChange: function(oEvent) {
@@ -156,7 +147,11 @@ sap.ui.define([
                         oMasterModel.submitChanges({
                             success: function (ok) {
                                 oView.setBusy(false);
-                                that.onPageNavBackButtonPress.call(that);
+                                // this.getRouter().navTo("mainList", {}, true);
+                                that.getRouter().navTo("mainList", {
+                                    refresh: "Y"
+                                });
+                                // that.onPageNavBackButtonPress.call(that);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
                             }
                         });
@@ -219,8 +214,11 @@ sap.ui.define([
                                 that._toShowMode();
                                 view.setBusy(false);
                                 that.getModel("midObjectView").setProperty("/isAddedMode", false);
+                                that.getRouter().navTo("mainList", {
+                                    refresh: "Y"
+                                });
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"), {duration: 3000});
-                                that.onPageNavBackButtonPress.call(that);
+                                // that.onPageNavBackButtonPress.call(that);
                             }.bind(this)
                         });
                     };
@@ -233,13 +231,12 @@ sap.ui.define([
          * @public
          */
         onPageCancelEditButtonPress: function () {
-            // this.onPageNavBackButtonPress.call(this);
             var sTenantId = this._sTenantId;
             if (this.getModel("midObjectView").getProperty("/isAddedMode") == true && sTenantId=="new") {
                 this.onPageNavBackButtonPress.call(this);
             } else {
                 this._toShowMode();
-            }
+            };
         },
 
         /* =========================================================== */
@@ -263,8 +260,7 @@ sap.ui.define([
         _onRoutedThisPage: function (oEvent) {
             
             var oArgs = oEvent.getParameter("arguments"),
-                oView = this.getView(), 
-                utcDate = this._getUtcSapDate();
+                oView = this.getView();
 
             this._sTenantId = oArgs.tenantId;
             this._sFundingNotifyNumber = oArgs.fundingNotifyNumber;
@@ -391,22 +387,6 @@ sap.ui.define([
             this.byId("pageCancelButton").setEnabled(false);
             this.byId("pageSaveButton").setEnabled(false);
             oMidObjectView.setProperty("/editMode", false);
-        },
-
-         /**
-         * UTC 기준 DATE를 반환합니다.
-         * @private
-         * @return "yyyy-MM-dd'T'HH:mm:ss"
-         */
-        _getUtcSapDate: function () {
-            var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                pattern: "yyyy-MM-dd'T'HH:mm"
-            });
-
-            var oNow = new Date();
-            var utcDate = oDateFormat.format(oNow) + ":00Z";
-            
-            return utcDate;
         }
     });
 });

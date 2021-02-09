@@ -56,7 +56,7 @@ sap.ui.define([
             }, true);
             
             this.setModel(new ManagedListModel(), "list");
-
+            
             this.getRouter().getRoute("mainList").attachPatternMatched(this._onRoutedThisPage, this);
             
             this._doInitTablePerso();
@@ -194,10 +194,12 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
 		 * @private
 		 */
-        _onRoutedThisPage: function () {
+        _onRoutedThisPage: function (oEvent) {
+            var oArgs = oEvent.getParameter("arguments");
             this.getModel("mainListView").setProperty("/headerExpanded", true);
-            
-            // this.byId("pageSearchButton").firePress();
+            if(oArgs.refresh==="Y"){
+                this.byId("pageSearchButton").firePress();
+            }
         },
 
 		/**
@@ -207,10 +209,11 @@ sap.ui.define([
 		 */
         _applySearch: function (aSearchFilters) {
             var oView = this.getView(),
-                oModel = this.getModel("list");
+                oModel = this.getModel("list"),
+                aSorter = [];
+
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            var aSorter = [];
             aSorter.push(new Sorter("funding_notify_number", true));
             
             oModel.read("/SfFundingNotifyView", {
