@@ -73,7 +73,7 @@ sap.ui.define([
             oTransactionManager = new TransactionManager();
             oTransactionManager.aDataModels.length = 0;
 
-          //  oTransactionManager.addDataModel(this.getModel("schedule"));
+            console.log("session >>>> " , this.getSessionUserInfo() );
 
             this.process.setDrawProcessUI(this, "rrMgtProcess" , "C", 0);
 
@@ -144,7 +144,8 @@ sap.ui.define([
             this.getRouter().navTo("rrMgtList", {}, true); 
         },
   
-        onPageDraftButtonPress : function () { 
+        onPageDraftButtonPress : function () {  
+
              var mst = this.getModel("rrMgt").getData()
                 , session = this.getSessionUserInfo();
 // rrMgt
@@ -204,7 +205,7 @@ sap.ui.define([
 
         }, 
 
-        _callAjax : function(data, fn , callback){
+        callAjax : function(data, fn , callback){
               var url = "/dp/md/remodelRepairMgtList/webapp/srv-api/odata/v4/dp.RrMgtListV4Service/" + fn;
 
             $.ajax({

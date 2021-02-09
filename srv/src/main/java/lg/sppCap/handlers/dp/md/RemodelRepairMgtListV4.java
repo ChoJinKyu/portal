@@ -17,6 +17,11 @@ import java.util.stream.Stream;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.time.Instant;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.CallableStatementCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,7 +47,7 @@ import com.sap.cds.ql.Update;
 import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Delete;
 import com.sap.cds.Result;
-
+import lg.sppCap.frame.user.SppUserSession;
 import cds.gen.dp.rrmgtlistv4service.*;
 
 
@@ -52,6 +57,13 @@ public class RemodelRepairMgtListV4 implements EventHandler {
 
     @Autowired
     private JdbcTemplate jdbc;
+
+    @Autowired
+    @Qualifier(RrMgtListV4Service_.CDS_NAME)
+    private CdsService cdsService;
+  
+    @Autowired
+    SppUserSession sppUserSession;
 
     @On(event = SaveRemodelRepairContext.CDS_NAME)
     public void onSave(SaveRemodelRepairContext context){
@@ -69,18 +81,45 @@ public class RemodelRepairMgtListV4 implements EventHandler {
         String repair_request_number = itemV4.getRepairRequestNumber();
 
         try {
-
+            Instant current = Instant.now();
             if( repair_request_number != null && !repair_request_number.equals("New") 
                 && !repair_request_number.equals("")){ // update 
-              
-
-                 
+                    RepairItem item = RepairItem.create();
+                    item.setRepairRequestNumber(itemV4.getRepairRequestNumber());
+                    item.setMoldId(itemV4.getMoldId());
+                    item.setTenantId(itemV4.getTenantId());
+                    item.setRepairDesc(itemV4.getRepairDesc());
+                    item.setRepairReason(itemV4.getRepairReason());
+                    item.setRepairRequestDate(itemV4.getRepairRequestDate());
+                    item.setMoldMovingPlanDate(itemV4.getMoldMovingPlanDate());
+                    item.setMoldMovingResultDate(itemV4.getMoldMovingResultDate());
+                    item.setMoldCompletePlanDate(itemV4.getMoldCompletePlanDate());
+                    item.setMoldCompleteResultDate(itemV4.getMoldCompleteResultDate());
+                    item.setUpdateUserId(sppUserSession.getUserId());
+                    item.setLocalUpdateDtm(current);
+                    CqnUpdate masterUpdate = Update.entity(RepairItem_.CDS_NAME).data(item);
+                    Result rst = cdsService.run(masterUpdate);
             
             }else{ // create 
-               // String sql="SELECT DP_MD_REPAIR_REQ_NUM_SEQ.NEXTVAL FROM DUMMY";
-               // int seq=jdbc.queryForObject(sql,Integer.class);
-            
-
+                    String sql="SELECT DP_MD_REPAIR_REQ_NUM_SEQ.NEXTVAL FROM DUMMY";
+                    int seq=jdbc.queryForObject(sql,Integer.class);
+                    RepairItem item = RepairItem.create();
+                    item.setRepairRequestNumber(String.valueOf(seq));
+                    item.setMoldId(itemV4.getMoldId());
+                    item.setTenantId(itemV4.getTenantId());
+                    item.setRepairDesc(itemV4.getRepairDesc());
+                    item.setRepairReason(itemV4.getRepairReason());
+                    item.setRepairRequestDate(itemV4.getRepairRequestDate());
+                    item.setMoldMovingPlanDate(itemV4.getMoldMovingPlanDate());
+                    item.setMoldMovingResultDate(itemV4.getMoldMovingResultDate());
+                    item.setMoldCompletePlanDate(itemV4.getMoldCompletePlanDate());
+                    item.setMoldCompleteResultDate(itemV4.getMoldCompleteResultDate());
+                    item.setUpdateUserId(sppUserSession.getUserId());
+                    item.setCreateUserId(sppUserSession.getUserId());
+                    item.setLocalUpdateDtm(current);
+                    item.setLocalCreateDtm(current);
+                    CqnInsert masterUpdate = Insert.into(RepairItem_.CDS_NAME).entry(item);
+                    Result rst = cdsService.run(masterUpdate);
             }
 
         } catch (Exception e) {
