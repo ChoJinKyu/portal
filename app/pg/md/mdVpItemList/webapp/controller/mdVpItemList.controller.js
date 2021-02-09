@@ -424,10 +424,7 @@ sap.ui.define([
         onDialogTreeSearch: function (event) {
 
             var treeVendor = [];
-            var search_Vp_Name = this.byId("search_Vp_Name").getValue();
-            if(search_Vp_Name != null || search_Vp_Name !=""){
-                this.byId("treepop_vendor_pool_local_name").setValue(search_Vp_Name);
-            }
+            // var search_Vp_Name = this.byId("search_Vp_Name").getValue();
             
             if (!!this.byId("treepop_vendor_pool_local_name").getValue()) {
                 treeVendor.push(new Filter({
@@ -437,6 +434,10 @@ sap.ui.define([
                     ],
                     and: false
                 }));
+            }
+            if (!!this.byId("searchChain").getSelectedKey()) {
+                treeVendor.push(new Filter("org_code", FilterOperator.Contains, this.byId("searchChain").getSelectedKey()));
+                treeVendor.push(new Filter("operation_unit_code", FilterOperator.Contains, "RAW_MATERIAL"));
             }
 
 
@@ -515,6 +516,7 @@ sap.ui.define([
 
         createTreePopupClose: function (oEvent) {
             console.log(oEvent);
+            // this.byId("treepop_vendor_pool_local_name").setValue("");
             this.byId("ceateVpCategorytree").close();
         },
 

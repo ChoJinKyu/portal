@@ -57,17 +57,18 @@ service NpApprovalDetailService {
         SELECT
                 key pam.tenant_id
              ,      cam.company_code
-             ,      cam.org_type_code
-             ,      cam.org_code	                            /* operating org */
+             //,      cam.org_type_code
+             //,      cam.org_code	                            /* operating org */
              ,  key pam.approval_number                         /* Approval No. */
 
+             /* 
              ,  (SELECT org.org_name
                    FROM CM_PUR_OPERATION_ORG  org
                   WHERE org.tenant_id     = pam.tenant_id
                     AND org.company_code  = cam.company_code
                     AND org.org_type_code = cam.org_type_code
                     AND org.org_code      = cam.org_code
-			    ) AS org_name : String                          /* org */
+			    ) AS org_name : String                       /  org */
 
 
             ,   cam.requestor_empno                             /* requestor */
@@ -220,9 +221,7 @@ service NpApprovalDetailService {
             ,   pad.currency_code	                    /*	(New)Currency	*/
             ,   pad.net_price                           /*	(New)Price	*/
 
-            //,   TO_VARCHAR((ROUND(((npm.net_price)/pad.net_price),2,ROUND_HALF_UP))*100)
-            ,   null as change_rate	                    : String   /*	변동비율(%) 이전단가 대비 변동비 net_price 	*/
-
+            ,   TO_VARCHAR(ROUND(pad.net_price/npm.net_price*100))   as change_rate : String        /* 변동비율(%) 이전단가 대비 변동비*/
             ,   null as royalty	                        : String //pad.royalty	                    /*	로열티	*/
             ,   null as pcst	                        : String //pad.pcst	                        /*	임가공비	*/
             ,   null as depreciation	                : String //pad.depreciation	                /*	감상비	*/
@@ -266,6 +265,15 @@ service NpApprovalDetailService {
                 ) as incoterms_name : String         /*	Incoterms	*/
 
             ,   pad.quality_certi_flag	            /*	부품인정여부	*/
+            ,   pad.net_price_type_code
+            ,   (SELECT cd.code_name
+                   FROM CM_CODE_LNG AS cd
+                  WHERE cd.tenant_id   = pad.tenant_id
+                    AND cd.group_code  = 'SP_NET_PRICE_TYPE'
+                    AND cd.language_cd = ssi.LANGUAGE_CODE
+               	    AND cd.code        = pad.net_price_type_code
+			    )  AS net_price_type_name : String
+
 
         FROM SP_NP_NET_PRICE_APPROVAL_DTL pad
 

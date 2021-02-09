@@ -95,7 +95,7 @@ sap.ui.define([
               ;
 
             if( oArgs.request_number != "New"){
-                oModel.read("/remodelRepairDetail(tenant_id='" + this.getSessionUserInfo().TENANT_ID
+                oModel.read("/remodelRepairDetail(tenant_id='" + "L2101"
                     + "',mold_id='" + oArgs.mold_id 
                     + "',repair_request_number='"+oArgs.request_number 
                     + "')", {
@@ -106,12 +106,13 @@ sap.ui.define([
                 });
             }else{
 
-                oModel.read("/remodelRepairNew(tenant_id='" + this.getSessionUserInfo().TENANT_ID
+                oModel.read("/remodelRepairNew(tenant_id='" + "L2101"
                     + "',mold_id='" + oArgs.mold_id + "')", {
                     filters: [],
                     success: function (oData) {
         
                          
+                    oModel.setProperty("/mold_id",  oArgs.mold_id ); 
                     oModel.setProperty("/create_user_id", session.USER_ID); 
                     oModel.setProperty("/user_local_name", session.EMPLOYEE_NAME); 
                     oModel.setProperty("/user_english_name", session.ENGLISH_EMPLOYEE_NAME); 
@@ -142,7 +143,88 @@ sap.ui.define([
         onPageNavBackButtonPress: function () {
             this.getRouter().navTo("rrMgtList", {}, true); 
         },
+  
+        onPageDraftButtonPress : function () { 
+             var mst = this.getModel("rrMgt").getData()
+                , session = this.getSessionUserInfo();
+// rrMgt
 
-        
+            var data = {
+                inputData: {
+                    repairItem : {
+                        tenant_id: session.tenant_id
+                        , repair_request_number: mst.repair_request_number
+                        , mold_id :  mst.mold_id
+                        , repair_desc :  mst.repair_desc
+                        , repair_reason :  mst.repair_reason
+                        , mold_moving_plan_date: mst.mold_moving_plan_date
+                        , mold_complete_plan_date: mst.mold_complete_plan_date 
+                        , mold_moving_result_date: mst.mold_moving_result_date 
+                        , mold_complete_result_date: mst.mold_complete_result_date
+                      //  , update_user_id: mst.requestor_empno
+                      //  , local_update_dtm: new Date()
+                    }
+                }
+            }
+
+
+            var msg = "";
+            var isOk = true;
+          //  if(this.firstStatusCode == "AR" && this.getModel('appMaster').getProperty("/approve_status_code") == "DR"){ 
+                isOk = true;
+                msg = "저장 하시겠습니까?";
+         //   }
+
+            if(isOk){
+                var oView = this.getView();
+                var that = this;
+                MessageBox.confirm(msg, {
+                    title: "Comfirmation",
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: function (sButton) {
+                        if (sButton === MessageBox.Action.OK) { 
+                            
+                            oView.setBusy(true);
+                            that.callAjax(data, "saveRemodelRepair"
+                                , function(result){
+                                    oView.setBusy(false);
+                                    MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
+                                if (result.resultCode > -1) {
+                                    that.onLoadThisPage(result);
+                                }
+                            });
+                        }else{ 
+                           
+                        };
+                    }
+                });
+            }
+
+
+
+        }, 
+
+        _callAjax : function(data, fn , callback){
+              var url = "/dp/md/remodelRepairMgtList/webapp/srv-api/odata/v4/dp.RrMgtListV4Service/" + fn;
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                //datatype: "json",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                success: function (result) { 
+                    callback(result);
+                },
+                error: function (e) {
+                    callback(e);
+                }
+            });
+        }
+
+
+
+
+
     });
 });

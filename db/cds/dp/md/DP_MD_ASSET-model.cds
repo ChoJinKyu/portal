@@ -15,7 +15,9 @@ entity Md_Asset {
         acq_amount              : Decimal(20, 2)       @title : '취득금액';
         scrap_date              : String(8)            @title : '폐기일자';
         primary_supplier_code   : String(10)           @title : '1차공급업체코드';
+        secondary_supplier_code : String(10)           @title : '2차공급업체코드';
         secondary_supplier_name : String(240)          @title : '2차공급업체명';
+        tertiary_supplier_code : String(10)            @title : '3차공급업체코드';
         tertiary_supplier_name  : String(240)          @title : '3차공급업체명';
         class_desc              : String(300)          @title : '품명';
         remark                  : String(3000)         @title : '벤더 비고';

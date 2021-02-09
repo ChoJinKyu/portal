@@ -72,16 +72,29 @@ service RrMgtListService {
                         and l.code = mst.mold_production_type_code
                         and l.tenant_id = mst.tenant_id
                 )  as mold_production_type_code_nm : String(240),
+                mst.mold_item_type_code,
+                (
+                    select l.code_name from codeLng.Code_Lng l 
+                     join sppUserSession.Spp_User_Session_View ses
+                        on (
+                            l.tenant_id = ses.TENANT_ID
+                            and l.language_cd = ses.LANGUAGE_CODE
+                        )
+                    where
+                            l.group_code  = 'DP_MD_ITEM_TYPE'
+                        and l.code        = mst.mold_item_type_code
+                        and l.tenant_id   = mst.tenant_id
+                ) as mold_item_type_code_nm       : String(240),
                 mst.mold_mfger_code,
                 sup.supplier_local_name as mold_mfger_code_nm : String(240), 
                 mst.supplier_code,
                 sup2.supplier_local_name as supplier_code_nm : String(240),
                 mst.production_supplier_code,
                 sup3.supplier_local_name as production_supplier_code_nm : String(240),
-                '' as mold_moving_plan_date        : String(240),
-                '' as mold_moving_result_date      : String(240),
-                '' as mold_complete_plan_date      : String(240),
-                '' as mold_complete_result_date    : String(240)
+                null as mold_moving_plan_date        : String(240),
+                null as mold_moving_result_date      : String(240),
+                null as mold_complete_plan_date      : String(240),
+                null as mold_complete_result_date    : String(240)
         from moldMst.Md_Mst mst
         join asset.Md_Asset ass  on mst.mold_id = ass.mold_id and mst.tenant_id = ass.tenant_id
         left join supplier.Sm_Supplier_Mst sup on sup.tenant_id = mst.tenant_id and sup.supplier_code = mst.mold_mfger_code

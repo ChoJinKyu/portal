@@ -185,7 +185,7 @@
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
-            <ScrollContainer  width="100%" horizontal="true" vertical="true" focusable="true">
+            <!-- <ScrollContainer  width="100%" horizontal="true" vertical="true" focusable="true"> -->
                 <smartTable:SmartTable
                     id="smarttable_main"
                     width="100%"
@@ -232,7 +232,6 @@
                         </OverflowToolbar>
                     </smartTable:customToolbar>
                     <Table id="mainTable" 
-                            growingScrollToLoad="true"
                             growing="true"
                             sticky="ColumnHeaders,HeaderToolbar"
                             growingThreshold="50"
@@ -357,7 +356,7 @@
                         </items> 
                     </Table>
                 </smartTable:SmartTable>
-            </ScrollContainer>
+            <!-- </ScrollContainer> -->
         </f:content>
         <!-- DynamicPage Footer -->
         <f:footer>

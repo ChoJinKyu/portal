@@ -30,15 +30,6 @@ service partActivityV4Service {
         crud_type_code : String;
     };
 
-    type PdPartBaseActivityLng : {
-        tenant_id : String;
-        activity_code : String;
-        language_cd : String;
-        code_name : String;
-        update_user_id : String;
-        crud_type_code : String;
-    };
-
     type OutType : {
         return_code : String(2);
         return_msg  : String(5000);
@@ -47,7 +38,6 @@ service partActivityV4Service {
     type ProcInputType : {
         crud_type  : String(1);
         pdMst      : PdpartActivityTemplateType;
-        pdDtl      : array of PdPartBaseActivityLng;
     }
 
     action PdpartActivitySaveProc(inputData : ProcInputType) returns OutType;

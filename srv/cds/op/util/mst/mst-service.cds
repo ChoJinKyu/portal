@@ -16,14 +16,19 @@ using {op.Pu_Account_Mst as AccountMst}     from '../../../../../db/cds/op/pu/ac
 using {op.Pu_Asset_Mst as AssetMst}     from '../../../../../db/cds/op/pu/asset/OP_PU_ASSET_MST-model';
 using {op.Pu_Cctr_Mst as CctrMst}     from '../../../../../db/cds/op/pu/cctr/OP_PU_CCTR_MST-model';
 using {op.Pu_Order_Mst as OrderMst}     from '../../../../../db/cds/op/pu/order/OP_PU_ORDER_MST-model';
-using {op.Pu_Wbs_Mst as WbsMst}     from '../../../../../db/cds/op/pu/wbs/OP_PU_WBS_MST-model';
+using {op.Pu_Wbs_Mst as WbsMst}                     from '../../../../../db/cds/op/pu/wbs/OP_PU_WBS_MST-model';
 
-using {cm.Hr_Department as Dept} from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
-using {cm.Code_Lng as cdLng}     from '../../../../../db/cds/cm/CM_CODE_LNG-model';
+using {cm.Hr_Department as Dept}                    from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model';
+using {cm.Code_Lng as cdLng}                        from '../../../../../db/cds/cm/CM_CODE_LNG-model';
+using {cm.Org_Purchasing_Group as purchasingGroup}  from '../../../../../db/cds/cm/CM_ORG_PURCHASING_GROUP-model';
 
 
 @path : '/op.util.MstService'
 service MstService {
+    
+    entity Cm_purchasingGroup   as projection on purchasingGroup;
+
+
     entity Pr_Mst     as projection on op.Pu_Pr_Mst;
     entity Pr_Dtl     as projection on op.Pu_Pr_Dtl;
     entity Pr_Account as projection on op.Pu_Pr_Account;

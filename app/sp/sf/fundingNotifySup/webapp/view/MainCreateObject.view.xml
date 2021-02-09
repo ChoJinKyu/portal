@@ -9,7 +9,7 @@
 	height="100%">
 	<uxap:ObjectPageLayout id="page"
 		toggleHeaderOnTitleClick="true"
-		alwaysShowContentHeader = "true"
+		alwaysShowContentHeader = "true" 
 		preserveHeaderStateOnScroll="false"
 		headerContentPinnable="true"
 		isChildPage="true"

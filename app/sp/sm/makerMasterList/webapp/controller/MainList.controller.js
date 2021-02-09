@@ -57,13 +57,15 @@ sap.ui.define([
 
             //this.enableMessagePopover();
 
+            //table size 조정
+            this.getOwnerComponent().getModel().setSizeLimit(5000);
+  
+
+
+
         },
 
-        onAfterRendering : function() {
-            //console.log("onAfterRendering");
-            //console.log("all : " + this.getModel("I18N").getText("/ALL"));
-            //console.log("model : " + this.getModel("mainListViewModel").getProperty("/makerStatusCodeList/0/code_name"));
-        },
+        
 
         /* =========================================================== */
         /* privet function                                            */
@@ -202,6 +204,7 @@ sap.ui.define([
          * @param {sap.ui.base.Event} oEvent 
          */
 		onBeforeRebindTable: function (oEvent) {
+            
             var that = this,
                 mBindingParams = oEvent.getParameter("bindingParams");
             

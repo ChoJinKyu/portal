@@ -81,7 +81,8 @@ sap.ui.define([
                         immediate_apply_flag: "Y",
                         Items: [],
                         nego_progress_status: {},
-                        nego_type: {}
+                        nego_type: {},
+                        outcome: {}
                     },
                     NegoItemPrices: {
                         Suppliers: []
@@ -269,10 +270,11 @@ sap.ui.define([
                 {
                     oView.getModel("propInfo").setProperty("/isEditMode", true );
 
+                    oView.getModel("NegoHeaders").setProperty("/outcome_code", outcome );
                     oView.getModel("NegoHeaders").setProperty("/nego_type_code", this._type );
                     oView.getModel("NegoHeaders").setProperty("/local_create_dtm", new Date() );
-                    oView.getModel("NegoHeaders").setProperty("/negotiation_output_class_code", this.getOutComeName(outcome) );
-                    oView.getModel("NegoHeaders").setProperty("/nego_progress_status/nego_progress_status_code", '090' );
+                    oView.getModel("NegoHeaders").setProperty("/outcome/outcome_name", this.getOutComeName(outcome) );
+                    oView.getModel("NegoHeaders").setProperty("/nego_progress_status_code", '090' );
                     oView.getModel("NegoHeaders").setProperty("/nego_progress_status/nego_progress_status_name", 'Draft' );
 
                     oView.byId("checkbox_Immediately").fireSelect();
@@ -509,8 +511,6 @@ sap.ui.define([
             onSupplierResult: function(pToken)
             {  
                 var oHeaders = this.getView().getModel("NegoHeaders").getData();
-
-                console.log( " this._addSupplierType : " + this._addSupplierType );
 
                 if( this._addSupplierType == "batch" ) {
                     var selectedIndices = this.getView().byId("tableLines").getSelectedIndices();
@@ -860,7 +860,7 @@ sap.ui.define([
                     "request_date"     : "",
                     "attch_code"     : "",
                     "supplier_provide_info"     : "",
-                    "incoterms"     : "",
+                    "incoterms_code"     : "",
                     "excl_flag"     : "",
                     "vendor_pool_code"     : "",
                     "request_quantity"     : "1",
@@ -1318,7 +1318,7 @@ sap.ui.define([
                     outcome_code                    : this.getCheckObject(oModel,"outcome_code",""),
                     negotiation_output_class_code   : this.getCheckObject(oModel,"negotiation_output_class_code",""),
                     buyer_empno                     : this.getCheckObject(oModel,"buyer_empno",""),
-                    buyer_department_code           : this.getCheckObject(oModel,"buyer_employee",""), // ??
+                    buyer_department_code           : this.getCheckObject(oModel,"buyer_employee.department_code",""), // ??
                     immediate_apply_flag            : this.getCheckObject(oModel,"immediate_apply_flag",""),
                     open_date                       : this.getCheckObject(oModel,"open_date", new Date()),
                     closing_date                    : this.getCheckObject(oModel,"closing_date", new Date()),
@@ -1330,14 +1330,38 @@ sap.ui.define([
                     actual_extension_count          : Number(this.getCheckObject(oModel,"actual_extension_count",0)),
                     remaining_hours                 : this.getCheckObject(oModel,"remaining_hours",0),
                     note_content                    : this.getCheckObject(oModel,"note_content","encoding"),  // encoding
-                    award_type_code                 : this.getCheckObject(oModel,"oModel.award_type_code",""),
+                    award_type_code                 : this.getCheckObject(oModel,"award_type_code",""),
                     award_method_code               : this.getCheckObject(oModel,"award_method_code",""),
                     target_amount_config_flag       : this.getCheckObject(oModel,"target_amount_config_flag",""),
                     target_currency                 : this.getCheckObject(oModel,"target_currency",""),
                     target_amount                   : this.getCheckObject(oModel,"target_amount",0),
                     supplier_participation_flag     : this.getCheckObject(oModel,"supplier_participation_flag",""),
                     partial_allow_flag              : this.getCheckObject(oModel,"partial_allow_flag",""),
-                    bidding_result_open_status_code : this.getCheckObject(oModel,"bidding_result_open_status_code","")
+                    bidding_result_open_status_code : this.getCheckObject(oModel,"bidding_result_open_status_code",""),
+
+                    // // 입찰 control 영역 //
+                    // // negotiation_style_code	        : this.getCheckObject(oModel,"bidding_result_open_status_code",""),//Bid Style	--# 기존필드
+                    // max_round_count	                : this.getCheckObject(oModel,"max_round_count",0),//Max Round Count	
+                    // auto_round                      : this.getCheckObject(oModel,"auto_round",""),//	Auto Round	
+                    // auto_round_terms                : this.getCheckObject(oModel,"auto_round_terms",0),//	Minute(Auto Round Terms)	
+                    // previous_round                  : this.getCheckObject(oModel,"previous_round",""),//	Previous Round	
+                    // // award_type_code                 : this.getCheckObject(oModel,"bidding_result_open_status_code",""),//	Award Type	--# 기존필드
+                    // // award_method_code               : this.getCheckObject(oModel,"bidding_result_open_status_code",""),//	Award Method	--# 기존필드
+                    // number_of_award_supplier        : this.getCheckObject(oModel,"number_of_award_supplier",0),//	Number of Award Supplier	
+                    // order_rate_01                   : this.getCheckObject(oModel,"order_rate_01",0),//..05	Order Rate	
+                    // order_rate_02                   : this.getCheckObject(oModel,"order_rate_02",0),//..05	Order Rate	
+                    // order_rate_03                   : this.getCheckObject(oModel,"order_rate_03",0),//..05	Order Rate	
+                    // order_rate_04                   : this.getCheckObject(oModel,"order_rate_04",0),//..05	Order Rate	
+                    // order_rate_05                   : this.getCheckObject(oModel,"order_rate_05",0),//..05	Order Rate	
+                    // // target_amount_config_flag       : this.getCheckObject(oModel,"bidding_result_open_status_code",""),//	Target Price Setup 여부	--# 기존필드
+                    // // target_amount                   : this.getCheckObject(oModel,"bidding_result_open_status_code",""),//	Target Total Amount	--# 기존필드
+                    // // supplier_participation_flag     : this.getCheckObject(oModel,"bidding_result_open_status_code",""),//	Intention of Supplier Participation  	
+                    // // partial_allow_flag              : this.getCheckObject(oModel,"bidding_result_open_status_code",""),//	Partial Quotation	
+                    // bid_conference                  : this.getCheckObject(oModel,"bid_conference",""),//	Bid Conference	
+                    // bid_conference_date             : this.getCheckObject(oModel,"bid_conference_date",new Date()),//	Bid Conference Date	
+                    // bid_conference_place            : this.getCheckObject(oModel,"bid_conference_place",""),//	Bid Conference Place	
+                    // contact_point_empno             : this.getCheckObject(oModel,"contact_point_empno",""),//	Contact Point	
+                    // phone_no                        : this.getCheckObject(oModel,"phone_no","")//	Phone No
 
                     // local_create_dtm                : new Date(),
                     // local_update_dtm                : new Date(),
@@ -1491,7 +1515,7 @@ sap.ui.define([
                         //refresh
                         oModel.refresh(true);
                         // console.log('data:', data);
-                    },
+                    }.bind(this),
                     error: function (e) {
                         // sap.m.MessageToast.show(i18nModel.getText("/EPG00001"));
                         // v_returnModel = oView.getModel("returnModel").getData().data;

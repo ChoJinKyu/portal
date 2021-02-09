@@ -6,6 +6,7 @@ SELECT X.NODE_ID
       ,X.TENANT_ID
       ,X.CATEGORY_GROUP_CODE
       ,X.CATEGORY_CODE
+      ,X.CATEGORY_GROUP_NAME
       ,X.CATEGORY_NAME
       ,X.PARENT_CATEGORY_CODE
       ,X.SEQUENCE
@@ -29,19 +30,25 @@ SELECT X.NODE_ID
             ,M.*
             ,L.CODE_NAME AS CATEGORY_NAME
             ,L.LANGUAGE_CD
+            ,CG.code_name AS CATEGORY_GROUP_NAME
             ,(SELECT CODE_NAME 
                 FROM DP_PD_PART_CATEGORY_LNG 
                WHERE TENANT_ID = M.TENANT_ID 
             	 AND CATEGORY_CODE = M.PARENT_CATEGORY_CODE 
             	 AND CATEGORY_GROUP_CODE = M.CATEGORY_GROUP_CODE
             	 AND LANGUAGE_CD = 'KO') AS PARENT_CATEGORY_NAME
-        FROM DP_PD_PART_CATEGORY M, DP_PD_PART_CATEGORY_LNG L
+        FROM DP_PD_PART_CATEGORY M, DP_PD_PART_CATEGORY_LNG L, CM_CODE_LNG CG
        WHERE M.TENANT_ID = L.TENANT_ID
          AND M.CATEGORY_CODE = L.CATEGORY_CODE
          AND M.CATEGORY_GROUP_CODE = L.CATEGORY_GROUP_CODE
          AND L.LANGUAGE_CD = 'KO'
          AND m.tenant_id = 'L2101'
 	     AND m.category_group_code = 'CO'
+	     AND m.tenant_id = CG.tenant_id
+	     AND m.category_group_code = CG.code
+	     AND CG.group_code = 'DP_PD_CATEGORY_GROUP'
+	     AND CG.code = 'CO'
+         AND CG.LANGUAGE_CD = 'KO'
     )
     START WHERE PARENT_CATEGORY_CODE = '@TOP'
     SIBLING ORDER BY PARENT_ID, SEQUENCE

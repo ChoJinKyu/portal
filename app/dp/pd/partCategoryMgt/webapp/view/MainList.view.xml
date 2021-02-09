@@ -67,8 +67,8 @@
                             <SegmentedButton id="searchActiveFlag" width="100%">
                                 <items>
                                     <SegmentedButtonItem text="All" width="3em"/>
-                                    <SegmentedButtonItem text="Active" width="5em" key="true"/>
-                                    <SegmentedButtonItem text="Inactive" width="5em" key="false"/>
+                                    <SegmentedButtonItem text="Active" width="5em" key="Active"/>
+                                    <SegmentedButtonItem text="Inactive" width="5em" key="Inactive"/>
                                 </items>
                             </SegmentedButton>
                             <layoutData>
@@ -122,25 +122,30 @@
                     </t:extension>
                     
                     <t:columns>
-                        <t:Column label="{I18N>/PART} {I18N>/CATEGORY}">    
+                        <t:Column label="{I18N>/PART} {I18N>/CATEGORY}" hAlign="Left">    
                             <t:template>
                                 <Text text="{tree>category_code}" wrapping="false" />
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/SORT}" width="5%">    
+                        <t:Column label="{I18N>/SORT}" width="5%" hAlign="Right">    
                             <t:template>
                                 <Text text="{tree>sequence}" wrapping="false" />
                             </t:template>
                         </t:Column>
                         
-                        <t:Column label="{I18N>/CATEGORY_NAME}">    
+                        <t:Column label="{I18N>/CATEGORY_NAME}" hAlign="Left">    
                             <t:template>
                                 <Text text="{tree>category_name}" wrapping="false" />
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/CATEGORY_GROUP}" width="10%">    
+                        <t:Column label="{I18N>/CATEGORY_GROUP}" width="10%" hAlign="Center">    
                             <t:template>
                                 <Text text="{tree>category_group_code}" wrapping="false" />
+                            </t:template>
+                        </t:Column>
+                        <t:Column label="{I18N>/CATEGORY_GROUP} {I18N>/NAME}" hAlign="Left">    
+                            <t:template>
+                                <Text text="{tree>category_group_name}" wrapping="false" />
                             </t:template>
                         </t:Column>
                         <t:Column label="{I18N>/STATUS}" hAlign="Center">    
@@ -153,7 +158,7 @@
                                 <Text text="{tree>update_user_id}" wrapping="false" />
                             </t:template>
                         </t:Column>
-                        <t:Column label="{I18N>/LOCAL_UPDATE_DTM}" hAlign="Right">    
+                        <t:Column label="{I18N>/LOCAL_UPDATE_DTM}" hAlign="Center">    
                             <t:template>
                                 <Text text="{tree>local_update_dtm}" wrapping="false" />
                             </t:template>

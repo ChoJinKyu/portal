@@ -62,25 +62,25 @@ sap.ui.define([
                 var length =  this.getModel("tblModel").getProperty("/right").length;
                 var str = "/right/"+length;
 
-                // var flag=true;
-                // for(var idx=0; idx<length; idx++){
-                //     if(arr[idx].spmd_character_code ==item.spmd_character_code){
-                //         flag = false ;
-                //         return;
-                //     }
-                // }
+                var flag=true;
+                for(var idx=0; idx<length; idx++){
+                    if(arr[idx].spmd_character_code ==item.spmd_character_code){
+                        flag = false ;
+                        return;
+                    }
+                }
 
-                // if(flag){
-                //     item.vendor_pool_code = "VP201610260087";
-                //     arr.push(item); 
-                //     arr.sort(function(a, b) {
+                if(flag){
+                    item.vendor_pool_code = "VP201610260087";
+                    arr.push(item); 
+                    // arr.sort(function(a, b) {
                     
-                //         if(a.spmd_category_sort_sequence < b.spmd_category_sort_sequence) return -1;
-                //         if(a.spmd_category_sort_sequence > b.spmd_category_sort_sequence) return 1;
-                //         if(a.spmd_category_sort_sequence === b.spmd_category_sort_sequence) return 0;
-                //         //return aSortNo - bSortNo;              
-                //     });
-                // }
+                    //     if(a.spmd_category_sort_sequence < b.spmd_category_sort_sequence) return -1;
+                    //     if(a.spmd_category_sort_sequence > b.spmd_category_sort_sequence) return 1;
+                    //     if(a.spmd_category_sort_sequence === b.spmd_category_sort_sequence) return 0;
+                    //     //return aSortNo - bSortNo;              
+                    // });
+                }
 
                 this.getModel("tblModel").refresh(true);
             }.bind(this));

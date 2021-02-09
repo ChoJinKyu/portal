@@ -85,13 +85,12 @@ sap.ui.define([
         , _isValidControl : function(aControls){
             var oMessageManager = sap.ui.getCore().getMessageManager(),
                 bAllValid = false,
-                oI18n = this.getView().getModel("I18N"),
-                oContext;
+                oI18n = this.getView().getModel("I18N");
                 
             oMessageManager.removeAllMessages();
             bAllValid = aControls.every(function(oControl){
                 var sEleName = oControl.getMetadata().getElementName(),
-                    sValue;
+                    sValue, oContext;
                 
                 switch(sEleName){
                     case "sap.m.Input":

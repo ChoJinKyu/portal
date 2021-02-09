@@ -193,7 +193,7 @@
                                         </items>
                                     </SegmentedButton>
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                        <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData> 
                                 </VBox>
                                 <VBox id="v_general_sd_exception_flag">
@@ -210,7 +210,7 @@
                                         </items>
                                     </SegmentedButton>
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                        <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData> 
                                 </VBox> 
                                 <VBox id="v_general_maker_material_code_mngt_flag">
@@ -227,16 +227,17 @@
                                         </items>
                                     </SegmentedButton>
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                        <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData> 
-                                </VBox>                                   
-                                <VBox id="v_general_vendor_pool_apply_exception_flag">
+                                </VBox>     
+
+                                <!-- <VBox id="v_general_vendor_pool_apply_exception_flag" visible="false">
                                     <Label text="{I18N>/VP_EXCEPTION_FLAG}" design="Bold" required="true" width="8rem"/> 
-                                        <!-- <Switch id="general_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                        <Switch id="general_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
                                             </layoutData>
-                                        </Switch>  -->
+                                        </Switch> 
                                     <SegmentedButton id="general_vendor_pool_apply_exception_flag" >
                                         <items>
                                             <SegmentedButtonItem key="true" text="Yes" />
@@ -246,7 +247,8 @@
                                     <layoutData>
                                         <layout:GridData span="XL1 L1 M1 S12" />
                                     </layoutData> 
-                                </VBox>                                                                       
+                                </VBox>     -->
+
                                 <VBox id="v_general_equipment_grade_code">
                                     <Label text="{I18N>/REVIEW_GRADE}" design="Bold"/> 
                                         <HBox>
@@ -524,7 +526,7 @@
                                         }" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/MATERIAL_CODE}" width="20%" filterProperty="material_code">
+                                <table:Column label="{I18N>/MATERIAL_CODE}" width="25%" filterProperty="material_code">
                                     <table:template>
                                         <!-- <lib-m:CodePicker id="material_code"
                                             placeholder="Enter a material name"
@@ -549,7 +551,7 @@
                                             />                                        
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/MATERIAL_SPEC}" width="50%" filterProperty="material_desc">
+                                <table:Column label="{I18N>/MATERIAL_SPEC}" width="55%" filterProperty="material_desc">
                                     <table:template>
                                         <Text text="{matlist>material_desc}" wrapping="false" />
                                     </table:template>
@@ -559,12 +561,12 @@
                                         <Text text="{matlist>vendor_pool_mapping_use_flag}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/REGISTER_REASON}" width="15%" filterProperty="register_reason">
+                                <table:Column label="{I18N>/REGISTER_REASON}" width="0rem" filterProperty="register_reason">
                                     <table:template>
                                         <Text text="{matlist>register_reason}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/REG_DATE}" width="15%" filterProperty="local_update_dtm">
+                                <table:Column label="{I18N>/REG_DATE}" width="20%" filterProperty="local_update_dtm">
                                     <table:template>
                                         <!-- <DatePicker  
                                             placeholder="Date" 
@@ -618,7 +620,7 @@
                                         }" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/EMPLOYEE_NAME}" width="20%" filterProperty="user_local_name">
+                                <table:Column label="{I18N>/EMPLOYEE_NAME}" width="25%" filterProperty="user_local_name">
                                     <table:template>
                                         <!-- <lib-m:CodePicker id="user_local_name"
                                             placeholder="Enter a vendor_pool_person_empno"
@@ -648,49 +650,49 @@
                                         <Text text="{manlist>user_local_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column> -->
-                                <table:Column label="이름(EN)" width="0em" filterProperty="user_english_name">
+                                <table:Column label="이름(EN)" width="0rem" filterProperty="user_english_name">
                                     <table:template>
                                         <Text text="{manlist>user_english_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/USER_POSITION}" width="20%" filterProperty="job_title">
+                                <table:Column label="{I18N>/USER_POSITION}" width="25%" filterProperty="job_title">
                                     <table:template>
                                         <Text text="{manlist>job_title}" wrapping="false" />
                                     </table:template>
                                 </table:Column>    
-                                <table:Column label="담당자역할" width="20%" filterProperty="vendor_pool_person_role_text">
+                                <!-- <table:Column label="담당자역할" width="0rem" filterProperty="vendor_pool_person_role_text" >
                                     <table:template>
                                         <Input id="vendor_pool_person_role_text" placeholder="Input data" value="{manlist>vendor_pool_person_role_text}"></Input> 
 
                                     </table:template>
-                                </table:Column>                                                            
-                                <table:Column label="{I18N>/DEPARTMENT}" width="20%" filterProperty="department_korean_name">
+                                </table:Column>                                                             -->
+                                <table:Column label="{I18N>/DEPARTMENT}" width="25%" filterProperty="department_korean_name">
                                     <table:template>
                                         <Text text="{manlist>department_local_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="" width="0em" filterProperty="department_english_name">
+                                <table:Column label="" width="0rem" filterProperty="department_english_name">
                                     <table:template>
                                         <Text text="{manlist>department_english_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="" width="0em" filterProperty="user_status_code">
+                                <table:Column label="" width="0rem" filterProperty="user_status_code">
                                     <table:template>
                                         <Text text="{manlist>user_status_code}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
 
-                                <table:Column label="" width="0em" filterProperty="vendor_pool_person_empno">
+                                <table:Column label="" width="0rem" filterProperty="vendor_pool_person_empno">
                                     <table:template>
                                         <Text text="{manlist>vendor_pool_person_empno}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="" width="0em" filterProperty="vendor_pool_mapping_use_flag">
+                                <table:Column label="" width="0rem" filterProperty="vendor_pool_mapping_use_flag">
                                     <table:template>
                                         <Text text="{manlist>vendor_pool_mapping_use_flag}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/REG_DATE}" width="20%" filterProperty="local_update_dtm">
+                                <table:Column label="{I18N>/REG_DATE}" width="25%" filterProperty="local_update_dtm">
                                     <table:template>
                                         <Text  text="{path: 'manlist>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"/>
                                         <!-- <Text text="{manlist>local_update_dtm}" wrapping="false" /> -->

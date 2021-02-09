@@ -333,6 +333,12 @@ sap.ui.define([
             var cateObj = this.getModel("category").getProperty("/PdPartBaseActivityCategoryView");
 
             console.log(cateObj);
+
+            var sGrade;
+            var aGrade;
+            var bGrade;
+            var cGrade;
+            var dGrade;            
             
             for (var i = 0; i <  cateObj.length; i++) {
                 
@@ -346,49 +352,73 @@ sap.ui.define([
                   oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days==null || 
                   parseInt(oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days) == undefined || 
                   parseInt(oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days) == NaN){
+                    
+                    sGrade = null;                                  
 
-                    oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days = "0";
+                }else{
+
+                    sGrade = oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days.toString();
                 }
+
                 if(oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days=="" ||
                   oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days==null || 
                   parseInt(oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days) == undefined || 
                   parseInt(oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days) == NaN){
-                      
-                    oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days = "0";
+
+                    aGrade = null;
+
+                }else{
+
+                    aGrade = oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days.toString();
                 }
+
                 if(oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days=="" ||
                   oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days==null || 
                   parseInt(oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days) == undefined || 
                   parseInt(oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days) == NaN){
                       
-                    oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days = "0";
+                    bGrade = null;
+
+                }else{
+
+                    bGrade = oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days.toString();
                 }
+
                 if(oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days=="" ||
                   oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days==null || 
                   parseInt(oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days) == undefined || 
                   parseInt(oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days) == NaN){
-                      
-                    oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days = "0";
+                    
+                    cGrade = null;
+
+                }else{
+
+                    cGrade = oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days.toString();
                 }
+
                 if(oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days=="" ||
                   oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days==null || 
                   parseInt(oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days) == undefined || 
                   parseInt(oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days) == NaN){
-                      
-                    oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days = "0";
-                }                
+                    
+                    dGrade = null;                      
+                    
+                }else{
+
+                    dGrade = oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days.toString();
+                }               
                 
                 pdCatVal.push({
                     tenant_id: oCateData.PdPartBaseActivityCategoryView[i].tenant_id,
                     activity_code: oCateData.PdPartBaseActivityCategoryView[i].activity_code,
                     category_group_code: oCateData.PdPartBaseActivityCategoryView[i].category_group_code,
                     category_code: oCateData.PdPartBaseActivityCategoryView[i].category_code,
-                    s_grade_standard_days: oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days.toString(),
+                    s_grade_standard_days: sGrade,
                     
-                    a_grade_standard_days: oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days.toString(),
-                    b_grade_standard_days: oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days.toString(),
-                    c_grade_standard_days: oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days.toString(),
-                    d_grade_standard_days: oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days.toString(),
+                    a_grade_standard_days: aGrade,
+                    b_grade_standard_days: bGrade,
+                    c_grade_standard_days: cGrade,
+                    d_grade_standard_days: dGrade,                    
                     active_flag: cateActiveFlg,
                     
                     update_user_id: this.loginUserId,                        
@@ -397,6 +427,8 @@ sap.ui.define([
             }
 
             input.inputData.pdCat = pdCatVal;
+
+            console.log(input);
 
             if(this.validator.validate(this.byId("page")) !== true) return;
 

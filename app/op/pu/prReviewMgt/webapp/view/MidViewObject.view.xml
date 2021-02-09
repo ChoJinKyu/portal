@@ -24,7 +24,7 @@
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="(미정)구매요청 검토" wrapping="true" />
+					<Title text="{I18N>/PR_REVIEW}" wrapping="true" />
 				</uxap:expandedHeading>
                 <uxap:navigationActions>
                     <!-- 전체화면 -->
@@ -104,23 +104,23 @@
 						<uxap:blocks>
                             <form:SimpleForm editable="false">
                                     <core:Title text="{I18N>/BASIC_INFO}" />
-                                    <Label text="(미정)구매요청번호"/>
+                                    <Label text="{I18N>/PR_NUMBER}"/>
                                     <Text text="{detail>/Pr_ReviewDtlView/pr_number}" width="20em" textAlign="Left" />
-                                    <Label text="(미정)품목번호"/>
+                                    <Label text="{I18N>/ITEM_NUMBER}"/>
                                     <Text text="{detail>/Pr_ReviewDtlView/pr_item_number}" width="20em" textAlign="Left" />
-                                    <Label text="(미정)ERP구매요청번호"/>
+                                    <Label text="{I18N>/ERP_PR_NUMBER}"/>
                                     <Text text="{detail>/Pr_ReviewDtlView/erp_pr_number}" width="20em" textAlign="Left" />
-                                    <Label text="(미정)진행상태"/>
+                                    <Label text="{I18N>/PROGRESS_STATUS}"/>
                                     <Text text="{detail>/Pr_ReviewDtlView/pr_progress_status_name}" width="20em" textAlign="Left" />
 
                                     <core:Title text="" />
-                                    <Label text="(미정)구매요청유형"/>
+                                    <Label text="{I18N>/PR_TYPE_CODE}"/>
                                     <Text text="{detail>/Pr_ReviewDtlView/pr_type_name}" width="20em" textAlign="Left" />
-                                    <Label text="(미정)품목그룹"/>
+                                    <Label text="{I18N>/PR_TYPE_CODE_2}"/>
                                     <Text text="{detail>/Pr_ReviewDtlView/pr_type_name_2}" width="20em" textAlign="Left" />
-                                    <Label text="(미정)품목"/>
+                                    <Label text="{I18N>/ITEM}"/>
                                     <Text text="{detail>/Pr_ReviewDtlView/pr_type_name_3}" width="20em" textAlign="Left" />
-                                    <Label text="(미정)구매요청템플릿"/>
+                                    <Label text="{I18N>/PR_TEMPLATE_NUMBER}"/>
                                     <Text text="{detail>/Pr_ReviewDtlView/pr_template_name}" width="20em" textAlign="Left" />
                             </form:SimpleForm>
 						</uxap:blocks>
@@ -129,55 +129,55 @@
             </uxap:ObjectPageSection>
             
             <!-- 품목/담당자 정보 -->
-			<uxap:ObjectPageSection titleUppercase="true" title="(미정)품목/담당자정보">
+			<uxap:ObjectPageSection titleUppercase="true" title="{I18N>/ITEM_PERSON_INFO}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
                             <form:SimpleForm editable="false">
-                                <core:Title text="(미정)품목정보" />
-                                <Label text="(미정)조직코드"/>
+                                <core:Title text="{I18N>/ITEM_INFO}" />
+                                <Label text="{I18N>/ORG_CODE}"/>
                                 <Text text="[{detail>/Pr_ReviewDtlView/org_code}] {detail>/Pr_ReviewDtlView/org_name}"
                                     visible="{= !!${detail>/Pr_ReviewDtlView/org_code}}"
                                 />
-                                <Label text="(미정)자재코드"/>
+                                <Label text="{I18N>/MATERIAL_CODE}"/>
                                 <Text text="{detail>/Pr_ReviewDtlView/material_code}" width="20em" textAlign="Left"
                                     visible="{= !!${detail>/Pr_ReviewDtlView/material_code}}"
                                 />
-                                <Label text="(미정)품명"/>
+                                <Label text="{I18N>/ITEM_NAME}"/>
                                 <Text text="{detail>/Pr_ReviewDtlView/pr_desc}" width="20em" textAlign="Left" />
-                                <Label text="(미정)비고"/>
+                                <Label text="{I18N>/REMARK}"/>
                                 <Text text="{detail>/Pr_ReviewDtlView/remark}" width="20em" textAlign="Left" />
 
-                                <Label text="(미정)자재그룹"/>
+                                <Label text="{I18N>/MATERIAL_GROUP_CODE}"/>
                                 <Text text="[{detail>/Pr_ReviewDtlView/material_group_code}] {detail>/Pr_ReviewDtlView/material_group_name}"
                                     visible="{= !!${detail>/Pr_ReviewDtlView/material_group_code}}"
                                 />
-                                <Label text="(미정)품목범주"/>
+                                <Label text="{I18N>/ITEM_CATEGORY}"/>
                                 <Text text="[{detail>/Pr_ReviewDtlView/item_category_code}] {detail>/Pr_ReviewDtlView/item_category_name}" width="20em" textAlign="Left" 
                                     visible="{= !!${detail>/Pr_ReviewDtlView/item_category_code}}"
                                 />
-                                <Label text="(미정)저장위치"/>
+                                <Label text="{I18N>/STORAGE_LOCATION}"/>
                                 <Text text="[{detail>/Pr_ReviewDtlView/slot_code}] {detail>/Pr_ReviewDtlView/slot_name}" width="20em" textAlign="Left"
                                     visible="{= !!${detail>/Pr_ReviewDtlView/slot_code}}"
                                 />
                             
-                                <core:Title text="(미정)담당자정보"/>
-                                <Label text="(미정)구매요청자"/>
+                                <core:Title text="{I18N>/PERSON_INFO}"/>
+                                <Label text="{I18N>/PR_REQUESTOR}"/>
                                 <Text text="{detail>/Pr_ReviewDtlView/requestor_name} / {detail>/Pr_ReviewDtlView/requestor_department_name}" width="20em" textAlign="Left" 
                                     visible="{= !!${detail>/Pr_ReviewDtlView/requestor_name}}"
                                 />
-                                <Label text="(미정)구매담당자"/>
+                                <Label text="{I18N>/BUYER}"/>
                                 <Text text="{detail>/Pr_ReviewDtlView/buyer_name} / {detail>/Pr_ReviewDtlView/buyer_department_name}" width="20em" textAlign="Left"
                                     visible="{= !!${detail>/Pr_ReviewDtlView/buyer_name}}"
                                 />
 
-                                <Label text="(미정)요청자명"/>
+                                <Label text="{I18N>/REQUESTOR_NAME}"/>
                                 <Text text="{detail>/Pr_ReviewDtlView/erp_requestor_name}" width="20em" textAlign="Left" />
-                                <Label text="(미정)구매그룹"/>
+                                <Label text="{I18N>/PURCHASING_GROUP_CODE}"/>
                                 <Text text="[{detail>/Pr_ReviewDtlView/purchasing_group_code}] {detail>/Pr_ReviewDtlView/purchasing_group_name}" width="20em" textAlign="Left" 
                                     visible="{= !!${detail>/Pr_ReviewDtlView/purchasing_group_code}}"
                                 />
-                                <Label text="(미정)자재구매그룹"/>
+                                <Label text="{I18N>/MATERIAL_PURCHASING_GROUP_CODE}"/>
                                 <Text text="[{detail>/Pr_ReviewDtlView/material_purchasing_group_code}] {detail>/Pr_ReviewDtlView/material_purchasing_group_name}" width="20em" textAlign="Left" 
                                     visible="{= !!${detail>/Pr_ReviewDtlView/material_purchasing_group_code}}"
                                 />
@@ -188,13 +188,13 @@
             </uxap:ObjectPageSection>
             
             <!-- 수량/금액/일자/공급업체 정보 -->
-			<uxap:ObjectPageSection titleUppercase="true" title="(미정)수량/금액/일자정보">
+			<uxap:ObjectPageSection titleUppercase="true" title="{I18N>/QTY_AMT_DATE_INFO}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
                             <form:SimpleForm editable="false">
-                                <core:Title text="(미정)수량/금액정보"/>
-                                <Label text="(미정)요청수량"/>
+                                <core:Title text="{I18N>/QTY_AMT_INFO}"/>
+                                <Label text="{I18N>/REQUEST_QUANTITY}"/>
                                 <Text 
                                     text="{
                                         parts: [
@@ -206,7 +206,7 @@
                                     textAlign="Left" 
                                 />
 
-                                <Label text="(미정)잔여수량"/>
+                                <Label text="{I18N>/REMAIN_QUANTITY}"/>
                                 <Text 
                                     text="{
                                         parts: [
@@ -218,7 +218,7 @@
                                     textAlign="Left" 
                                 />
 
-                                <Label text="(미정)단가예산"/>
+                                <Label text="{I18N>/NET_PRICE_BUDGET}"/>
                                 <Text 
                                     text="{
                                         parts: [
@@ -230,9 +230,9 @@
                                     textAlign="Left" 
                                 />
 
-                                <Label text="(미정)Per"/>
+                                <Label text="{I18N>/PER}"/>
                                 <Text text="{detail>/Pr_ReviewDtlView/price_unit}" width="20em" textAlign="Left" />
-                                <Label text="(미정)금액"/>
+                                <Label text="{I18N>/AMOUNT}"/>
                                 <Text 
                                     text="{
                                         parts: [
@@ -244,8 +244,8 @@
                                     textAlign="Left" 
                                 />
 
-                                <core:Title text="(미정)일자정보" />
-                                <Label text="(미정)생성일자"/>
+                                <core:Title text="{I18N>/DATE_INFO}" />
+                                <Label text="{I18N>/PR_REQUEST_DATE}"/>
                                 <Text 
                                     text="{
                                         path: 'detail>/Pr_ReviewDtlView/request_date',
@@ -254,7 +254,7 @@
                                     width="20em" 
                                     textAlign="Left"
                                 />
-                                <Label text="(미정)납품요청일자"/>
+                                <Label text="{I18N>/DELIVERY_REQUEST_DATE}"/>
                                 <Text 
                                     text="{
                                         path: 'detail>/Pr_ReviewDtlView/delivery_request_date',
@@ -263,7 +263,7 @@
                                     width="20em" 
                                     textAlign="Left"
                                 />
-                                <Label text="(미정)확정일자"/>
+                                <Label text="{I18N>/CONFIRMED_DATE}"/>
                                 <Text 
                                     text="{
                                         path: 'detail>/Pr_ReviewDtlView/confirmed_date',
@@ -272,7 +272,7 @@
                                     width="20em" 
                                     textAlign="Left"
                                 />
-                                <Label text="(미정)변경일자"/>
+                                <Label text="{I18N>/CHANGE_DATE}"/>
                                 <Text 
                                     text="{
                                         path: 'detail>/Pr_ReviewDtlView/local_update_dtm',
@@ -288,13 +288,13 @@
             </uxap:ObjectPageSection>
             
             <!-- 계정지정 정보 -->
-			<uxap:ObjectPageSection titleUppercase="true" title="(미정)공급업체정보" visible="{= !!${detail>/Pr_ReviewDtlView/supplier_code}}">
+			<uxap:ObjectPageSection titleUppercase="true" title="{I18N>/SUPPLIER_INFO}" visible="{= !!${detail>/Pr_ReviewDtlView/supplier_code}}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
                             <form:SimpleForm>
-                                <core:Title text="(미정)공급업체정보" />
-                                <Label text="(미정)공급업체"/>
+                                <core:Title text="{I18N>/SUPPLIER_INFO}" />
+                                <Label text="{I18N>/SUPPLIER}"/>
                                 <Text text="[{detail>/Pr_ReviewDtlView/supplier_code}] {detail>/Pr_ReviewDtlView/supplier_name}" width="20em" textAlign="Left" />
                                 
                                 <core:Title text="" />
@@ -305,7 +305,7 @@
             </uxap:ObjectPageSection>
 
             <!-- 계정지정 정보 -->
-			<uxap:ObjectPageSection titleUppercase="true" title="(미정)계정지정정보" visible="{= ${accounts>/Pr_ReviewDtlAcctView}.length > 0}">
+			<uxap:ObjectPageSection titleUppercase="true" title="{I18N>/ACCOUNT_ASSIGNMENT_INFO}" visible="{= ${accounts>/Pr_ReviewDtlAcctView}.length > 0}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
@@ -330,12 +330,12 @@
                                 >
                                     <headerToolbar>
                                         <OverflowToolbar>
-                                            <!-- <Title text="(미정)계정지정정보 ({= ${accounts>/Pr_ReviewDtlAcctView}.length || 0})" level="H2"/> -->
-                                            <!-- <Title text="(미정)계정지정정보" level="H2"/> -->
+                                            <!-- <Title text="{I18N>/ACCOUNT_ASSIGNMENT_INFO} ({= ${accounts>/Pr_ReviewDtlAcctView}.length || 0})" level="H2"/> -->
+                                            <!-- <Title text="{I18N>/ACCOUNT_ASSIGNMENT_INFO}" level="H2"/> -->
                                             <ToolbarSpacer/>
                                             <Button 
                                                 icon="sap-icon://excel-attachment" 
-                                                press="onExcel($event, 'Download', ${list>/Pr_ReviewDtlAcctView}, {
+                                                press="onExcel($event, 'Download', ${accounts>/Pr_ReviewDtlAcctView}, {
                                                     fileName: 'Account List',
                                                     tId: 'accountsTable'
                                                 })"
@@ -354,23 +354,23 @@
                                     <columns>
                                         <!-- 구매요청 번호 -->
                                         <Column hAlign="Center" width="auto">
-                                            <Text text="(미정)코스트센터" />
+                                            <Text text="{I18N>/CCTR_NAME}" />
                                         </Column>
                                         <!-- 구매요청 유형 -->
                                         <Column hAlign="Center" width="auto">
-                                            <Text text="(미정)계정코드" />
+                                            <Text text="{I18N>/ACCOUNT_CODE}" />
                                         </Column>
                                         <!-- 품목 번호 -->
                                         <Column hAlign="Center" width="auto">
-                                            <Text text="(미정)WBS코드" />
+                                            <Text text="{I18N>/WBS_CODE}" />
                                         </Column>
                                         <!-- 조직코드 -->
                                         <Column hAlign="Center" width="auto">
-                                            <Text text="(미정)자산번호" />
+                                            <Text text="{I18N>/ASSET_NUMBER}" />
                                         </Column>
                                         <!-- 자재코드 -->
                                         <Column demandPopin="true" minScreenWidth="Desktop" popinDisplay="Inline" hAlign="Center" width="auto">
-                                            <Text text="(미정)계정지정범주" />
+                                            <Text text="{I18N>/ACCOUNT_ASSIGNMENT_CATEGORY}" />
                                         </Column>
                                     </columns>
                                     <items>
@@ -415,7 +415,7 @@
 			<OverflowToolbar>
                 <ToolbarSpacer/>
                 <Button 
-                    text="(미정)마감취소"
+                    text="{I18N>/PR_REVIEW_CLOSING_CANCEL}"
                     type="Emphasized"
                     press=".onButtonPress($event, 'service', ${detail>/Pr_ReviewDtlView}, {
                         action: 'CLOSING_CANCEL',
@@ -425,7 +425,7 @@
                     visible="{detail>/Pr_ReviewDtlView/closing_flag}"
                 />
                 <Button 
-                    text="(미정)공사물량"
+                    text="{I18N>/COST_BM}"
                     type="Transparent"
                     press=".onButtonPress($event, 'service', ${detail>/Pr_ReviewDtlView}, {
                         action: 'undefined',
@@ -435,18 +435,18 @@
                     visible="true"
                 />
                 <Button 
-                    text="(미정)변경이력"
+                    text="{I18N>/CHANGE_HISTORY}"
                     type="Transparent"
                     press=".onButtonPress($event, 'service', ${detail>/Pr_ReviewDtlView}, {
                         action: 'CHANGE_HISTORY',
-                        title: '(미정)변경이력',
+                        title: '{I18N>/CHANGE_HISTORY}',
                         service: 'op.prReviewMgtV4Service',
                         entry: 'CallPrReviewSaveProc'
                     })"
                     visible="true"
                 />
                 <Button 
-                    text="(미정)발주이력"
+                    text="{I18N>/ORDER_HISTORY}"
                     type="Transparent"
                     press=".onButtonPress($event, 'service', ${detail>/Pr_ReviewDtlView}, {
                         action: 'undefined',
@@ -456,7 +456,7 @@
                     visible="true"
                 />
                 <Button 
-                    text="(미정)사용실적"
+                    text="{I18N>/USE_ACTUAL}"
                     type="Transparent"
                     press=".onButtonPress($event, 'service', ${detail>/Pr_ReviewDtlView}, {
                         action: 'undefined',

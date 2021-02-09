@@ -69,17 +69,22 @@ sap.ui.define([
         createTableColumns: function(){
             return [
                 new Column({
-                    width: "20%",
+                    width: "15%",
+                    label: new Label({text: this.getModel("I18N").getText("/CATEGORY_GROUP")}),
+                    template: new Text({text: "{category_group_name}"})
+                }),
+                new Column({
+                    width: "25%",
                     label: new Label({text: this.getModel("I18N").getText("/CATEGORY_NAME")}),
                     template: new Text({text: "{category_name}"})
                 }),
                 new Column({
-                    width: "60%",
+                    width: "45%",
                     label: new Label({text: this.getModel("I18N").getText("/PARENT_CATEGORY")}),
                     template: new Text({text: "{path}"})
                 }),
                 new Column({
-                    width: "20%",
+                    width: "15%",
                     label: new Label({text: this.getModel("I18N").getText("/STATUS")}),
                     template: new Text({text: "{active_flag_val}"})
                 })               
