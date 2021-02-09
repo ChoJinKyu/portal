@@ -382,7 +382,7 @@ service VpMappingService {
                     ,key mst.org_code                               
                     ,key mst.vendor_pool_code                       
                     ,key mst.supplier_code                          
-                    ,mst.org_type_name
+                    ,mst.operation_unit_name
                     ,mst.supplier_local_name                        
                     ,mst.supplier_english_name                      
                     ,mst.supplier_company_code                      
