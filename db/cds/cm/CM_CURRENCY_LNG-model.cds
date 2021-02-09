@@ -1,14 +1,15 @@
-namespace cm;
 
 using util from './util/util-model';
-using {cm as curreny} from './CM_CURRENCY-model';
+using from './CM_CURRENCY-model';
+
+namespace cm;
 
 entity Currency_Lng {
     key tenant_id          : String(5) not null;
     key currency_code      : String(30) not null;
     key language_code      : String(30);
 
-        parent             : Association to curreny.Currency
+        parent             : Association to cm.Currency
                                  on  parent.tenant_id     = tenant_id
                                  and parent.currency_code = currency_code;
 
