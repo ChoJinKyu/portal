@@ -24,22 +24,22 @@
                 <uxap:heading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
-                        <Title text="{I18N>/PRODUCT_ACTIVITY} {I18N>/DETAIL}" wrapping="true" class="" />
+                        <Title text="{I18N>/PRODUCT_ACTIVITY} {I18N>/MANAGEMENT} {I18N>/DETAIL}" wrapping="true" class="" />
                     </HBox>
                 </uxap:heading>	
 
 				<uxap:expandedHeading>
-					<Title text="{I18N>/PRODUCT_ACTIVITY_DETAIL}" wrapping="true" />
+					<Title text="{I18N>/PRODUCT_ACTIVITY_DETAIL} {I18N>/MANAGEMENT}" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="{I18N>/PRODUCT_ACTIVITY_DETAIL}" wrapping="true" />
+					<Title text="{I18N>/PRODUCT_ACTIVITY_DETAIL} {I18N>/MANAGEMENT}" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:expandedContent>
 				</uxap:expandedContent>
 				<uxap:snappedContent>
 				</uxap:snappedContent>
 				<uxap:snappedTitleOnMobile>
-					<Title text="{I18N>/PRODUCT_ACTIVITY_DETAIL}" />
+					<Title text="{I18N>/PRODUCT_ACTIVITY_DETAIL} {I18N>/MANAGEMENT}" />
 				</uxap:snappedTitleOnMobile>
                 <uxap:navigationActions>
 					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${fcl>/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
@@ -144,12 +144,14 @@
                                         </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="{I18N>/STATUS}"/>                                    
+                                    <Label text="{I18N>/STATUS}"/>
+                                    <Text 
+                                        text="{master>/active_flag}"
+                                        visible="{= !${midObjectViewModel>/editMode} }"/>                                   
                                     <SegmentedButton 
                                         id="editUseflag"
                                         selectedKey="{master>/active_flag}" 
-                                        selectionChange=""
-                                        enabled="{midObjectViewModel>/editMode}"
+                                        visible="{midObjectViewModel>/editMode}"
                                         width="100%">
                                         <items>
                                             <SegmentedButtonItem text="Active" width="5em" key="true"/>
@@ -166,71 +168,6 @@
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
             </uxap:ObjectPageSection>
-            
-
-<!-- 
-			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/GENERAL_INFO}">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection id="pageSubSection1" >
-
-                        <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
-                            <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                                <Label  
-                                    text="{I18N>/ACTIVITY_CODE} :" 
-                                    design="Bold" 
-                                    required="{= ${midObjectViewModel>/isAddedMode} }"
-                                    class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
-                                    <Text visible="{= !${midObjectViewModel>/isAddedMode} }" text="{master>/product_activity_code}" class="sapMLabelNoText"/> 
-                                    <Input required="{= ${midObjectViewModel>/isAddedMode} }" visible="{= ${midObjectViewModel>/isAddedMode} }" value="{master>/product_activity_code}" class="sapMLabelNoText"/> 
-                                  
-                            </layout:VerticalLayout>
-                        </FlexBox>
-
-                        <FlexBox visible="{= !${midObjectViewModel>/isAddedMode} }" height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
-                            <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                                <Label  
-                                    text="{I18N>/SEQUENCE} :" 
-                                    design="Bold" 
-                                    class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
-                                    <Text visible="{= !${midObjectViewModel>/editMode} }" text="{master>/sequence}" class="sapMLabelNoText"/> 
-                                    <Input visible="{midObjectViewModel>/editMode}" type="Number" value="{master>/sequence}" class="sapMLabelNoText"/> 
-                            </layout:VerticalLayout>
-                        </FlexBox>
-
-                        <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
-                            <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                                <Label  
-                                    text="{I18N>/DESCRIPTION} :" 
-                                    design="Bold" 
-                                    class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
-                                    <Text visible="{= !${midObjectViewModel>/editMode} }" text="{master>/description}" class="sapMLabelNoText"/> 
-                                    <Input visible="{midObjectViewModel>/editMode}" value="{master>/description}" class="sapMLabelNoText"/> 
-                            </layout:VerticalLayout>
-                        </FlexBox>
-
-                        <FlexBox height="40px" alignItems="Start" justifyContent="Start" class="sapUiLargeMarginBottom" >        
-                            <layout:VerticalLayout class="sapUiLargeMarginEnd">
-                                 <Label 
-                                    text="{I18N>/STATUS} :" 
-                                    design="Bold" 
-                                    class="sapUiTinyMarginTop sapUiTinyMarginBottom sapMLabelNoText"/>
-                                <SegmentedButton 
-                                    id="segmentedbutton_use_flag"
-                                    selectionChange="aaa"
-                                    selectedKey="{master>/active_flag}"
-                                    enabled="{midObjectViewModel>/editMode}"
-                                    width="100%">
-                                    <items>
-                                        <SegmentedButtonItem text="Active" width="5em" key="true"/>
-                                        <SegmentedButtonItem text="Inactive" width="5em" key="false"/>
-                                    </items>
-                                </SegmentedButton> 
-                            </layout:VerticalLayout>    
-                        </FlexBox>
-
-					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection> -->
 
 			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/MULTILINGUAL} ({= (${details>/PdProdActivityTemplateLng})?${details>/PdProdActivityTemplateLng}.length:0})">
 				<uxap:subSections>
@@ -250,7 +187,7 @@
                                     <ToolbarSpacer/>
                                     <HBox >
                                         <Button text="{I18N>/ROW_ADD}" press=".onPdActivityLengCreate"  type="Transparent"/>
-                                        <Button text="{I18N>/ROW_DELETE}" press=".onPdActivityLengDelete"/>
+                                        <Button text="{I18N>/ROW_DELETE}" press=".onPdActivityLengDelete" type="Transparent"/>
                                     </HBox>
                                 </Toolbar>
                             </headerToolbar>
@@ -270,13 +207,18 @@
                                 <items>
                                     <ColumnListItem>
                                         <cells>
-                                            <Text text="{details>_row_state_}"/>
+                                            <ObjectStatus 
+                                                visible="{midObjectViewModel>/editMode}"
+                                                icon="{
+                                                    path: 'details>_row_state_',
+                                                    formatter: '.formatter.toModelStateColumnIcon'
+                                                  }" />
                                             <HBox>
                                                 <Text
-                                                    visible="{= !${details>_row_state_}}"
-                                                    text="{details>language_cd}" /> 
+                                                    visible="{= !${midObjectViewModel>/editMode} }"
+                                                    text="{details>language_cd}" />
                                                 <ComboBox 
-                                                    visible="{= ${details>_row_state_} === 'C' || ${details>_row_state_} === 'D'}"
+                                                    visible="{midObjectViewModel>/editMode}"
                                                     showSecondaryValues= "true"
                                                     width="100%" 
                                                     selectedKey="{details>language_cd}"
