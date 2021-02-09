@@ -25,14 +25,7 @@
                 "settings": {
                     "odataVersion": "2.0"
                 }
-            },
-            "orgService": {
-                "uri": "srv-api/odata/v2/cm.OrgMgtService/",
-                "type": "OData",
-                "settings": {
-                "odataVersion": "2.0"
-                }
-            }            
+            }           
         }
     },
     "sap.fiori": {
@@ -100,16 +93,6 @@
                     "defaultCountMode": "Inline",
                     "refreshAfterChange": false,
                     "useBatch": true
-                }
-            },
-            "org": {
-                "dataSource": "orgService",
-                "preload": true,
-                "settings": {
-                "defaultBindingMode": "TwoWay",
-                "defaultCountMode": "Inline",
-                "refreshAfterChange": false,
-                "useBatch": true
                 }
             },
             "viewModel": {

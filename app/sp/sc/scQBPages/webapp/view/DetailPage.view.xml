@@ -775,7 +775,7 @@
                                                                     <ToggleButton text="{=${NegoHeaders>bidding_start_net_price_flag} === 'Y' || ${NegoHeaders>bidding_start_net_price_flag} === true ? 'YES' : 'NO'}" visible="{=${propInfo>/isEditMode}}" pressed="{NegoHeaders>bidding_start_net_price_flag}"  />
 
                                                                     <!-- <lib-m:FlagToggleButton  enabled="{=${propInfo>/isEditMode}}" pressed="{NegoHeaders>bidding_start_net_price_flag}" /> -->
-                                                                    <Text text="{NegoHeaders>bidding_start_net_price_flag}" visible="{=!${propInfo>/isEditMode}}" /> 
+                                                                    <Text text="{=${NegoHeaders>bidding_start_net_price_flag} === true ? 'YES' : 'NO'}" visible="{=!${propInfo>/isEditMode}}" /> 
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>

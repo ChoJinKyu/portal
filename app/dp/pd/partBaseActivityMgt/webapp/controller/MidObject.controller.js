@@ -462,7 +462,7 @@ sap.ui.define([
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         // 저장 후 재조회
                                         v_this.getModel("contModel").setProperty("/createMode", false);
-                                        v_this._bindView("/PdPartBaseActivity(tenant_id='" + v_this._sTenantId + "',activity_code='" + v_this._sActivityCode + "')");
+                                        v_this._bindView("/PdPartBaseActivityView(tenant_id='" + v_this._sTenantId + "',activity_code='" + v_this._sActivityCode + "')");
                                         oView.setBusy(true);
                                         var oLanguagesModel = v_this.getModel("languages");
                                             oLanguagesModel.setTransactionModel(v_this.getModel());
@@ -528,7 +528,7 @@ sap.ui.define([
             }else if (this._sActivityCode !== "new"){
                 
                 this.getModel("contModel").setProperty("/createMode", false);                
-                this._bindView("/PdPartBaseActivity(tenant_id='" + this._sTenantId + "',activity_code='" + this._sActivityCode + "')");
+                this._bindView("/PdPartBaseActivityView(tenant_id='" + this._sTenantId + "',activity_code='" + this._sActivityCode + "')");
                 oView.setBusy(true);
                 
                 var oLanguagesModel = this.getModel("languages");
@@ -624,7 +624,7 @@ sap.ui.define([
                     "activity_code": "",                    
                     "description": "",
                     "active_flag": true					
-                }, "/PdPartBaseActivity");
+                }, "/PdPartBaseActivityView");
                 
 				var oLanguagesModel = this.getModel("languages");
 				oLanguagesModel.setTransactionModel(this.getModel());
@@ -650,7 +650,7 @@ sap.ui.define([
 			}else{
 				this.getModel("contModel").setProperty("/createMode", false);
 
-				this._bindView("/PdPartBaseActivity(tenant_id='" + this._sTenantId + "',activity_code='" + this._sActivityCode + "')");
+				this._bindView("/PdPartBaseActivityView(tenant_id='" + this._sTenantId + "',activity_code='" + this._sActivityCode + "')");
 				oView.setBusy(true);
 				var oLanguagesModel = this.getModel("languages");
 				oLanguagesModel.setTransactionModel(this.getModel());

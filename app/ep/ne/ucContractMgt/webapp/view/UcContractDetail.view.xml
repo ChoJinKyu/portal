@@ -50,10 +50,7 @@
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
                     <ObjectStatus 
                         title="작성일자"
-                        text="{
-                                path: 'viewModel>/mst/contract_write_date',
-                                formatter: '.dateFormatter.toUTCDateString'
-                            }" />
+                        text="{viewModel>/mst/contract_write_date}" />
 
                     <ObjectStatus
                         title="작성부서"
@@ -114,11 +111,9 @@
                                 width="100%">
                             <t:extension>
                                 <OverflowToolbar>
-                                    <Title text="협력사 {= ${viewModel>/supplier}.length > 0 ? '(' + ${viewModel>/supplier}.length + ')' : ''}" level="H2"/>
                                     <ToolbarSpacer/>
                                     <Button id="supplierTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onSupplierTableAddButtonPress" />
                                     <Button id="supplierTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onSupplierTableDeleteButtonPress" />
-                                    
                                 </OverflowToolbar>
                             </t:extension>
                             <t:columns>
@@ -128,52 +123,68 @@
                                         <ObjectStatus icon="{
                                             path: 'viewModel>row_state',
                                             formatter: '.formatter.toModelStateColumnIcon'
-                                        }" />
+                                        }" visible="{viewSet>/isEditMode}" />
                                     </t:template>
                                 </t:Column>
-                                <t:Column hAlign="Center" width="10em" >
+                                <t:Column hAlign="Center" width="15em" >
                                     <Label text="협력사명" required="true" />
                                     <t:template>
                                     <HBox>
                                         <Input value="{viewModel>supplier_name}" 
                                             placeholder="협력사"
-                                            showValueHelp="true" valueHelpRequest=".openSupplierPopupInTable"
-                                            visible="true">
+                                            showValueHelp="true" valueHelpRequest=".openSupplierPopupInTable" width="14em"
+                                            visible="{viewSet>/isEditMode}">
                                         </Input>     
-                                        <Text text="{viewModel>supplier_code}" visible="false" />    
+                                        <Text text="{viewModel>supplier_code}" visible="false" />  
+                                        <Text text="{viewModel>supplier_name}" visible="{= ${viewSet>/isEditMode} === true ? false : true }" />        
                                     </HBox>                                   
                                     </t:template>
                                 </t:Column>
-                                <t:Column hAlign="Center" width="18em" >
-                                    <Label text="배분율" />
+                                <t:Column hAlign="Center" width="8em" >
+                                    <Label text="배분율(%)" />
                                     <t:template>
-                                        <Input value="{viewModel>distrb_rate}" editable="{= ${viewModel>row_state} === 'C' }" />
+                                        <HBox justifyContent="End">
+                                            <Input value="{viewModel>distrb_rate}" visible="{viewSet>/isEditMode}" type="Number" textAlign="Right" width="7em" />
+                                            <Text text="{viewModel>distrb_rate}" visible="{= ${viewSet>/isEditMode} === true ? false : true }" textAlign="Right" />    
+                                        </HBox>     
                                     </t:template>
                                 </t:Column>
-                                <t:Column hAlign="Center" minWidth="30rem" >
+                                <t:Column hAlign="Center" width="20em">
                                     <Label text="공장/지역구분" required="true" />
                                     <t:template>
-                                        <Input value="{viewModel>apply_plant_desc}" required="true" />
+                                        <HBox>
+                                            <Input value="{viewModel>apply_plant_desc}" visible="{viewSet>/isEditMode}" required="true" width="19em" />
+                                            <Text text="{viewModel>apply_plant_desc}" visible="{= ${viewSet>/isEditMode} === true ? false : true }" />    
+                                        </HBox>     
                                     </t:template>
                                 </t:Column>
                                 <t:Column hAlign="Center" width="10em" >
                                     <Label text="계약번호"/>
                                     <t:template>
-                                        <Text text="{viewModel>contract_number}" />
+                                        <Text text="{viewModel>contract_number}" width="9em" />
                                     </t:template>
                                 </t:Column>
                                 <t:Column hAlign="Center" width="10em" >
                                     <Label text="계약진행상태" />
                                     <t:template>
-                                        <Text text="{viewModel>contract_number}"  />
+                                        <Text text="{viewModel>contract_number}" width="9em"  />
                                     </t:template>
                                 </t:Column>
                                 <t:Column hAlign="Center" width="10em" >
                                     <Label text="계약방식" />
                                     <t:template>
-                                        <Text text="{viewModel>contract_number}" />
+                                        <Text text="{viewModel>contract_number}" width="9em" />
                                     </t:template>
-                                </t:Column>                                                                
+                                </t:Column>   
+                                <t:Column hAlign="Center" width="30em" >
+                                    <Label text="비고"/>
+                                    <t:template>
+                                        <HBox>
+                                            <Input value="{viewModel>remark}" visible="{viewSet>/isEditMode}" width="28em"/>
+                                            <Text text="{viewModel>remark}" visible="{= ${viewSet>/isEditMode} === true ? false : true }" />    
+                                        </HBox>     
+                                    </t:template>
+                                </t:Column>                                                                                             
                             </t:columns>
                         </t:Table>
 					</uxap:ObjectPageSubSection>
@@ -190,12 +201,12 @@
                                 selectionMode="MultiToggle"
                                 visibleRowCount="5"
                                 columnResize="onColumnResize"
-                                cellClick=".onCellClick"
+                                cellClick=".onItemCellClick"
                                 rowSelectionChange=".onCheck"
                                 width="100%">
                             <t:extension>
                                 <OverflowToolbar>
-                                    <Title text="품목 {= ${viewModel>/dtl}.length > 0 ? '(' + ${viewModel>/dtl}.length + ')' : ''}" level="H2"/>
+                                    <!-- <Title text="품목 {= ${viewModel>/dtl}.length > 0 ? '(' + ${viewModel>/dtl}.length + ')' : ''}" level="H2"/> -->
                                     <ToolbarSpacer/>
                                     <Button id="dtlTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onDtlTableAddButtonPress" />
                                     <Button id="dtlTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onDtlTableDeleteButtonPress" />
@@ -209,69 +220,111 @@
                                         <ObjectStatus icon="{
                                             path: 'viewModel>row_state',
                                             formatter: '.formatter.toModelStateColumnIcon'
-                                        }" />
+                                        }" visible="{viewSet>/isEditMode}" />
                                     </t:template>
                                 </t:Column>
-                                <t:Column hAlign="Center" width="10em" >
+                                <t:Column hAlign="Center" width="6em" >
                                     <Label text="품목순번" />
                                     <t:template>
                                         <Text text="{viewModel>item_sequence}" />
                                     </t:template>
                                 </t:Column>
-                                <t:Column hAlign="Center" width="18em" >
+                                <t:Column hAlign="Center" width="12em">
                                     <Label text="품목코드" required="true" />
                                     <t:template>
-                                        <Input value="{viewModel>ep_item_code}" editable="{= ${viewModel>row_state} === 'C' }" required="true" />
+                                        <HBox justifyContent="Center">
+                                            <Input value="{viewModel>ep_item_code}" 
+                                                placeholder="품목코드"
+                                                showValueHelp="true" valueHelpRequest=".openItemPopupInTable" width="11em"
+                                                visible="{viewSet>/isEditMode}">
+                                            </Input>                                         
+                                            <Text text="{viewModel>ep_item_code}" visible="{= ${viewSet>/isEditMode} === true ? false : true }" />
+                                        </HBox>    
                                     </t:template>
                                 </t:Column>
-                                <t:Column hAlign="Center" minWidth="30rem" >
+                                <t:Column hAlign="Center" width="14em">
                                     <Label text="품목명" required="true" />
                                     <t:template>
-                                        <Input value="{viewModel>ep_item_name}" required="true" />
+                                        <HBox>
+                                            <Input value="{viewModel>ep_item_name}" required="true" editable="false" visible="{viewSet>/isEditMode}" width="13em" />
+                                            <Text text="{viewModel>ep_item_name}" visible="{= ${viewSet>/isEditMode} === true ? false : true }" /> 
+                                        </HBox>       
                                     </t:template>
                                 </t:Column>
-                                <t:Column hAlign="Center" width="10em" >
+                                <t:Column hAlign="Center" width="18em">
                                     <Label text="규격" />
                                     <t:template>
-                                        <Input value="{viewModel>spec_desc}" />
+                                        <HBox>
+                                            <Input value="{viewModel>spec_desc}" editable="false" visible="{viewSet>/isEditMode}" width="17em" />
+                                            <Text text="{viewModel>spec_desc}" visible="{= ${viewSet>/isEditMode} === true ? false : true }" />     
+                                        </HBox>    
                                     </t:template>
                                 </t:Column>
-                                <t:Column hAlign="Center" width="10em" >
+                                <t:Column hAlign="Center" width="6em" >
                                     <Label text="단위" required="true" />
                                     <t:template>
-                                        <Input value="{viewModel>unit}" required="true" />
+                                        <HBox justifyContent="Center">
+                                            <Input value="{viewModel>unit}" required="true" editable="false" textAlign="Center" visible="{viewSet>/isEditMode}" width="5em" />
+                                            <Text text="{viewModel>unit}" textAlign="Center" visible="{= ${viewSet>/isEditMode} === true ? false : true }" />    
+                                        </HBox>    
                                     </t:template>
                                 </t:Column>     
-                                <t:Column hAlign="Center" width="10em" >
+                                <t:Column hAlign="Center" width="6em" >
                                     <Label text="자재적용" />
                                     <t:template>
-                                        <!-- <Input value="{= ${viewModel>material_apply_flag} === true ? 'Y' : 'N' }" /> -->
-                                        <Input value="{viewModel>material_apply_flag}" />    
+                                        <HBox justifyContent="Center">
+                                            <!-- <Input value="{= ${viewModel>material_apply_flag} === true ? 'Y' : 'N' }" /> -->
+                                            <Input value="{viewModel>material_apply_flag}" editable="false" textAlign="Center" visible="{viewSet>/isEditMode}" width="5em" />  
+                                            <Text text="{viewModel>material_apply_flag}" textAlign="Center" visible="{= ${viewSet>/isEditMode} === true ? false : true }" /> 
+                                        </HBox>         
                                     </t:template>
                                 </t:Column>
-                                <t:Column hAlign="Center" width="10em" >
+                                <t:Column hAlign="Center" width="6em" >
                                     <Label text="노무적용" />
                                     <t:template>
-                                        <!-- <Input value="{= ${viewModel>labor_apply_flag} === true ? 'Y' : 'N' }" /> -->
-                                        <Input value="{viewModel>labor_apply_flag}" />    
+                                        <HBox justifyContent="Center">
+                                            <!-- <Input value="{= ${viewModel>labor_apply_flag} === true ? 'Y' : 'N' }" /> -->
+                                            <Input value="{viewModel>labor_apply_flag}" editable="false" textAlign="Center" visible="{viewSet>/isEditMode}" width="5em" />    
+                                            <Text text="{viewModel>labor_apply_flag}" textAlign="Center" visible="{= ${viewSet>/isEditMode} === true ? false : true }" />   
+                                        </HBox>     
                                     </t:template>
                                 </t:Column>    
-                                <t:Column hAlign="Center" width="10em" >
+                                <t:Column hAlign="Center" width="11em" >
                                     <Label text="통화" />
                                     <t:template>
-                                        <Input value="{viewModel>currency_code}" />
+                                        <HBox justifyContent="Center">
+                                            <Select selectedKey="KRW" 
+                                                    visible="{viewSet>/isEditMode}"
+                                                    maxHeight="200px" width="10em"
+                                                    items="{
+                                                            path: 'common>/Currency',
+                                                            filters: [
+                                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                            ],
+                                                            sorter: { path: 'currency_code'}
+                                                        }">
+                                                <core:Item key="{common>currency_code}" text="{common>currency_code}" />
+                                            </Select>   
+                                            <Text text="{viewModel>currency_code}" visible="{= ${viewSet>/isEditMode} === true ? false : true }" />    
+                                        </HBox>                                          
                                     </t:template>
                                 </t:Column>
-                                <t:Column hAlign="Center" width="10em" >
+                                <t:Column hAlign="Center" width="8em" >
                                     <Label text="자재단가" />
                                     <t:template>
-                                        <Input value="{viewModel>material_net_price}" />
+                                        <HBox justifyContent="End">
+                                            <Input value="{viewModel>material_net_price}" type="Number" textAlign="Right" editable="{= ${viewModel>material_apply_flag} !== 'Y' ? false : true }" visible="{viewSet>/isEditMode}" width="7em" />
+                                            <Text text="{viewModel>material_net_price}" textAlign="Right" visible="{= ${viewSet>/isEditMode} === true ? false : true }" />
+                                        </HBox>    
                                     </t:template>
                                 </t:Column>    
-                                <t:Column hAlign="Center" width="10em" >
+                                <t:Column hAlign="Center" width="8em" >
                                     <Label text="노무단가" />
                                     <t:template>
-                                        <Input value="{viewModel>labor_net_price}" />
+                                        <HBox justifyContent="End">
+                                            <Input value="{viewModel>labor_net_price}" type="Number" textAlign="Right" editable="{= ${viewModel>labor_apply_flag} !== 'Y' ? false : true }" visible="{viewSet>/isEditMode}" width="7em" />
+                                            <Text text="{viewModel>labor_net_price}" textAlign="Right" visible="{= ${viewSet>/isEditMode} === true ? false : true }" />
+                                        </HBox>    
                                     </t:template>
                                 </t:Column>                                                                                                                            
                             </t:columns>
@@ -291,12 +344,13 @@
                                 items="{viewModel>/extra}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
-								mode="MultiSelect" 
+                                mode="MultiSelect" 
+                                noDataText="데이터가 없습니다."
 								width="auto">
 
 							<headerToolbar>
 								<OverflowToolbar>
-                                    <Title text="할증 {= ${viewModel>/extra}.length > 0 ? '(' + ${viewModel>/extra}.length + ')' : ''}" level="H2"/>
+                                    <!-- <Title text="할증 {= ${viewModel>/extra}.length > 0 ? '(' + ${viewModel>/extra}.length + ')' : ''}" level="H2"/> -->
 									<ToolbarSpacer/>
                                     <Button id="extraTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onExtraTableAddButtonPress" />
                                     <Button id="extraTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onExtraTableDeleteButtonPress" />
@@ -306,16 +360,16 @@
 								<Column id="extraColumnState" minScreenWidth="Tablet" hAlign="Center" width="2em" >
 									<Label text=""/>
 								</Column>
-								<Column minScreenWidth="Tablet" hAlign="Center" width="10em">
-									<Label text="할증분류"/>
+								<Column minScreenWidth="Tablet" hAlign="Center" width="12em">
+									<Label text="할증분류" required="{viewSet>/isEditMode}"/>
 								</Column>
-								<Column minScreenWidth="Tablet" hAlign="Center" width="10em">
-									<Label text="할증명"/>
-								</Column>   
 								<Column minScreenWidth="Tablet" hAlign="Center" width="15em">
-									<Label text="할증요율·적용기준"/>
+									<Label text="할증명" required="{viewSet>/isEditMode}"/>
+								</Column>   
+								<Column minScreenWidth="Tablet" hAlign="Center" width="8em">
+									<Label text="할증요율·적용기준" required="{viewSet>/isEditMode}"/>
 								</Column>  
-								<Column minScreenWidth="Tablet" hAlign="Center" width="30em">
+								<Column minScreenWidth="Tablet" hAlign="Center" width="25em">
 									<Label text="할증비고"/>
 								</Column>                                                                                               
 							</columns>
@@ -325,75 +379,11 @@
                                         <ObjectStatus icon="{
                                             path: 'viewModel>row_state',
                                             formatter: '.formatter.toModelStateColumnIcon'
-                                        }" />                                    
-                                        <HBox width="100%" textAlign="Center">
-                                            <ComboBox selectedKey="{viewModel>extra_class_number}" selectionChange="setExtraItem"
-                                                    items="{
-                                                            path: '/UcExtraClass',
-                                                            filters: [
-                                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                                {path: 'company_code', operator: 'EQ', value1: 'LGCKR'}
-                                                            ],
-                                                            sorter: { path: 'extra_class_number'}
-                                                        }">
-                                                <core:Item key="{extra_class_number}:{extra_class_name}" text="{extra_class_name}" />
-                                            </ComboBox>   
-                                            <Text text="{viewModel>extra_class_name}" visible="false" />    
-                                        </HBox>  
-                                        <HBox width="100%" alignContent="Center">
-                                            <ComboBox id="saveExtraItem" selectedKey="{viewModel>extra_number}"
-                                                    items="{
-                                                            path: '/UcExtraItem',
-                                                            filters: [
-                                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                                {path: 'company_code', operator: 'EQ', value1: 'LGCKR'}
-                                                            ],
-                                                            sorter: { path: 'extra_number'}
-                                                        }">
-                                                <core:Item key="{extra_number}:{extra_name}" text="{extra_name}" />
-                                            </ComboBox>   
-                                            <Text text="{viewModel>extra_name}" visible="false" />    
-                                        </HBox>  
-                                        <Input value="{viewModel>apply_extra_rate}" required="true" textAlign="Center" width="100%" />
-                                        <Input value="{viewModel>apply_extra_desc}" required="true" textAlign="Center" width="100%" />
-									</cells>
-								</ColumnListItem>
-							</items>
-						</Table>
-<!-- 
-                        <t:Table id="extraTable" 
-                                noData="{I18N>/NCM01004}"
-                                rows="{viewModel>/extra}"
-                                selectionMode="MultiToggle"
-                                visibleRowCount="5"
-                                columnResize="onColumnResize"
-                                cellClick=".onCellClick"
-                                rowSelectionChange=".onCheck"
-                                width="100%">
-                            <t:extension>
-                                <OverflowToolbar>
-                                    <Title text="할증 {= ${viewModel>/extra}.length > 0 ? '(' + ${viewModel>/extra}.length + ')' : ''}" level="H2"/>
-                                    <ToolbarSpacer/>
-                                    <Button id="extraTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onExtraTableAddButtonPress" />
-                                    <Button id="extraTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onExtraTableDeleteButtonPress" />
-                                </OverflowToolbar>
-                            </t:extension>
-                            <t:columns>
-                                <t:Column id="extraColumnState" hAlign="Center" width="2em" >
-                                    <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
-                                    <t:template>
-                                        <ObjectStatus icon="{
-                                            path: 'viewModel>row_state',
-                                            formatter: '.formatter.toModelStateColumnIcon'
-                                        }" />
-                                    </t:template>
-                                </t:Column>
-                                <t:Column hAlign="Center" width="10em" >
-                                    <Label text="할증분류" required="true" />
-                                    <t:template>
-                                        <HBox width="100%">
-                                            <ComboBox selectedKey="{viewModel>/extra_class_number}" selectionChange="setExtraItem"
-                                                    items="{
+                                        }" visible="{viewSet>/isEditMode}" />                                    
+                                        <HBox justifyContent="Center">
+                                            <ComboBox selectedKey="{viewModel>extra_class_number}" selectionChange="setExtraClass" required="true"
+                                                visible="{viewSet>/isEditMode}" width="11em"         
+                                                items="{
                                                             path: '/UcExtraClass',
                                                             filters: [
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
@@ -403,43 +393,36 @@
                                                         }">
                                                 <core:Item key="{extra_class_number}" text="{extra_class_name}" />
                                             </ComboBox>   
-                                            <Text text="{viewModel>extra_class_name}" visible="false" />    
-                                        </HBox>                                   
-                                    </t:template>
-                                </t:Column>
-                                <t:Column hAlign="Center" width="18em" >
-                                    <Label text="할증명" />
-                                    <t:template>
-                                        <HBox width="100%">
-                                            <ComboBox id="saveExtraItem" selectedKey="{viewModel>/extra_number}"
-                                                    items="{
+                                            <Text text="{viewModel>extra_class_name}" textAlign="Center" visible="{= ${viewSet>/isEditMode} === true ? false : true }" />    
+                                        </HBox>  
+                                        <HBox justifyContent="Center">
+                                            <ComboBox selectedKey="{viewModel>extra_number}" selectionChange="setExtra" required="true"
+                                                visible="{viewSet>/isEditMode}" width="14em"       
+                                                items="{
                                                             path: '/UcExtraItem',
                                                             filters: [
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                                {path: 'company_code', operator: 'EQ', value1: 'LGCKR'}
+                                                                {path: 'company_code', operator: 'EQ', value1: 'LGCKR'},
+                                                                {path: 'extra_class_number', operator: 'EQ', value1: ''}
                                                             ],
                                                             sorter: { path: 'extra_number'}
                                                         }">
                                                 <core:Item key="{extra_number}" text="{extra_name}" />
                                             </ComboBox>   
-                                            <Text text="{viewModel>extra_name}" visible="false" />    
-                                        </HBox>   
-                                    </t:template>
-                                </t:Column>
-                                <t:Column hAlign="Center" minWidth="30rem" >
-                                    <Label text="할증요율·적용기준" required="true" />
-                                    <t:template>
-                                        <Input value="{viewModel>apply_extra_rate}" required="true" />
-                                    </t:template>
-                                </t:Column>
-                                <t:Column hAlign="Center" width="10em" >
-                                    <Label text="할증비고"/>
-                                    <t:template>
-                                        <Input value="{viewModel>apply_extra_desc}" />
-                                    </t:template>
-                                </t:Column>
-                            </t:columns>
-                        </t:Table> -->
+                                            <Text text="{viewModel>extra_name}" textAlign="Center" visible="{= ${viewSet>/isEditMode} === true ? false : true }" />    
+                                        </HBox>  
+                                        <HBox justifyContent="End">
+                                            <Input value="{viewModel>apply_extra_rate}" visible="{viewSet>/isEditMode}" required="true" textAlign="Right" type="Number" width="7em" />
+                                            <Text text="{viewModel>apply_extra_rate}" textAlign="Right" visible="{= ${viewSet>/isEditMode} === true ? false : true }" />     
+                                        </HBox>
+                                        <HBox>  
+                                            <Input value="{viewModel>apply_extra_desc}" visible="{viewSet>/isEditMode}" textAlign="Left" width="24em" />
+                                            <Text text="{viewModel>apply_extra_desc}" textAlign="Left" visible="{= ${viewSet>/isEditMode} === true ? false : true }" />        
+                                        </HBox>      
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection> 
@@ -501,7 +484,7 @@
                     press=".onMessagePopoverPress" />
 				<ToolbarSpacer />
                 <Button id="pageEditButton" type="Transparent" text="Edit" press=".onPageEditButtonPress" />
-                <Button id="pageCopyButton" type="Transparent" text="Copy" press=".onPageCopyButtonPress" />
+                <!-- <Button id="pageCopyButton" type="Transparent" text="Copy" press=".onPageCopyButtonPress" /> -->
                 <Button id="pageSaveButton" type="Emphasized" text="Draft" press=".onPageSaveButtonPress('D')" />
                 <Button id="pageCancelButton" type="Transparent" text="Cancel" press=".onPageCancelEditButtonPress"/>
                 <Button id="pageDeleteButton" type="Transparent" text="Delete" press=".onPageDeleteButtonPress" />                

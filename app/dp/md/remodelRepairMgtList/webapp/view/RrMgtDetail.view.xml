@@ -119,12 +119,14 @@
                                     text="{path:'I18N>/REMARK', formatter:'I18NFormatter'}"
                                     class="sapUiTinyMarginEnd"
                                     textAlign="Left"
-                                    labelFor="input"
+                                    labelFor="input" 
+                                    required="true"
                                     />
                                 <TextArea
                                     value="{rrMgt>/repair_reason}"
                                     width="100%"
                                     height="10em" 
+                                    required="true"
                                     >
                                 </TextArea><!--class="readonlyField" fieldGroupIds="ge"-->
                             </VBox>
@@ -161,7 +163,7 @@
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"
                                             labelFor="input"
-                                            required="true"/>
+                                             />
                                         <Text text="{rrMgt>/model}"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
@@ -173,7 +175,7 @@
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"
                                             labelFor="input"
-                                            required="true"/>
+                                            />
                                         <Text text="{rrMgt>/mold_number}"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
@@ -185,7 +187,7 @@
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"
                                             labelFor="input"
-                                            required="true"/>
+                                             />
                                         <Text text="{rrMgt>/mold_sequence}"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
@@ -197,7 +199,7 @@
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"
                                             labelFor="input"
-                                            required="true"/>
+                                             />
                                         <Text text="{rrMgt>/class_desc}"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
@@ -209,7 +211,7 @@
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"
                                             labelFor="input"
-                                            required="true"/>
+                                            />
                                         <Text text="{rrMgt>/mold_production_type_code_nm}"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
@@ -221,7 +223,7 @@
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"
                                             labelFor="input"
-                                            required="true"/>
+                                             />
                                         <Text text="{rrMgt>/mold_item_type_code_nm}"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
@@ -233,11 +235,11 @@
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"
                                             labelFor="input"
-                                            required="true"/>
+                                           />
                                         <Input
                                             value="{rrMgt>/mold_mfger_code_nm}"
                                             width="10em"
-                                            placeholder="Input data" required="true" >
+                                            placeholder="Input data"   >
                                         </Input>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
@@ -249,7 +251,7 @@
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"
                                             labelFor="input"
-                                            required="true"/>
+                                            />
                                         <Text text="{rrMgt>/supplier_code_nm}"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
@@ -261,7 +263,7 @@
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"
                                             labelFor="input"
-                                            required="true"/>
+                                            />
                                         <Text text="{rrMgt>/production_supplier_code_nm}"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
@@ -274,7 +276,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             required="true"/>
-                                        <DatePicker dateValue="{path : 'rrMgt>/mold_moving_plan_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
+                                        <DatePicker dateValue="{path : 'rrMgt>/mold_moving_plan_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" required="true"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M12 S12"/>
 					                    </layoutData>
@@ -286,7 +288,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             required="true"/>
-                                        <DatePicker dateValue="{path : 'rrMgt>/mold_complete_plan_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
+                                        <DatePicker dateValue="{path : 'rrMgt>/mold_complete_plan_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" required="true"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M12 S12"/>
 					                    </layoutData>
@@ -309,7 +311,7 @@
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"
                                             labelFor="input"
-                                            required="true"/>
+                                            />
                                          <DatePicker dateValue="{path : 'rrMgt>/mold_moving_result_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M12 S12"/>
@@ -322,8 +324,8 @@
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"
                                             labelFor="input"
-                                            required="true"/>
-                                         <DatePicker dateValue="{path : 'rrMgt>/mold_complete_result_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
+                                            />
+                                         <DatePicker dateValue="{path : 'rrMgt>/mold_complete_result_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" />
                                         <layoutData>
 						                     <layout:GridData span="XL4 L4 M12 S12"/>
 					                    </layoutData>

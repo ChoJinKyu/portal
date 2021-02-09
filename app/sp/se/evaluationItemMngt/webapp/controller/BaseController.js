@@ -123,7 +123,7 @@ sap.ui.define([
                     }
                 }
                 
-                if(oContext){
+                if(oContext && oContext.getType()){
                     try{
                         oContext.getType().validateValue(sValue);
                     }catch(e){

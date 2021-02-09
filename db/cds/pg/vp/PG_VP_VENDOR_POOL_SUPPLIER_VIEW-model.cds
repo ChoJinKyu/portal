@@ -20,7 +20,7 @@ entity Vp_Vendor_Pool_Supplier_View {
     supeval_control_end_date: Date   @title: '공급업체평가통제종료일자'; 
     supplier_rm_control_flag: Boolean   @title: '공급업체위험관리제어여부'; 
     supplier_base_portion_rate: Decimal   @title: '공급업체기준분배비율'; 
-    vendor_pool_mapping_use_flag: Boolean   @title: '협력사풀매핑사용여부';
+    vendor_pool_mapping_use_flag: String(2)   @title: '협력사풀매핑사용여부';
     register_reason: String(50)   @title: '등록사유'; 
     approval_number: String(50)   @title: '품의번호';
     local_update_dtm: DateTime @title: '로컬수정시간';

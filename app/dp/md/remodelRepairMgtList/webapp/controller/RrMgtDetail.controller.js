@@ -19,12 +19,10 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
-    "dp/md/util/controller/MoldItemSelection",
-    "dp/md/util/controller/SupplierSelection",
     "dp/md/util/controller/ProcessUI", 
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, MoldItemSelection, SupplierSelection, ProcessUI
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ProcessUI
 ) {
     "use strict";
 
@@ -41,10 +39,6 @@ sap.ui.define([
         dateFormatter: DateFormatter,
 
         validator: new Validator(),
-
-        moldItemPop: new MoldItemSelection(),
-
-        supplierSelection: new SupplierSelection(),
 
         process : new ProcessUI(),
 
@@ -73,7 +67,7 @@ sap.ui.define([
             oTransactionManager = new TransactionManager();
             oTransactionManager.aDataModels.length = 0;
 
-          //  oTransactionManager.addDataModel(this.getModel("schedule"));
+            console.log("session >>>> " , this.getSessionUserInfo() );
 
             this.process.setDrawProcessUI(this, "rrMgtProcess" , "C", 0);
 
@@ -143,68 +137,110 @@ sap.ui.define([
         onPageNavBackButtonPress: function () {
             this.getRouter().navTo("rrMgtList", {}, true); 
         },
-  
-        onPageDraftButtonPress : function () { 
-             var mst = this.getModel("rrMgt").getData()
-                , session = this.getSessionUserInfo();
-// rrMgt
 
+        onPageDraftButtonPress: function () {
+            var mst = this.getModel("rrMgt").getData()
+                , session = this.getSessionUserInfo();
             var data = {
                 inputData: {
-                    repairItem : {
+                    repairItem: {
                         tenant_id: session.tenant_id
                         , repair_request_number: mst.repair_request_number
-                        , mold_id :  mst.mold_id
-                        , repair_desc :  mst.repair_desc
-                        , repair_reason :  mst.repair_reason
+                        , mold_id: mst.mold_id
+                        , repair_desc: mst.repair_desc
+                        , repair_reason: mst.repair_reason
                         , mold_moving_plan_date: mst.mold_moving_plan_date
-                        , mold_complete_plan_date: mst.mold_complete_plan_date 
-                        , mold_moving_result_date: mst.mold_moving_result_date 
+                        , mold_complete_plan_date: mst.mold_complete_plan_date
+                        , mold_moving_result_date: mst.mold_moving_result_date
                         , mold_complete_result_date: mst.mold_complete_result_date
-                      //  , update_user_id: mst.requestor_empno
-                      //  , local_update_dtm: new Date()
+                        , repair_progress_status_code: 'RS'
+                        , repair_type_code: 'F'
                     }
                 }
             }
 
+            var msg = "";
+            var isOk = true;
+            //  if(this.firstStatusCode == "AR" && this.getModel('appMaster').getProperty("/approve_status_code") == "DR"){ 
+            isOk = true;
+            msg = "저장 하시겠습니까?";
+            //   }
+
+            if (isOk) {
+                this._callSave(msg, data);
+            }
+        }, 
+
+        onPageRequestButtonPress : function(){
+// pageSectionRepairInfo 
+            if (this.validator.validate(this.byId("pageSectionReqEntry")) !== true) {
+                MessageToast.show(this.getModel('I18N').getText('/ECM01002'));
+                return;
+            }
+            if (this.validator.validate(this.byId("pageSectionRepairInfo")) !== true) {
+                MessageToast.show(this.getModel('I18N').getText('/ECM01002'));
+                return;
+            }
+
+
+
+
+            var mst = this.getModel("rrMgt").getData()
+                , session = this.getSessionUserInfo();
+            var data = {
+                inputData: {
+                    repairItem: {
+                        tenant_id: session.tenant_id
+                        , repair_request_number: mst.repair_request_number
+                        , mold_id: mst.mold_id
+                        , repair_desc: mst.repair_desc
+                        , repair_reason: mst.repair_reason
+                        , mold_moving_plan_date: mst.mold_moving_plan_date
+                        , mold_complete_plan_date: mst.mold_complete_plan_date
+                        , mold_moving_result_date: mst.mold_moving_result_date
+                        , mold_complete_result_date: mst.mold_complete_result_date
+                        , repair_progress_status_code: 'RA'
+                        , repair_type_code: 'F'
+                    }
+                }
+            }
 
             var msg = "";
             var isOk = true;
-          //  if(this.firstStatusCode == "AR" && this.getModel('appMaster').getProperty("/approve_status_code") == "DR"){ 
-                isOk = true;
-                msg = "저장 하시겠습니까?";
-         //   }
+            //  if(this.firstStatusCode == "AR" && this.getModel('appMaster').getProperty("/approve_status_code") == "DR"){ 
+            isOk = true;
+            msg = "요청 하시겠습니까?";
+            //   }
 
-            if(isOk){
-                var oView = this.getView();
-                var that = this;
-                MessageBox.confirm(msg, {
+            if (isOk) {
+                this._callSave(msg, data);
+            }
+        },
+
+        _callSave : function(msg, data){
+            var oView = this.getView();
+            var that = this;
+              MessageBox.confirm(msg, {
                     title: "Comfirmation",
                     initialFocus: sap.m.MessageBox.Action.CANCEL,
                     onClose: function (sButton) {
-                        if (sButton === MessageBox.Action.OK) { 
-                            
+                        if (sButton === MessageBox.Action.OK) {  
                             oView.setBusy(true);
                             that.callAjax(data, "saveRemodelRepair"
                                 , function(result){
                                     oView.setBusy(false);
                                     MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
                                 if (result.resultCode > -1) {
-                                    that.onLoadThisPage(result);
+                                    that._srchDetail(result);
                                 }
                             });
-                        }else{ 
-                           
-                        };
+                        }
                     }
                 });
-            }
-
-
 
         }, 
 
-        _callAjax : function(data, fn , callback){
+        callAjax : function(data, fn , callback){
               var url = "/dp/md/remodelRepairMgtList/webapp/srv-api/odata/v4/dp.RrMgtListV4Service/" + fn;
 
             $.ajax({

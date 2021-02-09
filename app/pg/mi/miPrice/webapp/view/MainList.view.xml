@@ -160,8 +160,7 @@
                 id="smartTable_MainTable_ResponsiveTable"
                 header="{I18N>/MIPRICE_TITLE} List"
                 entitySet="list>/MIMaterialPriceManagementView" 
-                
-                
+                tableBindingPath="list>/MIMaterialPriceManagementView"
                 useExportToExcel="false"
               
                 beforeExport=".onBeforeExport" 
@@ -185,8 +184,8 @@
                     <OverflowToolbar >
                         <ToolbarSpacer/>
                         <Button id="mainTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMainTableAddButtonPress" />
-                        <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" />
-                        <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress" />
+                        <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" enabled="{viewControl>/enabled}" type="Transparent" press=".onMainTableDeleteButtonPress" />
+                        <Button id="mainTableSaveButton" text="{I18N>/SAVE}"  enabled="{viewControl>/enabled}" type="Emphasized" press=".onMainTableSaveButtonPress" />
                        
                         <!-- <Button icon="sap-icon://upload" type="Transparent" press=".onMainTableDelete"/> -->
                         <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 

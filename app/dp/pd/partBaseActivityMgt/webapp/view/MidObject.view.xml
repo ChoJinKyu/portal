@@ -128,12 +128,15 @@
                                         </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="{I18N>/STATUS}"/>                                    
+                                    <Label text="{I18N>/STATUS}"/> 
+                                    <Text 
+                                        text="{master>/active_flag_val}"
+                                        visible="{= !${contModel>/editMode} }"/>                                   
                                     <SegmentedButton 
                                         id="editUseflag"
                                         selectedKey="{master>/active_flag}" 
                                         selectionChange=""
-                                        enabled="{contModel>/editMode}"
+                                        visible="{contModel>/editMode}"                                        
                                         width="100%">
                                         <items>
                                             <SegmentedButtonItem text="Active" width="5em" key="true"/>
@@ -278,7 +281,7 @@
                             </table:extension>
                             <table:columns>	
                                 <table:Column id="state" width="5em" visible="{contModel>/editMode}" hAlign="Center">
-                                    <Text text="{I18N>/STATUS}"/>
+                                    <Text text="{I18N>/STATUS}" />
                                     <table:template>
                                         <ObjectStatus icon="{
                                             path: 'category>_row_state_',
@@ -319,19 +322,19 @@
                                 </table:Column>
                                 <table:Column label="{I18N>/USE}" visible="{contModel>/readMode}" width="5em" filterProperty="active_flag">
                                     <table:template>                                    
-                                        <Text text="{= !!${category>active_flag} ? 'Y' : 'N'}"/>
+                                        <Text text="{= !!${category>active_flag} ? 'Y' : 'N'}" width="100%" textAlign="Center"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="{I18N>/USE}" visible="{contModel>/editMode}" width="5em" filterProperty="active_flag">
                                     <table:template>                                    
                                         <ToggleButton                                                                                            
                                             text="{= ${category>active_flag}? 'Yes':'No'}" 
-                                            pressed="{category>active_flag}"/>
+                                            pressed="{category>active_flag}" width="100%"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="{I18N>/S_GRADE_STANDARD_DAYS}" visible="{contModel>/readMode}" width="5em" filterProperty="s_grade_standard_days">
                                     <table:template>
-                                        <Text text="{category>s_grade_standard_days}" wrapping="false" />
+                                        <Text text="{category>s_grade_standard_days}" width="100%" textAlign="Right" wrapping="false" />
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="{I18N>/S_GRADE_STANDARD_DAYS}" visible="{contModel>/editMode}" width="5em" filterProperty="s_grade_standard_days">
@@ -341,12 +344,12 @@
                                             editable="{contModel>/editMode}"
                                             maxLength="40"
                                             type="Number"
-                                            value="{category>s_grade_standard_days}"/>
+                                            value="{category>s_grade_standard_days}" width="100%" textAlign="Right"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="{I18N>/A_GRADE_STANDARD_DAYS}" visible="{contModel>/readMode}" width="5em" filterProperty="a_grade_standard_days">
                                     <table:template>
-                                        <Text text="{category>a_grade_standard_days}" wrapping="false" />
+                                        <Text text="{category>a_grade_standard_days}" width="100%" textAlign="Right" wrapping="false" />
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="{I18N>/A_GRADE_STANDARD_DAYS}" visible="{contModel>/editMode}" width="5em" filterProperty="a_grade_standard_days">
@@ -356,12 +359,12 @@
                                             editable="{contModel>/editMode}"
                                             maxLength="40"
                                             type="Number"
-                                            value="{category>a_grade_standard_days}"/>
+                                            value="{category>a_grade_standard_days}" width="100%" textAlign="Right"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="{I18N>/B_GRADE_STANDARD_DAYS}" visible="{contModel>/readMode}" width="5em" filterProperty="b_grade_standard_days">
                                     <table:template>
-                                        <Text text="{category>b_grade_standard_days}" wrapping="false" />
+                                        <Text text="{category>b_grade_standard_days}" width="100%" textAlign="Right" wrapping="false" />
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="{I18N>/B_GRADE_STANDARD_DAYS}" visible="{contModel>/editMode}" width="5em" filterProperty="b_grade_standard_days">
@@ -371,12 +374,12 @@
                                             editable="{contModel>/editMode}"
                                             maxLength="40"
                                             type="Number"
-                                            value="{category>b_grade_standard_days}"/>
+                                            value="{category>b_grade_standard_days}" width="100%" textAlign="Right"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="{I18N>/C_GRADE_STANDARD_DAYS}" visible="{contModel>/readMode}" width="5em" filterProperty="c_grade_standard_days">
                                     <table:template>
-                                        <Text text="{category>c_grade_standard_days}" wrapping="false" />
+                                        <Text text="{category>c_grade_standard_days}" width="100%" textAlign="Right" wrapping="false" />
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="{I18N>/C_GRADE_STANDARD_DAYS}" visible="{contModel>/editMode}" width="5em" filterProperty="c_grade_standard_days">
@@ -386,12 +389,12 @@
                                             editable="{contModel>/editMode}"
                                             maxLength="40"
                                             type="Number"
-                                            value="{category>c_grade_standard_days}"/>
+                                            value="{category>c_grade_standard_days}" width="100%" textAlign="Right"/>
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="{I18N>/D_GRADE_STANDARD_DAYS}" visible="{contModel>/readMode}" width="5em" filterProperty="d_grade_standard_days">
                                     <table:template>
-                                        <Text text="{category>d_grade_standard_days}" wrapping="false" />
+                                        <Text text="{category>d_grade_standard_days}" width="100%" textAlign="Right" wrapping="false" />
                                     </table:template>
                                 </table:Column>
                                 <table:Column label="{I18N>/D_GRADE_STANDARD_DAYS}" visible="{contModel>/editMode}" width="5em" filterProperty="d_grade_standard_days">
@@ -401,7 +404,7 @@
                                             editable="{contModel>/editMode}"
                                             maxLength="40"
                                             type="Number"
-                                            value="{category>d_grade_standard_days}"/>
+                                            value="{category>d_grade_standard_days}" width="100%" textAlign="Right"/>
                                     </table:template>
                                 </table:Column>                                
                             </table:columns>
