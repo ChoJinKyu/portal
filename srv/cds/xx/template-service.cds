@@ -62,6 +62,10 @@ service TemplateService {
     entity Country_View as projection on Country;   //OData navigation property
     entity Code_View as projection on Code;         //OData navigation property
 
+
+
+
+
 }
 
 annotate TemplateService.Message with @(
