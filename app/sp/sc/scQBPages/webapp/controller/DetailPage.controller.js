@@ -81,7 +81,8 @@ sap.ui.define([
                         immediate_apply_flag: "Y",
                         Items: [],
                         nego_progress_status: {},
-                        nego_type: {}
+                        nego_type: {},
+                        outcome: {}
                     },
                     NegoItemPrices: {
                         Suppliers: []
@@ -272,7 +273,7 @@ sap.ui.define([
                     oView.getModel("NegoHeaders").setProperty("/outcome_code", outcome );
                     oView.getModel("NegoHeaders").setProperty("/nego_type_code", this._type );
                     oView.getModel("NegoHeaders").setProperty("/local_create_dtm", new Date() );
-                    oView.getModel("NegoHeaders").setProperty("/negotiation_output_class_code", this.getOutComeName(outcome) );
+                    oView.getModel("NegoHeaders").setProperty("/outcome/outcome_name", this.getOutComeName(outcome) );
                     oView.getModel("NegoHeaders").setProperty("/nego_progress_status_code", '090' );
                     oView.getModel("NegoHeaders").setProperty("/nego_progress_status/nego_progress_status_name", 'Draft' );
 
