@@ -1296,7 +1296,7 @@ BEGIN
                             --The number of revision data is not one.
                             SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Item Update(Insert) Error.['||V_ITEM_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 					    END IF;
-				    ELSE
+				    ELSEIF TRIM( ' ' FROM loop_itm.CRUD_TYPE_CODE )  =  'D' THEN
 						IF V_ITEM_EXIST_CNT_FOR_DELETE_ITEM != 1 THEN
                             --The number of data corresponding to the inquiry condition is not one.
                             SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||V_ERROR_PARAM||'-@-'||'Item Error.['||V_ITEM_LOOP_INDEX||']'||loop_itm.MATERIAL_CODE||','||loop_itm.CRUD_TYPE_CODE||V_MSG_LOOP_PARAM;
@@ -1517,7 +1517,7 @@ BEGIN
                             --The number of revision data is not one.
                             SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Update(Insert) Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 					    END IF;
-				    ELSE
+				    ELSEIF TRIM( ' ' FROM loop_man.CRUD_TYPE_CODE )  =  'D' THEN
 						IF V_MANAGER_EXIST_CNT_FOR_DELETE_MANAGER != 1 THEN
                             --The number of data corresponding to the inquiry condition is not one.
                             SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||V_ERROR_PARAM||'-@-'||'Manager Error.['||V_MANAGER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
