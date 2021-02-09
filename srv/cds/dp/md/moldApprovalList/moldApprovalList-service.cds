@@ -119,7 +119,7 @@ service MoldApprovalListService {
         join ( select 
             l.code, l.code_name, l.tenant_id
             from codeLng.Code_Lng l  
-          /*  join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE ) */
+          /*  join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE )  */
             where l.group_code='CM_APPROVE_STATUS' 
             and l.language_cd = 'KO' 
             ) cd on cd.code =  m.approve_status_code and  cd.tenant_id = m.tenant_id 
