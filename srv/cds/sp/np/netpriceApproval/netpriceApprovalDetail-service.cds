@@ -265,6 +265,15 @@ service NpApprovalDetailService {
                 ) as incoterms_name : String         /*	Incoterms	*/
 
             ,   pad.quality_certi_flag	            /*	부품인정여부	*/
+            ,   pad.net_price_type_code
+            ,   (SELECT cd.code_name
+                   FROM CM_CODE_LNG AS cd
+                  WHERE cd.tenant_id   = pad.tenant_id
+                    AND cd.group_code  = 'SP_NET_PRICE_TYPE'
+                    AND cd.language_cd = ssi.LANGUAGE_CODE
+               	    AND cd.code        = pad.net_price_type_code
+			    )  AS net_price_type_name : String
+
 
         FROM SP_NP_NET_PRICE_APPROVAL_DTL pad
 
