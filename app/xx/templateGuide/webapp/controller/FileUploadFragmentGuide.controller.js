@@ -24,8 +24,8 @@ sap.ui.define([
                     that.getView().byId("mainPanel").addContent(oFragmentUploadCollection);
                     
                     var initParam = {
-                        /* fileGroupId : "",  // 신규일경우 */
-                        fileGroupId : "098239879832998", /* UUID.randomUUID(); */
+                        /* fileGroupId : UUID.randomUUID(),  // 신규일경우 */
+                        fileGroupId : "098239879832998", /* 기 저장된 데이터가 있을 경우 */
                         oUploadCollection : oFragmentUploadCollection
                     };
 
