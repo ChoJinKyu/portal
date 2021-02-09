@@ -18,6 +18,19 @@
             navButtonType="Back" 
             navButtonPress="onNavToBack"
             showNavButton="true"  : 상단 < 버튼  -->
+         <headerContent>
+            <!-- <Button icon="sap-icon://action" tooltip="Share" /> -->
+            <Button 
+            type="Transparent" 
+            icon="{viewModel>/App/btnScreen}" 
+            tooltip="screen change" 
+            press="onPressLayoutChange" />
+            <Button
+            type="Transparent" 
+            icon="sap-icon://decline"
+            tooltip="back to the list" press="onNavToBack"
+            />    
+		</headerContent>
         <content>  
             <uxap:ObjectPageLayout
                 id="two"                
@@ -35,7 +48,7 @@
                 upperCaseAnchorBar="false"  
                 -->
 
-                <uxap:headerTitle>
+                <!-- <uxap:headerTitle>
                     <uxap:ObjectPageHeader>
                          <OverflowToolbarButton 
                          type="Transparent" 
@@ -51,7 +64,7 @@
                         tooltip="back to the list" press="onNavToBack"
                         />    
                     </uxap:ObjectPageHeader>
-                </uxap:headerTitle>
+                </uxap:headerTitle> -->
 
                 <uxap:headerContent/>                
 
@@ -82,7 +95,16 @@
                                                 <Input   
                                                         width="100%" 
                                                         placeholder="EVALUATION_TYPE_CODE"
-                                                        value="{TwoView>/evaluationType2/evaluation_type_code}"
+                                                       
+                                                        value="{
+                                                             path : 'TwoView>/evaluationType2/evaluation_type_code',
+                                                             type : 'sap.ui.model.odata.type.String',
+                                                             constraints : {
+                                                                nullable : false,
+                                                                maxLength : 30
+                                                            }   
+                                                            }"
+
                                                         editable="{=${TwoView>/isCreateMode}}"
 
                                                         fieldGroupIds="required"
@@ -94,7 +116,13 @@
                                                 <Input
                                                         width="100%" 
                                                         placeholder="EVALUATION_RATE"
-                                                        value="{TwoView>/evaluationType2/evaluation_type_distrb_score_rate}"
+                                                        value="{
+                                                             path : 'TwoView>/evaluationType2/evaluation_type_distrb_score_rate',
+                                                             type : 'sap.ui.model.odata.type.Decimal',
+                                                             constraints : {
+                                                                scale : 0
+                                                            }   
+                                                            }"
                                                         editable="{=${TwoView>/isEditMode}}"
 
                                                         fieldGroupIds="required"
@@ -109,7 +137,14 @@
                                                 <Input  
                                                         width="100%" 
                                                         placeholder="EVALUATION_TYPE_NAME"
-                                                        value="{TwoView>/evaluationType2/evaluation_type_name}"
+                                                        value="{
+                                                             path : 'TwoView>/evaluationType2/evaluation_type_name',
+                                                             type : 'sap.ui.model.odata.type.String',
+                                                             constraints : {
+                                                                 maxLength : 50
+                                                            }   
+                                                            }"
+                                                       
                                                         editable="{=${TwoView>/isEditMode}}"
 
                                                         fieldGroupIds="required"
@@ -171,20 +206,20 @@
                                         </Toolbar>
                                     </headerToolbar>
                                     <columns>
-                                        <Column width="3em">
+                                        <Column width="3em" >
                                             <core:Icon src="sap-icon://edit"/>
                                         </Column>
-                                        <Column>
-                                            <Text text="{I18N>/EVALUATION_GRAD}" />
+                                        <Column > 
+                                            <Label text="{I18N>/EVALUATION_GRAD}" required="true"/>
                                         </Column>
-                                        <Column>
-                                            <Text text="{I18N>/OVER}" />
+                                        <Column >
+                                            <Label text="{I18N>/OVER}"  required="true" />
                                         </Column>
-                                        <Column>
-                                            <Text text="{I18N>/LESS_THAN}" />
+                                        <Column >
+                                            <Label text="{I18N>/LESS_THAN}"  required="true"/>
                                         </Column>
-                                        <Column>
-                                            <Text text="{I18N>/INCENTIVE AND PENALTY}" />
+                                        <Column >
+                                            <Label text="{I18N>/INCENTIVE AND PENALTY}"  required="true" />
                                         </Column>
                                     </columns>
                                     <items>
@@ -204,7 +239,15 @@
                                                 <Input   
                                                 width="100%" 
                                                 placeholder="EVALUATION_GRADE"
-                                                value="{TwoView>evaluation_grade}"
+                                                value="{
+                                                             path : 'TwoView>evaluation_grade',
+                                                             type : 'sap.ui.model.odata.type.String',
+                                                             constraints : {
+                                                                 
+                                                                 nullable : false,
+                                                                 maxLength : 10
+                                                               }   
+                                                        }"
                                                 enabled="true"
                                                 editable="{= ${TwoView>/isCreateMode} === true ? true : ${TwoView>tansaction_code} === 'I' ? true : false}"
                                                 fieldGroupIds="required"
@@ -215,7 +258,15 @@
                                                 <Input   
                                                 width="100%" 
                                                 placeholder="OVER"
-                                                value="{TwoView>evaluation_grade_start_score}"
+                                                value="{
+                                                             path : 'TwoView>evaluation_grade_start_score',
+                                                             type : 'sap.ui.model.odata.type.Decimal',
+                                                             constraints : {
+                                                                 
+                                                                 precision:5,
+                                                                 scale:2
+                                                               }   
+                                                        }"
                                                 editable="{=
                                                                 ${TwoView>/isEditMode}
                                                             }"
@@ -227,7 +278,16 @@
                                                 <Input   
                                                 width="100%" 
                                                 placeholder="LESS_THAN"
-                                                value="{TwoView>evaluation_grade_end_score}"
+                                                value="{
+                                                             path : 'TwoView>evaluation_grade_end_score',
+                                                             type : 'sap.ui.model.odata.type.Decimal',
+                                                             constraints : {
+                                                                 
+                                                                 precision:5,
+                                                                 scale:2
+                                                               }   
+                                                        }"
+                                                
                                                 editable="{=
                                                                 ${TwoView>/isEditMode}
                                                             }"

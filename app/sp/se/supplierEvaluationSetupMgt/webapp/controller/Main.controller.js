@@ -8,12 +8,13 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",    
     "ext/lib/util/Multilingual",
-    "sap/ui/core/Item"
+    "sap/ui/core/Item",
+    "sap/ui/model/Sorter"
 ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (BaseController, Filter, MessageBox, MessageToast,  Multilingual, Item) {
+    function (BaseController, Filter, MessageBox, MessageToast,  Multilingual, Item, Sorter) {
         "use strict";
 
         return BaseController.extend("sp.se.supplierEvaluationSetupMgt.controller.Main", {
@@ -95,10 +96,13 @@ sap.ui.define([
                     aSearchFilters.push(new Filter("org_code", 'EQ', tenant_name));   
                     
                     mBindingParams.filters.push(new Filter(aSearchFilters, true));
+                   
 
                 }else if (tenant_name.length === 0) {
                     mBindingParams.filters.push(new Filter([]));
                 }
+                    //정렬
+                    mBindingParams.sorter= [new Sorter("evaluation_operation_unit_code")];
             },
 
             /** Detail view로 Navigate 기능 
