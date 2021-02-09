@@ -16,7 +16,7 @@
                         path: 'buyer_empno'
                     })"
                 />
-                <Label text="(미정)사유"/>
+                <Label text="{I18N>/REASON}"/>
                 <TextArea value="{fragment>/reason/processedReason}" rows="3"/>
             </form:SimpleForm>
         </VBox>

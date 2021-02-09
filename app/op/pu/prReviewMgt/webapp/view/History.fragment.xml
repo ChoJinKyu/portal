@@ -51,31 +51,31 @@
                 <columns>
                     <!-- 순번 -->
                     <Column hAlign="Center" width="auto">
-                        <Text text="(미정)순번" />
+                        <Text text="{I18N>/SEQUENCE}" />
                     </Column>
                     <!-- 작업일 -->
                     <Column hAlign="Center" width="auto">
-                        <Text text="(미정)작업일" />
+                        <Text text="{I18N>/WORK_DATE}" />
                     </Column>
                     <!-- 작업유형 -->
                     <Column hAlign="Center" width="auto">
-                        <Text text="(미정)작업유형" />
+                        <Text text="{I18N>/PR_WORK_TYPE}" />
                     </Column>
                     <!-- 변경전 -->
                     <Column hAlign="Center" width="auto">
-                        <Text text="(미정)변경전" />
+                        <Text text="{I18N>/CHANGE_BEFORE}" />
                     </Column>
                     <!-- 변경후 -->
                     <Column hAlign="Center" width="auto">
-                        <Text text="(미정)변경후" />
+                        <Text text="{I18N>/CHANGE_AFTER}" />
                     </Column>
                     <!-- 비고 -->
                     <Column hAlign="Center" width="auto">
-                        <Text text="(미정)비고" />
+                        <Text text="{I18N>/REMARK}" />
                     </Column>
                     <!-- 처리자 -->
                     <Column hAlign="Center" width="auto">
-                        <Text text="(미정)처리자" />
+                        <Text text="{I18N>/PR_WORKER}" />
                     </Column>
                 </columns>
                 <items>

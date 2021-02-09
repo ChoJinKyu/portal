@@ -212,6 +212,7 @@ sap.ui.define([
             // 해제
             var release = (function() {
                 setTimeout(() => {
+
                     Dialog.close();
                     Dialog.destroy();
                     this.dialog[key] && delete this.dialog[key];
