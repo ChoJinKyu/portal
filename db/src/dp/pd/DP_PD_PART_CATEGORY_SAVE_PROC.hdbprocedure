@@ -198,20 +198,22 @@ BEGIN
 
         ELSE
 
-        /* 생성요청상태 완료로 변경,  */
-/*            UPDATE DP_PD_PART_CATEGORY_CREATION_REQUEST M
-               SET (M.PROGRESS_STATUS_CODE, M.SEQUENCE, M.ACTIVE_FLAG, M.LOCAL_UPDATE_DTM, M.UPDATE_USER_ID, M.SYSTEM_UPDATE_DTM) =
-                   ( SELECT PARENT_CATEGORY_CODE, SEQUENCE, ACTIVE_FLAG, NOW(), UPDATE_USER_ID, NOW()
-                       FROM :I_M
-                      WHERE TENANT_ID = M.TENANT_ID 
-                        AND CATEGORY_GROUP_CODE = M.CATEGORY_GROUP_CODE
-                        AND REQUEST_NUMBER = M.REQUEST_NUMBER
-                   )
-            WHERE  M.TENANT_ID = V_TENANT_ID
-            AND    M.CATEGORY_GROUP_CODE = V_CATEGORY_GROUP_CODE
-            AND    M.CATEGORY_CODE = V_CATEGORY_CODE
-            ;            
-*/
+            /* 생성요청상태 완료로 변경, 생성카테고리코드 세팅  */
+            IF V_REQUEST_NUMBER is not null THEN
+                UPDATE DP_PD_PART_CATEGORY_CREATION_REQUEST M
+                SET (M.PROGRESS_STATUS_CODE, M.CREATE_CATEGORY_CODE, M.CREATOR_EMPNO, M.LOCAL_UPDATE_DTM, M.UPDATE_USER_ID, M.SYSTEM_UPDATE_DTM) =
+                    ( SELECT 'D', V_CATEGORY_CODE, NOW(),'9004', '17370CHEM@lgchem.com', NOW()
+                        FROM :I_M
+                        WHERE M.TENANT_ID = V_TENANT_ID
+                            AND M.CATEGORY_GROUP_CODE = V_CATEGORY_GROUP_CODE
+                            AND M.REQUEST_NUMBER = V_REQUEST_NUMBER
+                    )
+                WHERE  M.TENANT_ID = V_TENANT_ID
+                AND    M.CATEGORY_GROUP_CODE = V_CATEGORY_GROUP_CODE
+                AND    M.REQUEST_NUMBER = V_REQUEST_NUMBER
+                ;            
+            END IF;
+
             INSERT INTO DP_PD_PART_CATEGORY M
                       ( TENANT_ID
                         ,CATEGORY_CODE
