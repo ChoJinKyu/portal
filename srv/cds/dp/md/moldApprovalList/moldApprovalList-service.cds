@@ -119,8 +119,10 @@ service MoldApprovalListService {
         join ( select 
             l.code, l.code_name, l.tenant_id
             from codeLng.Code_Lng l  
-            join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE )
-            where l.group_code='CM_APPROVE_STATUS' ) cd on cd.code =  m.approve_status_code and  cd.tenant_id = m.tenant_id 
+          /*  join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE ) */
+            where l.group_code='CM_APPROVE_STATUS' 
+            and l.language_cd = 'KO' 
+            ) cd on cd.code =  m.approve_status_code and  cd.tenant_id = m.tenant_id 
         ;
 
     // referer 저장 목록 조회 
@@ -158,21 +160,23 @@ service MoldApprovalListService {
         key ar.approver_empno , 
         (
             select l.code_name from codeLng.Code_Lng l 
-            join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE )
+           /* join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE ) */
             where
                     l.group_code  = 'CM_APPROVER_TYPE'
                 and l.code        = ar.approver_type_code
                 and l.tenant_id   = ar.tenant_id
+                 and l.language_cd = 'KO'
         ) as approver_type_code_nm : String(240),
         ar.approver_type_code , 
         ar.approve_comment , 
         (
             select l.code_name from codeLng.Code_Lng l 
-            join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE )
+          /*  join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE ) */ 
             where
                     l.group_code  = 'CM_APPROVE_STATUS'
                 and l.code        = ar.approve_status_code
-                and l.tenant_id   = ar.tenant_id
+                and l.tenant_id   = ar.tenant_id 
+                and l.language_cd = 'KO'
         ) as approve_status_code_nm : String(240),
         ar.approve_status_code , 
         ar.approve_date_time , 
