@@ -222,7 +222,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             required="true"/>
-                                        <Text text="테스트"/>
+                                        <Text text="{rrMgt>/mold_item_type_code_nm}"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
 					                    </layoutData>
@@ -235,9 +235,9 @@
                                             labelFor="input"
                                             required="true"/>
                                         <Input
-                                            value="{rrMgt>/approval_title}"
+                                            value="{rrMgt>/mold_mfger_code_nm}"
                                             width="10em"
-                                            placeholder="Input data" required="true">
+                                            placeholder="Input data" required="true" >
                                         </Input>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
@@ -250,7 +250,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             required="true"/>
-                                        <Text text="테스트"/>
+                                        <Text text="{rrMgt>/supplier_code_nm}"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
 					                    </layoutData>
@@ -262,7 +262,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             required="true"/>
-                                        <Text text="테스트"/>
+                                        <Text text="{rrMgt>/production_supplier_code_nm}"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
 					                    </layoutData>
@@ -274,7 +274,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             required="true"/>
-                                        <DatePicker text="테스트"/>
+                                        <DatePicker dateValue="{path : 'rrMgt>/mold_moving_plan_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M12 S12"/>
 					                    </layoutData>
@@ -286,7 +286,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             required="true"/>
-                                        <DatePicker text="테스트"/>
+                                        <DatePicker dateValue="{path : 'rrMgt>/mold_complete_plan_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M12 S12"/>
 					                    </layoutData>
@@ -310,7 +310,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             required="true"/>
-                                        <DatePicker text="테스트"/>
+                                         <DatePicker dateValue="{path : 'rrMgt>/mold_moving_result_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M12 S12"/>
 					                    </layoutData>
@@ -323,7 +323,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             required="true"/>
-                                        <DatePicker text="테스트"/>
+                                         <DatePicker dateValue="{path : 'rrMgt>/mold_complete_result_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
                                         <layoutData>
 						                     <layout:GridData span="XL4 L4 M12 S12"/>
 					                    </layoutData>
