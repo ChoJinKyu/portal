@@ -72,7 +72,7 @@ sap.ui.define([
                 oViewModel.setProperty("/App/layout", "OneColumn");
                 oViewModel.setProperty("/App/btnScreen", "sap-icon://full-screen");
 
-                this.byId("page").setHeaderExpanded(true);
+                // this.byId("page").setHeaderExpanded(true);
             }
             /***
              * 평가조직 (orgCode) 콤보박스 아이템 바인딩

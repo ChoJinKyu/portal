@@ -213,7 +213,7 @@ sap.ui.define([
                     oViewModel.setProperty("/Detail", oDetailData);
 
                     if(oDynamicPage){
-                        oDynamicPage.setHeaderExpanded(true);
+                        // oDynamicPage.setHeaderExpanded(true);
                     }
                     this._setComboNodeType(oArgs, oDetailData.Header);
                     return;
@@ -296,7 +296,7 @@ sap.ui.define([
 
                         var oMasterPage = oComponent.byId("Master");
                         if(oMasterPage){
-                            oMasterPage.byId("page").setHeaderExpanded(false);
+                            // oMasterPage.byId("page").setHeaderExpanded(false);
                         }
                         oViewModel.setProperty("/Detail/Header", oResult);
                         oAppView.setBusy(false);
