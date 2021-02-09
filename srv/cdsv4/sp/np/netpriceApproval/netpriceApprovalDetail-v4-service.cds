@@ -113,7 +113,6 @@ service NpApprovalDetailV4Service {
     /* 상태 변경 Proc Parameter */
     type StatusChangeParamType : {
         tenant_id           : String(5) ; // L1100
-        company_code        : String(10); // 회사코드
         approval_number     : String(50); // 품의번호
         approve_status_code : String(30); // 품의상태코드
     }
@@ -132,9 +131,6 @@ service NpApprovalDetailV4Service {
     /* 상태 변경 Proc Parameter */
     type DeleteParamType : {
         tenant_id         : String(5)     ; // L1100
-        company_code      : String(10)    ; // 회사코드
-        org_type_code     : String(2)     ; // 구매운영조직유형
-        org_code          : String(10)    ; // 구매운영조직코드
         approval_number   : String(50)    ; // 품의번호
     }
 
