@@ -14,10 +14,11 @@
     <f:DynamicPage 
         id="page"
         toggleHeaderOnTitleClick="true"
-        >
-        <!-- headerExpanded="{=
+        preserveHeaderStateOnScroll="true"
+        headerExpanded="{=
             ${viewModel>/App/layout} === 'OneColumn'
-        }" -->
+        }"
+    >
         
         <f:title>
             <f:DynamicPageTitle>
@@ -150,16 +151,14 @@
             <t:TreeTable 
                 id="treeTable"
                 enableSelectAll="false"
-                visibleRowCount="{=
-                    ${viewModel>/App/layout} !== 'TwoColumnsMidExpanded' ? 13 : 16
-                }"
+                minAutoRowCount="10"
+                visibleRowCountMode="Auto"
                 enableColumnReordering="false"
                 class="sapFDynamicPageAlignContent" 
                 rowSelectionChange="onRowSelectionChange"
                 selectionMode="Single"
                 selectionBehavior="Row"
                 fixedColumnCount="1"
-                expandFirstLevel="true"
                 rows="{
                     path : 'viewModel>/Tree',
                     parameters : {
