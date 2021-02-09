@@ -1,8 +1,9 @@
-namespace cm;
 
 using util from './util/util-model';
 using {cm as master} from './CM_CODE_MST-model';
 using {cm as language} from './CM_CODE_LNG-model';
+
+namespace cm;
 
 entity Code_Dtl {
 
