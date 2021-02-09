@@ -743,15 +743,16 @@ sap.ui.define([
             
             return aSearchFilters;
         },
-        onInputWithEmployeeValuePress: function(){
+        onInputWithEmployeeValuePress: function(){           
             this.byId("employeeDialog").open();
         },
 
-        onEmployeeDialogApplyPress: function(oEvent){
+        onEmployeeDialogApplyPress: function(oEvent){            
             this.byId("inputWithEmployeeValueHelp").setValue(oEvent.getParameter("item").user_local_name);
         },
         
         onMultiInputWithEmployeeValuePress: function(){
+            
             if(!this.oEmployeeMultiSelectionValueHelp){
                 this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
                     title: "Choose Employees",
