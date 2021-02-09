@@ -52,17 +52,7 @@ service NpApprovalService {
                    ssi.LANGUAGE_CODE as language_code
              , key cam.tenant_id
              ,     cam.company_code
-             ,     cam.org_type_code
-             ,     cam.org_code	                    /* operating org */
              , key cam.approval_number
-
-             , (SELECT org.org_name
-                  FROM CM_PUR_OPERATION_ORG  org
-                 WHERE org.tenant_id     = cam.tenant_id
-                   AND org.company_code  = cam.company_code
-                   AND org.org_type_code = cam.org_type_code
-                   AND org.org_code      = cam.org_code
-			   ) AS org_name : String
 
              , cam.approval_title                   /* title */
              , cam.approve_status_code              /* status */

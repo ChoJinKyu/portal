@@ -37,8 +37,6 @@ service NpApprovalDetailV4Service {
     type masterType : {
         tenant_id                       : String(5)     ; // L1100
         company_code                    : String(10)    ; // 회사코드
-        org_type_code                   : String(2)     ; // 구매운영조직유형
-        org_code                        : String(10)    ; // 구매운영조직코드
         approval_number                 : String(50)    ; // 품의번호
 
         approval_title                  : String(300)   ; // 품의제목
@@ -69,6 +67,7 @@ service NpApprovalDetailV4Service {
         vendor_pool_code                : String(20)    ; // 협력사풀코드	
         market_code                     : String(30)    ; // 납선코드	
         net_price_approval_reason_code  : String(30)    ; // 단가품의사유코드	
+        net_price_type_code             : String(30)    ; // 단가유형코드
         maker_code                      : String(10)    ; // 제조사코드		
         incoterms                       : String(3)     ; // 인코텀즈
         _row_state_                     : String        ; // CUD
