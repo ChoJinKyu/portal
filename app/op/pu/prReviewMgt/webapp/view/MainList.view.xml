@@ -396,8 +396,13 @@
                                     text="{path: 'list>pr_progress_status_name'}"
                                     inverted="true"
                                     active="false"
-                                    icon="sap-icon://message-information"
-                                    state="Information" 
+                                    state="{= 
+                                        ${list>pr_progress_status_code} ===  'RUN' 
+                                        ? 'Information' 
+                                        : ${list>pr_progress_status_code} ===  'CLOSING' 
+                                        ? 'Success' 
+                                        : 'None' 
+                                    }" 
                                 />
                             </cells>
                         </ColumnListItem>
