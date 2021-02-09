@@ -19,6 +19,8 @@ entity Md_Repair_Mst_Asset_View {
         repair_desc                     : String(500)           @title:'수선설명';
         model                           : String(100)           @title:'모델';
         class_desc                      : String(300)           @title:'품명';
+        supplier_code                   : String(10)            @title:'공급업체코드';
+        supplier_name                   : String(100)           @title:'공급업체명';
         production_supplier_code        : String(100)           @title:'제작협력사ID';
         production_supplier_name        : String(100)           @title:'제작협력사명';
         remark                          : String(3000)          @title:'비고';
@@ -34,4 +36,7 @@ entity Md_Repair_Mst_Asset_View {
         repair_amount                   : Decimal               @title:'수선금액';
         investment_ecst_type_code       : String(30)            @title:'투자비용유형코드';
         account_code                    : String(10)            @title:'계정코드';
+        repair_supplier_code            : String(10)            @title:'수선공급업체코드';
+        repair_supplier_name            : String(100)           @title:'수선공급업체명';
+        complete_date                   : String(8)             @title:'완료일자';
 }
