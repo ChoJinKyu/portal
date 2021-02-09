@@ -7,6 +7,11 @@ SELECT pca.tenant_id,
        pca.category_code,
 	   pca.part_project_type_code,
        pca.activity_code,
+       (select org_name 
+        from   cm_pur_operation_org 
+        where  tenant_id = pca.tenant_id 
+        and    org_type_code = pca.org_type_code
+        and	   org_code = pca.org_code) as org_name,
        cname.code_name as category_name,
 	   a.code_name as part_project_type_name,
        aname.code_name as activity_name,
@@ -17,6 +22,7 @@ SELECT pca.tenant_id,
        pca.c_grade_standard_days,
        pca.d_grade_standard_days,
        pca.active_flag,
+       case when pca.active_flag = True then 'Active' else 'Inactive' end active_flag_val,
        pca.s_grade_standard_days AS s_grade_standard_days_ori,
        pca.a_grade_standard_days AS a_grade_standard_days_ori,
        pca.b_grade_standard_days AS b_grade_standard_days_ori,
