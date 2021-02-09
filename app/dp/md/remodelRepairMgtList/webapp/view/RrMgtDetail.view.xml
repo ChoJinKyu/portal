@@ -456,13 +456,5 @@
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
-    <cm-ui:EmployeeDialog id="employeeDialog" 
-        title="직원 검색"
-        items="{
-            filters: [
-                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
-            ]
-        }"
-        apply=".onEmployeeDialogApplyPress"
-    />
+   
 </mvc:View>
