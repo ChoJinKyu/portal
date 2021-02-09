@@ -1028,7 +1028,7 @@ BEGIN
 											--,TRIM( ' ' FROM loop_sup.INP_CODE )
 											,IFNULL( loop_sup.SUPPLIER_RM_CONTROL_FLAG, FALSE)
 	                                        ,loop_sup.SUPPLIER_BASE_PORTION_RATE
-	                                        ,true
+	                                        ,loop_sup.VENDOR_POOL_MAPPING_USE_FLAG
 											--,loop_sup.APPROVAL_NUMBER
 											,NOW()
 											,I_USER_ID
@@ -1045,6 +1045,7 @@ BEGIN
 										   ,SUPEVAL_CONTROL_END_DATE            = TRIM( ' ' FROM loop_sup.SUPEVAL_CONTROL_END_DATE )
 										   ,SUPPLIER_RM_CONTROL_FLAG            = IFNULL( loop_sup.SUPPLIER_RM_CONTROL_FLAG, FALSE) 
 										   ,SUPPLIER_BASE_PORTION_RATE			= loop_sup.SUPPLIER_BASE_PORTION_RATE
+										   ,VENDOR_POOL_MAPPING_USE_FLAG		= loop_sup.VENDOR_POOL_MAPPING_USE_FLAG
 										   ,LOCAL_UPDATE_DTM       				= NOW()
 										   ,UPDATE_USER_ID         				= I_USER_ID
 										   ,SYSTEM_UPDATE_DTM      				= NOW()
@@ -1055,6 +1056,19 @@ BEGIN
 									AND     VENDOR_POOL_CODE    = loop_sup.VENDOR_POOL_CODE
 									AND     SUPPLIER_CODE       = loop_sup.SUPPLIER_CODE
 								    ;
+								ELSEIF TRIM( ' ' FROM loop_sup.CRUD_TYPE_CODE )  =  'D' THEN
+								    UPDATE PG_VP_VENDOR_POOL_SUPPLIER_DTL
+								    SET     VENDOR_POOL_MAPPING_USE_FLAG		= FALSE
+										   ,LOCAL_UPDATE_DTM       				= NOW()
+										   ,UPDATE_USER_ID         				= I_USER_ID
+										   ,SYSTEM_UPDATE_DTM      				= NOW()
+									WHERE   TENANT_ID           = loop_sup.TENANT_ID
+									AND     COMPANY_CODE        = loop_sup.COMPANY_CODE
+									AND     ORG_TYPE_CODE       = loop_sup.ORG_TYPE_CODE
+									AND     ORG_CODE            = loop_sup.ORG_CODE
+									AND     VENDOR_POOL_CODE    = loop_sup.VENDOR_POOL_CODE
+									AND     SUPPLIER_CODE       = loop_sup.SUPPLIER_CODE
+								    ;    
 								END IF;
 								/*****************************************************
 							    임시 SUPPLIER 저장(TEMP안거치고 DTL로) 여기까지
