@@ -130,46 +130,46 @@
                         }" />
                     </t:template>
                 </t:Column> -->
-                <t:Column id="activity_code" hAlign="Center">
+                <t:Column id="activity_code">
                 <Label text="{I18N>/PROD_ACTIVITY_CODE}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>activity_code}" wrapping="false"/>
+                    <Text text="{list>activity_code}" textAlign="Left" width="100%" wrapping="false"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="activity_name" hAlign="Left">
+                <t:Column id="activity_name">
                 <Label text="{I18N>/PROD_ACTIVITY_NAME}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>activity_name}" wrapping="false"/>
+                    <Text text="{list>activity_name}" textAlign="Left" width="100%" wrapping="false"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="description" hAlign="Left">
+                <t:Column id="description">
                 <Label text="{I18N>/DESCRIPTION}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>description}" wrapping="false"/>
+                    <Text text="{list>description}" textAlign="Left" width="100%" wrapping="false"/>
                 </t:template>
                 </t:Column>                
-                <t:Column id="sequence" hAlign="Center">
+                <t:Column id="sequence" width="60px">
                 <Label text="{I18N>/SEQUENCE}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>sequence}" wrapping="false"/>
+                    <Text text="{list>sequence}" textAlign="Right" width="100%" wrapping="false"/>
                 </t:template>
                 </t:Column>  
-                <t:Column id="active_flag_val" hAlign="Center">
+                <t:Column id="active_flag_val">
                 <Label text="{I18N>/STATUS}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>active_flag_val}" wrapping="false"/>                    
+                    <Text text="{list>active_flag_val}" textAlign="Center" width="100%" wrapping="false"/>                    
                 </t:template>
                 </t:Column>                
-                <t:Column id="local_update_dtm" hAlign="Center">
+                <t:Column id="local_update_dtm">
                 <Label text="{I18N>/UPDATE} {I18N>/DATE_TIME}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{path: 'list>local_update_dtm', formatter: '.dateFormatter.toDateTimeString'}" wrapping="false"/>                    
+                    <Text text="{path: 'list>local_update_dtm', formatter: '.dateFormatter.toDateTimeString'}" textAlign="Center" width="100%" wrapping="false"/>                    
                 </t:template>
                 </t:Column> 
-                <t:Column id="update_user_id" hAlign="Center">
+                <t:Column id="update_user_id">
                 <Label text="{I18N>/UPDATE_USER_ID}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>update_user_id}" wrapping="false"/>                                       
+                    <Text text="{list>update_user_id}" textAlign="Left" width="100%" wrapping="false"/>                                       
                 </t:template>
                 </t:Column>                                                                                                                                       
             </t:columns>
