@@ -80,7 +80,7 @@ public class RemodelRepairMgtListV4 implements EventHandler {
         String repair_request_number = itemV4.getRepairRequestNumber();
 
         try {
-            Instant current = Instant.now();
+            Instant current = Instant.now(); // 현재시간 가져옴 
             if( repair_request_number != null && !repair_request_number.equals("New") 
                 && !repair_request_number.equals("")){ // update 
                     msg.setRepairRequestNumber(itemV4.getRepairRequestNumber());
@@ -133,11 +133,6 @@ public class RemodelRepairMgtListV4 implements EventHandler {
 
         context.setResult(msg);
         context.setCompleted();
-    
     }    
     
-  
-
-
-
 }
