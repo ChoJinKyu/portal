@@ -38,5 +38,5 @@ entity Md_Repair_Mst_Asset_View {
         account_code                    : String(10)            @title:'계정코드';
         repair_supplier_code            : String(10)            @title:'수선공급업체코드';
         repair_supplier_name            : String(100)           @title:'수선공급업체명';
-        complete_date                   : String(8)             @title:'완료일자';
+        repair_complete_date            : String(8)             @title:'완료일자';
 }
