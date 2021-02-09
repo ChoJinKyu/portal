@@ -101,7 +101,7 @@ sap.ui.define([
                         type: DialogType.Message,
                         title: "Information",
                         state: ValueState.Information,
-                        content: new Text({ text: "메뉴별 이동은 Sprint4에서..." }),
+                        content: new Text({ text: "메뉴별 이동은 Sprint4에서...곧 만나요." }),
                         beginButton: new Button({
                             type: ButtonType.Emphasized,
                             text: "OK",
@@ -112,8 +112,45 @@ sap.ui.define([
                     });
                 }
                 this.oInfoMessageDialog.open();
-            }
+            },
 
+            onMainTableCreate0ButtonPress: function () {
+                if (!this.oInfoMessageDialog) {
+                    this.oInfoMessageDialog = new Dialog({
+                        type: DialogType.Message,
+                        title: "Information",
+                        state: ValueState.Information,
+                        content: new Text({ text: "동일레벨생성은 Sprint3에서...곧 만나요." }),
+                        beginButton: new Button({
+                            type: ButtonType.Emphasized,
+                            text: "OK",
+                            press: function () {
+                                this.oInfoMessageDialog.close();
+                            }.bind(this)
+                        })
+                    });
+                }
+                this.oInfoMessageDialog.open();
+            },
+
+            onMainTableCreate1ButtonPress: function () {
+                if (!this.oInfoMessageDialog) {
+                    this.oInfoMessageDialog = new Dialog({
+                        type: DialogType.Message,
+                        title: "Information",
+                        state: ValueState.Information,
+                        content: new Text({ text: "하위레벨생성은 Sprint3에서...곧 만나요." }),
+                        beginButton: new Button({
+                            type: ButtonType.Emphasized,
+                            text: "OK",
+                            press: function () {
+                                this.oInfoMessageDialog.close();
+                            }.bind(this)
+                        })
+                    });
+                }
+                this.oInfoMessageDialog.open();
+            },
 
         });
     }

@@ -78,7 +78,7 @@
                                         selectedKey="{applicationSup>/org_code}"
                                         items="{transactionDivision>/}" width="100%">
                                         <items>
-                                            <core:Item key="{transactionDivision>org_code}" text="{transactionDivision>org_code} :  {transactionDivision>org_name}" />
+                                            <core:Item key="{transactionDivision>org_code}" text="{transactionDivision>org_name}" />
                                         </items>
                                     </ComboBox>
                                     

@@ -63,6 +63,7 @@ service FundingApplicationService {
             ,key op.company_code        //company_code 컬럼에 저장될 값
             ,key op.org_type_code       //org_type_code 컬럼에 저장될 값
             ,key op.org_code	        //콤보에 매핑될 value
+            ,key supOrg.supplier_code   //업체코드
             ,op.org_name as org_name : String	            //콤보에 매핑될 text
             ,op.purchase_org_code
             ,op.plant_code

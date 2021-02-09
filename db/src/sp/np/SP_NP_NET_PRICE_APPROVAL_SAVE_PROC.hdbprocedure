@@ -27,13 +27,15 @@ PROCEDURE SP_NP_NET_PRICE_APPROVAL_SAVE_PROC (
 
     ,IN   I_DETAILS                           TABLE (
                                                ITEM_SEQUENCE                      NVARCHAR(20)
+
+                                              ,ORG_CODE                           NVARCHAR(10)
                                               ,LINE_TYPE_CODE                     NVARCHAR(30)
                                               ,MATERIAL_CODE                      NVARCHAR(40)
                                               ,PAYTERMS_CODE                      NVARCHAR(30)
                                               ,SUPPLIER_CODE                      NVARCHAR(10)
                                               ,EFFECTIVE_START_DATE               NVARCHAR(10)
                                               ,EFFECTIVE_END_DATE                 NVARCHAR(10)
-                                              ,SURROGATE_TYPE_CODE                NVARCHAR(30)
+                                            --  ,SURROGATE_TYPE_CODE                NVARCHAR(30)
                                               ,CURRENCY_CODE                      NVARCHAR(3)
                                               ,NET_PRICE                          DECIMAL
                                               ,VENDOR_POOL_CODE                   NVARCHAR(20)
@@ -41,6 +43,7 @@ PROCEDURE SP_NP_NET_PRICE_APPROVAL_SAVE_PROC (
                                               ,NET_PRICE_APPROVAL_REASON_CODE     NVARCHAR(30)
                                               ,MAKER_CODE                         NVARCHAR(10)
                                               ,INCOTERMS                          NVARCHAR(3)
+
                                               ,_ROW_STATE_                        NVARCHAR(3)
                                            )
 
@@ -187,9 +190,11 @@ BEGIN
         
             INSERT INTO SP_NP_NET_PRICE_APPROVAL_MST (
                    TENANT_ID
+                   /*
                  , COMPANY_CODE
                  , ORG_TYPE_CODE
                  , ORG_CODE
+                   */
                  , APPROVAL_NUMBER
                  -- APPROVE_STATUS_CODE  상태 코드 추가 되어야 함.
                  , NET_PRICE_DOCUMENT_TYPE_CODE
@@ -212,9 +217,11 @@ BEGIN
                  , SYSTEM_UPDATE_DTM
             ) VALUES (
                    I_TENANT_ID                       -- TENANT_ID
+                   /*
                  , I_COMPANY_CODE                    -- COMPANY_CODE
                  , I_ORG_TYPE_CODE                   -- ORG_TYPE_CODE
                  , I_ORG_CODE                        -- ORG_CODE
+                   */
                  , V_APPROVAL_NUMBER                 -- APPROVAL_NUMBER
                  , I_NET_PRICE_DOCUMENT_TYPE_CODE    -- NET_PRICE_DOCUMENT_TYPE_CODE
                  , I_NET_PRICE_SOURCE_CODE           -- NET_PRICE_SOURCE_CODE
@@ -280,9 +287,11 @@ BEGIN
                  , SYSTEM_UPDATE_DTM              = NOW()
                  
              WHERE TENANT_ID           = I_TENANT_ID
+             /*
                AND COMPANY_CODE        = I_COMPANY_CODE
                AND ORG_TYPE_CODE       = I_ORG_TYPE_CODE
                AND ORG_CODE            = I_ORG_CODE
+             */
                AND APPROVAL_NUMBER     = V_APPROVAL_NUMBER
             ;
         END;
@@ -301,15 +310,19 @@ BEGIN
        
         DELETE FROM SP_NP_NET_PRICE_APPROVAL_DTL 
          WHERE (TENANT_ID
+               /*
                ,COMPANY_CODE
                ,ORG_TYPE_CODE
                ,ORG_CODE
+               */
                ,APPROVAL_NUMBER
                ,ITEM_SEQUENCE ) IN (SELECT 
                                            I_TENANT_ID
+                                           /*
                                          , I_COMPANY_CODE
                                          , I_ORG_TYPE_CODE
                                          , I_ORG_CODE
+                                         */
                                          , V_APPROVAL_NUMBER
                                          , DTL.ITEM_SEQUENCE
                                       FROM :I_DETAILS   DTL
@@ -330,13 +343,14 @@ BEGIN
          --Update Item
          MERGE INTO SP_NP_NET_PRICE_APPROVAL_DTL  T
          USING (SELECT ITEM_SEQUENCE
+                      ,ORG_CODE
                       ,LINE_TYPE_CODE
                       ,MATERIAL_CODE
                       ,PAYTERMS_CODE
                       ,SUPPLIER_CODE
                       ,EFFECTIVE_START_DATE
                       ,EFFECTIVE_END_DATE
-                      ,SURROGATE_TYPE_CODE
+                    --  ,SURROGATE_TYPE_CODE
                       ,CURRENCY_CODE
                       ,NET_PRICE
                       ,VENDOR_POOL_CODE
@@ -348,21 +362,24 @@ BEGIN
                 WHERE _ROW_STATE_ = 'U'
                ) I
          ON (    T.TENANT_ID          = I_TENANT_ID
+             /*
              AND T.COMPANY_CODE       = I_COMPANY_CODE
              AND T.ORG_TYPE_CODE      = I_ORG_TYPE_CODE
              AND T.ORG_CODE           = I_ORG_CODE
+             */
              AND T.APPROVAL_NUMBER    = V_APPROVAL_NUMBER
              AND T.ITEM_SEQUENCE      = I.ITEM_SEQUENCE
             )
          WHEN MATCHED THEN
              UPDATE
-             SET    T.LINE_TYPE_CODE                   = I.LINE_TYPE_CODE
+             SET    T.ORG_CODE                         = I.ORG_CODE
+                   ,T.LINE_TYPE_CODE                   = I.LINE_TYPE_CODE
                    ,T.MATERIAL_CODE                    = I.MATERIAL_CODE
                    ,T.PAYTERMS_CODE                    = I.PAYTERMS_CODE
                    ,T.SUPPLIER_CODE                    = I.SUPPLIER_CODE
-                   ,T.EFFECTIVE_START_DATE             = I.EFFECTIVE_START_DATE
-                   ,T.EFFECTIVE_END_DATE               = I.EFFECTIVE_END_DATE
-                   ,T.SURROGATE_TYPE_CODE              = I.SURROGATE_TYPE_CODE
+                   ,T.EFFECTIVE_START_DATE             = TO_DATE(I.EFFECTIVE_START_DATE, 'YYYYMMDD')
+                   ,T.EFFECTIVE_END_DATE               = TO_DATE(I.EFFECTIVE_END_DATE, 'YYYYMMDD')
+                --   ,T.SURROGATE_TYPE_CODE              = I.SURROGATE_TYPE_CODE
                    ,T.CURRENCY_CODE                    = I.CURRENCY_CODE
                    ,T.NET_PRICE                        = I.NET_PRICE
                    ,T.VENDOR_POOL_CODE                 = I.VENDOR_POOL_CODE
@@ -388,8 +405,10 @@ BEGIN
        
         INSERT INTO SP_NP_NET_PRICE_APPROVAL_DTL (
                TENANT_ID
+
              , COMPANY_CODE
              , ORG_TYPE_CODE
+
              , ORG_CODE
              , APPROVAL_NUMBER
              , ITEM_SEQUENCE
@@ -400,7 +419,7 @@ BEGIN
              , SUPPLIER_CODE
              , EFFECTIVE_START_DATE
              , EFFECTIVE_END_DATE
-             , SURROGATE_TYPE_CODE
+           --  , SURROGATE_TYPE_CODE
              , CURRENCY_CODE
              , NET_PRICE
              , VENDOR_POOL_CODE
@@ -418,9 +437,11 @@ BEGIN
         )
         SELECT 
                I_TENANT_ID
+               
              , I_COMPANY_CODE
              , I_ORG_TYPE_CODE
-             , I_ORG_CODE
+             
+             , DTL.ORG_CODE
              , V_APPROVAL_NUMBER
              , SEQ.MAX_ITEM_SEQUENCE + ROW_NUMBER()OVER(PARTITION BY SEQ.MAX_ITEM_SEQUENCE ORDER BY SEQ.MAX_ITEM_SEQUENCE)
 
@@ -428,9 +449,9 @@ BEGIN
              , DTL.MATERIAL_CODE
              , DTL.PAYTERMS_CODE
              , DTL.SUPPLIER_CODE
-             , DTL.EFFECTIVE_START_DATE
-             , DTL.EFFECTIVE_END_DATE
-             , DTL.SURROGATE_TYPE_CODE
+             , TO_DATE(DTL.EFFECTIVE_START_DATE, 'YYYYMMDD')
+             , TO_DATE(DTL.EFFECTIVE_END_DATE, 'YYYYMMDD')
+           --  , DTL.SURROGATE_TYPE_CODE
              , DTL.CURRENCY_CODE
              , DTL.NET_PRICE
              , DTL.VENDOR_POOL_CODE
@@ -449,9 +470,11 @@ BEGIN
              ,(SELECT IFNULL(MAX(ITEM_SEQUENCE), 0) AS MAX_ITEM_SEQUENCE
                  FROM SP_NP_NET_PRICE_APPROVAL_DTL
                 WHERE TENANT_ID        = I_TENANT_ID
+                /*
                   AND COMPANY_CODE     = I_COMPANY_CODE
                   AND ORG_TYPE_CODE    = I_ORG_TYPE_CODE
                   AND ORG_CODE         = I_ORG_CODE
+                */
                   AND APPROVAL_NUMBER  = V_APPROVAL_NUMBER
               ) SEQ
          WHERE DTL._ROW_STATE_ = 'C'

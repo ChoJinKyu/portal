@@ -1,15 +1,13 @@
+
+using {cm.Country as Country } from './CM_COUNTRY-model.cds';
+
 namespace cm;
 
-@cds.persistence.exists
-entity Country_View {
-    key tenant_id          : String(5);
-    key language_code      : String(30);
-    key country_code       : String(30);
-        country_name  : String(30);
-        language           : String(300);
-        iso_code           : String(30);
-        eu_code            : String(30);
-        date_format_code   : String(30);
-        number_format_code : String(30);
-        currency_code      : String(30);
-}
+view Country_View @(restrict: [
+    { grant: 'READ', where: 'tenant_id = $user.TENANT_ID'}
+]) as select from Country {
+        *,
+        language_code as language,
+        children.language_code,
+        children.country_name
+    } excluding { language_code };

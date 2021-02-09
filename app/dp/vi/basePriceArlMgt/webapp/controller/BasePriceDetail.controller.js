@@ -502,7 +502,7 @@ sap.ui.define([
             }else {
                 oDetailModel.setProperty(sSelectedPath+"/repr_material_code", null);
                 oDetailModel.setProperty(sSelectedPath+"/repr_material_supplier_code", null);
-                oDetailModel.setProperty(sSelectedPath+"/repr_material_supplier_name", null);
+                oDetailModel.setProperty(sSelectedPath+"/repr_material_supplier_local_name", null);
             }
 
             if( oDetailModel.getProperty("/approval_type_code") === "VI10" ) {
@@ -619,7 +619,7 @@ sap.ui.define([
                     delete oDetail.system_create_dtm;
                     delete oDetail.system_update_dtm;
                     delete oDetail.purOrg;
-                    delete oDetail.repr_material_supplier_name;
+                    delete oDetail.repr_material_supplier_local_name;
                     delete oDetail.change_reason_nm;
                     //oDetail.base_date = this._changeDateString(oDetail.base_date, "-");
 
@@ -810,6 +810,7 @@ sap.ui.define([
                     }
                 }
             }else {
+                sErrorMessage = "자재코드는 하나이상 추가해야합니다.";
                 bReturnValue = false;
             }
 
@@ -1077,7 +1078,7 @@ sap.ui.define([
 
             oDetail.repr_material_code = oSelectedData.material_code;
             oDetail.repr_material_supplier_code = oSelectedData.supplier_code;
-            oDetail.repr_material_supplier_name = oSelectedData.supplier_local_name;
+            oDetail.repr_material_supplier_local_name = oSelectedData.supplier_local_name;
 
             oDetailModel.refresh();
 

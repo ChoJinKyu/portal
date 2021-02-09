@@ -4,8 +4,7 @@ sap.ui.define([
     "ext/lib/util/ExcelUtil"
 ], function(Spreadsheet, Device, ExcelUtil) {
 	"use strict";
-	return ExcelUtil.extend("op.util.controller.ExcelUtil", {
-	//return {
+	return {
         
         /**
          * Export Table Data

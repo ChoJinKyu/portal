@@ -14,7 +14,7 @@ entity Pd_Part_Category_Activity_Temp {
     b_grade_standard_days : Integer default 0  @title: 'B' ;	
     c_grade_standard_days : Integer default 0  @title: 'C' ;	
     d_grade_standard_days : Integer default 0  @title: 'D' ;	
-    active_flag : Boolean   @title: 'Status' ;	
+    active_flag : Boolean   @title: 'Status' ;
     crud_type_code : String(1) null;
    new_category_code : String(40)  null @title: '신규 카테고리' ;	
 };

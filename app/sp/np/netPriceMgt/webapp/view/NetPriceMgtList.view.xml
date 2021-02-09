@@ -234,7 +234,7 @@
                     <t:Column hAlign="Center" width="10rem">
                         <Label text="{I18N>/REQUEST_DATE}" textAlign="Left" />
                         <t:template>
-                            <Text text="{path: 'list>request_date', formatter: '.DateFormatter.toDateString'}" />
+                            <Text text="{path: 'list>request_date'}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="10rem">

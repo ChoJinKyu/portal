@@ -56,17 +56,17 @@ service NpApprovalDetailService {
     view MasterView as
         SELECT
                 key pam.tenant_id
-             ,  key pam.company_code
-             ,  key pam.org_type_code
-             ,  key pam.org_code	                            /* operating org */
+             ,      cam.company_code
+             ,      cam.org_type_code
+             ,      cam.org_code	                            /* operating org */
              ,  key pam.approval_number                         /* Approval No. */
 
              ,  (SELECT org.org_name
                    FROM CM_PUR_OPERATION_ORG  org
                   WHERE org.tenant_id     = pam.tenant_id
-                    AND org.company_code  = pam.company_code
-                    AND org.org_type_code = pam.org_type_code
-                    AND org.org_code      = pam.org_code
+                    AND org.company_code  = cam.company_code
+                    AND org.org_type_code = cam.org_type_code
+                    AND org.org_code      = cam.org_code
 			    ) AS org_name : String                          /* org */
 
 
@@ -133,8 +133,9 @@ service NpApprovalDetailService {
         
         INNER JOIN CM_SPP_USER_SESSION_VIEW  ssi
             ON ssi.TENANT_ID         = pam.tenant_id
+        /*
            AND ssi.COMPANY_CODE      = pam.company_code
-
+        */
         INNER JOIN CM_APPROVAL_MST          cam
             ON cam.tenant_id         = pam.tenant_id
            AND cam.approval_number   = pam.approval_number
@@ -334,24 +335,23 @@ service NpApprovalDetailService {
             ,   pad.quarter_ci_rate                     /*  분기CI비율    */	
    
             /*  LGC 표시항목 */
-
+            ,   bpm.base_date as base_date : Date
+            ,   IFNULL(bpm.base_price ,0) as base_price : Decimal(34,10)        	
+            ,   IFNULL(bpm.currency_code,' ')  as base_currency_code : String
+            ,   bpm.apply_start_yyyymm as base_apply_start_yyyymm : String
+            ,   bpm.apply_end_yyyymm as base_apply_end_yyyymm : String
             /*
-            ,   bpm.base_date
-            ,   bpm.base_price
-
-
-            ,   IFNULL(bpm.currency_code,'')  as base_currency_code	            : String
+            ,   
             ,   IFNULL(bpm.apply_start_yyyymm,'')  as base_apply_start_yyyymm	: String
             ,   IFNULL(bpm.apply_end_yyyymm,'')  as base_apply_end_yyyymm	    : String
             
             ,   bpm.currency_code as base_currency_code : String
-            ,   bpm.apply_start_yyyymm as base_apply_start_yyyymm : String
-            ,   bpm.apply_end_yyyymm as base_apply_end_yyyymm : String
+            
             */
 
         FROM SP_NP_NET_PRICE_APPROVAL_DTL   pad
-  /* 
-        LEFT JOIN SP_NP_BASE_PRICE_MST bpm             기준단가 마스터 
+
+        LEFT JOIN SP_NP_BASE_PRICE_MST bpm 
                    ON pad.tenant_id              = bpm.tenant_id
                   AND pad.company_code           = bpm.company_code
                   AND pad.org_type_code          = bpm.org_type_code
@@ -362,7 +362,7 @@ service NpApprovalDetailService {
                   AND bpm.apply_start_yyyymm   <= TO_VARCHAR (NOW(), 'YYYYMM')
                   AND bpm.apply_end_yyyymm     >= TO_VARCHAR (NOW(), 'YYYYMM')
                   AND bpm.use_flag = true
-*/
+
         LEFT JOIN SP_SM_SUPPLIER_MST sm    /*  공급업체명 확인필요 */
                 ON pad.tenant_id        = sm.tenant_id
                AND pad.supplier_code    = sm.supplier_code

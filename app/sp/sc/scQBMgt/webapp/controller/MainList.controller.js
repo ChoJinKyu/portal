@@ -594,10 +594,11 @@ sap.ui.define([
                 var oBinding = e.getParameters().bindingParams;
                 var oFilters = [];
 
+                
                 // 첫조회 시 데이터 안나오게
                 if(!this._firstFlag){
                     this._firstFlag = true;
-                    oFilters.push(new Filter("nego_header_id", "EQ", ""));
+                    oFilters.push(new Filter("nego_document_number", "EQ", "99999999"));
                     oBinding.filters = oFilters;
                     return;
                 }
@@ -657,9 +658,9 @@ sap.ui.define([
                 var filterOutcomeItems = filterOutcome.getSelectedItems();
                 for (var i=0; i<filterOutcomeItems.length; i++){
                     var oItem = filterOutcomeItems[i];
-                    var oKey = oItem.getKey();      //바뀔거같음
-                    var oText = oItem.getText();   //현재
-                    oFilters.push(new Filter("negotiation_output_class_code", "EQ", oText));
+                    var oKey = oItem.getKey();      
+                    var oText = oItem.getText();   
+                    oFilters.push(new Filter("outcome_code", "EQ", oKey));
                 }
 
                 // AwardStatus
@@ -866,7 +867,7 @@ sap.ui.define([
                     pOutcome,
                     pHeader_id;
                 pNegoTypeCode = oRow.nego_type_code;
-                pOutcome = oRow.negotiation_output_class_code;
+                pOutcome = oRow.outcome_code;
                 pHeader_id =  String(oRow.nego_document_number);
 
                 if(pNegoTypeCode == null){

@@ -20,7 +20,8 @@
                     rowActionCount="1"
                     rows="{popupListModel>/results}"
                     class="sapFDynamicPageAlignContent" 
-                    visibleRowCountMode="Auto" >
+                    visibleRowCountMode="Auto"
+                    minAutoRowCount="5" >
                     <t:extension>
                         <OverflowToolbar>
                             <Title text="{I18N>/MATERIAL_COST}" level="H2" />

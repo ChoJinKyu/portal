@@ -62,12 +62,13 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             i18nModel = this.getModel("I18N");
+            
+
 
         },
 
         _onDetailMatched: function (oEvent) {
             var oView = this.getView();
-            oView.getModel().refresh(true);
             this.scenario_number = oEvent.getParameter("arguments")["scenario_number"],
                 this.tenant_id = oEvent.getParameter("arguments")["tenant_id"],
                 this.company_code = oEvent.getParameter("arguments")["company_code"],
@@ -75,14 +76,13 @@ sap.ui.define([
                 this.manager = oEvent.getParameter("arguments")["manager"],
                 this.manager_local_name = oEvent.getParameter("arguments")["manager_local_name"];
 
-
-            //필수입력항목 검사 결과 초기화
-            this.validator.clearValueState(this._oFragments.Detail_Edit);
-
             if (this.scenario_number === "New") {
                 this.getModel("DetailView").setProperty("/isEditMode", true);
                 this.getModel("DetailView").setProperty("/isCreate", true);
-                oView.bindElement("/TaskMonitoringMasterView");
+                
+                oView.bindElement("/TaskMonitoringMasterView", {});
+                this.byId("multiInputWithEmployeeValueHelp").removeAllTokens();
+                this.removeRichTextEditorValue();
                 this._toEditMode();
 
             } else {
@@ -90,6 +90,7 @@ sap.ui.define([
                 this.getModel("DetailView").setProperty("/isCreate", false);
                 var scenario_number = this.scenario_number + "l";
                 this.bindPath = "/TaskMonitoringMasterView(scenario_number=" + scenario_number + ",tenant_id='" + this.tenant_id + "',company_code='" + this.company_code + "',bizunit_code='" + this.bizunit_code + "')";
+                // this.getModel("masterModel").setProperty("master",this.getModel().getProperty(this.bindPath));
                 oView.bindElement(this.bindPath);
 
                 //담당자 조회
@@ -115,22 +116,19 @@ sap.ui.define([
                 this.byId("scenarioVBox").bindElement(detail_info_Path);
                 this.byId("systemVBox").bindElement(detail_info_Path);
 
+
                 this._toShowMode();
 
                 oView.getModel().read("/TaskMonitoringMaster(tenant_id='" + this.tenant_id + "',scenario_number=" + this.scenario_number + "l" + ")", {
                     success: function (oData) {
                         this.detailData = oData;
-                        this.PurposeFormattedText = this.detailData.monitoring_purpose === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.monitoring_purpose)));
-                        this.ScenarioDescFormattedText = this.detailData.scenario_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.scenario_desc)));
-                        this.ReSourceSystemFormattedText = this.detailData.source_system_desc === '' ? null : decodeURIComponent(escape(window.atob(this.detailData.source_system_desc)));
-                        this.byId("PurposeFormattedText").setHtmlText(this.PurposeFormattedText === null ? 'No Description' : this.PurposeFormattedText);
-                        this.byId("ScenarioDescFormattedText").setHtmlText(this.ScenarioDescFormattedText === null ? 'No Description' : this.ScenarioDescFormattedText);
-                        this.byId("ReSourceSystemFormattedText").setHtmlText(this.ReSourceSystemFormattedText === null ? 'No Description' : this.ReSourceSystemFormattedText);
+                        this.byId("reMonitoringPurpose").setValue(decodeURIComponent(escape(window.atob(this.detailData.monitoring_purpose))));
+                        this.byId("reMonitoringScenario").setValue(decodeURIComponent(escape(window.atob(this.detailData.scenario_desc))));
+                        this.byId("reSourceSystemDetail").setValue(decodeURIComponent(escape(window.atob(this.detailData.source_system_desc))));
+
                     }.bind(this),
                     error: function () {
-                        this.byId("PurposeFormattedText").setHtmlText("No Description");
-                        this.byId("ScenarioDescFormattedText").setHtmlText("No Description");
-                        this.byId("ReSourceSystemFormattedText").setHtmlText("No Description");
+
                     }
                 });
 
@@ -147,11 +145,11 @@ sap.ui.define([
             this.byId("reSourceSystemDetail").setValue("");
         },
 
-        removeFormattedTextValue: function () {
-            this.byId("PurposeFormattedText").setHtmlText("");
-            this.byId("ScenarioDescFormattedText").setHtmlText("");
-            this.byId("ReSourceSystemFormattedText").setHtmlText("");
-        },
+        // removeFormattedTextValue: function () {
+        //     this.byId("PurposeFormattedText").setHtmlText("");
+        //     this.byId("ScenarioDescFormattedText").setHtmlText("");
+        //     this.byId("ReSourceSystemFormattedText").setHtmlText("");
+        // },
 
         _richTextEditorDefaultSetting: function (Id) {
             var fontId = this.byId(Id).getAggregation("_toolbarWrapper").getAggregation("_toolbar").getAggregation("content")[5].getId();
@@ -247,7 +245,7 @@ sap.ui.define([
                 onClose: function (sAction) {
                     if (sAction === MessageBox.Action.OK) {
                         //필수입력항목 검사
-                        if (that.validator.validate(that._oFragments.Detail_Edit) !== true) {
+                        if (that.validator.validate(that.byId("simpleform_edit")) !== true) {
                             MessageToast.show(i18nModel.getText("/ECM01002"));
                             return;
                         }
@@ -260,7 +258,7 @@ sap.ui.define([
         },
 
 
-        htmlEncoding: function (value, sId) {
+        htmlEncoding: function (value) {
             return btoa(unescape(encodeURIComponent(value)))
         },
 
@@ -294,7 +292,7 @@ sap.ui.define([
                             } else {
                                 that.getRouter().navTo("main", {}, true);
                             }
-                            that._resetView();
+                            // that._resetView();
 
                         }
 
@@ -406,48 +404,47 @@ sap.ui.define([
             this._toEditMode();
         },
 
-        //view에 있는 value reset
-        _resetView: function () {
-            //담당자 multiInput reset
-            this.byId("multiInputWithEmployeeValueHelp").removeAllTokens();
-            //richTextEditorValue reset
-            this.removeRichTextEditorValue();
-            this.removeFormattedTextValue();
-            //refresh
-            this.getView().getModel().refresh();
-            //담당자 테이블
-            this.byId("managerListTable").getBinding("items").filter(new Filter("employee_number", FilterOperator.Contains, " "));
-            //tokens remove
-            this.byId("combo_purchasing_type").removeAllSelectedItems();
-            this.byId("company_edit_combo").removeAllSelectedItems();
-            this.byId("bizunit_edit_combo").removeAllSelectedItems();
-            this.byId("multiInputWithEmployeeValueHelp").removeAllTokens();
-            this.byId("multicombo_cycle").removeAllSelectedItems();
+        // //view에 있는 value reset
+        // _resetView: function () {
+        //     //담당자 multiInput reset
+        //     this.byId("multiInputWithEmployeeValueHelp").removeAllTokens();
+        //     //richTextEditorValue reset
+        //     this.removeRichTextEditorValue();
+        //     this.removeFormattedTextValue();
+        //     //refresh
+        //     this.getView().getModel().refresh();
+        //     //담당자 테이블
+        //     this.byId("managerListTable").getBinding("items").filter(new Filter("employee_number", FilterOperator.Contains, " "));
+        //     //tokens remove
+        //     this.byId("combo_purchasing_type").removeAllSelectedItems();
+        //     this.byId("company_edit_combo").removeAllSelectedItems();
+        //     this.byId("bizunit_edit_combo").removeAllSelectedItems();
+        //     this.byId("multiInputWithEmployeeValueHelp").removeAllTokens();
+        //     this.byId("multicombo_cycle").removeAllSelectedItems();
 
-        },
+        // },
 
         /**
         * Edit모드일 때 설정 
         */
         _toEditMode: function () {
+
             this.getModel("DetailView").setProperty("/isEditMode", true);
-            this._showFormFragment('Detail_Edit');
-            this.byId("page").setSelectedSection("pageSectionMain");
+            // this._showFormFragment('Detail_Edit');
+            // this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);
             this.byId("managerListTable").setMode(sap.m.ListMode.MultiSelect);
             this._bindMidTable(this.oEditableManagerTemplate, "Edit");
             this.byId("signalList").setMode(sap.m.ListMode.MultiSelect);
             this._bindMidTable(this.oEditableTemplate, "Edit");
-            if (this.scenario_number === "New") {
-                this._resetView();
-            } else {
-                //richTextEditor
-                this.byId("reMonitoringPurpose").setValue(this.PurposeFormattedText);
-                this.byId("reMonitoringScenario").setValue(this.ScenarioDescFormattedText);
-                this.byId("reSourceSystemDetail").setValue(this.ReSourceSystemFormattedText);
-            }
-            //회사,법인,사업본부 SelectionChange Event
-            // sap.ui.getCore().byId("tenant_edit_combo").fireSelectionChange();
+            // if (this.scenario_number === "New") {
+            //     this._resetView();
+            // } else {
+            //     //richTextEditor
+            //     this.byId("reMonitoringPurpose").setValue(this.PurposeFormattedText);
+            //     this.byId("reMonitoringScenario").setValue(this.ScenarioDescFormattedText);
+            //     this.byId("reSourceSystemDetail").setValue(this.ReSourceSystemFormattedText);
+            // }
 
         },
 
@@ -456,8 +453,8 @@ sap.ui.define([
          */
         _toShowMode: function () {
             this.getModel("DetailView").setProperty("/isEditMode", false);
-            this._showFormFragment('Detail_Show');
-            this.byId("page").setSelectedSection("pageSectionMain");
+            // this._showFormFragment('Detail_Show');
+            // this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", true);
             // signal table
             this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
@@ -718,22 +715,24 @@ sap.ui.define([
         * 지표 테이블, 담당자 테이블 bindItems
         */
         _bindMidTable: function (oTemplate, sKeyboardMode) {
+            if (this.getModel("DetailView").getProperty("/isCreate") === false) {
+                var aFilters = [
+                    new Filter("tenant_id", FilterOperator.Contains, this.tenant_id),
+                    new Filter("scenario_number", FilterOperator.EQ, this.scenario_number)
+                ];
+            } else {
+                aFilters = new Filter("tenant_id", FilterOperator.Contains, " ");
+            }
             if (oTemplate === this.oReadOnlyTemplate || oTemplate === this.oEditableTemplate) {
                 this.byId("signalList").bindItems({
                     path: "/TaskMonitoringIndicatorNumberView",
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.Contains, this.tenant_id),
-                        new Filter("scenario_number", FilterOperator.EQ, this.scenario_number)
-                    ],
+                    filters: aFilters,
                     template: oTemplate
                 }).setKeyboardMode(sKeyboardMode);
             } else {
                 this.byId("managerListTable").bindItems({
                     path: "/TaskMonitoringManagerView",
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.Contains, this.tenant_id),
-                        new Filter("scenario_number", FilterOperator.EQ, this.scenario_number)
-                    ],
+                    filters: aFilters,
                     template: oTemplate
                 }).setKeyboardMode(sKeyboardMode)
             }
@@ -744,29 +743,29 @@ sap.ui.define([
         * Detail_Edit, Detail_Show Fragment load 
         */
 
-        _oFragments: {},
-        _showFormFragment: function (sFragmentName) {
-            var oPageSubSection = this.byId("pageSubSection1");
-            this._loadFragment(sFragmentName, function (oFragment) {
-                oPageSubSection.removeAllBlocks();
-                oPageSubSection.addBlock(oFragment);
-            })
-        },
-        _loadFragment: function (sFragmentName, oHandler) {
-            if (!this._oFragments[sFragmentName]) {
-                Fragment.load({
-                    id: this.getView().getId(),
-                    name: "pg.tm.tmMonitoring.view." + sFragmentName,
-                    controller: this
-                }).then(function (oFragment) {
-                    this._oFragments[sFragmentName] = oFragment;
-                    if (oHandler) oHandler(oFragment);
-                }.bind(this));
-                // this.getView().addDependent(this._oFragments[sFragmentName]);
-            } else {
-                if (oHandler) oHandler(this._oFragments[sFragmentName]);
-            }
-        },
+        // _oFragments: {},
+        // _showFormFragment: function (sFragmentName) {
+        //     var oPageSubSection = this.byId("pageSubSection1");
+        //     this._loadFragment(sFragmentName, function (oFragment) {
+        //         oPageSubSection.removeAllBlocks();
+        //         oPageSubSection.addBlock(oFragment);
+        //     })
+        // },
+        // _loadFragment: function (sFragmentName, oHandler) {
+        //     if (!this._oFragments[sFragmentName]) {
+        //         Fragment.load({
+        //             id: this.getView().getId(),
+        //             name: "pg.tm.tmMonitoring.view." + sFragmentName,
+        //             controller: this
+        //         }).then(function (oFragment) {
+        //             this._oFragments[sFragmentName] = oFragment;
+        //             if (oHandler) oHandler(oFragment);
+        //         }.bind(this));
+
+        //     } else {
+        //         if (oHandler) oHandler(this._oFragments[sFragmentName]);
+        //     }
+        // },
 
         onMultiInputWithEmployeeValuePress: function () {
             if (!this.oEmployeeMultiSelectionValueHelp) {
@@ -932,7 +931,7 @@ sap.ui.define([
                 success: function (data) {
                     sap.m.MessageToast.show(i18nModel.getText("/NCM01002"));
                     that.getRouter().navTo("main", {}, true);
-                    that._resetView();
+                    // that._resetView();
                     //refresh
                     oModel.refresh(true);
                     // console.log('data:', data);
@@ -970,9 +969,9 @@ sap.ui.define([
                 "scenario_number": scenario_number,
                 "monitoring_type_code": this.byId("combo_monitoring_type").getSelectedKey(),
                 "activate_flag": this.byId("segmentButton_activate").getSelectedKey() === 'Yes' ? true : false,
-                "monitoring_purpose": this.htmlEncoding(monitoringPurposeValue, this.byId("reMonitoringPurpose").getId()),
-                "scenario_desc": this.htmlEncoding(scenarioDescValue, this.byId("reMonitoringPurpose").getId()),
-                "source_system_desc": this.htmlEncoding(sourceSystemDescValue, this.byId("reMonitoringPurpose").getId()),
+                "monitoring_purpose": this.htmlEncoding(monitoringPurposeValue),
+                "scenario_desc": this.htmlEncoding(scenarioDescValue),
+                "source_system_desc": this.htmlEncoding(sourceSystemDescValue),
                 "local_create_dtm": new Date(),
                 "local_update_dtm": new Date(),
                 "create_user_id": "Admin",
@@ -1159,7 +1158,8 @@ sap.ui.define([
                 success: function (data) {
                     sap.m.MessageToast.show(i18nModel.getText("/NCM01001"));
                     that.getRouter().navTo("main", {}, true);
-                    that._resetView();
+                    oModel.refresh(true);
+                    // that._resetView();
                     // console.log('data:', data);
                 },
                 error: function (e) {

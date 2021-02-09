@@ -49,7 +49,7 @@
                         <smartFilterBar:ControlConfiguration id="filterNegoNo" key="nego_document_number" index="2" label="Negotiation No" 
                             groupId="_BASIC" visibleInAdvancedArea="true" class="" >
                             <smartFilterBar:customControl class="">
-                                <Input id="inputFilterNegoNo"/>
+                                <Input id="inputFilterNegoNo" placeholder="입력 해주세요."/>
                             </smartFilterBar:customControl>
                         </smartFilterBar:ControlConfiguration>
                         <smartFilterBar:ControlConfiguration id="filterOutcome" key="1" index="3" label="Outcome" 
@@ -104,7 +104,7 @@
                         <smartFilterBar:ControlConfiguration id="filterTitle" key="nego_document_title" index="7" label="Title" 
                             groupId="_BASIC" visibleInAdvancedArea="true" class="" >
                             <smartFilterBar:customControl class="">
-                                <Input id="inputFilterTitle"/>
+                                <Input id="inputFilterTitle" placeholder="입력 해주세요."/>
                             </smartFilterBar:customControl>
                         </smartFilterBar:ControlConfiguration>
                         <smartFilterBar:ControlConfiguration id="filterStatus" key="6" index="8" label="Status" 
@@ -343,7 +343,8 @@
         </f:header>
         <f:content>
             <smartTable:SmartTable id="sTable1" entitySet="NegoWorkbenchView"
-                ignoreFromPersonalisation="tenant_id,nego_item_number,nego_header_id,nego_progress_status_code,award_progress_status_code,award_type_code" 
+                ignoreFromPersonalisation="tenant_id,nego_item_number,nego_header_id,nego_progress_status_code,award_progress_status_code,award_type_code,buyer_empno,negotiation_style_code,
+                negotiation_output_class_code,nego_type_code,outcome_code,request_department_code,requestor_empno,buyer_department_code"
                 ignoredFields=""
                 smartFilterId="smartFilterBar" tableType="Table" 
                 useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true" 
@@ -351,6 +352,7 @@
                 enableAutoBinding="true" 
                 class="sapUiResponsiveContentPadding sapUiSmallMarginBottom"
                 initiallyVisibleFields=""
+                requestAtLeastFields="nego_type_code,outcome_code,nego_progress_status_code,buyer_department_code,award_type_code,award_progress_status_code"
                 beforeRebindTable="beforeRebindTable">
                     <smartTable:customToolbar>
                         <OverflowToolbar design="Transparent">
@@ -383,7 +385,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "nego_document_number", "leadingProperty": "nego_document_number", "sortProperty": "nego_document_number", "filterProperty": "nego_document_number"}'/>
                                 </t:customData>
-                                <Label text="Negotiation No" />
+                                <Label text="{I18N>/NEGO_DOCUMENT_NUMBER}" />
                                 <t:template >
                                     <ObjectStatus text="{nego_document_number}" active="true" press="onNegoNumberPress" class="AlignL" />
                                 </t:template>
@@ -392,7 +394,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "nego_document_round", "leadingProperty": "nego_document_round", "sortProperty": "nego_document_round", "filterProperty": "nego_document_round"}'/>
                                 </t:customData>
-                                <Label text="Revision"  />
+                                <Label text="{I18N>/NEGO_DOCUMENT_ROUND}"  />
                                 <t:template>
                                     <Text text="{nego_document_round}" wrapping="false" />
                                 </t:template> 
@@ -401,19 +403,16 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "nego_progress_status_name", "leadingProperty": "nego_progress_status_name", "sortProperty": "nego_progress_status_name", "filterProperty": "nego_progress_status_name"}'/>
                                 </t:customData>
-                                <Label text="Negotiation Status" />
+                                <Label text="{I18N>/NEGO_PROGRESS_STATUS_CODE}" />
                                 <t:template>
                                     <Text text="{nego_progress_status_name}" wrapping="false" /> 
-                                    
-                                
-                                    
                                 </t:template>
                             </t:Column> 
                             <t:Column width="10rem" hAlign="Center" sortProperty="award_progress_status_name" filterProperty="award_progress_status_name">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "award_progress_status_name", "leadingProperty": "award_progress_status_name", "sortProperty": "award_progress_status_name", "filterProperty": "award_progress_status_name"}'/>
                                 </t:customData>
-                                <Label text="Award Status" />
+                                <Label text="{I18N>/AWARD_PROGRESS_STATUS_CODE}" />
                                 <t:template>
                                     <Text text="{award_progress_status_name}" wrapping="false" />
                                 </t:template>
@@ -422,7 +421,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "reply_times", "leadingProperty": "reply_times", "sortProperty": "reply_times", "filterProperty": "reply_times"}'/>
                                 </t:customData>
-                                <Label text="회신횟수" textAlign="Center" />
+                                <Label text="{I18N>/REPLY_TIMES}" textAlign="Center" />
                                 <t:template>
                                     <Text text="{reply_times}" wrapping="false" class="AlignR" />
                                 </t:template> 
@@ -432,7 +431,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "supplier_count", "leadingProperty": "supplier_count", "sortProperty": "supplier_count", "filterProperty": "supplier_count"}'/>
                                 </t:customData>
-                                <Label text="협력사수"  class="AlignC" width="100%"/>
+                                <Label text="{I18N>/SUPPLIER_COUNT}" class="AlignC" width="100%"/>
                                 <t:template>
                                     <Text text="{supplier_count}" wrapping="false" class="AlignC" width="100%" />
                                 </t:template>
@@ -441,7 +440,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "supplier_participation_flag", "leadingProperty": "supplier_participation_flag", "sortProperty": "supplier_participation_flag", "filterProperty": "supplier_participation_flag"}'/>
                                 </t:customData>
-                                <Label text="Participation" />
+                                <Label text="{I18N>/SUPPLIER_PARTICIPATION_FLAG}"  />
                                 <t:template>
                                     <Text text="{supplier_participation_flag}" wrapping="false" />
                                 </t:template> 
@@ -450,7 +449,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "remaining_hours", "leadingProperty": "remaining_hours", "sortProperty": "remaining_hours", "filterProperty": "remaining_hours"}'/>
                                 </t:customData>
-                                <Label text="잔여시간" />
+                                <Label text="{I18N>/REMAINING_HOURS}"/>
                                 <t:template>
                                     <Text text="{remaining_hours}" />
                                     <!-- <Text text="{path: 'remaining_hours',
@@ -464,7 +463,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "nego_document_title", "leadingProperty": "nego_document_title", "sortProperty": "nego_document_title", "filterProperty": "nego_document_title"}'/>
                                 </t:customData>
-                                <Label text="Title"  class="AlignC" width="100%" />
+                                <Label text="{I18N>/NEGO_DOCUMENT_TITLE}"  class="AlignC" width="100%" />
                                 <t:template>
                                     <Text text="{nego_document_title}" wrapping="false" class="AlignL" width="100%" />
                                 </t:template>  
@@ -473,52 +472,52 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "items_count", "leadingProperty": "items_count", "sortProperty": "items_count", "filterProperty": "items_count"}'/>
                                 </t:customData>
-                                <Label text="품목수" />
+                                <Label text="{I18N>/ITEMS_COUNT}"/>
                                 <t:template>
                                     <Text text="{items_count}" wrapping="false" class="AlignR" />
                                 </t:template>   
                             </t:Column> 
-                            <t:Column width="10rem" hAlign="Center" sortProperty="nego_type_code" filterProperty="nego_type_code">
+                            <t:Column width="10rem" hAlign="Center" sortProperty="nego_type_name" filterProperty="nego_type_name">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "nego_type_code", "leadingProperty": "nego_type_code", "sortProperty": "nego_type_code", "filterProperty": "nego_type_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "nego_type_name", "leadingProperty": "nego_type_name", "sortProperty": "nego_type_name", "filterProperty": "nego_type_name"}'/>
                                 </t:customData>
-                                <Label text="Negotiation Type"  />
+                                <Label text="{I18N>/NEGO_TYPE_CODE}"  />
                                 <t:template>
-                                    <Text text="{nego_type_code}" wrapping="false" />
+                                    <Text text="{nego_type_name}" wrapping="false" />
                                 </t:template> 
                             </t:Column> 
-                            <t:Column width="8rem" hAlign="Center" sortProperty="negotiation_style_code" filterProperty="negotiation_style_code">
+                            <t:Column width="8rem" hAlign="Center" sortProperty="negotiation_style_name" filterProperty="negotiation_style_name">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "negotiation_style_code", "leadingProperty": "negotiation_style_code", "sortProperty": "negotiation_style_code", "filterProperty": "negotiation_style_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "negotiation_style_name", "leadingProperty": "negotiation_style_name", "sortProperty": "negotiation_style_name", "filterProperty": "negotiation_style_name"}'/>
                                 </t:customData>
-                                <Label text="Quote Style" />
+                                <Label text="{I18N>/NEGOTIATION_STYLE_CODE}"/>
                                 <t:template>
-                                    <Text text="{negotiation_style_code}" wrapping="false" />
+                                    <Text text="{negotiation_style_name}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
                             <t:Column width="8rem" hAlign="Center" sortProperty="bidding_result_open_status_code" filterProperty="bidding_result_open_status_code">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "bidding_result_open_status_code", "leadingProperty": "bidding_result_open_status_code", "sortProperty": "bidding_result_open_status_code", "filterProperty": "bidding_result_open_status_code"}'/>
                                 </t:customData>
-                                <Label text="Bid Open Status" />
+                                <Label text="{I18N>/NW_BIDDING_STATUS_CODE}"/>
                                 <t:template>
                                     <Text text="{bidding_result_open_status_code}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
-                            <t:Column width="12rem" hAlign="Center" sortProperty="negotiation_output_class_code" filterProperty="negotiation_output_class_code">
+                            <t:Column width="12rem" hAlign="Center" sortProperty="outcome_name" filterProperty="outcome_name">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "negotiation_output_class_code", "leadingProperty": "negotiation_output_class_code", "sortProperty": "negotiation_output_class_code", "filterProperty": "negotiation_output_class_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "outcome_name", "leadingProperty": "outcome_name", "sortProperty": "outcome_name", "filterProperty": "outcome_name"}'/>
                                 </t:customData>
-                                <Label text="Outcome" />
+                                <Label text="{I18N>/OUTCOME_CODE}" />
                                 <t:template>
-                                    <Text text="{negotiation_output_class_code}" wrapping="false" />
+                                    <Text text="{outcome_name}" wrapping="false" />
                                 </t:template> 
                             </t:Column> 
                             <t:Column  width="10rem" hAlign="Center" sortProperty="pr_approve_number" filterProperty="pr_approve_number">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "pr_approve_number", "leadingProperty": "pr_approve_number", "sortProperty": "pr_approve_number", "filterProperty": "pr_approve_number"}'/>
                                 </t:customData>
-                                <Label text="Req Submission No" />
+                                <Label text="{I18N>/PR_APPROVE_NUMBER}" />
                                 <t:template>
                                     <Text text="{pr_approve_number}" wrapping="false" />
                                 </t:template> 
@@ -527,7 +526,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "req_submission_status", "leadingProperty": "req_submission_status", "sortProperty": "req_submission_status", "filterProperty": "req_submission_status"}'/>
                                 </t:customData>
-                                <Label text="Req Submission Status" />
+                                <Label text="{I18N>/REQ_SUBMISSION_STATUS}" />
                                 <t:template>
                                     <Text text="{req_submission_status}" wrapping="false" />
                                 </t:template>   
@@ -536,7 +535,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "req_reapproval", "leadingProperty": "req_reapproval", "sortProperty": "req_reapproval", "filterProperty": "req_reapproval"}'/>
                                 </t:customData>
-                                <Label text="Req Reapproval" />
+                                <Label text="{I18N>/REQ_REAPPROVAL}" />
                                 <t:template>
                                     <Text text="{req_reapproval}" wrapping="false" />
                                 </t:template> 
@@ -545,7 +544,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "material_code", "leadingProperty": "material_code", "sortProperty": "material_code", "filterProperty": "material_code"}'/>
                                 </t:customData>
-                                <Label text="Part No" />
+                                <Label text="{I18N>/MATERIAL_CODE}" />
                                 <t:template>
                                     <Text text="{material_code}" wrapping="false" class="AlignL" />
                                 </t:template> 
@@ -554,28 +553,28 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "material_desc", "leadingProperty": "material_desc", "sortProperty": "material_desc", "filterProperty": "material_desc"}'/>
                                 </t:customData>
-                                <Label text="Description"  class="AlignC" width="100%"/>
+                                <Label text="{I18N>/MATERIAL_DESC}"  class="AlignC" width="100%"/>
                                 <t:template>
                                     <Text text="{material_desc}" wrapping="false" class="AlignL" width="100%"/>
                                 </t:template> 
                             </t:Column>
-                            <t:Column width="8rem" hAlign="Center" sortProperty="requestor_empno" filterProperty="requestor_empno">
+                            <t:Column width="8rem" hAlign="Center" sortProperty="requestor_empno_name" filterProperty="requestor_empno_name">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "requestor_empno", "leadingProperty": "requestor_empno", "sortProperty": "requestor_empno", "filterProperty": "requestor_empno"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "requestor_empno_name", "leadingProperty": "requestor_empno_name", "sortProperty": "requestor_empno_name", "filterProperty": "requestor_empno_name"}'/>
                                 </t:customData>
-                                <Label text="요청자" />
+                                <Label text="{I18N>/REQUESTOR}" />
                                 <t:template>
-                                    <Text text="{requestor_empno}" wrapping="false" class="AlignL"/>
+                                    <Text text="{requestor_empno_name}" wrapping="false" class="AlignL"/>
                                 </t:template> 
                             </t:Column>
 
-                            <t:Column width="10rem" hAlign="Center" sortProperty="request_department_code" filterProperty="request_department_code">
+                            <t:Column width="10rem" hAlign="Center" sortProperty="request_department_name" filterProperty="request_department_name">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "request_department_code", "leadingProperty": "request_department_code", "sortProperty": "request_department_code", "filterProperty": "request_department_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "request_department_name", "leadingProperty": "request_department_name", "sortProperty": "request_department_name", "filterProperty": "request_department_name"}'/>
                                 </t:customData>
-                                <Label text="요청 부서" />
+                                <Label text="{I18N>/REQUESTOR_DEPARTMENT}" />
                                 <t:template>
-                                    <Text text="{request_department_code}" wrapping="false" />
+                                    <Text text="{request_department_name}" wrapping="false" />
                                 </t:template>  
                             </t:Column>
 
@@ -584,29 +583,40 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "award_type_name", "leadingProperty": "award_type_name", "sortProperty": "award_type_name", "filterProperty": "award_type_name"}'/>
                                 </t:customData>
-                                <Label text="Award Type" />
+                                <Label text="{I18N>/AWARD_TYPE_CODE}" />
                                 <t:template>
                                     <Text text="{award_type_name}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
+
+                            <t:Column width="8rem" hAlign="Center" sortProperty="buyer_empno_name" filterProperty="buyer_empno_name" >
+                                <t:customData>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "buyer_empno_name", "leadingProperty": "buyer_empno_name", "sortProperty": "buyer_empno_name", "filterProperty": "buyer_empno_name"}'/>
+                                </t:customData>
+                                <Label text="{I18N>/BUYER}"  />
+                                <t:template>
+                                    <Text text="{buyer_empno_name}" wrapping="false" />
+                                </t:template>  
+                            </t:Column> 
+
                             
-                            <t:Column width="8rem" hAlign="Center" sortProperty="buyer_empno" filterProperty="buyer_empno">
+                            <!-- <t:Column width="8rem" hAlign="Center" sortProperty="buyer_empno" filterProperty="buyer_empno">
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "buyer_empno", "leadingProperty": "buyer_empno", "sortProperty": "buyer_empno", "filterProperty": "buyer_empno"}'/>
                                 </t:customData>
                                 <Label text="Buyer"  />
                                 <t:template>
-                                    <Text text="{buyer_empno}" wrapping="false" />
+                                    <Text text="{buyer_empno} - {buyer_empno_name}" wrapping="false" />
                                 </t:template>  
-                            </t:Column> 
+                            </t:Column>  -->
                             
-                            <t:Column width="14rem" hAlign="Center" sortProperty="buyer_department_code" filterProperty="buyer_department_code">
+                            <t:Column width="14rem" hAlign="Center" sortProperty="buyer_department_name" filterProperty="buyer_department_name">
                                 <t:customData>
-                                    <core:CustomData key="p13nData" value='\{"columnKey": "buyer_department_code", "leadingProperty": "buyer_department_code", "sortProperty": "buyer_department_code", "filterProperty": "buyer_department_code"}'/>
+                                    <core:CustomData key="p13nData" value='\{"columnKey": "buyer_department_name", "leadingProperty": "buyer_department_name", "sortProperty": "buyer_department_name", "filterProperty": "buyer_department_name"}'/>
                                 </t:customData>
-                                <Label text="Department" />
+                                <Label text="{I18N>/BUYER_DEPARTMENT_CODE}" />
                                 <t:template>
-                                    <Text text="{buyer_department_code}" wrapping="false" />
+                                    <Text text="{buyer_department_name}" wrapping="false" />
                                 </t:template>  
                             </t:Column> 
                             
@@ -614,7 +624,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "open_date", "leadingProperty": "open_date", "sortProperty": "open_date", "filterProperty": "open_date", "type": "datetime"}'/>
                                 </t:customData>
-                                <Label text="Open Date" />
+                                <Label text="{I18N>/OPEN_DATE}" />
                                 <t:template>
                                     <Text text="{path: 'open_date',type : 'sap.ui.model.type.Date', 
                                             formatOptions: { pattern: 'yyyy/MM/dd hh:mm' }}" wrapping="false" />
@@ -627,7 +637,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "closing_date", "leadingProperty": "closing_date", "sortProperty": "closing_date", "filterProperty": "closing_date", "type":"datetime"}'/>
                                 </t:customData>
-                                <Label text="Close Date" />
+                                <Label text="{I18N>/CLOSING_DATE}" />
                                 <t:template>
                                     <Text text="{path: 'closing_date',type : 'sap.ui.model.type.Date', 
                                             formatOptions: { pattern: 'yyyy/MM/dd hh:mm' }}" wrapping="false" />
@@ -649,7 +659,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "close_date_ext_enabled_count", "leadingProperty": "close_date_ext_enabled_count", "sortProperty": "close_date_ext_enabled_count", "filterProperty": "close_date_ext_enabled_count"}'/>
                                 </t:customData>
-                                <Label text="Extention Times"  />
+                                <Label text="{I18N>/CLOSE_DATE_EXT_ENABLED_HOURS}"  />
                                 <t:template>
                                     <Text text="{close_date_ext_enabled_count}" wrapping="false" />
                                 </t:template>  
@@ -659,7 +669,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "actual_extension_count", "leadingProperty": "actual_extension_count", "sortProperty": "actual_extension_count", "filterProperty": "actual_extension_count"}'/>
                                 </t:customData>
-                                <Label text="Actual Extension Times" />
+                                <Label text="{I18N>/CLOSE_DATE_EXT_ENABLED_COUNT}" />
                                 <t:template>
                                     <Text text="{actual_extension_count}" wrapping="false" />
                                 </t:template>  
@@ -668,7 +678,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "requisition_flag", "leadingProperty": "requisition_flag", "sortProperty": "requisition_flag", "filterProperty": "requisition_flag"}'/>
                                 </t:customData>
-                                <Label text="Requisition Flag" />
+                                <Label text="{I18N>/REQUISITION_FLAG}" />
                                 <t:template>
                                     <Text text="{requisition_flag}" wrapping="false" />
                                 </t:template>  
@@ -677,7 +687,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "price_submission_no", "leadingProperty": "price_submission_no", "sortProperty": "price_submission_no", "filterProperty": "price_submission_no"}'/>
                                 </t:customData>
-                                <Label text="Price Submission No" />
+                                <Label text="{I18N>/PRICE_SUBMISSION_NO}" />
                                 <t:template>
                                     <Text text="{price_submission_no}" wrapping="false" />
                                 </t:template>  
@@ -686,7 +696,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "price_submisstion_status", "leadingProperty": "price_submisstion_status", "sortProperty": "price_submisstion_status", "filterProperty": "price_submisstion_status"}'/>
                                 </t:customData>
-                                <Label text="Price Submission Status" />
+                                <Label text="{I18N>/PRICE_SUBMISSTION_STATUS}" />
                                 <t:template>
                                     <Text text="{price_submisstion_status}" wrapping="false" />
                                 </t:template>  
@@ -695,7 +705,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "local_create_dtm", "leadingProperty": "local_create_dtm", "sortProperty": "local_create_dtm", "filterProperty": "local_create_dtm", "type":"datetime"}'/>
                                 </t:customData>
-                                <Label text="Create Date" />
+                                <Label text="{I18N>/NW_CREATE_DTM}" />
                                 <t:template>
                                     <Text text="{path: 'local_create_dtm',type : 'sap.ui.model.type.Date', 
                                             formatOptions: { pattern: 'yyyy/MM/dd hh:mm' }}" wrapping="false" />
@@ -705,7 +715,7 @@
                                 <t:customData>
                                     <core:CustomData key="p13nData" value='\{"columnKey": "interface_source", "leadingProperty": "interface_source", "sortProperty": "interface_source", "filterProperty": "interface_source"}'/>
                                 </t:customData>
-                                <Label text="Interface Source" />
+                                <Label text="{I18N>/INTERFACE_SOURCE}" />
                                 <t:template>
                                     <Text text="{interface_source}" wrapping="false" />
                                 </t:template>  

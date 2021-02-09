@@ -1,16 +1,14 @@
+
+using {cm.Currency as Currency } from './CM_CURRENCY-model.cds';
+
 namespace cm;
 
-@cds.persistence.exists
-entity Currency_View {
-    key tenant_id            : String(5);
-    key language_code        : String(30);
-    key currency_code        : String(30);
-        currency_code_name   : String(240);
-        effective_start_date : DateTime;
-        effective_end_date   : DateTime;
-        use_flag             : Boolean;
-        scale                : Decimal;
-        extension_scale      : Decimal;
-        currency_prefix      : String(30);
-        currency_suffix      : String(30);
-}
+view Currency_View @(restrict: [
+    { grant: 'READ', where: 'tenant_id = $user.TENANT_ID'}
+]) as select from Currency {
+        *,
+        children.language_code,
+        children.currency_code_name,
+        children.currency_prefix,
+        children.currency_suffix
+    } excluding { children };
