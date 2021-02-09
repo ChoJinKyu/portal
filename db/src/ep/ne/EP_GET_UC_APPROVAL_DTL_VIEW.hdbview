@@ -50,7 +50,7 @@ on mst.tenant_id = sup.tenant_id
 and mst.company_code = sup.company_code
 and mst.net_price_contract_document_no = sup.net_price_contract_document_no
 and mst.net_price_contract_degree = sup.net_price_contract_degree
------------------           param               ------------------------
+-----------------           param            ------------------------
 and sup.supplier_code = 'KR47999200' /*** 세션의 업체코드 사용 */
 and mst.org_code = '2000' /*** 운영단위(플랜트) */
 and dtl.ep_item_code in 
