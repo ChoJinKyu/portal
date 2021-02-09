@@ -240,7 +240,7 @@
                         <Button text="{I18N>/BOM_MAPPING}" type="Transparent" press=".onBomInfoMappingPress" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
                         <Button text="{I18N>/BOM}{I18N>/INFORMATION}" type="Transparent" press=".onBomInfo" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
                         <ToolbarSeparator/>
-                        <Button text="Search" type="Emphasized" press=".onSearchButtonPress" />
+                        <Button text="{I18N>/INITIALIZE}" type="Emphasized" press=".onSearchButtonPress" />
                         <Button text="Save" type="Emphasized" press=".onDraftPress" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
                         <Button text="Save &amp; Next" type="Emphasized" press=".onSaveNext" enabled="{= ${detailModel>/mcst_status_code} === 'CONFIRMED' ? false : true}"/>
                         <ToolbarSeparator/>
