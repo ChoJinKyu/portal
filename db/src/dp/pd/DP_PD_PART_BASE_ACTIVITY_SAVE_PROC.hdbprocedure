@@ -141,7 +141,7 @@ BEGIN
 
         ELSE
 
-             SELECT 'PAT' || TO_NCHAR(NOW(), 'YYMMDD') || LPAD(DP_PD_PART_CATEGORY_SEQ.NEXTVAL, 4, '0') 
+             SELECT 'PACT' || TO_NCHAR(NOW(), 'YYYYMMDD') || LPAD(DP_PD_PART_CATEGORY_SEQ.NEXTVAL, 5, '0') 
              INTO   V_ACTIVITY_CODE
              FROM   DUMMY
              ;
