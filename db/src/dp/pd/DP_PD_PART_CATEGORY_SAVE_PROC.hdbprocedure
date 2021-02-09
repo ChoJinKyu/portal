@@ -60,6 +60,40 @@ BEGIN
     FROM   :I_M
     ;
 
+/* 카테고리그룹코드를 사용하는 ORG_CODE 관리하는 Data를 CM_CODE에서 관리 */
+    SELECT MAX(OM.ORG_TYPE_CODE), MIN(OO.ORG_CODE)
+      INTO   V_ORG_TYPE_CODE, V_ORG_CODE
+      FROM   CM_PUR_ORG_TYPE_MAPPING OM,
+             CM_PUR_OPERATION_ORG OO,
+             CM_CODE_DTL CD,
+             CM_CODE_LNG CL
+      WHERE  OM.TENANT_ID = OO.TENANT_ID
+       AND   OM.TENANT_ID = CD.TENANT_ID
+       AND   OM.TENANT_ID = CL.TENANT_ID
+       AND   OM.PROCESS_TYPE_CODE = 'DP02'
+       AND   OM.TENANT_ID= OO.TENANT_ID
+       AND   OM.COMPANY_CODE = OO.COMPANY_CODE
+       AND   OM.ORG_TYPE_CODE = OO.ORG_TYPE_CODE
+       AND   OM.USE_FLAG = TRUE
+       AND   CD.GROUP_CODE =  'CM_ORG_TYPE_CODE'
+       AND   CD.GROUP_CODE =  CL.GROUP_CODE
+       AND   CD.CODE = CL.CODE
+       AND   CD.CODE = OM.ORG_TYPE_CODE
+       AND   OM.TENANT_ID = 'L2101'
+    GROUP BY OM.TENANT_ID
+    ;
+    V_COMPANY_CODE := 'LGESL';
+
+    IF :CRUD_TYPE IN ('D', 'U') THEN
+        SELECT SEQUENCE 
+        INTO   V_ORG_SEQUENCE 
+        FROM   DP_PD_PART_CATEGORY 
+        WHERE  TENANT_ID = V_TENANT_ID
+        AND    CATEGORY_GROUP_CODE = V_CATEGORY_GROUP_CODE
+        AND    CATEGORY_CODE = V_CATEGORY_CODE
+        ;
+    END IF;
+
 /* Input 임시테이블 관리 */
     INSERT INTO DP_PD_PART_CATEGORY_ACTIVITY_TEMP
         ( TENANT_ID
@@ -96,40 +130,8 @@ BEGIN
         V_CATEGORY_CODE 
       FROM :I_SD
         ;
-
-/* 카테고리그룹코드를 사용하는 ORG_CODE 관리하는 Data를 CM_CODE에서 관리 */
-    SELECT MAX(OM.ORG_TYPE_CODE), MIN(OO.ORG_CODE)
-      INTO   V_ORG_TYPE_CODE, V_ORG_CODE
-      FROM   CM_PUR_ORG_TYPE_MAPPING OM,
-             CM_PUR_OPERATION_ORG OO,
-             CM_CODE_DTL CD,
-             CM_CODE_LNG CL
-      WHERE  OM.TENANT_ID = OO.TENANT_ID
-       AND   OM.TENANT_ID = CD.TENANT_ID
-       AND   OM.TENANT_ID = CL.TENANT_ID
-       AND   OM.PROCESS_TYPE_CODE = 'DP02'
-       AND   OM.TENANT_ID= OO.TENANT_ID
-       AND   OM.COMPANY_CODE = OO.COMPANY_CODE
-       AND   OM.ORG_TYPE_CODE = OO.ORG_TYPE_CODE
-       AND   OM.USE_FLAG = TRUE
-       AND   CD.GROUP_CODE =  'CM_ORG_TYPE_CODE'
-       AND   CD.GROUP_CODE =  CL.GROUP_CODE
-       AND   CD.CODE = CL.CODE
-       AND   CD.CODE = OM.ORG_TYPE_CODE
-       AND   OM.TENANT_ID = 'L2101'
-    GROUP BY OM.TENANT_ID
-    ;
-    V_COMPANY_CODE := 'LGESL';
-
-    IF :CRUD_TYPE IN ('D', 'U') THEN
-        SELECT SEQUENCE 
-        INTO   V_ORG_SEQUENCE 
-        FROM   DP_PD_PART_CATEGORY 
-        WHERE  TENANT_ID = V_TENANT_ID
-        AND    CATEGORY_GROUP_CODE = V_CATEGORY_GROUP_CODE
-        AND    CATEGORY_CODE = V_CATEGORY_CODE
-        ;
-    END IF;
+        
+    COMMIT;
 
     /*  CRUD_TYPE가 'D' 인 Data 삭제 */
     IF :CRUD_TYPE = 'D' THEN
@@ -268,16 +270,16 @@ BEGIN
         END IF;
 
         /*  I_D Table의 Data 일괄 삭제 */
-        DELETE FROM DP_PD_PART_CATEGORY_LNG D
+/*        DELETE FROM DP_PD_PART_CATEGORY_LNG D
         WHERE ( D.TENANT_ID,D.CATEGORY_GROUP_CODE,D.CATEGORY_CODE,D.LANGUAGE_CD ) IN
             ( SELECT id.TENANT_ID, V_CATEGORY_GROUP_CODE, V_CATEGORY_CODE, id.LANGUAGE_CD
                 FROM :I_D id
                WHERE id.CRUD_TYPE_CODE = 'D'
             )
         ;
-
+*/
         /*  I_D Table의 Data 일괄 추가,수정 */
-        MERGE INTO DP_PD_PART_CATEGORY_LNG D
+/*        MERGE INTO DP_PD_PART_CATEGORY_LNG D
             USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE_CODE IN ('C','U')  ) id
             ON ( D.TENANT_ID = V_TENANT_ID
                 AND D.CATEGORY_GROUP_CODE = V_CATEGORY_GROUP_CODE
@@ -316,7 +318,7 @@ BEGIN
                     ,NOW()
                 )
         ; 
-
+*/
         /*  I_SD Table의 Data 일괄 추가,수정
         MERGE INTO DP_PD_PART_CATEGORY_ACTIVITY C
             USING ( SELECT :I_SD.tenant_id, V_COMPANY_CODE as COMPANY_CODE, V_ORG_TYPE_CODE as ORG_TYPE_CODE, cg.code as ORG_CODE,
