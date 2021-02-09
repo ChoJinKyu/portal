@@ -424,22 +424,37 @@ sap.ui.define([
                 new Column({
                     width: "8rem",
                     label: new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT") }),
-                    template: new Text({ text: ""})
+                    template: new Text({ text: "{operation_unit_name}"})
                 }),
                 new Column({
+                    id : "spColumnLvl1",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "1" }),
                     template: new Text({ text: "{vendor_pool_level1_name}" })
                 }),
                 new Column({
+                    id : "spColumnLvl2",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "2" }),
                     template: new Text({ text: "{vendor_pool_level2_name}" })
                 }),
                 new Column({
+                    id : "spColumnLvl3",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "3" }),
                     template: new Text({ text: "{vendor_pool_level3_name}" })
+                }),
+                new Column({
+                    id : "spColumnLvl4",
+                    width: "10rem",
+                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "4" }),
+                    template: new Text({ text: "{vendor_pool_level4_name}" })
+                }),
+                new Column({
+                    id : "spColumnLvl5",
+                    width: "10rem",
+                    label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") + "5" }),
+                    template: new Text({ text: "{vendor_pool_level5_name}" })
                 }),
                 new Column({
                     width: "8rem",
@@ -453,12 +468,12 @@ sap.ui.define([
                 }),
                 new Column({
                     width: "10rem",
-                    label: new Label({ text: this.getModel("I18N").getText("/REGISTER_STATUS") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_REG_TYPE") }),
                     template: new Text({ text: "{supplier_register_status_name}" })
                 }),
                 new Column({
                     width: "10rem",
-                    label: new Label({ text: this.getModel("I18N").getText("/FLAG") }),
+                    label: new Label({ text: this.getModel("I18N").getText("/SUPPLIER_FLAG") }),
                     template: new Text({ text: "{supplier_flag}" })
                 }),
                 new Column({
@@ -529,10 +544,14 @@ sap.ui.define([
         // 운영조직 필드에 따른 vp level 설정
         loadOperationChange: function() {
             if (that.oOperationOrgComb.getSelectedKey() && that.oOperationUnitComb.getSelectedKey()) {
-                var aFilters = [];
+                var aFilters = [],
+                    aColumnData = [];
+
                 aFilters.push(new Filter("tenant_id", FilterOperator.EQ, that.oSearchObj.tanentId));
                 aFilters.push(new Filter("org_code", FilterOperator.EQ, that.oOperationOrgComb.getSelectedKey()));
                 aFilters.push(new Filter("operation_unit_code", FilterOperator.EQ, that.oOperationUnitComb.getSelectedKey()));
+
+                aColumnData = this.oDialog.oTable.getColumns();
 
                 ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolSearchService/").read("/vpMaxLevelView", {
                         filters: aFilters,
@@ -545,35 +564,57 @@ sap.ui.define([
                                         that.oVendorPoolLvl3.oParent.setVisible(false);
                                         that.oVendorPoolLvl4.oParent.setVisible(false);
                                         that.oVendorPoolLvl5.oParent.setVisible(false);
+                                        aColumnData[2].setVisible(false);
+                                        aColumnData[3].setVisible(false);
+                                        aColumnData[4].setVisible(false);
+                                        aColumnData[5].setVisible(false);
                                         break;
                                     case "2" : 
                                         that.oVendorPoolLvl2.oParent.setVisible(true);
                                         that.oVendorPoolLvl3.oParent.setVisible(false);
                                         that.oVendorPoolLvl4.oParent.setVisible(false);
-                                        that.oVendorPoolLvl5.oParent.setVisible(false);
+                                        that.oVendorPoolLvl5.oParent.setVisible(false);                 
+                                        aColumnData[2].setVisible(true);
+                                        aColumnData[3].setVisible(false);
+                                        aColumnData[4].setVisible(false);
+                                        aColumnData[5].setVisible(false);
                                         break;
                                     case "3" :
                                         that.oVendorPoolLvl2.oParent.setVisible(true);
                                         that.oVendorPoolLvl3.oParent.setVisible(true);
                                         that.oVendorPoolLvl4.oParent.setVisible(false);
                                         that.oVendorPoolLvl5.oParent.setVisible(false);
+                                        aColumnData[2].setVisible(true);
+                                        aColumnData[3].setVisible(true);
+                                        aColumnData[4].setVisible(false);
+                                        aColumnData[5].setVisible(false);
                                         break;
                                     case "4" : 
                                         that.oVendorPoolLvl2.oParent.setVisible(true);
                                         that.oVendorPoolLvl3.oParent.setVisible(true);
                                         that.oVendorPoolLvl4.oParent.setVisible(true);
                                         that.oVendorPoolLvl5.oParent.setVisible(false); 
+                                        aColumnData[2].setVisible(true);
+                                        aColumnData[3].setVisible(true);
+                                        aColumnData[4].setVisible(true);
+                                        aColumnData[5].setVisible(false);
                                         break;
                                     case "5" : 
                                         that.oVendorPoolLvl2.oParent.setVisible(true);
                                         that.oVendorPoolLvl3.oParent.setVisible(true);
                                         that.oVendorPoolLvl4.oParent.setVisible(true);
                                         that.oVendorPoolLvl5.oParent.setVisible(true);
+                                        aColumnData[2].setVisible(true);
+                                        aColumnData[3].setVisible(true);
+                                        aColumnData[4].setVisible(true);
+                                        aColumnData[5].setVisible(true);
                                         break;
                                 }
                             } else {
                                 that.oVendorPoolLvl2.oParent.setVisible(false);
                                 that.oVendorPoolLvl3.oParent.setVisible(false);
+                                aColumnData[2].setVisible(false);
+                                aColumnData[3].setVisible(false);
                             }
                         }.bind(this)
                     }); 
@@ -796,6 +837,7 @@ sap.ui.define([
             // dialog가 호출될 때 넘어오는 인자
             this.oSearchObj = sSearchObj;
             this.oSearchObj.tanentId = "L2100";
+            
 
             if(!this.oDialog) {
                 this.openWasRequested = true;
@@ -803,9 +845,13 @@ sap.ui.define([
             }
             
             // 초기화면 설정 (기본레벨3)
+            var aColumnData = this.oDialog.oTable.getColumns();
+            aColumnData[4].setVisible(false);
+            aColumnData[5].setVisible(false);
+
             that.oVendorPoolLvl4.oParent.setVisible(false);
             that.oVendorPoolLvl5.oParent.setVisible(false);
-
+            
             // 앞 화면에서 넘어온 supplierCode가 있는 경우 화면에 넘김
             if (!!this.oSearchObj.supplierCode) {
                 this.oSupplierCode.setValue(null);
