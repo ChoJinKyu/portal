@@ -38,9 +38,11 @@ service OrgService {
     entity Pur_Operation as projection on Pur_Operation_Org;
 
     @readonly
-    view Pur_Operation_Mapping @(restrict: [
-        { grant: 'READ', where: 'tenant_id = $user.TENANT_ID'}
-    ]) as
+    view Pur_Operation_Mapping 
+    // @(restrict: [
+    //     { grant: 'READ', where: 'tenant_id = $user.TENANT_ID'}
+    // ]) 
+    as
         select
             key map.tenant_id,
             key map.company_code,
@@ -58,9 +60,11 @@ service OrgService {
 
     //세션 이용? TENANT_ID , LANGUAGE_CODE Mst.use_flag = 'true'  
     @readonly
-    view Org_code @(restrict: [
-        { grant: 'READ', where: 'tenant_id = $user.TENANT_ID and language_cd = $user.LANGUAGE_CODE'}
-    ])  as
+    view Org_code 
+    // @(restrict: [
+    //     { grant: 'READ', where: 'tenant_id = $user.TENANT_ID and language_cd = $user.LANGUAGE_CODE'}
+    // ])  
+    as
         select
             key Mst.tenant_id, 
             key Mst.group_code,

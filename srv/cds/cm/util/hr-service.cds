@@ -8,9 +8,11 @@ namespace cm.util;
 service HrService {
 
     @readonly
-    view Employee @(restrict: [
-        { grant: 'READ', where: 'tenant_id = $user.TENANT_ID'}
-    ])as
+    view Employee 
+    // @(restrict: [
+    //     { grant: 'READ', where: 'tenant_id = $user.TENANT_ID'}
+    // ])
+    as
         select
             key e.tenant_id,
             key e.employee_number,
@@ -28,9 +30,11 @@ service HrService {
             on e.employee_number = u.employee_number;
 
     @readonly
-    view Department @(restrict: [
-        { grant: 'READ', where: 'tenant_id = $user.TENANT_ID'}
-    ])as
+    view Department 
+    // @(restrict: [
+    //     { grant: 'READ', where: 'tenant_id = $user.TENANT_ID'}
+    // ])
+    as
         select
             key d.tenant_id,
             key d.department_id,
