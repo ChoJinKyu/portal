@@ -411,13 +411,13 @@ sap.ui.define([
                                         return value;
                                     },
                                     onCancel: function() {
-                                        var [event, action, ...args] = arguments;
+                                        //var [event, action, ...args] = arguments;
                                         return ;
                                     }
                                 }, this)
                                 .done(result => {
                                     var { buyerEmpno, buyerDepartmentCode, processedReason } = result;
-                                    console.log(">>>>>>>>>>>>> done", result);
+                                    //console.log(">>>>>>>>>>>>> done", result);
                                     this.procedure(service, entry, {
                                         inputData: {
                                             jobType: action,
