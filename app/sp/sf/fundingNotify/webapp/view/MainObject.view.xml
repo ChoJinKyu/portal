@@ -158,7 +158,7 @@
 					<uxap:ObjectPageSubSection>
 						<form:SimpleForm>
                             <VBox>
-                                <Label text="＊＊sprit3에 적용 예정입니다.＊＊"/>
+                                <Label text="＊＊sprint3에 적용 예정입니다.＊＊"/>
                                 <!-- File Upload 시작-->
                                 <UploadCollection
                                     id="UploadCollection"

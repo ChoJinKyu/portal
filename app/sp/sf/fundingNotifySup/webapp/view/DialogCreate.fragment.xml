@@ -314,9 +314,11 @@
         </content>
         
         <ToolbarSpacer/>
-        <HBox justifyContent="End" >
+        <beginButton>
             <Button text="취소" type="Transparent" press=".onCreatePopupClose"/>
+        </beginButton>
+        <endButton>
             <Button text="저장" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".onCreatePopupSave"/>
-        </HBox>
+        </endButton>
     </Dialog>
 </core:FragmentDefinition>
