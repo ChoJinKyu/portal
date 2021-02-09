@@ -136,7 +136,7 @@ sap.ui.define([
                 oModel.setProperty("/enabled", {
                     vat_number : false ,
                     btn_request : bBizNoCheck && bEnbaled,
-                    btn_reject : bBizNoCheck && bEnbaled,
+                    btn_reject : bBizNoCheck && bEnbaled || (sProgress === "REQUEST" && sGubun === "MR"),
                     btn_edit : bBizNoCheck && bEnbaled,
                     btn_check : sGubun !== "MR",
                     tax_id_chk : sGubun !== "MR"
