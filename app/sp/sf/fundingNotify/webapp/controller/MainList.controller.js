@@ -240,7 +240,7 @@ sap.ui.define([
                         new Filter("funding_notify_start_date", FilterOperator.BT, sFromDate, new Date(sToDate.toString())),
                         new Filter("funding_notify_end_date", FilterOperator.BT, sFromDate, new Date(sToDate.toString()))
                     ],
-                    // and : false
+                    and : false
                 }));
             }
             
