@@ -2,80 +2,75 @@
 	xmlns="sap.m"
 	xmlns:l="sap.ui.layout"
     xmlns:form="sap.ui.layout.form"
-    xmlns:layout="sap.ui.layout" displayBlock="true"
-    xmlns:richtexteditor="sap.ui.richtexteditor"
+    xmlns:layout="sap.ui.layout" 
 	xmlns:core="sap.ui.core">
 
-    <VBox id="publishShowBox">
+    <VBox id="showBox">
 
-        <form:SimpleForm id="publishForm1Show" editable="false"> 
+        <form:SimpleForm> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label text="* 품의명" design="Bold" class="sapMLabelNoText"/>
-                <Text text="{master>/loi_publish_title}" width="100%"/>
+                <Label text="* 계약명" design="Bold"/>
+                <Text text="{viewModel>/mst/net_price_contract_title}" class="sapUiSmallMarginBottom" />
             </VBox>
         </form:SimpleForm>
 
-        <form:SimpleForm id="publishForm2Show" editable="false">
-        
+        <form:SimpleForm>
+            
             <VBox alignContent="Center">
-                <Label text="* 협력사명" textAlign="left" design="Bold" class="sapMLabelNoText" />
-                <Text text="{master>/supplier_code}" />
+                <Label text="* 운영단위(플랜트)" design="Bold" />
+                <Text text="{viewModel>/mst/org_name}"/>
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>    
-            </VBox>      
+            </VBox>   
 
             <VBox alignContent="Center">
-                <Label text="* 계약서식" design="Bold" class="sapMLabelNoText"/>
-                <Text text="{= ${master>/contract_format_id} === 'K' ? '구매의향서(국문)' : '구매의향서(영문)' }" />
+                <Label text="* 계약기간" design="Bold"/>
+                <HBox>
+                    <Text text="{viewModel>/mst/net_price_contract_start_date}"/>                        
+                    <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                    <Text text="{viewModel>/mst/net_price_contract_end_date}"/>    
+                </HBox>
+                <layoutData>
+                    <layout:GridData span="XL6 L6 M6 S12" />
+                </layoutData>     
+            </VBox>  
+                            
+        </form:SimpleForm>    
+
+        <form:SimpleForm> 
+            <VBox alignContent="Center">
+                <Label text="* 대분류" design="Bold" class="sapUiSmallMarginTop"/>
+                <Text text="{viewModel>/mst/ep_item_class_name}"/>
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>     
             </VBox> 
 
-            <VBox alignContent="Center">
-                <Label text="* 계약일자" design="Bold" class="sapMLabelNoText"/>
-                <Text text="{master>/contract_date}" />  
+            <VBox alignContent="Center"> 
+                <Label text="* 견적참조정보" design="Bold" class="sapUiSmallMarginTop"/>
+                <Text text="{viewModel>/mst/quotation_reference_info}"/>
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
-                </layoutData>     
-            </VBox>
-            
-            <VBox alignContent="Center">
-                <Label text="* 서명방식" design="Bold" class="sapMLabelNoText"/>
-                <Text text="{= ${master>/offline_flag} === true ? '오프라인' : '온라인' }" />
-                <layoutData>
-                    <layout:GridData span="XL6 L6 M6 S12" />
-                </layoutData>     
-            </VBox>
-
+                </layoutData>                   
+            </VBox>            
         </form:SimpleForm>
 
-        <form:SimpleForm id="publishForm3Show" editable="false"> 
-            <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label  text="* 부대조건" 
+        <form:SimpleForm> 
+            <VBox alignContent="Center"> 
+                <Label  text="* 비고" 
                             design="Bold" 
-                            class="sapUiSmallMarginBottom"/>
-                <Text text="{master>/additional_condition_desc}" />            
+                            class="sapUiSmallMarginTop"/>
+                <Text text="{viewModel>/mst/remark}"/>            
             </VBox>
         </form:SimpleForm>
 
-        <form:SimpleForm id="publishForm4Show" editable="false"> 
-            <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label  text="* 특기사항" 
+        <form:SimpleForm visible="{= ${viewModel>/mst/net_price_contract_chg_type_cd} === 'D' ? true : false }"> 
+            <VBox alignContent="Center"> 
+                <Label  text="* 계약종료사유" 
                             design="Bold" 
                             class="sapUiSmallMarginBottom"/>
-                <richtexteditor:RichTextEditor
-                    editorType="TinyMCE4"
-                    width="98%"
-                    height="200px"
-                    editable="false"
-                    customToolbar="true"
-                    showGroupFont="true"
-                    showGroupLink="true"
-                    showGroupInsert="true"
-                    value="{master>/special_note}">
-                </richtexteditor:RichTextEditor> 
+                <Text text="{viewModel>/mst/delete_reason}"/>                 
             </VBox>
         </form:SimpleForm>        
 
