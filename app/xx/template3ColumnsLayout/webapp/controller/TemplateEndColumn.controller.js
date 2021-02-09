@@ -109,7 +109,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageEditModeButtonPress: function(oEvent){
-            if(oEvent.getSource().getPressed()){
+            if(oEvent.getSource().getEditMode()){
                 var cancelEdit = function(){
                         if(this.getModel("endPageViewModel").getProperty("/isAddedMode") == true){
                             this.onPageNavBackButtonPress.call(this);
@@ -260,19 +260,36 @@ sap.ui.define([
                         oData["department"] = this.getModel("department").getProperty("/");
                         oData["employees"] = this.updatedEmployees || [];
 
-                        delete oData["department"]["children"]["__deferred"];
-                        delete oData["department"]["children"];
-                        delete oData["department"]["company"]["__deferred"];
-                        delete oData["department"]["company"];
-                        delete oData["department"]["parent"]["__deferred"];
-                        delete oData["department"]["parent"];
-                        delete oData["department"]["__metadata"];
-                        delete oData["employees"][0]["department"];
-                        delete oData["employees"][0]["__metadata"];
-                        if(oData["employees"][1]){
-                            delete oData["employees"][1]["department"];
-                            delete oData["employees"][1]["__metadata"];
+                        var deleteNotAllowed = function(obj){
+                            for(var key in obj){
+                                if(key == "__metadata"){
+                                    delete obj["__metadata"];
+                                }else if(obj[key]){
+                                    if(obj[key].hasOwnProperty("__deferred")){
+                                        delete obj[key];
+                                    }else if(obj[key].hasOwnProperty("__metadata")){
+                                        delete obj[key];
+                                    }
+                                }
+                            }
                         }
+                        deleteNotAllowed(oData["department"]);
+                        oData["employees"].forEach(function(oItem){
+                            deleteNotAllowed(oItem);
+                        })
+                        // delete oData["department"]["children"]["__deferred"];
+                        // delete oData["department"]["children"];
+                        // delete oData["department"]["company"]["__deferred"];
+                        // delete oData["department"]["company"];
+                        // delete oData["department"]["parent"]["__deferred"];
+                        // delete oData["department"]["parent"];
+                        // delete oData["department"]["__metadata"];
+                        // delete oData["employees"][0]["department"];
+                        // delete oData["employees"][0]["__metadata"];
+                        // if(oData["employees"][1]){
+                        //     delete oData["employees"][1]["department"];
+                        //     delete oData["employees"][1]["__metadata"];
+                        // }
                         var oXhr = ServiceProvider.getServiceByUrl("srv-api/odata/v4/xx.TemplateV4Service");
                         oXhr.ajax({
                             url: "srv-api/odata/v4/xx.TemplateV4Service/SetDepartmentAndEmployees",
@@ -327,6 +344,16 @@ sap.ui.define([
 				var oDepartmentModel = this.getModel("department");
 				oDepartmentModel.setData({
 					"tenant_id": this._sTenantId,
+					"department_code": this._sDepartmentCode,
+                    "department_name": "",
+                    "department_korean_name": "",
+                    "department_english_name": "",
+                    "company_code": this._sCompanyCode,
+                    "parent_department_code": "",
+                    "department_leader_empno": "",
+                    "department_type_code": "",
+                    "sort_number": 0,
+                    "full_path_desc": "",
 					"use_flag": true
 				}, "/Company");
 
@@ -373,7 +400,7 @@ sap.ui.define([
             var VIEW_MODE = true;
             this.getModel("endPageViewModel").setProperty("/isEditMode", !VIEW_MODE);
 			this.byId("page").setSelectedSection("pageSectionMain");
-            this.byId('pageEditModeButton').setEditMode(!VIEW_MODE);
+            this.byId("pageEditModeButton").setEditMode(!VIEW_MODE);
 			this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
 			this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
 			this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
@@ -387,14 +414,15 @@ sap.ui.define([
 			var VIEW_MODE = false;
             this.getModel("endPageViewModel").setProperty("/isEditMode", !VIEW_MODE);
 			this.byId("page").setSelectedSection("pageSectionMain");
-            this.byId('pageEditModeButton').setEditMode(!VIEW_MODE);
+            this.byId("pageEditModeButton").setEditMode(!VIEW_MODE);
 			this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
 			this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
 			this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
 
 			this.byId("employeeListAddButton").setEnabled(!VIEW_MODE);
 			this.byId("employeeListDeleteButton").setEnabled(!VIEW_MODE);
-			this.getList().setMode(sap.m.ListMode.MultiSelect);
+            this.getList().setMode(sap.m.ListMode.MultiSelect);
+
         },
 
 		_onDepartmentPropertyChange: function(oEvent){

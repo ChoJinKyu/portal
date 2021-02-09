@@ -29,6 +29,7 @@ sap.ui.define([
             
             this.oRouter = this.getOwnerComponent().getRouter();
             this.oRouter.getRoute("ProjectInfo").attachPatternMatched(this._getProjectDetail, this);
+            this.setModel(new ManagedListModel(), "similarModel");//유사모델
 
         }
 
@@ -117,14 +118,15 @@ sap.ui.define([
                         MessageToast.show(this.I18N.getText("/NCM01001"), {at: "center center"});//저장하였습니다.
                         this._getProjectDetail();
                     } else {
-                        MessageBox.show(this.I18N.getText("/ECM01502", this.I18N.getText("/SAVE")), {at: "center center"});//{0} 처리에 실패하였습니다.
+                        let sMsg = this.I18N.getText("/ECM01502", this.I18N.getText("/SAVE")) + "[" + data.return_msg + "]";
+                        MessageBox.show(sMsg, {at: "center center"});//{0} 처리에 실패하였습니다.
                     }
                 }.bind(this),
                 error: function(e){
                     console.log("error", e);
                     let eMessage = JSON.parse(e.responseText).error.message;
                     MessageBox.show(this.I18N.getText("/ECM01502", this.I18N.getText("/SAVE")) + "["+eMessage+"]", {at: "center center"});
-                }
+                }.bind(this)
             });
         }
 
@@ -134,7 +136,10 @@ sap.ui.define([
         , _reFactorySaveModel: function() {
             var oDetailModel = this.getModel("detailModel");
             var oData = oDetailModel.getData();
-            var aSimilarModelData = oData.similar_model.results || [];
+            //var aSimilarModelData = oData.mcst_similar_model.results || [];
+            var oSimilarModelData = this.getModel("similarModel").getData();
+
+            var aSimilarModelData = oSimilarModelData.results ? oSimilarModelData.results : [];
             var aBaseExtract = oData.base_extra.results || [];
             
             //tblPrice_edit
@@ -182,15 +187,21 @@ sap.ui.define([
                 };
             var aTcPjt = [oTcPjt];
             
-            var aSimModelResult = aSimilarModelData.map(function(oSimModel) {
-                return {
-                    tenant_id            : oSimModel.tenant_id,
-                    project_code         : oSimModel.project_code,
-                    model_code           : oSimModel.model_code,
-                    similar_model_code   : oSimModel.similar_model_code,
-                    code_desc            : oSimModel.code_desc,
-                    direct_register_flag : oSimModel.direct_register_flag
-                };
+            var aSimModelResult = [];
+            aSimilarModelData.forEach(function(oSimModel) {
+                //삭제인 데이터는 제외시킴.
+                if((oSimModel.hasOwnProperty("_row_state_") && oSimModel._row_state_ !== "D") || !oSimModel.hasOwnProperty("_row_state_")) {
+                    aSimModelResult.push({
+                        tenant_id            : oData.tenant_id,
+                        project_code         : oData.project_code,
+                        model_code           : oData.model_code,
+                        similar_model_code   : oSimModel.similar_model_code,
+                        code_desc            : oSimModel.code_desc,
+                        //direct_register_flag : oSimModel.direct_register_flag
+                        direct_register_flag : true
+                    });
+                }
+                
             });
 
             var aPriceResult = [];
@@ -241,13 +252,31 @@ sap.ui.define([
             this._sendSaveData(oSendData);
         }
 
-
-        
+        , _checkValidSave: function() {
+            //유사모델 필수 체크
+            var oSimilarModelData = this.getModel("similarModel").getData();
+            if(oSimilarModelData.results) {
+                var bChkSimModel = true;
+                $.each(oSimilarModelData.results, function(nIdx, oSimModelRow) {
+                    if(!oSimModelRow.similar_model_code) {
+                        let sItemsNm = this.I18N.getText("/SIMILAR_MODEL") + " " + this.I18N.getText("/MODEL_CODE");
+                        MessageToast.show(this.I18N.getText("/EDP40001", sItemsNm), {at: "center center"});
+                        bChkSimModel = false;
+                        return false;
+                    }
+                }.bind(this));
+                return bChkSimModel;
+            }
+            
+        }
         
         /**
          * 저장
          */
         , onSavePress: function (oEvent) {
+            if(!this._checkValidSave()) {
+                return;
+            }
             MessageBox.confirm(this.I18N.getText("/NCM00001"), {//저장 하시겠습니까?
                 title : "Save",
                 initialFocus : MessageBox.Action.CANCEL,
@@ -290,7 +319,8 @@ sap.ui.define([
         , _pivottingData: function() {
             var oDetailData = this.getOwnerComponent().getModel("detailModel").getData();
             console.log("BlockPrice.Controller", oDetailData);
-            //Grid Table 별로 
+            //Grid Table 별로 data 가공
+            var oSimilarModelData = oDetailData.similar_model ? oDetailData.similar_model.results : [];//유사모델
             var oEvents = oDetailData.events ? oDetailData.events.results : [];//개발일정
 
             var oMtlmob = oDetailData.mtlmob ? oDetailData.mtlmob.results : [];//판가/물동/원가의 예상물동
@@ -299,6 +329,9 @@ sap.ui.define([
             var oSgna = oDetailData.sgna ? oDetailData.sgna.results : [];//판가/물동/원가의 판관비
             
             var oBaseExtra = oDetailData.base_extra ? oDetailData.base_extra.results : [];//환율
+
+            //similar_model
+            this.getModel("similarModel").setData(oSimilarModelData, "/results");
 
             //events
             var aEventsData = this._reCompositData(oEvents, "develope_event_code", "start_date");

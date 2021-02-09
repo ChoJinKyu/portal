@@ -17,7 +17,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{i18n>appTitle}" />
+                    <Title text="{I18N>/ACTIVITY} {I18N>/STANDARD_DAYS} {I18N>/DISPLAY}" />
                 </f:heading>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -41,7 +41,7 @@
                     columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="회사: "></Label>
+                            <Label text="{I18N>/COMPANY}: "></Label>
                             <ComboBox
                                 id="searchCompanyCombo"
                                 width="100%"
@@ -58,7 +58,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="조직: "></Label>
+                            <Label text="{I18N>/ORGANIZATION}: "></Label>
                             <!-- 테스트 테넌트번호 L1100, 원세팅테넌트번호 2100, 2600 -->
                             <ComboBox
                                 id="searchAUCombo"
@@ -76,7 +76,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Part Category: " labelFor="searchPCField"></Label>
+                            <Label text="{I18N>/PART} {I18N>/CATEGORY}: " labelFor="searchPCField"></Label>
                             <HBox>
                                 <SearchField id="searchPCField" search=".onSearchPartCategory" />
                                 <Input id="searchPCInput" placeholder="Input data" visible ="false"></Input>
@@ -86,7 +86,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Project Type: "></Label>
+                            <Label text="{I18N>/PROJECT_TYPE}: "></Label>
                             <ComboBox
                                 id="searchPTCombo"
                                 width="100%"
@@ -108,14 +108,14 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Activity 명: " labelFor="searchActivity"></Label>
+                            <Label text="{I18N>/ACTIVITY_NAME}: " labelFor="searchActivity"></Label>
                             <Input id="searchActivity" placeholder="Activity Name"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData>
                         </VBox>
                         <FlexBox alignItems="End" justifyContent="End">
-                            <Button id="btn_search" text="Search" type="Emphasized" press=".onPageSearchButtonPress"/>
+                            <Button id="btn_search" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress"/>
                             <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />
                             </layoutData>
@@ -134,7 +134,7 @@
                 width="auto">
                 <headerToolbar>
                     <OverflowToolbar>
-                        <Title id="mainTableTitle" text="Part Category Activity SD List ({=(${list>/pdActivityStdDayView})?${list>/pdActivityStdDayView}.length:0})" level="H2"/>
+                        <Title id="mainTableTitle" text="{I18N>/ACTIVITY} {I18N>/STANDARD_DAYS} {I18N>/DISPLAY} ({=(${list>/pdActivityStdDayView})?${list>/pdActivityStdDayView}.length:0})" level="H2"/>
                         <ToolbarSpacer/>
                         <Button id="rTableExportButton" type="Transparent" press=".onExportPress" icon="sap-icon://excel-attachment" />
                         <ToolbarSeparator/>
@@ -147,25 +147,25 @@
                 </headerToolbar>
                 <columns>
                     <Column id="mainColumnCom" minScreenWidth="Tablet" hAlign="Center" width="6rem">
-                        <Text text="회사" />
+                        <Text text="{I18N>/COMPANY}" />
                     </Column>
                     <Column id="mainColumnAU" minScreenWidth="Tablet" hAlign="Center" width="6rem">
-                        <Text text="조직코드" />
+                        <Text text="{I18N>/ORG_CODE}" />
                     </Column>
                     <Column id="mainColumnPC" minScreenWidth="Tablet" hAlign="Center">
-                        <Text text="Part Category" />
+                        <Text text="{I18N>/PART} {I18N>/CATEGORY}" />
                     </Column>
                     <Column id="mainColumnPT" minScreenWidth="Tablet" hAlign="Center">
-                        <Text text="Project Type" />
+                        <Text text="{I18N>/PROJECT_TYPE}" />
                     </Column>
                     <Column id="mainColumnAC" minScreenWidth="Tablet" hAlign="Center">
-                        <Text text="Activity 코드" />
+                        <Text text="{I18N>/ACTIVITY_CODE}" />
                     </Column>
                     <Column id="mainColumnAN" minScreenWidth="Tablet" hAlign="Center">
-                        <Text text="Activity 명" />
+                        <Text text="{I18N>/ACTIVITY_NAME}" />
                     </Column>
                     <Column id="mainColumnUseYn" minScreenWidth="Tablet" hAlign="Center" width="5rem">
-                        <Text text="사용여부" />
+                        <Text text="{I18N>/USE_FLAG}" />
                     </Column>
                     <Column id="mainColumnS" minScreenWidth="Tablet" hAlign="Right" width="5rem">
                         <Text text="s" />
@@ -183,10 +183,10 @@
                         <Text text="d" />
                     </Column>
                     <Column id="mainColumnUDM" minScreenWidth="Tablet" hAlign="Right">
-                        <Text text="수정일자" />
+                        <Text text="{I18N>/LOCAL_UPDATE_DTM}" />
                     </Column>
                     <Column id="mainColumnUUI" minScreenWidth="Tablet" hAlign="Center" width="6rem">
-                        <Text text="수정자" />
+                        <Text text="{I18N>/UPDATE_USER_ID}" />
                     </Column>
                 </columns>
                 <items>

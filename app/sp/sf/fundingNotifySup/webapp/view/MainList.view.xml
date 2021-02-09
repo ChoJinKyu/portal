@@ -67,7 +67,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="협력사 :" labelFor="searchDateS" />
+                            <Label text="(임시세션)협력사 :" labelFor="searchDateS" />
                             <ComboBox id="sSupplierCode">
                                 <core:Item key="KR01820600" text="BST상사" />
                                 <core:Item key="KR01818401" text="한국유나이티드제약(주)" />

@@ -140,7 +140,8 @@ sap.ui.define([
                                 "requestor_empno": result.requestor_empnm,
                                 "request_date": this.getOwnerComponent()._changeDateString(oToday),
                                 "net_price_document_type_code": result.net_price_document_type_code,
-                                "net_price_source_code": result.net_price_source_code
+                                "net_price_source_code": result.net_price_source_code,
+                                "net_price_type_code": result.net_price_type_code
                             };
                             oDetailModel.setData(oNewBasePriceData);
 
@@ -593,7 +594,17 @@ sap.ui.define([
             },
             /*========================================= Button Action ===============================*/
 
-
+            /**
+             *  yyyyMMdd 포맷으로 반환
+             */
+            getFormatDate: function (date){
+                var year = date.getFullYear();              //yyyy
+                var month = (1 + date.getMonth());          //M
+                month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+                var day = date.getDate();                   //d
+                day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+                return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+            },
             /*========================================= Footer Button Action ===============================*/
 
             onTmpSave: function() {
@@ -607,33 +618,33 @@ sap.ui.define([
                             "org_type_code"                   : "PL",
                             "org_code"                        : "5100",
                             "approval_number"                 : null,				/* 없으면 Insert (undefined, null, ''), 존재하면 Update*/
-                            "approval_title"                  : "Insert Test",
-                            "approval_contents"               : "Insert Test....",
+                            "approval_title"                  : that.byId("approval_title").getValue(),
+                            "approval_contents"               : that.byId("approval_contents").getValue(),
                             "attch_group_number"              : "temp00",
-                            "net_price_document_type_code"    : "A",
-                            "net_price_source_code"           : "B",
-                            "buyer_empno"                     : "emp00",
+                            "net_price_document_type_code"    : that.byId("net_price_document_type_code").getSelectedKey(),
+                            "net_price_source_code"           : that.byId("net_price_source_code").getSelectedKey(),
+                            "buyer_empno"                     : SppUserSessionUtil.getUserInfo().EMPLOYEE_NUMBER,
                             "tentprc_flag"                    : true
                         },
                         "general" : [
-                            {
-                                "item_sequence"                    : 1             /* (_row_state_ 값에 따라) [C] 불필요, [U,D] 는 필수 */
-                                ,"line_type_code"                  : "lineType"
-                                ,"material_code"                   : "material" 
-                                ,"payterms_code"                   : "payterms"
-                                ,"supplier_code"                   : "supplier"
-                                ,"effective_start_date"            : null
-                                ,"effective_end_date"              : null
-                                ,"surrogate_type_code"             : "surrogate"
-                                ,"currency_code"                   : "KRW"
-                                ,"net_price"                       : 100
-                                ,"vendor_pool_code"                : "VPCODE"
-                                ,"market_code"                     : "market"
-                                ,"net_price_approval_reason_code"  : "reason"
-                                ,"maker_code"                      : "maker"
-                                ,"incoterms"                       : "ico"
-                                ,"_row_state_"                     : "C"		     /* C, U, D */
-                            }
+                            // {
+                            //     "item_sequence"                    : 1             /* (_row_state_ 값에 따라) [C] 불필요, [U,D] 는 필수 */
+                            //     ,"line_type_code"                  : "lineType"
+                            //     ,"material_code"                   : "material" 
+                            //     ,"payterms_code"                   : "payterms"
+                            //     ,"supplier_code"                   : "supplier"
+                            //     ,"effective_start_date"            : null
+                            //     ,"effective_end_date"              : null
+                            //     ,"surrogate_type_code"             : "surrogate"
+                            //     ,"currency_code"                   : "KRW"
+                            //     ,"net_price"                       : 100
+                            //     ,"vendor_pool_code"                : "VPCODE"
+                            //     ,"market_code"                     : "market"
+                            //     ,"net_price_approval_reason_code"  : "reason"
+                            //     ,"maker_code"                      : "maker"
+                            //     ,"incoterms"                       : "ico"
+                            //     ,"_row_state_"                     : "C"		     /* C, U, D */
+                            // }
                         ]
                     }
                 }
@@ -643,9 +654,29 @@ sap.ui.define([
                     initialFocus : sap.m.MessageBox.Action.CANCEL,
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
-                            // this.generalInfoList = that.generalInfoTbl.getModel("generalInfoList").getProperty("/GeneralView");
-                            // console.log("generalInfoList : " + this.generalInfoList);
-                            // procObj.param.general = this.generalInfoList;
+                            this.generalInfoList = that.generalInfoTbl.getModel("generalInfoList").getProperty("/GeneralView");
+                            console.log("generalInfoList : " + this.generalInfoList);
+                            
+                            $(this.generalInfoList).each(function(idx, item){
+                                var generalInfoObj = {};
+                                generalInfoObj.item_sequence = item.item_sequence;
+                                generalInfoObj.line_type_code = item.line_type_code;
+                                generalInfoObj.material_code = item.material_code;
+                                generalInfoObj.payterms_code = item.payterms_code;
+                                generalInfoObj.supplier_code = item.supplier_code;
+                                generalInfoObj.effective_start_date = that.getFormatDate(item.effective_start_date);
+                                generalInfoObj.effective_end_date = that.getFormatDate(item.effective_end_date);
+                                generalInfoObj.surrogate_type_code = item.surrogate_type_code;
+                                generalInfoObj.currency_code = item.currency_code;
+                                generalInfoObj.net_price = item.net_price;
+                                generalInfoObj.vendor_pool_code = item.vendor_pool_code;
+                                generalInfoObj.market_code = item.market_code;
+                                generalInfoObj.net_price_approval_reason_code = item.net_price_approval_reason_code;
+                                generalInfoObj.maker_code  = item.maker_code;
+                                generalInfoObj.incoterms = item.incoterms;
+                                generalInfoObj._row_state_ = item._row_state_;
+                                procObj.param.general.push(generalInfoObj);
+                            });
             
                             $.ajax({
                                 url: "srv-api/odata/v4/sp.netpriceApprovalDetailV4Service/ApprovalSaveProc",

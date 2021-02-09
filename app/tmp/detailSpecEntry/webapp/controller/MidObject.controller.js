@@ -51,7 +51,8 @@ sap.ui.define([
             this.setModel(new ManagedModel(), "spec");
             this.setModel(new ManagedModel(), "tmpCcDpMdSpec");
             this.setModel(new ManagedModel(), "tmpCcDpMdSpecG");
-            this.setModel(new ManagedModel(), "tmpCcDpMdSpecExt");
+            this.setModel(new ManagedListModel(), "tmpCcDpMdSpecExt");
+            this.setModel(new ManagedModel(), "tmpCcDpMdSpecDisplay");
 
             oTransactionManager = new TransactionManager();
             oTransactionManager.aDataModels.length = 0;
@@ -143,7 +144,10 @@ sap.ui.define([
 			var oView = this.getView(),
                 me = this,
                 oModel = this.getModel("tmpCcDpMdSpec"),
+                oModelExtSrc = this.getModel("tmpCcDpMdSpecDisplay"),
                 oModelExt = this.getModel("tmpCcDpMdSpecExt");
+            var param = {};
+
 
             if(this.validator.validate( this.byId('scheduleTable1E') ) !== true){
                 MessageToast.show( this.getModel('I18N').getText('/ECM01002') );
@@ -173,18 +177,51 @@ sap.ui.define([
                         me.getModel('spec').setProperty('/mold_spec_status_code', 'D'); //이건 이제 필요없을듯 21.01.07
                         me.getModel("master").setProperty('/mold_progress_status_code', 'DTL_ENT');
 
-						oTransactionManager.submit({
+						
+                        oModel.submitChanges({
+                            success: function (oEvent) {
+                                oView.setBusy(false);
+                            }.bind(this)
+                        });
+                        console.log(oModelExt.getData());
+                        param.data = oModelExtSrc.getData();
+                        param.targetModel = oModelExt;
+                        param.sourceModel = oModelExtSrc;
+                        debugger
+                        me._convertExtDataR2C(param);
+                        console.log(oModelExt.getData());
+                        oModelExt.submitChanges({
+                            success: function (oEvent) {
+                                debugger
+                                oView.setBusy(false);
+                            }.bind(this)
+                        });
+                        debugger
+                        var idata = {};
+                        //idata["tmpCcDpMdSpecExt"] = me._convertExtDataR2C(param);
+                        
+                        // var url = "tmp/detailSpecEntry/webapp/srv-api/odata/v4/tmp.Tmp1MgrService/tmpCcDpMdSpecExt";
+                        // $.ajax({
+                        //     url: url,
+                        //     type: "PUT",
+                        //     data : JSON.stringify(idata),
+                        //     contentType: "application/json",
+                        //     success: function(data){
+                        //         MessageToast.show("Success");
+                                
+                        //     },
+                        //     error: function(e){
+                        //     }
+                        // });
+                        
+                        oTransactionManager.submit({
 							success: function(ok){
                                 console.log('ok',ok);
 								me._toShowMode();
 								MessageToast.show(me.getModel('I18N').getText('/NCM01001') || 'NCM01001');
 							}
                         });
-                        oModel.submitChanges({
-                            success: function (oEvent) {
-                                oView.setBusy(false);
-                            }.bind(this)
-                        });
+
                         //var data = oModelExt.getData();
 
 					};
@@ -370,22 +407,23 @@ sap.ui.define([
             });
 
             var extModel = this.getView().getModel("tmpCcDpMdSpecExt");
+            this.getView().getModel("tmpCcDpMdSpecDisplay").setData({});
+            
             var that = this;
             extModel.setTransactionModel(this.getModel("tmpMgr"));
             extModel.read("/tmpCcDpMdSpecExt", {
                 filters: [new sap.ui.model.Filter("MOLD_ID", sap.ui.model.FilterOperator.EQ, this._sMoldId)],
                 success: function(oData){
                     var data = oData.results
-                    var newData = {};
-                    var val="";
-                    
-                    for(var attr of data){
-                        val = attr["CHAR_VALUE"] || attr["NUM_VALUE"] || attr["DATE_VALUE"]  
-                        newData[attr["COL_ID"]] = val;
-                    }
-                    that.getModel("tmpCcDpMdSpecExt").setData(newData);
-                    debugger
-                }
+                    var param = {};
+                    param.data = data;
+                    //param.targetModel = that.getModel("tmpCcDpMdSpecExt");
+                    param.key = "MOLD_ID";
+                    param.targetModel = that.getModel("tmpCcDpMdSpecDisplay");
+
+                    that._convertExtDataC2R(param);   
+                    oData.results = param.data;
+                }.bind(this)
             });
 
             //debugger
@@ -438,7 +476,82 @@ sap.ui.define([
 			}else{
 				if(oHandler) oHandler(this._oFragments[sFragmentName]);
 			}
-		}
+        },
+        _convertExtDataC2R: function (param){
+            var oModel = param.targetModel;
+            var data = param.data;
+            var key = param.key;
+            var newData = {};
+            var valueType = {};
+            var metaData = {};
+            var entity = {};
+            if(data.size == 0 ){
+                return;
+            }
+            //__entity
+            for(var attr of data){
+                metaData[attr["COL_ID"]] = attr["__metadata"];
+                entity[attr["COL_ID"]] = attr["__entity"];
+                if(attr["CHAR_VALUE"]){
+                    newData[attr["COL_ID"]] = attr["CHAR_VALUE"];
+                    valueType[attr["COL_ID"]] = "CHAR_VALUE";
+                }else if(attr["NUM_VALUE"]){
+                    newData[attr["COL_ID"]] = attr["NUM_VALUE"];
+                    valueType[attr["COL_ID"]] = "NUM_VALUE";
+                }else if(attr["DATE_VALUE"]){
+                    newData[attr["COL_ID"]] = attr["DATE_VALUE"];
+                    valueType[attr["COL_ID"]] = "DATE_VALUE";
+                }else{
+                    newData[attr["COL_ID"]] = null;
+                    valueType[attr["COL_ID"]] = "null";
+                }
+            }
+            newData["__metadata"] = metaData;
+            newData["__entity"] = entity;
+            newData["VALUE_TYPE"] =  valueType;
+            newData["ID_KEY"] = key;
+            newData["ID_VALUE"] = data[0][key];
+            param.data = newData;
+            oModel.setData(newData);
+        },
+        _convertExtDataR2C: function (param){
+            var oModel = param.targetModel;
+            var data = param.data;
+            var idKey = data["ID_KEY"];
+            var idValue = data["ID_VALUE"];
+            var valueType = data["VALUE_TYPE"];
+            var metaData = data["__metadata"];
+            var entityName = oModel.getData()["entityName"];
+
+            var newData = [];
+            var temp = null;
+            var state = data["_state_"] == "U"; 
+            for(var key in data){
+                if(key == "ID_KEY" || key == "ID_VALUE" || key == "VALUE_TYPE" || key == "__metadata" || key == "__entity" || key == "_state_"){
+                    continue;
+                }
+                temp = {CHAR_VALUE:null, NUM_VALUE:null, DATE_VALUE:null};
+                temp[idKey] = idValue;
+                temp["COL_ID"] = key;
+                temp[valueType[key]] = data[key];
+                temp["__metadata"] = metaData[key];
+                if(state){
+                    temp["_row_state_"] = "U";
+                }
+    
+                newData.push(temp);
+            }
+            //newData["__entity"] = data["__entity"];
+            //newData["_state_"] = data["_state_"];
+
+            //return newData;oModel
+            var result = {};
+            result[entityName] = newData;
+            result["entityName"] = entityName;
+            oModel.setData(newData);
+            debugger
+            
+        }
 
 
 	});

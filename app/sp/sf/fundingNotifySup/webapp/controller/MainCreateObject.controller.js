@@ -44,9 +44,9 @@ sap.ui.define([
 
             var oAppSupModel = this.getOwnerComponent().getModel("fundingApp");
 
-            this._onComCodeListView(oAppSupModel);
-            this._onTransactionDivision(oAppSupModel);
             this.getRouter().getRoute("mainCreateObject").attachPatternMatched(this._onRoutedThisPage, this);
+            this._onComCodeListView(oAppSupModel);
+            
 
         },
 
@@ -137,7 +137,7 @@ sap.ui.define([
             if(!ofunding_status_code || ofunding_status_code=="110"){
                 this._ajaxCall("ProcSaveTemp", procSaveTemp);    
             }else{
-                alert("지금 진행 상태에서는 임시저장이 불가 합니다.");
+                MessageBox.alert("지금 진행 상태에서는 임시저장이 불가 합니다.");
             }
             
         },
@@ -468,7 +468,11 @@ sap.ui.define([
                     var aControls = that.byId("investmentPlanDetails").getControlsByFieldGroupId("newInvestmentPlan");
                 
                     that._clearValueState(aControls);
-                    that.getModel("applicationSup").setProperty("/popUpInvestPlanMst", {});
+                    debugger;
+                    that.getModel("applicationSup").setProperty("/popUpInvestPlanMst", {
+                        org_name : that.getModel("applicationSup").getData().org_name,
+                        supplier_local_name : that.getModel("applicationSup").getData().supplier_name
+                    });
                     that.getModel("applicationSup").setProperty("/popUpInvestPlanDtl", []);
                 });
             }
@@ -532,23 +536,27 @@ sap.ui.define([
         },
 
         //거래사업부
-        _onTransactionDivision: function (oAppSupModel) {
+        _onTransactionDivision: function () {
             var that = this,
-                sTenant_id = "L1100",
+                sModel=this.getModel("contModel").getProperty("/oArgs"),
+                sTenant_id = sModel.tenantId,
                 sCompany_code = "LGEKR",
-                aFilters = [];
+                sSupplier_code = sModel.supplierCode,
+                aFilters = [],
+                serviceModel=this.getModel("fundingApp");
 
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
-            aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompany_code));;
+            aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompany_code)); 
+            aFilters.push(new Filter("supplier_code", FilterOperator.EQ, sSupplier_code));
 
-            oAppSupModel.read("/OrgCodeListView", {
+            serviceModel.read("/OrgCodeListView", {
                 //Filter : 회사정보, 테넌트
                 filters: aFilters,
                 success: function (oData) {
                     that.getModel("transactionDivision").setData(oData.results);
                 },
                 error: function (oError) {
-
+                    MessageBox.alert("서비스 확인이 필요 합니다.");
                 }
             });
 
@@ -579,7 +587,7 @@ sap.ui.define([
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId));
             aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, this._sFundingNotifyNumber));
 
-            
+            this._onTransactionDivision();
             this._onObjectRead(aFilters);
         },
 

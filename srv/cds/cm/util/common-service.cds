@@ -3,12 +3,11 @@ using { cm.Code_View as cm_Code } from '../../../../db/cds/cm/CM_CODE_VIEW-model
 using { cm.Country_View as cm_Country } from '../../../../db/cds/cm/CM_COUNTRY_VIEW-model';
 using { cm.Currency_View as cm_Currency } from '../../../../db/cds/cm/CM_CURRENCY_VIEW-model';
 using { cm.Time_Zone as cm_Timezone } from '../../../../db/cds/cm/CM_TIME_ZONE-model';
-using { cm.File_Dtl as cm_File } from '../../../../db/cds/cm/CM_FILE_DTL-model';
+using { cm as file } from '../../../../db/cds/cm/CM_FILE_DTL-model';
 
 
 namespace cm.util;
 
-@path : '/cm.util.CommonService'
 service CommonService {
 
     @readonly
@@ -127,8 +126,11 @@ service CommonService {
             cm_Timezone a
     ;
 
+
+    entity File_Mst as projection on file.File_Mst; //OData navigation property
+
     @readonly
-    view File as SELECT from cm_File
+    view File as SELECT from file.File_Dtl
         excluding { 
             save_file_name
         };

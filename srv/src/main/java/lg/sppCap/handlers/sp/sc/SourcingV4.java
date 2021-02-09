@@ -428,6 +428,8 @@ public class SourcingV4 implements EventHandler {
             @Override
             public ReturnMsg mapRow(ResultSet v_rs, int rowNum) throws SQLException {
                 ReturnMsg v_row = ReturnMsg.create();
+                v_row.setTenantId(v_rs.getString("tenant_id"));
+                v_row.setNegoHeaderId(v_rs.getLong("nego_header_id"));
                 v_row.setCode(v_rs.getInt("code"));
                 v_row.setMessage(v_rs.getString("message"));
                 v_result.add(v_row);
@@ -602,6 +604,8 @@ curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' 
             @Override
             public ReturnMsg mapRow(ResultSet v_rs, int rowNum) throws SQLException {
                 ReturnMsg v_row = ReturnMsg.create();
+                v_row.setTenantId(v_rs.getString("tenant_id"));
+                v_row.setNegoHeaderId(v_rs.getLong("nego_header_id"));
                 v_row.setCode(v_rs.getInt("code"));
                 v_row.setMessage(v_rs.getString("message"));
                 v_result.add(v_row);
