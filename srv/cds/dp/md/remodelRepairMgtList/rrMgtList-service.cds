@@ -84,9 +84,9 @@ service RrMgtListService {
                 '' as mold_complete_result_date    : String(240)
         from moldMst.Md_Mst mst
         join asset.Md_Asset ass  on mst.mold_id = ass.mold_id and mst.tenant_id = ass.tenant_id
-        join supplier.Sm_Supplier_Mst sup on sup.tenant_id = mst.tenant_id and sup.supplier_code = mst.mold_mfger_code
-        join supplier.Sm_Supplier_Mst sup2 on sup2.tenant_id = mst.tenant_id and sup2.supplier_code = mst.supplier_code
-        join supplier.Sm_Supplier_Mst sup3 on sup3.tenant_id = mst.tenant_id and sup3.supplier_code = mst.production_supplier_code
+        left join supplier.Sm_Supplier_Mst sup on sup.tenant_id = mst.tenant_id and sup.supplier_code = mst.mold_mfger_code
+        left join supplier.Sm_Supplier_Mst sup2 on sup2.tenant_id = mst.tenant_id and sup2.supplier_code = mst.supplier_code
+        left join supplier.Sm_Supplier_Mst sup3 on sup3.tenant_id = mst.tenant_id and sup3.supplier_code = mst.production_supplier_code
         
         ;
 
