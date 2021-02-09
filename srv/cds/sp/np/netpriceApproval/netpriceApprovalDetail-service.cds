@@ -220,9 +220,7 @@ service NpApprovalDetailService {
             ,   pad.currency_code	                    /*	(New)Currency	*/
             ,   pad.net_price                           /*	(New)Price	*/
 
-            //,   TO_VARCHAR((ROUND(((npm.net_price)/pad.net_price),2,ROUND_HALF_UP))*100)
-            ,   null as change_rate	                    : String   /*	변동비율(%) 이전단가 대비 변동비 net_price 	*/
-
+            ,   TO_VARCHAR(ROUND(pad.net_price/npm.net_price*100))   as change_rate : String        /* 변동비율(%) 이전단가 대비 변동비*/
             ,   null as royalty	                        : String //pad.royalty	                    /*	로열티	*/
             ,   null as pcst	                        : String //pad.pcst	                        /*	임가공비	*/
             ,   null as depreciation	                : String //pad.depreciation	                /*	감상비	*/
