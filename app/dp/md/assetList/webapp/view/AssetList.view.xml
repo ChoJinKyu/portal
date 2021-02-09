@@ -253,7 +253,7 @@
                         <Title text="List ({= ${list>/Assets}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
                         <!-- Add the Personalization button -->
-                        <Button id="changeSuppButton"   type="Transparent" text="Change Supp."        press=".onChangeSuppButtonButtonPress"  />
+                        <Button id="changeSuppButton"   type="Transparent" text="Change Supp." press=".changeSuppButtonPress"  />
                         <ToolbarSeparator/>
                         <Button icon="sap-icon://excel-attachment" press=".onExportPress" />
                         <Button icon="sap-icon://action-settings"  press=".onMoldMstTablePersoButtonPressed" >

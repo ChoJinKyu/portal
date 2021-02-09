@@ -389,13 +389,90 @@ sap.ui.define([
         * @private 
         * @see (멀티박스)리스트 moldNumber 항목선택시 remodelRepairMgtList 컴포넌트 디테일로 이동
         */
-        handleLinkPress: function (){
+        handleLinkPress: function (oEvent){
+            var sPath = oEvent.getSource().getBindingContext("list").getPath(),
+                oRecord = this.getModel("list").getProperty(sPath);
             var pull_url = window.location.href;
             var complete_url;
-            var targetPath = "/dp/md/remodelRepairMgtList/webapp/#/rrMgtDetail/code"
+            // rrMgtDetail/{mold_id}/{request_number}
+            var targetPath = "/dp/md/remodelRepairMgtList/webapp/#/rrMgtDetail/"+oRecord.mold_id+"/New";
             complete_url=pull_url.split(pull_url.substring(pull_url.indexOf("/dp"),pull_url.length));
             complete_url[0] = complete_url[0]+targetPath;
             window.location.href=complete_url[0];
+        },
+
+        changeSuppButtonPress: function(){
+            var asTable = this.byId("assetListTable"),
+                oModel = this.getModel("list"),
+                oSelected = asTable.getSelectedIndices(),
+                viewData = oModel.getData().Assets;
+
+            var input = {};
+            var assetViews = [];
+            var isOk = false;
+            var msg;
+               
+            
+            if (oSelected != "") {
+                console.log("oSelected >>>>" , oSelected);
+                isOk = true;
+                msg ="Change Supplier? ";
+            }else{
+                isOk = false;
+                msg ="선택된 항목이 없습니다."
+                return;
+            }
+
+            for(var i=0; i<oSelected.length; i++){
+                assetViews.push({
+                        tenant_id                   : viewData[oSelected[i]].tenant_id,
+                        mold_id                     : viewData[oSelected[i]].mold_id,
+                        secondary_supplier_name     : asTable.getRows()[oSelected[i]].getCells()[5].getValue(),
+                        tertiary_supplier_name     : asTable.getRows()[oSelected[i]].getCells()[6].getValue()
+                });
+                
+            }
+            console.log(assetViews);
+            if(isOk){
+                var oView = this.getView();
+                var that = this;
+                MessageBox.confirm(msg, {
+                    title: "Comfirmation",
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: function (sButton) {
+                        if (sButton === MessageBox.Action.OK) { 
+                            oView.setBusy(true);
+                            that.callAjax(assetViews, "updateListVendor"
+                                , function(result){
+                                    oView.setBusy(false);
+                                    MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
+                                // if (result.resultCode > -1) {
+                                //     that.onLoadThisPage(result);
+                                // }
+                            });
+                        }
+                    }
+                });
+            }
+        },
+       
+        callAjax: function (data, fn , callback) {
+            console.log("send data >>>> ", data);
+            var url = "/dp/md/assetList/webapp/srv-api/odata/v4/dp.AssetListV4Service/" + fn;
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                //datatype: "json",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                success: function (result) { 
+                    callback(result);
+                },
+                error: function (e) {
+                    callback(e);
+                }
+            });
         },
         
         _doInitTablePerso: function () {
