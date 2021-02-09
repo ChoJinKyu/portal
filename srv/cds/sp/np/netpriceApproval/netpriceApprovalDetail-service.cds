@@ -145,11 +145,12 @@ service NpApprovalDetailService {
     view GeneralView as
         SELECT
                 key pad.tenant_id		                /*	테넌트ID	*/
-            ,	key pad.company_code		            /*	회사코드	*/
-            ,	key pad.org_type_code		            /*	구매운영조직유형	*/
-            ,	key pad.org_code		                /*	Operation Org   구매운영조직코드	*/
             ,	key pad.approval_number		            /*	품의번호	*/
             ,	key pad.item_sequence		            /*	품목순번	*/
+
+            ,	pad.company_code		                /*	회사코드	*/
+            ,	pad.org_type_code		                /*	구매운영조직유형	*/
+            ,	pad.org_code		                    /*	Operation Org   구매운영조직코드	*/
 
             ,   (SELECT org.org_name
                    FROM CM_PUR_OPERATION_ORG  org
@@ -294,11 +295,12 @@ service NpApprovalDetailService {
     view BasePriceInfoView as
         SELECT
                 key pad.tenant_id		                        /*	테넌트ID	*/
-            ,	key pad.company_code		                    /*	회사코드	*/
-            ,	key pad.org_type_code		                    /*	구매운영조직유형	*/
-            ,	key pad.org_code		                        /*	구매운영조직코드	*/
             ,	key pad.approval_number		                    /*	품의번호	*/
             ,	key pad.item_sequence		                    /*	품목순번	*/
+
+            ,	pad.company_code		                    /*	회사코드	*/
+            ,	pad.org_type_code		                    /*	구매운영조직유형	*/
+            ,	pad.org_code		                        /*	구매운영조직코드	*/
 
             ,   (SELECT org.org_name
                    FROM CM_PUR_OPERATION_ORG  org
@@ -365,11 +367,12 @@ service NpApprovalDetailService {
     view NegoHistoryInfoView  as
         SELECT
                 key pad.tenant_id		        /*	테넌트ID	*/
-            ,	key pad.company_code		    /*	회사코드	*/
-            ,	key pad.org_type_code		    /*	구매운영조직유형	*/
-            ,	key pad.org_code		        /*	구매운영조직코드	*/
             ,	key pad.approval_number		    /*	품의번호	*/
             ,	key pad.item_sequence		    /*	품목순번	*/
+
+            ,	pad.company_code		    /*	회사코드	*/
+            ,	pad.org_type_code		    /*	구매운영조직유형	*/
+            ,	pad.org_code		        /*	구매운영조직코드	*/
 
             , (SELECT org.org_name
                   FROM CM_PUR_OPERATION_ORG  org
