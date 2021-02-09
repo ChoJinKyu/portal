@@ -146,7 +146,7 @@
                                 <VBox>
                                     <Label text="{I18N>/STATUS}"/>
                                     <Text 
-                                        text="{master>/active_flag}"
+                                        text="{master>/active_flag_val}"
                                         visible="{= !${midObjectViewModel>/editMode} }"/>                                   
                                     <SegmentedButton 
                                         id="editUseflag"
