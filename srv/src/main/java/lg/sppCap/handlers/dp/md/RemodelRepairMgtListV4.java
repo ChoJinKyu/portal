@@ -84,6 +84,8 @@ public class RemodelRepairMgtListV4 implements EventHandler {
             Instant current = Instant.now();
             if( repair_request_number != null && !repair_request_number.equals("New") 
                 && !repair_request_number.equals("")){ // update 
+                    msg.setRepairRequestNumber(itemV4.getRepairRequestNumber());
+                    msg.setMoldId(itemV4.getMoldId());
                     RepairItem item = RepairItem.create();
                     item.setRepairRequestNumber(itemV4.getRepairRequestNumber());
                     item.setMoldId(itemV4.getMoldId());
@@ -97,12 +99,14 @@ public class RemodelRepairMgtListV4 implements EventHandler {
                     item.setMoldCompleteResultDate(itemV4.getMoldCompleteResultDate());
                     item.setUpdateUserId(sppUserSession.getUserId());
                     item.setLocalUpdateDtm(current);
-                    CqnUpdate masterUpdate = Update.entity(RepairItem_.CDS_NAME).data(item);
-                    Result rst = cdsService.run(masterUpdate);
+                    CqnUpdate updateData = Update.entity(RepairItem_.CDS_NAME).data(item);
+                    Result rst = cdsService.run(updateData);
             
             }else{ // create 
                     String sql="SELECT DP_MD_REPAIR_REQ_NUM_SEQ.NEXTVAL FROM DUMMY";
                     int seq=jdbc.queryForObject(sql,Integer.class);
+                    msg.setRepairRequestNumber(String.valueOf(seq));
+                    msg.setMoldId(itemV4.getMoldId());
                     RepairItem item = RepairItem.create();
                     item.setRepairRequestNumber(String.valueOf(seq));
                     item.setMoldId(itemV4.getMoldId());
@@ -118,8 +122,8 @@ public class RemodelRepairMgtListV4 implements EventHandler {
                     item.setCreateUserId(sppUserSession.getUserId());
                     item.setLocalUpdateDtm(current);
                     item.setLocalCreateDtm(current);
-                    CqnInsert masterUpdate = Insert.into(RepairItem_.CDS_NAME).entry(item);
-                    Result rst = cdsService.run(masterUpdate);
+                    CqnInsert insertData = Insert.into(RepairItem_.CDS_NAME).entry(item);
+                    Result rst = cdsService.run(insertData);
             }
 
         } catch (Exception e) {
