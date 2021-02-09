@@ -159,13 +159,15 @@ service NpApprovalDetailService {
                     AND org.org_code      = pad.org_code
 			    ) as org_name : String                  /*	구매운영조직코드 명	*/
 
-            ,   pad.material_code	                    /*	Material Code	자재코드*/
-            //,   pad.material_desc	                    /*	Description	    자재내역*/
+            ,   pad.material_code	                    /*	Material Code	자재코드    */
+            ,   pad.material_desc	                    /*	Description	    자재내역    */
+
+            /*	
             ,   (SELECT mmm.material_desc
                     FROM DP_MM_MATERIAL_MST mmm
                     WHERE mmm.tenant_id = pad.tenant_id
                     AND mmm.material_code = pad.material_code
-                ) as material_desc : String              /*	Description	    자재내역*/
+                ) as material_desc : String              Description	    자재내역*/
 
             ,   pad.supplier_code	                    /*	Supplier Code	공급업체코드 */
             ,   sm.supplier_local_name	                /*	Supplier Name	*/
@@ -260,7 +262,7 @@ service NpApprovalDetailService {
 
         INNER JOIN CM_SPP_USER_SESSION_VIEW  ssi
             ON pad.tenant_id        = ssi.TENANT_ID
-           AND pad.company_code     = ssi.COMPANY_CODE
+            /*  AND pad.company_code     = ssi.COMPANY_CODE */
 
         LEFT JOIN SP_NP_NET_PRICE_MST npm             /*  기준단가 마스터 */
                 ON pad.tenant_id        = npm.tenant_id
