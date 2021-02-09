@@ -119,8 +119,7 @@ BEGIN
              WHERE TENANT_ID          = :I_TENANT_ID
                AND APPROVAL_NUMBER LIKE 'N' || TO_CHAR(NOW(), 'YYYYMMDD') || '%'
             ;
-        
-        
+
         END;
         
         BEGIN
@@ -343,22 +342,37 @@ BEGIN
          --Update Item
          MERGE INTO SP_NP_NET_PRICE_APPROVAL_DTL  T
          USING (SELECT ITEM_SEQUENCE
-                      ,ORG_CODE
-                      ,LINE_TYPE_CODE
-                      ,MATERIAL_CODE
-                      ,PAYTERMS_CODE
-                      ,SUPPLIER_CODE
-                      ,EFFECTIVE_START_DATE
-                      ,EFFECTIVE_END_DATE
-                    --  ,SURROGATE_TYPE_CODE
-                      ,CURRENCY_CODE
-                      ,NET_PRICE
-                      ,VENDOR_POOL_CODE
-                      ,MARKET_CODE
-                      ,NET_PRICE_APPROVAL_REASON_CODE
-                      ,MAKER_CODE
-                      ,INCOTERMS
-                 FROM :I_DETAILS
+
+                     ,(SELECT MAX(COMPANY_CODE)
+                         FROM CM_PUR_OPERATION_ORG T
+                        WHERE T.TENANT_ID  = I_TENANT_ID
+                          AND T.ORG_CODE   = DTL.ORG_CODE
+                        -- AND USE_FLAG    = true
+                      ) AS COMPANY_CODE
+                     
+                     ,(SELECT MAX(ORG_TYPE_CODE)
+                         FROM CM_PUR_ORG_TYPE_MAPPING T
+                        WHERE T.TENANT_ID         = I_TENANT_ID
+                          AND T.PROCESS_TYPE_CODE = 'SP02'  /* 단가 품의 */
+                          AND T.USE_FLAG          = true
+                      ) AS ORG_TYPE_CODE
+                     
+                     , DTL.ORG_CODE
+                     , DTL.LINE_TYPE_CODE
+                     , DTL.MATERIAL_CODE
+                     , DTL.PAYTERMS_CODE
+                     , DTL.SUPPLIER_CODE
+                     , DTL.EFFECTIVE_START_DATE
+                     , DTL.EFFECTIVE_END_DATE
+                   --  ,SURROGATE_TYPE_CODE
+                     , DTL.CURRENCY_CODE
+                     , DTL.NET_PRICE
+                     , DTL.VENDOR_POOL_CODE
+                     , DTL.MARKET_CODE
+                     , DTL.NET_PRICE_APPROVAL_REASON_CODE
+                     , DTL.MAKER_CODE
+                     , DTL.INCOTERMS
+                 FROM :I_DETAILS   DTL
                 WHERE _ROW_STATE_ = 'U'
                ) I
          ON (    T.TENANT_ID          = I_TENANT_ID
@@ -372,7 +386,9 @@ BEGIN
             )
          WHEN MATCHED THEN
              UPDATE
-             SET    T.ORG_CODE                         = I.ORG_CODE
+             SET    T.COMPANY_CODE                     = I.COMPANY_CODE
+                   ,T.ORG_TYPE_CODE                    = I.ORG_TYPE_CODE
+                   ,T.ORG_CODE                         = I.ORG_CODE
                    ,T.LINE_TYPE_CODE                   = I.LINE_TYPE_CODE
                    ,T.MATERIAL_CODE                    = I.MATERIAL_CODE
                    ,T.PAYTERMS_CODE                    = I.PAYTERMS_CODE
@@ -437,10 +453,21 @@ BEGIN
         )
         SELECT 
                I_TENANT_ID
-               
-             , I_COMPANY_CODE
-             , I_ORG_TYPE_CODE
-             
+
+             , (SELECT MAX(COMPANY_CODE)
+                  FROM CM_PUR_OPERATION_ORG T
+                 WHERE T.TENANT_ID  = I_TENANT_ID
+                   AND T.ORG_CODE   = DTL.ORG_CODE
+                 -- AND USE_FLAG    = true
+               ) AS COMPANY_CODE
+
+             , (SELECT MAX(ORG_TYPE_CODE)
+                  FROM CM_PUR_ORG_TYPE_MAPPING T
+                 WHERE T.TENANT_ID         = I_TENANT_ID
+                   AND T.PROCESS_TYPE_CODE = 'SP02'  /* 단가 품의 */
+                   AND T.USE_FLAG          = true
+               ) AS ORG_TYPE_CODE
+
              , DTL.ORG_CODE
              , V_APPROVAL_NUMBER
              , SEQ.MAX_ITEM_SEQUENCE + ROW_NUMBER()OVER(PARTITION BY SEQ.MAX_ITEM_SEQUENCE ORDER BY SEQ.MAX_ITEM_SEQUENCE)
