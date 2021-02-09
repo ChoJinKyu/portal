@@ -85,26 +85,60 @@ sap.ui.define([
         } ,
 
         _srchDetail : function(oArgs){
-            var oModel = this.getModel("rrMgt");
-              oModel.setTransactionModel(this.getModel());
-
-            var filter = [
-                new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID),
-                new Filter("mold_id", FilterOperator.EQ, oArgs.mold_id)
-            ];
+            var oModel = this.getModel("rrMgt")
+                , session = this.getSessionUserInfo() 
+                , today = this._getToday()
+            ;
+              oModel.setTransactionModel(this.getModel())
+              
+              
+              ;
 
             if( oArgs.request_number != "New"){
-                filter.push(new Filter("repair_request_number", FilterOperator.EQ,  oArgs.request_number));
-            };
+                oModel.read("/remodelRepairDetail(tenant_id='" + this.getSessionUserInfo().TENANT_ID
+                    + "',mold_id='" + oArgs.mold_id 
+                    + "',repair_request_number='"+oArgs.request_number 
+                    + "')", {
+                    filters: [],
+                    success: function (oData) {
+                        console.log("oData>>>>> ", oData);
+                    }
+                });
+            }else{
 
-            oModel.read("/remodelRepairDetail", {
-                filters: filter,
-                success: function (oData) {
-                    console.log("oData>>>>> " , oData);
-                }
-            });
+                oModel.read("/remodelRepairNew(tenant_id='" + this.getSessionUserInfo().TENANT_ID
+                    + "',mold_id='" + oArgs.mold_id + "')", {
+                    filters: [],
+                    success: function (oData) {
+        
+                         
+                    oModel.setProperty("/create_user_id", session.USER_ID); 
+                    oModel.setProperty("/user_local_name", session.EMPLOYEE_NAME); 
+                    oModel.setProperty("/user_english_name", session.ENGLISH_EMPLOYEE_NAME); 
+                    oModel.setProperty("/repair_request_date", today);
+            
+
+
+                        console.log("oData>>>>> ", oData);
+                    }
+                });
+
+            };  
         },
+        /**
+         * today
+         * @private
+         * @return yyyy-mm-dd
+         */
+        _getToday: function () {
+            var date_ob = new Date();
+            var date = ("0" + date_ob.getDate()).slice(-2);
+            var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+            var year = date_ob.getFullYear();
 
+            // console.log(year + "-" + month + "-" + date);
+            return year + "" + month + "" + date;
+        },
         onPageNavBackButtonPress: function () {
             this.getRouter().navTo("rrMgtList", {}, true); 
         },
