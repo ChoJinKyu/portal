@@ -73,9 +73,11 @@ BEGIN
           FROM CM_APPROVAL_MST  CAM
          INNER JOIN SP_NP_NET_PRICE_APPROVAL_MST NAM
             ON NAM.TENANT_ID          = CAM.TENANT_ID
+            /*
            AND NAM.COMPANY_CODE       = CAM.COMPANY_CODE
            AND NAM.ORG_TYPE_CODE      = CAM.ORG_TYPE_CODE
            AND NAM.ORG_CODE           = CAM.ORG_CODE
+           */
            AND NAM.APPROVAL_NUMBER    = CAM.APPROVAL_NUMBER
 
          WHERE CAM.TENANT_ID          = :I_TENANT_ID

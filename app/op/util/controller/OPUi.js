@@ -54,8 +54,33 @@ sap.ui.define([
                         this.oModel.setData(oItem.d.results);
                     else if(oItem.results)
                         this.oModel.setData(oItem.results);
+                        
                 }.bind(this));
             }.bind(this));
+
+
+            // var oQueryM = {
+            //     urlParameters: {
+            //         "$select": "erp_interface_flag,default_template_number,use_flag,approval_flag,default_template_flag"
+            //     },
+            //     filters: [
+            //         new Filter("tenant_id", FilterOperator.EQ, this.getProperty("tenantId")),
+            //         new Filter("pr_template_number", FilterOperator.EQ, this.getProperty("templateNumber")),
+            //     ],
+            //     sorters: [
+            //         //new Sorter("tenant_id"),
+            //         //new Sorter("ettLabel"),                        
+            //     ]
+            // };
+            // oXhr.get("Pr_TMst", oQueryM, true).then(function(aItems){              
+            //     aItems.forEach(function(oItem){                  
+
+            //         if(oItem && oItem.d && oItem.d.results)
+            //             this.oModel.setDataM(oItem.d.results);
+            //         else if(oItem.results)
+            //             this.oModel.setDataM(oItem.results);
+            //     }.bind(this));
+            // }.bind(this));
 
             //Parent.prototype.constructor.apply(this, arguments);
         },

@@ -1,6 +1,6 @@
 sap.ui.define([
     "op/util/controller/BaseController",
-    "op/util/controller/OPUi",
+    // "op/util/controller/OPUi",
     "ext/lib/util/Multilingual",
     "ext/lib/model/ManagedListModel",
     "sap/ui/model/json/JSONModel",
@@ -20,8 +20,9 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/ui/core/Fragment",
     "ext/lib/util/ExcelUtil",
-    "op/util/controller/UiControlSet",
-], function (BaseController, OPUi, Multilingual, ManagedListModel, JSONModel, DateFormatter, 
+    // "op/util/controller/ExcelUtil",
+    "op/util/controller/UiControlSet"
+], function (BaseController, Multilingual, ManagedListModel, JSONModel, DateFormatter, 
     EmployeeDialog, DepartmentDialog, //OrderDialog, AssetDialog, AccountDialog, CctrDialog,
     Validator, TablePersoController, MainListPersoService,
     Filter, FilterOperator, MessageBox, MessageToast, Fragment, ExcelUtil, UiControlSet) {
@@ -43,12 +44,12 @@ sap.ui.define([
 		 */
         onInit: function () {
             
-            var oOPUi = new OPUi({
-                tenantId: "L2100",
-                txnType: "CREATE",
-                templateNumber: "TCT0001"
-            });
-            this.setModel(oOPUi.getModel(), "OPUI");
+            // var oOPUi = new OPUi({
+            //     tenantId: "L2100",
+            //     txnType: "CREATE",
+            //     templateNumber: "TCT0001"
+            // });
+            // this.setModel(oOPUi.getModel(), "OPUI");
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");

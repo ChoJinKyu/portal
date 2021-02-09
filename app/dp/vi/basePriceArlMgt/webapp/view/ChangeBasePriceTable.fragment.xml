@@ -540,7 +540,7 @@
                     <Label text="{I18N>/SUPPLIER_NAME}" textAlign="Center" width="100%" />
                 </t:multiLabels>
                 <t:template>
-                    <Text text="{detailModel>repr_material_supplier_name}" />
+                    <Text text="{detailModel>repr_material_supplier_local_name}" />
                 </t:template>
             </t:Column>
             <t:Column width="12rem">

@@ -4,11 +4,11 @@ using util from '../../cm/util/util-model';
 	
 entity Np_Net_Price_Approval_Dtl {
   key tenant_id                       : String(5)   not null   @title: '테넌트ID' ;	
-  key company_code                    : String(10)  not null   @title: '회사코드' ;
-  key org_type_code                   : String(2)   not null   @title: '구매운영조직유형' ;
-  key org_code                        : String(10)  not null   @title: '구매운영조직코드' ;
   key approval_number                 : String(50)  not null   @title: '품의번호' ;	
   key item_sequence                   : Integer64   not null   @title: '품목순번' ;	
+      company_code                    : String(10)  not null   @title: '회사코드' ;
+      org_type_code                   : String(2)   not null   @title: '구매운영조직유형' ;
+      org_code                        : String(10)  not null   @title: '구매운영조직코드' ;
       quotation_number                : Integer64              @title: '견적번호' ;	
       quotation_item_number           : Integer64              @title: '견적품목번호' ;	
       bidding_number                  : Integer64              @title: '입찰번호' ;	

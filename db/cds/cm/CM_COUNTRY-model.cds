@@ -1,7 +1,8 @@
-namespace cm;
 
-using {cm.Country_Lng as country_Lng} from './CM_COUNTRY_LNG-model';
 using util from './util/util-model';
+using from './CM_COUNTRY_LNG-model';
+
+namespace cm;
 
 entity Country {
     key tenant_id          : String(5) not null;
@@ -12,9 +13,10 @@ entity Country {
         date_format_code   : String(30);
         number_format_code : String(30);
         currency_code      : String(30);
-        details            : Composition of many country_Lng
-                                 on  details.tenant_id    = tenant_id
-                                 and details.country_code = country_code;
+
+        children           : Composition of many cm.Country_Lng
+                                 on  children.tenant_id    = tenant_id
+                                 and children.country_code = country_code;
 }
 
 extend Country with util.Managed;
