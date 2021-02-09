@@ -270,16 +270,16 @@ BEGIN
         END IF;
 
         /*  I_D Table의 Data 일괄 삭제 */
-/*        DELETE FROM DP_PD_PART_CATEGORY_LNG D
+        DELETE FROM DP_PD_PART_CATEGORY_LNG D
         WHERE ( D.TENANT_ID,D.CATEGORY_GROUP_CODE,D.CATEGORY_CODE,D.LANGUAGE_CD ) IN
             ( SELECT id.TENANT_ID, V_CATEGORY_GROUP_CODE, V_CATEGORY_CODE, id.LANGUAGE_CD
                 FROM :I_D id
                WHERE id.CRUD_TYPE_CODE = 'D'
             )
         ;
-*/
+
         /*  I_D Table의 Data 일괄 추가,수정 */
-/*        MERGE INTO DP_PD_PART_CATEGORY_LNG D
+        MERGE INTO DP_PD_PART_CATEGORY_LNG D
             USING ( SELECT * FROM :I_D WHERE :I_D.CRUD_TYPE_CODE IN ('C','U')  ) id
             ON ( D.TENANT_ID = V_TENANT_ID
                 AND D.CATEGORY_GROUP_CODE = V_CATEGORY_GROUP_CODE
@@ -318,7 +318,7 @@ BEGIN
                     ,NOW()
                 )
         ; 
-*/
+
         /*  I_SD Table의 Data 일괄 추가,수정
         MERGE INTO DP_PD_PART_CATEGORY_ACTIVITY C
             USING ( SELECT :I_SD.tenant_id, V_COMPANY_CODE as COMPANY_CODE, V_ORG_TYPE_CODE as ORG_TYPE_CODE, cg.code as ORG_CODE,
