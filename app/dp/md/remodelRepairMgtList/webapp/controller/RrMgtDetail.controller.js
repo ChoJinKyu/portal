@@ -95,7 +95,7 @@ sap.ui.define([
               ;
 
             if( oArgs.request_number != "New"){
-                oModel.read("/remodelRepairDetail(tenant_id='" + this.getSessionUserInfo().TENANT_ID
+                oModel.read("/remodelRepairDetail(tenant_id='" + "L2101"
                     + "',mold_id='" + oArgs.mold_id 
                     + "',repair_request_number='"+oArgs.request_number 
                     + "')", {
@@ -106,7 +106,7 @@ sap.ui.define([
                 });
             }else{
 
-                oModel.read("/remodelRepairNew(tenant_id='" + this.getSessionUserInfo().TENANT_ID
+                oModel.read("/remodelRepairNew(tenant_id='" + "L2101"
                     + "',mold_id='" + oArgs.mold_id + "')", {
                     filters: [],
                     success: function (oData) {
@@ -205,7 +205,7 @@ sap.ui.define([
         }, 
 
         _callAjax : function(data, fn , callback){
-              var url = "/dp/md/remodelRepairMgtList/webapp/srv-api/odata/v4/dp.AssetListV4Service/" + fn;
+              var url = "/dp/md/remodelRepairMgtList/webapp/srv-api/odata/v4/dp.RrMgtListV4Service/" + fn;
 
             $.ajax({
                 url: url,
