@@ -1071,7 +1071,7 @@ BEGIN
 										   ,UPDATE_USER_ID         				= I_USER_ID
 										   ,SYSTEM_UPDATE_DTM      				= NOW()
 									WHERE   TENANT_ID           = loop_sup.TENANT_ID
-									AND     COMPANY_CODE        = loop_sup.COMPANY_CODE
+									--AND     COMPANY_CODE        = loop_sup.COMPANY_CODE
 									AND     ORG_TYPE_CODE       = loop_sup.ORG_TYPE_CODE
 									AND     ORG_CODE            = loop_sup.ORG_CODE
 									AND     VENDOR_POOL_CODE    = loop_sup.VENDOR_POOL_CODE
@@ -1084,7 +1084,7 @@ BEGIN
 										   ,UPDATE_USER_ID         				= I_USER_ID
 										   ,SYSTEM_UPDATE_DTM      				= NOW()
 									WHERE   TENANT_ID           = loop_sup.TENANT_ID
-									AND     COMPANY_CODE        = loop_sup.COMPANY_CODE
+									--AND     COMPANY_CODE        = loop_sup.COMPANY_CODE
 									AND     ORG_TYPE_CODE       = loop_sup.ORG_TYPE_CODE
 									AND     ORG_CODE            = loop_sup.ORG_CODE
 									AND     VENDOR_POOL_CODE    = loop_sup.VENDOR_POOL_CODE
