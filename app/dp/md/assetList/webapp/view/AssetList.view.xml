@@ -66,7 +66,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox height="4em">
-                                <Label text="{path:'I18N>/ASSETS_STATUS', formatter:'I18NFormatter'}"></Label>
+                                <Label text="{path:'I18N>/ASSET', formatter:'I18NFormatter'} {path:'I18N>/STATUS', formatter:'I18NFormatter'}"></Label>
                                     <SegmentedButton 
                                         id="searchAssetsStatusS" 
                                         selectedKey="" 
@@ -145,7 +145,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox height="4em">
-                                <Label text="{path:'I18N>/ASSETS_STATUS', formatter:'I18NFormatter'}"></Label>
+                                <Label text="{path:'I18N>/ASSET', formatter:'I18NFormatter'} {path:'I18N>/STATUS', formatter:'I18NFormatter'}"></Label>
                                     <SegmentedButton 
                                         id="searchAssetsStatusE" 
                                         selectedKey="" 
@@ -326,13 +326,13 @@
                         </table:template>
                     </table:Column>
                     <table:Column id="assetAssetsStatusColumn" width="7em" hAlign="Center">
-                        <Label text="Assets Status" wrapping="true"/>
+                        <Label text="{path:'I18N>/ASSET', formatter:'I18NFormatter'} {path:'I18N>/STATUS', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="assets_status" text="{list>asset_status_code_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetAssetTypeColumn" width="7em" hAlign="Center">
-                        <Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}" wrapping="true"/>
+                    <table:Column id="assetAssetTypeColumn" width="10em" hAlign="Center">
+                        <Label text="{path:'I18N>/ASSET', formatter:'I18NFormatter'} {path:'I18N>/TYPE', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="asset_type" text="{list>asset_type_code_name}"/>
                         </table:template>
@@ -356,7 +356,7 @@
                         </table:template>
                     </table:Column>
                     <table:Column id="assetToolTypeColumn" width="7em" hAlign="Center">
-                        <Label text="{path:'I18N>/TOOL_TYPE', formatter:'I18NFormatter'}" wrapping="true"/>
+                        <Label text="Tool {path:'I18N>/TYPE', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="tool_type" text="{list>mold_item_type_code_name}"/>
                         </table:template>
@@ -374,16 +374,15 @@
                         </table:template>
                     </table:Column>
                     <table:Column id="assetMoldSupplierColumn" width="10em">
-                        <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
+                        <Label text="{path:'I18N>/MOLD', formatter:'I18NFormatter'} {path:'I18N>/SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <!-- <Text id="mold_supplier" text="{list>spec_name}"/> -->
+                            <Text id="mold_supplier" text="{list>supplier_code}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetAcquisitionDateColumn" width="10em" hAlign="Center">
-                        <Label text="{path:'I18N>/ACQISITION_DATE', formatter:'I18NFormatter'}" wrapping="true"/>
+                        <Label text="{path:'I18N>/ACQISITION', formatter:'I18NFormatter'} {path:'I18N>/DATE', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <DatePicker value="{list>acq_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
-                            <!-- <Text id="acquisition_date" text="{path: 'list>acq_date', formatter: '.dateFormatter.toDateString'}"/> -->
                         </table:template>
                     </table:Column>
                     <table:Column id="assetShotColumn" width="10em">

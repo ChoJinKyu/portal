@@ -971,7 +971,6 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
                 aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'CM_APPROVE_STATUS'));
 
-
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel("util"));
             oModel.read("/Code", {
@@ -979,7 +978,7 @@ sap.ui.define([
                 success: function (oData) {     
                     oModel.addRecord({
                         code: ""
-                      ,  code_name: codeName   
+                      ,  code_name: "All"   
                       ,  group_code: "CM_APPROVE_STATUS"
                       ,  parent_code: null
                       ,  parent_group_code: null

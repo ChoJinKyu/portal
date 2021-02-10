@@ -143,7 +143,7 @@ sap.ui.define([
                 success: function (oData) {     
                     oModel.addRecord({
                         code: ""
-                      ,  code_name: codeName   
+                      ,  code_name: "All"   
                       ,  group_code: "DP_MD_ASSET_STATUS"
                       ,  parent_code: null
                       ,  parent_group_code: null
