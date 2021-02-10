@@ -487,27 +487,29 @@ sap.ui.define([
                 var bReturn = true;
         
                 oList.forEach( function (oRow) {
-                    
-                    var oValueStates = {};
-                    //필수값 체크
-                    var sOperation_Org_Code = (oRow.operation_org_code === undefined || oRow.operation_org_code === null) ? "" : oRow.operation_org_code;
-                 //   var sLine_Type_Code = (oRow.line_type_code === undefined || oRow.line_type_code === null) ? "" : oRow.line_type_code;
-                    var sMaterial_Desc = (oRow.material_desc === undefined || oRow.material_desc === null) ? "" : oRow.material_desc;
-                    var sRequest_Quantity = (oRow.request_quantity === undefined || oRow.request_quantity === null) ? "" : oRow.request_quantity.toString();
-                    var sUom_Code = (oRow.uom_code === undefined || oRow.uom_code === null) ? "" : oRow.uom_code;
+                    if( oRow._row_state_ != "D" ) {
 
-                    if(sOperation_Org_Code === "")oValueStates.operation_org_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
-                  //  if(sLine_Type_Code === "")oValueStates.line_type_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
-                    if(sMaterial_Desc === "")oValueStates.material_desc = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
-                    if(sRequest_Quantity === "")oValueStates.request_quantity = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
-                    if(sUom_Code === "")oValueStates.uom_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
-                                        
-
-                    if('operation_org_code' in oValueStates || 'material_desc' in oValueStates || 'request_quantity' in oValueStates || 'uom_code' in oValueStates ){
-                        bReturn = false;
+                        var oValueStates = {};
+                        //필수값 체크
+                        var sOperation_Org_Code = (oRow.operation_org_code === undefined || oRow.operation_org_code === null) ? "" : oRow.operation_org_code;
+                     //   var sLine_Type_Code = (oRow.line_type_code === undefined || oRow.line_type_code === null) ? "" : oRow.line_type_code;
+                        var sMaterial_Desc = (oRow.material_desc === undefined || oRow.material_desc === null) ? "" : oRow.material_desc;
+                        var sRequest_Quantity = (oRow.request_quantity === undefined || oRow.request_quantity === null) ? "" : oRow.request_quantity.toString();
+                        var sUom_Code = (oRow.uom_code === undefined || oRow.uom_code === null) ? "" : oRow.uom_code;
+    
+                        if(sOperation_Org_Code === "")oValueStates.operation_org_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                      //  if(sLine_Type_Code === "")oValueStates.line_type_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                        if(sMaterial_Desc === "")oValueStates.material_desc = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                        if(sRequest_Quantity === "")oValueStates.request_quantity = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                        if(sUom_Code === "")oValueStates.uom_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                                            
+    
+                        if('operation_org_code' in oValueStates || 'material_desc' in oValueStates || 'request_quantity' in oValueStates || 'uom_code' in oValueStates ){
+                            bReturn = false;
+                        }
+    
+                        oRow.__metadata = {_valueStates : oValueStates};
                     }
-
-                    oRow.__metadata = {_valueStates : oValueStates};
                 });
 
                 if(!bReturn){
@@ -1640,7 +1642,7 @@ sap.ui.define([
                         // v_returnModel = oView.getModel("returnModel").getData().data;
                         console.log('v_returnModel_e:', e);
                         MessageBox.confirm(this.getModel("I18N").getText("/EPG00003"), {
-                            title : this.getModel("I18N").getText("/CONFIRM"),
+                            title : this.getModel("I18N").getText("/ERROR"),
                             initialFocus : sap.m.MessageBox.Action.CANCEL,
                             onClose : function(sButton) {
                                 // if (sButton === MessageBox.Action.OK) {
@@ -1700,7 +1702,7 @@ sap.ui.define([
                         // v_returnModel = oView.getModel("returnModel").getData().data;
                         console.log('v_returnModel_e:', e);
                         MessageBox.confirm(this.getModel("I18N").getText("/EPG00001"), {
-                            title : this.getModel("I18N").getText("/CONFIRM"),
+                            title : this.getModel("I18N").getText("/ERROR"),
                             initialFocus : sap.m.MessageBox.Action.CANCEL,
                             onClose : function(sButton) {
                                 // if (sButton === MessageBox.Action.OK) {
