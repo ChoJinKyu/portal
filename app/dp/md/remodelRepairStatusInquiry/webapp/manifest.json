@@ -13,14 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v2/dp.DevelopmentReceiptService/",
-        "type": "OData",
-        "settings": {
-          "odataVersion": "2.0"
-        }
-      },
-      "dseService": {
-        "uri": "srv-api/odata/v2/dp.DetailSpecEntryService/",
+        "uri": "srv-api/odata/v2/dp.RemodelRepairStatusInquiry/",
         "type": "OData",
         "settings": {
           "odataVersion": "2.0"
@@ -91,16 +84,6 @@
       },
       "": {
         "dataSource": "mainService",
-        "preload": true,
-        "settings": {
-          "defaultBindingMode": "TwoWay",
-          "defaultCountMode": "Inline",
-          "refreshAfterChange": true,
-          "useBatch": true
-        }
-      },
-      "dse": {
-        "dataSource": "dseService",
         "preload": true,
         "settings": {
           "defaultBindingMode": "TwoWay",
