@@ -70,7 +70,10 @@
                     <ObjectStatus
                         text="{detailModel>/mst/pr_number}"/>
                 </layout:VerticalLayout>
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"  visible="{
+                                                                            path: 'OPUI>/MST-REQUEST_DATE',
+                                                                            formatter: '.uiControlSet.toColumnVisible'
+                                                                            }">
                     <Label text="{I18N>/PR_REQUEST_DATE} :"/>
                     <ObjectStatus
                         text="{ path: 'detailModel>/mst/request_date',

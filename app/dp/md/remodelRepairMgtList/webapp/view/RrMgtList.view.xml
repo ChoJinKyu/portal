@@ -8,7 +8,7 @@
     xmlns:table="sap.ui.table" 
     xmlns:sc="sap.suite.ui.commons" 
     xmlns:microchart="sap.suite.ui.microchart" 
-    xmlns:lib-m="ext.lib.m"
+    xmlns:lib-m="ext.lib.m" 
     xmlns:cm-ui="cm.util.control.ui"
     core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
     height="100%">
@@ -35,6 +35,7 @@
                                         ],
                                         sorter: { path: 'company_code'}
                                     }" 
+                                    selectedKeys="{searchCon>/companyList}"
                                     selectionFinish="handleSelectionFinishComp" 
                                     required="true">
                                     <items>
@@ -48,6 +49,7 @@
                             <VBox height="4em">
                                 <Label text="{I18N>/PLANT}" labelFor="searchPlantS" required="true"></Label>
                                 <MultiComboBox  id="searchPlantS" width="100%" 
+                                        selectedKeys="{searchCon>/plantList}"
                                         items="{
                                             path: 'purOrg>/Pur_Operation_Org',
                                             filters: [
@@ -103,7 +105,9 @@
                         <form:content>
                             <VBox height="4em">
                                 <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyE" required="true"></Label>     
-                                <MultiComboBox id="searchCompanyE" width="100%" items="{
+                                <MultiComboBox id="searchCompanyE" width="100%" 
+                                         selectedKeys="{searchCon>/companyList}"
+                                        items="{
                                        path: 'org>/Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
@@ -129,7 +133,8 @@
                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                             ],
                                             sorter: { path: 'org_code'}
-                                        }"
+                                        }" 
+                                        selectedKeys="{searchCon>/plantList}"
                                         selectionFinish="handleSelectionFinishDiv" 
                                         required="true">
                                     <items>
@@ -212,27 +217,6 @@
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <!-- <VBox height="4em">
-                                <Label text="{path:'I18N>/RECEIPT_ESTIMATION_STATUS', formatter:'I18NFormatter'}"></Label>
-                                    <SegmentedButton 
-                                        id="searchReceiptEstimationStatusE" 
-                                        selectedKey="" 
-                                        width="100%" 
-                                        items="{path :'util>/Code',
-                                                filters: [
-                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
-                                                    ,  {path: 'group_code', operator: 'EQ', value1: 'DP_MD_REPAIR_PROGRESS_STATUS'}
-                                                ],
-                                                sorter: {path: 'sort_no'} }">
-                                        <items> 
-                                            <SegmentedButtonItem width="5em" key="{util>code}" text="{util>code_name}"/>
-                                        </items>
-                                    </SegmentedButton>
-                              
-                                <layoutData>
-                                    <layout:GridData span="XL6 L6 M12 S12" />
-                                </layoutData>
-                            </VBox> -->
                     </form:content>
                 </form:SimpleForm>
             </f:DynamicPageHeader>
@@ -244,12 +228,12 @@
                     visibleRowCountMode="Auto" 
                     enableColumnFreeze="true"
 				    showColumnVisibilityMenu="true"
-                    rows="{list>/MoldMstView}"
+                    rows="{list>/remodelRepairList}"
                     cellClick=".onCellClick"
                     rowSelectionChange=".onCheck">
                 <table:extension>
                     <OverflowToolbar>
-                        <Title text="List ({= ${list>/MoldMstView}.length || 0})" level="H2"/>
+                        <Title text="List ({= ${list>/remodelRepairList}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
                         <!-- Add the Personalization button -->
                         <Button id="changeSuppButton"   type="Transparent" text="Change Supp."   press=".onChangeSuppButtonButtonPress"  />
@@ -290,32 +274,32 @@
                     <table:Column id="rrMgtDescriptionColumn" width="10em" hAlign="Center">
                         <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text id="spec_name" text="{list>spec_name}"/>
+                            <Text id="spec_name" text="{list>class_desc}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="rrMgtRequestNoColumn" width="13em" hAlign="Center">
+                    <table:Column id="rrMgtRequestNoColumn" width="7em" hAlign="Center">
                         <Label text="Request No" wrapping="true"/>
                         <table:template>
-                            <Input id="rrMgtRequestNo"/>
+                            <Text id="rrMgtRequestNo" text="{list>repair_request_number}"/>
                         </table:template>
                     </table:Column>
                     <!-- Request/Receipt Date -->
                     <table:Column id="rrMgtRequestReceiptDateColumn" width="13em" hAlign="Center">
                         <Label text="Request/Receipt Date" wrapping="true"/>
                         <table:template>
-                            <Input id="rrMgtRequestReceiptDate"/>
+                            <Text text="{path:'list>request_receipt_date',formatter:'.dateFormatter.toDateString'}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="rrMgtTitleColumn" width="10em"  hAlign="Center" >
                         <Label text="Title" wrapping="true"/>
                         <table:template>
-                            <Text id="rrMgtTitle" text="{list>spec_name}"/>
+                            <Text id="rrMgtTitle" text="{list>repair_desc}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="rrMgtStatusColumn" width="10em"  hAlign="Center" >
                         <Label text="Status" wrapping="true"/>
                         <table:template>
-                            <Text id="rrMgtStatus" text="{list>spec_name}"/>
+                            <Text id="rrMgtStatus" text="{list>repair_progress_status_code_nm}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetOrderVendorNameColumn" width="10em" headerSpan="2"  hAlign="Center"  >
@@ -324,7 +308,7 @@
                             <Label text="Plan" wrapping="true"/>
                         </table:multiLabels>
                         <table:template>
-                            <Text id="order_vendor_name" text="{list>Plan}"/>
+                             <Text text="{path:'list>mold_moving_plan_date',formatter:'.dateFormatter.toDateString'}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetAssetsStatusColumn" width="10em"  hAlign="Center"  >
@@ -333,7 +317,7 @@
                             <Label text="Result" wrapping="true"/>
                         </table:multiLabels>
                         <table:template>
-                            <Text id="assets_status" text="{list>Result}"/>
+                            <Text text="{path:'list>mold_moving_result_date',formatter:'.dateFormatter.toDateString'}"/>
                         </table:template>
                     </table:Column>
                     <table:Column  width="10em" headerSpan="2"  hAlign="Center"  >
@@ -342,7 +326,7 @@
                             <Label text="Plan" wrapping="true"/>
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>Plan}"/>
+                            <Text text="{path:'list>mold_complete_plan_date',formatter:'.dateFormatter.toDateString'}"/>   
                         </table:template>
                     </table:Column>
                     <table:Column  width="10em">
@@ -351,85 +335,81 @@
                             <Label text="Result" wrapping="true" />
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>Result}"/>
+                            <Text text="{path:'list>mold_complete_result_date',formatter:'.dateFormatter.toDateString'}"/>      
                         </table:template>
                     </table:Column>
                     <table:Column id="assetAssetTypeColumn" width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text id="asset_type" text="{list>spec_name}"/>
+                            <Text id="asset_type" text="{list>mold_mfger_code_nm}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/ORDER_SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>spec_name}"/>
+                            <Text text="{list>supplier_code_nm}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/PROD_SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>spec_name}"/>
+                            <Text text="{list>production_supplier_code_nm}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/LGE_REMARK', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>spec_name}"/>
+                            <Text text="{list>lge_remark}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10em"  hAlign="Center" >
+                        <Label text="{path:'I18N>/REMARK', formatter:'I18NFormatter'}" wrapping="true"/>
+                        <table:template>
+                            <Text text="{list>repair_reason}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="15em"  hAlign="Center" >
                         <Label text="{path:'I18N>/RECEIPT_ESTIMATION_STATUS', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>spec_name}"/>
+                            <Text text="{list>repair_progress_status_code_nm}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/ASSETS_STATUS', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>spec_name}"/>
+                            <Text text="{list>asset_status_code_nm}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>spec_name}"/>
+                            <Text text="{list>asset_type_code_nm}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="10em"  hAlign="Center" >
+                    <table:Column width="20em"  hAlign="Center" >
                         <Label text="{path:'I18N>/ASSET_NO', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>spec_name}"/>
+                            <Text text="{list>asset_number}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/FAMILY_PART_NO', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>spec_name}"/>
+                            <Text text="{list>family_part_number}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/ESTIMATE_AMOUNT', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>spec_name}"/>
+                            <Text text="{list>repair_quotation_amount}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/ORDER_AMOUNT', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>spec_name}"/>
+                            <Text text="{list>repair_amount}"/>
                         </table:template>
-                    </table:Column>
-                    <table:Column width="10em"  hAlign="Center" >
-                        <Label text="{path:'I18N>/ORDER_AMOUNT', formatter:'I18NFormatter'}" wrapping="true"/>
-                        <table:template>
-                            <Text text="{list>spec_name}"/>
-                        </table:template>
-                    </table:Column>
-                 
-                   
-                    
-                    
+                    </table:Column>                   
                 </table:columns>
             </table:Table>
         </f:content>

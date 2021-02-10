@@ -41,9 +41,9 @@ service marketIntelligenceSacTService {
     // 시황정보분석 View
     view MiSacMiInfomationView @(title : '시황정보분석 View') as
     select 
-            'Actual'			as  version : String(10)
-            ,pmmpm.tenant_id	as  tenant
-            ,pmmpm.mi_material_code || '_'|| pmmpm.exchange || '_'|| pmmpm.termsdelv || '_'|| pmmpm.quantity_unit || '_'|| pmmpm.currency_unit  as  price_unit : String(100)
+        key 'Actual'			as  version : String(10)
+       ,key  pmmpm.tenant_id	as  tenant
+       ,key  pmmpm.mi_material_code || '_'|| pmmpm.exchange || '_'|| pmmpm.termsdelv || '_'|| pmmpm.quantity_unit || '_'|| pmmpm.currency_unit  as  price_unit : String(100)
             ,pmmpm.mi_material_code
             ,pmmc.category_code
             ,pmmpm.exchange

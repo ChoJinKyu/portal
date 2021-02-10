@@ -2,6 +2,7 @@ sap.ui.define([
     "ext/lib/controller/BaseController",
     "ext/lib/formatter/DateFormatter",
     "ext/lib/model/ManagedListModel",
+    "ext/lib/model/ManagedModel",
     "ext/lib/util/Multilingual",
     "ext/lib/util/Validator",
     "ext/lib/util/ExcelUtil",
@@ -29,7 +30,7 @@ sap.ui.define([
     'sap/m/SearchField',
     "sap/m/Text",
     "sap/m/Token"
-], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, ExcelUtil, EmployeeDialog, ModelDeveloperSelection, RrMgtListPersoService,
+], function (BaseController, DateFormatter, ManagedListModel, ManagedModel, Multilingual, Validator, ExcelUtil, EmployeeDialog, ModelDeveloperSelection, RrMgtListPersoService,
     ManagedObject, History, Element, Fragment, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item,
     ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token) {
     "use strict";
@@ -74,15 +75,13 @@ sap.ui.define([
                 intent: "#Template-display"
             }, true);
 
-            this._doInitSearch();
-           
-
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new ManagedListModel(), "SegmentedItem");
+            this.setModel(new ManagedModel(), "searchCon");
 
-            
+            this._doInitSearch();
 
             this._oTPC = new TablePersoController({
                 customDataKey: "remodelRepairMgtList",
@@ -108,17 +107,14 @@ sap.ui.define([
          * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
          */
         _doInitSearch: function () {
+           var search =  this.getView().getModel('searchCon');
+          //  var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
             
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
-            
-            this.getView().setModel(this.getOwnerComponent().getModel());
-            this.setPlant('LGESL');
+          //  this.getView().setModel(this.getOwnerComponent().getModel());
+         //   this.setPlant('LGESL');
             //접속자 법인 사업부로 바꿔줘야함
-            this.getView().byId("searchCompanyS").setSelectedKeys(['LGESL']);
-            this.getView().byId("searchCompanyE").setSelectedKeys(['LGESL']);
-            this.getView().byId("searchPlantS").setSelectedKeys(['A040']);
-            this.getView().byId("searchPlantE").setSelectedKeys(['A040']);
-            
+            search.setProperty("/companyList",['LGESL']);
+            search.setProperty("/plantList",['A040']);            
         },
         _onRoutedThisPage : function(){
             this.getModel("remodelRepairMgtListView").setProperty("/headerExpanded", true);
@@ -319,9 +315,10 @@ sap.ui.define([
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/MoldMstView", {
+            oModel.read("/remodelRepairList", {
                 filters: aTableSearchState,
-                success: function (oData) {
+                success: function (oData) { 
+                    console.log("oData>>> ", oData);
                     this.validator.clearValueState(this.byId("moldMstTable"));
                     oView.setBusy(false);
                 }.bind(this)
@@ -329,9 +326,7 @@ sap.ui.define([
         },
 
         _getSearchStates: function () {
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
-                //company = this.getView().byId("searchCompany" + sSurffix).getSelectedKeys(),
-                plant = this.getView().byId("searchPlant" + sSurffix).getSelectedKeys(),
+           
                 // status = this.getView().byId("searchStatus" + sSurffix).getSelectedKey(),
                 // //status = Element.registry.get(statusSelectedItemId).getText(),
                 // receiptFromDate = this.getView().byId("searchCreationDate" + sSurffix).getDateValue(),
@@ -339,20 +334,18 @@ sap.ui.define([
                 // itemType = this.getView().byId("searchItemType").getSelectedKeys(),
                 // productionType = this.getView().byId("searchProductionType").getSelectedKeys(),
                 // eDType = this.getView().byId("searchEDType").getSelectedKey(),
-                description = this.getView().byId("searchDescription").getValue(),
-                model = this.getView().byId("searchModel").getValue(),
-                moldNo = this.getView().byId("searchMoldNumber").getValue();
+        
                 // familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
 
             var aTableSearchState = [];
             var companyFilters = [];
             var plantFilters = [];
 
-            aTableSearchState.push(new Filter("mold_purchasing_type_code", FilterOperator.EQ, "L"));
+            
 
-            if (plant.length > 0) {
+            if (this.getModel('searchCon').getProperty("/plantList").length > 0) {
 
-                plant.forEach(function (item) {
+                this.getModel('searchCon').getProperty("/plantList").forEach(function (item) {
                     plantFilters.push(new Filter("org_code", FilterOperator.EQ, item));
                 });
 
@@ -364,20 +357,9 @@ sap.ui.define([
                 );
             }
 
-            if (status) {
-                aTableSearchState.push(new Filter("mold_progress_status_code", FilterOperator.EQ, status));
-            }
             
             
-            if (model && model.length > 0) {
-                aTableSearchState.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + model.toLowerCase() + "'"));
-            }
-            if (moldNo && moldNo.length > 0) {
-                aTableSearchState.push(new Filter("mold_number", FilterOperator.Contains, moldNo.toUpperCase()));
-            }
-            if (description && description.length > 0) {
-                aTableSearchState.push(new Filter("tolower(spec_name)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));
-            }
+           
             
             return aTableSearchState;
         },

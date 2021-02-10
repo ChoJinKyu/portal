@@ -258,42 +258,50 @@ BEGIN
     			    END IF;
     			
     			
-    			-- 3. 동일한 시작일자가 아닌, 기간에 포함되는 건이면, 종료일자를 시작일자 하루 전으로 Update, 신규 Insert
-    			ELSEIF V_COUNT_INCLUDE_PERIOD = 1 THEN
-    				-- 동일한 시작일자가 아닌, 기간에 포함되는 건이면, 종료일자를 시작일자 하루 전으로 Update
-                    UPDATE SP_NP_NET_PRICE_MST   SET
-                           EFFECTIVE_END_DATE                = TO_VARCHAR(ADD_DAYS(TO_DATE(c_item.EFFECTIVE_START_DATE, 'YYYYMMDD'), -1), 'YYYYMMDD') 
-				    	 
-                         , LOCAL_UPDATE_DTM                  = NOW()
-                         , UPDATE_USER_ID                    = :I_USER_ID
-                         , SYSTEM_UPDATE_DTM                 = NOW()
-				    	 
-				     WHERE TENANT_ID                         = c_item.TENANT_ID
-                       AND COMPANY_CODE                      = c_item.COMPANY_CODE
-                       AND ORG_TYPE_CODE                     = c_item.ORG_TYPE_CODE
-                       AND ORG_CODE                          = c_item.ORG_CODE
-                       AND NET_PRICE_DOCUMENT_TYPE_CODE      = c_item.NET_PRICE_DOCUMENT_TYPE_CODE
-                       AND NET_PRICE_SOURCE_CODE             = c_item.NET_PRICE_SOURCE_CODE
-                    --   AND NET_PRICE_SEQUENCE                = c_item.NET_PRICE_SEQUENCE
-                       AND SUPPLIER_CODE                     = c_item.SUPPLIER_CODE
-                       AND MATERIAL_CODE                     = c_item.MATERIAL_CODE
-                       AND MARKET_CODE                       = c_item.MARKET_CODE
-                       AND c_item.EFFECTIVE_START_DATE BETWEEN EFFECTIVE_START_DATE /* 기간에 포함 되는 건 */
-                                                           AND EFFECTIVE_END_DATE
-    			    ;
-    			    
-    			    IF ::ROWCOUNT = 0 THEN
-			            O_RETURN_CODE = 'NG010';
-			            O_RETURN_MSG  = '단가마스터에 수정된 건이 없습니다.';
-			            SIGNAL V_USER_EXCEPTION;
-			            
-    			    ELSEIF ::ROWCOUNT > 1 THEN
-			            O_RETURN_CODE = 'NG010';
-			            O_RETURN_MSG  = '단가마스터에 1건 이상 수정 되었습니다.';
-			            SIGNAL V_USER_EXCEPTION;
-    			    
-    			    END IF;
+    			-- 3. 동일한 시작일자가 아닌, 기간에 포함되는 건이 1건 이거나, 0건이면, ..
+    			ELSEIF V_COUNT_INCLUDE_PERIOD <= 1  THEN
+
+
+    			    -- 기간에 포함되는 건이 1건 이면, 종료일을 신규건의 시작일 하루전으로 Update
+                    IF V_COUNT_INCLUDE_PERIOD = 1  THEN
+                    
+    				    --  종료일을 신규건의 시작일 하루전으로 Update
+                        UPDATE SP_NP_NET_PRICE_MST   SET
+                               EFFECTIVE_END_DATE                = TO_VARCHAR(ADD_DAYS(TO_DATE(c_item.EFFECTIVE_START_DATE, 'YYYYMMDD'), -1), 'YYYYMMDD') 
+				        	 
+                             , LOCAL_UPDATE_DTM                  = NOW()
+                             , UPDATE_USER_ID                    = :I_USER_ID
+                             , SYSTEM_UPDATE_DTM                 = NOW()
+				        	 
+				         WHERE TENANT_ID                         = c_item.TENANT_ID
+                           AND COMPANY_CODE                      = c_item.COMPANY_CODE
+                           AND ORG_TYPE_CODE                     = c_item.ORG_TYPE_CODE
+                           AND ORG_CODE                          = c_item.ORG_CODE
+                           AND NET_PRICE_DOCUMENT_TYPE_CODE      = c_item.NET_PRICE_DOCUMENT_TYPE_CODE
+                           AND NET_PRICE_SOURCE_CODE             = c_item.NET_PRICE_SOURCE_CODE
+                        --   AND NET_PRICE_SEQUENCE                = c_item.NET_PRICE_SEQUENCE
+                           AND SUPPLIER_CODE                     = c_item.SUPPLIER_CODE
+                           AND MATERIAL_CODE                     = c_item.MATERIAL_CODE
+                           AND MARKET_CODE                       = c_item.MARKET_CODE
+                           AND c_item.EFFECTIVE_START_DATE BETWEEN EFFECTIVE_START_DATE /* 기간에 포함 되는 건 */
+                                                               AND EFFECTIVE_END_DATE
+    			        ;
+    			        
+    			        IF ::ROWCOUNT = 0 THEN
+			                O_RETURN_CODE = 'NG010';
+			                O_RETURN_MSG  = '단가마스터에 수정된 건이 없습니다.';
+			                SIGNAL V_USER_EXCEPTION;
+			                
+    			        ELSEIF ::ROWCOUNT > 1 THEN
+			                O_RETURN_CODE = 'NG010';
+			                O_RETURN_MSG  = '단가마스터에 1건 이상 수정 되었습니다.';
+			                SIGNAL V_USER_EXCEPTION;
+    			        
+    			        END IF;
+
+                    END IF;
     			
+                    -- 신규건 Insert
                     INSERT INTO SP_NP_NET_PRICE_MST (
                            TENANT_ID
                          , COMPANY_CODE

@@ -21,7 +21,7 @@ select
     mst.loi_request_status_code,
     mst.investment_review_flag,
     sub.buyer_empno,
-    (select cm_get_emp_name_func(mst.tenant_id, '9586') from dummy) as buyer_name,
+    (select cm_get_emp_name_func(mst.tenant_id, sub.buyer_empno) from dummy) as buyer_name,
     sub.publish_date,
     sub.supplier_code,
     mst.local_create_dtm,

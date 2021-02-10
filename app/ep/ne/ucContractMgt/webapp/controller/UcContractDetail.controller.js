@@ -250,6 +250,7 @@ sap.ui.define([
 
             mstData["contract_write_date"] = null;
             mstData["net_price_contract_degree"] = (mstData["net_price_contract_degree"] || !isNaN(mstData["net_price_contract_degree"]) ? parseInt(mstData["net_price_contract_degree"]) : null);
+            mstData["net_price_contract_status_code"] = statusCode;
             delete mstData["__metadata"];
 
             supplierData.map(d => {
@@ -283,7 +284,7 @@ sap.ui.define([
                 // d["extra_class_number"] = d["extra_class_number"].split(":")[0];
                 // d["extra_name"] = d["extra_number"].split(":")[1];
                 // d["extra_number"] = d["extra_number"].split(":")[0];
-                d["apply_extra_rate"] = (d["apply_extra_rate"] ? parseInt(d["apply_extra_rate"]) : null);
+                //d["apply_extra_rate"] = (d["apply_extra_rate"] ? parseInt(d["apply_extra_rate"]) : null);
                 d["base_extra_rate"] = (d["base_extra_rate"] ? parseInt(d["base_extra_rate"]) : null);
                 d["net_price_contract_degree"] = (d["net_price_contract_degree"] || !isNaN(d["net_price_contract_degree"]) ? parseInt(d["net_price_contract_degree"]) : null);
                 d["net_price_contract_extra_seq"] = (d["net_price_contract_extra_seq"] || !isNaN(d["net_price_contract_extra_seq"]) ? parseInt(d["net_price_contract_extra_seq"]) : null);
@@ -304,15 +305,6 @@ sap.ui.define([
             input.inputData.approvalDtlType = dtlData;
             input.inputData.approvalSupplierType = supplierData;
             input.inputData.approvalExtraType = extraData;
-
-            // inputData = {
-            //     "approvalMstType": mstData,
-            //     "approvalDtlType": dtlData,
-            //     "approvalSupplierType": supplierData,
-            //     "approvalExtraType": extraData
-            // }
-
-            // input.inputData = inputData;
 
             console.log("input====", input.inputData);
 
@@ -347,6 +339,12 @@ sap.ui.define([
                                 that.validator.clearValueState(that.byId("editBox"));
 
                                 oViewModel.setProperty("/mst", data.approvalMstType[0]);
+
+                                data.approvalDtlType.map(d => {
+                                    d["material_apply_flag"] = (d["material_apply_flag"] == true ? "Y" : "N");
+                                    d["labor_apply_flag"] = (d["labor_apply_flag"] == true ? "Y" : "N");
+                                    return d;
+                                });
                                 oViewModel.setProperty("/dtl", data.approvalDtlType);
                                 oViewModel.setProperty("/supplier", data.approvalSupplierType);
                                 oViewModel.setProperty("/extra", data.approvalExtraType);
@@ -380,36 +378,6 @@ sap.ui.define([
                 }
             }
         },
-
-        // onDtlTableAddButtonPress_bak: function () {
-        //     var oDtlModel = this.getModel("dtlList");
-        //     console.log("dtlModel=", this.dtlModel);
-        //     this.dtlModel["tenant_id"] = "L2100";
-        //     this.dtlModel["item_sequence"] = 10;
-        //     oDtlModel.addRecord(this.dtlModel, "/UcApprovalDtlDetailView", 0);
-        //     // oDtlModel.addRecord({
-        //     //     "tenant_id": "L2100",
-        //     //     "company_code": 'LGCKR',
-        //     // 	"net_price_contract_document_no": "",
-        //     // 	"net_price_contract_degree": 0,
-        //     // 	"net_price_contract_item_number": "",
-        //     // 	"item_sequence": 10,
-        //     //     "ep_item_code": "",
-        //     //     "ep_item_name": "",
-        //     //     "spec_desc": "",
-        //     //     "contract_quantity": "",
-        //     //     "unit": "",
-        //     //     "material_apply_flag": "",
-        //     //     "labor_apply_flag": "",
-        //     //     "currency_code": "",
-        //     //     "material_net_price": "",  
-        //     //     "labor_net_price": "",  
-        //     //     "remark": ""     
-        //     // }, "/UcApprovalDtlDetailView", 0);
-        //     //console.log("oDtlModel=", oDtlModel.getData().UcApprovalDtlDetailView.length);
-        //     this.validator.clearValueState(this.byId("dtlTable"));
-        //     this.byId("dtlTable").clearSelection();
-        // },
 
         onSupplierTableAddButtonPress: function () {
             var oViewModel = this.getModel("viewModel");
@@ -513,7 +481,7 @@ sap.ui.define([
             addExtraData["update_user_id"] = "100003";
             addExtraData["net_price_contract_document_no"] = oMstData["net_price_contract_document_no"];
             addExtraData["net_price_contract_degree"] = oMstData["net_price_contract_degree"];
-            addExtraData["extra_class_number"] = "G003";
+            addExtraData["extra_class_number"] = "";
             addExtraData["row_state"] = "C";
             // console.log("addExtraData=", addExtraData);
             // console.log("extra_before=", oViewModel.getProperty("/extra"));
@@ -524,6 +492,27 @@ sap.ui.define([
             // console.log("extra_after=", oViewModel.getProperty("/extra"));
             this.validator.clearValueState(this.byId("extraTable"));
             this.byId("extraTable").removeSelections(true);
+
+            // oViewModel.getProperty("/extra").forEach(function (d, idx) {
+
+            //     console.log("idx=", idx);
+
+            //     var bindInfo = {
+            //         path: '/UcExtraItem',
+            //         filters: [
+            //             new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+            //             new Filter("company_code", FilterOperator.EQ, "LGCKR"),
+            //             new Filter("extra_class_number", FilterOperator.EQ, d["extra_class_number"])
+            //         ],
+            //         sorters: [new Sorter("extra_number", false)],
+            //         template: new Item({
+            //             key: "{extra_number}", text: "{extra_name}"
+            //         })
+            //     };
+            //     this.byId("extraTable").getItems()[idx].getCells()[2].getItems()[0].bindItems(bindInfo);
+
+            // });
+
         },
 
         onExtraTableDeleteButtonPress: function () {
@@ -547,15 +536,15 @@ sap.ui.define([
             this.byId("extraTable").removeSelections(true);
         },
 
-        setProperty: function (sPath, oValue, oContext, bAsyncUpdate) {
+        // setProperty: function (sPath, oValue, oContext, bAsyncUpdate) {
 
-            console.log("setProperty call");
-            // if (!!oContext) {
-            //     var _oRecord = this.getObject(oContext.getPath());
-            //     if (typeof _oRecord == "object" && !_oRecord[STATE_COL]) _oRecord[STATE_COL] = "U";
-            // }
-            JSONModel.prototype.setProperty.call(sPath, oValue, oContext, bAsyncUpdate);
-        },
+        //     console.log("setProperty call");
+        //     // if (!!oContext) {
+        //     //     var _oRecord = this.getObject(oContext.getPath());
+        //     //     if (typeof _oRecord == "object" && !_oRecord[STATE_COL]) _oRecord[STATE_COL] = "U";
+        //     // }
+        //     JSONModel.prototype.setProperty.call(sPath, oValue, oContext, bAsyncUpdate);
+        // },
 
         setExtraClass: function (oEvent) {
 
@@ -580,14 +569,16 @@ sap.ui.define([
                     filters: [
                         new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
                         new Filter("company_code", FilterOperator.EQ, 'LGCKR'),
-                        new Filter("extra_class_number", FilterOperator.EQ, selectedKey)
+                        new Filter("extra_class_number", FilterOperator.EQ, selectedKey),
+                        new Filter("use_flag", FilterOperator.EQ, true)
                     ],
                     and: true
                 }));
             } else {
                 itemFilters.push(
                     new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                    new Filter("company_code", FilterOperator.EQ, 'LGCKR')
+                    new Filter("company_code", FilterOperator.EQ, 'LGCKR'),
+                    new Filter("use_flag", FilterOperator.EQ, true)
                 );
             }
 
@@ -612,15 +603,14 @@ sap.ui.define([
             //extra_class_name 값 할당
             oEvent.getSource().getParent().getParent().getCells()[1].mAggregations.items[1].setText(selectedValue);
             //extra_name 초기화
-            oEvent.getSource().getParent().getParent().getCells()[2].mAggregations.items[1].setSelectedKey("");
+            oEvent.getSource().getParent().getParent().getCells()[2].mAggregations.items[0].setSelectedKey("");
 
         },
 
         setExtra: function (oEvent) {
 
             var oView = this.getView(),
-                oRootModel = this.getModel(),
-                thatEvent = oEvent;
+                oRootModel = this.getModel();
 
             var selectedClassKey = oEvent.getSource().getParent().getParent().getCells()[1].mAggregations.items[0].getSelectedKey();
             var selectedKey = oEvent.getParameters().selectedItem.mProperties.key;
@@ -632,60 +622,35 @@ sap.ui.define([
             filter.push(new Filter("extra_class_number", FilterOperator.EQ, selectedClassKey));
             filter.push(new Filter("extra_number", FilterOperator.EQ, selectedKey));
 
-            // oView.setBusy(true);
-            // oRootModel.read("/UcExtraItem", {
-            //     filters: filter,
-            //     success: function (extraData) {
-            //         oView.setBusy(false);
-            //         console.log("extra_rate====", extraData.results[0].extra_rate);
-            //         console.log("extra_desc====", extraData.results[0].extra_desc);
-            //         console.log("oEvent.getSource()====", oEvent.getSource());
+            var extraRateItem = oEvent.getSource().getParent().getParent().getCells()[3].mAggregations.items[0];
+            var extraDescItem = oEvent.getSource().getParent().getParent().getCells()[4].mAggregations.items[0];
 
-            //         oEvent.getSource().getParent().getParent().getCells()[3].mAggregations.items[0].setValue(extraData.results[0].extra_rate);
-            //         oEvent.getSource().getParent().getParent().getCells()[4].mAggregations.items[0].setValue(extraData.results[0].extra_desc);
+            oView.setBusy(true);
+            oRootModel.read("/UcExtraItem", {
+                filters: filter,
+                success: function (extraData) {
+                    oView.setBusy(false);
+                    console.log("extra_rate====", extraData.results[0].extra_rate);
+                    console.log("extra_desc====", extraData.results[0].extra_desc);
+                    console.log("oEvent.getSource()====", oEvent.getSource());
 
-            //         var updateEnableFlag = (extraData.results[0].update_enable_flag ? true : false);
-            //         console.log("updateEnableFlag====", updateEnableFlag);
-            //         oEvent.getSource().getParent().getParent().getCells()[3].mAggregations.items[0].setEnabled(updateEnableFlag);
-            //         oEvent.getSource().getParent().getParent().getCells()[4].mAggregations.items[0].setEnabled(updateEnableFlag);
-                    
-            //     },
-            //     error: function (data) {
-            //         console.log("error", data);
-            //     }
-            // });
+                    // oEvent.getSource().getParent().getParent().getCells()[3].mAggregations.items[0].setValue(extraData.results[0].extra_rate);
+                    // oEvent.getSource().getParent().getParent().getCells()[4].mAggregations.items[0].setValue(extraData.results[0].extra_desc);
+                    extraRateItem.setValue(extraData.results[0].extra_rate);
+                    extraDescItem.setValue(extraData.results[0].extra_desc)
 
-            // var extraDataLoading = new Promise(function (resolve, reject) {
-            //     oRootModel.read("/UcExtraItem", {
-            //         filters: filter,
-            //         success: function (oData) {
-            //             resolve(oData);
-            //         },
-            //         error: function (data) {
-            //             reject(data);
-            //         }
-            //     });
-            // });
+                    var updateEnableFlag = (extraData.results[0].update_enable_flag ? true : false);
+                    console.log("updateEnableFlag====", updateEnableFlag);
+                    // oEvent.getSource().getParent().getParent().getCells()[3].mAggregations.items[0].setEnabled(updateEnableFlag);
+                    // oEvent.getSource().getParent().getParent().getCells()[4].mAggregations.items[0].setEnabled(updateEnableFlag);
+                    extraRateItem.setEnabled(updateEnableFlag);
+                    extraDescItem.setEnabled(updateEnableFlag)
 
-            // extraDataLoading.then(function (extraData) {
-
-            //     console.log("extra_rate====", extraData.results[0].extra_rate);
-            //     console.log("extra_desc====", extraData.results[0].extra_desc);
-
-            //     oEvent.getSource().getParent().getParent().getCells()[3].mAggregations.items[0].setValue(extraData.results[0].extra_rate);
-            //     oEvent.getSource().getParent().getParent().getCells()[4].mAggregations.items[0].setValue(extraData.results[0].extra_desc);
-
-            //     var updateEnableFlag = (extraData.results[0].update_enable_flag ? true : false);
-            //     console.log("updateEnableFlag====", updateEnableFlag);
-            //     oEvent.getSource().getParent().getParent().getCells()[3].mAggregations.items[0].setEnabled(updateEnableFlag);
-            //     oEvent.getSource().getParent().getParent().getCells()[4].mAggregations.items[0].setEnabled(updateEnableFlag);
-
-            //     oView.setBusy(false);
-
-
-            // }, function (data) {
-            //     console.log("extraError====", data);
-            // });
+                },
+                error: function (data) {
+                    console.log("error", data);
+                }
+            });
 
             //할증명 담기(콤보선택시 키값만 할당되고 할증명은 할당안되서~~~)
             var selectedValue = oEvent.getParameters().selectedItem.mProperties.text;
@@ -870,6 +835,28 @@ sap.ui.define([
                                     return d;
                                 });
                                 oViewModel.setProperty("/extra", extraData.results);
+
+                                oViewModel.getProperty("/extra").forEach(function (d, idx) {
+
+                                    console.log("idx=", idx);
+
+                                    var bindInfo = {
+                                        path: '/UcExtraItem',
+                                        filters: [
+                                            new Filter("tenant_id", FilterOperator.EQ, that._tenantId),
+                                            new Filter("company_code", FilterOperator.EQ, that._companyCode),
+                                            new Filter("extra_class_number", FilterOperator.EQ, d["extra_class_number"]),
+                                            new Filter("use_flag", FilterOperator.EQ, true)
+                                        ],
+                                        sorters: [new Sorter("extra_number", false)],
+                                        template: new Item({
+                                            key: "{extra_number}", text: "{extra_name}"
+                                        })
+                                    };
+                                    that.byId("extraTable").getItems()[idx].getCells()[2].getItems()[0].bindItems(bindInfo);
+
+                                });
+
                                 console.log("extraData====", oViewModel.getProperty("/extra"));
                                 oView.setBusy(false);
                                 that._toShowMode();
@@ -1111,9 +1098,12 @@ sap.ui.define([
 
         openItemPopupInTable: function (oEvent) {
 
+            var oViewModel = this.getModel("viewModel");
+
             this.oItemDialog = new UcItemDialog({
                 multiSelection: false,
-                loadWhenOpen: false
+                loadWhenOpen: false,
+                largeEpItem: oViewModel.getProperty("/mst/ep_item_class_code")
             });
 
             this.oItemDialog.open();
@@ -1123,8 +1113,6 @@ sap.ui.define([
 
             console.log("sPath=", sPath);
             console.log("index=", index);
-
-            var oViewModel = this.getModel("viewModel");
 
             this.oItemDialog.attachEvent("apply", function (oEvent) {
                 // this.byId("savePlantCode").setValue(oEvent.getParameter("item").bizdivision_code);

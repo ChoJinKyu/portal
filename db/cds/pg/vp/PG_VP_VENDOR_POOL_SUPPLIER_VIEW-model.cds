@@ -15,6 +15,7 @@ entity Vp_Vendor_Pool_Supplier_View {
     supplier_company_code: String(10) @title: '공급업체 회사코드';
     supplier_company_name: String(240) @title: '공급업체회사명';  
     inactive_status_code: String(30) @title: '공급업체상태코드';    
+    inactive_status_name: String(240) @title: '공급업체상태명';    
     supeval_control_flag: Boolean   @title: '공급업체평가통제여부'; 
     supeval_control_start_date: Date   @title: '공급업체평가통제시작일자'; 
     supeval_control_end_date: Date   @title: '공급업체평가통제종료일자'; 

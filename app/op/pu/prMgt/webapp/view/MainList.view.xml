@@ -227,8 +227,21 @@
                         <Column id="mainColumnREQUESTOR_NAME" minScreenWidth="Desktop" hAlign="Center" width="5em">
                             <Text text="{I18N>/REQUESTOR_NAME}" />
                         </Column>
+                        <!-- <Column id="mainColumnREQUEST_DATET" minScreenWidth="Desktop" hAlign="Center" visible="false"  >
+                            <Text text="{I18N>/PR_REQUEST_DATE}" />
+                             <customData>
+                             <core:CustomData key="exportData" value="true" />
+                            </customData>    
+                        </Column>  -->
                         <Column id="mainColumnREQUEST_DATE" minScreenWidth="Desktop" hAlign="Center"    width="7.5em">
                             <Text text="{I18N>/PR_REQUEST_DATE}" />
+                            <customData>
+                            <core:CustomData key="bindName" value="local_update_dtm" />
+                            <!--EDM Type-->
+                            <core:CustomData key="type" value="DateTime" />
+                            <!--format 시간은 분단위 까지만 출력됩니다.-->
+                            <core:CustomData key="format" value="yyyy-mm-dd HH:mm:ss" />
+                        </customData>
                         </Column> 
                         <Column id="mainColumnPR_COUNT"  hAlign="Center"  width="7.5em" >
                             <Text text="{I18N>/PR_COUNT}" />
@@ -251,16 +264,15 @@
                                 <Text text="{list>pr_template_name}" hAlign="Begin" width="14em"/>                                
                                 <Text text="{list>requestor_department_name}" hAlign="Begin" width="6.5em"/> 
                                 <Text text="{list>requestor_name}"/>     
-                                <Text text="{list>request_dateT}"/>     
-                                <!-- <DatePicker dateValue="{path : 'list>request_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/> -->
-                                <!-- <Text text="{
+                                <!-- <Text text="{list>request_dateT}"/>                                      -->
+                                <Text text="{
                                                     path:'list>request_date',
                                                     type:'sap.ui.model.odata.type.DateTime',
                                                     formatOptions: {
                                                         UTC: true,
                                                         pattern: 'yyyy-MM-dd'
                                                     }
-                                                }" /> -->
+                                                }" />
                                 <Text text="{list>pr_progress_status_cnt_txt}"/>
                                 <Text text="{list>pr_create_status_name}"/>
                             </cells>

@@ -2,7 +2,11 @@
     select 
         a.tenant_id
         ,a.approval_type_code
-        ,d.code_name as approval_type
+        ,CM_GET_CODE_NAME_FUNC (a.tenant_id
+                                ,'DP_MD_APPROVAL_TYPE'
+                                ,a.approval_type_code
+                                ,'KO'
+                                ) as approval_type 
         ,a.approval_number
         ,a.approval_title
         ,'['||a.company_code||'] '||e.company_name as company_name
@@ -17,33 +21,28 @@
         ,'['||g.user_english_name||'] '||g.user_korean_name as requestor_name
         ,a.request_date
         ,a.approve_status_code
-        ,h.code_name as approve_status
+	    ,CM_GET_CODE_NAME_FUNC (a.tenant_id
+                                ,'CM_APPROVE_STATUS'
+                                ,a.approve_status_code
+                                ,'KO'
+                                ) as approve_status 
         ,a.approval_contents
         ,g.email_id
         ,k.sort_no
         ,c.mold_sequence
     from CM_APPROVAL_MST a
-    left join dp_md_approval_dtl b 
-        on a.approval_number = b.approval_number
-    left join dp_md_mst c on b.mold_id = c.mold_id
-    left join (select 
-            code, code_name, tenant_id
-            from CM_CODE_LNG 
-            where group_code='DP_MD_APPROVAL_TYPE' and LANGUAGE_CD='KO') d 
-    on d.code = a.approval_type_code and d.tenant_id = a.tenant_id
+    join dp_md_approval_dtl b 
+        on a.approval_number = b.approval_number and a.tenant_id = b.tenant_id
+    left join dp_md_mst c on b.mold_id = c.mold_id and b.tenant_id = c.tenant_id
     left join cm_org_company e on e.company_code = a.company_code
     left join cm_pur_operation_org f on f.org_code = a.org_code and f.company_code=a.company_code
     inner join cm_pur_org_type_mapping j on f.tenant_id = j.tenant_id and f.org_type_code = j.org_type_code and j.process_type_code='DP05' 
     left join cm_hr_employee g on g.employee_number = a.requestor_empno and g.tenant_id = a.tenant_id
-    left join (select 
-            code, code_name, tenant_id
-            from CM_CODE_LNG 
-            where group_code='CM_APPROVE_STATUS' and LANGUAGE_CD='KO') h 
-    on h.code = a.approve_status_code and h.tenant_id = a.tenant_id
     left join cm_user i on g.employee_number = i.employee_number and i.tenant_id = a.tenant_id
     inner join 
-    	(select t1.code, t1.sort_no, t1.group_code, t2.language_cd, t1.tenant_id from cm_code_dtl t1 join cm_code_lng t2 on 
-    		t1.tenant_id = t2.tenant_id and t1.code = t2.code and t1.group_code=t2.group_code
+        (select t1.code, t1.sort_no, t1.group_code, t2.language_cd, t1.tenant_id 
+            from cm_code_dtl t1 join cm_code_lng t2 
+            on t1.tenant_id = t2.tenant_id and t1.code = t2.code and t1.group_code = t2.group_code
     		where t2.group_code='DP_MD_APPROVAL_TYPE' 
     		and t2.language_cd='KO'
     	) k 

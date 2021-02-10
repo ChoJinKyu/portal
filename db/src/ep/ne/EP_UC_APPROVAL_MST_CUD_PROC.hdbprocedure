@@ -88,7 +88,7 @@ PROCEDURE EP_UC_APPROVAL_MST_CUD_PROC (
         , EXTRA_CLASS_NAME                  NVARCHAR(100)
         , EXTRA_NAME                        NVARCHAR(100)
         , BASE_EXTRA_RATE                   DECIMAL
-        , APPLY_EXTRA_RATE                  DECIMAL
+        , APPLY_EXTRA_RATE                  NVARCHAR(10)
         , APPLY_EXTRA_DESC                  NVARCHAR(1000)
         , UPDATE_ENABLE_FLAG                BOOLEAN   
         , LOCAL_CREATE_DTM                  SECONDDATE
@@ -188,7 +188,7 @@ PROCEDURE EP_UC_APPROVAL_MST_CUD_PROC (
         , EXTRA_CLASS_NAME                  NVARCHAR(100)
         , EXTRA_NAME                        NVARCHAR(100)
         , BASE_EXTRA_RATE                   DECIMAL
-        , APPLY_EXTRA_RATE                  DECIMAL
+        , APPLY_EXTRA_RATE                  NVARCHAR(10)
         , APPLY_EXTRA_DESC                  NVARCHAR(1000)
         , UPDATE_ENABLE_FLAG                BOOLEAN   
         , LOCAL_CREATE_DTM                  SECONDDATE
@@ -671,8 +671,10 @@ BEGIN
         ) 
         = (SELECT 
             BASE_EXTRA_RATE                   
-            , APPLY_EXTRA_RATE                  
-            , APPLY_EXTRA_DESC                          
+            -- , APPLY_EXTRA_RATE   
+            -- , CAST(APPLY_EXTRA_DESC AS DECIMAL) 
+            , TO_NUMBER(APPLY_EXTRA_RATE)                              
+            , APPLY_EXTRA_DESC   
             , CURRENT_TIMESTAMP                  
             , UPDATE_USER_ID                    
             , CURRENT_TIMESTAMP  
@@ -726,7 +728,9 @@ BEGIN
             , EXTRA_CLASS_NUMBER                
             , EXTRA_NAME                        
             , BASE_EXTRA_RATE                   
-            , APPLY_EXTRA_RATE                  
+            -- , APPLY_EXTRA_RATE     
+            -- , CAST(APPLY_EXTRA_RATE AS DECIMAL)   
+            , TO_NUMBER(APPLY_EXTRA_RATE)          
             , APPLY_EXTRA_DESC    
             , TRUE     
             , CURRENT_TIMESTAMP                  
@@ -758,11 +762,33 @@ BEGIN
     AND NET_PRICE_CONTRACT_DOCUMENT_NO = :V_NET_PRICE_CONTRACT_DOCUMENT_NO
     AND NET_PRICE_CONTRACT_DEGREE = :V_NET_PRICE_CONTRACT_DEGREE;
 
-    O_E_TABLE = SELECT A.*, '' AS ROW_STATE FROM EP_UC_APPROVAL_EXTRA_DETAIL_VIEW AS A
-    WHERE TENANT_ID = :V_TENANT_ID
-    AND COMPANY_CODE = :V_COMPANY_CODE
-    AND NET_PRICE_CONTRACT_DOCUMENT_NO = :V_NET_PRICE_CONTRACT_DOCUMENT_NO
-    AND NET_PRICE_CONTRACT_DEGREE = :V_NET_PRICE_CONTRACT_DEGREE;    
+    O_E_TABLE = SELECT 
+        TENANT_ID                           
+        , COMPANY_CODE                      
+        , NET_PRICE_CONTRACT_DOCUMENT_NO    
+        , NET_PRICE_CONTRACT_DEGREE         
+        , NET_PRICE_CONTRACT_EXTRA_SEQ      
+        , EXTRA_NUMBER                      
+        , EXTRA_CLASS_NUMBER                
+        , EXTRA_CLASS_NAME                  
+        , EXTRA_NAME                        
+        , BASE_EXTRA_RATE                   
+        -- , APPLY_EXTRA_RATE
+        , CAST(APPLY_EXTRA_RATE AS NVARCHAR) AS APPLY_EXTRA_RATE                  
+        , APPLY_EXTRA_DESC                  
+        , UPDATE_ENABLE_FLAG                   
+        , LOCAL_CREATE_DTM                  
+        , LOCAL_UPDATE_DTM                  
+        , CREATE_USER_ID                    
+        , UPDATE_USER_ID                    
+        , SYSTEM_CREATE_DTM                 
+        , SYSTEM_UPDATE_DTM                    
+        , '' AS ROW_STATE                            
+        FROM EP_UC_APPROVAL_EXTRA_DETAIL_VIEW AS A
+        WHERE TENANT_ID = :V_TENANT_ID
+        AND COMPANY_CODE = :V_COMPANY_CODE
+        AND NET_PRICE_CONTRACT_DOCUMENT_NO = :V_NET_PRICE_CONTRACT_DOCUMENT_NO
+        AND NET_PRICE_CONTRACT_DEGREE = :V_NET_PRICE_CONTRACT_DEGREE;    
 
     
 END;

@@ -7,8 +7,8 @@ PROCEDURE EP_UC_QUOTATION_HD_SAVE_PROC
                         ,ORG_NAME                   NVARCHAR(10)    
                         ,CONST_NAME                 NVARCHAR(200)   
                         ,EP_ITEM_CODE               NVARCHAR(200)   
-                        ,CONST_START_DATE           Date            
-                        ,CONST_END_DATE             Date            
+                        ,CONST_START_DATE           DATE            
+                        ,CONST_END_DATE             DATE           
                         ,QUOTATION_STATUS_CODE      NVARCHAR(30)    
                         ,QUOTATION_STATUS_NAME      NVARCHAR(30)    
                         ,SUPPLIER_CODE              NVARCHAR(30)    
@@ -19,13 +19,13 @@ PROCEDURE EP_UC_QUOTATION_HD_SAVE_PROC
                         ,PURCHASING_DEPARTMENT_CODE NVARCHAR(50)    
                         ,PURCHASING_DEPARTMENT_NAME NVARCHAR(50)    
                         ,PR_NUMBER                  NVARCHAR(50)    
-                        ,QUOTATION_WRITE_DATE       Date            
+                        ,QUOTATION_WRITE_DATE       DATE            
                         ,REMARK                     NVARCHAR(3000)  
                         ,CURRENCY_CODE              NVARCHAR(15)    
                         ,ATTCH_GROUP_NUMBER         NVARCHAR(100)   
                         ,SUPPLIER_WRITE_FLAG        Boolean         
                         ,COMPLETION_FLAG            Boolean         
-                        ,COMPLETION_DATE            Date            
+                        ,COMPLETION_DATE            DATE            
                         ,FACILITY_PERSON_EMPNO      NVARCHAR(30)    
                         ,FACILITY_PERSON_NAME       NVARCHAR(30)    
                         ,FACILITY_DEPARTMENT_CODE   NVARCHAR(50)    
@@ -47,7 +47,7 @@ PROCEDURE EP_UC_QUOTATION_HD_SAVE_PROC
                         ,ITEM_DESC                        NVARCHAR(200)
                         ,SPEC_DESC                        NVARCHAR(1000)
                         ,QUOTATION_QUANTITY               DECIMAL   
-                        ,EXTRA_RATE                       DECIMAL   
+                        ,EXTRA_RATE                       NVARCHAR(100)   
                         ,UNIT                             NVARCHAR(3) 
                         ,CURRENCY_CODE                    NVARCHAR(15)
                         ,CURRENCY_NAME                    NVARCHAR(15)
@@ -84,7 +84,7 @@ PROCEDURE EP_UC_QUOTATION_HD_SAVE_PROC
                         NET_PRICE_CONTRACT_EXTRA_SEQ DECIMAL,
                         EXTRA_NUMBER NVARCHAR(30),
                         EXTRA_CLASS_NUMBER NVARCHAR(30),
-                        EXTRA_RATE DECIMAL,
+                        EXTRA_RATE NVARCHAR(100),
                         REMARK NVARCHAR(3000),
                         LOCAL_CREATE_DTM SECONDDATE,
                         LOCAL_UPDATE_DTM SECONDDATE,
@@ -102,8 +102,8 @@ PROCEDURE EP_UC_QUOTATION_HD_SAVE_PROC
                         ,ORG_NAME                   NVARCHAR(10)    
                         ,CONST_NAME                 NVARCHAR(200)   
                         ,EP_ITEM_CODE               NVARCHAR(200)   
-                        ,CONST_START_DATE           Date            
-                        ,CONST_END_DATE             Date            
+                        ,CONST_START_DATE           DATE           
+                        ,CONST_END_DATE             DATE            
                         ,QUOTATION_STATUS_CODE      NVARCHAR(30)    
                         ,QUOTATION_STATUS_NAME      NVARCHAR(30)    
                         ,SUPPLIER_CODE              NVARCHAR(30)    
@@ -114,13 +114,13 @@ PROCEDURE EP_UC_QUOTATION_HD_SAVE_PROC
                         ,PURCHASING_DEPARTMENT_CODE NVARCHAR(50)    
                         ,PURCHASING_DEPARTMENT_NAME NVARCHAR(50)    
                         ,PR_NUMBER                  NVARCHAR(50)    
-                        ,QUOTATION_WRITE_DATE       Date            
+                        ,QUOTATION_WRITE_DATE       DATE            
                         ,REMARK                     NVARCHAR(3000)  
                         ,CURRENCY_CODE              NVARCHAR(15)    
                         ,ATTCH_GROUP_NUMBER         NVARCHAR(100)   
                         ,SUPPLIER_WRITE_FLAG        Boolean         
                         ,COMPLETION_FLAG            Boolean         
-                        ,COMPLETION_DATE            Date            
+                        ,COMPLETION_DATE            DATE            
                         ,FACILITY_PERSON_EMPNO      NVARCHAR(30)    
                         ,FACILITY_PERSON_NAME       NVARCHAR(30)    
                         ,FACILITY_DEPARTMENT_CODE   NVARCHAR(50)    
@@ -143,7 +143,7 @@ PROCEDURE EP_UC_QUOTATION_HD_SAVE_PROC
                         ,ITEM_DESC                        NVARCHAR(200)
                         ,SPEC_DESC                        NVARCHAR(1000)
                         ,QUOTATION_QUANTITY               DECIMAL   
-                        ,EXTRA_RATE                       DECIMAL   
+                        ,EXTRA_RATE                       NVARCHAR(100)    
                         ,UNIT                             NVARCHAR(3) 
                         ,CURRENCY_CODE                    NVARCHAR(15)
                         ,CURRENCY_NAME                    NVARCHAR(15)
@@ -182,7 +182,7 @@ PROCEDURE EP_UC_QUOTATION_HD_SAVE_PROC
                         NET_PRICE_CONTRACT_EXTRA_SEQ DECIMAL,
                         EXTRA_NUMBER NVARCHAR(30),
                         EXTRA_CLASS_NUMBER NVARCHAR(30),
-                        EXTRA_RATE DECIMAL,
+                        EXTRA_RATE NVARCHAR(100),
                         REMARK NVARCHAR(3000),
                         LOCAL_CREATE_DTM SECONDDATE,
                         LOCAL_UPDATE_DTM SECONDDATE,
@@ -215,10 +215,10 @@ BEGIN
     DECLARE V_CONST_QUOTATION_ITEM_NUMBER NVARCHAR(30);
 
 
-    --SELECT 
-    --TENANT_ID, COMPANY_CODE, CONST_QUOTATION_NUMBER, EP_CONST_QUOTATION_ITEM_NUMBER_SEQ.NEXTVAL as CONST_QUOTATION_ITEM_NUMBER   
-    --INTO V_TENANT_ID, V_COMPANY_CODE, V_CONST_QUOTATION_NUMBER,V_CONST_QUOTATION_ITEM_NUMBER
-    --FROM :I_D_TABLE;
+    SELECT 
+    TENANT_ID, COMPANY_CODE, CONST_QUOTATION_NUMBER  
+    INTO V_TENANT_ID, V_COMPANY_CODE, V_CONST_QUOTATION_NUMBER
+    FROM :I_M_TABLE;
 
     --SELECT 
     --TENANT_ID, CODPANY_CODE, CONST_QUOTATION_NUMBER, CONST_QUOTATION_ITEM_NUMBER
@@ -276,7 +276,8 @@ BEGIN
         , COMPLETION_DATE     
         , FACILITY_PERSON_EMPNO       
         , FACILITY_DEPARTMENT_CODE 
-        , COMPLETION_ATTCH_GROUP_NUMBER                    
+        , COMPLETION_ATTCH_GROUP_NUMBER 
+        , QUOTATION_STATUS_CODE                   
         , LOCAL_UPDATE_DTM                  
         , UPDATE_USER_ID                    
         , SYSTEM_UPDATE_DTM    
@@ -284,15 +285,16 @@ BEGIN
     = (SELECT 
             CONST_NAME                  
         , EP_ITEM_CODE               
-        , CONST_START_DATE            
-        , CONST_END_DATE              
+        , CONST_START_DATE          
+        , CONST_END_DATE             
         , REMARK
         , ATTCH_GROUP_NUMBER
         , COMPLETION_FLAG       
         , COMPLETION_DATE     
         , FACILITY_PERSON_EMPNO       
         , FACILITY_DEPARTMENT_CODE 
-        , COMPLETION_ATTCH_GROUP_NUMBER                              
+        , COMPLETION_ATTCH_GROUP_NUMBER    
+        , QUOTATION_STATUS_CODE                          
         , CURRENT_TIMESTAMP                  
         , UPDATE_USER_ID                    
         , CURRENT_TIMESTAMP  
@@ -331,6 +333,11 @@ BEGIN
         FROM :I_D_TABLE A
         WHERE ROW_STATE = 'D');
 
+        DELETE FROM EP_UC_QUOTATION_EXTRA B
+        WHERE (B.TENANT_ID, B.COMPANY_CODE, B.CONST_QUOTATION_NUMBER, B.CONST_QUOTATION_ITEM_NUMBER)
+        IN (SELECT A.TENANT_ID, A.COMPANY_CODE, A.CONST_QUOTATION_NUMBER, A.CONST_QUOTATION_ITEM_NUMBER
+        FROM :I_R_TABLE A);
+
     END IF;
 
 
@@ -343,7 +350,8 @@ BEGIN
             , MATERIAL_AMOUNT             
             , LABOR_NET_PRICE             
             , LABOR_AMOUNT                
-            , SUM_AMOUNT                                          
+            , SUM_AMOUNT    
+            , EXTRA_RATE                                      
             , LOCAL_UPDATE_DTM                  
             , UPDATE_USER_ID                    
             , SYSTEM_UPDATE_DTM    
@@ -354,7 +362,8 @@ BEGIN
             , MATERIAL_AMOUNT             
             , LABOR_NET_PRICE             
             , LABOR_AMOUNT                
-            , SUM_AMOUNT                            
+            , SUM_AMOUNT  
+            , to_number(EXTRA_RATE)                          
             , CURRENT_TIMESTAMP                  
             , UPDATE_USER_ID                    
             , CURRENT_TIMESTAMP  
@@ -421,7 +430,7 @@ BEGIN
             , ITEM_DESC
             , SPEC_DESC
             , QUOTATION_QUANTITY
-            , EXTRA_RATE
+            , to_number(EXTRA_RATE)
             , UNIT
             , CURRENCY_CODE
             , MATERIAL_APPLY_FLAG
@@ -464,6 +473,7 @@ BEGIN
     WHERE ROW_STATE = 'D';    
 
 
+
     IF (V_R_UPDATE_ROW_COUNT > 0) THEN
 
         UPDATE EP_UC_QUOTATION_EXTRA B
@@ -478,7 +488,7 @@ BEGIN
         = (SELECT 
               EXTRA_NUMBER 
             , EXTRA_CLASS_NUMBER
-            , EXTRA_RATE                              
+            , to_number(EXTRA_RATE)                            
             , CURRENT_TIMESTAMP                  
             , UPDATE_USER_ID                    
             , CURRENT_TIMESTAMP  
@@ -502,6 +512,11 @@ BEGIN
 
     IF (V_R_CREATE_ROW_COUNT > 0) THEN
 
+        DELETE FROM EP_UC_QUOTATION_EXTRA B
+        WHERE (B.TENANT_ID, B.COMPANY_CODE, B.CONST_QUOTATION_NUMBER, B.CONST_QUOTATION_ITEM_NUMBER)
+        IN (SELECT A.TENANT_ID, A.COMPANY_CODE, A.CONST_QUOTATION_NUMBER, A.CONST_QUOTATION_ITEM_NUMBER
+        FROM :I_R_TABLE A);
+        
         INSERT INTO EP_UC_QUOTATION_EXTRA (
             TENANT_ID
             , COMPANY_CODE
@@ -533,7 +548,7 @@ BEGIN
             , NET_PRICE_CONTRACT_EXTRA_SEQ
             , EXTRA_NUMBER
             , EXTRA_CLASS_NUMBER
-            , EXTRA_RATE
+            , to_number(EXTRA_RATE)
             , REMARK
             , CURRENT_TIMESTAMP                  
             , CURRENT_TIMESTAMP                  
@@ -546,22 +561,111 @@ BEGIN
 
     END IF;   
 
-    O_M_TABLE = SELECT A.*, '' AS ROW_STATE FROM EP_UC_QUOTATION_LIST_VIEW AS A
+    O_M_TABLE = SELECT  A.TENANT_ID                  
+                        ,A.COMPANY_CODE               
+                        ,A.CONST_QUOTATION_NUMBER     
+                        ,A.ORG_CODE                   
+                        ,A.ORG_NAME                   
+                        ,A.CONST_NAME                 
+                        ,A.EP_ITEM_CODE               
+                        ,A.CONST_START_DATE           
+                        ,A.CONST_END_DATE             
+                        ,A.QUOTATION_STATUS_CODE      
+                        ,A.QUOTATION_STATUS_NAME      
+                        ,A.SUPPLIER_CODE              
+                        ,A.BUYER_EMPNO                
+                        ,A.BUYER_NAME                 
+                        ,A.CONST_PERSON_EMPNO         
+                        ,A.CONST_PERSON_NAME          
+                        ,A.PURCHASING_DEPARTMENT_CODE 
+                        ,A.PURCHASING_DEPARTMENT_NAME 
+                        ,A.PR_NUMBER                  
+                        ,A.QUOTATION_WRITE_DATE       
+                        ,A.REMARK                     
+                        ,A.CURRENCY_CODE              
+                        ,A.ATTCH_GROUP_NUMBER         
+                        ,A.SUPPLIER_WRITE_FLAG        
+                        ,A.COMPLETION_FLAG            
+                        ,A.COMPLETION_DATE            
+                        ,A.FACILITY_PERSON_EMPNO      
+                        ,A.FACILITY_PERSON_NAME       
+                        ,A.FACILITY_DEPARTMENT_CODE   
+                        ,A.COMPLETION_ATTCH_GROUP_NUMBER    
+                        ,A.LOCAL_CREATE_DTM 
+                        ,A.LOCAL_UPDATE_DTM 
+                        ,A.CREATE_USER_ID 
+                        ,A.UPDATE_USER_ID 
+                        ,A.SYSTEM_CREATE_DTM 
+                        ,A.SYSTEM_UPDATE_DTM 
+                        ,'' AS ROW_STATE 
+    FROM EP_UC_QUOTATION_LIST_VIEW AS A
     WHERE TENANT_ID = V_TENANT_ID
     AND COMPANY_CODE = V_COMPANY_CODE
     AND CONST_QUOTATION_NUMBER = V_CONST_QUOTATION_NUMBER;
 
-    O_D_TABLE = SELECT A.*, '' AS ROW_STATE FROM EP_UC_QUOTATION_DTL_VIEW AS A
+    O_D_TABLE = SELECT  A.TENANT_ID                        
+                        ,A.COMPANY_CODE                     
+                        ,A.CONST_QUOTATION_NUMBER           
+                        ,A.CONST_QUOTATION_ITEM_NUMBER      
+                        ,A.ITEM_SEQUENCE                    
+                        ,A.EP_ITEM_CODE                     
+                        ,A.ITEM_DESC                        
+                        ,A.SPEC_DESC                        
+                        ,A.QUOTATION_QUANTITY               
+                        ,A.EXTRA_RATE                       
+                        ,A.UNIT                             
+                        ,A.CURRENCY_CODE                    
+                        ,A.CURRENCY_NAME                    
+                        ,A.MATERIAL_APPLY_FLAG              
+                        ,A.LABOR_APPLY_FLAG                 
+                        ,A.NET_PRICE_CHANGE_ALLOW_FLAG      
+                        ,A.BASE_MATERIAL_NET_PRICE          
+                        ,A.BASE_LABOR_NET_PRICE             
+                        ,A.MATERIAL_NET_PRICE               
+                        ,A.MATERIAL_AMOUNT                  
+                        ,A.LABOR_NET_PRICE                  
+                        ,A.LABOR_AMOUNT                     
+                        ,A.SUM_AMOUNT                       
+                        ,A.REMARK                           
+                        ,A.NET_PRICE_CONTRACT_DOCUMENT_NO   
+                        ,A.NET_PRICE_CONTRACT_DEGREE        
+                        ,A.NET_PRICE_CONTRACT_ITEM_NUMBER   
+                        ,A.SUPPLIER_ITEM_CREATE_FLAG        
+                        ,A.LOCAL_CREATE_DTM 
+                        ,A.LOCAL_UPDATE_DTM 
+                        ,A.CREATE_USER_ID 
+                        ,A.UPDATE_USER_ID 
+                        ,A.SYSTEM_CREATE_DTM 
+                        ,A.SYSTEM_UPDATE_DTM 
+                        , '' AS ROW_STATE 
+    FROM EP_UC_QUOTATION_DTL_VIEW AS A
     WHERE TENANT_ID = V_TENANT_ID
     AND COMPANY_CODE = V_COMPANY_CODE
-    AND CONST_QUOTATION_NUMBER = V_CONST_QUOTATION_NUMBER
-    AND CONST_QUOTATION_ITEM_NUMBER = CONST_QUOTATION_ITEM_NUMBER;
+    AND CONST_QUOTATION_NUMBER = V_CONST_QUOTATION_NUMBER;
 
-    O_R_TABLE = SELECT A.*, '' AS ROW_STATE FROM EP_UC_QUOTATION_EXTRA AS A
+    O_R_TABLE = SELECT  A.TENANT_ID 
+                        ,A.COMPANY_CODE  
+                        ,A.CONST_QUOTATION_NUMBER 
+                        ,A.CONST_QUOTATION_ITEM_NUMBER 
+                        ,A.APPLY_EXTRA_SEQUENCE 
+                        ,A.NET_PRICE_CONTRACT_DOCUMENT_NO 
+                        ,A.NET_PRICE_CONTRACT_DEGREE
+                        ,A.NET_PRICE_CONTRACT_EXTRA_SEQ 
+                        ,A.EXTRA_NUMBER
+                        ,A.EXTRA_CLASS_NUMBER 
+                        ,A.EXTRA_RATE 
+                        ,A.REMARK                      
+                        ,A.LOCAL_CREATE_DTM 
+                        ,A.LOCAL_UPDATE_DTM 
+                        ,A.CREATE_USER_ID 
+                        ,A.UPDATE_USER_ID 
+                        ,A.SYSTEM_CREATE_DTM 
+                        ,A.SYSTEM_UPDATE_DTM 
+                        , '' AS ROW_STATE 
+    FROM EP_UC_QUOTATION_EXTRA AS A
     WHERE TENANT_ID = V_TENANT_ID
     AND COMPANY_CODE = V_COMPANY_CODE
-    AND CONST_QUOTATION_NUMBER = V_CONST_QUOTATION_NUMBER
-    AND CONST_QUOTATION_ITEM_NUMBER = CONST_QUOTATION_ITEM_NUMBER;
+    AND CONST_QUOTATION_NUMBER = V_CONST_QUOTATION_NUMBER;
 
     
 

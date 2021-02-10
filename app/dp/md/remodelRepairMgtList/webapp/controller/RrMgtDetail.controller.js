@@ -96,11 +96,12 @@ sap.ui.define([
                     }
                 });
             }else{ // NEW 일 경우 MOLD 정보만 조회한다. 
-                oModel.read("/remodelRepairNew(tenant_id='" + "L2101"
+                oModel.read("/remodelRepairNew(tenant_id='" + session.TENANT_ID
                             + "',mold_id='" + oArgs.mold_id + "')", {
                             filters: [],
                             success: function (oData) { 
 
+                            oModel.setProperty("/tenant_id", session.TENANT_ID); 
                             oModel.setProperty("/mold_id",  oArgs.mold_id ); 
                             oModel.setProperty("/create_user_id", session.USER_ID); 
                             oModel.setProperty("/user_local_name", session.EMPLOYEE_NAME); 
@@ -132,21 +133,31 @@ sap.ui.define([
             this.getRouter().navTo("rrMgtList", {}, true); 
         },
 
+        getStrDate : function(date){
+            if(date != null){
+               var str = this.dateFormatter.toDateString(date).split("-");
+              return str[0] + str[1] + str[2]   
+            }else{
+              return null;
+            }
+        },
+
+
+
         onPageDraftButtonPress: function () {
-            var mst = this.getModel("rrMgt").getData()
-                , session = this.getSessionUserInfo();
+            var mst = this.getModel("rrMgt").getData(); 
             var data = {
                 inputData: {
                     repairItem: {
-                        tenant_id: session.tenant_id
+                        tenant_id: mst.tenant_id
                         , repair_request_number: mst.repair_request_number
                         , mold_id: mst.mold_id
                         , repair_desc: mst.repair_desc
                         , repair_reason: mst.repair_reason
-                        , mold_moving_plan_date: mst.mold_moving_plan_date
-                        , mold_complete_plan_date: mst.mold_complete_plan_date
-                        , mold_moving_result_date: mst.mold_moving_result_date
-                        , mold_complete_result_date: mst.mold_complete_result_date
+                        , mold_moving_plan_date: this.getStrDate(mst.mold_moving_plan_date)
+                        , mold_complete_plan_date: this.getStrDate(mst.mold_complete_plan_date)
+                        , mold_moving_result_date: this.getStrDate(mst.mold_moving_result_date)
+                        , mold_complete_result_date: this.getStrDate(mst.mold_complete_result_date)
                         , repair_progress_status_code: 'RS'
                         , repair_type_code: 'F'
                     }
@@ -182,10 +193,10 @@ sap.ui.define([
                         , mold_id: mst.mold_id
                         , repair_desc: mst.repair_desc
                         , repair_reason: mst.repair_reason
-                        , mold_moving_plan_date: mst.mold_moving_plan_date
-                        , mold_complete_plan_date: mst.mold_complete_plan_date
-                        , mold_moving_result_date: mst.mold_moving_result_date
-                        , mold_complete_result_date: mst.mold_complete_result_date
+                        , mold_moving_plan_date: this.getStrDate(mst.mold_moving_plan_date)
+                        , mold_complete_plan_date: this.getStrDate(mst.mold_complete_plan_date)
+                        , mold_moving_result_date: this.getStrDate(mst.mold_moving_result_date)
+                        , mold_complete_result_date: this.getStrDate(mst.mold_complete_result_date)
                         , repair_progress_status_code: 'RA'
                         , repair_type_code: 'F'
                     }
@@ -201,6 +212,10 @@ sap.ui.define([
         },
         // confirm 창 띄우고 결과값 받음 
         _callSave : function(msg, data){
+
+            console.log("senddata>>>" , data);
+
+
             var oView = this.getView();
             var that = this;
               MessageBox.confirm(msg, {
@@ -214,6 +229,7 @@ sap.ui.define([
                                     oView.setBusy(false);
                                     MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
                                 if (result.resultCode > -1) {
+                                    console.log("result>>>> ", result);
                                     that._srchDetail(result);
                                 }
                             });

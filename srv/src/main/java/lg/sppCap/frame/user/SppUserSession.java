@@ -95,7 +95,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 정보를 추출
-     * @param attrName : String 사용자 정보 속성 명
+     * @param attrName : String - 사용자 정보 속성 명
      * @return String 사용자 속성 값
      */
     public String getSppUserAttribute(String attrName) {
@@ -119,8 +119,8 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 정보를 추출
-     * @param attrName : String 사용자 정보 속성 명
-     * @return List<String> 사용자 속성 값 List
+     * @param attrName : String - 사용자 정보 속성 명
+     * @return List<String> - 사용자 속성 값 List
      */
     public List<String> getSppUserAttributeList(String attrName) {
         return this.xsuaaUserInfo.getAttributeValues(attrName).isEmpty() ? null : this.xsuaaUserInfo.getAttributeValues(attrName);
@@ -128,7 +128,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 아이디 반환
-     * @return String User ID
+     * @return String - User ID
      */
     public String getUserId() {
         return this.getSppUserAttribute(ATTR_USER_ID);
@@ -136,7 +136,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 이메일 반환
-     * @return String User Email
+     * @return String - User Email
      */
     public String getEmail() {
         return this.getSppUserAttribute(ATTR_EMAIL);
@@ -148,7 +148,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 언어코드 반환
-     * @return String User Language Code
+     * @return String - User Language Code
      */
     public String getLanguageCode() {
         return this.getSppUserAttribute(ATTR_LANGUAGE_CODE);
@@ -156,7 +156,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 통화코드 반환
-     * @return String User Currency Code
+     * @return String - User Currency Code
      */
     public String getCurrencyCode() {
         return this.getSppUserAttribute(ATTR_CURRENCY_CODE);
@@ -164,7 +164,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 Tenant Id 반환
-     * @return String User Tenant Id
+     * @return String - User Tenant Id
      */
     public String getTenantId() {
         return this.getSppUserAttribute(ATTR_TENANT_ID);
@@ -172,7 +172,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 회사코드 반환
-     * @return String User Company Code 
+     * @return String - User Company Code 
      */
     public String getCompanyCode() {
         return this.getSppUserAttribute(ATTR_COMPANY_CODE);
@@ -180,7 +180,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 사번 반환
-     * @return String User Employee Number
+     * @return String - User Employee Number
      */
     public String getEmployeeNumber() {
         return this.getSppUserAttribute(ATTR_EMPLOYEE_NUMBER);
@@ -188,7 +188,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 이름 반환
-     * @return String User Employee Name
+     * @return String - User Employee Name
      */
     public String getEmployeeName() {
         return this.getSppUserAttribute(ATTR_EMPLOYEE_NAME);
@@ -196,7 +196,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 영문이름 반환
-     * @return String User English Employee Name
+     * @return String - User English Employee Name
      */
     public String getEnglishEmployeeName() {
         return this.getSppUserAttribute(ATTR_ENGLISH_EMPLOYEE_NAME);
@@ -204,7 +204,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 상태코드 반환
-     * @return String User Employee Status Code
+     * @return String - User Employee Status Code
      */
     public String getEmployeeStatusCode() {
         return this.getSppUserAttribute(ATTR_EMPLOYEE_STATUS_CODE);
@@ -212,7 +212,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 타임존코드 반환
-     * @return String User Timezone Code
+     * @return String - User Timezone Code
      */
     public String getTimezoneCode() {
         return this.getSppUserAttribute(ATTR_TIMEZONE_CODE);
@@ -220,7 +220,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 날짜포멧 반환
-     * @return String User Date Format Type
+     * @return String - User Date Format Type
      */
     public String getDateFormatType() {
         return this.getSppUserAttribute(ATTR_DATE_FORMAT_TYPE);
@@ -228,7 +228,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 숫자 반환
-     * @return String User Digis Format Type
+     * @return String - User Digis Format Type
      */
     public String getDigisFormatType() {
         return this.getSppUserAttribute(ATTR_DIGITS_FORMAT_TYPE);
@@ -236,7 +236,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 Role 반환
-     * @return String User Role
+     * @return String - User Role
      */
     public String getRoles() {
         return this.getSppUserAttribute(ATTR_ROLES);
@@ -244,7 +244,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 Role 반환
-     * @return List<String> User Role List
+     * @return List<String> - User Role List
      */
     public List<String> getRolesList() {
         return Lists.newArrayList(this.xsuaaUserInfo.getRoles());
@@ -253,8 +253,8 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo param에 해당하는 role이 있는지 boolean으로 반환
-     * @param role String Role 코드
-     * @return Boolean 사용자에게 role이 있는지 여부 반환
+     * @param role : String - Role 코드
+     * @return Boolean - 사용자에게 role이 있는지 여부 반환
      */
     public Boolean hasRole(String role) {
         return this.xsuaaUserInfo.hasRole(role);
@@ -263,7 +263,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 정보 Map으로 반환
-     * @return Map<String, String> User Info
+     * @return Map<String, String> - User Info
      */
     public Map<String, String> getUserSessionInfo(){
         return this.getXsuaaUserMap();
@@ -272,7 +272,7 @@ public class SppUserSession {
 
     /**
      * XsuaaUserInfo 에서 사용자 정보 Map으로 반환
-     * @return Map<String, String> User Info
+     * @return Map<String, String> - User Info
      */
     private Map<String, String> getXsuaaUserMap() {
         Map<String, String> userInfo = new HashMap<String, String>();

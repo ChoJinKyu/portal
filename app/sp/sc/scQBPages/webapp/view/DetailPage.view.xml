@@ -541,6 +541,7 @@
                                                                             templateShareable:true,
                                                                             sorter: { path: 'org>org_code' }
                                                                         }"
+                                                                        onfocusout=".onfocusoutMultiInput_org"
                                                                         >
                                                                         <core:ListItem key="{org>org_code}" text="{org>org_name}"  additionalText="{org>org_code}"/>
                                                                         <!-- <tokens>

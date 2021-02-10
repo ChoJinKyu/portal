@@ -111,7 +111,7 @@ service UcContractMgtV4Service {
         extra_class_name               : String;
         extra_name                     : String;
         base_extra_rate                : Decimal;
-        apply_extra_rate               : Decimal;
+        apply_extra_rate               : String;
         apply_extra_desc               : String;
         update_enable_flag             : Boolean;
         local_create_dtm               : DateTime;

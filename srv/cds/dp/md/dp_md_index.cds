@@ -10,6 +10,7 @@ using from './moldApprovalList/moldRecepitApproval-service';
 using from './assetList/assetList-service';
 using from './remodelRepairMgtList/rrMgtList-service';
 using from './remodelRepairMgt/remodelRepairMgt-service';
+using from './remodelRepairStatusInquiry/remodelRepairStatusInquiry-service';
 //Util
 using from './util/moldItemSelection-service';
 using from './util/supplierSelection-service';

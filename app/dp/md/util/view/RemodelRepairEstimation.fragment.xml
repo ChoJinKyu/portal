@@ -1,0 +1,741 @@
+<core:FragmentDefinition 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns="sap.m" 
+	xmlns:uxap="sap.uxap" 
+	xmlns:layout="sap.ui.layout" 
+    xmlns:form="sap.ui.layout.form"
+    xmlns:table="sap.ui.table" 
+	xmlns:core="sap.ui.core"
+    core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
+	height="100%">
+
+	<uxap:ObjectPageLayout 
+		toggleHeaderOnTitleClick="true"
+		alwaysShowContentHeader = "false"
+		preserveHeaderStateOnScroll="false"
+		headerContentPinnable="true"
+		isChildPage="true"
+		upperCaseAnchorBar="false"
+		showTitleInHeaderContent="false"
+		showEditHeaderButton="true" 
+		showFooter="true">
+		<uxap:headerTitle>
+			<uxap:ObjectPageDynamicHeaderTitle>
+                <uxap:heading>
+                    <HBox alignItems="Center">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".handleClose"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <Title text="Remodel/Repair Estimation" wrapping="true" class="" />
+                    </HBox>
+                </uxap:heading>
+
+                <uxap:navigationActions>
+                    
+                </uxap:navigationActions>
+
+            </uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+			<FlexBox wrap="Wrap" >
+				<layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<Label text="Remodel/Repair Factor: " />
+						<Text text="항합성"/>
+					</layout:HorizontalLayout>
+					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<Label text="Remodel/Repair Detail: "/>
+						<Text text="[DV][Applied P/N]Pluste Rear"/>
+					</layout:HorizontalLayout>
+					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
+						<Label text="Remarks: "/>
+						<Text text="C1 Improvement of Structure"/>
+					</layout:HorizontalLayout>
+				</layout:VerticalLayout>
+			</FlexBox>
+		</uxap:headerContent>
+
+		<uxap:sections id="testFrag">
+			<uxap:ObjectPageSection titleUppercase="false" title="General Info">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+                        <uxap:blocks>
+                            <form:SimpleForm
+                                maxContainerCols="2"
+                                editable="true"
+                                layout="ResponsiveGridLayout"
+                                adjustLabelSpan="false"
+                                labelSpanL="4"
+                                labelSpanM="4"
+                                emptySpanL="0"
+                                emptySpanM="0"
+                                columnsL="2"
+                                columnsM="2">
+                                <form:content>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="MJU66226501" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/MODEL', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="{master>/model}" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/ITEM_NAME', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="Tube,Inject" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="Etc" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/ORDER_VENDOR', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="대일화학" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/PROD_VENDOR', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="대일화학" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/PART_NO1', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/PART_NO2', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/FAMILY_PART_NUMBER', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/CAV', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="1" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/DIE_MACHINE', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="60" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/MATERIAL', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/QTY', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/SAMPLE_QTY', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="2" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/ACCOUNT_CODE', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="73210109" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/NULL', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="EAF J200436_MJU662265" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/REPAIR_AMOUNT', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="710,000" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/ISSUE_DATE', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="2019-03-15" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/MOVE_PLAN', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="2019-02-15" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/MOVE_RESULT', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/SUPPLIER', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="대일화학" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/COMPLETE_PLAN', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="2019-02-19" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                    <VBox height="4rem">
+                                        <Label text="{path:'I18N>/COMPLETE_RESULT', formatter:'I18NFormatter'}: " design="Bold" />
+                                        <Text text="" />
+                                        <layoutData>
+                                            <layout:GridData
+                                                span="XL2 L3 M6 S12" />
+                                        </layoutData>
+                                    </VBox>
+                                </form:content>
+                            </form:SimpleForm>
+						</uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection titleUppercase="false" title="Labor Cost">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+                        <uxap:blocks>
+
+                            <!-- <table:Table id="laborCostTable"
+                                selectionMode="None"
+                                fixedColumnCount="7"
+                                visibleRowCountMode="Auto"
+                                rows="{dse>/MoldMasterSpec}"
+                                cellClick=".onCellClick"
+                                rowSelectionChange=".onCheck">
+                                <table:columns>
+                                    <table:Column width="5rem" hAlign="Center">
+                                        <table:multiLabels>
+                                            <Label visible="false" />
+                                            <Label text="{path:'I18N>/NO', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>company_code}"/> 
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="15rem" hAlign="Center">
+                                        <table:multiLabels>
+                                            <Label visible="false" />
+                                            <Label text="{path:'I18N>/PROCESS_NAME', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>org_code}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="7rem"  hAlign="Center">
+                                        <table:multiLabels>
+                                            <Label visible="false" />
+                                            <Label text="{path:'I18N>/PREFERENCE', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template >
+                                            <Text text="{dse>model}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="7rem" hAlign="Center">
+                                        <table:multiLabels>
+                                            <Label visible="false" />
+                                            <Label text="{path:'I18N>/SIZE', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>mold_number}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="Center">
+                                        <table:multiLabels>
+                                            <Label visible="false" />
+                                            <Label text="{path:'I18N>/PRICE', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>mold_sequence}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="Center">
+                                        <table:multiLabels>
+                                            <Label visible="false" />
+                                            <Label text="{path:'I18N>/CURRENCY', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>spec_name}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="Center" headerSpan="2">
+                                        <table:multiLabels>
+                                            <Label text="{path:'I18N>/ESTIMATION', formatter:'I18NFormatter'}"/>
+                                            <Label text="{path:'I18N>/LABOR_HOUR', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>mold_progress_status_name}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="Center" headerSpan="2" >
+                                        <table:multiLabels>
+                                            <Label text="{path:'I18N>/ESTIMATION', formatter:'I18NFormatter'}"/>
+                                            <Label text="{path:'I18N>/AMOUNT', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>mold_progress_status_name}"/>
+                                        </table:template>
+                                    </table:Column>
+
+                                    <table:Column width="10rem" hAlign="Center" headerSpan="2">
+                                        <table:multiLabels>
+                                            <Label text="{path:'I18N>/AGREEMENT', formatter:'I18NFormatter'}"/>
+                                            <Label text="{path:'I18N>/LABOR_HOUR', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>mold_progress_status_name}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="Center" headerSpan="2">
+                                        <table:multiLabels>
+                                            <Label text="{path:'I18N>/AGREEMENT', formatter:'I18NFormatter'}"/>
+                                            <Label text="{path:'I18N>/AMOUNT', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>mold_progress_status_name}"/>
+                                        </table:template>
+                                    </table:Column>
+                                </table:columns>
+                            </table:Table> -->
+
+
+                            <Table 
+                                inset="false" 
+                                class="sapFDynamicPageAlignContent" 
+                                mode="None"
+                                growing="true"
+                                growingThreshold="10"
+                                itemPress="onItemPress"
+                                updateFinished=".onMainTableUpdateFinished"
+                                items="{/MoldMasterSpec}"
+                                width="auto">
+                                <columns>
+                                    <Column >
+                                        <Text text="{path:'I18N>/NO', formatter:'I18NFormatter'}" />
+                                        <footer>
+                                            <Text text="Total(①)" />
+                                        </footer>
+                                    </Column>
+                                    <Column  >
+                                        <Text text="{path:'I18N>/PROCESS_NAME', formatter:'I18NFormatter'}"/>
+                                    </Column>
+                                    <Column  >
+                                        <Text text="{path:'I18N>/PREFERENCE', formatter:'I18NFormatter'}" />
+                                    </Column>
+                                    <Column  >
+                                        <Text text="{path:'I18N>/SIZE', formatter:'I18NFormatter'}" />
+                                    </Column>
+                                    <Column  >
+                                        <Text text="{path:'I18N>/PRICE', formatter:'I18NFormatter'}" />
+                                    </Column>
+                                    <Column  >
+                                        <Text text="{path:'I18N>/CURRENCY', formatter:'I18NFormatter'}" />
+                                        <footer>
+                                            <Text text="KRW" />
+                                        </footer>
+                                    </Column>
+                                    <Column  >
+                                        <Text text="{path:'I18N>/ESTIMATION', formatter:'I18NFormatter'} {path:'I18N>/LABOR_HOUR', formatter:'I18NFormatter'}" />
+                                    </Column>
+                                    <Column  >
+                                        <Text text="{path:'I18N>/ESTIMATION', formatter:'I18NFormatter'} {path:'I18N>/AMOUNT', formatter:'I18NFormatter'}" />
+                                        <footer>
+                                            <Text text="12,000,000" />
+                                        </footer>
+                                    </Column>
+                                    <Column >
+                                        <Text text="{path:'I18N>/AGREEMENT', formatter:'I18NFormatter'} {path:'I18N>/LABOR_HOUR', formatter:'I18NFormatter'}" />
+                                    </Column>
+                                    <Column >
+                                        <Text text="{path:'I18N>/AGREEMENT', formatter:'I18NFormatter'} {path:'I18N>/AMOUNT', formatter:'I18NFormatter'}" />
+                                        <footer>
+                                            <Text text="11,000,000" />
+                                        </footer>
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem >
+                                        <cells>
+                                            <ObjectIdentifier text="{company_name}" />
+                                            <ObjectIdentifier text="{org_name}" />
+                                            <ObjectIdentifier text="{model}" />
+                                            <ObjectIdentifier text="{mold_number}" />
+                                            <ObjectIdentifier text="{mold_sequence}" />
+                                            <ObjectIdentifier text="{spec_name}" />
+                                            <ObjectIdentifier text="{mold_spec_status_name}" />
+                                            <ObjectIdentifier text="{mold_item_type_name}" />
+                                            <!-- <ObjectIdentifier text="{dse>create_user}" /> -->
+                                            <Input value="1" />
+                                            <ObjectIdentifier text="{create_user}" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection >
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection titleUppercase="false" title="Material Cost">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+                        <uxap:blocks>
+                            <table:Table id="materialCostTable"
+                                selectionMode="None"
+                                fixedColumnCount="7"
+                                visibleRowCountMode="Auto"
+                                rows="{dse>/MoldMasterSpec}"
+                                cellClick=".onCellClick"
+                                rowSelectionChange=".onCheck">
+                                <table:columns>
+                                    <table:Column width="15rem" hAlign="Center">
+                                        <table:multiLabels>
+                                            <Label visible="false" />
+                                            <Label text="{path:'I18N>/ITEM', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>org_code}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem"  hAlign="Center">
+                                        <table:multiLabels>
+                                            <Label visible="false" />
+                                            <Label text="{path:'I18N>/UNIT', formatter:'I18NFormatter'}(Qty)"/>           
+                                        </table:multiLabels>
+                                        <table:template >
+                                            <Text text="{dse>model}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="Center">
+                                        <table:multiLabels>
+                                            <Label visible="false" />
+                                            <Label text="{path:'I18N>/CURRENCY', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>spec_name}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="Center" headerSpan="2">
+                                        <table:multiLabels>
+                                            <Label text="{path:'I18N>/ESTIMATION', formatter:'I18NFormatter'}"/>
+                                            <Label text="{path:'I18N>/LABOR_HOUR', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>mold_progress_status_name}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="Center" headerSpan="2" >
+                                        <table:multiLabels>
+                                            <Label text="{path:'I18N>/ESTIMATION', formatter:'I18NFormatter'}"/>
+                                            <Label text="{path:'I18N>/AMOUNT', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>mold_progress_status_name}"/>
+                                        </table:template>
+                                    </table:Column>
+
+                                    <table:Column width="10rem" hAlign="Center" headerSpan="2">
+                                        <table:multiLabels>
+                                            <Label text="{path:'I18N>/AGREEMENT', formatter:'I18NFormatter'}"/>
+                                            <Label text="{path:'I18N>/LABOR_HOUR', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>mold_progress_status_name}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="Center" headerSpan="2">
+                                        <table:multiLabels>
+                                            <Label text="{path:'I18N>/AGREEMENT', formatter:'I18NFormatter'}"/>
+                                            <Label text="{path:'I18N>/AMOUNT', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>mold_progress_status_name}"/>
+                                        </table:template>
+                                    </table:Column>
+                                </table:columns>
+                                <table:footer>
+                                    <HBox>
+                                        <Text width="10rem" text="Total ( ② )"/>
+                                        <Text width="10rem" text="Currency: KRW" />
+                                        <Text width="20rem" text="Estimation amount: 12,000,000"  />
+                                        <Text width="20rem" text="Agreement amount: 11,000,000" />
+                                    </HBox>
+                                </table:footer>
+                            </table:Table>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection >
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection titleUppercase="false" title="Transport Cost">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+                        <uxap:blocks>
+                            <table:Table id="transportCostTable"
+                                selectionMode="None"
+                                fixedColumnCount="7"
+                                visibleRowCountMode="Auto"
+                                rows="{list>/MoldMasterSpec}"
+                                cellClick=".onCellClick"
+                                rowSelectionChange=".onCheck">
+                                <table:columns>
+                                    <table:Column width="13rem" hAlign="Center">
+                                        <Label text="{path:'I18N>/TYPE', formatter:'I18NFormatter'}"/>           
+                                        <table:template>
+                                            <Text text="{list>org_code}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem"  hAlign="Center">
+                                        <Label text="{path:'I18N>/AREA', formatter:'I18NFormatter'}(Qty)"/>           
+                                        <table:template >
+                                            <Text text="{list>model}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="Center">
+                                        <Label text="{path:'I18N>/TON', formatter:'I18NFormatter'}"/>           
+                                        <table:template>
+                                            <Text text="{list>spec_name}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="13rem" hAlign="Center" headerSpan="2">
+                                        <Label text="{path:'I18N>/TRANSPORTATION_CATEGORY', formatter:'I18NFormatter'}"/>           
+                                        <table:template>
+                                            <Text text="{list>mold_progress_status_name}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="Center" headerSpan="2" >
+                                        <Label text="{path:'I18N>/PRICE', formatter:'I18NFormatter'}"/>           
+                                        <table:template>
+                                            <Text text="{list>mold_progress_status_name}"/>
+                                        </table:template>
+                                    </table:Column>
+
+                                    <table:Column width="10rem" hAlign="Center" headerSpan="2">
+                                        <Label text="{path:'I18N>/OCCURRENCE', formatter:'I18NFormatter'}"/>           
+                                        <table:template>
+                                            <Text text="{list>mold_progress_status_name}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="13rem" hAlign="Center" headerSpan="2">
+                                        <Label text="{path:'I18N>/TOTAL_TRANSPORT_COST', formatter:'I18NFormatter'}"/>           
+                                        <table:template>
+                                            <Text text="{list>mold_progress_status_name}"/>
+                                        </table:template>
+                                    </table:Column>
+                                </table:columns>
+                            </table:Table>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection >
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection titleUppercase="false" title="Cost Total">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+                        <uxap:blocks>
+                            <table:Table id="costTotalTable"
+                                selectionMode="None"
+                                fixedColumnCount="7"
+                                visibleRowCountMode="Auto"
+                                rows="{dse>/MoldMasterSpec}"
+                                cellClick=".onCellClick"
+                                rowSelectionChange=".onCheck">
+                                <table:columns>
+                                    <table:Column width="5rem" hAlign="Center">
+                                        <table:multiLabels>
+                                            <Label visible="false" />
+                                            <Label text="{path:'I18N>/NO', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>org_code}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="15rem" hAlign="Center">
+                                        <table:multiLabels>
+                                            <Label visible="false" />
+                                            <Label text="{path:'I18N>/ITEM', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>org_code}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="Center">
+                                        <table:multiLabels>
+                                            <Label visible="false" />
+                                            <Label text="{path:'I18N>/CURRENCY', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>spec_name}"/>
+                                        </table:template>
+                                    </table:Column>
+                                    <table:Column width="10rem" hAlign="Center" >
+                                        <table:multiLabels>
+                                            <Label text="{path:'I18N>/ESTIMATION', formatter:'I18NFormatter'}"/>
+                                            <Label text="{path:'I18N>/AMOUNT', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>mold_progress_status_name}"/>
+                                        </table:template>
+                                    </table:Column>
+
+                                    <table:Column width="10rem" hAlign="Center" >
+                                        <table:multiLabels>
+                                            <Label text="{path:'I18N>/AGREEMENT', formatter:'I18NFormatter'}"/>
+                                            <Label text="{path:'I18N>/AMOUNT', formatter:'I18NFormatter'}"/>           
+                                        </table:multiLabels>
+                                        <table:template>
+                                            <Text text="{dse>mold_progress_status_name}"/>
+                                        </table:template>
+                                    </table:Column>
+                                </table:columns>
+                                
+                            </table:Table>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection >
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection titleUppercase="false" title="Remodeling/Repair Contents(Supplier)">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+                        <uxap:blocks>
+                            <TextArea value="Remodeling/Repair Contents(Supplier)" width="100%" rows="5"/>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection >
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection titleUppercase="false" title="Remark(LG)">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+                        <uxap:blocks>
+                            <TextArea value="시방 사전검토 비용 5백만원 입니다"  width="100%" rows="5"/>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection >
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection titleUppercase="false" title="ECO Item List">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+                        <uxap:blocks>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection >
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+            <uxap:ObjectPageSection titleUppercase="false" title="Attachments">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+                        <uxap:blocks>
+
+                            <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">
+
+                                <UploadCollection
+                                    id="UploadCollection"
+                                    maximumFilenameLength="55"
+                                    maximumFileSize="10"
+                                    multiple="true"
+                                    sameFilenameAllowed="true"
+                                    instantUpload="false"
+                                    noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                    change="onChange"
+                                    fileDeleted="onFileDeleted"
+                                    filenameLengthExceed="onFilenameLengthExceed"
+                                    fileSizeExceed="onFileSizeExceed"
+                                    typeMissmatch="onTypeMissmatch"
+                                    uploadComplete="onUploadComplete"
+                                    beforeUploadStarts="onBeforeUploadStarts" />
+                                    
+                                <Button id="uploadButton" type="Emphasized" text="Upload Now" press="onStartUpload" />
+                            </layout:VerticalLayout>
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection >
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+
+		</uxap:sections>
+		
+		<!-- <uxap:footer>
+			<OverflowToolbar>
+				<ToolbarSpacer />
+                <Button type="Emphasized" text="{path:'I18N>/EDIT', formatter:'I18NFormatter'}" press=".onPageEditButtonPress" />
+				<Button type="Transparent" text="{path:'I18N>/CANCEL', formatter:'I18NFormatter'}" press=".onPageCancelEditButtonPress"/>
+                <Button type="Transparent" text="{path:'I18N>/TEMP_SAVE', formatter:'I18NFormatter'}" press=".onPageSaveButtonPress" visible="{= !(${spec>/mold_spec_status_code} === 'C') }" />
+				<Button type="Emphasized" text="{path:'I18N>/CONFIRMED', formatter:'I18NFormatter'}" press=".onPageConfirmButtonPress" />
+			</OverflowToolbar>
+		</uxap:footer> -->
+	</uxap:ObjectPageLayout>
+</core:FragmentDefinition>

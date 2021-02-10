@@ -236,7 +236,7 @@ curl 'https://lg-common-dev-workspaces-ws-szhkx-app2.jp10.applicationstudio.clou
 
 
 #20210209
-  curl 'https://lg-common-dev-workspaces-ws-szhkx-app2.jp10.applicationstudio.cloud.sap/srv-api/odata/v4/sp.sourcingV4Service/deepUpsertNegoHeader' \
+  curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepUpsertNegoHeader' \
   -H 'Connection: keep-alive' \
   -H 'sec-ch-ua: "Chromium";v="88", "Google Chrome";v="88", ";Not A Brand";v="99"' \
   -H 'Accept: */*' \
