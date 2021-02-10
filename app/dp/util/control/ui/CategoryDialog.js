@@ -70,23 +70,55 @@ sap.ui.define([
             return [
                 new Column({
                     width: "15%",
-                    label: new Label({text: this.getModel("I18N").getText("/CATEGORY_GROUP")}),
-                    template: new Text({text: "{category_group_name}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/CATEGORY_GROUP"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{category_group_name}",
+                        textAlign: "Center",
+		                width: "100%"
+                    })
                 }),
                 new Column({
                     width: "25%",
-                    label: new Label({text: this.getModel("I18N").getText("/CATEGORY_NAME")}),
-                    template: new Text({text: "{category_name}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/CATEGORY_NAME"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{category_name}",
+                        textAlign: "Left",
+		                width: "100%"
+                    })
                 }),
                 new Column({
                     width: "45%",
-                    label: new Label({text: this.getModel("I18N").getText("/PARENT_CATEGORY")}),
-                    template: new Text({text: "{path}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/PARENT_CATEGORY"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{path}",
+                        textAlign: "Left",
+		                width: "100%"
+                    })
                 }),
                 new Column({
                     width: "15%",
-                    label: new Label({text: this.getModel("I18N").getText("/STATUS")}),
-                    template: new Text({text: "{active_flag_val}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/STATUS"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{active_flag_val}",
+                        textAlign: "Center",
+		                width: "100%"
+                    })
                 })               
             ];
         },
