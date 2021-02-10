@@ -514,12 +514,18 @@ BEGIN
 	            END IF;
 		    END IF;
 		    
+		    /**************************************************************
+		    현업리뷰 후 해당 컬럼 안쓰기로함.
+		    화면에서도 해당 부분 삭제하였음(2021-02-10 구책임님 요청사항)
+		    **************************************************************/
+		    /*
 		    IF IFNULL( loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG ) = '' THEN
 	            IF loop_mst.LEAF_FLAG = true then
 	            	--Department Code is a required value.
 	            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00037'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
 	            END IF;
 		    END IF;
+		    */
 		    
 		    IF IFNULL( loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG ) = '' THEN
 	            IF loop_mst.LEAF_FLAG = true then
@@ -571,7 +577,8 @@ BEGIN
 				,ORG_CODE                            ,VENDOR_POOL_CODE                      ,VENDOR_POOL_LOCAL_NAME
 				,VENDOR_POOL_ENGLISH_NAME            ,REPR_DEPARTMENT_CODE                  ,OPERATION_UNIT_CODE 
 				,INP_TYPE_CODE                       ,MTLMOB_BASE_CODE                      ,REGULAR_EVALUATION_FLAG
-				,INDUSTRY_CLASS_CODE                 ,SD_EXCEPTION_FLAG                     ,VENDOR_POOL_APPLY_EXCEPTION_FLAG
+				,INDUSTRY_CLASS_CODE                 ,SD_EXCEPTION_FLAG                     
+				--,VENDOR_POOL_APPLY_EXCEPTION_FLAG
 				,DOMESTIC_NET_PRICE_DIFF_RATE        ,DOM_OVERSEA_NETPRICE_DIFF_RATE        ,EQUIPMENT_GRADE_CODE 			
 				,EQUIPMENT_TYPE_CODE                 ,VENDOR_POOL_USE_FLAG                  ,VENDOR_POOL_DESC 				
 				,PARENT_VENDOR_POOL_CODE             ,LEAF_FLAG 				 		    ,MAKER_MATERIAL_CODE_MNGT_FLAG       
@@ -593,7 +600,7 @@ BEGIN
 				,IFNULL( loop_mst.REGULAR_EVALUATION_FLAG, TRUE)
 				,TRIM( ' ' FROM loop_mst.INDUSTRY_CLASS_CODE )
 				,IFNULL( loop_mst.SD_EXCEPTION_FLAG, FALSE)
-				,IFNULL( loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG, FALSE)
+				--,IFNULL( loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG, FALSE)
 				,loop_mst.DOMESTIC_NET_PRICE_DIFF_RATE
 				,loop_mst.DOM_OVERSEA_NETPRICE_DIFF_RATE
 				,TRIM( ' ' FROM loop_mst.EQUIPMENT_GRADE_CODE )
@@ -662,12 +669,18 @@ BEGIN
 			            END IF;
 				    END IF;
 				    
+				    /**************************************************************
+				    현업리뷰 후 해당 컬럼 안쓰기로함.
+				    화면에서도 해당 부분 삭제하였음(2021-02-10 구책임님 요청사항)
+				    **************************************************************/
+				    /*
 				    IF IFNULL( loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG ) = '' THEN
 			            IF loop_mst.LEAF_FLAG = true then
 			            	--Department Code is a required value.
 			            	SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00037'||'-'||V_ERROR_PARAM||'-@-'||V_MSG_LOOP_PARAM;
 			            END IF;
 				    END IF;
+				    */
 				    
 				    IF IFNULL( loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG, '-999')  = '-999' OR TRIM( ' ' FROM loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG ) = '' THEN
 			            IF loop_mst.LEAF_FLAG = true then
@@ -727,7 +740,7 @@ BEGIN
                             ,REGULAR_EVALUATION_FLAG 			= IFNULL( loop_mst.REGULAR_EVALUATION_FLAG, TRUE)
                             ,INDUSTRY_CLASS_CODE 				= TRIM( ' ' FROM loop_mst.INDUSTRY_CLASS_CODE )
                             ,SD_EXCEPTION_FLAG 					= IFNULL( loop_mst.SD_EXCEPTION_FLAG, FALSE)
-                            ,VENDOR_POOL_APPLY_EXCEPTION_FLAG 	= IFNULL( loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG, FALSE)
+                            --,VENDOR_POOL_APPLY_EXCEPTION_FLAG 	= IFNULL( loop_mst.VENDOR_POOL_APPLY_EXCEPTION_FLAG, FALSE)
                             ,DOMESTIC_NET_PRICE_DIFF_RATE 		= loop_mst.DOMESTIC_NET_PRICE_DIFF_RATE
                             ,DOM_OVERSEA_NETPRICE_DIFF_RATE 	= loop_mst.DOM_OVERSEA_NETPRICE_DIFF_RATE
                             ,EQUIPMENT_GRADE_CODE 				= TRIM( ' ' FROM loop_mst.EQUIPMENT_GRADE_CODE )
