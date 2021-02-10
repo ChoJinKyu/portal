@@ -179,7 +179,6 @@
                 </f:expandedContent>
                 <f:actions>
                     <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
-                    <Button id="detailMove" text="임시상세" type="Emphasized" press=".showDetail" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -238,8 +237,6 @@
                         <Title text="List ({= ${list>/remodelRepairList}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
                         <!-- Add the Personalization button -->
-                        <Button id="changeSuppButton"   type="Transparent" text="Change Supp."   press=".onChangeSuppButtonButtonPress"  />
-                        <ToolbarSeparator/>
                         <Button icon="sap-icon://excel-attachment" press=".onExportPress" />
                         <Button icon="sap-icon://action-settings"  press=".onMoldMstTablePersoButtonPressed" >
                             <layoutData>

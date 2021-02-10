@@ -304,7 +304,26 @@ sap.ui.define([
             return aTableSearchState;
         },
 
-        
+         /**
+        * @public
+        * @see 사용처 : 리스트에서 Excel Export 버튼 클릭시
+        */
+        onExportPress: function (_oEvent) {
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+            var sFileName = "Remodel/Repair Management List"
+            //var oData = this.getModel("list").getProperty("/Message"); //binded Data
+            var oData = oTable.getModel("list").getProperty("/remodelRepairList");
+            console.log(oData);
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
+        },   
         
         _doInitTablePerso: function () {
             // init and activate controller
