@@ -359,7 +359,7 @@
                                         visible="{contModel>/editMode}"
                                         editable="{contModel>/editMode}"
                                         maxLength="10"
-                                        type="Number"
+                                        liveChange=".onInputChange"                                        
                                         value="{category>s_grade_standard_days}" width="100%" textAlign="Right"/>
                                 </table:template>
                                 </table:Column>
@@ -376,7 +376,7 @@
                                         visible="{contModel>/editMode}"
                                         editable="{contModel>/editMode}"
                                         maxLength="10"
-                                        type="Number"
+                                        liveChange=".onInputChange"
                                         value="{category>a_grade_standard_days}" width="100%" textAlign="Right"/>
                                 </table:template>
                                 </table:Column>                                
@@ -393,7 +393,7 @@
                                         visible="{contModel>/editMode}"
                                         editable="{contModel>/editMode}"
                                         maxLength="10"
-                                        type="Number"
+                                        liveChange=".onInputChange"
                                         value="{category>b_grade_standard_days}" width="100%" textAlign="Right"/>
                                 </table:template>
                                 </table:Column>
@@ -410,7 +410,7 @@
                                         visible="{contModel>/editMode}"
                                         editable="{contModel>/editMode}"
                                         maxLength="10"
-                                        type="Number"
+                                        liveChange=".onInputChange"
                                         value="{category>c_grade_standard_days}" width="100%" textAlign="Right"/>
                                 </table:template>
                                 </table:Column>
@@ -427,7 +427,7 @@
                                         visible="{contModel>/editMode}"
                                         editable="{contModel>/editMode}"
                                         maxLength="10"
-                                        type="Number"
+                                        liveChange=".onInputChange"
                                         value="{category>d_grade_standard_days}" width="100%" textAlign="Right"/>
                                 </table:template>
                                 </table:Column>                                

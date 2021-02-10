@@ -40,12 +40,20 @@
                                 text="{I18N>/COMPANY}: "
                                 labelFor="searchCompany">
                             </Label>
-                            <ComboBox id="searchCompany" width="100%" selectedKey="" items="{
+                            <ComboBox 
+                                id="searchCompany" 
+                                width="100%" 
+                                selectedKey="" 
+                                showSecondaryValues= "true"
+                                items="{
                                 path: '/CompanyView'
                                
                                 }">
                                 <items>
-                                    <core:Item key="{company_code}" text="{company_code}" />
+                                    <core:ListItem
+                                        key="{company_code}"
+                                        text="{company_code}"
+                                        additionalText="{company_code}"/>
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -58,12 +66,20 @@
                                 text="{I18N>/ORGANIZATION}: "
                                 labelFor="searchOrg">
                             </Label>
-                            <ComboBox id="searchOrg" width="100%" selectedKey="" items="{
+                            <ComboBox 
+                                id="searchOrg" 
+                                width="100%" 
+                                selectedKey=""
+                                showSecondaryValues= "true" 
+                                items="{
                                 path: '/OrgView'
                                
                                 }">
                                 <items>
-                                    <core:Item key="{org_code}" text="{org_code}" />
+                                    <core:ListItem
+                                        key="{org_code}" 
+                                        text="{org_code}" 
+                                        additionalText="{org_code}"/>
                                 </items>
                             </ComboBox>
                             <layoutData>
