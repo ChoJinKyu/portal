@@ -1,33 +1,27 @@
-/**
- * 작성일 : 2021.01.18
- * 화면ID : 
- */
 sap.ui.define([
     "ext/lib/controller/BaseController",
     "sap/ui/model/Filter",
-    "sap/m/MessageBox",
     "sap/m/MessageToast",    
     "ext/lib/util/Multilingual",
     "sap/ui/core/Item",
     "sap/ui/model/Sorter"
 ],
-	/**
-     * @param {typeof sap.ui.core.mvc.Controller} Controller
-     */
-    function (BaseController, Filter, MessageBox, MessageToast,  Multilingual, Item, Sorter) {
+
+    function (BaseController, Filter, MessageToast,  Multilingual, Item, Sorter) {
         "use strict";
 
         return BaseController.extend("sp.se.supplierEvaluationSetupMgt.controller.Main", {
           
             onInit: function () {
+                var oMultilingual, oOwnerComponent , i18nModel;
 
-                var oMultilingual = new Multilingual();
+                oMultilingual = new Multilingual();
                 this.setModel(oMultilingual.getModel(), "I18N");
-                var i18nModel = this.getModel("I18N");
+                i18nModel = this.getModel("I18N");
                 
                 this.getView().byId("smartFilterBar")._oSearchButton.setText(i18nModel.getText("/SEARCH"));
 
-                var oOwnerComponent = this.getOwnerComponent();
+                oOwnerComponent = this.getOwnerComponent();
                 this.oRouter = oOwnerComponent.getRouter();
                 this.oRouter.getRoute("main").attachPatternMatched(this._onDetailMatched, this);
 
@@ -42,31 +36,28 @@ sap.ui.define([
 
             },
 
-            _onDetailMatched: function (oEvent) {
+            _onDetailMatched: function (){
+                var oTenantCombo, aTenantComboFilters;
 
-                var aTenantComboFilters = [];                
+                    oTenantCombo = this.byId("tenant_combo");
+
+                    aTenantComboFilters = [];                
                     aTenantComboFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
-                    aTenantComboFilters.push(new Filter("company_code", 'EQ', this.company_code));       
-                 
-                var oTenantCombo = this.byId("tenant_combo");
-              
+                    aTenantComboFilters.push(new Filter("company_code", 'EQ', this.company_code));  
+
                     oTenantCombo.bindItems({
-                        path:"/SupEvalOrgView",
-                        filters:aTenantComboFilters,
-                        template: new Item({
-                            key:"{org_code}",
-                            text:"{org_name}"
-                        })
-                    }
+                            path:"/SupEvalOrgView",
+                            filters:aTenantComboFilters,
+                            template: new Item({
+                                key:"{org_code}",
+                                text:"{org_name}"
+                            })
+                        }
                     );
 
-                // Detail View 조회&저장후 main View 전환시 재조회
-                if(this.byId("tenant_combo").getSelectedKey()){
-                  
-                    var key = this.byId("tenant_combo").getSelectedKey();
-                   
-                              this.byId("MonitorList").rebindTable();
-                    }
+                // Detail View -> Main View 전환시 재조회 추후 SmartTable -> m.table 변경예정
+                if(this.byId("tenant_combo").getSelectedKey())
+                   this.byId("MonitorList").rebindTable();
 
             },
             
@@ -75,16 +66,17 @@ sap.ui.define([
              *  @public
              */
             onSearchTable: function (oEvent) {
+                var oView, oBindingParams;
+                
+                oView = this.getView();
 
-                var oView = this.getView();
-
-                var mBindingParams = oEvent.getParameter("bindingParams");
+                oBindingParams = oEvent.getParameter("bindingParams");
 
                 this.byId("MonitorListTable").getModel().refresh(true);
 
                 // var oSmtFilter = this.getView().byId("smartFilterBar");
 
-                 //회사 콤보박스
+                //회사 콤보박스
                 var tenant_combo = oView.byId("tenant_combo"),        
                     tenant_name =  tenant_combo.getSelectedKey(); 
                     //tenant_name = tenant_combo.getValue();
@@ -95,51 +87,61 @@ sap.ui.define([
                     aSearchFilters.push(new Filter("company_code", 'EQ', this.company_code));
                     aSearchFilters.push(new Filter("org_code", 'EQ', tenant_name));   
                     
-                    mBindingParams.filters.push(new Filter(aSearchFilters, true));
+                    oBindingParams.filters.push(new Filter(aSearchFilters, true));
                    
 
                 }else if (tenant_name.length === 0) {
-                    mBindingParams.filters.push(new Filter([]));
+                    oBindingParams.filters.push(new Filter([]));
                 }
                     //정렬
-                    mBindingParams.sorter= [new Sorter("evaluation_operation_unit_code")];
+                    oBindingParams.sorter= [new Sorter("evaluation_operation_unit_code")];
             },
+            _getComboItem : function (){
+                var oTenantCombo, oContext, oModel, oItem
 
+                    oTenantCombo = this.byId("tenant_combo");
+
+                    if(oTenantCombo.getSelectedItem()===null){
+
+                        return MessageToast.show("please Selected");
+
+                    }else{
+                        oContext = oTenantCombo.getSelectedItem().getBindingContext();
+                        oModel = oContext.getModel();
+                        oItem = oModel.getProperty(oContext.getPath()); 
+
+                        return oItem;
+                    }
+            },
             /** Detail view로 Navigate 기능 
             * @public
             */
             onNavToDetail: function (oEvent) {
                
-                // 선택한 행의 정보
+                // 선택한 테이블의 행의 정보
                 var oEventContext = oEvent.getSource().getBindingContext();
                 var oEventModel = oEventContext.getModel();
                 var oEventItem = oEventModel.getProperty(oEventContext.getPath());                
                 
-                // 선택된 ComboBox정보
-                var oTenantCombo = this.byId("tenant_combo");
-                var oContext = oTenantCombo.getSelectedItem().getBindingContext();
-                var oModel = oContext.getModel();
-                var oItem = oModel.getProperty(oContext.getPath());
+                // 선택된 ComboBox 정보
+                // var oTenantCombo = this.byId("tenant_combo");
+                // var oContext = oTenantCombo.getSelectedItem().getBindingContext();
+                // var oModel = oContext.getModel();
+                // var oItem = oModel.getProperty(oContext.getPath());
+
+                var oComboItem = this._getComboItem();
 
                 //oModel.getProperty(oEvent.getSource().getBindingContext().getPath())
-                var  tenant_id = oItem.tenant_id,
-                     company_code = oItem.company_code,
-                     org_code = oItem.org_code ,
-                     org_type_code = oItem.org_type_code,
-                     evaluation_operation_unit_code = oEventItem.evaluation_operation_unit_code,
-                     evaluation_operation_unit_name = oEventItem.evaluation_operation_unit_name,
-                     use_flag = oEventItem.use_flag;
-                    
-                
-                    this.getRouter().navTo("detail", {
+                  
+                this.getRouter().navTo("detail", {
                         scenario_number: "Detail",
-                        tenant_id: tenant_id,
-                        company_code: company_code,
-                        org_code: org_code,
-                        org_type_code: org_type_code,
-                        evaluation_operation_unit_code : evaluation_operation_unit_code,
-                        evaluation_operation_unit_name : evaluation_operation_unit_name,
-                        use_flag : use_flag
+                        tenant_id: oComboItem.tenant_id,
+                        company_code: oComboItem.company_code,
+                        org_code: oComboItem.org_code,
+                        org_type_code: oComboItem.org_type_code,
+                        evaluation_operation_unit_code : oEventItem.evaluation_operation_unit_code,
+                        evaluation_operation_unit_name : oEventItem.evaluation_operation_unit_name,
+                        use_flag : oEventItem.use_flag
                     });
 
             },
@@ -149,37 +151,20 @@ sap.ui.define([
             * @public
             */
             onCreateDetail: function (oEvent) {
-            
-                var oTenantCombo = this.byId("tenant_combo");
 
-                if(oTenantCombo.getSelectedItem()==null){
-                    MessageToast.show("please Selected");
-                    return;
-                }
-                else{
-
-                    var oContext = oTenantCombo.getSelectedItem().getBindingContext();
-                    var oModel = oContext.getModel();
-                    var oItem = oModel.getProperty(oContext.getPath());
-
-                    var tenant_id = oItem.tenant_id,
-                    company_code = oItem.company_code,
-                    org_code = oItem.org_code ,
-                    org_type_code = oItem.org_type_code;
+                var oComboItem = this._getComboItem();
                 
                     this.getRouter().navTo("detail", {
                         scenario_number: "New",
-                        tenant_id: tenant_id,
-                        company_code: company_code,
-                        org_code: org_code,
-                        org_type_code: org_type_code,
+                        tenant_id: oComboItem.tenant_id,
+                        company_code: oComboItem.company_code,
+                        org_code: oComboItem.org_code,
+                        org_type_code: oComboItem.org_type_code,
                         evaluation_operation_unit_code : " ",
                         evaluation_operation_unit_name : " ",
                         use_flag : " "
                     });
                 }
-
-            }
 
         });
 });

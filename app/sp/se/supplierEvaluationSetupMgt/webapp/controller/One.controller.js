@@ -1,4 +1,3 @@
-// @ts-ignore
 sap.ui.define([
     "ext/lib/controller/BaseController",
     "sap/ui/core/routing/History",
@@ -13,7 +12,6 @@ sap.ui.define([
     "sap/ui/core/MessageType",
     "sap/m/SegmentedButtonItem"
 
-    // @ts-ignore
 ], function (BaseController, History, MessageBox, MessageToast, Filter,JSONModel, 
     Multilingual, Item, ValueState, Message, MessageType , SegmentedButtonItem
     ) {
@@ -21,29 +19,27 @@ sap.ui.define([
 
 
     var i18nModel; //i18n 모델
-
     return BaseController.extend("sp.se.supplierEvaluationSetupMgt.controller.One", {
 
         onInit: function () {
-
-            var oView = this.getView();
+            var oView, oViewModel, oMultilingual, oOwnerComponent;
+            oView = this.getView();
 
             // I18N 모델 
-            var oMultilingual = new Multilingual();
+            oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             i18nModel = this.getModel("I18N");
 
-            //DetailView Model
-            var oViewModel = new JSONModel();
+            //Detail Controller,View -> One Controller 변경 
+            oViewModel = new JSONModel();
             this.setModel(oViewModel, "DetailView");
             
             //MainView 넘어온 데이터 받기 -> DetailMatched
-            var oOwnerComponent = this.getOwnerComponent();
+            oOwnerComponent = this.getOwnerComponent();
             this.oRouter = oOwnerComponent.getRouter();
             this.oRouter.getRoute("detail").attachPatternMatched(this._onDetailMatched, this);
 
             // 로그인 세션 작업완료시 수정해야함!
-            
             this.loginUserId = "TestUser" ;
             this.tenant_id = "L2100";
             this.company_code = "LGCKR";  
@@ -55,35 +51,36 @@ sap.ui.define([
             // 자주쓸것같은 Filter
             // var aSearchFilters = [];                
             //     aSearchFilters.push(new Filter("tenant_id", 'EQ', this.tenant_id));
-            //     aSearchFilters.push(new Filter("company_code", 'EQ', this.company_code));        
-      
+            //     aSearchFilters.push(new Filter("company_code", 'EQ', this.company_code)); 
+            
             // search filed init
         },
 
         /**
-        * Manager Section 행 추가
+        * Manager Table 행 추가
         * @public
         **/            
         onManagerAdd : function(oEvent){
-            var oView = this.getView().getModel("DetailView");            
-            var oModel = oView.getProperty("/manager");
+            var oModel = this.getView().getModel("DetailView");            
+            var oItem = oModel.getProperty("/manager");
 
-                oModel.push({
+                oItem.push({
                 "tenant_id": this.tenant_id,
                     "company_code": this.company_code,
                     "org_type_code":  this.org_type_code,
                     "org_code":this.org_code,
                     "evaluation_operation_unit_code": this.evaluation_operation_unit_code,
-                    "evaluation_op_unt_person_empno": "",
-                    "user_local_name": "",
-                    "department_local_name": "",
-                    "evaluation_execute_role_code": "",
                     "transaction_code" : "I",
                     "crudFlg" : "I",
                     "rowEditable":true
                 });
          
-                oView.setProperty("/manager",oModel);
+                    // "evaluation_op_unt_person_empno": "",
+                    // "user_local_name": "",
+                    // "department_local_name": "",
+                    // "evaluation_execute_role_code": "",
+
+                oModel.setProperty("/manager",oItem);
 
                 
             // // "ext/lib/model/ManagedListModel" 쓸떄
