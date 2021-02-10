@@ -146,7 +146,11 @@
                                                                     }}"
                                                                     >
                                                                     <!-- filters: [{path: 'nego_type_code', operator: 'EQ', value1: ${NegoHeaders>/nego_type_code} }], -->
-                                                                <RadioButton key="{negotiation_style_code}" text="{negotiation_style_name}" />
+                                                                <RadioButton key="{negotiation_style_code}" text="{negotiation_style_name}" >
+                                                                    <customData>
+                                                                        <core:CustomData key="negotiation_style_code" value='{negotiation_style_code}'/>
+                                                                    </customData>
+                                                                </RadioButton>
                                                                 <!-- <RadioButton text="Sealed (Purchaser : X,Supplier :X)" />
                                                                 <RadioButton text="Blind (Purchaser : O,Supplier :X)" /> -->
                                                             </RadioButtonGroup>
@@ -326,7 +330,7 @@
                                                         columnsL="2"
                                                         columnsXL="4">
                                             <Label  text="Award Type"  />
-                                            <Select selectedKey="{NegoHeaders>/award_type_code}" 
+                                            <Select id="selectAwardType" selectedKey="{NegoHeaders>/award_type_code}" 
                                                 >
                                                     <!-- items="{
                                                         path: 'Sc_Nego_Award_Method_Code',
@@ -808,13 +812,12 @@
                                                             <Label text="납기요청일" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <DatePicker 
+                                                                    <!-- <DatePicker 
                                                                             valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd" visible="{=${propInfo>/isEditMode}}"
                                                                             value="{path: 'NegoHeaders>maturity_date', type: 'sap.ui.model.odata.type.Date', 
-                                                                                    formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" />
-                                                                    <!-- <Input value="{NegoHeaders>maturity_date}" visible="{=${propInfo>/isEditMode}}"/> -->
+                                                                                    formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" /> -->
                                                                     <Text text="{path: 'NegoHeaders>maturity_date', type: 'sap.ui.model.odata.type.Date', 
-                                                                        formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" visible="{=!${propInfo>/isEditMode}}" />
+                                                                        formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }"  />
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
@@ -942,11 +945,11 @@
                                                                                 descending: true
                                                                             }}" 
                                                                         showSecondaryValues= "true"
-                                                                        selectedKey="{}" visible="{=${propInfo>/isEditMode}}"
+                                                                        selectedKey="{NegoHeaders>payment_terms_code}" visible="{=${propInfo>/isEditMode}}"
                                                                         width="100%" required="true">
                                                                         <core:ListItem key="{payment_terms_code}" text="{payment_terms_name}" additionalText="{payment_terms_code}"/>
                                                                     </ComboBox>
-                                                                    <Text text="{}" visible="{=!${propInfo>/isEditMode}}" />
+                                                                    <Text text="{NegoHeaders>payment_terms/payment_terms_name}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
@@ -963,11 +966,11 @@
                                                                                 descending: true
                                                                             }}" 
                                                                         showSecondaryValues= "true"
-                                                                        selectedKey="{}" visible="{=${propInfo>/isEditMode}}"
+                                                                        selectedKey="{NegoHeaders>market_code}" visible="{=${propInfo>/isEditMode}}"
                                                                         width="100%" required="true">
                                                                         <core:ListItem key="{market_code}" text="{market_name}" additionalText="{market_code}"/>
                                                                     </ComboBox>
-                                                                    <Text text="" visible="{=!${propInfo>/isEditMode}}" />
+                                                                    <Text text="{NegoHeaders>market/market_name}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>

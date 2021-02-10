@@ -130,6 +130,10 @@ entity Sc_Nego_Item_Prices {
         company_code                 : String(30)                                 @title : '회사코드'; //화면미정의:UI에서 사원정보로 부터 입력되어야 한다.
         operation_org_type_code      : String(30)                                 @title : '운영조직타입코드'  @description : 'UI:Operating Org';
         operation_org_code           : String(30)                                 @title : '운영조직코드'  @description : 'UI:Operating Org';
+        operation_org                : association to Sc_Pur_Operation_Org 
+                                            on operation_org.tenant_id = $self.tenant_id
+                                            and operation_org.company_code = $self.company_code
+                                            and operation_org.operation_org_code = $self.operation_org_code;
         operation_unit_code          : String(30)                                 @title : '운영단위코드--폐기예정';
         award_progress_status_code   : String(25)                                 @title : '낙찰진행상태코드';
         //    item_type_code : String(30)   @title: '품목유형코드' ;
@@ -147,15 +151,15 @@ entity Sc_Nego_Item_Prices {
                                            and specification_fk.specification_code = $self.specification;
         bpa_price                    : Decimal(28, 2)                             @title : 'BPA Price'  @description : 'UI:BPA Price (금액)';
         detail_net_price             : Decimal(28, 2)                             @title : '상세단가'  @description : 'UI:상세 단가 (금액)';
-        recommend_info               : String(30)                                 @title : '추천정보'  @description : 'UI:추천정보';
+        recommend_info               : String(200)                                 @title : '추천정보'  @description : 'UI:추천정보';
         group_id                     : String(30)                                 @title : 'Group Id'  @description : 'UI:Group Id';
         // sparts_supply_type           : String(30)                                 @title : 'S/Parts Supply Type-폐기예정'  @description  : 'UI:S/Parts Supply Type-폐기예정';
         location                     : String(30)                                 @title : 'Location'  @description : 'UI:Location';
-        purpose                      : String(30)                                 @title : '목적'  @description : 'UI:목적';
-        reason                       : String(30)                                 @title : '사유'  @description : 'UI:사유';
+        purpose                      : String(200)                                 @title : '목적'  @description : 'UI:목적';
+        reason                       : String(200)                                @title : '사유'  @description : 'UI:사유';
         request_date                 : DateTime                                   @title : '요청일'  @description : 'UI:요청 날짜';
         attch_code                   : String(30)                                 @title : '첨부파일코드'  @description : 'UI:첨부파일';
-        supplier_provide_info        : String(30)                                 @title : '공급업체제공정보'  @description : 'UI:협력사 제공 정보';
+        supplier_provide_info        : LargeBinary                                @title : '공급업체제공정보'  @description : 'UI:협력사 제공 정보';
         incoterms_code               : Sc_Incoterms_View : incoterms_code         @title : 'Incoterms코드'  @description : 'UI:Incoterms';
         incoterms                    : Association to Sc_Incoterms_View
                                            on incoterms.tenant_id = $self.tenant_id

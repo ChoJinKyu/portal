@@ -23,7 +23,7 @@
                     <items>
                         <ColumnListItem >
                             <cells>
-                                <Text text="Specification"/>
+                                <Text text="사양/규격"/>
                                 <ComboBox id="comboBoxSpecification" items="{
                                         path: '/Sc_Spec_Code_View', 
                                         templateShareable:true, 
@@ -46,7 +46,7 @@
                         </ColumnListItem>
                         <ColumnListItem >
                             <cells>
-                                <Text text="Currency"/>
+                                <Text text="통화"/>
                                 <ComboBox id="comboBoxCurrency" items="{
                                         path: 'common>/Currency', 
                                         templateShareable:true, 
@@ -79,7 +79,8 @@
                                 <ToggleButton id="toggleBtnDisplay" text="NO" pressed="false"  press="onPress_toggleDisplay"/>
                             </cells>
                         </ColumnListItem>
-                        <ColumnListItem visible="{= ${propInfo>/outCome} === 'view' }">
+                        <!-- <ColumnListItem visible="{= ${propInfo>/outCome} === 'view' }"> -->
+                        <ColumnListItem visible="false">
                             <cells>
                                 <Text text="납기 요청일"/>
                                 <DatePicker id="datePickerMaturitydate"
