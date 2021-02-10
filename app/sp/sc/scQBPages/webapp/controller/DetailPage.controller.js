@@ -320,7 +320,7 @@ sap.ui.define([
                 
                 // var url = this.srvUrl+"NegoHeadersView?&$expand=Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._docNum + "'";
                 var headerExpandString = "ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map,contact_point";
-                var itemsExpandString = "Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department)";
+                var itemsExpandString = "Items($expand=Suppliers,material,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department)";
                 var url = this.srvUrl+"NegoHeadersView?&$expand="+headerExpandString + "," + itemsExpandString+"&$filter=nego_document_number eq '" + this._docNum + "'";
 
                 console.log( "0000 >>> " + url);
@@ -469,85 +469,11 @@ sap.ui.define([
                 
             },
 
-            // setHeaderData: function () {
-            //     var oTemp = this.getView().getModel("NegoHeaders").getData();
-
-            //     var headerData = {
-            //         'tenant_id'                     : oTemp.tenant_id,
-            //         'nego_header_id'                : String(oTemp.nego_header_id),
-            //         'reference_nego_header_id'      : String(oTemp.reference_nego_header_id),
-            //         'previous_nego_header_id'       : String(oTemp.previous_nego_header_id),
-            //         'operation_unit_code'           : oTemp.operation_unit_code,
-            //         'reference_nego_document_number': oTemp.reference_nego_header_id,
-            //         'nego_document_round'           : oTemp.nego_document_round,
-            //         'nego_document_number'          : oTemp.nego_document_number,
-            //         'nego_document_title'           : oTemp.nego_document_title,
-            //         'nego_document_desc'            : oTemp.nego_document_desc,
-            //         'nego_progress_status_code'     : oTemp.nego_progress_status_code,
-            //         'award_progress_status_code'    : oTemp.award_progress_status_code,
-            //         'reply_times'                   : oTemp.reply_times,
-            //         'supplier_count'                : oTemp.supplier_count,
-            //         'nego_type_code'                : oTemp.nego_type_code,
-            //         'negotiation_output_class_code' : oTemp.negotiation_output_class_code,
-            //         'buyer_empno'                   : oTemp.buyer_empno,
-            //         'buyer_department_code'         : oTemp.buyer_department_code,
-            //         'immediate_apply_flag'          : oTemp.immediate_apply_flag,
-            //         'open_date'                     : new Date(oView.byId("searchOpenDatePicker").getDateValue()),
-            //         'closing_date'                  : new Date(oView.byId("searchEndDatePicker").getDateValue()),
-            //         'auto_rfq'                      : oTemp.auto_rfq,
-            //         'itesm_count'                   : oTemp.itesm_count,
-            //         'negotiation_style_code'        : oTemp.negotiation_style_code,
-            //         'close_date_ext_enabled_hours'  : oTemp.close_date_ext_enabled_hours,
-            //         'close_date_ext_enabled_count'  : oTemp.close_date_ext_enabled_count,
-            //         'actual_extension_count'        : oTemp.actual_extension_count,
-            //         'remaining_hours'               : oTemp.remaining_hours,
-            //         'note_content'                  : oTemp.note_content,
-            //         'award_type_code'               : oTemp.award_type_code,
-            //         'target_amount_config_flag'     : oTemp.target_amount_config_flag,
-            //         'target_amount'                 : oTemp.target_amount,
-            //         'supplier_participation_flag'   : oTemp.supplier_participation_flag,
-            //         'partial_allow_flag'            : oTemp.partial_allow_flag,
-            //         'bidding_result_open_status_code': oTemp.bidding_result_open_status_code,
-            //         // 'local_create_dtm'           : "",
-            //         'local_update_dtm'              : new Date(),
-            //         // 'create_user_id'             : "",
-            //         'update_user_id'                : oTemp.update_user_id,
-            //         // 'system_create_dtm' : "",
-            //         'system_update_dtm'             : new Date()
-            //     };
-
-            //     return headerData;
-
-            // },
             //카테고리 코드 중복 체크
             usedCheckTextChange: function(e) {
                 
             },
 
-            onPageNavBackButtonPress: function () {
-            //     var items = this.getView().byId("midTable").getItems();
-            //     for(var i=0; i<items.length; i++){
-            //         var item = items[i];
-            //         item.destroy();
-            //     }
-            //     var oScr = this.getView().getModel("sm");
-            //     oScr.setData({"screen":"M"});
-            //     // this.getOwnerComponent().getRouter().navTo("Master");
-            //     var oFCL = this.getView().getParent().getParent();
-            //     oFCL.setLayout();
-            //     this.getOwnerComponent().getRouter().navTo("Master", 
-            //         {
-            //             lflag: " ", 
-            //             category_code: " ",
-            //             use_flag: false
-            //         });
-            //     // this.oRouter.navTo("RouteApp");
-                
-            //     // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-            //     // this.getRouter().navTo("mainPage", {layout: sNextLayout});
-            // }
-
-            },
             onSupplierResult: function(pToken)
             {  
                 var oHeaders = this.getView().getModel("NegoHeaders").getData();
@@ -902,6 +828,8 @@ sap.ui.define([
                     "attch_code"                    : "",
                     "supplier_provide_info"         : "",
                     "incoterms_code"                : "",
+                    "payment_terms_code"            : "",
+                    "market_code"                   : "",
                     "excl_flag"                     : "",
                     "vendor_pool_code"              : "",
                     "request_quantity"              : "1",
@@ -1341,7 +1269,8 @@ sap.ui.define([
 
             },
             getNegoHeaderObject : function (progressCode){
-                var oModel = this.getView().getModel("NegoHeaders").getData();
+                var oView = this.getView();
+                var oModel = oView.getModel("NegoHeaders").getData();
                 console.log( ":<<< getNegoHeaderObject >>> " );
                 console.log( oModel ); //// nego_document_desc, note_content
                 var negoheader = {
@@ -1370,13 +1299,13 @@ sap.ui.define([
                     closing_date                    : this.getCheckObject(oModel,"closing_date", new Date()),
                     auto_rfq                        : this.getCheckObject(oModel,"auto_rfq",""),
                     items_count                     : this.getCheckObject(oModel,"items_count",0),
-                    negotiation_style_code          : this.getCheckObject(oModel,"negotiation_style_code",""),
+                    negotiation_style_code          : this.getCheckObject(oModel,"negotiation_style_code",oView.byId("rbg1").getSelectedButton().getAggregation("customData")[0].getValue()),
                     close_date_ext_enabled_hours    : this.getCheckObject(oModel,"close_date_ext_enabled_hours",0),
                     close_date_ext_enabled_count    : this.getCheckObject(oModel,"close_date_ext_enabled_count",0),
                     actual_extension_count          : this.getCheckObject(oModel,"actual_extension_count",0),
                     remaining_hours                 : this.getCheckObject(oModel,"remaining_hours",0),
                     note_content                    : this.getCheckObject(oModel,"note_content","encoding"),  // encoding
-                    award_type_code                 : this.getCheckObject(oModel,"award_type_code",""),
+                    award_type_code                 : this.getCheckObject(oModel,"award_type_code",oView.byId("selectAwardType").getSelectedKey()),
                     award_method_code               : this.getCheckObject(oModel,"award_method_code",""),
                     target_amount_config_flag       : this.getCheckObject(oModel,"target_amount_config_flag",""),
                     target_currency                 : this.getCheckObject(oModel,"target_currency",""),
@@ -1454,6 +1383,8 @@ sap.ui.define([
                         attch_code                   : this.getCheckObject(element,"attch_code",""),
                         supplier_provide_info        : this.getCheckObject(element,"supplier_provide_info",""),
                         incoterms_code               : this.getCheckObject(element,"incoterms_code",""),
+                        payment_terms_code           : this.getCheckObject(element,"payment_terms_code",""),
+                        market_code                  : this.getCheckObject(element,"market_code",""),   
                         excl_flag                    : this.getCheckObject(element,"excl_flag",""),
                         specific_supplier_count      : this.getCheckObject(element,"specific_supplier_count",0),
                         vendor_pool_code             : this.getCheckObject(element,"vendor_pool_code",""),
