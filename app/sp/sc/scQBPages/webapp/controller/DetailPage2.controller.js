@@ -143,17 +143,35 @@ sap.ui.define([
             },
             onLiveTargetTotal: function(e){
                 
-                debugger;
+                
                 var oValue = e.getParameters().value;
                 oValue = oValue.replace(/[^-\.0-9]/g, "");
                 if(oValue.indexOf(".") != oValue.lastIndexOf(".")){
                     e.oSource.setValue(this._totalValue);
                     return;
                 }
+
+                
+
                 var newValue = oValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                var oIndex = oValue.indexOf(".");
+                
+                var aaa = newValue.substring(0, oIndex);
+                var bbb = newValue.substring(oIndex, newValue.length+1);
+                bbb = bbb.replaceAll(",", "");
+                
+                newValue = aaa + bbb;
+                debugger;
+
+                newValue = newValue.slice(0, oIndex+6);
+
                 e.oSource.setValue(newValue);
                 this._totalValue = newValue;
-                this.getView().getModel("NegoHeaders").oData.target_amount = oValue.replaceAll(",", "");
+
+                var oSTargetAmount = oValue.replaceAll(",", "");
+                var oFTargetAmount = parseFloat(oSTargetAmount).toFixed(5);
+
+                this.getView().getModel("NegoHeaders").oData.target_amount = oFTargetAmount;
             },
             onAfterRendering: function () {
 
@@ -1669,6 +1687,8 @@ sap.ui.define([
                 var negoItems = this.getNegoItemObject("C", progressCode);
                 var negoNons = this.getNegoNonPriceObject("C");
 
+                
+
                 var inputInfo = {
                     "deepupsertnegoheader" : {
                         "negoheaders": [
@@ -1684,7 +1704,7 @@ sap.ui.define([
                 };
                 console.log(inputInfo);
 
-                
+                debugger;
 
                 // return;
 
