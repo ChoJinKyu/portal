@@ -42,6 +42,7 @@ service UcContractMgtV4Service {
         buyer_name                     : String;
         purchasing_department_code     : String;
         purchasing_department_name     : String;
+        special_note                   : LargeString;
         local_create_dtm               : DateTime;
         local_update_dtm               : DateTime;
         create_user_id                 : String;

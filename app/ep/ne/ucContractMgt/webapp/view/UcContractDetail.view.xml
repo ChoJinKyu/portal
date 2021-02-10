@@ -434,7 +434,6 @@
 					<uxap:ObjectPageSubSection>
                         <form:SimpleForm >                    
                             <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin"> 
-    
                                 <!-- File Upload 시작-->
                                 <UploadCollection
                                     id="UploadCollection"
@@ -452,20 +451,20 @@
                                     uploadComplete="onUploadComplete"
                                     beforeUploadStarts="onBeforeUploadStarts" />
                                 <!-- File Upload 끝-->
-                                <!-- <Label  text="* 특기사항" 
+                                <Label  text="* 특기사항" 
                                             design="Bold" 
                                             class="sapUiMediumMarginTop sapUiSmallMarginBottom"/>
                                 <richtexteditor:RichTextEditor
                                     editorType="TinyMCE4"
                                     width="98%"
-                                    height="200px"
-                                    editable="{midObjectViewModel>/isEditMode}"
+                                    height="150px"
+                                    editable="{viewSet>/isEditMode}"
                                     customToolbar="true"
                                     showGroupFont="true"
                                     showGroupLink="true"
                                     showGroupInsert="true"
-                                    value="{master>/special_note}">
-                                </richtexteditor:RichTextEditor>                             -->
+                                    value="{viewModel>/mst/special_note}">
+                                </richtexteditor:RichTextEditor>                            
                             </VBox>
                         </form:SimpleForm>   						
 					</uxap:ObjectPageSubSection>
