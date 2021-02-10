@@ -52,7 +52,7 @@ bid_conference                    NVARCHAR(1)                ,  --#50
 bid_conference_date               SECONDDATE                 ,  --#51
 bid_conference_place              NVARCHAR(1000)             ,  --#52
 contact_point_empno               NVARCHAR(30)               ,  --#53
-phone_no                          NVARCHAR(30)                  --#54
+phone_no                          NVARCHAR(30)               ,  --#54
 /* ,
 local_create_dtm SECONDDATE NOT NULL,
 local_update_dtm SECONDDATE NOT NULL,
@@ -60,4 +60,5 @@ create_user_id NVARCHAR(255) NOT NULL,
 update_user_id NVARCHAR(255) NOT NULL,
 system_create_dtm SECONDDATE NOT NULL,
 system_update_dtm SECONDDATE NOT NULL */
+_row_state_                       NVARCHAR(1)               --#99 UI Table Manged Status('D':Delete, ''|'U':Update, 'C':Create)
 );

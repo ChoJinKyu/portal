@@ -126,6 +126,7 @@ public class SourcingV4 implements EventHandler {
                 .append("     , bid_conference_place                     ")  //#52 NVARCHAR(1000),
                 .append("     , contact_point_empno                      ")  //#53 NVARCHAR(30),
                 .append("     , phone_no                                 ")  //#54 NVARCHAR(30),
+                .append("     , cast('' as nvarchar(1)) as _row_state_   ")  //#99 NVARCHAR(1), @UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
                 .append("  FROM SP_SC_NEGO_HEADERS WHERE 1=0 )                                    ");
 
 		// create temp table: local_temp_negoitemprices
@@ -184,6 +185,7 @@ public class SourcingV4 implements EventHandler {
                 .append("    , budget_department_code                                         ")  //#49
                 .append("    , requestor_empno                                                ")  //#50
                 .append("    , request_department_code                                        ")  //#51
+                .append("    , cast('' as nvarchar(1)) as _row_state_                         ")  //#99 NVARCHAR(1), @UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
                 .append("    FROM SP_SC_NEGO_ITEM_PRICES WHERE 1=0 )                          ");
 
         // create temp table: local_temp_negosuppliers
@@ -210,6 +212,7 @@ public class SourcingV4 implements EventHandler {
                 .append("    , only_maker_flat                                              ")  //#17
                 .append("    , contact                                                      ")  //#18
                 .append("    , note_content                                                 ")  //#19
+                .append("    , cast('' as nvarchar(1)) as _row_state_                       ")  //#99 NVARCHAR(1), @UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
                 .append("    FROM SP_SC_NEGO_SUPPLIERS WHERE 1=0 )                          ");
 
         // create temp table: local_temp_negoitemnonprices
@@ -227,24 +230,26 @@ public class SourcingV4 implements EventHandler {
                 .append("     , note_content                            ")  //#08 BLOB,
                 .append("     , target_score                            ")  //#09 DECIMAL(28,3),
                 .append("     , file_group_code                         ")  //#10 NVARCHAR(30),
-                .append("  FROM SP_SC_NEGO_ITEM_NON_PRICE WHERE 1=0 )                                    ");
+                .append("     , cast('' as nvarchar(1)) as _row_state_  ")  //#99 NVARCHAR(1), @UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
+                .append("  FROM SP_SC_NEGO_ITEM_NON_PRICE WHERE 1=0 )   ");
 
         // create temp table: local_temp_negoitemnonpricedtls
         StringBuffer v_sql_createTable_negoitemnonpricedtls = new StringBuffer();
         // v_sql_buf.append("CREATE LOCAL TEMPORARY COLUMN TABLE #local_temp_negoitemnonpricedtls AS ( SELECT * FROM SP_SC_NEGO_ITEM_NON_PRICE_DTL WHERE 1=0 )");
         v_sql_createTable_negoitemnonpricedtls.append("CREATE LOCAL TEMPORARY COLUMN TABLE #local_temp_negoitemnonpricedtls AS (        ")
                 .append("  SELECT                                                                 ")
-                .append("       tenant_id                      ")  //#01 NVARCHAR(5) NOT NULL,
-                .append("     , nego_header_id                 ")  //#02 BIGINT NOT NULL,
-                .append("     , nonpr_item_number              ")  //#03 NVARCHAR(10) NOT NULL,
-                .append("     , nonpr_dtl_item_number          ")  //#04 NVARCHAR(10) NOT NULL,
-                .append("     , supeval_from_date              ")  //#05 DATE,
-                .append("     , supeval_to_date                ")  //#06 DATE,
-                .append("     , supeval_from_value             ")  //#07 DECIMAL(28,3),
-                .append("     , supeval_to_value               ")  //#08 DECIMAL(28,3),
-                .append("     , supeval_text_value             ")  //#09 NVARCHAR(100),
-                .append("     , supeval_score                  ")  //#10 DECIMAL(28,3),
-                .append("  FROM SP_SC_NEGO_ITEM_NON_PRICE_DTL WHERE 1=0 )                                    ");
+                .append("       tenant_id                                  ")  //#01 NVARCHAR(5) NOT NULL,
+                .append("     , nego_header_id                             ")  //#02 BIGINT NOT NULL,
+                .append("     , nonpr_item_number                          ")  //#03 NVARCHAR(10) NOT NULL,
+                .append("     , nonpr_dtl_item_number                      ")  //#04 NVARCHAR(10) NOT NULL,
+                .append("     , supeval_from_date                          ")  //#05 DATE,
+                .append("     , supeval_to_date                            ")  //#06 DATE,
+                .append("     , supeval_from_value                         ")  //#07 DECIMAL(28,3),
+                .append("     , supeval_to_value                           ")  //#08 DECIMAL(28,3),
+                .append("     , supeval_text_value                         ")  //#09 NVARCHAR(100),
+                .append("     , supeval_score                              ")  //#10 DECIMAL(28,3),
+                .append("     , cast('' as nvarchar(1)) as _row_state_     ")  //#99 NVARCHAR(1), @UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
+                .append("  FROM SP_SC_NEGO_ITEM_NON_PRICE_DTL WHERE 1=0 )  ");
 
         // // drop temp table:
         String v_sql_dropTable_negoheaders =          "drop table #local_temp_negoheaders";
@@ -257,31 +262,31 @@ public class SourcingV4 implements EventHandler {
         StringBuffer v_sql_insertTable_negoheaders= new StringBuffer();
 		v_sql_insertTable_negoheaders.append("insert into #local_temp_negoheaders values ")
         // .append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            .append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            .append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		// insert table: scenario
         StringBuffer v_sql_insertTable_negoitemprices= new StringBuffer();
 		v_sql_insertTable_negoitemprices.append("insert into #local_temp_negoitemprices values ")
 		// v_sql_insertTable_negoitemprices.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-		    .append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		    .append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		// insert temp table: company
         StringBuffer v_sql_insertTable_negosuppliers= new StringBuffer();
 		v_sql_insertTable_negosuppliers.append("insert into #local_temp_negosuppliers values ")
         // v_sql_insertTable_negosuppliers.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            .append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            .append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		// insert temp table: negoitemnonprices
         StringBuffer v_sql_insertTable_negoitemnonprices= new StringBuffer();
 		v_sql_insertTable_negoitemnonprices.append("insert into #local_temp_negoitemnonprices values ")
         // v_sql_insertTable_negoitemnonprices.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            .append("(?,?,?,?,?,?,?,?,?,?)");
+            .append("(?,?,?,?,?,?,?,?,?,?,?)");
 
 		// insert temp table: negoitemnonpricedtls
         StringBuffer v_sql_insertTable_negoitemnonpricedtls= new StringBuffer();
 		v_sql_insertTable_negoitemnonpricedtls.append("insert into #local_temp_negoitemnonpricedtls values ")
         // v_sql_insertTable_negoitemnonpricedtls.append("(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            .append("(?,?,?,?,?,?,?,?,?,?)");
+            .append("(?,?,?,?,?,?,?,?,?,?,?)");
 /* 
         select string_agg('?' ,',') cnt from SERIES_GENERATE_INTEGER(1,1,54+1) union all
         select string_agg('?' ,',') cnt from SERIES_GENERATE_INTEGER(1,1,51+1) union all
@@ -402,7 +407,9 @@ public class SourcingV4 implements EventHandler {
                     v_inRow.get("bid_conference_date"                     ),
                     v_inRow.get("bid_conference_place"                    ),
                     v_inRow.get("contact_point_empno"                     ),
-                    v_inRow.get("phone_no"                                )/*,
+                    v_inRow.get("phone_no"                                ),
+                    v_inRow.get("_row_state_"                                ),
+                    /*,
                     v_inRow.get("local_create_dtm"),
                     v_inRow.get("local_update_dtm"),
                     v_inRow.get("create_user_id"),
@@ -472,7 +479,9 @@ public class SourcingV4 implements EventHandler {
                     v_inRow.get("interface_source"                     ),
                     v_inRow.get("budget_department_code"               ),
                     v_inRow.get("requestor_empno"                      ),
-                    v_inRow.get("request_department_code"              )/* ,
+                    v_inRow.get("request_department_code"              ),
+                    v_inRow.get("_row_state_"                          ),
+                    /*,
                     v_inRow.get("local_create_dtm"),
                     v_inRow.get("local_update_dtm"),
                     v_inRow.get("create_user_id"),
@@ -510,7 +519,9 @@ public class SourcingV4 implements EventHandler {
                     v_inRow.get("nego_target_include_reason_desc"          ),
                     v_inRow.get("only_maker_flat"                          ),
                     v_inRow.get("contact"                                  ),
-                    v_inRow.get("note_content"                             )/* ,
+                    v_inRow.get("note_content"                             ),
+                    v_inRow.get("_row_state_"                              ),
+                    /*,
                     v_inRow.get("local_create_dtm"),
                     v_inRow.get("local_update_dtm"),
                     v_inRow.get("create_user_id"),
@@ -540,7 +551,9 @@ public class SourcingV4 implements EventHandler {
                     v_inRow.get("nonpr_requirements_text"                ),
                     v_inRow.get("note_content"                           ),
                     v_inRow.get("target_score"                           ),
-                    v_inRow.get("file_group_code"                        )/* ,
+                    v_inRow.get("file_group_code"                        ),
+                    v_inRow.get("_row_state_"                            ),
+                    /*,
                     v_inRow.get("local_create_dtm"),
                     v_inRow.get("local_update_dtm"),
                     v_inRow.get("create_user_id"),
@@ -569,7 +582,9 @@ public class SourcingV4 implements EventHandler {
                     v_inRow.get("supeval_from_value"            ),
                     v_inRow.get("supeval_to_value"              ),
                     v_inRow.get("supeval_text_value"            ),
-                    v_inRow.get("supeval_score"                 )/* ,
+                    v_inRow.get("supeval_score"                 ),
+                    v_inRow.get("_row_state_"                   ),
+                    /*,
                     v_inRow.get("local_create_dtm"),
                     v_inRow.get("local_update_dtm"),
                     v_inRow.get("create_user_id"),

@@ -155,6 +155,7 @@ service SourcingV4Service {
         bid_conference_place            : type of Sc_Nego_Headers : bid_conference_place;         // Bid Conference Place	
         contact_point_empno             : type of Sc_Nego_Headers : contact_point_empno;          // Contact Point	
         phone_no                        : type of Sc_Nego_Headers : phone_no;                     // Phone No	
+        _row_state_                     : String(1) @Text:'UI:Row State' @Description:'UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
     };
 
     type tyNegoItemPrice {
@@ -209,6 +210,7 @@ service SourcingV4Service {
         requestor_empno              : type of Sc_Nego_Item_Prices : requestor_empno;
         budget_department_code       : type of Sc_Nego_Item_Prices : budget_department_code;
         request_department_code      : type of Sc_Nego_Item_Prices : request_department_code;
+        _row_state_                  : String(1) @Text:'UI:Row State' @Description:'UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
     };
 
     type tyNegoSupplier {
@@ -231,6 +233,7 @@ service SourcingV4Service {
         only_maker_flat                  : type of Sc_Nego_Suppliers : only_maker_flat;
         contact                          : type of Sc_Nego_Suppliers : contact;
         note_content                     : type of Sc_Nego_Suppliers : note_content;
+        _row_state_                      : String(1) @Text:'UI:Row State' @Description:'UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
     };
 
     type tyNegoItemNonPrice {
@@ -244,6 +247,7 @@ service SourcingV4Service {
         note_content                     : type of Sc_Nego_Item_Non_Price:note_content;
         target_score                     : type of Sc_Nego_Item_Non_Price:target_score;
         file_group_code                  : type of Sc_Nego_Item_Non_Price:file_group_code;
+        _row_state_                      : String(1) @Text:'UI:Row State' @Description:'UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
     };
 
     type tyNegoItemNonPriceDtl {
@@ -257,6 +261,7 @@ service SourcingV4Service {
         supeval_to_value                 : type of Sc_Nego_Item_Non_Price_Dtl:supeval_to_value;
         supeval_text_value               : type of Sc_Nego_Item_Non_Price_Dtl:supeval_text_value;
         supeval_score                    : type of Sc_Nego_Item_Non_Price_Dtl:supeval_score;
+        _row_state_                      : String(1) @Text:'UI:Row State' @Description:'UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
     };
 
     type ReturnMsg : {
