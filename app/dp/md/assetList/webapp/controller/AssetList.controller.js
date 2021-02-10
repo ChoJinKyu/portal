@@ -126,7 +126,7 @@ sap.ui.define([
 
         _segmentSrch : function (){
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id='L2101';
+            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
             var oView = this.getView(),
                 oModel = this.getModel("SegmentedItem") ,
                 codeName = this.getModel('I18N').getText("/ALL")
@@ -157,7 +157,7 @@ sap.ui.define([
 
         setPlant: function(companyCode){
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id='L2101';
+            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
 
             var filter = new Filter({
                     filters: [
@@ -186,7 +186,7 @@ sap.ui.define([
         */
         handleSelectionFinishComp: function (oEvent) {
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id='L2101';
+            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
             this.copyMultiSelected(oEvent);
 
             var params = oEvent.getParameters();
@@ -413,6 +413,7 @@ sap.ui.define([
             var isOk = false;
             var msg;
             var session = this.getSessionUserInfo();
+
             
             if (oSelected != "") {
                 console.log("oSelected >>>>" , oSelected);
@@ -436,8 +437,7 @@ sap.ui.define([
                         secondary_supplier_name     : viewData[oSelected[i]].secondary_supplier_name,
                         tertiary_supplier_name      : viewData[oSelected[i]].tertiary_supplier_name,
                         local_update_dtm            : new Date(),
-                        // 추후 세션의 user_id로 변경 필요
-                        update_user_id              : "17370CHEM@lgchem.com",
+                        update_user_id              : session.USER_ID,
                         system_update_dtm           : new Date()
                 });
                 

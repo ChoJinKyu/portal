@@ -1082,7 +1082,7 @@ sap.ui.define([
                     , maker_material_code_mngt_flag: smaker_material_code_mngt_flag
                     , regular_evaluation_flag: sregular_evaluation_flag
                     , sd_exception_flag: ssd_exception_flag
-                    , vendor_pool_apply_exception_flag: svendor_pool_apply_exception_flag
+                    // , vendor_pool_apply_exception_flag: svendor_pool_apply_exception_flag
                     , equipment_grade_code: sequipment_grade_code
                     , equipment_type_code: sequipment_type_code
                     // "local_create_dtm": "2020-11-09T00:00:00Z",

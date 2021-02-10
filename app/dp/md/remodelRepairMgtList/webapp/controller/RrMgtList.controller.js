@@ -319,7 +319,7 @@ sap.ui.define([
                 oModel = this.getModel("list");
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel());
-            oModel.read("/MoldMstView", {
+            oModel.read("/remodelRepairList", {
                 filters: aTableSearchState,
                 success: function (oData) {
                     this.validator.clearValueState(this.byId("moldMstTable"));
