@@ -439,7 +439,7 @@ sap.ui.define([
                         }
 
                         this._supplierNumberModel(String(data.value[0].number_of_award_supplier));
-                        debugger;
+                        
     
 
                         oView.getModel("NegoHeaders").setProperty("/open_date" , new Date(data.value[0].open_date));
@@ -447,6 +447,9 @@ sap.ui.define([
                         oView.getModel("NegoHeaders").setProperty("/local_create_dtm" , new Date(data.value[0].local_create_dtm));
                         oView.getModel("NegoHeaders").setProperty("/nego_document_desc" , decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))) );
                         oView.getModel("NegoHeaders").setProperty("/note_content" , decodeURIComponent(escape(window.atob(data.value[0].note_content))) );
+                        // editable="{=${propInfo>/isEditMode}}" 
+                        this.byId("reDescription").setEditable(false);
+                        this.byId("reNoteToSupplier").setEditable(false);
 
                         // nego_document_desc, note_content
                         // decodeURIComponent(escape(window.atob(this.detailData.scenario_desc)))                            
