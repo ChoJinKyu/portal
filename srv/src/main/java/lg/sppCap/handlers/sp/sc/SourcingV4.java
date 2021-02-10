@@ -648,25 +648,45 @@ curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' 
         StringBuffer v_sql_createTable_negosuppliers = new StringBuffer();
 		v_sql_createTable_negosuppliers.append("CREATE LOCAL TEMPORARY COLUMN TABLE #local_temp_negosuppliers AS ( SELECT tenant_id, nego_header_id, nego_item_number, item_supplier_sequence FROM SP_SC_NEGO_SUPPLIERS WHERE 1=0 )");
 
+        // create temp table: local_temp_negoitemnonprices
+        StringBuffer v_sql_createTable_negoitemnonprices = new StringBuffer();
+		v_sql_createTable_negoitemnonprices.append("CREATE LOCAL TEMPORARY COLUMN TABLE #local_temp_negoitemnonprices AS ( SELECT tenant_id, nego_header_id, nonpr_item_number FROM SP_SC_NEGO_ITEM_NON_PRICE WHERE 1=0 )");
+
+        // create temp table: local_temp_negoitemnonpricedtls
+        StringBuffer v_sql_createTable_negoitemnonpricedtls = new StringBuffer();
+		v_sql_createTable_negoitemnonpricedtls.append("CREATE LOCAL TEMPORARY COLUMN TABLE #local_temp_negoitemnonpricedtls AS ( SELECT tenant_id, nego_header_id, nonpr_item_number, nonpr_dtl_item_number FROM SP_SC_NEGO_ITEM_NON_PRICE_DTL WHERE 1=0 )");
+
         // // drop temp table:
-        String v_sql_dropTable_negoheaders =          "DROP TABLE #local_temp_negoheaders";
-        String v_sql_dropTable_negoitemprices =       "DROP TABLE #local_temp_negoitemprices";
-        String v_sql_dropTable_negosuppliers =        "DROP TABLE #local_temp_negosuppliers";
+        String v_sql_dropTable_negoheaders           = "DROP TABLE #local_temp_negoheaders";
+        String v_sql_dropTable_negoitemprices        = "DROP TABLE #local_temp_negoitemprices";
+        String v_sql_dropTable_negosuppliers         = "DROP TABLE #local_temp_negosuppliers";
+        String v_sql_dropTable_negoitemnonprices     = "drop table #local_temp_negoitemnonprices";
+        String v_sql_dropTable_negoitemnonpricedtls  = "drop table #local_temp_negoitemnonpricedtls";
 
 		// insert temp table: master
         StringBuffer v_sql_insertTable_negoheaders= new StringBuffer();
-		v_sql_insertTable_negoheaders.append("insert into #local_temp_negoheaders values ");
-        v_sql_insertTable_negoheaders.append("(?,?)");
+		v_sql_insertTable_negoheaders.append("insert into #local_temp_negoheaders values ")
+                                     .append("(?,?)");
 
 		// insert table: scenario
         StringBuffer v_sql_insertTable_negoitemprices= new StringBuffer();
-		v_sql_insertTable_negoitemprices.append("insert into #local_temp_negoitemprices values ");
-		v_sql_insertTable_negoitemprices.append("(?,?,?)");
+		v_sql_insertTable_negoitemprices.append("insert into #local_temp_negoitemprices values ")
+		                                .append("(?,?,?)");
 
 		// insert temp table: company
         StringBuffer v_sql_insertTable_negosuppliers= new StringBuffer();
-		v_sql_insertTable_negosuppliers.append("insert into #local_temp_negosuppliers values ");
-        v_sql_insertTable_negosuppliers.append("(?,?,?,?)");
+		v_sql_insertTable_negosuppliers.append("insert into #local_temp_negosuppliers values ")
+                                       .append("(?,?,?,?)");
+
+		// insert temp table: negoitemnonprices
+        StringBuffer v_sql_insertTable_negoitemnonprices= new StringBuffer();
+		v_sql_insertTable_negoitemnonprices.append("insert into #local_temp_negoitemnonprices values ")
+                                           .append("(?,?,?)");
+
+		// insert temp table: negoitemnonpricedtls
+        StringBuffer v_sql_insertTable_negoitemnonpricedtls= new StringBuffer();
+		v_sql_insertTable_negoitemnonpricedtls.append("insert into #local_temp_negoitemnonpricedtls values ")
+                                              .append("(?,?,?,?)");
 
 		// call procedure
         StringBuffer v_sql_callProc = new StringBuffer();
@@ -688,6 +708,8 @@ curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' 
 		jdbc.execute(v_sql_createTable_negoheaders.toString());
 		jdbc.execute(v_sql_createTable_negoitemprices.toString());
 		jdbc.execute(v_sql_createTable_negosuppliers.toString());
+		jdbc.execute(v_sql_createTable_negoitemnonprices.toString());
+		jdbc.execute(v_sql_createTable_negoitemnonpricedtls.toString());
 
         /* /srv/cdsv4/sp/sc/sourcing/sourcing-v4-service.cds
         type tyDeepDeleteNegoheader {
@@ -703,6 +725,8 @@ curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' 
         Collection<TyNegoHeaderKey> v_negoheaders = context.getDeepdeletenegoheader().getNegoheaders();
         Collection<TyNegoItemPriceKey> v_negoitemprices = context.getDeepdeletenegoheader().getNegoitemprices();
         Collection<TyNegoSupplierKey> v_negosuppliers = context.getDeepdeletenegoheader().getNegosuppliers();
+        Collection<TyNegoItemNonPriceKey> v_negoitemnonprices = context.getDeepdeletenegoheader().getNegoitemnonprices();
+        Collection<TyNegoItemNonPriceDtlKey> v_negoitemnonpricedtls = context.getDeepdeletenegoheader().getNegoitemnonpricedtls();
 
 		// Collection<TaskMonitoringMaster>			v_inMaster			= context.getInputData().getSourceMaster();
 		// Collection<TaskMonitoringScenario>          v_inScenario		= context.getInputData().getSourceScenario();
@@ -760,6 +784,40 @@ curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' 
 
         int[] updateCounts_negosuppliers = jdbc.batchUpdate(v_sql_insertTable_negosuppliers.toString(), batch_negosuppliers);
 
+
+		// insert local temp table : negoitemnonprices
+        List<Object[]> batch_negoitemnonprices = new ArrayList<Object[]>();
+        if(!v_negoitemnonprices.isEmpty() && v_negoitemnonprices.size() > 0){
+            for(TyNegoItemNonPriceKey v_inRow : v_negoitemnonprices){
+                Object[] values = new Object[]
+				{
+                    v_inRow.get("tenant_id"                              ),
+                    v_inRow.get("nego_header_id"                         ),
+                    v_inRow.get("nonpr_item_number"                      )
+				};
+                batch_negoitemnonprices.add(values);
+            }
+        }
+        // Procedure Input Parameter Table Type #negoitemprices
+        int[] updateCounts_negoitemnonprices = jdbc.batchUpdate(v_sql_insertTable_negoitemnonprices.toString(), batch_negoitemnonprices);
+
+		// insert local temp table : negoitemnonpricedtls
+        List<Object[]> batch_negoitemnonpricedtls = new ArrayList<Object[]>();
+        if(!v_negoitemnonpricedtls.isEmpty() && v_negoitemnonpricedtls.size() > 0){
+            for(TyNegoItemNonPriceDtlKey v_inRow : v_negoitemnonpricedtls){
+                Object[] values = new Object[]
+				{
+                    v_inRow.get("tenant_id"                     ),
+                    v_inRow.get("nego_header_id"                ),
+                    v_inRow.get("nonpr_item_number"             ),
+                    v_inRow.get("nonpr_dtl_item_number"         )
+				};
+                batch_negoitemnonpricedtls.add(values);
+            }
+        }
+        // Procedure Input Parameter Table Type #negoitemnonpricedtl
+        int[] updateCounts_negoitemnonpricedtls = jdbc.batchUpdate(v_sql_insertTable_negoitemnonpricedtls.toString(), batch_negoitemnonpricedtls);
+
 		// procedure call
 		List<SqlParameter> paramList = new ArrayList<SqlParameter>();
 		// paramList.add(new SqlParameter("i_tenant_id", Types.NVARCHAR));
@@ -791,6 +849,8 @@ curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' 
 		jdbc.execute(v_sql_dropTable_negoheaders);
 		jdbc.execute(v_sql_dropTable_negoitemprices);
 		jdbc.execute(v_sql_dropTable_negosuppliers);
+		jdbc.execute(v_sql_dropTable_negoitemnonprices);
+		jdbc.execute(v_sql_dropTable_negoitemnonpricedtls);
 
         context.setResult(v_result);
         context.setCompleted();
