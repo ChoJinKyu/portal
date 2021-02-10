@@ -212,7 +212,7 @@ sap.ui.define([
             this.getRouter().navTo("mainCreateObject", {
                 tenantId: "new",
                 fundingNotifyNumber: sfundingNotifySupNumber,
-                supplierCode:"KR00297400",
+                supplierCode:"KR00533800",
                 "?query": {
                     //param1: "1111111111"
                 }
