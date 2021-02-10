@@ -153,6 +153,7 @@ sap.ui.define([
                 var newValue = oValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                 e.oSource.setValue(newValue);
                 this._totalValue = newValue;
+                this.getView().getModel("NegoHeaders").oData.target_amount = oValue.replaceAll(",", "");
             },
             onAfterRendering: function () {
 
@@ -337,7 +338,18 @@ sap.ui.define([
                     oView.getModel("NegoHeaders").oData.award_type_code = "010";
                     oView.getModel("NegoHeaders").oData.award_method_code = "MP";
                     oView.getModel("NegoHeaders").oData.number_of_award_supplier = "2";
+                    oView.getModel("NegoHeaders").oData.number_of_award_supplier = "1";
+                    oView.getModel("NegoHeaders").oData.auto_round = "N";
+                    oView.getModel("NegoHeaders").oData.target_amount_config_flag = "N";
+                    oView.getModel("NegoHeaders").oData.supplier_participation_flag = "N";
+                    oView.getModel("NegoHeaders").oData.partial_allow_flag = "N";
+                    oView.getModel("NegoHeaders").oData.previous_round = "N";
+                    oView.getModel("NegoHeaders").oData.bid_conference = "N";
                     oView.getModel("NegoHeaders").refresh(true);
+
+                    
+
+                    this._supplierNumberModel("1");
 
                     
 
@@ -376,6 +388,12 @@ sap.ui.define([
                         v_viewHeaderModel.NegoHeaders = data.value[0];
 
                         oView.getModel("NegoHeaders").setData(data.value[0]);
+                        // number_of_award_supplier, total, bid_conference_date 추가 2021.02.10 kbg
+                            oView.getModel("NegoHeaders").setProperty("/number_of_award_supplier" , parseInt(data.value[0].number_of_award_supplier));
+                            oView.getModel("NegoHeaders").setProperty("/bid_conference_date" , new Date(data.value[0].bid_conference_date));
+                            this._SupplierTotalScore = data.value[0].order_rate_01 + data.value[0].order_rate_02 +
+                                data.value[0].order_rate_03 + data.value[0].order_rate_04 + data.value[0].order_rate_05 ;
+    
 
                         oView.getModel("NegoHeaders").setProperty("/open_date" , new Date(data.value[0].open_date));
                         oView.getModel("NegoHeaders").setProperty("/closing_date" , new Date(data.value[0].closing_date));
@@ -408,7 +426,7 @@ sap.ui.define([
                         // data.value[0].Items.lengt
                         // oView.byId("table1")
 
-                    },
+                    }.bind(this),
                     error: function(e){
                         console.log( "error :: " + e.responseText);
                     }
@@ -486,7 +504,7 @@ sap.ui.define([
                         if (sButton === MessageBox.Action.OK) {
                             var titleLengh = this.getView().byId("inputTitle").getMaxLength() == 0 ? 300 : this.getView().byId("inputTitle").getMaxLength();
                             if( !oModel.hasOwnProperty("nego_document_title") || oModel.nego_document_title === undefined 
-                                    || oModel.nego_document_title.length <= 0 || oModel.nego_document_title.length > titleLengh ) {
+                                    || oModel.nego_document_title.length <= 0 || oModel.nego_document_title.length > titleLengh) {
 
                                 var stateText = this.getModel("I18N").getText("/ECM01002");
                                 if( oModel.nego_document_title != undefined ) {
@@ -497,7 +515,14 @@ sap.ui.define([
 
                                 this.getView().byId("inputTitle").focus();
                                 
-                            }else {
+                            }else if( this._SupplierTotalScore != 100 ){
+                                this.getView().byId("inputAwardSup1").setValueState("Error");
+                                this.getView().byId("inputAwardSup1").setValueStateText("order rate의 총 합은 100%이여야만 합니다.");//
+
+                                this.getView().byId("inputAwardSup1").focus();
+                            
+                            
+                            }  else {
 
                                 this._CallUpsertProc("010");
                                 
@@ -1659,6 +1684,8 @@ sap.ui.define([
                 };
                 console.log(inputInfo);
 
+                debugger;
+
                 // return;
 
                 $.ajax({
@@ -1753,6 +1780,7 @@ sap.ui.define([
                 
                 if(oValue == ""){
                     // alert("숫자만 입력 가능");
+                    var oState = this._sumSupplierScore();
                 }else{
                     var idLength = oId.length - 1;
                     var lastId = oId.substring(idLength);
@@ -1762,6 +1790,7 @@ sap.ui.define([
                     var oState = this._sumSupplierScore();
                 }
                 this._supplierNumInputStateChange(oState);
+                debugger;
                 // var inputGroup = this.getView().getControlsByFieldGroupId("SupplierNumG1");
                 // for(var i=0; i< inputGroup.length; i++){
                 //     var cInput = inputGroup[i];
@@ -1775,6 +1804,7 @@ sap.ui.define([
                 for(var i=0; i< inputGroup.length; i++){
                     var cInput = inputGroup[i];
                     cInput.setValueState(pState);
+                    cInput.setValueStateText("order rate의 총 합은 100%이여야만 합니다.");
                     console.log(cInput.sId);
                 }
             },
@@ -1797,7 +1827,7 @@ sap.ui.define([
                 console.log("this._SupplierTotalScore =========================== ", this._SupplierTotalScore);
                 console.log("this._SupplierScore =========================== ", this._SupplierScore);
 
-                if(tempSum > 100){
+                if(tempSum != 100){
                     return "Error";
                 }else{
                     return "None";
@@ -1852,7 +1882,7 @@ sap.ui.define([
                 supplierModel.refresh(true);
                 this._awardNumberClear(pKey);
                 var oState;
-                if(this._SupplierTotalScore > 100){
+                if(this._SupplierTotalScore != 100){
                     oState = "Error";
                 }else{
                     oState = "None";
@@ -1947,12 +1977,24 @@ sap.ui.define([
                         this.getView().getModel("NegoHeaders").oData.contact_point = oItem;
                         this.getView().getModel("NegoHeaders").oData.contact_point.employee_name = this.getView().getModel("NegoHeaders").oData.contact_point.user_local_name;
                         console.log(this.getView().getModel("NegoHeaders").oData.contact_point.employee_number);
+                        this.getView().getModel("NegoHeaders").oData.contact_point_empno = this.getView().getModel("NegoHeaders").oData.contact_point.employee_number;
                         oInput.setValue(oItem.user_local_name);
                         oEvent.getSource().close(); //직접 닫아야 합니다.
                     }.bind(this));
                 }
                 this._EmployeeDialog.open();
                 // this._EmployeeDialog.setTokens(this.byId("multiInputWithEmployeeValueHelp").getTokens());
+
+            },
+            selectedAutoRound: function(e) {
+                var flag = e.mParameters.selected;
+                var oValue ;
+                if(flag == true){
+                    oValue = "Y";
+                }else{
+                    oValue = "N";
+                }
+                this.getView().getModel("NegoHeaders").oData.auto_round = oValue;
 
             }
             
