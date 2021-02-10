@@ -480,16 +480,27 @@ sap.ui.define([
                 
             },
             onPageSaveButtonPress: function() {
+
+                var oModel = this.getView().getModel("NegoHeaders").getData();
                 
                 MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
-					title : this.getModel("I18N").getText("/SAVE"),
-					initialFocus : sap.m.MessageBox.Action.CANCEL,
-					onClose : function(sButton) {
-						if (sButton === MessageBox.Action.OK) {
-                            this._CallInsertProc();
-						}
-					}.bind(this)
-				});
+                    title : this.getModel("I18N").getText("/SAVE"),
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            if( !oModel.hasOwnProperty("nego_document_title") || oModel.nego_document_title.length <= 0 || oModel.nego_document_title === undefined ) {
+                                this.getView().byId("inputTitle").setValueState("Error");
+                                this.getView().byId("inputTitle").setValueStateText(this.getModel("I18N").getText("/ECM01002"));//
+
+                                this.getView().byId("inputTitle").focus();
+                            }else {
+
+                                this._CallInsertProc();
+                                
+                            }
+                        }
+                    }.bind(this)
+                });
                 
             },
 
@@ -1562,7 +1573,7 @@ sap.ui.define([
                 var oModel = this.getView().getModel("NegoHeaders").getData().ItemsNonPrice;
                 console.log( ":<<< getNegoItemObject >>> " );
                 var negoitemnonprices = [];
-                var negoitemsnonpricedtl = [];
+                var negoitemnonpricedtls = [];
                 // oModel.forEach(element => {
                 oModel.forEach(function(element, index, array){
                     // if( element.hasOwnProperty("_row_state_") && element._row_state_ === sFlag ) {
@@ -1584,8 +1595,8 @@ sap.ui.define([
                     negoitemnonprices.push(oItem);
                     // }
 
-                    var oItemsNonPriceDtls = element.ItemsNonPriceDtl;
-                    oItemsNonPriceDtls.forEach(element2 => {
+                    var oItemNonPriceDtls = element.ItemsNonPriceDtl;
+                    oItemNonPriceDtls.forEach(element2 => {
 
                         // if( element2.hasOwnProperty("_row_state_") && element2._row_state_ === sFlag ) {
 
@@ -1603,13 +1614,13 @@ sap.ui.define([
                                 supeval_text_value      : this.getCheckObject(element2,"supeval_text_value", ""),
                                 supeval_score           : this.getCheckObject(element2,"supeval_score", 0),
                             };
-                            negoitemsnonpricedtl.push(oItemsNonPriceDtls);
+                            negoitemnonpricedtls.push(oItemNonPriceDtls);
                         // }
                     });
                 }.bind(this));
                 
                 return {negoitemnonprices       : negoitemnonprices,
-                        negoitemsnonpricedtl    : negoitemsnonpricedtl };
+                        negoitemnonpricedtls    : negoitemnonpricedtls };
             },
 
             //Insert 프로시저 호출
@@ -1634,7 +1645,9 @@ sap.ui.define([
                             this.getNegoHeaderObject()
                         ],
                         "negoitemprices" : this.getNegoItemObject("C").negoitemprices,
-                        "negosuppliers" : this.getNegoItemObject("C").negosuppliers
+                        "negosuppliers" : this.getNegoItemObject("C").negosuppliers,
+                        "negoitemnonprices" : this.getNegoNonPriceObject("C").negoitemnonprices,
+                        "negoitemnonpricedtls": this.getNegoNonPriceObject("C").negoitemnonpricedtls
                     }
                 };
                 console.log(inputInfo);
