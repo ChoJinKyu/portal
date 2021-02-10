@@ -129,7 +129,11 @@ service SourcingV4Service {
         // award_type_code                 : type of Sc_Nego_Headers : award_type_code;              // #견적&입찰공통#Award Type	--# 기존필드
         // award_method_code               : type of Sc_Nego_Headers : award_method_code;            // #견적&입찰공통#Award Method	--# 기존필드
         number_of_award_supplier        : type of Sc_Nego_Headers : number_of_award_supplier;     // Number of Award Supplier	
-        order_rate_01                   : type of Sc_Nego_Headers : order_rate_01;                // ..05	Order Rate	
+        order_rate_01                   : type of Sc_Nego_Headers : order_rate_01;                // Order Rate	#01
+        order_rate_02                   : type of Sc_Nego_Headers : order_rate_02;                // Order Rate	#02
+        order_rate_03                   : type of Sc_Nego_Headers : order_rate_03;                // Order Rate	#03
+        order_rate_04                   : type of Sc_Nego_Headers : order_rate_04;                // Order Rate	#04
+        order_rate_05                   : type of Sc_Nego_Headers : order_rate_05;                // Order Rate	#05
         // target_amount_config_flag       : type of Sc_Nego_Headers : target_amount_config_flag;    // #견적&입찰공통#Target Price Setup 여부	--# 기존필드
         // target_amount                   : type of Sc_Nego_Headers : target_amount;                // #견적&입찰공통#Target Total Amount	--# 기존필드
         // supplier_participation_flag     : type of Sc_Nego_Headers : supplier_participation_flag;  // #견적&입찰공통#Intention of Supplier Participation  	
