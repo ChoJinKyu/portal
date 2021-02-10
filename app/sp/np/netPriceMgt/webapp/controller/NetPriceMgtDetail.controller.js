@@ -588,7 +588,7 @@ sap.ui.define([
                 $(this.generalInfoList).each(function(idx, item){
                     //console.log("item:" + item);
                     if (!!item.tenant_id && !!item.company_code && !!item.org_type_code && !!item.org_code
-                        && !!item.supplier_code && !!item.material_code && !!item.market_code)  {
+                        && !!item.supplier_code && !!item.material_code && !!item.market_code && !!item.currency_code)  {
                         var inDetailObj = {};
                          inDetailObj.tenant_id = SppUserSessionUtil.getUserInfo().TENANT_ID;
                          inDetailObj.company_code = item.company_code;
@@ -599,9 +599,9 @@ sap.ui.define([
                          inDetailObj.supplier_code = item.supplier_code;
                          inDetailObj.material_code = item.material_code;
                          inDetailObj.market_code = item.market_code;
+                         inDetailObj.currency_code = item.currency_code;
                          procObj.param.inDetails.push(inDetailObj);
                     } else {
-                        //console.log("뭔가 부족한데요");
                         MessageToast.show("필수값이 부족합니다.");
                         chkFlag = false;
                     }
