@@ -325,7 +325,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             />
-                                         <DatePicker dateValue="{path : 'rrMgt>/mold_complete_result_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" />
+                                        <DatePicker dateValue="{path : 'rrMgt>/mold_complete_result_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" />
                                         <layoutData>
 						                     <layout:GridData span="XL4 L4 M12 S12"/>
 					                    </layoutData>

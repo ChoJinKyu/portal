@@ -81,6 +81,7 @@ public class RemodelRepairMgtListV4 implements EventHandler {
 
         try {
             Instant current = Instant.now(); // 현재시간 가져옴 
+
             if( repair_request_number != null && !repair_request_number.equals("New") 
                 && !repair_request_number.equals("")){ // update 
                     msg.setRepairRequestNumber(itemV4.getRepairRequestNumber());
@@ -96,6 +97,8 @@ public class RemodelRepairMgtListV4 implements EventHandler {
                     item.setMoldMovingResultDate(itemV4.getMoldMovingResultDate());
                     item.setMoldCompletePlanDate(itemV4.getMoldCompletePlanDate());
                     item.setMoldCompleteResultDate(itemV4.getMoldCompleteResultDate());
+                    item.setRepairProgressStatusCode(itemV4.getRepairProgressStatusCode());
+                    item.setRepairTypeCode(itemV4.getRepairTypeCode());
                     item.setUpdateUserId(sppUserSession.getUserId());
                     item.setLocalUpdateDtm(current);
                     CqnUpdate updateData = Update.entity(RepairItem_.CDS_NAME).data(item);
@@ -117,6 +120,8 @@ public class RemodelRepairMgtListV4 implements EventHandler {
                     item.setMoldMovingResultDate(itemV4.getMoldMovingResultDate());
                     item.setMoldCompletePlanDate(itemV4.getMoldCompletePlanDate());
                     item.setMoldCompleteResultDate(itemV4.getMoldCompleteResultDate());
+                    item.setRepairProgressStatusCode(itemV4.getRepairProgressStatusCode());
+                    item.setRepairTypeCode(itemV4.getRepairTypeCode());
                     item.setUpdateUserId(sppUserSession.getUserId());
                     item.setCreateUserId(sppUserSession.getUserId());
                     item.setLocalUpdateDtm(current);
