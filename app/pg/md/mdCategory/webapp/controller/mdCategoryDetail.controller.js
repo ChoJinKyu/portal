@@ -193,19 +193,19 @@ sap.ui.define([
                     oMasterModel.setTransactionModel(that.getModel());
                     oMasterModel.submitChanges({
                         success: function (ok) {
-                            if (ok.__batchResponses[0].__changeResponses[0].response.statusCode == "400") {
-                                MessageToast.show(this.I18N.getText("/EPG10001", [this.I18N.getText("/SPMD_CATEGORY_CODE")]), {at: "center center"});
+                            if (ok.__batchResponses[0].__changeResponses[0].response != null && ok.__batchResponses[0].__changeResponses[0].response.statusCode == "400") {
+                                MessageToast.show(that.I18N.getText("/EPG10001", [that.I18N.getText("/SPMD_CATEGORY_CODE")]), {at: "center center"});
                                 return;
                             }
                             oView.setBusy(false);
                             that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                            //MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                            MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
                                     
                             that.onPageNavBackButtonPress(); 
                         }.bind(this),
                         error: function(data){
-                            MessageToast.show(this.I18N.getText("/EPG10001", [this.I18N.getText("/SPMD_CATEGORY_CODE")]), {at: "center center"});
-                        }
+                            MessageToast.show(that.I18N.getText("/EPG10001", [that.I18N.getText("/SPMD_CATEGORY_CODE")]), {at: "center center"});
+                        }.bind(this)
                     });
                 };
                 }
