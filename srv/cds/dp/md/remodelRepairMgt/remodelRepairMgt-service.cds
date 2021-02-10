@@ -13,7 +13,7 @@ service RemodelRepairMgtService {
 
     entity RepairMstAssetView as projection on repairMstAssetView.Md_Repair_Mst_Asset_View;
     entity RepairItem as projection on repairItem.Md_Repair_Item;
-    entity MoldMstAssetSpecView as projection on moldMstAssetSpecView.Md_Repair_Mst_Asset_View;
+    entity MoldMstAssetSpecView as projection on moldMstAssetSpecView.Md_Mst_Asset_Spec_View;
     entity MoldMasterSpec as projection on moldMstSpecView.Md_Mst_Spec_View;
 
     view Divisions as
