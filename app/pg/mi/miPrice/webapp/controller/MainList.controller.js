@@ -249,7 +249,7 @@ sap.ui.define([
                 if(sCurrency_unit === "")oValueStates.currency_unit = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
                 if(sQuantity_unit === "")oValueStates.quantity_unit = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
                 
-                else if(sExchange_unit.length > 40)oValueStates.exchange_unit = {valueState: "Error", valueStateText: "40자 이하의 값을 입력하십시오."};
+                if(sExchange_unit.length > 40)oValueStates.exchange_unit = {valueState: "Error", valueStateText: "40자 이하의 값을 입력하십시오."};
 
                 if(sExchange === "")oValueStates.exchange = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
                 else if(sExchange.length > 40)oValueStates.exchange = {valueState: "Error", valueStateText: "40자 이하의 값을 입력하십시오."};  //임시 공통 Validation 완성후 삭제
@@ -263,18 +263,6 @@ sap.ui.define([
                 if(sPrice === "")oValueStates.price = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
                 else if(sPrice.indexOf(".") > 0 && (sPrice.length - sPrice.indexOf(".")) > 6)oValueStates.price = {valueState: "Error", valueStateText: "소수점 5자리까지 유효합니다."}; 
 
-
-                 var sMi_material_code = oRow.mi_material_code === undefined ? "" : oRow.mi_material_code;
-                var sMi_material_name = oRow.mi_material_code === undefined ? "" : oRow.mi_material_name;
-                var sCurrency_unit = oRow.currency_unit === undefined ? "" : oRow.currency_unit;
-                var sQuantity_unit = oRow.quantity_unit === undefined ? "" : oRow.quantity_unit;
-                var sExchange_unit = oRow.exchange_unit === undefined ? "" : oRow.exchange_unit;
-                var sExchange = oRow.exchange === undefined ? "" : oRow.exchange;
-                var sTermsdelv = oRow.termsdelv === undefined ? "" : oRow.termsdelv;
-                var sSourcing_group_code = oRow.sourcing_group_code === undefined ? "" : oRow.sourcing_group_code;
-                var sDelivery_mm = oRow.delivery_mm === undefined ? "" : oRow.delivery_mm;
-                var sMi_date = oRow.mi_date === undefined ? "" : oRow.mi_date;
-                var sPrice = oRow.price === undefined ? "" : oRow.price.toString();
 
                 if('mi_material_code' in oValueStates || 'currency_unit' in oValueStates || 'quantity_unit' in oValueStates || 'exchange_unit' in oValueStates || 
                 'exchange' in oValueStates || 'termsdelv' in oValueStates || 'delivery_mm' in oValueStates || 'mi_date' in oValueStates || 'price' in oValueStates){
@@ -698,6 +686,8 @@ sap.ui.define([
 
                     if (oExcelData) {
                         var aData = oExcelData[Object.keys(oExcelData)[0]];
+                        var iDataLength = aData.length;
+                        var iSuccessLength = 0;
                         that.validator.clearValueState(that.byId("mainTable"));
                         aData.reverse().forEach(function (oRow) {
                             var aKeys = Object.keys(oRow),
@@ -768,6 +758,10 @@ sap.ui.define([
 
                                 oListModel.addRecord(oRow, "/MIMaterialPriceManagementView", 0);
                                 oViewControl.setProperty("/enabled", true);
+
+                                iSuccessLength ++;
+                                if(iDataLength === iSuccessLength)MessageToast.show("업로드가 완료되었습니다.");
+                                
                             });
                         });
                     }
