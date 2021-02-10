@@ -148,8 +148,10 @@ sap.ui.define([
                 oValue = oValue.replace(/[^-\.0-9]/g, "");
                 if(oValue.indexOf(".") != oValue.lastIndexOf(".")){
                     e.oSource.setValue(this._totalValue);
-                    return;
+                    oValue = this._totalValue;
+                    // return;
                 }
+                
 
                 
 
