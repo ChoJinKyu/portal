@@ -17,7 +17,7 @@
         <f:title>
                                 <f:DynamicPageTitle>
                                     <f:heading>
-                                        <Title text="평가 기준 설정"/>
+                                        <Title text="평가환경설정"/>
                                         <!-- <Title text="{I18N>/MONITORING_MANAGEMENT}"/> -->
                                     </f:heading>
 
@@ -37,7 +37,6 @@
                                     useToolbar="false" 
                                     entitySet="SupEvalOpUnitListView" 
                                     enableBasicSearch="false"
-                                    
                                     showFilterConfiguration="false"
                                     >
 

@@ -45,6 +45,7 @@ entity Md_Repair_Item {
         budget_exrate_date : String(8)                      @title : '예산환율일자';
         budget_exrate : Decimal                             @title : '예산환율';
         provisional_budget_amount : Decimal                 @title : '테넌트ID';
+        repair_supplier_request_number : String(100)        @title : '공급업체요청번호';
         mold_location_type_code : String(30)                @title : '금형위치유형코드';
         repair_supplier_contents : String(3000)             @title : '수선공급업체내용';
         trim_amount : Decimal                               @title : '절사금액';

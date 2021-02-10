@@ -508,6 +508,14 @@ sap.ui.define([
             });
         },
 
+        onItemPress: function(oEvent){
+
+            var sPath = oEvent.getSource()._aSelectedPaths[0],
+                oRecord = this.getModel("list").getProperty(sPath);
+
+            this.getRouter().navTo("detail" , oRecord);
+        },
+
         familyFlagChange : function (oEvent) {
             var sSelectedKey = oEvent.getSource().getSelectedKey();
             
@@ -577,7 +585,6 @@ sap.ui.define([
                 filters: aTableSearchState,
                 success: function(oData){
                     this.validator.clearValueState(this.byId("moldMstTable"));
-                    self.byId('moldMstTable').clearSelection();
                     oView.setBusy(false);
                 }.bind(this)
             });
@@ -589,17 +596,11 @@ sap.ui.define([
                 company = this.getView().byId("searchCompany"+sSurffix).getSelectedKeys(),
                 division = this.getView().byId("searchDivision"+sSurffix).getSelectedKeys(),
                 status = this.getView().byId("searchStatus"+sSurffix).getSelectedKey(),
-                //status = Element.registry.get(statusSelectedItemId).getText(),
                 receiptFromDate = this.getView().byId("searchCreationDate"+sSurffix).getDateValue(),
                 receiptToDate = this.getView().byId("searchCreationDate"+sSurffix).getSecondDateValue(),
-                itemType = this.getView().byId("searchItemType").getSelectedKeys(),
-                productionType = this.getView().byId("searchProductionType").getSelectedKeys(),
-                // suppliers = this.getView().byId("searchSupplier").getTokens(),
-                supplier = this.getView().byId("searchSupplier").getValue(),
-                description = this.getView().byId("searchDescription").getValue(),
                 model = this.getView().byId("searchModel").getValue(),
                 moldNo = this.getView().byId("searchMoldNo").getValue(),
-                familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
+                assetNo = this.getView().byId("searchAssetNo").getValue();
             
             var aTableSearchState = [];
             var companyFilters = [];
@@ -641,68 +642,17 @@ sap.ui.define([
                 aTableSearchState.push(new Filter("mold_progress_status_code", FilterOperator.EQ, status));
             }
 
-            //checkbox
-            this.byId('moldMstTable').setSelectionMode('MultiToggle');
-            this.byId('moldMstTableConfirmButton').setEnabled(true);
-            if(status == 'RCV_CNF'){
-                this.byId('moldMstTable').setSelectionMode('None');
-                this.byId('moldMstTableConfirmButton').setEnabled(false);
-            }
-            
-            if(itemType.length > 0){
-
-                var _itemTypeFilters = [];
-                itemType.forEach(function(item){
-                    _itemTypeFilters.push(new Filter("mold_item_type_code", FilterOperator.EQ, item ));
-                });
-
-                aTableSearchState.push(
-                    new Filter({
-                        filters: _itemTypeFilters,
-                        and: false
-                    })
-                );
-            }
-
-            if(productionType.length > 0){
-
-                var _productionTypeFilters = [];
-                productionType.forEach(function(item){
-                    _productionTypeFilters.push(new Filter("mold_production_type_code", FilterOperator.EQ, item ));
-                });
-
-                aTableSearchState.push(
-                    new Filter({
-                        filters: _productionTypeFilters,
-                        and: false
-                    })
-                );
-            }
-
-            if (supplier && supplier.length > 0) {
-                aTableSearchState.push(new Filter("supplier_code", FilterOperator.Contains, supplier));
-            }
             if (model && model.length > 0) {
                 aTableSearchState.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + model.toLowerCase() + "'"));
             }
+
             if (moldNo && moldNo.length > 0) {
                 aTableSearchState.push(new Filter("mold_number", FilterOperator.Contains, moldNo.toUpperCase()));
             }
-            if (description && description.length > 0) {
-                aTableSearchState.push(new Filter("tolower(spec_name)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));
-            }
-            if (familyPartNo && familyPartNo.length > 0) {
-                aTableSearchState.push(new Filter({
-                    filters: [
-                        new Filter("family_part_number_1", FilterOperator.Contains, familyPartNo.toUpperCase()),
-                        new Filter("family_part_number_2", FilterOperator.Contains, familyPartNo.toUpperCase()),
-                        new Filter("family_part_number_3", FilterOperator.Contains, familyPartNo.toUpperCase()),
-                        new Filter("family_part_number_4", FilterOperator.Contains, familyPartNo.toUpperCase()),
-                        new Filter("family_part_number_5", FilterOperator.Contains, familyPartNo.toUpperCase())
-                    ],
-                    and: false
-                }));
-            }
+
+            // if (assetNo && moldNo.length > 0) {
+            //     aTableSearchState.push(new Filter("asset_number", FilterOperator.Contains, assetNo.toUpperCase()));
+            // }
             
             return aTableSearchState;
         },
