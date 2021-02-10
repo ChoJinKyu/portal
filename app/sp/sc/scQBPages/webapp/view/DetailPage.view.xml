@@ -127,7 +127,7 @@
                                                             <Label  text="{I18N>/NEGO_DOCUMENT_DESC}:" class="nameTitle sapUiTinyMarginBottom" />
                                                             <rte:RichTextEditor id="reDescription" editorType="TinyMCE4" width="100%" height="400px" customToolbar="true" 
                                                                 showGroupFont="true" showGroupLink="true" showGroupInsert="false" value="{NegoHeaders>/nego_document_desc}"
-                                                                editable="{=${propInfo>/isEditMode}}" 
+                                                                
                                                                 />
                                                             <!-- <FormattedText id="formTextDescription" htmlText="{NegoHeaders>/nego_document_desc}" visible="{=!${propInfo>/isEditMode}}"/> -->
                                                         </VBox>
@@ -215,7 +215,7 @@
                                                         <VBox  class="sapUiMediumMarginTop">
                                                             <Label  text="{I18N>/NW_NOTE_TO_SUPPLIER}:" class="sapMLabelNoText sapUiTinyMarginBottom"/>
                                                             <rte:RichTextEditor id="reNoteToSupplier" editorType="TinyMCE4" width="100%" height="400px" customToolbar="true" 
-                                                                value="{NegoHeaders>/note_content}" editable="{=${propInfo>/isEditMode}}" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                                                value="{NegoHeaders>/note_content}" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
                                                             <!-- <FormattedText id="formTextNoteToSupplier" htmlText="{NegoHeaders>/note_content}"  visible="{=!${propInfo>/isEditMode}}"/> -->
                                                         </VBox>
 

@@ -272,7 +272,8 @@ sap.ui.define([
 
                 if( e.getParameter("arguments").mode === "NC" )  // Create 모드일 경우는 editmode : true
                 {
-                    oView.getModel("propInfo").setProperty("/isEditMode", true );
+                    // oView.getModel("propInfo").setProperty("/isEditMode", true );
+                    this.onSettingEditMode(true);
 
                     oView.getModel("NegoHeaders").setProperty("/outcome_code", outcome );
                     oView.getModel("NegoHeaders").setProperty("/outcome/outcome_name", this.getOutComeName(outcome) );
@@ -301,7 +302,8 @@ sap.ui.define([
 
 
                 }else {                                           // list 조회 모드 일 경우에 조회.
-                    oView.getModel("propInfo").setProperty("/isEditMode", false );
+                    // oView.getModel("propInfo").setProperty("/isEditMode", false );
+                    this.onSettingEditMode(false);
 
                     this._CallHeaderView();                    
                 }                
@@ -346,6 +348,9 @@ sap.ui.define([
                         oView.getModel("NegoHeaders").setProperty("/local_create_dtm" , new Date(data.value[0].local_create_dtm));
                         oView.getModel("NegoHeaders").setProperty("/nego_document_desc" , decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))) );
                         oView.getModel("NegoHeaders").setProperty("/note_content" , decodeURIComponent(escape(window.atob(data.value[0].note_content))) );
+                        // editable="{=${propInfo>/isEditMode}}" 
+                        this.byId("reDescription").setEditable(false);
+                        this.byId("reNoteToSupplier").setEditable(false);
 
                         // nego_document_desc, note_content
                         // decodeURIComponent(escape(window.atob(this.detailData.scenario_desc)))                            
@@ -398,6 +403,11 @@ sap.ui.define([
                 });
                 return promise;
             },
+            onSettingEditMode: function( isEditMod ) {
+                this.byId("reDescription").setEditable(isEditMod);
+                this.byId("reNoteToSupplier").setEditable(isEditMod);
+                this.getView().getModel("propInfo").setProperty("/isEditMode", isEditMod );
+            },
             onPageCancelButtonPress: function() {
                 // console.log("onPageCancelButtonPress :: " + this._)
 
@@ -408,7 +418,8 @@ sap.ui.define([
 						if (sButton === MessageBox.Action.OK) {
                             var oMode = $.sap.negoMode;
 
-                            this.getView().getModel("propInfo").setProperty("/isEditMode", false );
+                            this.onSettingEditMode(false);
+                            // this.getView().getModel("propInfo").setProperty("/isEditMode", false );
                             this.getView().byId("tableLines").setSelectedIndex(-1);
 
                             this.onNavBack();
@@ -438,7 +449,10 @@ sap.ui.define([
                 // this._CallUpsertProc();
             },
             onPageEditButtonPress: function() {
-                this.getView().getModel("propInfo").setProperty("/isEditMode", true );
+                // this.byId("reDescription").setEditable(true);
+                // this.byId("reNoteToSupplier").setEditable(true);
+                // this.getView().getModel("propInfo").setProperty("/isEditMode", true );
+                this.onSettingEditMode(true);
                 
             },
             onPageSaveButtonPress: function() {
@@ -1487,7 +1501,7 @@ sap.ui.define([
                         // if( element2.hasOwnProperty("_row_state_") && element2._row_state_ === sFlag ) {
 
                             var oSupplierItem = {
-                                _row_state_                      : this.getCheckObject(element2,"_row_state_",""),
+                                _row_state_                      : oItem._row_state_ === "C" ? "C" : this.getCheckObject(oItem,"_row_state_",""),
                                 tenant_id                        : this.getCheckObject(element2,"tenant_id",""),
                                 nego_header_id                   : this.getCheckObject(element2,"nego_header_id",-1),
                                 nego_item_number                 : oItem.nego_item_number,//this.getCheckObject(element2,"nego_item_number", createIdTemp ),
@@ -1626,7 +1640,8 @@ sap.ui.define([
                         console.log(data);
 
                         //저장 완료시 show 모드로 전환
-                        oView.getModel("propInfo").setProperty("/isEditMode", false );
+                        // oView.getModel("propInfo").setProperty("/isEditMode", false );
+                        this.onSettingEditMode(false);
                         this._CallHeaderView();
                         // value: Array(1)
                         //     0:
