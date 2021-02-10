@@ -159,7 +159,7 @@ entity Sc_Nego_Item_Prices {
         reason                       : String(200)                                @title : '사유'  @description : 'UI:사유';
         request_date                 : DateTime                                   @title : '요청일'  @description : 'UI:요청 날짜';
         attch_code                   : String(30)                                 @title : '첨부파일코드'  @description : 'UI:첨부파일';
-        supplier_provide_info        : LargeBinary                                @title : '공급업체제공정보'  @description : 'UI:협력사 제공 정보';
+        supplier_provide_info        : String(500)                                @title : '공급업체제공정보'  @description : 'UI:협력사 제공 정보';
         incoterms_code               : Sc_Incoterms_View : incoterms_code         @title : 'Incoterms코드'  @description : 'UI:Incoterms';
         incoterms                    : Association to Sc_Incoterms_View
                                            on incoterms.tenant_id = $self.tenant_id
@@ -180,12 +180,12 @@ entity Sc_Nego_Item_Prices {
         uom_code                     : String(3)                                  @title : 'UOM코드'  @description : 'UI:UOM';
         maturity_date                : DateTime                                   @title : '만기일자'  @description : 'UI:납기 요청일';
         currency_code                : String(5)                                  @title : '통화코드'  @description : 'UI:Currency';
-        response_currency_code       : String(15)                                 @title : '응답통화코드'  @description : 'UI:Response Currency';
+        response_currency_code       : String(5)                                  @title : '응답통화코드'  @description : 'UI:Response Currency';
         exrate_type_code             : String(15)                                 @title : '환율유형코드'  @description : 'UI:Exchange Rate Type';
         exrate_date                  : DateTime                                   @title : '환율일자'  @description : 'UI:Exchange Rate Date';
         //    exrate : String(15)   @title: '환율' ;
         bidding_start_net_price      : PriceAmountT                              @title : '입찰시작단가'  @description : 'UI:Start Price(금액)';
-        bidding_start_net_price_flag : Boolean default false                      @title : '입찰시작단가디스플레이여부'  @description : 'UI:Display to Supplier';
+        bidding_start_net_price_flag : String(1)                                    @title : '입찰시작단가디스플레이여부'  @description : 'UI:Display to Supplier';
         bidding_target_net_price     : PriceAmountT                                 @title : '입찰목표단가'  @description : 'UI:Target Price(금액)';
         current_price                : PriceAmountT                              @title : '현재가격'      @description : 'UI:Current Price(금액)';
         note_content                 : LargeBinary                                @title : '노트내용';

@@ -331,7 +331,9 @@ service SourcingV4Service {
     // Negotiation(견적&입찰) Workbench 정형 View
     // @(title:'UI:Workbench 뷰',description:'Nego(Header+ItemPrices) 정형뷰',readonly) 
     // @(title:'Nego(Header+ItemPrices) 정형뷰',description:'UI:Workbench 정형뷰',readonly)  
-    entity NegoWorkbenchView2 as projection on Sc_Nego_Workbench_View2;
+    entity NegoWorkbenchView2 as projection on Sc_Nego_Workbench_View2{ *,
+        Items : redirected to NegoItemPrices
+    };
     
     view NegoWorkbenchView3 as select from Sc_Nego_Headers_View {
     key tenant_id                                                                                   ,

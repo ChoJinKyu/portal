@@ -20,7 +20,7 @@ purpose                        NVARCHAR(200)              ,  --#18
 reason                         NVARCHAR(200)              ,  --#19
 request_date                   SECONDDATE                 ,  --#20
 attch_code                     NVARCHAR(30)               ,  --#21
-supplier_provide_info          BLOB                       ,  --#22
+supplier_provide_info          NVARCHAR(500)              ,  --#22
 incoterms_code                 NVARCHAR(30)               ,  --#23
 payment_terms_code             NVARCHAR(30)               ,  --#24
 market_code                    NVARCHAR(30)               ,  --#25

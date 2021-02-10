@@ -69,7 +69,9 @@ service SourcingService {
     
     //////////////////////////////////////////////////////////////////////////////
     // Test Begin
-    entity NegoWorkbenchView2 as projection on Sc_Nego_Workbench_View2;
+    entity NegoWorkbenchView2 as projection on Sc_Nego_Workbench_View2{ *,
+        Items : redirected to NegoItemPrices
+    };
     view NegoWorkbenchViewMy as select *,
         // SP_SC_MY_SESSION( ).tenant_id as my_tenant_id :String(5)
         // SP_SC_SESSION_LOCAL_FUNC(TENANT_ID: wv.tenant_id).locale_lg as locale_lg :String(2)
