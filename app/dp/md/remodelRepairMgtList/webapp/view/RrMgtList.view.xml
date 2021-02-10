@@ -8,7 +8,7 @@
     xmlns:table="sap.ui.table" 
     xmlns:sc="sap.suite.ui.commons" 
     xmlns:microchart="sap.suite.ui.microchart" 
-    xmlns:lib-m="ext.lib.m"
+    xmlns:lib-m="ext.lib.m" 
     xmlns:cm-ui="cm.util.control.ui"
     core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
     height="100%">
@@ -217,27 +217,6 @@
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <!-- <VBox height="4em">
-                                <Label text="{path:'I18N>/RECEIPT_ESTIMATION_STATUS', formatter:'I18NFormatter'}"></Label>
-                                    <SegmentedButton 
-                                        id="searchReceiptEstimationStatusE" 
-                                        selectedKey="" 
-                                        width="100%" 
-                                        items="{path :'util>/Code',
-                                                filters: [
-                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
-                                                    ,  {path: 'group_code', operator: 'EQ', value1: 'DP_MD_REPAIR_PROGRESS_STATUS'}
-                                                ],
-                                                sorter: {path: 'sort_no'} }">
-                                        <items> 
-                                            <SegmentedButtonItem width="5em" key="{util>code}" text="{util>code_name}"/>
-                                        </items>
-                                    </SegmentedButton>
-                              
-                                <layoutData>
-                                    <layout:GridData span="XL6 L6 M12 S12" />
-                                </layoutData>
-                            </VBox> -->
                     </form:content>
                 </form:SimpleForm>
             </f:DynamicPageHeader>
@@ -298,7 +277,7 @@
                             <Text id="spec_name" text="{list>class_desc}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="rrMgtRequestNoColumn" width="13em" hAlign="Center">
+                    <table:Column id="rrMgtRequestNoColumn" width="7em" hAlign="Center">
                         <Label text="Request No" wrapping="true"/>
                         <table:template>
                             <Text id="rrMgtRequestNo" text="{list>repair_request_number}"/>
@@ -308,8 +287,7 @@
                     <table:Column id="rrMgtRequestReceiptDateColumn" width="13em" hAlign="Center">
                         <Label text="Request/Receipt Date" wrapping="true"/>
                         <table:template>
-                             
-                            <Text text="{path: 'list>request_receipt_date', formatter: '.dateFormatter.toDateString'}"/>
+                            <Text text="{path:'list>request_receipt_date',formatter:'.dateFormatter.toDateString'}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="rrMgtTitleColumn" width="10em"  hAlign="Center" >
@@ -330,7 +308,7 @@
                             <Label text="Plan" wrapping="true"/>
                         </table:multiLabels>
                         <table:template>
-                            <Text id="order_vendor_name" text="{list>mold_moving_plan_date}"/>
+                             <Text text="{path:'list>mold_moving_plan_date',formatter:'.dateFormatter.toDateString'}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetAssetsStatusColumn" width="10em"  hAlign="Center"  >
@@ -339,7 +317,7 @@
                             <Label text="Result" wrapping="true"/>
                         </table:multiLabels>
                         <table:template>
-                            <Text id="assets_status" text="{list>mold_moving_result_date}"/>
+                            <Text text="{path:'list>mold_moving_result_date',formatter:'.dateFormatter.toDateString'}"/>
                         </table:template>
                     </table:Column>
                     <table:Column  width="10em" headerSpan="2"  hAlign="Center"  >
@@ -348,7 +326,7 @@
                             <Label text="Plan" wrapping="true"/>
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>mold_complete_plan_date}"/>
+                            <Text text="{path:'list>mold_complete_plan_date',formatter:'.dateFormatter.toDateString'}"/>   
                         </table:template>
                     </table:Column>
                     <table:Column  width="10em">
@@ -357,7 +335,7 @@
                             <Label text="Result" wrapping="true" />
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>mold_complete_result_date}"/>
+                            <Text text="{path:'list>mold_complete_result_date',formatter:'.dateFormatter.toDateString'}"/>      
                         </table:template>
                     </table:Column>
                     <table:Column id="assetAssetTypeColumn" width="10em"  hAlign="Center" >
@@ -405,10 +383,10 @@
                     <table:Column width="10em"  hAlign="Center" >
                         <Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>asset_type_code}"/>
+                            <Text text="{list>asset_type_code_nm}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="10em"  hAlign="Center" >
+                    <table:Column width="20em"  hAlign="Center" >
                         <Label text="{path:'I18N>/ASSET_NO', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text text="{list>asset_number}"/>
@@ -431,12 +409,7 @@
                         <table:template>
                             <Text text="{list>repair_amount}"/>
                         </table:template>
-                    </table:Column>
-        
-                 
-                   
-                    
-                    
+                    </table:Column>                   
                 </table:columns>
             </table:Table>
         </f:content>

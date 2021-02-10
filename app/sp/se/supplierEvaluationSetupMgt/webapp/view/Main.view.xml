@@ -1,135 +1,126 @@
 <mvc:View 
- xmlns:mvc="sap.ui.core.mvc"
- xmlns="sap.m" 
- xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
- xmlns:smartTable="sap.ui.comp.smarttable"
- xmlns:f="sap.f"
- xmlns:form="sap.ui.layout.form"
- xmlns:layout="sap.ui.layout"
- xmlns:core="sap.ui.core"
- xmlns:lib-m="ext.lib.m"
- controllerName="sp.se.supplierEvaluationSetupMgt.controller.Main"
- height="100%">
+        xmlns:mvc="sap.ui.core.mvc"
+        xmlns="sap.m" 
+        xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+        xmlns:smartTable="sap.ui.comp.smarttable"
+        xmlns:f="sap.f"
+        xmlns:form="sap.ui.layout.form"
+        xmlns:layout="sap.ui.layout"
+        xmlns:core="sap.ui.core"
+        xmlns:lib-m="ext.lib.m"
+        controllerName="sp.se.supplierEvaluationSetupMgt.controller.Main"
+        height="100%"
+        >
 
-    <f:DynamicPage id="page" toggleHeaderOnTitleClick="false">
-        <!-- headerExpanded="{mainListView>/headerExpanded}"  -->
-        <!-- DynamicPage Title -->
-        <f:title>
-                                <f:DynamicPageTitle>
-                                    <f:heading>
-                                        <Title text="평가환경설정"/>
-                                        <!-- <Title text="{I18N>/MONITORING_MANAGEMENT}"/> -->
-                                    </f:heading>
+            <f:DynamicPage id="page" toggleHeaderOnTitleClick="false">
+                <!-- headerExpanded="{mainListView>/headerExpanded}"  -->
+                <!-- DynamicPage Title -->
+                <f:title>
+                    <f:DynamicPageTitle>
+                        <f:heading>
+                            <Title text="평가환경설정"/>
+                            <!-- <Title text="{I18N>/MONITORING_MANAGEMENT}"/> -->
+                        </f:heading>
 
-                                    <f:snappedContent>
-                                    </f:snappedContent>
+                        <f:snappedContent>
+                        </f:snappedContent>
 
-                                    <f:expandedContent>
-                                    </f:expandedContent>
-                                  
-                                </f:DynamicPageTitle>
-                            </f:title>
-                            <!-- DynamicPage Header -->
-                            <f:header>
-                                <f:DynamicPageHeader pinnable="false">
-                                   <smartFilterBar:SmartFilterBar 
-                                    id="smartFilterBar" 
-                                    useToolbar="false" 
-                                    entitySet="SupEvalOpUnitListView" 
-                                    enableBasicSearch="false"
-                                    showFilterConfiguration="false"
-                                    >
+                        <f:expandedContent>
+                        </f:expandedContent>
+                        
+                    </f:DynamicPageTitle>
+                </f:title>
+                <!-- DynamicPage Header -->
+                <f:header>
+                    <f:DynamicPageHeader pinnable="false">
+                        <smartFilterBar:SmartFilterBar 
+                        id="smartFilterBar" 
+                        useToolbar="false" 
+                        entitySet="SupEvalOpUnitListView" 
+                        enableBasicSearch="false"
+                        showFilterConfiguration="false"
+                        >
+                                <smartFilterBar:controlConfiguration>
 
-                                            <smartFilterBar:controlConfiguration>
+                                    <!-- 회사 -->
+                                    <smartFilterBar:ControlConfiguration 
+                                    key="org_code" index="1" 
+                                    label="{I18N>/OPERATION_ORG}" groupId="_BASIC" 
+                                    visibleInAdvancedArea="true" 
+                                    mandatory="mandatory">
+                                            <smartFilterBar:customControl>
+                                                <ComboBox id="tenant_combo" 
+                                                selectedKey="BIZ00000"
+                                                />                    
+                                                <!-- <ComboBox id="tenant_combo" 
+                                                    items="{/SupEvalOrgView}" 
+                                                    selectedKey="L2100" 
+                                                    selectionChange="onChangeTenant">
+                                                    <core:Item key="{org_code}" text="{org_name}"/>
+                                                </ComboBox> -->
+                                            </smartFilterBar:customControl>
+                                    
+                                    </smartFilterBar:ControlConfiguration>                                 
 
-                                                <!-- 회사 -->
-                                                <smartFilterBar:ControlConfiguration 
-                                                key="org_code" index="1" 
-                                                label="{I18N>/OPERATION_ORG}" groupId="_BASIC" 
-                                                visibleInAdvancedArea="true" 
-                                                mandatory="mandatory">
-                                                    <smartFilterBar:customControl>
-                                                        <ComboBox id="tenant_combo" 
-                                                        selectedKey="BIZ00000"
-                                                        />
-                                                                                    
-                                                        <!-- <ComboBox id="tenant_combo" 
-                                                            items="{/SupEvalOrgView}" 
-                                                            selectedKey="L2100" 
-                                                            selectionChange="onChangeTenant">
-                                                            <core:Item key="{org_code}" text="{org_name}"/>
-                                                        </ComboBox> -->
-                                                    </smartFilterBar:customControl>
-                                                
-                                                </smartFilterBar:ControlConfiguration>                                 
+                                </smartFilterBar:controlConfiguration>
 
-                                            </smartFilterBar:controlConfiguration>
-<!-- 
-                                            <smartFilterBar:layoutData>
-                                                <FlexItemData shrinkFactor="0"/>
-                                            </smartFilterBar:layoutData> -->
+                        </smartFilterBar:SmartFilterBar> 
+                    </f:DynamicPageHeader>
+                </f:header>
+                
+                <f:content>
+                    <VBox>
+                        <smartTable:SmartTable height="100%" 
+                        id="MonitorList" 
+                        entitySet="SupEvalOpUnitListView"
+                        initiallyVisibleFields="evaluation_operation_unit_code,evaluation_operation_unit_name,evaluation_request_mode_code" 
+                        smartFilterId="smartFilterBar"
+                        tableType="ResponsiveTable"
+                        useExportToExcel="false"  
+                        beforeExport=".onBeforeExport" 
+                        useVariantManagement="true" 
+                        useTablePersonalisation="true" 
+                        showTablePersonalisation="false"                                 
+                        showRowCount="true" 
+                        enableAutoBinding="true" 
+                        demandPopin="true" 
+                        showFullScreenButton="false"
+                        beforeRebindTable="onSearchTable"
+                        >
+                        <!-- 자동바인딩 -->
+                        <!-- useExportToExcel : 추가메뉴 활성화 여부 -->
 
-                                        </smartFilterBar:SmartFilterBar> 
-
-                                </f:DynamicPageHeader>
-                            </f:header>
-                            <f:content>
-                        <VBox>
-                                 <smartTable:SmartTable height="100%" 
-                                    id="MonitorList" 
-                                    entitySet="SupEvalOpUnitListView"
-                                    initiallyVisibleFields="evaluation_operation_unit_code,evaluation_operation_unit_name,evaluation_request_mode_code" 
-                                    smartFilterId="smartFilterBar"
-                                    tableType="ResponsiveTable"
-                                    useExportToExcel="false"  
-                                    beforeExport=".onBeforeExport" 
-                                    useVariantManagement="true" 
-                                    useTablePersonalisation="true" 
-                                    showTablePersonalisation="false"                                 
-                                    showRowCount="true" 
-                                    enableAutoBinding="true" 
-                                    demandPopin="true" 
-                                    showFullScreenButton="false"
-                                    beforeRebindTable="onSearchTable"
-                                    >
-                         <!-- 자동바인딩 -->
-                                    <!-- useExportToExcel : 추가메뉴 활성화 여부 -->
-
-
-                                <smartTable:customToolbar>
-                                    <OverflowToolbar design="Transparent">
-                                        <!-- <Title id="tableTitle" text="" level="H2"/> -->
-                                        
-                                        <ToolbarSpacer/>
-                                        
-                                        <Button text="{I18N>/NEW}" type="Transparent" press=".onCreateDetail"/>
-                                        
-                                    </OverflowToolbar>
-                                            </smartTable:customToolbar>
-                                            <Table id="MonitorListTable" sticky="HeaderToolbar,ColumnHeaders">
-                                            <columns>
-                                                <Column
-                                                    hAlign="Center">
-                                                        <customData>
-                                                        <core:CustomData 
-                                                            key="p13nData"
-                                                            value='\{"columnKey": "use_flag","columnIndex":"2", 
-                                                            "leadingProperty": "use_flag", "sortProperty": "use_flag"}' />
-                                                        </customData>
-                                                       <Text text="{I18N>/USE_FLAG}"/>
-                                                </Column>                                             
-
-                                            </columns>
-                                        <items>
-                                            <ColumnListItem type="Navigation" press=".onNavToDetail">
+                            <smartTable:customToolbar>
+                                <OverflowToolbar design="Transparent">
+                                    <!-- <Title id="tableTitle" text="" level="h2"/> -->
+                                    
+                                    <ToolbarSpacer/>
+                                    
+                                    <Button text="{I18N>/NEW}" type="Transparent" press=".onCreateDetail"/>
+                                </OverflowToolbar>
+                            </smartTable:customToolbar>
+                                <Table id="MonitorListTable" sticky="HeaderToolbar,ColumnHeaders">
+                                    <columns>
+                                        <Column hAlign="Center">
+                                            <customData>
+                                                <core:CustomData 
+                                                    key="p13nData"
+                                                    value='\{"columnKey": "use_flag","columnIndex":"2", 
+                                                    "leadingProperty": "use_flag", "sortProperty": "use_flag"}' />
+                                            </customData>
+                                            <Text text="{I18N>/USE_FLAG}"/>
+                                        </Column>  
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem type="Navigation" press=".onNavToDetail">
                                             <cells>
                                                 <ObjectIdentifier text="{= ${use_flag}? 'Y' : 'N'}"/> 
                                             </cells>
-                                            </ColumnListItem>
-                                        </items>
-                                    </Table>
-                                </smartTable:SmartTable> 
-                        </VBox>
-                    </f:content>
-    </f:DynamicPage>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </smartTable:SmartTable> 
+                    </VBox>
+                </f:content>
+            </f:DynamicPage>
 </mvc:View>

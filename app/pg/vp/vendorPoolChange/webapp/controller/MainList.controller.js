@@ -88,10 +88,6 @@ sap.ui.define([
 
     return BaseController.extend("pg.vp.vendorPoolChange.controller.MainList", {
 
-
-        /*
-         * cm에서 제공하는 dateFormatter 
-         * */
         dateFormatter: DateFormatter,
 
         /* =========================================================== */
@@ -166,8 +162,8 @@ sap.ui.define([
         * @public
         * @see 사용처 DialogTreeCreate Fragment Open 이벤트
         */
-
         onDialogTreeCreate: function () {
+
             var oView = this.getView();
 
             if (!this.byId("search_Operation_ORG_E").getSelectedKey()) {
@@ -191,8 +187,6 @@ sap.ui.define([
                     // this.onAfterDialog();
                 }.bind(this));
             }
-
-
         },
 
         createTreePopupClose: function (oEvent) {
@@ -210,15 +204,6 @@ sap.ui.define([
             else if (sSurffix == "E") {
                 oper_unit = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
             }
-
-            // if (oper_unit == "EQUIPMENT") {
-            //     this.byId("table_review_grade").setVisible(true);
-            //     this.byId("table_equipment_type").setVisible(true);
-            // } else {
-            //     this.byId("table_review_grade").setVisible(false);
-            //     this.byId("table_equipment_type").setVisible(false);
-            // }
-
         },
 
         onDialogTreeSearch: function (event) {
@@ -297,17 +282,6 @@ sap.ui.define([
 		 */
         onMainTableUpdateFinished: function (oEvent) {
             // update the mainList's object counter after the table update
-            // var sTitle,
-            // 	oTable = oEvent.getSource(),
-            // 	iTotalItems = oEvent.getParameter("total");
-            // // only update the counter if the length is final and
-            // // the table is not empty
-            // if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-            // 	sTitle = this.getResourceBundle().getText("mainListTableTitleCount", [iTotalItems]);
-            // } else {
-            // 	sTitle = this.getResourceBundle().getText("mainListTableTitle");
-            // }
-            // this.getModel("mainListView").setProperty("/mainListTableTitle", sTitle);
         },
 
         /**
@@ -330,7 +304,7 @@ sap.ui.define([
             if (sSurffix === "S") {
                 var s_Operation_ORG_S = this.getView().byId("search_Operation_ORG_S").getSelectedKey();
                 var s_Operation_UNIT_S = this.getView().byId("search_Operation_UNIT_S").getSelectedKey();
-                //var s_Opertaion_CHANGER_S = this.getView().byId("search_Operation_CHANGER_S").getSelectedKey();
+                var s_Opertaion_CHANGER_S = this.getView().byId("search_Operation_CHANGER_S").getSelectedKey();
 
                 // if (s_Operation_ORG_S && s_Operation_ORG_S.length > 0
                 //     && s_Operation_UNIT_S && s_Operation_UNIT_S.length > 0
@@ -353,7 +327,7 @@ sap.ui.define([
             else if (sSurffix === "E") {
                 var s_Operation_ORG_E = this.getView().byId("search_Operation_ORG_E").getSelectedKey();
                 var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
-                //var s_Opertaion_CHANGER_E = this.getView().byId("search_Operation_CHANGER_E").getSelectedKey();
+                var s_Opertaion_CHANGER_E = this.getView().byId("search_Operation_CHANGER_E").getSelectedKey();
 
                 // if (s_Operation_ORG_E && s_Operation_ORG_E.length > 0
                 //     && s_Operation_UNIT_E && s_Operation_UNIT_E.length > 0
@@ -423,18 +397,19 @@ sap.ui.define([
                 var s_Operation_UNIT_S = this.getView().byId("search_Operation_UNIT_S").getSelectedKey();
                 var s_Operation_DATE_S_FR = this.formatDate(this.getView().byId("search_Operation_DATE_S").getDateValue());
                 var s_Operation_DATE_S_TO = this.formatDate(this.getView().byId("search_Operation_DATE_S").getSecondDateValue());
-                //var s_Opertaion_CHANGER_S = this.getView().byId("search_Operation_CHANGER_S").getSelectedKey();
+                var s_Opertaion_CHANGER_S = this.getView().byId("search_Operation_CHANGER_S").getSelectedKey();
 
-                //aSearchFilters.push(new Filter("change_date", FilterOperator.BT, s_Operation_DATE_S_FR, s_Operation_DATE_S_TO));
+                aSearchFilters.push(new Filter("change_date", FilterOperator.BT, s_Operation_DATE_S_FR, s_Operation_DATE_S_TO));
+
                 if (s_Operation_ORG_S && s_Operation_ORG_S.length > 0) {
                     aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, s_Operation_ORG_S));
                 }
                 if (s_Operation_UNIT_S && s_Operation_UNIT_S.length > 0) {
                     aSearchFilters.push(new Filter("operation_unit_code", FilterOperator.EQ, s_Operation_UNIT_S));
                 }
-                // if (s_Opertaion_CHANGER_S && s_Opertaion_CHANGER_S.length > 0) {
-                //     aSearchFilters.push(new Filter("changer_empno", FilterOperator.EQ, s_Opertaion_CHANGER_S));
-                // }
+                if (s_Opertaion_CHANGER_S && s_Opertaion_CHANGER_S.length > 0) {
+                    aSearchFilters.push(new Filter("changer_empno", FilterOperator.EQ, s_Opertaion_CHANGER_S));
+                }
             }
 
             else if (sSurffix === "E") {
@@ -442,26 +417,27 @@ sap.ui.define([
                 var s_Operation_UNIT_E = this.getView().byId("search_Operation_UNIT_E").getSelectedKey();
                 var s_Operation_DATE_E_FR = this.formatDate(this.getView().byId("search_Operation_DATE_E").getDateValue());
                 var s_Operation_DATE_E_TO = this.formatDate(this.getView().byId("search_Operation_DATE_E").getSecondDateValue());
-                //var s_Operation_CHANGER_E = this.getView().byId("search_Operation_CHANGER_E").getSelectedKey();
+                var s_Operation_CHANGER_E = this.getView().byId("search_Operation_CHANGER_E").getSelectedKey();
                 var s_Operation_STATE_E = this.getView().byId("searchCodeSegmentButton").getSelectedKey();
                 var s_Operation_VENDOR_E = this.getView().byId("search_Vp_Code").getValue();
 
-                //aSearchFilters.push(new Filter("change_date", FilterOperator.BT, s_Operation_DATE_E_FR, s_Operation_DATE_E_TO));
+                aSearchFilters.push(new Filter("change_date", FilterOperator.BT, s_Operation_DATE_E_FR, s_Operation_DATE_E_TO));
+
                 if (s_Operation_ORG_E && s_Operation_ORG_E.length > 0) {
                     aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, s_Operation_ORG_E));
                 }
                 if (s_Operation_UNIT_E && s_Operation_UNIT_E.length > 0) {
                     aSearchFilters.push(new Filter("operation_unit_code", FilterOperator.EQ, s_Operation_UNIT_E));
                 }
-                // if (s_Operation_CHANGER_E && s_Operation_CHANGER_E.length > 0) {
-                //     aSearchFilters.push(new Filter("changer_empno", FilterOperator.EQ, s_Operation_CHANGER_E));
-                //}
+                if (s_Operation_CHANGER_E && s_Operation_CHANGER_E.length > 0) {
+                    aSearchFilters.push(new Filter("changer_empno", FilterOperator.EQ, s_Operation_CHANGER_E));
+                }
                 if (s_Operation_VENDOR_E && s_Operation_VENDOR_E.length > 0) {
                     aSearchFilters.push(new Filter("vendor_pool_code", FilterOperator.EQ, s_Operation_VENDOR_E));
                 }
                 if (s_Operation_STATE_E !== "" && s_Operation_STATE_E > 0) {
                     //aSearchFilters.push(new Filter("approval_status", FilterOperator.EQ, s_Operation_STATE_E));
-                    aSearchFilters.push(new Filter("approval_status", FilterOperator.EQ, null));
+                    //aSearchFilters.push(new Filter("approval_status", FilterOperator.EQ, null));
                 }
             }
             return aSearchFilters;

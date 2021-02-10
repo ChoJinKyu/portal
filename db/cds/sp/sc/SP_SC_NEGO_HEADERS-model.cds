@@ -142,6 +142,8 @@ entity Sc_Nego_Headers {
         supplier_participation_flag     : String(1)          @title : '공급업체참여여부' @description : 'UI:Intention of Supplier Participation';
         partial_allow_flag              : String(1)          @title : '부분허용여부'     @description : 'UI:Partial Quotation';
         bidding_result_open_status_code : String(30)         @title : '입찰결과오픈상태코드';
+
+        //// 20210209 추가 - 입찰 전용 필드
         max_round_count                      : Integer       @title : 'Max Round Count' @description : 'UI:Max Round Count';
         auto_round                           : String(1)     @title : 'Auto Round' @description : 'UI:Auto Round';
         auto_round_terms                     : Integer       @title : 'Auto Round Terms' @description : 'UI:Auto Round Terms';
