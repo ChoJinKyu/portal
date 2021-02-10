@@ -14,7 +14,6 @@
     height="100%">
 
     <f:DynamicPage id="page"
-        title = "Asset List"
         headerExpanded="false" 
         toggleHeaderOnTitleClick="true">
         <!-- DynamicPage Title -->
@@ -385,28 +384,29 @@
                             <DatePicker value="{list>acq_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                         </table:template>
                     </table:Column>
+                    <!-- 아직 서비스 적용안됨 -->
                     <table:Column id="assetShotColumn" width="10em">
                         <Label text="{path:'I18N>/SHOT', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <!-- <Text id="shot" text="{list>spec_name}"/> -->
+                            <Text id="shot" text=""/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetAgeColumn" width="10em">
                         <Label text="Age(Month)" wrapping="true"/>
                         <table:template>
-                            <!-- <Text id="age_month" text="{list>spec_name}"/> -->
+                            <Text id="age_month" text=""/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetSignalColumn" width="10em">
                         <Label text="{path:'I18N>/SIGNAL', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <!-- <Text id="Signal" text="{list>spec_name}"/> -->
+                            <Text id="Signal" text=""/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetRepairStatusColumn" width="10em">
                         <Label text="{path:'I18N>/REPAIR_STATUS', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <!-- <Text id="repair_status" text="{list>spec_name}"/> -->
+                            <Text id="repair_status" text=""/>
                         </table:template>
                     </table:Column>
                     
