@@ -147,7 +147,7 @@ service RrMgtListService {
                 mst.mold_sequence,
                 ass.class_desc,
                 mst.mold_production_type_code, 
-                CM_GET_CODE_NAME_FUNC(mst.tenant_id , 'DP_MD_PROD_TYPE', mst.mold_production_type_code, ses.LANGUAGE_CODE) as mold_production_type_code_nm : String(240) ,
+                CM_GET_CODE_NAME_FUNC(mst.tenant_id ,'DP_MD_PROD_TYPE', mst.mold_production_type_code, ses.LANGUAGE_CODE) as mold_production_type_code_nm : String(240) ,
                 mst.mold_item_type_code, 
                 CM_GET_CODE_NAME_FUNC(mst.tenant_id, 'DP_MD_PROD_TYPE', mst.mold_item_type_code , ses.LANGUAGE_CODE) as mold_item_type_code_nm : String(240) ,
                 mst.mold_mfger_code,
