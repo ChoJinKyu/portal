@@ -547,8 +547,8 @@ sap.ui.define([
                 loiItemNumber: oRecord.same_selection_item_number,
                 loiSelectionNumber: oRecord.loi_selection_number,
                 loiNumber: oRecord.loi_number,
-                quotationNumber: oRecord.same_quotation_number,
-                quotationItemNumber: oRecord.same_quotation_item_number
+                quotationNumber: (oRecord.same_quotation_number ? oRecord.same_quotation_number : "new"),
+                quotationItemNumber: (oRecord.same_quotation_item_number ? oRecord.same_quotation_item_number : "new") 
                 // existRfq: (oRecord.quotation_number ? true : false)
             }, true);
         },

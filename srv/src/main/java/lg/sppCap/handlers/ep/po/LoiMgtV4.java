@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,6 +34,7 @@ import cds.gen.ep.loimgtv4service.DeleteLoiMulEntityProcContext;
 import cds.gen.ep.loimgtv4service.DeleteLoiPublishProcContext;
 import cds.gen.ep.loimgtv4service.DeleteLoiSupplySelectionProcContext;
 import cds.gen.ep.loimgtv4service.InputData;
+import cds.gen.ep.loimgtv4service.LoiDtlOffType;
 import cds.gen.ep.loimgtv4service.LoiDtlType;
 import cds.gen.ep.loimgtv4service.LoiMgtV4Service_;
 import cds.gen.ep.loimgtv4service.LoiRfqDtlOutType;
@@ -397,11 +397,15 @@ public class LoiMgtV4 implements EventHandler {
                             .append("TENANT_ID NVARCHAR(5), ")
                             .append("COMPANY_CODE NVARCHAR(10), ")
                             .append("LOI_WRITE_NUMBER NVARCHAR(50), ")
-                            .append("LOI_ITEM_NUMBER NVARCHAR(50) ")
+                            .append("LOI_ITEM_NUMBER NVARCHAR(50), ")
+                            .append("OFFLINE_SELECTION_SUPPLIER_CODE NVARCHAR(10), ")
+                            .append("OFFLINE_QUOTATION_AMOUNT DECIMAL, ")
+                            .append("OFFLINE_QUOTATION_DUE_DATE DATE, ")
+                            .append("OFFLINE_QUOTATION_REMARK NVARCHAR(500) ")
                         .append(")");
-        
+
         String v_sql_dropTableD = "DROP TABLE #LOCAL_TEMP_EP_SAVE_LOI_SUPPLY_SELECTION";        
-        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_EP_SAVE_LOI_SUPPLY_SELECTION VALUES (?, ?, ?, ?)";
+        String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_EP_SAVE_LOI_SUPPLY_SELECTION VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         v_sql_callProc.append("CALL EP_SAVE_LOI_SUPPLY_SELECTION_PROC ( ")
                     .append(" I_TENANT_ID => ?, ")
@@ -424,7 +428,7 @@ public class LoiMgtV4 implements EventHandler {
 
         SaveLoiSelectionType v_indata = context.getInputData();
         Collection<OutType> v_result = new ArrayList<>(); 
-        Collection<LoiDtlType> v_inDetails = v_indata.getDetails();
+        Collection<LoiDtlOffType> v_inDetails = v_indata.getDetails();
 
         // log.info("###getTenantId===="+v_indata.getTenantId());
 
@@ -437,12 +441,17 @@ public class LoiMgtV4 implements EventHandler {
         // Detail Local Temp Table에 insert
         List<Object[]> batchD = new ArrayList<Object[]>();
         if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
-            for(LoiDtlType v_inRow : v_inDetails){
+            for(LoiDtlOffType v_inRow : v_inDetails){
                 Object[] values = new Object[] {
                     v_inRow.get("tenant_id"),
                     v_inRow.get("company_code"),
                     v_inRow.get("loi_write_number"),
-                    v_inRow.get("loi_item_number")};
+                    v_inRow.get("loi_item_number"),
+                    v_inRow.get("offline_selection_supplier_code"),
+                    v_inRow.get("offline_quotation_amount"),
+                    v_inRow.get("offline_quotation_due_date"),
+                    v_inRow.get("offline_quotation_remark")};                
+
                 batchD.add(values);
             }
         }    

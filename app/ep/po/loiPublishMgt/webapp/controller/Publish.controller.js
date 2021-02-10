@@ -239,7 +239,7 @@ sap.ui.define([
                 "supplier_code": oMasterModel.getData().supplier_code,
                 "contract_format_id": oMasterModel.getData().contract_format_id,
                 "offline_flag": (oMasterModel.getData().offline_flag == "false" ? false : true),
-                "contract_date": oMasterModel.getData().contract_date,
+                "contract_date": oMasterModel.getData().contract_date.split("-").join(""),
                 "additional_condition_desc": oMasterModel.getData().additional_condition_desc,
                 "special_note": oMasterModel.getData().special_note,
                 "attch_group_number": oMasterModel.getData().attch_group_number,
@@ -257,7 +257,7 @@ sap.ui.define([
 
             input.inputData = inputData;
 
-            console.log("input====", JSON.stringify(input));
+            console.log("input====", input.inputData);
 
             // if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
             // 	MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
@@ -379,27 +379,27 @@ sap.ui.define([
                 loiWriteNumberArr = oArgs.loiWriteNumber.split(","),
                 loiItemNumberArr = oArgs.loiItemNumber.split(",");
 
-            tenantIdArr.forEach(function (item, index) {
+            loiItemNumberArr.forEach(function (item, index) {
                 var arr = {
-                    "tenant_id": item,
-                    "company_code": "",
-                    "loi_write_number": "",
-                    "loi_item_number": "",
+                    "tenant_id": tenantIdArr[0],
+                    "company_code": companyCodeArr[0],
+                    "loi_write_number": loiWriteNumberArr[0],
+                    "loi_item_number": item
                 };
                 loiDtlArr[index] = arr;
             });
 
-            companyCodeArr.forEach(function (item, index) {
-                loiDtlArr[index]["company_code"] = item;
-            });
+            // loiItemNumberArr.forEach(function (item, index) {
+            //     loiDtlArr[index]["tenant_id"] = tenantIdArr[0];
+            // });
 
-            loiWriteNumberArr.forEach(function (item, index) {
-                loiDtlArr[index]["loi_write_number"] = item;
-            });
+            // loiItemNumberArr.forEach(function (item, index) {
+            //     loiDtlArr[index]["company_code"] = companyCodeArr[0];
+            // });
 
-            loiItemNumberArr.forEach(function (item, index) {
-                loiDtlArr[index]["loi_item_number"] = item;
-            });
+            // loiItemNumberArr.forEach(function (item, index) {
+            //     loiDtlArr[index]["loi_write_number"] = loiWriteNumberArr[0];
+            // });
 
             console.log("loiDtlArr==", loiDtlArr);
 
@@ -486,7 +486,7 @@ sap.ui.define([
                 oMasterModel.setTransactionModel(this.getModel());
                 oMasterModel.read(sObjectPath, {
                     success: function (oData) {
-                        console.log("oData====", oData.loi_publish_status_code);
+                        console.log("oData====", oData);
                         oView.setBusy(false);
                         that._toShowMode();
                     }
@@ -504,7 +504,7 @@ sap.ui.define([
             this.byId("page").setProperty("showFooter", true);
             this.byId("pageEditButton").setVisible(false);
             this.byId("pageDeleteButton").setVisible(false);
-            this.byId("pageNavBackButton").setEnabled(false);
+            // this.byId("pageNavBackButton").setEnabled(false);
             this.byId("pageSaveButton").setVisible(true);
             this.byId("pageByPassButton").setVisible(true);
             this.byId("pageRequestButton").setVisible(true);
@@ -555,7 +555,7 @@ sap.ui.define([
             this.byId("pageDeleteButton").setVisible(true)
             //}
             //this.byId("pageDeleteButton").setEnabled(true);
-            this.byId("pageNavBackButton").setEnabled(true);
+            // this.byId("pageNavBackButton").setEnabled(true);
 
             this.byId("pageSaveButton").setVisible(false);
             this.byId("pageByPassButton").setVisible(false);
@@ -630,7 +630,21 @@ sap.ui.define([
                 this.byId("page").setSelectedSection("pageSectionMain");
                 this.byId("pageSectionMain").setSelectedSubSection("pageSubSection1");
             }
+        },
+
+        openSupplierPopupInTable: function (oEvent) {
+            this.byId("supplierWithOrgDialog").open();
+        },
+
+        onSupplierDialogApplyPress: function (oEvent) {
+
+            console.log("supplier_code ::: ", oEvent.getParameter("item").supplier_code);
+            console.log("supplier_local_name ::: ", oEvent.getParameter("item").supplier_local_name);
+            this.byId("saveSupplierName").setValue(oEvent.getParameter("item").supplier_local_name);
+            this.byId("saveSupplierCode").setText(oEvent.getParameter("item").supplier_code);
+
         }
+
 
     });
 });

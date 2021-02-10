@@ -142,7 +142,7 @@ BEGIN
                             , '' AS QUOTATION_DUE_DATE 
                             , NULL AS QUOTATION_REMARK 
                             , ITEM.OFFLINE_SELECTION_SUPPLIER_CODE 
-                            , ITEM.OFFLINE_SELECTION_SUPPLIER_CODE AS OFFLINE_SELECTION_SUPPLIER_NAME 
+                            , SP_VIEW.SUPPLIER_LOCAL_NAME AS OFFLINE_SELECTION_SUPPLIER_NAME 
                             , ITEM.OFFLINE_QUOTATION_AMOUNT 
                             , TO_CHAR(ITEM.OFFLINE_QUOTATION_DUE_DATE, 'YYYY-MM-DD') AS OFFLINE_QUOTATION_DUE_DATE 
                             , ITEM.OFFLINE_QUOTATION_REMARK 
@@ -156,7 +156,11 @@ BEGIN
 				    ON ITEM.TENANT_ID = PL.TENANT_ID 
 				    -- AND DTL.COMPANY_CODE = PL.COMPANY_CODE 
 				    AND ITEM.PLANT_CODE = PL.PLANT_CODE
-                    ORDER BY ITEM.ITEM_SEQUENCE ASC
+                    LEFT OUTER JOIN SP_SM_SUPPLIER_VIEW SP_VIEW
+                    ON ITEM.TENANT_ID = SP_VIEW.TENANT_ID
+                    -- AND ITEM.COMPANY_CODE = SP_VIEW.COMPANY_CODE
+                    AND ITEM.OFFLINE_SELECTION_SUPPLIER_CODE = SP_VIEW.SUPPLIER_CODE      
+                    ORDER BY ITEM.ITEM_SEQUENCE ASC                   
                     ;                    
 
 
@@ -169,7 +173,7 @@ BEGIN
                             , ITEM.COMPANY_CODE
                             , ITEM.LOI_WRITE_NUMBER
                             , ITEM.LOI_ITEM_NUMBER
-                            , ITEM.ITEM_SEQUENCE 
+                            , (ITEM.ITEM_SEQUENCE+20) AS ITEM_SEQUENCE 
                             , TRUE AS OFFLINE_FLAG 
                             , ITEM.PLANT_CODE 
                             , PL.PLANT_NAME 
@@ -187,7 +191,7 @@ BEGIN
                             , '' AS QUOTATION_DUE_DATE 
                             , NULL AS QUOTATION_REMARK 
                             , ITEM.OFFLINE_SELECTION_SUPPLIER_CODE 
-                            , ITEM.OFFLINE_SELECTION_SUPPLIER_CODE AS OFFLINE_SELECTION_SUPPLIER_NAME 
+                            , SP_VIEW.SUPPLIER_LOCAL_NAME AS OFFLINE_SELECTION_SUPPLIER_NAME 
                             , ITEM.OFFLINE_QUOTATION_AMOUNT 
                             , TO_CHAR(ITEM.OFFLINE_QUOTATION_DUE_DATE, 'YYYY-MM-DD') AS OFFLINE_QUOTATION_DUE_DATE
                             , ITEM.OFFLINE_QUOTATION_REMARK 
@@ -200,7 +204,11 @@ BEGIN
 				    LEFT OUTER JOIN CM_ORG_PLANT AS PL
 				    ON ITEM.TENANT_ID = PL.TENANT_ID 
 				    -- AND DTL.COMPANY_CODE = PL.COMPANY_CODE 
-				    AND ITEM.PLANT_CODE = PL.PLANT_CODE                    
+                    AND ITEM.PLANT_CODE = PL.PLANT_CODE      
+                    LEFT OUTER JOIN SP_SM_SUPPLIER_VIEW SP_VIEW
+                    ON ITEM.TENANT_ID = SP_VIEW.TENANT_ID
+                    -- AND ITEM.COMPANY_CODE = SP_VIEW.COMPANY_CODE
+                    AND ITEM.OFFLINE_SELECTION_SUPPLIER_CODE = SP_VIEW.SUPPLIER_CODE                                  
 
                     UNION ALL
 

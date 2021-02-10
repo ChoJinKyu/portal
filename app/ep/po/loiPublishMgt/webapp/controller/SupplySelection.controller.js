@@ -201,7 +201,7 @@ sap.ui.define([
                 oDetailsModel = this.getModel("details"),
                 that = this;
 
-            console.log("details===", oDetailsModel.getData());    
+            console.log("details===", oDetailsModel.getData());
 
             // '122010'	'RFQ진행중'
             // '122020'	'RFQ완료'
@@ -224,7 +224,24 @@ sap.ui.define([
 
             var input = {};
             var inputData = {};
-            var detailData = this._sLoiDtlArr;
+            // var detailData = this._sLoiDtlArr;
+            var detailData = [];
+
+            oDetailsModel.getData().forEach(function (d, index) {
+                var detailRow = {};
+                detailRow["tenant_id"] = d["tenant_id"];
+                detailRow["company_code"] = d["company_code"];
+                detailRow["loi_write_number"] = d["loi_write_number"];
+                detailRow["loi_item_number"] = d["loi_item_number"];
+                detailRow["offline_selection_supplier_code"] = d["offline_selection_supplier_code"];
+                detailRow["offline_quotation_amount"] = d["offline_quotation_amount"];
+                detailRow["offline_quotation_due_date"] = d["offline_quotation_due_date"];
+                detailRow["offline_quotation_remark"] = d["offline_quotation_remark"];
+                if(d["offline_flag"])
+                    detailData.push(detailRow);
+                return d;
+            });
+
             var tenantId = oMasterModel.getData().tenant_id;
             if (tenantId.indexOf(",") > -1) {
                 tenantId = tenantId.split(",")[0];
@@ -256,7 +273,7 @@ sap.ui.define([
 
             input.inputData = inputData;
 
-            console.log("input====", JSON.stringify(input));
+            console.log("input====", input.inputData);
 
             // if(!oMasterModel.isChanged() && !oDetailsModel.isChanged()) {
             // 	MessageToast.show(this.getModel("I18N").getText("/NCM0002"));
@@ -285,27 +302,85 @@ sap.ui.define([
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
                                 that.validator.clearValueState(that.byId("midObjectForm"));
 
+                                // var sObjectPath = "/LOISupplySelectionView(tenant_id='" + tenantId + "',company_code='" + companyCode + "',loi_selection_number='" + data.value[0].savedkey + "')";
+                                // var oMasterModel = that.getModel("master");
+                                // oView.setBusy(true);
+                                // oMasterModel.setTransactionModel(that.getModel());
+                                // oMasterModel.read(sObjectPath, {
+                                //     success: function (oData) {
+                                //         oView.setBusy(false);
+                                //         oView.getModel("master").updateBindings(true);
+                                //         that._toShowMode();
+                                //     }
+                                // });
+
                                 var sObjectPath = "/LOISupplySelectionView(tenant_id='" + tenantId + "',company_code='" + companyCode + "',loi_selection_number='" + data.value[0].savedkey + "')";
                                 var oMasterModel = that.getModel("master");
                                 oView.setBusy(true);
-                                oMasterModel.setTransactionModel(that.getModel());
-                                oMasterModel.read(sObjectPath, {
-                                    success: function (oData) {
-                                        oView.setBusy(false);
-                                        oView.getModel("master").updateBindings(true);
-                                        that._toShowMode();
-                                    }
+                                var mstDataLoading = new Promise(function (resolve, reject) {
+                                    oMasterModel.setTransactionModel(that.getModel());
+                                    oMasterModel.read(sObjectPath, {
+                                        success: function (oData) {
+                                            resolve(oData);
+                                        },
+                                        error: function (data) {
+                                            reject(data);
+                                        }
+                                    });
                                 });
 
-                                //that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                //뷰생성해서 변경예정
+                                var input = {
+                                    inputData: {
+                                        loiRfqType: [],
+                                        loiDtlType: []
+                                    }
+                                };
 
-                                // if (flag == "D") {
-                                //     that._toEditMode();
-                                // } else {
-                                //     that._toShowMode();
-                                // }
+                                input.inputData.loiRfqType = that._sQuotationArr;
+                                input.inputData.loiDtlType = that._sLoiDtlArr;
 
-                                console.log("master=======", oView.getModel("master"));
+                                console.log("input==", input.inputData);
+
+                                var url = "ep/po/loiPublishMgt/webapp/srv-api/odata/v4/ep.LoiMgtV4Service/SupplySelectionResult";
+
+                                var dtlDataLoading = new Promise(function (resolve, reject) {
+                                    $.ajax({
+                                        url: url,
+                                        type: "POST",
+                                        data: JSON.stringify(input),
+                                        contentType: "application/json",
+                                        success: function (oData) {
+                                            resolve(oData);
+                                        },
+                                        error: function (data) {
+                                            reject(data);
+                                        }
+                                    });
+                                });
+
+                                mstDataLoading.then(function (mstData) {
+
+                                    console.log("mstData====", mstData);
+                                    oView.getModel("master").updateBindings(true);
+
+                                    dtlDataLoading.then(function (dtlData) {
+                                        console.log("#########Success#####", dtlData);
+                                        oView.setBusy(false);
+                                        console.log("dtlData====", dtlData);
+                                        oView.getModel("details").setData(dtlData.value);
+                                        console.log("details11=======", oView.getModel("details").getData());
+                                        that._toShowMode();
+
+                                    }, function (data) {
+                                        console.log("extraError====", data);
+                                    });
+
+                                }, function (data) {
+                                    console.log("dtlError====", data);
+                                });
+
+                                // console.log("master=======", oView.getModel("master"));
 
                             },
                             error: function (e) {
@@ -391,18 +466,18 @@ sap.ui.define([
                 quotationItemNumberArr = oArgs.quotationItemNumber.split(",");
 
             quotationNumberArr.forEach(function (item, index) {
-                
+
                 var arr = {
                     "quotation_number": item,
                     "quotation_item_number": ""
                 };
-                if(item != "new")
+                if (item != "new")
                     quotationArr[index] = arr;
 
             });
 
             quotationItemNumberArr.forEach(function (item, index) {
-                if(item != "new")
+                if (item != "new")
                     quotationArr[index]["quotation_item_number"] = item;
             });
 
@@ -418,6 +493,7 @@ sap.ui.define([
             console.log("quotationArr==", quotationArr);
 
             this._sLoiDtlArr = loiDtlArr;
+            this._sQuotationArr = quotationArr;
 
             var input = {
                 inputData: {
@@ -518,7 +594,7 @@ sap.ui.define([
             this.byId("page").setProperty("showFooter", true);
             this.byId("pageEditButton").setVisible(false);
             this.byId("pageDeleteButton").setVisible(false);
-            this.byId("pageNavBackButton").setEnabled(false);
+            // this.byId("pageNavBackButton").setEnabled(false);
             this.byId("pageSaveButton").setVisible(true);
             this.byId("pageByPassButton").setVisible(true);
             this.byId("pageRequestButton").setVisible(true);
@@ -569,7 +645,7 @@ sap.ui.define([
             this.byId("pageDeleteButton").setVisible(true)
             //}
             //this.byId("pageDeleteButton").setEnabled(true);
-            this.byId("pageNavBackButton").setEnabled(true);
+            // this.byId("pageNavBackButton").setEnabled(true);
 
             this.byId("pageSaveButton").setVisible(false);
             this.byId("pageByPassButton").setVisible(false);
@@ -613,36 +689,33 @@ sap.ui.define([
             } else {
                 if (oHandler) oHandler(this._oFragments[sFragmentName]);
             }
+        },
+
+        openSupplierPopupInTable: function (oEvent) {
+            var sPath = oEvent.getSource().getBindingContext("details").getPath();
+            var index = sPath.substr(sPath.length - 1);
+
+            console.log(" index obj ----------------->", index);
+            this.openSupplierPopupInTable["row"] = index;
+
+            this.byId("supplierWithOrgDialog").open();
+
+        },
+
+        onSupplierDialogApplyPress: function (oEvent) {
+
+            console.log("onSupplierDialogApplyPress----------------->");
+
+            var oDetailsModel = this.getModel("details");
+            var rowIndex = this.openSupplierPopupInTable["row"];
+            console.log("row ::: ", this.openSupplierPopupInTable["row"]);
+
+            console.log("supplier_code ::: ", oEvent.getParameter("item").supplier_code);
+            console.log("supplier_local_name ::: ", oEvent.getParameter("item").supplier_local_name);
+
+            oDetailsModel.setProperty("/" + rowIndex + "/offline_selection_supplier_name", oEvent.getParameter("item").supplier_local_name);
+            oDetailsModel.setProperty("/" + rowIndex + "/offline_selection_supplier_code", oEvent.getParameter("item").supplier_code);
         }
-
-        // onAfterRendering : function () {
-        //     var that = this,
-        //         sHtmlValue = "";
-        //         // sHtmlValue = '<p style="text-align: justify; background: white; font-size: 10pt; font-family: Calibri, sans-serif;"><strong><span style="font-size: 10.5pt; font-family: sans-serif; color: black;">Lorem ipsum dolor sit amet</span></strong>' +
-        // 		// '<span style="font-size: 10.5pt; font-family: sans-serif; color: black;">, consectetur adipiscing elit. Suspendisse ornare, nibh nec gravida tincidunt, ipsum quam venenatis nisl, vitae venenatis urna sem eget ipsum. Ut cursus auctor leo et vulputate. ' +
-        // 		// 'Curabitur nec pretium odio, sed auctor felis. In vehicula, eros aliquam pharetra mattis, ante mi fermentum massa, nec pharetra arcu massa finibus augue. </span></p> ';                
-        // 	sap.ui.require(["sap/ui/richtexteditor/RichTextEditor", "sap/ui/richtexteditor/EditorType"],
-        // 		function (RTE, EditorType) {
-        // 			var oRichTextEditor = new RTE("myRTE", {
-        // 				editorType: EditorType.TinyMCE4,
-        // 				width: "100%",
-        //                 height: "200px",
-        //                 //editable: "{contModel>/editMode}",
-        //                 editable: true,
-        // 				customToolbar: true,
-        // 				showGroupFont: true,
-        // 				showGroupLink: true,
-        // 				showGroupInsert: true,
-        // 				value: sHtmlValue,
-        // 				ready: function () {
-        // 					this.addButtonGroup("styleselect").addButtonGroup("table");
-        // 				}
-        //             });
-        // 			that.getView().byId("idVerticalLayout").addContent(oRichTextEditor);
-        //     });
-
-        //     //this.onPageEnterFullScreenButtonPress();
-        // }
 
     });
 });

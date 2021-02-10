@@ -19,7 +19,7 @@
         
             <VBox alignContent="Center">
                 <Label text="* 협력사명" textAlign="left" design="Bold" class="sapMLabelNoText" />
-                <Text text="{master>/supplier_code}" />
+                <Text text="{master>/supplier_name}" />
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>    
