@@ -200,9 +200,9 @@ sap.ui.define([
                                 return;
                             }else{
                                 oView.setBusy(false);
-                                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
-                                this.onPageNavBackButtonPress();
+                                that.onPageNavBackButtonPress();
                             } 
                         }.bind(this)
                         // that.getModel("I18N").getText("/NCM01001")
