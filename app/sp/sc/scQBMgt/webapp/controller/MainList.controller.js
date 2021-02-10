@@ -1028,6 +1028,26 @@ sap.ui.define([
 
                 console.log("oFilterNegoNo = ",oFilterNegoNo);
                 console.log("oFilterTitle = ",oFilterTitle);
+            },
+
+            onStatusColor: function (sStautsCode) {
+
+                // var sReturnValue = 6;
+
+                var sReturnValue = parseInt(sStautsCode) / 10;
+
+                return sReturnValue;
+
+
+
+
+                // //색상 정의 필요
+                // if( sStautsCode === "S" ) {
+                //     sReturnValue = 1;
+                // }else if( sStautsCode === "O" ) {
+                //     sReturnValue = 2;
+                // }
+                // return sReturnValue;
             }
 		});
 	});

@@ -7,6 +7,7 @@
     xmlns:core="sap.ui.core" 
     xmlns:t="sap.ui.table"
     xmlns:u="sap.ui.unified"
+    xmlns:tnt="sap.tnt"  
     xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
     xmlns:smartTable="sap.ui.comp.smarttable"
     xmlns:customData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
@@ -356,7 +357,13 @@
                                 </t:customData>
                                 <Label text="{I18N>/NEGO_PROGRESS_STATUS_CODE}" />
                                 <t:template>
-                                    <Text text="{nego_progress_status_name}" wrapping="false" /> 
+                                    <tnt:InfoLabel 
+                                        text="{nego_progress_status_name}" 
+                                        colorScheme="{
+                                            path: 'nego_progress_status_code',
+                                            formatter: '.onStatusColor'
+                                        }" />  
+                                    <!-- <Text text="{nego_progress_status_name}" wrapping="false" />  -->
                                 </t:template>
                             </t:Column> 
                             <t:Column width="10rem" hAlign="Center" sortProperty="award_progress_status_name" filterProperty="award_progress_status_name">
@@ -365,7 +372,13 @@
                                 </t:customData>
                                 <Label text="{I18N>/AWARD_PROGRESS_STATUS_CODE}" />
                                 <t:template>
-                                    <Text text="{award_progress_status_name}" wrapping="false" />
+                                    <tnt:InfoLabel 
+                                        text="{award_progress_status_name}" 
+                                        colorScheme="{
+                                            path: 'award_progress_status_code',
+                                            formatter: '.onStatusColor'
+                                        }" />
+                                    <!-- <Text text="{award_progress_status_name}" wrapping="false" /> -->
                                 </t:template>
                             </t:Column> 
                             <t:Column width="6rem" hAlign="Center" sortProperty="reply_times" filterProperty="reply_times">
