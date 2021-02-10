@@ -149,6 +149,7 @@ service SourcingV4Service {
         tenant_id                    : type of Sc_Nego_Item_Prices : tenant_id;
         nego_header_id               : type of Sc_Nego_Item_Prices : nego_header_id;
         nego_item_number             : type of Sc_Nego_Item_Prices : nego_item_number;
+        company_code                 : type of Sc_Nego_Item_Prices : company_code;
         operation_org_code           : type of Sc_Nego_Item_Prices : operation_org_code;
         operation_unit_code          : type of Sc_Nego_Item_Prices : operation_unit_code;
         award_progress_status_code   : type of Sc_Nego_Item_Prices : award_progress_status_code;
