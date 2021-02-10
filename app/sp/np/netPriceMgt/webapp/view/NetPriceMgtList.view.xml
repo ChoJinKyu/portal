@@ -191,8 +191,7 @@
             <t:Table id="listTable"
                 selectionMode="None"
                 rows="{list>/NpApprovalListView}"
-                cellClick=".fnDetail"
-                visibleRowCountMode="Auto">
+                cellClick=".fnDetail">
                 <t:extension>
                     <OverflowToolbar class="sapFDynamicPageAlignContent">
                         <Title text="{I18N>/BASE_PRICE_LIST} ({= ${list>/NpApprovalListView}.length || 0})" level="H2"/>
@@ -205,12 +204,6 @@
                         <Label text="{I18N>/APPROVAL_NO}" textAlign="Center" />
                         <t:template>
                             <Text text="{list>approval_number}" />
-                        </t:template>
-                    </t:Column>
-                    <t:Column hAlign="Center" width="8rem">
-                        <Label text="{I18N>/ORG_CODE}" textAlign="Center" />
-                        <t:template>
-                            <Text text="{list>org_code}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="20rem">
@@ -247,12 +240,6 @@
                         <Label text="{I18N>/NEGOTIATION} No" textAlign="Left" />
                         <t:template>
                             <Text text="" />
-                        </t:template>
-                    </t:Column>
-                    <t:Column hAlign="Center" width="8rem">
-                        <Label text="{I18N>/CREATION_DATE}" textAlign="Left" />
-                        <t:template>
-                            <Text text="{path: 'list>creation_date', formatter: '.DateFormatter.toDateString'}" />
                         </t:template>
                     </t:Column>
                     <t:Column hAlign="Center" width="10rem">

@@ -26,7 +26,7 @@
 				<uxap:expandedHeading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBack" />
-                        <Title text="{I18N>/NEW_BASE_PRICE}" />
+                        <Title text="{I18N>/NET_PRICE_APPROVAL}" />
                     </HBox>
 				</uxap:expandedHeading>
 			</uxap:ObjectPageDynamicHeaderTitle>
@@ -379,7 +379,7 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="(New)Price" textAlign="Center" />
                                             <t:template>
-                                                <Input type="Text" value="{generalInfoList>net_price}" />
+                                                <Input type="Number" value="{generalInfoList>net_price}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -831,7 +831,7 @@
                 <Button id="requestBtn" type="Emphasized" text="{I18N>/REQUEST}" press=".onRequest" class="btnGrp"/>
                 <Button id="approveBtn" type="Emphasized" text="{I18N>/APPROVAL}" press=".onApprove" class="btnGrp"/>
                 <Button id="rejectBtn" type="Emphasized" text="{I18N>/REJECT}" press=".onReject" class="btnGrp"/>
-                <Button id="cancelBtn" text="{I18N>/CANCEL}" press=".onCancel" class="btnGrp"/>
+                <!-- <Button id="cancelBtn" text="{I18N>/CANCEL}" press=".onCancel" class="btnGrp"/> -->
 			</OverflowToolbar>
 		</uxap:footer>
         <!-- footer 끝 -->
