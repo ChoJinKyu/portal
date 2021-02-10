@@ -559,7 +559,7 @@ sap.ui.define([
                 
                 this._toShowMode();
             }
-            this.validator.clearValueState(this.byId("pageSubSection1"));
+            this.validator.clearValueState(this.byId("page"));
             this.validator.clearValueState(this.byId("lngTable"));
         },
 
@@ -677,7 +677,8 @@ sap.ui.define([
                 });
                 
 				this._toShowMode();
-			}
+            }
+            this.validator.clearValueState(this.byId("page"));
 			oTransactionManager.setServiceModel(this.getModel());
         },
         
