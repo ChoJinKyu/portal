@@ -419,8 +419,8 @@
                                                         <Label  text="Number of Award Supplier" 
                                                                 class="sapMLabelNoText"/> 
                                                         <HBox >
-                                                            <Select width="100%" selectedKey="1" change="selectNumberSupplierChange"
-                                                                id="selectNumberSupplier" enabled="{= ${NPInfPopupUtil>/enabled} === false ? false : true}">
+                                                            <Select width="100%" change="selectNumberSupplierChange" selectedKey="{NegoHeaders>/number_of_award_supplier}" 
+                                                                id="selectNumberSupplier" enabled="true">
                                                                 <core:Item key="1" text="1" />
                                                                 <core:Item key="2" text="2" />
                                                                 <core:Item key="3" text="3" />
@@ -586,7 +586,7 @@
                                                                 class="sapMLabelNoText"/> 
                                                         <HBox >
                                                             <Select width="100%" change="selectNumberSupplierChange" visible="false" selectedKey="{NegoHeaders>/number_of_award_supplier}"
-                                                                id="selectNumberSupplier2" enabled="{= ${NPInfPopupUtil>/enabled} === false ? false : true}">
+                                                                id="selectNumberSupplier2" enabled="false">
                                                                 <core:Item key="1" text="1" />
                                                                 <core:Item key="2" text="2" />
                                                                 <core:Item key="3" text="3" />

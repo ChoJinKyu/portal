@@ -143,6 +143,7 @@ sap.ui.define([
             },
             onLiveTargetTotal: function(e){
                 
+                debugger;
                 var oValue = e.getParameters().value;
                 oValue = oValue.replace(/[^-\.0-9]/g, "");
                 if(oValue.indexOf(".") != oValue.lastIndexOf(".")){
@@ -335,10 +336,10 @@ sap.ui.define([
                     
                     oView.getModel("NegoHeaders").oData.award_type_code = "010";
                     oView.getModel("NegoHeaders").oData.award_method_code = "MP";
-                    oView.getModel("NegoHeaders").oData.number_of_award_supplier = "1";
+                    oView.getModel("NegoHeaders").oData.number_of_award_supplier = "2";
                     oView.getModel("NegoHeaders").refresh(true);
 
-                    debugger;
+                    
 
 
                 }else {                                           // list 조회 모드 일 경우에 조회.
@@ -1814,6 +1815,7 @@ sap.ui.define([
                 
                 var oKey = e.getParameters().selectedItem.getKey();
                 this._supplierNumberModel(oKey);
+                this.getView().getModel("NegoHeaders").oData.number_of_award_supplier = oKey;
                 console.log("this.selectNumberSupplierChange oKey =========================== ", oKey);
                 var oState = this._sumSupplierScore();
                 this._supplierNumInputStateChange(oState);
