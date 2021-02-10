@@ -232,7 +232,7 @@ public class UcContractMgtV4Service implements EventHandler {
                             .append(", EXTRA_CLASS_NAME                  NVARCHAR(100) ")
                             .append(", EXTRA_NAME                        NVARCHAR(100) ")
                             .append(", BASE_EXTRA_RATE                   DECIMAL ")
-                            .append(", APPLY_EXTRA_RATE                  DECIMAL ")
+                            .append(", APPLY_EXTRA_RATE                  NVARCHAR(10) ")
                             .append(", APPLY_EXTRA_DESC                  NVARCHAR(1000) ")
                             .append(", UPDATE_ENABLE_FLAG                BOOLEAN ")   
                             .append(", LOCAL_CREATE_DTM                  SECONDDATE ")
@@ -545,7 +545,8 @@ public class UcContractMgtV4Service implements EventHandler {
                 v_row.setExtraClassName(v_rs.getString("extra_class_name"));
                 v_row.setExtraName(v_rs.getString("extra_name"));
                 v_row.setBaseExtraRate(v_rs.getBigDecimal("base_extra_rate"));
-                v_row.setApplyExtraRate(v_rs.getBigDecimal("apply_extra_rate"));
+                // v_row.setApplyExtraRate(v_rs.getBigDecimal("apply_extra_rate"));
+                v_row.setApplyExtraRate(v_rs.getString("apply_extra_rate"));
                 v_row.setApplyExtraDesc(v_rs.getString("apply_extra_desc"));
                 v_row.setUpdateEnableFlag(v_rs.getBoolean("update_enable_flag"));
                 // v_row.setLocalCreateDtm(v_rs.getDate("local_create_dtm").toInstant());
