@@ -102,7 +102,7 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
                         v_row.setQuarterBasePrice   (v_rs.getBigDecimal("quarter_base_price"));
                         v_row.setQuarterCiRate      (v_rs.getBigDecimal("quarter_ci_rate"));
 
-                        v_row.setBaseDate           (v_rs.getDate("base_date").toLocalDate());
+                        v_row.setBaseDate           (v_rs.getDate("base_date")==null?null:v_rs.getDate("base_date").toLocalDate());
                         v_row.setBasePrice          (v_rs.getBigDecimal("base_price"));
                         v_row.setBaseCurrencyCode   (v_rs.getString("base_currency_code"));
                         v_row.setBaseApplyStartYyyymm   (v_rs.getString("base_apply_start_yyyymm"));

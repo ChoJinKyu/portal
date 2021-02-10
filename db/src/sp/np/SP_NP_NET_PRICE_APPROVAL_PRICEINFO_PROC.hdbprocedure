@@ -77,6 +77,7 @@ BEGIN
                     ,	it.material_code
                     ,	it.market_code
 
+
                     ,   pad.currency_code
                     ,   pad.net_price
 
@@ -99,9 +100,11 @@ BEGIN
         
             LEFT JOIN SP_NP_NET_PRICE_APPROVAL_DTL pad      /*  단가품의 상세 */
                    ON it.tenant_id              = pad.tenant_id
+                   /*
                   AND it.company_code           = pad.company_code
                   AND it.org_type_code          = pad.org_type_code
                   AND it.org_code               = pad.org_code
+                  */
                   AND it.approval_number        = pad.approval_number
                   AND it.item_sequence          = pad.item_sequence
 
