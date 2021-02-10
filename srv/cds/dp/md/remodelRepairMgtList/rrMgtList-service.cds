@@ -106,6 +106,8 @@ service RrMgtListService {
                 ass.class_desc,
                 mst.mold_production_type_code, 
                 CM_GET_CODE_NAME_FUNC(item.tenant_id, 'DP_MD_PROD_TYPE', mst.mold_production_type_code, ses.LANGUAGE_CODE) as mold_production_type_code_nm : String(240) ,
+                item.repair_progress_status_code ,
+                CM_GET_CODE_NAME_FUNC(item.tenant_id , 'DP_MD_REPAIR_PROGRESS_STATUS', item.repair_progress_status_code, ses.LANGUAGE_CODE) as repair_progress_status_code_nm : String(240) ,
                 mst.mold_item_type_code,
                 CM_GET_CODE_NAME_FUNC(item.tenant_id, 'DP_MD_ITEM_TYPE', mst.mold_item_type_code, ses.LANGUAGE_CODE) as mold_item_type_code_nm : String(240) ,   
                 mst.mold_mfger_code ,

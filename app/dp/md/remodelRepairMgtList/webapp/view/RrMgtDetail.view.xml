@@ -76,14 +76,10 @@
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
 					<HBox><Label text="{I18N>/STATUS}" /> <Label text=" :"/></HBox>
-                    <!-- <ObjectStatus
+                   <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{= ${rrMgt>/approval_number} === undefined ?'New':''}{rrMgt>/approve_status_code_nm}"
-                        state="Error" /> -->
-                        <ObjectStatus
-                        class="sapMObjectStatusLarge"
-                        text="New"
-                        state="Error" />
+                        text="{= ${rrMgt>/repair_request_number} === undefined ?'New':''}{rrMgt>/repair_progress_status_code_nm}"
+                        state="Error" /> 
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">

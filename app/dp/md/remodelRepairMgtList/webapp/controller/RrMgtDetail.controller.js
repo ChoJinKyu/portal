@@ -142,8 +142,6 @@ sap.ui.define([
             }
         },
 
-
-
         onPageDraftButtonPress: function () {
             var mst = this.getModel("rrMgt").getData(); 
             var data = {
@@ -153,7 +151,8 @@ sap.ui.define([
                         , repair_request_number: mst.repair_request_number
                         , mold_id: mst.mold_id
                         , repair_desc: mst.repair_desc
-                        , repair_reason: mst.repair_reason
+                        , repair_reason: mst.repair_reason 
+                        , repair_request_date : this._getToday()
                         , mold_moving_plan_date: this.getStrDate(mst.mold_moving_plan_date)
                         , mold_complete_plan_date: this.getStrDate(mst.mold_complete_plan_date)
                         , mold_moving_result_date: this.getStrDate(mst.mold_moving_result_date)
@@ -183,16 +182,17 @@ sap.ui.define([
                 return;
             }
 
-            var mst = this.getModel("rrMgt").getData()
-                , session = this.getSessionUserInfo();
+            var mst = this.getModel("rrMgt").getData();
+            
             var data = {
                 inputData: {
                     repairItem: {
-                        tenant_id: session.tenant_id
+                        tenant_id: mst.tenant_id
                         , repair_request_number: mst.repair_request_number
                         , mold_id: mst.mold_id
                         , repair_desc: mst.repair_desc
-                        , repair_reason: mst.repair_reason
+                        , repair_reason: mst.repair_reason 
+                        , repair_request_date : this._getToday()
                         , mold_moving_plan_date: this.getStrDate(mst.mold_moving_plan_date)
                         , mold_complete_plan_date: this.getStrDate(mst.mold_complete_plan_date)
                         , mold_moving_result_date: this.getStrDate(mst.mold_moving_result_date)
