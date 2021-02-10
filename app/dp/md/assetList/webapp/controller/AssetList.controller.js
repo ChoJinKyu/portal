@@ -507,6 +507,7 @@ sap.ui.define([
             var sFileName = "ASSET LIST"
             //var oData = this.getModel("list").getProperty("/Message"); //binded Data
             var oData = oTable.getModel("list").getProperty("/Assets");
+            console.log(oData);
             ExcelUtil.fnExportExcel({
                 fileName: sFileName || "SpreadSheet",
                 table: oTable,

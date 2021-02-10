@@ -50,19 +50,21 @@ BEGIN
 	/***********************************************
 	변수 정의
 	***********************************************/
+	DECLARE i INT;
+	
 	DECLARE V_FUNDING_APPL_NUMBER NVARCHAR(10);	--자금지원 신청번호
     DECLARE V_INV_MST_CNT INT := 0;				--투자계획서 마스터 건수
 	DECLARE V_INV_DTL_CNT INT := 0;				--투자계획서 상세 건수
 	DECLARE V_STEP_CODE NVARCHAR(30);			--단계코드
 	DECLARE V_STATUS_CODE NVARCHAR(30);			--상태코드
     DECLARE V_FUNDING_APPL_DATE DATE;           --자금지원 신청일자
+    DECLARE V_INVESTMENT_PLAN_SEQUENCE INT := 0;
 
     --에러처리 관련 CONDITION 변수
     DECLARE V_ERR_VALID CONDITION FOR SQL_ERROR_CODE 10000;     --INPUT PARAM ERROR
     DECLARE V_ERR_SAVE CONDITION FOR SQL_ERROR_CODE 10100;      --INSERT, UPDATE CONDITION ERROR
     DECLARE V_CUD_COUNT INT := 0;                               --CUD 처리확인 변수
-	
-    
+
     /***********************************************
     Exception 종류별 처리 
     ***********************************************/
@@ -101,6 +103,15 @@ BEGIN
 
     --자금지원 신청번호 추출
 	V_FUNDING_APPL_NUMBER := :I_FUNDING_APPL_NUMBER;
+
+
+    --투자계획서 마스터 데이터
+    V_TBL_INV_MST_DATA = SELECT 
+                             FUNDING_APPL_NUMBER
+                            ,INVESTMENT_PLAN_SEQUENCE
+                         FROM SP_SF_FUNDING_INVEST_PLAN_MST
+	                     WHERE FUNDING_APPL_NUMBER = :I_FUNDING_APPL_NUMBER
+                         ;
 	
 
 	BEGIN
@@ -176,28 +187,27 @@ BEGIN
 	
 		-------------------------------------------------------------------------------[투자계획서를 입력했는지 체크]
 		--투자계획서 마스터 입력 체크
-		SELECT COUNT(1) AS CNT
-		INTO V_INV_MST_CNT
-		FROM SP_SF_FUNDING_INVEST_PLAN_MST
-		WHERE FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
-		;
-		
-		IF (V_INV_MST_CNT < 1) THEN
-			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_30';
-		END IF;
-		
-		--투자계획서 상세 입력 체크
-		SELECT COUNT(1) AS CNT
-		INTO V_INV_DTL_CNT
-		FROM SP_SF_FUNDING_INVEST_PLAN_DTL
-		WHERE FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
-		;
-		
-		IF (V_INV_DTL_CNT < 1) THEN
-			SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_31';
-		END IF;
-        
-	
+		IF (RECORD_COUNT(:V_TBL_INV_MST_DATA) < 1 ) THEN
+            SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_30';
+        END IF;
+
+
+		FOR i IN 1 .. RECORD_COUNT( :V_TBL_INV_MST_DATA ) DO
+			V_INVESTMENT_PLAN_SEQUENCE := :V_TBL_INV_MST_DATA.INVESTMENT_PLAN_SEQUENCE[:i];
+			
+            SELECT COUNT(1) AS CNT
+            INTO V_INV_DTL_CNT
+            FROM SP_SF_FUNDING_INVEST_PLAN_DTL
+            WHERE FUNDING_APPL_NUMBER = V_FUNDING_APPL_NUMBER
+            AND INVESTMENT_PLAN_SEQUENCE = V_INVESTMENT_PLAN_SEQUENCE
+            ;
+
+            IF (V_INV_DTL_CNT < 1) THEN
+                SIGNAL V_ERR_VALID SET MESSAGE_TEXT = 'REQ_ERR_CODE_31';
+            END IF;
+
+        END FOR;
+
 	END;
     
 	
@@ -232,6 +242,7 @@ BEGIN
         **********************************/
         IF (:I_FUNDING_STATUS_CODE = '110') THEN
             V_FUNDING_APPL_DATE := CURRENT_TIMESTAMP;
+            
             /*
             SELECT
                 CURRENT_TIMESTAMP   --최초 제출일자

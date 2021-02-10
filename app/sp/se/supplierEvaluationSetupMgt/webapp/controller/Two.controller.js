@@ -406,6 +406,7 @@ sap.ui.define([
             bAllValid = aControls.every(function(oControl){
                 var sEleName = oControl.getMetadata().getElementName(),
                     sValue,oContext;
+                // var scenario_number = this.scenario_number;
                 
                 switch(sEleName){
                     case "sap.m.Input":
@@ -462,6 +463,18 @@ sap.ui.define([
                     }
                 }
 
+                // if (oControl.getId() === "container-supplierEvaluationSetupMgt---detail--detailView--rate")
+                //         {   
+
+                //             var iValue = parseInt(oControl.getValue());
+
+                //             if(scenario_number === "New"){
+                                
+                //             }
+    
+                            
+                //             debugger;
+                //         }
 
 
                 return true;

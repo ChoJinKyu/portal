@@ -15,7 +15,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{I18N>/FUNDING_NOTIFICATION}" />
+                    <Title text="{I18N>/FUNDING_NOTIFICATION} (Supplier)" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
