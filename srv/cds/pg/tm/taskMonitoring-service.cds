@@ -29,9 +29,12 @@ using {pg as EmpView} from '../../../../db/cds/pg/tm/PG_TM_EMPLOYEE_VIEW-model';
 using {pg as JobTView} from '../../../../db/cds/pg/tm/PG_TM_JOB_TITLE_VIEW-model';
 using {pg as MPNumbView} from '../../../../db/cds/pg/tm/PG_TM_MOBILE_PHONE_NUMBER_VIEW-model';
 using {pg as DepartView} from '../../../../db/cds/pg/tm/PG_TM_DEPARTMENT_VIEW-model';
+//Test View
+using {pg as RwLmtest} from '../../../../db/cds/pg/tm/PG_TM_ROW_LIMIT_TEST-model';
 
 namespace pg;
 
+@cds.query.limit: { max: 99999 }
 @path : '/pg.taskMonitoringService'
 service taskMonitoringService {
 
@@ -62,6 +65,9 @@ service taskMonitoringService {
     // entity MonitoringFullMaster @(title : '모니터링 전체 마스터')                 as projection on mntrFullMaster.Monitor_Full_Master {
     //     * , linkToTenantID : redirected to OrgTenant, linkToCompanyCode : redirected to OrgCompany, linkToBizunitCode : redirected to OrgUnit
     // };
+    // @cds.query.limit: { default : 500, max: 100000 }
+    @readonly
+    view RowLimitTest as select from RwLmtest.Tm_Row_Limit_Test;
 
     // Tenant View
     view OrgTenantView @(title : '회사 마스터 View') as

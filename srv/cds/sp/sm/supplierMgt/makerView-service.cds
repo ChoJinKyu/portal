@@ -18,10 +18,12 @@ using {cm as CntryLng} from '../../../../../db/cds/cm/CM_COUNTRY_LNG-model';
 
 namespace sp;
 
+@cds.query.limit: { max: 99999 }
 @path : '/sp.makerViewService'
 service makerViewService {
 
     // View
+    // @cds.query.limit: {default: 20, max: 99999}
     @readonly
     view MakerView @(title : '제조사 View') as select from mkCalView.Sm_Maker_Cal_View;
 

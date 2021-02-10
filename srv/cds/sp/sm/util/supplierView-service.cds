@@ -11,9 +11,12 @@ using {cm.Code_Lng as CodeLng} from '../../../../../db/cds/cm/CM_CODE_LNG-model'
 
 namespace sp;
 
+@cds.query.limit: { max: 99999 }
 @path : '/sp.supplierViewService'
 service supplierViewService {
 
+    // @cds.query.limit: {default: 500, max: 100000}
+    // @cds.query.limit: {max: 100000}
     @readonly
     view supplierView @(title : '공급업체 View') as select from supplCalView.Sm_Supplier_Cal_View;
 

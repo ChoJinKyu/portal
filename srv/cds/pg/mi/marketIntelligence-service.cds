@@ -33,6 +33,8 @@ using {dp.Mm_Unit_Of_Measure as UnitOfMeasure} from '../../../../db/cds/dp/mm/DP
 
 namespace pg;
 
+// @cds.query.limit: { default: 10, max: 99999 }
+@cds.query.limit: { max: 99999 }
 @path : '/pg.marketIntelligenceService'
 service marketIntelligenceService {
 
