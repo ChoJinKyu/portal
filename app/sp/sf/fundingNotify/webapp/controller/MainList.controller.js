@@ -226,6 +226,8 @@ sap.ui.define([
         },
 
         _getSearchStates: function () {
+            // this.byId("searchDateS").getFrom().setHours("09", "00", "00", "00");
+            // this.byId("searchDateS").getTo().setHours("09", "00", "00", "00");
             var sTitle, searchDateS, aSearchFilters = [],
                 sFromDate = this.byId("searchDateS").getFrom(),
                 sToDate = this.byId("searchDateS").getTo();
@@ -237,8 +239,8 @@ sap.ui.define([
             if(!!sFromDate || !!sToDate){
                 aSearchFilters.push(new Filter({
                     filters: [
-                        new Filter("funding_notify_start_date", FilterOperator.LE, new Date(sToDate.toString())),
-                        new Filter("funding_notify_end_date", FilterOperator.GE,  sFromDate)
+                        new Filter("funding_notify_start_date", FilterOperator.LE, sToDate.setHours("09", "00", "00", "00")),
+                        new Filter("funding_notify_end_date", FilterOperator.GE,  sFromDate.setHours("09", "00", "00", "00"))
                     ],
                     and : true
                 }));
@@ -256,7 +258,15 @@ sap.ui.define([
                 persoService: MainListPersoService,
                 hasGrouping: true
             }).activate();
+        }, 
+
+        _utcTimeZon: function (oDate) {
+
+
+
+            return oDate;
         }
+
 
     });
 });
