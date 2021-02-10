@@ -39,6 +39,7 @@ service NpApprovalDetailPriceV4Service {
         supplier_code                   : String(15)    ; 
         material_code                   : String(40)    ; 
         market_code                     : String(30)    ; 
+        currency_code                   : String(3)     ; 
     }
 
     /*  */

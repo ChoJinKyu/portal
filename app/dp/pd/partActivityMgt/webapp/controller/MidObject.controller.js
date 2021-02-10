@@ -19,10 +19,11 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/ObjectStatus",
-    "sap/f/LayoutType"
+    "sap/f/LayoutType",
+    "dp/util/control/ui/ActivityCodeDialog"
 ], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus, LayoutType) {
+	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus, LayoutType, ActivityCodeDialog) {
 		
 	"use strict";
 
@@ -145,7 +146,30 @@ sap.ui.define([
 		 */
         onPageDeleteEditButtonPress: function(){
 			this.onPageSaveButtonPress("D");
-		},
+        },
+        
+        onDialogActivityPress : function(){
+
+            if(!this.oSearchActivityDialog){
+                this.oSearchActivityDialog = new ActivityCodeDialog({
+                    title: "Select Activity",
+                    multiSelection: false,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2101")
+                        ]
+                    }
+                });
+                this.oSearchActivityDialog.attachEvent("apply", function(oEvent){ 
+                    console.log(oEvent.getParameter("item"));
+                    this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_code);
+                    this.byId("searchActivityName").setText(oEvent.getParameter("item").activity_name);
+                }.bind(this));
+            }
+
+            this.oSearchActivityDialog.open();
+
+        },
 
 		// onLngTableAddButtonPress: function(){
 		// 	var oTable = this.byId("lngTable"),
@@ -193,7 +217,7 @@ sap.ui.define([
            
             var CUType = CUDType;
 
-            if(CUType !== "D" ){
+            if(CUType === "U" ){
                 if(!oMasterModel.isChanged()) {
                         MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
                         return;
@@ -246,7 +270,9 @@ sap.ui.define([
 
                     update_user_id  : this.loginUserId,
                     crud_type_code  : CUType
-            };           
+            };
+            
+            console.log(pdMstVal);
             
 
             // var input = {
@@ -309,6 +335,12 @@ sap.ui.define([
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     }else {
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                        // 저장 후 재조회
+                                        v_this.getModel("contModel").setProperty("/createMode", false);                
+                                        v_this._bindView("/pdPartactivityTemplateView(tenant_id='" + v_this._sTenantId + "',company_code='" + v_this._sCompanyCode
+                                        + "',org_type_code='" + v_this._sOrgTypeCode + "',org_code='" + v_this._sOrgCode + "',part_project_type_code='" + v_this._sPartProjectTypeCode 
+                                        + "',activity_code='" + v_this._sActivityCode + "')");
+
                                         v_this._toShowMode();                                
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                     }
@@ -374,8 +406,8 @@ sap.ui.define([
                 
                 this._toShowMode();
             }
-            this.validator.clearValueState(this.byId("pageSubSection1"));
-            this.validator.clearValueState(this.byId("lngTable"));
+            this.validator.clearValueState(this.byId("page"));
+            // this.validator.clearValueState(this.byId("lngTable"));
         },
 
 		/* =========================================================== */
@@ -429,7 +461,7 @@ sap.ui.define([
                     "org_type_code": "",
                     "org_code": "",
                     "part_project_type_code": "",
-                    "activity_code": "new",
+                    "activity_code": "",
                     "category_group_code": "",
                     "attachment_mandatory_flag": true,
                     "approve_mandatory_flag": true					
@@ -470,7 +502,8 @@ sap.ui.define([
                 // });
                 
 				this._toShowMode();
-			}
+            }
+            this.validator.clearValueState(this.byId("page"));
 			oTransactionManager.setServiceModel(this.getModel());
         },
         

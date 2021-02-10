@@ -202,6 +202,12 @@
                 </t:extension>
                 <t:columns>
                     <t:Column hAlign="Center" width="8rem">
+                        <Label text="{I18N>/APPROVAL_NO}" textAlign="Center" />
+                        <t:template>
+                            <Text text="{list>approval_number}" />
+                        </t:template>
+                    </t:Column>
+                    <t:Column hAlign="Center" width="8rem">
                         <Label text="{I18N>/ORG_CODE}" textAlign="Center" />
                         <t:template>
                             <Text text="{list>org_code}" />

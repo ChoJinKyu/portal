@@ -168,13 +168,12 @@ sap.ui.define([
                 });
 
             var bindItemInfo = {
-                    path: 'dpMdUtil>/Divisions',
-                    filters: filter,
-                    template: new Item({
-                        key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
-                    })
-                };
-
+                path: '/Divisions',
+                filters: filter,
+                template: new Item({
+                key: "{org_code}", text: "[{org_code}] {org_name}"
+                })
+            };
 
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
             this.getView().byId("searchPlantE").bindItems(bindItemInfo);
@@ -215,16 +214,16 @@ sap.ui.define([
                 and: false
             });
 
-            var bindInfo = {
-                    path: 'dpMdUtil>/Divisions',
-                    filters: filter,
-                    template: new Item({
-                    key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
-                    })
-                };
+           var bindItemInfo = {
+                path: '/Divisions',
+                filters: filter,
+                template: new Item({
+                key: "{org_code}", text: "[{org_code}] {org_name}"
+                })
+            };
             
-            this.getView().byId("searchPlantS").bindItems(bindInfo);
-            this.getView().byId("searchPlantE").bindItems(bindInfo);
+            this.getView().byId("searchPlantS").bindItems(bindItemInfo);
+            this.getView().byId("searchPlantE").bindItems(bindItemInfo);
 
             // this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
             // this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");

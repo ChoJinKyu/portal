@@ -47,18 +47,42 @@ sap.ui.define([
             return [
                 new Column({
                     width: "40%",
-                    label: new Label({text: this.getModel("I18N").getText("/ACTIVITY_CODE")}),
-                    template: new Text({text: "{activity_code}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/ACTIVITY_CODE"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{activity_code}",
+                        textAlign: "Center",
+                        width: "100%"
+                    })
                 }),
                 new Column({
                     width: "40%",
-                    label: new Label({text: this.getModel("I18N").getText("/ACTIVITY_NAME")}),
-                    template: new Text({text: "{activity_name}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/ACTIVITY_NAME"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{activity_name}",
+                        textAlign: "Left",
+                        width: "100%"
+                    })
                 }),
                 new Column({
                     width: "20%",
-                    label: new Label({text: this.getModel("I18N").getText("/STATUS")}),
-                    template: new Text({text: "{active_flag_val}"})
+                    label: new Label({
+                        text: this.getModel("I18N").getText("/STATUS"),
+                        textAlign: "Center",
+                        width: "100%"
+                    }),
+                    template: new Text({
+                        text: "{active_flag_val}",
+                        textAlign: "Center",
+                        width: "100%"
+                    })
                 })
             ];
         },

@@ -77,7 +77,7 @@
                             </Label>                            
                             <ComboBox 
                                 id="searchPrjType" 
-                                width="100%" 
+                                width="100%"
                                 selectedKey="" 
                                 showSecondaryValues= "true"
                                 items="{

@@ -276,6 +276,8 @@ service NpApprovalDetailService {
                AND pad.supplier_code    = npm.supplier_code
                AND pad.material_code    = npm.material_code
                AND pad.market_code      = npm.market_code
+               AND pad.currency_code    = npm.currency_code
+
                AND npm.effective_start_date <= TO_VARCHAR (NOW(), 'YYYYMMDD')
                AND npm.effective_end_date >= TO_VARCHAR (NOW(), 'YYYYMMDD')
 
@@ -355,6 +357,7 @@ service NpApprovalDetailService {
                   AND pad.supplier_code          = bpm.supplier_code
                   AND pad.material_code          = bpm.material_code
                   AND pad.market_code            = bpm.market_code
+                  AND pad.currency_code          = bpm.currency_code
                   AND bpm.apply_start_yyyymm   <= TO_VARCHAR (NOW(), 'YYYYMM')
                   AND bpm.apply_end_yyyymm     >= TO_VARCHAR (NOW(), 'YYYYMM')
                   AND bpm.use_flag = true
