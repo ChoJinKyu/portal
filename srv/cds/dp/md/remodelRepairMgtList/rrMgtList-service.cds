@@ -145,10 +145,10 @@ service RrMgtListService {
                 sup2.supplier_local_name as supplier_code_nm : String(240) ,
                 mst.production_supplier_code, 
                 sup3.supplier_local_name as production_supplier_code_nm : String(240),
-                item.mold_moving_plan_date,
-                item.mold_moving_result_date,
-                item.mold_complete_plan_date,
-                item.mold_complete_result_date
+                cast(item.mold_moving_plan_date as Date ) as mold_moving_plan_date : Date  ,
+                cast(item.mold_moving_result_date  as Date ) as mold_moving_result_date : Date , 
+                cast(item.mold_complete_plan_date  as Date ) as mold_complete_plan_date : Date ,
+                cast(item.mold_complete_result_date  as Date ) as mold_complete_result_date : Date 
         from item.Md_Repair_Item item 
         join moldMst.Md_Mst mst on mst.mold_id = item.mold_id and mst.tenant_id = item.tenant_id
         join asset.Md_Asset ass on mst.mold_id = ass.mold_id and mst.tenant_id = ass.tenant_id
