@@ -35,7 +35,7 @@ response_currency_code         NVARCHAR(15)               ,  --#33
 exrate_type_code               NVARCHAR(15)               ,  --#34
 exrate_date                    SECONDDATE                 ,  --#35
 bidding_start_net_price        DECIMAL(28,2)              ,  --#36
-bidding_start_net_price_flag   BOOLEAN                    ,  --#37
+bidding_start_net_price_flag   NVARCHAR(1)                    ,  --#37
 bidding_target_net_price       DECIMAL(28,2)              ,  --#38
 current_price                  DECIMAL(28,2)              ,  --#39
 note_content                   BLOB                       ,  --#40
