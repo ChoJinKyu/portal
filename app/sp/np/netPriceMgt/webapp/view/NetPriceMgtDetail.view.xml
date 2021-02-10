@@ -541,37 +541,37 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="BaseCode" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'basePriceInfoList>base_price_type_code'}"  />
+                                                <Text text="{path: 'basePriceInfoList>base_price_type_code'}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="Base Date" textAlign="Center" />
                                             <t:template>
-                                                <Text text=""  />
+                                                <Text text="{path: 'basePriceInfoList>base_date'}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="Base Price Currency" textAlign="Center" />
                                             <t:template>
-                                                <Text text=""  />
+                                                <Text text="{path: 'basePriceInfoList>base_currency_code'}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="Base Price" textAlign="Center" />
                                             <t:template>
-                                                <Text text=""  />
+                                                <Text text="{path: 'basePriceInfoList>base_price'}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="Apply Start Month" textAlign="Center" />
                                             <t:template>
-                                                <Text text=""  />
+                                                <Text text="{path: 'basePriceInfoList>base_apply_start_yyyymm'}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="Apply End Month" textAlign="Center" />
                                             <t:template>
-                                                <Text text=""  />
+                                                <Text text="{path: 'basePriceInfoList>base_apply_end_yyyymm'}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
