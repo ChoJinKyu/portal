@@ -6,7 +6,7 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout">
     <Dialog id="dialogForex" class="sapUiSmallMargin" title="외화신고대상 상세" contentWidth="35%"  afterClose="dialogAfterclose">
-        <VBox class="sapUiSmallMargin">
+        <VBox id="forexEdit">
             <form:SimpleForm
                 editable="false"
                 layout="ResponsiveGridLayout"
@@ -52,7 +52,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="신고일자 : " labelFor="declareDate"></Label>
+                            <Label text="신고일자 : " labelFor="declareDate" required="true"></Label>
                             <DatePicker id="declareDate" placeholder="Date" />
                             <layoutData>
                                 <layout:GridData span="XL6 L12 M6 S6" />
