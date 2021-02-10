@@ -40,7 +40,7 @@
                 </layout:VerticalLayout>
             </FlexBox> 
             <HBox renderType="Bare">
-                <mvc:XMLView id="availableItems" class="sapUiSmallMargin" viewName="pg.md.mdVpItemList.view.availableItems" />
+                <mvc:XMLView id="availableItems" class="sapUiContentPadding" viewName="pg.md.mdVpItemList.view.availableItems" />
                 <VBox justifyContent="Center" class="sapUiTinyMarginBeginEnd">
                     <Button
                         class="sapUiTinyMarginBottom"
@@ -52,7 +52,7 @@
                         tooltip="Move to available"
                         press="moveToAvailableItemsTable"/>
                 </VBox>
-                <mvc:XMLView id="selectedItems" class="sapUiSmallMargin" viewName="pg.md.mdVpItemList.view.selectedItems" />
+                <mvc:XMLView id="selectedItems" class="sapUiSmallMarginBeginEnd sapUiContentPadding" viewName="pg.md.mdVpItemList.view.selectedItems" />
             </HBox>
         </VBox>                     
         </content>

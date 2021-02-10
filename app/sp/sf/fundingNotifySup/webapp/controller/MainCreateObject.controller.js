@@ -104,6 +104,21 @@ sap.ui.define([
                 }
             }
 
+                
+            if(!this._onCheckPhone(oPramDataModel.getProperty("/appl_user_tel_number"))){
+                MessageBox.alert("전화번호 내용을 확인 해주세요.");
+                return;
+            };
+
+            if(!this._onCheckEmail(oPramDataModel.getProperty("/appl_user_email_address"))){
+                MessageBox.alert("이메일 내용을 확인해 주세요.");
+                return;
+            };
+
+            if(!this._onCheckDatePicker(hopeYyyyMm)){
+                MessageBox.alert("날짜 내용을 확인해 주세요.");
+                return;
+            };
             
             if(!hopeYyyyMm || hopeYyyyMm==""){
                 hopeYyyyMm = null;
@@ -191,6 +206,16 @@ sap.ui.define([
                 return;
             };
 
+            if(!this._onCheckPhone(oPramDataModel.getProperty("/appl_user_tel_number"))){
+                MessageBox.alert("전화번호 내용을 확인 해주세요.");
+                return;
+            };
+            
+            if(!this._onCheckEmail(oPramDataModel.getProperty("/appl_user_email_address"))){
+                MessageBox.alert("이메일 내용을 확인해 주세요.");
+                return;
+            };
+
             procRequest = {
                 funding_appl_number: oPramDataModel.getProperty("/funding_appl_number")
                 , funding_notify_number: urlPram.fundingNotifyNumber
@@ -225,8 +250,7 @@ sap.ui.define([
 
         //신청서 제출 성공 후
         onAfterProcRequest: function(){
-            MessageToast.show("제출 성공하였습니다.", {duration: 10000});
-             var urlPram = this.getModel("contModel").getProperty("/oArgs"),
+            var urlPram = this.getModel("contModel").getProperty("/oArgs"),
                 aFilters =[],
                 oI18n = this.getView().getModel("I18N");
             aFilters.push(new Filter("supplier_code", FilterOperator.EQ, urlPram.supplierCode));
@@ -234,7 +258,9 @@ sap.ui.define([
             aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, urlPram.fundingNotifyNumber));
             
             // this._onObjectRead(aFilters);
+            MessageToast.show("제출 성공하였습니다.", {duration: 10000});
             this.onPageNavBackButtonPress();
+            MessageToast.show("제출 성공하였습니다.", {duration: 10000});
         },
 
         //투자계획 팝업 저장
@@ -253,11 +279,22 @@ sap.ui.define([
                 return;
             }
 
+            if(!this._onCheckDatePicker(oPramMstDataModel.investment_yyyymm) || !this._onCheckDatePicker(oPramMstDataModel.execution_yyyymm)){
+                MessageBox.alert("날짜 내용을 확인해 주세요.");
+                return;
+            };
+
+            if(oPramMstDataModel.appl_amount != oPramMstDataModel.sum_item_pur_amt){
+                MessageBox.alert("신청 금액과 총구입 금액이 같아야 합니다.");
+                return;
+            }
+
             if(!oPramMstDataModel.investment_plan_sequence){
                 oInvestment_plan_sequence=0;
             }else{
                 oInvestment_plan_sequence=parseInt(oPramMstDataModel.investment_plan_sequence);
             };
+            
 
             procSaveInvPlan = {
                 funding_appl_number: this.getModel("applicationSup").getProperty("/funding_appl_number")
@@ -431,8 +468,8 @@ sap.ui.define([
                             }
                         })
                     },
-                    error: function (oError) {
-
+                    error: function(oError){
+                        MessageBox.alert("error가 발생 하였습니다.");
                     }
                 });
                 oDialog.open();
@@ -528,8 +565,8 @@ sap.ui.define([
                         that.getModel("contModel").setProperty("/detail/checkModel", aArr);
                     };
                 },
-                error: function (oError) {
-
+                error: function(oError){
+                    MessageBox.alert("error가 발생 하였습니다.");
                 }
             });
         },
@@ -554,8 +591,8 @@ sap.ui.define([
                 success: function (oData) {
                     that.getModel("transactionDivision").setData(oData.results);
                 },
-                error: function (oError) {
-                    MessageBox.alert("서비스 확인이 필요 합니다.");
+                error: function(oError){
+                    MessageBox.alert("error가 발생 하였습니다.");
                 }
             });
 
@@ -609,7 +646,7 @@ sap.ui.define([
                         var statusCode = that.getModel("applicationSup").getProperty("/funding_status_code")
 
                         if(statusCode=="110" || statusCode=="120" || statusCode=="230"){
-                            that.byId("productsTableToolbar").setVisible(true);
+                            // that.byId("productsTableToolbar").setVisible(true);
                             that.byId("pageSubmissionButton").setEnabled(true);
                         }
                         
@@ -633,13 +670,13 @@ sap.ui.define([
                                 that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
                                 
                             },
-                            error: function (oError) {
-                                MessageBox.alert("에러 입니다.");
+                            error: function(oError){
+                                MessageBox.alert("error가 발생 하였습니다.");
                             }
                         });
 
                     } else {
-                        that.byId("productsTableToolbar").setVisible(false);
+                        // that.byId("productsTableToolbar").setVisible(false);
                         that.byId("pageSubmissionButton").setEnabled(false);
                         that.byId("pageSaveButton").setEnabled(true);
                         
@@ -654,8 +691,8 @@ sap.ui.define([
 
                     // }
                 },
-                error: function (oError) {
-
+                error: function(oError){
+                    MessageBox.alert("error가 발생 하였습니다.");
                 }
             });
         },
@@ -726,6 +763,9 @@ sap.ui.define([
                 filters: bFilters,
                 success: function (oRetrievedResult) {
                     that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
+                },
+                error: function (oError) {
+                    MessageBox.alert("error가 발생 하였습니다.");
                 }
             });
         },
@@ -756,6 +796,17 @@ sap.ui.define([
             }; 
         },
 
+        _onCheckDatePicker : function(str){
+            var check = /^(19|20)\d{2}-(0[1-9]|1[012])$/,
+                checkDate =/^(19|20)\d{2}(0[1-9]|1[012])$/;
+
+            if(!check.test(str) && str != "" && !checkDate.test(str) ){
+                return false;
+            }else{
+                return true;
+            }; 
+        },
+
         onCheckEmail: function (oEvent) {
             var str = oEvent.getSource().getValue(),
                 check = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
@@ -769,8 +820,7 @@ sap.ui.define([
             };
         },
 
-        _onCheckEmail: function (str) {                                                 
-
+        _onCheckEmail: function (str) {
             var reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
 
             if(!reg_email.test(str)) {
@@ -783,7 +833,7 @@ sap.ui.define([
         onCheckPhone: function (oEvent) {
             var str = oEvent.getSource().getValue(),
                 check = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/,
-                regExp = /^\d{2,3}-\d{3,4}-\d{4}$/;;
+                regExp = /^\d{2,3}-\d{3,4}-\d{4}$/;
                 
                 
             if(!check.test(str) && str != "" && !regExp.test(str)){
@@ -792,6 +842,17 @@ sap.ui.define([
                 oEvent.getSource().focus();
             }else{
                 oEvent.getSource().setValueState(ValueState.None);
+            };
+        },
+
+        _onCheckPhone: function (str) {
+            var check = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/,
+                regExp = /^\d{2,3}-\d{3,4}-\d{4}$/;
+
+            if(!check.test(str) && str != "" && !regExp.test(str)){
+                return false;
+            }else{
+                return true;
             };
         },
 

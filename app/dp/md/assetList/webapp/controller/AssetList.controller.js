@@ -126,7 +126,7 @@ sap.ui.define([
 
         _segmentSrch : function (){
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id='L2101';
+            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
             var oView = this.getView(),
                 oModel = this.getModel("SegmentedItem") ,
                 codeName = this.getModel('I18N').getText("/ALL")
@@ -143,7 +143,7 @@ sap.ui.define([
                 success: function (oData) {     
                     oModel.addRecord({
                         code: ""
-                      ,  code_name: codeName   
+                      ,  code_name: "All"   
                       ,  group_code: "DP_MD_ASSET_STATUS"
                       ,  parent_code: null
                       ,  parent_group_code: null
@@ -157,7 +157,7 @@ sap.ui.define([
 
         setPlant: function(companyCode){
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id='L2101';
+            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
 
             var filter = new Filter({
                     filters: [
@@ -168,13 +168,12 @@ sap.ui.define([
                 });
 
             var bindItemInfo = {
-                    path: 'dpMdUtil>/Divisions',
-                    filters: filter,
-                    template: new Item({
-                        key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
-                    })
-                };
-
+                path: '/Divisions',
+                filters: filter,
+                template: new Item({
+                key: "{org_code}", text: "[{org_code}] {org_name}"
+                })
+            };
 
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
             this.getView().byId("searchPlantE").bindItems(bindItemInfo);
@@ -186,7 +185,7 @@ sap.ui.define([
         */
         handleSelectionFinishComp: function (oEvent) {
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id='L2101';
+            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
             this.copyMultiSelected(oEvent);
 
             var params = oEvent.getParameters();
@@ -215,16 +214,16 @@ sap.ui.define([
                 and: false
             });
 
-            var bindInfo = {
-                    path: 'dpMdUtil>/Divisions',
-                    filters: filter,
-                    template: new Item({
-                    key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
-                    })
-                };
+           var bindItemInfo = {
+                path: '/Divisions',
+                filters: filter,
+                template: new Item({
+                key: "{org_code}", text: "[{org_code}] {org_name}"
+                })
+            };
             
-            this.getView().byId("searchPlantS").bindItems(bindInfo);
-            this.getView().byId("searchPlantE").bindItems(bindInfo);
+            this.getView().byId("searchPlantS").bindItems(bindItemInfo);
+            this.getView().byId("searchPlantE").bindItems(bindItemInfo);
 
             // this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
             // this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
@@ -413,6 +412,7 @@ sap.ui.define([
             var isOk = false;
             var msg;
             var session = this.getSessionUserInfo();
+
             
             if (oSelected != "") {
                 console.log("oSelected >>>>" , oSelected);
@@ -436,8 +436,7 @@ sap.ui.define([
                         secondary_supplier_name     : viewData[oSelected[i]].secondary_supplier_name,
                         tertiary_supplier_name      : viewData[oSelected[i]].tertiary_supplier_name,
                         local_update_dtm            : new Date(),
-                        // 추후 세션의 user_id로 변경 필요
-                        update_user_id              : "17370CHEM@lgchem.com",
+                        update_user_id              : session.USER_ID,
                         system_update_dtm           : new Date()
                 });
                 
@@ -507,8 +506,9 @@ sap.ui.define([
             var sFileName = "ASSET LIST"
             //var oData = this.getModel("list").getProperty("/Message"); //binded Data
             var oData = oTable.getModel("list").getProperty("/Assets");
+
             ExcelUtil.fnExportExcel({
-                fileName: sFileName || "SpreadSheet",
+                fileName: "Asset List" || "SpreadSheet",
                 table: oTable,
                 data: oData
             });

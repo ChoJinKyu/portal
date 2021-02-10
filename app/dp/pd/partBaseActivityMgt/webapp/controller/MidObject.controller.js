@@ -198,7 +198,16 @@ sap.ui.define([
                 "category_name": ""			
             }, "/PdPartBaseActivityCategoryView", 0);           
             
-		},
+        },
+        
+        onInputChange: function(oEvent){
+            // 숫자만 입력
+            var _oInput = oEvent.getSource();
+            var val = _oInput.getValue();
+                val = val.replace(/[^\d]/g, '');
+            _oInput.setValue(val);                            
+                
+        },
 
 		onCateTableDeleteButtonPress: function(){
 			var oTable = this.byId("cateTable"),
@@ -559,7 +568,7 @@ sap.ui.define([
                 
                 this._toShowMode();
             }
-            this.validator.clearValueState(this.byId("pageSubSection1"));
+            this.validator.clearValueState(this.byId("page"));
             this.validator.clearValueState(this.byId("lngTable"));
         },
 
@@ -609,9 +618,6 @@ sap.ui.define([
             if(this._slayout === "TwoColumnsMidExpanded" ){
                 this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("local_update_dtm").setVisible(false);
                 this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("update_user_id").setVisible(false);
-            }else{
-                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("local_update_dtm").setVisible(true);
-                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("update_user_id").setVisible(true);
             }
 
 			if(this._sActivityCode == "new"){
@@ -677,7 +683,8 @@ sap.ui.define([
                 });
                 
 				this._toShowMode();
-			}
+            }
+            this.validator.clearValueState(this.byId("page"));
 			oTransactionManager.setServiceModel(this.getModel());
         },
         

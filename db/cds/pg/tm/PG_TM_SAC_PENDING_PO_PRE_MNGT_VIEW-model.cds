@@ -46,11 +46,11 @@ entity Tm_Sac_Pending_Po_Pre_Mngt_View {
 
         base_count                  : Integer           @title : '기준 개수';
         delay_days                  : Integer           @title : '납품 지연 일수';
-        po_exrate                   : Decimal(20,10)    @title : '구매오더 환율';
-        po_amount                   : Decimal(24,10)    @title : '구매오더 금액';
-        po_krw_amount               : Decimal(24,10)    @title : '구매오더 원화 금액';
-        po_quantity                 : Decimal(24,10)    @title : '구매오더 수량';
-        po_price                    : Decimal(24,10)    @title : '구매오더 단가';
-        receipt_quantity            : Decimal(24,10)    @title : '입고 수량';
-        pending_quantity            : Decimal(24,10)    @title : '미결 수량';
+        po_exrate                   : Decimal(20,7)     @title : '구매오더 환율';
+        po_amount                   : Decimal(27,7)     @title : '구매오더 금액';
+        po_krw_amount               : Decimal(27,7)     @title : '구매오더 원화 금액';
+        po_quantity                 : Decimal(27,7)     @title : '구매오더 수량';
+        po_price                    : Decimal(27,7)     @title : '구매오더 단가';
+        receipt_quantity            : Decimal(27,7)     @title : '입고 수량';
+        pending_quantity            : Decimal(27,7)     @title : '미결 수량';
 }

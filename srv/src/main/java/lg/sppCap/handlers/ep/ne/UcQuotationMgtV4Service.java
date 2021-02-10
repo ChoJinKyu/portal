@@ -98,7 +98,7 @@ public class UcQuotationMgtV4Service implements EventHandler {
                                     .append("ITEM_DESC                        NVARCHAR(2000), ")
                                     .append("SPEC_DESC                        NVARCHAR(100 ), ")
                                     .append("QUOTATION_QUANTITY               DECIMAL     , ")
-                                    .append("EXTRA_RATE                       DECIMAL     , ")
+                                    .append("EXTRA_RATE                       NVARCHAR(100),")
                                     .append("UNIT                             NVARCHAR(3) , ")
                                     .append("CURRENCY_CODE                    NVARCHAR(15), ")
                                     .append("CURRENCY_NAME                    NVARCHAR(15), ")
@@ -138,7 +138,7 @@ public class UcQuotationMgtV4Service implements EventHandler {
                                     .append("NET_PRICE_CONTRACT_EXTRA_SEQ DECIMAL, ")
                                     .append("EXTRA_NUMBER NVARCHAR(30), ")
                                     .append("EXTRA_CLASS_NUMBER NVARCHAR(30), ")
-                                    .append("EXTRA_RATE DECIMAL, ")
+                                    .append("EXTRA_RATE NVARCHAR(100), ")
                                     .append("REMARK NVARCHAR(3000), ")
                                     .append("LOCAL_CREATE_DTM SECONDDATE, ")
                                     .append("LOCAL_UPDATE_DTM SECONDDATE, ")
@@ -416,6 +416,9 @@ public class UcQuotationMgtV4Service implements EventHandler {
             @Override
             public UcMasterData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
                 UcMasterData v_row = UcMasterData.create();
+                // log.info("master ----- tenant_id="+v_rs.getString("tenant_id"));
+                // log.info("master ----- getTenantId="+v_row.getTenantId());
+
                 v_row.setTenantId(v_rs.getString("tenant_id"));
                 v_row.setCompanyCode(v_rs.getString("company_code"));
                 v_row.setConstQuotationNumber(v_rs.getString("const_quotation_number"));
@@ -446,12 +449,12 @@ public class UcQuotationMgtV4Service implements EventHandler {
                 v_row.setFacilityPersonName(v_rs.getString("facility_person_name"));
                 v_row.setFacilityDepartmentCode(v_rs.getString("facility_department_code"));
                 v_row.setCompletionAttchGroupNumber(v_rs.getString("completion_attch_group_number"));
-                v_row.setLocalCreateDtm(v_rs.getDate("local_create_dtm").toInstant());
-                v_row.setLocalUpdateDtm(v_rs.getDate("local_update_dtm").toInstant());
+                v_row.setLocalCreateDtm(null);
+                v_row.setLocalUpdateDtm(null);
                 v_row.setCreateUserId(v_rs.getString("create_user_id"));
                 v_row.setUpdateUserId(v_rs.getString("update_user_id"));
-                v_row.setSystemCreateDtm(v_rs.getDate("system_create_dtm").toInstant());
-                v_row.setSystemUpdateDtm(v_rs.getDate("system_update_dtm").toInstant());
+                v_row.setSystemCreateDtm(null);
+                v_row.setSystemUpdateDtm(null);
                 v_row.setRowState(v_rs.getString("row_state"));
                 v_resultM.add(v_row);
                 return v_row;
@@ -463,6 +466,9 @@ public class UcQuotationMgtV4Service implements EventHandler {
             public UcDetailData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
                 UcDetailData v_row = UcDetailData.create();
 
+                // log.info("detail ----- tenant_id="+v_rs.getString("tenant_id"));
+                // log.info("detail ----- getTenantId="+v_row.getTenantId());
+
                 v_row.setTenantId(v_rs.getString("tenant_id"));
                 v_row.setCompanyCode(v_rs.getString("company_code"));
                 v_row.setConstQuotationNumber(v_rs.getString("const_quotation_number"));
@@ -472,7 +478,8 @@ public class UcQuotationMgtV4Service implements EventHandler {
                 v_row.setItemDesc(v_rs.getString("item_desc"));
                 v_row.setSpecDesc(v_rs.getString("spec_desc"));
                 v_row.setQuotationQuantity(v_rs.getBigDecimal("quotation_quantity"));
-                v_row.setExtraRate(v_rs.getBigDecimal("extra_rate"));
+                //v_row.setExtraRate(v_rs.getBigDecimal("extra_rate"));
+                v_row.setExtraRate(v_rs.getString("extra_rate"));
                 v_row.setUnit(v_rs.getString("unit"));
                 v_row.setCurrencyCode(v_rs.getString("currency_code"));
                 v_row.setCurrencyName(v_rs.getString("currency_name"));
@@ -491,12 +498,12 @@ public class UcQuotationMgtV4Service implements EventHandler {
                 v_row.setNetPriceContractDegree(v_rs.getLong("net_price_contract_degree"));
                 v_row.setNetPriceContractItemNumber(v_rs.getString("net_price_contract_item_number"));
                 v_row.setSupplierItemCreateFlag(v_rs.getBoolean("supplier_item_create_flag"));
-                v_row.setLocalCreateDtm(v_rs.getDate("local_create_dtm").toInstant());
-                v_row.setLocalUpdateDtm(v_rs.getDate("local_update_dtm").toInstant());
+                v_row.setLocalCreateDtm(null);
+                v_row.setLocalUpdateDtm(null);
                 v_row.setCreateUserId(v_rs.getString("create_user_id"));
                 v_row.setUpdateUserId(v_rs.getString("update_user_id"));
-                v_row.setSystemCreateDtm(v_rs.getDate("system_create_dtm").toInstant());
-                v_row.setSystemUpdateDtm(v_rs.getDate("system_update_dtm").toInstant());
+                v_row.setSystemCreateDtm(null);
+                v_row.setSystemUpdateDtm(null);
                 v_row.setRowState(v_rs.getString("row_state"));
                 v_resultD.add(v_row);
                 return v_row;
@@ -507,6 +514,10 @@ public class UcQuotationMgtV4Service implements EventHandler {
             @Override
             public UcQuotationExtraData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
                 UcQuotationExtraData v_row = UcQuotationExtraData.create();
+                
+                // log.info("rate ----- tenant_id="+v_rs.getString("tenant_id"));
+                // log.info("rate ----- getTenantId="+v_row.getTenantId());
+
                 v_row.setTenantId(v_rs.getString("tenant_id"));
                 v_row.setCompanyCode(v_rs.getString("company_code"));
                 v_row.setConstQuotationNumber(v_rs.getString("const_quotation_number"));
@@ -517,14 +528,15 @@ public class UcQuotationMgtV4Service implements EventHandler {
                 v_row.setNetPriceContractExtraSeq(v_rs.getBigDecimal("net_price_contract_extra_seq"));
                 v_row.setExtraNumber(v_rs.getString("extra_number"));
                 v_row.setExtraClassNumber(v_rs.getString("extra_class_number"));
-                v_row.setExtraRate(v_rs.getBigDecimal("extra_rate"));
+                //v_row.setExtraRate(v_rs.getBigDecimal("extra_rate"));
+                v_row.setExtraRate(v_rs.getString("extra_rate"));
                 v_row.setRemark(v_rs.getString("remark"));
-                v_row.setLocalCreateDtm(v_rs.getDate("local_create_dtm").toInstant());
-                v_row.setLocalUpdateDtm(v_rs.getDate("local_update_dtm").toInstant());
+                v_row.setLocalCreateDtm(null);
+                v_row.setLocalUpdateDtm(null);
                 v_row.setCreateUserId(v_rs.getString("create_user_id"));
                 v_row.setUpdateUserId(v_rs.getString("update_user_id"));
-                v_row.setSystemCreateDtm(v_rs.getDate("system_create_dtm").toInstant());
-                v_row.setSystemUpdateDtm(v_rs.getDate("system_update_dtm").toInstant());
+                v_row.setSystemCreateDtm(null);
+                v_row.setSystemUpdateDtm(null);
                 v_row.setRowState(v_rs.getString("row_state"));
                 v_resultR.add(v_row);
                 return v_row;
@@ -536,7 +548,6 @@ public class UcQuotationMgtV4Service implements EventHandler {
         paramList.add(oMTable);
         paramList.add(oDTable);
         paramList.add(oRTable);
-
 
  
         Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
@@ -559,6 +570,11 @@ public class UcQuotationMgtV4Service implements EventHandler {
         v_result.setUcMasterData(v_resultM);
         v_result.setUcDetailData(v_resultD);
         v_result.setUcQuotationExtraData(v_resultR);
+
+
+        log.info("### setUcMasterData 프로시저 호출종료 ###" + v_resultM);
+        log.info("### setUcDetailData 프로시저 호출종료 ###" + v_resultD);
+        log.info("### setUcQuotationExtraData 프로시저 호출종료 ###" + v_resultR);
 
         context.setResult(v_result);            
         context.setCompleted();          

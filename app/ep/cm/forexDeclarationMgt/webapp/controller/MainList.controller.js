@@ -35,7 +35,7 @@ sap.ui.define([
     return BaseController.extend("ep.cm.forexDeclarationMgt.controller.MainList", {
 
         dateFormatter: DateFormatter,
-
+        numberFormatter: NumberFormatter,
         validator: new Validator(),
 
         /* =========================================================== */
@@ -312,15 +312,30 @@ sap.ui.define([
                 // }
 
                 _chartDialog.open();
+                var sum_val = [];
 
 
                 $.ajax({
-                    url: "ep/cm/forexDeclarationMgt/webapp/srv-api/odata/v4/ep.PoApprMgtV4Service/ForexDeclarationSummaryView(tenant_id='L2100',company_code='LGCKR',purchasing_department_code='',buyer_empno='',po_start_date="+sDate +",po_end_date="+ eDate +")/Set",
+                    url: "ep/cm/forexDeclarationMgt/webapp/srv-api/odata/v4/ep.PoApprMgtV4Service/ForexDeclarationSummaryView(tenant_id='L2100',company_code='LGCKR',purchasing_department_code='1000001',buyer_empno='100003',po_start_date="+sDate +",po_end_date="+ eDate +")/Set",
                     type: "GET",
                     contentType: "application/json",
                     
                     success: (function (oData) {
                         console.log("#########oData Success#####", oData.value);
+                        console.log("#########oData #####", oData.value.length);
+                        console.log("#########oData #####", oData.value[0].todo_count);
+                        var sum_count = oData.value[0].todo_count + oData.value[0].ongoing_count + oData.value[0].complete_count;
+
+                        console.log("#########sum_count #####", sum_count);
+
+                        oData.value.forEach(function (item, idx) {
+                            //_tempFilters.push(new Filter("net_price_contract_document_no", FilterOperator.EQ, item));
+
+                           oData.value[idx].sum_count = oData.value[idx].todo_count +  oData.value[idx].ongoing_count + oData.value[idx].complete_count;
+                        });
+
+                        console.log("#########result #####", oData.value);
+
                         this.getModel("popup").setProperty("/summaryChart", oData.value);
                         //console.log("#########SummaryChartModel#####", oView.getModel("SummaryChartModel").getData());
                     }).bind(this) 
@@ -335,12 +350,15 @@ sap.ui.define([
             var oView = this.getView();
 
             $.ajax({
-                    url: "ep/cm/forexDeclarationMgt/webapp/srv-api/odata/v4/ep.PoApprMgtV4Service/ForexDeclarationSummaryView(tenant_id='L2100',company_code='LGCKR',purchasing_department_code='',buyer_empno='',po_start_date="+this.sFrom +",po_end_date="+ this.sTo +")/Set",
+                    url: "ep/cm/forexDeclarationMgt/webapp/srv-api/odata/v4/ep.PoApprMgtV4Service/ForexDeclarationSummaryView(tenant_id='L2100',company_code='LGCKR',purchasing_department_code='1000001',buyer_empno='100003',po_start_date="+this.sFrom +",po_end_date="+ this.sTo +")/Set",
                     type: "GET",
                     contentType: "application/json",
                     
                     success: (function (oData) {
                         console.log("#########oData Success#####", oData.value);
+                        //console.log("#########oData Success#####", oData);
+                        
+
                         this.getModel("popup").setProperty("/summaryChart", oData.value);
                         //console.log("#########SummaryChartModel#####", oView.getModel("SummaryChartModel").getData());
                     }).bind(this) 
@@ -549,8 +567,8 @@ sap.ui.define([
                 });
             }else{
                 forexDtlModel.getData()["forexItems"].map(d => {
-                    d["declare_scheduled_date"] = oView.byId("declareScheduledDate").getText();
-                    d["declare_date"] = oView.byId("declareDate").getText();
+                    d["declare_scheduled_date"] = "";
+                    d["declare_date"] = "";
                     d["remark"] = oView.byId("remark").getText();
                     d["attch_group_number"] = oView.byId("attchGroupNumber").getText();
                     d["forex_declare_status_code"] = statusChange;
@@ -559,6 +577,8 @@ sap.ui.define([
             }
 
             console.log("forexDtlModel.getData()2==" + JSON.stringify(forexDtlModel.getData()));
+            if (this.validator.validate(this.byId("forexEdit")) !== true) return;
+
 
             var url = "ep/cm/forexDeclarationMgt/webapp/srv-api/odata/v4/ep.PoApprMgtV4Service/SavePoForexDeclarationProc";
 

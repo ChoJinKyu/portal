@@ -293,7 +293,7 @@
                                     <Label text="통화" />
                                     <t:template>
                                         <HBox justifyContent="Center">
-                                            <Select selectedKey="KRW" 
+                                            <Select selectedKey="{viewModel>currency_code}" 
                                                     visible="{viewSet>/isEditMode}"
                                                     maxHeight="200px" width="10em"
                                                     items="{
@@ -387,7 +387,8 @@
                                                             path: '/UcExtraClass',
                                                             filters: [
                                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
-                                                                {path: 'company_code', operator: 'EQ', value1: 'LGCKR'}
+                                                                {path: 'company_code', operator: 'EQ', value1: 'LGCKR'},
+                                                                {path: 'use_flag', operator: 'EQ', value1: true}
                                                             ],
                                                             sorter: { path: 'extra_class_number'}
                                                         }">
@@ -431,25 +432,41 @@
 			<uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
-						<uxap:blocks>
-                            <!-- File Upload 시작-->
-                            <UploadCollection
-                                id="UploadCollection"
-                                maximumFilenameLength="55"
-                                maximumFileSize="10"
-                                multiple="true"
-                                sameFilenameAllowed="true"
-                                instantUpload="false"
-                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
-                                change="onChange"
-                                fileDeleted="onFileDeleted"
-                                filenameLengthExceed="onFilenameLengthExceed"
-                                fileSizeExceed="onFileSizeExceed"
-                                typeMissmatch="onTypeMissmatch"
-                                uploadComplete="onUploadComplete"
-                                beforeUploadStarts="onBeforeUploadStarts" />
-                            <!-- File Upload 끝-->
-						</uxap:blocks>
+                        <form:SimpleForm >                    
+                            <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin"> 
+                                <!-- File Upload 시작-->
+                                <UploadCollection
+                                    id="UploadCollection"
+                                    maximumFilenameLength="55"
+                                    maximumFileSize="10"
+                                    multiple="true"
+                                    sameFilenameAllowed="true"
+                                    instantUpload="false"
+                                    noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                    change="onChange"
+                                    fileDeleted="onFileDeleted"
+                                    filenameLengthExceed="onFilenameLengthExceed"
+                                    fileSizeExceed="onFileSizeExceed"
+                                    typeMissmatch="onTypeMissmatch"
+                                    uploadComplete="onUploadComplete"
+                                    beforeUploadStarts="onBeforeUploadStarts" />
+                                <!-- File Upload 끝-->
+                                <Label  text="* 특기사항" 
+                                            design="Bold" 
+                                            class="sapUiMediumMarginTop sapUiSmallMarginBottom"/>
+                                <richtexteditor:RichTextEditor
+                                    editorType="TinyMCE4"
+                                    width="98%"
+                                    height="150px"
+                                    editable="{viewSet>/isEditMode}"
+                                    customToolbar="true"
+                                    showGroupFont="true"
+                                    showGroupLink="true"
+                                    showGroupInsert="true"
+                                    value="{viewModel>/mst/special_note}">
+                                </richtexteditor:RichTextEditor>                            
+                            </VBox>
+                        </form:SimpleForm>   						
 					</uxap:ObjectPageSubSection>
                 </uxap:subSections>
             </uxap:ObjectPageSection>

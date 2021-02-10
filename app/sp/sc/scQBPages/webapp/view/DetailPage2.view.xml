@@ -110,7 +110,7 @@
 
                                                                 <VBox class="sapUiNoMarginBottom">
                                                                     <Label  text="Outcome"  />
-                                                                    <Text  id="textOutcome" text="{NegoHeaders>/negotiation_output_class_code}" />
+                                                                    <Text  id="textOutcome" text="{NegoHeaders>/outcome/outcome_name}" />
                                                                 </VBox>
                                                             </form:content>
                                                         </form:SimpleForm>
@@ -186,8 +186,8 @@
                                                                 <HBox alignContent="Center" alignItems="Center" width="100%" class="sapUiSmallMarginEnd">
                                                                     <VBox width="100px">
                                                                         <Label text="Max Round Count" width="120px"  required="true" class="sapMLabelNoText"/>
-                                                                        <Input value="{NegoHeaders>/max_round_count}" width="100%" visible="{=${propInfo>/isEditMode}}"/>
-                                                                        <Text text="{NegoHeaders>/max_round_count}" width="100%" visible="{=!${propInfo>/isEditMode}}"/>
+                                                                        <Input value="{NegoHeaders>/max_round_count}" width="100%" visible="{=${propInfo>/isEditMode}}" />
+                                                                        <Text text="{NegoHeaders>/max_round_count}" width="100%" visible="{=!${propInfo>/isEditMode}}" textAlign="Center"/>
                                                                     </VBox>
                                                                     <VBox>
                                                                         <Label text=""  class="sapMLabelNoText"/>
@@ -200,7 +200,7 @@
                                                                     <VBox>
                                                                         <Label text=""  class="sapMLabelNoText"/>
                                                                         <Input value="{NegoHeaders>/auto_round_terms}" width="100px"  visible="{=${propInfo>/isEditMode}}"  />
-                                                                        <Text text="{NegoHeaders>/auto_round_terms}" width="100px" visible="{=!${propInfo>/isEditMode}}"/>
+                                                                        <Text text="{NegoHeaders>/auto_round_terms}" width="100px" visible="{=!${propInfo>/isEditMode}}" textAlign="Center"/>
                                                                     </VBox>
                                                                     <VBox>
                                                                         <Label text=""  class="sapMLabelNoText"/>
@@ -345,9 +345,21 @@
                                                     <VBox width="25%">
                                                         <Label  text="Award Type" 
                                                                 class="sapMLabelNoText"/> 
-                                                        <Select width="90%" selectedKey="{NegoHeaders>/award_type_code}" class=" " change="selectAwardTypeChange"> 
-                                                            <core:Item key="010" text="Award by Lines" />
-                                                            <core:Item key="020" text="Award by Total Amount" />
+                                                        <Select width="90%" selectedKey="{NegoHeaders>/award_type_code}" change="selectAwardTypeChange"
+                                                                items="{
+                                                                    path: '/Sc_Award_Type_Code_View',
+                                                                    filters: [
+                                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'},
+                                                                        {path: 'award_type_code', operator: 'EQ', value1: '010'},
+                                                                        {path: 'award_type_code', operator: 'EQ', value1: '020'}
+                                                                    ],
+                                                                    sorter: {
+                                                                        path: 'sort_no',
+                                                                        descending: true
+                                                                    }}">
+                                                            <core:Item key="{award_type_code}" text="{award_type_name}" />
+                                                            <!-- <core:Item key="010" text="Award by Lines" />
+                                                            <core:Item key="020" text="Award by Total Amount" /> -->
                                                         </Select > 
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
@@ -369,7 +381,11 @@
                                                     </VBox>
                                                     <VBox width="25%">
                                                         <Label  text="Target Total Amount" visible="true"/> 
-                                                        <Input value="{NegoHeaders>/target_amount}"   textAlign="Right" visible="true" id="inputTargetAmount" liveChange="onLiveTargetTotal" /> 
+                                                        <Input value="{
+                                                                path: 'NegoHeaders>/target_amount',
+                                                                formatter: '.numberFormatter.toNumberString'
+                                                                }"   
+                                                                textAlign="Right" visible="true" id="inputTargetAmount" liveChange="onLiveTargetTotal"/> 
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
@@ -380,20 +396,31 @@
                                                     <VBox width="25%">
                                                         <Label  text="Award Method" 
                                                                 class="sapMLabelNoText"/> 
-                                                        <Select selectedKey="1" width="90%" change="selectAwardMethodChange" id="selectAwardMethod" > 
-                                                            <core:Item key="1" text="Multi Supplier" enabled="{= ${award>/key} === '1' ? true : false}" />
-                                                            <core:Item key="2" text="Lowest Price Supplier"  />
+                                                        <Select selectedKey="{NegoHeaders>/award_method_code}" width="90%" change="selectAwardMethodChange" id="selectAwardMethod"
+                                                            items="{
+                                                                path: '/Sc_Award_Method_Code_View',
+                                                                filters: [
+                                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                                                ],
+                                                                sorter: {
+                                                                    path: 'sort_no',
+                                                                    descending: false
+                                                                }}">
+                                                            <core:Item key="{award_method_code}" text="{award_method_name}" />
+
+                                                            <!-- <core:Item key="010" text="Multi Supplier" enabled="{= ${NegoHeaders>/award_type/award_type_code} === '010' ? true : false}" />
+                                                            <core:Item key="020" text="Lowest Price Supplier"  /> -->
                                                         </Select > 
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
                                                     </VBox>
-                                                    <VBox width="75%" visible="{= ${award>/method} === '1' ? true : false }">
+                                                    <VBox width="75%" visible="{= ${NegoHeaders>/award_method_code} === 'MP' ? true : false }">
                                                         <Label  text="Number of Award Supplier" 
                                                                 class="sapMLabelNoText"/> 
                                                         <HBox >
-                                                            <Select width="100%" selectedKey="1" change="selectNumberSupplierChange"
-                                                                id="selectNumberSupplier" enabled="{= ${NPInfPopupUtil>/enabled} === false ? false : true}">
+                                                            <Select width="100%" change="selectNumberSupplierChange" selectedKey="{NegoHeaders>/number_of_award_supplier}" 
+                                                                id="selectNumberSupplier" enabled="true">
                                                                 <core:Item key="1" text="1" />
                                                                 <core:Item key="2" text="2" />
                                                                 <core:Item key="3" text="3" />
@@ -452,10 +479,15 @@
                                                     <VBox width="25%" class="">
                                                         <Label  text="Bid Conference Date" 
                                                                 class="sapMLabelNoText"/>
-                                                        <DateTimePicker placeholder="YYYY/MM/DD, HH:MM" width="90%"
+                                                        <DateTimePicker placeholder=""  width="90%"
+                                                                            valueFormat="yyyy/MM/ddTHH:mm" displayFormat="yyyy/MM/dd HH:mm" visible="{=${propInfo>/isEditMode}}"
+                                                                            value="{path: 'NegoHeaders>/bid_conference_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                                                    formatOptions: { pattern: 'yyyy/MM/dd HH:mm' , UTC: true} }" />
+                                                        
+                                                        <!-- <DateTimePicker placeholder="YYYY/MM/DD, HH:MM" width="90%"
                                                                         valueFormat="yyyy/MM/ddTHH:mm" displayFormat="yyyy/MM/dd HH:mm" visible="{=${propInfo>/isEditMode}}"
                                                                         value="{path: 'NegoHeaders>/bid_conference_date', type: 'sap.ui.model.odata.type.DateTime', 
-                                                                                formatOptions: { pattern: 'yyyy/MM/dd HH:mm' , UTC: true} }" />
+                                                                                formatOptions: { pattern: 'yyyy/MM/dd HH:mm' , UTC: true} }" /> -->
                                                         <layoutData>
                                                             <layout:GridData span="XL2 L4 M6 S12"/>
                                                         </layoutData>
@@ -528,7 +560,11 @@
                                                     </VBox>
                                                     <VBox width="25%">
                                                         <Label  text="Target Total Amount" visible="true"/> 
-                                                        <Text text="{NegoHeaders>/target_amount}" />
+                                                        <Text text="{
+                                                                path: 'NegoHeaders>/target_amount',
+                                                                formatter: '.numberFormatter.toNumberString'
+                                                                }" />
+                                                            
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
@@ -539,7 +575,8 @@
                                                     <VBox width="25%">
                                                         <Label  text="Award Method" 
                                                                 class="sapMLabelNoText"/> 
-                                                        <Text text="" />
+                                                        <Text text="{NegoHeaders>/award_method/award_method_name}" />
+                                                        
                                                         <layoutData>
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
@@ -549,7 +586,7 @@
                                                                 class="sapMLabelNoText"/> 
                                                         <HBox >
                                                             <Select width="100%" change="selectNumberSupplierChange" visible="false" selectedKey="{NegoHeaders>/number_of_award_supplier}"
-                                                                id="selectNumberSupplier2" enabled="{= ${NPInfPopupUtil>/enabled} === false ? false : true}">
+                                                                id="selectNumberSupplier2" enabled="false">
                                                                 <core:Item key="1" text="1" />
                                                                 <core:Item key="2" text="2" />
                                                                 <core:Item key="3" text="3" />
@@ -597,8 +634,15 @@
                                                     <VBox width="25%" class="">
                                                         <Label  text="Bid Conference Date:" 
                                                                 class="sapMLabelNoText"/>
-                                                        <Text text="{path: 'NegoHeaders>bid_conference_date', type: 'sap.ui.model.odata.type.Date', 
-                                                                        formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }"  />
+                                                        <!-- <Text text="{NegoHeaders>/bid_conference_date}"  /> -->
+                                                        <Text text="{path: 'NegoHeaders>/bid_conference_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                                    formatOptions: { pattern: 'yyyy/MM/dd HH:mm' , UTC: true} }"  class="sapUiTinyMarginEnd"/>
+                                                                         
+
+                                                        <!-- <DateTimePicker placeholder="YYYY/MM/DD, HH:MM" width="90%"
+                                                                        valueFormat="yyyy/MM/ddTHH:mm" displayFormat="yyyy/MM/dd HH:mm" visible="{=${propInfo>/isEditMode}}"
+                                                                        value="{path: 'NegoHeaders>/bid_conference_date', type: 'sap.ui.model.odata.type.DateTime', 
+                                                                                formatOptions: { pattern: 'yyyy/MM/dd HH:mm' , UTC: true} }" /> -->
                                                         <layoutData>
                                                             <layout:GridData span="XL2 L4 M6 S12"/>
                                                         </layoutData>
@@ -925,12 +969,12 @@
                                                                                 descending: false
                                                                             }}" 
                                                                         showSecondaryValues= "true"
-                                                                        selectedKey="{NegoHeaders>specification_code}" visible="{=${propInfo>/isEditMode}}"
+                                                                        selectedKey="{NegoHeaders>specification}" visible="{=${propInfo>/isEditMode}}"
                                                                         width="100%" required="true">
                                                                         <core:ListItem key="{specification_code}" text="{specification_name}" additionalText="{specification_code}"/>
                                                                     </ComboBox>
                                                                     
-                                                                    <Text text="{NegoHeaders>specification}" visible="{=!${propInfo>/isEditMode}}" />
+                                                                    <Text text="{NegoHeaders>specification_fk/specification_name}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
@@ -1088,7 +1132,7 @@
                                                                     <ToggleButton text="{=${NegoHeaders>bidding_start_net_price_flag} === 'Y' || ${NegoHeaders>bidding_start_net_price_flag} === true ? 'YES' : 'NO'}" visible="{=${propInfo>/isEditMode}}" pressed="{NegoHeaders>bidding_start_net_price_flag}"  />
 
                                                                     <!-- <lib-m:FlagToggleButton  enabled="{=${propInfo>/isEditMode}}" pressed="{NegoHeaders>bidding_start_net_price_flag}" /> -->
-                                                                    <Text text="{NegoHeaders>bidding_start_net_price_flag}" visible="{=!${propInfo>/isEditMode}}" /> 
+                                                                    <Text text="{=${NegoHeaders>bidding_start_net_price_flag} === true ? 'YES' : 'NO'}" visible="{=!${propInfo>/isEditMode}}" /> 
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
@@ -1233,11 +1277,11 @@
                                                                                 descending: true
                                                                             }}" 
                                                                         showSecondaryValues= "true"
-                                                                        selectedKey="{}" visible="{=${propInfo>/isEditMode}}"
+                                                                        selectedKey="{NegoHeaders>incoterms_code}" visible="{=${propInfo>/isEditMode}}"
                                                                         width="100%" required="true">
                                                                         <core:ListItem key="{incoterms_code}" text="{incoterms_name}" additionalText="{incoterms_code}"/>
                                                                     </ComboBox>
-                                                                    <Text text="{}" visible="{=!${propInfo>/isEditMode}}" />
+                                                                    <Text text="{NegoHeaders>incoterms/incoterms_name}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>

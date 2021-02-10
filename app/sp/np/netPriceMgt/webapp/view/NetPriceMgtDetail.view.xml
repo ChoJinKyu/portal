@@ -26,7 +26,7 @@
 				<uxap:expandedHeading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onBack" />
-                        <Title text="{I18N>/NEW_BASE_PRICE}" />
+                        <Title text="{I18N>/NET_PRICE_APPROVAL}" />
                     </HBox>
 				</uxap:expandedHeading>
 			</uxap:ObjectPageDynamicHeaderTitle>
@@ -191,8 +191,8 @@
                                         <OverflowToolbar class="sapFDynamicPageAlignContent">
                                             <ToolbarSpacer />
                                             <Button text="{I18N>/UPLOAD}" type="Transparent" press=".onDeveloping" visible="{detailViewModel>/viewMode}" />
-                                            <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" visible="{detailViewModel>/viewMode}" />
-                                            <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteBasePrice" visible="{detailViewModel>/viewMode}" />
+                                            <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddGeneralInfo" visible="{detailViewModel>/viewMode}" />
+                                            <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteGeneralInfo" visible="{detailViewModel>/viewMode}" />
                                         </OverflowToolbar>
                                     </t:extension>
                                     <t:columns>
@@ -211,7 +211,7 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/MATERIAL_CODE}" textAlign="Center" />
                                             <t:template>
-                                                <Input type="Text" value="{path: 'generalInfoList>material_code'}"  />
+                                                <Input type="Text" showValueHelp="true" valueHelpRequest=".vhMaterialOrgCode" value="{path: 'generalInfoList>material_code'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -259,7 +259,7 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="{I18N>/VENDOR_POOL}" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'generalInfoList>vendor_pool_name'}"  />
+                                                <Text text="{path: 'generalInfoList>vendor_pool_local_name'}"  />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -379,7 +379,7 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="(New)Price" textAlign="Center" />
                                             <t:template>
-                                                <Input type="Text" value="{generalInfoList>net_price}" />
+                                                <Input type="Number" value="{generalInfoList>net_price}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -489,7 +489,7 @@
                                     <t:extension>
                                         <OverflowToolbar class="sapFDynamicPageAlignContent">
                                             <ToolbarSpacer />
-                                            <Button text="Add Price" type="Transparent" press=".fnAddPrice" />
+                                            <Button text="Add Price" type="Emphasized" press=".fnAddPrice" />
                                             <!-- <Button text="{I18N>/UPLOAD}" type="Transparent" press=".onDeveloping" visible="{detailViewModel>/viewMode}" />
                                             <Button text="{I18N>/ADDITION}" type="Transparent" press=".onAddBasePrice" visible="{detailViewModel>/viewMode}" />
                                             <Button text="{I18N>/DELETE}" type="Transparent" press=".onDeleteBasePrice" visible="{detailViewModel>/viewMode}" /> -->
@@ -541,37 +541,37 @@
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="BaseCode" textAlign="Center" />
                                             <t:template>
-                                                <Text text="{path: 'basePriceInfoList>base_price_type_code'}"  />
+                                                <Text text="{path: 'basePriceInfoList>base_price_type_code'}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="Base Date" textAlign="Center" />
                                             <t:template>
-                                                <Text text=""  />
+                                                <Text text="{path: 'basePriceInfoList>base_date'}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="Base Price Currency" textAlign="Center" />
                                             <t:template>
-                                                <Text text=""  />
+                                                <Text text="{path: 'basePriceInfoList>base_currency_code'}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="Base Price" textAlign="Center" />
                                             <t:template>
-                                                <Text text=""  />
+                                                <Text text="{path: 'basePriceInfoList>base_price'}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="Apply Start Month" textAlign="Center" />
                                             <t:template>
-                                                <Text text=""  />
+                                                <Text text="{path: 'basePriceInfoList>base_apply_start_yyyymm'}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
                                             <Label text="Apply End Month" textAlign="Center" />
                                             <t:template>
-                                                <Text text=""  />
+                                                <Text text="{path: 'basePriceInfoList>base_apply_end_yyyymm'}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
@@ -824,37 +824,14 @@
 
         <!-- footer 시작 -->
         <uxap:footer>
-			<OverflowToolbar visible="{= ${detailModel>/approval_status_code} === 'DR' ? true : false}">
+			<OverflowToolbar>
 				<ToolbarSpacer />
-                <Button
-                    text="{I18N>/SAVE}"
-                    visible="{= ${detailViewModel>/viewMode}}"
-                    press=".onTmpSave" />
-                <Button
-                    text="{I18N>/CHANGE_DEVELOPER}"
-                    visible="{= ${detailViewModel>/viewMode}}"
-                    press=".onDeveloping" />
-                <Button
-                    text="{I18N>/EDIT}" 
-                    visible="{= !${detailViewModel>/viewMode}}"
-                    press=".onEditToggle" />
-                <Button
-                    text="{I18N>/CANCEL}"
-                    visible="{= ${detailViewModel>/viewMode}}"
-                    press=".onEditToggle" />
-				<Button
-                    text="{I18N>/DRAFT}" 
-                    visible="{= ${detailViewModel>/viewMode}}"
-                    press=".onDraft" />
-                <Button
-                    text="{I18N>/DELETE}" 
-                    visible="{= !${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
-                    press=".onDelete" />
-                <Button
-                    type="Emphasized"
-                    text="{I18N>/REQUEST}"
-                    visible="{= !${detailViewModel>/viewMode} &amp;&amp; ${detailModel>/approval_number} !== '' ? true : false}"
-                    press=".onRequest" />
+                <Button id="draftBtn" text="{I18N>/DRAFT}" press=".onDraft" class="btnGrp"/>
+                <Button id="deleteBtn" text="{I18N>/DELETE}" press=".onDelete" class="btnGrp"/>
+                <Button id="requestBtn" type="Emphasized" text="{I18N>/REQUEST}" press=".onRequest" class="btnGrp"/>
+                <Button id="approveBtn" type="Emphasized" text="{I18N>/APPROVAL}" press=".onApprove" class="btnGrp"/>
+                <Button id="rejectBtn" type="Emphasized" text="{I18N>/REJECT}" press=".onReject" class="btnGrp"/>
+                <!-- <Button id="cancelBtn" text="{I18N>/CANCEL}" press=".onCancel" class="btnGrp"/> -->
 			</OverflowToolbar>
 		</uxap:footer>
         <!-- footer 끝 -->

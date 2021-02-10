@@ -1,3 +1,7 @@
+/*
+소스 정리 필요
+*/
+
 sap.ui.define([
     "ext/lib/control/ui/CodeValueHelp",
     "ext/lib/control/DummyRenderer",
@@ -82,12 +86,22 @@ sap.ui.define([
             ];
         },
 
+        extractBindingInfo(oValue, oScope){
+            if(oValue && (oValue.filters || oValue.sorters)){
+                var oParam = jQuery.extend(true, {}, oValue);
+                this.oFilters = oValue.filters || [];
+                this.oSorters = oValue.sorters || [];
+            }else{
+                return Parent.prototype.extractBindingInfo.call(this, oValue, oScope);
+            }
+        },
+
         loadData: function(){
             var sKeyword = this.oSearchKeyword.getValue(),
                 sDepartment = this.oDepartment.getValue(),
-                oParam = this.getServiceParameters(),
-                aFilters = oParam.filters || [],
-                aSorters = oParam.sorters || [];
+                // oParam = this.getServiceParameters(),
+                aFilters = this.oFilters || [],
+                aSorters = this.oSorters || [];
             if(sKeyword){
                 aFilters.push(
                     new Filter({
@@ -108,6 +122,9 @@ sap.ui.define([
                         and: false
                     })
                 );
+                this.sKeywordFlag = true;
+            }else{
+                this.sKeywordFlag = false;
             }
             if(sDepartment){
                 aFilters.push(
@@ -129,16 +146,18 @@ sap.ui.define([
                         and: false
                     })
                 );
+                this.sDepartmentFlag = true;
+            }else{
+                this.sDepartmentFlag = false;
             }
-            aSorters.push(new Sorter("user_local_name", false));
-            this.oDialog.setBusy(true);
-            ODataV2ServiceProvider.getService("cm.util.HrService").read("/Employee", {
-                fetchOthers: true,
+
+            ODataV2ServiceProvider.getService("cm.util.HrService").read("/Employee_Entity", {
+             fetchOthers: true,
                 filters: aFilters,
                 sorters: aSorters,
-                success: function(oData, bHasMore){
-                    this.oDialog.setData(oData.results, false);
-                    if(!bHasMore) this.oDialog.setBusy(false);
+                success: function(oData){
+                    var aRecords = oData.results;
+                    this.oDialog.setData(aRecords, false);
                 }.bind(this),
                 fetchOthersSuccess: function(aDatas){
                     var aDialogData = this.oDialog.getData();
@@ -149,8 +168,15 @@ sap.ui.define([
                     this.oDialog.setBusy(false);
                 }.bind(this)
             });
+                
+            if(this.sKeywordFlag === true){
+                aFilters.length = aFilters.length -1;
+            }
+            if(this.sDepartmentFlag === true){
+                aFilters.length = aFilters.length -1;
+            }
         },
-
+        
         beforeOpen: function(){
         }
 

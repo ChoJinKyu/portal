@@ -477,11 +477,11 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="{I18N>/VP_EXCEPTION_FLAG}" width="8rem"  hAlign="Center">
+                            <!-- <table:Column label="{I18N>/VP_EXCEPTION_FLAG}" width="8rem"  hAlign="Center">
                                 <table:template >
                                     <Text text="{= !!${list>vendor_pool_apply_exception_flag} ? 'Y' : 'N'}" wrapping="false" />                               
                                 </table:template>
-                            </table:Column>
+                            </table:Column> -->
 
                             <table:Column label="{I18N>/SD_EXCEPTION_FLAG}" width="8rem" hAlign="Center">
                                 <table:template>

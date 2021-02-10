@@ -313,7 +313,7 @@ sap.ui.define([
 				oDetailsModel.addRecord({
 					"tenant_id": this._sTenantId,
 					"product_activity_code": "",
-					"language_cd": "KO",
+					"language_cd": "",
 					"code_name": ""			
                 }, "/PdProdActivityTemplateLng");
 

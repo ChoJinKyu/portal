@@ -10,7 +10,7 @@ entity Md_Mst_Asset_Spec_View {
         mold_number                     : String(40)  not null  @title:'부품번호';
         mold_sequence                   : String(100) not null  @title:'금형순번';
         model                           : String(100)           @title:'모델';
-        class_desc                      : String(300)           @title:'품명';
+        spec_name                       : String(300)           @title:'품명';
         supplier_code                   : String(10)            @title:'공급업체코드';
         supplier_name                   : String(100)           @title:'공급업체명';
         production_supplier_code        : String(100)           @title:'제작협력사ID';

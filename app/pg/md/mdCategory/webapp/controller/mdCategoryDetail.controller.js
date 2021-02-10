@@ -168,10 +168,6 @@ sap.ui.define([
 			});
 			oTable.removeSelections(true);
 		},
-        
-        onMidTableFilterPress: function() {
-            this._MidTableApplyFilter();
-        },
 
 		
         /**
@@ -182,7 +178,7 @@ sap.ui.define([
             var oView = this.getView(),
                 oMasterModel = this.getModel("master"),
                 that = this;
-
+                
             MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
                 title: "Comfirmation",
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -191,21 +187,21 @@ sap.ui.define([
                     oView.setBusy(true);
                     oMasterModel.removeData();
                     oMasterModel.setTransactionModel(that.getModel());
-                    oMasterModel.submitChanges({
+                    oMasterModel.submitChanges({ //다건
                         success: function (ok) {
-                            if (ok.__batchResponses[0].__changeResponses[0].response.statusCode == "400") {
-                                MessageToast.show(this.I18N.getText("/EPG10001", [this.I18N.getText("/SPMD_CATEGORY_CODE")]), {at: "center center"});
+                            if (ok.__batchResponses[0].__changeResponses[0].response != null && ok.__batchResponses[0].__changeResponses[0].response.statusCode == "400") {
+                                //범주 {0} 를 사용 중인 관리특성이 존재합니다.
+                                oView.setBusy(false);
+                                MessageToast.show(that.getModel("I18N").getText("/EPG10001",oMasterModel.oData.spmd_category_code_name), {at: "center center"});
                                 return;
-                            }
-                            oView.setBusy(false);
-                            that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                            //MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
-                                    
-                            that.onPageNavBackButtonPress(); 
-                        }.bind(this),
-                        error: function(data){
-                            MessageToast.show(this.I18N.getText("/EPG10001", [this.I18N.getText("/SPMD_CATEGORY_CODE")]), {at: "center center"});
-                        }
+                            }else{
+                                oView.setBusy(false);
+                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
+                                that.onPageNavBackButtonPress();
+                            } 
+                        }.bind(this)
+                        // that.getModel("I18N").getText("/NCM01001")
                     });
                 };
                 }
@@ -394,7 +390,8 @@ sap.ui.define([
                     "spmd_category_code": "",
 					"language_code": "",
 					"spmd_category_code_name": "",
-				}, "/MdCategoryLng");
+                }, "/MdCategoryLng");
+                
                 this._toEditMode();
                 
 			}else{   
@@ -441,12 +438,21 @@ sap.ui.define([
 
 			oTransactionManager.setServiceModel(this.getModel());
 
+            setTimeout(this.setPageLayout(), 500);
             //ScrollTop
-            var oObjectPageLayout = this.getView().byId("page");
-            var oFirstSection = this.getView().byId("pageSectionMain");
-            oObjectPageLayout.scrollToSection(oFirstSection, 0, -500);
+            // var oObjectPageLayout = this.getView().byId("page");
+            // var oFirstSection = oObjectPageLayout.getSections()[0];
+            // oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
+
+            // var oFirstSection = this.getView().byId("pageSectionMain");
+            // oObjectPageLayout.scrollToSection(oFirstSection, 0, -500);
 		},
 
+        setPageLayout : function(){ //fragment 없애야함
+            var oObjectPageLayout = this.getView().byId("page");
+            var oFirstSection = oObjectPageLayout.getSections()[0];
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);          
+        },
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -585,7 +591,8 @@ sap.ui.define([
             this._loadFragment(sFragmentName, function(oFragment){
 				oPageSubSection.removeAllBlocks();
 				oPageSubSection.addBlock(oFragment);
-			})
+            })
+            
         },
         _loadFragment: function (sFragmentName, oHandler) {
 			if(!this._oFragments[sFragmentName]){
@@ -601,18 +608,7 @@ sap.ui.define([
 				if(oHandler) oHandler(this._oFragments[sFragmentName]);
 			}
         },
-        
-
-        _MidTableApplyFilter: function() {
-
-            var oView = this.getView(),
-				sValue = oView.byId("midTableSearchField").getValue(),
-				oFilter = new Filter("spmd_category_code_name", FilterOperator.Contains, sValue);
-
-			oView.byId("midTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
-
-        },
-
+    
 		/**
 		 * Opens a fully featured <code>ColorPalette</code> in a <code>sap.m.ResponsivePopover</code>
 		 * @param oEvent

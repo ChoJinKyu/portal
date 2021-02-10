@@ -49,7 +49,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Submission No"/> 
-                                        <Text text="{repairItem>repair_request_number}"/> 
+                                        <Text text="{repairItem>/repair_request_number}"/> 
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -263,7 +263,7 @@
                                 <form:content>
                                     <VBox height="3.5rem">
                                         <Label text="Model"/>
-                                        <Text text="{moldView>model}"/>
+                                        <Text text="{moldView>/model}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -271,7 +271,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Mold No"/> 
-                                        <Text text="{moldView>mold_number}"/>
+                                        <Text text="{moldView>/mold_number}"/>
                                         <layoutData>
                                             <layout:GridData span="XL2 L2 M2 S3" />
                                         </layoutData>
@@ -279,7 +279,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Seq"/> 
-                                        <Text text="{moldView>mold_sequence}"/>
+                                        <Text text="{moldView>/mold_sequence}"/>
                                         <layoutData>
                                             <layout:GridData span="XL2 L2 M2 S3" />
                                         </layoutData>
@@ -287,7 +287,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Currency"/> 
-                                        <Text text="{repairItem>currency_code}"/>
+                                        <Text text="{moldView>/currency_code}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -295,7 +295,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Item Type"/>
-                                        <Select selectedKey="{moldView>mold_item_type_code}"
+                                        <Select selectedKey="{moldView>/mold_item_type_code}"
                                             items="{
                                                         path : 'util>/Code',
                                                         filters : [
@@ -313,7 +313,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Item Name"/>
-                                        <Text text="{moldView>class_desc}"/>
+                                        <Text text="{moldView>/spec_name}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -321,7 +321,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Die Machine"/>
-                                        <Text text="{moldView>mold_tonnage}"/>
+                                        <Text text="{moldView>/mold_tonnage}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -329,7 +329,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Material"/>
-                                        <Text text="{moldView>use_material_value}"/>
+                                        <Text text="{moldView>/use_material_value}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -337,7 +337,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Specification Number"/>
-                                        <Input value="{repairItem>eco_number}" placeholder="Search" required="true"
+                                        <Input value="{repairItem>/eco_number}" placeholder="Search" required="true"
                                             editable="{mode>/editFlag}"
                                             showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
                                         </Input>
@@ -432,7 +432,8 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Receipt Date"/>
-                                        <Text text="{path: 'moldView>/acq_date', formatter: '.dateFormatter.toDateString'}"/>
+                                        <!--<Text text="{path: 'moldView>/acq_date', formatter: '.dateFormatter.toDateString'}"/>-->
+                                        <Text text="{moldView>/acq_date}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -456,7 +457,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Account Dept"/>
-                                        <Input value="{repairItem>accounting_department_code}" placeholder="Search" required="true"
+                                        <Input value="{repairItem>/accounting_department_code}" placeholder="Search" required="true"
                                             editable="{mode>/editFlag}"
                                             showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
                                         </Input>
@@ -483,7 +484,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Repair Supplier"/>
-                                        <Input value="{repairItem>repair_supplier_name}" placeholder="Search" required="true"
+                                        <Input value="{repairItem>/repair_supplier_name}" placeholder="Search" required="true"
                                             editable="{mode>/editFlag}"
                                             showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
                                         </Input>
@@ -494,7 +495,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Move Plan"/>
-                                        <DatePicker value="{repairItem>mold_moving_plan_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
+                                        <DatePicker value="{repairItem>/mold_moving_plan_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -502,7 +503,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Complete Plan"/>
-                                        <DatePicker value="{repairItem>mold_complete_plan_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
+                                        <DatePicker value="{repairItem>/mold_complete_plan_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -510,7 +511,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Repair Supplier Code"/>
-                                        <Text text="{repairItem>repair_supplier_code}"/>
+                                        <Text text="{repairItem>/repair_supplier_code}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -518,7 +519,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Move Result"/>
-                                        <DatePicker value="{repairItem>mold_moving_result_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
+                                        <DatePicker value="{repairItem>/mold_moving_result_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -526,7 +527,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Complete Result"/>
-                                        <DatePicker value="{repairItem>mold_complete_result_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
+                                        <DatePicker value="{repairItem>/mold_complete_result_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -542,7 +543,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Acquisition Dept"/>
-                                        <Input value="{repairItem>acq_department_code}" placeholder="Search" required="true"
+                                        <Input value="{repairItem>/acq_department_code}" placeholder="Search" required="true"
                                             editable="{mode>/editFlag}" width="70%"
                                             showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
                                         </Input>
@@ -583,7 +584,7 @@
                                 inset="false"
                                 class="sapFDynamicPageAlignContent"
                                 width="auto"
-                                items= "{schedule>/MoldSchedule}" >
+                                items= "{history>/RepairMstAssetView}" >
                             <columns>
                                 <Column>
                                     <Label text="Type" wrapping="true" />
@@ -616,14 +617,16 @@
                             <items>
                                 <ColumnListItem>
                                     <cells>
-                                        <Text text="{history>/repair_type_name}"/>
-                                        <Text text="{path: 'history>repair_request_date', formatter: '.dateFormatter.toDateString'}"/>
-                                        <Text text="{history>/repair_desc}"/>
-                                        <Text text="{history>/repair_request_number}"/>
-                                        <Text text="{history>/repair_supplier_name}"/>
-                                        <Text text="{path: 'history>complete_date', formatter: '.dateFormatter.toDateString'}"/>
-                                        <Text text="{history>/eco_number}"/>
-                                        <Text text="{history>/currency_code}"/>
+                                        <Text text="{history>repair_type_name}"/>
+                                        <!--<Text text="{path: 'history>repair_request_date', formatter: '.dateFormatter.toDateString'}"/>-->
+                                        <Text text="{history>repair_request_date}"/>
+                                        <Text text="{history>repair_desc}"/>
+                                        <Text text="{history>repair_request_number}"/>
+                                        <Text text="{history>repair_supplier_name}"/>
+                                        <!--<Text text="{path: 'history>repair_complete_date', formatter: '.dateFormatter.toDateString'}"/>-->
+                                        <Text text="{history>repair_complete_date}"/>
+                                        <Text text="{history>eco_number}"/>
+                                        <Text text="{history>currency_code}"/>
                                         <Text text="{path: 'history>repair_amount', formatter: '.numberFormatter.toNumberString'}"/>
                                     </cells>
                                 </ColumnListItem>
@@ -641,7 +644,7 @@
                 <Button id="pageEditButton"         type="Transparent" text="{I18N>/EDIT}"   press=".onPageEditButtonPress" visible="{= ${mode>/newFlag} ? false : !${mode>/editFlag}}" />
 				<Button id="pageCancelButton"       type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress" visible="{= ${mode>/newFlag} ? false : ${mode>/editFlag}}" />
                 <!--<Button id="pageDraftButton"        type="Transparent" text="{I18N>/DRAFT}"  press=".onPageSaveButtonPress" visible="{= !(${moldView>/mold_spec_status_code} === 'C') }" />-->
-                <Button id="pagePartNoSearchButton" type="Transparent" text="Part No Search"  press=".onPagePartNoSearchButtonPress"  /><!--visible="{= !(${moldView>/mold_spec_status_code} === 'C') }"-->
+                <Button id="pagePartNoSearchButton" type="Transparent" text="Part No Search"  press=".onPagePartNoSearchButtonPress" visible="{= ${mode>/newFlag} ? false : ${mode>/editFlag}}" />
 				<Button id="pageConfirmButton"      type="Emphasized"  text="Confirm" press=".onPageConfirmButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>

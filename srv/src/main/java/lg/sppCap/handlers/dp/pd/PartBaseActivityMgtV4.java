@@ -33,23 +33,12 @@ public class PartBaseActivityMgtV4 implements EventHandler {
     @Transactional(rollbackFor = SQLException.class)
     @On(event = PdpartBaseActivitySaveProcContext.CDS_NAME)
     public void SaveIdeaProc(PdpartBaseActivitySaveProcContext context) {
-        System.out.println("START PROC.....");
+        
         // ProcInputType v_inDatas = context.getInputData();
         String crudType = context.getInputData().getCrudType();
         PdpartBaseActivityType v_pdMst = context.getInputData().getPdMst();
         Collection<PdpartBaseActivityLngType> v_pdDtl = context.getInputData().getPdDtl();
         Collection<PdpartBaseActivityCategoryType> v_pdCat = context.getInputData().getPdCat();
-        
-        /*
-        System.out.println(v_inDatas.get("tenant_id"));
-        System.out.println(v_inDatas.get("idea_number"));
-        System.out.println(v_inDatas.get("idea_title"));if(!v_inDatas.isEmpty() && v_inDatas.size() > 0){
-            for(PdProdActivityTemplateType v_inRow : v_inDatas){
-                System.out.println(v_inRow.get("crud_type_code"));
-                System.out.println(v_inRow.get("product_activity_code"));
-                System.out.println(v_inRow.get("product_activity_name"));
-            }
-        }*/
         
         // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
         String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
@@ -167,7 +156,7 @@ public class PartBaseActivityMgtV4 implements EventHandler {
         jdbc.execute(v_sql_createCateTable.toString());
         
         List<Object[]> batch_cat = new ArrayList<Object[]>();
-        System.out.println("MID PROC.....");
+        
         if(!v_pdCat.isEmpty() && v_pdCat.size() > 0){
             boolean cate_active_flag = false;
             Integer sGrade;
@@ -207,7 +196,7 @@ public class PartBaseActivityMgtV4 implements EventHandler {
                 } else {
                     dGrade = Integer.parseInt(String.valueOf(v_inRow.get("d_grade_standard_days")));
                 }
-                System.out.println("TEST....." + v_inRow.get("s_grade_standard_days"));
+                
                 Object[] values = new Object[] {
                     v_inRow.get("tenant_id"),
                     v_inRow.get("activity_code"),

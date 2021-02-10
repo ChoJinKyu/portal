@@ -16,7 +16,7 @@
                     constraints: {
                         maxLength: 50
                     }
-                }" required="true" width="100%" class="sapUiSmallMarginBottom"/>
+                }" required="true" width="75%" class="sapUiSmallMarginBottom"/>
             </VBox>
         </form:SimpleForm>
 
@@ -24,7 +24,7 @@
             
             <VBox alignContent="Center">
                 <Label text="* 운영단위(플랜트)" required="true" design="Bold" class="sapMLabelNoText" />
-                <Input id="savePlantName" value="{viewModel>/mst/org_name}" required="true" placeholder="플랜트" showValueHelp="true" valueHelpRequest=".openPlantPopup" width="100%" />
+                <Input id="savePlantName" value="{viewModel>/mst/org_name}" required="true" placeholder="플랜트" showValueHelp="true" valueHelpRequest=".openPlantPopup" width="50%" />
                 <Input id="savePlantCode" value="{viewModel>/mst/org_code}" visible="false" />
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
@@ -50,7 +50,7 @@
                 <Label text="* 대분류" design="Bold" required="true" class="sapUiSmallMarginTop"/>
                 <ComboBox selectedKey="{viewModel>/mst/ep_item_class_code}" 
                         selectionChange="setItemClass"
-                        width="100%" required="true"
+                        width="50%" required="true"
                         items="{
                                 path: '/UcItemClass',
                                 filters: [
@@ -76,7 +76,7 @@
                     constraints: {
                         maxLength: 50
                     }
-                }" width="100%"/>
+                }" width="50%"/>
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>                   

@@ -94,7 +94,7 @@
                                                 <Label text="{I18N>/EVALUATION_TYPE_CODE}"/>                                                                        
                                                 <Input   
                                                         width="100%" 
-                                                        placeholder="EVALUATION_TYPE_CODE"
+                                                        placeholder="input evaluation type code"
                                                        
                                                         value="{
                                                              path : 'TwoView>/evaluationType2/evaluation_type_code',
@@ -114,14 +114,15 @@
                                                 <!--  평가 비율 -->
                                                 <Label text="{I18N>/EVALUATION_RATE}"/>                                                
                                                 <Input
+                                                        id="rate"
                                                         width="100%" 
-                                                        placeholder="EVALUATION_RATE"
+                                                        placeholder="input evaluation rate"
                                                         value="{
                                                              path : 'TwoView>/evaluationType2/evaluation_type_distrb_score_rate',
                                                              type : 'sap.ui.model.odata.type.Decimal',
                                                              constraints : {
-                                                                scale : 0
-                                                            }   
+                                                                  scale : 0
+                                                                }   
                                                             }"
                                                         editable="{=${TwoView>/isEditMode}}"
 
@@ -136,7 +137,7 @@
                                                 <Label text="{I18N>/EVALUATION_TYPE_NAME}"/>
                                                 <Input  
                                                         width="100%" 
-                                                        placeholder="EVALUATION_TYPE_NAME"
+                                                        placeholder="input evaluation type name"
                                                         value="{
                                                              path : 'TwoView>/evaluationType2/evaluation_type_name',
                                                              type : 'sap.ui.model.odata.type.String',
@@ -238,7 +239,6 @@
                                                 />
                                                 <Input   
                                                 width="100%" 
-                                                placeholder="EVALUATION_GRADE"
                                                 value="{
                                                              path : 'TwoView>evaluation_grade',
                                                              type : 'sap.ui.model.odata.type.String',
@@ -257,7 +257,6 @@
                                                 />
                                                 <Input   
                                                 width="100%" 
-                                                placeholder="OVER"
                                                 value="{
                                                              path : 'TwoView>evaluation_grade_start_score',
                                                              type : 'sap.ui.model.odata.type.Decimal',
@@ -277,7 +276,6 @@
                                                 />
                                                 <Input   
                                                 width="100%" 
-                                                placeholder="LESS_THAN"
                                                 value="{
                                                              path : 'TwoView>evaluation_grade_end_score',
                                                              type : 'sap.ui.model.odata.type.Decimal',

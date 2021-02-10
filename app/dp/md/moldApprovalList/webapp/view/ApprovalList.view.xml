@@ -59,7 +59,7 @@
                             </VBox>
                             <VBox height="4em">
                                 <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchRequestDateS" required="true"></Label>
-                                <DateRangeSelection id="searchRequestDateS" width="100%" change="handleChange"/>
+                                <DateRangeSelection id="searchRequestDateS" width="100%" change="DateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -89,13 +89,15 @@
                         <form:content>
                             <VBox height="4em">
                                 <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyE" required="true"></Label>     
-                                <MultiComboBox id="searchCompanyE" width="100%" selectionFinish="handleSelectionFinishComp" items="{
+                                <MultiComboBox id="searchCompanyE" width="100%" items="{
                                        path: 'org>/Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'company_code'}
-                                    }" required="true">
+                                    }" 
+                                    selectionFinish="handleSelectionFinishComp" 
+                                    required="true">
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>
@@ -123,7 +125,7 @@
                             </VBox>
                             <VBox height="4em">
                                 <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchRequestDateE" required="true"></Label>
-                                <DateRangeSelection id="searchRequestDateE" width="100%" change="handleChange"/>
+                                <DateRangeSelection id="searchRequestDateE" width="100%" change="DateChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -308,35 +310,35 @@
                         <Column id="mainColumnChkBox" width="4em" >
                             <CheckBox selected="false" select=".onColumnChecBox" text=" "/> 
                         </Column>
-                        <Column id="mainColumnApprovalCategory" >
+                        <Column id="mainColumnApprovalCategory"  width="10em">
                             <!-- <Text text="Approval&#10;Category" /> -->
                             <Text text="{path:'I18N>/APPROVAL_TYPE_CODE', formatter:'I18NFormatter'}" />
                         </Column>
-                        <Column id="mainColumnCompany" >
+                        <Column id="mainColumnCompany"  width="10em">
                             <!-- <Text text="Company" /> -->
                             <Text text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" />
                         </Column>
-                        <Column id="mainColumnPlant" >
+                        <Column id="mainColumnPlant"  width="10em">
                             <!-- <Text text="Plant" /> -->
                             <Text text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" />
                         </Column>
-                        <Column id="mainColumnApprovalNo">
+                        <Column id="mainColumnApprovalNo" width="10em">
                             <!-- <Text text="Approval No" /> -->
                             <Text text="{path:'I18N>/APPROVAL_NUMBER', formatter:'I18NFormatter'}" />
                         </Column>
-                        <Column id="mainColumnSubject"  >
+                        <Column id="mainColumnSubject"   width="10em">
                             <!-- <Text text="Subject" /> -->
                             <Text text="{path:'I18N>/APPROVAL_TITLE', formatter:'I18NFormatter'}" />
                         </Column>
-                        <Column id="mainColumnRequestor"  >
+                        <Column id="mainColumnRequestor"  width="10em">
                             <!-- <Text text="Requestor" /> -->
                             <Text text="{path:'I18N>/REQUESTOR', formatter:'I18NFormatter'}" />
                         </Column>
-                        <Column id="mainColumnRequestDate"  >
+                        <Column id="mainColumnRequestDate" width="10em">
                             <!-- <Text text="Request Date" /> -->
                             <Text text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" />
                         </Column>
-                        <Column id="mainColumnStatus"  >
+                        <Column id="mainColumnStatus"  width="10em">
                             <!-- <Text text="Status" /> -->
                             <Text text="{path:'I18N>/APPROVE_STATUS_CODE', formatter:'I18NFormatter'}" />
                         </Column>

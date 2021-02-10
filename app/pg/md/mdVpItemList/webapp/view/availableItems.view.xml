@@ -21,7 +21,7 @@
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                     <Title text="{I18N>/SPMD_CHARACTER_LIST} ({= ${tblModel>/left}.length})" level="H2"/>
                     <ToolbarSpacer/> 
-                    <SearchField id="tableSearchField" width="15rem" search=".onTableFilterPress" />	
+                    <SearchField id="tableSearchField" class="sapUiTinyMarginBeginEnd"  width="15rem" search=".onTableFilterPress" />	
                 </OverflowToolbar>
             </t:extension>
             <t:columns>

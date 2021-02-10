@@ -14,7 +14,8 @@ entity Uc_Approval_Extra_Detail_View {
         extra_class_name               : String(100);
         extra_name                     : String(100);
         base_extra_rate                : Decimal;
-        apply_extra_rate               : Decimal;
+        // apply_extra_rate               : Decimal;
+        apply_extra_rate               : String(10);
         apply_extra_desc               : String(1000);
         update_enable_flag             : Boolean;
 

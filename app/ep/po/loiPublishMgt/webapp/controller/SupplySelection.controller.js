@@ -201,7 +201,7 @@ sap.ui.define([
                 oDetailsModel = this.getModel("details"),
                 that = this;
 
-            console.log("details===", oDetailsModel);    
+            console.log("details===", oDetailsModel.getData());    
 
             // '122010'	'RFQ진행중'
             // '122020'	'RFQ완료'
@@ -391,16 +391,19 @@ sap.ui.define([
                 quotationItemNumberArr = oArgs.quotationItemNumber.split(",");
 
             quotationNumberArr.forEach(function (item, index) {
+                
                 var arr = {
                     "quotation_number": item,
                     "quotation_item_number": ""
                 };
-                quotationArr[index] = arr;
+                if(item != "new")
+                    quotationArr[index] = arr;
 
             });
 
             quotationItemNumberArr.forEach(function (item, index) {
-                quotationArr[index]["quotation_item_number"] = item;
+                if(item != "new")
+                    quotationArr[index]["quotation_item_number"] = item;
             });
 
             // loiWriteNumberArr.forEach(function (item, index) {
@@ -415,7 +418,6 @@ sap.ui.define([
             console.log("quotationArr==", quotationArr);
 
             this._sLoiDtlArr = loiDtlArr;
-
 
             var input = {
                 inputData: {

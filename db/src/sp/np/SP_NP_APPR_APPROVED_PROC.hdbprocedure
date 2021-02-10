@@ -4,18 +4,16 @@ PROCEDURE SP_NP_APPR_APPROVED_PROC (
     - 단가Master에 데이터 등록 및 수정
     
         I.단가 등록 (NET_PRICE_DOCUMENT_TYPE_CODE = 'I')
-          1. 해당 기간에 포함되는 건이 2건 이상이면, Exception 발생
-          2. 동일한 시작일자가 존재하면, Update
-          3. 동일한 시작일자가 아닌, 기간에 포함되는 건이면, 종료일자를 시작일자 하루 전으로 Update, 신규 Insert
+          0. 해당 기간에 포함되는 건이 2건 이상이면, Exception 발생
+          0. 신규건의 시작일자보다 이후 인 건이 존재하면, Exception 발생
+          1. 동일한 시작일자가 존재하면, Update
+          2. 동일한 시작일자가 아닌, 기간에 포함되는 건이면, 종료일자를 시작일자 하루 전으로 Update, 신규 Insert
 
         C.단가 무조건 Insert (NET_PRICE_DOCUMENT_TYPE_CODE = 'C')
           - 순번은 Max + 1
 
 */
      IN   I_TENANT_ID                      NVARCHAR(20)
---    ,IN   I_COMPANY_CODE                   NVARCHAR(10)
---    ,IN   I_ORG_TYPE_CODE                  NVARCHAR(2)
---    ,IN   I_ORG_CODE                       NVARCHAR(10)
     ,IN   I_APPROVAL_NUMBER                NVARCHAR(20)
     ,IN   I_NET_PRICE_DOCUMENT_TYPE_CODE   NVARCHAR(10)
     ,IN   I_USER_ID                        NVARCHAR(255)
@@ -44,13 +42,13 @@ BEGIN
         , NAD.SUPPLIER_CODE
         , NAD.MATERIAL_CODE
         , NAD.MARKET_CODE
+        , NAD.CURRENCY_CODE
         , TO_VARCHAR(NAD.EFFECTIVE_START_DATE,'YYYYMMDD') AS EFFECTIVE_START_DATE
         , TO_VARCHAR(NAD.EFFECTIVE_END_DATE,'YYYYMMDD')   AS EFFECTIVE_END_DATE
         , NAD.PAYTERMS_CODE
         , NAD.INCOTERMS
         , NAM.BUYER_EMPNO
         , NAM.TENTPRC_FLAG
-        , NAD.CURRENCY_CODE
         , NAD.EXRATE_TYPE_CODE
         , NAD.EXRATE_DATE
         , NAD.EXRATE
@@ -107,8 +105,9 @@ BEGIN
        AND CAM.APPROVAL_NUMBER    = :I_APPROVAL_NUMBER
     ;
 
-	DECLARE V_COUNT_EQUAL_START_DT INT;
-	DECLARE V_COUNT_INCLUDE_PERIOD INT;
+	DECLARE V_COUNT_EQUAL_START_DT  INT;    /* 시작일자가 동일한 건수 */
+	DECLARE V_COUNT_OVER_START_DT   INT;    /* 시작일자가 이후 인 건수 */
+	DECLARE V_COUNT_INCLUDE_PERIOD  INT;    /* 시작일자가 포함되는 건수  */
 
     /*******************************************************************************
     *********** Exception 정의 *****************************************************
@@ -154,25 +153,36 @@ BEGIN
                     END;
                     
                     SELECT COUNT(CASE WHEN S.EFFECTIVE_START_DATE = c_item.EFFECTIVE_START_DATE THEN 1 END) AS COUNT_EQUAL_START_DT
+                         , COUNT(CASE WHEN S.EFFECTIVE_START_DATE > c_item.EFFECTIVE_START_DATE THEN 1 END) AS COUNT_OVER_START_DT
                          , COUNT(CASE WHEN c_item.EFFECTIVE_START_DATE BETWEEN S.EFFECTIVE_START_DATE AND S.EFFECTIVE_END_DATE THEN 1 END) AS COUNT_INCLUDE_PERIOD
                       INTO V_COUNT_EQUAL_START_DT
+                         , V_COUNT_OVER_START_DT
                          , V_COUNT_INCLUDE_PERIOD
                       FROM SP_NP_NET_PRICE_MST  S
-                     WHERE S.TENANT_ID              = c_item.TENANT_ID
-                       AND S.COMPANY_CODE           = c_item.COMPANY_CODE
-                       AND S.ORG_TYPE_CODE          = c_item.ORG_TYPE_CODE
-                       AND S.ORG_CODE               = c_item.ORG_CODE
-                       AND S.NET_PRICE_DOCUMENT_TYPE_CODE = c_item.NET_PRICE_DOCUMENT_TYPE_CODE
-                       AND S.NET_PRICE_SOURCE_CODE  = c_item.NET_PRICE_SOURCE_CODE
-                       AND S.SUPPLIER_CODE          = c_item.SUPPLIER_CODE
-                       AND S.MATERIAL_CODE          = c_item.MATERIAL_CODE
-                       AND S.MARKET_CODE            = c_item.MARKET_CODE
+                     WHERE S.TENANT_ID                       = c_item.TENANT_ID
+                       AND S.COMPANY_CODE                    = c_item.COMPANY_CODE
+                       AND S.ORG_TYPE_CODE                   = c_item.ORG_TYPE_CODE
+                       AND S.ORG_CODE                        = c_item.ORG_CODE
+                       AND S.NET_PRICE_DOCUMENT_TYPE_CODE    = c_item.NET_PRICE_DOCUMENT_TYPE_CODE
+                       AND S.NET_PRICE_SOURCE_CODE           = c_item.NET_PRICE_SOURCE_CODE
+                       AND S.SUPPLIER_CODE                   = c_item.SUPPLIER_CODE
+                       AND S.MATERIAL_CODE                   = c_item.MATERIAL_CODE
+                       AND S.MARKET_CODE                     = c_item.MARKET_CODE
+                       AND S.CURRENCY_CODE                   = c_item.CURRENCY_CODE
                     ;
                 END;
+
+
                 -- 1. 해당 기간에 포함되는 건이 2건 이상이면, Exception 발생
     			IF V_COUNT_INCLUDE_PERIOD > 1 THEN 
 		            O_RETURN_CODE = 'NG010';
-		            O_RETURN_MSG  = '품의마스터 삭제 중 오류 ';
+		            O_RETURN_MSG  = '신규 등록하려는 건의 시작일자에 포함되는 건이 여러 건 입니다.';
+		            SIGNAL V_USER_EXCEPTION;
+
+                    
+    			ELSEIF V_COUNT_OVER_START_DT > 1 THEN 
+		            O_RETURN_CODE = 'NG010';
+		            O_RETURN_MSG  = '신규 등록하려는 건의 시작일자보다 이후 인 건이 존재합니다.(시작일자가 이후 인건)';
 		            SIGNAL V_USER_EXCEPTION;
 
     			
@@ -184,7 +194,6 @@ BEGIN
                          , INCOTERMS                         = c_item.INCOTERMS
                          , BUYER_EMPNO                       = c_item.BUYER_EMPNO
                          , TENTPRC_FLAG                      = c_item.TENTPRC_FLAG
-                         , CURRENCY_CODE                     = c_item.CURRENCY_CODE
                          , EXRATE_TYPE_CODE                  = c_item.EXRATE_TYPE_CODE
                          , EXRATE_DATE                       = c_item.EXRATE_DATE
                          , EXRATE                            = c_item.EXRATE
@@ -242,6 +251,7 @@ BEGIN
                        AND SUPPLIER_CODE                     = c_item.SUPPLIER_CODE
                        AND MATERIAL_CODE                     = c_item.MATERIAL_CODE
                        AND MARKET_CODE                       = c_item.MARKET_CODE
+                       AND CURRENCY_CODE                     = c_item.CURRENCY_CODE
                        AND EFFECTIVE_START_DATE              = c_item.EFFECTIVE_START_DATE
     			    ;
     			    
@@ -258,42 +268,51 @@ BEGIN
     			    END IF;
     			
     			
-    			-- 3. 동일한 시작일자가 아닌, 기간에 포함되는 건이면, 종료일자를 시작일자 하루 전으로 Update, 신규 Insert
-    			ELSEIF V_COUNT_INCLUDE_PERIOD = 1 THEN
-    				-- 동일한 시작일자가 아닌, 기간에 포함되는 건이면, 종료일자를 시작일자 하루 전으로 Update
-                    UPDATE SP_NP_NET_PRICE_MST   SET
-                           EFFECTIVE_END_DATE                = TO_VARCHAR(ADD_DAYS(TO_DATE(c_item.EFFECTIVE_START_DATE, 'YYYYMMDD'), -1), 'YYYYMMDD') 
-				    	 
-                         , LOCAL_UPDATE_DTM                  = NOW()
-                         , UPDATE_USER_ID                    = :I_USER_ID
-                         , SYSTEM_UPDATE_DTM                 = NOW()
-				    	 
-				     WHERE TENANT_ID                         = c_item.TENANT_ID
-                       AND COMPANY_CODE                      = c_item.COMPANY_CODE
-                       AND ORG_TYPE_CODE                     = c_item.ORG_TYPE_CODE
-                       AND ORG_CODE                          = c_item.ORG_CODE
-                       AND NET_PRICE_DOCUMENT_TYPE_CODE      = c_item.NET_PRICE_DOCUMENT_TYPE_CODE
-                       AND NET_PRICE_SOURCE_CODE             = c_item.NET_PRICE_SOURCE_CODE
-                    --   AND NET_PRICE_SEQUENCE                = c_item.NET_PRICE_SEQUENCE
-                       AND SUPPLIER_CODE                     = c_item.SUPPLIER_CODE
-                       AND MATERIAL_CODE                     = c_item.MATERIAL_CODE
-                       AND MARKET_CODE                       = c_item.MARKET_CODE
-                       AND c_item.EFFECTIVE_START_DATE BETWEEN EFFECTIVE_START_DATE /* 기간에 포함 되는 건 */
-                                                           AND EFFECTIVE_END_DATE
-    			    ;
-    			    
-    			    IF ::ROWCOUNT = 0 THEN
-			            O_RETURN_CODE = 'NG010';
-			            O_RETURN_MSG  = '단가마스터에 수정된 건이 없습니다.';
-			            SIGNAL V_USER_EXCEPTION;
-			            
-    			    ELSEIF ::ROWCOUNT > 1 THEN
-			            O_RETURN_CODE = 'NG010';
-			            O_RETURN_MSG  = '단가마스터에 1건 이상 수정 되었습니다.';
-			            SIGNAL V_USER_EXCEPTION;
-    			    
-    			    END IF;
+    			-- 3. 동일한 시작일자가 아닌, 기간에 포함되는 건이 1건 이거나, 0건이면, ..
+    			ELSEIF V_COUNT_INCLUDE_PERIOD <= 1  THEN
+
+
+    			    -- 기간에 포함되는 건이 1건 이면, 종료일을 신규건의 시작일 하루전으로 Update
+                    IF V_COUNT_INCLUDE_PERIOD = 1  THEN
+                    
+    				    --  종료일을 신규건의 시작일 하루전으로 Update
+                        UPDATE SP_NP_NET_PRICE_MST   SET
+                               EFFECTIVE_END_DATE                = TO_VARCHAR(ADD_DAYS(TO_DATE(c_item.EFFECTIVE_START_DATE, 'YYYYMMDD'), -1), 'YYYYMMDD') 
+				        	 
+                             , LOCAL_UPDATE_DTM                  = NOW()
+                             , UPDATE_USER_ID                    = :I_USER_ID
+                             , SYSTEM_UPDATE_DTM                 = NOW()
+				        	 
+				         WHERE TENANT_ID                         = c_item.TENANT_ID
+                           AND COMPANY_CODE                      = c_item.COMPANY_CODE
+                           AND ORG_TYPE_CODE                     = c_item.ORG_TYPE_CODE
+                           AND ORG_CODE                          = c_item.ORG_CODE
+                           AND NET_PRICE_DOCUMENT_TYPE_CODE      = c_item.NET_PRICE_DOCUMENT_TYPE_CODE
+                           AND NET_PRICE_SOURCE_CODE             = c_item.NET_PRICE_SOURCE_CODE
+                        /*   AND NET_PRICE_SEQUENCE                = c_item.NET_PRICE_SEQUENCE    : 순번을 제외하고, 나머지 Key가 동일 한 건 */
+                           AND SUPPLIER_CODE                     = c_item.SUPPLIER_CODE
+                           AND MATERIAL_CODE                     = c_item.MATERIAL_CODE
+                           AND MARKET_CODE                       = c_item.MARKET_CODE
+                           AND CURRENCY_CODE                     = c_item.CURRENCY_CODE
+                           AND c_item.EFFECTIVE_START_DATE BETWEEN EFFECTIVE_START_DATE /* 기간에 포함 되는 건 */
+                                                               AND EFFECTIVE_END_DATE
+    			        ;
+    			        
+    			        IF ::ROWCOUNT = 0 THEN
+			                O_RETURN_CODE = 'NG010';
+			                O_RETURN_MSG  = '단가마스터에 수정된 건이 없습니다.';
+			                SIGNAL V_USER_EXCEPTION;
+			                
+    			        ELSEIF ::ROWCOUNT > 1 THEN
+			                O_RETURN_CODE = 'NG010';
+			                O_RETURN_MSG  = '단가마스터에 1건 이상 수정 되었습니다.';
+			                SIGNAL V_USER_EXCEPTION;
+    			        
+    			        END IF;
+
+                    END IF;
     			
+                    -- 신규건 Insert
                     INSERT INTO SP_NP_NET_PRICE_MST (
                            TENANT_ID
                          , COMPANY_CODE
@@ -304,6 +323,7 @@ BEGIN
                          , NET_PRICE_SEQUENCE
                          , SUPPLIER_CODE
                          , MATERIAL_CODE
+                         , CURRENCY_CODE
                          , MARKET_CODE
                          , EFFECTIVE_START_DATE
                          , EFFECTIVE_END_DATE
@@ -311,7 +331,6 @@ BEGIN
                          , INCOTERMS
                          , BUYER_EMPNO
                          , TENTPRC_FLAG
-                         , CURRENCY_CODE
                          , EXRATE_TYPE_CODE
                          , EXRATE_DATE
                          , EXRATE
@@ -372,13 +391,13 @@ BEGIN
                          , c_item.SUPPLIER_CODE
                          , c_item.MATERIAL_CODE
                          , c_item.MARKET_CODE
+                         , c_item.CURRENCY_CODE
                          , c_item.EFFECTIVE_START_DATE
                          , c_item.EFFECTIVE_END_DATE
                          , c_item.PAYTERMS_CODE
                          , c_item.INCOTERMS
                          , c_item.BUYER_EMPNO
                          , c_item.TENTPRC_FLAG
-                         , c_item.CURRENCY_CODE
                          , c_item.EXRATE_TYPE_CODE
                          , c_item.EXRATE_DATE
                          , c_item.EXRATE
@@ -458,13 +477,13 @@ BEGIN
                      , SUPPLIER_CODE
                      , MATERIAL_CODE
                      , MARKET_CODE
+                     , CURRENCY_CODE
                      , EFFECTIVE_START_DATE
                      , EFFECTIVE_END_DATE
                      , PAYTERMS_CODE
                      , INCOTERMS
                      , BUYER_EMPNO
                      , TENTPRC_FLAG
-                     , CURRENCY_CODE
                      , EXRATE_TYPE_CODE
                      , EXRATE_DATE
                      , EXRATE
@@ -532,18 +551,19 @@ BEGIN
                            AND S.SUPPLIER_CODE          = c_item.SUPPLIER_CODE
                            AND S.MATERIAL_CODE          = c_item.MATERIAL_CODE
                            AND S.MARKET_CODE            = c_item.MARKET_CODE
+                           AND S.CURRENCY_CODE          = c_item.CURRENCY_CODE
                            AND S.EFFECTIVE_START_DATE   = c_item.EFFECTIVE_START_DATE
                        )
                      , c_item.SUPPLIER_CODE
                      , c_item.MATERIAL_CODE
                      , c_item.MARKET_CODE
+                     , c_item.CURRENCY_CODE
                      , c_item.EFFECTIVE_START_DATE
                      , c_item.EFFECTIVE_END_DATE
                      , c_item.PAYTERMS_CODE
                      , c_item.INCOTERMS
                      , c_item.BUYER_EMPNO
                      , c_item.TENTPRC_FLAG
-                     , c_item.CURRENCY_CODE
                      , c_item.EXRATE_TYPE_CODE
                      , c_item.EXRATE_DATE
                      , c_item.EXRATE

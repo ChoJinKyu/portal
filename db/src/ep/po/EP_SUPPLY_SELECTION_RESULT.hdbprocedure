@@ -42,20 +42,20 @@ SQL SECURITY INVOKER
 AS
 BEGIN
 
-    DECLARE v_cntH BIGINT;
-    DECLARE v_cntD BIGINT;
+    DECLARE V_RFQ_CNT INT DEFAULT 0;
+    DECLARE V_DTL_CNT INT DEFAULT 0;
 
     SELECT COUNT(*)
-    INTO   v_cntH
+    INTO   V_RFQ_CNT
     FROM   :I_RFQ_TABLE
     ;
 
     SELECT COUNT(*)
-    INTO   v_cntD
+    INTO   V_DTL_CNT
     FROM   :I_DTL_TABLE
     ;
 
-    IF(v_cntH = 0) THEN
+    IF(V_RFQ_CNT > 0 AND V_DTL_CNT = 0) THEN
 
         O_TABLE = 
                     SELECT  'L2100' AS TENANT_ID
@@ -117,7 +117,7 @@ BEGIN
                     FROM    DUMMY   
                     ;
 
-    ELSEIF(v_cntD = 0) THEN
+    ELSEIF(V_DTL_CNT > 0 AND V_RFQ_CNT = 0) THEN
 
         O_TABLE = 
                     SELECT  ITEM.TENANT_ID

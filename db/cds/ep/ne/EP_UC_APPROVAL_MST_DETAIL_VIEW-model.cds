@@ -27,6 +27,7 @@ entity Uc_Approval_Mst_Detail_View {
         buyer_name                     : String(240);
         purchasing_department_code     : String(50);
         purchasing_department_name     : String(240);
+        special_note                   : LargeString;
 
 }
 

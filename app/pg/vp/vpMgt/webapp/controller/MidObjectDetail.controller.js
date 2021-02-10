@@ -589,9 +589,9 @@ sap.ui.define([
                         //,supeval_restrict_end_date: "20211229"   //??협의대상(화면의 어떤항목인지 모름)
                         //,inp_code: "AAA"  //??협의대상(화면의 어떤항목인지 모름)  
                         ,supplier_rm_control_flag: this.currnetSppObj[i].supplier_rm_control_flag
-                        ,supplier_base_portion_rate: parseFloat(this.currnetSppObj[i].supplier_base_portion_rate)
-                        ,vendor_pool_mapping_use_flag: this.currnetSppObj[i].vendor_pool_mapping_use_flag
-                        ,register_reason: this.currnetSppObj[i].register_reason
+                        // ,supplier_base_portion_rate: parseFloat(this.currnetSppObj[i].supplier_base_portion_rate)
+                        // ,vendor_pool_mapping_use_flag: this.currnetSppObj[i].vendor_pool_mapping_use_flag
+                        // ,register_reason: this.currnetSppObj[i].register_reason
                         ,approval_number: this.currnetSppObj[i].approval_number
                         ,crud_type_code : this.currnetSppObj[i]._row_state_   
                         
@@ -612,7 +612,7 @@ sap.ui.define([
                             , org_code: generaloDataRst.org_code
                             , vendor_pool_code: generaloDataRst.vendor_pool_code
                             , material_code: this.currnetMetObj[i].material_code
-                            , register_reason: this.currnetMetObj[i].register_reason
+                            // , register_reason: this.currnetMetObj[i].register_reason
                             , approval_number: this.currnetMetObj[i].approval_number
                             , crud_type_code : this.currnetMetObj[i]._row_state_
                     })

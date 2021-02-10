@@ -19,7 +19,7 @@ BEGIN
 
             WHERE T2.PROCESS_TYPE_CODE = 'DP05'
             AND T1.TENANT_ID = :P_TENANT_ID 
-            AND T1.ORG_CODE = :P_COMPANY_CODE
-            AND T1.COMPANY_CODE = :P_ORG_CODE
+            AND T1.COMPANY_CODE = :P_COMPANY_CODE
+            AND T1.ORG_CODE = :P_ORG_CODE
             ;
 END

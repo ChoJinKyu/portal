@@ -12,6 +12,7 @@ entity Uc_Quotation_List_View {
         org_name                   : String(10)             @title : '조직';
         const_name                 : String(200)            @title : '공사명';
         ep_item_code               : String(200)            @title : '대분류(공종)';
+        ep_item_name               : String(200)            @title : '대분류(공종)';
         const_start_date           : Date                   @title : '공사시작일자';
         const_end_date             : Date                   @title : '공사종료일자';
         quotation_status_code      : String(30)             @title : '견적상태코드';

@@ -15,8 +15,7 @@ sap.ui.define([
     "sap/m/MultiInput",
     "sap/m/ComboBox",
     "sap/ui/core/Item",
-    "sap/m/SearchField",
-    //"ext/pg/util/control/ui/VendorPoolDialogPop",
+    "ext/pg/util/control/ui/VendorPoolDialogPop",
     "ext/pg/util/control/ui/SupplierDialogPop",
     "ext/pg/util/control/ui/MaterialDialogPop",
     "ext/cm/util/control/ui/EmployeeDialog",
@@ -33,13 +32,12 @@ sap.ui.define([
     HBox, 
     Column, 
     Label, 
-    Text, 
+    Text,
     Input, 
     MultiInput,
     ComboBox, 
-    Item, 
-    SearchField,
-    //VendorPoolDialogPop,
+    Item,
+    VendorPoolDialogPop,
     SupplierDialogPop,
     MaterialDialogPop,
     EmployeeDialog,
@@ -94,51 +92,51 @@ sap.ui.define([
                 }
             });
 
-            // this.oVendorPoolCode = new Input({
-            //     placeholder : this.getModel("I18N").getText("/VENDOR_POOL_CODE"),
-            //     showValueHelp : true,
-            //     valueHelpOnly : true,
-            //     valueHelpRequest: function (oEvent) {
-            //         this.oVendorPoolDialogPop = new VendorPoolDialogPop({
-            //             multiSelection: false,
-            //             keyField: "VENDOR_POOL_CODE",
-            //             textField: "VENDOR_POOL_NAME",
-            //             filters: [
-            //                 new VBox({
-            //                     items: [
-            //                         new Label({ text: this.getModel("I18N").getText("/KEYWORD") }),
-            //                         new Input({placeholder : this.getModel("I18N").getText("/VENDOR_POOL_CODE")})
-            //                     ],
-            //                     layoutData: new GridData({ span: "XL2 L3 M5 S10" })
-            //                 })
-            //             ],
-            //             columns: [
-            //                 new Column({
-            //                     width: "75%",
-            //                     label: new Label({ text: this.getModel("I18N").getText("/VALUE") }),
-            //                     template: new Text({ text: "vendorpool code" })
-            //                 }),
-            //                 new Column({
-            //                     width: "25%",
-            //                     hAlign: "Center",
-            //                     label: new Label({ text: this.getModel("I18N").getText("/CODE") }),
-            //                     template: new Text({ text: "vendorpool name" })
-            //                 })
-            //             ]
-            //         });
+            this.oVendorPoolCode = new MultiInput({
+                placeholder : this.getModel("I18N").getText("/VENDOR_POOL_CODE"),
+                showValueHelp : true,
+                valueHelpOnly : true,
+                valueHelpRequest: function (oEvent) {
+                    this.oVendorPoolDialogPop = new VendorPoolDialogPop({
+                        multiSelection: false,
+                        keyField: "VENDOR_POOL_CODE",
+                        textField: "VENDOR_POOL_NAME",
+                        filters: [
+                            new VBox({
+                                items: [
+                                    new Label({ text: this.getModel("I18N").getText("/KEYWORD") }),
+                                    new Input({placeholder : this.getModel("I18N").getText("/VENDOR_POOL_CODE")})
+                                ],
+                                layoutData: new GridData({ span: "XL2 L3 M5 S10" })
+                            })
+                        ],
+                        columns: [
+                            new Column({
+                                width: "75%",
+                                label: new Label({ text: this.getModel("I18N").getText("/VALUE") }),
+                                template: new Text({ text: "vendorpool code" })
+                            }),
+                            new Column({
+                                width: "25%",
+                                hAlign: "Center",
+                                label: new Label({ text: this.getModel("I18N").getText("/CODE") }),
+                                template: new Text({ text: "vendorpool name" })
+                            })
+                        ]
+                    });
 
-            //         this.oVendorPoolDialogPop.setContentWidth("300px");
-            //         var sSearchObj = {};
-            //         sSearchObj.tanent_id = "L2100";
-            //         //sSearchObj.vendor_pool_code = oSearchValue;
-            //         this.oVendorPoolDialogPop.open(sSearchObj);
-            //         this.oVendorPoolDialogPop.attachEvent("apply", function (oEvent) {
-            //             console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
-            //             that.oVendorPoolCode.setValue(null);
-            //             that.oVendorPoolCode.setValue(oEvent.mParameters.item.vendor_pool_code);
-            //         }.bind(this));
-            //     }
-            // });
+                    this.oVendorPoolDialogPop.setContentWidth("300px");
+                    var sSearchObj = {};
+                    sSearchObj.tanent_id = "L2100";
+                    //sSearchObj.vendor_pool_code = oSearchValue;
+                    this.oVendorPoolDialogPop.open(sSearchObj);
+                    this.oVendorPoolDialogPop.attachEvent("apply", function (oEvent) {
+                        console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
+                        that.oVendorPoolCode.setValue(null);
+                        that.oVendorPoolCode.setValue(oEvent.mParameters.item.vendor_pool_code);
+                    }.bind(this));
+                }
+            });
 
             this.oVendorPoolLvl1 = new ComboBox({
                 id: "vendorPoolLvl1Vp",
@@ -357,7 +355,7 @@ sap.ui.define([
             return [
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/OPERATION_ORG") }),
+                        new Label({ text: this.getModel("I18N").getText("/OPERATION_ORG"), required: true }),
                         this.oOperationOrgComb
                     ],
                     layoutData: new GridData({ span: "XL6 L6 M6 S12" })
@@ -365,19 +363,20 @@ sap.ui.define([
 
                 new VBox({
                     items: [
-                        new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT") }),
+                        new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT"), required: true }),
                         this.oOperationUnitComb
                     ],
                     layoutData: new GridData({ span: "XL6 L6 M6 S12" })
                 }),
 
-                // new VBox({
-                //     items: [
-                //         new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") }),
-                //         this.oVendorPoolCode
-                //     ],
-                //     layoutData: new GridData({ span: "XL3 L3 M3 S12" })
-                // }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") }),
+                        this.oVendorPoolCode
+                    ],
+                    layoutData: new GridData({ span: "XL3 L3 M3 S12" }),
+                    visible: false
+                }),
 
                  new HBox({
                     items: [
@@ -465,31 +464,31 @@ sap.ui.define([
                     id : "vpColumnLvl",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") + "1"}),
-                    template: new Text({ text: "{vendor_pool_code}" })
+                    template: new Text({ text: "{level1}" })
                 }),
                 new Column({
                     id : "vpColumnLvl2",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") + "2" }),
-                    template: new Text({ text: "{vendor_pool_code}" })
+                    template: new Text({ text: "{level2}" })
                 }),
                 new Column({
                     id : "vpColumnLvl3",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") + "3"}),
-                    template: new Text({ text: "{vendor_pool_code}" })
+                    template: new Text({ text: "{level3}" })
                 }),
                 new Column({
                     id : "vpColumnLvl4",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") + "4" }),
-                    template: new Text({ text: "{vendor_pool_code}" })
+                    template: new Text({ text: "{level4}" })
                 }),
                 new Column({
                     id : "vpColumnLvl5",
                     width: "10rem",
                     label: new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL") + "5" }),
-                    template: new Text({ text: "{vendor_pool_code}" })
+                    template: new Text({ text: "{level5}" })
                 }),
                 new Column({
                     width: "8rem",
@@ -514,14 +513,12 @@ sap.ui.define([
             //     this.oVendorPoolCode.setValue(this.oSearchObj.vendorPoolCode);
             // }
            // var sVendorPoolCode = this.oVendorPoolCode.getValue();
-           this.oDialog.oTable.setBusy(true);
+            this.oDialog.oTable.setBusy(true);
 
             var aFilters = [];
             var aTempFilters = [];
             var vpTempFilters = [];
             var sSupplierCode,
-                sMaterialCode,
-                sEmployeeCode,
                 sDepartmentCode,
                 aSupplierToken;
             
@@ -612,8 +609,24 @@ sap.ui.define([
                 ],
                 success: function (oData) {
                     var aRecords = oData.results;
+                    
+                    that.oDialog.oTable.setBusy(false);
+
+                    // test - vplevelname 
+                    if (aRecords) {
+                        for(var i = 0; i < aRecords.length; i++) {
+                            var sPathName = aRecords[i].vendor_pool_path_name,
+                                aStrArr = sPathName.split('^');
+                            for (var j = 0; j < 5; j++) {
+                                if(!!aStrArr[j]) {
+                                    aRecords[i]["level" + (j + 1)] = aStrArr[j];
+                                } else { 
+                                    aRecords[i]["level" + (j + 1)] = "";
+                                }
+                            }
+                        }
+                    }
                     that.oDialog.setData(aRecords, false);
-                    this.oDialog.oTable.setBusy(false);
                 }.bind(this)
             });
         },
@@ -665,6 +678,7 @@ sap.ui.define([
        // 운영조직 필드에 따른 vp level 설정
         loadOperationChange: function() {
             if (that.oOperationOrgComb.getSelectedKey() && that.oOperationUnitComb.getSelectedKey()) {
+                this.oDialog.oTable.getModel().setData(null);
                 var aFilters = [],
                     aColumnData = [];
                 aFilters.push(new Filter("tenant_id", FilterOperator.EQ, that.oSearchObj.tanentId));
@@ -857,6 +871,7 @@ sap.ui.define([
             }            
 
             // 초기화면 설정 (기본레벨3)
+            this.oDialog.oTable.getModel().setData(null);
             var aColumnData = this.oDialog.oTable.getColumns();
             aColumnData[4].setVisible(false);
             aColumnData[5].setVisible(false);

@@ -164,7 +164,7 @@
           ]
         },
         {
-          "pattern": "MainObject/{moldId}/{orgCode}",
+          "pattern": "MainObject/{moldId}/{repairRequestNumber}",
           "name": "mainObject",
           "target": [
             "mainObject"

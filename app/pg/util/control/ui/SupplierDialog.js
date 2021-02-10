@@ -423,7 +423,8 @@ sap.ui.define([
             return [
                 new Column({
                     width: "8rem",
-                    label: new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT") }),
+                    hAlign: "Center",
+                    label: new Label({ text: this.getModel("I18N").getText("/OPERATION_UNIT")}),
                     template: new Text({ text: "{operation_unit_name}"})
                 }),
                 new Column({
@@ -544,6 +545,8 @@ sap.ui.define([
         // 운영조직 필드에 따른 vp level 설정
         loadOperationChange: function() {
             if (that.oOperationOrgComb.getSelectedKey() && that.oOperationUnitComb.getSelectedKey()) {
+                
+                this.oDialog.oTable.getModel().setData(null);
                 var aFilters = [],
                     aColumnData = [];
 
@@ -653,7 +656,7 @@ sap.ui.define([
             }
 
             if (!!this.oOperationUnitComb.getSelectedKey()) {
-                //aFilters.push(new Filter("operation_unit_code", FilterOperator.EQ, this.oOperationUnitComb.getSelectedKey()));
+                aFilters.push(new Filter("operation_unit_name", FilterOperator.EQ, this.oOperationUnitComb.getValue()));
             }
 
 
@@ -722,7 +725,10 @@ sap.ui.define([
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/vpSupplierPopupDtlView", {
                 filters: aFilters,
                 sorters: [
-                    new Sorter("supplier_code", true)
+                    //new Sorter("supplier_code", false),
+                    new Sorter("vendor_pool_level1_name", false),
+                    new Sorter("vendor_pool_level2_name", false),
+                    new Sorter("vendor_pool_level3_name", false)
                 ],
                 success: function (oData) {
                     var aRecords = oData.results;
@@ -838,13 +844,14 @@ sap.ui.define([
             this.oSearchObj = sSearchObj;
             this.oSearchObj.tanentId = "L2100";
             
-
+            
             if(!this.oDialog) {
-                this.openWasRequested = true;
+                this.openWasRequested = true; 
                 return;
             }
             
             // 초기화면 설정 (기본레벨3)
+            this.oDialog.oTable.getModel().setData(null);
             var aColumnData = this.oDialog.oTable.getColumns();
             aColumnData[4].setVisible(false);
             aColumnData[5].setVisible(false);

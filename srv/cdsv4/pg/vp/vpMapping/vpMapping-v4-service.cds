@@ -64,7 +64,7 @@ service VpMappingV4Service {
         inp_code                     : String(30);
         supplier_rm_control_flag     : Boolean;
         supplier_base_portion_rate   : Decimal;
-        vendor_pool_mapping_use_flag : Boolean;
+        vendor_pool_mapping_use_flag : String(2);
         register_reason              : String(50);
         approval_number              : String(50);
         crud_type_code               : String(2);

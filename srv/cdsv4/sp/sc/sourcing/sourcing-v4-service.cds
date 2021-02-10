@@ -79,6 +79,18 @@ service SourcingV4Service {
         item_supplier_sequence           : type of Sc_Nego_Suppliers : item_supplier_sequence;
     };
 
+    type tyNegoItemNonPriceKey {
+        tenant_id                        : type of Sc_Nego_Item_Non_Price:tenant_id;
+        nego_header_id                   : type of Sc_Nego_Item_Non_Price:nego_header_id;
+        nonpr_item_number                : type of Sc_Nego_Item_Non_Price:nonpr_item_number;
+    };
+
+    type tyNegoItemNonPriceDtlKey {
+        tenant_id                        : type of Sc_Nego_Item_Non_Price_Dtl:tenant_id;
+        nego_header_id                   : type of Sc_Nego_Item_Non_Price_Dtl:nego_header_id;
+        nonpr_item_number                : type of Sc_Nego_Item_Non_Price_Dtl:nonpr_item_number;
+        nonpr_dtl_item_number            : type of Sc_Nego_Item_Non_Price_Dtl:nonpr_dtl_item_number;
+    };
     type tyNegoHeader {
         tenant_id                       : type of Sc_Nego_Headers : tenant_id;
         nego_header_id                  : type of Sc_Nego_Headers : nego_header_id;
@@ -129,7 +141,11 @@ service SourcingV4Service {
         // award_type_code                 : type of Sc_Nego_Headers : award_type_code;              // #견적&입찰공통#Award Type	--# 기존필드
         // award_method_code               : type of Sc_Nego_Headers : award_method_code;            // #견적&입찰공통#Award Method	--# 기존필드
         number_of_award_supplier        : type of Sc_Nego_Headers : number_of_award_supplier;     // Number of Award Supplier	
-        order_rate_01                   : type of Sc_Nego_Headers : order_rate_01;                // ..05	Order Rate	
+        order_rate_01                   : type of Sc_Nego_Headers : order_rate_01;                // Order Rate	#01
+        order_rate_02                   : type of Sc_Nego_Headers : order_rate_02;                // Order Rate	#02
+        order_rate_03                   : type of Sc_Nego_Headers : order_rate_03;                // Order Rate	#03
+        order_rate_04                   : type of Sc_Nego_Headers : order_rate_04;                // Order Rate	#04
+        order_rate_05                   : type of Sc_Nego_Headers : order_rate_05;                // Order Rate	#05
         // target_amount_config_flag       : type of Sc_Nego_Headers : target_amount_config_flag;    // #견적&입찰공통#Target Price Setup 여부	--# 기존필드
         // target_amount                   : type of Sc_Nego_Headers : target_amount;                // #견적&입찰공통#Target Total Amount	--# 기존필드
         // supplier_participation_flag     : type of Sc_Nego_Headers : supplier_participation_flag;  // #견적&입찰공통#Intention of Supplier Participation  	
@@ -145,6 +161,7 @@ service SourcingV4Service {
         tenant_id                    : type of Sc_Nego_Item_Prices : tenant_id;
         nego_header_id               : type of Sc_Nego_Item_Prices : nego_header_id;
         nego_item_number             : type of Sc_Nego_Item_Prices : nego_item_number;
+        company_code                 : type of Sc_Nego_Item_Prices : company_code;
         operation_org_code           : type of Sc_Nego_Item_Prices : operation_org_code;
         operation_unit_code          : type of Sc_Nego_Item_Prices : operation_unit_code;
         award_progress_status_code   : type of Sc_Nego_Item_Prices : award_progress_status_code;
@@ -216,30 +233,55 @@ service SourcingV4Service {
         note_content                     : type of Sc_Nego_Suppliers : note_content;
     };
 
+    type tyNegoItemNonPrice {
+        tenant_id                        : type of Sc_Nego_Item_Non_Price:tenant_id;
+        nego_header_id                   : type of Sc_Nego_Item_Non_Price:nego_header_id;
+        nonpr_item_number                : type of Sc_Nego_Item_Non_Price:nonpr_item_number;
+        nonpr_score_comput_method_code   : type of Sc_Nego_Item_Non_Price:nonpr_score_comput_method_code;
+        nonpr_supeval_attr_type_code     : type of Sc_Nego_Item_Non_Price:nonpr_supeval_attr_type_code;
+        nonpr_supeval_attr_val_type_cd   : type of Sc_Nego_Item_Non_Price:nonpr_supeval_attr_val_type_cd;
+        nonpr_requirements_text          : type of Sc_Nego_Item_Non_Price:nonpr_requirements_text;
+        note_content                     : type of Sc_Nego_Item_Non_Price:note_content;
+        target_score                     : type of Sc_Nego_Item_Non_Price:target_score;
+        file_group_code                  : type of Sc_Nego_Item_Non_Price:file_group_code;
+    };
+
+    type tyNegoItemNonPriceDtl {
+        tenant_id                        : type of Sc_Nego_Item_Non_Price_Dtl:tenant_id;
+        nego_header_id                   : type of Sc_Nego_Item_Non_Price_Dtl:nego_header_id;
+        nonpr_item_number                : type of Sc_Nego_Item_Non_Price_Dtl:nonpr_item_number;
+        nonpr_dtl_item_number            : type of Sc_Nego_Item_Non_Price_Dtl:nonpr_dtl_item_number;
+        supeval_from_date                : type of Sc_Nego_Item_Non_Price_Dtl:supeval_from_date;
+        supeval_to_date                  : type of Sc_Nego_Item_Non_Price_Dtl:supeval_to_date;
+        supeval_from_value               : type of Sc_Nego_Item_Non_Price_Dtl:supeval_from_value;
+        supeval_to_value                 : type of Sc_Nego_Item_Non_Price_Dtl:supeval_to_value;
+        supeval_text_value               : type of Sc_Nego_Item_Non_Price_Dtl:supeval_text_value;
+        supeval_score                    : type of Sc_Nego_Item_Non_Price_Dtl:supeval_score;
+    };
+
     type ReturnMsg : {
         tenant_id                    : type of Sc_Nego_Headers : tenant_id;
         nego_header_id               : type of Sc_Nego_Headers : nego_header_id;
+        nego_document_number         : type of Sc_Nego_Headers : nego_document_number;
         code     : Integer;
         // CODE_STRING     : String(256);
         message  : String(2000);
     };
 
-    type tyDeepInsertNegoheader {
-        negoheaders    : array of tyNegoHeader;
-        negoitemprices : array of tyNegoItemPrice;
-        negosuppliers  : array of tyNegoSupplier;
-    };
-
     type tyDeepUpsertNegoheader {
-        negoheaders    : array of tyNegoHeader;
-        negoitemprices : array of tyNegoItemPrice;
-        negosuppliers  : array of tyNegoSupplier;
+        negoheaders           : array of tyNegoHeader;
+        negoitemprices        : array of tyNegoItemPrice;
+        negosuppliers         : array of tyNegoSupplier;
+        negoitemnonprices     : array of tyNegoItemNonPrice;
+        negoitemnonpricedtls  : array of tyNegoItemNonPriceDtl;
     };
 
     type tyDeepDeleteNegoheader {
-        negoheaders    : array of tyNegoHeaderKey;
-        negoitemprices : array of tyNegoItemPriceKey;
-        negosuppliers  : array of tyNegoSupplierKey;
+        negoheaders           : array of tyNegoHeaderKey;
+        negoitemprices        : array of tyNegoItemPriceKey;
+        negosuppliers         : array of tyNegoSupplierKey;
+        negoitemnonprices     : array of tyNegoItemNonPriceKey;
+        negoitemnonpricedtls  : array of tyNegoItemNonPriceDtlKey;
     };
 
     // action deepInsertNegoHeader(  negoheader     : tyNegoHeader

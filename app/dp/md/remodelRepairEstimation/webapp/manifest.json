@@ -162,6 +162,13 @@
           "target": [
             "remodelRepairEstimation"
           ]
+        },
+        {
+            "pattern": "detail/{tenant_id}/{mold_id}",
+            "name": "detail",
+            "target": [
+                "detail"
+            ]
         }
       ],
       "targets": {
@@ -169,6 +176,12 @@
           "viewName": "remodelRepairEstimation",
           "viewId": "remodelRepairEstimation",
           "viewLevel": 1,
+          "title": "{i18n>remodelRepairEstimationViewTitle}"
+        },
+        "detail": {
+          "viewName": "remodelRepairEstimationDetail",
+          "viewId": "remodelRepairEstimationDetail",
+          "viewLevel": 2,
           "title": "{i18n>remodelRepairEstimationViewTitle}"
         },
         "notFound": {

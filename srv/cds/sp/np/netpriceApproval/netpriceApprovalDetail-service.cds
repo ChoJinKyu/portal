@@ -171,8 +171,17 @@ service NpApprovalDetailService {
             ,   null as sd_file_group_no : String       //pad.sd_file_group_no	            /*	SD File	*/
 
             ,	pad.vendor_pool_code		            /*	Vendor Pool code    협력사풀코드 */
-            ,   vpm.vendor_pool_local_name              /*  Vendor Pool         협력사풀 명 */
-            ,   vpm.vendor_pool_english_name
+            /*  ,   vpm.vendor_pool_local_name              /  Vendor Pool         협력사풀 명  ,   vpm.vendor_pool_english_name */
+            
+            /* 펑션으로 빼야할듯 LGD의 경우 다름 */
+            ,(select vendor_pool_local_name from PG_VP_VENDOR_POOL_MST where tenant_id = pad.tenant_id
+                and org_code  =  (select bizunit_code 
+                                    from CM_PUR_OPERATION_ORG 
+                                    where tenant_id = pad.tenant_id 
+                                    and org_code = pad.org_code )
+                and vendor_pool_code = pad.vendor_pool_code
+            ) as vendor_pool_local_name : String 
+
 
             ,   pad.net_price_approval_reason_code	    /*	Reason code	*/
             ,   CM_GET_CODE_NAME_FUNC(   pad.tenant_id
@@ -254,6 +263,10 @@ service NpApprovalDetailService {
 
         FROM SP_NP_NET_PRICE_APPROVAL_DTL pad
 
+		INNER JOIN SP_NP_NET_PRICE_APPROVAL_MST pam
+			ON pam.tenant_id = pad.tenant_id 
+			AND pam.approval_number = pad.approval_number 
+
         INNER JOIN CM_SPP_USER_SESSION_VIEW  ssi
             ON pad.tenant_id        = ssi.TENANT_ID
             /*  AND pad.company_code     = ssi.COMPANY_CODE */
@@ -263,10 +276,12 @@ service NpApprovalDetailService {
                AND pad.company_code     = npm.company_code
                AND pad.org_type_code    = npm.org_type_code
                AND pad.org_code         = npm.org_code
-
+	           AND pam.net_price_document_type_code = npm.net_price_document_type_code
+			   AND pam.net_price_source_code = npm.net_price_source_code
                AND pad.supplier_code    = npm.supplier_code
                AND pad.material_code    = npm.material_code
                AND pad.market_code      = npm.market_code
+               AND pad.currency_code    = npm.currency_code
                AND npm.effective_start_date <= TO_VARCHAR (NOW(), 'YYYYMMDD')
                AND npm.effective_end_date >= TO_VARCHAR (NOW(), 'YYYYMMDD')
 
@@ -274,12 +289,14 @@ service NpApprovalDetailService {
                 ON pad.tenant_id        = sm.tenant_id
                AND pad.supplier_code    = sm.supplier_code
 
+        /* 
         LEFT JOIN PG_VP_VENDOR_POOL_MST vpm
                 ON pad.tenant_id        = vpm.tenant_id
-               AND pad.company_code     = vpm.company_code
+               AND pad.company_code     = vpm.company_code 
                AND pad.org_type_code    = vpm.org_type_code
                AND pad.org_code         = vpm.org_code
                AND pad.vendor_pool_code = vpm.vendor_pool_code
+                */
     ;
 
 
@@ -344,6 +361,7 @@ service NpApprovalDetailService {
                   AND pad.supplier_code          = bpm.supplier_code
                   AND pad.material_code          = bpm.material_code
                   AND pad.market_code            = bpm.market_code
+                  AND pad.currency_code          = bpm.currency_code
                   AND bpm.apply_start_yyyymm   <= TO_VARCHAR (NOW(), 'YYYYMM')
                   AND bpm.apply_end_yyyymm     >= TO_VARCHAR (NOW(), 'YYYYMM')
                   AND bpm.use_flag = true

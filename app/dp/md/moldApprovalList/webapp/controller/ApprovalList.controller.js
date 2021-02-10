@@ -126,9 +126,6 @@ sap.ui.define([
          * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
          */
         _doInitSearch: function (oEvent) {
-        
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
-
             this.getView().setModel(this.getOwnerComponent().getModel());
 
             this.setPlant('LGESL');
@@ -141,6 +138,7 @@ sap.ui.define([
             this.getView().byId("searchCompanyE").setSelectedKeys(['LGESL']);
             this.getView().byId("searchPlantS").setSelectedKeys(['A040']);
             this.getView().byId("searchPlantE").setSelectedKeys(['A040']);
+            
             // this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
             // this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
             // this.getView().byId("searchPlantS").setSelectedKeys(['DFZ']);
@@ -167,12 +165,12 @@ sap.ui.define([
                         });
 
             var bindItemInfo = {
-                    path: 'dpMdUtil>/Divisions',
-                    filters: filter,
-                    template: new Item({
-                        key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
-                    })
-                };
+                path: '/Divisions',
+                filters: filter,
+                template: new Item({
+                key: "{org_code}", text: "[{org_code}] {org_name}"
+                })
+            };
             
             console.log( bindItemInfo)    ;
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
@@ -312,9 +310,9 @@ sap.ui.define([
         * @see (멀티박스)Company와 Plant 부분 연관성 포함함
         */
         handleSelectionFinishComp: function (oEvent) {
+            this.copyMultiSelected(oEvent);
             // session에서 받아오는 tenant_id를 변수로 저장함
             var sTenant_id='L2101';
-            this.copyMultiSelected(oEvent);
 
             var params = oEvent.getParameters();
             var plantFilters = [];
@@ -330,7 +328,7 @@ sap.ui.define([
                         ],
                         and: true
                     }));
-                });
+                }.bind(this));
             } else {
                 plantFilters.push(
                     new Filter("tenant_id", FilterOperator.EQ, sTenant_id)
@@ -342,16 +340,16 @@ sap.ui.define([
                 and: false
             });
 
-            var bindInfo = {
-                    path: 'dpMdUtil>/Divisions',
-                    filters: filter,
-                    template: new Item({
-                    key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
-                    })
-                };
+            var bindItemInfo = {
+                path: '/Divisions',
+                filters: filter,
+                template: new Item({
+                key: "{org_code}", text: "[{org_code}] {org_name}"
+                })
+            };
 
-            this.getView().byId("searchPlantS").bindItems(bindInfo);
-            this.getView().byId("searchPlantE").bindItems(bindInfo);
+            this.getView().byId("searchPlantS").bindItems(bindItemInfo);
+            this.getView().byId("searchPlantE").bindItems(bindItemInfo);
 
             // this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
             // this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
@@ -378,13 +376,22 @@ sap.ui.define([
 
                 selectedKeys.push(item.getKey());
             });
-         
+            console.log("selectedKeys >>>>", selectedKeys);
             this.getView().byId(idPreFix + "E").setSelectedKeys(selectedKeys);
             this.getView().byId(idPreFix + "S").setSelectedKeys(selectedKeys);
         },
 
-        ///////////////////// Multi Combo box event End //////////////////////////
+        DateChange: function (oEvent) {
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
+                seSurffix = sSurffix === "E" ? "S" : "E",
+                sFrom = oEvent.getParameter("from"),
+                sTo = oEvent.getParameter("to");
 
+            this.getView().byId("searchRequestDate" + seSurffix).setDateValue(sFrom);
+            this.getView().byId("searchRequestDate" + seSurffix).setSecondDateValue(sTo);
+        },
+        ///////////////////// Multi Combo box event End //////////////////////////
+        
         ///////////////////// ValueHelpDialog section Start //////////////////////////
 
         onValueHelpRequested: function (oEvent) {
@@ -715,8 +722,8 @@ sap.ui.define([
         onToggleHandleInit: function () {
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
             if(!(this.byId("searchCompanyF") == undefined) || !(this.byId("searchPlantF") == undefined)){
-                this.byId("searchCompanyF").setSelectedKey("");
-                this.byId("searchPlantF").setSelectedKey("");
+                this.byId("searchCompanyF").setSelectedKey("LGESL");
+                this.byId("searchPlantF").setSelectedKey("A040");
             }
             for (var i = 0; i < groupId.length; i++) {
                 groupId[i].setPressed(false);
@@ -974,7 +981,6 @@ sap.ui.define([
                 aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
                 aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'CM_APPROVE_STATUS'));
 
-
             oView.setBusy(true);
             oModel.setTransactionModel(this.getModel("util"));
             oModel.read("/Code", {
@@ -982,7 +988,7 @@ sap.ui.define([
                 success: function (oData) {     
                     oModel.addRecord({
                         code: ""
-                      ,  code_name: codeName   
+                      ,  code_name: "All"   
                       ,  group_code: "CM_APPROVE_STATUS"
                       ,  parent_code: null
                       ,  parent_group_code: null

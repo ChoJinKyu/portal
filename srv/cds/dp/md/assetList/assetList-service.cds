@@ -22,22 +22,36 @@ view Assets as
         mst.mold_number,
         mst.mold_sequence,
         mst.spec_name,
-        ma.class_desc,
         ma.secondary_supplier_name,
         ma.primary_supplier_code,
         ma.tertiary_supplier_name,
         mst.supplier_code,
-        (select supplier_local_name from supp.Sm_Supplier_Mst sup where sup.tenant_id = ma.tenant_id and sup.supplier_code = ma.primary_supplier_code) as prod_vendor_name : String(240),
-        (select supplier_local_name from supp.Sm_Supplier_Mst sup where sup.tenant_id = mst.tenant_id and sup.supplier_code = mst.supplier_code) as order_vendor_name : String(240),
+        (select supplier_local_name from supp.Sm_Supplier_Mst sup where sup.tenant_id = ma.tenant_id and sup.supplier_code = ma.primary_supplier_code) as prod_vendor_name : String,
+        (select supplier_local_name from supp.Sm_Supplier_Mst sup where sup.tenant_id = mst.tenant_id and sup.supplier_code = mst.supplier_code) as order_vendor_name : String,
         ma.asset_status_code,
-        cd1.code_name as asset_status_code_name : String(240),
+        CM_GET_CODE_NAME_FUNC (ma.tenant_id
+                                ,'DP_MD_ASSET_STATUS'
+                                ,ma.asset_status_code
+                                ,ssi.LANGUAGE_CODE
+                                ) as asset_status_code_name : String,
+        // cd1.code_name as asset_status_code_name : String(240),
         ma.asset_type_code,
-        cd2.code_name as asset_type_code_name : String(240),
+        CM_GET_CODE_NAME_FUNC (ma.tenant_id
+                                ,'DP_MD_ASSET_TYPE'
+                                ,ma.asset_type_code
+                                ,ssi.LANGUAGE_CODE
+                                ) as asset_type_code_name : String,
+        // cd2.code_name as asset_type_code_name : String(240),
         ma.asset_number,
         ma.remark,
         ma.remark_2,
         mst.mold_item_type_code,
-        cd3.code_name as mold_item_type_code_name : String(240),
+         CM_GET_CODE_NAME_FUNC (mst.tenant_id
+                                ,'DP_MD_ITEM_TYPE'
+                                ,mst.mold_item_type_code
+                                ,ssi.LANGUAGE_CODE
+                                ) as mold_item_type_code_name : String,
+        // cd3.code_name as mold_item_type_code_name : String(240),
         spec.cavity_process_qty,
         spec.mold_tonnage,
         ma.acq_date
@@ -46,7 +60,8 @@ view Assets as
         ma.tenant_id = mst.tenant_id and ma.mold_id = mst.mold_id
     join moldSpec.Md_Spec spec on
         mst.tenant_id = spec.tenant_id and mst.mold_id = spec.mold_id
-    join (select 
+    inner join sppUserSession.Spp_User_Session_View ssi on 1=1;
+    /*join (select 
             l.code, l.code_name, l.tenant_id
             from codeLng.Code_Lng l  
             // join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE )
@@ -66,7 +81,7 @@ view Assets as
             // join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE )
             where l.group_code='DP_MD_ITEM_TYPE' 
             and l.language_cd ='KO'
-            ) cd3 on cd3.code =  mst.mold_item_type_code and  cd3.tenant_id = mst.tenant_id ;
+            ) cd3 on cd3.code =  mst.mold_item_type_code and  cd3.tenant_id = mst.tenant_id ;*/
 
 view Divisions as
     select key a.tenant_id       

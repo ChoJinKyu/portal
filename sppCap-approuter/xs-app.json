@@ -1,6 +1,7 @@
 {
   "welcomeFile": "/sppportal/index.html",
   "authenticationMethod": "route",
+  "sessionTimeout": 720,
   "routes": [
     {
       "authenticationType": "xsuaa",

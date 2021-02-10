@@ -14,7 +14,6 @@
     height="100%">
 
     <f:DynamicPage id="page"
-        title = "Asset List"
         headerExpanded="false" 
         toggleHeaderOnTitleClick="true">
         <!-- DynamicPage Title -->
@@ -66,7 +65,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox height="4em">
-                                <Label text="{path:'I18N>/ASSETS_STATUS', formatter:'I18NFormatter'}"></Label>
+                                <Label text="{path:'I18N>/ASSET', formatter:'I18NFormatter'} {path:'I18N>/STATUS', formatter:'I18NFormatter'}"></Label>
                                     <SegmentedButton 
                                         id="searchAssetsStatusS" 
                                         selectedKey="" 
@@ -145,7 +144,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox height="4em">
-                                <Label text="{path:'I18N>/ASSETS_STATUS', formatter:'I18NFormatter'}"></Label>
+                                <Label text="{path:'I18N>/ASSET', formatter:'I18NFormatter'} {path:'I18N>/STATUS', formatter:'I18NFormatter'}"></Label>
                                     <SegmentedButton 
                                         id="searchAssetsStatusE" 
                                         selectedKey="" 
@@ -289,19 +288,19 @@
                             <Text id="mold_sequence" text="{list>mold_sequence}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetDescriptionColumn" width="10em">
+                    <table:Column id="assetDescriptionColumn" width="20em">
                         <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text id="class_desc" text="{list>class_desc}"/>
+                            <Text id="spec_name" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetSecondVendorColumn" width="13em">
+                    <table:Column id="assetSecondVendorColumn" width="20em">
                         <Label text="2nd Vendor" wrapping="true"/>
                         <table:template>
                             <Input id="assetSecondVendor" value="{list>secondary_supplier_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetThirdVendorColumn" width="13em">
+                    <table:Column id="assetThirdVendorColumn" width="20em">
                         <Label text="3rd Vendor" wrapping="true"/>
                         <table:template>
                             <Input id="assetThirdVendor" value="{list>tertiary_supplier_name}"/>
@@ -313,31 +312,31 @@
                             <Text id="prod_vendor" text="{list>supplier_code}"/>
                         </table:template>
                     </table:Column> -->
-                    <table:Column id="assetProdVendorNameColumn" width="10em">
+                    <table:Column id="assetProdVendorNameColumn" width="20em">
                         <Label text="Prod Vendor Name" wrapping="true"/>
                         <table:template>
                             <Text id="prod_vendor_name" text="{list>prod_vendor_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetOrderVendorNameColumn" width="10em">
+                    <table:Column id="assetOrderVendorNameColumn" width="20em">
                         <Label text="Order Vendor Name" wrapping="true"/>
                         <table:template>
                             <Text id="order_vendor_name" text="{list>order_vendor_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetAssetsStatusColumn" width="10em">
-                        <Label text="Assets Status" wrapping="true"/>
+                    <table:Column id="assetAssetsStatusColumn" width="7em" hAlign="Center">
+                        <Label text="{path:'I18N>/ASSET', formatter:'I18NFormatter'} {path:'I18N>/STATUS', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="assets_status" text="{list>asset_status_code_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetAssetTypeColumn" width="10em">
-                        <Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}" wrapping="true"/>
+                    <table:Column id="assetAssetTypeColumn" width="10em" hAlign="Center">
+                        <Label text="{path:'I18N>/ASSET', formatter:'I18NFormatter'} {path:'I18N>/TYPE', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="asset_type" text="{list>asset_type_code_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetAssetNumberColumn" width="10em">
+                    <table:Column id="assetAssetNumberColumn" width="20em">
                         <Label text="{path:'I18N>/ASSET_NUMBER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="asset_number" text="{list>asset_number}"/>
@@ -355,58 +354,59 @@
                             <Text id="lg_remark" text="{list>remark_2}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetToolTypeColumn" width="10em">
-                        <Label text="{path:'I18N>/TOOL_TYPE', formatter:'I18NFormatter'}" wrapping="true"/>
+                    <table:Column id="assetToolTypeColumn" width="7em" hAlign="Center">
+                        <Label text="Tool {path:'I18N>/TYPE', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="tool_type" text="{list>mold_item_type_code_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetCavProcessColumn" width="10em">
+                    <table:Column id="assetCavProcessColumn" width="7em" hAlign="Center">
                         <Label text="Cav'/Process" wrapping="true"/>
                         <table:template>
                             <Text id="cav_process" text="{list>cavity_process_qty}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetTonColumn" width="10em">
+                    <table:Column id="assetTonColumn" width="5em" hAlign="Center">
                         <Label text="{path:'I18N>/TONNAGE', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
                             <Text id="ton" text="{list>mold_tonnage}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetMoldSupplierColumn" width="10em">
-                        <Label text="{path:'I18N>/MOLD_SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
+                        <Label text="{path:'I18N>/MOLD', formatter:'I18NFormatter'} {path:'I18N>/SUPPLIER', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <!-- <Text id="mold_supplier" text="{list>spec_name}"/> -->
+                            <Text id="mold_supplier" text="{list>supplier_code}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="assetAcquisitionDateColumn" width="10em">
-                        <Label text="{path:'I18N>/ACQISITION_DATE', formatter:'I18NFormatter'}" wrapping="true"/>
+                    <table:Column id="assetAcquisitionDateColumn" width="10em" hAlign="Center">
+                        <Label text="{path:'I18N>/ACQISITION', formatter:'I18NFormatter'} {path:'I18N>/DATE', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text id="acquisition_date" text="{list>acq_date}"/>
+                            <DatePicker value="{list>acq_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/>
                         </table:template>
                     </table:Column>
+                    <!-- 아직 서비스 적용안됨 -->
                     <table:Column id="assetShotColumn" width="10em">
                         <Label text="{path:'I18N>/SHOT', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <!-- <Text id="shot" text="{list>spec_name}"/> -->
+                            <Text id="shot" text=""/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetAgeColumn" width="10em">
                         <Label text="Age(Month)" wrapping="true"/>
                         <table:template>
-                            <!-- <Text id="age_month" text="{list>spec_name}"/> -->
+                            <Text id="age_month" text=""/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetSignalColumn" width="10em">
                         <Label text="{path:'I18N>/SIGNAL', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <!-- <Text id="Signal" text="{list>spec_name}"/> -->
+                            <Text id="Signal" text=""/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetRepairStatusColumn" width="10em">
                         <Label text="{path:'I18N>/REPAIR_STATUS', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <!-- <Text id="repair_status" text="{list>spec_name}"/> -->
+                            <Text id="repair_status" text=""/>
                         </table:template>
                     </table:Column>
                     

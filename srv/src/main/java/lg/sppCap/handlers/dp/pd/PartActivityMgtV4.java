@@ -216,7 +216,7 @@ public class PartActivityMgtV4 implements EventHandler {
 
 
         // Local Temp Table DROP
-        // jdbc.execute(v_sql_dropMstTable);
+        jdbc.execute(v_sql_dropMstTable);
         // jdbc.execute(v_sql_dropLngtable);
 
         context.setResult(v_row);

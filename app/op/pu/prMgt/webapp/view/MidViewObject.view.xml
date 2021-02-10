@@ -70,7 +70,7 @@
                     <ObjectStatus
                         text="{detailModel>/mst/pr_number}"/>
                 </layout:VerticalLayout>
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" >
                     <Label text="{I18N>/PR_REQUEST_DATE} :"/>
                     <ObjectStatus
                         text="{ path: 'detailModel>/mst/request_date',
@@ -746,7 +746,7 @@
 
 
             <!-- 첨부파일 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="Attachment">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/Attachments}">
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection title="외부용" level="H2">
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">                    
@@ -793,21 +793,60 @@
 			</uxap:ObjectPageSection>
             <!-- 첨부파일 끝 -->
 
-			<!-- <uxap:ObjectPageSection titleUppercase="false" title="Report Line">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/APPROVE}" visible="{OPUI>/APPROVAL_FLAG}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection titleUppercase="false">
 						<uxap:blocks>
-                           
+                            <Table  id="reportLineTable"
+                                    sticky="HeaderToolbar,ColumnHeaders"
+                                    inset="false"
+                                    class="sapFDynamicPageAlignContent"
+                                    width="auto">
+                                <headerToolbar>
+                                    <Toolbar>
+                                        <Title text="{I18N>/APPROVAL_LINE}"/>
+                                        <ToolbarSpacer/>
+                                    </Toolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column width="8em">
+                                        <Text text="{I18N>/SEQUENCE}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/TYPE}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/NAME} / {I18N>/DEPARTMENT}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/COMMENT}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/STATUS}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/ROW_ADD} / {I18N>/ROW_DELETE}" />
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <ObjectIdentifier title="{Name}" text="{ProductId}"/>
+                                            <Text text="{SupplierName}" />
+                                            <Text text="" />
+                                            <Text text="" />
+                                            <Text text="" />
+                                            <Text text="" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
 
-					<uxap:ObjectPageSubSection>
-						<uxap:blocks>
-                           
-						</uxap:blocks>
-					</uxap:ObjectPageSubSection>
+					
 				</uxap:subSections>
-			</uxap:ObjectPageSection> -->
+			</uxap:ObjectPageSection>
 
 		</uxap:sections>
 		<uxap:footer>

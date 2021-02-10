@@ -287,6 +287,37 @@ sap.ui.define([
 						oView.setBusy(true);
 						oTransactionManager.submit({						
 							success: function(ok){
+                                that._bindView("/SupplierGen(tenant_id='" + that._sTenantId + "',sourcing_supplier_id=" + that._sSsi + ")");
+            
+                                var oDetailsModel = that.getModel("SupplierFin");
+                                var oDetailsModel2 = that.getModel("SupplierSal");
+                                var oDetailsModel3 = that.getModel("SupplierGenView");
+                                oDetailsModel.setTransactionModel(that.getModel());
+                                oDetailsModel2.setTransactionModel(that.getModel());
+                                oDetailsModel3.setTransactionModel(that.getModel());
+                                oDetailsModel.read("/SupplierFin", {
+                                    filters: [
+                                        new Filter("tenant_id", FilterOperator.EQ, that._sTenantId),
+                                        new Filter("sourcing_supplier_id", FilterOperator.EQ, that._sSsi),
+                                    ],
+                                    success: function(oData){
+                                        
+                                    }
+                                });
+                                oDetailsModel2.read("/SupplierSal", {
+                                    filters: [
+                                        new Filter("tenant_id", FilterOperator.EQ, that._sTenantId),
+                                        new Filter("sourcing_supplier_id", FilterOperator.EQ, that._sSsi),
+                                    ],
+                                    success: function(oData){
+                                    
+                                    }
+                                });            
+                                oDetailsModel3.read("/SupplierGenView(tenant_id='" + that._sTenantId + "',sourcing_supplier_id=" + that._sSsi + ")", {
+                                    success: function (oData) {
+                                        
+                                    }
+                                });
 								that._toShowMode();
                                 oView.setBusy(false);
                                 // that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();

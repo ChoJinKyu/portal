@@ -59,7 +59,7 @@ service UcQuotationMgtV4Service {
         item_desc                       : String;
         spec_desc                       : String;
         quotation_quantity              : Decimal;
-        extra_rate                      : Decimal;
+        extra_rate                      : String;
         unit                            : String;
         currency_code                   : String;
         currency_name                   : String;
@@ -98,7 +98,7 @@ service UcQuotationMgtV4Service {
         net_price_contract_extra_seq    : Decimal;
         extra_number                    : String;
         extra_class_number              : String;
-        extra_rate                      : Decimal;
+        extra_rate                      : String;
         remark                          : String;
         local_create_dtm                : DateTime;
         local_update_dtm                : DateTime;

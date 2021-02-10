@@ -492,11 +492,18 @@ sap.ui.define([
             this.validator.clearValueState(this.byId("midTable"));
             oTransactionManager.setServiceModel(this.getModel());
             
+            setTimeout(this.setPageLayout(), 500);
             //ScrollTop
-            var oObjectPageLayout = this.getView().byId("page");
-            var oFirstSection = this.getView().byId("pageSectionMain");
-            oObjectPageLayout.scrollToSection(oFirstSection, 0, -500);
+            // var oObjectPageLayout = this.getView().byId("page");    
+            // var oFirstSection = this.getView().byId("pageSectionMain");
+            // oObjectPageLayout.scrollToSection(oFirstSection, 0, -500);
 		},
+
+        setPageLayout : function(){ //fragment 없애야함
+            var oObjectPageLayout = this.getView().byId("page");
+            var oFirstSection = oObjectPageLayout.getSections()[0];
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);          
+        },
 
 
 		/* =========================================================== */
