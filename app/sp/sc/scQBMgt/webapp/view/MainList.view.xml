@@ -79,10 +79,10 @@
                         <smartFilterBar:ControlConfiguration id="filterDateType" key="3" index="5" label="{I18N>/DATE_TYPE}" 
                             groupId="_BASIC" visibleInAdvancedArea="true" class="" >
                             <smartFilterBar:customControl class="">
-                                <Select id="selectFilterDateType">
-                                    <core:Item key="1" text="Open Date"/>
-                                    <core:Item key="2" text="Close Date"/>
-                                    <core:Item key="3" text="Create Date"/>
+                                <Select id="selectFilterDateType" selectedKey="1">
+                                    <core:Item key="1" text="Create Date"/>
+                                    <core:Item key="2" text="Open Date"/>
+                                    <core:Item key="3" text="Close Date"/>
                                 </Select>
                             </smartFilterBar:customControl>
                         </smartFilterBar:ControlConfiguration>
