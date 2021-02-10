@@ -594,6 +594,7 @@ public class SourcingV4 implements EventHandler {
                 ReturnMsg v_row = ReturnMsg.create();
                 v_row.setTenantId(v_rs.getString("tenant_id"));
                 v_row.setNegoHeaderId(v_rs.getLong("nego_header_id"));
+                v_row.setNegoDocumentNumber(v_rs.getString("nego_document_number"));
                 v_row.setCode(v_rs.getInt("code"));
                 v_row.setMessage(v_rs.getString("message"));
                 v_result.add(v_row);
@@ -832,6 +833,7 @@ curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' 
                 ReturnMsg v_row = ReturnMsg.create();
                 v_row.setTenantId(v_rs.getString("tenant_id"));
                 v_row.setNegoHeaderId(v_rs.getLong("nego_header_id"));
+                v_row.setNegoDocumentNumber(v_rs.getString("nego_document_number"));
                 v_row.setCode(v_rs.getInt("code"));
                 v_row.setMessage(v_rs.getString("message"));
                 v_result.add(v_row);

@@ -262,6 +262,7 @@ service SourcingV4Service {
     type ReturnMsg : {
         tenant_id                    : type of Sc_Nego_Headers : tenant_id;
         nego_header_id               : type of Sc_Nego_Headers : nego_header_id;
+        nego_document_number         : type of Sc_Nego_Headers : nego_document_number;
         code     : Integer;
         // CODE_STRING     : String(256);
         message  : String(2000);

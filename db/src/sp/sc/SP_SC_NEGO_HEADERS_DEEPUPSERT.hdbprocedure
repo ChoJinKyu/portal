@@ -6,6 +6,7 @@ PROCEDURE SP_SC_NEGO_HEADERS_DEEPUPSERT (
 	IN	I_TABLE_NEGOITEMNONPRICEDTLS SP_SC_NEGO_ITEM_NON_PRICE_DTL_TYPE,
     OUT O_TABLE_MESSAGE TABLE (TENANT_ID NVARCHAR(10),
                            NEGO_HEADER_ID BIGINT,
+                           NEGO_DOCUMENT_NUMBER NVARCHAR(50),
                            CODE INTEGER,
                         --    CODE_STRING NVARCHAR(256),
                            MESSAGE NVARCHAR(2000))
@@ -17,13 +18,14 @@ BEGIN
 	DECLARE v_int INT = 0;
     DECLARE v_tenant_id NVARCHAR(10);
     DECLARE v_nego_header_id BIGINT;
+    DECLARE v_nego_document_number NVARCHAR(50);
     DECLARE v_nego_item_number_max INTEGER;
     DECLARE v_nonpr_item_number_max INTEGER;
     DECLARE v_app_user NVARCHAR(255); 
 	DECLARE error_occurred CONDITION FOR SQL_ERROR_CODE 10001;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        O_TABLE_MESSAGE = SELECT '' AS TENANT_ID, 0 AS NEGO_HEADER_ID, ::SQL_ERROR_CODE AS CODE, ::SQL_ERROR_MESSAGE AS MESSAGE FROM DUMMY;
+        O_TABLE_MESSAGE = SELECT '' AS TENANT_ID, 0 AS NEGO_HEADER_ID, '' AS NEGO_DOCUMENT_NUMBER, ::SQL_ERROR_CODE AS CODE, ::SQL_ERROR_MESSAGE AS MESSAGE FROM DUMMY;
         RESIGNAL;
         -- ROLLBACK WORK;
         -- # Wrtie a log table
@@ -46,6 +48,23 @@ BEGIN
         AND RECORD_COUNT(:I_TABLE_NEGOITEMNONPRICES) = 0 AND RECORD_COUNT(:I_TABLE_NEGOITEMNONPRICEDTLS) = 0 THEN
         SIGNAL error_occurred SET MESSAGE_TEXT = 'No input value!';
     END IF;
+	
+	IF RECORD_COUNT(:I_TABLE_NEGOHEADERS) = 0 THEN 
+		vt_nego_headers_tmp = 
+		SELECT tenant_id, nego_header_id, reference_nego_header_id, previous_nego_header_id, operation_org_code, operation_unit_code, reference_nego_document_number, nego_document_round, nego_document_number, nego_document_title, nego_document_desc, nego_progress_status_code, award_progress_status_code, reply_times, supplier_count, nego_type_code, outcome_code, negotiation_output_class_code, buyer_empno, buyer_department_code, immediate_apply_flag, open_date, closing_date, auto_rfq, items_count, negotiation_style_code, close_date_ext_enabled_hours, close_date_ext_enabled_count, actual_extension_count, remaining_hours, note_content, award_type_code, award_method_code, target_amount_config_flag, target_currency, target_amount, supplier_participation_flag, partial_allow_flag, bidding_result_open_status_code, max_round_count, auto_round, auto_round_terms, previous_round, number_of_award_supplier, order_rate_01, order_rate_02, order_rate_03, order_rate_04, order_rate_05, bid_conference, bid_conference_date, bid_conference_place, contact_point_empno, phone_no FROM SP_SC_NEGO_HEADERS MAIN
+            WHERE 1=0
+                OR EXISTS ( SELECT * FROM :I_TABLE_NEGOITEMPRICES WHERE TENANT_ID = MAIN.TENANT_ID AND NEGO_HEADER_ID = MAIN.NEGO_HEADER_ID )
+                OR EXISTS ( SELECT * FROM :I_TABLE_NEGOSUPPLIERS WHERE TENANT_ID = MAIN.TENANT_ID AND NEGO_HEADER_ID = MAIN.NEGO_HEADER_ID  )
+        ;
+	else
+		vt_nego_headers_tmp = SELECT * FROM :I_TABLE_NEGOHEADERS;
+	END IF;
+		
+	vt_nego_item_prices_tmp = 
+	SELECT * FROM SP_SC_NEGO_ITEM_PRICES MAIN
+		WHERE 1=0
+			OR EXISTS ( SELECT * FROM :I_TABLE_NEGOSUPPLIERS WHERE TENANT_ID = MAIN.TENANT_ID AND NEGO_HEADER_ID = MAIN.NEGO_HEADER_ID AND NEGO_ITEM_NUMBER = MAIN.NEGO_ITEM_NUMBER )
+	;
 
 	-- IN	I_TABLE_NEGOHEADERS    SP_SC_NEGO_HEADERS_KEY_TYPE,
 	-- IN	I_TABLE_NEGOITEMPRICES SP_SC_NEGO_ITEMPRICES_KEY_TYPE,
@@ -133,12 +152,12 @@ BEGIN
             , :v_app_user update_user_id
             , ifnull(EXIST.system_create_dtm, NOW()) system_create_dtm
             , NOW() system_update_dtm 
-            FROM :I_TABLE_NEGOHEADERS NH
+            FROM :vt_nego_headers_tmp NH
             left outer many to one join SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW NEW_NH ON NH.tenant_id = NEW_NH.tenant_id
             left outer many to one join SP_SC_NEGO_HEADERS_NEW_REVISION_VIEW NEW_RV ON NH.tenant_id = NEW_RV.tenant_id AND NH.nego_header_id = NEW_RV.nego_header_id
             left outer one  to one join SP_SC_NEGO_HEADERS EXIST ON NH.tenant_id = EXIST.tenant_id and NH.nego_header_id = EXIST.nego_header_id
             ;
-    SELECT TOP 1 tenant_id, nego_header_id  INTO v_tenant_id, v_nego_header_id FROM :vt_nego_header;
+    SELECT TOP 1 tenant_id, nego_header_id, nego_document_number INTO v_tenant_id, v_nego_header_id, v_nego_document_number FROM :vt_nego_header;
         -- LEFT OUTER ONE TO ZERO JOIN ( SELECT NEGO_ITEM_NUMBER FROM SP_SC_NEGO_ITEM_PRICES GROUP BY );
 
     -- # Check Condition : Generate Negotiation Header
@@ -536,5 +555,5 @@ BEGIN
     END;
 
     -- # ERROR TEST # SELECT 1/:v_int FROM DUMMY;
-    O_TABLE_MESSAGE = SELECT :v_tenant_id AS TENANT_ID, :v_nego_header_id AS NEGO_HEADER_ID, CAST(0 AS INTEGER) AS CODE, 'Successed' AS MESSAGE FROM DUMMY;
+    O_TABLE_MESSAGE = SELECT :v_tenant_id AS TENANT_ID, :v_nego_header_id AS NEGO_HEADER_ID, :v_nego_document_number AS NEGO_DOCUMENT_NUMBER, CAST(0 AS INTEGER) AS CODE, 'Upsert Successed' AS MESSAGE FROM DUMMY;
 END;
