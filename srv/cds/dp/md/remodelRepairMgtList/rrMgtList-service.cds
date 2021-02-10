@@ -6,6 +6,9 @@ using { cm as sppUserSession} from '../../../../../db/cds/cm/util/CM_SPP_USER_SE
 using { cm as purOrg } from '../../../../../db/cds/cm/CM_PUR_OPERATION_ORG-model';
 using { cm as purMapping } from '../../../../../db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model';
 using { sp as supplier} from '../../../../../db/cds/sp/sm/SP_SM_SUPPLIER_MST-model';
+using { cm as employee}  from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
+using { cm as user}  from '../../../../../db/cds/cm/CM_USER-model';
+
 
 namespace dp;
 @path : '/dp.RrMgtListService' 
@@ -35,10 +38,7 @@ service RrMgtListService {
           end as request_receipt_date : String(240)
 	    , item.repair_desc  /* Subject */
 	    , item.repair_progress_status_code 
-        , CM_GET_CODE_NAME_FUNC(item.tenant_id
-                                , 'DP_MD_REPAIR_PROGRESS_STATUS'
-                                , item.repair_progress_status_code
-                                , ses.LANGUAGE_CODE) as repair_progress_status_code_nm : String(240)
+        , CM_GET_CODE_NAME_FUNC(item.tenant_id , 'DP_MD_REPAIR_PROGRESS_STATUS', item.repair_progress_status_code, ses.LANGUAGE_CODE) as repair_progress_status_code_nm : String(240)
 	    , cast(item.mold_moving_plan_date as Date ) as mold_moving_plan_date : Date  
 	    , cast(item.mold_moving_result_date  as Date ) as mold_moving_result_date : Date 
 	    , cast(item.mold_complete_plan_date  as Date ) as mold_complete_plan_date : Date 
@@ -51,15 +51,9 @@ service RrMgtListService {
 	    , mst.production_supplier_code  /* Prod Supplier */
         , sup3.supplier_local_name as production_supplier_code_nm : String(240) 
         , ass.asset_status_code         /* Asset Status */
-        , CM_GET_CODE_NAME_FUNC(item.tenant_id
-                                , 'DP_MD_ASSET_STATUS'
-                                , ass.asset_status_code
-                                , ses.LANGUAGE_CODE) as asset_status_code_nm : String(240)
+        , CM_GET_CODE_NAME_FUNC(item.tenant_id, 'DP_MD_ASSET_STATUS', ass.asset_status_code , ses.LANGUAGE_CODE) as asset_status_code_nm : String(240)
         , ass.asset_type_code        /* Asset Type */
-        , CM_GET_CODE_NAME_FUNC(item.tenant_id
-                            , 'DP_MD_ASSET_TYPE'
-                            , ass.asset_type_code
-                            , ses.LANGUAGE_CODE) as asset_type_code_nm : String(240) 
+        , CM_GET_CODE_NAME_FUNC(item.tenant_id, 'DP_MD_ASSET_TYPE' , ass.asset_type_code , ses.LANGUAGE_CODE) as asset_type_code_nm : String(240) 
         , ass.asset_number         /* Asset no */
         , ifnull(mst.family_part_number_1,'')  
                 || case  when mst.family_part_number_2 is null or mst.family_part_number_2 = '' then '' else ',' end || ifnull(mst.family_part_number_2,'') 
@@ -79,7 +73,6 @@ service RrMgtListService {
                                                 'RS', 'RA' 이면 공백
                                                 else면 DP_MD_REPAIR_ITEM.REMARK */
         , item.repair_reason    /* Remark */
-        
 	from item.Md_Repair_Item item 
     join sppUserSession.Spp_User_Session_View ses on item.tenant_id = ses.TENANT_ID 
 	join moldMst.Md_Mst mst  on mst.mold_id = item.mold_id and mst.tenant_id = item.tenant_id
@@ -91,10 +84,6 @@ service RrMgtListService {
     left join supplier.Sm_Supplier_Mst sup3 on sup3.tenant_id = mst.tenant_id and sup3.supplier_code = mst.production_supplier_code
     ;
 
-
-
-
-
     /**
     * @description : Remodel/Repair Management List 상세 
     * @author      : jinseon.lee 
@@ -105,7 +94,9 @@ service RrMgtListService {
             key mst.tenant_id,
             key mst.mold_id,
             key item.repair_request_number,
-                item.create_user_id,
+                item.create_user_id, 
+                u.employee_name as user_local_name : String(240),
+                u.english_employee_name as user_english_name : String(240),
                 item.repair_request_date,
                 item.repair_desc,
                 item.repair_reason,
@@ -113,32 +104,10 @@ service RrMgtListService {
                 mst.mold_number,
                 mst.mold_sequence,
                 ass.class_desc,
-                mst.mold_production_type_code,
-                (
-                    select l.code_name from codeLng.Code_Lng l
-                    join sppUserSession.Spp_User_Session_View ses
-                        on (
-                            l.tenant_id = ses.TENANT_ID
-                            and l.language_cd = ses.LANGUAGE_CODE
-                        )
-                    where
-                        l.group_code = 'DP_MD_PROD_TYPE'
-                        and l.code = mst.mold_production_type_code
-                        and l.tenant_id = mst.tenant_id
-                )  as mold_production_type_code_nm : String(240), 
-                   mst.mold_item_type_code,
-                (
-                    select l.code_name from codeLng.Code_Lng l 
-                     join sppUserSession.Spp_User_Session_View ses
-                        on (
-                            l.tenant_id = ses.TENANT_ID
-                            and l.language_cd = ses.LANGUAGE_CODE
-                        )
-                    where
-                            l.group_code  = 'DP_MD_ITEM_TYPE'
-                        and l.code        = mst.mold_item_type_code
-                        and l.tenant_id   = mst.tenant_id
-                ) as mold_item_type_code_nm       : String(240),
+                mst.mold_production_type_code, 
+                CM_GET_CODE_NAME_FUNC(item.tenant_id, 'DP_MD_PROD_TYPE', mst.mold_production_type_code, ses.LANGUAGE_CODE) as mold_production_type_code_nm : String(240) ,
+                mst.mold_item_type_code,
+                CM_GET_CODE_NAME_FUNC(item.tenant_id, 'DP_MD_ITEM_TYPE', mst.mold_production_type_code, ses.LANGUAGE_CODE) as mold_item_type_code_nm : String(240) ,   
                 mst.mold_mfger_code ,
                 sup.supplier_local_name as mold_mfger_code_nm : String(240) ,
                 mst.supplier_code ,
@@ -150,8 +119,10 @@ service RrMgtListService {
                 cast(item.mold_complete_plan_date  as Date ) as mold_complete_plan_date : Date ,
                 cast(item.mold_complete_result_date  as Date ) as mold_complete_result_date : Date 
         from item.Md_Repair_Item item 
+        join sppUserSession.Spp_User_Session_View ses on item.tenant_id = ses.TENANT_ID 
         join moldMst.Md_Mst mst on mst.mold_id = item.mold_id and mst.tenant_id = item.tenant_id
-        join asset.Md_Asset ass on mst.mold_id = ass.mold_id and mst.tenant_id = ass.tenant_id
+        join asset.Md_Asset ass on mst.mold_id = ass.mold_id and mst.tenant_id = ass.tenant_id 
+        join user.User u on u.user_id = item.create_user_id and u.tenant_id = item.tenant_id
         left join supplier.Sm_Supplier_Mst sup on sup.tenant_id = mst.tenant_id and sup.supplier_code = mst.mold_mfger_code
         left join supplier.Sm_Supplier_Mst sup2 on sup2.tenant_id = mst.tenant_id and sup2.supplier_code = mst.supplier_code
         left join supplier.Sm_Supplier_Mst sup3 on sup3.tenant_id = mst.tenant_id and sup3.supplier_code = mst.production_supplier_code
@@ -175,32 +146,10 @@ service RrMgtListService {
                 mst.mold_number,
                 mst.mold_sequence,
                 ass.class_desc,
-                mst.mold_production_type_code,
-                (
-                    select l.code_name from codeLng.Code_Lng l
-                    join sppUserSession.Spp_User_Session_View ses
-                        on (
-                            l.tenant_id = ses.TENANT_ID
-                            and l.language_cd = ses.LANGUAGE_CODE
-                        )
-                    where
-                        l.group_code = 'DP_MD_PROD_TYPE'
-                        and l.code = mst.mold_production_type_code
-                        and l.tenant_id = mst.tenant_id
-                )  as mold_production_type_code_nm : String(240),
-                mst.mold_item_type_code,
-                (
-                    select l.code_name from codeLng.Code_Lng l 
-                     join sppUserSession.Spp_User_Session_View ses
-                        on (
-                            l.tenant_id = ses.TENANT_ID
-                            and l.language_cd = ses.LANGUAGE_CODE
-                        )
-                    where
-                            l.group_code  = 'DP_MD_ITEM_TYPE'
-                        and l.code        = mst.mold_item_type_code
-                        and l.tenant_id   = mst.tenant_id
-                ) as mold_item_type_code_nm       : String(240),
+                mst.mold_production_type_code, 
+                CM_GET_CODE_NAME_FUNC(item.tenant_id , 'DP_MD_PROD_TYPE', mst.mold_production_type_code, ses.LANGUAGE_CODE) as mold_production_type_code_nm : String(240) ,
+                mst.mold_item_type_code, 
+                CM_GET_CODE_NAME_FUNC(item.tenant_id, 'DP_MD_PROD_TYPE', mst.mold_item_type_code , ses.LANGUAGE_CODE) as mold_item_type_code_nm : String(240) ,
                 mst.mold_mfger_code,
                 sup.supplier_local_name as mold_mfger_code_nm : String(240), 
                 mst.supplier_code,
@@ -211,7 +160,8 @@ service RrMgtListService {
                 null as mold_moving_result_date      : String(240),
                 null as mold_complete_plan_date      : String(240),
                 null as mold_complete_result_date    : String(240)
-        from moldMst.Md_Mst mst
+        from moldMst.Md_Mst mst 
+        join sppUserSession.Spp_User_Session_View ses on item.tenant_id = ses.TENANT_ID 
         join asset.Md_Asset ass  on mst.mold_id = ass.mold_id and mst.tenant_id = ass.tenant_id
         left join supplier.Sm_Supplier_Mst sup on sup.tenant_id = mst.tenant_id and sup.supplier_code = mst.mold_mfger_code
         left join supplier.Sm_Supplier_Mst sup2 on sup2.tenant_id = mst.tenant_id and sup2.supplier_code = mst.supplier_code
