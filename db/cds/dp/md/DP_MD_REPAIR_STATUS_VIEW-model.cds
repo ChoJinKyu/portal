@@ -3,7 +3,7 @@ namespace dp;
 @cds.persistence.exists
 entity Md_Repair_Status_View {
 
-
+        rownum                         : Integer;
     key tenant_id                      : String;
         repair_request_number          : String;
         repair_type_code               : String;

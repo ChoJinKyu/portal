@@ -1,5 +1,6 @@
 view DP_MD_REPAIR_STATUS_VIEW as
-select a.tenant_id
+select row_number() over() rownum
+    ,a.tenant_id
     ,a.repair_request_number
     ,a.repair_type_code
     ,CM_GET_CODE_NAME_FUNC(a.tenant_id, 'DP_MD_REPAIR_TYPE', a.repair_type_code, 'KO') repair_type_name
