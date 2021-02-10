@@ -1470,7 +1470,7 @@ sap.ui.define([
                     actual_extension_count          : this.getCheckObject(oModel,"actual_extension_count",0),
                     remaining_hours                 : this.getCheckObject(oModel,"remaining_hours",0),
                     note_content                    : this.getCheckObject(oModel,"note_content","encoding"),  // encoding
-                    award_type_code                 : this.getCheckObject(oModel,"award_type_code",oView.byId("selectAwardType").getSelectedKey()),
+                    award_type_code                 : this.getCheckObject(oModel,"award_type_code",""),
                     award_method_code               : this.getCheckObject(oModel,"award_method_code",""),
                     target_amount_config_flag       : this.getCheckObject(oModel,"target_amount_config_flag",""),
                     target_currency                 : this.getCheckObject(oModel,"target_currency",""),
