@@ -614,8 +614,8 @@ sap.ui.define([
                         approval_number : this.approval_number, 
                         pay_sequence : String(item.pay_sequence), 
                         split_pay_type_code : item.split_pay_type_code,
-                        pay_rate : item.pay_rate,
-                        pay_price : item.pay_price
+                        pay_rate : item.pay_rate === null ? item.pay_rate : item.pay_rate.replaceAll(",",""),
+                        pay_price : item.pay_price === null ? item.pay_price : item.pay_price.replaceAll(",","")
                     });
                 }.bind(this));
 

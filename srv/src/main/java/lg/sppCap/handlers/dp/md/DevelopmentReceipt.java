@@ -70,7 +70,7 @@ public class DevelopmentReceipt implements EventHandler {
         List<Map<String, Object>> entries = context.getCqn().entries();
 
         String statusCode = "DEV_RCV";
-        String v_sql_callProc = "CALL DP_MD_SCHEDULE_SAVE_PROC(TENANT_ID => ?, MOLD_ID => ?)";
+        String v_sql_callProc = "CALL DP_MD_SCHEDULE_ASSET_INSERT_PROC(TENANT_ID => ?, MOLD_ID => ?)";
         String v_progressSql_callProc = "CALL DP_MD_PROGRESS_STATUS_INSERT_PROC(TENANT_ID => ?, MOLD_ID => ?, PROG_STATUS_CODE => ?, PROG_STATUS_CHANGE_DATE => ?, PROG_STATUS_CHANGER_EMPNO => ?, PROG_STATUS_CHANGER_DEPT_CODE => ?, REMARK => ?)";
         
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
