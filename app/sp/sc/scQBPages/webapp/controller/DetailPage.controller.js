@@ -308,6 +308,11 @@ sap.ui.define([
             },
 
             _CallHeaderView: function () {
+
+                // // 초기화
+                this.getView().setModel( new JSONModel({ Suppliers: [] }), "NegoItemPrices");
+                this.getView().byId("panel_SuppliersContent").setExpanded(false);
+                
                 var that = this;
                 var oView = this.getView();
                 // NegoHeaders(tenant_id='L2100',nego_header_id=119)?&$format=json&$select=*&$expand=Items($expand=Suppliers)
@@ -320,7 +325,7 @@ sap.ui.define([
                 
                 // var url = this.srvUrl+"NegoHeadersView?&$expand=Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._docNum + "'";
                 var headerExpandString = "ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map,contact_point";
-                var itemsExpandString = "Items($expand=Suppliers,material,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department)";
+                var itemsExpandString = "Items($expand=Suppliers,operation_org,material,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department)";
                 var url = this.srvUrl+"NegoHeadersView?&$expand="+headerExpandString + "," + itemsExpandString+"&$filter=nego_document_number eq '" + this._docNum + "'";
 
                 console.log( "0000 >>> " + url);
@@ -810,6 +815,8 @@ sap.ui.define([
                     "company_code"          : "LGCKR",        // 임시로 지정
                     "nego_header_id"        : this.getCheckObject(oTemp,"nego_header_id",-1),
                     "nego_item_number"      : "TBD00" + itemNumberTemp,
+                    "operation_org"         : null,
+                    "operation_org_code"    : "",
                     "operation_unit_code"           : "",
                     "award_progress_status_code"    : "",
                     "line_type_code"                : "",
@@ -985,6 +992,7 @@ sap.ui.define([
                 oIndices.reverse();
                 // @ts-ignore
                 var oNPHeader = this.getView().getModel("viewModel").oData.NPHeader;
+                //
                 for (var i = 0; i < oIndices.length; i++) {
                     var oIndex = oIndices[i];
                     oNPHeader.splice(oIndex, 1);
@@ -1233,9 +1241,10 @@ sap.ui.define([
                 
                 var oSelectedItem = e.getParameter("selectedItem");
 
+                console.log( oSelectedItem );
                 var resultTokens = {
-                    org_code: oSelectedItem.getProperty("key"),
-                    org_name: oSelectedItem.getProperty("text")
+                    org_code: oSelectedItem != null ? oSelectedItem.getProperty("key")  : "",
+                    org_name: oSelectedItem != null ? oSelectedItem.getProperty("text") : ""
                 }
                 this.setOrgCode( resultTokens );
 
@@ -1243,8 +1252,11 @@ sap.ui.define([
             /** Operation Org 변경시 항목 처리 */
             setOrgCode: function (resultTokens) {
                 var oItem = this.getView().getModel("NegoHeaders").getData().Items[this._oIndex];
-                oItem.operation_unit_code = resultTokens.org_code;
-                oItem.operation_unit_name = resultTokens.org_name;
+                oItem.operation_org_code = resultTokens.org_code;
+                if( oItem.operation_org === null ){
+                    oItem.operation_org = {};
+                }
+                oItem.operation_org.operation_org_name = resultTokens.org_name;
 
                 this.getView().getModel("NegoHeaders").refresh();
             },
@@ -1274,6 +1286,7 @@ sap.ui.define([
                 console.log( ":<<< getNegoHeaderObject >>> " );
                 console.log( oModel ); //// nego_document_desc, note_content
                 var negoheader = {
+                    _row_state_                     : "",
                     tenant_id                       : oModel.tenant_id,
                     nego_header_id                  : this.getCheckObject(oModel,"nego_header_id",-1),
                     reference_nego_header_id        : this.getCheckObject(oModel,"reference_nego_header_id",0),
@@ -1359,6 +1372,7 @@ sap.ui.define([
                     var createIdTemp = "";//(element._row_state_ === "C") ? "TBD00" +(index+1) : "";
 
                     var oItem = {
+                        _row_state_                  : this.getCheckObject(element,"_row_state_",""),
                         tenant_id                    : this.getCheckObject(element,"tenant_id",""),
                         company_code                 : this.getCheckObject(element,"company_code","LGCKR"),  //"LGCKR"
                         nego_header_id               : this.getCheckObject(element,"nego_header_id",-1),
@@ -1421,6 +1435,7 @@ sap.ui.define([
                         // if( element2.hasOwnProperty("_row_state_") && element2._row_state_ === sFlag ) {
 
                             var oSupplierItem = {
+                                _row_state_                      : this.getCheckObject(element2,"_row_state_",""),
                                 tenant_id                        : this.getCheckObject(element2,"tenant_id",""),
                                 nego_header_id                   : this.getCheckObject(element2,"nego_header_id",-1),
                                 nego_item_number                 : oItem.nego_item_number,//this.getCheckObject(element2,"nego_item_number", createIdTemp ),
@@ -1462,6 +1477,7 @@ sap.ui.define([
                     var createIdTemp = (sFlag === "C") ? "TBD00" +(index+1) : "";
 
                     var oItem = {
+                        _row_state_                     : this.getCheckObject(element,"_row_state_",""),
                         tenant_id                       : this.getCheckObject(element,"tenant_id",""),
                         nego_header_id                  : this.getCheckObject(element,"nego_header_id", -1),
                         nonpr_item_number               : this.getCheckObject(element,"nego_header_id", createIdTemp),
@@ -1483,6 +1499,7 @@ sap.ui.define([
                         // if( element2.hasOwnProperty("_row_state_") && element2._row_state_ === sFlag ) {
 
                             var oSupplierItem = {
+                                _row_state_             : this.getCheckObject(element2,"_row_state_",""),
                                 tenant_id               : this.getCheckObject(element2,"tenant_id",""),
                                 nego_header_id          : this.getCheckObject(element2,"nego_header_id", -1),
                                 
@@ -1572,7 +1589,16 @@ sap.ui.define([
                         // sap.m.MessageToast.show(i18nModel.getText("/EPG00001"));
                         // v_returnModel = oView.getModel("returnModel").getData().data;
                         console.log('v_returnModel_e:', e);
-                    }
+                        MessageBox.confirm(this.getModel("I18N").getText("/EPG00003"), {
+                            title : this.getModel("I18N").getText("/CONFIRM"),
+                            initialFocus : sap.m.MessageBox.Action.CANCEL,
+                            onClose : function(sButton) {
+                                // if (sButton === MessageBox.Action.OK) {
+                                //     this.onNavBack();
+                                // }
+                            }.bind(this)
+                        });
+                    }.bind(this)
                 });
 
             },
@@ -1592,7 +1618,9 @@ sap.ui.define([
                             { "tenant_id": oModel.getProperty("/tenant_id"), "nego_header_id":  oModel.getProperty("/nego_header_id") }
                         ],
                         "negoitemprices" : [],
-                        "negosuppliers" : []
+                        "negosuppliers" : [],
+                        "negoitemnonprices" : [],
+                        "negoitemnonpricedtls": []
                     }
                 };
                 console.log( inputInfo );
@@ -1621,7 +1649,16 @@ sap.ui.define([
                         // sap.m.MessageToast.show(i18nModel.getText("/EPG00001"));
                         // v_returnModel = oView.getModel("returnModel").getData().data;
                         console.log('v_returnModel_e:', e);
-                    }
+                        MessageBox.confirm(this.getModel("I18N").getText("/EPG00001"), {
+                            title : this.getModel("I18N").getText("/CONFIRM"),
+                            initialFocus : sap.m.MessageBox.Action.CANCEL,
+                            onClose : function(sButton) {
+                                // if (sButton === MessageBox.Action.OK) {
+                                //     this.onNavBack();
+                                // }
+                            }.bind(this)
+                        });
+                    }.bind(this)
                 });
 
             },

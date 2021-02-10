@@ -51,14 +51,14 @@
                         <FlexBox wrap="Wrap" >
                             
                             <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="30rem">
-                                <ObjectStatus id="objectStatus_nego_document_number" title="Negotiation No" text="{path: 'NegoHeaders>/nego_document_number'}" class="sapUiLargeMarginBegin" />
-                                <ObjectStatus title="Buyer" text="{NegoHeaders>/buyer_employee/employee_name} [{NegoHeaders>/buyer_employee/department_name}]" class="sapUiLargeMarginBegin" />
-                                <ObjectStatus title="Create Date" text="{path: 'NegoHeaders>/local_create_dtm', type: 'sap.ui.model.odata.type.Date', 
+                                <ObjectStatus id="objectStatus_nego_document_number" title="{I18N>/NEGO_DOCUMENT_NUMBER}" text="{path: 'NegoHeaders>/nego_document_number'}" class="sapUiLargeMarginBegin" />
+                                <ObjectStatus title="{I18N>/BUYER}" text="{NegoHeaders>/buyer_employee/employee_name} [{NegoHeaders>/buyer_employee/department_name}]" class="sapUiLargeMarginBegin" />
+                                <ObjectStatus title="{I18N>/NW_CREATE_DTM}" text="{path: 'NegoHeaders>/local_create_dtm', type: 'sap.ui.model.odata.type.Date', 
                                                                         formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }"  class="sapUiLargeMarginBegin" />
                             </layout:VerticalLayout>
 
                             <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                                <Label text="Status :"/>
+                                <Label text="{I18N>/NEGO_PROGRESS_STATUS_CODE} :"/>
                                 <ObjectStatus class="sapMObjectStatusLarge" text="{path: 'NegoHeaders>/nego_progress_status/nego_progress_status_name' }" state="Error" />
                             </layout:VerticalLayout>
                             <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -69,11 +69,11 @@
 
                     <!-- Header Start -->
                     <uxap:sections>
-                        <uxap:ObjectPageSection id="objectPageSection" titleUppercase="false" title="Header" >
+                        <uxap:ObjectPageSection id="objectPageSection" titleUppercase="false" title="{I18N>/NW_SECTION_TITLE_HEADER}" >
                             <uxap:subSections >
                                 <uxap:ObjectPageSubSection>
                                     <uxap:blocks>
-                                        <Panel id="panel_Header" expandable="true" expanded="true" headerText="Header Content"  >
+                                        <Panel id="panel_Header" expandable="true" expanded="true" headerText="{I18N>/NW_SECTION_TITLE_HEADER} {I18N>/NW_CONTENT}"  >
                                             <content>
                                                 <layout:Grid
                                                     hSpacing="1"
@@ -82,7 +82,7 @@
                                                         <form:SimpleForm id="formHeader1" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="0"         labelSpanM="0" emptySpanL="0" emptySpanM="0" columnsL="3" columnsM="3">
                                                             <form:content>
                                                                 <VBox class="sapUiNoMarginBottom">
-                                                                    <Label  text="Negotiation No"  />
+                                                                    <Label  text="{I18N>/NEGO_DOCUMENT_NUMBER}:"  />
                                                                     <Input  id="inputNegotiationNo" value="{NegoHeaders>/nego_document_number}" enabled="false" visible="{=${propInfo>/isEditMode} }"/>
                                                                     <Text  id="textNegotiationNo" text="{NegoHeaders>/nego_document_number}" visible="{=!${propInfo>/isEditMode} }"/>
                                                                 </VBox>
@@ -382,10 +382,11 @@
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
                                     <Panel id="panel_NonPrice" expandable="true" expanded="true" headerText="Non Price Content">
+                                        <!-- rows="{viewModel>/NPHeader}" -->
                                         <t:Table id="tableNonPrice"
                                             minAutoRowCount="2"
                                             visibleRowCountMode="Auto"
-                                            rows="{viewModel>/NPHeader}"
+                                            rows="{NegoHeaders>/ItemsNonPrice}"
                                             cellClick="mTableOnCellClick"
                                             selectionMode="{=${propInfo>/isEditMode} ? 'MultiToggle' : 'None' }"
                                             ariaLabelledBy="title">
@@ -399,45 +400,50 @@
 
                                             <!-- visible="{= ${/propInfo/outCome} === '' }" -->
                                             <t:columns>
+                                                <t:Column minScreenWidth="Tablet" hAlign="Center" width="40px" visible="{=${propInfo>/isEditMode}}">
+                                                    <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                                                    <t:template>
+                                                        <ObjectStatus icon="{
+                                                            path: 'NegoHeaders>_row_state_',
+                                                            formatter: '.formatter.toModelStateColumnIcon'
+                                                        }" />
+                                                    </t:template>
+                                                </t:Column>
                                                 <t:Column width="" hAlign="Center" >
                                                     <Label text="평가항목 유형" />
                                                     <t:template>
-                                                        <!-- <Button 
-                                                            icon="sap-icon://account" press="onSupplierButtonPress" >
-                                                        </Button> -->
-                                                        <Text text="{viewModel>h1}"/>
+                                                        <!-- <Text text="{viewModel>h1}"/> -->
+                                                        <Text text="{NegoHeaders>nonpr_supeval_attr_type_code}"/>
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width="" hAlign="Center">
                                                     <Label text="요구사항" />
                                                     <t:template>
-                                                        <Text text="{viewModel>h2}" />
+                                                        <Text text="{NegoHeaders>nonpr_requirements_text}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width="" hAlign="Center">
                                                     <Label text="비고" />
                                                     <t:template>
-                                                    <Label text="{viewModel>h3}" />
+                                                    <Label text="{NegoHeaders>note_content}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width="" hAlign="Center">
                                                     <Label text="평가속성" />
                                                     <t:template>
-                                                        <!-- <Input id="abc" showValueHelp="true" valueHelpRequest="."></Input> -->
-                                                        <Text text="{viewModel>h4}" />
+                                                        <Text text="{NegoHeaders>nonpr_supeval_attr_val_type_cd}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width=""  hAlign="Center">
                                                     <Label text="점수 산정 방법" />
                                                     <t:template>
-                                                        <!-- <Input id="inputPartNo" showValueHelp="true" valueHelpRequest=".onPartNoPress" ></Input> -->
-                                                        <Text text="{viewModel>h5}" />
+                                                        <Text text="{NegoHeaders>nonpr_score_comput_method_code}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width=""  hAlign="Center">
                                                     <Label text="Target Score"/>
                                                     <t:template>
-                                                        <Label text="{viewModel>h6}" />
+                                                        <Label text="{NegoHeaders>target_score}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width="" hAlign="Center">
@@ -537,7 +543,7 @@
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center" >
                                                                     <Input id="multiinput_purOperationOrg_code" visible="{=${propInfo>/isEditMode}}" 
-                                                                        value="{NegoHeaders>operation_unit_code} : {NegoHeaders>operation_unit_name}"
+                                                                        value="{NegoHeaders>operation_org_code} : {NegoHeaders>operation_org/operation_org_name}"
                                                                         showValueHelp="true" valueHelpRequest=".onOperationOrgPress" textAlign="Center"
                                                                         showSuggestion="true" showSecondaryValues="true" suggestionItemSelected=".onSuggesionItemSelectedOprOrg"
                                                                         suggestionItems="{
@@ -556,7 +562,7 @@
                                                                         </layoutData>
                                                                     </Input>
                                                                     <!-- <Input value="{NegoHeaders>operation_unit_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/> -->
-                                                                    <Text text="{NegoHeaders>operation_unit_code} : {NegoHeaders>operation_unit_name}" visible="{=!${propInfo>/isEditMode}}" textAlign="Center"/>
+                                                                    <Text text="{NegoHeaders>operation_org_code} : {NegoHeaders>operation_org/operation_org_name}" visible="{=!${propInfo>/isEditMode}}" textAlign="Center"/>
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
@@ -1183,7 +1189,7 @@
                     <uxap:footer>
                         <OverflowToolbar>
                             <ToolbarSpacer />
-                            <Button text="{I18N>/TEMP_SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
+                            <Button text="{I18N>/TEMP_SAVE}" visible="{=${propInfo>/isEditMode}}" type="Emphasized" press=".onPageSaveButtonPress" />
                             <Button text="{I18N>/CANCEL}" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageCancelButtonPress" />
                             <Button text="{I18N>/DELETE}" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageDeleteButtonPress" />
                             <Button text="{I18N>/EDIT}" visible="{=!${propInfo>/isEditMode}}" type="Transparent" press=".onPageEditButtonPress" />
