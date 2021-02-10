@@ -69,8 +69,6 @@
                         <VBox>
                             <Label text="(임시세션)협력사 :" labelFor="searchDateS" />
                             <ComboBox id="sSupplierCode">
-                                <core:Item key="KR01820600" text="BST상사" />
-                                <core:Item key="KR01818401" text="한국유나이티드제약(주)" />
                                 <core:Item key="KR00533800" text="세운철강(주)" />
                                 <core:Item key="KR00616400" text="신혁기업사" />
                                 <core:Item key="KR00687500" text="희성정밀(주)" />
