@@ -827,28 +827,43 @@ sap.ui.define([
              * 삭제
              */
             onDelete: function () {
-                var oI18nModel = this.getModel("I18N");
+                var procObj = {
+                    "param" : {
+                        "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                        "company_code": SppUserSessionUtil.getUserInfo().COMPANY_CODE,
+                        "org_type_code": "PL",
+                        "org_code": "5100",
+                        "approval_number": that.pAppNum
+                    }
+                };
 
-                MessageBox.confirm(oI18nModel.getText("/NCM00003"), {
-                    title: "Delete",
-                    initialFocus: sap.m.MessageBox.Action.CANCEL,
-                    onClose: function (sButton) {
-                        if (sButton === MessageBox.Action.OK) {
-                            var oModel = this.getModel();
-                            var sDeletePath = oModel.createKey("/Base_Price_Arl_Master", this._getMasterKey(this.getModel("detailModel").getData(), "Master"));
-
-                            oModel.remove(sDeletePath, {
-                                success: function (data) {
-                                    MessageToast.show(oI18nModel.getText("/NCM01002"));
-                                    this.onBack();
-                                }.bind(this),
-                                error: function (data) {
-                                    console.log('remove error', data.message);
-                                    MessageBox.error(JSON.parse(data.responseText).error.message.value);
-                                }
-                            });
+                $.ajax({
+                    url: "srv-api/odata/v4/sp.netpriceApprovalDetailV4Service/ApprovalDeleteProc",
+                    type: "POST",
+                    data: JSON.stringify(procObj),
+                    contentType: "application/json",
+                    success: function (data) {
+                        console.log('data:', data);
+                    },
+                    error: function (e) {
+                        var eMessage = "callProcError",
+                            errorType,
+                            eMessageDetail;
+                    
+                        if (e.responseJSON.error.message == undefined || e.responseJSON.error.message == null) {
+                            eMessage = "callProcError";
+                            eMessageDetail = "callProcError";
+                        } else {
+                            eMessage = e.responseJSON.error.message.substring(0, 8);
+                            eMessageDetail = e.responseJSON.error.message.substring(9);
+                            errorType = e.responseJSON.error.message.substring(0, 1);
+                            console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                            
                         }
-                    }.bind(this)
+
+                        MessageToast.show(eMessageDetail);
+                        console.log(eMessageDetail);
+                    }
                 });
             },
 
@@ -856,32 +871,70 @@ sap.ui.define([
              * 상신
              */
             onRequest: function () {
-                var oI18nModel = this.getModel("I18N");
+                MessageToast.show("준비중입니다.");
+                // var oI18nModel = this.getModel("I18N");
 
-                MessageBox.confirm("요청 하시겠습니까?", {
-                    title: "Request",
-                    initialFocus: sap.m.MessageBox.Action.CANCEL,
-                    onClose: function (sButton) {
-                        if (sButton === MessageBox.Action.OK) {
-                            this.onDraft("approval");
-                        }
-                    }.bind(this)
-                });
+                // MessageBox.confirm("요청 하시겠습니까?", {
+                //     title: "Request",
+                //     initialFocus: sap.m.MessageBox.Action.CANCEL,
+                //     onClose: function (sButton) {
+                //         if (sButton === MessageBox.Action.OK) {
+                //             this.onDraft("approval");
+                //         }
+                //     }.bind(this)
+                // });
             },
 
             /*승인요청 버튼 */
             onApprove: function() {
-                
+                var procObj = {
+                    "param" : {
+
+                        "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                        "company_code": SppUserSessionUtil.getUserInfo().COMPANY_CODE,
+                        "approval_number": that.pAppNum,
+                        "approve_status_code": "AR"
+                    }
+                };
+
+                $.ajax({
+                    url: "srv-api/odata/v4/sp.netpriceApprovalDetailV4Service/ApprovalStatusChangeProc",
+                    type: "POST",
+                    data: JSON.stringify(procObj),
+                    contentType: "application/json",
+                    success: function (data) {
+                        console.log('data:', data);
+                    },
+                    error: function (e) {
+                        var eMessage = "callProcError",
+                            errorType,
+                            eMessageDetail;
+                    
+                        if (e.responseJSON.error.message == undefined || e.responseJSON.error.message == null) {
+                            eMessage = "callProcError";
+                            eMessageDetail = "callProcError";
+                        } else {
+                            eMessage = e.responseJSON.error.message.substring(0, 8);
+                            eMessageDetail = e.responseJSON.error.message.substring(9);
+                            errorType = e.responseJSON.error.message.substring(0, 1);
+                            console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                            
+                        }
+
+                        MessageToast.show(eMessageDetail);
+                        console.log(eMessageDetail);
+                    }
+                });
             },
             
             /*반려 버튼 */
             onReject: function() {
-                
+                MessageToast.show("준비중입니다.");
             },
             
             /*취소 버튼 */
             onCancel: function() {
-
+                MessageToast.show("준비중입니다.");
             },
 
             /**
