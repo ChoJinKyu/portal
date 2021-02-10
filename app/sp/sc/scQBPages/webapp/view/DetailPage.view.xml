@@ -103,7 +103,7 @@
                                                                         }" 
                                                                         editable="false" enabled="false" visible="false"
                                                                         selectedKey="{NegoHeaders>/nego_type_code}" value="{NegoHeaders>/nego_type/nego_type_name}"
-                                                                        width="100%" required="true">
+                                                                        width="100%" >
                                                                         <core:ListItem key="{nego_type_code}" text="{nego_type_name}" />
                                                                     </ComboBox>
                                                                 </VBox>
@@ -552,6 +552,7 @@
                                                                             sorter: { path: 'org>org_code' }
                                                                         }"
                                                                         onfocusout=".onfocusoutMultiInput_org"
+                                                                        valueState="{NegoHeaders>__metadata/_valueStates/operation_org_code/valueState}" valueStateText="{NegoHeaders>__metadata/_valueStates/operation_org_code/valueStateText}"
                                                                         >
                                                                         <core:ListItem key="{org>org_code}" text="{org>org_name}"  additionalText="{org>org_code}"/>
                                                                         <!-- <tokens>
@@ -601,7 +602,9 @@
                                                             <Label text="Description" required="true" />
                                                             <t:template>
                                                                 <FlexBox width="100%" >
-                                                                    <Input value="{NegoHeaders>material_desc}" visible="{=${propInfo>/isEditMode}}" width="100%" maxLength="200" placeholder="최대 200 자까지 입력 할 수 있습니다.">
+                                                                    <Input value="{NegoHeaders>material_desc}" visible="{=${propInfo>/isEditMode}}" width="100%" maxLength="200" placeholder="최대 200 자까지 입력 할 수 있습니다."
+                                                                        valueState="{NegoHeaders>__metadata/_valueStates/material_desc/valueState}" 
+                                                                        valueStateText="{NegoHeaders>__metadata/_valueStates/material_desc/valueStateText}">
                                                                         <layoutData>
                                                                             <FlexItemData growFactor="1"/>
                                                                         </layoutData>
@@ -624,7 +627,7 @@
                                                                             }}" 
                                                                         showSecondaryValues= "true"
                                                                         selectedKey="{NegoHeaders>specification}" visible="{=${propInfo>/isEditMode}}"
-                                                                        width="100%" required="true">
+                                                                        width="100%" >
                                                                         <core:ListItem key="{specification_code}" text="{specification_name}" additionalText="{specification_code}"/>
                                                                     </ComboBox>
                                                                     
@@ -698,7 +701,9 @@
                                                             <Label text="수량" required="true"/>
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <Input value="{NegoHeaders>request_quantity}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/>
+                                                                    <Input value="{NegoHeaders>request_quantity}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
+                                                                        valueState="{NegoHeaders>__metadata/_valueStates/request_quantity/valueState}" 
+                                                                        valueStateText="{NegoHeaders>__metadata/_valueStates/request_quantity/valueStateText}"/>
                                                                     <Text text="{NegoHeaders>request_quantity}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -707,7 +712,9 @@
                                                             <Label text="UOM" required="true" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <Input value="{NegoHeaders>uom_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/>
+                                                                    <Input value="{NegoHeaders>uom_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
+                                                                        valueState="{NegoHeaders>__metadata/_valueStates/uom_code/valueState}" 
+                                                                        valueStateText="{NegoHeaders>__metadata/_valueStates/uom_code/valueStateText}"/>
                                                                     <Text text="{NegoHeaders>uom_code}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -742,7 +749,7 @@
                                                                             }}" 
                                                                         showSecondaryValues= "true"
                                                                         selectedKey="{NegoHeaders>currency_code}" visible="{=${propInfo>/isEditMode}}"
-                                                                        width="100%" required="true">
+                                                                        width="100%" >
                                                                         <core:ListItem key="{common>currency_code}" text="{common>currency_code_name}" additionalText="{common>currency_code}"/>
                                                                     </ComboBox>
                                                                     <Text text="{NegoHeaders>currency_code}" visible="{=!${propInfo>/isEditMode}}" />
@@ -783,10 +790,11 @@
                                                             <Label text="협력사 공개" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <ToggleButton text="{=${NegoHeaders>bidding_start_net_price_flag} === 'Y' || ${NegoHeaders>bidding_start_net_price_flag} === true ? 'YES' : 'NO'}" visible="{=${propInfo>/isEditMode}}" pressed="{NegoHeaders>bidding_start_net_price_flag}"  />
+                                                                    <ToggleButton text="{=${NegoHeaders>bidding_start_net_price_flag} === 'Y' ? 'YES' : 'NO'}" 
+                                                                        visible="{=${propInfo>/isEditMode}}" pressed="{=${NegoHeaders>bidding_start_net_price_flag} === 'Y' ? true : false}"  />
 
                                                                     <!-- <lib-m:FlagToggleButton  enabled="{=${propInfo>/isEditMode}}" pressed="{NegoHeaders>bidding_start_net_price_flag}" /> -->
-                                                                    <Text text="{=${NegoHeaders>bidding_start_net_price_flag} === true ? 'YES' : 'NO'}" visible="{=!${propInfo>/isEditMode}}" /> 
+                                                                    <Text text="{=${NegoHeaders>bidding_start_net_price_flag} === 'Y' ? 'YES' : 'NO'}" visible="{=!${propInfo>/isEditMode}}" /> 
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
@@ -931,7 +939,7 @@
                                                                             }}" 
                                                                         showSecondaryValues= "true"
                                                                         selectedKey="{NegoHeaders>incoterms_code}" visible="{=${propInfo>/isEditMode}}"
-                                                                        width="100%" required="true">
+                                                                        width="100%" >
                                                                         <core:ListItem key="{incoterms_code}" text="{incoterms_name}" additionalText="{incoterms_code}"/>
                                                                     </ComboBox>
                                                                     <Text text="{NegoHeaders>incoterms/incoterms_name}" visible="{=!${propInfo>/isEditMode}}" />
@@ -952,7 +960,7 @@
                                                                             }}" 
                                                                         showSecondaryValues= "true"
                                                                         selectedKey="{NegoHeaders>payment_terms_code}" visible="{=${propInfo>/isEditMode}}"
-                                                                        width="100%" required="true">
+                                                                        width="100%" >
                                                                         <core:ListItem key="{payment_terms_code}" text="{payment_terms_name}" additionalText="{payment_terms_code}"/>
                                                                     </ComboBox>
                                                                     <Text text="{NegoHeaders>payment_terms/payment_terms_name}" visible="{=!${propInfo>/isEditMode}}" />
@@ -973,7 +981,7 @@
                                                                             }}" 
                                                                         showSecondaryValues= "true"
                                                                         selectedKey="{NegoHeaders>market_code}" visible="{=${propInfo>/isEditMode}}"
-                                                                        width="100%" required="true">
+                                                                        width="100%" >
                                                                         <core:ListItem key="{market_code}" text="{market_name}" additionalText="{market_code}"/>
                                                                     </ComboBox>
                                                                     <Text text="{NegoHeaders>market/market_name}" visible="{=!${propInfo>/isEditMode}}" />

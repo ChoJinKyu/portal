@@ -443,35 +443,78 @@ sap.ui.define([
             },
             onPageSaveButtonPress: function() {
                 
-                var oModel = this.getView().getModel("NegoHeaders").getData();
-                
-                MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
-                    title : this.getModel("I18N").getText("/SAVE"),
-                    initialFocus : sap.m.MessageBox.Action.CANCEL,
-                    onClose : function(sButton) {
-                        if (sButton === MessageBox.Action.OK) {
-                            var titleLengh = this.getView().byId("inputTitle").getMaxLength() == 0 ? 300 : this.getView().byId("inputTitle").getMaxLength();
-                            if( !oModel.hasOwnProperty("nego_document_title") || oModel.nego_document_title === undefined 
-                                    || oModel.nego_document_title.length <= 0 || oModel.nego_document_title.length > titleLengh ) {
-
-                                var stateText = this.getModel("I18N").getText("/ECM01002");
-                                if( oModel.nego_document_title != undefined ) {
-                                    stateText = oModel.nego_document_title.length <= 0 ? this.getModel("I18N").getText("/ECM01002") : this.getView().byId("inputTitle").getPlaceholder();
+                if(this._validator()){
+                    var oModel = this.getView().getModel("NegoHeaders").getData();
+                    
+                    MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+                        title : this.getModel("I18N").getText("/SAVE"),
+                        initialFocus : sap.m.MessageBox.Action.CANCEL,
+                        onClose : function(sButton) {
+                            if (sButton === MessageBox.Action.OK) {
+                                var titleLengh = this.getView().byId("inputTitle").getMaxLength() == 0 ? 300 : this.getView().byId("inputTitle").getMaxLength();
+                                if( !oModel.hasOwnProperty("nego_document_title") || oModel.nego_document_title === undefined 
+                                        || oModel.nego_document_title.length <= 0 || oModel.nego_document_title.length > titleLengh ) {
+    
+                                    var stateText = this.getModel("I18N").getText("/ECM01002");
+                                    if( oModel.nego_document_title != undefined ) {
+                                        stateText = oModel.nego_document_title.length <= 0 ? this.getModel("I18N").getText("/ECM01002") : this.getView().byId("inputTitle").getPlaceholder();
+                                    }
+                                    this.getView().byId("inputTitle").setValueState("Error");
+                                    this.getView().byId("inputTitle").setValueStateText(stateText);//
+    
+                                    this.getView().byId("inputTitle").focus();
+                                    
+                                }else {
+    
+                                    this._CallUpsertProc("010");
+                                    
                                 }
-                                this.getView().byId("inputTitle").setValueState("Error");
-                                this.getView().byId("inputTitle").setValueStateText(stateText);//
-
-                                this.getView().byId("inputTitle").focus();
-                                
-                            }else {
-
-                                this._CallUpsertProc("010");
-                                
                             }
-                        }
-                    }.bind(this)
+                        }.bind(this)
+                    });
+
+                }else {
+                    console.log("checkRequire");
+                    return; 
+
+                }
+            },
+
+            _validator : function(){
+                var oModel = this.getModel("NegoHeaders");
+                var oList = oModel.getData().Items;
+                var sEmptyMsg = this.getModel("I18N").getText("/ECM01002");
+                var bReturn = true;
+        
+                oList.forEach( function (oRow) {
+                    
+                    var oValueStates = {};
+                    //필수값 체크
+                    var sOperation_Org_Code = (oRow.operation_org_code === undefined || oRow.operation_org_code === null) ? "" : oRow.operation_org_code;
+                 //   var sLine_Type_Code = (oRow.line_type_code === undefined || oRow.line_type_code === null) ? "" : oRow.line_type_code;
+                    var sMaterial_Desc = (oRow.material_desc === undefined || oRow.material_desc === null) ? "" : oRow.material_desc;
+                    var sRequest_Quantity = (oRow.request_quantity === undefined || oRow.request_quantity === null) ? "" : oRow.request_quantity.toString();
+                    var sUom_Code = (oRow.uom_code === undefined || oRow.uom_code === null) ? "" : oRow.uom_code;
+
+                    if(sOperation_Org_Code === "")oValueStates.operation_org_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                  //  if(sLine_Type_Code === "")oValueStates.line_type_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                    if(sMaterial_Desc === "")oValueStates.material_desc = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                    if(sRequest_Quantity === "")oValueStates.request_quantity = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                    if(sUom_Code === "")oValueStates.uom_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                                        
+
+                    if('operation_org_code' in oValueStates || 'material_desc' in oValueStates || 'request_quantity' in oValueStates || 'uom_code' in oValueStates ){
+                        bReturn = false;
+                    }
+
+                    oRow.__metadata = {_valueStates : oValueStates};
                 });
-                
+
+                if(!bReturn){
+                    oModel.setProperty("/Items", oModel.getProperty("/Items"));
+                }
+
+                return bReturn;              
             },
 
             //카테고리 코드 중복 체크
@@ -847,7 +890,7 @@ sap.ui.define([
                     "exrate_type_code"              : "",
                     "exrate_date"                   : "",
                     "bidding_start_net_price"       : "",
-                    "bidding_start_net_price_flag"  : false,
+                    "bidding_start_net_price_flag"  : "N",
                     "bidding_target_net_price"      : "",
                     "current_price"                 : "",
                     "note_content"                  : "",
@@ -1130,7 +1173,7 @@ sap.ui.define([
                                         objTemp.bidding_target_net_price = Number(cell.getValue());
                                     }
                                     if( cell.getId().indexOf("toggleBtnDisplay") != -1 ) { 
-                                        objTemp.bidding_start_net_price_flag = cell.getPressed() ? true : false ;
+                                        objTemp.bidding_start_net_price_flag = cell.getPressed() ? "Y" : "N" ;
                                     }
                                     if( cell.getId().indexOf("datePickerMaturitydate") != -1 ) { 
                                         objTemp.maturity_date = cell.getDateValue();
@@ -1395,7 +1438,7 @@ sap.ui.define([
                         reason                       : this.getCheckObject(element,"reason,",""),
                         request_date                 : this.getCheckObject(element,"request_date",new Date()),
                         attch_code                   : this.getCheckObject(element,"attch_code",""),
-                        supplier_provide_info        : this.getCheckObject(element,"supplier_provide_info",""),
+                        supplier_provide_info        : this.getCheckObject(element,"supplier_provide_info","encoding"),
                         incoterms_code               : this.getCheckObject(element,"incoterms_code",""),
                         payment_terms_code           : this.getCheckObject(element,"payment_terms_code",""),
                         market_code                  : this.getCheckObject(element,"market_code",""),   
@@ -1410,7 +1453,7 @@ sap.ui.define([
                         exrate_type_code             : this.getCheckObject(element,"exrate_type_code",""),
                         exrate_date                  : this.getCheckObject(element,"exrate_date",new Date()),
                         bidding_start_net_price      : this.getCheckObject(element,"bidding_start_net_price",0),
-                        bidding_start_net_price_flag : this.getCheckObject(element,"bidding_start_net_price_flag", false),
+                        bidding_start_net_price_flag : this.getCheckObject(element,"bidding_start_net_price_flag", "N"),
                         bidding_target_net_price     : this.getCheckObject(element,"bidding_target_net_price",0),
                         current_price                : this.getCheckObject(element,"current_price",0),
                         note_content                 : this.getCheckObject(element,"note_content",""),
