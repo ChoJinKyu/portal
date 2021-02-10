@@ -244,7 +244,7 @@ sap.ui.define([
                 // this.getView().byId("panel_Specific").setExpanded(true);
              
                 this._type = e.getParameter("arguments").type;
-                this._header_id = e.getParameter("arguments").header_id;
+                this._docNum = e.getParameter("arguments").docnum;
 
                 this.getView().getModel("propInfo").setProperty("/type", this._type );
 
@@ -302,72 +302,76 @@ sap.ui.define([
 
                 }else {                                           // list 조회 모드 일 경우에 조회.
                     oView.getModel("propInfo").setProperty("/isEditMode", false );
-                    // NegoHeaders(tenant_id='L2100',nego_header_id=119)?&$format=json&$select=*&$expand=Items($expand=Suppliers)
-                    // var url = this.srvUrl+"NegoHeaders?&$format=json&$select=*,Items&$expand=Items&$filter=nego_document_number eq '" + this._header_id + "'";
-                    // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers)&$filter=nego_document_number eq '" + this._header_id + "'";
-                    // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=*&$filter=nego_document_number eq '" + this._header_id + "'";
-                    // NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers),nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,negotiation_style,award_type,award_method,award_method_map,award_method_map2,operation_org&$filter=nego_document_number
-                    // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers),nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,negotiation_style,award_type,award_method,award_method_map,award_method_map2,operation_org&$filter=nego_document_number eq '" + this._header_id + "'";
-                    // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers,specification_fk),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._header_id + "'";
-                    
-                    // var url = this.srvUrl+"NegoHeadersView?&$expand=Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._header_id + "'";
-                    var headerExpandString = "ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map,contact_point";
-                    var itemsExpandString = "Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department)";
-                    var url = this.srvUrl+"NegoHeadersView?&$expand="+headerExpandString + "," + itemsExpandString+"&$filter=nego_document_number eq '" + this._header_id + "'";
 
-                    console.log( "0000 >>> " + url);
-                    
-                    $.ajax({
-                        url: url,
-                        type: "GET",
-                        contentType: "application/json",
-                        success: function(data){
-                            // debugger;
-                            var v_viewHeaderModel = oView.getModel("viewModel").getData();
-                            v_viewHeaderModel.NegoHeaders = data.value[0];
-    
-                            oView.getModel("NegoHeaders").setData(data.value[0]);
-    
-                            oView.getModel("NegoHeaders").setProperty("/open_date" , new Date(data.value[0].open_date));
-                            oView.getModel("NegoHeaders").setProperty("/closing_date" , new Date(data.value[0].closing_date));
-                            oView.getModel("NegoHeaders").setProperty("/local_create_dtm" , new Date(data.value[0].local_create_dtm));
-                            oView.getModel("NegoHeaders").setProperty("/nego_document_desc" , decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))) );
-                            oView.getModel("NegoHeaders").setProperty("/note_content" , decodeURIComponent(escape(window.atob(data.value[0].note_content))) );
+                    this._CallHeaderView();                    
+                }                
+            },
 
-                            // nego_document_desc, note_content
-                            // decodeURIComponent(escape(window.atob(this.detailData.scenario_desc)))                            
+            _CallHeaderView: function () {
+                var that = this;
+                var oView = this.getView();
+                // NegoHeaders(tenant_id='L2100',nego_header_id=119)?&$format=json&$select=*&$expand=Items($expand=Suppliers)
+                // var url = this.srvUrl+"NegoHeaders?&$format=json&$select=*,Items&$expand=Items&$filter=nego_document_number eq '" + this._docNum + "'";
+                // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers)&$filter=nego_document_number eq '" + this._docNum + "'";
+                // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=*&$filter=nego_document_number eq '" + this._docNum + "'";
+                // NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers),nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,negotiation_style,award_type,award_method,award_method_map,award_method_map2,operation_org&$filter=nego_document_number
+                // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers),nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,negotiation_style,award_type,award_method,award_method_map,award_method_map2,operation_org&$filter=nego_document_number eq '" + this._docNum + "'";
+                // var url = this.srvUrl+"NegoHeadersView?&$format=json&$select=*&$expand=Items($expand=Suppliers,specification_fk),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._docNum + "'";
+                
+                // var url = this.srvUrl+"NegoHeadersView?&$expand=Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._docNum + "'";
+                var headerExpandString = "ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map,contact_point";
+                var itemsExpandString = "Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department)";
+                var url = this.srvUrl+"NegoHeadersView?&$expand="+headerExpandString + "," + itemsExpandString+"&$filter=nego_document_number eq '" + this._docNum + "'";
+
+                console.log( "0000 >>> " + url);
+                
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    contentType: "application/json",
+                    success: function(data){
+                        // debugger;
+                        var v_viewHeaderModel = oView.getModel("viewModel").getData();
+                        v_viewHeaderModel.NegoHeaders = data.value[0];
+
+                        oView.getModel("NegoHeaders").setData(data.value[0]);
+
+                        oView.getModel("NegoHeaders").setProperty("/open_date" , new Date(data.value[0].open_date));
+                        oView.getModel("NegoHeaders").setProperty("/closing_date" , new Date(data.value[0].closing_date));
+                        oView.getModel("NegoHeaders").setProperty("/local_create_dtm" , new Date(data.value[0].local_create_dtm));
+                        oView.getModel("NegoHeaders").setProperty("/nego_document_desc" , decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))) );
+                        oView.getModel("NegoHeaders").setProperty("/note_content" , decodeURIComponent(escape(window.atob(data.value[0].note_content))) );
+
+                        // nego_document_desc, note_content
+                        // decodeURIComponent(escape(window.atob(this.detailData.scenario_desc)))                            
+
+                        oView.getModel("viewModel").updateBindings(true);      
     
-                            oView.getModel("viewModel").updateBindings(true);      
-     
-                            console.log(oView.getModel("viewModel").getData());
-                            console.log( "--- " + oView.getModel("viewModel").getProperty("/NegoHeaders"));
-                            console.log(data.value[0]);
-    
-                            // var oModel = this.getView().getModel("NegoHeaders");//,
-                                // line = oModel.oData.ProductCollection[1]; //Just add to the end of the table a line like the second line
-                            if( !data.value[0].hasOwnProperty("Items") ) {
-                                oView.byId("tableLines").setVisibleRowCount( 2 );
-                                
-                            }else {
-                                oView.byId("tableLines").setVisibleRowCountMode("Fixed");
-                                oView.byId("tableLines").setVisibleRowCount( data.value[0].Items.length );
-                            }
-    
-                            // this.getView().byId("tableLines").getVisibleRowCount();
+                        console.log(oView.getModel("viewModel").getData());
+                        console.log( "--- " + oView.getModel("viewModel").getProperty("/NegoHeaders"));
+                        console.log(data.value[0]);
+
+                        // var oModel = this.getView().getModel("NegoHeaders");//,
+                            // line = oModel.oData.ProductCollection[1]; //Just add to the end of the table a line like the second line
+                        if( !data.value[0].hasOwnProperty("Items") ) {
+                            oView.byId("tableLines").setVisibleRowCount( 2 );
                             
-    
-                            // data.value[0].Items.lengt
-                            // oView.byId("table1")
-    
-                        },
-                        error: function(e){
-                            console.log( "error :: " + e.responseText);
+                        }else {
+                            oView.byId("tableLines").setVisibleRowCountMode("Fixed");
+                            oView.byId("tableLines").setVisibleRowCount( data.value[0].Items.length );
                         }
-                    });
-                }
 
-                
-                
+                        // this.getView().byId("tableLines").getVisibleRowCount();
+                        
+
+                        // data.value[0].Items.lengt
+                        // oView.byId("table1")
+
+                    },
+                    error: function(e){
+                        console.log( "error :: " + e.responseText);
+                    }
+                });
             },
 
             _update : function(uPath, uArray){
@@ -426,7 +430,7 @@ sap.ui.define([
 					}.bind(this)
 				});
                 
-                // this._CallInsertProc();
+                // this._CallUpsertProc();
             },
             onPageEditButtonPress: function() {
                 this.getView().getModel("propInfo").setProperty("/isEditMode", true );
@@ -441,14 +445,22 @@ sap.ui.define([
                     initialFocus : sap.m.MessageBox.Action.CANCEL,
                     onClose : function(sButton) {
                         if (sButton === MessageBox.Action.OK) {
-                            if( !oModel.hasOwnProperty("nego_document_title") || oModel.nego_document_title.length <= 0 || oModel.nego_document_title === undefined ) {
+                            var titleLengh = this.getView().byId("inputTitle").getMaxLength() == 0 ? 300 : this.getView().byId("inputTitle").getMaxLength();
+                            if( !oModel.hasOwnProperty("nego_document_title") || oModel.nego_document_title === undefined 
+                                    || oModel.nego_document_title.length <= 0 || oModel.nego_document_title.length > titleLengh ) {
+
+                                var stateText = this.getModel("I18N").getText("/ECM01002");
+                                if( oModel.nego_document_title != undefined ) {
+                                    stateText = oModel.nego_document_title.length <= 0 ? this.getModel("I18N").getText("/ECM01002") : this.getView().byId("inputTitle").getPlaceholder();
+                                }
                                 this.getView().byId("inputTitle").setValueState("Error");
-                                this.getView().byId("inputTitle").setValueStateText(this.getModel("I18N").getText("/ECM01002"));//
+                                this.getView().byId("inputTitle").setValueStateText(stateText);//
 
                                 this.getView().byId("inputTitle").focus();
+                                
                             }else {
 
-                                this._CallInsertProc();
+                                this._CallUpsertProc("010");
                                 
                             }
                         }
@@ -961,7 +973,7 @@ sap.ui.define([
                 oView.byId("tableLines").setSelectedIndex(-1);
             },
             onPartNoPress(e){
-                debugger;
+                
                 var materialItem;
                 this._partnoIndex = e.oSource.getParent().getParent().getIndex();
                 
@@ -1328,7 +1340,7 @@ sap.ui.define([
                 return oObj.hasOwnProperty(oField) ? resultVale : returnValue;
 
             },
-            getNegoHeaderObject : function (){
+            getNegoHeaderObject : function (progressCode){
                 var oModel = this.getView().getModel("NegoHeaders").getData();
                 console.log( ":<<< getNegoHeaderObject >>> " );
                 console.log( oModel ); //// nego_document_desc, note_content
@@ -1345,7 +1357,7 @@ sap.ui.define([
                     nego_document_title             : this.getCheckObject(oModel,"nego_document_title",""),
                     nego_document_desc              : this.getCheckObject(oModel,"nego_document_desc","encoding"),  // encoding
                     nego_progress_status_code       : this.getCheckObject(oModel,"nego_progress_status_code",""),
-                    award_progress_status_code      : this.getCheckObject(oModel,"award_progress_status_code",""),
+                    award_progress_status_code      : progressCode,//this.getCheckObject(oModel,"award_progress_status_code",""),
                     reply_times                     : this.getCheckObject(oModel,"reply_times",0),
                     supplier_count                  : this.getCheckObject(oModel,"supplier_count",0),
                     nego_type_code                  : this.getCheckObject(oModel,"nego_type_code",""),
@@ -1407,7 +1419,7 @@ sap.ui.define([
                 return negoheader;
             },
 
-            getNegoItemObject : function ( sFlag ){     // oFlag : C (생성), U(수정), D(삭제)
+            getNegoItemObject : function ( sFlag ,progressCode ){     // oFlag : C (생성), U(수정), D(삭제)
                 var oModel = this.getView().getModel("NegoHeaders").getData().Items;
                 console.log( ":<<< getNegoItemObject >>> " );
                 var negoitemprices = [];
@@ -1425,7 +1437,7 @@ sap.ui.define([
                         // nego_item_number             : (element._row_state_ === "C") ? createIdTemp : this.getCheckObject(element,"nego_item_number","") ,
                         operation_org_code           : this.getCheckObject(element,"operation_org_code",""),
                         operation_unit_code          : this.getCheckObject(element,"operation_unit_code",""),
-                        award_progress_status_code   : this.getCheckObject(element,"award_progress_status_code",""),
+                        award_progress_status_code   : progressCode,//this.getCheckObject(element,"award_progress_status_code",""),
                         line_type_code               : this.getCheckObject(element,"line_type_code",""),
                         material_code                : this.getCheckObject(element,"material_code",""),
                         material_desc                : this.getCheckObject(element,"material_desc",""),
@@ -1563,7 +1575,7 @@ sap.ui.define([
             },
 
             //Insert 프로시저 호출
-            _CallInsertProc: function () {
+            _CallUpsertProc: function (progressCode) {
                 // this.getNegoHeaderObject();
 
                 // console.log(  this.getNegoItemObject() );
@@ -1576,17 +1588,20 @@ sap.ui.define([
                     urlInfo = "srv-api/odata/v4/sp.sourcingV4Service/deepUpsertNegoHeader"; // delete
                 var oModel = oView.getModel("NegoHeaders");
 
+                var negoItems = this.getNegoItemObject("C", progressCode);
+                var negoNons = this.getNegoNonPriceObject("C");
+
                 var inputInfo = {
                     "deepupsertnegoheader" : {
                         "negoheaders": [
                             // { "tenant_id": oModel.tenant_id, "nego_header_id":  oModel.nego_header_id}
                             // oModel
-                            this.getNegoHeaderObject()
+                            this.getNegoHeaderObject(progressCode)
                         ],
-                        "negoitemprices" : this.getNegoItemObject("C").negoitemprices,
-                        "negosuppliers" : this.getNegoItemObject("C").negosuppliers,
-                        "negoitemnonprices" : this.getNegoNonPriceObject("C").negoitemnonprices,
-                        "negoitemnonpricedtls": this.getNegoNonPriceObject("C").negoitemnonpricedtls
+                        "negoitemprices" : negoItems.negoitemprices,
+                        "negosuppliers" : negoItems.negosuppliers,
+                        "negoitemnonprices" : negoNons.negoitemnonprices,
+                        "negoitemnonpricedtls": negoNons.negoitemnonpricedtls
                     }
                 };
                 console.log(inputInfo);
@@ -1604,10 +1619,15 @@ sap.ui.define([
                         // that._resetView();
                         MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
                         //refresh
-                        oModel.setProperty("/nego_header_id", data.value[0].nego_header_id);
-                        oModel.refresh(true);
+                        // oModel.setProperty("/nego_header_id", data.value[0].nego_header_id);
+                        // oModel.refresh(true);
+                        this._docNum = data.value[0].nego_document_number;
                         console.log( " --저장완료 -- "  );
                         console.log(data);
+
+                        //저장 완료시 show 모드로 전환
+                        oView.getModel("propInfo").setProperty("/isEditMode", false );
+                        this._CallHeaderView();
                         // value: Array(1)
                         //     0:
                         //     code: 0
