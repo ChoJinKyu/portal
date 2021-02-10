@@ -956,7 +956,8 @@ BEGIN
                             --The number of data corresponding to the inquiry condition cannot exceed 1.
                             SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00010'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
 						ELSE
-							IF V_SUPPLIER_JOB_GUBUN = 'TMP' THEN
+                            V_SUPPLIER_JOB_GUBUN := 'TMP';
+                            IF V_SUPPLIER_JOB_GUBUN = 'TMP' THEN
 							    /****************************************************
 						        Sprint2까지 TEMP에 저장 안하도록 DTL 강제함.
 						        Sprint3에서 제거 예정
@@ -1130,10 +1131,40 @@ BEGIN
 						END IF;
 					--삭제 로우가 존재하는 경우 VALIDATION만 체크한다.	
 				    ELSE
-						IF V_SUPPLIER_EXIST_CNT != 1 THEN
+						/*****************************************************
+                        임시 SUPPLIER 저장(TEMP안거치고 DTL로) 여기까지
+                        *****************************************************/
+                        UPDATE PG_VP_VENDOR_POOL_SUPPLIER_DTL
+                        SET     VENDOR_POOL_MAPPING_USE_FLAG		= FALSE
+                                ,LOCAL_UPDATE_DTM       			= NOW()
+                                ,UPDATE_USER_ID         			= I_USER_ID
+                                ,SYSTEM_UPDATE_DTM      			= NOW()
+                        WHERE   TENANT_ID           = loop_sup.TENANT_ID
+                        --AND     COMPANY_CODE        = loop_sup.COMPANY_CODE
+                        AND     ORG_TYPE_CODE       = loop_sup.ORG_TYPE_CODE
+                        AND     ORG_CODE            = loop_sup.ORG_CODE
+                        AND     VENDOR_POOL_CODE    = loop_sup.VENDOR_POOL_CODE
+                        AND     SUPPLIER_CODE       = loop_sup.SUPPLIER_CODE
+                        ;  
+                        SELECT ::ROWCOUNT into V_CUD_COUNT FROM DUMMY;
+                    
+                        IF V_CUD_COUNT != 1 THEN
+                            --The number of revision data is not one.
+                            SIGNAL invalid_crud_info SET MESSAGE_TEXT = 'EPG00011'||'-'||V_ERROR_PARAM||'-@-'||'Supplier DTL Update Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
+                        END IF;
+                        /*****************************************************
+                        임시 SUPPLIER 저장(TEMP안거치고 DTL로) 여기까지
+                        해당 IF문 안에서 아래 부분은 나중에 살려야함.
+                        *****************************************************/
+                        /*
+                        IF V_SUPPLIER_EXIST_CNT != 1 THEN
                             --The number of data corresponding to the inquiry condition is not one.
                             SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
-					    END IF;
+                        END IF;
+                        */
+                        /*****************************************************
+                        TEMP 적용 시 살려야함.
+                        *****************************************************/
 				    END IF;
 				END FOR;
 				/********************************************************
