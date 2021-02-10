@@ -670,6 +670,14 @@ sap.ui.define([
                 sLoiSelectionNumber = "new";
             }
 
+            if (!sQuotationNumber) {
+                sQuotationNumber = "new";
+            }
+
+            if (!sQuotationItemNumber) {
+                sQuotationItemNumber = "new";
+            }            
+
             console.log("sLoiSelectionNumber=", sLoiSelectionNumber);
             console.log("canSelect=", canSelect);
 
@@ -683,7 +691,7 @@ sap.ui.define([
                             if (sButton === MessageBox.Action.OK) {
                                 if (canSelect) {
                                     console.log("sTenantId=", sTenantId);
-                                    var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
+                                    // var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
                                     that.getRouter().navTo("selectionPage", {
                                         //layout: oNextUIState.layout,
                                         tenantId: sTenantId,

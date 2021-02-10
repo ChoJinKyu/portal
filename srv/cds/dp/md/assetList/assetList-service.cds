@@ -22,7 +22,6 @@ view Assets as
         mst.mold_number,
         mst.mold_sequence,
         mst.spec_name,
-        ma.class_desc,
         ma.secondary_supplier_name,
         ma.primary_supplier_code,
         ma.tertiary_supplier_name,

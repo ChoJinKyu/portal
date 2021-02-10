@@ -8,7 +8,8 @@ PROCEDURE OP_PU_PR_REVIEW_HIS_SAVE_PROC (
                                                             ,AFTER_DESC NVARCHAR(50)
                                                             ,REMARK NVARCHAR(3000)
                                                             ,EMPLOYEE_NUMBER NVARCHAR(30)
-                                                            ,UPDATE_DTM SECONDDATE
+                                                            ,LOCAL_DTM SECONDDATE
+                                                            ,SYSTEM_DTM SECONDDATE
                                                             )
                                         )
 LANGUAGE SQLSCRIPT
@@ -82,12 +83,12 @@ BEGIN
             ,l_data.BEFORE_DESC
             ,l_data.AFTER_DESC
             ,l_data.REMARK
-            ,l_data.UPDATE_DTM
-            ,l_data.UPDATE_DTM
+            ,l_data.LOCAL_DTM
+            ,l_data.LOCAL_DTM
             ,l_data.EMPLOYEE_NUMBER
             ,l_data.EMPLOYEE_NUMBER
-            ,l_data.UPDATE_DTM
-            ,l_data.UPDATE_DTM
+            ,l_data.SYSTEM_DTM
+            ,l_data.SYSTEM_DTM
         );
     END FOR;
 

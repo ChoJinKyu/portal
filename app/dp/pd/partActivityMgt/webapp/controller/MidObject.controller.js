@@ -471,7 +471,8 @@ sap.ui.define([
                     "activity_code": "",
                     "category_group_code": "",
                     "attachment_mandatory_flag": true,
-                    "approve_mandatory_flag": true					
+                    "approve_mandatory_flag": true,
+                    "active_flag": true			
                 }, "/pdPartactivityTemplateView");
                 
 				// var oLanguagesModel = this.getModel("languages");

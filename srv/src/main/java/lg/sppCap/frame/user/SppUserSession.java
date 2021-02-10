@@ -16,7 +16,12 @@ import org.springframework.stereotype.Component;
  * 사용자 세션
  * @Chain  CM(공통)
  * @Author 조진규 (ckcho@lgcns.com)
- * @Date   2021.02.09
+ * @History
+ * <ul>
+ * <li> 2021.02.09 최초 생성 </li>
+ * <li> 2021.02.10 주석 추가 </li>
+ * <li> 2021.02.11 Fix XXXXXX</li>
+ * </ul>
  */
 @Component
 public class SppUserSession {

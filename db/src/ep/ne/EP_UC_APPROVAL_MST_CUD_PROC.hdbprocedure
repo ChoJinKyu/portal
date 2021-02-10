@@ -22,6 +22,7 @@ PROCEDURE EP_UC_APPROVAL_MST_CUD_PROC (
         , BUYER_NAME                        NVARCHAR(240)
         , PURCHASING_DEPARTMENT_CODE        NVARCHAR(50)
         , PURCHASING_DEPARTMENT_NAME        NVARCHAR(240)  
+        , SPECIAL_NOTE                      NCLOB
         , LOCAL_CREATE_DTM                  SECONDDATE
         , LOCAL_UPDATE_DTM                  SECONDDATE
         , CREATE_USER_ID                    NVARCHAR(255)
@@ -122,6 +123,7 @@ PROCEDURE EP_UC_APPROVAL_MST_CUD_PROC (
         , BUYER_NAME                        NVARCHAR(240)
         , PURCHASING_DEPARTMENT_CODE        NVARCHAR(50)
         , PURCHASING_DEPARTMENT_NAME        NVARCHAR(240)  
+        , SPECIAL_NOTE                      NCLOB
         , LOCAL_CREATE_DTM                  SECONDDATE
         , LOCAL_UPDATE_DTM                  SECONDDATE
         , CREATE_USER_ID                    NVARCHAR(255)
@@ -298,7 +300,8 @@ BEGIN
             , QUOTATION_REFERENCE_INFO         
             , ORG_CODE                          
             , DELETE_REASON                     
-            , REMARK                            
+            , REMARK               
+            , SPECIAL_NOTE             
             , LOCAL_UPDATE_DTM                  
             , UPDATE_USER_ID                    
             , SYSTEM_UPDATE_DTM    
@@ -312,7 +315,8 @@ BEGIN
             , QUOTATION_REFERENCE_INFO         
             , ORG_CODE                          
             , DELETE_REASON                     
-            , REMARK                            
+            , REMARK   
+            , SPECIAL_NOTE                         
             , CURRENT_TIMESTAMP                  
             , UPDATE_USER_ID                    
             , CURRENT_TIMESTAMP  
@@ -350,7 +354,8 @@ BEGIN
             , NET_PRICE_CONTRACT_CHG_TYPE_CD    
             , DELETE_REASON                     
             , CONTRACT_WRITE_DATE               
-            , REMARK                            
+            , REMARK      
+            , SPECIAL_NOTE                      
             , BUYER_EMPNO                       
             , PURCHASING_DEPARTMENT_CODE        
             , USE_FLAG
@@ -377,7 +382,8 @@ BEGIN
             , NET_PRICE_CONTRACT_CHG_TYPE_CD    
             , DELETE_REASON                     
             , CURRENT_TIMESTAMP               
-            , REMARK                            
+            , REMARK    
+            , SPECIAL_NOTE                        
             , BUYER_EMPNO                       
             , PURCHASING_DEPARTMENT_CODE 
             , TRUE       

@@ -4,8 +4,8 @@
     xmlns:f="sap.f"
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout" >
-    <Dialog id="dialogVos" class="sapUiSmallMargin" title="" contentWidth="35%" >
-        <VBox class="sapUiSmallMargin">
+    <Dialog id="dialogVos" class="sapUiMediumMargin" title="" contentWidth="35%" >
+        <VBox class="sapUiMediumMargin">
             <form:SimpleForm id="VosForm" editable="false" >
                 <Toolbar>
                     <Title text="VOS"/>

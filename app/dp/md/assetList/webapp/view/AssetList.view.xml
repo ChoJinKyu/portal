@@ -291,7 +291,7 @@
                     <table:Column id="assetDescriptionColumn" width="20em">
                         <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
-                            <Text id="class_desc" text="{list>class_desc}"/>
+                            <Text id="spec_name" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetSecondVendorColumn" width="20em">

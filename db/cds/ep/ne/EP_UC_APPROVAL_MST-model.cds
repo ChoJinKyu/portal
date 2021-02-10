@@ -21,6 +21,7 @@ entity Uc_Approval_Mst {
         purchasing_department_code     : String(50);
         quotation_reference_info       : String(100);
         attch_group_number             : String(100);
+        special_note                   : LargeString;
         approval_number                : String(50);
         net_price_contract_chg_type_cd : String(30);
         delete_reason                  : String(3000);

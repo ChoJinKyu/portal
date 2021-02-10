@@ -381,8 +381,17 @@ sap.ui.define([
             this.getView().byId(idPreFix + "S").setSelectedKeys(selectedKeys);
         },
 
-        ///////////////////// Multi Combo box event End //////////////////////////
+        DateChange: function (oEvent) {
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S",
+                seSurffix = sSurffix === "E" ? "S" : "E",
+                sFrom = oEvent.getParameter("from"),
+                sTo = oEvent.getParameter("to");
 
+            this.getView().byId("searchRequestDate" + seSurffix).setDateValue(sFrom);
+            this.getView().byId("searchRequestDate" + seSurffix).setSecondDateValue(sTo);
+        },
+        ///////////////////// Multi Combo box event End //////////////////////////
+        
         ///////////////////// ValueHelpDialog section Start //////////////////////////
 
         onValueHelpRequested: function (oEvent) {

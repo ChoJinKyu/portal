@@ -676,7 +676,7 @@ sap.ui.define([
                         "master" : {
                             "tenant_id"                       : SppUserSessionUtil.getUserInfo().TENANT_ID,
                             "company_code"                    : SppUserSessionUtil.getUserInfo().COMPANY_CODE,
-                            "approval_number"                 : (that.byId("approval_number").getText() === "") ? null : String(that.byId("approval_number").getText()),				/* 없으면 Insert (undefined, null, ''), 존재하면 Update*/
+                            "approval_number"                 : (that.byId("approval_number").getText() === "N/A") ? null : String(that.byId("approval_number").getText()),				/* 없으면 Insert (undefined, null, ''), 존재하면 Update*/
                             "approval_title"                  : that.byId("approval_title").getValue(),
                             "approval_contents"               : that.byId("approval_contents").getValue(),
                             "attch_group_number"              : "temp00",
