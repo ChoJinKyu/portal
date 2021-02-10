@@ -488,8 +488,8 @@ sap.ui.define([
                 } else if (pop_h_lv == "1") {
                     pop_target_level = "2";
                 }
-
-                if (pop_h_lv == "2") {
+                // pop_d_state
+                if (pop_d_state == "leaf") {
                     MessageToast.show("해당 Operation Unit에서 정의된 레벨 하위는 구성할 수 없습니다.");
                 }
                 else if (pop_h_lv == "1") {
