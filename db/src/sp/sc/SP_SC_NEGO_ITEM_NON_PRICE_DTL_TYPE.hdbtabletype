@@ -1,0 +1,18 @@
+TYPE "SP_SC_NEGO_ITEM_NON_PRICE_DTL_TYPE" AS TABLE(
+tenant_id NVARCHAR(5) NOT NULL,
+nego_header_id BIGINT NOT NULL,
+nonpr_item_number INTEGER NOT NULL,
+nonpr_dtl_item_number INTEGER NOT NULL,
+supeval_from_date DATE,
+supeval_to_date DATE,
+supeval_from_value DECIMAL(28,3),
+supeval_to_value DECIMAL(28,3),
+supeval_text_value NVARCHAR(100),
+supeval_score DECIMAL(28,3)/* ,
+local_create_dtm SECONDDATE NOT NULL,
+local_update_dtm SECONDDATE NOT NULL,
+create_user_id NVARCHAR(255) NOT NULL,
+update_user_id NVARCHAR(255) NOT NULL,
+system_create_dtm SECONDDATE NOT NULL,
+system_update_dtm SECONDDATE NOT NULL */
+);

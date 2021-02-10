@@ -1,58 +1,59 @@
 TYPE "SP_SC_NEGO_HEADERS_TYPE" AS TABLE(
-tenant_id NVARCHAR(5) NOT NULL,
-nego_header_id BIGINT NOT NULL,
-reference_nego_header_id BIGINT,
-previous_nego_header_id BIGINT,
-operation_org_code NVARCHAR(10),
-operation_unit_code NVARCHAR(10),
-reference_nego_document_number INTEGER,
-nego_document_round INTEGER,
-nego_document_number NVARCHAR(50),
-nego_document_title NVARCHAR(300),
-nego_document_desc NVARCHAR(4000),
-nego_progress_status_code NVARCHAR(30),
-award_progress_status_code NVARCHAR(25),
-reply_times INTEGER,
-supplier_count INTEGER,
-nego_type_code NVARCHAR(25),
-outcome_code NVARCHAR(30),
-negotiation_output_class_code NVARCHAR(100),
-buyer_empno NVARCHAR(30),
-buyer_department_code NVARCHAR(10),
-immediate_apply_flag NVARCHAR(1),
-open_date SECONDDATE,
-closing_date SECONDDATE,
-auto_rfq NVARCHAR(1),
-items_count INTEGER,
-negotiation_style_code NVARCHAR(30),
-close_date_ext_enabled_hours INTEGER,
-close_date_ext_enabled_count INTEGER,
-actual_extension_count INTEGER,
-remaining_hours DECIMAL(28,2),
-note_content BLOB,
-award_type_code NVARCHAR(30),
-award_method_code NVARCHAR(30),
-target_amount_config_flag NVARCHAR(1),
-target_currency NVARCHAR(5),
-target_amount DECIMAL(28,5),
-supplier_participation_flag NVARCHAR(1),
-partial_allow_flag NVARCHAR(1),
-bidding_result_open_status_code NVARCHAR(30),
-max_round_count INTEGER,
-auto_round NVARCHAR(1),
-auto_round_terms INTEGER,
-previous_round NVARCHAR(1),
-number_of_award_supplier INTEGER,
-order_rate_01 DECIMAL(5,2),
-order_rate_02 DECIMAL(5,2),
-order_rate_03 DECIMAL(5,2),
-order_rate_04 DECIMAL(5,2),
-order_rate_05 DECIMAL(5,2),
-bid_conference NVARCHAR(1),
-bid_conference_date SECONDDATE,
-bid_conference_place NVARCHAR(1000),
-contact_point_empno NVARCHAR(30),
-phone_no NVARCHAR(30)/* ,
+tenant_id NVARCHAR(5) NOT NULL                               ,  --#01
+nego_header_id BIGINT NOT NULL                               ,  --#02
+reference_nego_header_id BIGINT                              ,  --#03
+previous_nego_header_id BIGINT                               ,  --#04
+operation_org_code NVARCHAR(10)                              ,  --#05
+operation_unit_code NVARCHAR(10)                             ,  --#06
+reference_nego_document_number INTEGER                       ,  --#07
+nego_document_round INTEGER                                  ,  --#08
+nego_document_number NVARCHAR(50)                            ,  --#09
+nego_document_title NVARCHAR(300)                            ,  --#10
+nego_document_desc NVARCHAR(4000)                            ,  --#11
+nego_progress_status_code NVARCHAR(30)                       ,  --#12
+award_progress_status_code NVARCHAR(25)                      ,  --#13
+reply_times INTEGER                                          ,  --#14
+supplier_count INTEGER                                       ,  --#15
+nego_type_code NVARCHAR(25)                                  ,  --#16
+outcome_code NVARCHAR(30)                                    ,  --#17
+negotiation_output_class_code NVARCHAR(100)                  ,  --#18
+buyer_empno NVARCHAR(30)                                     ,  --#19
+buyer_department_code NVARCHAR(10)                           ,  --#20
+immediate_apply_flag NVARCHAR(1)                             ,  --#21
+open_date SECONDDATE                                         ,  --#22
+closing_date SECONDDATE                                      ,  --#23
+auto_rfq NVARCHAR(1)                                         ,  --#24
+items_count INTEGER                                          ,  --#25
+negotiation_style_code NVARCHAR(30)                          ,  --#26
+close_date_ext_enabled_hours INTEGER                         ,  --#27
+close_date_ext_enabled_count INTEGER                         ,  --#28
+actual_extension_count INTEGER                               ,  --#29
+remaining_hours DECIMAL(28,2)                                ,  --#30
+note_content BLOB                                            ,  --#31
+award_type_code NVARCHAR(30)                                 ,  --#32
+award_method_code NVARCHAR(30)                               ,  --#33
+target_amount_config_flag NVARCHAR(1)                        ,  --#34
+target_currency NVARCHAR(5)                                  ,  --#35
+target_amount DECIMAL(28,5)                                  ,  --#36
+supplier_participation_flag NVARCHAR(1)                      ,  --#37
+partial_allow_flag NVARCHAR(1)                               ,  --#38
+bidding_result_open_status_code NVARCHAR(30)                 ,  --#39
+max_round_count INTEGER                                      ,  --#40
+auto_round NVARCHAR(1)                                       ,  --#41
+auto_round_terms INTEGER                                     ,  --#42
+previous_round NVARCHAR(1)                                   ,  --#43
+number_of_award_supplier INTEGER                             ,  --#44
+order_rate_01 DECIMAL(5,2)                                   ,  --#45
+order_rate_02 DECIMAL(5,2)                                   ,  --#46
+order_rate_03 DECIMAL(5,2)                                   ,  --#47
+order_rate_04 DECIMAL(5,2)                                   ,  --#48
+order_rate_05 DECIMAL(5,2)                                   ,  --#49
+bid_conference NVARCHAR(1)                                   ,  --#50
+bid_conference_date SECONDDATE                               ,  --#51
+bid_conference_place NVARCHAR(1000)                          ,  --#52
+contact_point_empno NVARCHAR(30)                             ,  --#53
+phone_no NVARCHAR(30)                                           --#54
+/* ,
 local_create_dtm SECONDDATE NOT NULL,
 local_update_dtm SECONDDATE NOT NULL,
 create_user_id NVARCHAR(255) NOT NULL,

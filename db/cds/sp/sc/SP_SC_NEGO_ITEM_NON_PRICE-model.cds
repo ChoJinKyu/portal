@@ -44,9 +44,9 @@ using {
 
 /////////////////////////////////// Main Logic ///////////////////////////////////
 entity Sc_Nego_Item_Non_Price {
-    key tenant_id                      : String(5) not null  @title : '테넌트ID';
-    key nego_header_id                 : Integer64 not null  @title : '협상헤더ID';
-    key nonpr_item_number              : Integer not null    @title : '비가격품목번호';
+    key tenant_id                      : String(5)  not null  @title : '테넌트ID';
+    key nego_header_id                 : Integer64  not null  @title : '협상헤더ID';
+    key nonpr_item_number              : String(10) not null    @title : '비가격품목번호';
         ItemsNonPriceDtl               : Composition of many Sc_Nego_Item_Non_Price_Dtl
                                              on ItemsNonPriceDtl.tenant_id = $self.tenant_id
                                              and ItemsNonPriceDtl.nego_header_id = $self.nego_header_id

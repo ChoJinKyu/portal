@@ -1,23 +1,24 @@
 TYPE "SP_SC_NEGO_SUPPLIERS_TYPE" AS TABLE(
-tenant_id NVARCHAR(5) NOT NULL,
-nego_header_id BIGINT NOT NULL,
-nego_item_number NVARCHAR(10) NOT NULL,
-item_supplier_SEQUENCE NVARCHAR(10) NOT NULL,
-operation_org_code NVARCHAR(30),
-operation_unit_code NVARCHAR(30),
-nego_supplier_register_type_code NVARCHAR(10),
-evaluation_type_code NVARCHAR(10),
-nego_supeval_type_code NVARCHAR(10),
-supplier_code NVARCHAR(10),
-supplier_name NVARCHAR(300),
-supplier_type_code NVARCHAR(30),
-excl_flag NVARCHAR(1),
-excl_reason_desc NVARCHAR(1000),
-include_flag NVARCHAR(1),
-nego_target_include_reason_desc NVARCHAR(1000),
-only_maker_flat NVARCHAR(1),
-contact NVARCHAR(30),
-note_content BLOB/* ,
+tenant_id NVARCHAR(5) NOT NULL                                ,  --#01
+nego_header_id BIGINT NOT NULL                                ,  --#02
+nego_item_number NVARCHAR(10) NOT NULL                        ,  --#03
+item_supplier_sequence NVARCHAR(10) NOT NULL                  ,  --#04
+operation_org_code NVARCHAR(30)                               ,  --#05
+operation_unit_code NVARCHAR(30)                              ,  --#06
+nego_supplier_register_type_code NVARCHAR(10)                 ,  --#07
+evaluation_type_code NVARCHAR(10)                             ,  --#08
+nego_supeval_type_code NVARCHAR(10)                           ,  --#09
+supplier_code NVARCHAR(10)                                    ,  --#10
+supplier_name NVARCHAR(300)                                   ,  --#11
+supplier_type_code NVARCHAR(30)                               ,  --#12
+excl_flag NVARCHAR(1)                                         ,  --#13
+excl_reason_desc NVARCHAR(1000)                               ,  --#14
+include_flag NVARCHAR(1)                                      ,  --#15
+nego_target_include_reason_desc NVARCHAR(1000)                ,  --#16
+only_maker_flat NVARCHAR(1)                                   ,  --#17
+contact NVARCHAR(30)                                          ,  --#18
+note_content BLOB                                                --#19
+/* ,
 local_create_dtm SECONDDATE NOT NULL,
 local_upDATE_dtm SECONDDATE NOT NULL,
 create_user_id NVARCHAR(255) NOT NULL,
