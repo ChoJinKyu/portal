@@ -10,7 +10,8 @@ PROCEDURE SP_NP_NET_PRICE_APPROVAL_PRICEINFO_PROC (
                                                 ,	ITEM_SEQUENCE						BIGINT
 	                                            ,	SUPPLIER_CODE                       NVARCHAR(10)
 	                                            ,	MATERIAL_CODE                       NVARCHAR(40)
-	                                            ,	MARKET_CODE							NVARCHAR(30)
+                                                ,	MARKET_CODE							NVARCHAR(30)
+                                                ,	CURRENCY_CODE						NVARCHAR(3)
                                                 )
     ,OUT    O_RETURN_CODE                   NVARCHAR(5)
     ,OUT    O_RETURN_MSG                    NVARCHAR(4000)
@@ -77,8 +78,7 @@ BEGIN
                     ,	it.material_code
                     ,	it.market_code
 
-
-                    ,   pad.currency_code
+                    ,   it.currency_code
                     ,   pad.net_price
 
                     ,   pad.base_price_type_code
@@ -116,6 +116,7 @@ BEGIN
                   AND it.supplier_code          = bpm.supplier_code
                   AND it.material_code          = bpm.material_code
                   AND it.market_code            = bpm.market_code
+                  AND it.currency_code          = bpm.currency_code
                   AND bpm.apply_start_yyyymm   <= TO_VARCHAR (NOW(), 'YYYYMM')
                   AND bpm.apply_end_yyyymm     >= TO_VARCHAR (NOW(), 'YYYYMM')
                   AND bpm.use_flag = true

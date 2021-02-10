@@ -355,6 +355,7 @@ service NpApprovalDetailService {
                   AND pad.supplier_code          = bpm.supplier_code
                   AND pad.material_code          = bpm.material_code
                   AND pad.market_code            = bpm.market_code
+                  AND pad.currency_code          = bpm.currency_code
                   AND bpm.apply_start_yyyymm   <= TO_VARCHAR (NOW(), 'YYYYMM')
                   AND bpm.apply_end_yyyymm     >= TO_VARCHAR (NOW(), 'YYYYMM')
                   AND bpm.use_flag = true
