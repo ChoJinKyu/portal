@@ -84,10 +84,14 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "plant");
             this.setModel(new ManagedModel(), "searchCon");
 
-            this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
-            this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-            this.getView().byId("searchRequestDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
-            this.getView().byId("searchRequestDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+
+
+
+         //   this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
+        //    this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            
+         //   this.getView().byId("searchRequestDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
+         //   this.getView().byId("searchRequestDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
 
             this._oTPC = new TablePersoController({
                 customDataKey: "remodelRepairMgtList",
@@ -116,6 +120,12 @@ sap.ui.define([
          */
         _doInitSearch: function () {
            var search =  this.getView().getModel('searchCon');
+            /** Date */
+            var today = new Date();
+           
+            search.setProperty("/request_date_from", new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
+            search.setProperty("/request_date_to", new Date(today.getFullYear(), today.getMonth(), today.getDate()) );
+
             //접속자 법인 사업부로 바꿔줘야함
             search.setProperty("/companyList",['LGESL']);
             search.setProperty("/plantList",['A040']);  
@@ -248,11 +258,11 @@ sap.ui.define([
             var search = this.getModel("searchCon");
 
             console.log("search>>>> " , search);
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
-            var sDateFrom = this.getView().byId("searchRequestDate" + sSurffix).getDateValue();
-            var sDateTo = this.getView().byId("searchRequestDate" + sSurffix).getSecondDateValue();
-            sDateFrom
-            sDateFrom
+            // var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
+            // var sDateFrom = this.getView().byId("searchRequestDate" + sSurffix).getDateValue();
+            // var sDateTo = this.getView().byId("searchRequestDate" + sSurffix).getSecondDateValue();
+            // sDateFrom
+            // sDateFrom
             var aTableSearchState = [];
             var companyFilters = [];
             var plantFilters = [];
@@ -282,15 +292,15 @@ sap.ui.define([
                 );
             };
 
-            if (sDateFrom || sDateFrom) {
+            if (search.getProperty("/request_date_from") || search.getProperty("/request_date_to")) {
                 var _tempFilters = [];
 
                 _tempFilters.push(
                     new Filter({
                         path: "repair_request_date",
                         operator: FilterOperator.BT,
-                        value1: this.getFormatDate(sDateFrom),
-                        value2: this.getFormatDate(sDateTo)
+                        value1: this.getFormatDate(search.getProperty("/request_date_from")),
+                        value2: this.getFormatDate(search.getProperty("/request_date_to"))
                     })
                 );
 

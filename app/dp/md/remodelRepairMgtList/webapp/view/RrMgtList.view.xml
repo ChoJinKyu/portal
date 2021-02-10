@@ -92,6 +92,8 @@
                              <VBox height="4em">
                                 <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchRequestDateS" required="true"></Label>
                                 <DateRangeSelection id="searchRequestDateS" 
+                                    dateValue="{searchCon>/request_date_from}" 
+                                    secondDateValue="{searchCon>/request_date_to}"
                                     width="100%" change="handleChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
@@ -169,7 +171,10 @@
                             </VBox>
                             <VBox height="4em">
                                 <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchRequestDateE" required="true"></Label>
-                                <DateRangeSelection id="searchRequestDateE" width="100%" change="handleChange"/>
+                                <DateRangeSelection id="searchRequestDateE" width="100%"
+                                        dateValue="{searchCon>/request_date_from}" 
+                                    secondDateValue="{searchCon>/request_date_to}"
+                                change="handleChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
