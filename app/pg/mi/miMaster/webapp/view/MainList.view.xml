@@ -128,6 +128,8 @@
                     smartVariant="pageVariantId"                    
                     entitySet="MIMatListView"
                     tableBindingPath="{/MIMatListView}"
+                    noData="{I18N>/NCM01004}"
+                    initialNoDataText="{I18N>/NCM01004}" 
                     smartFilterId="smartFilterBar"
                     tableType="ResponsiveTable"
                     useExportToExcel="true"
@@ -140,7 +142,7 @@
                     showRowCount="true"
                     editable="false"                    
                     persistencyKey="SmartTableAnalytical_Explored"
-                    enableAutoBinding="true"                     
+                    enableAutoBinding="false"                     
                     class="sapUiResponsiveContentPadding"                    
                     demandPopin="true"
                     initiallyVisibleFields="mi_material_code,mi_material_name,category_name,use_flag,category_code,system_update_dtm"
@@ -169,6 +171,7 @@
                         </OverflowToolbar>
                     </smartTable:customToolbar>
                             <Table id="mainTable" 
+                                   noDataText="{I18N>/NCM01004}"
                                    mode="MultiSelect"
                                    growingScrollToLoad="true"
                                    growing="true"
