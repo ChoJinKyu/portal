@@ -168,10 +168,6 @@ sap.ui.define([
 			});
 			oTable.removeSelections(true);
 		},
-        
-        onMidTableFilterPress: function() {
-            this._MidTableApplyFilter();
-        },
 
 		
         /**
@@ -394,7 +390,8 @@ sap.ui.define([
                     "spmd_category_code": "",
 					"language_code": "",
 					"spmd_category_code_name": "",
-				}, "/MdCategoryLng");
+                }, "/MdCategoryLng");
+                
                 this._toEditMode();
                 
 			}else{   
@@ -441,12 +438,21 @@ sap.ui.define([
 
 			oTransactionManager.setServiceModel(this.getModel());
 
+            setTimeout(this.setPageLayout(), 500);
             //ScrollTop
-            var oObjectPageLayout = this.getView().byId("page");
-            var oFirstSection = this.getView().byId("pageSectionMain");
-            oObjectPageLayout.scrollToSection(oFirstSection, 0, -500);
+            // var oObjectPageLayout = this.getView().byId("page");
+            // var oFirstSection = oObjectPageLayout.getSections()[0];
+            // oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
+
+            // var oFirstSection = this.getView().byId("pageSectionMain");
+            // oObjectPageLayout.scrollToSection(oFirstSection, 0, -500);
 		},
 
+        setPageLayout : function(){ //fragment 없애야함
+            var oObjectPageLayout = this.getView().byId("page");
+            var oFirstSection = oObjectPageLayout.getSections()[0];
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);          
+        },
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -585,7 +591,8 @@ sap.ui.define([
             this._loadFragment(sFragmentName, function(oFragment){
 				oPageSubSection.removeAllBlocks();
 				oPageSubSection.addBlock(oFragment);
-			})
+            })
+            
         },
         _loadFragment: function (sFragmentName, oHandler) {
 			if(!this._oFragments[sFragmentName]){
@@ -601,18 +608,7 @@ sap.ui.define([
 				if(oHandler) oHandler(this._oFragments[sFragmentName]);
 			}
         },
-        
-
-        _MidTableApplyFilter: function() {
-
-            var oView = this.getView(),
-				sValue = oView.byId("midTableSearchField").getValue(),
-				oFilter = new Filter("spmd_category_code_name", FilterOperator.Contains, sValue);
-
-			oView.byId("midTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
-
-        },
-
+    
 		/**
 		 * Opens a fully featured <code>ColorPalette</code> in a <code>sap.m.ResponsivePopover</code>
 		 * @param oEvent

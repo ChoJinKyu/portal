@@ -53,7 +53,7 @@
                         </VBox>
                         <VBox>   
                             <Label text="{I18N>/BUSINESS_UNIT}" labelFor="searchChain" required="true"></Label>
-                            <ComboBox id="searchChain" showSecondaryValues="true" width="100%" placeholder="All" selectedKey="" >
+                            <ComboBox id="searchChain" showSecondaryValues="true" width="100%" selectedKey="" >
                                 <items>
                                     <core:ListItem key="{org>bizunit_code}" text="{org>bizunit_name}" additionalText="{org>bizunit_code}"/>
                                 </items>
@@ -142,7 +142,6 @@
                                 </Menu>
                             </menu>
                         </MenuButton>
-                        <ToolbarSeparator/>
                         <Button id="mainTableItemMappingButton" text="{I18N>/MANAGEMENT_CHARACTER_MAP}" type="Transparent" press=".onMainTableItemMappingButtonPress"  />
                         <Button id="mainTableConfirmButton" text="{I18N>/CONFIRMED}" type="Emphasized" press=".onMainTableConfirmButtonPress"/>
                         <ToolbarSeparator/>
