@@ -289,7 +289,7 @@
                             <!-- <DatePicker value="{list>request_receipt_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/> -->
                             <Text text="{path:'list>request_receipt_date',formatter:'.dateFormatter.toDateString'}"/>
                         </table:template>
-                    </table:Column>
+                    </table:Column> 
                     <table:Column id="rrMgtTitleColumn" width="10em"  hAlign="Center" >
                         <Label text="Title" wrapping="true"/>
                         <table:template>

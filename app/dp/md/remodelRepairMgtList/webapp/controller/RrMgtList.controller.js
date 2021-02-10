@@ -328,7 +328,7 @@ sap.ui.define([
                 var srch = search.getProperty("/class_desc");
                 aTableSearchState.push(new Filter("tolower(class_desc)", FilterOperator.StartsWith, String(srch.toLowerCase())));
             };
-            
+             
             if(search.getProperty("/asset_number") != undefined 
                 && search.getProperty("/asset_number") != null && search.getProperty("/asset_number") != "" ){ 
                 var srch = search.getProperty("/asset_number");
