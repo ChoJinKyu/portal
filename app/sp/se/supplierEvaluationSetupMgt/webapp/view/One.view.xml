@@ -61,7 +61,7 @@ xmlns:flex="sap.f"
                                                     <Label text="{I18N>/OPERATION_UNIT_CODE}" required="true"/>                                                                        
                                                     <Input  id="opCodeInput" 
                                                             width="100%" 
-                                                            placeholder="OPERATION_UNIT_CODE"
+                                                            placeholder="input operation unit code"
                                                             value="{
                                                              path : 'DetailView>/OperationUnitMst/evaluation_operation_unit_code',
                                                              type : 'sap.ui.model.odata.type.String',
@@ -72,6 +72,7 @@ xmlns:flex="sap.f"
                                                             editable="{=${DetailView>/isCreateMode}}"
                                                             fieldGroupIds="required"
                                                             required="true"
+                                                            showSuggestion="true"
                                                             />
                                                             <!-- "{
                                                              path : 'DetailView>/OperationUnitMst/evaluation_operation_unit_code',
@@ -158,7 +159,7 @@ xmlns:flex="sap.f"
                                                     
                                                     <Input  id="opCodeName" 
                                                         width="100%" 
-                                                        placeholder="OPERATION_UNIT_NAME"
+                                                        placeholder="input operation unit name"
                                                         value= "{
                                                              path : 'DetailView>/OperationUnitMst/evaluation_operation_unit_name',
                                                              type : 'sap.ui.model.odata.type.String',
@@ -580,7 +581,6 @@ xmlns:flex="sap.f"
                                                         />
                                                         <Input   
                                                             width="100%" 
-                                                            placeholder="OPERATION_UNIT_CODE"
                                                             value="{
                                                              path : 'DetailView>qttive_item_code',
                                                              type : 'sap.ui.model.odata.type.String',
@@ -610,7 +610,6 @@ xmlns:flex="sap.f"
                                                               }" -->
                                                         <Input   
                                                             width="100%" 
-                                                            placeholder="QUANTITATIVE_ITEM_NAME"
                                                             value="{
                                                              path : 'DetailView>qttive_item_name',
                                                              type : 'sap.ui.model.odata.type.String',
@@ -666,7 +665,6 @@ xmlns:flex="sap.f"
                                                         </ComboBox> 
                                                         <Input   
                                                             width="100%" 
-                                                            placeholder="QUANTITATIVE_ITEM_DESC"
                                                             value="{
                                                              path : 'DetailView>qttive_item_desc',
                                                              type : 'sap.ui.model.odata.type.String',
@@ -681,7 +679,6 @@ xmlns:flex="sap.f"
                                                             />     
                                                         <Input   
                                                             width="100%" 
-                                                            placeholder="SORT_NUMBER"
                                                            value="{
                                                              path : 'DetailView>sort_sequence',
                                                              type : 'sap.ui.model.odata.type.Decimal',
