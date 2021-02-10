@@ -41,4 +41,18 @@ service HrService {
                 d.department_local_name
         from Dept as d;
 
+    @readonly
+    entity Employee_Entity as select from employee mixin {
+        DeptInfo: Association to Dept on department_id = DeptInfo.department_id and tenant_id = DeptInfo.tenant_id;
+    } into {
+        tenant_id,
+        employee_number,
+        user_local_name,
+        email_id,
+        mobile_phone_number,
+        job_title,
+        DeptInfo.department_local_name,
+        DeptInfo.department_id
+    }
+
 }

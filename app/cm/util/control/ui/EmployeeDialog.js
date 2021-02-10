@@ -151,7 +151,7 @@ sap.ui.define([
                 this.sDepartmentFlag = false;
             }
 
-            ODataV2ServiceProvider.getService("cm.util.HrService").read("/Employee", {
+            ODataV2ServiceProvider.getService("cm.util.HrService").read("/Employee_Entity", {
              fetchOthers: true,
                 filters: aFilters,
                 sorters: aSorters,
