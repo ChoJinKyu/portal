@@ -515,7 +515,7 @@ sap.ui.define([
 
                                 this.getView().byId("inputTitle").focus();
                                 
-                            }else if( this._SupplierTotalScore != 100 ){
+                            }else if( this._SupplierTotalScore != 100 && oModel.award_method_code =="MP" ){
                                 this.getView().byId("inputAwardSup1").setValueState("Error");
                                 this.getView().byId("inputAwardSup1").setValueStateText("order rate의 총 합은 100%이여야만 합니다.");//
 
@@ -1684,7 +1684,7 @@ sap.ui.define([
                 };
                 console.log(inputInfo);
 
-                debugger;
+                
 
                 // return;
 
