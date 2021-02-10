@@ -50,6 +50,8 @@ entity Md_Repair_Item {
         repair_supplier_contents : String(3000)             @title : '수선공급업체내용';
         trim_amount : Decimal                               @title : '절사금액';
         repair_group_file_id : String(36)                   @title : '수선그룹파일아이디';
+        reject_reason : String(3000)                        @title : '반려사유';
+
 }
 
 extend Md_Repair_Item with util.Managed;
