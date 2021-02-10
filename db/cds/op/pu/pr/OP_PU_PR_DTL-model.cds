@@ -1,4 +1,4 @@
-namespace op;	
+    namespace op;	
 
 using util from '../../../cm/util/util-model';
 using { op.Pu_Pr_Mst as mst } from './OP_PU_PR_MST-model';
@@ -54,6 +54,7 @@ entity Pu_Pr_Dtl {
             attch_group_number : String(100)    @title: '첨부파일그룹번호' ;	
             delete_flag     : Boolean   not null   @cds.on.insert: false   @title: '삭제여부' ;	
             closing_flag    : Boolean   not null   @cds.on.insert: false   @title: '마감여부' ;	
+            closing_quantity : Decimal(30,10)    @title: '마감수량' ;
             item_category_code : String(2)               @title: '품목범주코드' ;	
             account_assignment_category_code : String(2) @title: '계정지정범주코드' ;	
             sloc_code       : String(4)                  @title: '저장위치코드' ;	

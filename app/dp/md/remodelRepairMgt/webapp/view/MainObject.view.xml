@@ -41,7 +41,7 @@
                                 <form:content>
                                     <VBox height="3.5rem">
                                         <Label text="Submission Title"/>
-                                        <Input value="{spec>/use_material_value}" editable="{mode>/editFlag}" />
+                                        <Input value="{repairItem>/repair_desc}" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -49,7 +49,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Submission No"/> 
-                                        <Text text="{spec>company_code}"/> 
+                                        <Text text="{repairItem>repair_request_number}"/> 
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -59,12 +59,12 @@
                                         <Label text="Factor"/> 
                                         <Select width="100%"
                                                 forceSelection="false"
-                                                selectedKey="{master>/mold_type_code}"
+                                                selectedKey="{repairItem>/repair_factor}"
                                                 items="{
                                                             path : 'util>/Code',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_REPAIR_FACTOR'}
                                                             ]
                                                         }"
                                                 editable="{mode>/editFlag}" >
@@ -76,8 +76,8 @@
                                     </VBox>
 
                                     <VBox height="3.5rem">
-                                        <Label text="Vendor Remarks"/>
-                                        <Input value="{spec>/order_qty}" editable="{mode>/editFlag}" />
+                                        <Label text="Suppliers Remarks"/>
+                                        <Input value="{repairItem>/repair_reason}" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -85,7 +85,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Requester"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
+                                        <Text text="{repairItem>/create_user_id}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -93,7 +93,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Request Date"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
+                                        <Text text="{repairItem>/repair_request_date}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -101,7 +101,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="LGE Remarks"/>
-                                        <Input value="{spec>/mold_sample_qty}" editable="{mode>/editFlag}" />
+                                        <Input value="{repairItem>/remark}" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -111,12 +111,12 @@
                                         <Label text="Remodel/Repair"/>
                                         <Select width="100%"
                                                 forceSelection="false"
-                                                selectedKey="{spec>/hot_runner_maker_name}"
+                                                selectedKey="{repairItem>/repair_type_code}"
                                                 items="{
                                                             path : 'util>/Code',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_HR_MAKER'}
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_REPAIR_TYPE'}
                                                             ]
                                                         }"
                                                 editable="{mode>/editFlag}"
@@ -132,12 +132,12 @@
                                         <Label text="Domestic/Export"/>
                                         <Select width="100%"
                                                 forceSelection="false"
-                                                selectedKey="{spec>/hot_runner_maker_name}"
+                                                selectedKey="{repairItem>/mold_location_type_code}"
                                                 items="{
                                                             path : 'util>/Code',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_HR_MAKER'}
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ED_TYPE'}
                                                             ]
                                                         }"
                                                 editable="{mode>/editFlag}"
@@ -151,20 +151,18 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Account"/>
-                                        <Select   width="100%"
-                                                    forceSelection="false"
-                                                    selectedKey="{master>/mold_type_code}"
-                                                    items="{
-                                                                path : 'util>/Code',
-                                                                filters : [
-                                                                    {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                                    {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_MOLD_TYPE'}
-                                                                ]
-                                                            }"
-                                                    editable="{mode>/editFlag}"
-                                                    
-                                        >
-                                            <core:Item key="{util>code}" text="{util>code_name}" />
+                                        <Select width="100%"
+                                                forceSelection="false"
+                                                selectedKey="{repairItem>/account_code}"
+                                                items="{
+                                                            path : 'util>/Code',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ACCOUNT_CODE'}
+                                                            ]
+                                                        }"
+                                                editable="{mode>/editFlag}" >
+                                            <core:Item key="{util>code}" text="[{util>code}]{util>code_name}" />
                                         </Select>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
@@ -173,7 +171,19 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Investment/Cost"/>
-                                        <Input value="{spec>/mold_hot_runner_qty}" editable="{mode>/editFlag}" />
+                                        <Select width="100%"
+                                                forceSelection="false"
+                                                selectedKey="{repairItem>/investment_ecst_type_code}"
+                                                items="{
+                                                            path : 'util>/Code',
+                                                            filters : [
+                                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_INVESTMENT_EXPENSE_TYPE'}
+                                                            ]
+                                                        }"
+                                                editable="false" >
+                                            <core:Item key="{util>code}" text="{util>code_name}" />
+                                        </Select>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -183,12 +193,12 @@
                                         <Label text="Spare Part"/>
                                         <Select width="100%"
                                                 forceSelection="false"
-                                                selectedKey="{spec>/hot_runner_maker_name}"
+                                                selectedKey="{repairItem>/investment_ecst_type_code}"
                                                 items="{
                                                             path : 'util>/Code',
                                                             filters : [
                                                                 {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
-                                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_HR_MAKER'}
+                                                                {path : 'group_code', operator : 'EQ', value1 : 'CM_YN'}
                                                             ]
                                                         }"
                                                 editable="{mode>/editFlag}"
@@ -202,7 +212,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Spare Part Seq"/>
-                                        <Text text="{spec>company_code}"/>
+                                        <Text text="0"/>
                                         <layoutData>
                                             <layout:GridData span="XL2 L2 M2 S3" />
                                         </layoutData>
@@ -210,7 +220,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="ECO Creator"/>
-                                        <Text text="{spec>company_code}"/>
+                                        <Text text="{repairItem>eco_number}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -220,7 +230,7 @@
                                         <Label text="Activity"/>
                                         <Select   width="100%"
                                                     forceSelection="false"
-                                                    selectedKey="{spec>/mold_size}"
+                                                    selectedKey="{repairItem>/activity_code}"
                                                     items="{
                                                                 path : 'util>/Code',
                                                                 filters : [
@@ -253,7 +263,7 @@
                                 <form:content>
                                     <VBox height="3.5rem">
                                         <Label text="Model"/>
-                                        <Text text="{spec>use_material_value}"/>
+                                        <Text text="{moldView>model}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -261,7 +271,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Mold No"/> 
-                                        <Text text="{spec>company_code}"/>
+                                        <Text text="{moldView>mold_number}"/>
                                         <layoutData>
                                             <layout:GridData span="XL2 L2 M2 S3" />
                                         </layoutData>
@@ -269,7 +279,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Seq"/> 
-                                        <Text text="{spec>company_code}"/>
+                                        <Text text="{moldView>mold_sequence}"/>
                                         <layoutData>
                                             <layout:GridData span="XL2 L2 M2 S3" />
                                         </layoutData>
@@ -277,7 +287,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Currency"/> 
-                                        <Text text="{spec>company_code}"/>
+                                        <Text text="{repairItem>currency_code}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -285,7 +295,17 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Item Type"/>
-                                        <Text text="{spec>company_code}"/>
+                                        <Select selectedKey="{moldView>mold_item_type_code}"
+                                            items="{
+                                                        path : 'util>/Code',
+                                                        filters : [
+                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
+                                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+                                                        ]
+                                                    }"
+                                            editable="false" >
+                                            <core:Item key="{util>code}" text="{util>code_name}" />
+                                        </Select>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -293,7 +313,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Item Name"/>
-                                        <Text text="{spec>company_code}"/>
+                                        <Text text="{moldView>class_desc}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -301,7 +321,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Die Machine"/>
-                                        <Text text="{spec>company_code}"/>
+                                        <Text text="{moldView>mold_tonnage}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -309,7 +329,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Material"/>
-                                        <Text text="{spec>company_code}"/>
+                                        <Text text="{moldView>use_material_value}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -317,7 +337,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Specification Number"/>
-                                        <Input value="{spec>mold_developer_name}" placeholder="Search" required="true"
+                                        <Input value="{repairItem>eco_number}" placeholder="Search" required="true"
                                             editable="{mode>/editFlag}"
                                             showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
                                         </Input>
@@ -328,7 +348,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text=""/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
+                                        <Text text="{repairItem>/eco_number}"/>
                                         <layoutData>
                                             <layout:GridData span="XL2 L2 M2 S3" />
                                         </layoutData>
@@ -336,7 +356,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Mold Supplier"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
+                                        <Text text="{moldView>/supplier_name}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -344,7 +364,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Prod Supplier"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
+                                        <Text text="{moldView>/production_supplier_name}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -352,7 +372,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Etc1"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
+                                        <Text text="{moldView>/asset_number}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -360,7 +380,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Etc2"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
+                                        <Text text="{moldView>/asset_number}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -368,7 +388,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Cavity/Process Qty"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
+                                        <Text text="{moldView>/cavity_process_qty}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -376,7 +396,17 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Assets Type"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
+                                        <Select selectedKey="{moldView>/asset_type_code}"
+                                            items="{
+                                                        path : 'util>/Code',
+                                                        filters : [
+                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
+                                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ASSET_TYPE'}
+                                                        ]
+                                                    }"
+                                            editable="false" >
+                                            <core:Item key="{util>code}" text="{util>code_name}" />
+                                        </Select>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -384,7 +414,17 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Assets Status"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
+                                        <Select selectedKey="{moldView>/asset_status_code}"
+                                            items="{
+                                                        path : 'util>/Code',
+                                                        filters : [
+                                                            {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
+                                                            {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ASSET_STATUS'}
+                                                        ]
+                                                    }"
+                                            editable="false" >
+                                            <core:Item key="{util>code}" text="{util>code_name}" />
+                                        </Select>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -392,7 +432,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Receipt Date"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
+                                        <Text text="{path: 'moldView>/acq_date', formatter: '.dateFormatter.toDateString'}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -400,7 +440,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Sample Qty"/>
-                                        <Input value="{spec>/request_life_shot_count}" editable="{mode>/editFlag}" />
+                                        <Input value="{repairItem>/sample_quantity}" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -408,7 +448,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Size"/>
-                                        <Input value="{spec>/mold_weight}" editable="{mode>/editFlag}" />
+                                        <Input value="{repairItem>/repair_mold_size}" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -416,7 +456,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Account Dept"/>
-                                        <Input value="{spec>mold_developer_name}" placeholder="Search" required="true"
+                                        <Input value="{repairItem>accounting_department_code}" placeholder="Search" required="true"
                                             editable="{mode>/editFlag}"
                                             showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
                                         </Input>
@@ -427,7 +467,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Account Dept Code"/>
-                                        <Input value="{spec>/mold_weight}" editable="{mode>/editFlag}" />
+                                        <Input value="{repairItem>/accounting_department_code}" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -435,7 +475,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Event"/>
-                                        <Input value="{spec>/mold_hot_runner_qty}" editable="{mode>/editFlag}" />
+                                        <Input value="{repairItem>/develope_step_code}" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -443,7 +483,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Repair Supplier"/>
-                                        <Input value="{spec>mold_developer_name}" placeholder="Search" required="true"
+                                        <Input value="{repairItem>repair_supplier_name}" placeholder="Search" required="true"
                                             editable="{mode>/editFlag}"
                                             showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
                                         </Input>
@@ -454,7 +494,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Move Plan"/>
-                                        <DatePicker value="{spec>drawing_agreement_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
+                                        <DatePicker value="{repairItem>mold_moving_plan_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -462,15 +502,15 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Complete Plan"/>
-                                        <DatePicker value="{spec>drawing_agreement_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
+                                        <DatePicker value="{repairItem>mold_complete_plan_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
                                     </VBox>
 
                                     <VBox height="3.5rem">
-                                        <Label text="Supplier Code"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
+                                        <Label text="Repair Supplier Code"/>
+                                        <Text text="{repairItem>repair_supplier_code}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -478,7 +518,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Move Result"/>
-                                        <DatePicker value="{spec>drawing_agreement_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
+                                        <DatePicker value="{repairItem>mold_moving_result_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -486,7 +526,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Complete Result"/>
-                                        <DatePicker value="{spec>drawing_agreement_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
+                                        <DatePicker value="{repairItem>mold_complete_result_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -494,7 +534,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Project Code"/>
-                                        <Input value="{spec>/mold_hot_runner_qty}" editable="{mode>/editFlag}" />
+                                        <Input value="{repairItem>/project_code}" editable="{mode>/editFlag}" />
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -502,7 +542,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Acquisition Dept"/>
-                                        <Input value="{spec>mold_developer_name}" placeholder="Search" required="true"
+                                        <Input value="{repairItem>acq_department_code}" placeholder="Search" required="true"
                                             editable="{mode>/editFlag}" width="70%"
                                             showValueHelp="true" valueHelpRequest=".onInputWithEmployeeValuePress">
                                         </Input>
@@ -513,7 +553,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Balanced Budget"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
+                                        <Text text="{repairItem>/budget_amount}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -521,7 +561,7 @@
 
                                     <VBox height="3.5rem">
                                         <Label text="Family Part No"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
+                                        <Text text="{moldView>/family_part_numbers}"/>
                                         <layoutData>
                                             <layout:GridData span="XL4 L4 M4 S6" />
                                         </layoutData>
@@ -576,15 +616,15 @@
                             <items>
                                 <ColumnListItem>
                                     <cells>
-                                        <Text text="{spec>/cavity_process_qty}"/>
-                                        <Text text="{path: 'spec>local_create_dtm', formatter: '.dateFormatter.toDateString'}"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
-                                        <Text text="{spec>/cavity_process_qty}"/>
-                                        <Text text="{path: 'spec>local_create_dtm', formatter: '.dateFormatter.toDateString'}"/>
+                                        <Text text="{history>/repair_type_name}"/>
+                                        <Text text="{path: 'history>repair_request_date', formatter: '.dateFormatter.toDateString'}"/>
+                                        <Text text="{history>/repair_desc}"/>
+                                        <Text text="{history>/repair_request_number}"/>
+                                        <Text text="{history>/repair_supplier_name}"/>
+                                        <Text text="{path: 'history>complete_date', formatter: '.dateFormatter.toDateString'}"/>
+                                        <Text text="{history>/eco_number}"/>
+                                        <Text text="{history>/currency_code}"/>
+                                        <Text text="{path: 'history>repair_amount', formatter: '.numberFormatter.toNumberString'}"/>
                                     </cells>
                                 </ColumnListItem>
                             </items>
@@ -600,9 +640,9 @@
 				<ToolbarSpacer />
                 <Button id="pageEditButton"         type="Transparent" text="{I18N>/EDIT}"   press=".onPageEditButtonPress" visible="{= ${mode>/newFlag} ? false : !${mode>/editFlag}}" />
 				<Button id="pageCancelButton"       type="Transparent" text="{I18N>/CANCEL}" press=".onPageCancelEditButtonPress" visible="{= ${mode>/newFlag} ? false : ${mode>/editFlag}}" />
-                <Button id="pageDraftButton"        type="Transparent" text="{I18N>/DRAFT}"  press=".onPageSaveButtonPress" visible="{= !(${spec>/mold_spec_status_code} === 'C') }" />
+                <!--<Button id="pageDraftButton"        type="Transparent" text="{I18N>/DRAFT}"  press=".onPageSaveButtonPress" visible="{= !(${moldView>/mold_spec_status_code} === 'C') }" />-->
+                <Button id="pagePartNoSearchButton" type="Transparent" text="Part No Search"  press=".onPagePartNoSearchButtonPress"  /><!--visible="{= !(${moldView>/mold_spec_status_code} === 'C') }"-->
 				<Button id="pageConfirmButton"      type="Emphasized"  text="Confirm" press=".onPageConfirmButtonPress" />
-                <Button id="pageConfirmCancelButton" type="Transparent" text="Confirm Cancel" press=".onPageSaveButtonPress" visible="{= !(${spec>/mold_spec_status_code} === 'C') }" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

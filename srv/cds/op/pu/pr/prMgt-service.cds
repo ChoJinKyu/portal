@@ -17,6 +17,7 @@ using {op.Pu_Order_Mst as OrderMst}                 from '../../../../../db/cds/
 using {op.Pu_Wbs_Mst as WbsMst}                     from '../../../../../db/cds/op/pu/wbs/OP_PU_WBS_MST-model';
 
 using {cm.Org_Plant as Org_Plant}                   from '../../../../../db/cds/cm/CM_ORG_PLANT-model';
+using {cm.Org_Code_Lng as Org_Code_Lng}             from '../../../../../db/cds/cm/CM_ORG_CODE_LNG-model';
 using {cm.Hr_Employee as employee}                  from '../../../../../db/cds/cm/CM_HR_EMPLOYEE-model';
 using {cm.Org_Purchasing_Group as purchasingGroup}  from '../../../../../db/cds/cm/CM_ORG_PURCHASING_GROUP-model';
 using {cm.User as user}                             from '../../../../../db/cds/cm/CM_USER-model';
@@ -144,17 +145,18 @@ service PrMgtService {
             key pr_item_number  , //: Integer64     not null    @title: '구매요청품목번호' ;               
                 org_type_code  , /// : String(2)         @title: '조직유형코드' ;	
                 IFNULL( org_code, '') as  org_code :String(10)       ,   ///: String(10)        @title: '조직코드' ;	
-                IFNULL( ( Select plant_name 
-                    From Org_Plant
+                IFNULL( ( Select code_name 
+                    From Org_Code_Lng
                     Where  tenant_id = prDtl.tenant_id 
-                       And company_code = prDtl.company_code
-                       And plant_code = IFNULL( prDtl.org_code, '') ), '' ) as plant_name : String(240),
+                       And group_code = prDtl.org_type_code
+                       And language_cd = 'KO'
+                       And org_code = IFNULL( prDtl.org_code, '') ), '' ) as org_name : String(240),
                 material_code  , // : String(40)        @title: '자재코드' ;	
                 material_group_code , //: String(10)    @title: '자재그룹코드' ;
                 IFNULL( ( Select material_group_name 
                     From materialGroup
                     Where  tenant_id = prDtl.tenant_id 
-                       And material_group_code = IFNULL( prDtl.org_code, '') ), '' ) as material_group_name : String(100),
+                       And material_group_code = IFNULL( prDtl.material_group_code, '') ), '' ) as material_group_name : String(100),
 
 
 

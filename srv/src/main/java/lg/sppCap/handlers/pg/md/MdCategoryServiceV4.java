@@ -1,64 +1,60 @@
 package lg.sppCap.handlers.pg.md;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Iterator;
-import java.time.Instant;
-import java.beans.Introspector;
-import java.beans.BeanInfo;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
-import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.SqlReturnResultSet;
-import org.springframework.jdbc.core.CallableStatementCreator;
-import org.springframework.jdbc.datasource.DataSourceUtils;
-
-import com.sap.cds.reflect.CdsModel;
-import com.sap.cds.services.EventContext;
-import com.sap.cds.services.cds.CdsCreateEventContext;
-import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.handler.EventHandler;
-import com.sap.cds.services.handler.annotations.On;
-import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.After;
+import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.CallableStatementCreator;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.SqlReturnResultSet;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import cds.gen.pg.mdcategoryv4service.CommonReturnType;
+import cds.gen.pg.mdcategoryv4service.MdCategoryV4Service_;
+import cds.gen.pg.mdcategoryv4service.MdVpMappingItemMultiProcContext;
+import cds.gen.pg.mdcategoryv4service.MdVpMappingItemProcType;
+import cds.gen.pg.mdcategoryv4service.MdVpMappingItemView;
+import cds.gen.pg.mdcategoryv4service.MdVpMappingItemView_;
+import cds.gen.pg.mdcategoryv4service.MdVpMappingStatusMultiProcContext;
+import cds.gen.pg.mdcategoryv4service.MdVpMappingStatusProcType;
+import cds.gen.pg.mdcategoryv4service.MdVpMaterialMappSaveProcContext;
+import cds.gen.pg.mdcategoryv4service.ReturnRslt;
+import cds.gen.pg.mdcategoryv4service.VpMaterialValue;
+import cds.gen.pg.mdcategoryv4service.VpValueInfo;
 import lg.sppCap.frame.user.SppUserSession;
 import lg.sppCap.util.StringUtil;
-
-import cds.gen.pg.mdcategoryv4service.*;
 
 @Component
 @ServiceName("pg.MdCategoryV4Service")
 public class MdCategoryServiceV4 implements EventHandler {
 
-	private static final Logger log = LogManager.getLogger();
+    private final static Logger log = LoggerFactory.getLogger(MdCategoryServiceV4.class);
 
     @Autowired
     SppUserSession sppUserSession;
@@ -75,11 +71,11 @@ public class MdCategoryServiceV4 implements EventHandler {
     @On(event=MdVpMaterialMappSaveProcContext.CDS_NAME)
 	public void onMdVpMaterialMappSaveProc(MdVpMaterialMappSaveProcContext context) {
 
-        log.info("### onMdVpMaterialMappSaveProc array건 처리 [On] ###");
+        if(log.isDebugEnabled()) log.debug("### onMdVpMaterialMappSaveProc array건 처리 [On] ###");
 
         // Paramter 입력값
         VpValueInfo v_params = context.getParams();
-        //log.info("### VpValueInfo array ###["+v_params.getTenantId()+"]###["+v_params.getCompanyCode()+"]###["+v_params.getOrgTypeCode()+"]###["+v_params.getOrgCode()+"]###["+v_params.getVendorPoolCode()+"]###");
+        //if(log.isDebugEnabled()) log.debug("### VpValueInfo array ###{}#{}#{}#{}#{}###", v_params.getTenantId(), v_params.getCompanyCode(), v_params.getOrgTypeCode(), v_params.getOrgCode(), v_params.getVendorPoolCode());
         // Array건 입력값
         Collection<VpMaterialValue> v_values = v_params.getValues();
     
@@ -119,7 +115,7 @@ public class MdCategoryServiceV4 implements EventHandler {
             if(!v_values.isEmpty() && v_values.size() > 0){
                 for(VpMaterialValue v_inRow : v_values){
                     
-                    //log.info("### VpMaterialValue array ###["+v_inRow.get("material_code")+"]###["+v_inRow.get("supplier_code")+"]###["+v_inRow.get("item_serial_no")+"]###["+v_inRow.get("attr_value")+"]###");
+                    //if(log.isDebugEnabled()) log.debug("### VpMaterialValue array ###["+v_inRow.get("material_code")+"]###["+v_inRow.get("supplier_code")+"]###["+v_inRow.get("item_serial_no")+"]###["+v_inRow.get("attr_value")+"]###");
                     Object[] values = new Object[] {
                         v_params.getTenantId()
                         , v_params.getCompanyCode()
@@ -134,13 +130,13 @@ public class MdCategoryServiceV4 implements EventHandler {
                         , sppUserSession.getUserId() // "procSaveId"   // 세션 ID로 처리
                     };
 
-                    //for(Object sObj : values) log.info("######### array ###["+sObj+"]###");
+                    //for(Object sObj : values) if(log.isDebugEnabled()) log.debug("######### array ###{}###", sObj);
                     batch.add(values);
                 }
             }
 
             int[] updateCounts = jdbc.batchUpdate(v_sql_insertTable, batch);
-            //for(int iInsrtCnt : updateCounts) log.info("### [2-1] array ###["+iInsrtCnt+"]###");
+            //for(int iInsrtCnt : updateCounts) if(log.isDebugEnabled()) log.debug("### [2-1] array ###{}###", iInsrtCnt);
 
             // Procedure Call
             List<Map<String, String>> rsltList = new ArrayList<Map<String, String>>();
@@ -171,7 +167,7 @@ public class MdCategoryServiceV4 implements EventHandler {
             String rsltCd = "999";
             String rsltMesg = "DB Procedure process Error.";
             for(Map<String, String> rtnRow : rsltList){
-                log.info("### Procedure Return Code ["+rtnRow.get("return_code")+"] ###");
+                if(log.isDebugEnabled()) log.debug("### Procedure Return Code #{}#", rtnRow.get("return_code"));
 			    if ("00000".equals((String)rtnRow.get("return_code"))) {
 			        rsltCd = "000";
 			        rsltMesg = "SUCCESS";
@@ -208,7 +204,7 @@ public class MdCategoryServiceV4 implements EventHandler {
     @On(event=MdVpMappingItemMultiProcContext.CDS_NAME)
 	public void onMdVpMappingItemMultiProc(MdVpMappingItemMultiProcContext context) {
 
-		log.info("### onMdVpMappingItemMultiProc array건 처리 [On] ###");
+		if(log.isDebugEnabled()) log.debug("### onMdVpMappingItemMultiProc array건 처리 [On] ###");
 
         // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
         String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
@@ -259,13 +255,13 @@ public class MdCategoryServiceV4 implements EventHandler {
                         , sppUserSession.getUserId() // "procMultiId"   // 세션 ID로 처리
                     };
 
-                    //for(Object sObj : values) log.info("### array ###["+sObj+"]###");
+                    //for(Object sObj : values) if(log.isDebugEnabled()) log.debug("### array ###["+sObj+"]###");
                     batch.add(values);
                 }
             }
 
             int[] updateCounts = jdbc.batchUpdate(v_sql_insertTable, batch);
-            //for(int iInsrtCnt : updateCounts) log.info("### [2-1] array ###["+iInsrtCnt+"]###");
+            //for(int iInsrtCnt : updateCounts) if(log.isDebugEnabled()) log.debug("### [2-1] array ###["+iInsrtCnt+"]###");
 
             // Procedure Call
             List<CommonReturnType> rsltList = new ArrayList<CommonReturnType>();
@@ -298,7 +294,7 @@ public class MdCategoryServiceV4 implements EventHandler {
             String rsltCd = "999";
             String rsltMesg = "DB Procedure process Error.";
             for(CommonReturnType rtnRow : rsltList){
-                log.info("### Procedure Return Code ["+rtnRow.getReturnCode()+"] ###");        
+                if(log.isDebugEnabled()) log.debug("### Procedure Return Code {} ", rtnRow.getReturnCode());
 			    if ("00000".equals(rtnRow.getReturnCode())) {
 			        rsltCd = "000";
 			        rsltMesg = "SUCCESS";
@@ -335,7 +331,7 @@ public class MdCategoryServiceV4 implements EventHandler {
 	@On(event=MdVpMappingStatusMultiProcContext.CDS_NAME)
 	public void onMdVpMappingStatusMultiProc(MdVpMappingStatusMultiProcContext context) {
 
-		log.info("### onMdVpMappingStatusMultiProc array건 처리 ###");
+		if(log.isDebugEnabled()) log.debug("### onMdVpMappingStatusMultiProc array건 처리 ###");
 
         // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
         String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
@@ -419,7 +415,7 @@ public class MdCategoryServiceV4 implements EventHandler {
             String rsltCd = "999";
             String rsltMesg = "DB Procedure process Error.";
             for(CommonReturnType rtnRow : rsltList){
-                log.info("### Procedure Return Code ["+rtnRow.getReturnCode()+"] ###");        
+                if(log.isDebugEnabled()) log.debug("### Procedure Return Code {} ", rtnRow.getReturnCode());        
 			    if ("00000".equals(rtnRow.getReturnCode())) {
 			        rsltCd = "000";
 			        rsltMesg = "SUCCESS";
@@ -455,7 +451,7 @@ public class MdCategoryServiceV4 implements EventHandler {
 	@After(event = CdsService.EVENT_READ, entity=MdVpMappingItemView_.CDS_NAME)
 	public void readAfterMdVpMappingItemViewProc(List<MdVpMappingItemView> lists) {
 
-		log.info("### readAfterMdVpMappingItemViewProc Read [After] ###");
+		if(log.isDebugEnabled()) log.debug("### readAfterMdVpMappingItemViewProc Read [After] ###");
 
         /*
         // DB Function에서 가공 처리
@@ -528,7 +524,7 @@ public class MdCategoryServiceV4 implements EventHandler {
 
 	// 건별 attr parsing
 	private MdVpMappingItemView setVpItemMappingAttr (MdVpMappingItemView list) {
-		//log.info("### setVpItemMappingAttr ###");
+		//if(log.isDebugEnabled()) log.debug("### setVpItemMappingAttr ###");
 
 		Map<String, Object> hMap = new HashMap<String, Object>();
 		hMap = objectToMap(list, null);
@@ -566,14 +562,14 @@ public class MdCategoryServiceV4 implements EventHandler {
     @On(event=MdVpMappingItemViewProcContext.CDS_NAME)
 	public void getMdMappingItemViewProcList(MdVpMappingItemViewProcContext context) {
 
-        log.info("### onMdVpMappingItemMultiProc array건 처리 [On] ###");
+        if(log.isDebugEnabled()) log.debug("### onMdVpMappingItemMultiProc array건 처리 [On] ###");
 
         
         // Array건 입력값
         //Collection<MdVpMappingItemProcType> v_inRows = context.getItems();
         //Collection<DynamicParamType> param = context.get.getParams();
 
-        //log.info("### [0] ###"+param.getLanguageCode()+"###");
+        //if(log.isDebugEnabled()) log.debug("### [0] ###"+param.getLanguageCode()+"###");
 
         // Result return
         MdVpMappingItemViewData rtnRsltData = MdVpMappingItemViewData.create();
@@ -620,7 +616,7 @@ public class MdCategoryServiceV4 implements EventHandler {
 
         rtnRsltData.setTitles(listTitles);
 
-        log.info("### [1] ###"+listTitles.size()+"###");
+        if(log.isDebugEnabled()) log.debug("### [1] ###"+listTitles.size()+"###");
 
         List<DynamicRecord> listRecords = new ArrayList<>();
         for(int rowNo=0; rowNo<iRowCnt; rowNo++){ // Select Data Row Count
@@ -663,7 +659,7 @@ public class MdCategoryServiceV4 implements EventHandler {
         }
         rtnRsltData.setRecords(listRecords);
 
-        log.info("### [2] ###"+listRecords.size()+"###");
+        if(log.isDebugEnabled()) log.debug("### [2] ###"+listRecords.size()+"###");
         
 
         context.setResult(rtnRsltData);

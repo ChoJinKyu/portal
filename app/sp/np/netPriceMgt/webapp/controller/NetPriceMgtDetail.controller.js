@@ -15,10 +15,12 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/m/MessageToast",
     "sap/m/Token",
+    "dp/util/control/ui/MaterialOrgDialog",
     "dp/util/control/ui/MaterialMasterDialog",
     "ext/pg/util/control/ui/MaterialDialog",
     "ext/pg/util/control/ui/SupplierDialog",
-    "ext/pg/util/control/ui/VendorPoolDialog"
+    "ext/pg/util/control/ui/VendorPoolDialog",
+    "ext/pg/util/control/ui/VendorPoolDialogPop"
 ],
     function (
         BaseController,
@@ -37,10 +39,12 @@ sap.ui.define([
         FilterOperator, 
         MessageToast, 
         Token, 
+        MaterialOrgDialog,
         MaterialMasterDialog, 
         MatrialDialog,
         SupplierDialog,
-        VendorPoolDialog
+        VendorPoolDialog,
+        VendorPoolDialogPop
     ) {
         "use strict";
 
@@ -69,13 +73,20 @@ sap.ui.define([
                 this.setModel(new ManagedListModel(), "basePriceInfoList");
                 //협상이력
                 this.setModel(new ManagedListModel(), "negotitaionList");
-                
-                this.netPriceDocumentTypeCode = this.byId("net_price_document_type_code");
-                this.netPriceDocumentTypeCode.onAfterRendering = function(oEvent) {
-                    console.log("net_price_document_type_code onload!!!!" + oEvent);
-                };
-                
-                //this.setRichEditor();
+
+                 // Currency 데이터 조회 시작
+                var oCurrencyModel = this.getOwnerComponent().getModel("currency");
+                oCurrencyModel.read("/Currency", {
+                    filters : [new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID)],
+                    success : function(data){
+                        if( data && data.results ) {
+                            oCurrencyModel.setProperty("/currency", data.results);
+                        }
+                    },
+                    error : function(data){
+                        console.log("error", data);
+                    }
+                });
             },
 
             /**
@@ -114,7 +125,7 @@ sap.ui.define([
                 
                 if (args.pMode === "R") {
                     oDetailModel.setData({});
-                    oDetailViewModel.setProperty("/viewMode", false);
+                    //oDetailViewModel.setProperty("/viewMode", false);
 
                     var aMasterFilters = [];
                     aMasterFilters.push(new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID));
@@ -134,7 +145,7 @@ sap.ui.define([
                                 "tenant_d": SppUserSessionUtil.getUserInfo().TENANT_ID,
                                 "approval_number": result.approval_number,
                                 "approval_title": result.approval_title,
-                                //"approval_type_code": oRootModel.getProperty("/selectedApprovalType"),   // V10: 신규, V20: 변경
+                                "approval_contents" : result.approval_contents,
                                 "approval_status_code": result.approve_status_code,    // DR: Draft
                                 "approval_status_name": result.approve_status_name,
                                 "requestor_empno": result.requestor_empnm,
@@ -157,6 +168,7 @@ sap.ui.define([
                             oView.setBusy(false);
                         }
 
+                        this.onApproverAdd(0);
                         // Process에 표시될 상태 및 아이콘 데이터 세팅
                         //this.onSetProcessFlowStateAndIcon(oDetailViewModel, oMaster.approve_status_code);
                     }.bind(this));
@@ -181,7 +193,6 @@ sap.ui.define([
                     // 저장된 Approver가 없는 경우 Line 추가
                     this.onApproverAdd(0);
      
-                    //oDetailModel.setProperty("/approval_status_code", "DR");
                     // Process에 표시될 상태 및 아이콘 데이터 세팅
                    // this.onSetProcessFlowStateAndIcon(oDetailViewModel, oNewBasePriceData.approve_status_code);
                 }
@@ -224,24 +235,45 @@ sap.ui.define([
                 });
             },
             /*========================================= oData : End ===============================*/
-            
-            cChanged: function() {
-                console.log("cChanged!!!");
-            },
-            
+         
             
             /*========================================= ValueHelp : Start ===============================*/
+
+            vhMaterialOrgCode: function(oEvent){
+                //console.log("spath:::" + oEvent.getSource().getParent().getRowBindingContext().sPath);
+                that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+                var generalInfoModel = this.getModel("generalInfoList");
+
+                if(!this.oSearchMultiMaterialMasterDialog){
+                    this.oSearchMultiMaterialMasterDialog = new MaterialOrgDialog({                
+                        title: "Choose Material Code",
+                        multiSelection: false,
+                        items: {
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, this.tenantId)                            
+                            ]
+                        },
+                        orgCode: ""
+                    });
+                    this.oSearchMultiMaterialMasterDialog.attachEvent("apply", function(oEvent){
+                        console.log("apply event!!!");
+                        //oViewModel.refresh();
+                    }.bind(that));
+                }
+                this.oSearchMultiMaterialMasterDialog.open();
+            },
+
             vhMaterialCode: function(oEvent) {
-                console.log("change1:" + oEvent.oSource.getProperty("selectedKey"));
+                //console.log("change1:" + oEvent.oSource.getProperty("selectedKey"));
                 that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
                 var generalInfoModel = this.getModel("generalInfoList");
                 if (!this.gMatrialDialog) {
                     this.gMatrialDialog = new MatrialDialog({
-                        title: "Choose Supplier",
+                        title: "Choose Material",
                         multiSelection: false,
                         items: {
                             filters: [
-                                new Filter("tenant_id", "EQ", "L2100")
+                                new Filter("tenant_id", "EQ", SppUserSessionUtil.getUserInfo().TENANT_ID)
                             ]
                         }
                     });
@@ -278,6 +310,8 @@ sap.ui.define([
                         //console.log("달라지기 있기 없기 sPath:" + that.sPath);
                         //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.material_code);
                         generalInfoModel.setProperty(that.sPath + "/supplier_code", oEvent.mParameters.item.supplier_code);
+                        generalInfoModel.setProperty(that.sPath + "/supplier_local_name", oEvent.mParameters.item.supplier_local_name);
+                        generalInfoModel.setProperty(that.sPath + "/supplier_english_name", oEvent.mParameters.item.supplier_english_name);
                     }.bind(this));
                 }
 
@@ -305,7 +339,8 @@ sap.ui.define([
                     this.gVendorPoolDialog.attachEvent("apply", function (oEvent) {
                         //console.log("달라지기 있기 없기 sPath:" + that.sPath);
                         //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.material_code);
-                        generalInfoModel.setProperty(that.sPath + "/vendor_pool_code", oEvent.mParameters.item.supplier_code);
+                        generalInfoModel.setProperty(that.sPath + "/vendor_pool_code", oEvent.mParameters.item.vendor_pool_code);
+                        generalInfoModel.setProperty(that.sPath + "/vendor_pool_name", oEvent.mParameters.item.vendor_pool_local_name);
                     }.bind(this));
                 }
 
@@ -598,12 +633,16 @@ sap.ui.define([
              *  yyyyMMdd 포맷으로 반환
              */
             getFormatDate: function (date){
-                var year = date.getFullYear();              //yyyy
-                var month = (1 + date.getMonth());          //M
-                month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
-                var day = date.getDate();                   //d
-                day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
-                return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+                if (date !== undefined) {
+                    var year = date.getFullYear();              //yyyy
+                    var month = (1 + date.getMonth());          //M
+                    month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+                    var day = date.getDate();                   //d
+                    day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+                    return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+                } else {
+                    return null;
+                }
             },
             /*========================================= Footer Button Action ===============================*/
 
@@ -615,9 +654,7 @@ sap.ui.define([
                         "master" : {
                             "tenant_id"                       : SppUserSessionUtil.getUserInfo().TENANT_ID,
                             "company_code"                    : SppUserSessionUtil.getUserInfo().COMPANY_CODE,
-                            "org_type_code"                   : "PL",
-                            "org_code"                        : "5100",
-                            "approval_number"                 : null,				/* 없으면 Insert (undefined, null, ''), 존재하면 Update*/
+                            "approval_number"                 : (that.byId("approval_number").getText() === "") ? null : String(that.byId("approval_number").getText()),				/* 없으면 Insert (undefined, null, ''), 존재하면 Update*/
                             "approval_title"                  : that.byId("approval_title").getValue(),
                             "approval_contents"               : that.byId("approval_contents").getValue(),
                             "attch_group_number"              : "temp00",
@@ -659,7 +696,9 @@ sap.ui.define([
                             
                             $(this.generalInfoList).each(function(idx, item){
                                 var generalInfoObj = {};
-                                generalInfoObj.item_sequence = item.item_sequence;
+                                generalInfoObj.item_sequence = Number(item.item_sequence);
+                                //generalInfoObj.company_code = SppUserSessionUtil.getUserInfo().COMPANY_CODE;
+                                generalInfoObj.org_code = item.org_code;
                                 generalInfoObj.line_type_code = item.line_type_code;
                                 generalInfoObj.material_code = item.material_code;
                                 generalInfoObj.payterms_code = item.payterms_code;

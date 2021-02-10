@@ -130,6 +130,12 @@
                         }" />
                     </t:template>
                 </t:Column> -->
+                <t:Column id="sequence" width="60px">
+                <Label text="{I18N>/SEQUENCE}" wrapping="false" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>sequence}" textAlign="Right" width="100%" wrapping="false"/>
+                </t:template>
+                </t:Column>
                 <t:Column id="activity_code">
                 <Label text="{I18N>/PROD_ACTIVITY_CODE}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
@@ -147,13 +153,7 @@
                 <t:template>
                     <Text text="{list>description}" textAlign="Left" width="100%" wrapping="false"/>
                 </t:template>
-                </t:Column>                
-                <t:Column id="sequence" width="60px">
-                <Label text="{I18N>/SEQUENCE}" wrapping="false" textAlign="Center" width="100%"/>
-                <t:template>
-                    <Text text="{list>sequence}" textAlign="Right" width="100%" wrapping="false"/>
-                </t:template>
-                </t:Column>  
+                </t:Column>
                 <t:Column id="active_flag_val">
                 <Label text="{I18N>/STATUS}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>

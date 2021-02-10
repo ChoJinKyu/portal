@@ -58,25 +58,24 @@ service NpApprovalDetailService {
     view MasterView as
         SELECT
                 key pam.tenant_id
-             ,      cam.company_code
-             ,  key pam.approval_number                         /* Approval No. */
+            ,   key pam.approval_number                         /* Approval No. */
+            ,   cam.company_code
 
-             /* 
-             //,      cam.org_type_code
-             //,      cam.org_code	                            / operating org /
-             ,  (SELECT org.org_name
+            /* 
+            //,      cam.org_type_code
+            //,      cam.org_code	                            / operating org /
+            ,   (SELECT org.org_name
                    FROM CM_PUR_OPERATION_ORG  org
                   WHERE org.tenant_id     = pam.tenant_id
                     AND org.company_code  = cam.company_code
                     AND org.org_type_code = cam.org_type_code
                     AND org.org_code      = cam.org_code
-			    ) AS org_name : String                          /  org */
+			    ) as org_name : String                          /  org */
 
             ,   cam.requestor_empno                             /* requestor */
-			,   CASE WHEN ssi.LANGUAGE_CODE = 'EN' THEN che.user_english_name
-			         WHEN ssi.LANGUAGE_CODE = 'KO' THEN che.user_local_name
-					 ELSE che.user_english_name
-			    END AS requestor_empnm : String
+	        ,   CM_GET_EMP_NAME_FUNC(    pam.tenant_id
+				                        ,cam.requestor_empno
+			                        ) as requestor_empnm  : String
 
             ,   cam.request_date                                /* request date */
             ,   cam.approve_status_code                         /* status !!! */
@@ -84,7 +83,7 @@ service NpApprovalDetailService {
                                         ,'CM_APPROVE_STATUS'
                                         ,cam.approve_status_code
                                         ,ssi.LANGUAGE_CODE
-                                    ) AS approve_status_name : String
+                                    ) as approve_status_name : String
 
             ,   cam.approval_title                              /* title !!! */
             ,   pam.net_price_document_type_code                /* 단가문서유형코드 */   
@@ -92,30 +91,29 @@ service NpApprovalDetailService {
                                         ,'SP_DOCUMENT_TYPE'
                                         ,pam.net_price_document_type_code
                                         ,ssi.LANGUAGE_CODE
-                                    ) AS net_price_document_type_name : String
+                                    ) as net_price_document_type_name : String
 
             ,   pam.net_price_source_code
             ,   CM_GET_CODE_NAME_FUNC(   cam.tenant_id
                                         ,'NET_PRICE_SOURCE_CODE'
                                         ,pam.net_price_source_code
                                         ,ssi.LANGUAGE_CODE
-                                    ) AS net_price_source_name : String
+                                    ) as net_price_source_name : String
 
-			,   CASE WHEN ssi.LANGUAGE_CODE = 'EN' THEN chd.department_english_name
-			         WHEN ssi.LANGUAGE_CODE = 'KO' THEN chd.department_local_name
-					 ELSE chd.department_english_name
-			    END AS requestor_teamnm : String         /* requestor team */
+			,	CM_GET_DEPT_NAME_FUNC(   cam.tenant_id
+                                        ,che.department_id
+                                    ) as requestor_teamnm  : String               /* requestor team */
 
-            ,   pam.local_create_dtm AS creation_date    /* creation date */
+            ,   pam.local_create_dtm as creation_date       /* creation date */
 
             ,   cam.approval_contents
 
-            ,   MAP(pam.tentprc_flag,false,'N',true,'T') as net_price_type_code :String
+            ,   MAP(pam.tentprc_flag,false,'N',true,'T') as net_price_type_code : String
             ,   CM_GET_CODE_NAME_FUNC(   cam.tenant_id
                                         ,'SP_NET_PRICE_TYPE'
                                         ,MAP(pam.tentprc_flag,false,'N',true,'T')
                                         ,ssi.LANGUAGE_CODE
-                                    ) AS net_price_type_name : String
+                                    ) as net_price_type_name : String
 
             ,   pam.effective_start_date
             ,   pam.effective_end_date
@@ -123,21 +121,16 @@ service NpApprovalDetailService {
         FROM SP_NP_NET_PRICE_APPROVAL_MST   pam
         
         INNER JOIN CM_SPP_USER_SESSION_VIEW  ssi
-            ON ssi.TENANT_ID         = pam.tenant_id
-        /*
-           AND ssi.COMPANY_CODE      = pam.company_code
-        */
+                ON ssi.TENANT_ID         = pam.tenant_id
+        /*      AND ssi.COMPANY_CODE      = pam.company_code */
+
         INNER JOIN CM_APPROVAL_MST          cam
-            ON cam.tenant_id         = pam.tenant_id
-           AND cam.approval_number   = pam.approval_number
+                ON cam.tenant_id         = pam.tenant_id
+               AND cam.approval_number   = pam.approval_number
 
-          LEFT JOIN CM_HR_EMPLOYEE           che
-            ON che.tenant_id         = cam.tenant_id
-           AND che.employee_number   = cam.requestor_empno
-
-          LEFT JOIN CM_HR_DEPARTMENT         chd
-            ON chd.tenant_id         = che.tenant_id
-           AND chd.department_id     = che.department_id
+        LEFT JOIN CM_HR_EMPLOYEE           che
+               ON che.tenant_id         = cam.tenant_id
+              AND che.employee_number   = cam.requestor_empno
     ;
 
     /*---------------------------------------------------------------------------------------------------------------------*/
@@ -145,11 +138,12 @@ service NpApprovalDetailService {
     view GeneralView as
         SELECT
                 key pad.tenant_id		                /*	테넌트ID	*/
-            ,	key pad.company_code		            /*	회사코드	*/
-            ,	key pad.org_type_code		            /*	구매운영조직유형	*/
-            ,	key pad.org_code		                /*	Operation Org   구매운영조직코드	*/
             ,	key pad.approval_number		            /*	품의번호	*/
             ,	key pad.item_sequence		            /*	품목순번	*/
+
+            ,	pad.company_code		                /*	회사코드	*/
+            ,	pad.org_type_code		                /*	구매운영조직유형	*/
+            ,	pad.org_code		                    /*	Operation Org   구매운영조직코드	*/
 
             ,   (SELECT org.org_name
                    FROM CM_PUR_OPERATION_ORG  org
@@ -159,13 +153,15 @@ service NpApprovalDetailService {
                     AND org.org_code      = pad.org_code
 			    ) as org_name : String                  /*	구매운영조직코드 명	*/
 
-            ,   pad.material_code	                    /*	Material Code	자재코드*/
-            //,   pad.material_desc	                    /*	Description	    자재내역*/
+            ,   pad.material_code	                    /*	Material Code	자재코드    */
+            ,   pad.material_desc	                    /*	Description	    자재내역    */
+
+            /*	
             ,   (SELECT mmm.material_desc
                     FROM DP_MM_MATERIAL_MST mmm
                     WHERE mmm.tenant_id = pad.tenant_id
                     AND mmm.material_code = pad.material_code
-                ) as material_desc : String              /*	Description	    자재내역*/
+                ) as material_desc : String              Description	    자재내역*/
 
             ,   pad.supplier_code	                    /*	Supplier Code	공급업체코드 */
             ,   sm.supplier_local_name	                /*	Supplier Name	*/
@@ -260,7 +256,7 @@ service NpApprovalDetailService {
 
         INNER JOIN CM_SPP_USER_SESSION_VIEW  ssi
             ON pad.tenant_id        = ssi.TENANT_ID
-           AND pad.company_code     = ssi.COMPANY_CODE
+            /*  AND pad.company_code     = ssi.COMPANY_CODE */
 
         LEFT JOIN SP_NP_NET_PRICE_MST npm             /*  기준단가 마스터 */
                 ON pad.tenant_id        = npm.tenant_id
@@ -292,11 +288,12 @@ service NpApprovalDetailService {
     view BasePriceInfoView as
         SELECT
                 key pad.tenant_id		                        /*	테넌트ID	*/
-            ,	key pad.company_code		                    /*	회사코드	*/
-            ,	key pad.org_type_code		                    /*	구매운영조직유형	*/
-            ,	key pad.org_code		                        /*	구매운영조직코드	*/
             ,	key pad.approval_number		                    /*	품의번호	*/
             ,	key pad.item_sequence		                    /*	품목순번	*/
+
+            ,	pad.company_code		                    /*	회사코드	*/
+            ,	pad.org_type_code		                    /*	구매운영조직유형	*/
+            ,	pad.org_code		                        /*	구매운영조직코드	*/
 
             ,   (SELECT org.org_name
                    FROM CM_PUR_OPERATION_ORG  org
@@ -332,7 +329,7 @@ service NpApprovalDetailService {
             /*  LGC 표시항목 */
             ,   bpm.base_date as base_date : Date
             ,   IFNULL(bpm.base_price ,0) as base_price : Decimal(34,10)        	
-            ,   IFNULL(bpm.currency_code,' ')  as base_currency_code : String
+            ,   IFNULL(bpm.currency_code,'')  as base_currency_code : String
             ,   bpm.apply_start_yyyymm as base_apply_start_yyyymm : String
             ,   bpm.apply_end_yyyymm as base_apply_end_yyyymm : String
 
@@ -363,11 +360,12 @@ service NpApprovalDetailService {
     view NegoHistoryInfoView  as
         SELECT
                 key pad.tenant_id		        /*	테넌트ID	*/
-            ,	key pad.company_code		    /*	회사코드	*/
-            ,	key pad.org_type_code		    /*	구매운영조직유형	*/
-            ,	key pad.org_code		        /*	구매운영조직코드	*/
             ,	key pad.approval_number		    /*	품의번호	*/
             ,	key pad.item_sequence		    /*	품목순번	*/
+
+            ,	pad.company_code		    /*	회사코드	*/
+            ,	pad.org_type_code		    /*	구매운영조직유형	*/
+            ,	pad.org_code		        /*	구매운영조직코드	*/
 
             , (SELECT org.org_name
                   FROM CM_PUR_OPERATION_ORG  org

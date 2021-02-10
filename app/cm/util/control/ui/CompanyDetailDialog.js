@@ -1,3 +1,7 @@
+/* 
+tenant_id session 미처리
+*/
+
 sap.ui.define([
     "ext/lib/control/ui/CodeValueHelp",
     "ext/lib/control/DummyRenderer",
@@ -18,6 +22,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
+                loadWhenOpen: { type: "boolean", group: "Misc", defaultValue: false },
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "company_code" },
                 textField: { type: "string", group: "Misc", defaultValue: "company_name" }

@@ -10,40 +10,46 @@
     height="100%">
 
     <uxap:ObjectPageLayout id="page"
-		toggleHeaderOnTitleClick="false"
+		toggleHeaderOnTitleClick="true"
 		alwaysShowContentHeader = "true"
 		preserveHeaderStateOnScroll="false"
-		headerContentPinnable="false"
+		headerContentPinnable="true"
 		isChildPage="true"
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 
-		showFooter="false">
+        showFooter="true">
+        
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
-					<Title text="{I18N>/SPMD_CATEGORY_DETAIL}" wrapping="true" />
+                <uxap:heading>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <Title text="{I18N>/SPMD_CATEGORY_DETAIL}" wrapping="true" class="" />
+                    </HBox>
+                </uxap:heading>
+				<uxap:snappedTitleOnMobile>
+					<Title text="{I18N>/MASTER}" />
+				</uxap:snappedTitleOnMobile>
+				<!-- <uxap:expandedHeading>
+					<Title text="{I18N>/SPMD_CATEGORY_DETAIL}" wrapping="true"/>
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="{I18N>/SPMD_CATEGORY_DETAIL}" wrapping="true" />
+					<Title text="{I18N>/SPMD_CATEGORY_DETAIL}" wrapping="true"/>
 				</uxap:snappedHeading>
 				<uxap:snappedTitleOnMobile>
 					<Title text="{I18N>/MASTER_INFO}" />
-				</uxap:snappedTitleOnMobile>
-				<!-- <uxap:actions>
-					<Button id="pageEditButton" text="{I18N>/UPDATE}" type="Emphasized" press=".onPageEditButtonPress" />
-					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
-				</uxap:actions> -->
+				</uxap:snappedTitleOnMobile> -->
                 <uxap:navigationActions>
 					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
 					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
-					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+					<!-- <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/> -->
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
 		<uxap:headerContent>
-			<FlexBox wrap="Wrap" visible="false">
+			<FlexBox wrap="Wrap" visible="true">
 			</FlexBox>
 		</uxap:headerContent>
 
@@ -63,8 +69,7 @@
 								inset="false" 
 								items="{details>/MdCategoryLng}"
 								class="sapFDynamicPageAlignContent" 
-								updateFinished=".onMidTableUpdateFinished"
-								mode="SingleSelectLeft"
+								mode="MultiSelect" 
                                 autoPopinMode="true" 
 								width="auto">
 							<headerToolbar>
@@ -72,11 +77,8 @@
 									<Title text="{I18N>/LIST}" level="H2"/>
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
-									<Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMidTableAddButtonPress" enabled="false"/>
-									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMidTableDeleteButtonPress" enabled="false"/>
-									<ToolbarSeparator/>
-									<SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" />
-									<!-- <Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" /> -->
+									<Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMidTableAddButtonPress" visible="false"/>
+									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMidTableDeleteButtonPress" visible="false"/>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
@@ -91,7 +93,7 @@
 								</Column>
 							</columns>
 							<items>
-								<ColumnListItem type="Inactive" press=".onMidTableItemPress">
+								<ColumnListItem type="Inactive">
 									<cells>
 										<Text text="{details>_row_state_}"/>
 										<Input value="{details>language_code}"/>

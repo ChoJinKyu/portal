@@ -76,16 +76,17 @@
                             columnsM="1" >
                             
                             <form:content>                                
-                                <VBox>			
+                                <VBox width="100%">			
                                     <Label text="{I18N>/COMPANY}" required="true"/>
                                     <Text
+                                        width="50%"
                                         text="{master>/company_code}"
                                         visible="{contModel>/readMode}">
                                     </Text>
                                     <ComboBox 
+                                        width="50%"
                                         visible="{contModel>/editMode}"
-                                        showSecondaryValues= "true"
-                                        width="100%" 
+                                        showSecondaryValues= "true"                                         
                                         selectedKey="{master>/company_code}"
                                         items="{
                                             path: '/CompanyView'
@@ -100,16 +101,17 @@
                                             span="XL12 L12 M12 S12" />
                                     </layoutData>
                                 </VBox>
-                                <VBox>			
+                                <VBox width="100%">			
                                     <Label text="{I18N>/ORGANIZATION}" required="true"/>
                                     <Text
+                                        width="50%"
                                         text="{master>/org_code}"
                                         visible="{contModel>/readMode}">
                                     </Text>
-                                    <ComboBox 
+                                    <ComboBox
+                                        width="50%" 
                                         visible="{contModel>/editMode}"
-                                        showSecondaryValues= "true"
-                                        width="100%" 
+                                        showSecondaryValues= "true"                                        
                                         selectedKey="{master>/org_code}"
                                         items="{
                                             path: '/OrgView'
@@ -124,16 +126,17 @@
                                             span="XL12 L12 M12 S12" />
                                     </layoutData>
                                 </VBox>
-                                <VBox>			
+                                <VBox width="100%">			
                                     <Label text="{I18N>/PROJECT_TYPE}" required="true"/>
                                     <Text
+                                        width="50%"
                                         text="{master>/part_project_type_code}"
                                         visible="{contModel>/readMode}">
                                     </Text>                                    
-                                    <ComboBox 
+                                    <ComboBox
+                                        width="50%" 
                                         visible="{contModel>/editMode}"
-                                        showSecondaryValues= "true"
-                                        width="100%" 
+                                        showSecondaryValues= "true"                                         
                                         selectedKey="{master>/part_project_type_code}"
                                         items="{
                                             path: 'util>/Code',
@@ -151,13 +154,16 @@
                                             span="XL12 L12 M12 S12" />
                                     </layoutData>
                                 </VBox>
-                                <VBox>			
+                                <VBox width="100%">			
                                     <Label text="{I18N>/ACTIVITY_CODE}"/>
                                     <Text
+                                        width="50%"
                                         text="{master>/activity_code}"
                                         visible="{contModel>/readMode}">
                                     </Text>
-                                    <Input value="{
+                                    <Input 
+                                        width="50%"    
+                                        value="{
                                             path: 'master>/activity_code',
                                             type: 'sap.ui.model.type.String',
                                             constraints: {
@@ -169,13 +175,16 @@
                                             span="XL12 L12 M12 S12" />
                                     </layoutData>
                                 </VBox>                                
-                                <VBox>			
+                                <VBox width="100%">			
                                     <Label text="{I18N>/SEQUENCE}"/>
                                     <Text
+                                        width="50%"
                                         text="{master>/sequence}"
                                         visible="{contModel>/readMode}">
                                     </Text>
-                                    <Input value="{
+                                    <Input 
+                                        width="50%"
+                                        value="{
                                             path: 'master>/sequence'
                                         }" type="Number"  visible="{contModel>/editMode}" editable="{= !${contModel>/createMode}}"></Input>
                                     <layoutData>
@@ -183,16 +192,17 @@
                                             span="XL12 L12 M12 S12" />
                                     </layoutData>
                                 </VBox>
-                                <VBox>			
+                                <VBox width="100%">			
                                     <Label text="{I18N>/ROLE}"/>
                                     <Text
+                                        width="50%"
                                         text="{master>/actual_role_name}"
                                         visible="{contModel>/readMode}">
                                     </Text>
-                                    <ComboBox 
+                                    <ComboBox
+                                        width="50%" 
                                         visible="{contModel>/editMode}"
-                                        showSecondaryValues= "true"
-                                        width="100%" 
+                                        showSecondaryValues= "true"                                         
                                         selectedKey="{master>/actual_role_code}"
                                         items="{
                                             path: 'util>/Code',
@@ -210,16 +220,17 @@
                                             span="XL12 L12 M12 S12" />
                                     </layoutData>
                                 </VBox>
-                                <VBox>			
+                                <VBox width="100%">			
                                     <Label text="{I18N>/EVENT}"/>
                                     <Text
+                                        width="50%"
                                         text="{master>/develope_event_name}"
                                         visible="{contModel>/readMode}">
                                     </Text>
-                                    <ComboBox 
+                                    <ComboBox
+                                        width="50%" 
                                         visible="{contModel>/editMode}"
-                                        showSecondaryValues= "true"
-                                        width="100%" 
+                                        showSecondaryValues= "true"                                         
                                         selectedKey="{master>/develope_event_code}"
                                         items="{
                                             path: 'util>/Code',
@@ -237,13 +248,17 @@
                                             span="XL12 L12 M12 S12" />
                                     </layoutData>
                                 </VBox>
-                                <VBox>
-                                    <Label text="{I18N>/ATTACHMENT_MANDATORY}"/>                                    
-                                    <SegmentedButton 
+                                <VBox width="100%">
+                                    <Label text="{I18N>/ATTACHMENT_MANDATORY}"/>
+                                    <Text
+                                        width="50%"
+                                        text="{master>/attachment_mandatory_flag_val}"
+                                        visible="{= !${contModel>/editMode} }"/>                                    
+                                    <SegmentedButton                                        
                                         id="editAttachmentflag"
                                         selectedKey="{master>/attachment_mandatory_flag}" 
                                         selectionChange=""
-                                        enabled="{contModel>/editMode}"
+                                        visible="{contModel>/editMode}"
                                         width="100%">
                                         <items>
                                             <SegmentedButtonItem text="Yes" width="5em" key="true"/>
@@ -255,13 +270,17 @@
                                             span="XL12 L12 M12 S12" />
                                     </layoutData>
                                 </VBox>
-                                <VBox>
-                                    <Label text="{I18N>/APPROVE_MANDATORY}"/>                                    
+                                <VBox width="100%">
+                                    <Label text="{I18N>/APPROVE_MANDATORY}"/>
+                                    <Text
+                                        width="50%"
+                                        text="{master>/approve_mandatory_flag_val}"
+                                        visible="{= !${contModel>/editMode} }"/>                                    
                                     <SegmentedButton 
                                         id="editApproveflag"
                                         selectedKey="{master>/approve_mandatory_flag}" 
                                         selectionChange=""
-                                        enabled="{contModel>/editMode}"
+                                        visible="{contModel>/editMode}"
                                         width="100%">
                                         <items>
                                             <SegmentedButtonItem text="Yes" width="5em" key="true"/>
@@ -273,16 +292,39 @@
                                             span="XL12 L12 M12 S12" />
                                     </layoutData>
                                 </VBox>
-                                <VBox>			
+                                <VBox width="100%">
+                                    <Label text="{I18N>/USE_FLAG}"/> 
+                                    <Text
+                                        width="50%"
+                                        text="{master>/active_flag_val}"
+                                        visible="{= !${contModel>/editMode} }"/>                                   
+                                    <SegmentedButton 
+                                        id="editUseflag"
+                                        selectedKey="{master>/active_flag}" 
+                                        selectionChange=""
+                                        visible="{contModel>/editMode}"                                        
+                                        width="100%">
+                                        <items>
+                                            <SegmentedButtonItem text="Yes" width="5em" key="true"/>
+                                            <SegmentedButtonItem text="No" width="5em" key="false"/>
+                                        </items>
+                                    </SegmentedButton>                                        
+                                    <layoutData>
+                                        <layout:GridData
+                                            span="XL12 L12 M12 S12" />
+                                    </layoutData>
+                                </VBox> 
+                                <VBox width="100%">			
                                     <Label text="{I18N>/ACTIVITY_COMPLETE_TYPE}"/>
                                     <Text
+                                        width="50%"
                                         text="{master>/activity_complete_type_name}"
                                         visible="{contModel>/readMode}">
                                     </Text>
-                                    <ComboBox 
+                                    <ComboBox
+                                        width="50%" 
                                         visible="{contModel>/editMode}"
-                                        showSecondaryValues= "true"
-                                        width="100%" 
+                                        showSecondaryValues= "true"                                         
                                         selectedKey="{master>/activity_complete_type_code}"
                                         items="{
                                             path: 'util>/Code',
@@ -300,16 +342,17 @@
                                             span="XL12 L12 M12 S12" />
                                     </layoutData>
                                 </VBox>
-                                <VBox>			
+                                <VBox width="100%">			
                                     <Label text="{I18N>/JOB_TYPE}"/>
                                     <Text
+                                        width="50%"
                                         text="{master>/job_type_name}"
                                         visible="{contModel>/readMode}">
                                     </Text>
                                     <ComboBox 
+                                        width="50%"
                                         visible="{contModel>/editMode}"
-                                        showSecondaryValues= "true"
-                                        width="100%" 
+                                        showSecondaryValues= "true"                                        
                                         selectedKey="{master>/job_type_code}"
                                         items="{
                                             path: 'util>/Code',
@@ -333,7 +376,7 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>            				
 
-			<uxap:ObjectPageSection 
+			<!-- <uxap:ObjectPageSection 
                 titleUppercase="false" 
                 title="{I18N>/MULTILINGUAL} ({= (${languages>/PdPartBaseActivityLng})?${languages>/PdPartBaseActivityLng}.length:0})">
 				<uxap:subSections>
@@ -421,7 +464,7 @@
                         </uxap:blocks>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
-			</uxap:ObjectPageSection>                        
+			</uxap:ObjectPageSection> -->
 
 		</uxap:sections>
 		

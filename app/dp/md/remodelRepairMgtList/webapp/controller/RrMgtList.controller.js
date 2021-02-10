@@ -85,9 +85,9 @@ sap.ui.define([
             
 
             this._oTPC = new TablePersoController({
-                customDataKey: "rrMgtList",
+                customDataKey: "remodelRepairMgtList",
                 persoService: RrMgtListPersoService
-            }).setTable(this.byId("moldMstTable"));
+            }).setTable(this.byId("remodelRepairMgtListTable"));
             
             this.getRouter().getRoute("rrMgtList").attachPatternMatched(this._onRoutedThisPage, this);
         },

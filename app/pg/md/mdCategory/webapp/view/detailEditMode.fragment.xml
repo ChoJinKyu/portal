@@ -2,6 +2,7 @@
 	xmlns="sap.m"
 	xmlns:l="sap.ui.layout"
     xmlns:form="sap.ui.layout.form"
+    xmlns:lib-m="ext.lib.control.m"
 	xmlns:core="sap.ui.core">
 	<form:SimpleForm id="midObjectForm1Edit" editable="false" >
 		
@@ -22,17 +23,20 @@
                 }
             }" required="true"></Input>  
         <Label text="{I18N>/FONT_RGB_CODE}"/>
-        <Input id="fontColor"
-               width="7rem"
-               editable="false"
-               value="{
-                path: 'master>/rgb_font_color_code',
-                type: 'sap.ui.model.type.String',
-                constraints: {
-                    minLength:1,
-                    maxLength: 7
-                }
-            }"></Input>
-		<Button text="" id="liveChangeButton" press="onFontColor" width="3rem" icon="sap-icon://text-color"/>	  
+        <HBox renderType="Bare">
+            <lib-m:ColoredText id="fontColor" text="{master>/rgb_font_color_code}" color="{master>/rgb_font_color_code}"/>
+            <!-- <Input id="fontColor"
+                width="7rem"
+                editable="false"
+                value="{
+                    path: 'master>/rgb_font_color_code',
+                    type: 'sap.ui.model.type.String',
+                    constraints: {
+                        minLength:1,
+                        maxLength: 7
+                    }
+                }"></Input> -->
+            <Button text="" id="liveChangeButton" press="onFontColor" width="2rem" icon="sap-icon://text-color"/>	  
+        </HBox>
 	</form:SimpleForm>
 </core:FragmentDefinition>

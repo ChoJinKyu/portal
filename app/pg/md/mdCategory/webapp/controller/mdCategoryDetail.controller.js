@@ -193,21 +193,24 @@ sap.ui.define([
                     oMasterModel.setTransactionModel(that.getModel());
                     oMasterModel.submitChanges({
                         success: function (ok) {
+                            if (ok.__batchResponses[0].__changeResponses[0].response != null && ok.__batchResponses[0].__changeResponses[0].response.statusCode == "400") {
+                                MessageToast.show(that.I18N.getText("/EPG10001", [that.I18N.getText("/SPMD_CATEGORY_CODE")]), {at: "center center"});
+                                return;
+                            }
                             oView.setBusy(false);
                             that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                            //MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
+                            MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
                                     
                             that.onPageNavBackButtonPress(); 
                         }.bind(this),
                         error: function(data){
-                            MessageToast.show(this.I18N.getText("/EPG10001", [this.I18N.getText("/SPMD_CATEGORY_CODE")]), {at: "center center"});
-                        }
+                            MessageToast.show(that.I18N.getText("/EPG10001", [that.I18N.getText("/SPMD_CATEGORY_CODE")]), {at: "center center"});
+                        }.bind(this)
                     });
                 };
                 }
             });
         },
-        
 		/**
 		 * Event handler for saving page changes
 		 * @public
@@ -364,7 +367,6 @@ sap.ui.define([
             this._sSpmd_category_code = oArgs.spmd_category_code;
             // this._sSpmd_category_code_name = oArgs.spmd_category_code_name;
             // this._sRgb_font_color_code = oArgs.rgb_font_color_code;
-            // this._sRgb_cell_clolor_code = oArgs.rgb_cell_clolor_code;
             this._sSpmd_category_sort_sequence = oArgs.spmd_category_sort_sequence;
             
 			// this.getModel("midObjectView").setProperty("/isAddedMode", false);
@@ -377,8 +379,7 @@ sap.ui.define([
                     "org_code": this._sOrg_code,
                     "spmd_category_code": "",
                     "spmd_category_code_name": "",
-                    "rgb_font_color_code": "",
-                    "rgb_cell_clolor_code": "",
+                    "rgb_font_color_code": "#000000",
                     "spmd_category_sort_sequence": this._sSpmd_category_sort_sequence
                 }, "/MdCategory" );//, "/MdCategory"
             
@@ -439,11 +440,11 @@ sap.ui.define([
             this.validator.clearValueState(this.byId("midTable"));
 
 			oTransactionManager.setServiceModel(this.getModel());
-            
+
             //ScrollTop
             var oObjectPageLayout = this.getView().byId("page");
-            var oFirstSection = oObjectPageLayout.getSections()[0];
-            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
+            var oFirstSection = this.getView().byId("pageSectionMain");
+            oObjectPageLayout.scrollToSection(oFirstSection, 0, -500);
 		},
 
 
@@ -478,21 +479,20 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", !FALSE);
             
-            this.byId("pageCancelButton").setEnabled(!FALSE);
-            this.byId("pageEditButton").setEnabled(FALSE);
+            this.byId("pageCancelButton").setVisible(!FALSE);
+            this.byId("pageEditButton").setVisible(FALSE);
             if (this._sSpmd_category_code == "new"){
-                this.byId("pageDeleteButton").setEnabled(FALSE);
+                this.byId("pageDeleteButton").setVisible(FALSE);
             }else{
-                this.byId("pageDeleteButton").setEnabled(!FALSE);
+                this.byId("pageDeleteButton").setVisible(!FALSE);
             }
-            this.byId("pageSaveButton").setEnabled(!FALSE);
-			this.byId("pageNavBackButton").setEnabled(FALSE);
+            this.byId("pageSaveButton").setVisible(!FALSE);
+			this.byId("pageNavBackButton").setVisible(FALSE);
 
-			this.byId("midTableAddButton").setEnabled(!FALSE);
-			this.byId("midTableDeleteButton").setEnabled(!FALSE);
-            this.byId("midTableSearchField").setEnabled(FALSE);
+			this.byId("midTableAddButton").setVisible(!FALSE);
+			this.byId("midTableDeleteButton").setVisible(!FALSE);
             
-			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
+			this.byId("midTable").setMode(sap.m.ListMode.MultiSelect);
 			this._bindMidTable(this.oEditableTemplate, "Edit");
 		},
 
@@ -502,15 +502,14 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", TRUE);
             
-            this.byId("pageCancelButton").setEnabled(!TRUE);
-            this.byId("pageEditButton").setEnabled(TRUE);
-            this.byId("pageDeleteButton").setEnabled(!TRUE);
-            this.byId("pageSaveButton").setEnabled(!TRUE);
-			this.byId("pageNavBackButton").setEnabled(TRUE);
+            this.byId("pageCancelButton").setVisible(!TRUE);
+            this.byId("pageEditButton").setVisible(TRUE);
+            this.byId("pageDeleteButton").setVisible(!TRUE);
+            this.byId("pageSaveButton").setVisible(!TRUE);
+			this.byId("pageNavBackButton").setVisible(TRUE);
 
-			this.byId("midTableAddButton").setEnabled(!TRUE);
-			this.byId("midTableDeleteButton").setEnabled(!TRUE);
-            this.byId("midTableSearchField").setEnabled(TRUE);
+			this.byId("midTableAddButton").setVisible(!TRUE);
+			this.byId("midTableDeleteButton").setVisible(!TRUE);
             
 			this.byId("midTable").setMode(sap.m.ListMode.None);
 			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
@@ -636,7 +635,7 @@ sap.ui.define([
 			var oView = this.getView(),
 				oInput = oView.byId("fontColor");
 
-			oInput.setValue(oEvent.getParameter("hex"));
+			oInput.setText(oEvent.getParameter("hex"));
         },
 
 		onExit: function () {

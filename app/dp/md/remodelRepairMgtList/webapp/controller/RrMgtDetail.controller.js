@@ -77,44 +77,37 @@ sap.ui.define([
             console.log("param>>>>> " , oArgs); 
             this._srchDetail(oArgs);
         } ,
-
+        // 상세 조회 
         _srchDetail : function(oArgs){
             var oModel = this.getModel("rrMgt")
                 , session = this.getSessionUserInfo() 
                 , today = this._getToday()
             ;
-              oModel.setTransactionModel(this.getModel())
-              
-              
-              ;
 
+            oModel.setTransactionModel(this.getModel())
             if( oArgs.request_number != "New"){
-                oModel.read("/remodelRepairDetail(tenant_id='" + "L2101"
-                    + "',mold_id='" + oArgs.mold_id 
-                    + "',repair_request_number='"+oArgs.request_number 
-                    + "')", {
-                    filters: [],
+                oModel.read("/remodelRepairDetail(tenant_id='" + session.TENANT_ID 
+                            + "',mold_id='" + oArgs.mold_id 
+                            + "',repair_request_number='"+oArgs.request_number 
+                            + "')", {
+                            filters: [],
                     success: function (oData) {
                         console.log("oData>>>>> ", oData);
                     }
                 });
-            }else{
-
+            }else{ // NEW 일 경우 MOLD 정보만 조회한다. 
                 oModel.read("/remodelRepairNew(tenant_id='" + "L2101"
-                    + "',mold_id='" + oArgs.mold_id + "')", {
-                    filters: [],
-                    success: function (oData) {
-        
-                         
-                    oModel.setProperty("/mold_id",  oArgs.mold_id ); 
-                    oModel.setProperty("/create_user_id", session.USER_ID); 
-                    oModel.setProperty("/user_local_name", session.EMPLOYEE_NAME); 
-                    oModel.setProperty("/user_english_name", session.ENGLISH_EMPLOYEE_NAME); 
-                    oModel.setProperty("/repair_request_date", today);
+                            + "',mold_id='" + oArgs.mold_id + "')", {
+                            filters: [],
+                            success: function (oData) { 
+
+                            oModel.setProperty("/mold_id",  oArgs.mold_id ); 
+                            oModel.setProperty("/create_user_id", session.USER_ID); 
+                            oModel.setProperty("/user_local_name", session.EMPLOYEE_NAME); 
+                            oModel.setProperty("/user_english_name", session.ENGLISH_EMPLOYEE_NAME); 
+                            oModel.setProperty("/repair_request_date", today);
             
-
-
-                        console.log("oData>>>>> ", oData);
+                            console.log("oData>>>>> ", oData);
                     }
                 });
 
@@ -134,6 +127,7 @@ sap.ui.define([
             // console.log(year + "-" + month + "-" + date);
             return year + "" + month + "" + date;
         },
+
         onPageNavBackButtonPress: function () {
             this.getRouter().navTo("rrMgtList", {}, true); 
         },
@@ -159,12 +153,8 @@ sap.ui.define([
                 }
             }
 
-            var msg = "";
             var isOk = true;
-            //  if(this.firstStatusCode == "AR" && this.getModel('appMaster').getProperty("/approve_status_code") == "DR"){ 
-            isOk = true;
-            msg = "저장 하시겠습니까?";
-            //   }
+            var msg = "저장 하시겠습니까?";
 
             if (isOk) {
                 this._callSave(msg, data);
@@ -172,7 +162,7 @@ sap.ui.define([
         }, 
 
         onPageRequestButtonPress : function(){
-// pageSectionRepairInfo 
+            
             if (this.validator.validate(this.byId("pageSectionReqEntry")) !== true) {
                 MessageToast.show(this.getModel('I18N').getText('/ECM01002'));
                 return;
@@ -181,9 +171,6 @@ sap.ui.define([
                 MessageToast.show(this.getModel('I18N').getText('/ECM01002'));
                 return;
             }
-
-
-
 
             var mst = this.getModel("rrMgt").getData()
                 , session = this.getSessionUserInfo();
@@ -205,18 +192,14 @@ sap.ui.define([
                 }
             }
 
-            var msg = "";
+            var msg = "요청 하시겠습니까?";
             var isOk = true;
-            //  if(this.firstStatusCode == "AR" && this.getModel('appMaster').getProperty("/approve_status_code") == "DR"){ 
-            isOk = true;
-            msg = "요청 하시겠습니까?";
-            //   }
 
             if (isOk) {
                 this._callSave(msg, data);
             }
         },
-
+        // confirm 창 띄우고 결과값 받음 
         _callSave : function(msg, data){
             var oView = this.getView();
             var that = this;
@@ -237,11 +220,10 @@ sap.ui.define([
                         }
                     }
                 });
-
         }, 
 
         callAjax : function(data, fn , callback){
-              var url = "/dp/md/remodelRepairMgtList/webapp/srv-api/odata/v4/dp.RrMgtListV4Service/" + fn;
+            var url = "/dp/md/remodelRepairMgtList/webapp/srv-api/odata/v4/dp.RrMgtListV4Service/" + fn;
 
             $.ajax({
                 url: url,
@@ -256,11 +238,6 @@ sap.ui.define([
                     callback(e);
                 }
             });
-        }
-
-
-
-
-
+        }        
     });
 });
