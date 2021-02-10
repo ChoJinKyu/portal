@@ -152,6 +152,7 @@ sap.ui.define([
                 this.byId("statusCode").setValue("");
                 
                 if(!sOrgCode){
+                    this.byId("statusCode").unbindItems();
                     return;
                 }
 
