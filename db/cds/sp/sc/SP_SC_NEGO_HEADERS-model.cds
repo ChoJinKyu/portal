@@ -60,12 +60,12 @@ entity Sc_Nego_Headers {
         nego_document_round             : Integer            @title : '협상문서회차';
         nego_document_number            : String(50)         @title : '협상문서번호';
         nego_document_title             : String(300)        @title : '협상문서제목';
-        nego_document_desc              : String(4000)       @title : '협상문서설명';
+        nego_document_desc              : LargeBinary        @title : '협상문서설명';
         nego_progress_status_code       : String(30)         @title : '협상진행상태코드';
         nego_progress_status : Association to Sc_Nego_Prog_Status_Code_View
                             on nego_progress_status.tenant_id       = $self.tenant_id
                               and nego_progress_status.nego_progress_status_code = $self.nego_progress_status_code;
-        award_progress_status_code      : String(25)         @title : '낙찰진행상태코드';
+        award_progress_status_code      : String(25) default '010' @title : '낙찰진행상태코드';
         award_progress_status : Association to Sc_Award_Prog_Status_Code_View
                             on award_progress_status.tenant_id       = $self.tenant_id
                               and award_progress_status.award_progress_status_code = $self.award_progress_status_code;
@@ -275,7 +275,7 @@ entity Sc_Nego_Headers_View2 as
         operation_org : association to Sc_Pur_Operation_Org 
             on operation_org.tenant_id = $projection.tenant_id
             and operation_org.company_code = $projection.company_code
-            and operation_org.operation_org_code = $projection.operation_unit_code
+            and operation_org.operation_org_code = $projection.operation_org_code
             ;
     } into {
         *,

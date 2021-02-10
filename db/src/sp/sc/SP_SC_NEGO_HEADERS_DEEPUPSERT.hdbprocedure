@@ -87,23 +87,23 @@ BEGIN
 
     vt_nego_header = SELECT 
               NH.tenant_id
-            , map(NH.nego_header_id, -1, NEW_NH.nego_header_id          , NH.nego_header_id          ) as nego_header_id
+            , map(NH.nego_header_id, -1, NEW_NH.nego_header_id          , NH.nego_header_id          ) AS nego_header_id
             , map(-1, NH.nego_header_id     , NEW_NH.reference_nego_header_id
-                    , NH.nego_document_round, NEW_RV.reference_nego_header_id, NH.reference_nego_header_id) as reference_nego_header_id
+                    , NH.nego_document_round, NEW_RV.reference_nego_header_id, NH.reference_nego_header_id) AS reference_nego_header_id
             , map(-1, NH.nego_header_id     , NEW_NH.previous_nego_header_id
-                    , NH.nego_document_round, NEW_RV.previous_nego_header_id, NH.previous_nego_header_id) as previous_nego_header_id
+                    , NH.nego_document_round, NEW_RV.previous_nego_header_id, NH.previous_nego_header_id) AS previous_nego_header_id
             , NH.operation_org_code
             , NH.operation_unit_code
             , map(-1, NH.nego_header_id     , NEW_NH.reference_nego_document_number
-                    , NH.nego_document_round, NEW_RV.reference_nego_document_number, NH.reference_nego_document_number) as reference_nego_document_number
+                    , NH.nego_document_round, NEW_RV.reference_nego_document_number, NH.reference_nego_document_number) AS reference_nego_document_number
             , map(-1, NH.nego_header_id     , NEW_NH.nego_document_round
-                    , NH.nego_document_round, NEW_RV.nego_document_round, NH.nego_document_round) as nego_document_round
+                    , NH.nego_document_round, NEW_RV.nego_document_round, NH.nego_document_round) AS nego_document_round
             , map(-1, NH.nego_header_id     , NEW_NH.nego_document_number
-                    , NH.nego_document_round, NEW_RV.nego_document_number, NH.nego_document_number) as nego_document_number
+                    , NH.nego_document_round, NEW_RV.nego_document_number, NH.nego_document_number) AS nego_document_number
             , NH.nego_document_title
             , NH.nego_document_desc
             , NH.nego_progress_status_code
-            , NH.award_progress_status_code
+            , ifnull(nullif(NH.award_progress_status_code,''),'010') AS award_progress_status_code
             , NH.reply_times
             , NH.supplier_count
             , NH.nego_type_code
@@ -174,40 +174,60 @@ BEGIN
         FROM SP_SC_NEGO_ITEM_NON_PRICE WHERE tenant_id = :v_tenant_id and nego_header_id = :v_nego_header_id;
 
     vt_nego_item_prices_map = 
-        select NIP.tenant_id        as tenant_id_tmp
-            ,  NIP.nego_header_id   as nego_header_id_tmp
-            ,  NIP.nego_item_number as nego_item_number_tmp
-            ,  :v_tenant_id         as tenant_id
-            ,  :v_nego_header_id    as nego_header_id
-            ,  MAP( SUBSTRING(NIP.nego_item_number,1,3)  -- # 신규(TBD) ItemPrice Key Record 생성
-                , 'TBD', LPAD( CAST( IFNULL(:v_nego_item_number_max,0) 
-                                + row_number() over(partition by NIP.tenant_id, NIP.nego_header_id order by NIP.nego_item_number)
-                               AS INTEGER) , 5, '0')
-                , NIP.nego_item_number ) as nego_item_number
-            ,  NS_MAX.item_supplier_sequence_max as item_supplier_sequence_max
-            FROM :I_TABLE_NEGOITEMPRICES AS NIP LEFT OUTER ONE TO ONE JOIN 
+        SELECT *
+        FROM (
+            select INIP.tenant_id            AS tenant_id_tmp
+                 , INIP.nego_header_id       AS nego_header_id_tmp
+                 , INIP.nego_item_number     AS nego_item_number_tmp
+                 , :v_tenant_id              AS tenant_id
+                 , :v_nego_header_id         AS nego_header_id
+                 , LPAD( CAST( IFNULL(:v_nego_item_number_max,0) 
+                                   + row_number() over(partition by INIP.tenant_id, INIP.nego_header_id order by INIP.nego_item_number)
+                       AS INTEGER) , 5, '0') AS nego_item_number
+                 , 0                         AS item_supplier_sequence_max
+            FROM :I_TABLE_NEGOITEMPRICES AS INIP WHERE SUBSTRING(INIP.nego_item_number,1,3) = 'TBD'             -- #INPUT#신규(TBD) ItemPrice Key Record 생성
+            UNION ALL
+            SELECT NIP.tenant_id                 AS tenant_id_tmp
+                 , NIP.nego_header_id            AS nego_header_id_tmp
+                 , NIP.nego_item_number          AS nego_item_number_tmp
+                 , NIP.tenant_id, NIP.nego_header_id, NIP.nego_item_number
+                 , NS_MAX.item_supplier_sequence_max
+            FROM SP_SC_NEGO_ITEM_PRICES AS NIP
+            LEFT OUTER ONE TO ONE JOIN 
                 (SELECT tenant_id, nego_header_id, nego_item_number, CAST(MAX(item_supplier_sequence) AS INTEGER) item_supplier_sequence_max 
-                 FROM sp_Sc_Nego_Suppliers GROUP BY tenant_id, nego_header_id, nego_item_number) AS NS_MAX
-                 ON NIP.tenant_id = NS_MAX.tenant_id AND NIP.nego_header_id = NS_MAX.nego_header_id AND NIP.nego_item_number = NS_MAX.nego_item_number
-            ;
+                    FROM sp_Sc_Nego_Suppliers GROUP BY tenant_id, nego_header_id, nego_item_number) AS NS_MAX  -- #기존#DB#Last Item Number of Suppliers
+                    ON NIP.tenant_id = NS_MAX.tenant_id AND NIP.nego_header_id = NS_MAX.nego_header_id AND NIP.nego_item_number = NS_MAX.nego_item_number
+            WHERE  EXISTS ( SELECT * FROM :I_TABLE_NEGOITEMPRICES WHERE SUBSTRING(NEGO_ITEM_NUMBER,1,3) != 'TBD' AND TENANT_ID = NIP.TENANT_ID AND NEGO_HEADER_ID = NIP.NEGO_HEADER_ID AND NEGO_ITEM_NUMBER = NIP.NEGO_ITEM_NUMBER )
+                OR EXISTS ( SELECT * FROM :I_TABLE_NEGOSUPPLIERS  WHERE SUBSTRING(NEGO_ITEM_NUMBER,1,3) != 'TBD' AND TENANT_ID = NIP.TENANT_ID AND NEGO_HEADER_ID = NIP.NEGO_HEADER_ID AND NEGO_ITEM_NUMBER = NIP.NEGO_ITEM_NUMBER )
+        );
 
     vt_nego_item_non_prices_map = 
-        select NIP.tenant_id         as tenant_id_tmp
-            ,  NIP.nego_header_id    as nego_header_id_tmp
-            ,  NIP.nonpr_item_number as nonpr_item_number_tmp
-            ,  :v_tenant_id          as tenant_id
-            ,  :v_nego_header_id     as nego_header_id
-            ,  MAP( SUBSTRING(NIP.nonpr_item_number,1,3)  -- # 신규(TBD) ItemPrice Key Record 생성
-                , 'TBD', LPAD( CAST( IFNULL(:v_nonpr_item_number_max,0) 
-                                + row_number() over(partition by NIP.tenant_id, NIP.nego_header_id order by NIP.nonpr_item_number)
-                               AS INTEGER) , 5, '0')
-                , NIP.nonpr_item_number ) as nonpr_item_number
-            ,  NS_MAX.nonpr_dtl_item_number_max as nonpr_dtl_item_number_max
-            FROM :I_TABLE_NEGOITEMNONPRICES AS NIP LEFT OUTER ONE TO ONE JOIN 
+        SELECT *
+        FROM (
+            select INIP.tenant_id            AS tenant_id_tmp
+                 , INIP.nego_header_id       AS nego_header_id_tmp
+                 , INIP.nonpr_item_number     AS nonpr_item_number_tmp
+                 , :v_tenant_id              AS tenant_id
+                 , :v_nego_header_id         AS nego_header_id
+                 , LPAD( CAST( IFNULL(:v_nonpr_item_number_max,0) 
+                                   + row_number() over(partition by INIP.tenant_id, INIP.nego_header_id order by INIP.nonpr_item_number)
+                       AS INTEGER) , 5, '0') AS nonpr_item_number
+                 , 0                         AS nonpr_dtl_item_number_max
+            FROM :I_TABLE_NEGOITEMNONPRICES AS INIP WHERE SUBSTRING(INIP.nonpr_item_number,1,3) = 'TBD'             -- #INPUT#신규(TBD) ItemPrice Key Record 생성
+            UNION ALL
+            SELECT NIP.tenant_id                 AS tenant_id_tmp
+                 , NIP.nego_header_id            AS nego_header_id_tmp
+                 , NIP.nonpr_item_number          AS nonpr_item_number_tmp
+                 , NIP.tenant_id, NIP.nego_header_id, NIP.nonpr_item_number
+                 , NS_MAX.nonpr_dtl_item_number_max
+            FROM SP_SC_NEGO_ITEM_NON_PRICE AS NIP
+            LEFT OUTER ONE TO ONE JOIN 
                 (SELECT tenant_id, nego_header_id, nonpr_item_number, CAST(MAX(nonpr_dtl_item_number) AS INTEGER) nonpr_dtl_item_number_max 
-                 FROM sp_Sc_Nego_Item_Non_Price_Dtl GROUP BY tenant_id, nego_header_id, nonpr_item_number) AS NS_MAX
-                 ON NIP.tenant_id = NS_MAX.tenant_id AND NIP.nego_header_id = NS_MAX.nego_header_id AND NIP.nonpr_item_number = NS_MAX.nonpr_item_number
-            ;
+                    FROM SP_SC_NEGO_ITEM_NON_PRICE_DTL GROUP BY tenant_id, nego_header_id, nonpr_item_number) AS NS_MAX  -- #기존#DB#Last Item Number of Suppliers
+                    ON NIP.tenant_id = NS_MAX.tenant_id AND NIP.nego_header_id = NS_MAX.nego_header_id AND NIP.nonpr_item_number = NS_MAX.nonpr_item_number
+            WHERE  EXISTS ( SELECT * FROM :I_TABLE_NEGOITEMNONPRICES WHERE SUBSTRING(nonpr_item_number,1,3) != 'TBD' AND TENANT_ID = NIP.TENANT_ID AND NEGO_HEADER_ID = NIP.NEGO_HEADER_ID AND nonpr_item_number = NIP.nonpr_item_number )
+                OR EXISTS ( SELECT * FROM :I_TABLE_NEGOITEMNONPRICEDTLS  WHERE SUBSTRING(nonpr_item_number,1,3) != 'TBD' AND TENANT_ID = NIP.TENANT_ID AND NEGO_HEADER_ID = NIP.NEGO_HEADER_ID AND nonpr_item_number = NIP.nonpr_item_number )
+        );
 
     BEGIN PARALLEL EXECUTION  -- # 병렬 실행
 
