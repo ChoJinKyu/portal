@@ -199,7 +199,7 @@ BEGIN
         v_insert_idx = :v_insert_idx + 1;
 
         /* RFQ작성(RFQ), 입찰작성(BIDDING)의 경우 담당자를 변경 했을 경우 담당자 변경으로 이력 추가 - Start  */
-        IF :I_JOB_TYPE = 'RFQ' AND :I_JOB_TYPE = 'BIDDING' THEN
+        IF :I_JOB_TYPE = 'RFQ' OR :I_JOB_TYPE = 'BIDDING' THEN
 
             SELECT CASE WHEN PD.BUYER_EMPNO = :I_EMPLOYEE_NUMBER THEN 0 ELSE 1 END
             INTO   v_sql_rowcnt
