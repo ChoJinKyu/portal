@@ -34,6 +34,7 @@ using { cm as cmDeptMst } from '../../../../../db/cds/cm/CM_HR_DEPARTMENT-model'
 using { pg as vpSupplierMst } from '../../../../../db/cds/pg/vp/PG_VP_SUPPLIER_MST_VIEW-model';
 using { pg as vpTreeDrillType } from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_LEAF_INFO_VIEW-model';
 using { cm as sppUserSession} from '../../../../../db/cds/cm/util/CM_SPP_USER_SESSION_VIEW-model';
+using { pg as sppVpTempSession} from '../../../../../db/cds/pg/vp/PG_VP_VENDOR_POOL_TEMP_SESSION_VIEW-model';
 
 namespace pg; 
 @path : '/pg.vendorPoolMappingService'
@@ -57,7 +58,7 @@ service VpMappingService {
                 key m.material_code,
                 m.material_desc
         from   vpMaterialMst.Vp_Material_Mst_View m
-                join sppUserSession.Spp_User_Session_View ssn
+                join sppVpTempSession.Vp_Vendor_Pool_Temp_Session_View ssn
                 on     m.tenant_id    = ssn.TENANT_ID
                 and    m.language_cd  = ssn.LANGUAGE_CODE
         ; 
@@ -82,7 +83,7 @@ service VpMappingService {
                 and    map(md.company_code, '*', mv.company_code, md.company_code) = mv.company_code
                 and    md.org_code      = mv.bizunit_code
                 and    md.material_code = mv.material_code
-                join sppUserSession.Spp_User_Session_View ssn
+                join sppVpTempSession.Vp_Vendor_Pool_Temp_Session_View ssn
                 on     md.tenant_id    = ssn.TENANT_ID
                 and    mv.language_cd  = ssn.LANGUAGE_CODE
         where   ifnull(md.vendor_pool_mapping_use_flag, true) = true
@@ -125,7 +126,7 @@ service VpMappingService {
                 join cmDeptMst.Hr_Department hd
                 on     he.tenant_id       = hd.tenant_id
                 and    he.department_code = hd.department_code
-                join sppUserSession.Spp_User_Session_View ssn
+                join sppVpTempSession.Vp_Vendor_Pool_Temp_Session_View ssn
                 on     md.tenant_id    = ssn.TENANT_ID                
         where  ifnull(md.vendor_pool_mapping_use_flag, true) = true;        
 
@@ -153,7 +154,7 @@ service VpMappingService {
                 supplier_old_supplier_code,
                 maker_old_supplier_code
         from   vpSupplierMst.Vp_Supplier_Mst_View m
-                join sppUserSession.Spp_User_Session_View ssn
+                join sppVpTempSession.Vp_Vendor_Pool_Temp_Session_View ssn
                 on     m.tenant_id    = ssn.TENANT_ID
                 and    m.language_cd  = ssn.LANGUAGE_CODE
         ; 
@@ -194,7 +195,7 @@ service VpMappingService {
                 mst.info_change_status,
                 mst.maker_material_code_mngt_flag
         from   vpDetailView.Vp_Vendor_Pool_Detail_View mst
-                join sppUserSession.Spp_User_Session_View ssn
+                join sppVpTempSession.Vp_Vendor_Pool_Temp_Session_View ssn
                 on     mst.tenant_id    = ssn.TENANT_ID                
                 and    mst.language_cd  = ssn.LANGUAGE_CODE        
         ;  
