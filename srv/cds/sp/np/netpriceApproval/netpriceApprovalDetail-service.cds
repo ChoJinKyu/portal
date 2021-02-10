@@ -276,6 +276,8 @@ service NpApprovalDetailService {
                AND pad.supplier_code    = npm.supplier_code
                AND pad.material_code    = npm.material_code
                AND pad.market_code      = npm.market_code
+               AND pad.currency_code    = npm.currency_code
+
                AND npm.effective_start_date <= TO_VARCHAR (NOW(), 'YYYYMMDD')
                AND npm.effective_end_date >= TO_VARCHAR (NOW(), 'YYYYMMDD')
 
