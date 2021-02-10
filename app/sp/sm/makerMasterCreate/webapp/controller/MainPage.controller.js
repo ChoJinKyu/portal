@@ -238,15 +238,16 @@ sap.ui.define([
             var oWriteModel = this.getModel("writeModel");
             var oGeneralInfo = oWriteModel.getProperty("/generalInfo");
             var sPath = oEvent.getSource().getBindingPath("selectedKey");
-            var oSelectedItem = sap.ui.getCore().byId(oEvent.getSource().getSelectedItemId()).getBindingContext().getObject();
+            var oSelectedItem = oEvent.getSource().getSelectedItemId();
+                oSelectedItem = oSelectedItem !== "" ? sap.ui.getCore().byId(oSelectedItem).getBindingContext().getObject() : oSelectedItem;
 
             if(sPath.indexOf("country_code") > -1){
-                oWriteModel.setProperty("/generalInfo/country_name", oSelectedItem["country_name"]);
+                oWriteModel.setProperty("/generalInfo/country_name", oSelectedItem === "" ? oSelectedItem : oSelectedItem["country_name"]);
                 this._setVisiableVatNumber(oSelectedItem["eu_flag"]);
             }else if(sPath.indexOf("maker_status_code") > -1){
-                oWriteModel.setProperty("/generalInfo/maker_status_name", oSelectedItem["code_name"]);
+                oWriteModel.setProperty("/generalInfo/maker_status_name", oSelectedItem === "" ? oSelectedItem : oSelectedItem["code_name"]);
             }else if(sPath.indexOf("company_class_code") > -1){
-                oWriteModel.setProperty("/generalInfo/company_class_name", oSelectedItem["code_name"]);
+                oWriteModel.setProperty("/generalInfo/company_class_name", oSelectedItem === "" ? oSelectedItem : oSelectedItem["code_name"]);
             }
         },
 

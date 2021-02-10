@@ -554,7 +554,7 @@
                                             </VBox>
                                             <VBox>
                                                 <Label design="Bold" text="{I18N>/COMPANY_TEL_NUMBER}"  required="{mainPageView>/required/basic}"/>
-                                                <Input id="input_company_tel_number" type="sap.m.InputType.Tel"
+                                                <Input id="input_company_tel_number" 
                                                     value="{
                                                         path: 'writeModel>/generalInfo/company_tel_number',
                                                         type: 'sap.ui.model.type.String',
@@ -573,7 +573,7 @@
                                             </VBox>
                                             <VBox>
                                                 <Label design="Bold" text="{I18N>/COMPANY_EMAIL_ADDRESS}" required="{mainPageView>/required/basic}"/>
-                                                <Input id="input_company_email_address"  type="sap.m.InputType.Email"
+                                                <Input id="input_company_email_address" 
                                                     value="{
                                                         path: 'writeModel>/generalInfo/company_email_address', 
                                                         type: 'sap.ui.model.type.String',

@@ -238,8 +238,16 @@
                         </t:Column>
                         <t:Column id="mi_material_code" hAlign="Center" width="10%">
                             <Label text="{I18N>/MI_MATERIAL_CODE}" required="true" />
-                            <t:template>
-                                <Input value="{list>mi_material_code}"  required="true" editable="{= ${list>_row_state_} === 'C' }"
+                            <t:template><!--value="{
+                                        path: 'list>mi_material_code',
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            maxLength: 40
+                                        }
+                                    }"-->
+                                <Input 
+                                    value="{list>mi_material_code}" 
+                                    required="true" editable="{= ${list>_row_state_} === 'C' }"
                                     showSuggestion="true" suggestionItems="{path: '/MIMatCodeView', templateShareable:true}" 
                                     suggestionItemSelected="onSuggestionItemSelected" submit="onSubmit" liveChange="onLiveChange"
                                     valueState="{list>__metadata/_valueStates/mi_material_code/valueState}" valueStateText="{list>__metadata/_valueStates/mi_material_code/valueStateText}">
@@ -293,8 +301,16 @@
                         </t:Column>
                         <t:Column hAlign="Center" width="10em" >
                             <Label text="{I18N>/EXCHANGE_UNIT}"/>
-                            <t:template>
-                                <Input value="{list>exchange_unit}" editable="{= ${list>_row_state_} === 'C' }" ></Input>
+                            <t:template><!--value="{
+                                        path: 'list>exchange_unit',
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            maxLength: 40
+                                        }
+                                    }">-->
+                                <Input value="{list>exchange_unit}" 
+                                 editable="{= ${list>_row_state_} === 'C' }" 
+                                 valueState="{list>__metadata/_valueStates/exchange_unit/valueState}" valueStateText="{list>__metadata/_valueStates/exchange_unit/valueStateText}"/> 
                             </t:template>
                         </t:Column>
                         <t:Column hAlign="Center" width="10em" >
@@ -322,14 +338,30 @@
                         <t:Column hAlign="Center" width="10em" >
                             <Label text="{I18N>/SOURCING_GROUP_CODE}"/>
                             <t:template>
-                                <Input value="{list>sourcing_group_code}" ></Input>  
+                                <!-- value="{
+                                        path: 'list>sourcing_group_code',
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            maxLength: 10
+                                        }
+                                    }"-->
+                                <Input value="{list>sourcing_group_code}" 
+                                valueState="{list>__metadata/_valueStates/sourcing_group_code/valueState}" valueStateText="{list>__metadata/_valueStates/sourcing_group_code/valueStateText}"/> 
                             </t:template>
                         </t:Column>
 
                         <t:Column hAlign="Center" width="10em" >
                             <Label text="{I18N>/DELIVERY_MM}"/>
                             <t:template>
-                                <Input value="{list>delivery_mm}" ></Input>  
+                                <!--value="{
+                                        path: 'list>delivery_mm',
+                                        type: 'sap.ui.model.type.String',
+                                        constraints: {
+                                            maxLength: 10
+                                        }
+                                    }"-->
+                                <Input value="{list>delivery_mm}" 
+                                valueState="{list>__metadata/_valueStates/delivery_mm/valueState}" valueStateText="{list>__metadata/_valueStates/delivery_mm/valueStateText}"/> 
                             </t:template>
                         </t:Column>
                         <t:Column hAlign="Center" width="10em" >
@@ -342,9 +374,16 @@
                             </t:template>
                         </t:Column>
                         <t:Column hAlign="Center" width="10em" >
-                            <Label text="{I18N>/PRICE}"/>
-                            <t:template>
-                                <Input value="{list>price}" type="Number" textAlign="Right"></Input>
+                            <Label text="{I18N>/PRICE}" required="true" />
+                            <t:template><!--value="{
+                                        path: 'list>price',
+                                        type: 'sap.ui.model.type.Float',
+                                        formatOptions:{minIntegerDigits:'1',maxIntegerDigits:'28', minFractionDigits:'0',maxFractionDigits:'5'}
+                                    }"-->
+                                <Input type="Number" 
+                                     value="{list>price}" 
+                                    textAlign="Right" required="true"
+                                    valueState="{list>__metadata/_valueStates/price/valueState}" valueStateText="{list>__metadata/_valueStates/price/valueStateText}"/>
                             </t:template>
                         </t:Column>
                     </t:columns>  
