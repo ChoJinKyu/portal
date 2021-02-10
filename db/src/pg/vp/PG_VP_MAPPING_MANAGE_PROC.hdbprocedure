@@ -1128,10 +1128,9 @@ BEGIN
 							    END IF;
 							END IF;
 							
-						END IF;
-					--삭제 로우가 존재하는 경우 VALIDATION만 체크한다.	
-				    ELSE
-						/*****************************************************
+                        END IF;
+                    ELSEIF TRIM( ' ' FROM loop_sup.CRUD_TYPE_CODE )  =  'D' THEN
+                        /*****************************************************
                         임시 SUPPLIER 저장(TEMP안거치고 DTL로) 여기까지
                         *****************************************************/
                         UPDATE PG_VP_VENDOR_POOL_SUPPLIER_DTL
@@ -1154,17 +1153,13 @@ BEGIN
                         END IF;
                         /*****************************************************
                         임시 SUPPLIER 저장(TEMP안거치고 DTL로) 여기까지
-                        해당 IF문 안에서 아래 부분은 나중에 살려야함.
-                        *****************************************************/
-                        /*
+                        *****************************************************/    
+					--삭제 로우가 존재하는 경우 VALIDATION만 체크한다.	
+				    ELSE
                         IF V_SUPPLIER_EXIST_CNT != 1 THEN
                             --The number of data corresponding to the inquiry condition is not one.
                             SIGNAL invalid_where_info SET MESSAGE_TEXT = 'EPG00020'||'-'||V_ERROR_PARAM||'-@-'||'Supplier Error.['||V_SUPPLIER_LOOP_INDEX||'] '||V_MSG_LOOP_PARAM;
                         END IF;
-                        */
-                        /*****************************************************
-                        TEMP 적용 시 살려야함.
-                        *****************************************************/
 				    END IF;
 				END FOR;
 				/********************************************************
