@@ -23,7 +23,7 @@
         </t:extension>
         <t:columns>
             <!-- <t:Column hAlign="Center" width="6rem"> -->
-            <t:Column width="18rem">
+            <t:Column width="12rem">
                 <Label text="{I18N>/COMPANY}" textAlign="Center" width="100%" />
                 <t:template>
                     <!-- <ComboBox width="100%" 
@@ -42,11 +42,11 @@
                             <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                         </items>
                     </ComboBox> -->
-                    <Text text="{detailModel>company_name}" />
+                    <Text text="{detailModel>company_name}" tooltip="{detailModel>company_name}" />
                 </t:template>
             </t:Column>
             <!-- <t:Column hAlign="Center" width="6rem"> -->
-            <t:Column width="18rem">
+            <t:Column width="12rem">
                 <Label  text="{I18N>/VI_APPROVE_ORG_CODE}" textAlign="Center" width="100%" />
                 <t:template>
                     <!-- <Text text="{detailModel>org_code}" /> -->
@@ -62,7 +62,7 @@
                             <core:Item key="{detailModel>org_code}" text="[{detailModel>org_code}]{detailModel>org_name}" />
                         </items>
                     </ComboBox> -->
-                    <Text text="{detailModel>org_name}" />
+                    <Text text="{detailModel>org_name}" tooltip="{detailModel>org_name}" />
                 </t:template>
             </t:Column>
             <t:Column width="10rem">
