@@ -83,7 +83,7 @@ service NpApprovalService {
                    AND cd.language_cd = ssi.LANGUAGE_CODE
                	   AND cd.code        = pam.outcome_code
 			   )  AS outcome_name : String
-             , cam.request_date                 /* request date */
+             , TO_VARCHAR(TO_DATE(cam.request_date,'YYYYMMDD'), ssi.DATE_FORMAT_TYPE)  AS request_date : String      /* request date */
              , pam.nego_number                  /* ??? negotiation no ??? */
  
              , pam.local_create_dtm AS creation_date   /* creation date */
