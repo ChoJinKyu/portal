@@ -21,14 +21,13 @@
                     <!-- <form:SimpleForm 
                         layout="ResponsiveGridLayout"
                     > -->
-                        <VBox>
-                            <!-- 평가항목명 -->
+                        <!-- <VBox>
                             <Label text="{I18N>/TITLE}:" />
                             <Input 
                                 value="{sSearch>/sTitle}"
                                 submit=".onPageSearchButtonPress"
                             />
-                        </VBox>
+                        </VBox> -->
                         <FlexBox alignItems="End" justifyContent="End">
                             <Button text="{I18N>/DISPLAY}" type="Emphasized" press=".onPageSearchButtonPress"/>
                         </FlexBox>

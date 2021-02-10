@@ -21,7 +21,6 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                     <!-- 평가항목 관리 -->
                     <Title text="자금지원현황" />
                 </f:heading>
 
@@ -31,10 +30,10 @@
                 <f:snappedContent>
                     <VBox>
                         <Label text="공고제목" />
-                        <Input 
+                        <!-- <Input 
                             value="{viewModel>/cond/Contains/funding_notify_title}"
                             submit=".onPressSearch"
-                        />
+                        /> -->
                         <FlexBox alignItems="End" justifyContent="End">
                             <Button text="{I18N>/DISPLAY}" type="Emphasized" press=".onPressSearch"/>
                         </FlexBox>
