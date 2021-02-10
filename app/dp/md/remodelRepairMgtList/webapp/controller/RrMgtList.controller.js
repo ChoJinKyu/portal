@@ -196,20 +196,22 @@ sap.ui.define([
             this._applySearch(aTableSearchState);
         },
 
-
-
         /**
 		 * Shows the selected item on the object page
 		 * On phones a additional history entry is created
 		 * @param {sap.m.ObjectListItem} oItem selected Item
 		 * @private
 		 */
-        showDetail: function (oItem) {
-            var that = this;
-            that.getRouter().navTo("rrMgtDetail", {
-                moldId:'code'
+        onCellClick : function (oEvent) { 
+            var params = oEvent.getParameters()
+              , sPath = params.rowBindingContext.sPath
+              , oRecord = this.getModel("list").getProperty(sPath);
+  
+            this.getRouter().navTo("rrMgtDetail", {
+                mold_id : oRecord.mold_id  
+                , request_number : oRecord.repair_request_number
             });
-           
+         
         },
 
 		/**
