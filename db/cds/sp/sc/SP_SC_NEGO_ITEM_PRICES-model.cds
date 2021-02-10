@@ -14,16 +14,16 @@ using {
     sp.Sc_Pur_Operation_Org,
     sp.Sc_Pu_Pr_Mst,
     sp.Sc_Approval_Mst
-} from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+} from '../../sp/sc/SP_SC_REFERENCE_OTHERS-model';
 
-using { sp.Sc_Mm_Material_Mst } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+using { sp.Sc_Mm_Material_Mst } from '../../sp/sc/SP_SC_REFERENCE_OTHERS-model';
 
 using {
     sp.Sc_Incoterms_View,
     sp.Sc_Payment_Terms_View,
     sp.Sc_Market_Code_View,
     sp.Sc_Spec_Code_View
-} from '../../sp/sc/SP_SC_REFERENCE_COMMON.model';
+} from '../../sp/sc/SP_SC_REFERENCE_COMMON-model';
 
 /////////////////////////////////// Reference Type ///////////////////////////////////
 // TYPE-POOLS
@@ -42,7 +42,7 @@ using {
 /* 
 // #Sc_Pur_Operation_Org == Pur_Org_Type_Mapping[process_type_code='SP03:견적입찰'] = Pur_Operation_Org =+ Code_Lng[group_code='CM_ORG_TYPE_CODE']
 // #How to use : as association
-using { sp.Sc_Pur_Operation_Org } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+using { sp.Sc_Pur_Operation_Org } from '../../sp/sc/SP_SC_REFERENCE_OTHERS-model';
         operation_org : association to Sc_Pur_Operation_Org 
             on operation_org.tenant_id = $self.tenant_id
             and operation_org.company_code = $self.company_code

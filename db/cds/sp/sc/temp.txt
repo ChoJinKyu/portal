@@ -215,6 +215,9 @@ curl 'https://lg-common-dev-workspaces-ws-szhkx-app2.jp10.applicationstudio.clou
 
 
 
+PG_VP_VENDOR_POOL_MST
+이게 일단 벤더풀만 들어가있는 마스터입니다.
 
-
-
+혹시.. ITEM 또는 SUPPLIER와 같이 사용해야 할 경우에는..
+PG_Vp_Vendor_Pool_Item_Dtl
+PG_VP_VENDOR_POOL_SUPPLIER_DTL

@@ -22,14 +22,14 @@ using {
     sp.Sc_Employee_View,
     sp.Sc_Hr_Department,
     sp.Sc_Pur_Operation_Org
-} from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+} from '../../sp/sc/SP_SC_REFERENCE_OTHERS-model';
 
 using {
     sp.Sc_Nego_Prog_Status_Code_View,
     sp.Sc_Award_Prog_Status_Code_View,
     sp.Sc_Award_Type_Code_View,
     sp.Sc_Award_Method_Code_View
-} from '../../sp/sc/SP_SC_REFERENCE_COMMON.model';
+} from '../../sp/sc/SP_SC_REFERENCE_COMMON-model';
 
 // TYPE-POOLS
 using {
@@ -247,7 +247,7 @@ entity Sc_Nego_Headers_View as
     };
 
   annotate Sc_Nego_Headers_View with @( 
-        title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가',readonly
+        title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가'
   ) {
         remain_times @title:'잔여시간' @description:'잔여시간=마감시간-현재시간' @readonly;
   };
