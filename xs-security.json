@@ -112,6 +112,7 @@
         }
     ],
     "oauth2-configuration": {
+        "token-validity": 43200,
         "redirect-uris": [
             "https://biztech-partners-co---ltd-lg-common-dev-dev-po-sppcap-approuter.cfapps.jp10.hana.ondemand.com",
             "https://*.jp10.applicationstudio.cloud.sap/**"
