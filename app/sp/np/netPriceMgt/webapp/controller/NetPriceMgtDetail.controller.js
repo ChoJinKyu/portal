@@ -869,7 +869,6 @@ sap.ui.define([
                 var procObj = {
                     "param" : {
                         "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
-                        "company_code": SppUserSessionUtil.getUserInfo().COMPANY_CODE,
                         "approval_number": that.pAppNum,
                         "approve_status_code": status
                     }
