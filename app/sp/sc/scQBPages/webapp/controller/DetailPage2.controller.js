@@ -1815,6 +1815,12 @@ sap.ui.define([
             onExport: function () {
                 this.createConfirmBox();
             },
+            ,
+            onPressBiddingFlag: function (e) {
+                e.getSource().setProperty("text", e.getSource().getPressed() ? "YES":"NO");
+                // console.log( " >> onPressBiddingFlag" );
+                // console.log( e );
+            },
 
             inputAwardSupChange: function(e){
 

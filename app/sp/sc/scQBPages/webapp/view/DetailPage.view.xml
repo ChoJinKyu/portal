@@ -791,7 +791,8 @@
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
                                                                     <ToggleButton text="{=${NegoHeaders>bidding_start_net_price_flag} === 'Y' ? 'YES' : 'NO'}" 
-                                                                        visible="{=${propInfo>/isEditMode}}" pressed="{=${NegoHeaders>bidding_start_net_price_flag} === 'Y' ? true : false}"  />
+                                                                        visible="{=${propInfo>/isEditMode}}" pressed="{=${NegoHeaders>bidding_start_net_price_flag} === 'Y' ? true : false}"  
+                                                                        press="onPressBiddingFlag"/>
 
                                                                     <!-- <lib-m:FlagToggleButton  enabled="{=${propInfo>/isEditMode}}" pressed="{NegoHeaders>bidding_start_net_price_flag}" /> -->
                                                                     <Text text="{=${NegoHeaders>bidding_start_net_price_flag} === 'Y' ? 'YES' : 'NO'}" visible="{=!${propInfo>/isEditMode}}" /> 
