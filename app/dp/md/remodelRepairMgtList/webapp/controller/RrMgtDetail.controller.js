@@ -228,7 +228,8 @@ sap.ui.define([
                                 , function(result){
                                     oView.setBusy(false);
                                     MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
-                                if (result.resultCode > -1) {
+                                if (result.resultCode > -1) { 
+                                    result.request_number = result.repair_request_number 
                                     console.log("result>>>> ", result);
                                     that._srchDetail(result);
                                 }

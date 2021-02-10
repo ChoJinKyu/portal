@@ -278,25 +278,25 @@ sap.ui.define([
             if(search.getProperty("/model") != undefined 
                 && search.getProperty("/model") != null && search.getProperty("/model") != "" ){ 
                 var srch = search.getProperty("/model");
-                aTableSearchState.push(new Filter("model", FilterOperator.Contains, srch));
+                aTableSearchState.push(new Filter("tolower(model)", FilterOperator.StartsWith, String(srch.toLowerCase()) ));
             };
             
             if(search.getProperty("/mold_number") != undefined 
                 && search.getProperty("/mold_number") != null && search.getProperty("/mold_number") != "" ){ 
                 var srch = search.getProperty("/mold_number");
-                aTableSearchState.push(new Filter("mold_number", FilterOperator.Contains, srch));
+                aTableSearchState.push(new Filter("tolower(mold_number)", FilterOperator.StartsWith, String(srch.toLowerCase())));
             };
 
             if(search.getProperty("/class_desc") != undefined 
                 && search.getProperty("/class_desc") != null && search.getProperty("/class_desc") != "" ){ 
                 var srch = search.getProperty("/class_desc");
-                aTableSearchState.push(new Filter("class_desc", FilterOperator.Contains, srch));
+                aTableSearchState.push(new Filter("tolower(class_desc)", FilterOperator.StartsWith, String(srch.toLowerCase())));
             };
             
             if(search.getProperty("/asset_number") != undefined 
                 && search.getProperty("/asset_number") != null && search.getProperty("/asset_number") != "" ){ 
                 var srch = search.getProperty("/asset_number");
-                aTableSearchState.push(new Filter("asset_number", FilterOperator.Contains, srch));
+                aTableSearchState.push(new Filter("tolower(asset_number)", FilterOperator.StartsWith, String(srch.toLowerCase())));
             };
             
             console.log("aTableSearchState>>>> " , aTableSearchState);
