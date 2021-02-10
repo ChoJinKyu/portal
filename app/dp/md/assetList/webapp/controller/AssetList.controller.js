@@ -54,7 +54,7 @@ sap.ui.define([
             var oViewModel,
                 oResourceBundle = this.getResourceBundle();
             
-            console.log(" session >>> " , this.getSessionUserInfo().TENANT_ID);
+            console.log(" session >>> " , 'L2101');
             // Model used to manipulate control states
             oViewModel = new JSONModel({
                 assetListTableTitle: oResourceBundle.getText("assetListTableTitle"),
@@ -126,7 +126,7 @@ sap.ui.define([
 
         _segmentSrch : function (){
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
+            var sTenant_id='L2101';
             var oView = this.getView(),
                 oModel = this.getModel("SegmentedItem") ,
                 codeName = this.getModel('I18N').getText("/ALL")
@@ -157,7 +157,7 @@ sap.ui.define([
 
         setPlant: function(companyCode){
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
+            var sTenant_id='L2101';
 
             var filter = new Filter({
                     filters: [
@@ -186,7 +186,7 @@ sap.ui.define([
         */
         handleSelectionFinishComp: function (oEvent) {
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
+            var sTenant_id='L2101';
             this.copyMultiSelected(oEvent);
 
             var params = oEvent.getParameters();
@@ -436,7 +436,8 @@ sap.ui.define([
                         secondary_supplier_name     : viewData[oSelected[i]].secondary_supplier_name,
                         tertiary_supplier_name      : viewData[oSelected[i]].tertiary_supplier_name,
                         local_update_dtm            : new Date(),
-                        update_user_id              : session.USER_ID,
+                        // 추후 세션의 user_id로 변경 필요
+                        update_user_id              : "17370CHEM@lgchem.com",
                         system_update_dtm           : new Date()
                 });
                 

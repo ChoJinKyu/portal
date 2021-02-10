@@ -1,4 +1,5 @@
 using {tmp.emp as emp} from '../TMP_EMP-model';
+using util from '../../cm/util/util-model';
 
 namespace tmp_tmp3;
 
@@ -8,4 +9,5 @@ entity emp_extb {
 	OFFC_TELNO : String(20) @title: 'OFFC_TELNO';
     EMP_ID_FK : Association to emp 
                 on EMP_ID_FK.EMP_ID = EMP_ID;
-}
+};
+extend emp_extb with util.Managed;

@@ -35,7 +35,7 @@ sap.ui.define([
         this.setModel(oMultilingual.getModel(), "I18N");
         this.getView().setModel(new ManagedListModel(), "list");
         this.rowIndex=0;
-        
+
         var STATE_COL = "_row_state_";
         ManagedListModel.prototype._executeBatch = function (sGroupId) {
             var oServiceModel = this._oTransactionModel,
@@ -93,6 +93,28 @@ sap.ui.define([
       // Display row number without changing data
       onAfterRendering: function () {
         //this.onSearch();
+
+        //화학 기본설정 - 사업본부
+        this.getView().byId("searchTenantCombo").setSelectedKey("L2100");
+        var oSelectedkey = this.getView().byId("searchTenantCombo").getSelectedKey();
+        var business_combo = this.getView().byId("searchChain");  
+        business_combo.setValue("");
+
+        var aFiltersComboBox = [];
+        aFiltersComboBox.push( new Filter("tenant_id", "EQ", oSelectedkey));
+        var businessSorter = new sap.ui.model.Sorter("bizunit_code", false);        //sort Ascending
+        
+        business_combo.bindAggregation("items", {
+            path: "org>/Org_Unit",
+            sorter: businessSorter,
+            filters: aFiltersComboBox,
+            // @ts-ignore
+            template: new sap.ui.core.ListItem({
+                key: "{org>bizunit_code}",
+                text: "{org>bizunit_name}",
+                additionalText: "{org>bizunit_code}"
+            })
+        });
       },
 
 
@@ -115,9 +137,10 @@ sap.ui.define([
             sorter: businessSorter,
             filters: aFiltersComboBox,
             // @ts-ignore
-            template: new sap.ui.core.Item({
+            template: new sap.ui.core.ListItem({
                 key: "{org>bizunit_code}",
-                text: "{org>bizunit_code}: {org>bizunit_name}"
+                text: "{org>bizunit_name}",
+                additionalText: "{org>bizunit_code}"
             })
         });
     },

@@ -35,9 +35,9 @@
         <f:header>
             <f:DynamicPageHeader pinnable="true">
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" 
-                adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" 
-                                        emptySpanL="0" emptySpanM="0" 
-                                        columnsL="2" columnsM="2" >
+                                                     adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" 
+                                                     emptySpanL="0" emptySpanM="0" 
+                                                     columnsL="2" columnsM="2" >
                     <form:content>
                         <VBox>
 <!--                                
@@ -164,7 +164,7 @@
                         sticky="HeaderToolbar,ColumnHeaders" 
                         inset="false" 
                         growing="true"
-                        mode="MultiSelect"
+                        mode="None"
                         growingThreshold="10"
                         class="sapFDynamicPageAlignContent" 
                         updateFinished=".onMainTableUpdateFinished"
@@ -182,7 +182,7 @@
                             <Title text="{i18n>appTitle} ({= ${list>/Pr_MstView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="mainTableAddButton" text="{I18N>/CREATE}" type="Transparent" press=".onMainTableAddDialogPress" />
-                            <Button id="mainTableDeleteButton" text="{I18N>/DELETE}" type="Transparent" press=".onPrDeletePress" />
+                            <!-- <Button id="mainTableDeleteButton" text="{I18N>/DELETE}" type="Transparent" press=".onPrDeletePress" /> -->
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://excel-attachment" press=".onExportPress" >
                                 <layoutData>
