@@ -329,12 +329,12 @@
                     selectionBehavior="RowOnly"
                     fixedColumnCount="6"
                     visibleRowCountMode="Auto"
-                    rows="{list>/MoldMasterSpec}"
+                    rows="{/RemodelRepairStatus}"
                     cellClick=".onCellClick"
                     rowSelectionChange=".onCheck">
                 <table:extension>
                     <OverflowToolbar>
-                        <Title text="{I18N>/LIST} ({= ${list>/MoldMasterSpec}.length || 0})" level="H2"/>
+                        <Title text="{I18N>/LIST} ({= ${/RemodelRepairStatus}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
                         <Button id="moldMstTableExcelButton" icon="sap-icon://excel-attachment" press=".onExportPress"   />
                         <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
@@ -351,7 +351,7 @@
                             <Label text="{path:'I18N>/NO', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>       
                         <table:template>
-                            <Text text="{list>company_code}"/> 
+                            <Text text="{rownum}"/> 
                         </table:template>
                     </table:Column>
                     <table:Column id="moldCompanyColumn" width="10rem" hAlign="Center">
@@ -360,7 +360,7 @@
                             <Label text="{path:'I18N>/COMPANY', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>          
                         <table:template>
-                            <Text id="company_code" text="{list>company_code}"/> 
+                            <Text id="company_code" text="[{company_code}] {company_name}"/> 
                         </table:template>
                     </table:Column>
                     <table:Column id="moldDivisionColumn" width="10rem" hAlign="Center">
@@ -369,7 +369,7 @@
                             <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text id="org_code" text="{list>org_code}"/>
+                            <Text id="org_code" text="[{org_code}] {org_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldModelColumn" width="10rem"  hAlign="Center">
@@ -378,7 +378,7 @@
                             <Label text="{path:'I18N>/MODEL', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template >
-                            <Text id="model" text="{list>model}"/>
+                            <Text id="model" text="{model}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldMoldNoColumn" width="10rem" hAlign="Center">
@@ -387,7 +387,7 @@
                             <Label text="{path:'I18N>/MOLD_NO', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text id="mold_number" text="{list>mold_number}"/>
+                            <Text id="mold_number" text="{mold_number}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldSeqColumn" width="10rem" hAlign="Center">
@@ -396,7 +396,7 @@
                             <Label text="{path:'I18N>/SEQ', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text id="mold_sequence" text="{list>mold_sequence}"/>
+                            <Text id="mold_sequence" text="{mold_sequence}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldSparePartColumn" width="10rem" >
@@ -405,7 +405,7 @@
                             <Label text="{path:'I18N>/SPARE_PART', formatter:'I18NFormatter'}" class="label-center"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text  text="{list>spec_name}"/>
+                            <Text  text="제외 컬럼?"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldPdmRequestNoColumn" width="10rem">
@@ -414,7 +414,7 @@
                             <Label text="{path:'I18N>/PDM_REQUEST_NO', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text  text="{list>spec_name}"/>
+                            <Text  text="미정"/>
                         </table:template>
                     </table:Column>
 
@@ -424,7 +424,7 @@
                             <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text  text="{list>spec_name}"/>
+                            <Text  text="{spec_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldRepairNoColumn" width="10rem">
@@ -433,7 +433,7 @@
                             <Label text="{path:'I18N>/REPAIR_NO', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text  text="{list>spec_name}"/>
+                            <Text  text="{repair_request_number}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldRepairDateColumn" width="10rem">
@@ -442,7 +442,7 @@
                             <Label text="{path:'I18N>/REPAIR_DATE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text  text="{list>spec_name}"/>
+                            <Text  text="{repair_request_date}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldEcoNoColumn" width="10rem">
@@ -451,7 +451,7 @@
                             <Label text="{path:'I18N>/ECO_NO', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text  text="{list>spec_name}"/>
+                            <Text  text="{eco_number}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldEcoRequestorColumn" width="10rem">
@@ -460,7 +460,7 @@
                             <Label text="{path:'I18N>/ECO_REQUESTOR', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text  text="{list>spec_name}"/>
+                            <Text  text="삭제?"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldRepairTypeColumn" width="10rem">
@@ -469,7 +469,7 @@
                             <Label text="{path:'I18N>/REPAIR_TYPE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text  text="{list>spec_name}"/>
+                            <Text  text="{repair_type_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldItemTypeColumn" width="10rem" hAlign="Center">
@@ -478,7 +478,7 @@
                             <Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>mold_item_type_name}"/>
+                            <Text text="{mold_item_type_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldEdTypeColumn" width="10rem" hAlign="Center">
@@ -487,7 +487,7 @@
                             <Label text="{path:'I18N>/ED_TYPE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>mold_item_type_name}"/>
+                            <Text text="{mold_location_type_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="moldItemSizeColumn" width="10rem" hAlign="Center">
@@ -496,7 +496,7 @@
                             <Label text="{path:'I18N>/ITEM_SIZE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>mold_item_type_name}"/>
+                            <Text text="{repair_mold_size}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -505,7 +505,7 @@
                             <Label text="{path:'I18N>/CURRENCY', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{currency_code}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -514,7 +514,8 @@
                             <Label text="{path:'I18N>/REQUESTOR', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{=${requestor_empno}? ${requestor_name} +' [' + ${requestor_empno} + ']' : '' }"/>
+                            
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -523,7 +524,7 @@
                             <Label text="{path:'I18N>/ESTIMATE_DATE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{repair_supplier_quotation_date}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -532,7 +533,7 @@
                             <Label text="{path:'I18N>/ESTIMATE_AMOUNT', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{repair_quotation_amount}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -541,7 +542,7 @@
                             <Label text="{path:'I18N>/REPAIR_SUPPLIER', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{=${repair_supplier_code}? '[' + ${repair_supplier_code}+'] ' + ${repair_supplier_name} : '' }"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -550,7 +551,7 @@
                             <Label text="{path:'I18N>/REPAIR_AMOUNT', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{repair_amount}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -559,7 +560,7 @@
                             <Label text="{path:'I18N>/MOVE_PLAN_DATE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{mold_moving_plan_date}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -568,7 +569,7 @@
                             <Label text="{path:'I18N>/COMPLETE_PLAN_DATE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{mold_complete_plan_date}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -577,7 +578,7 @@
                             <Label text="{path:'I18N>/ACCOUNT_DEPT', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{=${accounting_department_code}? '[' + ${accounting_department_code} + '] ' + ${accounting_department_name} : '' }"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -586,7 +587,7 @@
                             <Label text="{path:'I18N>/ACCOUNT_NAME', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{=${account_code}? '[' + ${account_code} + '] ' + ${account_name} : '' }"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -595,7 +596,7 @@
                             <Label text="{path:'I18N>/CLEAR_EXPECT_DATE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="미사용?"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -604,7 +605,7 @@
                             <Label text="{path:'I18N>/INVEST_TYPE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{investment_ecst_type_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -613,7 +614,7 @@
                             <Label text="{path:'I18N>/INVEST_CODE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="미사용?"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -622,7 +623,7 @@
                             <Label text="{path:'I18N>/RECEIPT_DATE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="미사용?"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -631,17 +632,17 @@
                             <Label text="{path:'I18N>/COMPLETE_DATE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{repair_complete_date}"/>
                         </table:template>
                     </table:Column>
 
-                    <table:Column width="10rem" hAlign="Center" headerSpan="5">
+                    <!-- <table:Column width="10rem" hAlign="Center" headerSpan="5">
                         <table:multiLabels>
                             <Label text="{path:'I18N>/REPAIR_REPORT', formatter:'I18NFormatter'}" />
                             <Label text="{path:'I18N>/REPORT_NO', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{approval_number}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center" >
@@ -650,7 +651,7 @@
                             <Label text="{path:'I18N>/REPORT_NAME', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{approval_title}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center" >
@@ -659,7 +660,7 @@
                             <Label text="{path:'I18N>/REQUESTOR', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{requestor_name}[requestor_empno]"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center" >
@@ -668,7 +669,7 @@
                             <Label text="{path:'I18N>/REPORT_DATE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{request_date}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center" >
@@ -677,9 +678,9 @@
                             <Label text="{path:'I18N>/STATUS', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{approve_status_name}"/>
                         </table:template>
-                    </table:Column>
+                    </table:Column> -->
 
                     <table:Column width="10rem" hAlign="Center">
                         <table:multiLabels>
@@ -687,7 +688,7 @@
                             <Label text="{path:'I18N>/NEGO_STATUS', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{repair_progress_status_name}"/>
                         </table:template>
                     </table:Column>
 
@@ -697,7 +698,7 @@
                             <Label text="{path:'I18N>/REPORT_NO', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{approval_number}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center" >
@@ -706,7 +707,7 @@
                             <Label text="{path:'I18N>/REPORT_NAME', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{approval_title}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center" >
@@ -715,7 +716,7 @@
                             <Label text="{path:'I18N>/REQUESTOR', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{=${requestor_empno}? ${requestor_name} + '[' + ${requestor_empno} + ']' : '' }"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center" >
@@ -724,7 +725,7 @@
                             <Label text="{path:'I18N>/REPORT_DATE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{request_date}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center" >
@@ -733,7 +734,7 @@
                             <Label text="{path:'I18N>/STATUS', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{approve_status_name}"/>
                         </table:template>
                     </table:Column>
 
@@ -743,7 +744,7 @@
                             <Label text="{path:'I18N>/ASSET_NO', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{asset_number}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -752,7 +753,7 @@
                             <Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{asset_type_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -761,7 +762,7 @@
                             <Label text="{path:'I18N>/PROD_SUPPLIER', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{=${primary_supplier_code}? '[' + ${primary_supplier_code} + '] ' + ${primary_supplier_name} : '' }"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -770,7 +771,7 @@
                             <Label text="{path:'I18N>/KEEP_VENDOR', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{=${secondary_supplier_code}? '[' + ${secondary_supplier_code} + '] ' + ${secondary_supplier_name} : '' }"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -779,7 +780,7 @@
                             <Label text="{path:'I18N>/SAMPLE_QTY', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{sample_quantity}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -788,7 +789,7 @@
                             <Label text="{path:'I18N>/USE_MATERIAL', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{use_material_value}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -797,7 +798,7 @@
                             <Label text="{path:'I18N>/DIE_MACHINE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{mold_tonnage}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -806,7 +807,7 @@
                             <Label text="{path:'I18N>/CAVITY_PROC_QTY', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{cavity_process_qty}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="10rem" hAlign="Center">
@@ -815,7 +816,7 @@
                             <Label text="{path:'I18N>/REQUEST_LIFE', formatter:'I18NFormatter'}"/>           
                         </table:multiLabels>
                         <table:template>
-                            <Text text="{list>currency_code}"/>
+                            <Text text="{request_life_shot_count}"/>
                         </table:template>
                     </table:Column>
 
