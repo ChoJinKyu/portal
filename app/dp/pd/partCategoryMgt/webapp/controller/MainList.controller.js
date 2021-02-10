@@ -55,11 +55,16 @@ sap.ui.define([
             onSearch: function (event) {
                 var predicates = [];
                 if (!!this.byId("searchCategoryCombo").getSelectedKey()) {
-                    predicates.push(new Filter("category_group_code", FilterOperator.Contains, this.byId("searchCategoryCombo").getSelectedKey()));
+                    predicates.push(new Filter("category_group_code", FilterOperator.EQ, this.byId("searchCategoryCombo").getSelectedKey()));
                 }
 
                 if (!!this.byId("searchActiveFlag").getSelectedKey()) {
-                    predicates.push(new Filter("activity_flag", FilterOperator.Contains, this.byId("searchActiveFlag").getSelectedKey()));
+                    if(this.byId("searchActiveFlag").getSelectedKey()=="Active"){
+                        predicates.push(new Filter("active_flag", FilterOperator.EQ, true));
+                    } else {
+                        predicates.push(new Filter("active_flag", FilterOperator.EQ, false));
+                    }
+                    
                 }
                
                 this.treeListModel = this.treeListModel || new TreeListModel(this.getView().getModel(), { returnType: "Array" });

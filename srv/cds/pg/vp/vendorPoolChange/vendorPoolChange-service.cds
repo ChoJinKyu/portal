@@ -32,5 +32,6 @@ service VpChangeService {
     view VpEmpView as
     select distinct key changer_empno,  
                         changer_name 
-    from vpChangeList.Vp_Vendor_Pool_supplier_Change_List_View; 
+    from vpChangeList.Vp_Vendor_Pool_supplier_Change_List_View
+    where changer_empno is not null; 
 }

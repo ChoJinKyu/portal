@@ -108,6 +108,21 @@ BEGIN
             , NH.supplier_participation_flag
             , NH.partial_allow_flag
             , NH.bidding_result_open_status_code
+            , NH.max_round_count
+            , NH.auto_round
+            , NH.auto_round_terms
+            , NH.previous_round
+            , NH.number_of_award_supplier
+            , NH.order_rate_01
+            , NH.order_rate_02
+            , NH.order_rate_03
+            , NH.order_rate_04
+            , NH.order_rate_05
+            , NH.bid_conference
+            , NH.bid_conference_date
+            , NH.bid_conference_place
+            , NH.contact_point_empno
+            , NH.phone_no
             -- , * 
             , NOW() local_create_dtm, NOW() local_update_dtm, :v_app_user create_user_id, :v_app_user update_user_id, NOW() system_create_dtm, NOW() system_update_dtm 
             FROM :I_TABLE_NEGOHEADERS NH
@@ -200,6 +215,21 @@ BEGIN
             , supplier_participation_flag
             , partial_allow_flag
             , bidding_result_open_status_code
+            , max_round_count
+            , auto_round
+            , auto_round_terms
+            , previous_round
+            , number_of_award_supplier
+            , order_rate_01
+            , order_rate_02
+            , order_rate_03
+            , order_rate_04
+            , order_rate_05
+            , bid_conference
+            , bid_conference_date
+            , bid_conference_place
+            , contact_point_empno
+            , phone_no
             , local_create_dtm
             , local_update_dtm
             , create_user_id

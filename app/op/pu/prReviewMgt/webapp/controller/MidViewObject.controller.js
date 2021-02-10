@@ -68,7 +68,7 @@ sap.ui.define([
             // Transaction
             (
                 // 마감취소
-                (action == 'CLOSING_CANCEL' && (message = "(메세지)마감취소를 진행하시겠습니까?"))
+                (action == 'CLOSING_CANCEL' && (message = this.getModel("I18N").getText("/NOP00010")))
             )
             &&
             (function() {
@@ -94,7 +94,7 @@ sap.ui.define([
                                     onCommit: function() {
                                         var [event, action, value, ...args] = arguments;
                                         if (!value.processedReason) {
-                                            MessageBox.alert("(미정)사유를 입력하세요");
+                                            MessageBox.alert(this.getModel("I18N").getText("/NOP00004"));
                                             return false;
                                         }
                                         return value;

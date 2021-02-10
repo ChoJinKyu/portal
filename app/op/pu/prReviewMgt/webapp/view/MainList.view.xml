@@ -16,7 +16,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="(미정)구매요청 검토/접수" />
+                    <Title text="{I18N>/PR_REVIEW_RECEIPT}" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -90,8 +90,8 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <!-- 확정일자 (미정) -->
-                            <Label text="(미정)확정일자"/>
+                            <!-- 확정일자 -->
+                            <Label text="{I18N>/CONFIRMED_DATE}"/>
                             <DateRangeSelection 
                                 width="100%"
                                 value="{
@@ -208,7 +208,7 @@
                             <Title text="{i18n>appTitle} ({= ${list>/Pr_ReviewListView}.length || 0})" level="H2"/>
                             <ToolbarSpacer/>
                             <Button 
-                                text="(미정)RFQ작성"
+                                text="{I18N>/RFQ_WRITE}"
                                 type="Transparent"
                                 press=".onButtonPress($event, 'service', {
                                     action: 'RFQ',
@@ -218,7 +218,7 @@
                                 })"
                             />
                             <Button 
-                                text="(미정)입찰작성"
+                                text="{I18N>/BIDDING_WRITE}"
                                 type="Transparent"
                                 press=".onButtonPress($event, 'service', {
                                     action: 'BIDDING',
@@ -228,7 +228,7 @@
                                 })"
                             />
                             <Button 
-                                text="(미정)재작성요청"
+                                text="{I18N>/REWRITE_REQUEST}"
                                 type="Transparent"
                                 press=".onButtonPress($event, 'service', {
                                     action: 'REWRITE',
@@ -238,7 +238,7 @@
                                 })"
                             />
                             <Button 
-                                text="(미정)마감"
+                                text="{I18N>/PR_REVIEW_CLOSING}"
                                 type="Transparent"
                                 press=".onButtonPress($event, 'service', {
                                     action: 'CLOSING',
@@ -248,7 +248,7 @@
                                 })"
                             />
                             <Button 
-                                text="(미정)구매담당자변경"
+                                text="{I18N>/BUYER_CHANGE}"
                                 type="Transparent"
                                 press=".onButtonPress($event, 'service', {
                                     action: 'CHANGE',
@@ -339,7 +339,7 @@
                         </Column>
                         <!-- 진행상태 -->
                         <Column minScreenWidth="Desktop" hAlign="Center" width="auto">
-                            <Text text="(미정)진행상태" />
+                            <Text text="{I18N>/PROGRESS_STATUS}" />
                         </Column>
                     </columns>
                     <items>
@@ -396,8 +396,13 @@
                                     text="{path: 'list>pr_progress_status_name'}"
                                     inverted="true"
                                     active="false"
-                                    icon="sap-icon://message-information"
-                                    state="Information" 
+                                    state="{= 
+                                        ${list>pr_progress_status_code} ===  'RUN' 
+                                        ? 'Information' 
+                                        : ${list>pr_progress_status_code} ===  'CLOSING' 
+                                        ? 'Success' 
+                                        : 'None' 
+                                    }" 
                                 />
                             </cells>
                         </ColumnListItem>

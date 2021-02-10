@@ -54,7 +54,7 @@ sap.ui.define([
             var oViewModel,
                 oResourceBundle = this.getResourceBundle();
             
-            console.log(" session >>> " , this.getSessionUserInfo().TENANT_ID);
+            console.log(" session >>> " , 'L2101');
             // Model used to manipulate control states
             oViewModel = new JSONModel({
                 assetListTableTitle: oResourceBundle.getText("assetListTableTitle"),
@@ -82,9 +82,10 @@ sap.ui.define([
             this._oTPC = new TablePersoController({
                 customDataKey: "assetList",
                 persoService: AssetListPersoService
-            }).setTable(this.byId("moldMstTable"));
+            }).setTable(this.byId("assetListTable"));
             
             this.getRouter().getRoute("assetList").attachPatternMatched(this._onRoutedThisPage, this);
+            console.log(this.getSessionUserInfo());
         },
 
         onMainTablePersoButtonPressed: function (event) {
@@ -125,7 +126,7 @@ sap.ui.define([
 
         _segmentSrch : function (){
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
+            var sTenant_id='L2101';
             var oView = this.getView(),
                 oModel = this.getModel("SegmentedItem") ,
                 codeName = this.getModel('I18N').getText("/ALL")
@@ -156,7 +157,7 @@ sap.ui.define([
 
         setPlant: function(companyCode){
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
+            var sTenant_id='L2101';
 
             var filter = new Filter({
                     filters: [
@@ -185,7 +186,7 @@ sap.ui.define([
         */
         handleSelectionFinishComp: function (oEvent) {
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
+            var sTenant_id='L2101';
             this.copyMultiSelected(oEvent);
 
             var params = oEvent.getParameters();
@@ -389,24 +390,129 @@ sap.ui.define([
         * @private 
         * @see (멀티박스)리스트 moldNumber 항목선택시 remodelRepairMgtList 컴포넌트 디테일로 이동
         */
-        handleLinkPress: function (){
+        handleLinkPress: function (oEvent){
+            var sPath = oEvent.getSource().getBindingContext("list").getPath(),
+                oRecord = this.getModel("list").getProperty(sPath);
             var pull_url = window.location.href;
             var complete_url;
-            var targetPath = "/dp/md/remodelRepairMgtList/webapp/#/rrMgtDetail/code"
+            // rrMgtDetail/{mold_id}/{request_number}
+            var targetPath = "/dp/md/remodelRepairMgtList/webapp/#/rrMgtDetail/"+oRecord.mold_id+"/New";
             complete_url=pull_url.split(pull_url.substring(pull_url.indexOf("/dp"),pull_url.length));
             complete_url[0] = complete_url[0]+targetPath;
             window.location.href=complete_url[0];
         },
+
+        changeSuppButtonPress: function(){
+            var asTable = this.byId("assetListTable"),
+                oModel = this.getModel("list"),
+                oSelected = asTable.getSelectedIndices(),
+                viewData = oModel.getData().Assets;
+
+            var data = {};
+            var assetViews = [];
+            var isOk = false;
+            var msg;
+            var session = this.getSessionUserInfo();
+            
+            if (oSelected != "") {
+                console.log("oSelected >>>>" , oSelected);
+                isOk = true;
+                msg ="Change Supplier? ";
+            }else{
+                isOk = false;
+                msg ="선택된 항목이 없습니다."
+                MessageBox.error(msg);
+                return;
+            }
+
+            for(var i=0; i<oSelected.length; i++){
+                console.log(viewData[oSelected[i]]);
+                
+                // var secondary = String(asTable.getRows()[oSelected[i]].getCells()[5].getValue().trim()),
+                //     tertiary = String(asTable.getRows()[oSelected[i]].getCells()[6].getValue().trim());
+                assetViews.push({
+                        tenant_id                   : viewData[oSelected[i]].tenant_id,
+                        mold_id                     : viewData[oSelected[i]].mold_id,
+                        secondary_supplier_name     : viewData[oSelected[i]].secondary_supplier_name,
+                        tertiary_supplier_name      : viewData[oSelected[i]].tertiary_supplier_name,
+                        local_update_dtm            : new Date(),
+                        // 추후 세션의 user_id로 변경 필요
+                        update_user_id              : "17370CHEM@lgchem.com",
+                        system_update_dtm           : new Date()
+                });
+                
+            }
+            data ={
+                inputData: {
+                    assetData : assetViews
+                }
+            }
+            console.log(data);
+            if(isOk){
+                var oView = this.getView();
+                var that = this;
+                MessageBox.confirm(msg, {
+                    title: "Comfirmation",
+                    initialFocus: sap.m.MessageBox.Action.CANCEL,
+                    onClose: function (sButton) {
+                        if (sButton === MessageBox.Action.OK) { 
+                            oView.setBusy(true);
+                            that.callAjax(data, "updateListVendor"
+                                , function(result){
+                                    oView.setBusy(false);
+                                    MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
+                                if (result.resultCode > -1) {
+                                    that.onLoadThisPage(result);
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        },
+       
+        callAjax: function (data, fn , callback) {
+            console.log("send data >>>> ", data);
+            var url = "/dp/md/assetList/webapp/srv-api/odata/v4/dp.AssetListV4Service/" + fn;
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                //datatype: "json",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                success: function (result) { 
+                    callback(result);
+                },
+                error: function (e) {
+                    callback(e);
+                }
+            });
+        },
         
-        _doInitTablePerso: function () {
-            // init and activate controller
-            this._oTPC = new TablePersoController({
-                table: this.byId("moldMstTable"),
-                componentName: "assetList",
-                persoService: AssetListPersoService,
-                hasGrouping: true
-            }).activate();
-        }
+        onLoadThisPage : function(){
+            console.log("onLoadThisPage");
+        },
+
+        /**
+        * @public
+        * @see 사용처 : 리스트에서 Excel Export 버튼 클릭시
+        */
+        onExportPress: function (_oEvent) {
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+            var sFileName = "ASSET LIST"
+            //var oData = this.getModel("list").getProperty("/Message"); //binded Data
+            var oData = oTable.getModel("list").getProperty("/Assets");
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
+        }   
 
     });
 });

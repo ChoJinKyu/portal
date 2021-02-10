@@ -16,7 +16,7 @@ SELECT  B.VENDOR_POOL_LEVEL1_CODE
        ,A.TENANT_ID
        ,A.COMPANY_CODE
        ,A.ORG_TYPE_CODE
-       ,D.CODE_NAME AS ORG_TYPE_NAME
+       ,D.CODE_NAME AS OPERATION_UNIT_NAME
        ,A.ORG_CODE
        ,A.VENDOR_POOL_CODE
        ,A.SUPPLIER_CODE
@@ -46,6 +46,7 @@ FROM
         SD.COMPANY_CODE,
         SD.ORG_TYPE_CODE,
         SD.ORG_CODE,
+        SV.SUPPLIER_TYPE_CODE AS OPERATION_UNIT_CODE,
         SD.VENDOR_POOL_CODE,
         SD.SUPPLIER_CODE,
         SV.SUPPLIER_LOCAL_NAME,
@@ -74,6 +75,7 @@ FROM
             SD.COMPANY_CODE,
             SD.ORG_TYPE_CODE,
             SD.ORG_CODE,
+            SV.SUPPLIER_TYPE_CODE,
             SD.VENDOR_POOL_CODE,
             SD.SUPPLIER_CODE,
             SV.SUPPLIER_LOCAL_NAME,
@@ -96,6 +98,7 @@ FROM
         SD.COMPANY_CODE,
         SD.ORG_TYPE_CODE,
         SD.ORG_CODE,
+        SV.SUPPLIER_TYPE_CODE AS OPERATION_UNIT_CODE,
         SD.VENDOR_POOL_CODE,
         SD.SUPPLIER_CODE,
         SV.SUPPLIER_LOCAL_NAME,
@@ -125,6 +128,7 @@ FROM
             SD.COMPANY_CODE,
             SD.ORG_TYPE_CODE,
             SD.ORG_CODE,
+            SV.SUPPLIER_TYPE_CODE,
             SD.VENDOR_POOL_CODE,
             SD.SUPPLIER_CODE,
             SV.SUPPLIER_LOCAL_NAME,
@@ -176,16 +180,17 @@ FROM
     ) C  
     ON     A.TENANT_ID = C.TENANT_ID
     AND    A.SUPPLIER_CODE = C.SUPPLIER_CODE
-    INNER JOIN ( SELECT L.TENANT_ID
-                       ,L.LANGUAGE_CD
-                       ,L.CODE
-                       ,L.CODE_NAME
-                 FROM   CM_CODE_LNG AS L
-                 WHERE  L.GROUP_CODE = 'CM_ORG_TYPE_CODE'
+    INNER JOIN (
+                  SELECT L.TENANT_ID
+                        ,L.LANGUAGE_CD
+                        ,L.CODE
+                        ,L.CODE_NAME
+                  FROM   CM_CODE_LNG L
+                  WHERE  L.GROUP_CODE = 'SP_SM_SUPPLIER_TYPE'
                 ) D
-    ON     A.TENANT_ID     = D.TENANT_ID
-    AND    A.ORG_TYPE_CODE = D.CODE    
-    AND    A.LANGUAGE_CD   = D.LANGUAGE_CD
+    ON     A.TENANT_ID           = D.TENANT_ID
+    AND    A.OPERATION_UNIT_CODE = D.CODE    
+    AND    A.LANGUAGE_CD         = D.LANGUAGE_CD
 WHERE A.LANGUAGE_CD   = :P_LANGUAGE_CODE
 AND   A.TENANT_ID     = :P_TENANT_ID
 AND   A.COMPANY_CODE  = :P_COMPANY_CODE

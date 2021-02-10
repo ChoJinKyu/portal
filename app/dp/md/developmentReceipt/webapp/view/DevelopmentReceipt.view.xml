@@ -23,6 +23,7 @@
                         <Button icon="sap-icon://unfavorite" type="Transparent" />
                         <Title text="{i18n>appTitle}" />
                     </HBox>
+                    
                 </f:heading>
                 <f:expandedContent>
                     <HBox>

@@ -49,7 +49,7 @@ sap.ui.define([
 			var oMultilingual = new Multilingual();
 			this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
-            
+            this.setModel(new JSONModel({enabled : false}), "viewControl");
             this.setModel(new JSONModel(), "excelModel");
 
             //sheet.js cdn url
@@ -155,7 +155,8 @@ sap.ui.define([
 
 		onMainTableAddButtonPress: function(){
 			var oTable = this.byId("mainTable"),
-				oModel = this.getModel("list");
+                oModel = this.getModel("list"),
+                oViewControl = this.getModel("viewControl");
 			oModel.addRecord({
                 "price": "",
                 "category_code": "",
@@ -175,6 +176,7 @@ sap.ui.define([
 
             oModel.refresh(true);
             this.validator.clearValueState(this.byId("mainTable"));
+            oViewControl.setProperty("/enabled", true);
 		},
 
 		onMainTableDeleteButtonPress: function(){
@@ -208,6 +210,8 @@ sap.ui.define([
             table.getSelectedIndices().reverse().forEach(function (idx) {
                 model.markRemoved(idx);
             });
+
+            table.clearSelection();
         },
        
         onMainTableSaveButtonPress: function(){
@@ -435,10 +439,17 @@ sap.ui.define([
 				success: function(oData){
                     this.validator.clearValueState(this.byId("mainTable"));
                     this.byId("mainTable").clearSelection();
+                    this._setTableHeader();
 					oView.setBusy(false);
 				}.bind(this)
 			});
-		},
+        },
+        
+        _setTableHeader: function(){
+            var sHeader = this.byId("smartTable_MainTable_ResponsiveTable").getHeader();
+            var iCount = this.byId("mainTable").getBinding("rows").iLength;
+            this.byId("smartTable_MainTable_ResponsiveTable").getToolbar().getContent()[0].setText(sHeader+" ("+iCount+")");
+        },
 		
 		_getSearchStates: function(){
 			var aTableSearchState = [];
@@ -642,6 +653,14 @@ sap.ui.define([
 
            this._setColumnbind( codeTemp , oEvent.getSource().getParent().getCells());
             
+
+        },
+
+        onCheck: function(oEvent){
+            var oViewControl = this.getModel("viewControl");
+            
+            oViewControl.setProperty("/enabled", 
+            oEvent.getSource().getSelectedIndices().length > 0 || this.getModel("list").getChanges().length > 0);
 
         },
 

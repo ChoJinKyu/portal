@@ -7,8 +7,7 @@ entity Po_Approval_Mst {
   key purchasing_approval_number : String(50)  not null;	
     org_type_code : String(2)  ;	
     org_code : String(10)  ;	
-    po_number : String(50)  ;	
-    po_degree : Integer64  ;	
+    po_number : String(50)  ;		
     po_desc : String(100)  ;	
     purchasing_approval_status_code : String(30)  ;	
     ep_purchasing_type_code : String(30)  ;	
@@ -24,8 +23,7 @@ entity Po_Approval_Mst {
     currency_code : String(15)  ;	
     budget_amount : Decimal  ;	
     target_amount : Decimal  ;	
-    order_amount : Decimal  ;	
-    won_order_amount : Decimal  ;	
+    po_amount : Decimal  ;	
     exrate : Decimal  ;	
     exrate_fixed_flag : Boolean  ;	
     saving_amount : Decimal  ;	
@@ -37,7 +35,7 @@ entity Po_Approval_Mst {
     equipment_type_code : String(30)  ;	
     termsdelv_code : String(30)  ;	
     termsdelv_desc : String(1000)  ;	
-    pay_condition_desc : String(1000)  ;	
+    payterms_desc : String(1000)  ;	
     contract_due_date : Date  ;	
     at_approval_target_flag : Boolean  ;	
     stamp_tax_flag : Boolean  ;	
@@ -50,6 +48,7 @@ entity Po_Approval_Mst {
     attch_group_number : String(100)  ;	
     special_note : LargeString  ;	
     approval_number : String(50)  ;	
-    remark : String(3000)  ;	
+    remark : String(3000)  ;
+    po_date	: Date  ;	
 }	
 extend Po_Approval_Mst with util.Managed;

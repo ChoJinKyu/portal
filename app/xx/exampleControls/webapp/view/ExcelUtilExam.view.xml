@@ -86,6 +86,33 @@
                             <core:CustomData key="bindName" value="use_flag" />
                         </customData>
                     </Column>
+                    <Column minScreenWidth="Tablet" hAlign="End" width="10em">
+                        <Text text="create date" textAlign="Center" />
+                        <customData>
+                            <core:CustomData key="bindName" value="local_create_dtm" />
+                            <!--EDM Type-->
+                            <core:CustomData key="type" value="Date" />
+                            <!--format-->
+                            <core:CustomData key="format" value="yyyy-mm-dd" />
+                        </customData>
+                    </Column>
+                    <Column minScreenWidth="Tablet" hAlign="End" width="10em">
+                        <Text text="update datetime" textAlign="Center" />
+                        <customData>
+                            <core:CustomData key="bindName" value="local_update_dtm" />
+                            <!--EDM Type-->
+                            <core:CustomData key="type" value="DateTime" />
+                            <!--format 시간은 분단위 까지만 출력됩니다.-->
+                            <core:CustomData key="format" value="yyyy-mm-dd HH:mm:ss" />
+                        </customData>
+                    </Column>
+                    <Column minScreenWidth="Tablet" hAlign="End" width="10em" visible="false">
+                        <Text text="Hidden Column" textAlign="Center" />
+                        <!--감춤칼럼을 excel export 대상으로 지정-->
+                        <customData>
+                            <core:CustomData key="exportData" value="true" />
+                        </customData>
+                    </Column>
                 </columns>
                 <items>
                     <ColumnListItem>
@@ -130,7 +157,7 @@
                                     }" required="true" visible="{displayModel>/editMode}"/>
                             </HBox>
 
-                            <Text text="{rModelList>message_contents}" width="100%" />
+                            <TextArea value="{rModelList>message_contents}" width="100%" />
                             <Select forceSelection="false" selectedKey="{rModelList>message_type_code}" autoAdjustWidth="true" items="{
                                     path: 'common>/Code',
                                     type: 'sap.ui.model.type.String',
@@ -157,6 +184,15 @@
                                     <FlexItemData growFactor="1" />
                                 </layoutData>
                             </Switch>
+                            <ObjectIdentifier text="{
+                                    path: 'rModelList>local_create_dtm',
+                                    formatter: '.DateFormatter.toUTCDateString'
+                                }"/>
+                            <ObjectIdentifier text="{
+                                    path: 'rModelList>local_update_dtm',
+                                    formatter: '.DateFormatter.toUTCDateTimeString'
+                                }"/>
+                            <Text text="{rModelList>name}" />
                         </cells>
                     </ColumnListItem>
                 </items>

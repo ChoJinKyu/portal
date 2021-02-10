@@ -405,12 +405,13 @@ sap.ui.define([
             oMessageManager.removeAllMessages();
             bAllValid = aControls.every(function(oControl){
                 var sEleName = oControl.getMetadata().getElementName(),
-                    sValue;
+                    sValue,oContext;
                 
                 switch(sEleName){
                     case "sap.m.Input":
                     case "sap.m.TextArea":
                         sValue = oControl.getValue();
+                        oContext = oControl.getBinding("value");
                         break;
                     case "sap.m.ComboBox":
                         sValue = oControl.getSelectedKey();
@@ -439,11 +440,57 @@ sap.ui.define([
                         oControl.setValueState(ValueState.None);
                     }
                 }
+
+                 if(oContext&&oContext.getType()){
+                    try{
+                        oContext.getType().validateValue(sValue);
+                    }catch(e){
+                        oControl.setValueState(ValueState.Error);
+                        oControl.setValueStateText(e.message);
+                        oControl.focus();
+                        return false;
+                    }
+                    oControl.setValueState(ValueState.None);
+                }else if(sEleName === "sap.m.ComboBox"){
+                    if(!sValue && oControl.getValue()){
+                        oControl.setValueState(ValueState.Error);
+                        oControl.setValueStateText("올바른 값을 선택해 주십시오.");
+                        oControl.focus();
+                        return false;
+                    }else{
+                        oControl.setValueState(ValueState.None);
+                    }
+                }
+
+
+
                 return true;
             });
 
             return bAllValid;
         },
+         /**
+         * ValueState 초기화
+         */
+        _clearValueState : function(aControls){
+             aControls.forEach(function(oControl){
+                var sEleName = oControl.getMetadata().getElementName(),
+                    sValue;
+                
+                switch(sEleName){
+                    case "sap.m.Input":
+                    case "sap.m.TextArea":
+                    case "sap.m.ComboBox":
+                    case "sap.m.MultiComboBox":    
+                        break;
+                    default:
+                        return;
+                }
+                oControl.setValueState(ValueState.None);
+                oControl.setValueStateText();
+            });
+        },
+
 
         _getSaveData : function(sTransactionCode){
                 var oSaveData, oUserInfo, oView, oViewModel,sHeadField;
@@ -533,8 +580,8 @@ sap.ui.define([
                                 }
                                 if(scenario_number === "New")
                                 oNewQunaRowData.evaluation_type_code = evaluation_type_code;
-                                oNewQunaRowData.evaluation_grade_start_score = parseInt(oNewQunaRowData.evaluation_grade_start_score);
-                                oNewQunaRowData.evaluation_grade_end_score = parseInt(oNewQunaRowData.evaluation_grade_end_score);
+                                oNewQunaRowData.evaluation_grade_start_score = parseFloat(oNewQunaRowData.evaluation_grade_start_score);
+                                oNewQunaRowData.evaluation_grade_end_score = parseFloat(oNewQunaRowData.evaluation_grade_end_score);
                                 // oNewQunaRowData.sort_sequence = parseInt(oNewQunaRowData.sort_sequence);                    
                                 oSaveData.EvalGrade.push(oNewQunaRowData);
                             });
@@ -773,7 +820,7 @@ sap.ui.define([
                     sLayout = "MidColumnFullScreen";
                     sBtnScreenText = "sap-icon://exit-full-screen";
                 }else{
-                    sLayout = "TwoColumnsMidExpanded";
+                    sLayout = "TwoColumnsBeginExpanded";
                     sBtnScreenText = "sap-icon://full-screen";
                 }
 

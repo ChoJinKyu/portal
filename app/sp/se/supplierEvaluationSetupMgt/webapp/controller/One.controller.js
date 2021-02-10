@@ -504,17 +504,20 @@ sap.ui.define([
         _isValidControl : function(aControls){
             var oMessageManager = sap.ui.getCore().getMessageManager(),
                 bAllValid = false;
+                
                 // oI18n = this.getView().getModel("I18N");
+                
                 
             oMessageManager.removeAllMessages();
             bAllValid = aControls.every(function(oControl){
                 var sEleName = oControl.getMetadata().getElementName(),
-                    sValue;
+                    sValue,oContext;
                 
                 switch(sEleName){
                     case "sap.m.Input":
                     case "sap.m.TextArea":
                         sValue = oControl.getValue();
+                        oContext = oControl.getBinding("value");
                         break;
                     case "sap.m.ComboBox":
                         sValue = oControl.getSelectedKey();
@@ -543,10 +546,54 @@ sap.ui.define([
                         oControl.setValueState(ValueState.None);
                     }
                 }
+
+
+                if(oContext&&oContext.getType()){
+                    try{
+                        oContext.getType().validateValue(sValue);
+                    }catch(e){
+                        oControl.setValueState(ValueState.Error);
+                        oControl.setValueStateText(e.message);
+                        oControl.focus();
+                        return false;
+                    }
+                    oControl.setValueState(ValueState.None);
+                }else if(sEleName === "sap.m.ComboBox"){
+                    if(!sValue && oControl.getValue()){
+                        oControl.setValueState(ValueState.Error);
+                        oControl.setValueStateText("올바른 값을 선택해 주십시오.");
+                        oControl.focus();
+                        return false;
+                    }else{
+                        oControl.setValueState(ValueState.None);
+                    }
+                }
+
                 return true;
             });
 
             return bAllValid;
+        },
+         /**
+         * ValueState 초기화
+         */
+        _clearValueState : function(aControls){
+             aControls.forEach(function(oControl){
+                var sEleName = oControl.getMetadata().getElementName(),
+                    sValue;
+                
+                switch(sEleName){
+                    case "sap.m.Input":
+                    case "sap.m.TextArea":
+                    case "sap.m.ComboBox":
+                    case "sap.m.MultiComboBox":    
+                        break;
+                    default:
+                        return;
+                }
+                oControl.setValueState(ValueState.None);
+                oControl.setValueStateText();
+            });
         },
 
 
@@ -657,7 +704,7 @@ sap.ui.define([
                     "qttive_item_uom_code": "",
                     "qttive_item_measure_mode_code": "",
                     "qttive_item_desc": "",
-                    "sort_sequence": "",
+                    "sort_sequence": 1,
                     "transaction_code":"I",
                     "crudFlg" : "I",
                     "rowEditable":true
@@ -1176,6 +1223,8 @@ sap.ui.define([
 
             this._readAll();
 
+            var aControls = oView.getControlsByFieldGroupId("required");
+            this._clearValueState(aControls);                
             
              oView.setBusy(false);
          },
@@ -1187,13 +1236,9 @@ sap.ui.define([
             
             var url = `srv-api/odata/v4/sp.supEvalSetupV4Service/VpLevelChipView(tenant_id='${this.tenant_id}',org_code='${this.org_code}',op_unit_code='${iKeys}')/Set`;
             
-                       
-            var param = {};
-            var params = {"language_code":"KR"};
-            
+                 
             var oSegmentedButton = this.getView().byId("vendor_pool_lvl");
 
-            param.params = params; // param.params 변수명은 변경불가함 handler에서 사용하기 때문
 			$.ajax({
 				url: url,
 				type: "GET",
@@ -1210,6 +1255,7 @@ sap.ui.define([
                                     })
                                 );
                             }
+                    // oSegmentedButton.setSelectedKey(data.value.length);
 					
 				},
 				error: function(req){
@@ -1252,7 +1298,8 @@ sap.ui.define([
                 "distrb_score_eng_flag" : false,
                 "operation_plan_flag" : false,
                 "evaluation_request_approval_flag" : false,
-                "evaluation_request_mode_code" : this.evaluation_request_mode_code                 
+                "evaluation_request_mode_code" : this.evaluation_request_mode_code,      
+                "eval_apply_vendor_pool_lvl_no" : 0         
                 });
 
                 
@@ -1396,6 +1443,7 @@ sap.ui.define([
                                             })
                                         );
                                     }
+                            oSegmentedButton.setSelectedKey(iLvl);
 
 
                         // var oVPCombo = this.byId("searchMultiComboCode");

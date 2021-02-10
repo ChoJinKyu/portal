@@ -110,7 +110,7 @@
 
                                                                 <VBox class="sapUiNoMarginBottom">
                                                                     <Label  text="Outcome"  />
-                                                                    <Text  id="textOutcome" text="{NegoHeaders>/negotiation_output_class_code}" />
+                                                                    <Text  id="textOutcome" text="{NegoHeaders>/outcome/outcome_name}" />
                                                                 </VBox>
                                                             </form:content>
                                                         </form:SimpleForm>
@@ -346,7 +346,7 @@
                                             <Label text="Partial Response" />
 
                                             <SegmentedButton id="SegmentButtonUsed" selectedKey="{NegoHeaders>/partial_allow_flag}" 
-                                                enabled="{=${NegoHeaders>/award_type_code} !== 'Award by Total Amount'}" >
+                                                enabled="{=${NegoHeaders>/award_type_code} !== '020'}" >
                                                 <items>
                                                     <SegmentedButtonItem key="Y" text="Yes"/>
                                                     <SegmentedButtonItem key="N" text="No" />
@@ -361,8 +361,8 @@
                                                         columnsXL="4">
                                             <Label  text="Award Type"  /> 
                                             <Text text="{NegoHeaders>/award_type/award_type_name}" />
-                                            <Label  text="Target Total Amount"    visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/> 
-                                            <Text text="{NegoHeaders>/target_amount}" visible="{=${NegoHeaders>/award_type_code}==='Award by Total Amount'}"/>
+                                            <Label  text="Target Total Amount"    visible="{=${NegoHeaders>/award_type_code}==='020'}"/> 
+                                            <Text text="{NegoHeaders>/target_amount}" visible="{=${NegoHeaders>/award_type_code}==='020'}"/>
                                             <Label text="Partial Response" />
                                             <Text text="{=${NegoHeaders>/partial_allow_flag}==='Y' ? 'Yes' : 'No'}" /> 
                                         </form:SimpleForm>
@@ -612,12 +612,12 @@
                                                                                 descending: false
                                                                             }}" 
                                                                         showSecondaryValues= "true"
-                                                                        selectedKey="{NegoHeaders>specification_code}" visible="{=${propInfo>/isEditMode}}"
+                                                                        selectedKey="{NegoHeaders>specification}" visible="{=${propInfo>/isEditMode}}"
                                                                         width="100%" required="true">
                                                                         <core:ListItem key="{specification_code}" text="{specification_name}" additionalText="{specification_code}"/>
                                                                     </ComboBox>
                                                                     
-                                                                    <Text text="{NegoHeaders>specification}" visible="{=!${propInfo>/isEditMode}}" />
+                                                                    <Text text="{NegoHeaders>specification_fk/specification_name}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
@@ -775,7 +775,7 @@
                                                                     <ToggleButton text="{=${NegoHeaders>bidding_start_net_price_flag} === 'Y' || ${NegoHeaders>bidding_start_net_price_flag} === true ? 'YES' : 'NO'}" visible="{=${propInfo>/isEditMode}}" pressed="{NegoHeaders>bidding_start_net_price_flag}"  />
 
                                                                     <!-- <lib-m:FlagToggleButton  enabled="{=${propInfo>/isEditMode}}" pressed="{NegoHeaders>bidding_start_net_price_flag}" /> -->
-                                                                    <Text text="{NegoHeaders>bidding_start_net_price_flag}" visible="{=!${propInfo>/isEditMode}}" /> 
+                                                                    <Text text="{=${NegoHeaders>bidding_start_net_price_flag} === true ? 'YES' : 'NO'}" visible="{=!${propInfo>/isEditMode}}" /> 
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
@@ -920,11 +920,11 @@
                                                                                 descending: true
                                                                             }}" 
                                                                         showSecondaryValues= "true"
-                                                                        selectedKey="{}" visible="{=${propInfo>/isEditMode}}"
+                                                                        selectedKey="{NegoHeaders>incoterms_code}" visible="{=${propInfo>/isEditMode}}"
                                                                         width="100%" required="true">
                                                                         <core:ListItem key="{incoterms_code}" text="{incoterms_name}" additionalText="{incoterms_code}"/>
                                                                     </ComboBox>
-                                                                    <Text text="{}" visible="{=!${propInfo>/isEditMode}}" />
+                                                                    <Text text="{NegoHeaders>incoterms/incoterms_name}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>

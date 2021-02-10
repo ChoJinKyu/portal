@@ -1,7 +1,6 @@
 using { dp as PartActivityTemplateView } from '../../../../../db/cds/dp/pd/DP_PD_PART_ACTIVITY_TEMPLATE_VIEW-model';
 using { dp as partActivityTemplate } from '../../../../../db/cds/dp/pd/DP_PD_PART_ACTIVITY_TEMPLATE-model';
 using { dp as activityMapping} from '../../../../../db/cds/dp/pd/DP_PD_ACTIVITY_MAPPING-model';
-using { dp as PartBaseActivityLng } from '../../../../../db/cds/dp/pd/DP_PD_PART_BASE_ACTIVITY_LNG-model';
 using { dp as partBaseActivity} from '../../../../../db/cds/dp/pd/DP_PD_PART_BASE_ACTIVITY-model';
 
 // 공통코드  ( group_code = 'DP_PART_PJT_TYPE' )
@@ -15,7 +14,6 @@ service PartActivityService {
     entity PdPartActivityTemplate as projection on partActivityTemplate.Pd_Part_Activity_Template;
     entity PdSelectAnActivityView as projection on partActivityTemplate.Pd_Select_An_Activity_View;
     entity pdActivityMapping as projection on activityMapping.Pd_Activity_Mapping;
-    entity PdPartBaseActivityLng as projection on PartBaseActivityLng.Pd_Part_Base_Activity_Lng;
     entity PdPartBaseActivity as projection on partBaseActivity.Pd_Select_An_Activity_View;
 
     view CompanyView as

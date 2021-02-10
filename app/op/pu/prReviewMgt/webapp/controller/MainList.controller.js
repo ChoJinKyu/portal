@@ -199,7 +199,7 @@ sap.ui.define([
             type == "org_code"
             &&
             this.dialog(new PurOperationOrgDialog({
-                title: "(미정)조직을 선택하세요",
+                title: this.getModel("I18N").getText("/NOP00005"),
                 multiSelection: true,
                 items: {
                     filters: [
@@ -224,7 +224,7 @@ sap.ui.define([
             )
             &&
             this.dialog(new DepartmentDialog({
-                title: "(미정)부서를 선택하세요",
+                title: this.getModel("I18N").getText("/NOP00002"),
                 multiSelection: true,
                 items: {
                     filters: [
@@ -239,7 +239,7 @@ sap.ui.define([
             type == "requestor_empno"
             &&
             this.dialog(new EmployeeDialog({
-                title: "(미정)사원을 선택하세요",
+                title: this.getModel("I18N").getText("/NOP00003"),
                 multiSelection: true,
                 items: {
                     filters: [
@@ -254,7 +254,7 @@ sap.ui.define([
             type == "buyer_empno"
             &&
             this.dialog(new EmployeeDialog({
-                title: "(미정)사원을 선택하세요",
+                title: this.getModel("I18N").getText("/NOP00003"),
                 multiSelection: false,
                 items: {
                     filters: [
@@ -319,35 +319,35 @@ sap.ui.define([
             // 아래의 모든 작업은 진행상태가 결재완료(30), 생성완료(50) 상태에서만 가능하다.
             if (items.filter(e => !(e.pr_create_status_code == "30" || e.pr_create_status_code == "50")).length > 0) {
                 // 결재완료, 생성완료만 선택가능합니다.
-                MessageBox.alert("(메세지)결재완료, 생성완료만 처리 할 수 있습니다");
+                MessageBox.alert(this.getModel("I18N").getText("/NOP00007"));
                 return ;
             }
             // 구매담당자가 본인이 아닐 경우 Confirm 메시지 띄움.
             if (items.filter(e => (e.buyer_empno != this.$session.employee_number)).length > 0) {
-                message = "(메세지)본인 담당이 아닌 구매요청건이 존재합니다\n확인시 자동으로 본인 담당으로 변경됩니다\n";
+                message = this.getModel("I18N").getText("/NOP00011");
             }
             // 잔량이 없는 PR은 선택이 불가능하다 = 요청수량 0
             if ((action == "RFQ" || action == "BIDDING") && items.filter(e => (+e.pr_quantity) <= 0 || !e).length > 0) {
-                MessageBox.alert("(메세지)요청수량(잔량)이 없는 PR 은 선택 할 수 없습니다");
+                MessageBox.alert(this.getModel("I18N").getText("/NOP00012"));
                 return;
             }
 
             // Transaction
             (
                 // 구매담당자변경
-                (action == 'CHANGE' && (message = "(메세지)구매담당자 담당자 변경을 진행하시겠습니까?"))
+                (action == 'CHANGE' && (message = this.getModel("I18N").getText("/NOP00008")))
                 ||
                 // 재작성요청
-                (action == 'REWRITE' && (message = "(메세지)재작성요청을 진행하시겠습니까?"))
+                (action == 'REWRITE' && (message = this.getModel("I18N").getText("/NOP00014")))
                 ||
                 // 마감
-                (action == 'CLOSING' && (message = "(메세지)마감을 진행하시겠습니까?"))
+                (action == 'CLOSING' && (message = this.getModel("I18N").getText("/NOP00009")))
                 ||
                 // RFQ작성
-                (action == 'RFQ' && (message = message + "(메세지)RFQ작성을 진행하시겠습니까?"))
+                (action == 'RFQ' && (message = message + this.getModel("I18N").getText("/NOP00006")))
                 ||
                 // 입찰작성
-                (action == 'BIDDING' && (message = message + "(메세지)입찰작성을 진행하시겠습니까?"))
+                (action == 'BIDDING' && (message = message + this.getModel("I18N").getText("/NOP00013")))
             )
             &&
             (function() {
@@ -366,10 +366,10 @@ sap.ui.define([
                                             "reason": {
                                                 title: 
                                                     action == 'CLOSING'
-                                                    ? '(미정)마감'
+                                                    ? this.getModel("I18N").getText("/PR_REVIEW_CLOSING")
                                                     : action == 'CHANGE'
-                                                    ? '(미정)구매담당자변경'
-                                                    : '(미정)재작성요청',
+                                                    ? this.getModel("I18N").getText("/BUYER_CHANGE")
+                                                    : this.getModel("I18N").getText("/REWRITE_REQUEST"),
                                                 action: action,
                                                 buyerEmpno: "",
                                                 processedReason: ""
@@ -382,7 +382,7 @@ sap.ui.define([
                                         var control = event.getSource();
 
                                         this.dialog(new EmployeeDialog({
-                                            title: "(미정)사원을 선택하세요",
+                                            title: this.getModel("I18N").getText("/NOP00003"),
                                             multiSelection: false,
                                             items: {
                                                 filters: [
@@ -401,23 +401,23 @@ sap.ui.define([
                                     onCommit: function() {
                                         var [event, action, value, ...args] = arguments;
                                         if (value.action == 'CHANGE' && !value.buyerEmpno) {
-                                            MessageBox.alert("(미정)구매담당자를 선택하세요");
+                                            MessageBox.alert(this.getModel("I18N").getText("/NOP00001"));
                                             return false;
                                         }
                                         if (!value.processedReason) {
-                                            MessageBox.alert("(미정)사유를 입력하세요");
+                                            MessageBox.alert(this.getModel("I18N").getText("/NOP00004"));
                                             return false;
                                         }
                                         return value;
                                     },
                                     onCancel: function() {
-                                        var [event, action, ...args] = arguments;
+                                        //var [event, action, ...args] = arguments;
                                         return ;
                                     }
                                 }, this)
                                 .done(result => {
                                     var { buyerEmpno, buyerDepartmentCode, processedReason } = result;
-                                    console.log(">>>>>>>>>>>>> done", result);
+                                    //console.log(">>>>>>>>>>>>> done", result);
                                     this.procedure(service, entry, {
                                         inputData: {
                                             jobType: action,

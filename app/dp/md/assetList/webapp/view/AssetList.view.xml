@@ -14,6 +14,7 @@
     height="100%">
 
     <f:DynamicPage id="page"
+        title = "Asset List"
         headerExpanded="false" 
         toggleHeaderOnTitleClick="true">
         <!-- DynamicPage Title -->
@@ -253,7 +254,7 @@
                         <Title text="List ({= ${list>/Assets}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
                         <!-- Add the Personalization button -->
-                        <Button id="changeSuppButton"   type="Transparent" text="Change Supp."        press=".onChangeSuppButtonButtonPress"  />
+                        <Button id="changeSuppButton"   type="Transparent" text="Change Supp." press=".changeSuppButtonPress"  />
                         <ToolbarSeparator/>
                         <Button icon="sap-icon://excel-attachment" press=".onExportPress" />
                         <Button icon="sap-icon://action-settings"  press=".onMoldMstTablePersoButtonPressed" >
@@ -263,7 +264,7 @@
                         </Button>
                     </OverflowToolbar>
                 </table:extension>                             
-                <table:columns >
+                <table:columns>
                     <table:Column id="assetDivisionColumn" width="4.5em" hAlign="Center">
                         <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" wrapping="true"/>
                         <table:template>
@@ -297,13 +298,13 @@
                     <table:Column id="assetSecondVendorColumn" width="13em">
                         <Label text="2nd Vendor" wrapping="true"/>
                         <table:template>
-                            <Input id="assetSecondVendor"/>
+                            <Input id="assetSecondVendor" value="{list>secondary_supplier_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetThirdVendorColumn" width="13em">
                         <Label text="3rd Vendor" wrapping="true"/>
                         <table:template>
-                            <Input id="assetThirdVendor"/>
+                            <Input id="assetThirdVendor" value="{list>tertiary_supplier_name}"/>
                         </table:template>
                     </table:Column>
                     <!-- <table:Column id="assetProdVendorColumn" width="10em">

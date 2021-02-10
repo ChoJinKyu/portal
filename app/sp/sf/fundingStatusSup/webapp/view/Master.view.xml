@@ -1,0 +1,247 @@
+<mvc:View 
+    controllerName="sp.sf.fundingStatusSup.controller.Master"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form"
+    xmlns:t="sap.ui.table"
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core" 
+    height="100%"
+>
+    
+    <f:DynamicPage 
+        id="page"
+        toggleHeaderOnTitleClick="true"
+    >
+        <!-- headerExpanded="{=
+            ${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'
+        }" -->
+        
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                     <!-- 평가항목 관리 -->
+                    <Title text="자금지원 현황" />
+                </f:heading>
+
+                <f:expandedContent>
+                </f:expandedContent>
+
+                <f:snappedContent>
+                    <VBox>
+                        <Label text="공고제목" />
+                        <Input 
+                            value="{viewModel>/cond/Contains/evaluation_article_name}"
+                        />
+                        <layoutData>
+                            <layout:GridData span="XL2 L3 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                </f:snappedContent>
+                
+                <f:actions>
+                    <!-- 조회 -->
+                    <Button text="{I18N>/DISPLAY}" type="Emphasized" press=".onPressSearch"/>
+                </f:actions>
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <f:header> 
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm 
+                    layout="ResponsiveGridLayout"
+                >
+                    <VBox>
+                        <!-- 공고제목 -->
+                        <Label text="공고제목"/>
+                        <Input 
+                            value="{viewModel>/cond/Contains/funding_notify_title}"
+                        />
+                        <layoutData>
+                            <layout:GridData span="XL2 L3 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <VBox>
+                        <!-- 단계 -->
+                        <Label text="단계"/>
+                        <ComboBox 
+                            id="stepCode" 
+                            width="100%" 
+                            placeholder="전체"
+                            showSecondaryValues="true"
+                            selectionChange="onSelectionChangeOrgCode"
+                            selectedKey="{viewModel>/cond/EQ/funding_step_code}"
+                        />
+                        <layoutData>
+                            <layout:GridData span="XL2 L3 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <VBox>
+                        <!--  상태 -->
+                        <Label text="상태"/>
+                        <ComboBox 
+                            id="statusCode" 
+                            width="100%"
+                            placeholder="전체"
+                            showSecondaryValues="true"
+                            selectionChange="onSelectionChangeUnitCode"
+                            selectedKey="{viewModel>/cond/EQ/funding_status_code}"
+                        />
+                        <layoutData>
+                            <layout:GridData span="XL2 L3 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                    <VBox>
+                        <!-- 신청일자 -->
+                        <Label text="신청일자" />
+                        <DateRangeSelection 
+                            id="searchDateS" 
+                            displayFormat="yyyy-MM-dd" 
+                            placeholder="YYYY-MM-DD - YYYY-MM-DD"
+                            dateValue="{
+                                path:'viewModel>/cond/BT/funding_appl_date/value1',
+                                type:'sap.ui.model.odata.type.DateTime',
+                                constraints : {
+                                    displayFormat: 'Date'
+                                }
+                            }"
+                            secondDateValue="{
+                                path:'viewModel>/cond/BT/funding_appl_date/value2',
+                                type:'sap.ui.model.odata.type.DateTime',
+                                constraints : {
+                                    displayFormat: 'Date'
+                                }
+                            }"
+                        />
+                        <layoutData>
+                            <layout:GridData span="XL2 L3 M6 S12" />
+                        </layoutData>
+                    </VBox>
+                </form:SimpleForm>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <t:Table 
+                id="treeTable"
+                enableSelectAll="false"
+                enableColumnReordering="false"
+                class="sapFDynamicPageAlignContent" 
+                visibleRowCountMode="Auto"
+                selectionMode="Single"
+                rowSelectionChange="onRowSelectionChange"
+                minAutoRowCount="16"
+                selectionBehavior="Row"
+                rows="{
+                    path: 'viewModel>/list'                 
+                }"
+            >
+                <t:extension>
+                    <OverflowToolbar>
+                        <Title text="자금지원 현황 ({= ${viewModel>/list}.length || 0})" level="H2"/>
+                        
+                        <ToolbarSpacer/>
+                        <!-- <Button 
+                            text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press="onPressCreate($event, 'SameLevel')" 
+                            visible="{=${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'}"
+                        />
+                        <Button 
+                            text="{I18N>/CREATE_LOWER_LEVEL}" type="Transparent" press="onPressCreate($event, 'LowLevel')" 
+                            visible="{=${viewModel>/App/layout} !== 'TwoColumnsMidExpanded'}"
+                        />
+                        <MenuButton 
+                            icon="sap-icon://create-form"
+                            visible="{=${viewModel>/App/layout} === 'TwoColumnsMidExpanded'}"
+                        >
+                            <menu>
+                                <Menu>
+                                    <MenuItem text="{I18N>/CREATE_SAME_LEVEL}" press="onPressCreate($event, 'SameLevel')"/>
+                                    <MenuItem text="{I18N>/CREATE_LOWER_LEVEL}" press="onPressCreate($event, 'LowLevel')"/>
+                                </Menu>
+                            </menu>
+                        </MenuButton>
+                        <Button icon="sap-icon://expand-all" tooltip="{I18N>/EXPAND}" type="Transparent" press="onPressExpandAll" />
+                        <Button icon="sap-icon://collapse-all" tooltip="{I18N>/COLLAPSE}" type="Transparent" press="onPressCollapseAll" />
+                        <Button icon="sap-icon://excel-attachment" type="Transparent" press="onExcelExport" />
+                        <Button icon="sap-icon://action-settings" type="Transparent" press="onMainTablePersoButtonPressed"/> -->
+                    </OverflowToolbar>
+                </t:extension>
+                
+                <t:columns>
+                    <!-- 공고제목 -->
+                    <t:Column width="25em" hAlign="Left">
+                        <Label text="공고제목" tooltip="공고제목" wrapping="false" textAlign="Left" width="100%"/>
+                        <t:template>
+                            <Text text="{viewModel>funding_notify_title}" tooltip="{evaluation_article_name}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <!-- 신청번호 -->
+                    <t:Column width="7em" hAlign="Center">
+                        <Label text="신청번호" tooltip="신청번호" wrapping="false" textAlign="Center" width="100%"/>
+                        <t:template>
+                            <Text text="{viewModel>funding_appl_number}" tooltip="{evaluation_operation_unit_name}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <!-- 신청일-->
+                    <t:Column width="8em" hAlign="Center">
+                        <Label text="신청일" tooltip="신청일" wrapping="false" textAlign="Center" width="100%"/>
+                        <t:template>
+                            <Text
+                                text="{
+                                    path: 'viewModel>funding_appl_date',
+                                    type: 'sap.ui.model.type.Date',
+                                    formatOptions: {
+                                        pattern: 'yyyy-MM-dd'
+                                    }
+                                }" tooltip="{
+                                    path:'viewModel>funding_appl_date',
+                                    type: 'sap.ui.model.type.Date',
+                                    formatOptions: {
+                                        pattern: 'yyyy-MM-dd'
+                                    }
+                                }" wrapping="false" 
+                            />
+                        </t:template>
+                    </t:Column>
+                    <!-- 단계 -->
+                    <t:Column width="5em" hAlign="left">
+                        <Label text="단계" tooltip="단계" wrapping="false" textAlign="Center" width="100%"/>
+                        <t:template>
+                            <Text text="{viewModel>funding_step_name}" tooltip="{funding_step_name}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <!-- 상태 -->
+                    <t:Column width="8em" hAlign="left">
+                        <Label text="상태" tooltip="상태" wrapping="false" textAlign="Center" width="100%"/>
+                        <t:template>
+                            <Text text="{viewModel>funding_status_name}" tooltip="{funding_status_code}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <!-- 사업부 -->
+                    <t:Column width="12em" hAlign="left">  
+                        <Label text="사업부" tooltip="사업부" wrapping="false" textAlign="Left" width="100%"/>  
+                        <t:template>
+                            <Text text="{viewModel>org_name}" tooltip="{org_name}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <!-- LG구매팀 -->
+                    <t:Column width="10em" hAlign="left">
+                        <Label text="LG구매팀" tooltip="LG구매팀" wrapping="false" textAlign="Center" width="100%"/>
+                        <t:template>
+                            <Text text="{viewModel>purchasing_department_name}" tooltip="{purchasing_department_name}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                    <!-- 신청금액 -->
+                    <t:Column width="8em" hAlign="Right">
+                        <Label text="신청금액" tooltip="신청금액" wrapping="false" textAlign="Center" width="100%"/>
+                        <t:template>
+                            <Text text="{viewModel>funding_appl_amount}" tooltip="{funding_appl_amount}" wrapping="false" />
+                        </t:template>
+                    </t:Column>
+                </t:columns>
+            </t:Table>
+        </f:content>
+
+    </f:DynamicPage>
+    
+</mvc:View>

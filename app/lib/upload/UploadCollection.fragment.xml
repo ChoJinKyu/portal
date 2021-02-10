@@ -30,12 +30,12 @@
                 selected="true"
                 press="onFileDownload">
                 <attributes>
-                    <ObjectAttribute title="Upload Date" text="{fileList>uploadDate}" />
-                    <ObjectAttribute title="File Size" text="{path : 'fileList>fileSize', formatter : '._formatAttribute'}" />
+                    <ObjectAttribute title="{I18N>/REGISTER}{I18N>/DATE_TIME}" text="{fileList>uploadDate}" />
+                    <ObjectAttribute title="{I18N>/FILE}{I18N>/SIZE}" text="{path : 'fileList>fileSize', formatter : '._formatAttribute'}" />
                 </attributes>
                 <statuses>
-                    <ObjectStatus title="Status"
-                        text="{= ${fileList>state} !== 'Error' ? 'Uploaded' : ${fileList>state} }"
+                    <ObjectStatus title="{I18N>/STATUS}"
+                        text="{= ${fileList>state} !== 'Error' ? ${I18N>/UPLOAD} + ' ' + ${I18N>/COMPLETE} : ${I18N>/UPLOAD} + ' ' + ${I18N>/ERROR} }"
                         state="{fileList>state}" />
                 </statuses>
             </UploadCollectionItem>

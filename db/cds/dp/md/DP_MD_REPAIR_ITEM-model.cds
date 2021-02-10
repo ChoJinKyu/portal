@@ -18,7 +18,6 @@ entity Md_Repair_Item {
         remark : String(3000)                               @title : '비고';
         sample_quantity : Decimal                           @title : '샘플수량';
         eco_number : String(45)                             @title : 'ECO번호';
-        complete_date : String(8)                           @title : '완료일자';
         repair_amount : Decimal                             @title : '수선금액';
         repair_supplier_code : String(10)                   @title : '수선공급업체코드';
         repair_request_date : String(8)                     @title : '수선요청일자';
@@ -47,6 +46,9 @@ entity Md_Repair_Item {
         budget_exrate : Decimal                             @title : '예산환율';
         provisional_budget_amount : Decimal                 @title : '테넌트ID';
         mold_location_type_code : String(30)                @title : '금형위치유형코드';
+        repair_supplier_contents : String(3000)             @title : '수선공급업체내용';
+        trim_amount : Decimal                               @title : '절사금액';
+        repair_group_file_id : String(36)                   @title : '수선그룹파일아이디';
 }
 
 extend Md_Repair_Item with util.Managed;

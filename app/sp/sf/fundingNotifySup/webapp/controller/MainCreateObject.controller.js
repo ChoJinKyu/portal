@@ -152,7 +152,7 @@ sap.ui.define([
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, urlPram.tenantId));
             aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, urlPram.fundingNotifyNumber));
             
-            this._onObjectRead(aFilters);
+            // this._onObjectRead(aFilters);
             this.onPageNavBackButtonPress();
             MessageToast.show(oI18n.getText("/NCM01001"));
         },
@@ -225,17 +225,16 @@ sap.ui.define([
 
         //신청서 제출 성공 후
         onAfterProcRequest: function(){
+            MessageToast.show("제출 성공하였습니다.", {duration: 10000});
              var urlPram = this.getModel("contModel").getProperty("/oArgs"),
                 aFilters =[],
                 oI18n = this.getView().getModel("I18N");
-
             aFilters.push(new Filter("supplier_code", FilterOperator.EQ, urlPram.supplierCode));
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, urlPram.tenantId));
             aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, urlPram.fundingNotifyNumber));
             
-            this._onObjectRead(aFilters);
+            // this._onObjectRead(aFilters);
             this.onPageNavBackButtonPress();
-            MessageToast.show("제출 성공하였습니다.");
         },
 
         //투자계획 팝업 저장
@@ -468,7 +467,7 @@ sap.ui.define([
                     var aControls = that.byId("investmentPlanDetails").getControlsByFieldGroupId("newInvestmentPlan");
                 
                     that._clearValueState(aControls);
-                    debugger;
+                    
                     that.getModel("applicationSup").setProperty("/popUpInvestPlanMst", {
                         org_name : that.getModel("applicationSup").getData().org_name,
                         supplier_local_name : that.getModel("applicationSup").getData().supplier_name
@@ -783,10 +782,11 @@ sap.ui.define([
 
         onCheckPhone: function (oEvent) {
             var str = oEvent.getSource().getValue(),
-                check = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/;
+                check = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/,
+                regExp = /^\d{2,3}-\d{3,4}-\d{4}$/;;
                 
                 
-            if(!check.test(str) && str != ""){
+            if(!check.test(str) && str != "" && !regExp.test(str)){
                 oEvent.getSource().setValueState(ValueState.Error);
                 oEvent.getSource().setValueStateText("올바른 형식이 아닙니다.");
                 oEvent.getSource().focus();

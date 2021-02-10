@@ -74,7 +74,7 @@ sap.ui.define([
             this.getView().setModel(new ManagedModel(), "amount");
             
             var schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number),
-                             new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)];
+                             new Filter("tenant_id", FilterOperator.EQ, 'L2101')];
             
             var oModel = this.getModel('amount'),
                 poAmount = 0,

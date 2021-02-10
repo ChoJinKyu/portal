@@ -472,7 +472,7 @@ sap.ui.define([
             var eval_flag = this.getView().byId("general_regular_evaluation_flag").getSelectedKey();
             var mngt_flag = this.getView().byId("general_maker_material_code_mngt_flag").getSelectedKey();
             var sd_flag = this.getView().byId("general_sd_exception_flag").getSelectedKey();
-            var vp_flag = this.getView().byId("general_vendor_pool_apply_exception_flag").getSelectedKey();
+            // var vp_flag = this.getView().byId("general_vendor_pool_apply_exception_flag").getSelectedKey();
 
             if(eval_flag == "true"){
                 eval_flag = true;
@@ -489,11 +489,11 @@ sap.ui.define([
             }else{
                 sd_flag = false;
             }
-            if(vp_flag == "true"){
-                vp_flag = true;
-            }else{
-                vp_flag = false;
-            }                        
+            // if(vp_flag == "true"){
+            //     vp_flag = true;
+            // }else{
+            //     vp_flag = false;
+            // }                        
 
             vpMstList.push({
                 tenant_id: generaloDataRst.tenant_id //auto set
@@ -514,7 +514,7 @@ sap.ui.define([
                 // ,vendor_pool_apply_exception_flag : this.getView().byId("general_vendor_pool_apply_exception_flag").getState()//  view value set
                 // ,maker_material_code_mngt_flag : this.getView().byId("general_maker_material_code_mngt_flag").getState()//  view value set                
                 ,sd_exception_flag : sd_flag//  view value set
-                ,vendor_pool_apply_exception_flag : vp_flag//  view value set
+                // ,vendor_pool_apply_exception_flag : vp_flag//  view value set
                 ,maker_material_code_mngt_flag : mngt_flag//  view value set
                 ,domestic_net_price_diff_rate : parseFloat(this.getView().byId("general_domestic_net_price_diff_rate").getValue())// view value set
                 ,dom_oversea_netprice_diff_rate : parseFloat(this.getView().byId("general_dom_oversea_netprice_diff_rate").getValue())// view value set
@@ -635,7 +635,7 @@ sap.ui.define([
                             , register_reason: this.currnetManObj[i].register_reason
                             , approval_number: this.currnetManObj[i].approval_number
                             , vendor_pool_person_empno: this.currnetManObj[i].vendor_pool_person_empno
-                            , vendor_pool_person_role_text: this.currnetManObj[i].vendor_pool_person_role_text
+                            // , vendor_pool_person_role_text: this.currnetManObj[i].vendor_pool_person_role_text
                             //, approval_number: ''  //안보냄    
                             //, register_reason: ''  //안보냄    
                             , crud_type_code : this.currnetManObj[i]._row_state_                                
@@ -802,7 +802,7 @@ sap.ui.define([
                 this.byId("v_general_regular_evaluation_flag").setVisible(true);
                 this.byId("v_general_maker_material_code_mngt_flag").setVisible(true);
                 this.byId("v_general_sd_exception_flag").setVisible(true);
-                this.byId("v_general_vendor_pool_apply_exception_flag").setVisible(true);
+                // this.byId("v_general_vendor_pool_apply_exception_flag").setVisible(true);
                 this.byId("v_general_equipment_grade_code").setVisible(true);
                 this.byId("v_general_equipment_type_code").setVisible(true);
                 this.byId("v_general_dom_oversea_netprice_diff_rate").setVisible(true);
@@ -837,7 +837,7 @@ sap.ui.define([
                 this.byId("v_general_regular_evaluation_flag").setVisible(false);
                 this.byId("v_general_maker_material_code_mngt_flag").setVisible(false);
                 this.byId("v_general_sd_exception_flag").setVisible(false);
-                this.byId("v_general_vendor_pool_apply_exception_flag").setVisible(false);
+                // this.byId("v_general_vendor_pool_apply_exception_flag").setVisible(false);
                 this.byId("v_general_equipment_grade_code").setVisible(false);
                 this.byId("v_general_equipment_type_code").setVisible(false);
                 this.byId("v_general_dom_oversea_netprice_diff_rate").setVisible(false);
@@ -999,7 +999,7 @@ sap.ui.define([
                             sModel.setProperty(sPath + "/user_local_name", results.user_local_name);
                             sModel.setProperty(sPath + "/user_english_name", results.user_english_name);
                             sModel.setProperty(sPath + "/job_title", results.job_title);
-                            sModel.setProperty(sPath + "/vendor_pool_person_role_text", results.vendor_pool_person_role_text);
+                            // sModel.setProperty(sPath + "/vendor_pool_person_role_text", results.vendor_pool_person_role_text);
                             sModel.setProperty(sPath + "/department_local_name", results.department_local_name);
                             sModel.setProperty(sPath + "/department_english_name", results.department_english_name);
                             sModel.setProperty(sPath + "/user_status_code", results.user_status_code);
@@ -1011,7 +1011,7 @@ sap.ui.define([
                         sModel.setProperty(sPath + "/user_local_name", "");
                         sModel.setProperty(sPath + "/user_english_name", "");
                         sModel.setProperty(sPath + "/job_title", "");
-                        sModel.setProperty(sPath + "/vendor_pool_person_role_text", "");
+                        // sModel.setProperty(sPath + "/vendor_pool_person_role_text", "");
                         sModel.setProperty(sPath + "/department_local_name", "");
                         sModel.setProperty(sPath + "/department_english_name", "");
                         sModel.setProperty(sPath + "/user_status_code", "");
@@ -1148,7 +1148,7 @@ sap.ui.define([
                     that.getView().byId("general_regular_evaluation_flag").setSelectedKey(eval_flag);
                     that.getView().byId("general_maker_material_code_mngt_flag").setSelectedKey(mngt_flag);
                     that.getView().byId("general_sd_exception_flag").setSelectedKey(sd_flag);
-                    that.getView().byId("general_vendor_pool_apply_exception_flag").setSelectedKey(vp_flag);
+                    // that.getView().byId("general_vendor_pool_apply_exception_flag").setSelectedKey(vp_flag);
                     that.getView().byId("general_equipment_grade_code").setSelectedKey(generaloDataRst.equipment_grade_code);
                     that.getView().byId("general_equipment_type_code").setSelectedKey(generaloDataRst.equipment_type_code);
                     that.getView().byId("general_dom_oversea_netprice_diff_rate").setValue(generaloDataRst.dom_oversea_netprice_diff_rate);

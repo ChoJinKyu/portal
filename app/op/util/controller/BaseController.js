@@ -212,7 +212,7 @@ sap.ui.define([
             // 해제
             var release = (function() {
                 setTimeout(() => {
-                    console.log(">>>>>>> release");
+
                     Dialog.close();
                     Dialog.destroy();
                     this.dialog[key] && delete this.dialog[key];
@@ -268,13 +268,13 @@ sap.ui.define([
                 return oDeferred.promise();
             }).call(this)
             .done(function(r) {
-                console.log(">>>>>>>>>>>> done", r);
+
                 // Array
                 r.value instanceof Array
                 && 
                 (r = r.value[0]);
                 // Message
-                MessageBox.alert(r.return_msg);
+                MessageBox.success(r.return_msg);
                 // Settled
                 return (
                     r.return_code == "NG" 
@@ -283,8 +283,7 @@ sap.ui.define([
                 );
             })
             .fail(function(e) {
-                console.log(">>>>>>>>>>>> failure", e);
-                MessageBox.alert(e.responseText);
+                MessageBox.error(e.responseText);
                 mDeferred.reject(e);
             })
             .always((function() {
@@ -314,9 +313,11 @@ sap.ui.define([
             // 성공시
             .done((function (oData) {
                 if (!this.getView().getModel(model)) {
-                    this.getView().setModel(new JSONModel({
-                        [(() => entity)()]: !isSingle ? oData.results : oData.results[0]
-                    }), model);
+                    this
+                        .getView()
+                        .setModel(new JSONModel({
+                            [(() => entity)()]: !isSingle ? oData.results : oData.results[0]
+                        }), model);
                 }
                 else {
                     this

@@ -79,14 +79,16 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedListModel(), "segmentedItem");
 /*
             this._oTPC = new TablePersoController({
                 customDataKey: "remodelRepairMgt",
                 persoService: MainListPersoService
             }).setTable(this.byId("moldMstTable"));
 */
-            this.process.setDrawProcessUI(this, "remodelRepairMgtProcessE", "B", 1);
-            this.process.setDrawProcessUI(this, "remodelRepairMgtProcessS", "B", 1);
+            //this.process.setDrawProcessUI(this, "remodelRepairMgtProcessE", "B", 1);
+            //this.process.setDrawProcessUI(this, "remodelRepairMgtProcessS", "B", 1);
+            //this._segmentSrch();
         },
         
         onAfterRendering : function () {
@@ -174,6 +176,35 @@ sap.ui.define([
                 orgCode: rowData.org_code
             });
 		},
+
+        _segmentSrch : function (){
+            // session에서 받아오는 tenant_id를 변수로 저장함
+            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
+            var oView = this.getView(),
+                oModel = this.getModel("segmentedItem"),
+                codeName = this.getModel('I18N').getText("/ALL");
+
+            var aSearchFilters = [];
+                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
+                aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'DP_MD_REPAIR_PROGRESS_STATUS'));
+
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("util"));
+            oModel.read("/Code", {
+                filters: aSearchFilters,
+                success: function (oData) {     
+                    oModel.addRecord({
+                        code: ""
+                      ,  code_name: codeName   
+                      ,  group_code: "DP_MD_REPAIR_PROGRESS_STATUS"
+                      ,  parent_code: null
+                      ,  parent_group_code: null
+                      ,  sort_no: "0"
+                    },"/Code",0);
+                    oView.setBusy(false);
+                }
+            });
+        },
 
         /**
          * @private

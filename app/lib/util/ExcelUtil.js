@@ -24,17 +24,17 @@ sap.ui.define([
                 alert("No Data to Exporting!");
                 return;
             }
-            var aCols = this._fnGetColumnConfig(_oParam.table);
+            var clonedData = $.extend(true, {}, _oParam);
+            var aCols = this._fnGetColumnConfig(clonedData.table);
             var aNewData = [];
             if(_aListItemObj && _aListItemObj.length > 0) {
 
-                $.each(_oParam.data, function(iRowIdx, oRowItem) {// row list
+                $.each(clonedData.data, function(iRowIdx, oRowItem) {// row list
                     $.each(_aListItemObj, function(iCodeListIdx, oCodeListItem) {// code lists passed
                         if(oRowItem.hasOwnProperty(oCodeListItem.sBindName)) {
                             $.each(oCodeListItem.aListItem, function(iCodeIdx, oCodeItem) {// code items
                                 if(oRowItem[oCodeListItem.sBindName] === oCodeItem[oCodeListItem.sKeyName]) {
                                     oRowItem[oCodeListItem.sBindName] = oCodeItem[oCodeListItem.sTextName];
-                                    aNewData.push(oRowItem);
                                     return false;
                                 }
                             });
@@ -51,7 +51,7 @@ sap.ui.define([
                     columns: aCols,
                     hierarchyLevel: _oParam.hierarchyLevel
                 },
-                dataSource: aNewData.length > 0 ? aNewData : _oParam.data
+                dataSource: clonedData.data
             };
             var oSheet = new Spreadsheet(oSettings);
             oSheet.build().finally(function() {
@@ -73,7 +73,7 @@ sap.ui.define([
 
 	    	aColumnConfig = aColumns.map(
 	    		function(oCol, idx){
-	    			if(oCol.data("noExcel") || !(typeof oCol.getVisible === "function" ? oCol.getVisible() : oCol.getHeader().getVisible())) {// passing column, invisible column
+	    			if(oCol.data("exportData") !== "true" && !(typeof oCol.getVisible === "function" ? oCol.getVisible() : oCol.getHeader().getVisible())) {// passing column, invisible column
 						return;
                     }
                     
@@ -110,19 +110,30 @@ sap.ui.define([
                     if(oBindingInfo.prop === "") {//binding 정보가 없으면 pass
                         return;
                     }
-                    var aPath = [];
-                    if(Array.isArray(oBindingInfo.prop)) {
-                        aPath = oBindingInfo.prop.map(function(oProp) {
-                            return oProp.parts[0].path;
-                        });
-                    } else {
-                        aPath = [oBindingInfo.prop.parts[0].path];
-                    }
+                    // var aPath = [];
+                    // if(Array.isArray(oBindingInfo.prop)) {
+                    //     aPath = oBindingInfo.prop.filter(function(oProp) {
+                    //         debugger;
+                    //         if(oProp) {
+                    //             return oProp.parts[0].path;
+                    //         }
+                    //     });
+                    //     if(aPath.length === 1) {
+                    //         aPath = [aPath[0].parts[0].path];
+                    //     }
+                    // } else {
+                    //     aPath = [oBindingInfo.prop.parts[0].path];
+                    // }
+                    var sPath = [oBindingInfo.prop.parts[0].path];
+
 	    			return {
 	    				label : sLabel,
 	    				width : oCol.getWidth(),
 	    				textAlign: oBindingInfo.align ? oBindingInfo.align : "Left",
-	    				property : aPath
+                        property : sPath,
+                        type : oCol.data("type") || "",
+                        format : oCol.data("format") || "",
+                        style : oCol.data("style") || ""
 	    			};
 	    		}.bind(this)	
     		);
@@ -151,18 +162,14 @@ sap.ui.define([
                 case "sap.m.Text" :
                 case "sap.m.ObjectIdentifier" :
                     
-                    if(sEleNm === "sap.m.ObjectIdentifier") {
-                        let aParam = [oCell.getBindingInfo("title"), oCell.getBindingInfo("text")];
-                        oBindingInfo.prop =  aParam;
-                    } else {
-                        oBindingInfo.prop = oCell.getBindingInfo("text") || "";
-                    }
+                    oBindingInfo.prop = oCell.getBindingInfo("text") || "";
                     if(typeof oCell.getTextAlign === "function") {
                         oBindingInfo.align = this._convAlign(oCell.getTextAlign());
                     }
                     
                     break;
                 case "sap.m.Input" :
+                case "sap.m.TextArea" :
                 case "sap.m.DatePicker" :
                     oBindingInfo.prop = oCell.getBindingInfo("value") || "";
                     oBindingInfo.align = this._convAlign(oCell.getTextAlign());

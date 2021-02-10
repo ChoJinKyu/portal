@@ -308,7 +308,7 @@
                     <table:Table
                         id="mainTable"
                         selectionMode="MultiToggle"
-                        fixedColumnCount="4"
+                        fixedColumnCount="6"
 
                         rows="{
                             path: 'list>/vpSearchOrderView',

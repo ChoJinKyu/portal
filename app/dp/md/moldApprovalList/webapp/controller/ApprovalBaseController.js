@@ -187,7 +187,7 @@ sap.ui.define([
 
             // console.log("args>>>>> " , args);
 
-            this.tenant_id = this.getSessionUserInfo().TENANT_ID;
+            this.tenant_id = 'L2101'  // this.getSessionUserInfo().TENANT_ID;
             this.approval_number = args.approval_number;
             this.approval_type_code = args.approval_type_code;
             this.company_code = args.company_code;
@@ -229,9 +229,9 @@ sap.ui.define([
             this._onRoutedThisPage(this.approval_number);
 
             if (this.approval_number === "New") {
-                this.getModel("appMaster").setProperty("/requestor_empno", this.getSessionUserInfo().EMPLOYEE_NUMBER);  
-                this.getModel("appMaster").setProperty("/user_english_name", this.getSessionUserInfo().ENGLISH_EMPLOYEE_NAME); 
-                this.getModel("appMaster").setProperty("/user_local_name", this.getSessionUserInfo().EMPLOYEE_NAME); 
+                this.getModel("appMaster").setProperty("/requestor_empno", '9001');   /* this.getSessionUserInfo().EMPLOYEE_NUMBER */
+                this.getModel("appMaster").setProperty("/user_english_name", "b"); // this.getSessionUserInfo().ENGLISH_EMPLOYEE_NAME
+                this.getModel("appMaster").setProperty("/user_local_name", "**진" );  // this.getSessionUserInfo().EMPLOYEE_NAME
                 this.getModel("appMaster").setProperty("/request_date", this._getToday());
             }
 

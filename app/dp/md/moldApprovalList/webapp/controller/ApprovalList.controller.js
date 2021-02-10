@@ -157,7 +157,7 @@ sap.ui.define([
 
         setPlant: function(companyCode){
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
+            var sTenant_id='L2101';
             var filter = new Filter({
                             filters: [
                                     new Filter("tenant_id", FilterOperator.EQ, sTenant_id),
@@ -313,7 +313,7 @@ sap.ui.define([
         */
         handleSelectionFinishComp: function (oEvent) {
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
+            var sTenant_id='L2101';
             this.copyMultiSelected(oEvent);
 
             var params = oEvent.getParameters();
@@ -392,7 +392,7 @@ sap.ui.define([
 
             //var path = '';
 
-            // var schFilter = [new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)];
+            // var schFilter = [new Filter("tenant_id", FilterOperator.EQ, 'L2101')];
             //     this._bindView("/Requestors", "requestors", schFilter, function(oData){
                     
             //     });
@@ -651,7 +651,7 @@ sap.ui.define([
         dialogChangeComp: function (oEvent) {
             this.copySelected(oEvent);
             var source = oEvent.getSource();
-            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
+            var sTenant_id='L2101';
             var filter = new Filter({
                             filters: [
                                     new Filter("tenant_id", FilterOperator.EQ, sTenant_id),
@@ -964,7 +964,7 @@ sap.ui.define([
         
         _segmentSrch : function (){
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id=this.getSessionUserInfo().TENANT_ID; 
+            var sTenant_id='L2101'; 
             var oView = this.getView(),
                 oModel = this.getModel("SegmentedItem") ,
                 codeName = this.getModel('I18N').getText("/ALL")
@@ -1014,7 +1014,7 @@ sap.ui.define([
         */
         _getSearchStates: function () {
             // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id=this.getSessionUserInfo().TENANT_ID; 
+            var sTenant_id='L2101'; 
             var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
 
             var aCompany = this.getView().byId("searchCompany" + sSurffix).getSelectedKeys();

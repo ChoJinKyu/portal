@@ -325,7 +325,7 @@
                                         </items>
                                     </SegmentedButton>                                         -->
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                        <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData> 
                                 </VBox> 
                                 <VBox id="v_pop_sd_exception_flag">
@@ -336,7 +336,7 @@
                                             </layoutData>
                                         </Switch> 
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                        <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData> 
                                 </VBox>                         
                                 <VBox id="v_pop_maker_material_code_mngt_flag" >
@@ -347,10 +347,10 @@
                                             </layoutData>
                                         </Switch> 
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12"  />
+                                        <layout:GridData span="XL2 L2 M2 S12"  />
                                     </layoutData> 
                                 </VBox> 
-                                <VBox id="v_pop_vendor_pool_apply_exception_flag">
+                                <!-- <VBox id="v_pop_vendor_pool_apply_exception_flag">
                                     <Label text = "{I18N>/VP_EXCEPTION_FLAG}" required="true" width="8rem" design="Bold"/> 
                                         <Switch id="pop_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
@@ -360,7 +360,7 @@
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData> 
-                                </VBox>                                                                       
+                                </VBox>                                                                        -->
                                 <VBox id = "v_review_grade" >
                                     <Label text = "{I18N>/REVIEW_GRADE}" design="Bold"/> 
                                         <HBox>

@@ -4,38 +4,36 @@ sap.ui.define([
     "sap/m/UploadCollectionParameter",
     "sap/ui/core/format/FileSizeFormat",
     "ext/lib/util/UUID",
+    "ext/lib/util/Multilingual",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/base/util/deepExtend",
     "ext/lib/js/jquery.fileDownload",
-    "jquery.sap.global"
+    "jquery.sap.global",
 ],
-	function(Controller, JSONModel, UploadCollectionParameter, FileSizeFormat, UUID, MessageBox, MessageToast, deepExtend, fileDownload, $) {
+	function(Controller, JSONModel, UploadCollectionParameter, FileSizeFormat, UUID, Multilingual, MessageBox, MessageToast, deepExtend, fileDownload, $) {
     "use strict";
     
     var _fileGroupId;
     var _oUploadCollection;
+    var _oResourceModel;
 
-	return Controller.extend("xx.templateGuie.controller.FileUploadGuide", {
-        onInit: function() {            
-            this._fileGroupId = "098239879832998";
-            // this._fileGroupId = "";
-            
-            this._oUploadCollection = this.getView().byId("fileUploadCollection");
-            
+	return Controller.extend("xx.templateGuie.controller.UploadCollection", {
+        onInit: function(initParam) {            
+            this._fileGroupId = initParam.fileGroupId;
+            this._oUploadCollection = initParam.oUploadCollection;
+
             var oFileModel = new JSONModel();
-            this._oUploadCollection.setModel(oFileModel, "fileList");     
+            this._oUploadCollection.setModel(oFileModel, "fileList");
+
+            var oMultilingual = new Multilingual();
+            this._oUploadCollection.setModel(oMultilingual.getModel(), "I18N");
+            this._oResourceModel = this._oUploadCollection.getModel("I18N");
 
             if(this._fileGroupId){  // _fileGroupId가 있다면 조회를 수행한다(기 저장된 데이터인 경우)
                 this._selectFileList();
                 return;
             };
-            
-            this._fileGroupId = UUID.randomUUID();
-        },
-
-        onExit : function(){
-            
         },
 
         onChange: function(oEvent) {
@@ -46,7 +44,6 @@ sap.ui.define([
 				value: "securityTokenFromModel"
 			});
 			oUploadCollection.addHeaderParameter(oCustomerHeaderToken);
-
 		},
 
 		onBeforeUploadStarts: function(oEvent) {
@@ -66,23 +63,23 @@ sap.ui.define([
 		},
 
         onUploadComplete : function(oEvent){
-            var originalFileName = oEvent.getParameter("files")[0].fileName;
             var resultData = JSON.parse(oEvent.getParameter("files")[0].responseRaw);
+            var originalFileName = oEvent.getParameter("files")[0].fileName;
 
             var oModel = this._oUploadCollection.getModel("fileList");
             oModel.getProperty("/records").push({
-				"fileId": resultData.fileId,
+				"fileId": undefined === resultData.fileId ? UUID.randomUUID() : resultData.fileId,
 				"fileName": originalFileName,
                 "fileExt": resultData.fileExt,
                 "uploadDate":  resultData.uploadDate,
-                "fileSize":  resultData.fileSize,
+                "fileSize":  isNaN(resultData.fileSize) ? 0 : resultData.fileSize,
                 "state": resultData.result === "success" ? "None" : "Error"
 			});
             
             oModel.refresh();
 
             if(resultData.result !== "success"){
-                MessageBox.error(originalFileName + " upload fail.");
+                MessageBox.error(this._oResourceModel.getText("/ECM01011", [originalFileName]));
             }            
         },
 
@@ -109,7 +106,7 @@ sap.ui.define([
                 },
                 failCallback : function(responseHtml, url){
                     that._oUploadCollection.setBusy(false);
-                    MessageBox.error("Download Fail.");
+                    MessageBox.error(that._oResourceModel.getText("/ECM01013"));
                 }
             });
         },
@@ -117,6 +114,11 @@ sap.ui.define([
 		onFileDeleted: function(oEvent) {
             var that = this;
             var documentId = oEvent.getParameter("documentId");
+
+            if("Error" === oEvent.getParameter("item").getAggregation("statuses")[0].getProperty("state")){
+                that._deleteItemById(documentId);
+                return;
+            }
 
             this._oUploadCollection.setBusy(true);
 
@@ -136,7 +138,7 @@ sap.ui.define([
                 }
             })
             .fail(function (resultData, textStatus, xhr) {
-                MessageBox.error("File delete fail.");
+                MessageBox.error(that._oResourceModel.getText("/ECM01012"));
             })
             .always(function () {
                 that._oUploadCollection.setBusy(false);
@@ -144,11 +146,11 @@ sap.ui.define([
         },
 
         onTypeMissmatch : function(oEvent){
-            MessageBox.error("Disallowed file type : " + oEvent.getParameters().files[0].name);
+            MessageBox.error(this._oResourceModel.getText("/ECM01503", [oEvent.getParameters().files[0].name]));            
         },
 
         onFileSizeExceed : function(oEvent){
-            MessageBox.error("Submitted file size is over : " + oEvent.getParameters().files[0].name + "\nOne file max size : " + oEvent.getSource().getMaximumFileSize() + "MB");
+            MessageBox.error(this._oResourceModel.getText("/ECM01504", oEvent.getParameters().files[0].name, oEvent.getSource().getMaximumFileSize()));
         },
 
         _selectFileList : function(){
@@ -189,7 +191,7 @@ sap.ui.define([
 			});
             
             this._oUploadCollection.getModel("fileList").setProperty("/records", aItems);
-            MessageToast.show("Successfully file deleted.");
+            MessageToast.show(this._oResourceModel.getText("/NCM01002"));
 		},
        
         _getTypeIcon : function(fileExtention){

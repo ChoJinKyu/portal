@@ -1,0 +1,22 @@
+/* Enter your custom styles here */
+
+.cell_create_row{
+    background-color: rgb(47, 130, 255);
+}
+
+.investmentItemPurchasingAmtSum {
+    margin-right: 2.5rem !important;
+}
+
+.inputPurchasingAmt {
+    margin: 0.5rem !important;
+}
+
+.iconTabBarContent {
+    padding-top: 0rem !important;
+    padding-bottom: 0rem !important;
+}
+
+.iconTabBarContent .sapMITBContent {
+    padding: 0;
+}

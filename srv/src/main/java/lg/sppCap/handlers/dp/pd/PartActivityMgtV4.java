@@ -37,7 +37,7 @@ public class PartActivityMgtV4 implements EventHandler {
         // ProcInputType v_inDatas = context.getInputData();
         String crudType = context.getInputData().getCrudType();
         PdpartActivityTemplateType v_pdMst = context.getInputData().getPdMst();
-        Collection<PdPartBaseActivityLng> v_pdDtl = context.getInputData().getPdDtl();
+        // Collection<PdPartBaseActivityLng> v_pdDtl = context.getInputData().getPdDtl();
         
         /*
         System.out.println(v_inDatas.get("tenant_id"));
@@ -83,23 +83,23 @@ public class PartActivityMgtV4 implements EventHandler {
         
         String v_sql_dropMstTable = "DROP TABLE #LOCAL_TEMP_PART_ACTIVITY";
 
-        // languages 테이블
-        StringBuffer v_sql_createLngTable = new StringBuffer();
-        // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
-        v_sql_createLngTable.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_PART_BASE_ACTIVITY_LNG (");
+        // // languages 테이블
+        // StringBuffer v_sql_createLngTable = new StringBuffer();
+        // // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
+        // v_sql_createLngTable.append("CREATE local TEMPORARY column TABLE #LOCAL_TEMP_PART_BASE_ACTIVITY_LNG (");
 
-        v_sql_createLngTable.append("TENANT_ID NVARCHAR(5),");
-        v_sql_createLngTable.append("ACTIVITY_CODE NVARCHAR(40),");
-        v_sql_createLngTable.append("LANGUAGE_CD NVARCHAR(30),");
-        v_sql_createLngTable.append("CODE_NAME NVARCHAR(240),");        
-        v_sql_createLngTable.append("UPDATE_USER_ID NVARCHAR(255),");
-        v_sql_createLngTable.append("CRUD_TYPE_CODE NVARCHAR(1) )");
+        // v_sql_createLngTable.append("TENANT_ID NVARCHAR(5),");
+        // v_sql_createLngTable.append("ACTIVITY_CODE NVARCHAR(40),");
+        // v_sql_createLngTable.append("LANGUAGE_CD NVARCHAR(30),");
+        // v_sql_createLngTable.append("CODE_NAME NVARCHAR(240),");        
+        // v_sql_createLngTable.append("UPDATE_USER_ID NVARCHAR(255),");
+        // v_sql_createLngTable.append("CRUD_TYPE_CODE NVARCHAR(1) )");
 
-        String v_sql_insertLngTable = "INSERT INTO #LOCAL_TEMP_PART_BASE_ACTIVITY_LNG VALUES (?, ?, ?, ?, ?, ?)";        
+        // String v_sql_insertLngTable = "INSERT INTO #LOCAL_TEMP_PART_BASE_ACTIVITY_LNG VALUES (?, ?, ?, ?, ?, ?)";        
         
-        String v_sql_dropLngtable = "DROP TABLE #LOCAL_TEMP_PART_BASE_ACTIVITY_LNG";
+        // String v_sql_dropLngtable = "DROP TABLE #LOCAL_TEMP_PART_BASE_ACTIVITY_LNG";
 
-        String v_sql_callProc = "CALL DP_PD_PART_ACTIVITY_TEMPLETE_SAVE_PROC(CRUD_TYPE => ?, I_M => #LOCAL_TEMP_PART_ACTIVITY, I_D => #LOCAL_TEMP_PART_BASE_ACTIVITY_LNG, O_MSG => ?)";
+        String v_sql_callProc = "CALL DP_PD_PART_ACTIVITY_TEMPLETE_SAVE_PROC(CRUD_TYPE => ?, I_M => #LOCAL_TEMP_PART_ACTIVITY, O_MSG => ?)";
 
         Collection<OutType> v_result = new ArrayList<>();
 
@@ -162,28 +162,28 @@ public class PartActivityMgtV4 implements EventHandler {
 
         
 
-        jdbc.execute(v_sql_createLngTable.toString());
+        // jdbc.execute(v_sql_createLngTable.toString());
 
         // BaseExtrate Local Temp Table에 insert
-            List<Object[]> batch_dtl = new ArrayList<Object[]>();
-            if(!v_pdDtl.isEmpty() && v_pdDtl.size() > 0){
-            // log.info("-----> v_pdDtl : " + v_pdDtl.size());
-                for(PdPartBaseActivityLng v_inRow : v_pdDtl){
-                    Object[] values = new Object[] {
-                        v_inRow.get("tenant_id"),
-                        v_inRow.get("activity_code"),
-                        v_inRow.get("language_cd"),
-                        v_inRow.get("code_name"),
-                        v_inRow.get("update_user_id"),
-                        v_inRow.get("crud_type_code")
-                    };
-                    //v_statement_insertBaseExtrate.addBatch();
-                    batch_dtl.add(values);
-                }
-                //v_statement_insertBaseExtrate.executeBatch();
-                int[] updateLngCounts = jdbc.batchUpdate(v_sql_insertLngTable, batch_dtl);
-                // log.info("batch_BaseExtrate : " + updateCounts);
-            }
+            // List<Object[]> batch_dtl = new ArrayList<Object[]>();
+            // if(!v_pdDtl.isEmpty() && v_pdDtl.size() > 0){
+            // // log.info("-----> v_pdDtl : " + v_pdDtl.size());
+            //     for(PdPartBaseActivityLng v_inRow : v_pdDtl){
+            //         Object[] values = new Object[] {
+            //             v_inRow.get("tenant_id"),
+            //             v_inRow.get("activity_code"),
+            //             v_inRow.get("language_cd"),
+            //             v_inRow.get("code_name"),
+            //             v_inRow.get("update_user_id"),
+            //             v_inRow.get("crud_type_code")
+            //         };
+            //         //v_statement_insertBaseExtrate.addBatch();
+            //         batch_dtl.add(values);
+            //     }
+            //     //v_statement_insertBaseExtrate.executeBatch();
+            //     int[] updateLngCounts = jdbc.batchUpdate(v_sql_insertLngTable, batch_dtl);
+            //     // log.info("batch_BaseExtrate : " + updateCounts);
+            // }
 
         // int[] updateLngCounts = jdbc.batchUpdate(v_sql_insertLngTable, batch);
                 
@@ -194,8 +194,7 @@ public class PartActivityMgtV4 implements EventHandler {
             @Override
             public OutType mapRow(ResultSet v_rs, int rowNum) throws SQLException {
                 v_row.setReturnCode(v_rs.getString("return_code"));
-                v_row.setReturnMsg(v_rs.getString("return_msg"));
-                // v_row.setReturnMsgCode(v_rs.getString("return_msg_code"));
+                v_row.setReturnMsg(v_rs.getString("return_msg"));                
                 v_result.add(v_row);
                 return v_row;
             }
@@ -217,8 +216,8 @@ public class PartActivityMgtV4 implements EventHandler {
 
 
         // Local Temp Table DROP
-        jdbc.execute(v_sql_dropMstTable);
-        jdbc.execute(v_sql_dropLngtable);
+        // jdbc.execute(v_sql_dropMstTable);
+        // jdbc.execute(v_sql_dropLngtable);
 
         context.setResult(v_row);
         context.setCompleted();

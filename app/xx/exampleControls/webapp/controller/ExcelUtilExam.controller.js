@@ -4,8 +4,9 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "ext/lib/util/ExcelUtil",
-    "ext/lib/formatter/Formatter"
-], function (Controller, JSONModel, MessageBox, MessageToast, ExcelUtil, Formatter) {
+    "ext/lib/formatter/Formatter",
+    "ext/lib/formatter/DateFormatter"
+], function (Controller, JSONModel, MessageBox, MessageToast, ExcelUtil, Formatter, DateFormatter) {
     "use strict";
 
     return Controller.extend("xx.exampleControls.controller.ExcelUtilExam", {
@@ -14,6 +15,8 @@ sap.ui.define([
         /* lifecycle methods                                           */
         /* =========================================================== */
         formatter: Formatter,
+
+        DateFormatter: DateFormatter,
         
         onInit: function () {
 
@@ -39,13 +42,19 @@ sap.ui.define([
             var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
             var oData = oTable.getModel().getProperty("/Message");//binded Data
 
-            //CM_CHAIN_CD code list
-            var aCtxtChainCode = Object.keys(this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_CHAIN_CD')").getProperty("/"));
-            var aChainCode = aCtxtChainCode.map(sCtxt => this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_CHAIN_CD')").getModel().getProperty("/"+sCtxt));
-
-            //CM_LANG_CODE code List
-            var aCtxtLang = Object.keys(this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_CHAIN_CD')").getProperty("/"));
-            var aLangCode = aCtxtLang.map(sCtxt => this.getModel("common").getContext("/Code(tenant_id='L2100,group_id='CM_LANG_CODE')").getModel().getProperty("/"+sCtxt));
+            //Code Model Context
+            var aCtxtCode = Object.keys(this.getModel("common").getContext("/Code").getProperty("/"));
+            //CM_CHAIN_CD, CM_LANG_CODE code list
+            var aChainCode = [], aLangCode = [];
+            aCtxtCode.forEach(function(sCtxt) {
+                let oCtxt = this.getModel("common").getContext("/Code").getProperty("/"+sCtxt);
+                if(oCtxt.group_code === "CM_CHAIN_CD") {
+                    aChainCode.push(oCtxt);
+                }
+                if(oCtxt.group_code === "CM_LANG_CODE") {
+                    aLangCode.push(oCtxt);
+                }
+            }.bind(this));
 
             //optional object param
             //aListItem - 코드목록, sBindName - Table 칼럼에 바인딩한 property, sKeyName - 코드목록의 key, sTextName - 코드목록의 text
@@ -156,8 +165,8 @@ sap.ui.define([
                         "chain_code": "CM",
                         "message_type_code": "LBL",
                         "message_contents": "약어",
-                        "local_create_dtm": "/Date(1606974329000)/",
-                        "local_update_dtm": "/Date(1606974329000)/",
+                        "local_create_dtm": new Date(1606974329000),
+                        "local_update_dtm": new Date(1606974329000),
                         "create_user_id": "anonymous",
                         "update_user_id": "anonymous",
                         "system_create_dtm": "/Date(1606974351000)/",
@@ -177,11 +186,11 @@ sap.ui.define([
                         "tenant_id": "L2100",
                         "message_code": "ABNORMAL",
                         "language_code": "KO",
-                        "chain_code": "CM",
+                        "chain_code": "DP",
                         "message_type_code": "LBL",
                         "message_contents": "특이",
-                        "local_create_dtm": "/Date(1606974329000)/",
-                        "local_update_dtm": "/Date(1606974329000)/",
+                        "local_create_dtm": new Date(1606974329000),
+                        "local_update_dtm": new Date(1606974329000),
                         "create_user_id": "anonymous",
                         "update_user_id": "anonymous",
                         "system_create_dtm": "/Date(1606974351000)/",
@@ -200,12 +209,12 @@ sap.ui.define([
                         },
                         "tenant_id": "L2100",
                         "message_code": "ACCOUNT",
-                        "language_code": "KO",
-                        "chain_code": "CM",
+                        "language_code": "EN",
+                        "chain_code": "DP",
                         "message_type_code": "LBL",
                         "message_contents": "계정",
-                        "local_create_dtm": "/Date(1606974329000)/",
-                        "local_update_dtm": "/Date(1606974329000)/",
+                        "local_create_dtm": new Date(1606974329000),
+                        "local_update_dtm": new Date(1606974329000),
                         "create_user_id": "anonymous",
                         "update_user_id": "anonymous",
                         "system_create_dtm": "/Date(1606974351000)/",
@@ -228,8 +237,8 @@ sap.ui.define([
                         "chain_code": "CM",
                         "message_type_code": "LBL",
                         "message_contents": "계정코드",
-                        "local_create_dtm": "/Date(1606748448000)/",
-                        "local_update_dtm": "/Date(1606748448000)/",
+                        "local_create_dtm": new Date(1606748448000),
+                        "local_update_dtm": new Date(1606748448000),
                         "create_user_id": "anonymous",
                         "update_user_id": "anonymous",
                         "system_create_dtm": "/Date(1606748516000)/",
@@ -252,8 +261,8 @@ sap.ui.define([
                         "chain_code": "CM",
                         "message_type_code": "LBL",
                         "message_contents": "ACCOUNT CODE",
-                        "local_create_dtm": "/Date(1606748448000)/",
-                        "local_update_dtm": "/Date(1606748448000)/",
+                        "local_create_dtm": new Date(1606748448000),
+                        "local_update_dtm": new Date(1606748448000),
                         "create_user_id": "anonymous",
                         "update_user_id": "anonymous",
                         "system_create_dtm": "/Date(1606748516000)/",
@@ -276,8 +285,8 @@ sap.ui.define([
                         "chain_code": "CM",
                         "message_type_code": "LBL",
                         "message_contents": "외상매입금",
-                        "local_create_dtm": "/Date(1606974329000)/",
-                        "local_update_dtm": "/Date(1606974329000)/",
+                        "local_create_dtm": new Date(1606974329000),
+                        "local_update_dtm": new Date(1606974329000),
                         "create_user_id": "anonymous",
                         "update_user_id": "anonymous",
                         "system_create_dtm": "/Date(1606974351000)/",
@@ -300,8 +309,8 @@ sap.ui.define([
                         "chain_code": "CM",
                         "message_type_code": "LBL",
                         "message_contents": "회계",
-                        "local_create_dtm": "/Date(1606974329000)/",
-                        "local_update_dtm": "/Date(1606974329000)/",
+                        "local_create_dtm": new Date(1606974329000),
+                        "local_update_dtm": new Date(1606974329000),
                         "create_user_id": "anonymous",
                         "update_user_id": "anonymous",
                         "system_create_dtm": "/Date(1606974351000)/",

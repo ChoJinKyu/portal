@@ -15,7 +15,6 @@ sap.ui.define([
         },
 
         init: function () {
-
             //console.log("SppUserSessionUtil", SppUserSessionUtil);
             // call the base component's init function
             UIComponent.prototype.init.apply(this, arguments);
@@ -25,21 +24,14 @@ sap.ui.define([
                 number: { symbol: "", currency: "KRW" }
             };
 
-            // basePriceProgressStatusMgt App 전체에서 사용할 Model 세팅
-            
+            // basePriceArlMgt App 전체에서 사용할 Model 세팅
+            this.setModel(new JSONModel(oBasePriceArlMgtRootData), "rootModel");
             // 다국어 Model 세팅
             this.setModel(new Multilingual().getModel(), "I18N");
 
             var oRootModel = this.getModel("rootModel");
 
-            if (oRootModel === undefined) {
-                this.setModel(new JSONModel(oBasePriceArlMgtRootData), "rootModel");
-                oRootModel = this.getModel("rootModel");
-            }
-
-            // 상태값 조회(품의서 진행 상태) 시작
             var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID));
             aFilters.push(new Filter("group_code", FilterOperator.EQ, "CM_APPROVE_STATUS"));
 
             this.getModel("util").read("/Code", {
@@ -58,14 +50,14 @@ sap.ui.define([
             });
         },
 
-         /**
-         * Date 데이터를 String 타입으로 변경. 예) 2020-10-10
-         */
+        /**
+        * Date 데이터를 String 타입으로 변경. 예) 2020-10-10
+        */
         _changeDateString: function (oDateParam, sGubun) {
             var oDate = oDateParam || new Date(),
                 sGubun = sGubun || "",
                 iYear = oDate.getFullYear(),
-                iMonth = oDate.getMonth()+1,
+                iMonth = oDate.getMonth() + 1,
                 iDate = oDate.getDate(),
                 iHours = oDate.getHours(),
                 iMinutes = oDate.getMinutes(),
@@ -77,7 +69,7 @@ sap.ui.define([
         },
 
         _getPreZero: function (iDataParam) {
-            return (iDataParam<10 ? "0"+iDataParam : iDataParam);
+            return (iDataParam < 10 ? "0" + iDataParam : iDataParam);
         }
     });
 });

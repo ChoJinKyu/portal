@@ -109,7 +109,7 @@
                                             </smartTable:customToolbar>
                                             <Table id="MonitorListTable" sticky="HeaderToolbar,ColumnHeaders">
                                             <columns>
-                                                                                              <Column
+                                                <Column
                                                     hAlign="Center">
                                                         <customData>
                                                         <core:CustomData 

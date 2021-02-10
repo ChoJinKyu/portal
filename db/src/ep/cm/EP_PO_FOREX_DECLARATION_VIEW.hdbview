@@ -39,11 +39,11 @@ INNER JOIN (
         , MST.ORG_CODE AS PLANT_CODE /* 플랜트코드 */
         , ORG.ORG_NAME AS PLANT_NAME /* 플랜트명 */
         , MST.CURRENCY_CODE AS CURRENCY_NAME /* 통화 */
-        , MST.ORDER_AMOUNT AS PO_AMOUNT /* PO금액 */
+        , MST.PO_AMOUNT /* PO금액 */
         , PAY.PAY_AMOUNT AS PREPAY_AMOUNT /* 선급금액 */
         , MST.SUPPLIER_CODE /* 협력사코드 */	
         , SUPM.SUPPLIER_LOCAL_NAME AS SUPPLIER_NAME /* 협력사 */	
-        , TO_DATE('20200101') AS PO_DATE /* PO일자 */	
+        , MST.PO_DATE /* PO일자(임시->향후 PO테이블로 변경) */	
         , PAY.PAY_SCHEDULED_DATE AS PREPAY_DATE /* 선급금지급일자 */			
         , MST.CONTRACT_DUE_DATE AS RECEIPT_SCHEDULED_DATE /* 입고예정일자 */	
         , TO_DATE('') AS RECEIPT_DATE /* 입고일자 */	
@@ -57,7 +57,7 @@ INNER JOIN (
     AND MST.COMPANY_CODE = PAY.COMPANY_CODE
     AND MST.PURCHASING_APPROVAL_NUMBER = PAY.PURCHASING_APPROVAL_NUMBER
     AND MST.FOR_PUR_FLAG = true
-    AND MST.ORDER_AMOUNT >= 20000 /* 추후 환율 적용 */
+    AND MST.PO_AMOUNT >= 20000 /* 추후 환율 적용 */
     AND PAY.PAY_TYPE_CODE = 'PRE' /* 선급금+외화+USD2만 이상 PO 조회 */
     LEFT OUTER JOIN SP_SM_SUPPLIER_MST SUPM
     ON MST.TENANT_ID = SUPM.TENANT_ID

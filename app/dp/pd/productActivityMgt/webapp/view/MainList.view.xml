@@ -16,7 +16,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{I18N>/PRODUCT_ACTIVITY}" />
+                    <Title text="{I18N>/PRODUCT_ACTIVITY} {I18N>/MANAGEMENT}" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
@@ -33,16 +33,17 @@
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="{I18N>/PRODUCT_ACTIVITY_NAME}" labelFor="searchProductActivity"></Label>
-                            <Input id="searchProductActivity" 
-                                placeholder="{I18N>/PRODUCT_ACTIVITY_NAME}" change=".onPageSearchButtonPress"/>
+                            <Label text="코드/ 명/ 설명: " labelFor="searchProductActivity"></Label>
+                            <Input 
+                                id="searchProductActivity"
+                                change=".onPageSearchButtonPress"/>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                       
+                        
                         <VBox>
-                            <Label text="{I18N>/OPTION}:" labelFor="searchUsageSegmentButton"></Label>
+                            <Label text="{I18N>/STATUS}:" labelFor="searchUsageSegmentButton"></Label>
                             <SegmentedButton 
                                 id="searchStatusSegmentButton"
                                 selectedKey="all"
@@ -70,7 +71,7 @@
         </f:header>
         
         <f:content>
-            <t:Table id="mainTable" 
+            <t:Table id="mainTable"
                     rows="{
                         path: 'list>/PdProdActivityTemplateView'
                     }"
@@ -82,10 +83,10 @@
                     width="auto">
                 <t:extension>
                     <OverflowToolbar class="sapFDynamicPageAlignContent">
-                        <Title id="mainTableTitle2" text="{I18N>/PRODUCT_ACTIVITY} {I18N>/LIST} {= ${list>/PdProdActivityTemplateView}.length > 0 ? '(' + ${list>/PdProdActivityTemplateView}.length + ')' : ''}" level="H2"/>
+                        <Title id="mainTableTitle2" text="{I18N>/PRODUCT_ACTIVITY} {I18N>/MANAGEMENT} {I18N>/LIST} {= ${list>/PdProdActivityTemplateView}.length > 0 ? '(' + ${list>/PdProdActivityTemplateView}.length + ')' : '(0)'}" level="H2"/>
                         <ToolbarSpacer/>
                         <Button text="{I18N>/CREATE}" id="createActivity" press=".onCreateActivity"  type="Transparent"/>
-                        <Button icon="sap-icon://excel-attachment" text="{I18N>/EXCEL}" press="onExportPress" type="Transparent"/>
+                        <Button icon="sap-icon://excel-attachment" press="onExportPress" type="Transparent"/>
                         <ToolbarSeparator/>
                         <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed"/>
                         
@@ -94,56 +95,57 @@
  
                 <t:columns>
 
-                    <t:Column hAlign="Center">
-                        <Text text="{I18N>/PRODUCT_ACTIVITY_CODE}" wrapping="false"/>
+                    <t:Column>
+                        <Label text="{I18N>/PRODUCT_ACTIVITY_CODE}" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
-                            <Text text="{list>product_activity_code}" wrapping="false"></Text>  
+                            <Text text="{list>product_activity_code}" wrapping="false" textAlign="Left" width="100%"/>  
                         </t:template>
                     </t:Column>
 
-                    <t:Column hAlign="Center">
-                        <Text text="{I18N>/PRODUCT_ACTIVITY_NAME}" wrapping="false"/>
+                    <t:Column hAlign="Start">
+                        <Label text="{I18N>/PRODUCT_ACTIVITY_NAME}" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
-                            <Text text="{list>activity_name}" wrapping="false"></Text>  
+                            <Text text="{list>activity_name}" wrapping="false"/>  
                         </t:template>
                     </t:Column>
 
-                    <t:Column hAlign="Center">
-                        <Text text="{I18N>/PRODUCT_DESC}" wrapping="false"/>
+                    <t:Column>
+                        <Label text="{I18N>/PRODUCT_DESC}" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
-                            <Text text="{list>description}" wrapping="false"></Text>  
+                            <Text text="{list>description}" wrapping="false" textAlign="Left" width="100%" />  
                         </t:template>
                     </t:Column>
 
-                    <t:Column hAlign="Center" width="auto">
-                        <Text text="{I18N>/SEQUENCE}" wrapping="false"/>
+                    <t:Column hAlign="End" width="60px">
+                        <Label text="{I18N>/SEQUENCE}" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
-                            <Text text="{list>sequence}" wrapping="false"></Text>  
+                            <Text text="{list>sequence}" wrapping="false" textAlign="Right" width="100%"/>  
                         </t:template>
                     </t:Column>
 
-                    <t:Column hAlign="Center">
-                        <Text text="{I18N>/STATUS}" wrapping="false"/>
+                    <t:Column>
+                        <Label text="{I18N>/STATUS}" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
-                            <Text text="{list>active_flag_val}" wrapping="false"/>  
+                            <Text text="{list>active_flag_val}" wrapping="false" textAlign="Center" width="100%"/>  
                         </t:template>
                     </t:Column>
 
-                    <t:Column id="localUpdateDtmColumn" hAlign="Center">
-                        <Text text="{I18N>/UPDATE} {I18N>/DATE_TIME}" wrapping="false"/>
+                    <t:Column id="localUpdateDtmColumn">
+                        <Label text="{I18N>/UPDATE} {I18N>/DATE_TIME}" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
                             <Text text="{
                                         path: 'list>local_update_dtm',
                                         formatter: '.dateFormatter.toDateTimeString'
                                     }"
-                                    wrapping="false"/>  
+                                    wrapping="false"
+                                    textAlign="Center" width="100%"/>  
                         </t:template>
                     </t:Column>
 
-                    <t:Column id="updateUserIdColumn" hAlign="Center">
-                        <Text text="{I18N>/UPDATE_USER_ID}" wrapping="false"/>
+                    <t:Column id="updateUserIdColumn">
+                        <Label text="{I18N>/UPDATE_USER_ID}" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
-                            <Text text="{list>update_user_id}" wrapping="false" ></Text>  
+                            <Text text="{list>update_user_id}" wrapping="false" textAlign="Left" width="100%"/>  
                         </t:template>
                     </t:Column>
 

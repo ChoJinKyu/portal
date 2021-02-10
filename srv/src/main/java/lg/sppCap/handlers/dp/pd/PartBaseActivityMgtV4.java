@@ -169,24 +169,55 @@ public class PartBaseActivityMgtV4 implements EventHandler {
         List<Object[]> batch_cat = new ArrayList<Object[]>();
         System.out.println("MID PROC.....");
         if(!v_pdCat.isEmpty() && v_pdCat.size() > 0){
-            boolean cate_active_flag = false;        
+            boolean cate_active_flag = false;
+            Integer sGrade;
+            Integer aGrade;
+            Integer bGrade;
+            Integer cGrade;
+            Integer dGrade;
+                    
             for(PdpartBaseActivityCategoryType v_inRow : v_pdCat){                
                 if(v_inRow.get("active_flag")!=null && (v_inRow.get("active_flag")).equals("true")){
                     cate_active_flag = true;
                 } else {
                     cate_active_flag = false;
                 }
-                System.out.println("ERR.....");
+                if(v_inRow.get("s_grade_standard_days")==null){
+                    sGrade = null;
+                } else {
+                    sGrade = Integer.parseInt(String.valueOf(v_inRow.get("s_grade_standard_days")));
+                }
+                if(v_inRow.get("a_grade_standard_days")==null){
+                    aGrade = null;
+                } else {
+                    aGrade = Integer.parseInt(String.valueOf(v_inRow.get("a_grade_standard_days")));
+                }
+                if(v_inRow.get("b_grade_standard_days")==null){
+                    bGrade = null;
+                } else {
+                    bGrade = Integer.parseInt(String.valueOf(v_inRow.get("b_grade_standard_days")));
+                }
+                if(v_inRow.get("c_grade_standard_days")==null){
+                    cGrade = null;
+                } else {
+                    cGrade = Integer.parseInt(String.valueOf(v_inRow.get("c_grade_standard_days")));
+                }
+                if(v_inRow.get("d_grade_standard_days")==null){
+                    dGrade = null;
+                } else {
+                    dGrade = Integer.parseInt(String.valueOf(v_inRow.get("d_grade_standard_days")));
+                }
+                System.out.println("TEST....." + v_inRow.get("s_grade_standard_days"));
                 Object[] values = new Object[] {
                     v_inRow.get("tenant_id"),
                     v_inRow.get("activity_code"),
                     v_inRow.get("category_group_code"),
                     v_inRow.get("category_code"),
-                    Integer.parseInt(String.valueOf(v_inRow.get("s_grade_standard_days"))),                    
-                    Integer.parseInt(String.valueOf(v_inRow.get("a_grade_standard_days"))),
-                    Integer.parseInt(String.valueOf(v_inRow.get("b_grade_standard_days"))),
-                    Integer.parseInt(String.valueOf(v_inRow.get("c_grade_standard_days"))),
-                    Integer.parseInt(String.valueOf(v_inRow.get("d_grade_standard_days"))),                    
+                    sGrade,                    
+                    aGrade,
+                    bGrade,
+                    cGrade,
+                    dGrade,                    
                     cate_active_flag,
                     v_inRow.get("update_user_id"),
                     v_inRow.get("crud_type_code")

@@ -92,7 +92,7 @@ sap.ui.define([
             //  } else {
 
             schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number)
-                , new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)
+                , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
             ];
             // this.getView().setModel(new ManagedModel(), "mdCommon");
             var md = this.getModel('mdCommon');
@@ -163,7 +163,7 @@ sap.ui.define([
         _searchAssetType : function(parent_code,callback){ // 목록의 combo 조회  
 
            var aFilter = [new Filter("group_code", FilterOperator.EQ, 'DP_MD_ASSET_TYPE' )
-                , new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)
+                , new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 , new Filter("parent_code", FilterOperator.EQ, parent_code)
             ];
             var oView = this.getView(),
@@ -182,7 +182,7 @@ sap.ui.define([
         },
         _searchImportCompany: function () {
             var nFilter = [
-                new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)
+                new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 , new Filter("company_code", FilterOperator.NE, this.company_code)
             ];
             // console.log("nFilter>>>>> " , nFilter);
@@ -213,7 +213,7 @@ sap.ui.define([
 
         _bindComboPlant: function (company_code) {
             var aFilter = [
-                new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)
+                new Filter("tenant_id", FilterOperator.EQ, 'L2101')
                 , new Filter("company_code", FilterOperator.EQ, company_code)
             ];
 
@@ -277,7 +277,7 @@ sap.ui.define([
             /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */
             var approval_number = mstModel.oData.approval_number;
             oModel.addRecord({
-                "tenant_id": this.getSessionUserInfo().TENANT_ID,
+                "tenant_id": 'L2101',
                 "mold_id": String(data.mold_id),
                 "approval_number": approval_number,
                 "model": data.model,

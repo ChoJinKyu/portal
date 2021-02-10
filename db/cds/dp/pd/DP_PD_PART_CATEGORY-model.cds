@@ -26,6 +26,7 @@ entity Pd_Part_Category_View {
     key tenant_id             : String;
     key category_group_code   : String;
     key category_code         : String;
+        category_group_name   : String;
         category_name         : String;
         parent_category_code  : String;
         sequence              : Decimal;
