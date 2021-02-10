@@ -14,11 +14,11 @@
 		alwaysShowContentHeader = "true" 
 		preserveHeaderStateOnScroll="false"
 		headerContentPinnable="true"
-		isChildPage="true"
+        isChildPage="true"
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 
-        showFooter="true">
+        showFooter="false">
         
 		<uxap:headerTitle>
 			<!-- 타이틀 영역 -->
@@ -427,10 +427,10 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-                <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageNavBackButtonPress"/>
-                <Button id="pageUpdateButton" enabled="false" type="Transparent" text="{I18N>/UPDATE}" press=".onPageUpdateButtonPress" />
-                <Button id="pageSaveButton" enabled="false" type="Transparent" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
-                <Button id="pageSubmissionButton" enabled="false" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSubmissionButtonPress" />
+                <Button id="cancelButton" type="Transparent" text="취소" press=".onPageNavBackButtonPress"/>
+                <Button id="updateButton" type="Transparent" text="수정" press=".onPageUpdateButtonPress" />
+                <Button id="saveButton" type="Transparent" text="저장" press=".onPageSaveButtonPress" />
+                <Button id="submissionButton" type="Emphasized" text="제출" press=".onPageSubmissionButtonPress" />
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>
