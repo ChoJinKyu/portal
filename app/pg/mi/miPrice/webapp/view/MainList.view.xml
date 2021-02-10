@@ -186,7 +186,7 @@
                         <Button id="mainTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMainTableAddButtonPress" />
                         <Button id="mainTableDeleteButton" text="{I18N>/ROW_DELETE}" enabled="{viewControl>/enabled}" type="Transparent" press=".onMainTableDeleteButtonPress" />
                         <Button id="mainTableSaveButton" text="{I18N>/SAVE}"  enabled="{viewControl>/enabled}" type="Emphasized" press=".onMainTableSaveButtonPress" />
-                       
+                    
                         <!-- <Button icon="sap-icon://upload" type="Transparent" press=".onMainTableDelete"/> -->
                         <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
                                         buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="Upload"/>
@@ -330,6 +330,7 @@
                                 <ComboBox items="{path: '/MITermsdelvView', templateShareable:true, filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}]}" 
                                     placeholder="선택하세요." selectedKey="{list>termsdelv}" 
                                     width="100%" required="true" value="{list>termsdelv}"
+                                    change=".onChangeData"
                                     valueState="{list>__metadata/_valueStates/termsdelv/valueState}" valueStateText="{list>__metadata/_valueStates/termsdelv/valueStateText}">
                                     <core:Item key="{termsdelv}" text="{termsdelv}"/>
                                 </ComboBox> 
@@ -345,7 +346,7 @@
                                             maxLength: 10
                                         }
                                     }"-->
-                                <Input value="{list>sourcing_group_code}" 
+                                <Input value="{list>sourcing_group_code}" change=".onChangeData"
                                 valueState="{list>__metadata/_valueStates/sourcing_group_code/valueState}" valueStateText="{list>__metadata/_valueStates/sourcing_group_code/valueStateText}"/> 
                             </t:template>
                         </t:Column>
@@ -360,7 +361,7 @@
                                             maxLength: 10
                                         }
                                     }"-->
-                                <Input value="{list>delivery_mm}" 
+                                <Input value="{list>delivery_mm}" change=".onChangeData"
                                 valueState="{list>__metadata/_valueStates/delivery_mm/valueState}" valueStateText="{list>__metadata/_valueStates/delivery_mm/valueStateText}"/> 
                             </t:template>
                         </t:Column>
@@ -380,7 +381,7 @@
                                         type: 'sap.ui.model.type.Float',
                                         formatOptions:{minIntegerDigits:'1',maxIntegerDigits:'28', minFractionDigits:'0',maxFractionDigits:'5'}
                                     }"-->
-                                <Input type="Number" 
+                                <Input type="Number" change=".onChangeData"
                                      value="{list>price}" 
                                     textAlign="Right" required="true"
                                     valueState="{list>__metadata/_valueStates/price/valueState}" valueStateText="{list>__metadata/_valueStates/price/valueStateText}"/>

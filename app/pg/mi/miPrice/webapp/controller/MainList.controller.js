@@ -179,6 +179,10 @@ sap.ui.define([
             oViewControl.setProperty("/enabled", true);
 		},
 
+        onChangeData : function(oEvent){
+            this.getModel("viewControl").setProperty("/enabled", true);
+
+        },
 		onMainTableDeleteButtonPress: function(){
             //--- m Table 일 경우,
 			// var oTable = this.byId("mainTable"),
@@ -230,17 +234,17 @@ sap.ui.define([
                 
                 var oValueStates = {};
                 //필수값 체크
-                var sMi_material_code = oRow.mi_material_code === undefined ? "" : oRow.mi_material_code;
-                var sMi_material_name = oRow.mi_material_code === undefined ? "" : oRow.mi_material_name;
-                var sCurrency_unit = oRow.currency_unit === undefined ? "" : oRow.currency_unit;
-                var sQuantity_unit = oRow.quantity_unit === undefined ? "" : oRow.quantity_unit;
-                var sExchange_unit = oRow.exchange_unit === undefined ? "" : oRow.exchange_unit;
-                var sExchange = oRow.exchange === undefined ? "" : oRow.exchange;
-                var sTermsdelv = oRow.termsdelv === undefined ? "" : oRow.termsdelv;
-                var sSourcing_group_code = oRow.sourcing_group_code === undefined ? "" : oRow.sourcing_group_code;
-                var sDelivery_mm = oRow.delivery_mm === undefined ? "" : oRow.delivery_mm;
-                var sMi_date = oRow.mi_date === undefined ? "" : oRow.mi_date;
-                var sPrice = oRow.price === undefined ? "" : oRow.price.toString();
+                var sMi_material_code = (oRow.mi_material_code === undefined || oRow.mi_material_code === null) ? "" : oRow.mi_material_code;
+                var sMi_material_name = (oRow.mi_material_name === undefined || oRow.mi_material_name === null) ? "" : oRow.mi_material_name;
+                var sCurrency_unit = (oRow.currency_unit === undefined || oRow.currency_unit === null) ? "" : oRow.currency_unit;
+                var sQuantity_unit = (oRow.quantity_unit === undefined || oRow.quantity_unit === null) ? "" : oRow.quantity_unit;
+                var sExchange_unit = (oRow.exchange_unit === undefined || oRow.exchange_unit === null) ? "" : oRow.exchange_unit;
+                var sExchange = (oRow.exchange === undefined || oRow.exchange === null) ? "" : oRow.exchange;
+                var sTermsdelv = (oRow.termsdelv === undefined || oRow.termsdelv === null) ? "" : oRow.termsdelv;
+                var sSourcing_group_code = (oRow.sourcing_group_code === undefined || oRow.sourcing_group_code === null) ? "" : oRow.sourcing_group_code;
+                var sDelivery_mm = (oRow.delivery_mm === undefined || oRow.delivery_mm === null) ? "" : oRow.delivery_mm;
+                var sMi_date = (oRow.mi_date === undefined || oRow.mi_date === null) ? "" : oRow.mi_date;
+                var sPrice = (oRow.price === undefined || oRow.price === null) ? "" : oRow.price.toString();
 
                 if(sMi_material_code === "")oValueStates.mi_material_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
                 else if(sMi_material_code !== "" && sMi_material_name === "")oValueStates.mi_material_code = {valueState: "Error", valueStateText: "등록이 안된 코드입니다"};
@@ -265,7 +269,7 @@ sap.ui.define([
 
 
                 if('mi_material_code' in oValueStates || 'currency_unit' in oValueStates || 'quantity_unit' in oValueStates || 'exchange_unit' in oValueStates || 
-                'exchange' in oValueStates || 'termsdelv' in oValueStates || 'delivery_mm' in oValueStates || 'mi_date' in oValueStates || 'price' in oValueStates){
+                'sourcing_group_code' in oValueStates || 'exchange' in oValueStates || 'termsdelv' in oValueStates || 'delivery_mm' in oValueStates || 'mi_date' in oValueStates || 'price' in oValueStates){
                     bReturn = false;
                 }
 
