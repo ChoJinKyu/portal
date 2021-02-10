@@ -4,7 +4,7 @@ sap.ui.define([
     "ext/lib/model/ManagedListModel",
     "ext/lib/util/Multilingual",
     "ext/lib/util/Validator",
-    "./remodelRepairEstimationPersoService",
+    "./RemodelRepairStatusInquiryPersoService",
     "sap/ui/base/ManagedObject",
     "sap/ui/core/routing/History",
     "sap/ui/core/Element",
@@ -28,42 +28,49 @@ sap.ui.define([
     "sap/m/Token",
     "dp/md/util/controller/SupplierSelection",
     "ext/lib/util/ExcelUtil",
-    "ext/lib/formatter/NumberFormatter"
-], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, remodelRepairEstimationPersoService, 
+    "ext/lib/formatter/NumberFormatter",
+    "ext/lib/util/SppUserSession"
+], function (BaseController, DateFormatter, ManagedListModel, Multilingual, Validator, RemodelRepairStatusInquiryPersoService, 
     ManagedObject, History, Element, Fragment, JSONModel, Filter, FilterOperator, Sorter, Column, Row, TablePersoController, Item, 
     ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token, SupplierSelection, ExcelUtil,
-    NumberFormatter) {
+    NumberFormatter, SppUserSession) {
     "use strict";
     
-    return BaseController.extend("dp.md.remodelRepairEstimation.controller.remodelRepairEstimation", {
+    return BaseController.extend("dp.md.remodelRepairStatusInquiry.controller.RemodelRepairStatusInquiry", {
 
         dateFormatter: DateFormatter,
         numberFormatter: NumberFormatter,
         validator: new Validator(),
         supplierSelection: new SupplierSelection(),
+        userInfo: {},
 
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
 
         /**
-         * Called when the remodelRepairEstimation controller is instantiated.
+         * Called when the remodelRepairStatusInquiry controller is instantiated.
          * @public
          */
         onInit : function () {
             var oViewModel,
                 oResourceBundle = this.getResourceBundle();
 
+            var sppUserSession = new SppUserSession();
+            this.setModel(sppUserSession.getModel(),'USER_SESSION');
+            
+            this.userInfo = this.getSessionUserInfo();
+
             // Model used to manipulate control states
             oViewModel = new JSONModel({
-                remodelRepairEstimationTableTitle : oResourceBundle.getText("remodelRepairEstimationTableTitle"),
+                remodelRepairStatusInquiryTableTitle : oResourceBundle.getText("remodelRepairStatusInquiryTableTitle"),
                 tableNoDataText : oResourceBundle.getText("tableNoDataText")
             });
-            this.setModel(oViewModel, "remodelRepairEstimationView");
+            this.setModel(oViewModel, "remodelRepairStatusInquiryView");
 
-            // Add the remodelRepairEstimation page to the flp routing history
+            // Add the remodelRepairStatusInquiry page to the flp routing history
             this.addHistoryEntry({
-                title: oResourceBundle.getText("remodelRepairEstimationViewTitle"),
+                title: oResourceBundle.getText("remodelRepairStatusInquiryViewTitle"),
                 icon: "sap-icon://table-view",
                 intent: "#Template-display"
             }, true);
@@ -76,8 +83,8 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "list");
 
             this._oTPC = new TablePersoController({
-                customDataKey: "remodelRepairEstimation",
-                persoService: remodelRepairEstimationPersoService
+                customDataKey: "remodelRepairStatusInquiry",
+                persoService: RemodelRepairStatusInquiryPersoService
             }).setTable(this.byId("moldMstTable"));
 
             //sheet.js cdn url
@@ -126,7 +133,7 @@ sap.ui.define([
             
             var filter = new Filter({
                             filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, this.userInfo.TENANT_ID ),
                                     new Filter("company_code", FilterOperator.EQ, companyCode)
                                 ],
                                 and: true
@@ -158,18 +165,18 @@ sap.ui.define([
          * @public
          */
         onMoldMstTableUpdateFinished : function (oEvent) {
-            // update the remodelRepairEstimation's object counter after the table update
+            // update the remodelRepairStatusInquiry's object counter after the table update
             var sTitle,
                 oTable = oEvent.getSource(),
                 iTotalItems = oEvent.getParameter("total");
             // only update the counter if the length is final and
             // the table is not empty
             if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-                sTitle = this.getResourceBundle().getText("remodelRepairEstimationTableTitleCount", [iTotalItems]);
+                sTitle = this.getResourceBundle().getText("remodelRepairStatusInquiryTableTitleCount", [iTotalItems]);
             } else {
-                sTitle = this.getResourceBundle().getText("remodelRepairEstimationTableTitle");
+                sTitle = this.getResourceBundle().getText("remodelRepairStatusInquiryTableTitle");
             }
-            this.getModel("remodelRepairEstimationView").setProperty("/remodelRepairEstimationTableTitle", sTitle);
+            this.getModel("remodelRepairStatusInquiryView").setProperty("/remodelRepairStatusInquiryTableTitle", sTitle);
         },
 
         /**
@@ -187,7 +194,7 @@ sap.ui.define([
          * @public
          */
         onMoldMstTablePersoRefresh : function() {
-            remodelRepairEstimationPersoService.resetPersData();
+            RemodelRepairStatusInquiryPersoService.resetPersData();
             this._oTPC.refresh();
         },
 
@@ -224,7 +231,7 @@ sap.ui.define([
             if (!this._oDialog) {
                 this._oDialog = Fragment.load({ 
                     id: oView.getId(),
-                    name: "dp.md.remodelRepairEstimation.view.Employee",
+                    name: "dp.md.remodelRepairStatusInquiry.view.Employee",
                     controller: this
                 }).then(function (oDialog) {
                     oView.addDependent(oDialog);
@@ -502,18 +509,10 @@ sap.ui.define([
             // }
 
             ExcelUtil.fnExportExcel({
-                fileName: "RemodelRepairEstimation",
+                fileName: "RemodelRepairStatusInquiry",
                 table: oTable,
                 data: oData
             });
-        },
-
-        onItemPress: function(oEvent){
-
-            var sPath = oEvent.getSource()._aSelectedPaths[0],
-                oRecord = this.getModel("list").getProperty(sPath);
-
-            this.getRouter().navTo("detail" , oRecord);
         },
 
         familyFlagChange : function (oEvent) {
@@ -585,6 +584,7 @@ sap.ui.define([
                 filters: aTableSearchState,
                 success: function(oData){
                     this.validator.clearValueState(this.byId("moldMstTable"));
+                    self.byId('moldMstTable').clearSelection();
                     oView.setBusy(false);
                 }.bind(this)
             });
@@ -598,9 +598,10 @@ sap.ui.define([
                 status = this.getView().byId("searchStatus"+sSurffix).getSelectedKey(),
                 receiptFromDate = this.getView().byId("searchCreationDate"+sSurffix).getDateValue(),
                 receiptToDate = this.getView().byId("searchCreationDate"+sSurffix).getSecondDateValue(),
+                itemType = this.getView().byId("searchItemType").getSelectedKeys(),
+                description = this.getView().byId("searchDescription").getValue(),
                 model = this.getView().byId("searchModel").getValue(),
-                moldNo = this.getView().byId("searchMoldNo").getValue(),
-                assetNo = this.getView().byId("searchAssetNo").getValue();
+                moldNo = this.getView().byId("searchMoldNo").getValue();
             
             var aTableSearchState = [];
             var companyFilters = [];
@@ -642,37 +643,35 @@ sap.ui.define([
                 aTableSearchState.push(new Filter("mold_progress_status_code", FilterOperator.EQ, status));
             }
 
+            
+            if(itemType.length > 0){
+
+                var _itemTypeFilters = [];
+                itemType.forEach(function(item){
+                    _itemTypeFilters.push(new Filter("mold_item_type_code", FilterOperator.EQ, item ));
+                });
+
+                aTableSearchState.push(
+                    new Filter({
+                        filters: _itemTypeFilters,
+                        and: false
+                    })
+                );
+            }
+
             if (model && model.length > 0) {
                 aTableSearchState.push(new Filter("tolower(model)", FilterOperator.Contains, "'" + model.toLowerCase() + "'"));
             }
-
             if (moldNo && moldNo.length > 0) {
                 aTableSearchState.push(new Filter("mold_number", FilterOperator.Contains, moldNo.toUpperCase()));
             }
-
-            // if (assetNo && moldNo.length > 0) {
-            //     aTableSearchState.push(new Filter("asset_number", FilterOperator.Contains, assetNo.toUpperCase()));
-            // }
+            if (description && description.length > 0) {
+                aTableSearchState.push(new Filter("tolower(spec_name)", FilterOperator.Contains, "'" + description.toLowerCase() + "'"));
+            }
             
             return aTableSearchState;
         },
         
-        /*
-        _rebindTable: function(oTemplate, sKeyboardMode) {
-            var aFilters = this._getSearchStates();
-            this.byId("moldMstTable").bindItems({
-                path: "/Message",
-                filters: aFilters,
-                parameters: {
-                    "$$updateGroupId" : 'odataGroupIdForUpdate'
-                },
-                template: oTemplate,
-                templateShareable: true,
-                key: "message_code"
-            }).setKeyboardMode(sKeyboardMode);
-        },
-*/
-
         _toEditMode: function(){
             var oRows = this.byId("moldMstTable").getRows(),
                 oUiModel = this.getView().getModel("mode");
@@ -721,6 +720,9 @@ sap.ui.define([
 
             var params = oEvent.getParameters();
             var divisionFilters = [];
+            var self = this;
+
+            console.log('self.userInfo.TENANT_ID',self.userInfo.TENANT_ID);
 
             if(params.selectedItems.length > 0){
 
@@ -728,14 +730,14 @@ sap.ui.define([
 
                     divisionFilters.push(new Filter({
                                 filters: [
-                                    new Filter("tenant_id", FilterOperator.EQ, 'L2101' ),
+                                    new Filter("tenant_id", FilterOperator.EQ, self.userInfo.TENANT_ID ),
                                     new Filter("company_code", FilterOperator.EQ, item.getKey() )
                                 ],
                                 and: true
                             }));
                 });
             }else{
-                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101' ));
+                divisionFilters.push(new Filter("tenant_id", FilterOperator.EQ, self.userInfo.TENANT_ID ));
             }
 
             var filter = new Filter({
@@ -779,7 +781,7 @@ sap.ui.define([
         onValueHelpRequested : function (oEvent) {
 
             var path = '';
-            this._oValueHelpDialog = sap.ui.xmlfragment("dp.md.remodelRepairEstimation.view.ValueHelpDialogModel", this);
+            this._oValueHelpDialog = sap.ui.xmlfragment("dp.md.remodelRepairStatusInquiry.view.ValueHelpDialogModel", this);
 
             this._oBasicSearchField = new SearchField({
                 showSearchButton: false
@@ -794,24 +796,24 @@ sap.ui.define([
             
 
             var aCols = this.oColModel.getData().cols;
-
+            var self = this;
             
             this.getView().addDependent(this._oValueHelpDialog);
 
             this._oValueHelpDialog.getTableAsync().then(function (oTable) {
 
-                var _filter = new Filter("tenant_id", FilterOperator.EQ, 'L2101' );
+                var _filter = new Filter("tenant_id", FilterOperator.EQ, self.userInfo.TENANT_ID );
                 
-                oTable.setModel(this.getOwnerComponent().getModel(this.modelName));
-                oTable.setModel(this.oColModel, "columns");
+                oTable.setModel(self.getOwnerComponent().getModel(self.modelName));
+                oTable.setModel(self.oColModel, "columns");
 
                 if (oTable.bindRows) {
-                    oTable.bindAggregation("rows", this.vhdPath);
+                    oTable.bindAggregation("rows", self.vhdPath);
                     oTable.getBinding("rows").filter(_filter);
                 }
 
                 if (oTable.bindItems) {
-                    oTable.bindAggregation("items", this.vhdPath, function () {
+                    oTable.bindAggregation("items", self.vhdPath, function () {
                         return new ColumnListItem({
                             cells: aCols.map(function (column) {
                                 return new Label({ text: "{" + column.template + "}" });
@@ -820,7 +822,7 @@ sap.ui.define([
                     });
                     oTable.getBinding("items").filter(_filter);
                 }
-                this._oValueHelpDialog.update();
+                self._oValueHelpDialog.update();
 
             }.bind(this));
 
@@ -947,7 +949,7 @@ sap.ui.define([
                 and: false
             }));
 
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, 'L2101' ));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.userInfo.TENANT_ID ));
 
             this._filterTable(new Filter({
                 filters: aFilters,
@@ -997,8 +999,8 @@ sap.ui.define([
             // init and activate controller
             this._oTPC = new TablePersoController({
                 table: this.byId("moldMstTable"),
-                componentName: "remodelRepairEstimation",
-                persoService: remodelRepairEstimationPersoService,
+                componentName: "remodelRepairStatusInquiry",
+                persoService: RemodelRepairStatusInquiryPersoService,
                 hasGrouping: true
             }).activate();
         }

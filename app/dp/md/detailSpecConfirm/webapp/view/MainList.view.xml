@@ -23,7 +23,7 @@
                 <f:snappedContent>
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="3">
                         <form:content>
-                            <VBox height="3rem">
+                            <VBox>
                                 <Label text="{I18N>/COMPANY}" labelFor="searchCompanyS" required="true"></Label>
                                 <MultiComboBox id="searchCompanyS" width="100%"  required="true" selectionFinish="handleSelectionFinishComp" items="{
                                     path: 'org>/Company',
@@ -40,7 +40,7 @@
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox height="3rem">
+                            <VBox>
                                 <Label text="{I18N>/PLANT}" labelFor="searchDivisionS" required="true"></Label>
                                 <MultiComboBox id="searchDivisionS" width="100%"  required="true" selectionFinish="handleSelectionFinishDiv" items="{
                                     path: '/Divisions',
@@ -57,7 +57,7 @@
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox height="3rem">
+                            <VBox>
                                 <Label text="{I18N>/DATE}" labelFor="searchDateS" required="true"></Label>
                                 <DateRangeSelection id="searchDateS" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD" required="true"/>
                                 <layoutData>
@@ -71,7 +71,7 @@
                 <f:expandedContent>
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="3">
                         <form:content>
-                            <VBox height="3rem">
+                            <VBox>
                                 <Label text="{I18N>/COMPANY}" labelFor="searchCompanyE"  required="true"></Label>
                                 <MultiComboBox id="searchCompanyE" width="100%"  required="true" selectionFinish="handleSelectionFinishComp" items="{
                                     path: 'org>/Company',
@@ -88,7 +88,7 @@
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox height="3rem">
+                            <VBox>
                                 <Label text="{I18N>/PLANT}" labelFor="searchDivisionE" required="true"></Label>
                                 <MultiComboBox id="searchDivisionE" width="100%"  required="true" selectionFinish="handleSelectionFinishDiv" items="{
                                     path: '/Divisions',
@@ -105,7 +105,7 @@
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox height="3rem">
+                            <VBox>
                                 <Label text="{I18N>/DATE}" labelFor="searchDateE" required="true"></Label>
                                 <DateRangeSelection id="searchDateE" valueFormat = "yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD" required="true"/>
                                 <layoutData>
@@ -130,7 +130,7 @@
 
                 <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="3">
                     <form:content>
-                        <VBox height="3rem">
+                        <VBox>
                             <Label text="{I18N>/MODEL}" labelFor="searchModel"></Label>
                             <Input id="searchModel" 
                                     showValueHelp="true"  
@@ -148,7 +148,7 @@
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <VBox height="3rem">
+                        <VBox>
                             <Label text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}" labelFor="searchPart"></Label>
                             <Input id="searchPart" 
                                     showValueHelp="true"  
@@ -166,14 +166,14 @@
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <VBox height="3rem">
+                        <VBox>
                             <Label text="{path:'I18N>/FAMILY_PART_NUMBER', formatter:'I18NFormatter'}" labelFor="searchFamilyPart"></Label>
                             <Input id="searchFamilyPart" placeholder="Input data"></Input>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <VBox height="3rem">
+                        <VBox>
                             <Label text="{path:'I18N>/REQUESTOR', formatter:'I18NFormatter'}" labelFor="searchRequester"></Label>
                             <Input id="searchRequester" 
                                     showValueHelp="true"  
@@ -191,7 +191,7 @@
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
-                        <VBox height="3rem">
+                        <VBox>
                             <Label text="{I18N>/STATUS}" labelFor="searchStatus"></Label>
                             <SegmentedButton id="searchStatus"  class="sapUiSmallMarginBottom" width="100%">
                                 <items>

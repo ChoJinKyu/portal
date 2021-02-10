@@ -4,8 +4,8 @@ using {User} from '@sap/cds/common';
 
 @cds.persistence.exists
 entity Md_Mst_Spec_View {
-        session_user_id                 : String;
-        session_language_code           : String;
+        // session_user_id                 : String;
+        // session_language_code           : String;
         company_name                    : String;
         org_name                        : String;
         create_user_name                : String;
