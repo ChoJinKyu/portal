@@ -1,7 +1,9 @@
 PROCEDURE SP_SC_NEGO_HEADERS_DEEPUPSERT (
-	IN	I_TABLE_NEGOHEADERS    SP_SC_NEGO_HEADERS_TYPE,
-	IN	I_TABLE_NEGOITEMPRICES SP_SC_NEGO_ITEMPRICES_TYPE,
-	IN	I_TABLE_NEGOSUPPLIERS  SP_SC_NEGO_SUPPLIERS_TYPE,
+	IN	I_TABLE_NEGOHEADERS          SP_SC_NEGO_HEADERS_TYPE,
+	IN	I_TABLE_NEGOITEMPRICES       SP_SC_NEGO_ITEMPRICES_TYPE,
+	IN	I_TABLE_NEGOSUPPLIERS        SP_SC_NEGO_SUPPLIERS_TYPE,
+	IN	I_TABLE_NEGOITEMNONPRICES    SP_SC_NEGO_ITEM_NON_PRICE_TYPE,
+	IN	I_TABLE_NEGOITEMNONPRICEDTLS SP_SC_NEGO_ITEM_NON_PRICE_DTL_TYPE,
     OUT O_TABLE_MESSAGE TABLE (TENANT_ID NVARCHAR(10),
                            NEGO_HEADER_ID BIGINT,
                            CODE INTEGER,
@@ -16,6 +18,7 @@ BEGIN
     DECLARE v_tenant_id NVARCHAR(10);
     DECLARE v_nego_header_id BIGINT;
     DECLARE v_nego_item_number_max INTEGER;
+    DECLARE v_nonpr_item_number_max INTEGER;
     DECLARE v_app_user NVARCHAR(255); 
 	DECLARE error_occurred CONDITION FOR SQL_ERROR_CODE 10001;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -39,8 +42,8 @@ BEGIN
 		-- END;
     END;
 
-    IF RECORD_COUNT(:I_TABLE_NEGOHEADERS) = 0 AND RECORD_COUNT(:I_TABLE_NEGOHEADERS) = 0 AND RECORD_COUNT(:I_TABLE_NEGOHEADERS) = 0 THEN
-        SELECT 1 FROM DUMMY;
+    IF RECORD_COUNT(:I_TABLE_NEGOHEADERS) = 0 AND RECORD_COUNT(:I_TABLE_NEGOHEADERS) = 0 AND RECORD_COUNT(:I_TABLE_NEGOHEADERS) = 0 
+        AND RECORD_COUNT(:I_TABLE_NEGOITEMNONPRICES) = 0 AND RECORD_COUNT(:I_TABLE_NEGOITEMNONPRICEDTLS) = 0 THEN
         SIGNAL error_occurred SET MESSAGE_TEXT = 'No input value!';
     END IF;
 
@@ -124,10 +127,16 @@ BEGIN
             , NH.contact_point_empno
             , NH.phone_no
             -- , * 
-            , NOW() local_create_dtm, NOW() local_update_dtm, :v_app_user create_user_id, :v_app_user update_user_id, NOW() system_create_dtm, NOW() system_update_dtm 
+            , ifnull(EXIST.local_create_dtm, NOW()) local_create_dtm
+            , NOW() local_update_dtm
+            , ifnull(EXIST.create_user_id, :v_app_user) create_user_id
+            , :v_app_user update_user_id
+            , ifnull(EXIST.system_create_dtm, NOW()) system_create_dtm
+            , NOW() system_update_dtm 
             FROM :I_TABLE_NEGOHEADERS NH
             left outer many to one join SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW NEW_NH ON NH.tenant_id = NEW_NH.tenant_id
             left outer many to one join SP_SC_NEGO_HEADERS_NEW_REVISION_VIEW NEW_RV ON NH.tenant_id = NEW_RV.tenant_id AND NH.nego_header_id = NEW_RV.nego_header_id
+            left outer one  to one join SP_SC_NEGO_HEADERS EXIST ON NH.tenant_id = EXIST.tenant_id and NH.nego_header_id = EXIST.nego_header_id
             ;
     SELECT TOP 1 tenant_id, nego_header_id  INTO v_tenant_id, v_nego_header_id FROM :vt_nego_header;
         -- LEFT OUTER ONE TO ZERO JOIN ( SELECT NEGO_ITEM_NUMBER FROM SP_SC_NEGO_ITEM_PRICES GROUP BY );
@@ -137,9 +146,13 @@ BEGIN
         SIGNAL error_occurred SET MESSAGE_TEXT = 'Negotiation header could not be determined!';
     END IF;
 
-    -- # Negotiation Item Prices : MAX()
+    -- # Negotiation Item Prices : MAX(Item Number)
     SELECT CAST(MAX(nego_item_number) AS INTEGER) INTO v_nego_item_number_max 
         FROM sp_sc_nego_item_prices WHERE tenant_id = :v_tenant_id and nego_header_id = :v_nego_header_id;
+
+    -- # Negotiation Item Non-Prices : MAX(Item Number)
+    SELECT CAST(MAX(nonpr_item_number) AS INTEGER) INTO v_nonpr_item_number_max 
+        FROM SP_SC_NEGO_ITEM_NON_PRICE WHERE tenant_id = :v_tenant_id and nego_header_id = :v_nego_header_id;
 
     vt_nego_item_prices_map = 
         select NIP.tenant_id        as tenant_id_tmp
@@ -159,21 +172,25 @@ BEGIN
                  ON NIP.tenant_id = NS_MAX.tenant_id AND NIP.nego_header_id = NS_MAX.nego_header_id AND NIP.nego_item_number = NS_MAX.nego_item_number
             ;
 
-    BEGIN PARALLEL EXECUTION
-/* 
-        DELETE FROM SP_SC_NEGO_SUPPLIERS AS MAIN
-            WHERE EXISTS ( SELECT * FROM :I_TABLE_NEGOHEADERS WHERE TENANT_ID = MAIN.TENANT_ID AND NEGO_HEADER_ID = MAIN.NEGO_HEADER_ID )
-                OR EXISTS ( SELECT * FROM :I_TABLE_NEGOITEMPRICES WHERE TENANT_ID = MAIN.TENANT_ID AND NEGO_HEADER_ID = MAIN.NEGO_HEADER_ID AND NEGO_ITEM_NUMBER = MAIN.NEGO_ITEM_NUMBER )
-                OR EXISTS ( SELECT * FROM :I_TABLE_NEGOSUPPLIERS WHERE TENANT_ID = MAIN.TENANT_ID AND NEGO_HEADER_ID = MAIN.NEGO_HEADER_ID AND NEGO_ITEM_NUMBER = MAIN.NEGO_ITEM_NUMBER  AND ITEM_SUPPLIER_SEQUENCE = MAIN.ITEM_SUPPLIER_SEQUENCE )
-        ;
-        DELETE FROM SP_SC_NEGO_ITEM_PRICES AS MAIN 
-            WHERE EXISTS ( SELECT * FROM :I_TABLE_NEGOHEADERS WHERE TENANT_ID = MAIN.TENANT_ID AND NEGO_HEADER_ID = MAIN.NEGO_HEADER_ID )
-                OR EXISTS ( SELECT * FROM :I_TABLE_NEGOITEMPRICES WHERE TENANT_ID = MAIN.TENANT_ID AND NEGO_HEADER_ID = MAIN.NEGO_HEADER_ID AND NEGO_ITEM_NUMBER = MAIN.NEGO_ITEM_NUMBER )
-        ;
-        DELETE FROM SP_SC_NEGO_HEADERS AS MAIN 
-            WHERE EXISTS ( SELECT * FROM :I_TABLE_NEGOHEADERS WHERE TENANT_ID = MAIN.TENANT_ID AND NEGO_HEADER_ID = MAIN.NEGO_HEADER_ID )
-        ;
- */
+    vt_nego_item_non_prices_map = 
+        select NIP.tenant_id         as tenant_id_tmp
+            ,  NIP.nego_header_id    as nego_header_id_tmp
+            ,  NIP.nonpr_item_number as nonpr_item_number_tmp
+            ,  :v_tenant_id          as tenant_id
+            ,  :v_nego_header_id     as nego_header_id
+            ,  MAP( SUBSTRING(NIP.nonpr_item_number,1,3)  -- # 신규(TBD) ItemPrice Key Record 생성
+                , 'TBD', LPAD( CAST( IFNULL(:v_nonpr_item_number_max,0) 
+                                + row_number() over(partition by NIP.tenant_id, NIP.nego_header_id order by NIP.nonpr_item_number)
+                               AS INTEGER) , 5, '0')
+                , NIP.nonpr_item_number ) as nonpr_item_number
+            ,  NS_MAX.nonpr_dtl_item_number_max as nonpr_dtl_item_number_max
+            FROM :I_TABLE_NEGOITEMNONPRICES AS NIP LEFT OUTER ONE TO ONE JOIN 
+                (SELECT tenant_id, nego_header_id, nonpr_item_number, CAST(MAX(nonpr_dtl_item_number) AS INTEGER) nonpr_dtl_item_number_max 
+                 FROM sp_Sc_Nego_Item_Non_Price_Dtl GROUP BY tenant_id, nego_header_id, nonpr_item_number) AS NS_MAX
+                 ON NIP.tenant_id = NS_MAX.tenant_id AND NIP.nego_header_id = NS_MAX.nego_header_id AND NIP.nonpr_item_number = NS_MAX.nonpr_item_number
+            ;
+
+    BEGIN PARALLEL EXECUTION  -- # 병렬 실행
 
         UPSERT SP_SC_NEGO_HEADERS ( 
               tenant_id
@@ -349,12 +366,19 @@ BEGIN
             , NIP.budget_department_code
             , NIP.requestor_empno
             , NIP.request_department_code
-            , NOW() local_create_dtm, NOW() local_update_dtm, :v_app_user create_user_id, :v_app_user update_user_id, NOW() system_create_dtm, NOW() system_update_dtm
+
+            , ifnull(EXIST.local_create_dtm, NOW()) local_create_dtm
+            , NOW() local_update_dtm
+            , ifnull(EXIST.create_user_id, :v_app_user) create_user_id
+            , :v_app_user update_user_id
+            , ifnull(EXIST.system_create_dtm, NOW()) system_create_dtm
+            , NOW() system_update_dtm 
             FROM :I_TABLE_NEGOITEMPRICES NIP
-            LEFT OUTER ONE TO ONE JOIN :vt_nego_item_prices_map V_NIPM
-            ON  NIP.tenant_id        = V_NIPM.tenant_id_tmp 
-            AND NIP.nego_header_id   = V_NIPM.nego_header_id_tmp
-            AND NIP.nego_item_number = V_NIPM.nego_item_number_tmp
+            LEFT OUTER ONE TO ONE JOIN :vt_nego_item_prices_map V_NIPM 
+                ON  NIP.tenant_id        = V_NIPM.tenant_id_tmp AND NIP.nego_header_id   = V_NIPM.nego_header_id_tmp
+                AND NIP.nego_item_number = V_NIPM.nego_item_number_tmp
+            LEFT OUTER ONE TO ONE JOIN SP_SC_NEGO_ITEM_PRICES EXIST ON NIP.tenant_id = EXIST.tenant_id and NIP.nego_header_id = EXIST.nego_header_id
+                AND NIP.nego_item_number = EXIST.nego_item_number
             ;
 
         UPSERT SP_SC_NEGO_SUPPLIERS(
@@ -388,7 +412,7 @@ BEGIN
             , IFNULL(V_NIPM.nego_header_id  , NS.nego_header_id  ) AS nego_header_id
             , IFNULL(V_NIPM.nego_item_number, NS.nego_item_number) AS nego_item_number
             , MAP(NS.item_supplier_sequence
-                , '', LPAD(ROW_NUMBER() OVER(PARTITION BY NS.tenant_id, NS.nego_header_id, NS.nego_item_number ORDER BY NS.nego_supplier_register_type_code) ,5 ,'0')
+                , '', LPAD(IFNULL(V_NIPM.item_supplier_sequence_max,0)+ROW_NUMBER() OVER(PARTITION BY NS.tenant_id, NS.nego_header_id, NS.nego_item_number ORDER BY NS.nego_supplier_register_type_code) ,5 ,'0')
                 , NS.item_supplier_sequence) AS item_supplier_sequence
             , NS.operation_org_code
             , NS.operation_unit_code
@@ -405,11 +429,110 @@ BEGIN
             , NS.only_maker_flat
             , NS.contact
             , NS.note_content
-            , NOW() local_create_dtm, NOW() local_update_dtm, :v_app_user create_user_id, :v_app_user update_user_id, NOW() system_create_dtm, NOW() system_update_dtm
+
+            , ifnull(EXIST.local_create_dtm, NOW()) local_create_dtm
+            , NOW() local_update_dtm
+            , ifnull(EXIST.create_user_id, :v_app_user) create_user_id
+            , :v_app_user update_user_id
+            , ifnull(EXIST.system_create_dtm, NOW()) system_create_dtm
+            , NOW() system_update_dtm 
         FROM :I_TABLE_NEGOSUPPLIERS NS
             LEFT OUTER ONE TO ONE JOIN :vt_nego_item_prices_map V_NIPM
             ON NS.tenant_id = V_NIPM.tenant_id_tmp AND NS.nego_header_id = V_NIPM.nego_header_id_tmp AND NS.nego_item_number = V_NIPM.nego_item_number_tmp
+            LEFT OUTER ONE TO ONE JOIN SP_SC_NEGO_SUPPLIERS EXIST ON NS.tenant_id = EXIST.tenant_id and NS.nego_header_id = EXIST.nego_header_id
+                AND NS.nego_item_number = EXIST.nego_item_number AND NS.nego_item_number = EXIST.item_supplier_sequence
         ;
+
+
+        -- # Upsert Item Non Price + Detail
+        UPSERT SP_SC_NEGO_ITEM_NON_PRICE(
+			  tenant_id
+			, nego_header_id
+			, nonpr_item_number
+			, nonpr_score_comput_method_code
+			, nonpr_supeval_attr_type_code
+			, nonpr_supeval_attr_val_type_cd
+			, nonpr_requirements_text
+			, note_content
+			, target_score
+			, file_group_code
+            , local_create_dtm
+            , local_update_dtm
+            , create_user_id
+            , update_user_id
+            , system_create_dtm
+            , system_update_dtm
+        ) SELECT
+              IFNULL(V_NINPM.tenant_id        , NINP.tenant_id       )   AS tenant_id
+            , IFNULL(V_NINPM.nego_header_id   , NINP.nego_header_id  )   AS nego_header_id
+            , IFNULL(V_NINPM.nonpr_item_number, NINP.nonpr_item_number) AS nonpr_item_number
+            , NINP.nonpr_score_comput_method_code
+            , NINP.nonpr_supeval_attr_type_code
+            , NINP.nonpr_supeval_attr_val_type_cd
+            , NINP.nonpr_requirements_text
+            , NINP.note_content
+            , NINP.target_score
+            , NINP.file_group_code
+
+            , ifnull(EXIST.local_create_dtm, NOW()) local_create_dtm
+            , NOW() local_update_dtm
+            , ifnull(EXIST.create_user_id, :v_app_user) create_user_id
+            , :v_app_user update_user_id
+            , ifnull(EXIST.system_create_dtm, NOW()) system_create_dtm
+            , NOW() system_update_dtm 
+            FROM :I_TABLE_NEGOITEMNONPRICES NINP
+            LEFT OUTER ONE TO ONE JOIN :vt_nego_item_non_prices_map V_NINPM
+            ON  NINP.tenant_id         = V_NINPM.tenant_id_tmp 
+            AND NINP.nego_header_id    = V_NINPM.nego_header_id_tmp
+            AND NINP.nonpr_item_number = V_NINPM.nonpr_item_number_tmp
+            LEFT OUTER ONE TO ONE JOIN SP_SC_NEGO_ITEM_NON_PRICE EXIST ON NINP.tenant_id = EXIST.tenant_id and NINP.nego_header_id = EXIST.nego_header_id
+                AND NINP.nonpr_item_number = EXIST.nonpr_item_number
+        ;
+
+        UPSERT SP_SC_NEGO_ITEM_NON_PRICE_DTL(
+		      tenant_id
+            , nego_header_id
+            , nonpr_item_number
+            , nonpr_dtl_item_number
+            , supeval_from_date
+            , supeval_to_date
+            , supeval_from_value
+            , supeval_to_value
+            , supeval_text_value
+            , supeval_score
+            , local_create_dtm
+            , local_update_dtm
+            , create_user_id
+            , update_user_id
+            , system_create_dtm
+            , system_upDATE_dtm
+        ) SELECT 
+              IFNULL(V_NINPM.tenant_id        , ND.tenant_id        ) AS tenant_id
+            , IFNULL(V_NINPM.nego_header_id   , ND.nego_header_id   ) AS nego_header_id
+            , IFNULL(V_NINPM.nonpr_item_number, ND.nonpr_item_number) AS nonpr_item_number
+            , MAP(ND.nonpr_dtl_item_number
+                , '', LPAD(ifnull(V_NINPM.nonpr_dtl_item_number_max,0)+ROW_NUMBER() OVER(PARTITION BY ND.tenant_id, ND.nego_header_id, ND.nonpr_item_number) ,5 ,'0')
+                , ND.nonpr_dtl_item_number) AS nonpr_dtl_item_number
+            , ND.supeval_from_date
+            , ND.supeval_to_date
+            , ND.supeval_from_value
+            , ND.supeval_to_value
+            , ND.supeval_text_value
+            , ND.supeval_score
+
+            , ifnull(EXIST.local_create_dtm, NOW()) local_create_dtm
+            , NOW() local_update_dtm
+            , ifnull(EXIST.create_user_id, :v_app_user) create_user_id
+            , :v_app_user update_user_id
+            , ifnull(EXIST.system_create_dtm, NOW()) system_create_dtm
+            , NOW() system_update_dtm 
+        FROM :I_TABLE_NEGOITEMNONPRICEDTLS ND
+            LEFT OUTER ONE TO ONE JOIN :vt_nego_item_non_prices_map V_NINPM
+            ON ND.tenant_id = V_NINPM.tenant_id_tmp AND ND.nego_header_id = V_NINPM.nego_header_id_tmp AND ND.nonpr_item_number = V_NINPM.nonpr_item_number_tmp
+            LEFT OUTER ONE TO ONE JOIN SP_SC_NEGO_ITEM_NON_PRICE_DTL EXIST ON ND.tenant_id = EXIST.tenant_id and ND.nego_header_id = EXIST.nego_header_id
+                AND ND.nonpr_item_number = EXIST.nonpr_item_number AND ND.nonpr_dtl_item_number = EXIST.nonpr_dtl_item_number
+        ;
+
     END;
 
     -- # ERROR TEST # SELECT 1/:v_int FROM DUMMY;

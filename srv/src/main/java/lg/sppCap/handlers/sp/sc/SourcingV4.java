@@ -296,9 +296,11 @@ public class SourcingV4 implements EventHandler {
 		v_sql_callProc.append("call sp_sc_nego_headers_deepupsert(");
         // append: in table => local temp table
         // v_sql_callProc.append("i_tenant_id => ?, ");
-		v_sql_callProc.append("i_table_negoheaders    => #local_temp_negoheaders    , ");
+		v_sql_callProc.append("i_table_negoheaders => #local_temp_negoheaders , ");
 		v_sql_callProc.append("i_table_negoitemprices => #local_temp_negoitemprices , ");
-        v_sql_callProc.append("i_table_negosuppliers  => #local_temp_negosuppliers  , ");
+        v_sql_callProc.append("i_table_negosuppliers => #local_temp_negosuppliers , ");
+        v_sql_callProc.append("i_table_negoitemnonprices => #local_temp_negoitemnonprices , ");
+        v_sql_callProc.append("i_table_negoitemnonpricedtls => #local_temp_negoitemnonpricedtls , ");
 		// append: out table => local temp table
 		v_sql_callProc.append("o_table_message => ? ");
 		// append: end
@@ -693,9 +695,11 @@ curl 'http://localhost:8080/odata/v4/sp.sourcingV4Service/deepDeleteNegoHeader' 
 		v_sql_callProc.append("call sp_sc_nego_headers_deepdelete(");
         // append: in table => local temp table
         // v_sql_callProc.append("i_tenant_id => ?, ");
-		v_sql_callProc.append("i_table_negoheaders    => #local_temp_negoheaders    , ");
+		v_sql_callProc.append("i_table_negoheaders => #local_temp_negoheaders , ");
 		v_sql_callProc.append("i_table_negoitemprices => #local_temp_negoitemprices , ");
-        v_sql_callProc.append("i_table_negosuppliers  => #local_temp_negosuppliers  , ");
+        v_sql_callProc.append("i_table_negosuppliers => #local_temp_negosuppliers , ");
+        v_sql_callProc.append("i_table_negoitemnonprices => #local_temp_negoitemnonprices , ");
+        v_sql_callProc.append("i_table_negoitemnonpricedtls => #local_temp_negoitemnonpricedtls , ");
 		// append: out table => local temp table
 		v_sql_callProc.append("o_table_message => ? ");
 		// append: end
