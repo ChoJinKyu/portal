@@ -33,7 +33,11 @@
                         <Label text="공고제목" />
                         <Input 
                             value="{viewModel>/cond/Contains/funding_notify_title}"
+                            submit=".onPressSearch"
                         />
+                        <FlexBox alignItems="End" justifyContent="End">
+                            <Button text="{I18N>/DISPLAY}" type="Emphasized" press=".onPressSearch"/>
+                        </FlexBox>
                         <layoutData>
                             <layout:GridData span="XL2 L3 M6 S12" />
                         </layoutData>
@@ -41,9 +45,10 @@
                 </f:snappedContent>
                 
                 <f:actions>
-                    <!-- 조회 -->
-                    <Button text="{I18N>/DISPLAY}" type="Emphasized" press=".onPressSearch"/>
                 </f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions>
             </f:DynamicPageTitle>
         </f:title>
 
@@ -57,6 +62,7 @@
                         <Label text="공고제목"/>
                         <Input 
                             value="{viewModel>/cond/Contains/funding_notify_title}"
+                            submit=".onPressSearch"
                         />
                         <layoutData>
                             <layout:GridData span="XL2 L3 M6 S12" />
@@ -85,7 +91,6 @@
                             width="100%"
                             placeholder="전체"
                             showSecondaryValues="true"
-                            selectionChange="onSelectionChangeUnitCode"
                             selectedKey="{viewModel>/cond/EQ/funding_status_code}"
                         />
                         <layoutData>
@@ -123,6 +128,7 @@
                         <Label text="업체명" />
                         <Input 
                             value="{viewModel>/cond/Contains/supplier_name}"
+                            submit=".onPressSearch"
                         />
                         <layoutData>
                             <layout:GridData span="XL2 L3 M6 S12" />
@@ -133,11 +139,18 @@
                         <Label text="업체코드" />
                         <Input 
                             value="{viewModel>/cond/Contains/supplier_code}"
+                            submit=".onPressSearch"
                         />
                         <layoutData>
                             <layout:GridData span="XL2 L3 M6 S12" />
                         </layoutData>
                     </VBox>
+                    <FlexBox alignItems="End" justifyContent="End">
+                        <Button text="{I18N>/DISPLAY}" type="Emphasized" press=".onPressSearch"/>
+                        <layoutData>
+                            <layout:GridData span="XL12 L12 M12 S12" />
+                        </layoutData>
+                    </FlexBox>
                 </form:SimpleForm>
             </f:DynamicPageHeader>
         </f:header>

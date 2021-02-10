@@ -149,26 +149,14 @@ sap.ui.define([
 
                 oControl = oEvent.getSource();
                 sOrgCode = oControl.getSelectedKey();
-
+                this.byId("statusCode").setValue("");
+                
                 if(!sOrgCode){
+                    this.byId("statusCode").removeAllItems;
                     return;
                 }
 
                 this._bindStatusComboItem(sOrgCode);
-            }
-            , onSelectionChangeUnitCode : function(oEvent){
-                var sOrgCode, sEvalOperationUnitCode, oControl, oComboOrgCode;
-                
-                oControl = oEvent.getSource();
-                oComboOrgCode = this.byId("orgCode");
-                sOrgCode = oComboOrgCode.getSelectedKey();
-                sEvalOperationUnitCode = oControl.getSelectedKey();
-
-                if(!sEvalOperationUnitCode){
-                    return;
-                }
-
-                this._bindEavluTypeItem(sOrgCode, sEvalOperationUnitCode);
             }
             
             /***
