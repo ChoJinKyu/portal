@@ -91,7 +91,7 @@ sap.ui.define([
         
         onAfterRendering : function () {
             this.getModel().setDeferredGroups(["bindReceipt", "cancelBind", "delete", "receipt"]);
-            this.byId("pageSearchButton").firePress();
+            
             return;
         },
 

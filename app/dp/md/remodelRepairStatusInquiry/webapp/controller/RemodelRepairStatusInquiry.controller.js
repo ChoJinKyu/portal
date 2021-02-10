@@ -61,6 +61,8 @@ sap.ui.define([
             
             this.userInfo = this.getSessionUserInfo();
 
+            this.userInfo.TENANT_ID = 'L2101';  //임시
+
             // Model used to manipulate control states
             oViewModel = new JSONModel({
                 remodelRepairStatusInquiryTableTitle : oResourceBundle.getText("remodelRepairStatusInquiryTableTitle"),
@@ -98,7 +100,7 @@ sap.ui.define([
         
         onAfterRendering : function () {
             this.getModel().setDeferredGroups(["bindReceipt", "cancelBind", "delete", "receipt"]);
-            this.byId("pageSearchButton").firePress();
+            
             return;
         },
 
