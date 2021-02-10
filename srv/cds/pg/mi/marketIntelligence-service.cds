@@ -81,7 +81,7 @@ service marketIntelligenceService {
         from CodeLng	
         where	
                 group_code  = 'CM_ORG_TYPE_CODE'	
-            and language_cd = 'KO'
+            and language_cd = upper(substring(session_context('LOCALE'),1,2))
         ;	
 
     // Organizaiton Code View	
@@ -104,7 +104,7 @@ service marketIntelligenceService {
         from CodeLng
         where
                 group_code  = 'PG_MI_EXCHANGE_CODE'
-            and language_cd = 'KO'
+            and language_cd = upper(substring(session_context('LOCALE'),1,2))
         ;
 
     // Term Of Deliver View
@@ -116,7 +116,7 @@ service marketIntelligenceService {
         from CodeLng
         where
                 group_code  = 'PG_MI_TERMSDELV_CODE'
-            and language_cd = 'EN'
+            and language_cd = upper(substring(session_context('LOCALE'),1,2))
         ;
 
     // MI Material Code View
@@ -127,7 +127,7 @@ service marketIntelligenceService {
                 mi_material_name //시황자재명
         from MIMaterialCodeText
         where
-            language_code = 'KO'
+            language_code = upper(substring(session_context('LOCALE'),1,2))
         ;
 
     // MI Parent Category View
@@ -141,7 +141,7 @@ service marketIntelligenceService {
             on  main.tenant_id     = catg.tenant_id
             and main.category_code = catg.category_code
         where
-                main.language_code        =  'KO'
+                main.language_code        =  upper(substring(session_context('LOCALE'),1,2))
             and catg.parent_category_code is null
         group by
             main.tenant_id,
@@ -160,7 +160,7 @@ service marketIntelligenceService {
             on  main.tenant_id     = catg.tenant_id
             and main.category_code = catg.category_code
         where
-                main.language_code        =      'KO'
+                main.language_code = upper(substring(session_context('LOCALE'),1,2))
             and catg.parent_category_code is not null
         group by
             main.tenant_id,
@@ -176,7 +176,7 @@ service marketIntelligenceService {
                 main.category_name as category_text //카테고리명
         from MICategoryText as main
         where
-                main.language_code        =      'KO'
+                main.language_code = upper(substring(session_context('LOCALE'),1,2))
         group by
             main.tenant_id,
             main.category_code,
@@ -192,7 +192,7 @@ service marketIntelligenceService {
         from CodeLng
         where
                 group_code  = 'CM_TF_FLAG'
-            and language_cd = 'EN'
+            and language_cd = upper(substring(session_context('LOCALE'),1,2))
         ;
 
     // Language View
@@ -204,7 +204,7 @@ service marketIntelligenceService {
         from CodeLng
         where
                 group_code  = 'CM_LANG_CODE'
-            and language_cd = 'KO'
+            and language_cd = upper(substring(session_context('LOCALE'),1,2))
         ;
 
     // Currency Unit View
@@ -216,7 +216,7 @@ service marketIntelligenceService {
                 currency_code_name //통화단위코드명
         from CurrencyLanguage
         where
-            language_code = 'KO'
+            language_code = upper(substring(session_context('LOCALE'),1,2))
         ;
 
     // Unit of Measure View
@@ -231,7 +231,7 @@ service marketIntelligenceService {
             on  uom.tenant_id = uom_lang.tenant_id
             and uom.uom_code  = uom_lang.uom_code
         where
-                uom_lang.language_code =  'KO'
+                uom_lang.language_code =  upper(substring(session_context('LOCALE'),1,2))
             and uom.tenant_id          =  'L2100'
             and uom.uom_class_code     in ('VOLUME', 'WEIGHT', 'MASS')
         ;
@@ -255,11 +255,11 @@ service marketIntelligenceService {
         left join MICategoryText as prtCatgText
             on  main.tenant_id            = prtCatgText.tenant_id
             and main.parent_category_code = prtCatgText.category_code
-            and prtCatgText.language_code = 'KO'
+            and prtCatgText.language_code = upper(substring(session_context('LOCALE'),1,2))
         left join MICategoryText as catgText
             on  main.tenant_id         = catgText.tenant_id
             and main.category_code     = catgText.category_code
-            and catgText.language_code = 'KO'
+            and catgText.language_code = upper(substring(session_context('LOCALE'),1,2))
         group by
             main.tenant_id,
             main.parent_category_code,
@@ -307,11 +307,11 @@ service marketIntelligenceService {
         left join MIMaterialCodeText as matText
             on  main.tenant_id        = matText.tenant_id
             and main.mi_material_code = matText.mi_material_code
-            and matText.language_code = 'KO'
+            and matText.language_code = upper(substring(session_context('LOCALE'),1,2))
         left join MICategoryText as catg
             on  main.tenant_id     = catg.tenant_id
             and main.category_code = catg.category_code
-            and catg.language_code = 'KO'
+            and catg.language_code = upper(substring(session_context('LOCALE'),1,2))
         group by
             main.tenant_id,
             main.mi_material_code,

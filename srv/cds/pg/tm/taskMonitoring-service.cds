@@ -107,7 +107,7 @@ service taskMonitoringService {
         from codeLng
         where
                 group_code  = 'PG_TM_TYPE_CODE'
-            and language_cd = 'KO';
+            and language_cd = upper(substring(session_context('LOCALE'),1,2));
 
     // Purchaing Type View
     view TaskMonitoringPurchaingTypeCodeView @(title : '모니터링 구매유형코드 View') as
@@ -118,7 +118,7 @@ service taskMonitoringService {
         from codeLng
         where
                 group_code  = 'PG_TM_PURCHAING_TYPE_CODE'
-            and language_cd = 'KO';
+            and language_cd = upper(substring(session_context('LOCALE'),1,2));
 
     // Activate Flag View
     view TaskMonitoringActivateFlagView @(title : '모니터링 활성화여부 View') as
@@ -129,7 +129,7 @@ service taskMonitoringService {
         from codeLng
         where
                 group_code  = 'PG_TM_ACTIVATE_FLAG'
-            and language_cd = 'KO';
+            and language_cd = upper(substring(session_context('LOCALE'),1,2));
 
     // Operation Mode View
     view TaskMonitoringOperationModeView @(title : '모니터링 운영방식 View') as
@@ -146,7 +146,7 @@ service taskMonitoringService {
                 system_update_dtm
         from TaskMonitoringOperationModeLanguage
         where
-            language_code = 'KO'
+            language_code = upper(substring(session_context('LOCALE'),1,2))
         order by
             tenant_id,
             scenario_number,
@@ -161,7 +161,7 @@ service taskMonitoringService {
         from codeLng
         where
                 group_code  = 'PG_TM_CYCLE_CODE'
-            and language_cd = 'KO';
+            and language_cd = upper(substring(session_context('LOCALE'),1,2));
 
     // Indicator Number Code View
     view TaskMonitoringIndicatorNumberCodeView @(title : '모니터링 지표번호코드 View') as
@@ -172,7 +172,7 @@ service taskMonitoringService {
         from codeLng
         where
                 group_code  = 'PG_TM_INDC_NUMBER_CODE'
-            and language_cd = 'KO';
+            and language_cd = upper(substring(session_context('LOCALE'),1,2));
 
     // Indicator Comparision Basic Code View
     view TaskMonitoringIndicatorComparisionBasicCodeView @(title : '모니터링 지표비교기준코드 View') as
@@ -183,7 +183,7 @@ service taskMonitoringService {
         from codeLng
         where
                 group_code  = 'PG_TM_INDC_CMPR_BASIC_CODE'
-            and language_cd = 'KO';
+            and language_cd = upper(substring(session_context('LOCALE'),1,2));
 
     // Indicator Comparision Condition Code View
     view TaskMonitoringIndicatorComparisonConditionCodeView @(title : '모니터링 지표조건코드 View') as
@@ -194,7 +194,7 @@ service taskMonitoringService {
         from codeLng
         where
                 group_code  = 'PG_TM_INDC_CMPR_CONDITION_CODE'
-            and language_cd = 'KO';
+            and language_cd = upper(substring(session_context('LOCALE'),1,2));
 
     // Indicator Comparision Grade Code View
     view TaskMonitoringIndicatorComparisionGradeCodeView @(title : '모니터링 지표등급코드 View') as
@@ -205,7 +205,7 @@ service taskMonitoringService {
         from codeLng
         where
                 group_code  = 'PG_TM_INDC_CMPR_GRADE_CODE'
-            and language_cd = 'KO';
+            and language_cd = upper(substring(session_context('LOCALE'),1,2));
 
 
 // annotate monitorService.IndicatorComparisonBasic with @(UI : {
