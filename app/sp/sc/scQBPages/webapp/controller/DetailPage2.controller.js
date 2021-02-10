@@ -156,22 +156,27 @@ sap.ui.define([
                 
 
                 var newValue = oValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                var oIndex = oValue.indexOf(".");
+                var oIndex = newValue.indexOf(".");
                 
-                var aaa = newValue.substring(0, oIndex);
-                var bbb = newValue.substring(oIndex, newValue.length+1);
-                bbb = bbb.replaceAll(",", "");
+                if(oIndex > 0){
+
                 
-                newValue = aaa + bbb;
-                debugger;
-
-                newValue = newValue.slice(0, oIndex+6);
-
+                    var aaa = newValue.substring(0, oIndex);
+                    var bbb = newValue.substring(oIndex, newValue.length+1);
+                    bbb = bbb.replaceAll(",", "");
+                    newValue = aaa + bbb;
+                    
+                    newValue = newValue.slice(0, oIndex+6);
+                    var oSTargetAmount = oValue.replaceAll(",", "");
+                    var oFTargetAmount = parseFloat(oSTargetAmount).toFixed(5);
+                }else{
+                    var oFTargetAmount = parseFloat(oValue).toFixed(5);
+                }
                 e.oSource.setValue(newValue);
                 this._totalValue = newValue;
 
-                var oSTargetAmount = oValue.replaceAll(",", "");
-                var oFTargetAmount = parseFloat(oSTargetAmount).toFixed(5);
+                
+                
 
                 this.getView().getModel("NegoHeaders").oData.target_amount = oFTargetAmount;
             },
