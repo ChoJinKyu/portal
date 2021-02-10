@@ -89,13 +89,15 @@
                         <form:content>
                             <VBox height="4em">
                                 <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" labelFor="searchCompanyE" required="true"></Label>     
-                                <MultiComboBox id="searchCompanyE" width="100%" selectionFinish="handleSelectionFinishComp" items="{
+                                <MultiComboBox id="searchCompanyE" width="100%" items="{
                                        path: 'org>/Company',
                                         filters: [
                                             {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                         ],
                                         sorter: { path: 'company_code'}
-                                    }" required="true">
+                                    }" 
+                                    selectionFinish="handleSelectionFinishComp" 
+                                    required="true">
                                     <items>
                                         <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
                                     </items>

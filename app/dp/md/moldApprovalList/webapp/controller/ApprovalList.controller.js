@@ -126,9 +126,6 @@ sap.ui.define([
          * @see 검색을 위한 컨트롤에 대하여 필요 초기화를 진행 합니다. 
          */
         _doInitSearch: function (oEvent) {
-        
-            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
-
             this.getView().setModel(this.getOwnerComponent().getModel());
 
             this.setPlant('LGESL');
@@ -167,12 +164,12 @@ sap.ui.define([
                         });
 
             var bindItemInfo = {
-                    path: 'dpMdUtil>/Divisions',
-                    filters: filter,
-                    template: new Item({
-                        key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
-                    })
-                };
+                path: '/Divisions',
+                filters: filter,
+                template: new Item({
+                key: "{org_code}", text: "[{org_code}] {org_name}"
+                })
+            };
             
             console.log( bindItemInfo)    ;
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
@@ -312,9 +309,9 @@ sap.ui.define([
         * @see (멀티박스)Company와 Plant 부분 연관성 포함함
         */
         handleSelectionFinishComp: function (oEvent) {
+            this.copyMultiSelected(oEvent);
             // session에서 받아오는 tenant_id를 변수로 저장함
             var sTenant_id='L2101';
-            this.copyMultiSelected(oEvent);
 
             var params = oEvent.getParameters();
             var plantFilters = [];
@@ -330,7 +327,7 @@ sap.ui.define([
                         ],
                         and: true
                     }));
-                });
+                }.bind(this));
             } else {
                 plantFilters.push(
                     new Filter("tenant_id", FilterOperator.EQ, sTenant_id)
@@ -342,16 +339,16 @@ sap.ui.define([
                 and: false
             });
 
-            var bindInfo = {
-                    path: 'dpMdUtil>/Divisions',
-                    filters: filter,
-                    template: new Item({
-                    key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
-                    })
-                };
+            var bindItemInfo = {
+                path: '/Divisions',
+                filters: filter,
+                template: new Item({
+                key: "{org_code}", text: "[{org_code}] {org_name}"
+                })
+            };
 
-            this.getView().byId("searchPlantS").bindItems(bindInfo);
-            this.getView().byId("searchPlantE").bindItems(bindInfo);
+            this.getView().byId("searchPlantS").bindItems(bindItemInfo);
+            this.getView().byId("searchPlantE").bindItems(bindItemInfo);
 
             // this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
             // this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
@@ -378,7 +375,7 @@ sap.ui.define([
 
                 selectedKeys.push(item.getKey());
             });
-         
+            console.log("selectedKeys >>>>", selectedKeys);
             this.getView().byId(idPreFix + "E").setSelectedKeys(selectedKeys);
             this.getView().byId(idPreFix + "S").setSelectedKeys(selectedKeys);
         },
