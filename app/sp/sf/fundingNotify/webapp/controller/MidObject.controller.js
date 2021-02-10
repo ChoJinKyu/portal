@@ -153,6 +153,9 @@ sap.ui.define([
                                 });
                                 // that.onPageNavBackButtonPress.call(that);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
+                            },
+                            error: function(oError){
+                                MessageBox.alert("error가 발생 하였습니다.");
                             }
                         });
                     };
@@ -223,6 +226,9 @@ sap.ui.define([
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"), {duration: 3000});
                                 // that.onPageNavBackButtonPress.call(that);
                             }.bind(this)
+                            ,error: function(oError){
+                                MessageBox.alert("error가 발생 하였습니다.");
+                            }
                         });
                     };
                 }
@@ -335,6 +341,9 @@ sap.ui.define([
                          this.getModel("master").setData(oData.results[0]);
                         oView.setBusy(false);
                     }.bind(this)
+                    ,error: function(oError){
+                        MessageBox.alert("error가 발생 하였습니다.");
+                    }
                 });
                 this.getView().getModel("midObjectView").setProperty("/showMode", true);
                 this._toShowMode();
@@ -357,6 +366,9 @@ sap.ui.define([
             oMasterModel.read(sObjectPath, {
                 success: function (oData) {
                     oView.setBusy(false);
+                }
+                ,error: function(oError){
+                    MessageBox.alert("error가 발생 하였습니다.");
                 }
             });
         },

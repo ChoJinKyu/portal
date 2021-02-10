@@ -8,12 +8,13 @@
 	xmlns:core="sap.ui.core"
     height="100%">
     
-	<uxap:ObjectPageLayout id="page"
-		toggleHeaderOnTitleClick="false"
-		alwaysShowContentHeader = "true"
-		preserveHeaderStateOnScroll="true"
-        headerContentPinnable="false"
-        isChildPage="true"
+    <uxap:ObjectPageLayout 
+        id="Apply"
+		toggleHeaderOnTitleClick="true"
+		alwaysShowContentHeader = "true" 
+		preserveHeaderStateOnScroll="false"
+		headerContentPinnable="true"
+		isChildPage="true"
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 
@@ -110,8 +111,19 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="LG 구매팀 :"/>
-                                    <Text text="{viewModel>/Detail/Apply/purchasing_department_name}" design="Bold"/>
+                                    <Label text="LG 구매팀 :" required="true"/>
+                                    <Input 
+                                        editable="{viewModel>/Detail/Apply/editableMode}"
+                                        fieldGroupIds="newRequest"
+                                        required="true"
+                                        value="{
+                                            path: 'viewModel>/Detail/Apply/purchasing_department_name',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 100
+                                            }
+                                        }"
+                                    />
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" />
                                     </layoutData>
@@ -138,34 +150,66 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="전년도매출액(백만원) :"/>
-                                    <Text text="{viewModel>/Detail/Apply/pyear_sales_amount}" design="Bold"/>
+                                    <Label text="전년도매출액(백만원) :" required="true"/>
+                                    <Input
+                                        editable="{viewModel>/Detail/Apply/editableMode}"
+                                        fieldGroupIds="newRequest"
+                                        required="true"
+                                        type="Number"
+                                        value="{
+                                            path: 'viewModel>/Detail/Apply/pyear_sales_amount', 
+                                            type: 'sap.ui.model.type.Integer'
+                                        }"
+                                    />
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12"/>
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="주거래은행 :" />
-                                    <Text text="{viewModel>/Detail/Apply/main_bank_name}" design="Bold"/>
+                                    <Label text="주거래은행 :" required="true"/>
+                                    <Input 
+                                        editable="{viewModel>/Detail/Apply/editableMode}"
+                                        required="true"
+                                        fieldGroupIds="newRequest"
+                                        value="{
+                                            path: 'viewModel>/Detail/Apply/main_bank_name',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 100
+                                            }
+                                        }"
+                                    />
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="신청금액(원) :" />
-                                    <Text text="{viewModel>/Detail/Apply/funding_appl_amount}" design="Bold"/>
+                                    <Label text="신청금액(원) :" required="true"/>
+                                    <Input 
+                                        editable="{viewModel>/Detail/Apply/editableMode}"
+                                        required="true"
+                                        fieldGroupIds="newRequest"
+                                        value="{
+                                            path: 'viewModel>/Detail/Apply/funding_appl_amount',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 100
+                                            }
+                                        }"
+                                    />
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" linebreak="true" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="희망년월 :"/>
-                                    <Text 
-                                        text="{
-                                            path : 'viewModel>/Detail/Apply/funding_hope_yyyymm', 
-                                            formatter : '._formatChange'
-                                        }" 
-                                        design="Bold"
+                                    <Label text="희망년월 :" required="true"/>
+                                    <DatePicker 
+                                        required="true"
+                                        fieldGroupIds="newRequest"
+                                        displayFormat='yyyy-MM'
+                                        valueFormat ="yyyy-MM"
+                                        change="onCheckDatePicker"
+                                        value="{viewModel>/Detail/Apply/funding_hope_yyyymm}"
                                     />
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" />
@@ -180,22 +224,55 @@
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="신청자 :"/>
-                                    <Text text="{viewModel>/Detail/Apply/appl_user_name}" design="Bold"/>
+                                    <Label text="신청자 :" required="true"/>
+                                    <Input 
+                                        editable="{viewModel>/Detail/Apply/editableMode}"
+                                        required="true"
+                                        fieldGroupIds="newRequest"
+                                        value="{
+                                            path: 'viewModel>/Detail/Apply/appl_user_name',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 100
+                                            }
+                                        }"
+                                    />
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="전화번호 :"/>
-                                    <Text text="{viewModel>/Detail/Apply/appl_user_tel_number}" design="Bold"/>
+                                    <Label text="전화번호 :" required="true"/>
+                                    <Input 
+                                        editable="{viewModel>/Detail/Apply/editableMode}"
+                                        required="true"
+                                        fieldGroupIds="newRequest"
+                                        value="{
+                                            path: 'viewModel>/Detail/Apply/appl_user_tel_number',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 100
+                                            }
+                                        }"
+                                    />
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="Mail Address :"/>
-                                    <Text text="{viewModel>/Detail/Apply/appl_user_email_address}" design="Bold"/>
+                                    <Label text="Mail Address :" required="true"/>
+                                    <Input 
+                                        editable="{viewModel>/Detail/Apply/editableMode}"
+                                        required="true"
+                                        fieldGroupIds="newRequest"
+                                        value="{
+                                            path: 'viewModel>/Detail/Apply/appl_user_email_address',
+                                            type: 'sap.ui.model.type.String',
+                                            constraints: {
+                                                maxLength: 100
+                                            }
+                                        }"
+                                    />
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M6 S12" />
                                     </layoutData>
@@ -211,7 +288,7 @@
 					<uxap:ObjectPageSubSection id="pageSubSection2">
 						<form:SimpleForm>
                             <VBox id="checkBoxContent">
-                                <Label text="지원사유 :" />
+                                <Label text="지원사유 :"  required="true"/>
                                 <layoutData>
                                     <layout:GridData span="XL12 L12 M12 S12" />
                                 </layoutData>
@@ -231,6 +308,13 @@
                             class="sapFDynamicPageAlignContent"
                             items="{viewModel>/Detail/Apply/investPlanMst}"
                             width="auto">
+                            <headerToolbar>
+                                <OverflowToolbar id="productsTableToolbar" visible="true">
+                                    <ToolbarSpacer/>
+                                    <Button id="addRow" text="추가" type="Transparent" press=".onInvestmentPlanAddButtonPress" />
+                                    <Button id="deleteRow" text="삭제" type="Transparent" press=".onInvestmentPlanDeleteButtonPress" />
+                                </OverflowToolbar>
+                            </headerToolbar>
                             <columns>
                                 <Column hAlign="Left">
                                     <Text text="과제명" />
@@ -278,14 +362,40 @@
                             <form:content>
                                 <VBox>
                                     <Label text="담보물 :" required="true"/>
-                                    <Text text="{viewModel>/Detail/Apply/collateral_type_code}" design="Bold"/>
+                                    <ComboBox 
+                                        id="search_collateral_type_code"
+                                        editable="{viewModel>/Detail/Apply/editableMode}"
+                                        fieldGroupIds="newRequest"
+                                        required="true"
+                                        width="100%"
+                                        items="{
+                                                    path : 'common>/Code',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L1100'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'SP_SF_COLLATERAL_TYPE_CODE'}
+                                                    ]
+                                                }"
+
+                                        selectedKey="{viewModel>/Detail/Apply/collateral_type_code}"
+                                    >
+                                        <core:Item key="{common>code}" text="{common>code_name}" />
+                                    </ComboBox>
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M12 S12" />
                                     </layoutData>
                                 </VBox>
                                 <VBox>
-                                    <Label text="담보금액(원) :"/>
-                                    <Text text="{viewModel>/Detail/Apply/collateral_amount}" design="Bold"/>
+                                    <Label text="담보금액(원) :" required="true"/>
+                                    <Input
+                                        editable="{viewModel>/Detail/Apply/editableMode}"
+                                        fieldGroupIds="newRequest"
+                                        required="true"
+                                        type="Number"
+                                        value="{
+                                            path: 'viewModel>/Detail/Apply/collateral_amount', 
+                                            type: 'sap.ui.model.type.Integer'
+                                        }"
+                                    />
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M12 S12" />
                                     </layoutData>
@@ -311,6 +421,17 @@
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
-		</uxap:sections>
+        </uxap:sections>
+        
+        <!-- 하단 버튼 처리 툴바 -->
+		<uxap:footer>
+			<OverflowToolbar>
+				<ToolbarSpacer />
+                <Button id="pageCancelButton" type="Transparent" text="{I18N>/CANCEL}" press=".onPageNavBackButtonPress"/>
+                <Button id="pageUpdateButton" enabled="false" type="Transparent" text="{I18N>/UPDATE}" press=".onPageUpdateButtonPress" />
+                <Button id="pageSaveButton" enabled="false" type="Transparent" text="{I18N>/SAVE}" press=".onPageSaveButtonPress" />
+                <Button id="pageSubmissionButton" enabled="false" type="Emphasized" text="{I18N>/SUBMIT}" press=".onPageSubmissionButtonPress" />
+			</OverflowToolbar>
+		</uxap:footer>
 	</uxap:ObjectPageLayout>
 </mvc:View>
