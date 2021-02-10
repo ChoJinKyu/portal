@@ -233,15 +233,16 @@ sap.ui.define([
             if (!!(sTitle = this.byId("searchTitle").getValue())) {
                 aSearchFilters.push(new Filter("tolower(funding_notify_title)", FilterOperator.Contains, "'"+sTitle.toLowerCase().replace("'","''")+"'"));
             };
-
+            
             if(!!sFromDate || !!sToDate){
                 aSearchFilters.push(new Filter({
                     filters: [
-                        new Filter("funding_notify_start_date", FilterOperator.BT, sFromDate, new Date(sToDate.toString())),
-                        new Filter("funding_notify_end_date", FilterOperator.BT, sFromDate, new Date(sToDate.toString()))
+                        new Filter("funding_notify_start_date", FilterOperator.LE, new Date(sToDate.toString())),
+                        new Filter("funding_notify_end_date", FilterOperator.GE,  sFromDate)
                     ],
-                    and : false
+                    and : true
                 }));
+                        
             }
             
             return aSearchFilters;

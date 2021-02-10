@@ -494,8 +494,8 @@ sap.ui.define([
             
             //ScrollTop
             var oObjectPageLayout = this.getView().byId("page");
-            var oFirstSection = oObjectPageLayout.getSections()[0];
-            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
+            var oFirstSection = this.getView().byId("pageSectionMain");
+            oObjectPageLayout.scrollToSection(oFirstSection, 0, -500);
 		},
 
 
@@ -532,21 +532,20 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", !FALSE);
             
-            this.byId("pageCancelButton").setEnabled(!FALSE);
-			this.byId("pageEditButton").setEnabled(FALSE);
+            this.byId("pageCancelButton").setVisible(!FALSE);
+			this.byId("pageEditButton").setVisible(FALSE);
             if (this._sSpmd_character_code == "new"){
-                this.byId("pageDeleteButton").setEnabled(FALSE);
+                this.byId("pageDeleteButton").setVisible(FALSE);
             }else{
-                this.byId("pageDeleteButton").setEnabled(!FALSE);
+                this.byId("pageDeleteButton").setVisible(!FALSE);
             }
-            this.byId("pageSaveButton").setEnabled(!FALSE);
-			this.byId("pageNavBackButton").setEnabled(FALSE);
+            this.byId("pageSaveButton").setVisible(!FALSE);
+			this.byId("pageNavBackButton").setVisible(FALSE);
 
-			this.byId("midTableAddButton").setEnabled(!FALSE);
-			this.byId("midTableDeleteButton").setEnabled(!FALSE);
-            this.byId("midTableSearchField").setEnabled(FALSE);
+			this.byId("midTableAddButton").setVisible(!FALSE);
+			this.byId("midTableDeleteButton").setVisible(!FALSE);
             
-			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
+			this.byId("midTable").setMode(sap.m.ListMode.MultiSelect);
 			this._bindMidTable(this.oEditableTemplate, "Edit");
 		},
 
@@ -556,15 +555,14 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", TRUE);
             
-            this.byId("pageCancelButton").setEnabled(!TRUE);
-            this.byId("pageEditButton").setEnabled(TRUE);
-            this.byId("pageDeleteButton").setEnabled(!TRUE);
-            this.byId("pageSaveButton").setEnabled(!TRUE);
-			this.byId("pageNavBackButton").setEnabled(TRUE);
+            this.byId("pageCancelButton").setVisible(!TRUE);
+            this.byId("pageEditButton").setVisible(TRUE);
+            this.byId("pageDeleteButton").setVisible(!TRUE);
+            this.byId("pageSaveButton").setVisible(!TRUE);
+			this.byId("pageNavBackButton").setVisible(TRUE);
 
-			this.byId("midTableAddButton").setEnabled(!TRUE);
-			this.byId("midTableDeleteButton").setEnabled(!TRUE);
-            this.byId("midTableSearchField").setEnabled(TRUE);
+			this.byId("midTableAddButton").setVisible(!TRUE);
+			this.byId("midTableDeleteButton").setVisible(!TRUE);
             
 			this.byId("midTable").setMode(sap.m.ListMode.None);
 			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");

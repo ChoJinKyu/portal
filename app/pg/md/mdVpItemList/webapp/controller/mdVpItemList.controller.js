@@ -61,7 +61,6 @@ sap.ui.define([
 
             var aFiltersComboBox = [];
             aFiltersComboBox.push( new Filter("tenant_id", "EQ", oSelectedkey));
-            // oBindingComboBox.filter(aFiltersComboBox);          //sort Ascending
             var businessSorter = new sap.ui.model.Sorter("bizunit_code", false);        //sort Ascending
             
             business_combo.bindAggregation("items", {
@@ -69,9 +68,10 @@ sap.ui.define([
                 sorter: businessSorter,
                 filters: aFiltersComboBox,
                 // @ts-ignore
-                template: new sap.ui.core.Item({
+                template: new sap.ui.core.ListItem({
                     key: "{org>bizunit_code}",
-                    text: "{org>bizunit_code}: {org>bizunit_name}"
+                    text: "{org>bizunit_name}",
+                    additionalText: "{org>bizunit_code}"
                 })
             });
 
@@ -98,9 +98,10 @@ sap.ui.define([
                 sorter: businessSorter,
                 filters: aFiltersComboBox,
                 // @ts-ignore
-                template: new sap.ui.core.Item({
+                template: new sap.ui.core.ListItem({
                     key: "{org>bizunit_code}",
-                    text: "{org>bizunit_code}: {org>bizunit_name}"
+                    text: "{org>bizunit_name}",
+                    additionalText: "{org>bizunit_code}"
                 })
             });
         },

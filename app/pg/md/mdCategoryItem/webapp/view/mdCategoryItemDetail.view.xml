@@ -10,29 +10,29 @@
     height="100%">
 
     <uxap:ObjectPageLayout id="page"
-		toggleHeaderOnTitleClick="false"
+		toggleHeaderOnTitleClick="true"
 		alwaysShowContentHeader = "true"
 		preserveHeaderStateOnScroll="false"
-		headerContentPinnable="false"
+		headerContentPinnable="true"
 		isChildPage="true"
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
 		showEditHeaderButton="true" 
-		showFooter="false">
+		showFooter="true">
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-				<uxap:expandedHeading>
+                <uxap:heading>
+                    <HBox alignItems="End">
+                        <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <Title text="{I18N>/SPMD_CHARACTER_DETAIL}" wrapping="true" class="" />
+                    </HBox>
+                </uxap:heading>
+				<!-- <uxap:expandedHeading>
 					<Title text="{I18N>/SPMD_CHARACTER_DETAIL}" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
 					<Title text="{I18N>/SPMD_CHARACTER_DETAIL}" wrapping="true" />
-				</uxap:snappedHeading>
-				<uxap:expandedContent>
-					<Text text="{I18N>/SPMD_CHARACTER_CODE} : {master>/spmd_character_code}" />
-				</uxap:expandedContent>
-				<uxap:snappedContent>
-					<Text text="{I18N>/SPMD_CHARACTER_CODE} : {master>/spmd_character_code}" />
-				</uxap:snappedContent>
+				</uxap:snappedHeading> -->
 				<uxap:snappedTitleOnMobile>
 					<Title text="{I18N>/MASTER}" />
 				</uxap:snappedTitleOnMobile>
@@ -43,19 +43,13 @@
                 <uxap:navigationActions>
 					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
 					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
-					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+					<!-- <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/> -->
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
 		<uxap:headerContent>
-			<FlexBox wrap="Wrap" visible="false">
-				<!-- <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<layout:HorizontalLayout class="sapUiSmallMarginBeginEnd">
-						<Label text="특성코드: " />
-						<Text text="{master>/spmd_character_code}"/>
-					</layout:HorizontalLayout>
-				</layout:VerticalLayout> -->
+			<FlexBox wrap="Wrap" visible="true">
 			</FlexBox>
 		</uxap:headerContent>
 
@@ -67,19 +61,6 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<!-- <uxap:ObjectPageSection titleUppercase="false" title="Managed Values" visible="{= !${midObjectViewModel>/isAddedMode}}">
-				<uxap:subSections>
-					<uxap:ObjectPageSubSection>
-						<form:SimpleForm editable="false">
-                            <Label text="특성코드"/>
-                            <Text text="{master>/spmd_character_code}"/>
-                            <Label text="특성코드명"/>
-                            <Text text="{details>/spmd_character_code_name}"/>		
-						</form:SimpleForm>
-					</uxap:ObjectPageSubSection>
-				</uxap:subSections>
-			</uxap:ObjectPageSection> -->
-
 			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/LANGUAGE}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
@@ -89,7 +70,7 @@
 								items="{details>/MdCategoryItemLng}"
 								class="sapFDynamicPageAlignContent" 
 								updateFinished=".onMidTableUpdateFinished"
-								mode="SingleSelectLeft" 
+								mode="MultiSelect" 
                                 autoPopinMode="true" 
 								width="auto">
 							<headerToolbar>
@@ -97,11 +78,8 @@
 									<!-- <Title text="Level and Values" level="H2"/> -->
 									<ToolbarSpacer/>
 									<!-- Add the Personalization button -->
-									<Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMidTableAddButtonPress" enabled="false"/>
-									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMidTableDeleteButtonPress" enabled="false"/>
-									<ToolbarSeparator/>
-									<SearchField id="midTableSearchField" width="10rem" search=".onMidTableFilterPress" />
-									<!-- <Button id="midTableApplyFilterButton" text="Apply" type="Transparent" press=".onMidTableApplyFilterButton" /> -->
+									<Button id="midTableAddButton" text="{I18N>/ROW_ADD}" type="Transparent" press=".onMidTableAddButtonPress" visible="false"/>
+									<Button id="midTableDeleteButton" text="{I18N>/ROW_DELETE}" type="Transparent" press=".onMidTableDeleteButtonPress" visible="false"/>
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
@@ -119,7 +97,7 @@
 								</Column>
 							</columns>
 							<items>
-								<ColumnListItem type="Inactive" press=".onMidTableItemPress">
+								<ColumnListItem type="Inactive">
 									<cells>
 										<Text text="{details>_row_state_}"/>
 										<Input value="{details>language_code}"/>

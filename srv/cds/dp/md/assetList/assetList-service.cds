@@ -49,18 +49,24 @@ view Assets as
     join (select 
             l.code, l.code_name, l.tenant_id
             from codeLng.Code_Lng l  
-            join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE )
-            where l.group_code='DP_MD_ASSET_STATUS' ) cd1 on cd1.code =  ma.asset_status_code and  cd1.tenant_id = ma.tenant_id 
+            // join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE )
+            where l.group_code='DP_MD_ASSET_STATUS' 
+            and l.language_cd ='KO'
+            ) cd1 on cd1.code =  ma.asset_status_code and  cd1.tenant_id = ma.tenant_id 
     join (select 
             l.code, l.code_name, l.tenant_id
             from codeLng.Code_Lng l  
-            join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE )
-            where l.group_code='DP_MD_ASSET_TYPE' ) cd2 on cd2.code =  ma.asset_type_code and  cd2.tenant_id = ma.tenant_id 
+            // join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE )
+            where l.group_code='DP_MD_ASSET_TYPE' 
+            and l.language_cd ='KO'
+            ) cd2 on cd2.code =  ma.asset_type_code and  cd2.tenant_id = ma.tenant_id 
     join (select 
             l.code, l.code_name, l.tenant_id
             from codeLng.Code_Lng l  
-            join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE )
-            where l.group_code='DP_MD_ITEM_TYPE' ) cd3 on cd3.code =  mst.mold_item_type_code and  cd3.tenant_id = mst.tenant_id ;
+            // join sppUserSession.Spp_User_Session_View ses on (l.tenant_id = ses.TENANT_ID and l.language_cd = ses.LANGUAGE_CODE )
+            where l.group_code='DP_MD_ITEM_TYPE' 
+            and l.language_cd ='KO'
+            ) cd3 on cd3.code =  mst.mold_item_type_code and  cd3.tenant_id = mst.tenant_id ;
 
 view Divisions as
     select key a.tenant_id       

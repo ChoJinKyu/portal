@@ -43,6 +43,8 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
+
+            BaseController.prototype["op.init"].apply(this, arguments);
             
             // var oOPUi = new OPUi({
             //     tenantId: "L2100",
@@ -752,42 +754,74 @@ sap.ui.define([
         },
         
         onMultiInputWithEmployeeValuePress: function(){
-            
-            if(!this.oEmployeeMultiSelectionValueHelp){
-                this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
-                    title: "Choose Employees",
-                    multiSelection: true,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2100")
-                        ]
-                    }
-                });
-                this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
-                    this.byId("multiInputWithEmployeeValueHelp").setTokens(oEvent.getSource().getTokens());
-                }.bind(this));
-            }
-            this.oEmployeeMultiSelectionValueHelp.open();
-            this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("multiInputWithEmployeeValueHelp").getTokens());
+
+            this.dialog(new EmployeeDialog({
+                title: this.getModel("I18N").getText("/NOP00003"),
+                multiSelection: true,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                    ]
+                }
+             }), function(r) {
+                this.byId("multiInputWithEmployeeValueHelp").setTokens(r.getSource().getTokens());
+            })
+
+            // if(!this.oEmployeeMultiSelectionValueHelp){
+            //     this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
+            //         title: "Choose Employees",
+            //         multiSelection: true,
+            //         items: {
+            //             filters: [
+            //                 new Filter("tenant_id", FilterOperator.EQ, "L2100")
+            //             ]
+            //         }
+            //     });
+            //     this.oEmployeeMultiSelectionValueHelp.attachApply(function(oEvent){
+            //         this.byId("multiInputWithEmployeeValueHelp").setTokens(oEvent.getSource().getTokens());
+            //         this.oEmployeeMultiSelectionValueHelp.destroy();
+            //     }.bind(this));
+            //     this.oEmployeeMultiSelectionValueHelp.attachCancel(function(oEvent){
+            //         this.oEmployeeMultiSelectionValueHelp.destroy();
+            //     }.bind(this));
+            // }
+            // //debugger;
+            // this.oEmployeeMultiSelectionValueHelp.open();
+            // this.oEmployeeMultiSelectionValueHelp.setTokens(this.byId("multiInputWithEmployeeValueHelp").getTokens());
+
         },
 
         onMultiInputWithDepartmentValuePress: function(){
-            if(!this.oDepartmentMultiSelectionValueHelp){
-                this.oDepartmentMultiSelectionValueHelp = new DepartmentDialog({
-                    title: "Choose Departments",
-                    multiSelection: true,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2100"),
-                        ]
-                    }
-                });
-                this.oDepartmentMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
-                    this.byId("multiInputWithDepartmentValueHelp").setTokens(oEvent.getSource().getTokens());
-                }.bind(this));
-            }
-            this.oDepartmentMultiSelectionValueHelp.open();
-            this.oDepartmentMultiSelectionValueHelp.setTokens(this.byId("multiInputWithDepartmentValueHelp").getTokens());
+
+            this.dialog(new DepartmentDialog({
+                title: this.getModel("I18N").getText("/NOP00002"),
+                multiSelection: true,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, "L2100")
+                    ]
+                }
+             }), function(r) {
+                this.byId("multiInputWithDepartmentValueHelp").setTokens(r.getSource().getTokens());
+            })
+
+
+            // if(!this.oDepartmentMultiSelectionValueHelp){
+            //     this.oDepartmentMultiSelectionValueHelp = new DepartmentDialog({
+            //         title: "Choose Departments",
+            //         multiSelection: true,
+            //         items: {
+            //             filters: [
+            //                 new Filter("tenant_id", FilterOperator.EQ, "L2100"),
+            //             ]
+            //         }
+            //     });
+            //     this.oDepartmentMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
+            //         this.byId("multiInputWithDepartmentValueHelp").setTokens(oEvent.getSource().getTokens());
+            //     }.bind(this));
+            // }
+            // this.oDepartmentMultiSelectionValueHelp.open();
+            // this.oDepartmentMultiSelectionValueHelp.setTokens(this.byId("multiInputWithDepartmentValueHelp").getTokens());
         },
 
 

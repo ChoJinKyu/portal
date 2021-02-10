@@ -188,7 +188,7 @@ sap.ui.define([
                         param.targetModel = oModelExt;
                         param.sourceModel = oModelExtSrc;
                         debugger
-                        me._convertExtDataR2C(param);
+                        me._convertExtDataC2R(param);
                         console.log(oModelExt.getData());
                         oModelExt.submitChanges({
                             success: function (oEvent) {
@@ -417,11 +417,10 @@ sap.ui.define([
                     var data = oData.results
                     var param = {};
                     param.data = data;
-                    //param.targetModel = that.getModel("tmpCcDpMdSpecExt");
-                    param.key = "MOLD_ID";
+                    param.key = ["MOLD_ID"];
                     param.targetModel = that.getModel("tmpCcDpMdSpecDisplay");
 
-                    that._convertExtDataC2R(param);   
+                    that._convertExtDataR2C(param);   
                     oData.results = param.data;
                 }.bind(this)
             });
@@ -477,10 +476,11 @@ sap.ui.define([
 				if(oHandler) oHandler(this._oFragments[sFragmentName]);
 			}
         },
-        _convertExtDataC2R: function (param){
+        _convertExtDataR2C: function (param){
             var oModel = param.targetModel;
             var data = param.data;
-            var key = param.key;
+            var idKey = param.key;
+            var idVal = [];
             var newData = {};
             var valueType = {};
             var metaData = {};
@@ -488,7 +488,9 @@ sap.ui.define([
             if(data.size == 0 ){
                 return;
             }
-            //__entity
+            for(var key of idKey){
+                idVal.push(data[0][key]);
+            }
             for(var attr of data){
                 metaData[attr["COL_ID"]] = attr["__metadata"];
                 entity[attr["COL_ID"]] = attr["__entity"];
@@ -509,12 +511,12 @@ sap.ui.define([
             newData["__metadata"] = metaData;
             newData["__entity"] = entity;
             newData["VALUE_TYPE"] =  valueType;
-            newData["ID_KEY"] = key;
-            newData["ID_VALUE"] = data[0][key];
+            newData["ID_KEY"] = idKey;
+            newData["ID_VALUE"] = idVal;
             param.data = newData;
             oModel.setData(newData);
         },
-        _convertExtDataR2C: function (param){
+        _convertExtDataC2R: function (param){
             var oModel = param.targetModel;
             var data = param.data;
             var idKey = data["ID_KEY"];
@@ -525,24 +527,28 @@ sap.ui.define([
 
             var newData = [];
             var temp = null;
-            var state = data["_state_"] == "U"; 
+            var state = data["_state_"]; 
             for(var key in data){
                 if(key == "ID_KEY" || key == "ID_VALUE" || key == "VALUE_TYPE" || key == "__metadata" || key == "__entity" || key == "_state_"){
                     continue;
                 }
+
+                
+
                 temp = {CHAR_VALUE:null, NUM_VALUE:null, DATE_VALUE:null};
-                temp[idKey] = idValue;
                 temp["COL_ID"] = key;
                 temp[valueType[key]] = data[key];
                 temp["__metadata"] = metaData[key];
                 if(state){
-                    temp["_row_state_"] = "U";
+                    temp["_row_state_"] = state;
                 }
+                while(idKey.length > 0){
+                    temp[idKey.pop()] = idValue.pop();
+                }
+                //temp[idKey] = idValue;
     
                 newData.push(temp);
             }
-            //newData["__entity"] = data["__entity"];
-            //newData["_state_"] = data["_state_"];
 
             //return newData;oModel
             var result = {};

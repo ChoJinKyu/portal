@@ -230,6 +230,9 @@ sap.ui.define([
             
         //    if(this.validator.validate(this.byId("mainTable")) !== true) return;
 
+        this.validator.setModel(this.getModel("list"), "list");
+        if(this.validator.validate(this.byId("mainTable"))){
+
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -411,7 +414,11 @@ sap.ui.define([
 						// });
 					};
 				}.bind(this)
-			});
+            });
+            }else{
+               console.log("checkRequire");
+                return; 
+            }
 			
         }, 
 
@@ -595,8 +602,11 @@ sap.ui.define([
         onImportChange: function (_oEvent) {
             var oTable = _oEvent.getSource().getParent().getParent();
             var oModel = oTable.getModel();
+            var sTenantId = "L2100";
+            var sLanguageCode = "KO";
             var oExcelModel = this.getModel("excelModel"),
                 oListModel = this.getModel("list"), 
+                oViewControl = this.getModel("viewControl"),
                 that = this;
             
             oExcelModel.setData({});
@@ -616,15 +626,87 @@ sap.ui.define([
                             var aKeys = Object.keys(oRow),
                                 newObj = {};
 
-                            oRow.mi_date = new Date( oRow.mi_date );
+                            //oRow.mi_date = new Date( oRow.mi_date );
+                            if(oModel.getObject("/CurrencyUnitView(tenant_id='"+sTenantId+"',currency_code='"+that.replaceSpecialCharacters(oRow.currency_unit)+"',language_code='"+sLanguageCode+"')") === undefined)oRow.currency_unit = "";
+                            if(oModel.getObject("/UnitOfMeasureView(tenant_id='"+sTenantId+"',uom_code='"+that.replaceSpecialCharacters(oRow.quantity_unit)+"',language_code='"+sLanguageCode+"')") === undefined)oRow.quantity_unit = "";
+                            if(oModel.getObject("/MIExchangeView(tenant_id='"+sTenantId+"',exchage='"+that.replaceSpecialCharacters(oRow.exchange)+"')") === undefined)oRow.exchange = "";
+                            if(oModel.getObject("/MITermsdelvView(tenant_id='"+sTenantId+"',termsdelv='"+that.replaceSpecialCharacters(oRow.termsdelv)+"')") === undefined)oRow.termsdelv = "";
+                            /*if(oModel.getObject("/MIMatCodeView(tenant_id='"+sTenantId+"',mi_material_code='"+that.replaceSpecialCharacters(oRow.mi_material_code)+"')") !== undefined){
+                                
+                            }*/
 
-                            oListModel.addRecord(oRow, "/MIMaterialPriceManagementView", 0);
-							that.validator.clearValueState(that.byId("mainTable"));
+                            var sMiDate = (oRow.mi_date).toString();
+                            var dMiDate;
+                            if(sMiDate !== ""){
+                                if(sMiDate.length === 8){
+                                    dMiDate = new Date(sMiDate.substr(0,4) + "-" + sMiDate.substr(4,2) + "-" + sMiDate.substr(6,2));
+                                }else if(sMiDate.length === 10){
+                                    dMiDate = new Date(sMiDate);
+                                }
 
+                            }
+                            if(dMiDate instanceof Date)oRow.mi_date = dMiDate;
+                            else oRow.mi_date = "";
+
+                            that._getMiMaterial(oRow.mi_material_code).then(function(returnData) {
+                                oRow.mi_material_name = returnData.mi_material_name;
+                                oRow.category_code = returnData.category_code;
+                                oRow.category_name = returnData.category_name;
+                                oListModel.addRecord(oRow, "/MIMaterialPriceManagementView", 0);
+
+                                oViewControl.setProperty("/enabled", true);
+                                that.validator.clearValueState(that.byId("mainTable"));
+                            });
                         });
                     }
                 }
             });
+        },
+
+        /**
+         * Binds the view to the object path.
+         * @function
+         * @param {string} sObjectPath path to the object to be bound
+         * @private
+         */
+
+
+
+        _getMiMaterial: function(mi_material_code) {
+            var promise = jQuery.Deferred(),
+            oModel = this.getModel(),
+            oResult = {mi_material_name : "", category_code : "", category_name :""};
+
+            oModel.read("/MIMatListView", {
+                    filters: [new Filter("mi_material_code", FilterOperator.EQ, mi_material_code)],
+                    success: function(oData) {
+                        if(oData["results"].length > 0)oResult = oData["results"][0];
+                        promise.resolve(oResult);
+                        
+                    }.bind(this),						
+                    error: function(oData){						
+                        promise.reject(oData);	
+                    }
+                });
+
+            return promise;
+        },
+
+
+
+
+        replaceSpecialCharacters: function(attribute) {
+        // replace the single quotes
+            attribute = attribute.replace(/'/g, "''");
+
+            attribute = attribute.replace(/%/g, "%25");
+            attribute = attribute.replace(/\+/g, "%2B");
+            attribute = attribute.replace(/\//g, "%2F");
+            attribute = attribute.replace(/\?/g, "%3F");
+
+            attribute = attribute.replace(/#/g, "%23");
+            attribute = attribute.replace(/&/g, "%26");
+            return attribute;
         },
         onBeforeExport: function( oEvent ) {
             
@@ -650,7 +732,7 @@ sap.ui.define([
             //     console.log('Works! : ' + oEvent );
             // }.bind(oEvent), 3000);
            var codeTemp = oEvent.getParameter("value");
-
+           //oEvent.getSource().getBindingInfo("value").binding.getContext().sPath
            this._setColumnbind( codeTemp , oEvent.getSource().getParent().getCells());
             
 

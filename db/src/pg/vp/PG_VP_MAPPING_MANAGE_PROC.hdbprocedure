@@ -139,6 +139,11 @@ BEGIN
 	--CUD 건수 체크를 위한 변수
     DECLARE V_CUD_COUNT INT := 0;
     
+    /*****************************************************
+	Etc. 사용 변수
+	*****************************************************/
+	DECLARE V_REGIST_REASON_NEW NVARCHAR(500) := 'Regist';
+    
     --마스터 LOOPING CURSOR 정보
     DECLARE CURSOR l_mst_cursor FOR
         SELECT   TENANT_ID
@@ -571,9 +576,9 @@ BEGIN
 				,DOMESTIC_NET_PRICE_DIFF_RATE        ,DOM_OVERSEA_NETPRICE_DIFF_RATE        ,EQUIPMENT_GRADE_CODE 			
 				,EQUIPMENT_TYPE_CODE                 ,VENDOR_POOL_USE_FLAG                  ,VENDOR_POOL_DESC 				
 				,PARENT_VENDOR_POOL_CODE             ,LEAF_FLAG 				 		    ,MAKER_MATERIAL_CODE_MNGT_FLAG       
-				,LEVEL_NUMBER                        ,DISPLAY_SEQUENCE 		 		        ,LOCAL_CREATE_DTM       		
-				,CREATE_USER_ID                      ,SYSTEM_CREATE_DTM                     ,LOCAL_UPDATE_DTM       		
-				,UPDATE_USER_ID                      ,SYSTEM_UPDATE_DTM
+				,LEVEL_NUMBER                        ,DISPLAY_SEQUENCE 		 		        ,REGISTER_REASON
+				,LOCAL_CREATE_DTM       		     ,CREATE_USER_ID                        ,SYSTEM_CREATE_DTM
+				,LOCAL_UPDATE_DTM       		     ,UPDATE_USER_ID                        ,SYSTEM_UPDATE_DTM
     	    ) VALUES (
     	    	 loop_mst.TENANT_ID
 				,loop_mst.COMPANY_CODE
@@ -601,6 +606,7 @@ BEGIN
 				,IFNULL( loop_mst.MAKER_MATERIAL_CODE_MNGT_FLAG, FALSE)
 				,loop_mst.LEVEL_NUMBER 
 				,loop_mst.DISPLAY_SEQUENCE 
+				,:V_REGIST_REASON_NEW  --신규 시 Regist
 				,NOW()
 				,I_USER_ID
 				,NOW()
@@ -1009,9 +1015,9 @@ BEGIN
 											--,INP_CODE                          
 											,SUPPLIER_RM_CONTROL_FLAG		     ,SUPPLIER_BASE_PORTION_RATE         ,VENDOR_POOL_MAPPING_USE_FLAG
 											--,APPROVAL_NUMBER --승인된 DTL의 APPR번호 재 요청할 때도 값을 넘겨야하는지
-											,LOCAL_CREATE_DTM                    ,CREATE_USER_ID         		
-											,SYSTEM_CREATE_DTM                  ,LOCAL_UPDATE_DTM                    ,UPDATE_USER_ID
-											,SYSTEM_UPDATE_DTM
+											,REGISTER_REASON
+											,LOCAL_CREATE_DTM                    ,CREATE_USER_ID         		     ,SYSTEM_CREATE_DTM
+											,LOCAL_UPDATE_DTM                    ,UPDATE_USER_ID                     ,SYSTEM_UPDATE_DTM
 								    ) VALUES (
 								    		 loop_sup.TENANT_ID
 								    		,loop_sup.COMPANY_CODE
@@ -1031,6 +1037,7 @@ BEGIN
 	                                        ,loop_sup.SUPPLIER_BASE_PORTION_RATE
 	                                        ,true
 											--,loop_sup.APPROVAL_NUMBER
+											,:V_REGIST_REASON_NEW  --신규 시 Regist
 											,NOW()
 											,I_USER_ID
 											,NOW()
@@ -1281,7 +1288,9 @@ BEGIN
 						    (
 							    	 TENANT_ID                          ,COMPANY_CODE                        ,ORG_TYPE_CODE
 									,ORG_CODE                           ,VENDOR_POOL_CODE                    ,MATERIAL_CODE
-									,VENDOR_POOL_MAPPING_USE_FLAG       ,REGISTER_REASON				     ,APPROVAL_NUMBER
+									,VENDOR_POOL_MAPPING_USE_FLAG       
+									,REGISTER_REASON				     
+									--,APPROVAL_NUMBER
 									,LOCAL_CREATE_DTM                   ,CREATE_USER_ID         		     ,SYSTEM_CREATE_DTM
 									,LOCAL_UPDATE_DTM                   ,UPDATE_USER_ID                      ,SYSTEM_UPDATE_DTM
 						    ) VALUES (
@@ -1292,8 +1301,9 @@ BEGIN
 						    		,loop_itm.VENDOR_POOL_CODE
 						    		,loop_itm.MATERIAL_CODE
 						    		,TRUE
-									,TRIM( ' ' FROM loop_itm.REGISTER_REASON )
-									,TRIM( ' ' FROM loop_itm.APPROVAL_NUMBER )
+									--,TRIM( ' ' FROM loop_itm.REGISTER_REASON )
+									,:V_REGIST_REASON_NEW  --신규 시 Regist
+									--,TRIM( ' ' FROM loop_itm.APPROVAL_NUMBER )
 									,NOW()
 									,I_USER_ID
 									,NOW()
@@ -1499,7 +1509,7 @@ BEGIN
 							    	 TENANT_ID                          ,COMPANY_CODE                        ,ORG_TYPE_CODE
 									,ORG_CODE                           ,VENDOR_POOL_CODE                    ,VENDOR_POOL_PERSON_EMPNO
 									,VENDOR_POOL_PERSON_ROLE_TEXT       ,VENDOR_POOL_MAPPING_USE_FLAG        
-									--,REGISTER_REASON				
+									,REGISTER_REASON				
 									--,APPROVAL_NUMBER                    
 									,LOCAL_CREATE_DTM                    ,CREATE_USER_ID         		
 									,SYSTEM_CREATE_DTM                  ,LOCAL_UPDATE_DTM                    ,UPDATE_USER_ID
@@ -1514,6 +1524,7 @@ BEGIN
 						    		,TRIM( ' ' FROM loop_man.VENDOR_POOL_PERSON_ROLE_TEXT )
 									,TRUE
 									--,TRIM( ' ' FROM loop_man.REGISTER_REASON )
+									,:V_REGIST_REASON_NEW  --신규 시 Regist
 									--,TRIM( ' ' FROM loop_man.APPROVAL_NUMBER )
 									,NOW()
 									,I_USER_ID

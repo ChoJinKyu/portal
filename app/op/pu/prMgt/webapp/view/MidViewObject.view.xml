@@ -70,7 +70,10 @@
                     <ObjectStatus
                         text="{detailModel>/mst/pr_number}"/>
                 </layout:VerticalLayout>
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd"  visible="{
+                                                                            path: 'OPUI>/MST-REQUEST_DATE',
+                                                                            formatter: '.uiControlSet.toColumnVisible'
+                                                                            }">
                     <Label text="{I18N>/PR_REQUEST_DATE} :"/>
                     <ObjectStatus
                         text="{ path: 'detailModel>/mst/request_date',
@@ -208,7 +211,7 @@
                                     <table:template>
                                         <Text text="{ parts: [
                                                             {path: 'detailModel>org_code'},
-                                                            {path: 'detailModel>plant_name'}
+                                                            {path: 'detailModel>org_name'}
                                                             ],
                                                        formatter: '.uiControlSet.toKeyValueDisp'}" hAlign="Begin" />
                                     </table:template>
@@ -670,7 +673,7 @@
                                     </table:template>
                                 </table:Column>
 
-                                 <table:Column  hAlign="Center" 
+                                 <table:Column  hAlign="Center" width="10em"
                                                 visible="{
                                                     path: 'OPUI>/SERVICE-PR_QUANTITY',
                                                     formatter: '.uiControlSet.toColumnVisible'
@@ -684,7 +687,7 @@
                                     </table:template>
                                 </table:Column>
 
-                                 <table:Column  hAlign="Center" 
+                                 <table:Column  hAlign="Center" width="5em"
                                                 visible="{
                                                     path: 'OPUI>/SERVICE-UNIT',
                                                     formatter: '.uiControlSet.toColumnVisible'
@@ -695,7 +698,7 @@
                                     </table:template>
                                 </table:Column>
 
-                                 <table:Column  hAlign="Center" 
+                                 <table:Column  hAlign="Center" width="10em"
                                                 visible="{
                                                     path: 'OPUI>/SERVICE-NET_PRICE',
                                                     formatter: '.uiControlSet.toColumnVisible'

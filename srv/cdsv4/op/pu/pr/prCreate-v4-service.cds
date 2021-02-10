@@ -67,6 +67,7 @@ service PrCreateV4Service {
         order_number : String;
         org_name : String;
         org_name_desc : String;
+        user_local_name : String;
     };
 
     type PrCreateSaveType : {

@@ -190,7 +190,7 @@
                         <!-- <Button icon="sap-icon://upload" type="Transparent" press=".onMainTableDelete"/> -->
                         <u:FileUploader id="rFileUploader" uploadComplete="handleUploadComplete" change=".onImportChange" style="Transparent" 
                                         buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="Upload"/>
-                        <Button icon="sap-icon://download" iconOnly="true" type="Transparent" enabled="false" tooltip="Template Download"/>           
+                        <Button icon="sap-icon://download" type="Transparent" enabled="false" tooltip="Template Download"/>           
 <!-- 
                         <Button iconOnly="true" icon="sap-icon://excel-attachment" press=".onExport"/> -->
 
@@ -217,7 +217,6 @@
                 </smartTable:customToolbar>
 
                 <t:Table id="mainTable" 
-                    noDataText="{I18N>/NCM01004}"
                     rows="{list>/MIMaterialPriceManagementView}"
                     selectionMode="MultiToggle"
                     visibleRowCountMode="Auto"
@@ -228,7 +227,7 @@
                     width="auto">
  
                     <t:columns>
-                        <t:Column id="_row_state_" minScreenWidth="Tablet" hAlign="Center" width="40px" >
+                        <t:Column id="_row_state_" hAlign="Center" width="40px" >
                             <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
                             <t:template>
                                 <ObjectStatus icon="{
@@ -237,112 +236,115 @@
                                 }" />
                             </t:template>
                         </t:Column>
-                        <t:Column id="mi_material_code" minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="10%" >
-                            <Text text="{I18N>/MI_MATERIAL_CODE}" />
+                        <t:Column id="mi_material_code" hAlign="Center" width="10%">
+                            <Label text="{I18N>/MI_MATERIAL_CODE}" required="true" />
                             <t:template>
                                 <Input value="{list>mi_material_code}"  required="true" editable="{= ${list>_row_state_} === 'C' }"
                                     showSuggestion="true" suggestionItems="{path: '/MIMatCodeView', templateShareable:true}" 
-                                    suggestionItemSelected="onSuggestionItemSelected" submit="onSubmit" liveChange="onLiveChange">
+                                    suggestionItemSelected="onSuggestionItemSelected" submit="onSubmit" liveChange="onLiveChange"
+                                    valueState="{list>__metadata/_valueStates/mi_material_code/valueState}" valueStateText="{list>__metadata/_valueStates/mi_material_code/valueStateText}">
                                     <suggestionItems>
                                         <core:Item text="{mi_material_code}" />
                                     </suggestionItems>
                                 </Input>
                             </t:template>
                         </t:Column>
-                        <t:Column minScreenWidth="Tablet" hAlign="Center" mergeDuplicates="true" width="15em" >
-                            <Text text="{I18N>/MI_MATERIAL_NAME}" />
+                        <t:Column hAlign="Center" width="15em" >
+                            <Label text="{I18N>/MI_MATERIAL_NAME}"/>
                             <t:template>
                                 <Text text="{list>mi_material_name}" ></Text>
                             </t:template>
                         </t:Column>
-                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
-                            <Text text="{I18N>/CATEGORY_CODE}" />
+                        <t:Column hAlign="Center" width="10em" >
+                            <Label text="{I18N>/CATEGORY_CODE}"/>
                             <t:template>
                                 <Text text="{list>category_code}"></Text>
                             </t:template>
                         </t:Column>
-                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em">
-                            <Text text="{I18N>/CATEGORY_NAME}" />
+                        <t:Column hAlign="Center" width="10em">
+                            <Label text="{I18N>/CATEGORY_NAME}"/>
                             <t:template>
                                 <Text text="{list>category_name}"></Text>
                             </t:template>
                         </t:Column>
-                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
-                            <Text text="{I18N>/CURRENCY_UNIT}" />
+                        <t:Column hAlign="Center" width="10em" >
+                            <Label text="{I18N>/CURRENCY_UNIT}" required="true" />
                             <t:template>
                                 <ComboBox items="{path: '/CurrencyUnitView', templateShareable:true, filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}]}" 
                                     placeholder="선택하세요."  selectedKey="{list>currency_unit}" editable="{= ${list>_row_state_} === 'C' }"
-                                    width="100%" required="true">
+                                    width="100%" required="true" value="{list>currency_unit}"
+                                    valueState="{list>__metadata/_valueStates/currency_unit/valueState}" valueStateText="{list>__metadata/_valueStates/currency_unit/valueStateText}">
                                     <items>
                                         <core:Item key="{currency_code}" text="{currency_code}" />
                                     </items>
                                 </ComboBox>
                             </t:template>
                         </t:Column>
-                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
-                            <Text text="{I18N>/QUANTITY_UNIT}" />
+                        <t:Column hAlign="Center" width="10em" >
+                            <Label text="{I18N>/QUANTITY_UNIT}" required="true" />
                             <t:template>
                                 <ComboBox items="{path: '/UnitOfMeasureView', templateShareable:true, filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}]}" 
                                     placeholder="선택하세요." selectedKey="{list>quantity_unit}" editable="{= ${list>_row_state_} === 'C' }"
-                                    width="100%" required="true">
+                                    width="100%" required="true" value="{list>quantity_unit}"
+                                    valueState="{list>__metadata/_valueStates/quantity_unit/valueState}" valueStateText="{list>__metadata/_valueStates/quantity_unit/valueStateText}">
                                     <core:Item key="{uom_code}" text="{uom_code}"/>
                                 </ComboBox>
                             </t:template>
                         </t:Column>
-                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
-                            <Text text="{I18N>/EXCHANGE_UNIT}" />
+                        <t:Column hAlign="Center" width="10em" >
+                            <Label text="{I18N>/EXCHANGE_UNIT}"/>
                             <t:template>
                                 <Input value="{list>exchange_unit}" editable="{= ${list>_row_state_} === 'C' }" ></Input>
                             </t:template>
                         </t:Column>
-                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
-                            <Text text="{I18N>/EXCHANGE_CODE}" />
+                        <t:Column hAlign="Center" width="10em" >
+                            <Label text="{I18N>/EXCHANGE_CODE}" required="true" />
                             <t:template>
                                 <ComboBox items="{path: '/MIExchangeView', templateShareable:true, filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}]}" 
                                     placeholder="선택하세요." selectedKey="{list>exchange}" editable="{= ${list>_row_state_} === 'C' }"
-                                    width="100%" required="true">
+                                    width="100%" required="true" value="{list>exchange}"
+                                    valueState="{list>__metadata/_valueStates/exchange/valueState}" valueStateText="{list>__metadata/_valueStates/exchange/valueStateText}">
                                     <core:Item key="{exchage}" text="{exchage}"/>
                                 </ComboBox>
                             </t:template>
                         </t:Column>                
-                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
-                            <Text text="{I18N>/TERMS_OF_DELIVERY}" />
+                        <t:Column hAlign="Center" width="10em" >
+                            <Label text="{I18N>/TERMS_OF_DELIVERY}" required="true" />
                             <t:template>
                                 <ComboBox items="{path: '/MITermsdelvView', templateShareable:true, filters: [{path: 'tenant_id', operator: 'EQ', value1: 'L2100'}]}" 
                                     placeholder="선택하세요." selectedKey="{list>termsdelv}" 
-                                    width="100%" required="true">
+                                    width="100%" required="true" value="{list>termsdelv}"
+                                    valueState="{list>__metadata/_valueStates/termsdelv/valueState}" valueStateText="{list>__metadata/_valueStates/termsdelv/valueStateText}">
                                     <core:Item key="{termsdelv}" text="{termsdelv}"/>
                                 </ComboBox> 
                             </t:template>
                         </t:Column>
-                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
-                            <Text text="{I18N>/SOURCING_GROUP_CODE}" />
+                        <t:Column hAlign="Center" width="10em" >
+                            <Label text="{I18N>/SOURCING_GROUP_CODE}"/>
                             <t:template>
                                 <Input value="{list>sourcing_group_code}" ></Input>  
                             </t:template>
                         </t:Column>
 
-                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
-                            <Text text="{I18N>/DELIVERY_MM}" />
+                        <t:Column hAlign="Center" width="10em" >
+                            <Label text="{I18N>/DELIVERY_MM}"/>
                             <t:template>
                                 <Input value="{list>delivery_mm}" ></Input>  
                             </t:template>
                         </t:Column>
-
-                    
-                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
-                            <Text text="{I18N>/MI_DATE}" />
+                        <t:Column hAlign="Center" width="10em" >
+                            <Label text="{I18N>/MI_DATE}" required="true" />
                             <t:template>
                                 <DatePicker  valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd'" required="true" editable="{= ${list>_row_state_} === 'C' }"
                                     value="{path: 'list>mi_date', type: 'sap.ui.model.type.Date', 
-                                    formatOptions: { pattern: 'yyyy/MM/dd', UTC: true} }" />
+                                    formatOptions: { pattern: 'yyyy/MM/dd', UTC: true} }" 
+                                    valueState="{list>__metadata/_valueStates/mi_date/valueState}" valueStateText="{list>__metadata/_valueStates/mi_date/valueStateText}"/>
                             </t:template>
                         </t:Column>
-                    
-                        <t:Column minScreenWidth="Tablet" hAlign="Center" width="10em" >
-                            <Text text="{I18N>/PRICE}" />
+                        <t:Column hAlign="Center" width="10em" >
+                            <Label text="{I18N>/PRICE}"/>
                             <t:template>
-                                <Input value="{list>price}" type="Number" textAlign="Right" required="true" ></Input>
+                                <Input value="{list>price}" type="Number" textAlign="Right"></Input>
                             </t:template>
                         </t:Column>
                     </t:columns>  
