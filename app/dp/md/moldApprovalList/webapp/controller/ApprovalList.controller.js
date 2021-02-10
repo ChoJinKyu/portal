@@ -138,6 +138,7 @@ sap.ui.define([
             this.getView().byId("searchCompanyE").setSelectedKeys(['LGESL']);
             this.getView().byId("searchPlantS").setSelectedKeys(['A040']);
             this.getView().byId("searchPlantE").setSelectedKeys(['A040']);
+            
             // this.getView().byId("searchCompanyS").setSelectedKeys(['LGEKR']);
             // this.getView().byId("searchCompanyE").setSelectedKeys(['LGEKR']);
             // this.getView().byId("searchPlantS").setSelectedKeys(['DFZ']);
@@ -712,8 +713,8 @@ sap.ui.define([
         onToggleHandleInit: function () {
             var groupId = this.getView().getControlsByFieldGroupId("toggleButtons");
             if(!(this.byId("searchCompanyF") == undefined) || !(this.byId("searchPlantF") == undefined)){
-                this.byId("searchCompanyF").setSelectedKey("");
-                this.byId("searchPlantF").setSelectedKey("");
+                this.byId("searchCompanyF").setSelectedKey("LGESL");
+                this.byId("searchPlantF").setSelectedKey("A040");
             }
             for (var i = 0; i < groupId.length; i++) {
                 groupId[i].setPressed(false);
