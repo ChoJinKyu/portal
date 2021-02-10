@@ -83,7 +83,8 @@ sap.ui.define([
                 , session = this.getSessionUserInfo() 
                 , today = this._getToday()
             ;
-
+            var that = this;
+            var oUiModel = this.getView().getModel("mode");
             oModel.setTransactionModel(this.getModel())
             if( oArgs.request_number != "New"){
                 oModel.read("/remodelRepairDetail(tenant_id='" + session.TENANT_ID 
@@ -91,8 +92,10 @@ sap.ui.define([
                             + "',repair_request_number='"+oArgs.request_number 
                             + "')", {
                             filters: [],
-                    success: function (oData) {
-                        console.log("oData>>>>> ", oData);
+                    success: function (oData) { 
+                        oUiModel.setProperty("/editFlag", false);    
+                        oUiModel.setProperty("/viewFlag", true);    
+                        that._setBtnStatus();
                     }
                 });
             }else{ // NEW 일 경우 MOLD 정보만 조회한다. 
@@ -101,6 +104,13 @@ sap.ui.define([
                             filters: [],
                             success: function (oData) { 
 
+                            oUiModel.setProperty("/editFlag", true);    
+                            oUiModel.setProperty("/viewFlag", false);    
+                            oUiModel.setProperty("/btnDraft", true);    
+                            oUiModel.setProperty("/btnRequset", true);    
+                            oUiModel.setProperty("/btnEdit", false);    
+                            oUiModel.setProperty("/btnCancel", false);    
+
                             oModel.setProperty("/tenant_id", session.TENANT_ID); 
                             oModel.setProperty("/mold_id",  oArgs.mold_id ); 
                             oModel.setProperty("/create_user_id", session.USER_ID); 
@@ -108,12 +118,72 @@ sap.ui.define([
                             oModel.setProperty("/user_english_name", session.ENGLISH_EMPLOYEE_NAME); 
                             oModel.setProperty("/repair_request_date", today);
             
-                            console.log("oData>>>>> ", oData);
+                           
                     }
                 });
 
             };  
         },
+        onPageEditButtonPress : function(){
+            var oUiModel = this.getView().getModel("mode");
+                oUiModel.setProperty("/editFlag", true);    
+                oUiModel.setProperty("/viewFlag", false);    
+                this._setBtnStatus();
+        },
+        onPageCancelEditButtonPress : function(){
+            var oUiModel = this.getView().getModel("mode");
+                oUiModel.setProperty("/editFlag", false);    
+                oUiModel.setProperty("/viewFlag", true);    
+                this._setBtnStatus();
+        },
+        _setBtnStatus : function(){
+            var oUiModel = this.getView().getModel("mode");
+             console.log("_setBtnStatus>>>>> ", oUiModel);
+            var oModel = this.getModel("rrMgt") ;
+
+            console.log("oModel>>>>> ", oModel);
+            if(oUiModel.getProperty("/editFlag")){
+                if(oModel.getProperty("/repair_progress_status_code") === "RA"){ // Requst 
+                    oUiModel.setProperty("/btnDraft", false);    
+                    oUiModel.setProperty("/btnRequset", false);
+                    oUiModel.setProperty("/btnEdit", false);
+                    oUiModel.setProperty("/btnCancel", false);
+
+                }else if(oModel.getProperty("/repair_progress_status_code") === "RS"){ // Draft
+                    oUiModel.setProperty("/btnDraft", true);    
+                    oUiModel.setProperty("/btnRequset", true);  
+                    oUiModel.setProperty("/btnEdit", false);
+                    oUiModel.setProperty("/btnCancel", true);
+                }else{
+                    oUiModel.setProperty("/btnDraft", false);    
+                    oUiModel.setProperty("/btnRequset", false);
+                    oUiModel.setProperty("/btnEdit", false);
+                    oUiModel.setProperty("/btnCancel", false);
+                }
+            }else{  
+                if(oModel.getProperty("/repair_progress_status_code") === "RA"){ // Requst 
+                    oUiModel.setProperty("/btnDraft", false);    
+                    oUiModel.setProperty("/btnRequset", false);
+                    oUiModel.setProperty("/btnEdit", false);
+                    oUiModel.setProperty("/btnCancel", false);
+
+                }else if(oModel.getProperty("/repair_progress_status_code") === "RS"){ // Draft
+                    oUiModel.setProperty("/btnDraft", false);    
+                    oUiModel.setProperty("/btnRequset", true);  
+                    oUiModel.setProperty("/btnEdit", true);
+                    oUiModel.setProperty("/btnCancel", false);
+                }else{
+                    oUiModel.setProperty("/btnDraft", false);    
+                    oUiModel.setProperty("/btnRequset", false);
+                    oUiModel.setProperty("/btnEdit", false);
+                    oUiModel.setProperty("/btnCancel", false);
+                }
+            }
+
+               console.log("_setBtnStatus 222 >>>>> ", oUiModel);
+          
+        },
+
         /**
          * today
          * @private
