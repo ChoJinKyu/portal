@@ -63,7 +63,7 @@ service NpApprovalDetailV4Service {
         effective_end_date              : String(10)    ; // 유효종료일자	
         surrogate_type_code             : String(30)    ; // 대리견적유형코드	
         currency_code                   : String(3)     ; // 통화코드	
-        net_price                       : Decimal       ; // 단가		
+        net_price                       : Decimal(34,10); // 단가		
         vendor_pool_code                : String(20)    ; // 협력사풀코드	
         market_code                     : String(30)    ; // 납선코드	
         net_price_approval_reason_code  : String(30)    ; // 단가품의사유코드	
