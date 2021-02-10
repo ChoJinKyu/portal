@@ -1,3 +1,7 @@
+/* 
+tenant_id session 미처리
+*/
+
 sap.ui.define([
     "ext/lib/control/ui/CodeValueHelp",
     "ext/lib/control/DummyRenderer",
@@ -18,6 +22,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
+                loadWhenOpen: { type: "boolean", group: "Misc", defaultValue: false },
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "code" },
                 textField: { type: "string", group: "Misc", defaultValue: "code_name" }
@@ -61,7 +66,6 @@ sap.ui.define([
         extractBindingInfo(oValue, oScope){
             if(oValue && (oValue.filters || oValue.sorters)){
                 var oParam = jQuery.extend(true, {}, oValue);
-
                 this.oFilters = oValue.filters || [];
                 this.oSorters = oValue.sorters || [];
             }else{
@@ -89,16 +93,28 @@ sap.ui.define([
             }
             ODataV2ServiceProvider.getService("cm.util.OrgService").read("/Org_code", {
                 
+                fetchOthers: true,
                 filters: aFilters,
                 sorters: aSorters,
                 success: function(oData){
                     var aRecords = oData.results;
                     this.oDialog.setData(aRecords, false);
+                }.bind(this),
+                fetchOthersSuccess: function(aDatas){
+                    var aDialogData = this.oDialog.getData();
+                    aDatas.forEach(function(oData){
+                        aDialogData = aDialogData.concat(oData.results);
+                    }.bind(this));
+                    this.oDialog.setData(aDialogData);
+                    this.oDialog.setBusy(false);
                 }.bind(this)
             });
             if(this.sKeywordFlag === true){
                 aFilters.length = aFilters.length -1;
             }
+        },
+
+        beforeOpen: function(){
         }
 
     });
