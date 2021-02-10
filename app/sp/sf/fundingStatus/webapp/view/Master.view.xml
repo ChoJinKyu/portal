@@ -32,7 +32,7 @@
                     <VBox>
                         <Label text="공고제목" />
                         <Input 
-                            value="{viewModel>/cond/Contains/evaluation_article_name}"
+                            value="{viewModel>/cond/Contains/funding_notify_title}"
                         />
                         <layoutData>
                             <layout:GridData span="XL2 L3 M6 S12" />
