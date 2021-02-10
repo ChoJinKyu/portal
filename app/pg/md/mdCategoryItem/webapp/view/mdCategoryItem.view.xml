@@ -39,13 +39,13 @@
                 <form:content>
                     <VBox>
                         <Label text="{I18N>/TENANT}" labelFor="searchTenantCombo" required="true"></Label>
-                        <ComboBox id="searchTenantCombo" width="100%" items="{
+                        <ComboBox id="searchTenantCombo" showSecondaryValues="true" width="100%" items="{
                                 path: 'org>/Org_Tenant',
                                 filters: []
                             }"
                             selectionChange="onChangeTenant">
                             <items>
-                                <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
+                                <core:ListItem key="{org>tenant_id}" text="{org>tenant_name}" additionalText="{org>tenant_id}" />
                             </items>
                         </ComboBox>
                         <layoutData>
@@ -54,7 +54,7 @@
                     </VBox>
                     <VBox>
                         <Label text="{I18N>/BUSINESS_UNIT}" labelFor="searchChain" required="true"></Label>
-                        <ComboBox id="searchChain" width="100%" selectedKey="" selectionChange="onChangeBizUnit">
+                        <ComboBox id="searchChain" showSecondaryValues="true" width="100%" selectedKey="" selectionChange="onChangeBizUnit">
                         <!-- <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" items="{
                                 path: 'org>/Org_Unit',
                                 filters: [
@@ -62,7 +62,7 @@
                                 ]
                             }"> -->
                             <items>
-                                <core:Item key="{org>bizunit_code}" text="{org>bizunit_code}: {org>bizunit_name}" />
+                                <core:ListItem key="{org>bizunit_code}" text="{org>bizunit_name}" additionalText="{org>bizunit_code}"/>
                             </items>
                         </ComboBox>
                         <layoutData>
@@ -71,7 +71,7 @@
                     </VBox>
                     <VBox>
                         <Label text="{I18N>/SPMD_CATEGORY}" labelFor="searchCategory" required="true"></Label>
-                        <ComboBox id="searchCategory" width="100%" selectedKey="" >
+                        <ComboBox id="searchCategory" showSecondaryValues="true" width="100%" selectedKey="" >
                         <!-- <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" items="{
                                 path: 'org>/Org_Unit',
                                 filters: [
@@ -79,7 +79,7 @@
                                 ]
                             }"> -->
                             <items>
-                                <core:Item key="{category>spmd_category_code}" text="{category>spmd_category_code}: {category>spmd_category_code_name}" />
+                                <core:ListItem key="{category>spmd_category_code}" text="{category>spmd_category_code_name}" additionalText="{category>spmd_category_code}" />
                             </items>
                         </ComboBox>
                         <layoutData>
@@ -115,8 +115,6 @@
                     path: 'list>/MdCategoryItem'
                 }"
 				class="sapFDynamicPageAlignContent"
-                columnResize="onColumnResize"
-		        beforeOpenContextMenu="onBeforeOpenContextMenu"
                 width="auto">
             <headerToolbar>
             <OverflowToolbar class="sapFDynamicPageAlignContent">
@@ -139,43 +137,43 @@
             </headerToolbar>
 
             <columns> 
-                <Column  hAlign="Center" mergeDuplicates="false" width="3em" >
+                <Column  hAlign="Center" width="3em" >
                     <Text text="" />
                 </Column>
-                <Column  hAlign="Center" mergeDuplicates="false" width="3em" >
+                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" width="3em" >
                     <Text text="{I18N>/SPMD_CHARACTER_SORT_SEQ}" />
                 </Column>
-                <Column  hAlign="Center" mergeDuplicates="false" width="8em" >
+                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="false">
                     <Text text="{I18N>/BIZUNIT_CODE}" />
                 </Column>
-                <Column  hAlign="Center" mergeDuplicates="false" width="12em" >
+                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" >
                     <Text text="{I18N>/BIZUNIT_NAME}" />
                 </Column>
-                <Column  hAlign="Center" mergeDuplicates="false" width="8em" >
+                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" >
                     <Text text="{I18N>/SPMD_CATEGORY_CODE}" />
                 </Column>
-                <Column  hAlign="Center" mergeDuplicates="false" width="12em" >
+                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" >
                     <Text text="{I18N>/SPMD_CATEGORY_CODE_NAME}" />
                 </Column>
-                <Column  hAlign="Center" mergeDuplicates="false" width="8em" >
+                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" >
                     <Text text="{I18N>/SPMD_CHARACTER_CODE}" />
                 </Column>
-                <Column  hAlign="Center" width="12em" >
+                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" >
                     <Text text="{I18N>/SPMD_CHARACTER_CODE_NAME}" />
                 </Column>
-                <Column  hAlign="Center" width="20em" >
+                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline">
                     <Text text="{I18N>/SPMD_CHARACTER_DESC}" />
                 </Column>
-                <Column  hAlign="Center" width="10em" >
+                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="false">
                     <Text text="{I18N>/CREATE_USER_ID}" />
                 </Column>
-                <Column  hAlign="Center" width="10em" >
+                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="false">
                     <Text text="{I18N>/UPDATE_USER_ID}" />
                 </Column>
-                <Column  hAlign="Center" width="10em" >
+                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="false">
                     <Text text="{I18N>/LOCAL_CREATE_DTM}" />
                 </Column>
-                <Column  hAlign="Center" width="10em" >
+                <Column  hAlign="Center" minScreenWidth="Desktop" demandPopin="false">
                     <Text text="{I18N>/LOCAL_CHANGE_DTM}" />
                 </Column>
             </columns>

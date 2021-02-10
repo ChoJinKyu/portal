@@ -91,17 +91,22 @@ sap.ui.define([
 
       //window창 파라메터 분리
         getQueryStringObject: function() {
-            var a = window.location.search.substr(1).split('&');
-            if (a == null) return {};
-            var b = {};
-            for (var i = 0; i < a.length; ++i) {
-                var p = a[i].split('=', 2);
-                if (p.length == 1)
-                    b[p[0]] = "";
-                else
-                    b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+            if(window.location.search != ""){
+                var a = window.location.search.substr(1).split('&');
+                if (a == null) return {};
+                var b = {};
+                for (var i = 0; i < a.length; ++i) {
+                    var p = a[i].split('=', 2);
+                    if (p.length == 1)
+                        b[p[0]] = "";
+                    else
+                        b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+                }
+                return b;
+
+            }else{
+                return "";
             }
-            return b;
         },
 
       onMainTablePersoButtonPressed: function (event) {
@@ -111,9 +116,8 @@ sap.ui.define([
 
       // Display row number without changing data
       onAfterRendering: function () {
-
         var qs = this.getQueryStringObject();
-
+        
         if(qs != ""){
             var tenant_id = qs.tenant_id; 
             var org_code = qs.org_code; 
@@ -134,9 +138,10 @@ sap.ui.define([
                 sorter: businessSorter,
                 filters: aFiltersComboBox,
                 // @ts-ignore
-                template: new sap.ui.core.Item({
+                template: new sap.ui.core.ListItem({
                     key: "{org>bizunit_code}",
-                    text: "{org>bizunit_code}: {org>bizunit_name}"
+                    text: "{org>bizunit_name}",
+                    additionalText: "{org>bizunit_code}"
                 })
             });
             
@@ -153,14 +158,38 @@ sap.ui.define([
                 sorter: businessSorter,
                 filters: aFiltersComboBox,
                 // @ts-ignore
-                template: new sap.ui.core.Item({
+                template: new sap.ui.core.ListItem({
                     key: "{category>spmd_category_code}",
-                    text: "{category>spmd_category_code}: {category>spmd_category_code_name}"
+                    text: "{category>spmd_category_code_name}",
+                    additionalText: "{category>spmd_category_code}"
                 })
             });  
+        }else{
+            
+            //화학 기본설정 - 사업본부
+            this.getView().byId("searchTenantCombo").setSelectedKey("L2100");
+            var oSelectedkey = this.getView().byId("searchTenantCombo").getSelectedKey();
+
+            var business_combo = this.getView().byId("searchChain");  
+                business_combo.setValue("");
+                
+            var aFiltersComboBox = [];
+            aFiltersComboBox.push( new Filter("tenant_id", "EQ", oSelectedkey));
+            var businessSorter = new sap.ui.model.Sorter("bizunit_code", false);   
+
+            business_combo.bindAggregation("items", {
+                path: "org>/Org_Unit",
+                sorter: businessSorter,
+                filters: aFiltersComboBox,
+                // @ts-ignore
+                template: new sap.ui.core.ListItem({
+                    key: "{org>bizunit_code}",
+                    text: "{org>bizunit_name}",
+                    additionalText: "{org>bizunit_code}"
+                })
+            });
         }
          
-        // this.onSearch();
       },
     
       /** 
@@ -181,9 +210,10 @@ sap.ui.define([
             sorter: businessSorter,
             filters: aFiltersComboBox,
             // @ts-ignore
-            template: new sap.ui.core.Item({
+            template: new sap.ui.core.ListItem({
                 key: "{org>bizunit_code}",
-                text: "{org>bizunit_code}: {org>bizunit_name}"
+                text: "{org>bizunit_name}",
+                additionalText: "{org>bizunit_code}"
             })
         });
     },
@@ -210,9 +240,10 @@ sap.ui.define([
             sorter: businessSorter,
             filters: aFiltersComboBox,
             // @ts-ignore
-            template: new sap.ui.core.Item({
+            template: new sap.ui.core.ListItem({
                 key: "{category>spmd_category_code}",
-                text: "{category>spmd_category_code}: {category>spmd_category_code_name}"
+                text: "{category>spmd_category_code_name}",
+                additionalText: "{category>spmd_category_code}"
             })
         });
     },

@@ -39,13 +39,13 @@
                 <form:content>
                     <VBox>
                         <Label text="{I18N>/TENANT}" labelFor="searchTenantCombo" required="true"></Label>
-                        <ComboBox id="searchTenantCombo" width="100%" items="{
+                        <ComboBox id="searchTenantCombo" showSecondaryValues="true" width="100%" items="{
                                 path: 'org>/Org_Tenant',
                                 filters: []
                             }"
                             selectionChange="onChangeTenant">
                             <items>
-                                <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
+                                <core:ListItem key="{org>tenant_id}" text="{org>tenant_name}" additionalText="{org>tenant_id}" />
                             </items>
                         </ComboBox>
                         <layoutData>
@@ -54,7 +54,7 @@
                     </VBox>
                     <VBox>   
                         <Label text="{I18N>/BUSINESS_UNIT}" labelFor="searchChain" required="true"></Label>
-                        <ComboBox id="searchChain" width="100%" selectedKey="" >
+                        <ComboBox id="searchChain" showSecondaryValues="true" width="100%" selectedKey="" >
                         <!-- <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" items="{
                                 path: 'org>/Org_Unit',
                                 filters: [
@@ -62,7 +62,7 @@
                                 ]
                             }"> -->
                             <items>
-                                <core:Item key="{org>bizunit_code}" text="{org>bizunit_code}: {org>bizunit_name}" />
+                                <core:ListItem key="{org>bizunit_code}" text="{org>bizunit_name}" additionalText="{org>bizunit_code}"/>
                             </items>
                         </ComboBox>
                         <layoutData>
@@ -94,11 +94,9 @@
 
                 }"
 				class="sapFDynamicPageAlignContent"
-                columnResize="onColumnResize"
-		        beforeOpenContextMenu="onBeforeOpenContextMenu"
                 width="auto">
             <headerToolbar>
-            <OverflowToolbar class="sapFDynamicPageAlignContent">
+            <OverflowToolbar>
               <Title text="{I18N>/LIST} ({= ${list>/MdCategory}.length})" level="H2" />
               <Button icon="sap-icon://move" enabled="false" />
               <ToolbarSpacer/>
@@ -118,40 +116,37 @@
             </headerToolbar>
 
             <columns>
-                <Column  hAlign="Center" mergeDuplicates="false" width="3em" >
+                <Column hAlign="Center" width="3em">
                     <Text text="" />
                 </Column>
-                <Column hAlign="Center" mergeDuplicates="false" width="3em" >
+                <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="true" popinDisplay="Inline" width="3em" >
                     <Text text="{I18N>/SPMD_CATEGORY_SORT_SEQUENCE}" />
                 </Column>
-                <Column hAlign="Center" mergeDuplicates="false" width="80px" >
+                <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="false">
                     <Text text="{I18N>/BIZUNIT_CODE}" />
                 </Column>
-                <Column hAlign="Center" width="200px">
+                <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="true"  popinDisplay="Inline">
                     <Text text="{I18N>/BIZUNIT_NAME}" />
                 </Column>
-                <Column hAlign="Center" mergeDuplicates="false" width="80px" >
+                <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="true" importance="High" popinDisplay="Inline"  >
                     <Text text="{I18N>/SPMD_CATEGORY_CODE}" />
                 </Column>
-                <Column hAlign="Center" width="250px">
+                <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="true"  popinDisplay="Inline">
                     <Text text="{I18N>/SPMD_CATEGORY_CODE_NAME}" />
                 </Column>
-                <Column hAlign="Center" width="150px" >
+                <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="true"  popinDisplay="Inline">
                     <Text text="{I18N>/FONT_RGB_CODE}" />
                 </Column>
-                <Column hAlign="Center" width="150px" >
-                    <Text text="{I18N>/CELL_RGB_CODE}" />
-                </Column>
-                <Column  hAlign="Center" width="150px" >
+                <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="false">
                     <Text text="{I18N>/CREATE_USER_ID}" />
                 </Column>
-                <Column  hAlign="Center" width="150px" >
+                <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="false">
                     <Text text="{I18N>/UPDATE_USER_ID}" />
                 </Column>
-                <Column  hAlign="Center" width="150px" >
+                <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="false">
                     <Text text="{I18N>/LOCAL_CREATE_DTM}" />
                 </Column>
-                <Column  hAlign="Center" width="150px" >
+                <Column hAlign="Center" minScreenWidth="Desktop" demandPopin="false" >
                     <Text text="{I18N>/LOCAL_CHANGE_DTM}" />
                 </Column>
             </columns>
@@ -182,9 +177,6 @@
                         </HBox>
                         <HBox alignItems="Center">
                             <Text text="{list>rgb_font_color_code}" visible="true"></Text>
-                        </HBox>
-                        <HBox alignItems="Center">
-                            <Text text="{list>rgb_cell_clolor_code}" visible="true"></Text>
                         </HBox>
                         <HBox alignItems="Center">
                             <Text text="{list>create_user_id}"></Text>
