@@ -14,10 +14,11 @@ sap.ui.define([
     "sap/m/Input",
     "sap/m/ComboBox",
     "sap/ui/core/Item",
+    "sap/ui/core/ListItem",
     "ext/lib/control/m/CodeComboBox",
     "sap/m/MessageToast"
 ], function (Parent, Renderer, ODataV2ServiceProvider, JSONModel, Filter, FilterOperator, Sorter, 
-            GridData, VBox, Column, Label, Text, Input, ComboBox, Item, CodeComboBox, MessageToast) {
+            GridData, VBox, Column, Label, Text, Input, ComboBox, Item, ListItem, CodeComboBox, MessageToast) {
     "use strict";
 
     var MaterialOrgDialog = Parent.extend("dp.vi.basePriceArlMgt.controller.MaterialOrgDialog", {
@@ -178,63 +179,64 @@ sap.ui.define([
         },
 
         createTableColumns: function(){
+            var oI18NModel = this.getModel("I18N");
             var aColumnsControl = [];
 
             if( this.tenantId === "L2100" ) {
                 aColumnsControl.push(new Column({
-                    width: "15%",
-                    hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/COMPANY")}),
-                    template: new Text({text: "[{company_code}]{company_name}"})
+                    width: "12%",
+                    hAlign: "Begin",
+                    label: new Label({text: oI18NModel.getText("/COMPANY"), textAlign:"Center", width: "100%"}),
+                    template: new Text({text: "{company_name}", tooltip: "{company_name}"})
                 }));
             }
             
             aColumnsControl.push(new Column({
-                    width: "15%",
+                    width: "12%",
+                    hAlign: "Begin",
+                    label: new Label({text: oI18NModel.getText("/VI_APPROVE_ORG_CODE"), textAlign:"Center", width: "100%"}),
+                    template: new Text({text: "{org_name}", tooltip: "{org_name}"})
+                }));
+            aColumnsControl.push(new Column({
+                    width: "12%",
                     hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/VI_APPROVE_ORG_CODE")}),
-                    template: new Text({text: "[{org_code}]{org_name}"})
+                    label: new Label({text: oI18NModel.getText("/MATERIAL_CODE")}),
+                    template: new Text({text: "{material_code}", tooltip: "{material_code}"})
+                }));
+            aColumnsControl.push(new Column({
+                    width: "23%",
+                    hAlign: "Begin",
+                    label: new Label({text: oI18NModel.getText("/MATERIAL_DESC"), textAlign:"Center", width: "100%"}),
+                    template: new Text({text: "{material_desc}", tooltip: "{material_desc}"})
+                }));
+            aColumnsControl.push(new Column({
+                    width: "21%",
+                    hAlign: "Begin",
+                    label: new Label({text: oI18NModel.getText("/MATERIAL") + oI18NModel.getText("/SPECIFICATION"), textAlign:"Center", width: "100%"}),
+                    template: new Text({text: "{material_spec}", tooltip: "{material_spec}"})
                 }));
             aColumnsControl.push(new Column({
                     width: "10%",
                     hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_CODE")}),
-                    template: new Text({text: "{material_code}"})
-                }));
-            aColumnsControl.push(new Column({
-                    width: "15%",
-                    hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_DESC"), textAlign:"Center"}),
-                    template: new Text({text: "{material_desc}", textAlign:"Begin"})
-                }));
-            aColumnsControl.push(new Column({
-                    width: "25%",
-                    hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL") + this.getModel("I18N").getText("/SPECIFICATION")}),
-                    template: new Text({text: "{material_spec}"})
-                }));
-            aColumnsControl.push(new Column({
-                    width: "10%",
-                    hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/BASE_UOM_CODE")}),
+                    label: new Label({text: oI18NModel.getText("/BASE_UOM_CODE")}),
                     template: new Text({text: "{base_uom_code}"})
                 }));
             aColumnsControl.push(new Column({
                     width: "10%",
                     hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/STATUS") }),
+                    label: new Label({text: oI18NModel.getText("/STATUS") }),
                     template: new Text({text: "{material_status_code_name}"})
                 }));
             // aColumnsControl.push(new Column({
             //         width: "10%",
             //         hAlign: "Center",
-            //         label: new Label({text: this.getModel("I18N").getText("/HS_CODE")}),
+            //         label: new Label({text: oI18NModel.getText("/HS_CODE")}),
             //         template: new Text({text: "{hs_code}"})
             //     }));
             // aColumnsControl.push(new Column({
             //         width: "5%",
             //         hAlign: "Center",
-            //         label: new Label({text: this.getModel("I18N").getText("/UIT")}),
+            //         label: new Label({text: oI18NModel.getText("/UIT")}),
             //         template: new Text({text: "{user_item_type_code}"})
             //     }));
 
@@ -250,7 +252,7 @@ sap.ui.define([
             oPlantComboBox.setSelectedKey("");
 
             for( var i=0; i<aPurOrg.length; i++ ) {
-                oPlantComboBox.addItem(new Item({key:aPurOrg[i].org_code, text:aPurOrg[i].org_name}));
+                oPlantComboBox.addItem(new ListItem({key:aPurOrg[i].org_code, text:aPurOrg[i].org_name, additionalText:aPurOrg[i].org_code}));
             }
         },
         
@@ -299,6 +301,7 @@ sap.ui.define([
 
                 if( this.getProperty("type") === "Change" ) {
                     sDetailUrl = "/Price_Master_Vw";
+                    aFilters.push(new Filter("material_desc", FilterOperator.NE, null));
                 }
 
                 ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.BasePriceArlService/").read(sDetailUrl, {
