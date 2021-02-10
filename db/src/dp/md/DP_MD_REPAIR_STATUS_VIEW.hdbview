@@ -80,6 +80,7 @@ select a.tenant_id
     ,CM_GET_EMP_NAME_FUNC(a.tenant_id, e.requestor_empno) requestor_name
     ,e.request_date
     ,e.approve_status_code
+    ,CM_GET_CODE_NAME_FUNC(a.tenant_id, 'CM_APPROVE_STATUS', e.approve_status_code, 'KO') approve_status_name
 
 from DP_MD_REPAIR_ITEM a
 

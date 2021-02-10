@@ -83,6 +83,7 @@ entity Md_Repair_Status_View {
         requestor_name                 : String;
         request_date                   : String;
         approve_status_code            : String;
+        approve_status_name            : String;
 
 
 }
