@@ -446,8 +446,15 @@ sap.ui.define([
             this._sPartProjectTypeCode = oArgs.partProjectTypeCode;
             this._sActivityCode = oArgs.activityCode;
             // this._sCategoryGroupCode = oArgs.categoryGroupCode;
+            this._slayout = oArgs.layout;
             
             this._fnInitControlModel();
+
+            //Flexible 넓은 화면 레이아웃 일 때 Main List 화면 테이블의 컬럼을 줄이기 위한 설정
+            if(this._slayout === "TwoColumnsMidExpanded" ){
+                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("local_update_dtm").setVisible(false);
+                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("update_user_id").setVisible(false);
+            }
 
 			if(this._sActivityCode == "new"){
 				//It comes Add button pressed from the before page.
