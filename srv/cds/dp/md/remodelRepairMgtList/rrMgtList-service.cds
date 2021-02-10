@@ -39,10 +39,10 @@ service RrMgtListService {
                                 , 'DP_MD_REPAIR_PROGRESS_STATUS'
                                 , item.repair_progress_status_code
                                 , ses.LANGUAGE_CODE) as repair_progress_status_code_nm : String(240)
-	    , item.mold_moving_plan_date  
-	    , item.mold_moving_result_date  
-	    , item.mold_complete_plan_date  
-	    , item.mold_complete_result_date 
+	    , cast(item.mold_moving_plan_date as Date ) as mold_moving_plan_date : Date  
+	    , cast(item.mold_moving_result_date  as Date ) as mold_moving_result_date : Date 
+	    , cast(item.mold_complete_plan_date  as Date ) as mold_complete_plan_date : Date 
+	    , cast(item.mold_complete_result_date  as Date ) as mold_complete_result_date : Date 
 	    , mst.mold_production_type_code 
 	    , mst.mold_mfger_code  /* Mold Supplier */ 
         , sup.supplier_local_name as mold_mfger_code_nm : String(240) 
