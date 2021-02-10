@@ -182,7 +182,7 @@ sap.ui.define([
             var oView = this.getView(),
                 oMasterModel = this.getModel("master"),
                 that = this;
-
+                
             MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
                 title: "Comfirmation",
                 initialFocus: sap.m.MessageBox.Action.CANCEL,
@@ -191,21 +191,21 @@ sap.ui.define([
                     oView.setBusy(true);
                     oMasterModel.removeData();
                     oMasterModel.setTransactionModel(that.getModel());
-                    oMasterModel.submitChanges({
+                    oMasterModel.submitChanges({ //다건
                         success: function (ok) {
                             if (ok.__batchResponses[0].__changeResponses[0].response != null && ok.__batchResponses[0].__changeResponses[0].response.statusCode == "400") {
-                                MessageToast.show(that.I18N.getText("/EPG10001", [that.I18N.getText("/SPMD_CATEGORY_CODE")]), {at: "center center"});
+                                //범주 {0} 를 사용 중인 관리특성이 존재합니다.
+                                oView.setBusy(false);
+                                MessageToast.show(that.getModel("I18N").getText("/EPG10001",oMasterModel.oData.spmd_category_code_name), {at: "center center"});
                                 return;
-                            }
-                            oView.setBusy(false);
-                            that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                            MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
-                                    
-                            that.onPageNavBackButtonPress(); 
-                        }.bind(this),
-                        error: function(data){
-                            MessageToast.show(that.I18N.getText("/EPG10001", [that.I18N.getText("/SPMD_CATEGORY_CODE")]), {at: "center center"});
+                            }else{
+                                oView.setBusy(false);
+                                that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
+                                that.onPageNavBackButtonPress();
+                            } 
                         }.bind(this)
+                        // that.getModel("I18N").getText("/NCM01001")
                     });
                 };
                 }

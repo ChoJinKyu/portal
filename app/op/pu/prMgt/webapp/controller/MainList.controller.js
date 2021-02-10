@@ -531,6 +531,9 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSearchButtonPress: function (oEvent) {
+
+            if(this.validator.validate(this.byId("searchRequestDate")) !== true) return;
+
             if (oEvent.getParameters().refreshButtonPressed) {
                 // Search field's 'refresh' button has been pressed.
                 // This is visible if you select any master list item.

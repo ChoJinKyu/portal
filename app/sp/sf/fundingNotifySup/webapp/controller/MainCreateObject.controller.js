@@ -250,8 +250,7 @@ sap.ui.define([
 
         //신청서 제출 성공 후
         onAfterProcRequest: function(){
-            MessageToast.show("제출 성공하였습니다.", {duration: 10000});
-             var urlPram = this.getModel("contModel").getProperty("/oArgs"),
+            var urlPram = this.getModel("contModel").getProperty("/oArgs"),
                 aFilters =[],
                 oI18n = this.getView().getModel("I18N");
             aFilters.push(new Filter("supplier_code", FilterOperator.EQ, urlPram.supplierCode));
@@ -259,7 +258,9 @@ sap.ui.define([
             aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, urlPram.fundingNotifyNumber));
             
             // this._onObjectRead(aFilters);
+            MessageToast.show("제출 성공하였습니다.", {duration: 10000});
             this.onPageNavBackButtonPress();
+            MessageToast.show("제출 성공하였습니다.", {duration: 10000});
         },
 
         //투자계획 팝업 저장

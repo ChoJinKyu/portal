@@ -22,7 +22,7 @@
             <f:DynamicPageTitle>
                 <f:heading>
                      <!-- 평가항목 관리 -->
-                    <Title text="자금지원 현황" />
+                    <Title text="자금지원현황" />
                 </f:heading>
 
                 <f:expandedContent>
