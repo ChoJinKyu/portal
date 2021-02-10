@@ -588,11 +588,11 @@
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
                                                     </VBox>
-                                                    <VBox width="75%" visible="{= ${award>/method} === '1' ? true : false }">
+                                                    <VBox width="75%" visible="{= ${NegoHeaders>/award_method_code} === 'MP' ? true : false }">
                                                         <Label  text="{I18N>/NUMBER_OF_AWARD_SUPPLIER}:" 
                                                                 class="sapMLabelNoText"/> 
                                                         <HBox >
-                                                            <Select width="100%" change="selectNumberSupplierChange" visible="false" selectedKey="{NegoHeaders>/number_of_award_supplier}"
+                                                            <Select width="100%" change="selectNumberSupplierChange" visible="true" selectedKey="{NegoHeaders>/number_of_award_supplier}"
                                                                 id="selectNumberSupplier2" enabled="false">
                                                                 <core:Item key="1" text="1" />
                                                                 <core:Item key="2" text="2" />

@@ -419,11 +419,27 @@ sap.ui.define([
                         v_viewHeaderModel.NegoHeaders = data.value[0];
 
                         oView.getModel("NegoHeaders").setData(data.value[0]);
+                        
                         // number_of_award_supplier, total, bid_conference_date 추가 2021.02.10 kbg
-                            oView.getModel("NegoHeaders").setProperty("/number_of_award_supplier" , parseInt(data.value[0].number_of_award_supplier));
-                            oView.getModel("NegoHeaders").setProperty("/bid_conference_date" , new Date(data.value[0].bid_conference_date));
-                            this._SupplierTotalScore = data.value[0].order_rate_01 + data.value[0].order_rate_02 +
-                                data.value[0].order_rate_03 + data.value[0].order_rate_04 + data.value[0].order_rate_05 ;
+                        oView.getModel("NegoHeaders").setProperty("/number_of_award_supplier" , parseInt(data.value[0].number_of_award_supplier));
+                        oView.getModel("NegoHeaders").setProperty("/bid_conference_date" , new Date(data.value[0].bid_conference_date));
+                        
+                        this._SupplierTotalScore = data.value[0].order_rate_01;     //임시
+                        if(parseInt(data.value[0].order_rate_02) > 0){
+                            this._SupplierTotalScore = this._SupplierTotalScore + data.value[0].order_rate_02;
+                        }
+                        if(parseInt(data.value[0].order_rate_03) > 0){
+                            this._SupplierTotalScore = this._SupplierTotalScore + data.value[0].order_rate_03;
+                        }
+                        if(parseInt(data.value[0].order_rate_04) > 0){
+                            this._SupplierTotalScore = this._SupplierTotalScore + data.value[0].order_rate_04;
+                        }
+                        if(parseInt(data.value[0].order_rate_05) > 0){
+                            this._SupplierTotalScore = this._SupplierTotalScore + data.value[0].order_rate_05;
+                        }
+
+                        this._supplierNumberModel(String(data.value[0].number_of_award_supplier));
+                        debugger;
     
 
                         oView.getModel("NegoHeaders").setProperty("/open_date" , new Date(data.value[0].open_date));
@@ -1932,7 +1948,7 @@ sap.ui.define([
                 var supplierModel = this.getView().getModel("supplierNum");
                 supplierModel.oData.number = parseInt(pKey);
                 supplierModel.refresh(true);
-                this._awardNumberClear(pKey);
+                if(!this.getView().getModel("NegoHeaders").oData.nego_header_id) this._awardNumberClear(pKey);
                 var oState;
                 if(this._SupplierTotalScore != 100){
                     oState = "Error";
