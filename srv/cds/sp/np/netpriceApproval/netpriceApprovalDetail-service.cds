@@ -263,6 +263,10 @@ service NpApprovalDetailService {
 
         FROM SP_NP_NET_PRICE_APPROVAL_DTL pad
 
+		INNER JOIN SP_NP_NET_PRICE_APPROVAL_MST pam
+			ON pam.tenant_id = pad.tenant_id 
+			AND pam.approval_number = pad.approval_number 
+
         INNER JOIN CM_SPP_USER_SESSION_VIEW  ssi
             ON pad.tenant_id        = ssi.TENANT_ID
             /*  AND pad.company_code     = ssi.COMPANY_CODE */
@@ -272,12 +276,12 @@ service NpApprovalDetailService {
                AND pad.company_code     = npm.company_code
                AND pad.org_type_code    = npm.org_type_code
                AND pad.org_code         = npm.org_code
-
+	           AND pam.net_price_document_type_code = npm.net_price_document_type_code
+			   AND pam.net_price_source_code = npm.net_price_source_code
                AND pad.supplier_code    = npm.supplier_code
                AND pad.material_code    = npm.material_code
                AND pad.market_code      = npm.market_code
                AND pad.currency_code    = npm.currency_code
-
                AND npm.effective_start_date <= TO_VARCHAR (NOW(), 'YYYYMMDD')
                AND npm.effective_end_date >= TO_VARCHAR (NOW(), 'YYYYMMDD')
 
