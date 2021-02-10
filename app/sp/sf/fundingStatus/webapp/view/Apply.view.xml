@@ -23,13 +23,13 @@
 			<!-- 타이틀 영역 -->
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="신청" wrapping="true" />
+					<Title text="신청 ({viewModel>/Detail/Apply/funding_status_code_name})" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="신청" wrapping="true" />
+					<Title text="신청 ({viewModel>/Detail/Apply/funding_status_code_name})" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:snappedTitleOnMobile>
-					<Title text="신청" />
+					<Title text="신청 ({viewModel>/Detail/Apply/funding_status_code_name})"/>
 				</uxap:snappedTitleOnMobile>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
