@@ -372,7 +372,7 @@ sap.ui.define([
                         // data.value[0].Items.lengt
                         // oView.byId("table1")
 
-                    },
+                    }.bind(this),
                     error: function(e){
                         console.log( "error :: " + e.responseText);
                     }
@@ -453,7 +453,7 @@ sap.ui.define([
                             if (sButton === MessageBox.Action.OK) {
                                 var titleLengh = this.getView().byId("inputTitle").getMaxLength() == 0 ? 300 : this.getView().byId("inputTitle").getMaxLength();
                                 if( !oModel.hasOwnProperty("nego_document_title") || oModel.nego_document_title === undefined 
-                                        || oModel.nego_document_title.length <= 0 || oModel.nego_document_title.length > titleLengh ) {
+                                        || oModel.nego_document_title.length <= 0 || oModel.nego_document_title.length > titleLengh) {
     
                                     var stateText = this.getModel("I18N").getText("/ECM01002");
                                     if( oModel.nego_document_title != undefined ) {
@@ -1285,11 +1285,14 @@ sap.ui.define([
                 var oSelectedItem = e.getParameter("selectedItem");
 
                 console.log( oSelectedItem );
-                var resultTokens = {
-                    org_code: oSelectedItem != null ? oSelectedItem.getProperty("key")  : "",
-                    org_name: oSelectedItem != null ? oSelectedItem.getProperty("text") : ""
+                if( oSelectedItem != null ) {
+
+                    var resultTokens = {
+                        org_code: oSelectedItem.getProperty("key"),
+                        org_name: oSelectedItem.getProperty("text")
+                    }
+                    this.setOrgCode( resultTokens );
                 }
-                this.setOrgCode( resultTokens );
 
             },
             /** Operation Org 변경시 항목 처리 */
@@ -1300,6 +1303,10 @@ sap.ui.define([
                     oItem.operation_org = {};
                 }
                 oItem.operation_org.operation_org_name = resultTokens.org_name;
+
+                console.log( "<<< setOrgCode >>>");
+                console.log(resultTokens);
+                console.log(oItem);
 
                 this.getView().getModel("NegoHeaders").refresh();
             },
@@ -1438,7 +1445,7 @@ sap.ui.define([
                         reason                       : this.getCheckObject(element,"reason,",""),
                         request_date                 : this.getCheckObject(element,"request_date",new Date()),
                         attch_code                   : this.getCheckObject(element,"attch_code",""),
-                        supplier_provide_info        : this.getCheckObject(element,"supplier_provide_info","encoding"),
+                        supplier_provide_info        : this.getCheckObject(element,"supplier_provide_info",""),
                         incoterms_code               : this.getCheckObject(element,"incoterms_code",""),
                         payment_terms_code           : this.getCheckObject(element,"payment_terms_code",""),
                         market_code                  : this.getCheckObject(element,"market_code",""),   

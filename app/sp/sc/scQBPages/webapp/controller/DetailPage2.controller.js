@@ -386,6 +386,11 @@ sap.ui.define([
                 }
             },
             _CallHeaderView: function () {
+
+                // // 초기화
+                this.getView().setModel( new JSONModel({ Suppliers: [] }), "NegoItemPrices");
+                this.getView().byId("panel_SuppliersContent").setExpanded(false);
+                
                 var that = this;
                 var oView = this.getView();
                 // NegoHeaders(tenant_id='L2100',nego_header_id=119)?&$format=json&$select=*&$expand=Items($expand=Suppliers)
@@ -398,7 +403,7 @@ sap.ui.define([
                 
                 // var url = this.srvUrl+"NegoHeadersView?&$expand=Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department),ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map&$filter=nego_document_number eq '" + this._docNum + "'";
                 var headerExpandString = "ItemsNonPrice,nego_progress_status,award_progress_status,nego_type,outcome,buyer_employee,buyer_department,negotiation_style,award_type,award_method,award_method_map,contact_point";
-                var itemsExpandString = "Items($expand=Suppliers,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department)";
+                var itemsExpandString = "Items($expand=Suppliers,operation_org,material,specification_fk,incoterms,payment_terms,market,purchase_requisition,approval,budget_department,requestor_employee,request_department)";
                 var url = this.srvUrl+"NegoHeadersView?&$expand="+headerExpandString + "," + itemsExpandString+"&$filter=nego_document_number eq '" + this._docNum + "'";
 
                 console.log( "0000 >>> " + url);
@@ -520,123 +525,92 @@ sap.ui.define([
             },
             onPageSaveButtonPress: function() {
 
-                var oModel = this.getView().getModel("NegoHeaders").getData();
-                
-                MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
-                    title : this.getModel("I18N").getText("/SAVE"),
-                    initialFocus : sap.m.MessageBox.Action.CANCEL,
-                    onClose : function(sButton) {
-                        if (sButton === MessageBox.Action.OK) {
-                            var titleLengh = this.getView().byId("inputTitle").getMaxLength() == 0 ? 300 : this.getView().byId("inputTitle").getMaxLength();
-                            if( !oModel.hasOwnProperty("nego_document_title") || oModel.nego_document_title === undefined 
-                                    || oModel.nego_document_title.length <= 0 || oModel.nego_document_title.length > titleLengh) {
+                if(this._validator()){
+                    var oModel = this.getView().getModel("NegoHeaders").getData();
+                    
+                    MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+                        title : this.getModel("I18N").getText("/SAVE"),
+                        initialFocus : sap.m.MessageBox.Action.CANCEL,
+                        onClose : function(sButton) {
+                            if (sButton === MessageBox.Action.OK) {
+                                var titleLengh = this.getView().byId("inputTitle").getMaxLength() == 0 ? 300 : this.getView().byId("inputTitle").getMaxLength();
+                                if( !oModel.hasOwnProperty("nego_document_title") || oModel.nego_document_title === undefined 
+                                        || oModel.nego_document_title.length <= 0 || oModel.nego_document_title.length > titleLengh) {
 
-                                var stateText = this.getModel("I18N").getText("/ECM01002");
-                                if( oModel.nego_document_title != undefined ) {
-                                    stateText = oModel.nego_document_title.length <= 0 ? this.getModel("I18N").getText("/ECM01002") : this.getView().byId("inputTitle").getPlaceholder();
+                                    var stateText = this.getModel("I18N").getText("/ECM01002");
+                                    if( oModel.nego_document_title != undefined ) {
+                                        stateText = oModel.nego_document_title.length <= 0 ? this.getModel("I18N").getText("/ECM01002") : this.getView().byId("inputTitle").getPlaceholder();
+                                    }
+                                    this.getView().byId("inputTitle").setValueState("Error");
+                                    this.getView().byId("inputTitle").setValueStateText(stateText);//
+
+                                    this.getView().byId("inputTitle").focus();
+                                    
+                                }else if( this._SupplierTotalScore != 100 && oModel.award_method_code =="MP" ){
+                                    this.getView().byId("inputAwardSup1").setValueState("Error");
+                                    this.getView().byId("inputAwardSup1").setValueStateText("order rate의 총 합은 100%이여야만 합니다.");//
+
+                                    this.getView().byId("inputAwardSup1").focus();
+                                
+                                
+                                }  else {
+
+                                    this._CallUpsertProc("010");
+                                    
                                 }
-                                this.getView().byId("inputTitle").setValueState("Error");
-                                this.getView().byId("inputTitle").setValueStateText(stateText);//
-
-                                this.getView().byId("inputTitle").focus();
-                                
-                            }else if( this._SupplierTotalScore != 100 && oModel.award_method_code =="MP" ){
-                                this.getView().byId("inputAwardSup1").setValueState("Error");
-                                this.getView().byId("inputAwardSup1").setValueStateText("order rate의 총 합은 100%이여야만 합니다.");//
-
-                                this.getView().byId("inputAwardSup1").focus();
-                            
-                            
-                            }  else {
-
-                                this._CallUpsertProc("010");
-                                
                             }
-                        }
-                    }.bind(this)
-                });
-                
+                        }.bind(this)
+                    });
+
+                }else {
+                    console.log("checkRequire");
+                    return; 
+
+                }
             },
 
-            // setHeaderData: function () {
-            //     var oTemp = this.getView().getModel("NegoHeaders").getData();
+            _validator : function(){
+                var oModel = this.getModel("NegoHeaders");
+                var oList = oModel.getData().Items;
+                var sEmptyMsg = this.getModel("I18N").getText("/ECM01002");
+                var bReturn = true;
+        
+                oList.forEach( function (oRow) {
+                    
+                    var oValueStates = {};
+                    //필수값 체크
+                    var sOperation_Org_Code = (oRow.operation_org_code === undefined || oRow.operation_org_code === null) ? "" : oRow.operation_org_code;
+                 //   var sLine_Type_Code = (oRow.line_type_code === undefined || oRow.line_type_code === null) ? "" : oRow.line_type_code;
+                    var sMaterial_Desc = (oRow.material_desc === undefined || oRow.material_desc === null) ? "" : oRow.material_desc;
+                    var sRequest_Quantity = (oRow.request_quantity === undefined || oRow.request_quantity === null) ? "" : oRow.request_quantity.toString();
+                    var sUom_Code = (oRow.uom_code === undefined || oRow.uom_code === null) ? "" : oRow.uom_code;
 
-            //     var headerData = {
-            //         'tenant_id'                     : oTemp.tenant_id,
-            //         'nego_header_id'                : String(oTemp.nego_header_id),
-            //         'reference_nego_header_id'      : String(oTemp.reference_nego_header_id),
-            //         'previous_nego_header_id'       : String(oTemp.previous_nego_header_id),
-            //         'operation_unit_code'           : oTemp.operation_unit_code,
-            //         'reference_nego_document_number': oTemp.reference_nego_header_id,
-            //         'nego_document_round'           : oTemp.nego_document_round,
-            //         'nego_document_number'          : oTemp.nego_document_number,
-            //         'nego_document_title'           : oTemp.nego_document_title,
-            //         'nego_document_desc'            : oTemp.nego_document_desc,
-            //         'nego_progress_status_code'     : oTemp.nego_progress_status_code,
-            //         'award_progress_status_code'    : oTemp.award_progress_status_code,
-            //         'reply_times'                   : oTemp.reply_times,
-            //         'supplier_count'                : oTemp.supplier_count,
-            //         'nego_type_code'                : oTemp.nego_type_code,
-            //         'negotiation_output_class_code' : oTemp.negotiation_output_class_code,
-            //         'buyer_empno'                   : oTemp.buyer_empno,
-            //         'buyer_department_code'         : oTemp.buyer_department_code,
-            //         'immediate_apply_flag'          : oTemp.immediate_apply_flag,
-            //         'open_date'                     : new Date(oView.byId("searchOpenDatePicker").getDateValue()),
-            //         'closing_date'                  : new Date(oView.byId("searchEndDatePicker").getDateValue()),
-            //         'auto_rfq'                      : oTemp.auto_rfq,
-            //         'itesm_count'                   : oTemp.itesm_count,
-            //         'negotiation_style_code'        : oTemp.negotiation_style_code,
-            //         'close_date_ext_enabled_hours'  : oTemp.close_date_ext_enabled_hours,
-            //         'close_date_ext_enabled_count'  : oTemp.close_date_ext_enabled_count,
-            //         'actual_extension_count'        : oTemp.actual_extension_count,
-            //         'remaining_hours'               : oTemp.remaining_hours,
-            //         'note_content'                  : oTemp.note_content,
-            //         'award_type_code'               : oTemp.award_type_code,
-            //         'target_amount_config_flag'     : oTemp.target_amount_config_flag,
-            //         'target_amount'                 : oTemp.target_amount,
-            //         'supplier_participation_flag'   : oTemp.supplier_participation_flag,
-            //         'partial_allow_flag'            : oTemp.partial_allow_flag,
-            //         'bidding_result_open_status_code': oTemp.bidding_result_open_status_code,
-            //         // 'local_create_dtm'           : "",
-            //         'local_update_dtm'              : new Date(),
-            //         // 'create_user_id'             : "",
-            //         'update_user_id'                : oTemp.update_user_id,
-            //         // 'system_create_dtm' : "",
-            //         'system_update_dtm'             : new Date()
-            //     };
+                    if(sOperation_Org_Code === "")oValueStates.operation_org_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                  //  if(sLine_Type_Code === "")oValueStates.line_type_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                    if(sMaterial_Desc === "")oValueStates.material_desc = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                    if(sRequest_Quantity === "")oValueStates.request_quantity = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                    if(sUom_Code === "")oValueStates.uom_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                                        
 
-            //     return headerData;
+                    if('operation_org_code' in oValueStates || 'material_desc' in oValueStates || 'request_quantity' in oValueStates || 'uom_code' in oValueStates ){
+                        bReturn = false;
+                    }
 
-            // },
+                    oRow.__metadata = {_valueStates : oValueStates};
+                });
+
+                if(!bReturn){
+                    oModel.setProperty("/Items", oModel.getProperty("/Items"));
+                }
+
+                return bReturn;              
+            },
+
             //카테고리 코드 중복 체크
             usedCheckTextChange: function(e) {
                 
             },
 
-            onPageNavBackButtonPress: function () {
-            //     var items = this.getView().byId("midTable").getItems();
-            //     for(var i=0; i<items.length; i++){
-            //         var item = items[i];
-            //         item.destroy();
-            //     }
-            //     var oScr = this.getView().getModel("sm");
-            //     oScr.setData({"screen":"M"});
-            //     // this.getOwnerComponent().getRouter().navTo("Master");
-            //     var oFCL = this.getView().getParent().getParent();
-            //     oFCL.setLayout();
-            //     this.getOwnerComponent().getRouter().navTo("Master", 
-            //         {
-            //             lflag: " ", 
-            //             category_code: " ",
-            //             use_flag: false
-            //         });
-            //     // this.oRouter.navTo("RouteApp");
-                
-            //     // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
-            //     // this.getRouter().navTo("mainPage", {layout: sNextLayout});
-            // }
-
-            },
             onSupplierResult: function(pToken)
             {  
                 var oHeaders = this.getView().getModel("NegoHeaders").getData();
@@ -975,6 +949,8 @@ sap.ui.define([
                     "company_code"          : "LGCKR",        // 임시로 지정
                     "nego_header_id"        : this.getCheckObject(oTemp,"nego_header_id",-1),
                     "nego_item_number"      : "TBD00" + itemNumberTemp,
+                    "operation_org"         : null,
+                    "operation_org_code"    : "",
                     "operation_unit_code"           : "",
                     "award_progress_status_code"    : "",
                     "line_type_code"                : "",
@@ -993,6 +969,8 @@ sap.ui.define([
                     "attch_code"                    : "",
                     "supplier_provide_info"         : "",
                     "incoterms_code"                : "",
+                    "payment_terms_code"            : "",
+                    "market_code"                   : "",
                     "excl_flag"                     : "",
                     "vendor_pool_code"              : "",
                     "request_quantity"              : "1",
@@ -1003,7 +981,7 @@ sap.ui.define([
                     "exrate_type_code"              : "",
                     "exrate_date"                   : "",
                     "bidding_start_net_price"       : "",
-                    "bidding_start_net_price_flag"  : false,
+                    "bidding_start_net_price_flag"  : "N",
                     "bidding_target_net_price"      : "",
                     "current_price"                 : "",
                     "note_content"                  : "",
@@ -1291,7 +1269,7 @@ sap.ui.define([
                                         objTemp.bidding_target_net_price = Number(cell.getValue());
                                     }
                                     if( cell.getId().indexOf("toggleBtnDisplay") != -1 ) { 
-                                        objTemp.bidding_start_net_price_flag = cell.getPressed() ? true : false ;
+                                        objTemp.bidding_start_net_price_flag = cell.getPressed() ? "Y" : "N" ;
                                     }
                                     if( cell.getId().indexOf("datePickerMaturitydate") != -1 ) { 
                                         objTemp.maturity_date = cell.getDateValue();
@@ -1332,6 +1310,10 @@ sap.ui.define([
                 MessageBox.confirm( "Sprint#3 에 적용됩니다." , {});
             },
 
+            onfocusoutMultiInput_org: function( e ) {
+                console.log(" onfocusoutMultiInput_org ");
+                console.log( e );
+            },
             onOperationOrgPress: function(e){
                 // 
                 // this._addSupplierType = "sigle";
@@ -1408,18 +1390,25 @@ sap.ui.define([
                 
                 var oSelectedItem = e.getParameter("selectedItem");
 
-                var resultTokens = {
-                    org_code: oSelectedItem.getProperty("key"),
-                    org_name: oSelectedItem.getProperty("text")
+                console.log( oSelectedItem );
+                if( oSelectedItem != null ) {
+
+                    var resultTokens = {
+                        org_code: oSelectedItem.getProperty("key"),
+                        org_name: oSelectedItem.getProperty("text")
+                    }
+                    this.setOrgCode( resultTokens );
                 }
-                this.setOrgCode( resultTokens );
 
             },
             /** Operation Org 변경시 항목 처리 */
             setOrgCode: function (resultTokens) {
                 var oItem = this.getView().getModel("NegoHeaders").getData().Items[this._oIndex];
-                oItem.operation_unit_code = resultTokens.org_code;
-                oItem.operation_unit_name = resultTokens.org_name;
+                oItem.operation_org_code = resultTokens.org_code;
+                if( oItem.operation_org === null ){
+                    oItem.operation_org = {};
+                }
+                oItem.operation_org.operation_org_name = resultTokens.org_name;
 
                 this.getView().getModel("NegoHeaders").refresh();
             },
@@ -1444,10 +1433,12 @@ sap.ui.define([
 
             },
             getNegoHeaderObject : function (progressCode){
-                var oModel = this.getView().getModel("NegoHeaders").getData();
+                var oView = this.getView();
+                var oModel = oView.getModel("NegoHeaders").getData();
                 console.log( ":<<< getNegoHeaderObject >>> " );
                 console.log( oModel ); //// nego_document_desc, note_content
                 var negoheader = {
+                    _row_state_                     : "",
                     tenant_id                       : oModel.tenant_id,
                     nego_header_id                  : this.getCheckObject(oModel,"nego_header_id",-1),
                     reference_nego_header_id        : this.getCheckObject(oModel,"reference_nego_header_id",0),
@@ -1473,13 +1464,13 @@ sap.ui.define([
                     closing_date                    : this.getCheckObject(oModel,"closing_date", new Date()),
                     auto_rfq                        : this.getCheckObject(oModel,"auto_rfq",""),
                     items_count                     : this.getCheckObject(oModel,"items_count",0),
-                    negotiation_style_code          : this.getCheckObject(oModel,"negotiation_style_code",""),
+                    negotiation_style_code          : this.getCheckObject(oModel,"negotiation_style_code",oView.byId("rbg1").getSelectedButton().getAggregation("customData")[0].getValue()),
                     close_date_ext_enabled_hours    : this.getCheckObject(oModel,"close_date_ext_enabled_hours",0),
                     close_date_ext_enabled_count    : this.getCheckObject(oModel,"close_date_ext_enabled_count",0),
                     actual_extension_count          : this.getCheckObject(oModel,"actual_extension_count",0),
                     remaining_hours                 : this.getCheckObject(oModel,"remaining_hours",0),
                     note_content                    : this.getCheckObject(oModel,"note_content","encoding"),  // encoding
-                    award_type_code                 : this.getCheckObject(oModel,"award_type_code",""),
+                    award_type_code                 : this.getCheckObject(oModel,"award_type_code",oView.byId("selectAwardType").getSelectedKey()),
                     award_method_code               : this.getCheckObject(oModel,"award_method_code",""),
                     target_amount_config_flag       : this.getCheckObject(oModel,"target_amount_config_flag",""),
                     target_currency                 : this.getCheckObject(oModel,"target_currency",""),
@@ -1533,6 +1524,7 @@ sap.ui.define([
                     var createIdTemp = "";//(element._row_state_ === "C") ? "TBD00" +(index+1) : "";
 
                     var oItem = {
+                        _row_state_                  : this.getCheckObject(element,"_row_state_",""),
                         tenant_id                    : this.getCheckObject(element,"tenant_id",""),
                         company_code                 : this.getCheckObject(element,"company_code","LGCKR"),  //"LGCKR"
                         nego_header_id               : this.getCheckObject(element,"nego_header_id",-1),
@@ -1556,7 +1548,9 @@ sap.ui.define([
                         request_date                 : this.getCheckObject(element,"request_date",new Date()),
                         attch_code                   : this.getCheckObject(element,"attch_code",""),
                         supplier_provide_info        : this.getCheckObject(element,"supplier_provide_info",""),
-                        incoterms_code               : this.getCheckObject(element,"incoterms_code",""),
+                        incoterms_code               : this.getCheckObject(element,"incoterms_code",""),                        
+                        payment_terms_code           : this.getCheckObject(element,"payment_terms_code",""),
+                        market_code                  : this.getCheckObject(element,"market_code",""), 
                         excl_flag                    : this.getCheckObject(element,"excl_flag",""),
                         specific_supplier_count      : this.getCheckObject(element,"specific_supplier_count",0),
                         vendor_pool_code             : this.getCheckObject(element,"vendor_pool_code",""),
@@ -1568,7 +1562,7 @@ sap.ui.define([
                         exrate_type_code             : this.getCheckObject(element,"exrate_type_code",""),
                         exrate_date                  : this.getCheckObject(element,"exrate_date",new Date()),
                         bidding_start_net_price      : this.getCheckObject(element,"bidding_start_net_price",0),
-                        bidding_start_net_price_flag : this.getCheckObject(element,"bidding_start_net_price_flag", false),
+                        bidding_start_net_price_flag : this.getCheckObject(element,"bidding_start_net_price_flag", "N"),
                         bidding_target_net_price     : this.getCheckObject(element,"bidding_target_net_price",0),
                         current_price                : this.getCheckObject(element,"current_price",0),
                         note_content                 : this.getCheckObject(element,"note_content",""),
@@ -1593,6 +1587,7 @@ sap.ui.define([
                         // if( element2.hasOwnProperty("_row_state_") && element2._row_state_ === sFlag ) {
 
                             var oSupplierItem = {
+                                _row_state_                      : this.getCheckObject(element2,"_row_state_",""),
                                 tenant_id                        : this.getCheckObject(element2,"tenant_id",""),
                                 nego_header_id                   : this.getCheckObject(element2,"nego_header_id",-1),
                                 nego_item_number                 : oItem.nego_item_number,//this.getCheckObject(element2,"nego_item_number", createIdTemp ),
@@ -1634,6 +1629,7 @@ sap.ui.define([
                     var createIdTemp = (sFlag === "C") ? "TBD00" +(index+1) : "";
 
                     var oItem = {
+                        _row_state_                     : this.getCheckObject(element,"_row_state_",""),
                         tenant_id                       : this.getCheckObject(element,"tenant_id",""),
                         nego_header_id                  : this.getCheckObject(element,"nego_header_id", -1),
                         nonpr_item_number               : this.getCheckObject(element,"nego_header_id", createIdTemp),
@@ -1655,6 +1651,7 @@ sap.ui.define([
                         // if( element2.hasOwnProperty("_row_state_") && element2._row_state_ === sFlag ) {
 
                             var oSupplierItem = {
+                                _row_state_             : this.getCheckObject(element2,"_row_state_",""),
                                 tenant_id               : this.getCheckObject(element2,"tenant_id",""),
                                 nego_header_id          : this.getCheckObject(element2,"nego_header_id", -1),
                                 
@@ -1737,11 +1734,20 @@ sap.ui.define([
                         this._CallHeaderView();
                         // console.log('data:', data);
                     }.bind(this),
-                    error: function (e) {
+                   error: function (e) {
                         // sap.m.MessageToast.show(i18nModel.getText("/EPG00001"));
                         // v_returnModel = oView.getModel("returnModel").getData().data;
                         console.log('v_returnModel_e:', e);
-                    }
+                        MessageBox.confirm(this.getModel("I18N").getText("/EPG00003"), {
+                            title : this.getModel("I18N").getText("/CONFIRM"),
+                            initialFocus : sap.m.MessageBox.Action.CANCEL,
+                            onClose : function(sButton) {
+                                // if (sButton === MessageBox.Action.OK) {
+                                //     this.onNavBack();
+                                // }
+                            }.bind(this)
+                        });
+                    }.bind(this)
                 });
 
             },
@@ -1761,7 +1767,9 @@ sap.ui.define([
                             { "tenant_id": oModel.getProperty("/tenant_id"), "nego_header_id":  oModel.getProperty("/nego_header_id") }
                         ],
                         "negoitemprices" : [],
-                        "negosuppliers" : []
+                        "negosuppliers" : [],
+                        "negoitemnonprices" : [],
+                        "negoitemnonpricedtls": []
                     }
                 };
                 console.log(inputInfo);
@@ -1787,11 +1795,20 @@ sap.ui.define([
                         
 
                     }.bind(this),
-                    error: function (e) {
+                     error: function (e) {
                         // sap.m.MessageToast.show(i18nModel.getText("/EPG00001"));
                         // v_returnModel = oView.getModel("returnModel").getData().data;
                         console.log('v_returnModel_e:', e);
-                    }
+                        MessageBox.confirm(this.getModel("I18N").getText("/EPG00001"), {
+                            title : this.getModel("I18N").getText("/CONFIRM"),
+                            initialFocus : sap.m.MessageBox.Action.CANCEL,
+                            onClose : function(sButton) {
+                                // if (sButton === MessageBox.Action.OK) {
+                                //     this.onNavBack();
+                                // }
+                            }.bind(this)
+                        });
+                    }.bind(this)
                 });
 
             },

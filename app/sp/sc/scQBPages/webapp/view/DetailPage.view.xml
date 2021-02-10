@@ -88,7 +88,7 @@
                                                                 </VBox>
 
                                                                 <VBox class="sapUiNoMarginBottom">
-                                                                    <Label  text="Type"  />
+                                                                    <Label text="{I18N>/NEGO_TYPE_CODE}:"  />
                                                                     <Text  id="textType" text="{NegoHeaders>/nego_type/nego_type_name}" />
                                                                     
                                                                     <!-- nego type name 위한 temp성 콤보 -->
@@ -109,14 +109,14 @@
                                                                 </VBox>
 
                                                                 <VBox class="sapUiNoMarginBottom">
-                                                                    <Label  text="Outcome"  />
+                                                                    <Label text="{I18N>/OUTCOME_CODE}:"   />
                                                                     <Text  id="textOutcome" text="{NegoHeaders>/outcome/outcome_name}" />
                                                                 </VBox>
                                                             </form:content>
                                                         </form:SimpleForm>
                                                         
                                                         <VBox  class="sapUiMediumMarginTop">
-                                                            <Label  text="Title:" required="true" class="nameTitle"  />
+                                                            <Label text="{I18N>/NEGO_DOCUMENT_TITLE}:" required="true" class="nameTitle"  />
                                                             
                                                             <Input  id="inputTitle" width="100%" value="{NegoHeaders>/nego_document_title}" visible="{=${propInfo>/isEditMode}}"
                                                                 placeholder="최대 300자까지 입력 할 수 있습니다." maxLength="300"/>
@@ -124,7 +124,7 @@
                                                         </VBox>
                                                     
                                                         <VBox class="sapUiMediumMarginTop">
-                                                            <Label  text="Description:" class="nameTitle sapUiTinyMarginBottom" />
+                                                            <Label  text="{I18N>/NEGO_DOCUMENT_DESC}:" class="nameTitle sapUiTinyMarginBottom" />
                                                             <rte:RichTextEditor id="reDescription" editorType="TinyMCE4" width="100%" height="400px" customToolbar="true" 
                                                                 showGroupFont="true" showGroupLink="true" showGroupInsert="false" value="{NegoHeaders>/nego_document_desc}"
                                                                 editable="{=${propInfo>/isEditMode}}" 
@@ -133,8 +133,7 @@
                                                         </VBox>
 
                                                         <VBox  width="100%" height="100%" alignItems="Start" class="sapUiMediumMarginTop" >
-                                                    
-                                                            <Label  text="Bid Style:" class="nameTitle " />
+                                                            <Label  text="{I18N>/NW_QUATE_STYLE}:" class="nameTitle " />
                                                             <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="{=${NegoHeaders>/negotiation_style_code}==='Blind' ? 1 : 0 }" 
                                                                 visible="{=${propInfo>/isEditMode}}" 
                                                                 buttons="{
@@ -161,9 +160,9 @@
                                                         <HBox  width="100%"  class="sapUiMediumMarginTop">
                                                             <VBox width="50%">
                                                             
-                                                                <Label  text="Period:" width="100px" required="true" class="sapMLabelNoText"/> 
+                                                                <Label  text="{I18N>/NW_PERIOD}:" width="100px" required="true" class="sapMLabelNoText"/> 
                                                                 <HBox  height="100%" alignItems="Center" >
-                                                                    <CheckBox id="checkbox_Immediately" text="Immediately" selected="{=${NegoHeaders>/immediate_apply_flag}==='Y'}" editable="{=${propInfo>/isEditMode}}"
+                                                                    <CheckBox id="checkbox_Immediately" text="{I18N>/NW_IMMEDIATELY}" selected="{=${NegoHeaders>/immediate_apply_flag}==='Y'}" editable="{=${propInfo>/isEditMode}}"
                                                                         select="selectImmediately" /> 
                                                                     <ToolbarSpacer width="1rem"/> 
                                                                     <FlexBox>
@@ -214,7 +213,7 @@
                                                         </HBox>
 
                                                         <VBox  class="sapUiMediumMarginTop">
-                                                            <Label  text="Note To Supplier:" class="sapMLabelNoText sapUiTinyMarginBottom"/>
+                                                            <Label  text="{I18N>/NW_NOTE_TO_SUPPLIER}:" class="sapMLabelNoText sapUiTinyMarginBottom"/>
                                                             <rte:RichTextEditor id="reNoteToSupplier" editorType="TinyMCE4" width="100%" height="400px" customToolbar="true" 
                                                                 value="{NegoHeaders>/note_content}" editable="{=${propInfo>/isEditMode}}" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
                                                             <!-- <FormattedText id="formTextNoteToSupplier" htmlText="{NegoHeaders>/note_content}"  visible="{=!${propInfo>/isEditMode}}"/> -->
@@ -251,7 +250,7 @@
                                                                 width="auto">
                                                                 <headerToolbar>
                                                                     <OverflowToolbar>
-                                                                        <Title text="Attachments (0)" level="H2"/>
+                                                                        <Title text="{I18N>/Attachments} (0)" level="H2"/>
                                                                         <ToolbarSpacer/>
                                                                         
                                                                         <Button text="Load Attached file From Requisition" type="Transparent" press=".createConfirmBox" visible="{=${propInfo>/isEditMode}}" />
@@ -321,7 +320,7 @@
                     <!-- Header End -->
                     <!-- Control Start -->
                     <uxap:sections>
-                        <uxap:ObjectPageSection titleUppercase="false" title="Control" visible="true">
+                        <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/NW_SECTION_TITLE_CONTROL}" visible="true">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
                                     <Panel id="panel_Control" expandable="true" expanded="true" headerText="Control Content">
@@ -378,10 +377,10 @@
                     <!-- Control End -->
                     <!-- Non Price Start visible="{=${propInfo>/isNPMode}}"-->
                     <uxap:sections >
-                        <uxap:ObjectPageSection id="npSection" titleUppercase="false" title="Non Price" visible="{=${propInfo>/isNPMode}}">
+                        <uxap:ObjectPageSection id="npSection" titleUppercase="false" title="{I18N>/NW_SECTION_TITLE_NONPRICE}" visible="{=${propInfo>/isNPMode}}">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
-                                    <Panel id="panel_NonPrice" expandable="true" expanded="true" headerText="Non Price Content">
+                                    <Panel id="panel_NonPrice" expandable="true" expanded="true" headerText="{I18N>/NW_SECTION_TITLE_NONPRICE} {I18N>/NW_CONTENT}">
                                         <!-- rows="{viewModel>/NPHeader}" -->
                                         <t:Table id="tableNonPrice"
                                             minAutoRowCount="2"
@@ -462,10 +461,10 @@
                     <!-- Non Price End -->
                     <!-- Line Start -->
                     <uxap:sections>
-                        <uxap:ObjectPageSection titleUppercase="false" title="Lines">
+                        <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/NW_SECTION_TITLE_LINES}">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
-                                    <Panel id="panel_Line" expandable="true" expanded="true" headerText="Line Content">
+                                    <Panel id="panel_Line" expandable="true" expanded="true" headerText="{I18N>/NW_SECTION_TITLE_LINES} {I18N>/NW_CONTENT}">
                                         <VBox>
                                             <smartTable:SmartTable id="sTable1" tableType="Table"
                                                 useExportToExcel="false" beforeExport="onBeforeExport" 
@@ -475,9 +474,10 @@
                                                 tableBindingPath="NegoHeaders>/Items"
                                                 beforeRebindTable="beforeRebindTable"
                                                 ignoreFromPersonalisation="_row_state_,Suppliers"
-                                                requestAtLeastFields="pr_number,pr_approve_number,line_type_code,material_code,material_desc,specification,bpa_price,detail_net_price,recommend_info,group_id,vendor_pool_code,specific_supplier_count,request_quantity,uom_code,maturity_date,currency_code,response_currency_code,exrate_type_code,exrate_date,bidding_start_net_price,bidding_start_net_price,bidding_target_net_price,current_price"
-
-                                                initiallyVisibleFields="pr_number,pr_approve_number,line_type_code,material_code,material_desc,specification,bpa_price,detail_net_price,recommend_info,group_id,vendor_pool_code,specific_supplier_count,request_quantity,uom_code,maturity_date,currency_code,response_currency_code,exrate_type_code,exrate_date,bidding_start_net_price,bidding_start_net_price,bidding_target_net_price,current_price"
+                                                requestAtLeastFields="pr_number,pr_approve_number,line_type_code,material_code,material_desc,specification,bpa_price,detail_net_price,recommend_info,group_id,vendor_pool_code,specific_supplier_count,request_quantity,uom_code,maturity_date,currency_code,response_currency_code
+                                                ,exrate_type_code,exrate_date,bidding_start_net_price,bidding_start_net_price,bidding_target_net_price,current_price"
+                                                initiallyVisibleFields="pr_number,pr_approve_number,line_type_code,material_code,material_desc,specification,bpa_price,detail_net_price,recommend_info,group_id
+                                                ,vendor_pool_code,specific_supplier_count,request_quantity,uom_code,maturity_date,currency_code,response_currency_code,exrate_type_code,exrate_date,bidding_start_net_price,bidding_start_net_price,bidding_target_net_price,current_price"
                                                 class="sapUiSmallMarginBottom"
                                                 >
                                                 <!-- <smartTable:layoutData>
@@ -993,7 +993,7 @@
                                             </smartTable:SmartTable>
 
 
-                                            <Panel id="panel_SuppliersContent" width="100%" expandable="true" expanded="false" headerText="Suppliers">
+                                            <Panel id="panel_SuppliersContent" width="100%" expandable="true" expanded="false" headerText="{I18N>/SUPPLIERS_TITLE}">
                                                 <form:SimpleForm editable="true"  layout="ColumnLayout"
                                                     columnsM="2" width="100%" 
                                                     columnsL="3"
@@ -1008,7 +1008,7 @@
                                                     <Text   text="{NegoItemPrices>/vendor_pool_code}"/>
                                                 </form:SimpleForm>
                                                 
-                                                <Panel id="panel_Evaluation" expandable="true" expanded="true" headerText="Evaluation Supplier">
+                                                <Panel id="panel_Evaluation" expandable="true" expanded="true" headerText="{I18N>/NW_SECTION_TITLE_SUPPLIER_01}">
                                                     <Table 
                                                         sticky="HeaderToolbar,ColumnHeaders" 
                                                         inset="false" 
@@ -1069,7 +1069,7 @@
                                                         </items>
                                                     </Table>
                                                 </Panel>
-                                                <Panel id="panel_Potential" expandable="true" expanded="true" headerText="Potential Supplier">
+                                                <Panel id="panel_Potential" expandable="true" expanded="true" headerText="{I18N>/NW_SECTION_TITLE_SUPPLIER_02}">
                                                     <Table 
                                                         sticky="HeaderToolbar,ColumnHeaders" 
                                                         inset="false" 
@@ -1110,7 +1110,7 @@
                                                         </items>
                                                     </Table>
                                                 </Panel>
-                                                <Panel id="panel_Specific" expandable="true" expanded="true" headerText="Specific Supplier">
+                                                <Panel id="panel_Specific" expandable="true" expanded="true" headerText="{I18N>/NW_SECTION_TITLE_SUPPLIER_03}">
                                                     <Table 
                                                         id="table_Specific"
                                                         sticky="HeaderToolbar,ColumnHeaders" 
