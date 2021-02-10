@@ -286,6 +286,7 @@
                     <table:Column id="rrMgtRequestReceiptDateColumn" width="13em" hAlign="Center">
                         <Label text="Request/Receipt Date" wrapping="true"/>
                         <table:template>
+                            <!-- <DatePicker value="{list>request_receipt_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/> -->
                             <Text text="{path:'list>request_receipt_date',formatter:'.dateFormatter.toDateString'}"/>
                         </table:template>
                     </table:Column>

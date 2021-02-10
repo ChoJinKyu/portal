@@ -60,6 +60,9 @@ sap.ui.define([
             var oViewModel,
                 oResourceBundle = this.getResourceBundle();
             
+            /** Date */
+            var today = new Date();
+
             console.log(" session >>> " , this.getSessionUserInfo().TENANT_ID);
             // Model used to manipulate control states
             oViewModel = new JSONModel({
@@ -80,6 +83,11 @@ sap.ui.define([
             this.setModel(new ManagedListModel(), "list");
             this.setModel(new ManagedListModel(), "plant");
             this.setModel(new ManagedModel(), "searchCon");
+
+            this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
+            this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            this.getView().byId("searchRequestDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
+            this.getView().byId("searchRequestDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
 
             this._oTPC = new TablePersoController({
                 customDataKey: "remodelRepairMgtList",
@@ -220,6 +228,7 @@ sap.ui.define([
 		 * @private
 		 */
         _applySearch: function (aTableSearchState) {
+            console.log(aTableSearchState);
             var oView = this.getView(),
                 oModel = this.getModel("list");
             oView.setBusy(true);
@@ -239,7 +248,11 @@ sap.ui.define([
             var search = this.getModel("searchCon");
 
             console.log("search>>>> " , search);
-
+            var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
+            var sDateFrom = this.getView().byId("searchRequestDate" + sSurffix).getDateValue();
+            var sDateTo = this.getView().byId("searchRequestDate" + sSurffix).getSecondDateValue();
+            sDateFrom
+            sDateFrom
             var aTableSearchState = [];
             var companyFilters = [];
             var plantFilters = [];
@@ -268,6 +281,29 @@ sap.ui.define([
                     })
                 );
             };
+
+            if (sDateFrom || sDateFrom) {
+                var _tempFilters = [];
+
+                _tempFilters.push(
+                    new Filter({
+                        path: "repair_request_date",
+                        operator: FilterOperator.BT,
+                        value1: this.getFormatDate(sDateFrom),
+                        value2: this.getFormatDate(sDateTo)
+                    })
+                );
+
+                _tempFilters.push(new Filter("repair_request_date", FilterOperator.EQ, ''));
+                _tempFilters.push(new Filter("repair_request_date", FilterOperator.EQ, null));
+
+                aTableSearchState.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
+            }
 
             if(search.getProperty("/repair_progress_status_code") != undefined 
                 && search.getProperty("/repair_progress_status_code") != null && search.getProperty("/repair_progress_status_code") != ""){
@@ -302,6 +338,15 @@ sap.ui.define([
             console.log("aTableSearchState>>>> " , aTableSearchState);
             
             return aTableSearchState;
+        },
+
+        getFormatDate: function (date) {
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
         },
 
          /**
