@@ -882,11 +882,11 @@ sap.ui.define([
                                 msg += "\r\n - " + (idx+1) + "번째 열의 " + sI18NText; 
                                 bReturn = false;
                             }else if(key === "pr_quantity" || key === "estimated_price" || key === "price_unit"){
-                                // var checkVal = Number.parseFloat(itemDtl[key]).toFixed(0);
-                                // if(checkVal <= 0){
-                                //     msg += "\r\n - " + (idx+1) + "번째 열의 " + sI18NText " (0 보다 큰값 입력)"; 
-                                //     bReturn = false;
-                                // }
+                                var checkVal = Number.parseFloat(itemDtl[key]).toFixed(0);
+                                if(checkVal <= 0){
+                                    msg += "\r\n - " + (idx+1) + "번째 열의 " + sI18NText + " (0 보다 큰 값 입력)"; 
+                                    bReturn = false;
+                                }
                             }
                         }
                     }
