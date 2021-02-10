@@ -9,7 +9,7 @@ reference_nego_document_number    INTEGER                    ,  --#07
 nego_document_round               INTEGER                    ,  --#08
 nego_document_number              NVARCHAR(50)               ,  --#09
 nego_document_title               NVARCHAR(300)              ,  --#10
-nego_document_desc                NVARCHAR(4000)             ,  --#11
+nego_document_desc                BLOB                       ,  --#11
 nego_progress_status_code         NVARCHAR(30)               ,  --#12
 award_progress_status_code        NVARCHAR(25)               ,  --#13
 reply_times                       INTEGER                    ,  --#14

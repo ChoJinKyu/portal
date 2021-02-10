@@ -15,6 +15,12 @@ LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER 
 AS
 BEGIN
+/**************************************************************************************************/
+/* Unit Test
+DO BEGIN 
+CREATE LOCAL TEMPORARY COLUMN TABLE #I_TABLE_NEGOHEADERS AS ( SELECT * FROM SP_SC_NEGO_HEADERS WHERE NEGO_HEADER_ID = 245)
+END;
+*/
 	DECLARE v_int INT = 0;
     DECLARE v_tenant_id NVARCHAR(10);
     DECLARE v_nego_header_id BIGINT;
@@ -46,9 +52,44 @@ BEGIN
 
     IF RECORD_COUNT(:I_TABLE_NEGOHEADERS) = 0 AND RECORD_COUNT(:I_TABLE_NEGOHEADERS) = 0 AND RECORD_COUNT(:I_TABLE_NEGOHEADERS) = 0 
         AND RECORD_COUNT(:I_TABLE_NEGOITEMNONPRICES) = 0 AND RECORD_COUNT(:I_TABLE_NEGOITEMNONPRICEDTLS) = 0 THEN
-        SIGNAL error_occurred SET MESSAGE_TEXT = 'No input value!';
+        SIGNAL error_occurred SET MESSAGE_TEXT = 'No input value for (upsert|delete)!';
     END IF;
-	
+
+    /**************************************************************************************************/
+    /** Deep Delete - Nego */
+    VT_DEL_NEGOHEADERS           =  SELECT TENANT_ID, NEGO_HEADER_ID                                           FROM :I_TABLE_NEGOHEADERS          WHERE _ROW_STATE_ = 'D';
+    VT_DEL_NEGOITEMPRICES        =  SELECT TENANT_ID, NEGO_HEADER_ID, NEGO_ITEM_NUMBER                         FROM :I_TABLE_NEGOITEMPRICES       WHERE _ROW_STATE_ = 'D';
+    VT_DEL_NEGOSUPPLIERS         =  SELECT TENANT_ID, NEGO_HEADER_ID, NEGO_ITEM_NUMBER, ITEM_SUPPLIER_SEQUENCE FROM :I_TABLE_NEGOSUPPLIERS        WHERE _ROW_STATE_ = 'D';
+    VT_DEL_NEGOITEMNONPRICES     =  SELECT TENANT_ID, NEGO_HEADER_ID, NONPR_ITEM_NUMBER                        FROM :I_TABLE_NEGOITEMNONPRICES    WHERE _ROW_STATE_ = 'D';
+    VT_DEL_NEGOITEMNONPRICEDTLS  =  SELECT TENANT_ID, NEGO_HEADER_ID, NONPR_ITEM_NUMBER, NONPR_DTL_ITEM_NUMBER FROM :I_TABLE_NEGOITEMNONPRICEDTLS WHERE _ROW_STATE_ = 'D';
+
+    /*** If Exist Records for Delete */
+    SELECT SUM(CNT) INTO V_INT FROM 
+      ( SELECT COUNT(*) CNT FROM :VT_DEL_NEGOHEADERS          UNION ALL
+        SELECT COUNT(*) CNT FROM :VT_DEL_NEGOITEMPRICES       UNION ALL
+        SELECT COUNT(*) CNT FROM :VT_DEL_NEGOSUPPLIERS        UNION ALL
+        SELECT COUNT(*) CNT FROM :VT_DEL_NEGOITEMNONPRICES    UNION ALL
+        SELECT COUNT(*) CNT FROM :VT_DEL_NEGOITEMNONPRICEDTLS           );
+
+    IF RECORD_COUNT(:VT_DEL_NEGOHEADERS) != 0 OR RECORD_COUNT(:VT_DEL_NEGOITEMPRICES) != 0 OR RECORD_COUNT(:VT_DEL_NEGOSUPPLIERS) != 0 
+        OR RECORD_COUNT(:VT_DEL_NEGOITEMNONPRICES) != 0 OR RECORD_COUNT(:VT_DEL_NEGOITEMNONPRICEDTLS) != 0 THEN
+        BEGIN 
+	        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	        BEGIN
+	            O_TABLE_MESSAGE = SELECT '' AS TENANT_ID, 0 AS NEGO_HEADER_ID, '' AS NEGO_DOCUMENT_NUMBER, ::SQL_ERROR_CODE AS CODE, ::SQL_ERROR_MESSAGE AS MESSAGE FROM DUMMY;
+	        END;
+	        CALL SP_SC_NEGO_HEADERS_DEEPDELETE(:VT_DEL_NEGOHEADERS,:VT_DEL_NEGOITEMPRICES,:VT_DEL_NEGOSUPPLIERS,:VT_DEL_NEGOITEMNONPRICES,:VT_DEL_NEGOITEMNONPRICEDTLS,:O_TABLE_MESSAGE);
+        END;
+    END IF;
+
+    /**************************************************************************************************/
+    /** Deep Upsert - Nego */
+    I_TABLE_NEGOHEADERS           =  SELECT * FROM :I_TABLE_NEGOHEADERS          WHERE _ROW_STATE_ != 'D';
+    I_TABLE_NEGOITEMPRICES        =  SELECT * FROM :I_TABLE_NEGOITEMPRICES       WHERE _ROW_STATE_ != 'D';
+    I_TABLE_NEGOSUPPLIERS         =  SELECT * FROM :I_TABLE_NEGOSUPPLIERS        WHERE _ROW_STATE_ != 'D';
+    I_TABLE_NEGOITEMNONPRICES     =  SELECT * FROM :I_TABLE_NEGOITEMNONPRICES    WHERE _ROW_STATE_ != 'D';
+    I_TABLE_NEGOITEMNONPRICEDTLS  =  SELECT * FROM :I_TABLE_NEGOITEMNONPRICEDTLS WHERE _ROW_STATE_ != 'D';
+
 	IF RECORD_COUNT(:I_TABLE_NEGOHEADERS) = 0 THEN 
 		vt_nego_headers_tmp = 
 		SELECT tenant_id, nego_header_id, reference_nego_header_id, previous_nego_header_id, operation_org_code, operation_unit_code, reference_nego_document_number, nego_document_round, nego_document_number, nego_document_title, nego_document_desc, nego_progress_status_code, award_progress_status_code, reply_times, supplier_count, nego_type_code, outcome_code, negotiation_output_class_code, buyer_empno, buyer_department_code, immediate_apply_flag, open_date, closing_date, auto_rfq, items_count, negotiation_style_code, close_date_ext_enabled_hours, close_date_ext_enabled_count, actual_extension_count, remaining_hours, note_content, award_type_code, award_method_code, target_amount_config_flag, target_currency, target_amount, supplier_participation_flag, partial_allow_flag, bidding_result_open_status_code, max_round_count, auto_round, auto_round_terms, previous_round, number_of_award_supplier, order_rate_01, order_rate_02, order_rate_03, order_rate_04, order_rate_05, bid_conference, bid_conference_date, bid_conference_place, contact_point_empno, phone_no FROM SP_SC_NEGO_HEADERS MAIN
@@ -575,5 +616,7 @@ BEGIN
     END;
 
     -- # ERROR TEST # SELECT 1/:v_int FROM DUMMY;
-    O_TABLE_MESSAGE = SELECT :v_tenant_id AS TENANT_ID, :v_nego_header_id AS NEGO_HEADER_ID, :v_nego_document_number AS NEGO_DOCUMENT_NUMBER, CAST(0 AS INTEGER) AS CODE, 'Upsert Successed' AS MESSAGE FROM DUMMY;
+    O_TABLE_MESSAGE = 
+        SELECT * FROM :O_TABLE_MESSAGE UNION ALL
+        SELECT :v_tenant_id AS TENANT_ID, :v_nego_header_id AS NEGO_HEADER_ID, :v_nego_document_number AS NEGO_DOCUMENT_NUMBER, CAST(0 AS INTEGER) AS CODE, 'Upsert Successed' AS MESSAGE FROM DUMMY;
 END;

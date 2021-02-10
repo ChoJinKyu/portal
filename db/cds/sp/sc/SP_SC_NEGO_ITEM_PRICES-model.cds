@@ -149,8 +149,8 @@ entity Sc_Nego_Item_Prices {
         specification_fk             : Association to Sc_Spec_Code_View
                                            on specification_fk.tenant_id = $self.tenant_id
                                            and specification_fk.specification_code = $self.specification;
-        bpa_price                    : Decimal(28, 2)                             @title : 'BPA Price'  @description : 'UI:BPA Price (금액)';
-        detail_net_price             : Decimal(28, 2)                             @title : '상세단가'  @description : 'UI:상세 단가 (금액)';
+        bpa_price                    : PriceAmountT                             @title : 'BPA Price'  @description : 'UI:BPA Price (금액)';
+        detail_net_price             : PriceAmountT                             @title : '상세단가'  @description : 'UI:상세 단가 (금액)';
         recommend_info               : String(200)                                 @title : '추천정보'  @description : 'UI:추천정보';
         group_id                     : String(30)                                 @title : 'Group Id'  @description : 'UI:Group Id';
         // sparts_supply_type           : String(30)                                 @title : 'S/Parts Supply Type-폐기예정'  @description  : 'UI:S/Parts Supply Type-폐기예정';
@@ -184,10 +184,10 @@ entity Sc_Nego_Item_Prices {
         exrate_type_code             : String(15)                                 @title : '환율유형코드'  @description : 'UI:Exchange Rate Type';
         exrate_date                  : DateTime                                   @title : '환율일자'  @description : 'UI:Exchange Rate Date';
         //    exrate : String(15)   @title: '환율' ;
-        bidding_start_net_price      : Decimal(28,2)                              @title : '입찰시작단가'  @description : 'UI:Start Price(금액)';
+        bidding_start_net_price      : PriceAmountT                              @title : '입찰시작단가'  @description : 'UI:Start Price(금액)';
         bidding_start_net_price_flag : Boolean default false                      @title : '입찰시작단가디스플레이여부'  @description : 'UI:Display to Supplier';
-        bidding_target_net_price     : sp.AmountT                                 @title : '입찰목표단가'  @description : 'UI:Target Price(금액)';
-        current_price                : Decimal(28,2)                              @title : '현재가격'      @description : 'UI:Current Price(금액)';
+        bidding_target_net_price     : PriceAmountT                                 @title : '입찰목표단가'  @description : 'UI:Target Price(금액)';
+        current_price                : PriceAmountT                              @title : '현재가격'      @description : 'UI:Current Price(금액)';
         note_content                 : LargeBinary                                @title : '노트내용';
         //    award_quantity : Decimal(28,3)   @title: '낙찰수량' ;
         pr_number                    : Sc_Pu_Pr_Mst : pr_number                   @title : '구매요청번호'  @description : 'UI:Requisition No';
