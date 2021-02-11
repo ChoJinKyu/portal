@@ -18,6 +18,7 @@ entity Uc_Quotation_List_View {
         quotation_status_code      : String(30)             @title : '견적상태코드';
         quotation_status_name      : String(30)             @title : '견적상태';
         supplier_code              : String(30)             @title : '공급업체코드';
+        supplier_name              : String(30)             @title : '공급업체';
         buyer_empno                : String(30)             @title : '구매담당자사번';
         buyer_name                 : String(30)             @title : '구매담당자';
         const_person_empno         : String(30)             @title : '공사담당자사번';
