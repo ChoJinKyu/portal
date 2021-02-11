@@ -192,7 +192,7 @@
                                         <DatePicker
                                             value="{
                                                 path:'viewModel>delivery_request_date',
-                                                type:'sap.ui.model.odata.type.DateTime',
+                                                type:'sap.ui.model.odata.type.Date',
                                                 formatOptions: {
                                                     UTC: true,
                                                     pattern: 'yyyy-MM-dd'
@@ -380,7 +380,7 @@
             <!-- 첨부파일 시작 -->
 			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/ATTACHMENT}">
 				<uxap:subSections>
-                    <uxap:ObjectPageSubSection title="{I18N>/FOREXTERNAL}" level="H2">
+                    <uxap:ObjectPageSubSection title="{I18N>/FOREXTERNAL}">
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">                    
                             <UploadCollection
                                 id="UploadCollectionOuter"
@@ -401,7 +401,7 @@
                         </layout:VerticalLayout>
 					</uxap:ObjectPageSubSection>
 
-                    <uxap:ObjectPageSubSection title="{I18N>/FORINTERNAL}" level="H2">
+                    <uxap:ObjectPageSubSection title="{I18N>/FORINTERNAL}" >
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">                    
                             <UploadCollection
                                 id="UploadCollectionInner"
