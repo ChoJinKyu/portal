@@ -1,5 +1,5 @@
 {
-    "xsappname": "sppcap",
+    "xsappname": "sppcap_qa",
     "tenant-mode": "dedicated",
     "description": "Security profile of called application",
     "scopes": [
@@ -114,7 +114,7 @@
     "oauth2-configuration": {
         "token-validity": 43200,
         "redirect-uris": [
-            "https://biztech-partners-co---ltd-lg-common-dev-dev-po-sppcap-approuter.cfapps.jp10.hana.ondemand.com",
+            "https://biztech-partners-co---ltd-lg-common-dev-qa-po-sppcap-approuter.cfapps.jp10.hana.ondemand.com",
             "https://*.jp10.applicationstudio.cloud.sap/**"
         ]
     }
