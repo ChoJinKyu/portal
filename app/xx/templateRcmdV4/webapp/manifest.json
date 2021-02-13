@@ -13,7 +13,7 @@
     "resources": "resources.json",
     "dataSources": {
       "mainService": {
-        "uri": "srv-api/odata/v4/xx.TemplateV4Service/",
+        "uri": "srv-api/odata/v4/xx.TemplateService/",
         "type": "OData",
         "settings": {
           "odataVersion": "4.0"
