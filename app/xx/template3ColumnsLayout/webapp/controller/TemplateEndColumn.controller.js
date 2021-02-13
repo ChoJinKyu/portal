@@ -284,7 +284,11 @@ sap.ui.define([
                         // if(oData["employees"][1]){
                         //     delete oData["employees"][1]["department"];
                         //     delete oData["employees"][1]["__metadata"];
-                        // }
+						// }
+						delete oData["department"]["company_name"];
+						delete oData["department"]["parent_department_name"];
+						delete oData["department"]["parent_department_korean_name"];
+						delete oData["department"]["parent_department_english_name"];
                         var oXhr = ServiceProvider.getServiceByUrl("srv-api/odata/v4/xx.TemplateV4Service");
                         oXhr.ajax({
                             url: "srv-api/odata/v4/xx.TemplateV4Service/SetDepartmentAndEmployees",
