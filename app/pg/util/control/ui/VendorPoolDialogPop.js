@@ -76,7 +76,7 @@ sap.ui.define([
             
             var sVendorPoolCodePop = this.oVendorPoolCodePop.getValue();
             var aFilters = [
-                new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId)
+                new Filter("tenant_id", FilterOperator.EQ, "L2100")
             ];
 
             if (sVendorPoolCodePop) {

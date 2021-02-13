@@ -94,7 +94,7 @@
                                                 <Label text="{I18N>/EVALUATION_TYPE_CODE}"/>                                                                        
                                                 <Input   
                                                         width="100%" 
-                                                        placeholder="input evaluation_type_code"
+                                                        placeholder="input evaluation type code"
                                                        
                                                         value="{
                                                              path : 'TwoView>/evaluationType2/evaluation_type_code',
@@ -116,7 +116,7 @@
                                                 <Input
                                                         id="rate"
                                                         width="100%" 
-                                                        placeholder="input evaluation_rate"
+                                                        placeholder="input evaluation rate"
                                                         value="{
                                                              path : 'TwoView>/evaluationType2/evaluation_type_distrb_score_rate',
                                                              type : 'sap.ui.model.odata.type.Decimal',
@@ -137,7 +137,7 @@
                                                 <Label text="{I18N>/EVALUATION_TYPE_NAME}"/>
                                                 <Input  
                                                         width="100%" 
-                                                        placeholder="input evaluation_type_name"
+                                                        placeholder="input evaluation type name"
                                                         value="{
                                                              path : 'TwoView>/evaluationType2/evaluation_type_name',
                                                              type : 'sap.ui.model.odata.type.String',

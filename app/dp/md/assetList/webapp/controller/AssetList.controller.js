@@ -143,7 +143,7 @@ sap.ui.define([
                 success: function (oData) {     
                     oModel.addRecord({
                         code: ""
-                      ,  code_name: codeName   
+                      ,  code_name: "All"   
                       ,  group_code: "DP_MD_ASSET_STATUS"
                       ,  parent_code: null
                       ,  parent_group_code: null
@@ -168,13 +168,12 @@ sap.ui.define([
                 });
 
             var bindItemInfo = {
-                    path: 'dpMdUtil>/Divisions',
-                    filters: filter,
-                    template: new Item({
-                        key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
-                    })
-                };
-
+                path: '/Divisions',
+                filters: filter,
+                template: new Item({
+                key: "{org_code}", text: "[{org_code}] {org_name}"
+                })
+            };
 
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
             this.getView().byId("searchPlantE").bindItems(bindItemInfo);
@@ -215,16 +214,16 @@ sap.ui.define([
                 and: false
             });
 
-            var bindInfo = {
-                    path: 'dpMdUtil>/Divisions',
-                    filters: filter,
-                    template: new Item({
-                    key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
-                    })
-                };
+           var bindItemInfo = {
+                path: '/Divisions',
+                filters: filter,
+                template: new Item({
+                key: "{org_code}", text: "[{org_code}] {org_name}"
+                })
+            };
             
-            this.getView().byId("searchPlantS").bindItems(bindInfo);
-            this.getView().byId("searchPlantE").bindItems(bindInfo);
+            this.getView().byId("searchPlantS").bindItems(bindItemInfo);
+            this.getView().byId("searchPlantE").bindItems(bindItemInfo);
 
             // this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
             // this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
@@ -507,9 +506,9 @@ sap.ui.define([
             var sFileName = "ASSET LIST"
             //var oData = this.getModel("list").getProperty("/Message"); //binded Data
             var oData = oTable.getModel("list").getProperty("/Assets");
-            console.log(oData);
+
             ExcelUtil.fnExportExcel({
-                fileName: sFileName || "SpreadSheet",
+                fileName: "Asset List" || "SpreadSheet",
                 table: oTable,
                 data: oData
             });

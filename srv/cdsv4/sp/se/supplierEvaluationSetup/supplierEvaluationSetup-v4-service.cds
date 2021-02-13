@@ -27,7 +27,20 @@ service SupEvalSetupV4Service {
         where  tenant_id = :tenant_id
         and    org_code = :org_code
         and    instr(:op_unit_code, vp_operation_unit_code) > 0
+        and    level_no <= (select min(v1.l_no1) as l_no : String(10)
+                            from   (select v.tenant_id,
+                                           v.org_code,
+                                           v.vp_operation_unit_code,
+                                           max(v.level_no) as l_no1: String(10)
+                                    from   VpLevelView v
+                                    where  v.tenant_id = :tenant_id
+                                    and    v.org_code = :org_code
+                                    and    instr(:op_unit_code, v.vp_operation_unit_code) > 0
+                                    group by v.vp_operation_unit_code,
+                                             v.tenant_id,
+                                             v.org_code) as v1)
         ;
+        
     
     type operationUnitMst : {
         tenant_id: String(5); 

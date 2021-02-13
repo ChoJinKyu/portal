@@ -25,13 +25,17 @@
 
             <VBox alignContent="Center">
                 <Label text="* 협력사명" design="Bold" class="sapMLabelNoText" />
-                <Input value="{
+                <Input id="saveSupplierName" value="{master>/supplier_name}" 
+                        required="true" editable="true" width="100%"
+                        showValueHelp="true" valueHelpRequest=".openSupplierPopupInTable"/>
+                <Text id="saveSupplierCode" text="{master>/supplier_code}" visible="false" />     
+                <!-- <Input value="{
                         path: 'master>/supplier_code',
                         type: 'sap.ui.model.type.String',
                         constraints: {
                             maxLength: 50
                         }
-                    }" required="true" editable="true" width="100%"/>
+                    }" required="true" editable="true" width="100%"/> -->
                 <layoutData>
                     <layout:GridData span="XL6 L6 M6 S12" />
                 </layoutData>    

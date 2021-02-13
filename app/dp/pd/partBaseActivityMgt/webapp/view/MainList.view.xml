@@ -139,7 +139,7 @@
                 <t:Column id="activity_code">
                 <Label text="{I18N>/PROD_ACTIVITY_CODE}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>activity_code}" textAlign="Left" width="100%" wrapping="false"/>
+                    <Text text="{list>activity_code}" textAlign="Center" width="100%" wrapping="false"/>
                 </t:template>
                 </t:Column>
                 <t:Column id="activity_name">

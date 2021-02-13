@@ -10,10 +10,10 @@
     height="100%">
 
     <uxap:ObjectPageLayout id="page"
-		toggleHeaderOnTitleClick="true"
+		toggleHeaderOnTitleClick="false"
 		alwaysShowContentHeader = "true"
 		preserveHeaderStateOnScroll="false"
-		headerContentPinnable="true"
+		headerContentPinnable="false"
 		isChildPage="true"
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
@@ -28,10 +28,10 @@
                         <Title text="{I18N>/SPMD_CATEGORY_DETAIL}" wrapping="true" class="" />
                     </HBox>
                 </uxap:heading>
-				<uxap:snappedTitleOnMobile>
+				<!--<uxap:snappedTitleOnMobile>
 					<Title text="{I18N>/MASTER}" />
 				</uxap:snappedTitleOnMobile>
-				<!-- <uxap:expandedHeading>
+				 <uxap:expandedHeading>
 					<Title text="{I18N>/SPMD_CATEGORY_DETAIL}" wrapping="true"/>
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
@@ -49,7 +49,7 @@
 		</uxap:headerTitle>
 
 		<uxap:headerContent>
-			<FlexBox wrap="Wrap" visible="true">
+			<FlexBox wrap="Wrap" visible="false">
 			</FlexBox>
 		</uxap:headerContent>
 
@@ -96,8 +96,8 @@
 								<ColumnListItem type="Inactive">
 									<cells>
 										<Text text="{details>_row_state_}"/>
-										<Input value="{details>language_code}"/>
-										<Input value="{details>spmd_category_code_name}"/>
+										<Input id="tableLngCode" value="{details>language_code}" /> <!--editable="false" -->
+										<Input id="tableCtgrName" value="{details>spmd_category_code_name}"/>
 									</cells>
 								</ColumnListItem>
 							</items>

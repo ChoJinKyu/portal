@@ -200,13 +200,13 @@
                                 <Column 
                                     visible="{contModel>/editMode}"
                                     width="4em">
-                                    <Text text="{I18N>/STATUS}"/>
+                                    <Label text="{I18N>/STATUS}"/>
                                 </Column>
                                 <Column>
-                                    <Text text="{I18N>/LANGUAGE}" />
+                                    <Label text="{I18N>/LANGUAGE}" required="true" />
                                 </Column>
                                 <Column>
-                                    <Text text="{I18N>/ACTIVITY_NAME}" />
+                                    <Label text="{I18N>/ACTIVITY_NAME}" />
                                 </Column>
                             </columns>
                                 <items>
@@ -219,7 +219,7 @@
                                             <HBox>
                                                 <Text
                                                     visible="{contModel>/readMode}"
-                                                    text="{languages>language_cd}" />                                                
+                                                    text="{languages>language_cd}" required="true"/>                                                
                                                 <ComboBox 
                                                     visible="{contModel>/editMode}"
                                                     showSecondaryValues= "true"
@@ -302,19 +302,19 @@
                                 </table:template>
                                 </table:Column>                                
                                 <table:Column id="category_group_name" width="100px" filterProperty="category_group_name">
-                                <Label text="{I18N>/GROUP}" wrapping="false" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/GROUP}" wrapping="false" textAlign="Center" width="100%" required="true"/>
                                 <table:template>
-                                    <Text text="{category>category_group_name}" textAlign="Left" width="100%" wrapping="false"/>
+                                    <Text text="{category>category_group_name}" textAlign="Center" width="100%" wrapping="false" required="true"/>
                                 </table:template>
                                 </table:Column>                                
                                 <table:Column id="category_name_show" visible="{= !${contModel>/editMode}}" filterProperty="category_name">
-                                <Label text="{I18N>/CATEGORY}" wrapping="false" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/CATEGORY}" wrapping="false" textAlign="Center" width="100%" required="true"/>
                                 <table:template>
-                                    <Text text="{category>category_name}" textAlign="Left" width="100%" wrapping="false"/>
+                                    <Text text="{category>category_name}" textAlign="Left" width="100%" wrapping="false" required="true"/>
                                 </table:template>
                                 </table:Column>
                                 <table:Column id="category_name_edit" visible="{= ${contModel>/editMode}}" filterProperty="category_name">
-                                <Label text="{I18N>/CATEGORY}" wrapping="false" textAlign="Center" width="100%"/>
+                                <Label text="{I18N>/CATEGORY}" wrapping="false" textAlign="Center" width="100%" required="true"/>
                                 <table:template>                                                                           
                                     <Input
                                         editable="{= ${category>_row_state_} === 'C' }"
@@ -322,6 +322,7 @@
                                         valueHelpRequest=".onDialogCategoryPress"
                                         value="{category>category_name}"
                                         showValueHelp="true"
+                                        required="true"
                                         />
                                 </table:template>
                                 </table:Column>                                
@@ -348,11 +349,18 @@
                                 <table:Column id="s_grade_standard_days_edit" width="100px" visible="{contModel>/editMode}" filterProperty="s_grade_standard_days">
                                 <Label text="{I18N>/S_GRADE_STANDARD_DAYS}" wrapping="false" textAlign="Center" width="100%"/>
                                 <table:template>
+                                    <!-- <MaskInput
+                                        visible="{contModel>/editMode}"
+                                        editable="{contModel>/editMode}" 
+                                        mask="99999999999" 
+                                        placeholderSymbol=" "  
+                                        value="{category>s_grade_standard_days}" width="100%" textAlign="Right"  
+                                        placeholder="0"/> -->
                                     <Input
                                         visible="{contModel>/editMode}"
                                         editable="{contModel>/editMode}"
-                                        maxLength="40"
-                                        type="Number"
+                                        maxLength="10"
+                                        liveChange=".onInputChange"                                        
                                         value="{category>s_grade_standard_days}" width="100%" textAlign="Right"/>
                                 </table:template>
                                 </table:Column>
@@ -368,8 +376,8 @@
                                     <Input
                                         visible="{contModel>/editMode}"
                                         editable="{contModel>/editMode}"
-                                        maxLength="40"
-                                        type="Number"
+                                        maxLength="10"
+                                        liveChange=".onInputChange"
                                         value="{category>a_grade_standard_days}" width="100%" textAlign="Right"/>
                                 </table:template>
                                 </table:Column>                                
@@ -385,8 +393,8 @@
                                     <Input
                                         visible="{contModel>/editMode}"
                                         editable="{contModel>/editMode}"
-                                        maxLength="40"
-                                        type="Number"
+                                        maxLength="10"
+                                        liveChange=".onInputChange"
                                         value="{category>b_grade_standard_days}" width="100%" textAlign="Right"/>
                                 </table:template>
                                 </table:Column>
@@ -402,8 +410,8 @@
                                     <Input
                                         visible="{contModel>/editMode}"
                                         editable="{contModel>/editMode}"
-                                        maxLength="40"
-                                        type="Number"
+                                        maxLength="10"
+                                        liveChange=".onInputChange"
                                         value="{category>c_grade_standard_days}" width="100%" textAlign="Right"/>
                                 </table:template>
                                 </table:Column>
@@ -419,8 +427,8 @@
                                     <Input
                                         visible="{contModel>/editMode}"
                                         editable="{contModel>/editMode}"
-                                        maxLength="40"
-                                        type="Number"
+                                        maxLength="10"
+                                        liveChange=".onInputChange"
                                         value="{category>d_grade_standard_days}" width="100%" textAlign="Right"/>
                                 </table:template>
                                 </table:Column>                                

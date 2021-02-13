@@ -9,7 +9,7 @@ reference_nego_document_number    INTEGER                    ,  --#07
 nego_document_round               INTEGER                    ,  --#08
 nego_document_number              NVARCHAR(50)               ,  --#09
 nego_document_title               NVARCHAR(300)              ,  --#10
-nego_document_desc                NVARCHAR(4000)             ,  --#11
+nego_document_desc                BLOB                       ,  --#11
 nego_progress_status_code         NVARCHAR(30)               ,  --#12
 award_progress_status_code        NVARCHAR(25)               ,  --#13
 reply_times                       INTEGER                    ,  --#14
@@ -52,7 +52,7 @@ bid_conference                    NVARCHAR(1)                ,  --#50
 bid_conference_date               SECONDDATE                 ,  --#51
 bid_conference_place              NVARCHAR(1000)             ,  --#52
 contact_point_empno               NVARCHAR(30)               ,  --#53
-phone_no                          NVARCHAR(30)                  --#54
+phone_no                          NVARCHAR(30)               ,  --#54
 /* ,
 local_create_dtm SECONDDATE NOT NULL,
 local_update_dtm SECONDDATE NOT NULL,
@@ -60,4 +60,5 @@ create_user_id NVARCHAR(255) NOT NULL,
 update_user_id NVARCHAR(255) NOT NULL,
 system_create_dtm SECONDDATE NOT NULL,
 system_update_dtm SECONDDATE NOT NULL */
+_row_state_                       NVARCHAR(1)               --#99 UI Table Manged Status('D':Delete, ''|'U':Update, 'C':Create)
 );

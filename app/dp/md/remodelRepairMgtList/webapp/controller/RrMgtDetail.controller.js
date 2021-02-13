@@ -83,7 +83,8 @@ sap.ui.define([
                 , session = this.getSessionUserInfo() 
                 , today = this._getToday()
             ;
-
+            var that = this;
+            var oUiModel = this.getView().getModel("mode");
             oModel.setTransactionModel(this.getModel())
             if( oArgs.request_number != "New"){
                 oModel.read("/remodelRepairDetail(tenant_id='" + session.TENANT_ID 
@@ -91,8 +92,12 @@ sap.ui.define([
                             + "',repair_request_number='"+oArgs.request_number 
                             + "')", {
                             filters: [],
-                    success: function (oData) {
-                        console.log("oData>>>>> ", oData);
+                    success: function (oData) { 
+                        var d = oModel.getProperty("/repair_request_date");
+                        oModel.setProperty("/repair_request_date", d.substring(0, 4) + "-" +d.substring(4, 6)+"-"+d.substring(6, 8));
+                        oUiModel.setProperty("/editFlag", false);    
+                        oUiModel.setProperty("/viewFlag", true);    
+                        that._setBtnStatus();
                     }
                 });
             }else{ // NEW 일 경우 MOLD 정보만 조회한다. 
@@ -101,19 +106,93 @@ sap.ui.define([
                             filters: [],
                             success: function (oData) { 
 
+                            oUiModel.setProperty("/editFlag", true);    
+                            oUiModel.setProperty("/viewFlag", false);    
+                            oUiModel.setProperty("/btnDraft", true);    
+                            oUiModel.setProperty("/btnRequset", true);    
+                            oUiModel.setProperty("/btnEdit", false);    
+                            oUiModel.setProperty("/btnCancel", false);    
+
                             oModel.setProperty("/tenant_id", session.TENANT_ID); 
                             oModel.setProperty("/mold_id",  oArgs.mold_id ); 
                             oModel.setProperty("/create_user_id", session.USER_ID); 
                             oModel.setProperty("/user_local_name", session.EMPLOYEE_NAME); 
                             oModel.setProperty("/user_english_name", session.ENGLISH_EMPLOYEE_NAME); 
-                            oModel.setProperty("/repair_request_date", today);
+                            oModel.setProperty("/repair_request_date", today.substring(0, 4) + "-" +today.substring(4, 6)+"-"+today.substring(6, 8));
             
-                            console.log("oData>>>>> ", oData);
+                           
                     }
                 });
 
             };  
         },
+
+        dateParse : function(str){
+            var y = str.substring(0, 4);
+            var m = str.substring(4, 2);
+            var d = str.substring(6, 2);
+            return new Date(y,m-1,d)
+        },
+        onPageEditButtonPress : function(){
+            var oUiModel = this.getView().getModel("mode");
+                oUiModel.setProperty("/editFlag", true);    
+                oUiModel.setProperty("/viewFlag", false);    
+                this._setBtnStatus();
+        },
+        onPageCancelEditButtonPress : function(){
+            var oUiModel = this.getView().getModel("mode");
+                oUiModel.setProperty("/editFlag", false);    
+                oUiModel.setProperty("/viewFlag", true);    
+                this._setBtnStatus();
+        },
+        _setBtnStatus : function(){
+            var oUiModel = this.getView().getModel("mode");
+             console.log("_setBtnStatus>>>>> ", oUiModel);
+            var oModel = this.getModel("rrMgt") ;
+
+            console.log("oModel>>>>> ", oModel);
+            if(oUiModel.getProperty("/editFlag")){
+                if(oModel.getProperty("/repair_progress_status_code") === "RA"){ // Requst 
+                    oUiModel.setProperty("/btnDraft", false);    
+                    oUiModel.setProperty("/btnRequset", false);
+                    oUiModel.setProperty("/btnEdit", false);
+                    oUiModel.setProperty("/btnCancel", false);
+
+                }else if(oModel.getProperty("/repair_progress_status_code") === "RS"){ // Draft
+                    oUiModel.setProperty("/btnDraft", true);    
+                    oUiModel.setProperty("/btnRequset", true);  
+                    oUiModel.setProperty("/btnEdit", false);
+                    oUiModel.setProperty("/btnCancel", true);
+                }else{
+                    oUiModel.setProperty("/btnDraft", false);    
+                    oUiModel.setProperty("/btnRequset", false);
+                    oUiModel.setProperty("/btnEdit", false);
+                    oUiModel.setProperty("/btnCancel", false);
+                }
+            }else{  
+                if(oModel.getProperty("/repair_progress_status_code") === "RA"){ // Requst 
+                    oUiModel.setProperty("/btnDraft", false);    
+                    oUiModel.setProperty("/btnRequset", false);
+                    oUiModel.setProperty("/btnEdit", false);
+                    oUiModel.setProperty("/btnCancel", false);
+
+                }else if(oModel.getProperty("/repair_progress_status_code") === "RS"){ // Draft
+                    oUiModel.setProperty("/btnDraft", false);    
+                    oUiModel.setProperty("/btnRequset", true);  
+                    oUiModel.setProperty("/btnEdit", true);
+                    oUiModel.setProperty("/btnCancel", false);
+                }else{
+                    oUiModel.setProperty("/btnDraft", false);    
+                    oUiModel.setProperty("/btnRequset", false);
+                    oUiModel.setProperty("/btnEdit", false);
+                    oUiModel.setProperty("/btnCancel", false);
+                }
+            }
+
+               console.log("_setBtnStatus 222 >>>>> ", oUiModel);
+          
+        },
+
         /**
          * today
          * @private
@@ -142,8 +221,6 @@ sap.ui.define([
             }
         },
 
-
-
         onPageDraftButtonPress: function () {
             var mst = this.getModel("rrMgt").getData(); 
             var data = {
@@ -153,7 +230,8 @@ sap.ui.define([
                         , repair_request_number: mst.repair_request_number
                         , mold_id: mst.mold_id
                         , repair_desc: mst.repair_desc
-                        , repair_reason: mst.repair_reason
+                        , repair_reason: mst.repair_reason 
+                        , repair_request_date : this._getToday()
                         , mold_moving_plan_date: this.getStrDate(mst.mold_moving_plan_date)
                         , mold_complete_plan_date: this.getStrDate(mst.mold_complete_plan_date)
                         , mold_moving_result_date: this.getStrDate(mst.mold_moving_result_date)
@@ -183,16 +261,17 @@ sap.ui.define([
                 return;
             }
 
-            var mst = this.getModel("rrMgt").getData()
-                , session = this.getSessionUserInfo();
+            var mst = this.getModel("rrMgt").getData();
+            
             var data = {
                 inputData: {
                     repairItem: {
-                        tenant_id: session.tenant_id
+                        tenant_id: mst.tenant_id
                         , repair_request_number: mst.repair_request_number
                         , mold_id: mst.mold_id
                         , repair_desc: mst.repair_desc
-                        , repair_reason: mst.repair_reason
+                        , repair_reason: mst.repair_reason 
+                        , repair_request_date : this._getToday()
                         , mold_moving_plan_date: this.getStrDate(mst.mold_moving_plan_date)
                         , mold_complete_plan_date: this.getStrDate(mst.mold_complete_plan_date)
                         , mold_moving_result_date: this.getStrDate(mst.mold_moving_result_date)
@@ -228,7 +307,8 @@ sap.ui.define([
                                 , function(result){
                                     oView.setBusy(false);
                                     MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
-                                if (result.resultCode > -1) {
+                                if (result.resultCode > -1) { 
+                                    result.request_number = result.repair_request_number 
                                     console.log("result>>>> ", result);
                                     that._srchDetail(result);
                                 }

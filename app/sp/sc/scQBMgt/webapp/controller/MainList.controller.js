@@ -865,10 +865,10 @@ sap.ui.define([
                 
                 var pNegoTypeCode,
                     pOutcome,
-                    pHeader_id;
+                    pDocNum;
                 pNegoTypeCode = oRow.nego_type_code;
                 pOutcome = oRow.outcome_code;
-                pHeader_id =  String(oRow.nego_document_number);
+                pDocNum =  String(oRow.nego_document_number);
 
                 if(pNegoTypeCode == null){
                     pNegoTypeCode = " ";
@@ -876,8 +876,8 @@ sap.ui.define([
                 if(pOutcome == null){
                     pOutcome = " ";
                 }
-                if(pHeader_id == null){
-                    pHeader_id = " ";
+                if(pDocNum == null){
+                    pDocNum = " ";
                 }
 
 
@@ -890,8 +890,8 @@ sap.ui.define([
 
                  
                     
-                // 생성 구분 코드(NC : Negotiation Create, NW : Negotiation Workbench) / Negotiation Type / outcome / Header Id
-                var changeHash = "NW/" + pNegoTypeCode + "/" + pOutcome + "/" + pHeader_id;   
+                // 생성 구분 코드(NC : Negotiation Create, NW : Negotiation Workbench) / Negotiation Type / outcome / Document Number
+                var changeHash = "NW/" + pNegoTypeCode + "/" + pOutcome + "/" + pDocNum;   
                 HashChanger.getInstance().replaceHash("");
 
                 Component.load({
@@ -910,46 +910,8 @@ sap.ui.define([
                 }).catch(function (e) {
                     MessageToast.show("error");
                 })
-
-                
-                
-                // this.getOwnerComponent().getRouter().navTo("detailPage", { type : pNegoTypeCode , outcome : pOutcome, header_id: pHeader_id  } );
-
-
             },
-            tableCellClick: function(e){
 
-                
-                var vIndex = e.getParameters().rowIndex;
-                var oPath = e.oSource.getContextByIndex(vIndex).sPath;
-                var oRow = this.getView().getModel("main").getProperty(oPath);
-
-                var pNegoTypeCode,
-                    pOutcome,
-                    pHeader_id;
-                pNegoTypeCode = oRow.nego_type_code;
-                pOutcome = oRow.negotiation_output_class_code;
-                pHeader_id =  String(oRow.nego_document_number);
-
-                if(pNegoTypeCode == null){
-                    pNegoTypeCode = " ";
-                }
-                if(pOutcome == null){
-                    pOutcome = " ";
-                }
-                if(pHeader_id == null){
-                    pHeader_id = " ";
-                }
-                
-                this.getOwnerComponent().getRouter().navTo("detailPage", { type : pNegoTypeCode , outcome : pOutcome, header_id: pHeader_id  } );
-
-                // // ======================================================
-
-                // //Test용 detailPage2
-                // this.getOwnerComponent().getRouter().navTo("detailPage2", { type : " " , outcome : " " } );
-
-                
-            },
             _getSmartTable: function () {
                 if (!this._oSmartTable) {
                     this._oSmartTable = this.getView().byId("sTable1");
@@ -997,17 +959,6 @@ sap.ui.define([
             _onProductMatched: function (e) {
 
 
-            },
-            ListTableItemPress : function(e){
-                if(e.getParameters().listItem.getCells()[0].getText() == "2426536-1" ){
-                    this.getOwnerComponent().getRouter().navTo("detailPage", { type : "A"} );
-                }else{
-                    this.getOwnerComponent().getRouter().navTo("detailPage2", { type : "B"} );
-                }
-                
-            },
-            onMainTableCreate: function(e){
-                this.getOwnerComponent().getRouter().navTo("createPage", {} );
             },
             _message: function() {
                 var result = jQuery.Deferred();
@@ -1077,6 +1028,26 @@ sap.ui.define([
 
                 console.log("oFilterNegoNo = ",oFilterNegoNo);
                 console.log("oFilterTitle = ",oFilterTitle);
+            },
+
+            onStatusColor: function (sStautsCode) {
+
+                // var sReturnValue = 6;
+
+                var sReturnValue = parseInt(sStautsCode) / 10;
+
+                return sReturnValue;
+
+
+
+
+                // //색상 정의 필요
+                // if( sStautsCode === "S" ) {
+                //     sReturnValue = 1;
+                // }else if( sStautsCode === "O" ) {
+                //     sReturnValue = 2;
+                // }
+                // return sReturnValue;
             }
 		});
 	});

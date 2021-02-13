@@ -28,24 +28,6 @@ sap.ui.define([
 		 * @public
 		 */
         onInit: function () {
-            // var oMultilingual = new Multilingual();
-            // this.setModel(oMultilingual.getModel(), "I18N");
-
-            // var oViewTableModel = new JSONModel(
-            //     { items: [] }
-            // );
-
-            // this.setModel(new JSONModel(), "applicationSup");
-            // this.setModel(new JSONModel(), "transactionDivision");
-            // this.setModel(new JSONModel(), "contModel");
-
-            // this.getView().setModel(oViewTableModel, "localModel");
-
-            // var oAppSupModel = this.getOwnerComponent().getModel("fundingApp");
-
-            // this._onComCodeListView(oAppSupModel);
-            // this._onTransactionDivision(oAppSupModel);
-            // this.getOwnerComponent().getModel("viewModel").setProperty("/detail/checkModel", []);
             this._onComCodeListView();
             this.getRouter().getRoute("Apply").attachPatternMatched(this._onRoutedThisPage, this);
 
@@ -83,7 +65,7 @@ sap.ui.define([
                 filters: aFilters,
                 success: function (oData) {
                     for (var i = 0; i < oData.results.length; i++) {
-                        that.byId("checkBoxContent").addItem(new CheckBox({ text: oData.results[i].code + ". " + oData.results[i].code_name, editable:false ,selected: "{viewModel>/detailControll/checkModel/" + i + "}" }));
+                        that.byId("checkBoxContent").addItem(new CheckBox({ text: oData.results[i].code + ". " + oData.results[i].code_name, editable:"{viewModel>/Detail/Apply/editableMode}" ,selected: "{viewModel>/detailControll/checkModel/" + i + "}" }));
                     };
                 },
                 error: function (oError) {
@@ -140,12 +122,12 @@ sap.ui.define([
                                 that.getModel("viewModel").setProperty("/Detail/Apply/popUpInvestPlanDtl", Result.results);
                             },
                             error: function (oError) {
-
+                                MessageBox.alert("통신에러 입니다.");
                             }
                         })
                     },
                     error: function (oError) {
-
+                        MessageBox.alert("통신에러 입니다.");
                     }
                 });
                 oDialog.open();

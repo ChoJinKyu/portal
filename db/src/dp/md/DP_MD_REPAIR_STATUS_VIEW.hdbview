@@ -1,5 +1,6 @@
 view DP_MD_REPAIR_STATUS_VIEW as
-select a.tenant_id
+select row_number() over() rownum
+    ,a.tenant_id
     ,a.repair_request_number
     ,a.repair_type_code
     ,CM_GET_CODE_NAME_FUNC(a.tenant_id, 'DP_MD_REPAIR_TYPE', a.repair_type_code, 'KO') repair_type_name
@@ -80,6 +81,7 @@ select a.tenant_id
     ,CM_GET_EMP_NAME_FUNC(a.tenant_id, e.requestor_empno) requestor_name
     ,e.request_date
     ,e.approve_status_code
+    ,CM_GET_CODE_NAME_FUNC(a.tenant_id, 'CM_APPROVE_STATUS', e.approve_status_code, 'KO') approve_status_name
 
 from DP_MD_REPAIR_ITEM a
 

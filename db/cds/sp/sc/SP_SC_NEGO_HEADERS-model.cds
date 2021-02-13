@@ -22,14 +22,14 @@ using {
     sp.Sc_Employee_View,
     sp.Sc_Hr_Department,
     sp.Sc_Pur_Operation_Org
-} from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+} from '../../sp/sc/SP_SC_REFERENCE_OTHERS-model';
 
 using {
     sp.Sc_Nego_Prog_Status_Code_View,
     sp.Sc_Award_Prog_Status_Code_View,
     sp.Sc_Award_Type_Code_View,
     sp.Sc_Award_Method_Code_View
-} from '../../sp/sc/SP_SC_REFERENCE_COMMON.model';
+} from '../../sp/sc/SP_SC_REFERENCE_COMMON-model';
 
 // TYPE-POOLS
 using {
@@ -60,12 +60,12 @@ entity Sc_Nego_Headers {
         nego_document_round             : Integer            @title : '협상문서회차';
         nego_document_number            : String(50)         @title : '협상문서번호';
         nego_document_title             : String(300)        @title : '협상문서제목';
-        nego_document_desc              : String(4000)       @title : '협상문서설명';
+        nego_document_desc              : LargeBinary        @title : '협상문서설명';
         nego_progress_status_code       : String(30)         @title : '협상진행상태코드';
         nego_progress_status : Association to Sc_Nego_Prog_Status_Code_View
                             on nego_progress_status.tenant_id       = $self.tenant_id
                               and nego_progress_status.nego_progress_status_code = $self.nego_progress_status_code;
-        award_progress_status_code      : String(25)         @title : '낙찰진행상태코드';
+        award_progress_status_code      : String(25) default '010' @title : '낙찰진행상태코드';
         award_progress_status : Association to Sc_Award_Prog_Status_Code_View
                             on award_progress_status.tenant_id       = $self.tenant_id
                               and award_progress_status.award_progress_status_code = $self.award_progress_status_code;
@@ -112,7 +112,7 @@ entity Sc_Nego_Headers {
         close_date_ext_enabled_hours    : Integer            @title : '마감일자동연장가능시간수';
         close_date_ext_enabled_count    : Integer            @title : '마감일자동연장가능횟수';
         actual_extension_count          : Integer            @title : '실제연장횟수';
-        remaining_hours                 : Decimal(28, 2)     @title : '잔여시간';
+        remaining_hours                 : PriceAmountT       @title : '잔여시간';
         note_content                    : LargeBinary        @title : '노트내용' @description : 'UI:Note to Content';
         award_type_code                 : Sc_Award_Type_Code_View:award_type_code @title : '낙찰유형코드' @description : 'UI:Award Type';
         award_type : Association to Sc_Award_Type_Code_View
@@ -247,7 +247,7 @@ entity Sc_Nego_Headers_View as
     };
 
   annotate Sc_Nego_Headers_View with @( 
-        title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가',readonly
+        title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가'
   ) {
         remain_times @title:'잔여시간' @description:'잔여시간=마감시간-현재시간' @readonly;
   };
@@ -275,7 +275,7 @@ entity Sc_Nego_Headers_View2 as
         operation_org : association to Sc_Pur_Operation_Org 
             on operation_org.tenant_id = $projection.tenant_id
             and operation_org.company_code = $projection.company_code
-            and operation_org.operation_org_code = $projection.operation_unit_code
+            and operation_org.operation_org_code = $projection.operation_org_code
             ;
     } into {
         *,

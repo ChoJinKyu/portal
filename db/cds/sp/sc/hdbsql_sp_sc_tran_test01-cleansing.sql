@@ -246,7 +246,8 @@ nego_type_code
 , award_type_code, award_method_code
 -- , number_of_award_supplier, order_rate_01, order_rate_02, order_rate_03, order_rate_04, order_rate_05
 -- , target_amount_config_flag, target_amount
-, bid_conference, bid_conference_date, bid_conference_place, contact_point_empno, phone_no
+-- , bid_conference, bid_conference_date, bid_conference_place, contact_point_empno, phone_no
+, target_amount_config_flag, auto_round, supplier_participation_flag, partial_allow_flag, bid_conference
 from SP_SC_NEGO_HEADERS where 1=1
 and nego_type_code in ('CPB','TSB') 
 -- and ( 1=0
@@ -257,6 +258,17 @@ and nego_type_code in ('CPB','TSB')
 -- )
 -- GROUP BY nego_type_code, award_type_code, award_method_code, number_of_award_supplier
 -- , order_rate_01, order_rate_02, order_rate_03, order_rate_04, order_rate_05
+;
+
+-- @block #Random Update#Cursor
+-- @group SP_SC
+-- @name TABLES - SP_SC_NEGO_HEADERS - Cleansing Flag 'X'=>'Y', ''=>'N'
+UPDATE SP_SC_NEGO_HEADERS SET 
+  target_amount_config_flag   = map(target_amount_config_flag  , 'X', 'Y', '', 'N', 'N')
+, auto_round                  = map(auto_round                 , 'X', 'Y', '', 'N', 'N')
+, supplier_participation_flag = map(supplier_participation_flag, 'X', 'Y', '', 'N', 'N')
+, partial_allow_flag          = map(partial_allow_flag         , 'X', 'Y', '', 'N', 'N')
+, bid_conference              = map(bid_conference             , 'X', 'Y', '', 'N', 'N')
 ;
 
 -- @block #Random Update#Cursor

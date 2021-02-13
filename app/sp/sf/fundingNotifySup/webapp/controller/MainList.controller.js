@@ -34,6 +34,7 @@ sap.ui.define([
 		 */
         onInit: function () {
             var oViewModel,
+                searchModel,
                 oResourceBundle = this.getResourceBundle();
 
             // Model used to manipulate control states
@@ -42,6 +43,13 @@ sap.ui.define([
                 mainListTableTitle: oResourceBundle.getText("mainListTableTitle"),
                 tableNoDataText: oResourceBundle.getText("tableNoDataText")
             });
+            
+            searchModel = new JSONModel({
+                sTitle:"",
+                sSearchDateS: []
+            });
+
+            this.setModel(searchModel, "sSearch");
             this.setModel(oViewModel, "mainListView");
 
             var oMultilingual = new Multilingual();
@@ -249,13 +257,13 @@ sap.ui.define([
         },
 
         _getSearchStates: function () {
-            var sTitle, searchDateS, aSearchFilters = [],
-                sFromDate = this.byId("searchDateS").getFrom(),
-                sToDate = this.byId("searchDateS").getTo();
-            
-            if (!!(sTitle = this.byId("searchTitle").getValue())) {
+            var sTitle, aSearchFilters = [],
+                sFromDate = this.getModel("sSearch").getProperty("/sSearchDateS/value1"),
+                sToDate = this.getModel("sSearch").getProperty("/sSearchDateS/value2");
+                
+            if (!!(sTitle = this.getModel("sSearch").getProperty("/sTitle"))) {
                 aSearchFilters.push(new Filter("tolower(funding_notify_title)", FilterOperator.Contains, "'"+sTitle.toLowerCase().replace("'","''")+"'"));
-            };
+            }
 
             if(!!sFromDate || !!sToDate){
                 aSearchFilters.push(new Filter({

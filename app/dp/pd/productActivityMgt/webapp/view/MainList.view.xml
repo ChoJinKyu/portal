@@ -95,10 +95,17 @@
  
                 <t:columns>
 
+                    <t:Column hAlign="End" width="60px">
+                        <Label text="{I18N>/SEQUENCE}" wrapping="false" textAlign="Center" width="100%"/>
+                        <t:template>
+                            <Text text="{list>sequence}" wrapping="false" textAlign="Right" width="100%"/>  
+                        </t:template>
+                    </t:Column>
+
                     <t:Column>
                         <Label text="{I18N>/PRODUCT_ACTIVITY_CODE}" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
-                            <Text text="{list>product_activity_code}" wrapping="false" textAlign="Left" width="100%"/>  
+                            <Text text="{list>product_activity_code}" wrapping="false" textAlign="Center" width="100%"/>  
                         </t:template>
                     </t:Column>
 
@@ -113,13 +120,6 @@
                         <Label text="{I18N>/PRODUCT_DESC}" wrapping="false" textAlign="Center" width="100%"/>
                         <t:template>
                             <Text text="{list>description}" wrapping="false" textAlign="Left" width="100%" />  
-                        </t:template>
-                    </t:Column>
-
-                    <t:Column hAlign="End" width="60px">
-                        <Label text="{I18N>/SEQUENCE}" wrapping="false" textAlign="Center" width="100%"/>
-                        <t:template>
-                            <Text text="{list>sequence}" wrapping="false" textAlign="Right" width="100%"/>  
                         </t:template>
                     </t:Column>
 

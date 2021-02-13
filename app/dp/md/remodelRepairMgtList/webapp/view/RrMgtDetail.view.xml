@@ -10,7 +10,8 @@
     xmlns:si="sap.suite.ui.commons.statusindicator"
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
-    xmlns="sap.m"
+    xmlns="sap.m" 
+    xmlns:lib-m="ext.lib.m" 
     xmlns:cm-ui="cm.util.control.ui"
     xmlns:dnd="sap.ui.core.dnd"
     core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
@@ -70,20 +71,18 @@
                         title="{I18N>/REQUESTOR}"
                         text="[{rrMgt>/user_english_name}]{rrMgt>/user_local_name}"/>
                     <ObjectStatus
-                        title="{I18N>/REQUEST_DATE}"
-                        text="{rrMgt>/repair_request_date}"/>
+                        title="{I18N>/REQUEST_DATE}" 
+                        text="{rrMgt>/repair_request_date}"
+                        />
+                     
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<HBox><Label text="{I18N>/STATUS}" /> <Label text=" :"/></HBox>
-                    <!-- <ObjectStatus
+					<HBox><Label text="{I18N>/STATUS}" /> <Label text=" :"/> <Text text="{rrMgt>/repair_request_date}"/>  </HBox>
+                   <ObjectStatus
                         class="sapMObjectStatusLarge"
-                        text="{= ${rrMgt>/approval_number} === undefined ?'New':''}{rrMgt>/approve_status_code_nm}"
-                        state="Error" /> -->
-                        <ObjectStatus
-                        class="sapMObjectStatusLarge"
-                        text="New"
-                        state="Error" />
+                        text="{= ${rrMgt>/repair_request_number} === undefined ?'New':''}{rrMgt>/repair_progress_status_code_nm}"
+                        state="Error" /> 
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -111,6 +110,7 @@
                                 <Input
                                     value="{rrMgt>/repair_desc}"
                                     width="40em" 
+                                    editable="{mode>/editFlag}"
                                     placeholder="Input data" required="true">
                                 </Input><!--class="readonlyField" fieldGroupIds="ge"-->
                             </HBox>
@@ -126,6 +126,7 @@
                                     value="{rrMgt>/repair_reason}"
                                     width="100%"
                                     height="10em" 
+                                    editable="{mode>/editFlag}"
                                     required="true"
                                     >
                                 </TextArea><!--class="readonlyField" fieldGroupIds="ge"-->
@@ -239,7 +240,9 @@
                                         <Input
                                             value="{rrMgt>/mold_mfger_code_nm}"
                                             width="10em"
-                                            placeholder="Input data"   >
+                                            placeholder="Input data" 
+                                            editable="{mode>/editFlag}"
+                                            >
                                         </Input>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M6 S6"/>
@@ -276,7 +279,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             required="true"/>
-                                        <DatePicker dateValue="{path : 'rrMgt>/mold_moving_plan_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" required="true"/>
+                                        <DatePicker editable="{mode>/editFlag}" dateValue="{path : 'rrMgt>/mold_moving_plan_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" required="true"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M12 S12"/>
 					                    </layoutData>
@@ -287,8 +290,9 @@
                                             class="sapUiTinyMarginEnd"
                                             textAlign="Left"
                                             labelFor="input"
-                                            required="true"/>
-                                        <DatePicker dateValue="{path : 'rrMgt>/mold_complete_plan_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" required="true"/>
+                                            required="true"
+                                            />
+                                        <DatePicker editable="{mode>/editFlag}" dateValue="{path : 'rrMgt>/mold_complete_plan_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" required="true"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M12 S12"/>
 					                    </layoutData>
@@ -312,7 +316,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             />
-                                         <DatePicker dateValue="{path : 'rrMgt>/mold_moving_result_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
+                                         <DatePicker editable="{mode>/editFlag}" dateValue="{path : 'rrMgt>/mold_moving_result_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd"/>
                                         <layoutData>
 						                    <layout:GridData span="XL4 L4 M12 S12"/>
 					                    </layoutData>
@@ -325,7 +329,7 @@
                                             textAlign="Left"
                                             labelFor="input"
                                             />
-                                        <DatePicker dateValue="{path : 'rrMgt>/mold_complete_result_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" />
+                                        <DatePicker editable="{mode>/editFlag}" dateValue="{path : 'rrMgt>/mold_complete_result_date'}"  valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" />
                                         <layoutData>
 						                     <layout:GridData span="XL4 L4 M12 S12"/>
 					                    </layoutData>
@@ -449,12 +453,12 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-                <!-- <Button type="Transparent" text="{I18N>/EDIT}"      press=".onPageEditButtonPress" visible="{mode>/btnEditFlag}"/>
-                <Button type="Transparent" text="{I18N>/CANCEL}"    press=".onPageCancelEditButtonPress" visible="{mode>/btnCancelFlag}" /> -->
-				<Button type="Transparent" text="{I18N>/DRAFT}"     press=".onPageDraftButtonPress"   visible="{mode>/btnDraftFlag}" />
+                <Button type="Transparent" text="{I18N>/EDIT}"      press=".onPageEditButtonPress" visible="{mode>/btnEdit}"/>
+                <Button type="Transparent" text="{I18N>/CANCEL}"    press=".onPageCancelEditButtonPress" visible="{mode>/btnCancel}" /> 
+				<Button type="Transparent" text="{I18N>/DRAFT}"     press=".onPageDraftButtonPress"   visible="{mode>/btnDraft}" />
                 <!-- <Button type="Transparent" text="Request Cancel"  press=".onPageRequestCancelButtonPress"  visible="{mode>/btnRequestCancelFlag}"/>
 				<Button type="Transparent" text="{I18N>/PREVIEW}"   press=".onPagePreviewButtonPress"  /> -->
-				<Button type="Emphasized"  text="{I18N>/REQUEST}"   press=".onPageRequestButtonPress" visible="{mode>/btnRequestFlag}"/>
+				<Button type="Emphasized"  text="{I18N>/REQUEST}"   press=".onPageRequestButtonPress" visible="{mode>/btnRequset}"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

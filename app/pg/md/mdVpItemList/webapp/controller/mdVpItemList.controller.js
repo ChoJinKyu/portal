@@ -120,7 +120,7 @@ sap.ui.define([
                 // @ts-ignore 
                 template: new sap.m.MenuItem({ 
                     key: "{category>spmd_category_code}", 
-                    text: "{category>spmd_category_code}: {category>spmd_category_code_name}" 
+                    text: "{category>spmd_category_code}: {category>spmd_category_code_name}"
                 }) 
             }); 
         }, 

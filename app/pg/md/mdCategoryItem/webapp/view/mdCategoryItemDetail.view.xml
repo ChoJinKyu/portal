@@ -10,10 +10,10 @@
     height="100%">
 
     <uxap:ObjectPageLayout id="page"
-		toggleHeaderOnTitleClick="true"
+		toggleHeaderOnTitleClick="false"
 		alwaysShowContentHeader = "true"
 		preserveHeaderStateOnScroll="false"
-		headerContentPinnable="true"
+		headerContentPinnable="false"
 		isChildPage="true"
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
@@ -32,11 +32,11 @@
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
 					<Title text="{I18N>/SPMD_CHARACTER_DETAIL}" wrapping="true" />
-				</uxap:snappedHeading> -->
+				</uxap:snappedHeading>
 				<uxap:snappedTitleOnMobile>
 					<Title text="{I18N>/MASTER}" />
 				</uxap:snappedTitleOnMobile>
-				<!-- <uxap:actions>
+				 <uxap:actions>
 					<Button id="pageEditButton" text="{I18N>/UPDATE}" type="Emphasized" press=".onPageEditButtonPress" />
 					<Button id="pageDeleteButton" text="Delete" type="Transparent" press=".onPageDeleteButtonPress" />
 				</uxap:actions> -->

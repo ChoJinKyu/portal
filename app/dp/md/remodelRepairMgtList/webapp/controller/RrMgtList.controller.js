@@ -60,6 +60,9 @@ sap.ui.define([
             var oViewModel,
                 oResourceBundle = this.getResourceBundle();
             
+            /** Date */
+            var today = new Date();
+
             console.log(" session >>> " , this.getSessionUserInfo().TENANT_ID);
             // Model used to manipulate control states
             oViewModel = new JSONModel({
@@ -78,16 +81,25 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
-            this.setModel(new ManagedListModel(), "SegmentedItem");
+            this.setModel(new ManagedListModel(), "plant");
             this.setModel(new ManagedModel(), "searchCon");
 
-            this._doInitSearch();
+
+
+
+         //   this.getView().byId("searchRequestDateS").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
+        //    this.getView().byId("searchRequestDateS").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
+            
+         //   this.getView().byId("searchRequestDateE").setDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
+         //   this.getView().byId("searchRequestDateE").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
 
             this._oTPC = new TablePersoController({
                 customDataKey: "remodelRepairMgtList",
                 persoService: RrMgtListPersoService
             }).setTable(this.byId("remodelRepairMgtListTable"));
             
+            this._doInitSearch();
+
             this.getRouter().getRoute("rrMgtList").attachPatternMatched(this._onRoutedThisPage, this);
         },
 
@@ -108,75 +120,56 @@ sap.ui.define([
          */
         _doInitSearch: function () {
            var search =  this.getView().getModel('searchCon');
-          //  var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
-            
-          //  this.getView().setModel(this.getOwnerComponent().getModel());
-         //   this.setPlant('LGESL');
+            /** Date */
+            var today = new Date();
+           
+            search.setProperty("/request_date_from", new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90));
+            search.setProperty("/request_date_to", new Date(today.getFullYear(), today.getMonth(), today.getDate()) );
+
             //접속자 법인 사업부로 바꿔줘야함
             search.setProperty("/companyList",['LGESL']);
-            search.setProperty("/plantList",['A040']);            
+            search.setProperty("/plantList",['A040']);  
+                    
         },
         _onRoutedThisPage : function(){
-            this.getModel("remodelRepairMgtListView").setProperty("/headerExpanded", true);
-            this._segmentSrch();
+            this.getModel("remodelRepairMgtListView").setProperty("/headerExpanded", true); 
+            this._searchPlant(); 
         },
 
-        _segmentSrch : function (){
+        _searchPlant: function(){ 
+            var search = this.getView().getModel("searchCon");
             // session에서 받아오는 tenant_id를 변수로 저장함
             var sTenant_id=this.getSessionUserInfo().TENANT_ID;
+            var aFilter = [];
+            var companyFilters = [];
+                aFilter.push( new Filter("tenant_id", FilterOperator.EQ, sTenant_id)); 
+              if(search.getProperty("/companyList").length > 0){
+                search.getProperty("/companyList").forEach(function (item) {
+                    companyFilters.push(new Filter("company_code", FilterOperator.EQ, item));
+                });
+                aFilter.push(
+                    new Filter({
+                        filters: companyFilters,
+                        and: false
+                    })
+                );
+            }; 
+            
+            
+            console.log("aFilter>>" , aFilter);
+
+           
             var oView = this.getView(),
-                oModel = this.getModel("SegmentedItem") ,
-                codeName = this.getModel('I18N').getText("/ALL")
-                ;
-            console.log("codeName >>>>", codeName);
-             var aSearchFilters = [];
-                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant_id));
-                aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'DP_MD_ASSET_STATUS'));
-
-
+                oModel = oView.getModel("plant");
             oView.setBusy(true);
-            oModel.setTransactionModel(this.getModel("util"));
-            console.log(oModel);
-            oModel.read("/Code", {
-                filters: aSearchFilters,
-                success: function (oData) {     
-                    oModel.addRecord({
-                        code: ""
-                      ,  code_name: codeName   
-                      ,  group_code: "DP_MD_ASSET_STATUS"
-                      ,  parent_code: null
-                      ,  parent_group_code: null
-                      ,  sort_no: "0"
-                    },"/Code",0);
-                    oView.setBusy(false);
-                    
+            oModel.setTransactionModel(this.getModel("dpMdUtil"));
+            oModel.read("/Divisions", {
+                filters: aFilter,
+                success: function (oData) { 
+                    // console.log(" Pur_Operation_Org " , oData);
+                    oView.setBusy(false); 
                 }
             });
-        } ,
-
-        setPlant: function(companyCode){
-            // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
-
-            var filter = new Filter({
-                    filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, sTenant_id),
-                            new Filter("company_code", FilterOperator.EQ, companyCode)
-                        ],
-                        and: true
-                });
-
-            var bindItemInfo = {
-                    path: 'dpMdUtil>/Divisions',
-                    filters: filter,
-                    template: new Item({
-                        key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
-                    })
-                };
-
-
-            this.getView().byId("searchPlantS").bindItems(bindItemInfo);
-            this.getView().byId("searchPlantE").bindItems(bindItemInfo);
         },
        
         /**
@@ -184,76 +177,8 @@ sap.ui.define([
         * @see (멀티박스)Company와 Plant 부분 연관성 포함함
         */
         handleSelectionFinishComp: function (oEvent) {
-            // session에서 받아오는 tenant_id를 변수로 저장함
-            var sTenant_id=this.getSessionUserInfo().TENANT_ID;
-            this.copyMultiSelected(oEvent);
-
-            var params = oEvent.getParameters();
-            var plantFilters = [];
-
-            if (params.selectedItems.length > 0) {
-
-                params.selectedItems.forEach(function (item, idx, arr) {
-
-                    plantFilters.push(new Filter({
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, sTenant_id),
-                            new Filter("company_code", FilterOperator.EQ, item.getKey())
-                        ],
-                        and: true
-                    }));
-                });
-            } else {
-                plantFilters.push(
-                    new Filter("tenant_id", FilterOperator.EQ, sTenant_id)
-                );
-            }
- 
-            var filter = new Filter({
-                filters: plantFilters,
-                and: false
-            });
-
-            var bindInfo = {
-                    path: 'dpMdUtil>/Divisions',
-                    filters: filter,
-                    template: new Item({
-                    key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
-                    })
-                };
-            
-            this.getView().byId("searchPlantS").bindItems(bindInfo);
-            this.getView().byId("searchPlantE").bindItems(bindInfo);
-
-            // this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
-            // this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
+           this._searchPlant();
         },
-
-
-        handleSelectionFinishDiv: function (oEvent) {
-            this.copyMultiSelected(oEvent);
-        },
-
-        copyMultiSelected: function (oEvent) {
-            var source = oEvent.getSource();
-            var params = oEvent.getParameters();
-
-            var sIds =source.sId.split('--');
-            var id = sIds[sIds.length-1];
-           
-            var idPreFix = id.substr(0, id.length - 1);
-            var selectedKeys = [];
-
-
-
-            params.selectedItems.forEach(function (item, idx, arr) {
-
-                selectedKeys.push(item.getKey());
-            });
-            this.getView().byId(idPreFix + "E").setSelectedKeys(selectedKeys);
-            this.getView().byId(idPreFix + "S").setSelectedKeys(selectedKeys);
-        },
-
 
 
 		/**
@@ -289,20 +214,22 @@ sap.ui.define([
             this._applySearch(aTableSearchState);
         },
 
-
-
         /**
 		 * Shows the selected item on the object page
 		 * On phones a additional history entry is created
 		 * @param {sap.m.ObjectListItem} oItem selected Item
 		 * @private
 		 */
-        showDetail: function (oItem) {
-            var that = this;
-            that.getRouter().navTo("rrMgtDetail", {
-                moldId:'code'
+        onCellClick : function (oEvent) { 
+            var params = oEvent.getParameters()
+              , sPath = params.rowBindingContext.sPath
+              , oRecord = this.getModel("list").getProperty(sPath);
+  
+            this.getRouter().navTo("rrMgtDetail", {
+                mold_id : oRecord.mold_id  
+                , request_number : oRecord.repair_request_number
             });
-           
+         
         },
 
 		/**
@@ -311,6 +238,7 @@ sap.ui.define([
 		 * @private
 		 */
         _applySearch: function (aTableSearchState) {
+            console.log(aTableSearchState);
             var oView = this.getView(),
                 oModel = this.getModel("list");
             oView.setBusy(true);
@@ -326,26 +254,33 @@ sap.ui.define([
         },
 
         _getSearchStates: function () {
-           
-                // status = this.getView().byId("searchStatus" + sSurffix).getSelectedKey(),
-                // //status = Element.registry.get(statusSelectedItemId).getText(),
-                // receiptFromDate = this.getView().byId("searchCreationDate" + sSurffix).getDateValue(),
-                // receiptToDate = this.getView().byId("searchCreationDate" + sSurffix).getSecondDateValue(),
-                // itemType = this.getView().byId("searchItemType").getSelectedKeys(),
-                // productionType = this.getView().byId("searchProductionType").getSelectedKeys(),
-                // eDType = this.getView().byId("searchEDType").getSelectedKey(),
-        
-                // familyPartNo = this.getView().byId("searchFamilyPartNo").getValue();
 
+            var search = this.getModel("searchCon");
+
+            console.log("search>>>> " , search);
+            // var sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S"
+            // var sDateFrom = this.getView().byId("searchRequestDate" + sSurffix).getDateValue();
+            // var sDateTo = this.getView().byId("searchRequestDate" + sSurffix).getSecondDateValue();
+            // sDateFrom
+            // sDateFrom
             var aTableSearchState = [];
             var companyFilters = [];
             var plantFilters = [];
 
-            
-
-            if (this.getModel('searchCon').getProperty("/plantList").length > 0) {
-
-                this.getModel('searchCon').getProperty("/plantList").forEach(function (item) {
+            if(search.getProperty("/companyList").length > 0){
+                search.getProperty("/companyList").forEach(function (item) {
+                    companyFilters.push(new Filter("company_code", FilterOperator.EQ, item));
+                });
+                aTableSearchState.push(
+                    new Filter({
+                        filters: companyFilters,
+                        and: false
+                    })
+                );
+            };
+ 
+            if (search.getProperty("/plantList").length > 0) {
+                search.getProperty("/plantList").forEach(function (item) {
                     plantFilters.push(new Filter("org_code", FilterOperator.EQ, item));
                 });
 
@@ -355,16 +290,95 @@ sap.ui.define([
                         and: false
                     })
                 );
+            };
+
+            if (search.getProperty("/request_date_from") || search.getProperty("/request_date_to")) {
+                var _tempFilters = [];
+
+                _tempFilters.push(
+                    new Filter({
+                        path: "repair_request_date",
+                        operator: FilterOperator.BT,
+                        value1: this.getFormatDate(search.getProperty("/request_date_from")),
+                        value2: this.getFormatDate(search.getProperty("/request_date_to"))
+                    })
+                );
+
+                _tempFilters.push(new Filter("repair_request_date", FilterOperator.EQ, ''));
+                _tempFilters.push(new Filter("repair_request_date", FilterOperator.EQ, null));
+
+                aTableSearchState.push(
+                    new Filter({
+                        filters: _tempFilters,
+                        and: false
+                    })
+                );
             }
 
+            if(search.getProperty("/repair_progress_status_code") != undefined 
+                && search.getProperty("/repair_progress_status_code") != null && search.getProperty("/repair_progress_status_code") != ""){
+                var srch = search.getProperty("/repair_progress_status_code");
+                aTableSearchState.push(new Filter("repair_progress_status_code", FilterOperator.EQ, srch));
+            };
+
+            if(search.getProperty("/model") != undefined 
+                && search.getProperty("/model") != null && search.getProperty("/model") != "" ){ 
+                var srch = search.getProperty("/model");
+                aTableSearchState.push(new Filter("model", FilterOperator.StartsWith, srch));
+            };
             
+            if(search.getProperty("/mold_number") != undefined 
+                && search.getProperty("/mold_number") != null && search.getProperty("/mold_number") != "" ){ 
+                var srch = search.getProperty("/mold_number");
+                aTableSearchState.push(new Filter("mold_number", FilterOperator.StartsWith, srch));
+            };
+
+            if(search.getProperty("/class_desc") != undefined 
+                && search.getProperty("/class_desc") != null && search.getProperty("/class_desc") != "" ){ 
+                var srch = search.getProperty("/class_desc");
+                aTableSearchState.push(new Filter("class_desc", FilterOperator.StartsWith, srch));
+            };
+             
+            if(search.getProperty("/asset_number") != undefined 
+                && search.getProperty("/asset_number") != null && search.getProperty("/asset_number") != "" ){ 
+                var srch = search.getProperty("/asset_number");
+                aTableSearchState.push(new Filter("asset_number", FilterOperator.StartsWith, srch));
+            };
             
-           
+            console.log("aTableSearchState>>>> " , aTableSearchState);
             
             return aTableSearchState;
         },
 
-        
+        getFormatDate: function (date) {
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        },
+
+         /**
+        * @public
+        * @see 사용처 : 리스트에서 Excel Export 버튼 클릭시
+        */
+        onExportPress: function (_oEvent) {
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+            var sFileName = "Remodel/Repair Management List"
+            //var oData = this.getModel("list").getProperty("/Message"); //binded Data
+            var oData = oTable.getModel("list").getProperty("/remodelRepairList");
+            console.log(oData);
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
+        },   
         
         _doInitTablePerso: function () {
             // init and activate controller

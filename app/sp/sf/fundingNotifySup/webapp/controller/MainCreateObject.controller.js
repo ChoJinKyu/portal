@@ -468,8 +468,8 @@ sap.ui.define([
                             }
                         })
                     },
-                    error: function (oError) {
-
+                    error: function(oError){
+                        MessageBox.alert("error가 발생 하였습니다.");
                     }
                 });
                 oDialog.open();
@@ -565,8 +565,8 @@ sap.ui.define([
                         that.getModel("contModel").setProperty("/detail/checkModel", aArr);
                     };
                 },
-                error: function (oError) {
-
+                error: function(oError){
+                    MessageBox.alert("error가 발생 하였습니다.");
                 }
             });
         },
@@ -591,8 +591,8 @@ sap.ui.define([
                 success: function (oData) {
                     that.getModel("transactionDivision").setData(oData.results);
                 },
-                error: function (oError) {
-                    MessageBox.alert("서비스 확인이 필요 합니다.");
+                error: function(oError){
+                    MessageBox.alert("error가 발생 하였습니다.");
                 }
             });
 
@@ -670,8 +670,8 @@ sap.ui.define([
                                 that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
                                 
                             },
-                            error: function (oError) {
-                                MessageBox.alert("에러 입니다.");
+                            error: function(oError){
+                                MessageBox.alert("error가 발생 하였습니다.");
                             }
                         });
 
@@ -691,8 +691,8 @@ sap.ui.define([
 
                     // }
                 },
-                error: function (oError) {
-
+                error: function(oError){
+                    MessageBox.alert("error가 발생 하였습니다.");
                 }
             });
         },
@@ -763,6 +763,9 @@ sap.ui.define([
                 filters: bFilters,
                 success: function (oRetrievedResult) {
                     that.getModel("applicationSup").setProperty("/investPlanMst", oRetrievedResult.results);
+                },
+                error: function (oError) {
+                    MessageBox.alert("error가 발생 하였습니다.");
                 }
             });
         },

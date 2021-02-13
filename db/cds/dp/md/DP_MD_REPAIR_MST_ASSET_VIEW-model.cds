@@ -18,7 +18,7 @@ entity Md_Repair_Mst_Asset_View {
         repair_progress_status_name     : String(30)            @title:'수선진행상태명';	
         repair_desc                     : String(500)           @title:'수선설명';
         model                           : String(100)           @title:'모델';
-        class_desc                      : String(300)           @title:'품명';
+        spec_name                       : String(300)           @title:'품명';
         supplier_code                   : String(10)            @title:'공급업체코드';
         supplier_name                   : String(100)           @title:'공급업체명';
         production_supplier_code        : String(100)           @title:'제작협력사ID';

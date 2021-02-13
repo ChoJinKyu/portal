@@ -190,11 +190,12 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
                     .append(",SUPPLIER_CODE               NVARCHAR(10)")
                     .append(",MATERIAL_CODE               NVARCHAR(40)")
                     .append(",MARKET_CODE                 NVARCHAR(30)")
+                    .append(",CURRENCY_CODE               NVARCHAR(3)")
                     .append(")")
                     .toString()
                     );
 
-        String insertSql = "INSERT INTO " + tableName + " VALUES (?,?,?,?,? ,?,?,?,?)";
+        String insertSql = "INSERT INTO " + tableName + " VALUES (?,?,?,?,? ,?,?,?,?,?)";
 
         //Local Temp Table에 insert                        
         List<Object[]> batchDtl = new ArrayList<Object[]>();
@@ -210,6 +211,7 @@ public class NetpriceApprovalDetailPriceV4Service extends SpNpBaseService implem
                     ,vRow.get("supplier_code")                  
                     ,vRow.get("material_code")           
                     ,vRow.get("market_code")                     	
+                    ,vRow.get("currency_code") 
                 });
             }
         }

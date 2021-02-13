@@ -438,15 +438,17 @@
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
                                     <uxap:blocks>
-
+                                        
                                         <Table id="valuationTable"
 
                                                 inset="false"
                                                 class="sapFDynamicPageAlignContent"
                                                 width="auto"
                                                 items="{
-                                                    path: 'DetailView>/evaluationType1'
-                                            }">
+                                                    path: 'DetailView>/evaluationType1',
+                                                    sorter: { path: 'evaluation_type_distrb_score_rate',
+                                                              descending : true}
+                                                        }">
                                             <headerToolbar>
                                                 <Toolbar>
                                                     <ToolbarSpacer/>
@@ -524,7 +526,8 @@
                                         items="{
                                             path: 'DetailView>/quantitative'
                                             ,
-                                            sorter: { path: 'sort_sequence'}
+                                            sorter: { path: 'sort_sequence'
+                                                    }
                                             }"
                                         mode="{=
                                             ${DetailView>/isEditMode} ? 'SingleSelectLeft' : 'None'

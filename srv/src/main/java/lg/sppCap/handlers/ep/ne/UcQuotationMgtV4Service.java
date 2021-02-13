@@ -444,7 +444,8 @@ public class UcQuotationMgtV4Service implements EventHandler {
                 v_row.setAttchGroupNumber(v_rs.getString("attch_group_number"));
                 v_row.setSupplierWriteFlag(v_rs.getBoolean("supplier_write_flag"));
                 v_row.setCompletionFlag(v_rs.getBoolean("completion_flag"));
-                v_row.setCompletionDate(v_rs.getDate("completion_date").toLocalDate());
+                //v_row.setCompletionDate(v_rs.getDate("completion_date").toLocalDate());
+                v_row.setCompletionDate(v_rs.getDate("completion_date")==null?null:v_rs.getDate("completion_date").toLocalDate());    
                 v_row.setFacilityPersonEmpno(v_rs.getString("facility_person_empno"));
                 v_row.setFacilityPersonName(v_rs.getString("facility_person_name"));
                 v_row.setFacilityDepartmentCode(v_rs.getString("facility_department_code"));

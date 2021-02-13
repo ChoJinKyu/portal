@@ -133,8 +133,9 @@
                 <VBox height ="100%">
                     <table:TreeTable
                                 id="midTreeTable"
-                               selectionMode="Single"
-                                rowSelectionChange=".onCellClick"  
+                                selectionMode="Single"
+                                rowSelectionChange=".onCellClick" 
+                                onCellClick = "onCellClick" 
 	                            selectionBehavior="Row"                  
                                 enableColumnReordering="false"
                                 expandFirstLevel="true"

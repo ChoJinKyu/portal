@@ -336,7 +336,8 @@ BEGIN
         DELETE FROM EP_UC_QUOTATION_EXTRA B
         WHERE (B.TENANT_ID, B.COMPANY_CODE, B.CONST_QUOTATION_NUMBER, B.CONST_QUOTATION_ITEM_NUMBER)
         IN (SELECT A.TENANT_ID, A.COMPANY_CODE, A.CONST_QUOTATION_NUMBER, A.CONST_QUOTATION_ITEM_NUMBER
-        FROM :I_R_TABLE A);
+        FROM :I_D_TABLE A
+        WHERE ROW_STATE = 'D'); 
 
     END IF;
 
@@ -351,7 +352,8 @@ BEGIN
             , LABOR_NET_PRICE             
             , LABOR_AMOUNT                
             , SUM_AMOUNT    
-            , EXTRA_RATE                                      
+            , EXTRA_RATE  
+            , ITEM_SEQUENCE                                    
             , LOCAL_UPDATE_DTM                  
             , UPDATE_USER_ID                    
             , SYSTEM_UPDATE_DTM    
@@ -363,7 +365,8 @@ BEGIN
             , LABOR_NET_PRICE             
             , LABOR_AMOUNT                
             , SUM_AMOUNT  
-            , to_number(EXTRA_RATE)                          
+            , to_number(EXTRA_RATE)  
+            , ITEM_SEQUENCE                        
             , CURRENT_TIMESTAMP                  
             , UPDATE_USER_ID                    
             , CURRENT_TIMESTAMP  

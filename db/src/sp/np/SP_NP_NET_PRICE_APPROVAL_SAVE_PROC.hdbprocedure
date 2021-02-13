@@ -35,7 +35,7 @@ PROCEDURE SP_NP_NET_PRICE_APPROVAL_SAVE_PROC (
                                               ,EFFECTIVE_END_DATE                 NVARCHAR(10)
                                             --  ,SURROGATE_TYPE_CODE                NVARCHAR(30)
                                               ,CURRENCY_CODE                      NVARCHAR(3)
-                                              ,NET_PRICE                          DECIMAL
+                                              ,NET_PRICE                          DECIMAL(34,10)
                                               ,VENDOR_POOL_CODE                   NVARCHAR(20)
                                               ,MARKET_CODE                        NVARCHAR(30)
                                               ,NET_PRICE_APPROVAL_REASON_CODE     NVARCHAR(30)

@@ -8,6 +8,7 @@
     xmlns:sc="sap.suite.ui.commons"
 	xmlns:core="sap.ui.core"
     xmlns:richtexteditor="sap.ui.richtexteditor"
+    xmlns:sp-ui="sp.util.control.ui"
 	height="100%">
 
 	<uxap:ObjectPageLayout id="page"
@@ -147,7 +148,7 @@
                             }"
                             cellClick=".onCellClick"
                             rowSelectionChange=".onCheck"
-                            visibleRowCountMode="Auto"
+                            visibleRowCount="5"
                             columnResize="onColumnResize">
                             <!-- <t:extension>
                                 <OverflowToolbar class="sapFDynamicPageAlignContent">
@@ -221,31 +222,44 @@
                                     <Text text="{details>selection_result}"/>
                                 </t:template>
                                 </t:Column> 
-                                <t:Column id="mainRequestAmount" width="7rem" hAlign="Left">
+                                <t:Column id="mainRequestAmount" width="14rem" hAlign="Left">
                                 <Label text="참여업체" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{details>supplier_name}"/>
-                                    <Input value="{
-                                                        path: 'details>offline_selection_supplier_name',
-                                                        type: 'sap.ui.model.type.String',
-                                                        constraints: {
-                                                            maxLength: 50
-                                                        }
-                                                    }" visible="{details>offline_flag}"/>                                    
+                                    <HBox justifyContent="Center">
+                                        <Text text="{details>supplier_name}" visible="{= ${details>offline_flag} === true ? false : true }"/>
+                                        <!-- <Input value="{
+                                                            path: 'details>offline_selection_supplier_name',
+                                                            type: 'sap.ui.model.type.String',
+                                                            constraints: {
+                                                                maxLength: 50
+                                                            }
+                                                        }" visible="{details>offline_flag}"/>   -->
+                                        <Input value="{details>offline_selection_supplier_name}" 
+                                            placeholder="참여업체" width="13rem"
+                                            showValueHelp="true" valueHelpRequest=".openSupplierPopupInTable"
+                                            visible="{= ${details>offline_flag} === true &amp;&amp; ${midObjectViewModel>/isEditMode} === true ? true : false }" />
+                                        <Text text="{details>offline_selection_supplier_name}" visible="{= ${details>offline_flag} === true &amp;&amp; ${midObjectViewModel>/isEditMode} === false ? true : false }" />     
+                                        <Text text="{details>offline_selection_supplier_code}" visible="false" /> 
+                                    </HBox>                                                  
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainLoiSelectionStatusCode" width="8rem" hAlign="Right">
                                 <Label text="환산견적금액" textAlign="Center" width="100%" tooltip="업체선정진행상태"/>
                                 <t:template>
-                                    <Text text="{details>quotation_amount}" visible="{= ${details>offline_flag} === true ? false : true }"/>
-                                    <Input value="{
-                                                        path: 'details>offline_quotation_amount',
-                                                        type: 'sap.ui.model.type.Integer',
-                                                        constraints: {
-                                                            minimum: '0',
-                                                            maximum: '1000000000000'
-                                                        }
-                                                    }" textAlign="Right" visible="{details>offline_flag}"/>    
+                                    <HBox justifyContent="Center">
+                                        <Text text="{details>quotation_amount}" visible="{= ${details>offline_flag} === true ? false : true }"/>
+                                        <Input value="{
+                                                            path: 'details>offline_quotation_amount',
+                                                            type: 'sap.ui.model.type.Integer',
+                                                            constraints: {
+                                                                minimum: '0',
+                                                                maximum: '1000000000000'
+                                                            }
+                                                        }" 
+                                                        textAlign="Right" 
+                                                        visible="{= ${details>offline_flag} === true &amp;&amp; ${midObjectViewModel>/isEditMode} === true ? true : false }" />
+                                        <Text text="{details>offline_quotation_amount}" visible="{= ${details>offline_flag} === true &amp;&amp; ${midObjectViewModel>/isEditMode} === false ? true : false }" />                     
+                                    </HBox>                      
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainLoiPublishStatusCode" width="7rem" hAlign="Center">
@@ -257,30 +271,36 @@
                                 <t:Column id="mainPoStatusCode" width="10rem" hAlign="Center">
                                 <Label text="견적납기일자" textAlign="Center" width="100%" tooltip="발주상태"/>
                                 <t:template>
-                                    <Text text="{details>quotation_due_date}" visible="{= ${details>offline_flag} === true ? false : true }"/>
-                                    <DatePicker value="{ 
-                                        path: 'details>offline_quotation_due_date', 
-                                        type: 'sap.ui.model.odata.type.DateTime', 
-                                        formatOptions: { UTC: true, format: 'yMd' } }" 
-                                    placeholder="Date" visible="{details>offline_flag}"/>   
-                                    <!-- <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyyMMdd" value="{details>/offline_quotation_due_date}" 
-                                    placeholder="Date" visible="{details>offline_flag}"/>    -->
+                                    <HBox justifyContent="Center">
+                                        <Text text="{details>quotation_due_date}" visible="{= ${details>offline_flag} === true ? false : true }"/>
+                                        <DatePicker value="{ 
+                                            path: 'details>offline_quotation_due_date', 
+                                            formatOptions: { UTC: true, format: 'yMd' } }" 
+                                            displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" 
+                                            placeholder="Date" 
+                                            visible="{= ${details>offline_flag} === true &amp;&amp; ${midObjectViewModel>/isEditMode} === true ? true : false }" />
+                                        <Text text="{details>offline_quotation_due_date}" visible="{= ${details>offline_flag} === true &amp;&amp; ${midObjectViewModel>/isEditMode} === false ? true : false }" />                             
+                                    </HBox>  
                                 </t:template>
                                 </t:Column>
-                                <t:Column id="mainRequestDepartmentName" width="7rem">
+                                <t:Column id="mainRequestDepartmentName" width="12rem">
                                 <Label text="견적비고" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{details>quotation_remark}" visible="{= ${details>offline_flag} === true ? false : true }"/>
-                                    <Input value="{
-                                                        path: 'details>offline_quotation_remark',
-                                                        type: 'sap.ui.model.type.String',
-                                                        constraints: {
-                                                            maxLength: 50
-                                                        }
-                                                    }" visible="{details>offline_flag}"/> 
+                                    <HBox justifyContent="Center">
+                                        <Text text="{details>quotation_remark}" visible="{= ${details>offline_flag} === true ? false : true }"/>
+                                        <Input value="{
+                                                            path: 'details>offline_quotation_remark',
+                                                            type: 'sap.ui.model.type.String',
+                                                            constraints: {
+                                                                maxLength: 50
+                                                            }
+                                                        }" 
+                                                        visible="{= ${details>offline_flag} === true &amp;&amp; ${midObjectViewModel>/isEditMode} === true ? true : false }" />
+                                        <Text text="{details>offline_quotation_remark}" visible="{= ${details>offline_flag} === true &amp;&amp; ${midObjectViewModel>/isEditMode} === false ? true : false }" />                
+                                    </HBox>                 
                                 </t:template>
                                 </t:Column>
-                                <t:Column id="mainRequestorName" width="5rem">
+                                <t:Column id="mainRequestorName" width="7rem">
                                 <Label text="견적번호" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{details>quotation_remark}"/>
@@ -443,5 +463,16 @@
 				
 			</OverflowToolbar>
 		</uxap:footer>
-	</uxap:ObjectPageLayout>
+    </uxap:ObjectPageLayout>
+
+    <sp-ui:SupplierWithOrgDialog id="supplierWithOrgDialog" 
+        title="협력사 검색"
+        items="{
+            filters: [
+                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+            ]
+        }"
+        apply=".onSupplierDialogApplyPress"
+    />      
+
 </mvc:View>

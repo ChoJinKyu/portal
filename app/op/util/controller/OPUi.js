@@ -36,24 +36,38 @@ sap.ui.define([
             var oXhr = ServiceProvider.getServiceByUrl("srv-api/odata/v2/op.util.TemplateService/");
             var oQuery = {
                 urlParameters: {
-                    "$select": "ettLabel,ettStatus"
+                    // "$select": "ettLabel,ettStatus",
+                    "$expand": "tpldvs"
                 },
                 filters: [
                     new Filter("tenant_id", FilterOperator.EQ, this.getProperty("tenantId")),
-                    new Filter("txn_type_code", FilterOperator.EQ, this.getProperty("txnType")),
+                    // new Filter("txn_type_code", FilterOperator.EQ, this.getProperty("txnType")),
                     new Filter("pr_template_number", FilterOperator.EQ, this.getProperty("templateNumber")),
                 ],
                 sorters: [
-                    //new Sorter("tenant_id"),
-                    new Sorter("ettLabel"),                        
+                    new Sorter("tenant_id")
+                    // new Sorter("ettLabel"),                        
                 ]
             };
-            oXhr.get("Pr_TDtlVIew", oQuery, true).then(function(aItems){
+            oXhr.get("Pr_TMst", oQuery, true).then(function(aItems){
                 aItems.forEach(function(oItem){
-                    if(oItem && oItem.d && oItem.d.results)
-                        this.oModel.setData(oItem.d.results);
+                    if(oItem && oItem.d && oItem.d.results )
+                    {
+                        //this.oModel.setData(oItem.d.results);  
+                          this.oModel.setDataM(oItem.d.results[0].tpldvs.results, this.getProperty("txnType") ); 
+                          this.oModel.setProperty("/APPROVAL_FLAG", oItem.d.results[0].approval_flag );  
+                          this.oModel.setProperty("/DEFAULT_TEMPLATE_NUMBER", oItem.d.results[0].default_template_number );  
+                          
+
+                    }      
                     else if(oItem.results)
-                        this.oModel.setData(oItem.results);
+                    {                        
+                        //this.oModel.setData(oItem.results);
+                          this.oModel.setDataM(oItem.results[0].tpldvs.results, this.getProperty("txnType") );
+                          this.oModel.setProperty("/APPROVAL_FLAG", oItem.results[0].approval_flag );  
+                          this.oModel.setProperty("/DEFAULT_TEMPLATE_NUMBER", oItem.results[0].default_template_number );  
+                    }    
+                         
                         
                 }.bind(this));
             }.bind(this));

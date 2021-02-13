@@ -16,12 +16,13 @@
             selectionMode="Single"
             rows="{tblModel>/left}"
             visibleRowCount="15"
+            class="sapFDynamicPageAlignContent" 
             width="100%">
             <t:extension>
-                <OverflowToolbar class="sapFDynamicPageAlignContent">
+                <OverflowToolbar>
                     <Title text="{I18N>/SPMD_CHARACTER_LIST} ({= ${tblModel>/left}.length})" level="H2"/>
                     <ToolbarSpacer/> 
-                    <SearchField id="tableSearchField" width="15rem" search=".onTableFilterPress" />	
+                    <SearchField id="tableSearchField" class="onMidTableFilterPress"  width="15rem" search=".onTableFilterPress" />	
                 </OverflowToolbar>
             </t:extension>
             <t:columns>

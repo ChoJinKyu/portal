@@ -16,16 +16,16 @@ using {sp.Sc_Nego_Item_Non_Price_Dtl} from '../../sp/sc/SP_SC_NEGO_ITEM_NON_PRIC
 //     sp.Sc_Pur_Operation_Org,
 //     sp.Sc_Pu_Pr_Mst,
 //     sp.Sc_Approval_Mst
-// } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+// } from '../../sp/sc/SP_SC_REFERENCE_OTHERS-model';
 
-// using { sp.Sc_Mm_Material_Mst } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+// using { sp.Sc_Mm_Material_Mst } from '../../sp/sc/SP_SC_REFERENCE_OTHERS-model';
 
 // using {
 //     sp.Sc_Incoterms_View,
 //     sp.Sc_Payment_Terms_View,
 //     sp.Sc_Market_Code_View,
 //     sp.Sc_Spec_Code_View
-// } from '../../sp/sc/SP_SC_REFERENCE_COMMON.model';
+// } from '../../sp/sc/SP_SC_REFERENCE_COMMON-model';
 
 
 /////////////////////////////////// Reference Type ///////////////////////////////////

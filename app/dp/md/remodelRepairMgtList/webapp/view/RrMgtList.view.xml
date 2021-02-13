@@ -51,16 +51,17 @@
                                 <MultiComboBox  id="searchPlantS" width="100%" 
                                         selectedKeys="{searchCon>/plantList}"
                                         items="{
-                                            path: 'purOrg>/Pur_Operation_Org',
+                                            path: 'plant>/Divisions',
                                             filters: [
                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                             ],
                                             sorter: { path: 'org_code'}
                                         }"
-                                        selectionFinish="handleSelectionFinishDiv"
+                                      
                                         required="true">
+                                          <!-- selectionFinish="handleSelectionFinishDiv" -->
                                     <items>
-                                        <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}] {purOrg>org_name}" />
+                                        <core:Item key="{plant>org_code}" text="[{plant>org_code}] {plant>org_name}" />
                                     </items>
                                 </MultiComboBox>
                                 <layoutData>
@@ -72,7 +73,7 @@
                                    <Select forceSelection="false"  
                                         width="100%" 
                                         id="searchAssetsStatusS" 
-                                        selectedKey="{mdCommon>/import_company_code}" 
+                                        selectedKey="{searchCon>/repair_progress_status_code}" 
                                         items="{
                                             path: 'util>/Code',
                                                     filters: [
@@ -90,7 +91,10 @@
                             </VBox>
                              <VBox height="4em">
                                 <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchRequestDateS" required="true"></Label>
-                                <DateRangeSelection id="searchRequestDateS" width="100%" change="handleChange"/>
+                                <DateRangeSelection id="searchRequestDateS" 
+                                    dateValue="{searchCon>/request_date_from}" 
+                                    secondDateValue="{searchCon>/request_date_to}"
+                                    width="100%" change="handleChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -128,17 +132,17 @@
                                 <Label text="{I18N>/PLANT}" labelFor="searchPlantE" required="true"></Label>
                                 <MultiComboBox  id="searchPlantE" width="100%"
                                         items="{
-                                            path: 'purOrg>/Pur_Operation_Org',
+                                            path: 'plant>/Divisions',
                                             filters: [
                                                 {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
                                             ],
                                             sorter: { path: 'org_code'}
                                         }" 
                                         selectedKeys="{searchCon>/plantList}"
-                                        selectionFinish="handleSelectionFinishDiv" 
                                         required="true">
+                                        <!-- selectionFinish="handleSelectionFinishDiv"  -->
                                     <items>
-                                        <core:Item key="{purOrg>org_code}" text="[{purOrg>org_code}] {purOrg>org_name}" />
+                                        <core:Item key="{plant>org_code}" text="[{plant>org_code}] {plant>org_name}" />
                                     </items>
                                 </MultiComboBox>
                                 <layoutData>
@@ -150,7 +154,7 @@
                              	<Select forceSelection="false"  
                                         width="100%" 
                                         id="searchAssetsStatusE" 
-                                        selectedKey="{mdCommon>/import_company_code}" 
+                                        selectedKey="{searchCon>/repair_progress_status_code}" 
                                         items="{
                                             path: 'util>/Code',
                                                     filters: [
@@ -167,7 +171,10 @@
                             </VBox>
                             <VBox height="4em">
                                 <Label text="{path:'I18N>/REQUEST_DATE', formatter:'I18NFormatter'}" labelFor="searchRequestDateE" required="true"></Label>
-                                <DateRangeSelection id="searchRequestDateE" width="100%" change="handleChange"/>
+                                <DateRangeSelection id="searchRequestDateE" width="100%"
+                                        dateValue="{searchCon>/request_date_from}" 
+                                    secondDateValue="{searchCon>/request_date_to}"
+                                change="handleChange"/>
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
@@ -177,7 +184,6 @@
                 </f:expandedContent>
                 <f:actions>
                     <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
-                    <Button id="detailMove" text="임시상세" type="Emphasized" press=".showDetail" />
                 </f:actions>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -191,28 +197,28 @@
                     <form:content>
                         <VBox height="4em">
                             <Label text="{path:'I18N>/MODEL', formatter:'I18NFormatter'}" labelFor="searchModel"></Label>
-                            <Input id="searchModel" placeholder="Input data" />
+                            <Input id="searchModel" placeholder="Input data" value="{searchCon>/model}" />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" linebreak="true" />
                             </layoutData>
                         </VBox>
                         <VBox height="4em">
                             <Label text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}" labelFor="searchMoldNumber"></Label>
-                            <Input id="searchMoldNumber" placeholder="Input data" />
+                            <Input id="searchMoldNumber" placeholder="Input data" value="{searchCon>/mold_number}"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox height="4em">
                             <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" labelFor="searchDescription"></Label>
-                            <Input id="searchDescription" placeholder="Input data"/>
+                            <Input id="searchDescription" placeholder="Input data" value="{searchCon>/class_desc}" />
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox height="4em">
                             <Label text="{path:'I18N>/ASSET_NUMBER', formatter:'I18NFormatter'}" labelFor="searchAssetNumber"></Label>
-                            <Input id="searchAssetNumber" placeholder="Input data"/>
+                            <Input id="searchAssetNumber" placeholder="Input data" value="{searchCon>/asset_number}"/>
                             <layoutData>
                                 <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
@@ -236,8 +242,6 @@
                         <Title text="List ({= ${list>/remodelRepairList}.length || 0})" level="H2"/>
                         <ToolbarSpacer/>
                         <!-- Add the Personalization button -->
-                        <Button id="changeSuppButton"   type="Transparent" text="Change Supp."   press=".onChangeSuppButtonButtonPress"  />
-                        <ToolbarSeparator/>
                         <Button icon="sap-icon://excel-attachment" press=".onExportPress" />
                         <Button icon="sap-icon://action-settings"  press=".onMoldMstTablePersoButtonPressed" >
                             <layoutData>
@@ -287,9 +291,10 @@
                     <table:Column id="rrMgtRequestReceiptDateColumn" width="13em" hAlign="Center">
                         <Label text="Request/Receipt Date" wrapping="true"/>
                         <table:template>
+                            <!-- <DatePicker value="{list>request_receipt_date}" valueFormat="yyyyMMdd" displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD" editable="false" class="readonlyField"/> -->
                             <Text text="{path:'list>request_receipt_date',formatter:'.dateFormatter.toDateString'}"/>
                         </table:template>
-                    </table:Column>
+                    </table:Column> 
                     <table:Column id="rrMgtTitleColumn" width="10em"  hAlign="Center" >
                         <Label text="Title" wrapping="true"/>
                         <table:template>

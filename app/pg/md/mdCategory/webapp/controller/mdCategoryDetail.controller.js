@@ -136,7 +136,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageEditButtonPress: function(){
-			this._toEditMode();
+            this._toEditMode();
 		},
 
 		onMidTableAddButtonPress: function(){
@@ -150,7 +150,9 @@ sap.ui.define([
 				"spmd_category_code": this._sSpmd_category_code,
 				"language_code": "",
 				"spmd_category_code_name": ""
-			}, "/MdCategoryLng");
+            }, "/MdCategoryLng");
+            
+
 		},
 
 		onMidTableDeleteButtonPress: function(){
@@ -168,10 +170,6 @@ sap.ui.define([
 			});
 			oTable.removeSelections(true);
 		},
-        
-        onMidTableFilterPress: function() {
-            this._MidTableApplyFilter();
-        },
 
 		
         /**
@@ -211,6 +209,49 @@ sap.ui.define([
                 }
             });
         },
+
+        
+
+		/**
+		 * Event handler for saving page changes
+		 * @public
+		 */
+
+        _onPageLngCheckData: function () {
+            // check master
+            var oMasterModel = this.getModel("master");
+            var oDetailsModel = this.getModel("details");
+            var oDetailsData = oDetailsModel.getData();
+            var oDetailsTable = this.byId("midTable");
+
+            var aCheckLng = [];
+
+            for (var i = 0; i < oDetailsTable.getItems().length; i++) {
+                
+                if ( oDetailsModel.getProperty("/MdCategoryLng/"+i)._row_state_ === "C" )
+                {                    
+                    aCheckLng.push(oDetailsTable.getItems()[i].getCells()[1].getSelectedKey() );
+                }             
+            }
+
+            for (var i = 0; i < aCheckLng.length; i++) {
+                for (var j = 0; j < oDetailsTable.getItems().length; j++) {
+                    if ( oDetailsModel.getProperty("/MdCategoryLng/"+j)._row_state_ == null )
+                    {                    
+                        if (aCheckLng[i] === oDetailsTable.getItems()[j].getCells()[1].getSelectedKey())
+                        {
+                            MessageToast.show("Language code 중복");
+                            return false;
+                        }
+                    }             
+                }
+                
+            }
+
+            return true;
+
+        },
+
 		/**
 		 * Event handler for saving page changes
 		 * @public
@@ -245,6 +286,9 @@ sap.ui.define([
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
+                        if (!that._onPageLngCheckData()) {
+                            return;
+                        }
                         oView.setBusy(true);
                         
                         if(that._sSpmd_category_code !== "new"){
@@ -359,18 +403,17 @@ sap.ui.define([
 		 * @private
 		 */
 		_onRoutedThisPage: function(oEvent){
-			var oArgs = oEvent.getParameter("arguments"),
+            var oArgs = oEvent.getParameter("arguments"),
+                oTable = this.byId("midTable"),
 				oView = this.getView();
             this._sCompany_code = oArgs.company_code;
             this._sOrg_type_code = oArgs.org_type_code;
             this._sOrg_code = oArgs.org_code;
             this._sSpmd_category_code = oArgs.spmd_category_code;
-            // this._sSpmd_category_code_name = oArgs.spmd_category_code_name;
-            // this._sRgb_font_color_code = oArgs.rgb_font_color_code;
             this._sSpmd_category_sort_sequence = oArgs.spmd_category_sort_sequence;
             
-			// this.getModel("midObjectView").setProperty("/isAddedMode", false);
             if(oArgs.spmd_category_code == "new" ){
+
 				var oMasterModel = this.getModel("master");
 				oMasterModel.setData({
                     "tenant_id": "L2100",
@@ -394,7 +437,8 @@ sap.ui.define([
                     "spmd_category_code": "",
 					"language_code": "",
 					"spmd_category_code_name": "",
-				}, "/MdCategoryLng");
+                }, "/MdCategoryLng");
+                
                 this._toEditMode();
                 
 			}else{   
@@ -428,9 +472,11 @@ sap.ui.define([
                         new Filter("org_type_code", FilterOperator.EQ, this._sOrg_type_code),
                         new Filter("org_code", FilterOperator.EQ, this._sOrg_code),
                         new Filter("spmd_category_code", FilterOperator.EQ, this._sSpmd_category_code)
-                        // new Filter("language_code", FilterOperator.EQ, 'EN')
                     ],
                     success: function(oData){
+                        // for(var idx=0; idx<oData.results.length; idx++){
+                        //     oTable.getAggregation('items')[idx].getCells()[1].getItems()[0].setEditable(false);
+                        // }
                         oView.setBusy(false);
                     }
                 });
@@ -441,12 +487,21 @@ sap.ui.define([
 
 			oTransactionManager.setServiceModel(this.getModel());
 
+            setTimeout(this.setPageLayout(), 500);
             //ScrollTop
-            var oObjectPageLayout = this.getView().byId("page");
-            var oFirstSection = this.getView().byId("pageSectionMain");
-            oObjectPageLayout.scrollToSection(oFirstSection, 0, -500);
+            // var oObjectPageLayout = this.getView().byId("page");
+            // var oFirstSection = oObjectPageLayout.getSections()[0];
+            // oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
+
+            // var oFirstSection = this.getView().byId("pageSectionMain");
+            // oObjectPageLayout.scrollToSection(oFirstSection, 0, -500);
 		},
 
+        setPageLayout : function(){ //fragment 없애야함
+            var oObjectPageLayout = this.getView().byId("page");
+            var oFirstSection = oObjectPageLayout.getSections()[0];
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);          
+        },
 
 		/* =========================================================== */
 		/* internal methods                                            */
@@ -532,32 +587,35 @@ sap.ui.define([
             });
             
 
-            //language_code : comboBox
-            var oLanguageCode = new ComboBox({
+            //language_code : comboBox 
+            this.oLanguageCode = new ComboBox({
                     selectedKey: "{details>language_code}",
-                    required : true
+                    required : true,
+                    editable: "{= ${details>_row_state_} === 'C' ? true : false}"
                 });
-                oLanguageCode.bindItems({
-                    path: 'util>/Code',
-                    filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
-                        // new Filter("company_code", FilterOperator.EQ, 'G100'),
-                        new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')
-                    ],
-                    template: new Item({
-                        key: "{util>code}",
-                        text: "{util>code_name}"
-                    })
-                }); 
+            this.oLanguageCode.bindItems({
+                path: 'util>/Code',
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, 'L2100'),
+                    // new Filter("company_code", FilterOperator.EQ, 'G100'),
+                    new Filter("group_code", FilterOperator.EQ, 'CM_LANG_CODE')
+                ],
+                template: new Item({
+                    key: "{util>code}",
+                    text: "{util>code_name}"
+                })
+            }); 
 
 
+            //edit가능 : 카테고리 신규 생성 , 언어row 추가
+            
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new ObjectStatus({
                         icon:{ path:'details>_row_state_', formatter: this.formattericon
                                 }                              
                     }),
-                    oLanguageCode,
+                    this.oLanguageCode,
 					new Input({
 						value: {
 							path: "details>spmd_category_code_name",
@@ -585,7 +643,8 @@ sap.ui.define([
             this._loadFragment(sFragmentName, function(oFragment){
 				oPageSubSection.removeAllBlocks();
 				oPageSubSection.addBlock(oFragment);
-			})
+            })
+            
         },
         _loadFragment: function (sFragmentName, oHandler) {
 			if(!this._oFragments[sFragmentName]){
@@ -601,18 +660,7 @@ sap.ui.define([
 				if(oHandler) oHandler(this._oFragments[sFragmentName]);
 			}
         },
-        
-
-        _MidTableApplyFilter: function() {
-
-            var oView = this.getView(),
-				sValue = oView.byId("midTableSearchField").getValue(),
-				oFilter = new Filter("spmd_category_code_name", FilterOperator.Contains, sValue);
-
-			oView.byId("midTable").getBinding("items").filter(oFilter, sap.ui.model.FilterType.Application);
-
-        },
-
+    
 		/**
 		 * Opens a fully featured <code>ColorPalette</code> in a <code>sap.m.ResponsivePopover</code>
 		 * @param oEvent

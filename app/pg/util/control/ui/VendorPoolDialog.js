@@ -11,10 +11,11 @@ sap.ui.define([
     "sap/ui/table/Column",
     "sap/m/Label",
     "sap/m/Text",
+    "sap/m/Input",
     "sap/m/MultiInput",
     "sap/m/ComboBox",
     "sap/ui/core/Item",
-    //"ext/pg/util/control/ui/VendorPoolDialogPop",
+    "ext/pg/util/control/ui/VendorPoolDialogPop",
     "ext/pg/util/control/ui/SupplierDialogPop",
     "ext/pg/util/control/ui/MaterialDialogPop",
     "ext/cm/util/control/ui/EmployeeDialog",
@@ -31,11 +32,12 @@ sap.ui.define([
     HBox, 
     Column, 
     Label, 
-    Text, 
+    Text,
+    Input, 
     MultiInput,
     ComboBox, 
     Item,
-    //VendorPoolDialogPop,
+    VendorPoolDialogPop,
     SupplierDialogPop,
     MaterialDialogPop,
     EmployeeDialog,
@@ -90,51 +92,51 @@ sap.ui.define([
                 }
             });
 
-            // this.oVendorPoolCode = new Input({
-            //     placeholder : this.getModel("I18N").getText("/VENDOR_POOL_CODE"),
-            //     showValueHelp : true,
-            //     valueHelpOnly : true,
-            //     valueHelpRequest: function (oEvent) {
-            //         this.oVendorPoolDialogPop = new VendorPoolDialogPop({
-            //             multiSelection: false,
-            //             keyField: "VENDOR_POOL_CODE",
-            //             textField: "VENDOR_POOL_NAME",
-            //             filters: [
-            //                 new VBox({
-            //                     items: [
-            //                         new Label({ text: this.getModel("I18N").getText("/KEYWORD") }),
-            //                         new Input({placeholder : this.getModel("I18N").getText("/VENDOR_POOL_CODE")})
-            //                     ],
-            //                     layoutData: new GridData({ span: "XL2 L3 M5 S10" })
-            //                 })
-            //             ],
-            //             columns: [
-            //                 new Column({
-            //                     width: "75%",
-            //                     label: new Label({ text: this.getModel("I18N").getText("/VALUE") }),
-            //                     template: new Text({ text: "vendorpool code" })
-            //                 }),
-            //                 new Column({
-            //                     width: "25%",
-            //                     hAlign: "Center",
-            //                     label: new Label({ text: this.getModel("I18N").getText("/CODE") }),
-            //                     template: new Text({ text: "vendorpool name" })
-            //                 })
-            //             ]
-            //         });
+            this.oVendorPoolCode = new MultiInput({
+                placeholder : this.getModel("I18N").getText("/VENDOR_POOL_CODE"),
+                showValueHelp : true,
+                valueHelpOnly : true,
+                valueHelpRequest: function (oEvent) {
+                    this.oVendorPoolDialogPop = new VendorPoolDialogPop({
+                        multiSelection: false,
+                        keyField: "VENDOR_POOL_CODE",
+                        textField: "VENDOR_POOL_NAME",
+                        filters: [
+                            new VBox({
+                                items: [
+                                    new Label({ text: this.getModel("I18N").getText("/KEYWORD") }),
+                                    new Input({placeholder : this.getModel("I18N").getText("/VENDOR_POOL_CODE")})
+                                ],
+                                layoutData: new GridData({ span: "XL2 L3 M5 S10" })
+                            })
+                        ],
+                        columns: [
+                            new Column({
+                                width: "75%",
+                                label: new Label({ text: this.getModel("I18N").getText("/VALUE") }),
+                                template: new Text({ text: "vendorpool code" })
+                            }),
+                            new Column({
+                                width: "25%",
+                                hAlign: "Center",
+                                label: new Label({ text: this.getModel("I18N").getText("/CODE") }),
+                                template: new Text({ text: "vendorpool name" })
+                            })
+                        ]
+                    });
 
-            //         this.oVendorPoolDialogPop.setContentWidth("300px");
-            //         var sSearchObj = {};
-            //         sSearchObj.tanent_id = "L2100";
-            //         //sSearchObj.vendor_pool_code = oSearchValue;
-            //         this.oVendorPoolDialogPop.open(sSearchObj);
-            //         this.oVendorPoolDialogPop.attachEvent("apply", function (oEvent) {
-            //             console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
-            //             that.oVendorPoolCode.setValue(null);
-            //             that.oVendorPoolCode.setValue(oEvent.mParameters.item.vendor_pool_code);
-            //         }.bind(this));
-            //     }
-            // });
+                    this.oVendorPoolDialogPop.setContentWidth("300px");
+                    var sSearchObj = {};
+                    sSearchObj.tanent_id = "L2100";
+                    //sSearchObj.vendor_pool_code = oSearchValue;
+                    this.oVendorPoolDialogPop.open(sSearchObj);
+                    this.oVendorPoolDialogPop.attachEvent("apply", function (oEvent) {
+                        console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
+                        that.oVendorPoolCode.setValue(null);
+                        that.oVendorPoolCode.setValue(oEvent.mParameters.item.vendor_pool_code);
+                    }.bind(this));
+                }
+            });
 
             this.oVendorPoolLvl1 = new ComboBox({
                 id: "vendorPoolLvl1Vp",
@@ -367,13 +369,14 @@ sap.ui.define([
                     layoutData: new GridData({ span: "XL6 L6 M6 S12" })
                 }),
 
-                // new VBox({
-                //     items: [
-                //         new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") }),
-                //         this.oVendorPoolCode
-                //     ],
-                //     layoutData: new GridData({ span: "XL3 L3 M3 S12" })
-                // }),
+                new VBox({
+                    items: [
+                        new Label({ text: this.getModel("I18N").getText("/VENDOR_POOL_CODE") }),
+                        this.oVendorPoolCode
+                    ],
+                    layoutData: new GridData({ span: "XL3 L3 M3 S12" }),
+                    visible: false
+                }),
 
                  new HBox({
                     items: [

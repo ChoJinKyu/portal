@@ -547,8 +547,8 @@ sap.ui.define([
                 loiItemNumber: oRecord.same_selection_item_number,
                 loiSelectionNumber: oRecord.loi_selection_number,
                 loiNumber: oRecord.loi_number,
-                quotationNumber: oRecord.same_quotation_number,
-                quotationItemNumber: oRecord.same_quotation_item_number
+                quotationNumber: (oRecord.same_quotation_number ? oRecord.same_quotation_number : "new"),
+                quotationItemNumber: (oRecord.same_quotation_item_number ? oRecord.same_quotation_item_number : "new") 
                 // existRfq: (oRecord.quotation_number ? true : false)
             }, true);
         },
@@ -670,6 +670,14 @@ sap.ui.define([
                 sLoiSelectionNumber = "new";
             }
 
+            if (!sQuotationNumber) {
+                sQuotationNumber = "new";
+            }
+
+            if (!sQuotationItemNumber) {
+                sQuotationItemNumber = "new";
+            }            
+
             console.log("sLoiSelectionNumber=", sLoiSelectionNumber);
             console.log("canSelect=", canSelect);
 
@@ -683,7 +691,7 @@ sap.ui.define([
                             if (sButton === MessageBox.Action.OK) {
                                 if (canSelect) {
                                     console.log("sTenantId=", sTenantId);
-                                    var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
+                                    // var oNextUIState = that.getOwnerComponent().getHelper().getNextUIState(1);
                                     that.getRouter().navTo("selectionPage", {
                                         //layout: oNextUIState.layout,
                                         tenantId: sTenantId,

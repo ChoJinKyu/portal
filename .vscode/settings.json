@@ -68,5 +68,5 @@
     "CDS graphical modeler.Automatic Sorting": false,
     "cds.checkDevKitInstalled": false,
     "wattFeature.calculationViewEditor.performanceAnalysisAlwaysOn": true,
-    "welcome.showOnStartup": true
+    "welcome.showOnStartup": false
 }

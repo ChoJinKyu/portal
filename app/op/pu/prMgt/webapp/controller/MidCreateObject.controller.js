@@ -8,6 +8,7 @@ sap.ui.define([
     "ext/lib/control/ui/CodeValueHelp",
     "sap/ui/model/json/JSONModel", 
     "sap/ui/model/odata/v2/ODataModel",
+    "sap/ui/core/format/DateFormat",
     "sap/ui/core/routing/History",
     "sap/ui/richtexteditor/RichTextEditor",
 	"sap/ui/model/Filter",
@@ -36,7 +37,7 @@ sap.ui.define([
     "op/util/control/ui/WbsDialog",
     "sp/util/control/ui/SupplierDialog"
 ], function (BaseController, ManagedListModel, ManagedModel, Validator, DateFormatter, NumberFormatter, CodeValueHelp, 
-            JSONModel, ODataModel, History, RichTextEditor, Filter, FilterOperator, Sorter,
+            JSONModel, ODataModel, DateFormat, History, RichTextEditor, Filter, FilterOperator, Sorter,
             Fragment, ValueState ,LayoutType, MessageBox, MessageToast,  UploadCollectionParameter, Device ,syncStyleClass, ColumnListItem, Label,
             EmployeeDialog, PlantDialog, PurOperationOrgDialog, MaterialOrgDialog, AccountDialog, AssetDialog, CctrDialog, CurrencyDialog, OrderDialog, UomDialog, WbsDialog, SupplierDialog) {
             
@@ -54,10 +55,6 @@ sap.ui.define([
         dateFormatter: DateFormatter,
         numberFormatter: NumberFormatter,
         validator: new Validator(),
-        
-		/* =========================================================== */
-		/* lifecycle methods                                           */
-		/* =========================================================== */
 
 		/**
 		 * Called when the mainObject controller is instantiated.
@@ -70,7 +67,7 @@ sap.ui.define([
             // view에서 사용할 메인 Model
             this.setModel(new JSONModel(), "detailModel"); 
             this.setModel(new JSONModel(), "viewModel"); 
-            
+                        
             this.getRouter().getRoute("midCreate").attachPatternMatched(this._onObjectMatched, this);
             this.getRouter().getRoute("midModify").attachPatternMatched(this._onObjectMatched, this);
         },
@@ -720,11 +717,24 @@ sap.ui.define([
                 aDetails = oViewModel.getProperty("/Pr_Dtl"),
                 oPritemTable = oView.byId("pritemTable");
             
+            //const dateFormat = DateFormat.getDateInstance({ pattern: "yyyy-MM-dd" });
+            //const jsDateObject = dt.parse("2020-08-01T00:00:00"); // returns: Sat Aug 01 2020 00:00:00 <timezone information>
+            //const dayMonthYear = dt.format(jsDateObject)
+
             var aSelectedIndex = oPritemTable.getSelectedIndices();
             if(aSelectedIndex.length > 0){
                 aSelectedIndex.forEach(function(item, idx){
                     //var oNewData = that._fnSetPrDetailData(aDetails[item]);
                     var oNewData = JSON.parse(JSON.stringify(aDetails[item]));
+                    
+                    //var deliveryRequestDate = drDateFormat.toDateString(oNewData.delivery_request_date);
+                    //var oDrDate = dateFormat.parse(oNewData.delivery_request_date);
+                    //oNewData.delivery_request_date = dateFormat.format(oDrDate);
+
+                    if(oNewData.delivery_request_date.length > 10){
+                        oNewData.delivery_request_date = oNewData.delivery_request_date.substring(0,10);
+                    }
+
                     aDetails.push(oNewData);
                 });
 
@@ -884,9 +894,16 @@ sap.ui.define([
                             }else if(key === "pr_quantity" || key === "estimated_price" || key === "price_unit"){
                                 var checkVal = Number.parseFloat(itemDtl[key]).toFixed(0);
                                 if(checkVal <= 0){
-                                    msg += "\r\n - " + (idx+1) + "번째 열의 " + sI18NText + " (0 보다 큰 값 입력)"; 
+                                    msg += "\r\n - " + (idx+1) + "번째 열의 " + sI18NText + " (0 보다 큰 숫자를 입력하세요)"; 
                                     bReturn = false;
                                 }
+                            }else if(key === "delivery_request_date"){
+                                let convDate = that._fnConvertDate(itemDtl[key]);
+                                if(convDate.length > 10){
+                                    msg += "\r\n - " + (idx+1) + "번째 열의 " + sI18NText + " (정확한 날짜를 입력하세요)"; 
+                                    bReturn = false;
+                                }
+
                             }
                         }
                     }
@@ -903,8 +920,6 @@ sap.ui.define([
                 });
                 bReturn = false;
             }
-
-
 
             // var oTable = this.byId(tableId);
             // var aColumns = oTable.getColumns();
@@ -932,7 +947,21 @@ sap.ui.define([
             return bReturn;
         },
 
-
+        /**
+         * 날짜 변환
+         */
+        _fnConvertDate(pDate){
+            var dateY, dateM, dateD, convDate;
+            if(pDate && pDate != "" && !pDate.hasOwnProperty("length")){
+                dateY = pDate.getFullYear();
+                dateM = pDate.getMonth() + 1;
+                dateD = pDate.getDate();
+                convDate = dateY + "-" + (dateM >= 10 ? dateM : "0"+dateM) + "-" + (dateD >= 10 ? dateD : "0"+dateD);
+            }else{
+                convDate = pDate || "";
+            }
+            return convDate
+        },
         
         /**
          * 구매요청 저장
@@ -1007,12 +1036,12 @@ sap.ui.define([
                 pr_type_name_2: oMaster.pr_type_name_2,
                 pr_type_name_3: oMaster.pr_type_name_3,
                 pr_desc: oMaster.pr_desc,
-                update_user_id: "A60264",
+                update_user_id: this.$session.employee_number,
                 details: []
             };
 
             // Detail data
-            var drdateY, drdateM, drdateD, delivery_request_date;
+            //var drdateY, drdateM, drdateD, delivery_request_date;
             var aDetails = [];
             var aViewDataPrDtl = oViewData.Pr_Dtl;
             if(aViewDataPrDtl.length > 0){
@@ -1076,24 +1105,17 @@ sap.ui.define([
          */
         _fnSetPrDetailData: function(item){
             var that = this;
-
+            
             // 납품요청일
-            var drdateY, drdateM, drdateD, delivery_request_date;
-            if(item.delivery_request_date && item.delivery_request_date != ""){
-                drdateY = item.delivery_request_date.getFullYear();
-                drdateM = item.delivery_request_date.getMonth() + 1;
-                drdateD = item.delivery_request_date.getDate();
-                delivery_request_date = drdateY + "-" + (drdateM >= 10 ? drdateM : "0"+drdateM) + "-" + (drdateD >= 10 ? drdateD : "0"+drdateD);
-            }else{
-                delivery_request_date = "";
-            }
-
-            // 구매조직명칭
-            // let sOrgNameDesc = "";
-            // if(item.org_name && item.org_name !== ""){
-            //     sOrgNameDesc = item.org_name + " [" + item.org_code + "]";
-            // }else if(item.plant_name && item.plant_name !== ""){
-            //     sOrgNameDesc = item.plant_name + " [" + item.org_code + "]";
+            // var drdateY, drdateM, drdateD, delivery_request_date;
+            // var drDate = item.delivery_request_date;           
+            // if(drDate && drDate != "" && !drDate.hasOwnProperty("length")){
+            //     drdateY = drDate.getFullYear();
+            //     drdateM = drDate.getMonth() + 1;
+            //     drdateD = drDate.getDate();
+            //     delivery_request_date = drdateY + "-" + (drdateM >= 10 ? drdateM : "0"+drdateM) + "-" + (drdateD >= 10 ? drdateD : "0"+drdateD);
+            // }else{
+            //     delivery_request_date = drDate || "";
             // }
 
             var oPrDetailData = {
@@ -1107,16 +1129,18 @@ sap.ui.define([
                         org_name_desc       : that._fnGetCodeNameDesc(item.org_code, item.org_name),
                         buyer_empno         : (item.buyer_empno) ? item.buyer_empno : "",
                         user_local_name     : (item.user_local_name) ? item.user_local_name : "",
-                        currency_code       : (item.currency_code) ? item.currency_code : "KRW",
+                        //currency_code       : (item.currency_code) ? item.currency_code : "KRW",
+                        currency_code         : item.currency_code || "KRW",
                         estimated_price     : (item.estimated_price && item.estimated_price !== "") ? item.estimated_price+"" : "0", 
                         material_code       : (item.material_code) ? item.material_code : "",
                         material_group_code : (item.material_group_code) ? item.material_group_code : "",
                         pr_desc             : (item.pr_desc) ? item.pr_desc : "",                        
-                        pr_quantity         : (item.pr_quantity) ? item.pr_quantity : "0",
+                        //pr_quantity         : (item.pr_quantity) ? item.pr_quantity : "0",
+                        pr_quantity         : item.pr_quantity || "0",
                         pr_unit             : (item.pr_unit) ? item.pr_unit : "",
                         requestor_empno     : (item.requestor_empno) ? item.requestor_empno : this.$session.employee_number,
                         requestor_name      : (item.requestor_name) ? item.requestor_name : this.$session.employee_name,
-                        delivery_request_date: delivery_request_date,
+                        delivery_request_date: that._fnConvertDate(item.delivery_request_date),
                         //delivery_request_date: (item.delivery_request_date) ? item.delivery_request_date : "",
                         purchasing_group_code: (item.purchasing_group_code) ? item.purchasing_group_code : "",
                         price_unit          : (item.price_unit && item.price_unit !== "") ? item.price_unit+"" : "1",
@@ -1167,22 +1191,9 @@ sap.ui.define([
             var that=this;
             var oViewModel = this.getModel("viewModel");
             var oSelectedData = oViewModel.getProperty(sSelectedPath);
+           
 
-            // this.oSearchUomDialog = new UomDialog({
-        //             title: "Choose Uom Code"
-        //         });
-        //         this.oSearchUomDialog.attachEvent("apply", function(oEvent){
-        //             var oItemData = oEvent.getParameter("item");
-        //             var oViewModel = that.getModel("viewModel");
-        //             var oSelectedData = oViewModel.getProperty(sSelectedPath);
-
-        //             if(oItemData.uom_code && oItemData.uom_code !== ""){
-        //                 oSelectedData.pr_unit = oItemData.uom_code;                    
-        //                 oViewModel.refresh();
-        //             }                    
-        //         }.bind(that));
-
-            // Employee 
+            // PR UNIT (UOM) 
             action == "pr_unit"
             &&
             this.dialog(new UomDialog({
