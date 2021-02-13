@@ -1,23 +1,23 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"ext/lib/util/Multilingual",
 	"sap/ui/model/json/JSONModel",
-    "ext/lib/util/ExcelUtil",
-	"ext/lib/formatter/DateFormatter",
-	"sap/m/TablePersoController",
-	"cm/util/control/ui/CountryDialog",
-	"sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "sap/ui/thirdparty/jquery",
-], function (BaseController, Multilingual, JSONModel, ExcelUtil, DateFormatter, 
+	"sap/m/TablePersoController",
+	"ext/lib/formatter/DateFormatter",
+    "ext/lib/util/ExcelUtil",
+	"sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+	"cm/util/control/ui/CountryDialog",
+], function (BaseController, JSONModel, MessageBox, MessageToast, jQuery, 
         TablePersoController, 
-        CountryDialog,
-        Filter, FilterOperator, MessageBox, MessageToast, jQuery) {
+        DateFormatter, ExcelUtil, 
+        Filter, FilterOperator, 
+        CountryDialog) {
 	"use strict";
 
-	return BaseController.extend("xx.template3ColumnsLayout.controller.TemplateBeginColumn", {
+	return BaseController.extend("xx.templateRcmdV4.controller.TemplateBeginColumn", {
 
 		dateFormatter: DateFormatter,
 
@@ -30,28 +30,43 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-			var oMultilingual = new Multilingual();
+			var oMultilingual = this.getMultilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-            this.setModel(new JSONModel(), "list");
             this.setModel(new JSONModel(), "beginPageViewModel");
 
 			oMultilingual.attachEvent("ready", function(oEvent){
-				// var oI18nModel = oEvent.getParameter("model");
+				var oI18nModel = oEvent.getParameter("model");
 				this.addHistoryEntry({
-					title: "3컬럼 Layout",
+					title: oI18nModel.getText("/TEMPLATE_3COLUMNSLAYOUT_TITLE"),
 					icon: "sap-icon://table-view",
 					intent: "#Template3ColumnsLayout-display"
 				}, true);
-			}.bind(this));
+            }.bind(this));
+            
+            this.getView().bindElement({
+                path: "/Tenant",
+                events: {
+                    dataStateChange: function(){
+                        debugger;
+                    },
+                    dataRequested: function(){
+                        this.getView().setBusy(true);
+                    }.bind(this),
+                    dataReceived: function(oData){
+                    }.bind(this),
+                    change: function(){
+                        this.getView().setBusy(false);
+                    }.bind(this)
+                }
+            });
 			
 			this.getRouter().getRoute("beginPage").attachPatternMatched(this._onRoutedThisPage, this);
-
-            this.enableMessagePopover();
         },
 		
 		/* =========================================================== */
 		/* event handlers                                              */
         /* =========================================================== */
+        
         onSearchCountryDialogPress: function(oEvent){
             var oInput = oEvent.getSource();
             if(!this.oSearchCountryDialog){
@@ -75,10 +90,10 @@ sap.ui.define([
             this.oSearchCountryDialog.setTokens(aTokens);
         },
         
-        onMainTableExportButtonPress: function(){
+        onCompanyListExportButtonPress: function(){
             ExcelUtil.fnExportExcel({
                 fileName: "Template3ColumnsLayoutExport",
-                table: this.byId("mainTable"),
+                table: this.byId("CompanyList"),
                 data: this.getModel("list").getProperty("/")
             });
         },
@@ -89,16 +104,8 @@ sap.ui.define([
 		 * @public
 		 */
 		onPageSearchButtonPress : function (oEvent) {
-			if (oEvent.getParameters().refreshButtonPressed) {
-				// Search field's 'refresh' button has been pressed.
-				// This is visible if you select any master list item.
-				// In this case no new search is triggered, we only
-				// refresh the list binding.
-				this.onRefresh();
-			} else {
-				var aSearchFilters = this._getSearchStates();
-				this._applySearch(aSearchFilters);
-			}
+            var aSearchFilters = this._getSearchStates();
+            this._applySearch(aSearchFilters);
 		},
 
 		/**
@@ -106,10 +113,10 @@ sap.ui.define([
 		 * @param {sap.ui.base.Event} oEvent
 		 * @public
 		 */
-		onMainTableItemPress: function(oEvent) {
+		onCompanyListItemPress: function(oEvent) {
 			var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1),
-				sPath = oEvent.getSource().getBindingContext("list").getPath(),
-				oRecord = this.getModel("list").getProperty(sPath);
+				sPath = oEvent.getSource().getBindingContextPath(),
+				oRecord = this.getModel().getProperty(sPath);
 
 			this.getRouter().navTo("midPage", {
 				layout: oNextUIState.layout, 
@@ -118,19 +125,23 @@ sap.ui.define([
 			});
 
             if(oNextUIState.layout === "TwoColumnsMidExpanded"){
-                this.getModel("beginPageViewModel").setProperty("/headerExpandFlag", false);
+                this.getModel("beginPageViewModel").setProperty("/headerExpanded", false);
+                this.getModel("beginPageViewModel").setProperty("/lessImportantSearchConditionsVisible", false);
             }
 
+			// store index of the item clicked, which can be used later in the columnResize event
 			var oItem = oEvent.getSource();
 			oItem.setNavigated(true);
-			var oParent = oItem.getParent();
-			// store index of the item clicked, which can be used later in the columnResize event
-			this.iIndex = oParent.indexOfItem(oItem);
+			this.iIndex = oItem.getParent().indexOfItem(oItem);
 		},
 
 		/* =========================================================== */
 		/* internal methods                                            */
 		/* =========================================================== */
+
+        getList: function(){
+			return this.byId("companyList");
+        },
 
 		/**
 		 * When it routed to this page from the other page.
@@ -148,29 +159,18 @@ sap.ui.define([
 		 * @private
 		 */
 		_applySearch: function(aSearchFilters) {
-			var oView = this.getView(),
-				oModel = this.getModel("list");
-			oView.setBusy(true);
-			this.getModel().read("/Company", {
-                filters: aSearchFilters,
-                fetchOthers: true,
-				success: function(oData){
-                    oModel.setProperty("/", oData.results);
-				},
-				fetchOthersSuccess: function(aData, aErrors){
-                    aData.forEach(function(oData){
-                        oModel.setProperty("/", oData.results);
-                    }.bind(this));
-					oView.setBusy(false);
-				}.bind(this)
-			});
+            this.getList().getBinding("items").filter(aSearchFilters, "Application");
 		},
 		
 		_getSearchStates: function(){
-			var sKeyword = this.getView().byId("searchKeyword").getValue(),
+            var sTenant = this.getView().byId("searchTenant").getValue(),
+                sKeyword = this.getView().byId("searchKeyword").getValue(),
 			    aCountryTokens = this.getView().byId("searchCountry").getTokens();
 			
 			var aSearchFilters = [];
+			if (sTenant) {
+				aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTenant));
+            }
 			if (sKeyword && sKeyword.length > 0) {
 				aSearchFilters.push(new Filter({
 					filters: [

@@ -1,33 +1,28 @@
 sap.ui.define([
 	"ext/lib/controller/BaseController",
-	"ext/lib/util/Multilingual",
-	"ext/lib/model/ManagedModel",
-	"ext/lib/model/ManagedListModel",
 	"sap/ui/model/json/JSONModel",
-    "ext/lib/util/Validator",
+    "sap/m/MessageBox",
+    "sap/m/MessageToast",
+    "sap/ui/thirdparty/jquery",
 	"ext/lib/formatter/Formatter",
 	"ext/lib/formatter/DateFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
-	"sap/ui/core/Fragment",
-    "sap/m/MessageBox",
-    "sap/m/MessageToast",
 	"sap/m/ColumnListItem",
 	"sap/m/ObjectStatus",
 	"sap/m/ObjectIdentifier",
 	"sap/m/Text",
 	"sap/m/Input",
-	"ext/lib/control/m/CodeComboBox",
 	"sap/ui/core/Item",
-], function (BaseController, Multilingual, ManagedModel, ManagedListModel, JSONModel, Validator, Formatter, DateFormatter, 
-        Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-        ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, CodeComboBox, Item) {
+	"ext/lib/control/m/CodeComboBox",
+], function (BaseController, JSONModel, MessageBox, MessageToast, jQuery, 
+        Formatter, DateFormatter, 
+        Filter, FilterOperator, 
+        ColumnListItem, ObjectStatus, ObjectIdentifier, Text, Input, Item, CodeComboBox) {
 	"use strict";
 
-	return BaseController.extend("xx.template3ColumnsLayout.controller.TemplateMidColumn", {
+	return BaseController.extend("xx.templateRcmdV4.controller.TemplateMidColumn", {
 
-		validator: new Validator(),
-		
         formatter: Formatter,
         
         dateFormatter: DateFormatter,
@@ -49,18 +44,13 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit : function () {
-            var oMultilingual = new Multilingual();
-            this.setModel(oMultilingual.getModel(), "I18N");
-			this.setModel(new JSONModel(), "company");
-			this.setModel(new JSONModel(), "department");
+            this.setModel(this.getMultilingual().getModel(), "I18N");
 			this.setModel(new JSONModel(), "midPageViewModel");
 
             this.getRouter().getRoute("midPage").attachPatternMatched(this._onRoutedThisPage, this);
             
-			this.getModel("company").attachPropertyChange(this._onMasterDataChanged.bind(this));
+			//this.getModel("company").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
-			this._initTableTemplates();
-            this.enableMessagePopover();
 		}, 
 
 		/* =========================================================== */
@@ -135,21 +125,17 @@ sap.ui.define([
 			});
 		},
 
-		onMidTableAddButtonPress: function(){
-			var oTable = this.byId("midTable"),
-				oDepartmentModel = this.getModel("department");
-			oDepartmentModel.addRecord({
-				"tenant_id": this._sTenantId,
-				"company_code": this._sCompanyCode,
-				"control_option_level_code": "",
-				"control_option_level_val": "",
-				"company_name": ""
-			}, "/Company");
-            this.validator.clearValueState(this.byId("midTable"));
+		onDepartmentListAddButtonPress: function(oEvent){
+			this.getRouter().navTo("endPage", {
+				layout: sap.f.LayoutType.ThreeColumnsEndExpanded, 
+				tenantId: this._sTenantId,
+				companyCode: this._sCompanyCode,
+                departmentCode: "new"
+			});
 		},
 
-		onMidTableDeleteButtonPress: function(){
-			var oTable = this.byId("midTable"),
+		onDepartmentListDeleteButtonPress: function(){
+			var oTable = this.getList(),
 				oDepartmentModel = this.getModel("department"),
 				aItems = oTable.getSelectedItems(),
 				aIndices = [];
@@ -162,7 +148,6 @@ sap.ui.define([
 				oDepartmentModel.markRemoved(nIndex);
 			});
 			oTable.removeSelections(true);
-            this.validator.clearValueState(this.byId("midTable"));
 		},
 		
 		/**
@@ -180,8 +165,6 @@ sap.ui.define([
 				return;
             }
 
-            if(this.validator.validate(this.byId("page")) !== true) return;
-
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -190,7 +173,7 @@ sap.ui.define([
 						oView.setBusy(true);
 						// oTransactionManager.submit({
 						// 	success: function(ok){
-						// 		that._toShowMode();
+						// 		that._toViewMode();
 						// 		oView.setBusy(false);
                         //         that.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
 						// 		MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
@@ -214,8 +197,7 @@ sap.ui.define([
 					if(this.getModel("midPageViewModel").getProperty("/isAddedMode") == true){
 						this.onPageNavBackButtonPress.call(this);
 					}else{
-						this.validator.clearValueState(this.byId("page"));
-						this._toShowMode();
+						this._toViewMode();
 					}
 				}.bind(this);
 				
@@ -236,6 +218,10 @@ sap.ui.define([
 		/* =========================================================== */
 		/* internal methods                                            */
 		/* =========================================================== */
+
+        getList: function(){
+			return this.byId("departmentList");
+        },
 
 		_onMasterDataChanged: function(oEvent){
 			if(this.getModel("midPageViewModel").getProperty("/isAddedMode") == true){
@@ -263,7 +249,7 @@ sap.ui.define([
 			this._sTenantId = oArgs.tenantId;
 			this._sCompanyCode = oArgs.companyCode;
 
-			if(oArgs.companyCode == "new"){
+			if(oArgs.tenantId == "create" && oArgs.companyCode == "new"){
 				//It comes Add button pressed from the before page.
 				this.getModel("midPageViewModel").setProperty("/isAddedMode", true);
 
@@ -282,159 +268,74 @@ sap.ui.define([
 				}, "/Company");
 				this._toEditMode();
 			}else{
-				this.getModel("midPageViewModel").setProperty("/isAddedMode", false);
+                this.getModel("midPageViewModel").setProperty("/isAddedMode", false);
+                this.getView().bindElement({
+                    path: "/Company(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "')"
+                });
 				
-				var sPath = "/Company(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "')";
-				oView.setBusy(true);
-				this.getModel().read(sPath, {
-					success: function(oData){
-                        this.getModel("company").setProperty("/", oData);
-						oView.setBusy(false);
-					}.bind(this)
-				});
-			
-				oView.setBusy(true);
-				this.getModel().read("/Department", {
-                    urlParameters: {
-                        "$top": 20,
-                        "$expand": "parent,children"
-                    },
-					filters: [
-						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-						new Filter("company_code", FilterOperator.EQ, "LGCKR"),
-					],
-					success: function(oData){
-                        this.getModel("department").setProperty("/", oData.results);
-						oView.setBusy(false);
-					}.bind(this)
-				});
-				this._toShowMode();
+                this.getList().getBinding("items").filter([
+                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                    new Filter("company_code", FilterOperator.EQ, "LGCKR")
+                ], "Application");
+
+				// this.getModel().read("/Department", {
+                //     urlParameters: {
+                //         "$top": 20,
+                //         "$expand": "parent,children"
+                //     },
+				// 	filters: [
+				// 		new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+				// 		new Filter("company_code", FilterOperator.EQ, "LGCKR"),
+				// 	],
+				// 	success: function(oData){
+                //         this.getModel("department").setProperty("/", oData.results);
+				// 		oView.setBusy(false);
+				// 	}.bind(this)
+				// });
+				this._toViewMode();
 			}
 		},
 
 		_toEditMode: function(){
 			var VIEW_MODE = false;
-            this._showFormFragment('TemplateMidObject_Edit');
 			this.byId("page").setSelectedSection("pageSectionMain");
 			// this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
 			// this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
 			this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
 
-			// this.byId("midTableAddButton").setEnabled(!VIEW_MODE);
-			// this.byId("midTableDeleteButton").setEnabled(!VIEW_MODE);
-			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
-			// this.byId("midTable").getColumns()[0].setVisible(!VIEW_MODE);
-			this._bindMidTable(this.oEditableTemplate, "Edit");
+			// this.byId("DepartmentListAddButton").setEnabled(!VIEW_MODE);
+			// this.byId("DepartmentListDeleteButton").setEnabled(!VIEW_MODE);
+			this.getList().setMode(sap.m.ListMode.SingleSelectLeft);
+			// this.getList().getColumns()[0].setVisible(!VIEW_MODE);
 		},
 
-		_toShowMode: function(){
+		_toViewMode: function(){
 			var VIEW_MODE = true;
-			this._showFormFragment('TemplateMidObject_Show');
 			this.byId("page").setSelectedSection("pageSectionMain");
 			// this.byId("pageDeleteButton").setEnabled(VIEW_MODE);
 			// this.byId("pageSaveButton").setEnabled(!VIEW_MODE);
 			this.byId("pageNavBackButton").setEnabled(VIEW_MODE);
 
-			// this.byId("midTableAddButton").setEnabled(!VIEW_MODE);
-			// this.byId("midTableDeleteButton").setEnabled(!VIEW_MODE);
-			this.byId("midTable").setMode(sap.m.ListMode.None);
-			// this.byId("midTable").getColumns()[0].setVisible(!VIEW_MODE);
-			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
+			// this.byId("DepartmentListAddButton").setEnabled(!VIEW_MODE);
+			// this.byId("DepartmentListDeleteButton").setEnabled(!VIEW_MODE);
+			this.getList().setMode(sap.m.ListMode.None);
+			// this.getList().getColumns()[0].setVisible(!VIEW_MODE);
 		},
 
-		_initTableTemplates: function(){
-			this.oReadOnlyTemplate = new ColumnListItem({
-                type: sap.m.ListType.Navigation,
-                press: this.onMidObjectTableItemPress.bind(this),
-				cells: [
-					new ObjectIdentifier({
-						text: "{department>department_code}"
-					}), 
-					new Text({
-						text: "{department>department_name}"
-					}), 
-					new Text({
-						text: "{department>parent/department_name}"
-					}), 
-					new Text({
-						text: "{= ${department>children/results}.length > 0 ? ${department>children/results}.length + ' Chidren' : '' }"
-					})
-				]
-			});
-
-			this.oEditableTemplate = new ColumnListItem({
-				cells: [
-					new Text({
-						text: "{department>department_code}"
-					}), 
-					new Text({
-						text: "{department>department_name}"
-					}), 
-					new Input({
-						value: {
-							path: "department>department_korean_name",
-                            type: new sap.ui.model.type.String(null, {
-								maxLength: 100
-							}),
-						},
-						required: true
-					}),
-					new Input({
-						value: {
-							path: "department>department_english_name",
-                            type: new sap.ui.model.type.String(null, {
-								maxLength: 100
-							})
-						},
-						required: true
-					})
-				]
-            });
-		},
-
-		_bindMidTable: function(oTemplate, sKeyboardMode){
-			this.byId("midTable").bindItems({
-				path: "department>/",
-				template: oTemplate
-			}).setKeyboardMode(sKeyboardMode);
-        },
         
-        onMidObjectTableItemPress: function(oEvent){
+        onDepartmentListItemPress: function(oEvent){
 			// var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(2),
-			var sPath = oEvent.getSource().getBindingContext("department").getPath(),
-                oRecord = this.getModel("department").getProperty(sPath);
+			var sPath = oEvent.getSource().getBindingContextPath(),
+				oRecord = this.getModel().getProperty(sPath);
                 
 			this.getRouter().navTo("endPage", {
 				layout: sap.f.LayoutType.ThreeColumnsEndExpanded, 
 				tenantId: oRecord.tenant_id,
-				companyCode: this._sCompanyCode,
+				companyCode: oRecord.company_code,
                 departmentCode: oRecord.department_code
 			});
             //navigate next column
-        },
-
-		_oFragments: {},
-		_showFormFragment : function (sFragmentName) {
-            var oPageSubSection = this.byId("pageSubSection1");
-            this._loadFragment(sFragmentName, function(oFragment){
-				oPageSubSection.removeAllBlocks();
-				oPageSubSection.addBlock(oFragment);
-			})
-        },
-        _loadFragment: function (sFragmentName, oHandler) {
-			if(!this._oFragments[sFragmentName]){
-				Fragment.load({
-					id: this.getView().getId(),
-					name: "xx.template3ColumnsLayout.view." + sFragmentName,
-					controller: this
-				}).then(function(oFragment){
-					this._oFragments[sFragmentName] = oFragment;
-					if(oHandler) oHandler(oFragment);
-				}.bind(this));
-			}else{
-				if(oHandler) oHandler(this._oFragments[sFragmentName]);
-			}
-		}
+        }
 
 
 	});

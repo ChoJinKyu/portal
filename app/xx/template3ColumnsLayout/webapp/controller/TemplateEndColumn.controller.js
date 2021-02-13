@@ -197,7 +197,7 @@ sap.ui.define([
             var oEmployeeModel = this.getModel("employee"),
                 aItems = oEmployeeModel.getProperty("/");
                 
-            aItems.splice(0 || 0, 0, {
+            aItems.splice(0, 0, {
                 "tenant_id": this._sTenantId,
                 "employee_number": "1000001",
                 "user_status_code": "C",
@@ -237,10 +237,7 @@ sap.ui.define([
 		 * @public
 		 */
         onPageSaveButtonPress: function(){
-            var oView = this.getView(),
-                oDepartmentModel = this.getModel("department"),
-                oEmployeeModel = this.getModel("employee"),
-                that = this;
+            var oView = this.getView();
                 
             if(!this.isDepartmentChanged && !this.isEmployeeChanged){
 				MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
@@ -265,9 +262,7 @@ sap.ui.define([
                                 if(key == "__metadata"){
                                     delete obj["__metadata"];
                                 }else if(obj[key]){
-                                    if(obj[key].hasOwnProperty("__deferred")){
-                                        delete obj[key];
-                                    }else if(obj[key].hasOwnProperty("__metadata")){
+                                    if(obj[key].hasOwnProperty("__deferred") || obj[key].hasOwnProperty("__metadata")){
                                         delete obj[key];
                                     }
                                 }
