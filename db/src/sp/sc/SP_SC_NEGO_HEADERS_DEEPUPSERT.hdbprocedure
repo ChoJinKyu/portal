@@ -469,8 +469,10 @@ END;
             , operation_org_code
             , operation_unit_code
             , nego_supplier_register_type_code
+            , negotiation_supp_reg_status_cd
             , evaluation_type_code
             , nego_supeval_type_code
+            , supplier_register_status_code
             , supplier_code
             , supplier_name
             , supplier_type_code
@@ -497,8 +499,10 @@ END;
             , NS.operation_org_code
             , NS.operation_unit_code
             , NS.nego_supplier_register_type_code
+            , NS.negotiation_supp_reg_status_cd
             , NS.evaluation_type_code
             , NS.nego_supeval_type_code
+            , NS.supplier_register_status_code
             , NS.supplier_code
             , NS.supplier_name
             , NS.supplier_type_code
