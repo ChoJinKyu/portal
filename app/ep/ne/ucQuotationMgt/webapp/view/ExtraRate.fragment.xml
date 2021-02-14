@@ -1,0 +1,94 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core" 
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:t="sap.ui.table"
+    xmlns:layout="sap.ui.layout" >
+    <Dialog id="dialogExtraRate" class="sapUiSmallMargin" title="할증정보" contentWidth="40%"  contentHeight="500px">
+        <VBox class="sapUiSmallMargin">
+            <form:SimpleForm id="popExtraRateForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2" Height="350px">
+<!-- selectedKey="{contModel>/tenant_id}" -->
+                    <form:content>
+
+                    <VBox id="midExtraRateForm">
+                        
+                        <form:SimpleForm id="extraRateForm1" editable="false"> 
+                            <VBox>
+                                <Label
+                                    text="단가계약그룹번호 : "
+                                    labelFor="searchNetPriceContractDocumentNo">
+                                </Label>
+                                <Text id="searchNetPriceContractDocumentNo" />                               
+                                
+                            </VBox>
+                            <VBox>
+                                <Label
+                                    text="계약명 : "
+                                    labelFor="searchNetPriceContractTitle">
+                                </Label>
+                                <Text id="searchNetPriceContractTitle" />                               
+                            </VBox>
+                            
+                        </form:SimpleForm>
+                    </VBox>
+
+                       </form:content>
+
+                  </form:SimpleForm>
+
+                  <t:Table id="popRateTable"
+                            selectionMode="None"
+                            rows="{
+                                path: 'popExtraRate>/'
+                            }"
+                            cellClick=".onCellClickPress"
+                            rowSelectionChange=".onCheck"
+                            visibleRowCountMode="Auto"
+                            columnResize="onColumnResize"
+                            width="auto">
+                            <!-- <t:extension>
+                                <OverflowToolbar class="sapFDynamicPageAlignContent">
+                                <Title text="Extra Rate List {= ${popExtraRate>/}.length > 0 ? '(' + ${popExtraRate>/}.length + ')' : ''}" level="H2"/>
+                                <ToolbarSpacer/>
+                                </OverflowToolbar>
+                            </t:extension> -->
+    
+                            <t:columns>
+                                <t:Column id="popExtraClassName" width="8rem" hAlign="Center">
+                                <Label text="할증구분" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{popExtraRate>extra_class_name}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="popExtraName" width="15rem">
+                                <Label text="할증명" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{popExtraRate>extra_name}"/>
+                                </t:template>
+                                </t:Column>
+                                <t:Column id="popApplyExtraRate" width="8rem">
+                                <Label text="적용할증요율" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{popExtraRate>apply_extra_rate}" />
+                                </t:template>
+                                </t:Column> 
+                                <t:Column id="popApplyExtraDesc" width="12rem">
+                                <Label text="할증비고" textAlign="Center" width="100%"/>
+                                <t:template>
+                                    <Text text="{popExtraRate>apply_extra_desc}"/>
+                                </t:template>
+                                </t:Column>
+                                
+                                
+                            </t:columns>
+                            </t:Table>
+            </VBox>       
+      
+        <ToolbarSpacer/>
+        <HBox alignItems="End" justifyContent="End" >
+            <Button text="Cancel" type="Transparent"  class="sapUiSmallMargin" press=".onExtraRate"/>
+            <!-- <Button text="Apply" class="sapUiSmallMargin" type="Emphasized" press=".onExtraRateApply"/> -->
+        </HBox>
+    </Dialog>
+</core:FragmentDefinition>

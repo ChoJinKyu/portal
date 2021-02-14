@@ -3,6 +3,8 @@ using {dp as partCategoryLng} from '../../../../../db/cds/dp/pd/DP_PD_PART_CATEG
 using { dp as getCmCodeCombo } from '../../../../../db/cds/dp/pd/DP_PD_GET_CM_CODE_COMBO_VIEW-model';
 using { dp as activityStdDayView } from '../../../../../db/cds/dp/pd/DP_PD_ACTIVITY_STANDARD_DAY_VIEW-model';
 using {dp as creationRequest} from '../../../../../db/cds/dp/pd/DP_PD_PART_CATEGORY_CREATION_REQUEST-model';	
+// 카테고리그룹 group_code = 'DP_PD_CATEGORY_GROUP'
+using { cm as Code } from '../../../../../db/cds/cm/CM_CODE_VIEW-model';
 
 namespace dp;
 @path : '/dp.PartCategoryService'
