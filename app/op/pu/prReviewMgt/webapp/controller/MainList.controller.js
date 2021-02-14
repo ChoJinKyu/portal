@@ -287,8 +287,8 @@ sap.ui.define([
                 record = this.getModel(model).getProperty(event.getSource().getBindingContextPath());
 
             // 조회조건접힘처리
-            (this.getModel("fcl").getProperty("/layout") != layout)
-            &&
+            // (this.getModel("fcl").getProperty("/layout") != layout)
+            // &&
             this.getModel("mainListViewModel").setProperty("/headerExpanded", false);
             // Route
             this.getRouter().navTo("midView", {
@@ -351,73 +351,118 @@ sap.ui.define([
             )
             &&
             (function() {
-                MessageBox.confirm(message, {
-                    title: "Comfirmation",
-                    initialFocus: sap.m.MessageBox.Action.CANCEL,
-                    onClose: (function (sButton) {
-                        if (sButton === MessageBox.Action.OK) {
-                            if (action == 'CLOSING' || action == 'CHANGE' || action == 'REWRITE') {
-                                // 사유입력
-                                this.fragment("reason", {
-                                    name: "op.pu.prReviewMgt.view.Reason"
-                                }, {
-                                    onAfterOpen: (function() {
-                                        this.setModel(new JSONModel({
-                                            "reason": {
-                                                title: 
-                                                    action == 'CLOSING'
-                                                    ? this.getModel("I18N").getText("/PR_REVIEW_CLOSING")
-                                                    : action == 'CHANGE'
-                                                    ? this.getModel("I18N").getText("/BUYER_CHANGE")
-                                                    : this.getModel("I18N").getText("/REWRITE_REQUEST"),
-                                                action: action,
-                                                buyerEmpno: "",
-                                                processedReason: ""
-                                            }
-                                        }), "fragment");
-                                    }).bind(this),
-                                    onValueHelpRequest: function() {
-                                        var [ event, type, ...args ] = arguments;
-                                        var { model, path } = args[args.length - 1];
-                                        var control = event.getSource();
+                this.procedure('op.prReviewMgtV4Service', 'CallPrReviewVldtProc', {
+                    inputData: {
+                        jobType: action,
+                        prItemTbl: items.map(function(e) { 
+                            return { 
+                                transaction_code: e.transaction_code, 
+                                tenant_id: e.tenant_id, 
+                                company_code: e.company_code, 
+                                pr_number: e.pr_number, 
+                                pr_item_number: e.pr_item_number 
+                            };
+                        }),
+                        employeeNumber: this.$session.employee_number
+                    }
+                }, { skip: true })
+                .done((function(r) {
+                    MessageBox.confirm(message, {
+                        title: "Comfirmation",
+                        initialFocus: sap.m.MessageBox.Action.CANCEL,
+                        onClose: (function (sButton) {
+                            if (sButton === MessageBox.Action.OK) {
+                                if (action == 'CLOSING' || action == 'CHANGE' || action == 'REWRITE') {
+                                    // 사유입력
+                                    this.fragment("reason", {
+                                        name: "op.pu.prReviewMgt.view.Reason"
+                                    }, {
+                                        onAfterOpen: (function() {
+                                            this.setModel(new JSONModel({
+                                                "reason": {
+                                                    title: 
+                                                        action == 'CLOSING'
+                                                        ? this.getModel("I18N").getText("/PR_REVIEW_CLOSING")
+                                                        : action == 'CHANGE'
+                                                        ? this.getModel("I18N").getText("/BUYER_CHANGE")
+                                                        : this.getModel("I18N").getText("/REWRITE_REQUEST"),
+                                                    action: action,
+                                                    buyerEmpno: "",
+                                                    processedReason: ""
+                                                }
+                                            }), "fragment");
+                                        }).bind(this),
+                                        onValueHelpRequest: function() {
+                                            var [ event, type, ...args ] = arguments;
+                                            var { model, path } = args[args.length - 1];
+                                            var control = event.getSource();
 
-                                        this.dialog(new EmployeeDialog({
-                                            title: this.getModel("I18N").getText("/NOP00003"),
-                                            multiSelection: false,
-                                            items: {
-                                                filters: [
-                                                    new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
-                                                ]
+                                            this.dialog(new EmployeeDialog({
+                                                title: this.getModel("I18N").getText("/NOP00003"),
+                                                multiSelection: false,
+                                                items: {
+                                                    filters: [
+                                                        new Filter("tenant_id", FilterOperator.EQ, this.$session.tenant_id)
+                                                    ]
+                                                }
+                                            }), function(r) {
+                                                control.setValue((control.oldText = [
+                                                    "(", r.getParameter("item").employee_number, ") ", r.getParameter("item").user_local_name
+                                                ].join("")));
+                                                control.oldValue = r.getParameter("item").employee_number;
+                                                this.getModel("fragment")
+                                                    .setProperty("/reason/buyerEmpno", r.getParameter("item").employee_number);
+                                            }, control);
+                                        },
+                                        onCommit: function() {
+                                            var [event, action, value, ...args] = arguments;
+                                            if (value.action == 'CHANGE' && !value.buyerEmpno) {
+                                                MessageBox.alert(this.getModel("I18N").getText("/NOP00001"));
+                                                return false;
                                             }
-                                        }), function(r) {
-                                            control.setValue((control.oldText = [
-                                                "(", r.getParameter("item").employee_number, ") ", r.getParameter("item").user_local_name
-                                            ].join("")));
-                                            control.oldValue = r.getParameter("item").employee_number;
-                                            this.getModel("fragment")
-                                                .setProperty("/reason/buyerEmpno", r.getParameter("item").employee_number);
-                                        }, control);
-                                    },
-                                    onCommit: function() {
-                                        var [event, action, value, ...args] = arguments;
-                                        if (value.action == 'CHANGE' && !value.buyerEmpno) {
-                                            MessageBox.alert(this.getModel("I18N").getText("/NOP00001"));
-                                            return false;
+                                            if (!value.processedReason) {
+                                                MessageBox.alert(this.getModel("I18N").getText("/NOP00004"));
+                                                return false;
+                                            }
+                                            return value;
+                                        },
+                                        onCancel: function() {
+                                            //var [event, action, ...args] = arguments;
+                                            return ;
                                         }
-                                        if (!value.processedReason) {
-                                            MessageBox.alert(this.getModel("I18N").getText("/NOP00004"));
-                                            return false;
-                                        }
-                                        return value;
-                                    },
-                                    onCancel: function() {
-                                        //var [event, action, ...args] = arguments;
-                                        return ;
-                                    }
-                                }, this)
-                                .done(result => {
-                                    var { buyerEmpno, buyerDepartmentCode, processedReason } = result;
-                                    //console.log(">>>>>>>>>>>>> done", result);
+                                    }, this)
+                                    .done(result => {
+                                        var { buyerEmpno, buyerDepartmentCode, processedReason } = result;
+                                        //console.log(">>>>>>>>>>>>> done", result);
+                                        this.procedure(service, entry, {
+                                            inputData: {
+                                                jobType: action,
+                                                prItemTbl: items.map(function(e) { 
+                                                    return { 
+                                                        transaction_code: e.transaction_code, 
+                                                        tenant_id: e.tenant_id, 
+                                                        company_code: e.company_code, 
+                                                        pr_number: e.pr_number, 
+                                                        pr_item_number: e.pr_item_number 
+                                                    };
+                                                }),
+                                                buyerEmpno: buyerEmpno,
+                                                buyerDepartmentCode: buyerDepartmentCode,
+                                                processedReason: processedReason,
+                                                employeeNumber: this.$session.employee_number
+                                            }
+                                        })
+                                        .done((function(r) {
+                                            this.search("jSearch", "list", "Pr_ReviewListView");
+                                            // main 화면으로 복귀
+                                            this.getModel("fcl").setProperty("/layout", LayoutType.OneColumn);
+                                            this.getRouter().navTo("mainPage", {
+                                                layout: LayoutType.OneColumn
+                                            });
+                                        }).bind(this));
+                                    });
+                                }
+                                else {
                                     this.procedure(service, entry, {
                                         inputData: {
                                             jobType: action,
@@ -430,9 +475,9 @@ sap.ui.define([
                                                     pr_item_number: e.pr_item_number 
                                                 };
                                             }),
-                                            buyerEmpno: buyerEmpno,
-                                            buyerDepartmentCode: buyerDepartmentCode,
-                                            processedReason: processedReason,
+                                            buyerEmpno: "",
+                                            buyerDepartmentCode: "",
+                                            processedReason: "",
                                             employeeNumber: this.$session.employee_number
                                         }
                                     })
@@ -444,39 +489,11 @@ sap.ui.define([
                                             layout: LayoutType.OneColumn
                                         });
                                     }).bind(this));
-                                });
+                                }
                             }
-                            else {
-                                this.procedure(service, entry, {
-                                    inputData: {
-                                        jobType: action,
-                                        prItemTbl: items.map(function(e) { 
-                                            return { 
-                                                transaction_code: e.transaction_code, 
-                                                tenant_id: e.tenant_id, 
-                                                company_code: e.company_code, 
-                                                pr_number: e.pr_number, 
-                                                pr_item_number: e.pr_item_number 
-                                            };
-                                        }),
-                                        buyerEmpno: "",
-                                        buyerDepartmentCode: "",
-                                        processedReason: "",
-                                        employeeNumber: this.$session.employee_number
-                                    }
-                                })
-                                .done((function(r) {
-                                    this.search("jSearch", "list", "Pr_ReviewListView");
-                                    // main 화면으로 복귀
-                                    this.getModel("fcl").setProperty("/layout", LayoutType.OneColumn);
-                                    this.getRouter().navTo("mainPage", {
-                                        layout: LayoutType.OneColumn
-                                    });
-                                }).bind(this));
-                            }
-                        }
-                    }).bind(this)
-                });
+                        }).bind(this)
+                    });
+                }).bind(this));
             }).call(this);
         }
     });
