@@ -27,11 +27,10 @@ select
     mst.quotation_status_code,
     (select cm_get_code_name_func(mst.tenant_id, 'EP_QUOTATION_STATUS', mst.quotation_status_code, 'KO') from dummy) as quotation_status_name,
     mst.supplier_code,
-    ( select sp_view.supplier_local_name as supplier_name
-    from sp_sm_supplier_view sp_view
-    where sp_view.tenant_id = mst.tenant_id
-    and sp_view.company_code = mst.company_code
-    and sp_view.supplier_code = mst.supplier_code) as supplier_name,
+    ( select supm.supplier_local_name
+    from sp_sm_supplier_mst supm
+    where supm.tenant_id = mst.tenant_id
+    and supm.supplier_code = mst.supplier_code) as supplier_name,
     mst.supplier_person_id,
     mst.buyer_empno,
     (select cm_get_emp_name_func(mst.tenant_id, mst.buyer_empno) from dummy) as buyer_name,
