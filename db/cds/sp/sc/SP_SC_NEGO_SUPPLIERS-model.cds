@@ -70,6 +70,7 @@ entity Sc_Nego_Suppliers {
                                                on  Item.tenant_id        = $self.tenant_id
                                                and Item.nego_header_id   = $self.nego_header_id
                                                and Item.nego_item_number = $self.nego_item_number;
+        operation_org_type_code          : String(30)          @title : '운영조직타입코드';
         operation_org_code               : String(30)          @title : '운영조직코드';
         operation_unit_code              : String(30)          @title : '운영단위코드--삭제예정';
         
@@ -133,8 +134,8 @@ mixin {
 } into {
     *,
     Item.company_code,
-    Item.operation_org_code,
-    Item.operation_org_type_code,
+    // Item.operation_org_code,
+    // Item.operation_org_type_code,
     supplier_org.supplier_register_status_code,
     supplier_org.supplier_register_status_name,
     supplier_org.supplier_register_status_code as evaluation_type_code,

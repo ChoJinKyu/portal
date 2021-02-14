@@ -197,6 +197,7 @@ public class SourcingV4 implements EventHandler {
                 .append("    , nego_header_id                                               ")  //#02
                 .append("    , nego_item_number                                             ")  //#03
                 .append("    , item_supplier_SEQUENCE                                       ")  //#04
+                .append("    , operation_org_type_code                                      ")  //#05
                 .append("    , operation_org_code                                           ")  //#05
                 .append("    , operation_unit_code                                          ")  //#06
                 .append("    , nego_supplier_register_type_code                             ")  //#07-폐기예정
@@ -507,6 +508,7 @@ public class SourcingV4 implements EventHandler {
                     v_inRow.get("nego_header_id"                           ),
                     v_inRow.get("nego_item_number"                         ),
                     v_inRow.get("item_supplier_sequence"                   ),
+                    v_inRow.get("operation_org_type_code"                  ),
                     v_inRow.get("operation_org_code"                       ),
                     v_inRow.get("operation_unit_code"                      ),
                     v_inRow.get("nego_supplier_register_type_code"         ),  //#07-폐기예정

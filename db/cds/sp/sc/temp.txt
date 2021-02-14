@@ -252,3 +252,25 @@ conn.connect(conn_params, function(err) {
     conn.disconnect(); 
   }) 
 }); 
+
+
+business_partner_code: "VN12346300"
+business_partner_english_name: "DAE MYUNG VIETNAM  COMPANY LIMITTED"
+business_partner_local_name: "DAE MYUNG VIETNAM  COMPANY LIMITTED"
+business_partner_register_progress_code: "QUALIFICATION"
+business_partner_register_progress_name: "적격"
+business_partner_register_status_code: "QUAA"
+business_partner_register_status_name: "Qualification↵  Approved"
+business_partner_status_code: "A"
+business_partner_status_name: "Active"
+company_code: "LGCKR"
+maker_role: "Y"
+old_maker_code: "VN000423"
+old_supplier_code: null
+org_code: "BIZ00100"
+org_name: "석유화학"
+supplier_role: "N"
+tax_id: null
+tenant_id: "L2100"
+type_code: "RAW_MATERIAL"
+type_name: "원자재"
