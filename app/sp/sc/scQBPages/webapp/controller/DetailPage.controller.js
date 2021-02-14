@@ -707,6 +707,9 @@ sap.ui.define([
                                 objTemp.evaluation_type_code = pToken[i].business_partner_register_status_code;
                                 objTemp.evaluation_type_name = pToken[i].business_partner_register_status_name;
 
+                                objTemp.operation_org_code = pToken[i].org_code;
+                                // objTemp.operation_org_type_code = pToken[i].type_code;
+
                                 console.log( pToken[i].supplier_role + " : " +pToken[i].maker_role  )
 
                                 objTemp.only_maker_flag = (pToken[i].supplier_role == "N" && pToken[i].maker_role == "Y") ? "Y" : " N";
@@ -757,6 +760,7 @@ sap.ui.define([
                     "nego_item_number": oObj.nego_item_number,
                     "item_supplier_sequence": this.getCheckObject(oObj,"item_supplier_sequence", ""),
                     "operation_org_code": oObj.operation_org_code,
+                    "operation_org_type_code": oObj.operation_org_type_code,
                     "operation_unit_code": oObj.operation_unit_code,
                     "nego_supplier_register_type_code": "S",
                     "evaluation_type_code": oObj.evaluation_type_code,
@@ -1605,29 +1609,29 @@ sap.ui.define([
                     negoitemnonprices.push(oItem);
                     // }
 
-                    // var oItemNonPriceDtls = element.ItemsNonPriceDtl;
-                    // oItemNonPriceDtls.forEach(element2 => {
+                    var oItemNonPriceDtls = element.ItemsNonPriceDtl;
+                    oItemNonPriceDtls.forEach(element2 => {
 
-                    //     // if( element2.hasOwnProperty("_row_state_") && element2._row_state_ === sFlag ) {
+                        // if( element2.hasOwnProperty("_row_state_") && element2._row_state_ === sFlag ) {
 
-                    //         var oDtlItem = {
-                    //             _row_state_             : that.getCheckObject(element2,"_row_state_",""),
-                    //             tenant_id               : that.getCheckObject(element2,"tenant_id",""),
-                    //             nego_header_id          : that.getCheckObject(element2,"nego_header_id", -1),
+                            var oDtlItem = {
+                                _row_state_             : that.getCheckObject(element2,"_row_state_",""),
+                                tenant_id               : that.getCheckObject(element2,"tenant_id",""),
+                                nego_header_id          : that.getCheckObject(element2,"nego_header_id", -1),
                                 
-                    //             nonpr_item_number       : oItem.nonpr_item_number,
-                    //             nonpr_dtl_item_number   : that.getCheckObject(element2,"nonpr_dtl_item_number", ""),
+                                nonpr_item_number       : oItem.nonpr_item_number,
+                                nonpr_dtl_item_number   : that.getCheckObject(element2,"nonpr_dtl_item_number", ""),
 
-                    //             supeval_from_date       : that.getCheckObject(element2,"supeval_from_date", new Date()),
-                    //             supeval_to_date         : that.getCheckObject(element2,"supeval_to_date", new Date()),
-                    //             supeval_from_value      : that.getCheckObject(element2,"supeval_from_value", 0),
-                    //             supeval_to_value        : that.getCheckObject(element2,"supeval_to_value", 0),
-                    //             supeval_text_value      : that.getCheckObject(element2,"supeval_text_value", ""),
-                    //             supeval_score           : that.getCheckObject(element2,"supeval_score", 0),
-                    //         };
-                    //         negoitemnonpricedtls.push(oDtlItem);
-                    //     // }
-                    // });
+                                supeval_from_date       : that.getCheckObject(element2,"supeval_from_date", new Date()),
+                                supeval_to_date         : that.getCheckObject(element2,"supeval_to_date", new Date()),
+                                supeval_from_value      : that.getCheckObject(element2,"supeval_from_value", 0),
+                                supeval_to_value        : that.getCheckObject(element2,"supeval_to_value", 0),
+                                supeval_text_value      : that.getCheckObject(element2,"supeval_text_value", ""),
+                                supeval_score           : that.getCheckObject(element2,"supeval_score", 0),
+                            };
+                            negoitemnonpricedtls.push(oDtlItem);
+                        // }
+                    });
                 }.bind(this));
                 
                 return {negoitemnonprices       : negoitemnonprices,
@@ -1709,7 +1713,7 @@ sap.ui.define([
                         // sap.m.MessageToast.show(i18nModel.getText("/EPG00001"));
                         // v_returnModel = oView.getModel("returnModel").getData().data;
                         console.log('v_returnModel_e:', e);
-                        MessageBox.confirm(this.getModel("I18N").getText("/EPG00003"), {
+                        MessageBox.error(this.getModel("I18N").getText("/EPG00003"), {
                             title : this.getModel("I18N").getText("/ERROR"),
                             initialFocus : sap.m.MessageBox.Action.CANCEL,
                             onClose : function(sButton) {
@@ -1769,7 +1773,7 @@ sap.ui.define([
                         // sap.m.MessageToast.show(i18nModel.getText("/EPG00001"));
                         // v_returnModel = oView.getModel("returnModel").getData().data;
                         console.log('v_returnModel_e:', e);
-                        MessageBox.confirm(this.getModel("I18N").getText("/EPG00001"), {
+                        MessageBox.error(this.getModel("I18N").getText("/EPG00001"), {
                             title : this.getModel("I18N").getText("/ERROR"),
                             initialFocus : sap.m.MessageBox.Action.CANCEL,
                             onClose : function(sButton) {

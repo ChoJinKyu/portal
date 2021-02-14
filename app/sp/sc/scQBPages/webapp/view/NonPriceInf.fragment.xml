@@ -53,14 +53,15 @@
                         <Label  text="요구사항" 
                                 required="true"
                                 class="sapMLabelNoText"/>
-                        <Input  value="{NPHeaderModel>/h2}" class="sapMLabelNoText" placeholder="최대 1000 자까지 입력 할 수 있습니다."/>
+                        <Input  value="{NPHeaderModel>/h2}" class="sapMLabelNoText" placeholder="최대 1000 자까지 입력 할 수 있습니다."
+                                editable="{=${propInfo>/isEditMode}}"/>
                     </VBox>
                 </HBox>
                 <HBox class="sapUiTinyMarginBottom" width="100%">
                     <VBox width="100%">
                         <Label  text="비고" 
                                 class="sapMLabelNoText"/>
-                        <TextArea value="{NPHeaderModel>/h3}" cols="300"/>
+                        <TextArea value="{NPHeaderModel>/h3}" cols="300" editable="{=${propInfo>/isEditMode}}"/>
                     </VBox>
                 </HBox>
                 <HBox class="sapUiTinyMarginBottom" width="100%">
@@ -79,7 +80,7 @@
                         <Label  text="점수 신청 방법" 
                                 required="true"
                                 class="sapMLabelNoText"/>
-                        <Select width="100%" selectedKey="{NPHeaderModel>/h5}">
+                        <Select width="100%" selectedKey="{NPHeaderModel>/h5}" editable="{=${propInfo>/isEditMode}}">
                             <core:Item key="1" text="Automatic" />
                             <core:Item key="2" text="None" />
                         </Select >
@@ -88,7 +89,8 @@
                         <Label  text="Target Score" 
                                 required="true"
                                 class="sapMLabelNoText"/>
-                        <Input  value="{NPHeaderModel>/h6}" width="100%" type="Number" validateFieldGroup="vfgHeader"/>
+                        <Input  value="{NPHeaderModel>/h6}" width="100%" type="Number" validateFieldGroup="vfgHeader"
+                                editable="{=${propInfo>/isEditMode}}"/>
                     </VBox>
                 </HBox>
             </VBox>
@@ -98,7 +100,7 @@
             <VBox class="sapUiSmallMarginBottom sapUiSmallMarginTop">
                 <Table class="sapUiSmallMarginBottom">
                     <headerToolbar>
-                        <OverflowToolbar class="NonPricePopHeader">
+                        <OverflowToolbar class="NonPricePopHeader" visible="{=${propInfo>/isEditMode}}">
                             <content>
                                 <Title text="첨부파일" level="H2"/>
                                 <ToolbarSpacer />
@@ -145,12 +147,12 @@
                         mode="MultiSelect"
                         inset="false">
                         <headerToolbar>
-                            <OverflowToolbar class="NonPricePopHeader">
+                            <OverflowToolbar class="NonPricePopHeader" visible="{=${propInfo>/isEditMode}}">
                                 <content>
                                     <!-- <Title text="Item Title Name" level="H2"/> -->
                                     <ToolbarSpacer />
-                                    <Button  text="Add" type="Transparent" press=".onNonPriceItemAdd" />
-                                    <Button  text="Delete" type="Transparent" press=".onNonPriceItemDelete" />
+                                    <Button  text="{I18N>/ROW_ADD}" type="Transparent" press=".onNonPriceItemAdd" />
+                                    <Button  text="{I18N>/ROW_DELETE}" type="Transparent" press=".onNonPriceItemDelete" />
                                 </content>
                             </OverflowToolbar>
                         </headerToolbar>
@@ -226,12 +228,12 @@
                                 <cells>
                                     <Label text="1" />
 
-                                    <DatePicker
+                                    <DatePicker editable="{=${propInfo>/isEditMode}}"
                                         visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
                                         value="2015-11-23"
                                         valueFormat="yyyy-MM-dd"
                                         displayFormat="long"/>
-                                    <DatePicker
+                                    <DatePicker editable="{=${propInfo>/isEditMode}}"
                                         visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
                                         value="2015-11-23"
                                         valueFormat="yyyy-MM-dd"
@@ -239,17 +241,17 @@
                                     <!-- <Input value=""
                                         visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}" /> -->
 
-                                    <Input value="1"
+                                    <Input value="1" editable="{=${propInfo>/isEditMode}}"
                                         visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
-                                    <Input value="1.2"
+                                    <Input value="1.2" editable="{=${propInfo>/isEditMode}}"
                                         visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
                                     <!-- <Input value="100"
                                         visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" /> -->
 
-                                    <Input value=""
+                                    <Input value="" editable="{=${propInfo>/isEditMode}}"
                                         visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}" />
 
-                                    <Input value="" /> 
+                                    <Input value="" editable="{=${propInfo>/isEditMode}}"/> 
 
 
                                     <!-- <Text text="4" />

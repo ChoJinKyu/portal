@@ -48,6 +48,9 @@ sap.ui.define([
             this._NPNone(e.oSource);
             var tab = e.oSource.getContent()[0].getItems()[2].getItems()[0].getContent()[0];
             tab.destroyItems();
+
+            this._isEditMode = that.getView().getModel("propInfo").getData().isEditMode; //propInfo>/isEditMode
+
             // 조회용
 
             if (that._NPSelectIndex >= 0) {
@@ -160,6 +163,7 @@ sap.ui.define([
             var ApplyButton = new sap.m.Button({
                 type: sap.m.ButtonType.Emphasized,
                 text: "적용",
+                visible: this._isEditMode,
                 press: function (e) {
                     var oHeader = this._getNPPopupData(e);
                     var validationCheck = this._ApplyValidationCheck(e, oHeader);
@@ -621,11 +625,13 @@ sap.ui.define([
 
         },
         _NPFirstLine: function () {
+            
 
             var newLine = new sap.m.ColumnListItem();
             var oDatePicker = new sap.m.DatePicker();
             oDatePicker.setDisplayFormat("yyyy/MM/dd");
             oDatePicker.setPlaceholder("YYYY/MM/DD");
+            oDatePicker.setEditable(this._isEditMode);
 
             newLine.addCell(new sap.m.Text({ text: "1" }));
 
@@ -635,15 +641,15 @@ sap.ui.define([
 
             // newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
 
-            newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
+            newLine.addCell(new sap.m.Input({ value: "", type: "Number" , editable: this._isEditMode}));
 
-            newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
+            newLine.addCell(new sap.m.Input({ value: "", type: "Number" , editable: this._isEditMode}));
 
             // newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
 
-            newLine.addCell(new sap.m.Input({ value: "" }));
+            newLine.addCell(new sap.m.Input({ value: "" , editable: this._isEditMode}));
 
-            newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
+            newLine.addCell(new sap.m.Input({ value: "", type: "Number" , editable: this._isEditMode}));
 
             return newLine;
         },
@@ -670,6 +676,7 @@ sap.ui.define([
             );
             oDatePicker.setDisplayFormat("yyyy/MM/dd");
             oDatePicker.setPlaceholder("YYYY/MM/DD");
+            oDatePicker.setEditable(this._isEditMode);
 
             newLine.addCell(new sap.m.Text({ text: String(oIndex) }));
 
@@ -679,15 +686,15 @@ sap.ui.define([
 
             // newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
 
-            newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
+            newLine.addCell(new sap.m.Input({ value: "", type: "Number" , editable: this._isEditMode}));
 
-            newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
+            newLine.addCell(new sap.m.Input({ value: "", type: "Number" , editable: this._isEditMode}));
 
             // newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
 
-            newLine.addCell(new sap.m.Input({ value: "" }));
+            newLine.addCell(new sap.m.Input({ value: "" , editable: this._isEditMode}));
 
-            newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
+            newLine.addCell(new sap.m.Input({ value: "", type: "Number" , editable: this._isEditMode}));
 
             tab.addItem(newLine);
         },

@@ -1168,7 +1168,7 @@
                                                                     <Label text="{NegoItemPrices>supplier_name}"/>
                                                                     <Label text="{NegoItemPrices>evaluation_type_name}"/>
                                                                     <Label text="{NegoItemPrices>supplier_type_name}"/>
-                                                                    <Label text="{NegoItemPrices>only_maker_flag}"/>
+                                                                    <Label text="{NegoItemPrices>maker_only_flag}"/>
                                                                     <Button icon="sap-icon://value-help" />
                                                                 </cells>
                                                             </ColumnListItem>
