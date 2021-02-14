@@ -16,74 +16,80 @@ sap.ui.define(["jquery.sap.global"],
                 visible: true
             },
             {
-                id: "activityStandardDayMgt-mainList-mainColumnPC",
+                id: "activityStandardDayMgt-mainList-mainColumnAUName",
                 order: 2,
+                text: "조직코드명",
+                visible: true
+            },
+            {
+                id: "activityStandardDayMgt-mainList-mainColumnPC",
+                order: 3,
                 text: "Part Category",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnPT",
-                order: 3,
+                order: 4,
                 text: "Project Type",
                 visible: true
             },
             {
                 id: "activityStandardDayMgt-mainList-mainColumnAC",
-                order: 4,
+                order: 5,
                 text: "Activity 코드",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnAN",
-                order: 5,
+                order: 6,
                 text: "Activity 명",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnUseYn",
-                order: 6,
+                order: 7,
                 text: "사용여부",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnS",
-                order: 7,
+                order: 8,
                 text: "s",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnA",
-                order: 8,
+                order: 9,
                 text: "a",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnB",
-                order: 9,
+                order: 10,
                 text: "b",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnC",
-                order: 10,
+                order: 11,
                 text: "c",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnD",
-                order: 11,
+                order: 12,
                 text: "d",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnUDM",
-                order: 12,
+                order: 13,
                 text: "수정일자",
                 visible: true
             },            
             {
                 id: "activityStandardDayMgt-mainList-mainColumnUUI",
-                order: 13,
+                order: 14,
                 text: "수정자",
                 visible: true
             }

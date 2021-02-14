@@ -115,7 +115,7 @@ sap.ui.define([
 
             oDetailModel.setProperty("/TenantId", oArgs.tenantId);  
             oDetailModel.setProperty("/CompanyCode", oArgs.company_code);  
-            oDetailModel.setProperty("/XtnTypeCode", "CREATE"); 
+            oDetailModel.setProperty("/XtnTypeCode", "DISPLAY"); 
             oDetailModel.setProperty("/PrNumber", oArgs.pr_number); 
            // oDetailModel.setProperty("/XtnTypeCode", oArgs.vMode );  
              

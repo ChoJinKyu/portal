@@ -2,3 +2,6 @@
     white-space: normal;
     height: auto !important;
 }
+.label-center{
+    margin: auto;
+}

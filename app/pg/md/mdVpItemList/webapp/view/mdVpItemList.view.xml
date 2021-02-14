@@ -38,13 +38,13 @@
                     <form:content>
                         <VBox>
                             <Label text="{I18N>/TENANT}" labelFor="searchTenantCombo" required="true"></Label>
-                            <ComboBox id="searchTenantCombo" width="100%" items="{
+                            <ComboBox id="searchTenantCombo" showSecondaryValues="true" width="100%" items="{
                                     path: 'org>/Org_Tenant',
                                     filters: []
                                 }"
                                 selectionChange="onChangeTenant">
                                 <items>
-                                    <core:Item key="{org>tenant_id}" text="{org>tenant_id} : {org>tenant_name}" />
+                                    <core:ListItem key="{org>tenant_id}" text="{org>tenant_name}" additionalText="{org>tenant_id}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -53,9 +53,9 @@
                         </VBox>
                         <VBox>   
                             <Label text="{I18N>/BUSINESS_UNIT}" labelFor="searchChain" required="true"></Label>
-                            <ComboBox id="searchChain" width="100%" placeholder="All" selectedKey="" >
+                            <ComboBox id="searchChain" showSecondaryValues="true" width="100%" selectedKey="" >
                                 <items>
-                                    <core:Item key="{org>bizunit_code}" text="{org>bizunit_code}: {org>bizunit_name}" />
+                                    <core:ListItem key="{org>bizunit_code}" text="{org>bizunit_name}" additionalText="{org>bizunit_code}"/>
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -133,9 +133,6 @@
                     <OverflowToolbar>
                         <Title id="title" level="H2"/> 
                         <ToolbarSpacer/>
-                        <Button id="mainTableButtonAllClose" text="{I18N>/COLLAPSE_ALL}" type="Transparent" press=".onMainTablecollapseAll" />
-                        <Button id="mainTableButtonAllOpen" text="{I18N>/EXPAND_ALL}" type="Transparent" press=".onMainTableexpandAll" />
-                        <ToolbarSeparator/>
                         <MenuButton  text=" {I18N>/MANAGEMENT_CHARACTER_CONFIG} ">
                             <menu>
                                 <Menu itemSelected="onMenuAction" id="searchCategory" items="{category>/MdCategory}">
@@ -145,9 +142,11 @@
                                 </Menu>
                             </menu>
                         </MenuButton>
-                        <ToolbarSeparator/>
                         <Button id="mainTableItemMappingButton" text="{I18N>/MANAGEMENT_CHARACTER_MAP}" type="Transparent" press=".onMainTableItemMappingButtonPress"  />
                         <Button id="mainTableConfirmButton" text="{I18N>/CONFIRMED}" type="Emphasized" press=".onMainTableConfirmButtonPress"/>
+                        <ToolbarSeparator/>
+                        <Button id="mainTableButtonAllClose" icon="sap-icon://collapse-all" type="Transparent" press=".onMainTablecollapseAll" />
+                        <Button id="mainTableButtonAllOpen" icon="sap-icon://expand-all" type="Transparent" press=".onMainTableexpandAll" />
                         
                     </OverflowToolbar>
                 </t:extension>

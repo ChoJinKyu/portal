@@ -41,14 +41,16 @@ sap.ui.define([
             Parent.prototype.setData.call(this, oParsed);
         },
 
-        setDataM: function(oData){
-            var oParsed = this.getProperty("/") || {};          
+        setDataM: function(oData, txnType){
+            var oParsed = this.getProperty("/") || {};
             (oData || []).forEach(function(oItem){
-                oParsed["erp_interface_flag"] = oItem.erp_interface_flag;
+                if (oItem.txn_type_code === txnType)
+                    oParsed[oItem.ettLabel] = oItem.ettStatus;
             });
             Parent.prototype.setData.call(this, oParsed);
         },
 
+      
         setReady: function(){
             this.bReady = true;
             this.fireEvent("ready", {

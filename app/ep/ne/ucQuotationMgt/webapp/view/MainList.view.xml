@@ -1,0 +1,233 @@
+<mvc:View controllerName="ep.ne.ucQuotationMgt.controller.MainList"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:t="sap.ui.table"
+    xmlns:core="sap.ui.core" 
+    xmlns:lib-m="ext.lib.control.m"
+    xmlns:u="sap.ui.unified"
+    height="100%">
+
+    <f:DynamicPage id="page2"
+        headerExpanded="true" 
+        toggleHeaderOnTitleClick="true">        
+        <!-- DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="공사단가계약 정산" />
+                </f:heading>
+                <f:snappedContent>
+                </f:snappedContent>
+                <f:expandedContent>
+                </f:expandedContent>
+                <f:actions>
+                    <!-- <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" /> -->
+                </f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <!-- DynamicPage Header -->
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                        <VBox>
+                            <Label text="운영단위(플렌트) : " labelFor="searchOrgCode"></Label>
+                            <Input id="searchOrgCode" placeholder="플랜트" submit=".onPageSearchButtonPress" showValueHelp="true" valueHelpRequest=".openPlantPopup" />
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="공사시작일자 : " labelFor="searchConstDate" required = "true"/>
+                            <DateRangeSelection id="searchConstDate" displayFormat="yyyy-MM-dd" width="100%" placeholder="" />                                
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+
+                        <VBox>
+                            <Label text="공사명 : " labelFor="searchConstName"/>
+                            <Input id="searchConstName" placeholder="공사명" submit=".onPageSearchButtonPress" />                                
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="협력사명 :" labelFor="searchSupplierName"></Label>
+                            <Input id="searchSupplierName" placeholder="협력사" submit=".onPageSearchButtonPress" showValueHelp="true" valueHelpRequest=".openSupplierPopup" />
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>      
+
+
+                        <VBox>
+                            <Label text="진행상태"></Label>
+                            <SegmentedButton id="searchStatus" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
+                                <items>
+                                    <SegmentedButtonItem text="All" key="" width="4.1rem" />
+                                    <SegmentedButtonItem text="BM등록요청" key="221010" width="7rem" />
+                                    <SegmentedButtonItem text="물량확정요청" key="221020" width="7rem" />
+                                    <SegmentedButtonItem text="물량수정요청" key="221030" width="7rem" />
+                                    <SegmentedButtonItem text="물량확정" key="221040" width="5.5rem" />
+                                </items>
+                            </SegmentedButton>
+                            <layoutData>
+                                <layout:GridData span="XL5 L6 M6 S12" />
+                            </layoutData>
+
+                        </VBox>
+                        <VBox>
+                            <Label
+                                text="견적서번호: "
+                                labelFor="searchConstQuotationNumber">
+                            </Label>
+                            <Input id="searchConstQuotationNumber" 
+                                placeholder="Search"/>
+                            <layoutData>
+                                <layout:GridData span="XL2 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                                <Label text="요청자" labelFor="searchRequestorS"></Label>
+                                <lib-m:CodePicker id="searchRequestorS"
+                                    placeholder="Enter a employee name"
+                                    keyField="employee_number"
+                                    textField="user_local_name"
+                                    suggestionItems="{
+                                        path: '/',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+                                        ],
+                                        serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
+                                        entityName: 'Employee'
+                                    }">
+                                    <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
+                                        keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" />
+                                </lib-m:CodePicker>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L3 M6 S12" />                                 
+                                </layoutData>
+                            </VBox>
+
+
+                        <FlexBox
+                            alignItems="Start"
+                            justifyContent="End">
+                            
+                            <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                            <layoutData>
+                                <!-- <layout:GridData
+                                    span="XL4 L6 M12 S12" /> -->
+                                    <layout:GridData span="XL2 L3 M6 S12" /> 
+                            </layoutData>
+                        </FlexBox>                                          
+                    </form:content>
+                </form:SimpleForm>
+                            
+            </f:DynamicPageHeader>
+        </f:header>
+
+        <f:content>
+            <t:Table id="mainTable"
+            selectionMode="None"
+            
+            rows="{viewModel>/list}"
+            cellClick=".onCellClickPress"
+            rowSelectionChange=".onCheck"
+            visibleRowCountMode="Auto"
+            fixedColumnCount="3"
+            columnResize="onColumnResize">
+            <t:extension>
+                <OverflowToolbar class="sapFDynamicPageAlignContent">
+                <Title text="Quotation List {= ${viewModel>/list}.length > 0 ? '(' + ${viewModel>/list}.length + ')' : ''}" level="H2"/>
+                <ToolbarSpacer/>
+                
+                <ToolbarSeparator/>
+                <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
+                    <layoutData>
+                    <OverflowToolbarLayoutData priority="NeverOverflow"/>
+                    </layoutData>
+                </Button>
+                </OverflowToolbar>
+            </t:extension>
+            <t:rowSettingsTemplate>
+            </t:rowSettingsTemplate>
+            <t:columns>
+                <t:Column id="mainUcConstQuotationNumber" width="8rem">
+                <Label text="견적서번호" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{viewModel>const_quotation_number}"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="mainUcOrgCode" width="8rem">
+                <Label text="운영단위" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{viewModel>org_name}"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="mainUcConstName" width="20rem">
+                <Label text="공사명" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{viewModel>const_name}"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="mainUcSupplierCode" width="15rem">
+                <Label text="협력사명" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{viewModel>supplier_name}"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="mainUcConstStartDate" width="10rem" hAlign="Center">
+                <Label text="공사시작일자" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{
+                                path: 'viewModel>const_start_date',
+                                formatter: '.dateFormatter.toDateString'
+                            }"/>
+                </t:template>
+                </t:Column>  
+                <t:Column id="mainUcConstEndDate" width="10rem" hAlign="Center">
+                <Label text="공사종료일자" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{
+                                path: 'viewModel>const_end_date',
+                                formatter: '.dateFormatter.toUTCDateString'
+                            }"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="mainUcQuotationStatusCode" width="12rem">
+                <Label text="진행상태" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{viewModel>quotation_status_name}"/>
+                </t:template>
+                </t:Column>              
+                <t:Column id="mainUcPrNumber" width="12rem">
+                <Label text="PR번호" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{viewModel>pr_number}"/>
+                </t:template>
+                </t:Column>  
+                <t:Column id="mainUcConstPersonEmpno" width="12rem">
+                <Label text="물량검토자" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{viewModel>const_person_name}"/>
+                </t:template>
+                </t:Column> 
+                <t:Column id="mainUcBuyerEmpno" width="12rem">
+                <Label text="구매담당자" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{viewModel>buyer_name}"/>
+                </t:template>
+                </t:Column>                                                                                                           
+            </t:columns>
+            </t:Table>
+        </f:content>
+    </f:DynamicPage>
+</mvc:View>

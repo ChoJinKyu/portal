@@ -40,14 +40,14 @@
                             <Label text="운영단위(플렌트) : " labelFor="searchOrgCode"></Label>
                             <Input id="searchOrgCode" placeholder="플랜트" submit=".onPageSearchButtonPress" showValueHelp="true" valueHelpRequest=".openPlantPopup" />
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="계약명 : " labelFor="searchTitle"/>
                             <Input id="searchTitle" submit=".onPageSearchButtonPress" placeholder="" />                                
                             <layoutData>
-                                <layout:GridData span="XL2 L4 M6 S12" />
+                                <layout:GridData span="XL4 L4 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -58,7 +58,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="단기계약그룹번호 :" labelFor="searchDocumentNo"></Label>
+                            <Label text="단가계약그룹번호 :" labelFor="searchDocumentNo"></Label>
                             <MultiInput width="100%"
                                 id="searchDocumentNo"
                                 suggestionItems="{
@@ -73,7 +73,7 @@
                                 <core:Item key="{net_price_contract_document_no}" text="{net_price_contract_document_no}" />
                             </MultiInput>    
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M12 S12" />
+                                <layout:GridData span="XL3 L3 M12 S12" />
                             </layoutData>
                         </VBox>    
                     </form:content>
@@ -81,7 +81,7 @@
                 <form:SimpleForm id="pageSearchForm2" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="Status : " labelFor="searchStatusCode"/>
+                            <Label text="계약진행상태 : " labelFor="searchStatusCode"/>
                             <SegmentedButton id="searchStatusCode" class="sapUiSmallMarginBottom" selectedKey="All" width="100%">                                            
                                 <items>
                                     <SegmentedButtonItem text="All" key="all" width="4rem" />
@@ -104,7 +104,7 @@
                                 </items>                                                        
                             </SegmentedButton>                                        -->
                             <layoutData>
-                                <layout:GridData span="XL2 L4 M6 S12" />
+                                <layout:GridData span="XL4 L4 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -131,7 +131,7 @@
                                 </items>                                                        
                             </SegmentedButton>                               -->
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL3 L3 M6 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
@@ -145,7 +145,7 @@
                             <Label text="협력사명 :" labelFor="searchSupplierName"></Label>
                             <Input id="searchSupplierName" placeholder="협력사" submit=".onPageSearchButtonPress" showValueHelp="true" valueHelpRequest=".openSupplierPopup" />
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M12 S12" />
+                                <layout:GridData span="XL3 L3 M12 S12" />
                             </layoutData>
                         </VBox>                                              
                     </form:content>
@@ -159,11 +159,12 @@
             rows="{
                 path: 'viewModel>/list'        
             }"
-            cellClick=".onCellClick"
+            cellClick="onTableItemPress"
             rowSelectionChange=".onCheck"
             visibleRowCountMode="Auto"
             fixedColumnCount="2"
             columnResize="onColumnResize"
+            rowActionCount="1"
             width="100%">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
@@ -184,7 +185,7 @@
             </t:rowSettingsTemplate>
             <t:columns>
                 <t:Column id="mainDocumentNo" width="10rem" hAlign="Center">
-                <Label text="단기계약그룹번호" textAlign="Center" width="100%"/>
+                <Label text="단가계약그룹번호" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>net_price_contract_document_no}"/>
                 </t:template>
@@ -234,7 +235,8 @@
                 <t:Column id="mainStatusCode" width="7rem" hAlign="Center">
                 <Label text="계약진행상태" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Link text="{viewModel>net_price_contract_status_name}" press="onTableItemPress" enabled="{= ${viewModel>net_price_contract_status_name} !== '' ? true : false }" />
+                    <Text text="{viewModel>net_price_contract_status_name}"/>
+                    <!-- <Link text="{viewModel>net_price_contract_status_name}" press="onTableItemPress" enabled="{= ${viewModel>net_price_contract_status_name} !== '' ? true : false }" /> -->
                 </t:template>
                 </t:Column>
                 <t:Column id="mainEffectiveStatusName" width="7rem" hAlign="Center">
@@ -246,7 +248,7 @@
                 <t:Column id="mainDayCount" width="6rem" hAlign="Right">
                 <Label text="계약일수" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{viewModel>net_price_contract_day_count}"/>
+                    <Text text="{viewModel>net_price_contract_day_count} %"/>
                     <!-- <Text  text="{
                                 path: 'list>net_price_contract_day_count',
                                 formatter: '.numberFormatter.toNumberString'
@@ -254,6 +256,11 @@
                 </t:template>
                 </t:Column>
             </t:columns>
+            <t:rowActionTemplate>
+                <t:RowAction>
+                    <t:RowActionItem type="Navigation"></t:RowActionItem>
+                </t:RowAction>
+            </t:rowActionTemplate>            
             </t:Table>
         </f:content>
     </f:DynamicPage>

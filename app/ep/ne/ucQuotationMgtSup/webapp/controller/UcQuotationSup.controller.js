@@ -7,7 +7,7 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "ext/lib/util/Validator",
     "ext/lib/formatter/Formatter",
-    "ext/lib/formatter/DateFormatter",
+    //"ext/lib/formatter/DateFormatter",
     "ext/lib/formatter/NumberFormatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -23,17 +23,19 @@ sap.ui.define([
     "sap/ui/core/Item",
     "sap/ui/richtexteditor/RichTextEditor",
     "sap/ui/model/odata/v2/ODataModel",
+     "ext/cm/util/control/ui/EmployeeDialog",
+     "ext/cm/util/control/ui/DepartmentDialog", 
     "sap/ui/model/Sorter"
-], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, Formatter, DateFormatter, NumberFormatter,
+], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, Formatter, NumberFormatter,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast, History,
-    ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel, Sorter) {
+    ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel, EmployeeDialog, DepartmentDialog, Sorter) {
     "use strict";
 
     var oTransactionManager;
 
     return BaseController.extend("ep.ne.ucQuotationMgtSup.controller.UcQuotationSup", {
 
-        dateFormatter: DateFormatter,
+        //dateFormatter: DateFormatter,
         numberFormatter: NumberFormatter,
         formatter: Formatter,
         validator: new Validator(),
@@ -96,11 +98,10 @@ sap.ui.define([
 
             // Master 조회
             oModel.read("/GetUcApprovalDtlView", {
-                filters: [
-                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                    new Filter("company_code", FilterOperator.EQ, this._sCompanyCode)//,
-                    //new Filter("const_quotation_number", FilterOperator.EQ, this._sConstQuotationNumber)
-                ],
+                filters: aSearchFilters,
+                // sorters: [
+                //     new Sorter("const_start_date", false)
+                // ],
                 success: function (oData) {
                     console.log(" GetUcApprovalDtlView ::: ", oData.results);
                     oView.getModel("popUcQuotationSup").setData(oData.results);
@@ -108,6 +109,22 @@ sap.ui.define([
                 }
 
             });
+
+            // Master 조회
+            // oModel.read("/UcQuotationListView", {
+            //     filters: aSearchFilters,
+            //     sorters: [
+            //         new Sorter("const_start_date", false)
+            //     ],
+            //     success: function (oData) {
+            //         console.log("oData====", oData);
+            //         //oViewModel.getModel("listModel").setData(oData.results);
+
+            //         oViewModel.setProperty("/list", oData.results);
+            //         oView.setBusy(false);
+            //     }
+            // });
+
         },
 
 
@@ -152,7 +169,8 @@ sap.ui.define([
 		 * @public
 		 */
         onPageNavBackButtonPress: function () {
-            this.validator.clearValueState(this.byId("midObjectForm"));
+            //this.validator.clearValueState(this.byId("midObjectForm"));
+            this.validator.clearValueState(this.byId("ucUcQuotationSupEditBox"));
             // var sNextLayout = this.getModel("fcl").getProperty("/actionButtonsInfo/midColumn/closeColumn");
             // this.getRouter().navTo("mainPage", {layout: sNextLayout});
             var sPreviousHash = History.getInstance().getPreviousHash();
@@ -264,14 +282,16 @@ sap.ui.define([
             mstData.push(oViewModel.getProperty("/ucmaster"));
             var dtlData = oViewModel.getProperty("/ucdetails");
             var reteDate = this.hasInput;
-            var dtl_net_price_contract_degree_ = 0;
-            var dtl_const_quotation_item_number_ = "56";
+            //var dtl_net_price_contract_degree_ = dtlData[this.rateIndex].const_quotation_item_number;
             var rate_len = 0;
             console.log("reteDate ----------> " , reteDate);
+            
 
             if (reteDate === undefined) {
                 rate_len = 0;
                 console.log("rate_len ----------> " , rate_len);
+            }else{
+                rate_len = reteDate.length;
             }
             
             //rate_len = (!reteDate.length ? 0 : reteDate.length);
@@ -287,24 +307,36 @@ sap.ui.define([
             //     //"extra": extraData
             // }
 
+
+            // var convertContractStartDate = that.convertDateToString(contractStartDate);
+            //         var convertContractEndDate = that.convertDateToString(contractEndDate);
+
             var omst = [];
             var const_quotation_number_ = "";
              omst = mstData.map(function(e) { 
                 const_quotation_number_ = e.const_quotation_number;
+                console.log("date >>> " , e.facility_person_empno);
+                console.log("date222 >>> " , e.facility_person_name);
+
+                console.log("const_start_date11 >>> " , e.const_start_date);
+                 console.log("const_end_date222 >>> " , e.const_end_date);
+                 console.log("completion_date33 >>> " , e.completion_date);
+
                 return { 
                     tenant_id: e.tenant_id, 
                     company_code: e.company_code,
                     const_quotation_number: e.const_quotation_number,
                     const_name: e.const_name,
                     ep_item_code: e.ep_item_code,
-                    const_start_date: that.getFormatDate(e.const_start_date),
-                    const_end_date: that.getFormatDate(e.const_end_date),
+                    const_start_date: (!that.convertDateToString(e.const_start_date) ? null : that.convertDateToString(e.const_start_date)),
+                    const_end_date: (!that.convertDateToString(e.const_end_date) ? null : that.convertDateToString(e.const_end_date)),
                     remark: e.remark,
                     attch_group_number: e.attch_group_number,
                     completion_flag : Boolean(e.completion_flag),
-                    completion_date : that.getFormatDate(e.completion_date),
+                    completion_date :(!that.convertDateToString(e.completion_date) ? null : that.convertDateToString(e.completion_date)),
                     facility_person_empno : e.facility_person_empno,
                     completion_attch_group_number : e.completion_attch_group_number,
+                    quotation_status_code : statusCode,
                     update_user_id: (!e.update_user_id ? 'Admin' : e.update_user_id),
                     row_state: 'U',
 
@@ -328,6 +360,8 @@ sap.ui.define([
             //var delNum = 0;
             //var afterDelCnt = 0;
             var num = 1;
+            var delNum = 0;
+            var afterDelCnt = 0;
             
 
 
@@ -337,27 +371,49 @@ sap.ui.define([
             //detail.getData()["LOIRequestDetailView"].map(r => {
                 //itemSeq = len * 10;
            // })
+           var seq_input = 0;
+           var index = 0;
+           var rowState = "";
 
              odtl = dtlData.map(function(e) { 
 
                 len = num * 10;
                 //console.log(" len ::: ", reteDate.length);
                 //rate_len = (!reteDate.length ? 0 : reteDate.length);
-                dtl_const_quotation_item_number_ = ((e.row_state == "U" && rate_len > 0) ? e.const_quotation_item_number : null);
-                console.log(" dtl_const_quotation_item_number_ ::: ", dtl_const_quotation_item_number_);
+                // dtl_const_quotation_item_number_ = ((e.row_state == "U" && rate_len > 0) ? e.const_quotation_item_number : null);
+                // console.log(" dtl_const_quotation_item_number_ ::: ", dtl_const_quotation_item_number_);
+
+                 console.log(" e.row_state ::: ", e.row_state);
+                if(e.row_state != "D"){
+                    seq_input = 10 * (index + 1);
+                    if(e.const_quotation_item_number && !e.row_state){
+                        e.row_state = "U";
+                    }
+                    index++;
+                }else{
+                    seq_input =  e.item_sequence - (afterDelCnt * 10);
+                    afterDelCnt++;
+                }
+                
+
+                
+
+                console.log(" seq_input ::: ", seq_input);
+
                 return { 
 
                     tenant_id: e.tenant_id, 
                     company_code: e.company_code,
                     const_quotation_number:  const_quotation_number_,
                     const_quotation_item_number: (!e.const_quotation_item_number ? null : e.const_quotation_item_number),
-                    item_sequence: (e.item_sequence == 0 ? (num++ * 10) : parseFloat(e.item_sequence)), 
+                    //item_sequence: (e.item_sequence == 0 ? (num++ * 10) : parseFloat(e.item_sequence)), 
+                    item_sequence: seq_input,
                     const_name: e.const_name,
                     ep_item_code: e.ep_item_code,
                     item_desc: e.item_desc,
                     spec_desc: e.spec_desc,
                     quotation_quantity: (!e.quotation_quantity ? null : parseFloat(e.quotation_quantity)),
-                    extra_rate: (!e.extra_rate ? 1 : parseFloat(e.extra_rate)),
+                    extra_rate: (!e.extra_rate ? "1" : String(e.extra_rate)),
                     unit: (!e.unit ? null : e.unit),
                     currency_code: e.currency_code,
                     currency_name: (!e.currency_name ? null : e.currency_name),
@@ -367,22 +423,29 @@ sap.ui.define([
                     base_material_net_price: (!e.base_material_net_price ? null : parseFloat(e.base_material_net_price)),
                     base_labor_net_price: (!e.base_labor_net_price ? null : parseFloat(e.base_labor_net_price)),
                     material_net_price: (!e.material_net_price ? null : parseFloat(e.material_net_price)),
-                    material_amount: (!e.material_amount ? null : parseFloat(e.material_amount)),
+                    material_amount: (!e.material_amount ? 0 : parseFloat(e.material_amount)),
                     labor_net_price: (!e.labor_net_price ? null : parseFloat(e.labor_net_price)),
-                    labor_amount: (!e.labor_amount ? null : parseFloat(e.labor_amount)),
+                    labor_amount: (!e.labor_amount ? 0 : parseFloat(e.labor_amount)),
                     sum_amount: (!e.sum_amount ? null : parseFloat(e.sum_amount)),
                     remark: e.remark,
                     net_price_contract_document_no: e.net_price_contract_document_no,
                     net_price_contract_degree: (!e.net_price_contract_degree ? null : parseFloat(e.net_price_contract_degree)),
                     net_price_contract_item_number: e.net_price_contract_item_number,
                     supplier_item_create_flag: (!e.supplier_item_create_flag ? false : Boolean(e.supplier_item_create_flag)),
-                    row_state: (!e.create_user_id ? null : e.row_state),
+                    row_state: (!e.const_quotation_item_number ? 'C' : e.row_state),
 //row_state: (!e.const_quotation_item_number ? 'C' : 'U'),
                     create_user_id: (!e.create_user_id ? 'Admin' : e.create_user_id),
                     update_user_id: (!e.update_user_id ? 'Admin' : e.update_user_id)
                     
 
                 };
+
+                // console.log(" String(e ::: ", String(e.item_sequence - (afterDelCnt * 10)));
+
+                // if (e.row_state == "D") {
+                //         delNum = delNum + 1;
+                //         afterDelCnt++;
+                //     }
 
                 // if (e.row_state == "U" && reteDate.length > 0) {
                 // //if (reteDate.length > 0) {
@@ -431,15 +494,16 @@ sap.ui.define([
                     tenant_id: e.tenant_id, 
                     company_code: e.company_code,
                     const_quotation_number:  const_quotation_number_,
-                    const_quotation_item_number: dtl_const_quotation_item_number_,
+                    const_quotation_item_number: (!e.const_quotation_item_number ? null : e.const_quotation_item_number),
                     apply_extra_sequence: (!e.apply_extra_sequence ? null : parseFloat(e.apply_extra_sequence)),
                     net_price_contract_document_no: (!e.net_price_contract_document_no ? null : e.net_price_contract_document_no),
                     net_price_contract_degree : (!e.net_price_contract_degree ? null : parseInt(e.net_price_contract_degree)),
                     net_price_contract_extra_seq : (!e.net_price_contract_extra_seq ? null : parseFloat(e.net_price_contract_extra_seq)),
                     extra_number: (!e.extra_number ? null : e.extra_number), 
                     extra_class_number: (!e.extra_class_number ? null : e.extra_class_number), 
-                    extra_rate: (!e.apply_extra_rate ? null : parseInt(e.apply_extra_rate)), 
-                    row_state: (!e.create_user_id ? null : e.row_state),
+                    //extra_rate: (!e.apply_extra_rate ? null : parseInt(e.apply_extra_rate)), 
+                    extra_rate: (!e.apply_extra_rate ? null : String(e.apply_extra_rate)), 
+                    row_state: (!e.row_state ? null : e.row_state),
                     create_user_id: (!e.create_user_id ? 'Admin' : e.create_user_id),
                     update_user_id: (!e.update_user_id ? 'Admin' : e.update_user_id)
                 };
@@ -457,7 +521,7 @@ sap.ui.define([
             input.inputData.ucDetailData = odtl;
             input.inputData.ucQuotationExtraData = orate;
 
-            //console.log("inputData ---> " , inputData);
+            console.log("orate ---> " , orate);
 
             // return;
 
@@ -595,7 +659,7 @@ sap.ui.define([
             // 	return;
             // }
 
-            if (this.validator.validate(this.byId("midObjectForm")) !== true) return;
+            if (this.validator.validate(this.byId("ucUcQuotationSupEditBox")) !== true) return;
 
             var url = "ep/ne/ucQuotationMgtSup/webapp/srv-api/odata/v4/ep.UcQuotationMgtV4Service/SaveUcQuotationDtlProc";
 
@@ -615,25 +679,14 @@ sap.ui.define([
                                 console.log("#########Success#####", data);
                                 oView.setBusy(false);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"));
-          //                      that.validator.clearValueState(that.byId("midObjectForm"));
+                                //that.validator.clearValueState(that.byId("ucUcQuotationSupEditBox"));
+                                oViewModel.setProperty("/ucmaster", data.ucMasterData[0]);
 
-                            // Detail 조회
-                            // oDetailsModel.read("/UcQuotationDtlView", {
-                            //     filters: [
-                            //         new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                            //         new Filter("company_code", FilterOperator.EQ, this._sCompanyCode),
-                            //         new Filter("const_quotation_number", FilterOperator.EQ, this._sConstQuotationNumber)
-                            //     ],
-                            //     success: function (oData) {
-                            //         console.log(" UcQuotationDtlView ::: ", oData.results);
-                            //         oView.getModel("details").setData(oData.results);
-                            //         oView.setBusy(false);
-                            //         // loi_status = oData.quotation_status_code;
-                            //         oView.getModel("details").updateBindings(true);
-                            //         that._toShowMode();
-                            //     }
+                                //oView.byId("completionDate").setDateValue(data.ucMasterData[0].completion_date);
+                                oViewModel.setProperty("/ucdetails", data.ucDetailData);
+                                oViewModel.setProperty("/ucRate", data.ucQuotationExtraData);
+                                that._toShowMode();       
 
-                            // });
 
                             },
                             error: function (e) {
@@ -652,7 +705,8 @@ sap.ui.define([
 		 * @public
 		 */
         onPageCancelEditButtonPress: function () {
-            this.validator.clearValueState(this.byId("midObjectForm"));
+            //this.validator.clearValueState(this.byId("midObjectForm"));
+            this.validator.clearValueState(this.byId("ucUcQuotationSupEditBox"));
             if (this.getModel("midObjectViewModel").getProperty("/isAddedMode") == true) {
                 this.onPageNavBackButtonPress.call(this);
             } else {
@@ -736,8 +790,13 @@ sap.ui.define([
                         
                         console.log(" UcQuotationListView ::: ", oData.results);
 
-                        // oView.getModel("master").setData(oData.results[0]);
+                        oData.results[0]["const_start_date"] = that.convertDateToString(oData.results[0]["const_start_date"]);
+                        oData.results[0]["const_end_date"] = that.convertDateToString(oData.results[0]["const_end_date"]);
+                        oData.results[0]["completion_date"] = that.convertDateToString(oData.results[0]["completion_date"]);
+                        
+                        console.log(" convert.... ::: ", oData.results[0]);
                         oViewModel.setProperty("/ucmaster", oData.results[0]);
+
                         oView.setBusy(false);
                         loi_status = oData.quotation_status_code;
                         that._toShowMode();
@@ -757,12 +816,30 @@ sap.ui.define([
                         new Sorter("item_sequence", false)
                     ],
                     success: function (oData) {
-                        console.log(" UcQuotationDtlView ::: ", oData.results);
+                        // console.log(" UcQuotationDtlView ::: ", oData.results);
+
+                        // console.log(" const_start_date ::: ", oData.results[0]);
+                        // console.log("convertDateToString  const_start_date ::: ", that.convertDateToString(oData.results[0]["const_start_date"]));
                         //oView.getModel("details").setData(oData.results);
+
+                        oData.results.forEach(function (item, index) {
+           
+
+                            oData.results[index]["material_net_price"] = (!oData.results[index]["material_net_price"] ? 0 : parseFloat(oData.results[index]["material_net_price"]));
+                            oData.results[index]["labor_net_price"] = (!oData.results[index]["labor_net_price"] ? 0 : parseFloat(oData.results[index]["labor_net_price"]));
+                            //oData.results[index]["material_amount"] = (!oData.results[index]["material_amount"] ? 0 : parseFloat(oData.results[index]["material_amount"]));
+                            //oData.results[index]["labor_amount"] = (!oData.results[index]["labor_amount"] ? 0 : parseFloat(oData.results[index]["labor_amount"]));
+
+                        });
+
                         oViewModel.setProperty("/ucdetails", oData.results);
                         oView.setBusy(false);
                         // loi_status = oData.quotation_status_code;
                         // that._toShowMode();
+
+
+                    
+
                     }
 
                 });
@@ -809,7 +886,7 @@ sap.ui.define([
             // var oMasterModel = this.getModel("master")
             // var statusCode = oMasterModel.getData().quotation_status_code;
 
-            var oViewModel = this.getModel("viewModel")
+            var oViewModel = this.getModel("viewModel");
             var statusCode = oViewModel.getProperty("/ucmaster").quotation_status_code;
 
             this._showFormFragment('UcQuotationSup_Edit');
@@ -848,14 +925,15 @@ sap.ui.define([
             // var statusCode = oMasterModel.getData().quotation_status_code;
 
 
-            var oViewModel = this.getModel("viewModel")
+            var oViewModel = this.getModel("viewModel");
+       console.log("toshow...quotation_status_code " , oViewModel.getProperty("/ucmaster").quotation_status_code);     
             var statusCode = oViewModel.getProperty("/ucmaster").quotation_status_code;
             console.log("statusCode=", statusCode);
             this.getModel("midObjectViewModel").setProperty("/isEditMode", false);
             this.getModel("midObjectViewModel").setProperty("/isShowMode", true);
             this._showFormFragment('UcQuotationSup_Show');
             // this.byId("page").setSelectedSection("pageSectionMain");
-            if (statusCode == "221040") {
+            if (statusCode == "221040" || statusCode == "221030" ) {
                 this.byId("page").setProperty("showFooter", false);
             } else {
                 this.byId("page").setProperty("showFooter", true);
@@ -865,7 +943,14 @@ sap.ui.define([
             //     this.byId("pageEditButton").setVisible(false);
             //     this.byId("pageDeleteButton").setVisible(false);
             // } else {
-            this.byId("pageEditButton").setVisible(true);
+            //this.byId("pageEditButton").setVisible(true);
+
+            if (statusCode === "221010") { //BM등록요청
+                this.byId("pageEditButton").setVisible(true);
+            } else {
+                this.byId("pageEditButton").setVisible(false);
+            }
+
             //this.byId("pageDeleteButton").setVisible(true)
             //}
             //this.byId("pageDeleteButton").setEnabled(true);
@@ -918,7 +1003,7 @@ sap.ui.define([
 
         _oFragments: {},
         _showFormFragment: function (sFragmentName) {
-            var oPageSubSection = this.byId("pageSubSection1");
+            var oPageSubSection = this.byId("pageUcSubSection1");
             this._loadFragment(sFragmentName, function (oFragment) {
                 oPageSubSection.removeAllBlocks();
                 oPageSubSection.addBlock(oFragment);
@@ -935,12 +1020,12 @@ sap.ui.define([
                     this._oFragments[sFragmentName] = oFragment;
                     if (oHandler) oHandler(oFragment);
                     this.byId("page").setSelectedSection("pageSectionMain");
-                    this.byId("pageSectionMain").setSelectedSubSection("pageSubSection1");
+                    this.byId("pageSectionMain").setSelectedSubSection("pageUcSubSection1");
                 }.bind(this));
             } else {
                 if (oHandler) oHandler(this._oFragments[sFragmentName]);
                 this.byId("page").setSelectedSection("pageSectionMain");
-                this.byId("pageSectionMain").setSelectedSubSection("pageSubSection1");
+                this.byId("pageSectionMain").setSelectedSubSection("pageUcSubSection1");
             }
         },
 
@@ -988,6 +1073,8 @@ sap.ui.define([
             console.log("mstData.company_code  ------> " , mstData.company_code);
             console.log("mstData.const_quotation_number  ------> " , mstData.const_quotation_number);
 
+            console.log("mstData.org_name  ------> " , mstData.org_name);
+
 
             if (!this._contractItemDialog) {
                 this._contractItemDialog = Fragment.load({
@@ -1021,8 +1108,8 @@ sap.ui.define([
 
                 });
 
-                oView.byId("searchPopEpItemCode").setSelectedKey(mstData.ep_item_code); 
-                oView.byId("searchTenantId").setText(mstData.org_name);
+                oView.byId("searchPopEpItemClassCode").setSelectedKey(mstData.ep_item_code); 
+                oView.byId("searchPopOrgCode").setText(mstData.org_name);
 
 
             }).bind(this));
@@ -1049,7 +1136,10 @@ sap.ui.define([
             var document_no_ = "";
             var degree_ = "";
             var item_number_ = "";
-            var real_val = 0;
+            var real_val = 9999;
+
+            var seq = 0;
+            //seq = (dtlData.length+1) * 10;
 
             if (oSelected.length > 0) {
                 
@@ -1058,15 +1148,19 @@ sap.ui.define([
                 oSelected.some(function (chkIdx, index) {
 
                 document_no_ = (!oModel.getData()[chkIdx].net_price_contract_document_no ? '' : oModel.getData()[chkIdx].net_price_contract_document_no); 
-                degree_ = (!oModel.getData()[chkIdx].net_price_contract_degree ? 0 : oModel.getData()[chkIdx].net_price_contract_degree);
+                degree_ = (!oModel.getData()[chkIdx].net_price_contract_degree ? '' : oModel.getData()[chkIdx].net_price_contract_degree);
                 item_number_ = (!oModel.getData()[chkIdx].net_price_contract_item_number ? '' : oModel.getData()[chkIdx].net_price_contract_item_number);
 
                 if(dtlData.length > 0){
                         dtlData.map(r => {
                             
                             document_no = (!r["net_price_contract_document_no"] ? '' : r["net_price_contract_document_no"]); 
-                            degree = (!r["net_price_contract_degree"] ? 0 : r["net_price_contract_degree"]);
+                            degree = (!r["net_price_contract_degree"] ? '' : r["net_price_contract_degree"]);
                             item_number = (!r["net_price_contract_item_number"] ? '' : r["net_price_contract_item_number"]);
+
+                            console.log("document_no ---> " , document_no   + " ^^^^^^^^ document_no_ ---> " , document_no_);
+                            console.log("degree ---> " , degree   + " ^^^^^^^^ degree_ ---> " , degree_);
+                            console.log("item_number ---> " , item_number   + " ^^^^^^^^ item_number_ ---> " , item_number_);
 
                             if (((document_no.includes(document_no_)) 
                                 && (degree.includes(degree_)) 
@@ -1079,13 +1173,19 @@ sap.ui.define([
 
                         });
 
-                    console.log("one more========", real_val);
-                    if(real_val != chkIdx){
-                        console.log("two more========", chkIdx);    
+                    console.log("one real_val========", real_val  + " one chkIdx========", chkIdx);
+                    if(real_val.toString() != chkIdx){
+                        console.log("two more========", chkIdx);  
+                        
                         input.push(oModel.getData()[chkIdx]);  
+                        //input[chkIdx].row_state= "C";  
+                        //input[chkIdx].item_sequence= (chkIdx+1) * 10;
+                        console.log("idx=", input[index].item_sequence);
+                        
                     }
                 }else{
-                    input.push(oModel.getData()[chkIdx]);  
+                    input.push(oModel.getData()[chkIdx]);
+                    //input[chkIdx].row_state= "C";    
                 }
 
                 });
@@ -1095,24 +1195,39 @@ sap.ui.define([
 
 
             console.log("input========", input);
-            oViewModel.setProperty("/ucdetails", input);
+            //oViewModel.setProperty("/ucdetails", input);
 
-            var seq = 0;
-            seq = (dtlData.length+1) * 10;
-            input.forEach(function (item, index) {
-                //input.push(dtlData[index]);
-                console.log("idx11=", index);
+            // var seq = 0;
+            // seq = (dtlData.length+1) * 10;
+            // input.forEach(function (item, index) {
+            //     //input.push(dtlData[index]);
+            //     // console.log("idx11=", input[index].item_sequence);
                 
+            //     // if(input[index].item_sequence == 0){
+            //     //     input[index].row_state= "C";
+            //     //     input[index].item_sequence= seq;
+            //     //     console.log("idx=", input[index].item_sequence);
+            //     //     seq = seq + 10;
+            //     // }
+            //     seq = seq + 10;
+            //     input[index].item_sequence= seq;
+            //     input[index].row_state= "C";
                 
-                if(input[index].item_sequence == 0){
-                    input[index].row_state= "C";
-                    input[index].item_sequence= seq;
-                    console.log("idx=", input[index].item_sequence);
-                    seq = seq + 10;
+            // });
+
+             input.map(function (d, index) {
+                console.log("index=", index);
+                d["item_sequence"] = 10 * (index + 1);
+                //d["row_state"] = "C";
+                if(dtlData.length <= index){
+                    d["row_state"] = "C";
                 }
-                
-                
+                return d;
             });
+
+            
+
+            oViewModel.setProperty("/ucdetails", input);
 
             this.byId("dialogContractItem").close();
         },
@@ -1125,6 +1240,8 @@ sap.ui.define([
                 oSelected = oTable.getSelectedIndices();
             var rateData = oViewModel.getProperty("/ucRate");
             var dtlData = oViewModel.getProperty("/ucdetails");
+            var that = this;
+
 
             
             var input = [];
@@ -1142,21 +1259,42 @@ sap.ui.define([
             var item_number_ = "";
             var real_val = 0;
 
+
+            console.log("this.rateIndex 111111111111111---> " , this.rateIndex );
+            var selIndex = this.rateIndex;
+
             if (oSelected.length > 0) {
                 
                 console.log("oSelected.length ---> " , oSelected.length);
                 console.log("rateData.length ---> " , rateData.length );
+                
+                var sum_val = 0;
+                var aaa = 0 ;
+                var sum_int = [];
                 oSelected.some(function (chkIdx, index) {
                     //input.push(oModel.getData()[chkIdx]);  
                     input.push(rateData[chkIdx]);  
+                    aaa = (!oModel.getData()[chkIdx].apply_extra_rate) ? null : parseFloat(oModel.getData()[chkIdx].apply_extra_rate);
+                    sum_val = sum_val + aaa;
                 });
             }
             
             input.forEach(function (item, index) {
                 input[index].row_state= "C";
+                input[index].const_quotation_item_number = dtlData[selIndex].const_quotation_item_number;
+
+                //sum_val = sum_val +  parseFloat(dtlData[selIndex].apply_extra_rate).toFixed(2);//parseFloat(sum_val) + Math.floor(dtlData[selIndex].apply_extra_rate*100)/100;
+                //console.log("sum_val========", dtlData[selIndex].apply_extra_rate);
             });
 
+            sum_int = String(sum_val).split('.');
 
+            console.log("####  ---> " + "1.".concat(sum_int[1]));
+
+
+            
+
+//console.log("sum_val========", aaa);
             console.log("input========", input);
 
             this.hasInput = input;
@@ -1165,10 +1303,17 @@ sap.ui.define([
 
             
 
-
+var coms = parseFloat("1.".concat(sum_int[1]));
+console.log("Math.round========", (Math.round(coms*100)/100.0));
 
             if(input.length > 0){
-                dtlData[1].row_state = 'U';
+                dtlData[selIndex].row_state = 'U';
+                dtlData[selIndex].extra_rate = (Math.round(coms*100)/100.0);
+
+
+
+        
+                
                 
             // var odtl = [];
 
@@ -1192,7 +1337,14 @@ sap.ui.define([
             //     input[index].item_sequence= seq;
             //     console.log("idx=", input[index].item_sequence);
             //     seq = seq + 10;
+
+            that.onRateChange(dtlData[selIndex].extra_rate,selIndex);
             }
+
+            
+
+
+            oViewModel.setProperty("/ucdetails", dtlData);
 
             
             // oViewModel.setProperty("/ucdetails", input);
@@ -1232,6 +1384,32 @@ sap.ui.define([
             _oInput.setValue(val);
         },
 
+        //할증변경
+        onRateChange : function(val,index){
+
+            
+            console.log("val -->" , val);
+
+             var oViewModel = this.getModel("viewModel");
+            // var sPath = oEvent.getSource().getBindingInfo("value").binding.getContext().getPath();
+            // var index = sPath.substr(sPath.length-1);
+            console.log(" index obj ----------------->" , index); 
+
+            var dtlData = oViewModel.getProperty("/ucdetails");
+            //quotation_quantity
+
+            console.log(" edit before----------------->" , dtlData[index]["row_state"]); 
+
+            //dtlData[index]["material_amount"] = dtlData[index]["material_amount"];
+            dtlData[index]["labor_amount"] = Math.round(val * dtlData[index]["quotation_quantity"] * dtlData[index]["labor_net_price"]);
+            dtlData[index]["sum_amount"] = Math.round(dtlData[index]["material_amount"]) + Math.round(dtlData[index]["labor_amount"]);
+            if(dtlData[index]["row_state"] != "C"){
+                dtlData[index]["row_state"] = "U";
+            }
+
+
+        },
+
         //수량변경
         onQuantityChange: function(oEvent){
 
@@ -1249,10 +1427,15 @@ sap.ui.define([
 
             var dtlData = oViewModel.getProperty("/ucdetails");
 
+            console.log(" edit before----------------->" , dtlData[index]["row_state"]); 
+
             dtlData[index]["material_amount"] = val * dtlData[index]["material_net_price"];
             dtlData[index]["labor_amount"] = val * dtlData[index]["labor_net_price"];
             dtlData[index]["sum_amount"] = dtlData[index]["material_amount"] + dtlData[index]["labor_amount"];
-            dtlData[index]["row_state"] = "U";
+            if(dtlData[index]["row_state"] != "C"){
+                dtlData[index]["row_state"] = "U";
+            }
+
 
         },
 
@@ -1276,7 +1459,9 @@ sap.ui.define([
             dtlData[index]["material_amount"] = val * dtlData[index]["quotation_quantity"]; //자재단가 * 수량
             dtlData[index]["labor_amount"] = dtlData[index]["quotation_quantity"] * dtlData[index]["labor_net_price"]; //수량 * 노무단가
             dtlData[index]["sum_amount"] = dtlData[index]["material_amount"] + dtlData[index]["labor_amount"];
-            dtlData[index]["row_state"] = "U";
+            if(dtlData[index]["row_state"] != "C"){
+                dtlData[index]["row_state"] = "U";
+            }
         },
 
         //노무단가변경
@@ -1299,8 +1484,59 @@ sap.ui.define([
             dtlData[index]["labor_amount"] = val * dtlData[index]["quotation_quantity"]; //노무단가 * 수량
             dtlData[index]["material_amount"] = dtlData[index]["quotation_quantity"] * dtlData[index]["material_net_price"]; //수량 * 자재단가
             dtlData[index]["sum_amount"] = dtlData[index]["material_amount"] + dtlData[index]["labor_amount"];
-            dtlData[index]["row_state"] = "U";
+            if(dtlData[index]["row_state"] != "C"){
+                dtlData[index]["row_state"] = "U";
+            }
 
+        },
+
+        _bindView: function () {
+            var promise = jQuery.Deferred();
+
+            var oView = this.getView(),
+                oModel = this.getModel(),
+                oViewModel = this.getModel("viewModel");
+            var mstData = oViewModel.getProperty("/ucmaster");
+            oView.setBusy(true);
+
+            oModel.read("/UcApprovalExtraRateView", {
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, mstData.tenant_id),
+                    new Filter("company_code", FilterOperator.EQ, mstData.company_code)//,
+                    //new Filter("const_quotation_number", FilterOperator.EQ, this._sConstQuotationNumber)
+                ],
+                success: function (oData) {
+                    console.log(" UcApprovalExtraRateView ::: ", oData.results);
+                    oView.getModel("popExtraRate").setData(oData.results);
+                    oViewModel.setProperty("/ucRate", oData.results);
+                    oView.setBusy(false);
+
+                    promise.resolve(oData);
+
+                }.bind(this),						
+                error: function(oData){						
+                    promise.reject(oData);	
+                }
+
+            });
+
+
+            // oMasterModel.setTransactionModel(this.getModel());
+            // oMasterModel.read(sObjectPath, {
+            //     success: function (oData) {
+            //         oView.setBusy(false);
+
+            //         console.log("master ----> " ,oData);
+            //         oView.getModel("master").updateBindings(true);
+            //          promise.resolve(oData);
+            //     }.bind(this),						
+            //     error: function(oData){						
+            //         promise.reject(oData);	
+            //     }	
+
+            // });
+
+            return promise;
         },
 
         onTableExtraRatePress: function (oEvent) {
@@ -1309,38 +1545,11 @@ sap.ui.define([
 
             var oView = this.getView(),
                 oModel = this.getModel(),
-                oViewModel = this.getModel("viewModel"),
-                that = this;
-            // var [ event] = arguments;
-            
-            //console.log("event  ------> ", oEvent.getParameter("item").getKey());
-
-            console.log("onTableExtraRatePress -->" , oEvent);
-            // var sPath = "odata>" + oEvent.oSource._aSelectedPaths[0] + "/ucdetails";
-
-            //var sPath = oEvent.getSource().getParent().getBindingContext("/ucdetails").getPath();
-            // var sPath = oEvent.getSource().getBindingInfo("value").binding.getContext().getPath();
-            
-             //console.log(" sPath----------------->", sPath); 
-            // var oRecord = this.getModel("ucdetails").getProperty(sPath);
-            // var index = sPath.substr(sPath.length-1);
-
-            // console.log(" index obj ----------------->" , index); 
-            // this.onCmInputWithCodeValuePress["row"] = index;
-
-            // console.log(" index obj @@@@@@@@@@@@@ ----------------->" , this.onCmInputWithCodeValuePress["row"] ); 
-
-
-
-
-
-            var rateModel = this.getSchema("UcApprovalExtraRateView");
-            console.log("mstModel333=================", rateModel);
-
-            oViewModel.setProperty("/ucRate", rateModel);
+                oViewModel = this.getModel("viewModel");
 
             var mstData = oViewModel.getProperty("/ucmaster");
             var dtlData = oViewModel.getProperty("/ucdetails");
+            var rateData = oViewModel.getProperty("/ucRate");
 
             console.log("dtlData  ------> " , dtlData);
 
@@ -1349,6 +1558,23 @@ sap.ui.define([
             console.log("dtlData.net_price_contract_document_no  ------> " , dtlData.net_price_contract_document_no);
             console.log("mstData.net_price_contract_title  ------> " , mstData.net_price_contract_title);
 
+            var sPath = oEvent.getSource().getBindingInfo("text").binding.getContext().getPath();
+            this.rateIndex =  parseInt(sPath.substr(11,1));
+            var beforeIndex = parseInt(sPath.substr(11,1));
+            var test_val = [];
+            ///ucdetails/2
+             //console.log(" sPath----------------->", sPath); 
+             console.log(" sPath----------------->", sPath);
+             console.log(" this.rateIndex----------------->", this.rateIndex);  
+             //console.log(" this.tenant_id----------------->", dtlData[0]["tenant_id"]); 
+             console.log(" this.tenant_id----------------->", dtlData[this.rateIndex]["tenant_id"]); 
+             console.log(" this.company_code----------------->", dtlData[this.rateIndex]["company_code"]); 
+             console.log(" this.const_quotation_number----------------->", dtlData[this.rateIndex]["const_quotation_number"]); 
+             console.log(" this.const_quotation_item_number----------------->", dtlData[beforeIndex]["const_quotation_item_number"]); 
+
+             console.log(" $$$$$$$$$$$$$$$$$$ this.net_price_contract_document_no----------------->", dtlData[beforeIndex]["net_price_contract_document_no"]); 
+
+//oView.byId("searchNetPriceContractTitle").setText(dtlData[beforeIndex]["net_price_contract_title"]);
 
             // var sPath = oEvent.getSource().getBindingInfo("value").binding.getContext().getPath();
             // var index = sPath.substr(sPath.length-1);
@@ -1376,28 +1602,130 @@ sap.ui.define([
             this._extraRateDialog.then((function (extraRateDialog) {
                 extraRateDialog.open();
 
-                oView.setBusy(true);
+                console.log("rateData  ------> " , rateData);
 
-                // Master 조회
-                oModel.read("/UcApprovalExtraRateView", {
+                // if(!rateData){
+                // // Master 조회
+                //     oView.setBusy(true);
+                //     oModel.read("/UcApprovalExtraRateView", {
+                //         filters: [
+                //             new Filter("tenant_id", FilterOperator.EQ, mstData.tenant_id),
+                //             new Filter("company_code", FilterOperator.EQ, mstData.company_code)//,
+                //             //new Filter("const_quotation_number", FilterOperator.EQ, this._sConstQuotationNumber)
+                //         ],
+                //         success: function (oData) {
+                //             console.log(" UcApprovalExtraRateView ::: ", oData.results);
+                //             oView.getModel("popExtraRate").setData(oData.results);
+                //             oViewModel.setProperty("/ucRate", oData.results);
+                //             oView.setBusy(false);
+
+                //         }
+
+                //     });
+                // }
+
+                this._bindView().then((function () {
+                    oView.setBusy(true);
+
+                // 저장되어있는 할증 조회
+                oModel.read("/UcQuotationExtraRateView", {
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, mstData.tenant_id),
-                        new Filter("company_code", FilterOperator.EQ, mstData.company_code)//,
-                        //new Filter("const_quotation_number", FilterOperator.EQ, this._sConstQuotationNumber)
+                        new Filter("tenant_id", FilterOperator.EQ, dtlData[this.rateIndex]["tenant_id"]),
+                        new Filter("company_code", FilterOperator.EQ, dtlData[this.rateIndex]["company_code"]),
+                        new Filter("const_quotation_number", FilterOperator.EQ, dtlData[this.rateIndex]["const_quotation_number"]),
+                        new Filter("const_quotation_item_number", FilterOperator.EQ, dtlData[this.rateIndex]["const_quotation_item_number"])
                     ],
                     success: function (oData) {
-                        console.log(" UcApprovalExtraRateView ::: ", oData.results);
-                        oView.getModel("popExtraRate").setData(oData.results);
-                        oViewModel.setProperty("/ucRate", oData.results);
+                        console.log(" before UcQuotationExtraRateView ::: ", oData.results);
+                        //oView.getModel("popExtraRate").setData(oData.results);
+                        oViewModel.setProperty("/ucBeforeRate", oData.results);
+
+
+                        //console.log(" %%%%%%%%%%%%%%%% this.net_price_contract_title----------------->", oData.results[beforeIndex]["net_price_contract_title"]); 
+
+
+                        var beforeRateData = oViewModel.getProperty("/ucBeforeRate");
+                        var net_price_contract_document_no_ = "";
+                        var net_price_contract_degree_ = "";
+                        var net_price_contract_extra_seq_ = "";
+                        
+                        var test_index = 0;
+
+                        var dtl_net_price_contract_document_no = (!dtlData[beforeIndex]["net_price_contract_document_no"] ? '' : dtlData[beforeIndex]["net_price_contract_document_no"]); 
+                        var dtl_net_price_contract_degree = (!dtlData[beforeIndex]["net_price_contract_degree"] ? '' : dtlData[beforeIndex]["net_price_contract_degree"]); 
+                        var dtl_net_price_contract_extra_seq = (!dtlData[beforeIndex]["net_price_contract_extra_seq"] ? '' : dtlData[beforeIndex]["net_price_contract_extra_seq"]); 
+
+
+                        console.log(" rateData----------------->" ,rateData); 
+
+                        if(rateData){
+                            console.log(" 1111111111111----------------->", dtl_net_price_contract_document_no);  
+                            rateData.map(r => {
+                            
+                                net_price_contract_document_no_ = (!r["net_price_contract_document_no"] ? '' : r["net_price_contract_document_no"]); 
+                                net_price_contract_degree_ = (!r["net_price_contract_degree"] ? '' : r["net_price_contract_degree"]); 
+                                net_price_contract_extra_seq_ = (!r["net_price_contract_extra_seq"] ? '' : r["net_price_contract_extra_seq"]); 
+console.log(" 222222222222----------------->" ,net_price_contract_document_no_);  
+
+                                // if (((dtl_net_price_contract_document_no.includes(net_price_contract_document_no_)) 
+                                // && (dtl_net_price_contract_degree.includes(net_price_contract_degree_)) 
+                                // && (dtl_net_price_contract_extra_seq.includes(net_price_contract_extra_seq_)))) {
+
+                                if (((dtl_net_price_contract_document_no.includes(net_price_contract_document_no_)) 
+                                && (dtl_net_price_contract_degree.includes(net_price_contract_degree_)) 
+                                && (dtl_net_price_contract_extra_seq.includes(net_price_contract_extra_seq_)))) {
+                                    console.log("@@@@@===", dtl_net_price_contract_document_no + "@@@@@===", net_price_contract_document_no_   );
+                                    console.log("@@@@@===", dtl_net_price_contract_degree + "@@@@@===", net_price_contract_degree_   );
+                                    console.log("@@@@@===", dtl_net_price_contract_extra_seq + "@@@@@===", net_price_contract_extra_seq_   );
+
+                                    //++test_index;
+
+                                    console.log(" test_index----------------->", test_index); 
+                                    test_val.push(test_index);
+
+
+                                    //oView.byId("popRateTable").setSelectedIndex(test_index);
+                                    
+                                    
+                                   
+
+
+                                }
+
+                                test_index++;
+
+                            });
+
+                            console.log(" test_val----------------->", test_val);
+                            oView.byId("popRateTable").clearSelection();
+                            for(var i=0; i < test_val.length ; i++){
+                                oView.byId("popRateTable").addSelectionInterval(i,1);
+                                console.log("############################################" , i);
+                            }
+
+                        }
+                        console.log(" beforeRateData----------------->", beforeRateData[0]); 
+                        console.log(" beforeRateData- net_price_contract_title---------------->", beforeRateData[0]["net_price_contract_title"]);   
+
+                        oView.byId("searchNetPriceContractTitle").setText(beforeRateData[0]["net_price_contract_title"]);
+            
+
                         oView.setBusy(false);
 
                     }
 
                 });
+                //저장되어있는 할증 조회
 
-                oView.byId("searchNetPriceContractDocumentNo").setText(net_price_contract_document_no_); 
-                oView.byId("searchNetPriceContractTitle").setText(mstData.net_price_contract_title);
+                }).bind(this));
+                
 
+                oView.byId("searchNetPriceContractDocumentNo").setText(dtlData[beforeIndex]["net_price_contract_document_no"]); 
+                
+
+
+
+                dtlData[this.rateIndex]["const_quotation_item_number"]
 
             }).bind(this));
 
@@ -1432,34 +1760,64 @@ sap.ui.define([
                 }
             });
 
+            // oDtlData.map(function (d, index) {
+            //     console.log("index=", index);
+            //     if(oDtlData[index]["row_state"] != "D"){
+            //         d["item_sequence"] = 10 * (index + 1);
+            //     }
+            //     return d;
+                
+            // });
+
              console.log("oDtlData=", oDtlData);
             oViewModel.setProperty("/ucdetails", oDtlData);
             this.byId("mainTable").clearSelection();
         },
 
+        convertBoolean : function (str) {
+            return str.toLowerCase() === "true";
+        },
+
+
+
 
         onSegmentChange: function (oEvent) {
             console.log("onSegmentChange  ------> " ,oEvent);
 
+            var oViewModel = this.getModel("viewModel");
+            var that = this;
 
+            var isFalseBoolean = (oEvent.getParameter("item").getKey()==='true');
+            console.log("isFalseBoolean  ------> " ,isFalseBoolean);
+            //this.byId("changeDate").getFormatDate("");
+
+
+//Boolean bbb = that.convertBoolean(oEvent.getParameter("item").getKey());
+           
+
+            oViewModel.setProperty('/ucmaster/completion_flag',isFalseBoolean);
+
+            if(!isFalseBoolean){
+                console.log("false !!!!!");
+                oViewModel.setProperty('/ucmaster/completion_date',null);
+                oViewModel.setProperty('/ucmaster/facility_person_name',""); 
+                oViewModel.setProperty('/ucmaster/facility_person_empno',""); 
+                //oViewModel.setProperty('/ucmaster/facility_person_name',"");
+                //this.getView().byId("facility_person_name").setValue("");
+            }
+            
+
+            //viewModel>/ucmaster/completion_flag
             
 
             //var [event, field] = arguments;
 
-            console.log("event  ------> ", oEvent.getParameter("item").getKey());
+            //console.log("event  ------> ", oEvent.getParameter("item").getKey());
             //console.log("val  ------> ", val);
             // var bVal;
             // bVal= oEvent.getParameter("item").getKey();
 
-            // if(bVal === false){
-            //     this.getModel("midObjectViewModel").setProperty("/isShowMode", false);
-            //     console.log("1111  ------> ");
-
-            //     //this.byId("completionForm1Show").setEnabled(true);
-            // }else{
-            //     this.getModel("midObjectViewModel").setProperty("/isShowMode", true);
-            //     console.log("2222  ------> ");
-            // }
+            
         },
 
         // onStatusSelectionChange: function (oEvent) {
@@ -1482,17 +1840,17 @@ sap.ui.define([
             month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
             var day = date.getDate();                   //d
             day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
-            return year + '-' + month + '-' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+            return year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
         },
 
         _getSearchStates: function () {
 
             console.log("_getSearchStates");
             //console.log(this.getView().byId("searchPopEpItemCode").getSelectedKey().getContext());
-            var sSearchPopEpItemCode = this.getView().byId("searchPopEpItemCode").getSelectedKey();
+            var sSearchPopEpItemClassCode = this.getView().byId("searchPopEpItemClassCode").getSelectedKey();
             var sSearchPopItemDesc = this.getView().byId("searchPopItemDesc").getValue();
             var sSearchPopNetPriceContractTitle = this.getView().byId("searchPopNetPriceContractTitle").getValue();
-            var sUseFlag = this.getView().byId("search_useflag").getSelectedKey();
+            //추후적용 var sUseFlag = this.getView().byId("searchRateUseflag").getSelectedKey();
 
             // var requestFromDate = this.byId("searchConstDate").getValue().substring(0, 10).replaceAll(" ", ""),
             //     requestToDate = this.byId("searchConstDate").getValue().substring(13).replaceAll(" ", "");
@@ -1511,14 +1869,15 @@ sap.ui.define([
 
             var aSearchFilters = [];
 
-            if(!this.isValNull(sSearchPopEpItemCode)){
-                    aSearchFilters.push(new Filter("ep_item_code", FilterOperator.EQ, sSearchPopEpItemCode));
+            if(!this.isValNull(sSearchPopEpItemClassCode)){
+                    aSearchFilters.push(new Filter("ep_item_class_code", FilterOperator.EQ, sSearchPopEpItemClassCode));
                 }
 
-            if(!this.isValNull(sUseFlag)){
-                    var bUseFlag = (sUseFlag === "true")?true:false;
-                    aSearchFilters.push(new Filter("use_flag", FilterOperator.EQ, bUseFlag));
-                }
+            //추후적용
+            // if(!this.isValNull(sUseFlag)){
+            //         var bUseFlag = (sUseFlag === "true")?true:false;
+            //         aSearchFilters.push(new Filter("expiration_contract_include_flag", FilterOperator.EQ, bUseFlag));
+            //     }
 
             if(!this.isValNull(sSearchPopItemDesc)){
                     var aKeywordFilters = {
@@ -1566,6 +1925,152 @@ sap.ui.define([
 
 
             return aSearchFilters;
+        },
+
+        // dialogContractItemAfterclose: function() {
+        //     this.byId("dialogContractItem").destroy();
+        // },
+
+        // dialogExtraRateAfterclose: function() {
+        //     this.byId("dialogExtraRate").destroy();
+        // },
+
+        onDetailInputWithManValuePress: function (oEvent) {
+            //var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;    
+            var that = this;        
+            this.oDetailEmployeeDialog = new EmployeeDialog({
+                // id:"employeeDialog" ,
+                title:"담당자 검색",
+                closeWhenApplied:true,
+                items:{
+                    filters: [
+                    ]
+                }
+
+            });
+            this.oDetailEmployeeDialog.open();
+            this.oDetailEmployeeDialog.attachEvent("apply", function (oEvent) {
+                //console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
+                var sModel = this.getModel("manlist");
+
+                    // if (!that.fnChkDupData(that.mngListTbl, "manlist", "/vpManagerDtlView", "vendor_pool_person_empno", empNo)) {
+
+                        // sModel.setProperty(sPath + "/user_local_name", oEvent.mParameters.item.user_local_name);
+                        // sModel.setProperty(sPath + "/user_english_name", oEvent.mParameters.item.user_english_name);
+                        // sModel.setProperty(sPath + "/job_title", oEvent.mParameters.item.job_title);
+                        // sModel.setProperty(sPath + "/vendor_pool_person_role_text", oEvent.mParameters.item.vendor_pool_person_role_text);
+                        // sModel.setProperty(sPath + "/department_local_name", oEvent.mParameters.item.department_local_name);
+                        // sModel.setProperty(sPath + "/department_english_name", oEvent.mParameters.item.department_english_name);
+                        // sModel.setProperty(sPath + "/user_status_code", oEvent.mParameters.item.user_status_code); 
+
+                //     } else {
+                //         alert("중복 값이 있습니다.");
+                //         sModel.setProperty(sPath + "/user_local_name", "");
+                //         sModel.setProperty(sPath + "/user_english_name", "");
+                //         sModel.setProperty(sPath + "/job_title", "");
+                //         sModel.setProperty(sPath + "/vendor_pool_person_role_text", "");
+                //         sModel.setProperty(sPath + "/department_local_name", "");
+                //         sModel.setProperty(sPath + "/department_english_name", "");
+                //         sModel.setProperty(sPath + "/user_status_code", "");
+                //     }
+
+console.log("@@@@@@@@@@@@@@@@@@ 0 " , oEvent.mParameters.item.department_local_name);
+                this.byId("facility_person_name").setValue(null);
+                this.byId("facility_person_empno").setValue(null);
+                // that.oSupplierCode.setValue(null);
+                this.byId("facility_person_name").setValue(oEvent.mParameters.item.department_local_name);
+                this.byId("facility_person_empno").setValue(oEvent.mParameters.item.department_id);
+
+
+                console.log("@@@@@@@@@@@@@@@@@@ 0 " , this.byId("facility_person_empno").getValue());
+
+                // sModel.setProperty(sPath + "/user_local_name", oEvent.mParameters.item.user_local_name);
+                // sModel.setProperty(sPath + "/vendor_pool_person_empno", oEvent.mParameters.item.employee_number);
+                // // sModel.setProperty(sPath + "/user_english_name", oEvent.mParameters.item.user_english_name);
+                // sModel.setProperty(sPath + "/job_title", oEvent.mParameters.item.job_title);
+                // // sModel.setProperty(sPath + "/vendor_pool_person_role_text", oEvent.mParameters.item.vendor_pool_person_role_text);
+                // sModel.setProperty(sPath + "/department_local_name", oEvent.mParameters.item.department_local_name);
+                // // sModel.setProperty(sPath + "/department_english_name", oEvent.mParameters.item.department_english_name);
+                // // sModel.setProperty(sPath + "/user_status_code", oEvent.mParameters.item.user_status_code);                
+
+            }.bind(this));
+        },
+
+        onDetailInputWithDeptValuePress: function(){
+             this.oDetailDeptDialog = new DepartmentDialog({
+                // id:"employeeDialog" ,
+                title:"부서 검색",
+                closeWhenApplied:true,
+                items:{
+                    filters: [
+                    ]
+                }
+
+            });
+            this.oDetailDeptDialog.open();
+            this.oDetailDeptDialog.attachEvent("apply", function (oEvent) {
+                //console.log("oEvent 여기는 팝업에 팝업에서 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
+                that.byId("general_repr_department_name").setValue(null);
+                that.byId("general_repr_department_code").setValue(null);
+                // that.oSupplierCode.setValue(null);
+                that.byId("general_repr_department_name").setValue(oEvent.mParameters.item.department_local_name);
+                that.byId("general_repr_department_code").setValue(oEvent.mParameters.item.department_id);
+            }.bind(this));
+        },
+//EmployeeDialog   new EmployeeDialog({
+        openPlantPopup: function () {
+            if (!this.oCmDialogHelp) {
+                this.oCmDialogHelp = new EmployeeDialog({
+                    title: "{I18N>/PLANT_NAME}",
+                    keyFieldLabel: "{I18N>/PLANT_CODE}",
+                    textFieldLabel: "{I18N>/PLANT_NAME}",
+                    keyField: "employee_number",
+                    textField: "user_local_name",
+                    items: {
+                        sorters: [
+                            new Sorter("user_local_name", false)
+                        ],
+                        serviceName: "cm.util.OrgService",
+                        entityName: "Division"
+                    }
+                });
+                this.oCmDialogHelp.attachEvent("apply", function (oEvent) {
+                    this.byId("saveFacilityPersonCode").setValue(oEvent.getParameter("item").employee_number);
+                    this.byId("saveFacilityPersonName").setValue(oEvent.getParameter("item").user_local_name);
+                }.bind(this));
+            }
+            this.oCmDialogHelp.open();
+        },
+
+        
+
+        getFormatDate2 : function (date) {
+
+            if(!date){
+                return '';
+            }
+
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return  year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        },
+
+        convertDateToString: function (pDate) {
+
+            if (!pDate) return null;
+
+            var date = new Date(pDate);
+            var year = date.getFullYear();
+            var month = ("0" + (1 + date.getMonth())).slice(-2);
+            var day = ("0" + date.getDate()).slice(-2);
+            var dateString = year + "-" + month + "-" + day;
+
+            var dateString = year + "-" + month + "-" + day;
+            return dateString;
+
         },
 
     });

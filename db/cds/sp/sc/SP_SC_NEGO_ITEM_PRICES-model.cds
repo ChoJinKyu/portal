@@ -14,16 +14,16 @@ using {
     sp.Sc_Pur_Operation_Org,
     sp.Sc_Pu_Pr_Mst,
     sp.Sc_Approval_Mst
-} from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+} from '../../sp/sc/SP_SC_REFERENCE_OTHERS-model';
 
-using { sp.Sc_Mm_Material_Mst } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+using { sp.Sc_Mm_Material_Mst } from '../../sp/sc/SP_SC_REFERENCE_OTHERS-model';
 
 using {
     sp.Sc_Incoterms_View,
     sp.Sc_Payment_Terms_View,
     sp.Sc_Market_Code_View,
     sp.Sc_Spec_Code_View
-} from '../../sp/sc/SP_SC_REFERENCE_COMMON.model';
+} from '../../sp/sc/SP_SC_REFERENCE_COMMON-model';
 
 /////////////////////////////////// Reference Type ///////////////////////////////////
 // TYPE-POOLS
@@ -42,7 +42,7 @@ using {
 /* 
 // #Sc_Pur_Operation_Org == Pur_Org_Type_Mapping[process_type_code='SP03:견적입찰'] = Pur_Operation_Org =+ Code_Lng[group_code='CM_ORG_TYPE_CODE']
 // #How to use : as association
-using { sp.Sc_Pur_Operation_Org } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+using { sp.Sc_Pur_Operation_Org } from '../../sp/sc/SP_SC_REFERENCE_OTHERS-model';
         operation_org : association to Sc_Pur_Operation_Org 
             on operation_org.tenant_id = $self.tenant_id
             and operation_org.company_code = $self.company_code
@@ -130,6 +130,10 @@ entity Sc_Nego_Item_Prices {
         company_code                 : String(30)                                 @title : '회사코드'; //화면미정의:UI에서 사원정보로 부터 입력되어야 한다.
         operation_org_type_code      : String(30)                                 @title : '운영조직타입코드'  @description : 'UI:Operating Org';
         operation_org_code           : String(30)                                 @title : '운영조직코드'  @description : 'UI:Operating Org';
+        operation_org                : association to Sc_Pur_Operation_Org 
+                                            on operation_org.tenant_id = $self.tenant_id
+                                            and operation_org.company_code = $self.company_code
+                                            and operation_org.operation_org_code = $self.operation_org_code;
         operation_unit_code          : String(30)                                 @title : '운영단위코드--폐기예정';
         award_progress_status_code   : String(25)                                 @title : '낙찰진행상태코드';
         //    item_type_code : String(30)   @title: '품목유형코드' ;
@@ -145,17 +149,17 @@ entity Sc_Nego_Item_Prices {
         specification_fk             : Association to Sc_Spec_Code_View
                                            on specification_fk.tenant_id = $self.tenant_id
                                            and specification_fk.specification_code = $self.specification;
-        bpa_price                    : Decimal(28, 2)                             @title : 'BPA Price'  @description : 'UI:BPA Price (금액)';
-        detail_net_price             : Decimal(28, 2)                             @title : '상세단가'  @description : 'UI:상세 단가 (금액)';
-        recommend_info               : String(30)                                 @title : '추천정보'  @description : 'UI:추천정보';
+        bpa_price                    : PriceAmountT                             @title : 'BPA Price'  @description : 'UI:BPA Price (금액)';
+        detail_net_price             : PriceAmountT                             @title : '상세단가'  @description : 'UI:상세 단가 (금액)';
+        recommend_info               : String(200)                                 @title : '추천정보'  @description : 'UI:추천정보';
         group_id                     : String(30)                                 @title : 'Group Id'  @description : 'UI:Group Id';
         // sparts_supply_type           : String(30)                                 @title : 'S/Parts Supply Type-폐기예정'  @description  : 'UI:S/Parts Supply Type-폐기예정';
         location                     : String(30)                                 @title : 'Location'  @description : 'UI:Location';
-        purpose                      : String(30)                                 @title : '목적'  @description : 'UI:목적';
-        reason                       : String(30)                                 @title : '사유'  @description : 'UI:사유';
+        purpose                      : String(200)                                 @title : '목적'  @description : 'UI:목적';
+        reason                       : String(200)                                @title : '사유'  @description : 'UI:사유';
         request_date                 : DateTime                                   @title : '요청일'  @description : 'UI:요청 날짜';
         attch_code                   : String(30)                                 @title : '첨부파일코드'  @description : 'UI:첨부파일';
-        supplier_provide_info        : String(30)                                 @title : '공급업체제공정보'  @description : 'UI:협력사 제공 정보';
+        supplier_provide_info        : String(500)                                @title : '공급업체제공정보'  @description : 'UI:협력사 제공 정보';
         incoterms_code               : Sc_Incoterms_View : incoterms_code         @title : 'Incoterms코드'  @description : 'UI:Incoterms';
         incoterms                    : Association to Sc_Incoterms_View
                                            on incoterms.tenant_id = $self.tenant_id
@@ -171,19 +175,19 @@ entity Sc_Nego_Item_Prices {
         excl_flag                    : String(1)                                  @title : '제외여부';
         //    ship_to_location_id : String(30)   @title: '납품처위치코드' ;
         specific_supplier_count      : Integer                                    @title : 'Specific Supplier 개수'  @description : 'UI:Specific Supplier (숫자)';
-        vendor_pool_code             : String(100)                                @title : '협력사풀코드';
+        vendor_pool_code             : String(100)                                @title : '협력사풀코드' @description : 'TBD:마스터매핑필요';
         request_quantity             : Decimal(28,3)                              @title : '요청수량'  @description : 'UI:Quantity (수량)';
         uom_code                     : String(3)                                  @title : 'UOM코드'  @description : 'UI:UOM';
         maturity_date                : DateTime                                   @title : '만기일자'  @description : 'UI:납기 요청일';
         currency_code                : String(5)                                  @title : '통화코드'  @description : 'UI:Currency';
-        response_currency_code       : String(15)                                 @title : '응답통화코드'  @description : 'UI:Response Currency';
+        response_currency_code       : String(5)                                  @title : '응답통화코드'  @description : 'UI:Response Currency';
         exrate_type_code             : String(15)                                 @title : '환율유형코드'  @description : 'UI:Exchange Rate Type';
         exrate_date                  : DateTime                                   @title : '환율일자'  @description : 'UI:Exchange Rate Date';
         //    exrate : String(15)   @title: '환율' ;
-        bidding_start_net_price      : Decimal(28,2)                              @title : '입찰시작단가'  @description : 'UI:Start Price(금액)';
-        bidding_start_net_price_flag : Boolean default false                      @title : '입찰시작단가디스플레이여부'  @description : 'UI:Display to Supplier';
-        bidding_target_net_price     : sp.AmountT                                 @title : '입찰목표단가'  @description : 'UI:Target Price(금액)';
-        current_price                : Decimal(28,2)                              @title : '현재가격'      @description : 'UI:Current Price(금액)';
+        bidding_start_net_price      : PriceAmountT                              @title : '입찰시작단가'  @description : 'UI:Start Price(금액)';
+        bidding_start_net_price_flag : String(1)                                    @title : '입찰시작단가디스플레이여부'  @description : 'UI:Display to Supplier';
+        bidding_target_net_price     : PriceAmountT                                 @title : '입찰목표단가'  @description : 'UI:Target Price(금액)';
+        current_price                : PriceAmountT                              @title : '현재가격'      @description : 'UI:Current Price(금액)';
         note_content                 : LargeBinary                                @title : '노트내용';
         //    award_quantity : Decimal(28,3)   @title: '낙찰수량' ;
         pr_number                    : Sc_Pu_Pr_Mst : pr_number                   @title : '구매요청번호'  @description : 'UI:Requisition No';

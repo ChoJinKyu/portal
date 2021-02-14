@@ -56,7 +56,11 @@ BEGIN
                     V_PAY_PRICE = V_PAY_PRICE + :I_TABLE.PAY_PRICE[V_IDX];
                 END IF;
             END IF;
-            I_TABLE.PAY_RATE[V_IDX] = NULL;
+            IF (RECORD_COUNT(:I_TABLE) = 1) THEN
+                I_TABLE.PAY_RATE[V_IDX] = 100;
+            ELSE
+                I_TABLE.PAY_RATE[V_IDX] = NULL;
+            END IF;
         END FOR;
     ELSE
         I_TABLE.PAY_SEQUENCE[1] = '1';

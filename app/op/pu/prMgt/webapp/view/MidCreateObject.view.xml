@@ -120,10 +120,10 @@
                                 <OverflowToolbar>
                                     <Title text="{I18N>/ITEM} ({= (${viewModel>/Pr_Dtl})?${viewModel>/Pr_Dtl}.length:0})" level="H2"/>
                                     <ToolbarSpacer/>
-                                    <Button type="Emphasized" text="Add Item" press=".onItemAddRow" />
-                                    <Button type="Transparent" text="Add Multiple Item" press=".onItemAddMultiRow" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag}"/>
-                                    <Button type="Transparent" text="Copy"  press=".onItemCopyRow" />
-                                    <Button type="Transparent" text="Delete"  press=".onItemDeleteRow" />
+                                    <Button type="Emphasized" text="{I18N>/ROW_ADD}" press=".onItemAddRow" /><!-- Add Item -->
+                                    <Button type="Transparent" text="{I18N>/MULTI} {I18N>/ROW_ADD}" press=".onItemAddMultiRow" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/MATERIAL_CODE/display_column_flag}"/>
+                                    <Button type="Transparent" text="{I18N>/COPY}" press=".onItemCopyRow" />
+                                    <Button type="Transparent" text="{I18N>/DELETE}" press=".onItemDeleteRow" />
                                 </OverflowToolbar>
                             </table:extension>          
 
@@ -182,7 +182,7 @@
                                             maxLength="3" 
                                             showValueHelp="true" 
                                             valueHelpOnly="true"
-                                            valueHelpRequest=".onOpenUomDialog" 
+                                            valueHelpRequest=".onValueHelpRequest($event, 'pr_unit', {})" 
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/PR_UNIT/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>   
@@ -192,7 +192,7 @@
                                         <DatePicker
                                             value="{
                                                 path:'viewModel>delivery_request_date',
-                                                type:'sap.ui.model.odata.type.DateTime',
+                                                type:'sap.ui.model.odata.type.Date',
                                                 formatOptions: {
                                                     UTC: true,
                                                     pattern: 'yyyy-MM-dd'
@@ -203,13 +203,13 @@
                                     </table:template>
                                 </table:Column>                                      
                                 <table:Column width="10em" hAlign="Center" visible="{contModel>/DisplayFlag/OP_PU_PR_DTL/BUYER_EMPNO/display_column_flag}">
-                                    <Label text="{I18N>/BUYER_EMPNO}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/BUYER_EMPNO/mandatory_column_flag}"/>      
+                                    <Label text="{I18N>/BUYER}" required="{contModel>/DisplayFlag/OP_PU_PR_DTL/BUYER_EMPNO/mandatory_column_flag}"/>      
                                     <table:template>
                                         <Input
-                                            value="{viewModel>buyer_empno}"
+                                            value="{viewModel>user_local_name}"
                                             showValueHelp="true"
                                             valueHelpOnly="true"
-                                            valueHelpRequest=".onOpenSearchEmpDialog" 
+                                            valueHelpRequest=".onValueHelpRequest($event, 'buyer_empno', {})" 
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/BUYER_EMPNO/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
@@ -331,7 +331,7 @@
                                             maxLength="10"
                                             showValueHelp="true"
                                             valueHelpOnly="true"
-                                            valueHelpRequest=".onOpenSearchSupplierDialog"
+                                            valueHelpRequest=".onValueHelpRequest($event, 'supplier_code', {})"
                                             required="{contModel>/DisplayFlag/OP_PU_PR_DTL/SUPPLIER_CODE/mandatory_column_flag}"/>
                                     </table:template>
                                 </table:Column>
@@ -378,9 +378,9 @@
             <!-- 품목 정보 끝 -->
 
             <!-- 첨부파일 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="Attachment">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/ATTACHMENT}">
 				<uxap:subSections>
-                    <uxap:ObjectPageSubSection title="외부용" level="H2">
+                    <uxap:ObjectPageSubSection title="{I18N>/FOREXTERNAL}">
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">                    
                             <UploadCollection
                                 id="UploadCollectionOuter"
@@ -401,7 +401,7 @@
                         </layout:VerticalLayout>
 					</uxap:ObjectPageSubSection>
 
-                    <uxap:ObjectPageSubSection title="내부용" level="H2">
+                    <uxap:ObjectPageSubSection title="{I18N>/FORINTERNAL}" >
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">                    
                             <UploadCollection
                                 id="UploadCollectionInner"
@@ -425,7 +425,7 @@
 			</uxap:ObjectPageSection>
             <!-- 첨부파일 끝 -->
 
-			<uxap:ObjectPageSection titleUppercase="false" title="Report Line" visible="{contModel>/Approval/approval_flag}">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/APPROVE}" visible="{contModel>/Approval/approval_flag}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection titleUppercase="false">
 						<uxap:blocks>
@@ -436,28 +436,28 @@
                                     width="auto">
                                 <headerToolbar>
                                     <Toolbar>
-                                        <Title id="title" text="Approval Line"/>
+                                        <Title text="{I18N>/APPROVAL_LINE}"/>
                                         <ToolbarSpacer/>
                                     </Toolbar>
                                 </headerToolbar>
                                 <columns>
                                     <Column width="8em">
-                                        <Text text="No." />
+                                        <Text text="{I18N>/SEQUENCE}" />
                                     </Column>
                                     <Column>
-                                        <Text text="Type" />
+                                        <Text text="{I18N>/TYPE}" />
                                     </Column>
                                     <Column>
-                                        <Text text="Name / Dept." />
+                                        <Text text="{I18N>/NAME} / {I18N>/DEPARTMENT}" />
                                     </Column>
                                     <Column>
-                                        <Text text="Comment" />
+                                        <Text text="{I18N>/COMMENT}" />
                                     </Column>
                                     <Column>
-                                        <Text text="Status" />
+                                        <Text text="{I18N>/STATUS}" />
                                     </Column>
                                     <Column>
-                                        <Text text="Add / Delete" />
+                                        <Text text="{I18N>/ROW_ADD} / {I18N>/ROW_DELETE}" />
                                     </Column>
                                 </columns>
                                 <items>
@@ -491,7 +491,7 @@
                                 </headerToolbar>
                                 <columns>
                                     <Column width="auto">
-                                        <Text text="Referrer" />
+                                        <Text text="참조자" />
                                     </Column>
                                 </columns>
                                 <items>
@@ -511,9 +511,9 @@
 		<uxap:footer>
 			<OverflowToolbar>
 				<ToolbarSpacer />
-				<Button type="Transparent" text="Draft" press=".onDraftButtonPress" />
-				<Button type="Transparent" text="Cancel" press=".onCancelButtonPress" />
-				<Button type="Emphasized"  text="Save" press=".onSaveButtonPress"/>
+				<Button type="Transparent" text="{I18N>/TEMP_SAVE}" press=".onDraftButtonPress" />
+				<Button type="Transparent" text="{I18N>/CANCEL}" press=".onCancelButtonPress" />
+				<Button type="Emphasized"  text="{I18N>/SAVE}" press=".onSaveButtonPress"/>
 			</OverflowToolbar>
 		</uxap:footer>
 	</uxap:ObjectPageLayout>

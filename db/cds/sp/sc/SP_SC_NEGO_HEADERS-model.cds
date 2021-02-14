@@ -22,14 +22,14 @@ using {
     sp.Sc_Employee_View,
     sp.Sc_Hr_Department,
     sp.Sc_Pur_Operation_Org
-} from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+} from '../../sp/sc/SP_SC_REFERENCE_OTHERS-model';
 
 using {
     sp.Sc_Nego_Prog_Status_Code_View,
     sp.Sc_Award_Prog_Status_Code_View,
     sp.Sc_Award_Type_Code_View,
     sp.Sc_Award_Method_Code_View
-} from '../../sp/sc/SP_SC_REFERENCE_COMMON.model';
+} from '../../sp/sc/SP_SC_REFERENCE_COMMON-model';
 
 // TYPE-POOLS
 using {
@@ -43,9 +43,9 @@ using {
 // using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
 
 entity Sc_Nego_Headers {
-    key tenant_id : type of orgTenant.Org_Tenant : tenant_id @title : '테넌트ID';
+    key tenant_id : type of orgTenant.Org_Tenant : tenant_id     @title : '테넌트ID';
         // key tenant_id                       : Association to orgTenant.Org_Tenant @title : '테넌트ID';
-    key nego_header_id                  : Integer64 not null @title : '협상헤더ID';
+    key nego_header_id                  : Integer64 not null     @title : '협상헤더ID';
         Items                           : Composition of many Sc_Nego_Item_Prices
                                               on  Items.tenant_id      = $self.tenant_id
                                               and Items.nego_header_id = $self.nego_header_id;
@@ -53,67 +53,67 @@ entity Sc_Nego_Headers {
                                               on  ItemsNonPrice.tenant_id      = $self.tenant_id
                                               and ItemsNonPrice.nego_header_id = $self.nego_header_id;
         reference_nego_header_id        : type of nego_header_id @title : '참조협상헤더ID';
-        previous_nego_header_id         : Integer64          @title : '기존협상헤더ID';
-        operation_org_code              : String(10)         @title : '운영조직코드';
-        operation_unit_code             : String(10)         @title : '운영단위코드--폐기예정';
-        reference_nego_document_number  : Integer            @title : '참조협상문서번호';
-        nego_document_round             : Integer            @title : '협상문서회차';
-        nego_document_number            : String(50)         @title : '협상문서번호';
-        nego_document_title             : String(300)        @title : '협상문서제목';
-        nego_document_desc              : String(4000)       @title : '협상문서설명';
-        nego_progress_status_code       : String(30)         @title : '협상진행상태코드';
+        previous_nego_header_id         : type of nego_header_id @title : '기존협상헤더ID';
+        operation_org_code              : String(10)             @title : '운영조직코드';
+        operation_unit_code             : String(10)             @title : '운영단위코드--폐기예정';
+        reference_nego_document_number  : Integer                @title : '참조협상문서번호';
+        nego_document_round             : Integer                @title : '협상문서회차';
+        nego_document_number            : String(50)             @title : '협상문서번호';
+        nego_document_title             : String(300)            @title : '협상문서제목';
+        nego_document_desc              : LargeBinary            @title : '협상문서설명';
+        nego_progress_status_code       : String(30)             @title : '협상진행상태코드';
         nego_progress_status : Association to Sc_Nego_Prog_Status_Code_View
                             on nego_progress_status.tenant_id       = $self.tenant_id
                               and nego_progress_status.nego_progress_status_code = $self.nego_progress_status_code;
-        award_progress_status_code      : String(25)         @title : '낙찰진행상태코드';
+        award_progress_status_code      : String(25) default '010' @title : '낙찰진행상태코드';
         award_progress_status : Association to Sc_Award_Prog_Status_Code_View
                             on award_progress_status.tenant_id       = $self.tenant_id
                               and award_progress_status.award_progress_status_code = $self.award_progress_status_code;
         //    award_date : Date   @title: '낙찰일자' ;
-        reply_times                     : Integer            @title : '회신횟수';
-        supplier_count                  : Integer            @title : '공급업체개수';
-        nego_type_code                  : String(25)         @title : '협상유형코드';
+        reply_times                     : Integer                @title : '회신횟수';
+        supplier_count                  : Integer                @title : '공급업체개수';
+        nego_type_code                  : String(25)             @title : '협상유형코드';
         nego_type      : Association to one Sc_Nego_Type_Code 
                             on nego_type.tenant_id       = $self.tenant_id
                               and nego_type.nego_type_code = $self.nego_type_code;
         //    purchasing_order_type_code : String(30)   @title: '구매주문유형코드' ;
-        outcome_code   : type of Sc_Outcome_Code:outcome_code  @title : '아웃컴코드';
+        outcome_code   : type of Sc_Outcome_Code:outcome_code    @title : '아웃컴코드';
         outcome        : Association to Sc_Outcome_Code 
                             on outcome.tenant_id = $self.tenant_id 
                               and outcome.nego_type_code = $self.nego_type_code
                               and outcome.outcome_code = $self.outcome_code
                             //   excluding { local_create_dtm }
                               ;
-        negotiation_output_class_code   : String(100)        @title : '협상산출물분류코드-삭제예정(OUTCOME_CODE대체)';
+        negotiation_output_class_code   : String(100)            @title : '협상산출물분류코드-삭제예정(OUTCOME_CODE대체)';
         // buyer_empno                     : String(30)         @title : '구매담당자사번';
         buyer_empno                     : type of Sc_Employee_View : employee_number @title : '구매담당자사번';
         buyer_employee : Association to Sc_Employee_View    //UseCase        
                             on buyer_employee.tenant_id = $self.tenant_id
                               and buyer_employee.employee_number = $self.buyer_empno;
-        buyer_department_code           : String(10)         @title : '구매담당자부서코드';
+        buyer_department_code           : String(10)             @title : '구매담당자부서코드';
         buyer_department : Association to Sc_Hr_Department    //UseCase        
                             on buyer_department.tenant_id = $self.tenant_id
                               and buyer_department.department_code = $self.buyer_department_code;
         //    ship_to_location_code : Integer   @title: '납품처위치코드' ;
         //    submit_date : Date   @title: '제출일자' ;
-        immediate_apply_flag            : String(1)          @title : '즉시적용여부';
-        open_date                       : DateTime           @title : '오픈일자';
-        closing_date                    : DateTime           @title : '마감일자';
+        immediate_apply_flag            : String(1)              @title : '즉시적용여부';
+        open_date                       : DateTime               @title : '오픈일자';
+        closing_date                    : DateTime               @title : '마감일자';
         //    reference_closing_date : Date   @title: '참조마감일자' ;
         //    cancel_date : Date   @title: '취소일자' ;
-        auto_rfq                        : String(1)          @title : 'Auto RFQ';
-        items_count                     : Integer            @title : '품목수';
-        negotiation_style_code          : String(30)         @title : '협상스타일코드' @description : 'UI:Bid Style|Quote Style';
+        auto_rfq                        : String(1)              @title : 'Auto RFQ';
+        items_count                     : Integer                @title : '품목수';
+        negotiation_style_code          : String(30)             @title : '협상스타일코드' @description : 'UI:Bid Style|Quote Style';
         negotiation_style : Association to one Sc_Negotiation_Style_Map
                             on    negotiation_style.tenant_id              = $self.tenant_id
                               and negotiation_style.nego_type_code         = $self.nego_type_code
                               and negotiation_style.negotiation_style_code = $self.negotiation_style_code
                             @title : '협상유형&협상스타일 Navi.';
-        close_date_ext_enabled_hours    : Integer            @title : '마감일자동연장가능시간수';
-        close_date_ext_enabled_count    : Integer            @title : '마감일자동연장가능횟수';
-        actual_extension_count          : Integer            @title : '실제연장횟수';
-        remaining_hours                 : Decimal(28, 2)     @title : '잔여시간';
-        note_content                    : LargeBinary        @title : '노트내용';
+        close_date_ext_enabled_hours    : Integer                @title : '마감일자동연장가능시간수';
+        close_date_ext_enabled_count    : Integer                @title : '마감일자동연장가능횟수';
+        actual_extension_count          : Integer                @title : '실제연장횟수';
+        remaining_hours                 : PriceAmountT           @title : '잔여시간';
+        note_content                    : LargeBinary            @title : '노트내용' @description : 'UI:Note to Content';
         award_type_code                 : Sc_Award_Type_Code_View:award_type_code @title : '낙찰유형코드' @description : 'UI:Award Type';
         award_type : Association to Sc_Award_Type_Code_View
                             on    award_type.tenant_id       = $self.tenant_id
@@ -142,6 +142,8 @@ entity Sc_Nego_Headers {
         supplier_participation_flag     : String(1)          @title : '공급업체참여여부' @description : 'UI:Intention of Supplier Participation';
         partial_allow_flag              : String(1)          @title : '부분허용여부'     @description : 'UI:Partial Quotation';
         bidding_result_open_status_code : String(30)         @title : '입찰결과오픈상태코드';
+
+        //// 20210209 추가 - 입찰 전용 필드
         max_round_count                      : Integer       @title : 'Max Round Count' @description : 'UI:Max Round Count';
         auto_round                           : String(1)     @title : 'Auto Round' @description : 'UI:Auto Round';
         auto_round_terms                     : Integer       @title : 'Auto Round Terms' @description : 'UI:Auto Round Terms';
@@ -241,11 +243,11 @@ entity Sc_Nego_Headers_View as
         award_method_map2,                                      //[가능]명시적으로 포함 시켜야 실제 디자인타임에 Association으로 적용됨
         award_method_map2.sort_no as nego_award_method_sort_no, //[가능]Association으로 추가되지 않고 디자인타임의 Left Outer Join으로 적용된다.
         round(seconds_between($now, closing_date)/3600,2) as remain_times  : Decimal(28, 2),
-        operation_org //[가능]명시적으로 포함 시켜야 실제 디자인타임에 Association으로 적용됨
+        operation_org                                           //[가능]명시적으로 포함 시켜야 실제 디자인타임에 Association으로 적용됨
     };
 
   annotate Sc_Nego_Headers_View with @( 
-        title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가',readonly
+        title:'잔여시간추가',description:'잔여시간()=마감시간-현재시간)추가'
   ) {
         remain_times @title:'잔여시간' @description:'잔여시간=마감시간-현재시간' @readonly;
   };
@@ -273,7 +275,7 @@ entity Sc_Nego_Headers_View2 as
         operation_org : association to Sc_Pur_Operation_Org 
             on operation_org.tenant_id = $projection.tenant_id
             and operation_org.company_code = $projection.company_code
-            and operation_org.operation_org_code = $projection.operation_unit_code
+            and operation_org.operation_org_code = $projection.operation_org_code
             ;
     } into {
         *,
@@ -290,63 +292,61 @@ entity Sc_Nego_Headers_View_Ext as projection on Sc_Nego_Headers_View;
 //         remain_times @title:'잔여시간' @description:'잔여시간=마감시간-현재시간' @readonly;
 //   };
 
-view Sc_Nego_Workbench_View as select from Sc_Nego_Item_Prices as Items {
-    Key Items.tenant_id                                                                           ,
-    key Items.nego_header_id                                                                      ,
-    Key Items.nego_item_number                                                                    ,
-        Header.nego_document_number                                                               ,
-        Header.nego_document_round                                                                ,
-        Header.nego_progress_status_code                                                          ,
-        Header.nego_progress_status.nego_progress_status_name as nego_progress_status_name        ,
-        Header.award_progress_status_code                                                         ,
-        Header.award_progress_status.award_progress_status_name as award_progress_status_name     ,
-        Header.reply_times                                                                        ,
-        Header.supplier_count                                                                     ,
-        Header.supplier_participation_flag                                                        ,
-        Header.remaining_hours                                                                    ,
-        Header.nego_document_title                                                                ,
-        Header.items_count                                                                        ,
-        Header.nego_type_code                                                                     ,
-        Header.nego_type.nego_type_name as nego_type_name                                         ,
-        Header.outcome_code                                                                       ,
-        Header.outcome.outcome_name as outcome_name                                               ,
-        Header.negotiation_style_code                                                             ,
-        Header.negotiation_style.negotiation_style_name as negotiation_style_name                 ,
-        Header.bidding_result_open_status_code                                                    ,
-        Header.negotiation_output_class_code                                                      ,
-        Items.pr_approve_number                                                                   ,
-        Items.req_submission_status                                                               ,
-        Items.req_reapproval                                                                      ,
-        Items.material_code                                                                       ,
-        Items.material_desc                                                                       ,
-        Items.requestor_empno                                                                     ,
-        Items.requestor_employee.employee_name as requestor_empno_name                            ,
-        Items.request_department_code                                                             ,
-        Items.request_department.department_name as request_department_name                       ,
-        Header.award_type_code                                                                    ,
-        Header.award_type.award_type_name as award_type_name                                      ,
-        Header.buyer_empno                                                                        ,
-        Header.buyer_employee.employee_name as buyer_empno_name                                   ,
-        Header.buyer_department_code                                                              ,
-        Header.buyer_department.department_name as buyer_department_name                          ,
-        Header.open_date                                                                          ,
-        Header.closing_date                                                                       ,
-        Header.close_date_ext_enabled_hours                                                       ,
-        Header.close_date_ext_enabled_count                                                       ,
-        Header.actual_extension_count                                                             ,
-        Items.requisition_flag                                                                    ,
-        Items.price_submission_no                                                                 ,
-        Items.price_submisstion_status                                                            ,
-        Header.local_create_dtm                                                                   ,
+view Sc_Nego_Workbench_View as select from Sc_Nego_Headers_View as Header {
+    Key Header.tenant_id                                                                                 ,
+    key Header.nego_header_id                                                                            ,
+    Key ifnull(Items.nego_item_number,'') as nego_item_number : Sc_Nego_Item_Prices : nego_item_number  ,
+        Header.nego_document_number                                                                     ,
+        Header.nego_document_round                                                                      ,
+        Header.nego_progress_status_code                                                                ,
+        Header.nego_progress_status.nego_progress_status_name as nego_progress_status_name              ,
+        Header.award_progress_status_code                                                               ,
+        Header.award_progress_status.award_progress_status_name as award_progress_status_name           ,
+        Header.reply_times                                                                              ,
+        Header.supplier_count                                                                           ,
+        Header.supplier_participation_flag                                                              ,
+        Header.remaining_hours                                                                          ,
+        Header.nego_document_title                                                                      ,
+        Header.items_count                                                                              ,
+        Header.nego_type_code                                                                           ,
+        Header.nego_type.nego_type_name as nego_type_name                                               ,
+        Header.outcome_code                                                                             ,
+        Header.outcome.outcome_name as outcome_name                                                     ,
+        Header.negotiation_style_code                                                                   ,
+        Header.negotiation_style.negotiation_style_name as negotiation_style_name                       ,
+        Header.bidding_result_open_status_code                                                          ,
+        Header.negotiation_output_class_code                                                            ,
+        Items.pr_approve_number                                                                         ,
+        Items.req_submission_status                                                                     ,
+        Items.req_reapproval                                                                            ,
+        Items.material_code                                                                             ,
+        Items.material_desc                                                                             ,
+        Items.requestor_empno                                                                           ,
+        Items.requestor_employee.employee_name as requestor_empno_name                                  ,
+        Items.request_department_code                                                                   ,
+        Items.request_department.department_name as request_department_name                             ,
+        Header.award_type_code                                                                          ,
+        Header.award_type.award_type_name as award_type_name                                            ,
+        Header.buyer_empno                                                                              ,
+        Header.buyer_employee.employee_name as buyer_empno_name                                         ,
+        Header.buyer_department_code                                                                    ,
+        Header.buyer_department.department_name as buyer_department_name                                ,
+        Header.open_date                                                                                ,
+        Header.closing_date                                                                             ,
+        Header.close_date_ext_enabled_hours                                                             ,
+        Header.close_date_ext_enabled_count                                                             ,
+        Header.actual_extension_count                                                                   ,
+        Items.requisition_flag                                                                          ,
+        Items.price_submission_no                                                                       ,
+        Items.price_submisstion_status                                                                  ,
+        Header.local_create_dtm                                                                         ,
         Items.interface_source                  
 };
 
 view Sc_Nego_Workbench_View2 as select from Sc_Nego_Headers_View as Header {
-    Key Header.tenant_id                                                                          ,
-    Key Header.nego_header_id                                                                     ,
-    Key Items.tenant_id         as items_tenant_id                                                ,
-    Key Items.nego_header_id    as items_nego_header_id                                           ,
-    Key Items.nego_item_number  as items_nego_item_number                                         ,
+    Key Header.tenant_id                                                                                                   ,
+    Key Header.nego_header_id                                                                                              ,
+    Key ifnull(Items.nego_item_number,'') as nego_item_number : Sc_Nego_Item_Prices : nego_item_number ,
         Items
 };
     

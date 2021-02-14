@@ -59,8 +59,7 @@
                         id="createDate"
                         title="작성일자 "
                         text="{
-                                path: 'viewModel>/ucmaster/quotation_write_date',
-                                formatter: '.dateFormatter.toUTCDateString'
+                                path: 'viewModel>/ucmaster/quotation_write_date'
                             }" />
 
                     <ObjectStatus
@@ -105,7 +104,7 @@
 					
                     <uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="기본정보">
                         <uxap:subSections>
-                            <uxap:ObjectPageSubSection id="pageSubSection1">
+                            <uxap:ObjectPageSubSection id="pageUcSubSection1">
                             </uxap:ObjectPageSubSection>
                         </uxap:subSections>
                     </uxap:ObjectPageSection>
@@ -209,9 +208,9 @@
                                 </t:Column>
                                 
                                 <t:Column id="mainQuotationQuantity" width="4rem" hAlign="Center">
-                                <Label text="수량" textAlign="Center" width="100%"/>
+                                <Label text="수량" textAlign="Center" width="100%" required="true"/>
                                 <t:template>
-                                    <HBox>
+                                    <HBox justifyContent="End">
                                     <Text  text="{
                                                     path: 'viewModel>quotation_quantity',
                                                     formatter: '.numberFormatter.toNumberString'
@@ -242,7 +241,7 @@
                                 <t:Column id="mainMaterialNetPrice" width="8rem" hAlign="Right">
                                 <Label text="자재단가" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <HBox> 
+                                    <HBox justifyContent="End"> 
                                         <Text  text="{
                                                     path: 'viewModel>material_net_price',
                                                     formatter: '.numberFormatter.toNumberString'
@@ -275,7 +274,7 @@
                                 <t:Column id="mainLaborNetPrice" width="8rem" hAlign="Right">
                                 <Label text="노무단가" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <HBox>    
+                                    <HBox justifyContent="End">    
                                         <Text  text="{
                                                     path: 'viewModel>labor_net_price',
                                                     formatter: '.numberFormatter.toNumberString'
@@ -362,7 +361,8 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
-                        <VBox id="midCompletionForm">
+                        <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
                             <VBox alignContent="Center">
                                     <Label text="준공여부" textAlign="left" design="Bold" class="sapMLabelNoText" />
 
@@ -378,37 +378,85 @@
                                             <SegmentedButtonItem text="No" width="6em" key="false"/>
                                         </items>
                                     </SegmentedButton>
+                                    <layoutData>
+                                        <layout:GridData span="XL12 L12 M12 S12" />
+                                    </layoutData> 
                                 </VBox>   
 
                             
-                                <form:SimpleForm id="completionForm1Show" editable="false"> 
-                                    <VBox alignContent="Center" alignItems="Stretch"> 
+                                <!-- <form:SimpleForm id="completionForm1Show" editable="{viewModel>/ucmaster/completion_flag}">  -->
+                                    <VBox alignContent="Center" alignItems="Stretch" visible="{viewModel>/ucmaster/completion_flag}"> 
                                         <Label  text="* 준공일자" 
                                                     design="Bold" 
                                                     class="sapUiSmallMarginBottom"/>
                                         <HBox>
-                                            
-                                            <DatePicker placeholder="Date" id="completionDatePicker" value="{path: 'viewModel>/ucmaster/completion_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"
+                                            <!-- <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" value="{viewModel>/ucmaster/completion_date}" required="true" placeholder="Date" width="100%"
                                                 visible="{=!${midObjectViewModel>/isShowMode}}"
-                                                />
+                                                editable="{viewModel>/ucmaster/completion_flag}"/> -->
+                    
+                                            <!-- <DatePicker placeholder="Date" id="completionDatePicker" value="{path: 'viewModel>/ucmaster/completion_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"
+                                                visible="{=!${midObjectViewModel>/isShowMode}}"
+                                                editable="{viewModel>/ucmaster/completion_flag}"/> -->
 
-                                            <Text text="{
+                                            <!-- <DatePicker
+                                                id="changeDate"
+                                                value="{
+                                                    path:'viewModel>/ucmaster/completion_date',
+                                                    type:'sap.ui.model.odata.type.DateTime',
+                                                    formatOptions: {
+                                                        pattern: 'yyyy-MM-dd'
+                                                    }
+                                                }"
+                                                visible="{=!${midObjectViewModel>/isShowMode}}"
+                                                editable="{viewModel>/ucmaster/completion_flag}"/>  -->
+
+
+                                            <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" value="{viewModel>/ucmaster/completion_date}" required="true" placeholder="Date" width="100%"
+                                                visible="{=!${midObjectViewModel>/isShowMode}}"
+                                                editable="{viewModel>/ucmaster/completion_flag}"/> 
+                    
+
+
+                                            <!-- <DatePicker id="completionDate" placeholder="Date" 
+                                             visible="{=!${midObjectViewModel>/isShowMode}}"
+                                                editable="{viewModel>/ucmaster/completion_flag}"/> -->
+
+                                            
+                                            <!-- <DatePicker
+                                                value="{
+                                                    path:'viewModel>/ucmaster/completion_date',
+                                                    type:'sap.ui.model.odata.type.DateTime',
+                                                    formatOptions: {
+                                                        pattern: 'yyyy-MM-dd'
+                                                    }
+                                                }"
+                                                visible="{=!${midObjectViewModel>/isShowMode}}"
+                                                editable="{viewModel>/ucmaster/completion_flag}"/> -->
+                                            <!-- <DatePicker placeholder="Disable Date" value="{path: 'viewModel>/ucmaster/completion_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}"
+                                                visible="{=!${midObjectViewModel>/isShowMode}}"
+                                                editable="{viewModel>/ucmaster/completion_flag}"/> -->
+
+                                            <!-- <Text text="{
                                                 path: 'viewModel>/ucmaster/completion_date',
                                                 type: 'sap.ui.model.type.Date',
                                                 formatOptions: {
                                                     pattern: 'yyyy/MM/dd'
                                                 }                                        
                                             }"  
-                                            class="sapUiTinyMarginBegin" visible="{midObjectViewModel>/isShowMode}"/>          
+                                            class="sapUiTinyMarginBegin" visible="{midObjectViewModel>/isShowMode}"/>      -->
+                                            <Text text="{viewModel>/ucmaster/completion_date}" class="sapUiTinyMarginBegin" visible="{midObjectViewModel>/isShowMode}"/> 
                                         </HBox> 
+                                        <layoutData>
+                                            <layout:GridData span="XL6 L6 M6 S12" />
+                                        </layoutData>   
                                     </VBox>
-                                    <VBox alignContent="Center" alignItems="Stretch"> 
+                                    <VBox alignContent="Center" alignItems="Stretch" visible="{viewModel>/ucmaster/completion_flag}"> 
                                         <Label  text="* 시설담당자" 
                                                     design="Bold" 
                                                     class="sapUiSmallMarginBottom"/>
                                         <HBox>
 
-                                        <lib-m:CodePicker id="searchRequestorS"
+                                        <!-- <lib-m:CodePicker id="searchRequestorS"
                                             placeholder="Employee name"
                                             keyField="employee_number"
                                             textField="user_local_name"
@@ -421,18 +469,37 @@
                                                 entityName: 'Employee'
                                             }"
                                             visible="{=!${midObjectViewModel>/isShowMode}}"
+                                            editable="{viewModel>/ucmaster/completion_flag}"
                                             >
                                             <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
                                                 keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" 
                                                 />
-                                        </lib-m:CodePicker>    
+                                        </lib-m:CodePicker>      -->
+                                        <HBox>
+                                            <!-- <SearchField id="facility_person_name"
+                                            search=".onDetailInputWithManValuePress" 
+                                            change="resetDetailCode"
+                                            visible="{=!${midObjectViewModel>/isShowMode}}"
+                                                editable="{viewModel>/ucmaster/completion_flag}"
+                                            />
+                                        <Input id="facility_person_empno" placeholder="Input data" visible ="false"></Input> -->
+
+                                            <Input id="saveFacilityPersonName" value="{viewModel>/ucmaster/facility_person_name}" required="true" placeholder="시설담당자" showValueHelp="true" valueHelpRequest=".openPlantPopup" width="100%" 
+                                                 visible="{=!${midObjectViewModel>/isShowMode}}"
+                                                editable="{viewModel>/ucmaster/completion_flag}"/>
+                                            <Input id="saveFacilityPersonCode" value="{viewModel>/ucmaster/facility_person_empno}" visible="false" />
+                                        </HBox>
                                         <Text text="{viewModel>/ucmaster/facility_person_name}" 
                                             visible="{midObjectViewModel>/isShowMode}"/> 
-                                        </HBox>          
+                                              
+                                        </HBox>  
+                                        <layoutData>
+                                            <layout:GridData span="XL6 L6 M6 S12" />
+                                        </layoutData>          
                                     </VBox>
-                                </form:SimpleForm>   
+                                <!-- </form:SimpleForm>    -->
 
-                                <form:SimpleForm id="completionForm2Show" editable="false"> 
+                                
                                     <UploadCollection
                                         id="UploadCollection2"
                                         maximumFilenameLength="55"
@@ -447,10 +514,17 @@
                                         fileSizeExceed="onFileSizeExceed"
                                         typeMissmatch="onTypeMissmatch"
                                         uploadComplete="onUploadComplete"
-                                        beforeUploadStarts="onBeforeUploadStarts" />
-                                </form:SimpleForm>   
+                                        beforeUploadStarts="onBeforeUploadStarts" 
+                                        editable="{viewModel>/ucmaster/completion_flag}"
+                                        visible="{viewModel>/ucmaster/completion_flag}">
+                                        <layoutData>
+                                            <layout:GridData span="XL12 L12 M12 S12" />
+                                        </layoutData> 
+                                </UploadCollection>
+                                </form:content>
+                            </form:SimpleForm>   
 
-                            </VBox>      
+    
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
                 </uxap:subSections>

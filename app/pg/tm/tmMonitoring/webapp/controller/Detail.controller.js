@@ -62,7 +62,6 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             i18nModel = this.getModel("I18N");
-            
 
 
         },
@@ -76,10 +75,13 @@ sap.ui.define([
                 this.manager = oEvent.getParameter("arguments")["manager"],
                 this.manager_local_name = oEvent.getParameter("arguments")["manager_local_name"];
 
+            //validator 초기화
+            this.validator.clearValueState(this.byId("simpleform_edit"));
+
             if (this.scenario_number === "New") {
                 this.getModel("DetailView").setProperty("/isEditMode", true);
                 this.getModel("DetailView").setProperty("/isCreate", true);
-                
+
                 oView.bindElement("/TaskMonitoringMasterView", {});
                 this.byId("multiInputWithEmployeeValueHelp").removeAllTokens();
                 this.removeRichTextEditorValue();

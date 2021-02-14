@@ -313,44 +313,58 @@
                                 
                                 <VBox id="v_pop_regular_evaluation_flag">
                                     <Label text = "{I18N>/EVALUATION}" design="Bold" required="true"/> 
-                                        <Switch id="pop_regular_evaluation_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                        <!-- <Switch id="pop_regular_evaluation_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
                                             </layoutData>
-                                        </Switch> 
-                                    <!-- <SegmentedButton id="pop_regular_evaluation_flag" >
+                                        </Switch>  -->
+                                        
+                                    <SegmentedButton id="pop_regular_evaluation_flag" >
                                         <items>
                                             <SegmentedButtonItem key="true" text="Yes" />
                                             <SegmentedButtonItem key="false" text="No" />
                                         </items>
-                                    </SegmentedButton>                                         -->
+                                    </SegmentedButton>                                        
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                        <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData> 
                                 </VBox> 
                                 <VBox id="v_pop_sd_exception_flag">
                                     <Label text = "{I18N>/SD_FLAG}" design="Bold" required="true"/> 
-                                        <Switch id="pop_sd_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                        <!-- <Switch id="pop_sd_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
                                             </layoutData>
-                                        </Switch> 
+                                        </Switch>  -->
+                                    <SegmentedButton id="pop_sd_exception_flag" >
+                                        <items>
+                                            <SegmentedButtonItem key="true" text="Yes" />
+                                            <SegmentedButtonItem key="false" text="No" />
+                                        </items>
+                                    </SegmentedButton> 
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                        <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData> 
                                 </VBox>                         
                                 <VBox id="v_pop_maker_material_code_mngt_flag" >
                                     <Label text = "Maker P/N" design="Bold" required="true" width="8rem"/> 
-                                        <Switch id="pop_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                    
+                                        <!-- <Switch id="pop_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
                                             </layoutData>
-                                        </Switch> 
+                                        </Switch>  -->
+                                    <SegmentedButton id="pop_maker_material_code_mngt_flag" >
+                                        <items>
+                                            <SegmentedButtonItem key="true" text="Yes" />
+                                            <SegmentedButtonItem key="false" text="No" />
+                                        </items>
+                                    </SegmentedButton>     
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12"  />
+                                        <layout:GridData span="XL2 L2 M2 S12"  />
                                     </layoutData> 
                                 </VBox> 
-                                <VBox id="v_pop_vendor_pool_apply_exception_flag">
+                                <!-- <VBox id="v_pop_vendor_pool_apply_exception_flag">
                                     <Label text = "{I18N>/VP_EXCEPTION_FLAG}" required="true" width="8rem" design="Bold"/> 
                                         <Switch id="pop_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
@@ -360,7 +374,7 @@
                                     <layoutData>
                                         <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData> 
-                                </VBox>                                                                       
+                                </VBox>                                                                        -->
                                 <VBox id = "v_review_grade" >
                                     <Label text = "{I18N>/REVIEW_GRADE}" design="Bold"/> 
                                         <HBox>

@@ -53,7 +53,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="신고일자 : " labelFor="declareDate"></Label>
+                            <Label text="* 신고일자 : " labelFor="declareDate"></Label>
                             <Text id="declareDate"  width="100%"/>
                             <layoutData>
                                 <layout:GridData span="XL6 L12 M6 S6" />

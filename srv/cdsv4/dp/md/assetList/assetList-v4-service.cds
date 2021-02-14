@@ -12,6 +12,9 @@ service AssetListV4Service {
         mold_id                 : String;
         secondary_supplier_name : String;
         tertiary_supplier_name  : String;
+        local_update_dtm        : DateTime;
+        update_user_id          : String;
+        system_update_dtm       : DateTime;
    };
 
 
@@ -22,7 +25,7 @@ service AssetListV4Service {
 
     type resultMsg {
         messageCode : String;
-        mold_id : String; 
+        resultCode : Integer;
     }
 
     action updateListVendor ( inputData : data ) returns resultMsg;

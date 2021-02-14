@@ -35,25 +35,22 @@
                     <!-- <OverflowToolbarButton id="pageNavigationBackButton" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onNavigationBackPress" /> -->
                     
                      <!-- 전체화면 -->
-                    <!-- visible="{= ${midObjectView>/screen} !== 'Full' }" -->
                     <OverflowToolbarButton 
                         icon="sap-icon://full-screen" 
                         type="Transparent"
                         tooltip="Enter Full Screen Mode"
-                        visible="true"
+                        visible="{= ${fcl>/layout} !== 'MidColumnFullScreen'}"
                         press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Full', column: 'two' })"
                     /> 
                     <!-- 전체화면해제 -->
-                    <!-- visible="{= ${midObjectView>/screen} === 'Full' }" -->
                     <OverflowToolbarButton 
                         icon="sap-icon://exit-full-screen" 
                         type="Transparent"
                         tooltip="Exit Full Screen Mode" 
-                        visible="true"
+                        visible="{= ${fcl>/layout} === 'MidColumnFullScreen'}"
                         press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'Exit', column: 'two' })"
                     /> 
                     <!-- 뒤로가기 -->
-                    <!-- visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }" -->
                     <OverflowToolbarButton 
                         icon="sap-icon://decline" 
                         type="Transparent"
@@ -61,7 +58,6 @@
                         tooltip="Back to the list" 
                         press=".onOverflowToolbarButtonPress($event, 'navigation', { action: 'NavBack', column: 'two' })"
                     />
-
 
                 </uxap:navigationActions>
 			</uxap:ObjectPageDynamicHeaderTitle>
@@ -74,7 +70,7 @@
                     <ObjectStatus
                         text="{detailModel>/mst/pr_number}"/>
                 </layout:VerticalLayout>
-                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
+                <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" >
                     <Label text="{I18N>/PR_REQUEST_DATE} :"/>
                     <ObjectStatus
                         text="{ path: 'detailModel>/mst/request_date',
@@ -203,7 +199,7 @@
                                 </table:Column>
 
 
-                                <table:Column   width="10em" hAlign="Center"
+                                <table:Column   width="15em" hAlign="Center"
                                                 visible="{
                                                     path: 'OPUI>/DTL-ORG_CODE',
                                                     formatter: '.uiControlSet.toColumnVisible'
@@ -212,7 +208,7 @@
                                     <table:template>
                                         <Text text="{ parts: [
                                                             {path: 'detailModel>org_code'},
-                                                            {path: 'detailModel>plant_name'}
+                                                            {path: 'detailModel>org_name'}
                                                             ],
                                                        formatter: '.uiControlSet.toKeyValueDisp'}" hAlign="Begin" />
                                     </table:template>
@@ -296,7 +292,7 @@
                                     </table:template>
                                 </table:Column> 
 
-                                <table:Column   width="5em" hAlign="Center"
+                                <table:Column   width="15em" hAlign="Center"
                                                 visible="{
                                                     path: 'OPUI>/DTL-PURCHASING_GROUP_CODE',
                                                     formatter: '.uiControlSet.toColumnVisible'
@@ -543,7 +539,7 @@
                                     </table:template>
                                 </table:Column>
                               
-                                <table:Column  hAlign="Center" >
+                                <table:Column  hAlign="Center"  width="20em" >
                                     <Label text="{I18N>/ACCOUNT_CODE}"/>
                                     <table:template>
                                         <Text text="{ parts: [
@@ -554,7 +550,7 @@
                                     </table:template>
                                 </table:Column>
 
-                                 <table:Column  hAlign="Center" 
+                                 <table:Column  hAlign="Center" width="20em" 
                                                 visible="{
                                                     path: 'OPUI>/ACCOUNT-CCTR_CODE',
                                                     formatter: '.uiControlSet.toColumnVisible'
@@ -569,7 +565,7 @@
                                     </table:template>
                                 </table:Column>
 
-                                 <table:Column  hAlign="Center" 
+                                 <table:Column  hAlign="Center"  width="20em" 
                                                 visible="{
                                                     path: 'OPUI>/ACCOUNT-WBS_CODE',
                                                     formatter: '.uiControlSet.toColumnVisible'
@@ -584,11 +580,12 @@
                                     </table:template>
                                 </table:Column>
 
-                                 <table:Column  hAlign="Center" visible="{
+                                 <table:Column  hAlign="Center"  width="20em" 
+                                                visible="{
                                                     path: 'OPUI>/ACCOUNT-ASSET_NUMBER',
                                                     formatter: '.uiControlSet.toColumnVisible'
                                                     }">
-                                    <Label text="{I18N>/ASSET}"/>
+                                    <Label text="{I18N>/ASSET}" />
                                     <table:template>
                                         <Text text="{ parts: [
                                                             {path: 'detailModel>asset_number'},
@@ -598,7 +595,7 @@
                                     </table:template>
                                 </table:Column>
 
-                                <table:Column  hAlign="Center" 
+                                <table:Column  hAlign="Center"  width="20em" 
                                                visible="{
                                                     path: 'OPUI>/ACCOUNT-ORDER_NUMBER',
                                                     formatter: '.uiControlSet.toColumnVisible'
@@ -673,7 +670,7 @@
                                     </table:template>
                                 </table:Column>
 
-                                 <table:Column  hAlign="Center" 
+                                 <table:Column  hAlign="Center" width="10em"
                                                 visible="{
                                                     path: 'OPUI>/SERVICE-PR_QUANTITY',
                                                     formatter: '.uiControlSet.toColumnVisible'
@@ -687,7 +684,7 @@
                                     </table:template>
                                 </table:Column>
 
-                                 <table:Column  hAlign="Center" 
+                                 <table:Column  hAlign="Center" width="5em"
                                                 visible="{
                                                     path: 'OPUI>/SERVICE-UNIT',
                                                     formatter: '.uiControlSet.toColumnVisible'
@@ -698,7 +695,7 @@
                                     </table:template>
                                 </table:Column>
 
-                                 <table:Column  hAlign="Center" 
+                                 <table:Column  hAlign="Center" width="10em"
                                                 visible="{
                                                     path: 'OPUI>/SERVICE-NET_PRICE',
                                                     formatter: '.uiControlSet.toColumnVisible'
@@ -749,7 +746,7 @@
 
 
             <!-- 첨부파일 시작 -->
-			<uxap:ObjectPageSection titleUppercase="false" title="Attachment">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/Attachments}">
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection title="외부용" level="H2">
                         <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="100%">                    
@@ -796,21 +793,60 @@
 			</uxap:ObjectPageSection>
             <!-- 첨부파일 끝 -->
 
-			<!-- <uxap:ObjectPageSection titleUppercase="false" title="Report Line">
+			<uxap:ObjectPageSection titleUppercase="false" title="{I18N>/APPROVE}" visible="{OPUI>/APPROVAL_FLAG}">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection titleUppercase="false">
 						<uxap:blocks>
-                           
+                            <Table  id="reportLineTable"
+                                    sticky="HeaderToolbar,ColumnHeaders"
+                                    inset="false"
+                                    class="sapFDynamicPageAlignContent"
+                                    width="auto">
+                                <headerToolbar>
+                                    <Toolbar>
+                                        <Title text="{I18N>/APPROVAL_LINE}"/>
+                                        <ToolbarSpacer/>
+                                    </Toolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column width="8em">
+                                        <Text text="{I18N>/SEQUENCE}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/TYPE}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/NAME} / {I18N>/DEPARTMENT}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/COMMENT}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/STATUS}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{I18N>/ROW_ADD} / {I18N>/ROW_DELETE}" />
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <ObjectIdentifier title="{Name}" text="{ProductId}"/>
+                                            <Text text="{SupplierName}" />
+                                            <Text text="" />
+                                            <Text text="" />
+                                            <Text text="" />
+                                            <Text text="" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
 
-					<uxap:ObjectPageSubSection>
-						<uxap:blocks>
-                           
-						</uxap:blocks>
-					</uxap:ObjectPageSubSection>
+					
 				</uxap:subSections>
-			</uxap:ObjectPageSection> -->
+			</uxap:ObjectPageSection>
 
 		</uxap:sections>
 		<uxap:footer>

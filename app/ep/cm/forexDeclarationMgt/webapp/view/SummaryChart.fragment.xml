@@ -5,7 +5,7 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:microchart="sap.suite.ui.microchart"
     xmlns:layout="sap.ui.layout" >
-    <Dialog id="dialogForexChart" class="sapUiSmallMargin" title="외화신고대상 차트" contentWidth="35%" afterClose="dialogChartAfterclose">
+    <Dialog id="dialogForexChart" class="sapUiSmallMargin" title="외화신고대상 차트" contentWidth="45%" afterClose="dialogChartAfterclose">
         <VBox class="sapUiSmallMargin">
             <form:SimpleForm
                 editable="false"
@@ -59,7 +59,7 @@
                             >
                          <headerToolbar>
                         <OverflowToolbar>
-                            <Title text="조회결과 ({= (${popup>/summaryChart})?${popup>/summaryChart}.length:0})" level="H2"/>
+                            <Title text="조회결과" level="H2"/>
                             <ToolbarSpacer/>
                         </OverflowToolbar>
                     </headerToolbar> 
@@ -69,6 +69,9 @@
                             </Column>
                             <Column id="modelItem_modelPartNo2" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="작성대상" />
+                            </Column> 
+                            <Column id="modelItem_modelPartNo3" minScreenWidth="Tablet" hAlign="Center"  >
+                                <Text text="작성대기" />
                             </Column>
                             <Column id="modelItem_modelPartNo" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="신고진행중" />
@@ -79,14 +82,15 @@
                             <Column id="modelItem_description" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="chart bar" />
                             </Column> 
-                            <Column id="modelItem_moldItemType" minScreenWidth="Tablet" hAlign="Center"  >
+                            <!-- <Column id="modelItem_moldItemType" minScreenWidth="Tablet" hAlign="Center"  >
                                 <Text text="chart" />
-                            </Column>				
+                            </Column>				 -->
                         </columns>
                         <items>
                              <ColumnListItem>
                                 <cells>
                                     <Text text="{popup>group_type}" />
+                                    <Text text="{popup>sum_count}" />
                                     <Text text="{popup>todo_count}" />
                                     <Text text="{popup>ongoing_count}" />
                                     <Text text="{popup>complete_count}" />
@@ -99,14 +103,14 @@
                                         </microchart:bars>
                                     </microchart:StackedBarMicroChart>
 
-                                    <microchart:ComparisonMicroChart minValue="0" maxValue="200" colorPalette="sapUiChartPaletteQualitativeHue1, sapUiChartPaletteQualitativeHue2, sapUiChartPaletteQualitativeHue3"
+                                    <!-- <microchart:ComparisonMicroChart minValue="0" maxValue="200" colorPalette="sapUiChartPaletteQualitativeHue1, sapUiChartPaletteQualitativeHue2, sapUiChartPaletteQualitativeHue3"
                                                 size="Responsive" press="press">
                                         <microchart:data>
                                             <microchart:ComparisonMicroChartData value="{popup>todo_count}" title="작성대상"/>
                                             <microchart:ComparisonMicroChartData value="{popup>ongoing_count}" title="신고진행중"/>
                                             <microchart:ComparisonMicroChartData value="{popup>complete_count}" title="신고완료"/>
                                         </microchart:data>
-                                    </microchart:ComparisonMicroChart> 
+                                    </microchart:ComparisonMicroChart>  -->
                                 </cells>
                             </ColumnListItem>   
                             </items>

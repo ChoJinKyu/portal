@@ -9,6 +9,9 @@ using { ep as ucQuotationDtlView} from '../../../../db/cds/ep/ne/EP_UC_QUOTATION
 using { ep as getUcApprovalDtlView} from '../../../../db/cds/ep/ne/EP_GET_UC_APPROVAL_DTL_VIEW-model';
 using { ep as getItemClassView} from '../../../../db/cds/ep/ne/EP_UC_ITEM_CLASS-model';
 using { ep as ucApprovalExtraRateView} from '../../../../db/cds/ep/ne/EP_UC_APPROVAL_EXTRA_RATE_VIEW-model';
+using { ep as ucQuotationExtraRateView} from '../../../../db/cds/ep/ne/EP_UC_QUOTATION_EXTRA_RATE_VIEW-model';
+using { ep as ucQuotationExtraRateDetailView} from '../../../../db/cds/ep/ne/EP_UC_QUOTATION_EXTRA_RATE_DETAIL_VIEW-model';
+
 
 
 namespace ep;
@@ -26,6 +29,9 @@ service UcQuotationMgtService {
     entity GetUcApprovalDtlView as projection on getUcApprovalDtlView.Get_Uc_Approval_Dtl_View;
     entity UcApprovalExtraRateView as projection on ucApprovalExtraRateView.Uc_Approval_Extra_Rate_View;
     entity GetUcItemClassView as projection on getItemClassView.Uc_Item_Class;
+    entity UcQuotationExtraRateView as projection on ucQuotationExtraRateView.Uc_Quotation_Extra_Rate_View;
+    entity UcQuotationExtraRateDetailView as projection on ucQuotationExtraRateDetailView.Uc_Quotation_Extra_Rate_Detail_View;
+
 
 
     // 대분류(공종) View

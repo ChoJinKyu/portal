@@ -5,7 +5,8 @@ sap.ui.define([
     "ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
-	"ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/NumberFormatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
@@ -13,8 +14,9 @@ sap.ui.define([
     "sap/m/MessageToast",
     "sap/ui/core/Item",
     "ext/lib/util/Validator",
-    "dp/md/util/controller/SupplierSelection"
-], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Item, Validator, SupplierSelection) {
+    "dp/md/util/controller/SupplierSelection",
+    "dp/md/util/controller/ReModelRepairItemDialog"
+], function (BaseController, History, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, NumberFormatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, Item, Validator, SupplierSelection, ReModelRepairItemDialog) {
     "use strict";
     
     var oTransactionManager = null;
@@ -22,9 +24,11 @@ sap.ui.define([
 	return BaseController.extend("dp.md.remodelRepairMgt.controller.MainObject", {
 
         dateFormatter: DateFormatter,
+        numberFormatter: NumberFormatter,
         validator: new Validator(),
         supplierSelection: new SupplierSelection(),
         tenantId: 'L2101',
+        rrItem : new ReModelRepairItemDialog(),
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -45,9 +49,8 @@ sap.ui.define([
 			this.getRouter().getRoute("mainObject").attachPatternMatched(this._onRoutedThisPage, this);
 			this.setModel(oViewModel, "mainObjectView");
 			
-            this.setModel(new ManagedModel(), "master");
-            this.setModel(new ManagedModel(), "mstSpecView");
-            this.setModel(new ManagedModel(), "spec");
+            this.setModel(new ManagedModel(), "repairItem");
+            this.setModel(new ManagedModel(), "moldView");
 			this.setModel(new ManagedListModel(), "history");
 
             oTransactionManager = new TransactionManager();
@@ -55,7 +58,7 @@ sap.ui.define([
 
 			oTransactionManager.addDataModel(this.getModel("master"));
             oTransactionManager.addDataModel(this.getModel("schedule"));
-            oTransactionManager.addDataModel(this.getModel("spec"));
+            oTransactionManager.addDataModel(this.getModel("asset"));
 		}, 
 
 		/* =========================================================== */
@@ -164,7 +167,73 @@ sap.ui.define([
 				}
 			});
 		},
-		
+		/**
+         * @description moldItemSelect 공통팝업   
+         * @param vThis : view page의 this 
+         *       , oEvent : 이벤트 
+         * ,     , oArges : company_code , org_code (필수)
+		 */
+        onPagePartNoSearchButtonPress : function () {
+            var oArgs = {
+                company_code: this.company_code,
+                org_code: this.plant_code,
+            }
+           this.rrItem.openPop(this, oArgs, function(item){
+                console.log("item>>>> " , item);
+           });
+
+        },
+
+        /**
+        * @description participating row 추가 
+        * @param {*} data 
+        */
+        _addMoldItemTable: function (data) {
+            var oTable = this.byId("moldRecepitTable"),
+                oModel = this.getModel("mdRecepit"),
+                mstModel = this.getModel("appMaster");
+            ;
+            /** add record 시 저장할 model 과 다른 컬럼이 있을 경우 submit 안됨 */  
+            var approval_number = mstModel.oData.approval_number;
+            oModel.addRecord({
+                "tenant_id": this.getSessionUserInfo().TENANT_ID,
+                "mold_id": String(data.mold_id),
+                "approval_number": approval_number,
+                "model": data.model,
+                "mold_number": data.mold_number,
+                "mold_sequence": data.mold_sequence,
+                "spec_name": data.spec_name,
+                "mold_item_type_code": data.mold_item_type_code,
+                "mold_item_type_code_nm": data.mold_item_type_code_nm,
+                "currency_code": data.currency_code,
+                "currency_code_nm": data.currency_code_nm,
+                "receiving_amount": data.receiving_amount,
+                "book_currency_code": data.book_currency_code,
+                "provisional_budget_amount": data.provisional_budget_amount,
+                "supplier_code": data.supplier_code,
+                "supplier_local_name": data.supplier_local_name,
+                "supplier_code_nm": data.supplier_code_nm,
+                "production_supplier_code": data.production_supplier_code,
+                "production_supplier_code_nm": data.production_supplier_code_nm,
+                "project_code": data.project_code,
+                "acq_department_code": data.acq_department_code,
+                "acq_department_code_nm": data.acq_department_code_nm,
+                "drawing_consent_plan": data.drawing_consent_plan,
+                "drawing_consent_result": data.drawing_consent_result,
+                "production_plan": data.production_plan,
+                "production_result": data.production_result,
+                "completion_plan": data.completion_plan,
+                "completion_result": data.completion_result,
+                "local_create_dtm": new Date(),
+                "local_update_dtm": new Date()
+            }, "/MoldRecepit"); 
+
+            if(oModel.getProperty("/entityName") == undefined){ // 신규시 entityName 없어서 행삭제를 못하고 있음 
+                oModel.setProperty("/entityName","MoldRecepit");
+            }
+
+        },
+
 		/**
 		 * Event handler for saving page changes
 		 * @public
@@ -211,7 +280,7 @@ sap.ui.define([
                     if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
                         
-                        me.getModel('spec').setProperty('/mold_spec_status_code', 'D'); //21.01.07 안쓸듯
+                        me.getModel('asset').setProperty('/mold_spec_status_code', 'D'); //21.01.07 안쓸듯
                         me.getModel("master").setProperty('/mold_progress_status_code', 'DTL_ENT');
 
 						oTransactionManager.submit({
@@ -231,7 +300,7 @@ sap.ui.define([
         checkChange: function(){
             var omMaster = this.getModel('master');
             var omSchedule = this.getModel('schedule');
-            var omSpec = this.getModel('spec');
+            var omSpec = this.getModel('asset');
 
             if(omMaster.isChanged() || omSchedule.isChanged() || omSpec.isChanged()){
                 return true;
@@ -269,7 +338,7 @@ sap.ui.define([
                     if (sButton === MessageBox.Action.OK) {
                         oView.setBusy(true);
                         
-                        me.getModel('spec').setProperty('/mold_spec_status_code', 'C'); //21.01.07 안쓸듯
+                        me.getModel('asset').setProperty('/mold_spec_status_code', 'C'); //21.01.07 안쓸듯
                         me.getModel("master").setProperty('/mold_progress_status_code', 'DTL_CNF');
 
 						oTransactionManager.submit({
@@ -344,11 +413,12 @@ sap.ui.define([
 			var oArgs = oEvent.getParameter("arguments"),
 				oView = this.getView();
 			this._sTenantId = this.getSessionUserInfo().TENANT_ID;
-			this._sMoldId = oArgs.moldId;
+            this._sMoldId = oArgs.moldId;
+            this._sRepairRequestNumber = oArgs.repairRequestNumber;
 
 			if(oArgs.moldId === "new"){
 				//It comes Add button pressed from the before page.
-				var oMasterModel = this.getModel("master");
+				var oMasterModel = this.getModel("repairItem");
 				/*oMasterModel.setData({
 					tenant_id: this._sTenantId
 				});*/
@@ -357,25 +427,21 @@ sap.ui.define([
                 oUiModel.setProperty("/newFlag", true);
 			}else{
 
-				this._bindView("/MoldMasters(tenant_id='" + this._sTenantId + "',mold_id='" + this._sMoldId + "')", "master", [], function(oData){
-                    this._toShowMode();
+				this._bindView("/RepairItem(tenant_id='" + this._sTenantId + "',repair_request_number='" + this._sRepairRequestNumber + "')", "repairItem", [], function(oData){
+                    console.log(oData);
                 }.bind(this));
-/*
-                this._bindView("/MoldMasterSpec(tenant_id='" + this._sTenantId + "',mold_id='" + this._sMoldId + "')", "mstSpecView", [], function(oData){
-                    
+
+                this._bindView("/MoldMstAssetSpecView(tenant_id='" + this._sTenantId + "',mold_id='" + this._sMoldId + "')", "moldView", [], function(oData){
+                    console.log(oData);
                 });
 
                 var schFilter = [
-                                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                                    new Filter("mold_id", FilterOperator.EQ, this._sMoldId)
-                                ];
-                this._bindView("/MoldSchedule", "schedule", schFilter, function(oData){
-                    
+                        new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                        new Filter("repair_request_number", FilterOperator.EQ, this._sRepairRequestNumber)
+                    ];
+                this._bindView("/RepairMstAssetView", "history", schFilter, function(oData){
+                    console.log(oData);
                 });
-
-                this._bindView("/MoldSpec(tenant_id='" + this._sTenantId + "',mold_id='"+this._sMoldId+"')", "spec", [], function(oData){
-                    
-                });*/
             }
             
             oTransactionManager.setServiceModel(this.getModel());

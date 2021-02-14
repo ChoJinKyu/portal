@@ -75,6 +75,17 @@ service LoiMgtV4Service {
         loi_item_number  : String;
     };
 
+    type loiDtlOffType : {
+        tenant_id                       : String;
+        company_code                    : String;
+        loi_write_number                : String;
+        loi_item_number                 : String;
+        offline_selection_supplier_code : String;
+        offline_quotation_amount        : Decimal;
+        offline_quotation_due_date      : Date;
+        offline_quotation_remark        : String;
+    };
+
     type saveLoiSelectionType {
         tenant_id                  : String;
         company_code               : String;
@@ -90,7 +101,7 @@ service LoiMgtV4Service {
         org_type_code              : String;
         org_code                   : String;
         user_id                    : String;
-        details                    : array of loiDtlType;
+        details                    : array of loiDtlOffType;
     }
 
     //LOI업체선정 등록

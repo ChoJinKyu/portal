@@ -54,7 +54,7 @@ sap.ui.define([
             var oViewModel,
                 oResourceBundle = this.getResourceBundle();
             
-            console.log(" session >>> " , this.getSessionUserInfo().TENANT_ID);
+            console.log(" session >>> " , 'L2101');
             // Model used to manipulate control states
             oViewModel = new JSONModel({
                 assetListTableTitle: oResourceBundle.getText("assetListTableTitle"),
@@ -82,9 +82,10 @@ sap.ui.define([
             this._oTPC = new TablePersoController({
                 customDataKey: "assetList",
                 persoService: AssetListPersoService
-            }).setTable(this.byId("moldMstTable"));
+            }).setTable(this.byId("assetListTable"));
             
             this.getRouter().getRoute("assetList").attachPatternMatched(this._onRoutedThisPage, this);
+            console.log(this.getSessionUserInfo());
         },
 
         onMainTablePersoButtonPressed: function (event) {
@@ -142,7 +143,7 @@ sap.ui.define([
                 success: function (oData) {     
                     oModel.addRecord({
                         code: ""
-                      ,  code_name: codeName   
+                      ,  code_name: "All"   
                       ,  group_code: "DP_MD_ASSET_STATUS"
                       ,  parent_code: null
                       ,  parent_group_code: null
@@ -167,13 +168,12 @@ sap.ui.define([
                 });
 
             var bindItemInfo = {
-                    path: 'dpMdUtil>/Divisions',
-                    filters: filter,
-                    template: new Item({
-                        key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
-                    })
-                };
-
+                path: '/Divisions',
+                filters: filter,
+                template: new Item({
+                key: "{org_code}", text: "[{org_code}] {org_name}"
+                })
+            };
 
             this.getView().byId("searchPlantS").bindItems(bindItemInfo);
             this.getView().byId("searchPlantE").bindItems(bindItemInfo);
@@ -214,16 +214,16 @@ sap.ui.define([
                 and: false
             });
 
-            var bindInfo = {
-                    path: 'dpMdUtil>/Divisions',
-                    filters: filter,
-                    template: new Item({
-                    key: "{dpMdUtil>org_code}", text: "[{dpMdUtil>org_code}] {dpMdUtil>org_name}"
-                    })
-                };
+           var bindItemInfo = {
+                path: '/Divisions',
+                filters: filter,
+                template: new Item({
+                key: "{org_code}", text: "[{org_code}] {org_name}"
+                })
+            };
             
-            this.getView().byId("searchPlantS").bindItems(bindInfo);
-            this.getView().byId("searchPlantE").bindItems(bindInfo);
+            this.getView().byId("searchPlantS").bindItems(bindItemInfo);
+            this.getView().byId("searchPlantE").bindItems(bindItemInfo);
 
             // this.getView().byId("searchPlantS").getBinding("items").filter(filter, "Application");
             // this.getView().byId("searchPlantE").getBinding("items").filter(filter, "Application");
@@ -407,11 +407,12 @@ sap.ui.define([
                 oSelected = asTable.getSelectedIndices(),
                 viewData = oModel.getData().Assets;
 
-            var input = {};
+            var data = {};
             var assetViews = [];
             var isOk = false;
             var msg;
-               
+            var session = this.getSessionUserInfo();
+
             
             if (oSelected != "") {
                 console.log("oSelected >>>>" , oSelected);
@@ -420,19 +421,32 @@ sap.ui.define([
             }else{
                 isOk = false;
                 msg ="선택된 항목이 없습니다."
+                MessageBox.error(msg);
                 return;
             }
 
             for(var i=0; i<oSelected.length; i++){
+                console.log(viewData[oSelected[i]]);
+                
+                // var secondary = String(asTable.getRows()[oSelected[i]].getCells()[5].getValue().trim()),
+                //     tertiary = String(asTable.getRows()[oSelected[i]].getCells()[6].getValue().trim());
                 assetViews.push({
                         tenant_id                   : viewData[oSelected[i]].tenant_id,
                         mold_id                     : viewData[oSelected[i]].mold_id,
-                        secondary_supplier_name     : asTable.getRows()[oSelected[i]].getCells()[5].getValue(),
-                        tertiary_supplier_name     : asTable.getRows()[oSelected[i]].getCells()[6].getValue()
+                        secondary_supplier_name     : viewData[oSelected[i]].secondary_supplier_name,
+                        tertiary_supplier_name      : viewData[oSelected[i]].tertiary_supplier_name,
+                        local_update_dtm            : new Date(),
+                        update_user_id              : session.USER_ID,
+                        system_update_dtm           : new Date()
                 });
                 
             }
-            console.log(assetViews);
+            data ={
+                inputData: {
+                    assetData : assetViews
+                }
+            }
+            console.log(data);
             if(isOk){
                 var oView = this.getView();
                 var that = this;
@@ -442,13 +456,13 @@ sap.ui.define([
                     onClose: function (sButton) {
                         if (sButton === MessageBox.Action.OK) { 
                             oView.setBusy(true);
-                            that.callAjax(assetViews, "updateListVendor"
+                            that.callAjax(data, "updateListVendor"
                                 , function(result){
                                     oView.setBusy(false);
                                     MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
-                                // if (result.resultCode > -1) {
-                                //     that.onLoadThisPage(result);
-                                // }
+                                if (result.resultCode > -1) {
+                                    that.onLoadThisPage(result);
+                                }
                             });
                         }
                     }
@@ -475,15 +489,30 @@ sap.ui.define([
             });
         },
         
-        _doInitTablePerso: function () {
-            // init and activate controller
-            this._oTPC = new TablePersoController({
-                table: this.byId("moldMstTable"),
-                componentName: "assetList",
-                persoService: AssetListPersoService,
-                hasGrouping: true
-            }).activate();
-        }
+        onLoadThisPage : function(){
+            console.log("onLoadThisPage");
+        },
+
+        /**
+        * @public
+        * @see 사용처 : 리스트에서 Excel Export 버튼 클릭시
+        */
+        onExportPress: function (_oEvent) {
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            //var sFileName = oTable.title || this.byId("page").getTitle(); //file name to exporting
+            var sFileName = "ASSET LIST"
+            //var oData = this.getModel("list").getProperty("/Message"); //binded Data
+            var oData = oTable.getModel("list").getProperty("/Assets");
+
+            ExcelUtil.fnExportExcel({
+                fileName: "Asset List" || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
+        }   
 
     });
 });

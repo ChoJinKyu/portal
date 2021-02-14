@@ -153,6 +153,9 @@ sap.ui.define([
                                 });
                                 // that.onPageNavBackButtonPress.call(that);
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01002"));
+                            },
+                            error: function(oError){
+                                MessageBox.alert("error가 발생 하였습니다.");
                             }
                         });
                     };
@@ -187,7 +190,6 @@ sap.ui.define([
             var view = this.getView(),
                 master = view.getModel("master"),
                 that = this;
-            // console.log(master.getData()["funding_notify_contents"]);
             
             // Validation
             if (!master.getData()["funding_notify_title"]) {
@@ -200,6 +202,10 @@ sap.ui.define([
             }
             if (!master.getData()["funding_notify_end_date"]) {
                 MessageBox.alert("신청기간을 입력하세요.");
+                return;
+            }
+            if(new Date(master.getData()["funding_appl_closing_date"]) < new Date()){
+                MessageBox.alert("과거 신청기간은 등록 되지 않습니다.");
                 return;
             }
 
@@ -220,6 +226,9 @@ sap.ui.define([
                                 MessageToast.show(that.getModel("I18N").getText("/NCM01001"), {duration: 3000});
                                 // that.onPageNavBackButtonPress.call(that);
                             }.bind(this)
+                            ,error: function(oError){
+                                MessageBox.alert("error가 발생 하였습니다.");
+                            }
                         });
                     };
                 }
@@ -307,6 +316,9 @@ sap.ui.define([
                 var oMasterModel = this.getModel("master");
                 oMasterModel.setData({
                     "tenant_id": "L1100",
+                    "funding_notify_start_date" : new Date(),
+                    "funding_notify_end_date" : new Date(new Date().setMonth(+2)),
+                    "funding_appl_closing_date" : new Date(new Date().setMonth(+2)),
                     "funding_notify_title": "[안내] '21년 협력회사 무이자 직접자금 지원 신청",
                     "funding_notify_contents": notifyContent,
                 }, "/SfFundingNotify", 0);
@@ -329,6 +341,9 @@ sap.ui.define([
                          this.getModel("master").setData(oData.results[0]);
                         oView.setBusy(false);
                     }.bind(this)
+                    ,error: function(oError){
+                        MessageBox.alert("error가 발생 하였습니다.");
+                    }
                 });
                 this.getView().getModel("midObjectView").setProperty("/showMode", true);
                 this._toShowMode();
@@ -351,6 +366,9 @@ sap.ui.define([
             oMasterModel.read(sObjectPath, {
                 success: function (oData) {
                     oView.setBusy(false);
+                }
+                ,error: function(oError){
+                    MessageBox.alert("error가 발생 하였습니다.");
                 }
             });
         },

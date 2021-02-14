@@ -1,0 +1,827 @@
+<mvc:View controllerName="dp.md.remodelRepairStatusInquiry.controller.RemodelRepairStatusInquiry" 
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns="sap.m" 
+    xmlns:f="sap.f" 
+    xmlns:form="sap.ui.layout.form" 
+    xmlns:layout="sap.ui.layout" 
+    xmlns:core="sap.ui.core" 
+    xmlns:table="sap.ui.table" 
+    xmlns:sc="sap.suite.ui.commons" 
+    xmlns:microchart="sap.suite.ui.microchart" 
+    xmlns:lib-m="ext.lib.m"
+    core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
+    height="100%">
+
+    <f:DynamicPage id="page"
+        headerExpanded="false" 
+        toggleHeaderOnTitleClick="true">
+        <!-- DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="{i18n>appTitle}" />
+                </f:heading>
+                <f:snappedContent>
+                    <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="{I18N>/COMPANY}" labelFor="searchCompanyS" required="true"></Label>
+                                <!--<MultiInput id="searchCompanyS" valueHelpOnly="true" width="100%" valueHelpRequest=".onValueHelpRequested"/>-->
+                                <MultiComboBox id="searchCompanyS" width="100%" selectedKey="" required="true"
+                                                items="{
+                                                    path: 'org>/Company',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                                    ],
+                                                    sorter: { path: 'company_code'}
+                                                }"
+                                selectionFinish="handleSelectionFinishComp">
+                                    <items>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/PLANT}" labelFor="searchDivisionS" required="true"></Label>
+                                <MultiComboBox  id="searchDivisionS" width="100%" selectedKey="" required="true"
+                                                items="{
+                                                    path: '/Divisions',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                                    ],
+                                                    sorter: { path: 'org_code'}
+                                                }"
+                                selectionFinish="handleSelectionFinishDiv" >
+                                    <items>
+                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{path:'I18N>/DATE', formatter:'I18NFormatter'}" labelFor="searchCreationDateS"></Label>
+                                <HBox>
+                                    <DateRangeSelection id="searchCreationDateS" change="creationDateChange"  displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
+                                    <ComboBox id="searchDateTypeS" >
+                                        <items>
+                                            <core:Item key="RR" text="수선요청일" />
+                                            <core:Item key="OA" text="발주품의일" />
+                                            <core:Item key="RD" text="입고일" />
+                                            <core:Item key="CD" text="완료일" />
+                                        </items>
+                                    </ComboBox>
+                                </HBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox displayInline="true" fitContainer="true">
+                                <Label text="{path:'I18N>/STATUS', formatter:'I18NFormatter'}" ></Label>
+                                <SegmentedButton id="searchStatusS" selectedKey="" class="sapUiSmallMarginBottom segBtnWrap" width="100%" selectionChange="onStatusSelectionChange" >
+                                    <items>
+                                        <SegmentedButtonItem text="All" key="ALL" width="auto" />
+                                        <SegmentedButtonItem text="수선항목등록" key="1" width="auto" />
+                                        <SegmentedButtonItem text="수선품의(발주품의진행중)" key="2" width="auto" />
+                                        <SegmentedButtonItem text="견적요청(업체로견적요청중)" key="3" width="auto" />
+                                        <SegmentedButtonItem text="LG검토요청(업체견적입력완료)" key="4" width="auto" />
+                                        <SegmentedButtonItem text="업체재등록(견적가사정요청중)" key="5" width="auto" />
+                                        <SegmentedButtonItem text="업체합의완료(LG합의완료)" key="6" width="auto" />
+                                        <SegmentedButtonItem text="업체합의완료" key="7" width="auto" />
+                                        <SegmentedButtonItem text="확정완료(입고확인)" key="8" width="auto" />
+                                        <SegmentedButtonItem text="완료품의(입고품의진행중)" key="9" width="auto" />
+                                        <SegmentedButtonItem text="최종완료(수선완료)" key="10" width="auto" />
+                                    </items>
+                                </SegmentedButton>
+                                <layoutData>
+                                    <layout:GridData span="XL9 L9 M12 S12"  />
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </f:snappedContent>
+                <f:expandedContent>
+                    <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                        <form:content>
+                            <VBox>
+                                <Label text="{I18N>/COMPANY}" labelFor="searchCompanyE" required="true"></Label>
+                                <MultiComboBox id="searchCompanyE" width="100%" selectedKey="" required="true"
+                                                items="{
+                                                    path: 'org>/Company',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                                    ],
+                                                    sorter: { path: 'company_code'}
+                                                }"
+                                selectionFinish="handleSelectionFinishComp">
+                                    <items>
+                                        <core:Item key="{org>company_code}" text="[{org>company_code}] {org>company_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{I18N>/PLANT}" labelFor="searchDivisionE" required="true"></Label>
+                                <MultiComboBox  id="searchDivisionE" width="100%" selectedKey="" required="true"
+                                                items="{
+                                                    path: '/Divisions',
+                                                    filters: [
+                                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                                    ],
+                                                    sorter: { path: 'org_code'}
+                                                }"
+                                selectionFinish="handleSelectionFinishDiv" >
+                                    <items>
+                                        <core:Item key="{org_code}" text="[{org_code}] {org_name}" />
+                                    </items>
+                                </MultiComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{path:'I18N>/DATE', formatter:'I18NFormatter'}" labelFor="searchCreationDateE"></Label>
+                                <HBox>
+                                    <DateRangeSelection id="searchCreationDateE" change="creationDateChange"  displayFormat="yyyy-MM-dd" placeholder="YYYY-MM-DD - YYYY-MM-DD"/>
+                                    <ComboBox id="searchDateTypeE" >
+                                        <items>
+                                            <core:Item key="RR" text="수선요청일" />
+                                            <core:Item key="OA" text="발주품의일" />
+                                            <core:Item key="RD" text="입고일" />
+                                            <core:Item key="CD" text="완료일" />
+                                        </items>
+                                    </ComboBox>
+                                </HBox>
+                                <layoutData>
+                                    <layout:GridData span="XL3 L3 M6 S12" />
+                                </layoutData>
+                            </VBox>
+                            <VBox>
+                                <Label text="{path:'I18N>/STATUS', formatter:'I18NFormatter'}" ></Label>
+                                <SegmentedButton id="searchStatusE" selectedKey="" class="sapUiSmallMarginBottom segBtnWrap" width="100%" selectionChange="onStatusSelectionChange" >
+                                    <items>
+                                        <SegmentedButtonItem text="All" key="ALL" width="auto" />
+                                        <SegmentedButtonItem text="수선항목등록" key="1" width="auto" />
+                                        <SegmentedButtonItem text="수선품의(발주품의진행중)" key="2" width="auto" />
+                                        <SegmentedButtonItem text="견적요청(업체로견적요청중)" key="3" width="auto" />
+                                        <SegmentedButtonItem text="LG검토요청(업체견적입력완료)" key="4" width="auto" />
+                                        <SegmentedButtonItem text="업체재등록(견적가사정요청중)" key="5" width="auto" />
+                                        <SegmentedButtonItem text="업체합의완료(LG합의완료)" key="6" width="auto" />
+                                        <SegmentedButtonItem text="업체합의완료" key="7" width="auto" />
+                                        <SegmentedButtonItem text="확정완료(입고확인)" key="8" width="auto" />
+                                        <SegmentedButtonItem text="완료품의(입고품의진행중)" key="9" width="auto" />
+                                        <SegmentedButtonItem text="최종완료(수선완료)" key="10" width="auto" />
+                                    </items>
+                                </SegmentedButton>
+                                <layoutData>
+                                    <layout:GridData span="XL9 L9 M12 S12" />
+                                </layoutData>
+                            </VBox>
+                        </form:content>
+                    </form:SimpleForm>
+                </f:expandedContent>
+                <f:actions>
+                    <Button id="pageSearchButton" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress" />
+                </f:actions>
+                <f:navigationActions>
+                    <Button icon="sap-icon://unfavorite" type="Transparent" />
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <!-- DynamicPage Header -->
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <form:SimpleForm maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                    <form:content>
+                        <VBox height="3rem">
+                            <Label text="{path:'I18N>/PDM_REQUEST_NO', formatter:'I18NFormatter'}" labelFor="searchPdmRequestNo"></Label>
+                            <Input id="searchPdmRequestNo" placeholder="Input Data" />
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12"  />
+                            </layoutData>
+                        </VBox>
+                        <VBox height="3rem">
+                            <Label text="{path:'I18N>/REPAIR_NO', formatter:'I18NFormatter'}" labelFor="searchRepairNo"></Label>
+                            <Input id="searchRepairNo" placeholder="Input Data" />
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12"  />
+                            </layoutData>
+                        </VBox>
+                        <VBox height="3rem">
+                            <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}" labelFor="searchDescription"></Label>
+                            <Input id="searchDescription" placeholder="Input Data" />
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12"  />
+                            </layoutData>
+                        </VBox>
+                        <VBox height="3rem">
+                            <Label text="{path:'I18N>/REPAIR_TYPE', formatter:'I18NFormatter'}" labelFor="searchRepairType"></Label>
+                            <ComboBox id="searchRepairType" width="100%"></ComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12"  />
+                            </layoutData>
+                        </VBox>
+                        <VBox height="3rem">
+                            <Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}" labelFor="searchItemType"></Label>
+                            <MultiComboBox   id="searchItemType" width="100%"
+                                        selectedKey=""
+                                        items="{
+                                                    path : 'util>/Code',
+                                                    filters : [
+                                                        {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
+                                                        {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_ITEM_TYPE'}
+                                                    ],
+                                                    sorter: { path: 'sort_no'}
+                                                }"
+                            >
+                                <core:Item key="{util>code}" text="{util>code_name}" />
+                            </MultiComboBox>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12"  />
+                            </layoutData>
+                        </VBox>
+                        
+                        <VBox height="3rem">
+                            <Label text="{I18N>/MODEL}" labelFor="searchModel"></Label>
+                            <Input id="searchModel" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: '/Models',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                        ],
+                                        sorter: { path: 'model' }
+                            }">
+                                <core:Item key="{model}" text="{model}" />
+                            </Input>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12"  />
+                            </layoutData>
+                        </VBox>
+                        <VBox height="3rem">
+                            <Label text="{path:'I18N>/MOLD_NUMBER', formatter:'I18NFormatter'}" labelFor="searchMoldNo"></Label>
+                            <Input id="searchMoldNo" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: '/PartNumbers',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                        ],
+                                        sorter: { path: 'mold_number' }
+                            }">
+                                <core:Item key="{mold_number}" text="{mold_number}" />
+                            </Input>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox height="3rem">
+                            <Label text="{path:'I18N>/ASSET_NO', formatter:'I18NFormatter'}" labelFor="searchAssetNo"></Label>
+                            <Input id="searchAssetNo" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: '/PartNumbers',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                        ],
+                                        sorter: { path: 'mold_number' }
+                            }">
+                                <core:Item key="{mold_number}" text="{mold_number}" />
+                            </Input>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                        <VBox height="3rem">
+                            <Label text="{path:'I18N>/REQUESTOR', formatter:'I18NFormatter'}" labelFor="searchRequestor"></Label>
+                            <Input id="searchRequestor" 
+                                    showValueHelp="true"  
+                                    valueHelpRequest=".onValueHelpRequested"
+                                    suggestionItems="{
+                                        path: '/PartNumbers',
+                                        filters: [
+                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
+                                        ],
+                                        sorter: { path: 'mold_number' }
+                            }">
+                                <core:Item key="{mold_number}" text="{mold_number}" />
+                            </Input>
+                            <layoutData>
+                                <layout:GridData span="XL3 L3 M6 S12" />
+                            </layoutData>
+                        </VBox>
+                    </form:content>
+                </form:SimpleForm>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <table:Table id="moldMstTable"
+                    selectionMode="Single"
+                    selectionBehavior="RowOnly"
+                    fixedColumnCount="6"
+                    visibleRowCountMode="Auto"
+                    rows="{/RemodelRepairStatus}"
+                    cellClick=".onCellClick"
+                    rowSelectionChange=".onCheck">
+                <table:extension>
+                    <OverflowToolbar>
+                        <Title text="{I18N>/LIST} ({= ${/RemodelRepairStatus}.length || 0})" level="H2"/>
+                        <ToolbarSpacer/>
+                        <Button id="moldMstTableExcelButton" icon="sap-icon://excel-attachment" press=".onExportPress"   />
+                        <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
+                            <layoutData>
+                                <OverflowToolbarLayoutData priority="NeverOverflow" />
+                            </layoutData>
+                        </Button>
+                    </OverflowToolbar>
+                </table:extension>                             
+                <table:columns>
+                    <table:Column id="moldNoColumn" width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/NO', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>       
+                        <table:template>
+                            <Text text="{rownum}"/> 
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldCompanyColumn" width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/COMPANY', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>          
+                        <table:template>
+                            <Text id="company_code" text="[{company_code}] {company_name}"/> 
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldDivisionColumn" width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text id="org_code" text="[{org_code}] {org_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldModelColumn" width="10rem"  hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/MODEL', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template >
+                            <Text id="model" text="{model}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldMoldNoColumn" width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/MOLD_NO', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text id="mold_number" text="{mold_number}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldSeqColumn" width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/SEQ', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text id="mold_sequence" text="{mold_sequence}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldSparePartColumn" width="10rem" >
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/SPARE_PART', formatter:'I18NFormatter'}" class="label-center"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text  text="제외 컬럼?"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldPdmRequestNoColumn" width="10rem">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/PDM_REQUEST_NO', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text  text="미정"/>
+                        </table:template>
+                    </table:Column>
+
+                    <table:Column id="moldDescriptionColumn" width="10rem">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/DESCRIPTION', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text  text="{spec_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldRepairNoColumn" width="10rem">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/REPAIR_NO', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text  text="{repair_request_number}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldRepairDateColumn" width="10rem">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/REPAIR_DATE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text  text="{repair_request_date}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldEcoNoColumn" width="10rem">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/ECO_NO', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text  text="{eco_number}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldEcoRequestorColumn" width="10rem">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/ECO_REQUESTOR', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text  text="삭제?"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldRepairTypeColumn" width="10rem">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/REPAIR_TYPE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text  text="{repair_type_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldItemTypeColumn" width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/ITEM_TYPE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{mold_item_type_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldEdTypeColumn" width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/ED_TYPE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{mold_location_type_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldItemSizeColumn" width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/ITEM_SIZE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{repair_mold_size}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/CURRENCY', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{currency_code}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/REQUESTOR', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{=${requestor_empno}? ${requestor_name} +' [' + ${requestor_empno} + ']' : '' }"/>
+                            
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/ESTIMATE_DATE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{repair_supplier_quotation_date}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/ESTIMATE_AMOUNT', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{repair_quotation_amount}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/REPAIR_SUPPLIER', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{=${repair_supplier_code}? '[' + ${repair_supplier_code}+'] ' + ${repair_supplier_name} : '' }"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/REPAIR_AMOUNT', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{repair_amount}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/MOVE_PLAN_DATE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{mold_moving_plan_date}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/COMPLETE_PLAN_DATE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{mold_complete_plan_date}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/ACCOUNT_DEPT', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{=${accounting_department_code}? '[' + ${accounting_department_code} + '] ' + ${accounting_department_name} : '' }"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/ACCOUNT_NAME', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{=${account_code}? '[' + ${account_code} + '] ' + ${account_name} : '' }"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/CLEAR_EXPECT_DATE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="미사용?"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/INVEST_TYPE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{investment_ecst_type_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/INVEST_CODE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="미사용?"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/RECEIPT_DATE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="미사용?"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/COMPLETE_DATE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{repair_complete_date}"/>
+                        </table:template>
+                    </table:Column>
+
+                    <!-- <table:Column width="10rem" hAlign="Center" headerSpan="5">
+                        <table:multiLabels>
+                            <Label text="{path:'I18N>/REPAIR_REPORT', formatter:'I18NFormatter'}" />
+                            <Label text="{path:'I18N>/REPORT_NO', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{approval_number}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center" >
+                        <table:multiLabels>
+                            <Label text="{path:'I18N>/REPAIR_REPORT', formatter:'I18NFormatter'}" />
+                            <Label text="{path:'I18N>/REPORT_NAME', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{approval_title}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center" >
+                        <table:multiLabels>
+                            <Label text="{path:'I18N>/REPAIR_REPORT', formatter:'I18NFormatter'}" />
+                            <Label text="{path:'I18N>/REQUESTOR', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{requestor_name}[requestor_empno]"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center" >
+                        <table:multiLabels>
+                            <Label text="{path:'I18N>/REPAIR_REPORT', formatter:'I18NFormatter'}" />
+                            <Label text="{path:'I18N>/REPORT_DATE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{request_date}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center" >
+                        <table:multiLabels>
+                            <Label text="{path:'I18N>/REPAIR_REPORT', formatter:'I18NFormatter'}" />
+                            <Label text="{path:'I18N>/STATUS', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{approve_status_name}"/>
+                        </table:template>
+                    </table:Column> -->
+
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/NEGO_STATUS', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{repair_progress_status_name}"/>
+                        </table:template>
+                    </table:Column>
+
+                    <table:Column width="10rem" hAlign="Center" headerSpan="5">
+                        <table:multiLabels>
+                            <Label text="{path:'I18N>/COMPLETE_REPORT', formatter:'I18NFormatter'}" />
+                            <Label text="{path:'I18N>/REPORT_NO', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{approval_number}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center" >
+                        <table:multiLabels>
+                            <Label text="{path:'I18N>/COMPLETE_REPORT', formatter:'I18NFormatter'}" />
+                            <Label text="{path:'I18N>/REPORT_NAME', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{approval_title}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center" >
+                        <table:multiLabels>
+                            <Label text="{path:'I18N>/COMPLETE_REPORT', formatter:'I18NFormatter'}" />
+                            <Label text="{path:'I18N>/REQUESTOR', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{=${requestor_empno}? ${requestor_name} + '[' + ${requestor_empno} + ']' : '' }"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center" >
+                        <table:multiLabels>
+                            <Label text="{path:'I18N>/COMPLETE_REPORT', formatter:'I18NFormatter'}" />
+                            <Label text="{path:'I18N>/REPORT_DATE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{request_date}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center" >
+                        <table:multiLabels>
+                            <Label text="{path:'I18N>/COMPLETE_REPORT', formatter:'I18NFormatter'}" />
+                            <Label text="{path:'I18N>/STATUS', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{approve_status_name}"/>
+                        </table:template>
+                    </table:Column>
+
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/ASSET_NO', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{asset_number}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/ASSET_TYPE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{asset_type_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/PROD_SUPPLIER', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{=${primary_supplier_code}? '[' + ${primary_supplier_code} + '] ' + ${primary_supplier_name} : '' }"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/KEEP_VENDOR', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{=${secondary_supplier_code}? '[' + ${secondary_supplier_code} + '] ' + ${secondary_supplier_name} : '' }"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/SAMPLE_QTY', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{sample_quantity}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/USE_MATERIAL', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{use_material_value}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/DIE_MACHINE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{mold_tonnage}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/CAVITY_PROC_QTY', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{cavity_process_qty}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="10rem" hAlign="Center">
+                        <table:multiLabels>
+                            <Label visible="false" />
+                            <Label text="{path:'I18N>/REQUEST_LIFE', formatter:'I18NFormatter'}"/>           
+                        </table:multiLabels>
+                        <table:template>
+                            <Text text="{request_life_shot_count}"/>
+                        </table:template>
+                    </table:Column>
+
+                </table:columns>
+            </table:Table>
+        </f:content>
+    </f:DynamicPage>
+</mvc:View>

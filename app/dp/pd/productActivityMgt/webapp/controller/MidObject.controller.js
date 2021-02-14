@@ -264,7 +264,6 @@ sap.ui.define([
         
 		_onRoutedThisPage: function(oEvent){
             
-            console.log(oEvent);
             var oView = this.getView(),
                 that = this;
 
@@ -314,7 +313,7 @@ sap.ui.define([
 				oDetailsModel.addRecord({
 					"tenant_id": this._sTenantId,
 					"product_activity_code": "",
-					"language_cd": "KO",
+					"language_cd": "",
 					"code_name": ""			
                 }, "/PdProdActivityTemplateLng");
 
@@ -343,7 +342,6 @@ sap.ui.define([
 				oMasterModel.setTransactionModel(this.getModel());
 				oMasterModel.read(sObjectPath, {
 					success: function (rData, reponse) {
-                        console.log(rData);
                                 if(rData.active_flag === true){
                                     rData.active_flag = "true";
                                 }else{
@@ -388,7 +386,6 @@ sap.ui.define([
                 });
                 //detail table detete data 초기화 ;
                 this._detailDeleteData = [];
-                console.log(oMasterModel);
                 oView.setBusy(false);
                 this._toShowMode();
             
@@ -433,8 +430,7 @@ sap.ui.define([
                 } else {
                     CUType = "C";
                 }
-            }              
-            console.log(oMasterData.active_flag); 
+            }               
 
             var activeFlg = "false";
 
@@ -523,13 +519,14 @@ sap.ui.define([
                                     }
                                 }else{
                                     console.log(rst);
-                                    sap.m.MessageToast.show( "error");
+                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                    MessageBox.error(rst.return_msg);
                                 }
                             },
                             error: function (rst) {
                                     console.log("error");
                                     console.log(rst);
-                                    MessageBox.error(rst.return_msg);
+                                    MessageBox.error("예기치 않은 오류가 발생하였습니다.");
                             }
                         });
 					};

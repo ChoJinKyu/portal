@@ -18,7 +18,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{I18N>/MAKER_MASTER}" />
+                    <Title text="{I18N>/MAKER_MASTER} {I18N>/MANAGEMENT}"/>
                 </f:heading>
                 <f:snappedContent>
                         <form:SimpleForm id="simple_form_snapped" maxContainerCols="3" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
@@ -159,9 +159,9 @@
                             <Label text="{I18N>/LOCAL_CREATE_DATE}" labelFor="datepicker_creation_date"></Label>
                             <DateRangeSelection 
                             id="datepicker_creation_date" value="{mainListViewModel>/searchArea/local_create_dtm}" 
-                            showFooter="true" placeholder="yyyy/MM/dd - yyyy/MM/dd" displayFormat="yyyy/MM/dd" 
-                            dateValue="{path:'mainListViewModel>/searchArea/st_local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyy/MM/dd' }}"
-                            secondDateValue="{path:'mainListViewModel>/searchArea/ed_local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyy/MM/dd' }}"       
+                            showFooter="true" placeholder="YYYY-MM-DD - YYYY-MM-DD" displayFormat="yyyy-MM-dd" 
+                            dateValue="{path:'mainListViewModel>/searchArea/st_local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyy-MM-dd' }}"
+                            secondDateValue="{path:'mainListViewModel>/searchArea/ed_local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyy-MM-dd' }}"       
                             />	
                             <layoutData><layout:GridData span="XL3 L3 M3 S12"/></layoutData>
                         </VBox>
@@ -174,9 +174,9 @@
                             <Label text="{I18N>/LOCAL_UPDATE_DATE}" labelFor="datepicker_update_date"></Label>
                             <DateRangeSelection 
                             id="datepicker_update_date" value="{mainListViewModel>/searchArea/local_update_dtm}"
-                            showFooter="true" placeholder="yyyy/MM/dd - yyyy/MM/dd" displayFormat="yyyy/MM/dd" 
-                            dateValue="{path:'mainListViewModel>/searchArea/st_local_update_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyy/MM/dd' }}"
-                            secondDateValue="{path:'master>/ed_local_update_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyy/MM/dd' }}"       
+                            showFooter="true" placeholder="YYYY-MM-DD - YYYY-MM-DD" displayFormat="yyyy-MM-dd" 
+                            dateValue="{path:'mainListViewModel>/searchArea/st_local_update_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyy-MM-dd' }}"
+                            secondDateValue="{path:'master>/ed_local_update_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyy-MM-dd' }}"       
                             />	
                             <layoutData><layout:GridData span="XL3 L3 M3 S12"/></layoutData>
                         </VBox>                     
@@ -185,9 +185,11 @@
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
-            <ScrollContainer  width="100%" horizontal="true" vertical="true" focusable="true">
+            <!-- <ScrollContainer  width="100%" horizontal="true" vertical="true" focusable="true"> -->
                 <smartTable:SmartTable
                     id="smarttable_main"
+                    noData="{I18N>/NCM01004}"
+                    initialNoDataText="{I18N>/NCM01004}" 
                     width="100%"
                     height="100%"
                     smartVariant="pageVariantId"                    
@@ -204,7 +206,7 @@
                     showRowCount="true"
                     editable="true"                    
                     persistencyKey="SmartTableAnalytical_Explored"
-                    enableAutoBinding="true"                     
+                    enableAutoBinding="false"                     
                     class="sapUiResponsiveContentPadding"                    
                     demandPopin="true"
                     requestAtLeastFields="tenant_id"
@@ -232,6 +234,7 @@
                         </OverflowToolbar>
                     </smartTable:customToolbar>
                     <Table id="mainTable" 
+                            noDataText="{I18N>/NCM01004}"
                             growingScrollToLoad="true"
                             growing="true"
                             sticky="ColumnHeaders,HeaderToolbar"
@@ -339,13 +342,13 @@
                                 <Text text="{ path: 'local_create_dtm',
                                                     type: 'sap.ui.model.type.Date',
                                                     formatOptions: {
-                                                    pattern: 'yyyy/MM/dd'
+                                                    pattern: 'yyyy-MM-dd'
                                                     }}" wrapping="false" />                                                                                       
                                 <Text text="{update_user_id}" wrapping="false" />
                                 <Text text="{ path: 'local_update_dtm',
                                                     type: 'sap.ui.model.type.Date',
                                                     formatOptions: {
-                                                    pattern: 'yyyy/MM/dd'
+                                                    pattern: 'yyyy-MM-dd'
                                                     }}" wrapping="false" /> 
                                 <tnt:InfoLabel 
                                         text="{maker_status_name}" 
@@ -357,7 +360,7 @@
                         </items> 
                     </Table>
                 </smartTable:SmartTable>
-            </ScrollContainer>
+            <!-- </ScrollContainer> -->
         </f:content>
         <!-- DynamicPage Footer -->
         <f:footer>

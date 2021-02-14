@@ -37,8 +37,6 @@ service NpApprovalDetailV4Service {
     type masterType : {
         tenant_id                       : String(5)     ; // L1100
         company_code                    : String(10)    ; // 회사코드
-        org_type_code                   : String(2)     ; // 구매운영조직유형
-        org_code                        : String(10)    ; // 구매운영조직코드
         approval_number                 : String(50)    ; // 품의번호
 
         approval_title                  : String(300)   ; // 품의제목
@@ -65,10 +63,11 @@ service NpApprovalDetailV4Service {
         effective_end_date              : String(10)    ; // 유효종료일자	
         surrogate_type_code             : String(30)    ; // 대리견적유형코드	
         currency_code                   : String(3)     ; // 통화코드	
-        net_price                       : Decimal       ; // 단가		
+        net_price                       : Decimal(34,10); // 단가		
         vendor_pool_code                : String(20)    ; // 협력사풀코드	
         market_code                     : String(30)    ; // 납선코드	
         net_price_approval_reason_code  : String(30)    ; // 단가품의사유코드	
+        net_price_type_code             : String(30)    ; // 단가유형코드
         maker_code                      : String(10)    ; // 제조사코드		
         incoterms                       : String(3)     ; // 인코텀즈
         _row_state_                     : String        ; // CUD
@@ -114,7 +113,6 @@ service NpApprovalDetailV4Service {
     /* 상태 변경 Proc Parameter */
     type StatusChangeParamType : {
         tenant_id           : String(5) ; // L1100
-        company_code        : String(10); // 회사코드
         approval_number     : String(50); // 품의번호
         approve_status_code : String(30); // 품의상태코드
     }
@@ -133,9 +131,6 @@ service NpApprovalDetailV4Service {
     /* 상태 변경 Proc Parameter */
     type DeleteParamType : {
         tenant_id         : String(5)     ; // L1100
-        company_code      : String(10)    ; // 회사코드
-        org_type_code     : String(2)     ; // 구매운영조직유형
-        org_code          : String(10)    ; // 구매운영조직코드
         approval_number   : String(50)    ; // 품의번호
     }
 

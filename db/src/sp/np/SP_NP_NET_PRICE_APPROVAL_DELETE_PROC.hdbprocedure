@@ -52,6 +52,13 @@ BEGIN
 
     BEGIN
         /* 해당 Block에서 Exception 발생시, 사용자 정의 Exception 발생 시킴. */
+        DECLARE EXIT HANDLER FOR SQL_ERROR_CODE 1299 
+        BEGIN
+            O_RETURN_CODE = 'NG010';
+            O_RETURN_MSG  = '존재하지 않는 품의 정보 입니다. (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
+            SIGNAL V_USER_EXCEPTION;
+        END;
+
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             O_RETURN_CODE = 'NG010';

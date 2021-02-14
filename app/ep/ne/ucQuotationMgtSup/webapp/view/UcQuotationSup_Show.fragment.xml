@@ -19,9 +19,9 @@
         
             <VBox alignContent="Center">
                 <Label text="* 대분류(공종)" textAlign="left" design="Bold" class="sapMLabelNoText" />
-                <Text text="{viewModel>/ucmaster/supplier_code}" />
+                <Text text="{viewModel>/ucmaster/ep_item_name}" />
                 <layoutData>
-                    <layout:GridData span="XL6 L6 M6 S12" />
+                    <layout:GridData span="XL4 L4 M4 S12" />
                 </layoutData>    
             </VBox>      
 
@@ -31,55 +31,72 @@
                 <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
                 <Text text="{master>/const_end_date}" /> -->
                 <HBox>
-                    <Text text="{
+                    <Text text="{viewModel>/ucmaster/const_start_date}" class="sapUiTinyMarginBegin"/> 
+                    <!-- <Text text="{
                                             path: 'viewModel>/ucmaster/const_start_date',
                                             type: 'sap.ui.model.type.Date',
                                             formatOptions: {
                                                 pattern: 'yyyy/MM/dd'
                                             }                                        
                                         }"  
-                                        class="sapUiTinyMarginBegin"/> 
+                                        class="sapUiTinyMarginBegin"/>  -->
 
                 <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
-                <Text text="{
+
+                <Text text="{viewModel>/ucmaster/const_end_date}" class="sapUiTinyMarginBegin"/> 
+                <!-- <Text text="{
                                             path: 'viewModel>/ucmaster/const_end_date',
                                             type: 'sap.ui.model.type.Date',
                                             formatOptions: {
                                                 pattern: 'yyyy/MM/dd'
                                             }                                        
                                         }"  
-                                        class="sapUiTinyMarginBegin"/> 
+                                        class="sapUiTinyMarginBegin"/>  -->
                 </HBox>
                 <layoutData>
-                    <layout:GridData span="XL6 L6 M6 S12" />
+                    <layout:GridData span="XL4 L4 M4 S12" />
                 </layoutData>     
             </VBox> 
+            <VBox alignContent="Center">
+                <Label text="견적통화" design="Bold" class="sapMLabelNoText"/>
+                <Text text="{viewModel>/ucmaster/currency_code}" />  
+                <layoutData>
+                    <layout:GridData span="XL4 L4 M4 S12" />
+                </layoutData>     
+            </VBox>
 
         </form:SimpleForm>
 
         <form:SimpleForm id="ucUcQuotationSupForm3Show" editable="false">
         
             <VBox alignContent="Center">
-                <Label text="* 물량검토자" design="Bold" class="sapMLabelNoText"/>
+                <Label text="물량검토자" design="Bold" class="sapMLabelNoText"/>
                 <Text text="{viewModel>/ucmaster/const_person_name}" />  
                 <layoutData>
-                    <layout:GridData span="XL6 L6 M6 S12" />
+                    <layout:GridData span="XL4 L4 M4 S12" />
                 </layoutData>     
             </VBox>
             
             <VBox alignContent="Center">
-                <Label text="* 구매담당자" design="Bold" class="sapMLabelNoText"/>
+                <Label text="구매담당자" design="Bold" class="sapMLabelNoText"/>
                 <Text text="{viewModel>/ucmaster/buyer_name}" />  
                 <layoutData>
-                    <layout:GridData span="XL6 L6 M6 S12" />
+                    <layout:GridData span="XL8 L8 M8 S12" />
                 </layoutData>     
             </VBox>
+
+            <VBox alignContent="Center">
+                <layoutData>
+                    <layout:GridData span="XL4 L4 M4 S12" />
+                </layoutData>     
+            </VBox>
+
 
         </form:SimpleForm>
 
         <form:SimpleForm id="ucUcQuotationSupForm4Show" editable="false"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label  text="* 비고" 
+                <Label  text="비고" 
                             design="Bold" 
                             class="sapUiSmallMarginBottom"/>
                 <Text text="{viewModel>/ucmaster/remark}" />            

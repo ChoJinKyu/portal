@@ -51,6 +51,10 @@ sap.ui.define([
             
             this.userInfo = this.getSessionUserInfo();
 
+            this.userInfo.TENANT_ID = 'L2101';  //임시
+
+            console.log('this.userInfo',this.userInfo);
+
 			// Model used to manipulate control states
 			oViewModel = new JSONModel({
 				headerExpanded: true,
@@ -79,7 +83,7 @@ sap.ui.define([
         },
         
         onAfterRendering : function () {
-			this.byId("pageSearchButton").firePress();
+			
 			return;
         },
 

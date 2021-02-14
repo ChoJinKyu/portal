@@ -15,7 +15,6 @@ sap.ui.define([
         },
 
         init: function () {
-
             //console.log("SppUserSessionUtil", SppUserSessionUtil);
             // call the base component's init function
             UIComponent.prototype.init.apply(this, arguments);
@@ -25,22 +24,16 @@ sap.ui.define([
                 number: { symbol: "", currency: "KRW" }
             };
 
-            // basePriceProgressStatusMgt App 전체에서 사용할 Model 세팅
-            
+            // basePriceArlMgt App 전체에서 사용할 Model 세팅
+            this.setModel(new JSONModel(oBasePriceArlMgtRootData), "rootModel");
             // 다국어 Model 세팅
             this.setModel(new Multilingual().getModel(), "I18N");
 
             var oRootModel = this.getModel("rootModel");
 
-            if (oRootModel === undefined) {
-                this.setModel(new JSONModel(oBasePriceArlMgtRootData), "rootModel");
-                oRootModel = this.getModel("rootModel");
-            }
-
-            // 상태값 조회(품의서 진행 상태) 시작
             var aFilters = [];
-            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID));
             aFilters.push(new Filter("group_code", FilterOperator.EQ, "CM_APPROVE_STATUS"));
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID));
 
             this.getModel("util").read("/Code", {
                 filters: aFilters,
@@ -56,16 +49,46 @@ sap.ui.define([
                     console.log("error", data);
                 }
             });
+
+            // 플랜트 조회 시작
+            var oPurOrgModel = this.getModel("purOrg");
+            var aPurOrgFilter = [new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID)];
+            oPurOrgModel.read("/Pur_Operation_Org", {
+                filters : aPurOrgFilter,
+                success : function(data){
+                    if( data && data.results ) {
+                        var aResults = data.results;
+                        var aCompoany = [];
+                        var oPurOrg = {};
+
+                        for( var i=0; i<aResults.length; i++ ) {
+                            var oResult = aResults[i];
+                            if( -1===aCompoany.indexOf(oResult.company_code) ) {
+                                aCompoany.push(oResult.company_code);
+                                oPurOrg[oResult.company_code] = [];
+                            }
+
+                            oPurOrg[oResult.company_code].push({org_code: oResult.org_code, org_name: oResult.org_name});
+                        }
+
+                        oRootModel.setProperty("/purOrg", oPurOrg);
+                    }
+                },
+                error : function(data){
+                    console.log("error", data);
+                }
+            });
+            // 플랜트 조회 끝
         },
 
-         /**
-         * Date 데이터를 String 타입으로 변경. 예) 2020-10-10
-         */
+        /**
+        * Date 데이터를 String 타입으로 변경. 예) 2020-10-10
+        */
         _changeDateString: function (oDateParam, sGubun) {
             var oDate = oDateParam || new Date(),
                 sGubun = sGubun || "",
                 iYear = oDate.getFullYear(),
-                iMonth = oDate.getMonth()+1,
+                iMonth = oDate.getMonth() + 1,
                 iDate = oDate.getDate(),
                 iHours = oDate.getHours(),
                 iMinutes = oDate.getMinutes(),
@@ -77,7 +100,7 @@ sap.ui.define([
         },
 
         _getPreZero: function (iDataParam) {
-            return (iDataParam<10 ? "0"+iDataParam : iDataParam);
+            return (iDataParam < 10 ? "0" + iDataParam : iDataParam);
         }
     });
 });

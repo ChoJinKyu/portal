@@ -74,8 +74,8 @@
         },
         "resourceRoots": {
             "ext.lib": "../../../lib",
-            "ext.lib.fragment": "./fragment",
-            "ext.lib.fragment.controller": "./fragmentController",
+            "ext.lib.fragment": "../../../lib/upload",
+            "ext.lib.fragment.controller": "../../../lib/upload",
             "ext.lib.js": "../../../lib/thirdParty",
             "templateGuideView" : "./view",
             "templateGuideController" : "./controller"

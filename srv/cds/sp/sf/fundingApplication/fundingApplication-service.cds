@@ -161,6 +161,7 @@ service FundingApplicationService {
             ,fa.collateral_attch_group_number   //담보 약식확인서 첨부파일 그룹번호
             ,fa.funding_step_code               //자금지원 단계 코드
             ,fa.funding_status_code             //자금지원 상태 코드
+            ,cv_a.code_name as funding_status_code_name : String //상태코드명
             //------------업체정보------------
             ,supp.supplier_local_name as supplier_name : String  //업체명
 			,supp.tax_id                                //사업자번호
@@ -187,6 +188,11 @@ service FundingApplicationService {
         and cv_c.group_code = 'SP_SF_COLLATERAL_TYPE_CODE'
         and cv_c.code       = fa.collateral_type_code
         and cv_c.language_cd = 'KO'
+        left outer join codeView as cv_a           //담보구분 공통코드 조인
+        on cv_a.tenant_id  = fa.tenant_id
+        and cv_a.group_code = 'SP_SF_FUNDING_STATUS_CODE'
+        and cv_a.code       = fa.funding_status_code
+        and cv_a.language_cd = 'KO'
         left outer join sp.Sm_Supplier_Mst as supp
         on fa.tenant_id = supp.tenant_id
         and fa.supplier_code = supp.supplier_code

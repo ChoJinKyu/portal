@@ -381,6 +381,7 @@ sap.ui.define([
                 new Filter("tenant_id", FilterOperator.EQ, sTenant),
                 new Filter("group_code", FilterOperator.EQ, 'CM_CHAIN_CD')
             ];
+            debugger;
             var oItemTemplate = new sap.ui.core.ListItem({
                 key : "{util>code}",
                 text : "{util>code_name}",
@@ -391,7 +392,7 @@ sap.ui.define([
             if(oEvent){
                 oChain.setSelectedKey(null);
             }
-            oChain.bindItems("util>/CodeDetails", oItemTemplate, null, aFilters);
+            oChain.bindItems("util>/Code", oItemTemplate, null, aFilters);
         }
 	});
 });

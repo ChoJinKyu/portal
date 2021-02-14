@@ -4,7 +4,7 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout" >
     
-    <Dialog id="investmentPlanDetails" class="sapUiSmallMargin" title="투자계획상세내용" contentWidth="100%" >
+    <Dialog id="investmentPlanDetails" class="sapUiSmallMargin" title="투자계획" contentWidth="100%" >
         <content>  
             <VBox class="sapUiSmallMargin">
                 <form:SimpleForm
@@ -244,7 +244,7 @@
                         width="auto">
                         <headerToolbar>
                             <OverflowToolbar>
-                                <Title text="투자내역 상세" level="H2"/>
+                                <Title text="상세내역" level="H2"/>
                                 <ToolbarSpacer/>
                                 <Button id="dtlAddRow" text="추가" type="Transparent" press=".onInvestmentDtlAddButtonPress" />
                                 <Button id="dtlDeleteRow" text="삭제" type="Transparent" press=".onInvestmentDtlDeleteButtonPress" />

@@ -1,19 +1,19 @@
 <mvc:View 
-xmlns="sap.m" 
-xmlns:core="sap.ui.core"
-xmlns:mvc="sap.ui.core.mvc"
-xmlns:uxap="sap.uxap"
-xmlns:table="sap.ui.table"
-xmlns:f="sap.ui.layout.form"
-class="sapUiSizeCompact"
-displayBlock="true"
-xmlns:lib-m="ext.lib.control.m"
-xmlns:cm-ui="cm.util.control.ui"
-controllerName="sp.se.supplierEvaluationSetupMgt.controller.One"
-xmlns:flex="sap.f"
->
+        xmlns="sap.m" 
+        xmlns:core="sap.ui.core"
+        xmlns:mvc="sap.ui.core.mvc"
+        xmlns:uxap="sap.uxap"
+        xmlns:table="sap.ui.table"
+        xmlns:f="sap.ui.layout.form"
+        class="sapUiSizeCompact"
+        displayBlock="true"
+        xmlns:lib-m="ext.lib.control.m"
+        xmlns:cm-ui="cm.util.control.ui"
+        controllerName="sp.se.supplierEvaluationSetupMgt.controller.One"
+        xmlns:flex="sap.f"
+        >
    
-    <!-- <App id="idAppControl"> -->
+        <!-- <App id="idAppControl"> -->
         <Page title="설정정보" 
         showNavButton="true" 
         navButtonType="Back" 
@@ -58,25 +58,39 @@ xmlns:flex="sap.f"
 
                                                 <f:content>
                                                     <!-- Column1. 운영단위코드 -->
-                                                    <Label text="{I18N>/OPERATION_UNIT_CODE}"/>                                                                        
+                                                    <Label text="{I18N>/OPERATION_UNIT_CODE}" required="true"/>                                                                        
                                                     <Input  id="opCodeInput" 
                                                             width="100%" 
-                                                            placeholder="OPERATION_UNIT_CODE"
-                                                            value="{DetailView>/OperationUnitMst/evaluation_operation_unit_code}"
+                                                            placeholder="input operation unit code"
+                                                            value="{
+                                                             path : 'DetailView>/OperationUnitMst/evaluation_operation_unit_code',
+                                                             type : 'sap.ui.model.odata.type.String',
+                                                             constraints : {
+                                                                maxLength : 30
+                                                            }   
+                                                            }"
                                                             editable="{=${DetailView>/isCreateMode}}"
-                                                            
                                                             fieldGroupIds="required"
                                                             required="true"
+                                                            showSuggestion="true"
                                                             />
+                                                            <!-- "{
+                                                             path : 'DetailView>/OperationUnitMst/evaluation_operation_unit_code',
+                                                             type : 'sap.ui.model.odata.type.String',
+                                                             constraints : {
+                                                                maxLength : 240
+                                                            }   
+                                                            }" -->
                                                             
                                                     <!-- 배점설계여부 -->
-                                                    <Label text="{I18N>/DISTRB_SCOR_ENG_FLAG}"/>
+                                                    <Label text="{I18N>/DISTRB_SCOR_ENG_FLAG}" required="true"/>
                                                     <SegmentedButton
                                                             selectedKey="{
                                                             path : 'DetailView>/OperationUnitMst/distrb_score_eng_flag',
                                                             type: 'sap.ui.model.type.Boolean'                                                       
                                                             }"
-                                                            enabled="{DetailView>/isEditMode}"                                                         
+                                                            enabled="{DetailView>/isEditMode}"  
+                                                            required="true"                                                       
                                                             >                                                            
                                                             <items>
                                                                 <SegmentedButtonItem text="Yes" key="true" />
@@ -85,13 +99,14 @@ xmlns:flex="sap.f"
                                                     </SegmentedButton>
 
                                                     <!-- 운영 전략 수립 여부 -->
-                                                    <Label text="{I18N>/OPERATION_PLAN_FLAG}"/> 
+                                                    <Label text="{I18N>/OPERATION_PLAN_FLAG}" required="true"/> 
                                                     <SegmentedButton 
                                                             selectedKey="{
                                                             path : 'DetailView>/OperationUnitMst/operation_plan_flag',
                                                             type: 'sap.ui.model.type.Boolean'
                                                         }"
-                                                            enabled="{DetailView>/isEditMode}">                                                       
+                                                            enabled="{DetailView>/isEditMode}"
+                                                            >                                                       
                                                             <items>
                                                                 <SegmentedButtonItem text="Yes" key="true" />
                                                                 <SegmentedButtonItem text="No" key="false" />
@@ -99,7 +114,7 @@ xmlns:flex="sap.f"
                                                     </SegmentedButton>
 
                                                     <!-- V/P 운연단위 -->
-                                                    <Label text="{I18N>/VP_OPERATION_UNIT}"/> 
+                                                    <Label text="{I18N>/VP_OPERATION_UNIT}" required="true"/> 
                                                     <MultiComboBox id="searchMultiComboCode" width="100%" showSecondaryValues="true" 
                                                             items="{
                                                             path: 'common>/Code',
@@ -140,17 +155,23 @@ xmlns:flex="sap.f"
                                                         </MultiComboBox>-->                            
 
                                                     <!-- Column2. 운영단위 명 -->
-                                                    <Label text="{I18N>/OPERATION_UNIT_NAME}"/>
+                                                    <Label text="{I18N>/OPERATION_UNIT_NAME}" required="true"/>
                                                     
                                                     <Input  id="opCodeName" 
                                                         width="100%" 
-                                                        placeholder="OPERATION_UNIT_NAME"
-                                                        value="{DetailView>/OperationUnitMst/evaluation_operation_unit_name}"
+                                                        placeholder="input operation unit name"
+                                                        value= "{
+                                                             path : 'DetailView>/OperationUnitMst/evaluation_operation_unit_name',
+                                                             type : 'sap.ui.model.odata.type.String',
+                                                             constraints : {
+                                                                maxLength : 50
+                                                            }   
+                                                            }"
                                                         editable="{=${DetailView>/isEditMode}}"
                                                         fieldGroupIds="required"
                                                         required="true"   
-                                                                                                            
                                                         />
+                                                        
 
                                                             <!-- enabled="{=
                                                                 ${DetailView>/isEditMode}
@@ -174,7 +195,7 @@ xmlns:flex="sap.f"
                                                         
                                                     
                                                     <!-- 발의 품의 여부 -->
-                                                    <Label text="{I18N>/EVAL_REQUEST_APPROVAL_FLAG}"/> 
+                                                    <Label text="{I18N>/EVAL_REQUEST_APPROVAL_FLAG}" required="true"/> 
                                                         <SegmentedButton  
                                                         selectedKey="{
                                                             path : 'DetailView>/OperationUnitMst/evaluation_request_approval_flag',
@@ -188,7 +209,7 @@ xmlns:flex="sap.f"
                                                         </SegmentedButton>
 
                                                     <!-- 사용 여부 -->
-                                                    <Label text="{I18N>/USE_FLAG}"/> 
+                                                    <Label text="{I18N>/USE_FLAG}" required="true"/> 
                                                         <SegmentedButton  
                                                         selectedKey="{
                                                             path : 'DetailView>/OperationUnitMst/use_flag',
@@ -202,7 +223,7 @@ xmlns:flex="sap.f"
                                                         </SegmentedButton>
 
                                                     <!-- 평가 대상 V/P 레벨 -->
-                                                    <Label text="{I18N>/EVAL_APPLY_VENDOR_POOL_LVL_NO}"/> 
+                                                    <Label text="{I18N>/EVAL_APPLY_VENDOR_POOL_LVL_NO}" required="true"/> 
                                                         <SegmentedButton
                                                         id="vendor_pool_lvl"
                                                         selectedKey="{DetailView>/OperationUnitMst/eval_apply_vendor_pool_lvl_no}"
@@ -235,12 +256,12 @@ xmlns:flex="sap.f"
                                         class="sapFDynamicPageAlignContent"
                                         width="auto"
                                         items="{
-                                            path: 'DetailView>/manager'
+                                            path: 'DetailView>/manager',
+                                            sorter: { path: 'evaluation_execute_role_code'}
                                             }"
                                         mode="{=
                                             ${DetailView>/isEditMode} ? 'SingleSelectLeft' : 'None'
                                         }"
-                                          
                                             >
                                             <!-- selectionChange="onSelectItem"   -->
                                             <headerToolbar>
@@ -260,13 +281,13 @@ xmlns:flex="sap.f"
                                                     <core:Icon src="sap-icon://edit"/>
                                                 </Column>
                                                 <Column>
-                                                   <Text text="{I18N>/ROLE}"/>
+                                                   <Label text="{I18N>/ROLE}" required="true"/>
                                                 </Column>
                                                 <Column>
-                                                    <Text text="{I18N>/PERSON}" />
+                                                    <Label text="{I18N>/PERSON}" required="true" />
                                                 </Column>
                                                 <Column>
-                                                    <Text text="{I18N>/DEPARTMENT}" />
+                                                    <Label text="{I18N>/DEPARTMENT}" />
                                                 </Column>
                                             </columns>
                                             <items>
@@ -321,9 +342,7 @@ xmlns:flex="sap.f"
                                                             
                                                             
                                                         </Input>
-                                                          <Text text="{DetailView>department_local_name}"  required="true" 
-                                                              
-                                                              />     
+                                                          <Text text="{DetailView>department_local_name}"/>     
                                                               <!-- blocked="{=
                                                                 !${DetailView>/isEditMode}
                                                               }"                   -->
@@ -419,15 +438,17 @@ xmlns:flex="sap.f"
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
                                     <uxap:blocks>
-
+                                        
                                         <Table id="valuationTable"
 
                                                 inset="false"
                                                 class="sapFDynamicPageAlignContent"
                                                 width="auto"
                                                 items="{
-                                                    path: 'DetailView>/evaluationType1'
-                                            }">
+                                                    path: 'DetailView>/evaluationType1',
+                                                    sorter: { path: 'evaluation_type_distrb_score_rate',
+                                                              descending : true}
+                                                        }">
                                             <headerToolbar>
                                                 <Toolbar>
                                                     <ToolbarSpacer/>
@@ -445,16 +466,16 @@ xmlns:flex="sap.f"
                                             </headerToolbar>
                                             <columns>
                                                 <Column>
-                                                    <Text text="{I18N>/EVALUATION_TYPE_CODE}" />
+                                                    <Label text="{I18N>/EVALUATION_TYPE_CODE}" />
                                                 </Column>
                                                 <Column>
-                                                    <Text text="{I18N>/EVALUATION_TYPE_NAME}" />
+                                                    <Label text="{I18N>/EVALUATION_TYPE_NAME}" />
                                                 </Column>
                                                 <Column>
-                                                    <Text text="{I18N>/EVALUATION_RATE}" />
+                                                    <Label text="{I18N>/EVALUATION_RATE}" />
                                                 </Column>
                                                 <Column>
-                                                    <Text text="{I18N>/USE_FLAG}" />
+                                                    <Label text="{I18N>/USE_FLAG}" />
                                                 </Column>
                                             </columns>
                                             <items>
@@ -504,6 +525,9 @@ xmlns:flex="sap.f"
                                         width="auto"
                                         items="{
                                             path: 'DetailView>/quantitative'
+                                            ,
+                                            sorter: { path: 'sort_sequence'
+                                                    }
                                             }"
                                         mode="{=
                                             ${DetailView>/isEditMode} ? 'SingleSelectLeft' : 'None'
@@ -524,25 +548,25 @@ xmlns:flex="sap.f"
                                             </headerToolbar>
                                             <columns>
                                                 <Column width="3em">
-                                                    <core:Icon src="sap-icon://edit"/>
+                                                    <core:Icon src="sap-icon://edit" required="true"/>
                                                 </Column>
                                                 <Column>
-                                                   <Text text="{I18N>/QUANTITATIVE_ITEM_CODE}"/>
+                                                   <Label text="{I18N>/QUANTITATIVE_ITEM_CODE}" required="true"/>
                                                 </Column>
                                                 <Column>
-                                                    <Text text="{I18N>/QUANTITATIVE_ITEM_NAME}" />
+                                                    <Label text="{I18N>/QUANTITATIVE_ITEM_NAME}" required="true"/>
                                                 </Column>
                                                 <Column>
-                                                    <Text text="{I18N>/UNIT}" />
+                                                    <Label text="{I18N>/UNIT}"  required="true"/>
                                                 </Column>
                                                 <Column>
-                                                    <Text text="{I18N>/MEASURE_MODE}" />
+                                                    <Label text="{I18N>/MEASURE_MODE}" required="true" />
                                                 </Column>
                                                 <Column>
-                                                    <Text text="{I18N>/QUANTITATIVE_ITEM_DESC}" />
+                                                    <Label text="{I18N>/QUANTITATIVE_ITEM_DESC}" />
                                                 </Column>
                                                 <Column>
-                                                    <Text text="{I18N>/SORT_NUMBER}" />
+                                                    <Label text="{I18N>/SORT_NUMBER}" required="true" />
                                                 </Column>
                                             </columns>
                                             <items>
@@ -560,21 +584,42 @@ xmlns:flex="sap.f"
                                                         />
                                                         <Input   
                                                             width="100%" 
-                                                            placeholder="OPERATION_UNIT_CODE"
-                                                            value="{DetailView>qttive_item_code}"
+                                                            value="{
+                                                             path : 'DetailView>qttive_item_code',
+                                                             type : 'sap.ui.model.odata.type.String',
+                                                             constraints : {
+                                                                nullable:false,
+                                                                maxLength:15
+                                                            }   
+                                                            }"
                                                             editable="{= ${DetailView>/isCreateMode} === true ? true : ${DetailView>crudFlg} === 'I' ? true : false}"
                                                             fieldGroupIds="required"
                                                             required="true"   
                                                             change="onChangeEdit"
                                                             
+                                                            
                                                             />
+                                                            <!-- value="{
+                                                             path : 'DetailView>qttive_item_code',
+                                                             type : 'sap.ui.model.odata.type.String',
+                                                             constraints : {
+                                                                nullable:false,
+                                                                maxLength:15,
+                                                            }   
+                                                            }" -->
+                                                            
                                                             <!-- blocked="{=
                                                                 !${DetailView>/isEditMode}
                                                               }" -->
                                                         <Input   
                                                             width="100%" 
-                                                            placeholder="QUANTITATIVE_ITEM_NAME"
-                                                            value="{DetailView>qttive_item_name}"
+                                                            value="{
+                                                             path : 'DetailView>qttive_item_name',
+                                                             type : 'sap.ui.model.odata.type.String',
+                                                             constraints : {
+                                                                maxLength:240
+                                                            }   
+                                                            }"
                                                             editable="{=
                                                                 ${DetailView>/isEditMode}
                                                             }"
@@ -623,8 +668,13 @@ xmlns:flex="sap.f"
                                                         </ComboBox> 
                                                         <Input   
                                                             width="100%" 
-                                                            placeholder="QUANTITATIVE_ITEM_DESC"
-                                                            value="{DetailView>qttive_item_desc}"
+                                                            value="{
+                                                             path : 'DetailView>qttive_item_desc',
+                                                             type : 'sap.ui.model.odata.type.String',
+                                                             constraints : {
+                                                                maxLength:1000
+                                                            }   
+                                                            }"
                                                             editable="{=
                                                                 ${DetailView>/isEditMode}  
                                                             }"
@@ -632,8 +682,14 @@ xmlns:flex="sap.f"
                                                             />     
                                                         <Input   
                                                             width="100%" 
-                                                            placeholder="SORT_NUMBER"
-                                                            value="{DetailView>sort_sequence}"
+                                                           value="{
+                                                             path : 'DetailView>sort_sequence',
+                                                             type : 'sap.ui.model.odata.type.Decimal',
+                                                             constraints : {
+                                                               scale : 0,
+                                                               nullable:false
+                                                            }   
+                                                            }"
                                                             editable="{=
                                                                 ${DetailView>/isEditMode}
                                                             }"

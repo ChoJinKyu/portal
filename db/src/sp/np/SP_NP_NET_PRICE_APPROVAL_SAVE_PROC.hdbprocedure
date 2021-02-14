@@ -10,8 +10,6 @@ PROCEDURE SP_NP_NET_PRICE_APPROVAL_SAVE_PROC (
 */
      IN   I_TENANT_ID                      NVARCHAR(20)
     ,IN   I_COMPANY_CODE                   NVARCHAR(10)
-    ,IN   I_ORG_TYPE_CODE                  NVARCHAR(2)
-    ,IN   I_ORG_CODE                       NVARCHAR(10)
     ,IN   I_APPROVAL_NUMBER                NVARCHAR(20)
 
     ,IN   I_APPROVAL_TITLE                 NVARCHAR(300)
@@ -37,10 +35,11 @@ PROCEDURE SP_NP_NET_PRICE_APPROVAL_SAVE_PROC (
                                               ,EFFECTIVE_END_DATE                 NVARCHAR(10)
                                             --  ,SURROGATE_TYPE_CODE                NVARCHAR(30)
                                               ,CURRENCY_CODE                      NVARCHAR(3)
-                                              ,NET_PRICE                          DECIMAL
+                                              ,NET_PRICE                          DECIMAL(34,10)
                                               ,VENDOR_POOL_CODE                   NVARCHAR(20)
                                               ,MARKET_CODE                        NVARCHAR(30)
                                               ,NET_PRICE_APPROVAL_REASON_CODE     NVARCHAR(30)
+                                              ,NET_PRICE_TYPE_CODE                NVARCHAR(30)
                                               ,MAKER_CODE                         NVARCHAR(10)
                                               ,INCOTERMS                          NVARCHAR(3)
 
@@ -157,8 +156,8 @@ BEGIN
                 , V_APPROVAL_NUMBER          -- APPROVAL_NUMBER
                 , NULL                       -- LEGACY_APPROVAL_NUMBER
                 , I_COMPANY_CODE             -- COMPANY_CODE
-                , I_ORG_TYPE_CODE            -- ORG_TYPE_CODE
-                , I_ORG_CODE                 -- ORG_CODE
+                , NULL                       -- ORG_TYPE_CODE
+                , NULL                       -- ORG_CODE
                 , 'SP'                       -- CHAIN_CODE
                 
                 , 'NPA01'                    -- APPROVAL_TYPE_CODE
@@ -189,11 +188,6 @@ BEGIN
         
             INSERT INTO SP_NP_NET_PRICE_APPROVAL_MST (
                    TENANT_ID
-                   /*
-                 , COMPANY_CODE
-                 , ORG_TYPE_CODE
-                 , ORG_CODE
-                   */
                  , APPROVAL_NUMBER
                  -- APPROVE_STATUS_CODE  상태 코드 추가 되어야 함.
                  , NET_PRICE_DOCUMENT_TYPE_CODE
@@ -216,11 +210,6 @@ BEGIN
                  , SYSTEM_UPDATE_DTM
             ) VALUES (
                    I_TENANT_ID                       -- TENANT_ID
-                   /*
-                 , I_COMPANY_CODE                    -- COMPANY_CODE
-                 , I_ORG_TYPE_CODE                   -- ORG_TYPE_CODE
-                 , I_ORG_CODE                        -- ORG_CODE
-                   */
                  , V_APPROVAL_NUMBER                 -- APPROVAL_NUMBER
                  , I_NET_PRICE_DOCUMENT_TYPE_CODE    -- NET_PRICE_DOCUMENT_TYPE_CODE
                  , I_NET_PRICE_SOURCE_CODE           -- NET_PRICE_SOURCE_CODE
@@ -286,11 +275,6 @@ BEGIN
                  , SYSTEM_UPDATE_DTM              = NOW()
                  
              WHERE TENANT_ID           = I_TENANT_ID
-             /*
-               AND COMPANY_CODE        = I_COMPANY_CODE
-               AND ORG_TYPE_CODE       = I_ORG_TYPE_CODE
-               AND ORG_CODE            = I_ORG_CODE
-             */
                AND APPROVAL_NUMBER     = V_APPROVAL_NUMBER
             ;
         END;
@@ -309,105 +293,15 @@ BEGIN
        
         DELETE FROM SP_NP_NET_PRICE_APPROVAL_DTL 
          WHERE (TENANT_ID
-               /*
-               ,COMPANY_CODE
-               ,ORG_TYPE_CODE
-               ,ORG_CODE
-               */
                ,APPROVAL_NUMBER
                ,ITEM_SEQUENCE ) IN (SELECT 
                                            I_TENANT_ID
-                                           /*
-                                         , I_COMPANY_CODE
-                                         , I_ORG_TYPE_CODE
-                                         , I_ORG_CODE
-                                         */
                                          , V_APPROVAL_NUMBER
                                          , DTL.ITEM_SEQUENCE
                                       FROM :I_DETAILS   DTL
                                      WHERE DTL._ROW_STATE_ = 'D'
                                    )
         ;
-    END;
-    
-    BEGIN
-	
-        DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            O_RETURN_CODE = 'NG032';
-            O_RETURN_MSG  = '단가품의 상세 수정 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
-            SIGNAL V_USER_EXCEPTION;
-        END;
-       
-         --Update Item
-         MERGE INTO SP_NP_NET_PRICE_APPROVAL_DTL  T
-         USING (SELECT ITEM_SEQUENCE
-
-                     ,(SELECT MAX(COMPANY_CODE)
-                         FROM CM_PUR_OPERATION_ORG T
-                        WHERE T.TENANT_ID  = I_TENANT_ID
-                          AND T.ORG_CODE   = DTL.ORG_CODE
-                        -- AND USE_FLAG    = true
-                      ) AS COMPANY_CODE
-                     
-                     ,(SELECT MAX(ORG_TYPE_CODE)
-                         FROM CM_PUR_ORG_TYPE_MAPPING T
-                        WHERE T.TENANT_ID         = I_TENANT_ID
-                          AND T.PROCESS_TYPE_CODE = 'SP02'  /* 단가 품의 */
-                          AND T.USE_FLAG          = true
-                      ) AS ORG_TYPE_CODE
-                     
-                     , DTL.ORG_CODE
-                     , DTL.LINE_TYPE_CODE
-                     , DTL.MATERIAL_CODE
-                     , DTL.PAYTERMS_CODE
-                     , DTL.SUPPLIER_CODE
-                     , DTL.EFFECTIVE_START_DATE
-                     , DTL.EFFECTIVE_END_DATE
-                   --  ,SURROGATE_TYPE_CODE
-                     , DTL.CURRENCY_CODE
-                     , DTL.NET_PRICE
-                     , DTL.VENDOR_POOL_CODE
-                     , DTL.MARKET_CODE
-                     , DTL.NET_PRICE_APPROVAL_REASON_CODE
-                     , DTL.MAKER_CODE
-                     , DTL.INCOTERMS
-                 FROM :I_DETAILS   DTL
-                WHERE _ROW_STATE_ = 'U'
-               ) I
-         ON (    T.TENANT_ID          = I_TENANT_ID
-             /*
-             AND T.COMPANY_CODE       = I_COMPANY_CODE
-             AND T.ORG_TYPE_CODE      = I_ORG_TYPE_CODE
-             AND T.ORG_CODE           = I_ORG_CODE
-             */
-             AND T.APPROVAL_NUMBER    = V_APPROVAL_NUMBER
-             AND T.ITEM_SEQUENCE      = I.ITEM_SEQUENCE
-            )
-         WHEN MATCHED THEN
-             UPDATE
-             SET    T.COMPANY_CODE                     = I.COMPANY_CODE
-                   ,T.ORG_TYPE_CODE                    = I.ORG_TYPE_CODE
-                   ,T.ORG_CODE                         = I.ORG_CODE
-                   ,T.LINE_TYPE_CODE                   = I.LINE_TYPE_CODE
-                   ,T.MATERIAL_CODE                    = I.MATERIAL_CODE
-                   ,T.PAYTERMS_CODE                    = I.PAYTERMS_CODE
-                   ,T.SUPPLIER_CODE                    = I.SUPPLIER_CODE
-                   ,T.EFFECTIVE_START_DATE             = TO_DATE(I.EFFECTIVE_START_DATE, 'YYYYMMDD')
-                   ,T.EFFECTIVE_END_DATE               = TO_DATE(I.EFFECTIVE_END_DATE, 'YYYYMMDD')
-                --   ,T.SURROGATE_TYPE_CODE              = I.SURROGATE_TYPE_CODE
-                   ,T.CURRENCY_CODE                    = I.CURRENCY_CODE
-                   ,T.NET_PRICE                        = I.NET_PRICE
-                   ,T.VENDOR_POOL_CODE                 = I.VENDOR_POOL_CODE
-                   ,T.MARKET_CODE                      = I.MARKET_CODE
-                   ,T.NET_PRICE_APPROVAL_REASON_CODE   = I.NET_PRICE_APPROVAL_REASON_CODE
-                   ,T.MAKER_CODE                       = I.MAKER_CODE
-                   ,T.INCOTERMS                        = I.INCOTERMS
-                   
-                   ,T.LOCAL_UPDATE_DTM                 = NOW()
-                   ,T.UPDATE_USER_ID                   = :I_USER_ID
-                   ,T.SYSTEM_UPDATE_DTM                = NOW()
-         ;
     END;
     
     BEGIN
@@ -441,6 +335,7 @@ BEGIN
              , VENDOR_POOL_CODE
              , MARKET_CODE
              , NET_PRICE_APPROVAL_REASON_CODE
+             , NET_PRICE_TYPE_CODE
              , MAKER_CODE
              , INCOTERMS
 
@@ -484,6 +379,7 @@ BEGIN
              , DTL.VENDOR_POOL_CODE
              , DTL.MARKET_CODE
              , DTL.NET_PRICE_APPROVAL_REASON_CODE
+             , DTL.NET_PRICE_TYPE_CODE
              , DTL.MAKER_CODE
              , DTL.INCOTERMS
 
@@ -509,6 +405,82 @@ BEGIN
         
     END;
 
+    BEGIN
+	
+        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            O_RETURN_CODE = 'NG032';
+            O_RETURN_MSG  = '단가품의 상세 수정 오류 (' || ::SQL_ERROR_CODE || '-' || ::SQL_ERROR_MESSAGE || ')';
+            SIGNAL V_USER_EXCEPTION;
+        END;
+       
+         --Update Item
+         MERGE INTO SP_NP_NET_PRICE_APPROVAL_DTL  T
+         USING (SELECT ITEM_SEQUENCE
+
+                     ,(SELECT MAX(COMPANY_CODE)
+                         FROM CM_PUR_OPERATION_ORG T
+                        WHERE T.TENANT_ID  = I_TENANT_ID
+                          AND T.ORG_CODE   = DTL.ORG_CODE
+                        -- AND USE_FLAG    = true
+                      ) AS COMPANY_CODE
+                     
+                     ,(SELECT MAX(ORG_TYPE_CODE)
+                         FROM CM_PUR_ORG_TYPE_MAPPING T
+                        WHERE T.TENANT_ID         = I_TENANT_ID
+                          AND T.PROCESS_TYPE_CODE = 'SP02'  /* 단가 품의 */
+                          AND T.USE_FLAG          = true
+                      ) AS ORG_TYPE_CODE
+                     
+                     , DTL.ORG_CODE
+                     , DTL.LINE_TYPE_CODE
+                     , DTL.MATERIAL_CODE
+                     , DTL.PAYTERMS_CODE
+                     , DTL.SUPPLIER_CODE
+                     , DTL.EFFECTIVE_START_DATE
+                     , DTL.EFFECTIVE_END_DATE
+                   --  ,SURROGATE_TYPE_CODE
+                     , DTL.CURRENCY_CODE
+                     , DTL.NET_PRICE
+                     , DTL.VENDOR_POOL_CODE
+                     , DTL.MARKET_CODE
+                     , DTL.NET_PRICE_APPROVAL_REASON_CODE
+                     , DTL.NET_PRICE_TYPE_CODE
+                     , DTL.MAKER_CODE
+                     , DTL.INCOTERMS
+                 FROM :I_DETAILS   DTL
+                WHERE IFNULL( _ROW_STATE_ ,'U') NOT IN ('C','D')
+               ) I
+         ON (    T.TENANT_ID          = I_TENANT_ID
+             AND T.APPROVAL_NUMBER    = V_APPROVAL_NUMBER
+             AND T.ITEM_SEQUENCE      = I.ITEM_SEQUENCE
+            )
+         WHEN MATCHED THEN
+             UPDATE
+             SET    T.COMPANY_CODE                     = I.COMPANY_CODE
+                   ,T.ORG_TYPE_CODE                    = I.ORG_TYPE_CODE
+                   ,T.ORG_CODE                         = I.ORG_CODE
+                   ,T.LINE_TYPE_CODE                   = I.LINE_TYPE_CODE
+                   ,T.MATERIAL_CODE                    = I.MATERIAL_CODE
+                   ,T.PAYTERMS_CODE                    = I.PAYTERMS_CODE
+                   ,T.SUPPLIER_CODE                    = I.SUPPLIER_CODE
+                   ,T.EFFECTIVE_START_DATE             = TO_DATE(I.EFFECTIVE_START_DATE, 'YYYYMMDD')
+                   ,T.EFFECTIVE_END_DATE               = TO_DATE(I.EFFECTIVE_END_DATE, 'YYYYMMDD')
+                --   ,T.SURROGATE_TYPE_CODE              = I.SURROGATE_TYPE_CODE
+                   ,T.CURRENCY_CODE                    = I.CURRENCY_CODE
+                   ,T.NET_PRICE                        = I.NET_PRICE
+                   ,T.VENDOR_POOL_CODE                 = I.VENDOR_POOL_CODE
+                   ,T.MARKET_CODE                      = I.MARKET_CODE
+                   ,T.NET_PRICE_APPROVAL_REASON_CODE   = I.NET_PRICE_APPROVAL_REASON_CODE
+                   ,T.NET_PRICE_TYPE_CODE              = I.NET_PRICE_TYPE_CODE
+                   ,T.MAKER_CODE                       = I.MAKER_CODE
+                   ,T.INCOTERMS                        = I.INCOTERMS
+                   
+                   ,T.LOCAL_UPDATE_DTM                 = NOW()
+                   ,T.UPDATE_USER_ID                   = :I_USER_ID
+                   ,T.SYSTEM_UPDATE_DTM                = NOW()
+         ;
+    END;
 
     /* 결재자 등록 : 전체 삭제 후, 재 등록 */
     BEGIN

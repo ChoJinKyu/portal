@@ -6,6 +6,14 @@
 -- @name #Platform#SAPHelp:TO_TIME Function (Data Type Conversion)
 SELECT * FROM TIMEZONES
 ;
+
+-- @block Bookmarked query
+-- @group SP_SC
+-- @name TABLES - 설명
+SELECT TOP 50 * FROM DUMMY WHERE 1=1 
+-- AND FIELD = "VALUE"
+;
+
 -- @block Bookmarked query
 -- @group SP_SC
 -- @name #Platform#SAPHelp:TO_TIME Function (Data Type Conversion)
@@ -70,12 +78,6 @@ ORDER BY OBJECT_NAME
 select *,
 HEADER.*
 from SP_SOURCINGV4SERVICE_NEGOITEMPRICES
--- AND FIELD = "VALUE"
-;
--- @block Bookmarked query
--- @group SP_SC
--- @name TABLES - 설명
-SELECT TOP 50 * FROM DUMMY WHERE 1=1 
 -- AND FIELD = "VALUE"
 ;
 -- @block Bookmarked query

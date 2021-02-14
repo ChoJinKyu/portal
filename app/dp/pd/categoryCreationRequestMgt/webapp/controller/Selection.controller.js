@@ -121,7 +121,7 @@ sap.ui.define([
                 "tf_flag"           : true,
                 "approval_comment"  : null,
                 "approve_date_time" : new Date(),
-                "update_user_id"    : this.loginUserId
+                "update_user_id"    : "17370CHEM@lgchem.com"
             }, "/PdCategoryApprovalType");
         },
 
@@ -136,7 +136,7 @@ sap.ui.define([
                 "tf_flag"           : true,
                 "approval_comment"  : null,
                 "approve_date_time" : new Date(),
-                "update_user_id"    : this.loginUserId
+                "update_user_id"    : "17370CHEM@lgchem.com"
             }, "/PdCategoryApprovalType");
         },
 
@@ -224,7 +224,7 @@ sap.ui.define([
                 progress_status_code     : progressCode,
                 creator_empno            : oMasterData.creator_empno,
                 create_category_code     : oMasterData.create_category_code,
-                update_user_id           : this.loginUserId,
+                update_user_id           : "17370CHEM@lgchem.com",
                 crud_type_code           : CUType
             };
 
@@ -248,7 +248,7 @@ sap.ui.define([
                     tf_flag : oDetailsData.PdCategoryApprovalType[i].tf_flag,
                     approval_comment : oDetailsData.PdCategoryApprovalType[i].approval_comment,
                     approve_date_time : oDetailsData.PdCategoryApprovalType[i].approve_date_time,
-                    update_user_id : oDetailsData.PdCategoryApprovalType[i].update_user_id,
+                    update_user_id : "17370CHEM@lgchem.com",
                     crud_type_code : CUType
                 });
             }
@@ -340,9 +340,13 @@ sap.ui.define([
 		 * Event handler for cancel page editing
 		 * @public
 		 */
-        onPageCancelButtonPress: function () {
+        onPageCancelButtonPress: function (flag) {
             this.validator.clearValueState(this.byId("midObjectForm"));
-            this._toShowMode();
+            if(flag == "N") {
+                this.onPageNavBackButtonPress.call(this);
+            } else {
+                this._toShowMode();
+            }
         },
 
         /**
@@ -396,7 +400,7 @@ sap.ui.define([
                 "tf_flag"           : null,
                 "approval_comment"  : null,
                 "approve_date_time" : new Date(),
-                "update_user_id"    : this.loginUserId
+                "update_user_id"    : "17370CHEM@lgchem.com"
             }, "/PdCategoryApprovalType");
         },
 
@@ -456,6 +460,7 @@ sap.ui.define([
                 success: function (oData) {
                     //oView.byId("ideaCompany").setValue(oData.company_code);
                     oView.setBusy(false);
+                    v_this._toShowMode();
                 }
             });
             
@@ -580,8 +585,8 @@ sap.ui.define([
                 MessageToast.show("Leaf Category만 선택할 수 있습니다.");
                 return;
             } else {
-                this.byId("searchField").setValue( "[" + row.category_code + " ] " + row.category_name);
-                this.byId("similarCategoryCode").setText( "[" + row.category_code + " ] " + row.category_name);
+                this.byId("searchField").setValue(row.category_code);
+                this.byId("similarCategoryCode").setText(row.category_code);
 
                 this.partCategoryPopupClose();
             }

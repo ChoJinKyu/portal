@@ -203,6 +203,49 @@ sap.ui.define([
                 }
             });
         },
+
+        
+
+		/**
+		 * Event handler for saving page changes
+		 * @public
+		 */
+
+        _onPageLngCheckData: function () {
+            // check master
+            var oMasterModel = this.getModel("master");
+            var oDetailsModel = this.getModel("details");
+            var oDetailsData = oDetailsModel.getData();
+            var oDetailsTable = this.byId("midTable");
+
+            var aCheckLng = [];
+
+            for (var i = 0; i < oDetailsTable.getItems().length; i++) {
+                
+                if ( oDetailsModel.getProperty("/MdCategoryItemLng/"+i)._row_state_ === "C" )
+                {                    
+                    aCheckLng.push(oDetailsTable.getItems()[i].getCells()[1].getSelectedKey() );
+                }             
+            }
+
+            for (var i = 0; i < aCheckLng.length; i++) {
+                for (var j = 0; j < oDetailsTable.getItems().length; j++) {
+                    if ( oDetailsModel.getProperty("/MdCategoryItemLng/"+j)._row_state_ == null )
+                    {                    
+                        if (aCheckLng[i] === oDetailsTable.getItems()[j].getCells()[1].getSelectedKey())
+                        {
+                            MessageToast.show("Language code 중복");
+                            return false;
+                        }
+                    }             
+                }
+                
+            }
+
+            return true;
+
+        },
+
 		/**
 		 * Event handler for saving page changes
 		 * @public
@@ -237,6 +280,9 @@ sap.ui.define([
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
+                        if (!that._onPageLngCheckData()) {
+                            return;
+                        }
                         oView.setBusy(true);
 
                         
@@ -492,11 +538,18 @@ sap.ui.define([
             this.validator.clearValueState(this.byId("midTable"));
             oTransactionManager.setServiceModel(this.getModel());
             
+            setTimeout(this.setPageLayout(), 500);
             //ScrollTop
+            // var oObjectPageLayout = this.getView().byId("page");    
+            // var oFirstSection = this.getView().byId("pageSectionMain");
+            // oObjectPageLayout.scrollToSection(oFirstSection, 0, -500);
+		},
+
+        setPageLayout : function(){ //fragment 없애야함
             var oObjectPageLayout = this.getView().byId("page");
             var oFirstSection = oObjectPageLayout.getSections()[0];
-            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
-		},
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);          
+        },
 
 
 		/* =========================================================== */
@@ -532,21 +585,20 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", !FALSE);
             
-            this.byId("pageCancelButton").setEnabled(!FALSE);
-			this.byId("pageEditButton").setEnabled(FALSE);
+            this.byId("pageCancelButton").setVisible(!FALSE);
+			this.byId("pageEditButton").setVisible(FALSE);
             if (this._sSpmd_character_code == "new"){
-                this.byId("pageDeleteButton").setEnabled(FALSE);
+                this.byId("pageDeleteButton").setVisible(FALSE);
             }else{
-                this.byId("pageDeleteButton").setEnabled(!FALSE);
+                this.byId("pageDeleteButton").setVisible(!FALSE);
             }
-            this.byId("pageSaveButton").setEnabled(!FALSE);
-			this.byId("pageNavBackButton").setEnabled(FALSE);
+            this.byId("pageSaveButton").setVisible(!FALSE);
+			this.byId("pageNavBackButton").setVisible(FALSE);
 
-			this.byId("midTableAddButton").setEnabled(!FALSE);
-			this.byId("midTableDeleteButton").setEnabled(!FALSE);
-            this.byId("midTableSearchField").setEnabled(FALSE);
+			this.byId("midTableAddButton").setVisible(!FALSE);
+			this.byId("midTableDeleteButton").setVisible(!FALSE);
             
-			this.byId("midTable").setMode(sap.m.ListMode.SingleSelectLeft);
+			this.byId("midTable").setMode(sap.m.ListMode.MultiSelect);
 			this._bindMidTable(this.oEditableTemplate, "Edit");
 		},
 
@@ -556,15 +608,14 @@ sap.ui.define([
 			this.byId("page").setSelectedSection("pageSectionMain");
             this.byId("page").setProperty("showFooter", TRUE);
             
-            this.byId("pageCancelButton").setEnabled(!TRUE);
-            this.byId("pageEditButton").setEnabled(TRUE);
-            this.byId("pageDeleteButton").setEnabled(!TRUE);
-            this.byId("pageSaveButton").setEnabled(!TRUE);
-			this.byId("pageNavBackButton").setEnabled(TRUE);
+            this.byId("pageCancelButton").setVisible(!TRUE);
+            this.byId("pageEditButton").setVisible(TRUE);
+            this.byId("pageDeleteButton").setVisible(!TRUE);
+            this.byId("pageSaveButton").setVisible(!TRUE);
+			this.byId("pageNavBackButton").setVisible(TRUE);
 
-			this.byId("midTableAddButton").setEnabled(!TRUE);
-			this.byId("midTableDeleteButton").setEnabled(!TRUE);
-            this.byId("midTableSearchField").setEnabled(TRUE);
+			this.byId("midTableAddButton").setVisible(!TRUE);
+			this.byId("midTableDeleteButton").setVisible(!TRUE);
             
 			this.byId("midTable").setMode(sap.m.ListMode.None);
 			this._bindMidTable(this.oReadOnlyTemplate, "Navigation");
@@ -593,7 +644,8 @@ sap.ui.define([
             //language_code : comboBox
             var oLanguageCode = new ComboBox({
                     selectedKey: "{details>language_code}",
-                    required : true
+                    required : true,
+                    editable: "{= ${details>_row_state_} === 'C' ? true : false}"
                 });
                 oLanguageCode.bindItems({
                     path: 'util>/Code',
@@ -612,8 +664,7 @@ sap.ui.define([
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new ObjectStatus({
-                        icon:{ path:'details>_row_state_', formatter: this.formattericon
-                                }                              
+                        icon:{ path:'details>_row_state_', formatter: this.formattericon }                              
                     }),
                     oLanguageCode,
 					new Input({

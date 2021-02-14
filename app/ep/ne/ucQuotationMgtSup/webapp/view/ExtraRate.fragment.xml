@@ -5,7 +5,7 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:t="sap.ui.table"
     xmlns:layout="sap.ui.layout" >
-    <Dialog id="dialogExtraRate" class="sapUiSmallMargin" title="할증정보" contentWidth="60%"  contentHeight="500px">
+    <Dialog id="dialogExtraRate" class="sapUiSmallMargin" title="할증정보" contentWidth="50%"  contentHeight="500px" afterClose="dialogExtraRateAfterclose">
         <VBox class="sapUiSmallMargin">
             <form:SimpleForm id="popExtraRateForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2" Height="350px">
 <!-- selectedKey="{contModel>/tenant_id}" -->
@@ -77,7 +77,7 @@
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="popApplyExtraRate" width="15rem">
-                                <Label text="할증요율-적용기분" textAlign="Center" width="100%"/>
+                                <Label text="적용할증요율" textAlign="Center" width="100%"/>
                                 <t:template>
                                     <Text text="{popExtraRate>apply_extra_rate}" />
                                 </t:template>

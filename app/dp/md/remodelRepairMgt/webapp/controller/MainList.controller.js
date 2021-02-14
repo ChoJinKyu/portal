@@ -79,18 +79,21 @@ sap.ui.define([
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedListModel(), "list");
+            this.setModel(new ManagedListModel(), "segmentedItem");
 /*
             this._oTPC = new TablePersoController({
                 customDataKey: "remodelRepairMgt",
                 persoService: MainListPersoService
             }).setTable(this.byId("moldMstTable"));
 */
-            this.process.setDrawProcessUI(this, "remodelRepairMgtProcessE", "B", 1);
-            this.process.setDrawProcessUI(this, "remodelRepairMgtProcessS", "B", 1);
+            //this.process.setDrawProcessUI(this, "remodelRepairMgtProcessE", "B", 1);
+            //this.process.setDrawProcessUI(this, "remodelRepairMgtProcessS", "B", 1);
+            
         },
         
         onAfterRendering : function () {
-            //this.byId("pageSearchButton").firePress();
+            this.byId("pageSearchButton").firePress();
+            this._segmentSrch();
 			return;
         },
 
@@ -171,9 +174,36 @@ sap.ui.define([
                 //layout: oNextUIState.layout,
                 //tenantId: rowData.tenant_id,
                 moldId: rowData.mold_id,
-                orgCode: rowData.org_code
+                repairRequestNumber: rowData.repair_request_number
             });
 		},
+
+        _segmentSrch : function (){
+            var oView = this.getView(),
+                oModel = this.getModel("segmentedItem"),
+                codeName = this.getModel('I18N').getText("/ALL");
+
+            var aSearchFilters = [];
+                aSearchFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID));
+                aSearchFilters.push(new Filter("group_code", FilterOperator.EQ, 'DP_MD_REPAIR_PROGRESS_STATUS'));
+
+            oView.setBusy(true);
+            oModel.setTransactionModel(this.getModel("util"));
+            oModel.read("/Code", {
+                filters: aSearchFilters,
+                success: function (oData) {     
+                    oModel.addRecord({
+                        code: ""
+                      ,  code_name: codeName   
+                      ,  group_code: "DP_MD_REPAIR_PROGRESS_STATUS"
+                      ,  parent_code: null
+                      ,  parent_group_code: null
+                      ,  sort_no: "0"
+                    },"/Code",0);
+                    oView.setBusy(false);
+                }
+            });
+        },
 
         /**
          * @private
@@ -301,7 +331,7 @@ sap.ui.define([
                 plant = this.getView().byId("searchPlant" + sSurffix).getSelectedKeys(),
                 requestFromDate = this.getView().byId("searchRequestDate" + sSurffix).getDateValue(),
                 requestToDate = this.getView().byId("searchRequestDate" + sSurffix).getSecondDateValue(),
-                status = this.getView().byId("searchRequestStatus" + sSurffix).getSelectedKey(),
+                status = this.getView().byId("searchStatus" + sSurffix).getSelectedKey(),
                 ecoNumber = this.getView().byId("searchEcoNumber").getValue(),
                 description = this.getView().byId("searchDescription").getValue(),
                 repairType = this.getView().byId("searchRepairType").getSelectedKey(),
@@ -346,7 +376,7 @@ sap.ui.define([
             }
 
             if (requestFromDate || requestToDate) {
-                aTableSearchState.push(new Filter("repair_request_date", FilterOperator.BT, requestFromDate, requestToDate));
+                aTableSearchState.push(new Filter("repair_request_date", FilterOperator.BT, this.getFormatDate(requestFromDate), this.getFormatDate(requestToDate)));
             }
             if (status) {
                 aTableSearchState.push(new Filter("repair_progress_status_code", FilterOperator.EQ, status));
@@ -385,6 +415,15 @@ sap.ui.define([
             }
             return aTableSearchState;
 		},
+
+        getFormatDate: function (date) {
+            var year = date.getFullYear();              //yyyy
+            var month = (1 + date.getMonth());          //M
+            month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+            var day = date.getDate();                   //d
+            day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+            return year + '' + month + '' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+        },
 
         onValueHelpRequested: function (oEvent) {
 

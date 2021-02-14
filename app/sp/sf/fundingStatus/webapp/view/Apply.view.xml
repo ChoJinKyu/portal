@@ -23,13 +23,13 @@
 			<!-- 타이틀 영역 -->
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:expandedHeading>
-					<Title text="신청" wrapping="true" />
+					<Title text="신청 ({viewModel>/Detail/Apply/funding_status_code_name})" wrapping="true" />
 				</uxap:expandedHeading>
 				<uxap:snappedHeading>
-					<Title text="신청" wrapping="true" />
+					<Title text="신청 ({viewModel>/Detail/Apply/funding_status_code_name})" wrapping="true" />
 				</uxap:snappedHeading>
 				<uxap:snappedTitleOnMobile>
-					<Title text="신청" />
+					<Title text="신청 ({viewModel>/Detail/Apply/funding_status_code_name})"/>
 				</uxap:snappedTitleOnMobile>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
@@ -277,8 +277,8 @@
                             adjustLabelSpan="false">
                             <form:content>
                                 <VBox>
-                                    <Label text="담보물 :" required="true"/>
-                                    <Text text="{viewModel>/Detail/Apply/collateral_type_code}" design="Bold"/>
+                                    <Label text="담보물 :"/>
+                                    <Text text="{viewModel>/Detail/Apply/collateral_type_code_name}" design="Bold"/>
                                     <layoutData>
                                         <layout:GridData span="XL6 L6 M12 S12" />
                                     </layoutData>

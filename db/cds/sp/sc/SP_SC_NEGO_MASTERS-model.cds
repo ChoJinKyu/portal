@@ -9,7 +9,7 @@ using {cm as orgTenant} from '../../cm/CM_ORG_TENANT-model';
 using {
     sp.Sc_Award_Type_Code_View,
     sp.Sc_Award_Method_Code_View
-} from '../../sp/sc/SP_SC_REFERENCE_COMMON.model';
+} from '../../sp/sc/SP_SC_REFERENCE_COMMON-model';
 
 
 // using {sp as ScOutcomeCodeView} from '../../sp/sc/SP_SC_NEGO_MASTERS-model';

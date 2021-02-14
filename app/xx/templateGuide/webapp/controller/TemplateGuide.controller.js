@@ -1,15 +1,16 @@
 sap.ui.define([
-		"sap/ui/core/mvc/Controller"
+        "ext/lib/controller/BaseController"
 	],
-	function (Controller) {
+	function (BaseController) {
 		"use strict";
 
-		return Controller.extend("xx.templateGuide.controller.TemplateGuide", {
+		return BaseController.extend("xx.templateGuide.controller.TemplateGuide", {
 			onInit: function () {
                 var that = this;
+
                 var oView = sap.ui.core.mvc.XMLView.create({
-                    viewName : "templateGuideView/FileUploadGuide",
-                    controller : sap.ui.controller("templateGuideController/FileUploadGuide")
+                    viewName : "templateGuideView/FileUploadFragmentGuide",
+                    controller : sap.ui.controller("templateGuideController/FileUploadFragmentGuide")
                 }).then(function(oView){
                     that.getView().byId("mainTabContainer").removeAllContent();
                     that.getView().byId("mainTabContainer").addContent(oView);

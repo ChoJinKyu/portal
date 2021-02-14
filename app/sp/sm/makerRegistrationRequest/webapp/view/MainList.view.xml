@@ -96,10 +96,10 @@
 		</f:header>
 		<f:content>
 			<VBox>
-				<Table id="mainTable" growingScrollToLoad="true" growing="true" sticky="ColumnHeaders,HeaderToolbar" growingThreshold="50" inset="false" items="{path: '/MakerRegistrationRequestView', sorts: {path: 'maker_request_sequence'}}" mode="None">
+				<Table id="mainTable" growingScrollToLoad="true" growing="true" sticky="ColumnHeaders,HeaderToolbar" growingThreshold="50" inset="false" items="{listModel>/results}" mode="None">
 					<headerToolbar>
 						<OverflowToolbar class="sapFDynamicPageAlignContent">
-							<Title text="{I18N>/MAKER_REQUEST_LIST} ({=(${countModel>/count})?${countModel>/count}:0})" level="H2"/>
+							<Title text="{I18N>/MAKER_REQUEST_LIST} ({=${listModel>/results}.length })" level="H2"/>
 							<ToolbarSpacer/>
 							<!-- <Button text="{I18N>/CREATE}" press=".onOpenCreateDialog" />
                             <ToolbarSeparator/> -->
@@ -139,14 +139,14 @@
 					<items>
 						<ColumnListItem type="Navigation" press=".onGoDetail">
 							<cells>
-								<Text text="{maker_request_type_code}"/>
-								<Text text="{=${USER_SESSION>/LANGUAGE_CODE} === 'KO' ? ${requestor_korean_name} : ${requestor_english_name} }"/>
-								<Text text="{=${USER_SESSION>/LANGUAGE_CODE} === 'KO'? ${requestor_department_korean_name} : ${requestor_department_english_name}}" />
-                                <Text text="{path: 'local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { pattern: 'YYYY-MM-dd', UTC: true }}"/>
-								<Text text="{tax_id}"/>
-								<Text text="{maker_local_name}"/>
-								<Text text="{maker_english_name}"/>
-								<tnt:InfoLabel text="{maker_progress_status_name}" colorScheme="{path: 'maker_progress_status_code', formatter: '.onStatusColor'}" displayOnly="true"/>
+								<Text text="{listModel>maker_request_type_code}"/>
+								<Text text="{=${USER_SESSION>/LANGUAGE_CODE} === 'KO' ? ${listModel>requestor_korean_name} : ${listModel>requestor_english_name} }"/>
+								<Text text="{=${USER_SESSION>/LANGUAGE_CODE} === 'KO'? ${listModel>requestor_department_korean_name} : ${listModel>requestor_department_english_name}}" />
+                                <Text text="{path: 'listModel>local_create_dtm', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { pattern: 'YYYY-MM-dd', UTC: true }}"/>
+								<Text text="{listModel>tax_id}"/>
+								<Text text="{listModel>maker_local_name}"/>
+								<Text text="{listModel>maker_english_name}"/>
+								<tnt:InfoLabel text="{listModel>maker_progress_status_name}" colorScheme="{path: 'listModel>maker_progress_status_code', formatter: '.onStatusColor'}" displayOnly="true"/>
 							</cells>
 						</ColumnListItem>
 					</items>

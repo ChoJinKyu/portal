@@ -159,6 +159,7 @@ public class UcContractMgtV4Service implements EventHandler {
                             .append(", BUYER_NAME                        NVARCHAR(240) ")
                             .append(", PURCHASING_DEPARTMENT_CODE        NVARCHAR(50) ")
                             .append(", PURCHASING_DEPARTMENT_NAME        NVARCHAR(240) ")  
+                            .append(", SPECIAL_NOTE                      NCLOB ")  
                             .append(", LOCAL_CREATE_DTM                  SECONDDATE ")
                             .append(", LOCAL_UPDATE_DTM                  SECONDDATE ")
                             .append(", CREATE_USER_ID                    NVARCHAR(255) ")
@@ -232,7 +233,7 @@ public class UcContractMgtV4Service implements EventHandler {
                             .append(", EXTRA_CLASS_NAME                  NVARCHAR(100) ")
                             .append(", EXTRA_NAME                        NVARCHAR(100) ")
                             .append(", BASE_EXTRA_RATE                   DECIMAL ")
-                            .append(", APPLY_EXTRA_RATE                  DECIMAL ")
+                            .append(", APPLY_EXTRA_RATE                  NVARCHAR(10) ")
                             .append(", APPLY_EXTRA_DESC                  NVARCHAR(1000) ")
                             .append(", UPDATE_ENABLE_FLAG                BOOLEAN ")   
                             .append(", LOCAL_CREATE_DTM                  SECONDDATE ")
@@ -250,7 +251,7 @@ public class UcContractMgtV4Service implements EventHandler {
         String v_sql_dropableS = "DROP TABLE #LOCAL_TEMP_S";
         String v_sql_dropableE = "DROP TABLE #LOCAL_TEMP_E";
 
-        String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_M VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_M VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_D VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insertTableS = "INSERT INTO #LOCAL_TEMP_S VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String v_sql_insertTableE = "INSERT INTO #LOCAL_TEMP_E VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -304,7 +305,8 @@ public class UcContractMgtV4Service implements EventHandler {
                     v_inRow.get("buyer_empno"),                    
                     v_inRow.get("buyer_name"),                     
                     v_inRow.get("purchasing_department_code"),     
-                    v_inRow.get("purchasing_department_name"),     
+                    v_inRow.get("purchasing_department_name"),  
+                    v_inRow.get("special_note"),        
                     v_inRow.get("local_create_dtm"),               
                     v_inRow.get("local_update_dtm"),               
                     v_inRow.get("create_user_id"),                 
@@ -446,6 +448,7 @@ public class UcContractMgtV4Service implements EventHandler {
                 v_row.setBuyerName(v_rs.getString("buyer_name"));
                 v_row.setPurchasingDepartmentCode(v_rs.getString("purchasing_department_code"));
                 v_row.setPurchasingDepartmentName(v_rs.getString("purchasing_department_name"));
+                v_row.setSpecialNote(v_rs.getString("special_note"));
                 // v_row.setLocalCreateDtm(v_rs.getDate("local_create_dtm").toInstant());
                 // v_row.setLocalUpdateDtm(v_rs.getDate("local_update_dtm").toInstant());
                 v_row.setLocalCreateDtm(null);
@@ -545,7 +548,8 @@ public class UcContractMgtV4Service implements EventHandler {
                 v_row.setExtraClassName(v_rs.getString("extra_class_name"));
                 v_row.setExtraName(v_rs.getString("extra_name"));
                 v_row.setBaseExtraRate(v_rs.getBigDecimal("base_extra_rate"));
-                v_row.setApplyExtraRate(v_rs.getBigDecimal("apply_extra_rate"));
+                // v_row.setApplyExtraRate(v_rs.getBigDecimal("apply_extra_rate"));
+                v_row.setApplyExtraRate(v_rs.getString("apply_extra_rate"));
                 v_row.setApplyExtraDesc(v_rs.getString("apply_extra_desc"));
                 v_row.setUpdateEnableFlag(v_rs.getBoolean("update_enable_flag"));
                 // v_row.setLocalCreateDtm(v_rs.getDate("local_create_dtm").toInstant());

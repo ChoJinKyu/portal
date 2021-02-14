@@ -74,7 +74,7 @@ sap.ui.define([
             this.getView().setModel(new ManagedModel(), "amount");
             
             var schFilter = [new Filter("approval_number", FilterOperator.EQ, this.approval_number),
-                             new Filter("tenant_id", FilterOperator.EQ, this.getSessionUserInfo().TENANT_ID)];
+                             new Filter("tenant_id", FilterOperator.EQ, 'L2101')];
             
             var oModel = this.getModel('amount'),
                 poAmount = 0,
@@ -614,8 +614,8 @@ sap.ui.define([
                         approval_number : this.approval_number, 
                         pay_sequence : String(item.pay_sequence), 
                         split_pay_type_code : item.split_pay_type_code,
-                        pay_rate : item.pay_rate,
-                        pay_price : item.pay_price
+                        pay_rate : item.pay_rate === null ? item.pay_rate : item.pay_rate.replaceAll(",",""),
+                        pay_price : item.pay_price === null ? item.pay_price : item.pay_price.replaceAll(",","")
                     });
                 }.bind(this));
 

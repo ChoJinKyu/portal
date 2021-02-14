@@ -1,7 +1,8 @@
-namespace cm;
 
 using util from './util/util-model';
 using {cm as detail} from './CM_CODE_DTL-model';
+
+namespace cm;
 
 entity Code_Lng {
 

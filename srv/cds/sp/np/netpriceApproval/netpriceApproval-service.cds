@@ -52,17 +52,7 @@ service NpApprovalService {
                    ssi.LANGUAGE_CODE as language_code
              , key cam.tenant_id
              ,     cam.company_code
-             ,     cam.org_type_code
-             ,     cam.org_code	                    /* operating org */
              , key cam.approval_number
-
-             , (SELECT org.org_name
-                  FROM CM_PUR_OPERATION_ORG  org
-                 WHERE org.tenant_id     = cam.tenant_id
-                   AND org.company_code  = cam.company_code
-                   AND org.org_type_code = cam.org_type_code
-                   AND org.org_code      = cam.org_code
-			   ) AS org_name : String
 
              , cam.approval_title                   /* title */
              , cam.approve_status_code              /* status */
@@ -93,7 +83,7 @@ service NpApprovalService {
                    AND cd.language_cd = ssi.LANGUAGE_CODE
                	   AND cd.code        = pam.outcome_code
 			   )  AS outcome_name : String
-             , cam.request_date                 /* request date */
+             , TO_VARCHAR(TO_DATE(cam.request_date,'YYYYMMDD'), ssi.DATE_FORMAT_TYPE)  AS request_date : String      /* request date */
              , pam.nego_number                  /* ??? negotiation no ??? */
  
              , pam.local_create_dtm AS creation_date   /* creation date */

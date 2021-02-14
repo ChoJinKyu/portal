@@ -25,14 +25,14 @@
                     </HBox>
                 </f:heading>
                 <f:expandedContent>
-                    <HBox>
+                    <!--<HBox>
                         <Text text=""/>
                     </HBox>
                     <HBox>
                         <Title text="{I18N>/PROCESS}"/>
                     </HBox>
                     <HBox id="remodelRepairMgtProcessE">
-                    </HBox>
+                    </HBox>-->
                     <form:SimpleForm id="pageSearchFormE" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
@@ -81,7 +81,7 @@
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox>
+                            <!--<VBox>
                                 <Label text="{I18N>/STATUS}"></Label>
                                 <SegmentedButton id="searchRequestStatusE" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                                     <items>
@@ -100,7 +100,7 @@
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
-                            </VBox>
+                            </VBox>-->
                             <VBox>
                                 <!--<Label text="LG {I18N>/DATE}" labelFor="searchLGDateE"></Label>
                                     <DateRangeSelection id="searchLGDateE" width="100%" change="creationDateChange"/>-->
@@ -109,35 +109,43 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Receipt estimation {I18N>/STATUS}"></Label>
-                                <SegmentedButton id="searchReceiptEstimationStatusE" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
+                                <Label text="{I18N>/STATUS}"></Label><!--Receipt estimation -->
+                                <!--<SegmentedButton id="searchStatusE" selectedKey="" class="sapUiSmallMarginBottom" width="100%"
+                                    items="{
+                                            path : 'util>/Code',
+                                            filters : [
+                                                {path : 'tenant_id', operator : 'EQ', value1 : 'L2101'},
+                                                {path : 'group_code', operator : 'EQ', value1 : 'DP_MD_REPAIR_PROGRESS_STATUS'}
+                                            ],
+                                            sorter: { path: 'sort_no'}
+                                        }">
                                     <items>
-                                        <SegmentedButtonItem text="All" key="" />
-                                        <SegmentedButtonItem text="품의중" key="DEV_RCV" width="4em" />
-                                        <SegmentedButtonItem text="견적요청중" key="DEV_REQ" width="6em" />
-                                        <SegmentedButtonItem text="LGE 검토요청" key="DEV_RCV" width="7em" />
-                                        <SegmentedButtonItem text="업체 합의요청" key="DEV_REQ" width="7em" />
-                                        <SegmentedButtonItem text="업체 재등록중" key="DEV_REQ" width="8em" />
-                                        <SegmentedButtonItem text="업체 합의완료" key="DEV_RCV" width="8em" />
-                                        <SegmentedButtonItem text="수선항목등록" key="DEV_REQ" width="7em" />
+                                        <SegmentedButtonItem key="{util>code}" text="{util>code_name}" width="auto"/>
+                                    </items>
+                                </SegmentedButton>-->
+                                <SegmentedButton id="searchStatusE" selectedKey="" class="sapUiSmallMarginBottom" width="100%"
+                                    items="{path : 'segmentedItem>/Code',
+                                              sorter: {path: 'sort_no'}}">
+                                    <items>
+                                        <SegmentedButtonItem width="auto" text="{segmentedItem>code_name}" key="{segmentedItem>code}"/>
                                     </items>
                                 </SegmentedButton>
                                 <layoutData>
-                                    <layout:GridData span="XL6 L6 M12 S12" />
+                                    <layout:GridData span="XL12 L12 M12 S12" />
                                 </layoutData>
                             </VBox>
                         </form:content>
                     </form:SimpleForm>
                 </f:expandedContent>
                 <f:snappedContent>
-                    <HBox>
+                    <!--<HBox>
                         <Text text=""/>
                     </HBox>
                     <HBox>
                         <Title text="{I18N>/PROCESS}"/>
                     </HBox>
                     <HBox id="remodelRepairMgtProcessS">
-                    </HBox>
+                    </HBox>-->
                     <form:SimpleForm id="pageSearchFormS" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
                         <form:content>
                             <VBox>
@@ -187,7 +195,7 @@
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
                             </VBox>
-                            <VBox>
+                            <!--<VBox>
                                 <Label text="Request {I18N>/STATUS}"></Label>
                                 <SegmentedButton id="searchRequestStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                                     <items>
@@ -206,7 +214,7 @@
                                 <layoutData>
                                     <layout:GridData span="XL3 L3 M6 S12" />
                                 </layoutData>
-                            </VBox>
+                            </VBox>-->
                             <VBox>
                                 <!--<Label text="LG {I18N>/DATE}" labelFor="searchLGDateS"></Label>
                                     <DateRangeSelection id="searchLGDateS" width="100%" change="creationDateChange"/>-->
@@ -215,8 +223,8 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Receipt estimation {I18N>/STATUS}"></Label>
-                                <SegmentedButton id="searchReceiptEstimationStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
+                                <Label text="{I18N>/STATUS}"></Label><!--Receipt estimation -->
+                                <!--<SegmentedButton id="searchReceiptEstimationStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%" selectionChange="onStatusSelectionChange" >
                                     <items>
                                         <SegmentedButtonItem text="All" key="" />
                                         <SegmentedButtonItem text="품의중" key="DEV_RCV" width="4em" />
@@ -227,9 +235,16 @@
                                         <SegmentedButtonItem text="업체 합의완료" key="DEV_RCV" width="8em" />
                                         <SegmentedButtonItem text="수선항목등록" key="DEV_REQ" width="7em" />
                                     </items>
+                                </SegmentedButton>-->
+                                <SegmentedButton id="searchStatusS" selectedKey="" class="sapUiSmallMarginBottom" width="100%"
+                                    items="{path : 'segmentedItem>/Code',
+                                              sorter: {path: 'sort_no'}}">
+                                    <items>
+                                        <SegmentedButtonItem width="auto" text="{segmentedItem>code_name}" key="{segmentedItem>code}"/>
+                                    </items>
                                 </SegmentedButton>
                                 <layoutData>
-                                    <layout:GridData span="XL6 L6 M12 S12" />
+                                    <layout:GridData span="XL12 L12 M12 S12" />
                                 </layoutData>
                             </VBox>
                         </form:content>
@@ -363,7 +378,7 @@
         <f:content>
             <table:Table id="mainTable"
                     selectionMode="None"
-                    fixedColumnCount="12"
+                    fixedColumnCount="9"
                     visibleRowCountMode="Auto"
                     rows="{list>/RepairMstAssetView}"
                     cellClick=".onMainTableItemPress"
@@ -390,7 +405,7 @@
                         <Label text=" "/>
                         <table:template>
                             <CheckBox id="chk" selected="{list>chk}" select=".setIdSelect"
-                            visible="{= (${list>set_progress_status} === 'DEV_REQ' || ${list>repair_progress_status_code} === 'DEV_RCV') ? true : false }" />
+                            visible="{= (${list>repair_progress_status_code} === 'RS' || ${list>repair_progress_status_code} === 'RS') ? true : false }" />
                         </table:template>
                     </table:Column>
                     <table:Column id="moldCompanyColumn" width="4em" hAlign="Center">
@@ -405,16 +420,16 @@
                             <Text id="org_code" text="{list>org_code}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="13em">
+                    <table:Column width="7em">
                         <Label text="Order Sheet No" wrapping="true"/>
                         <table:template>
                             <Text text="{list>repair_request_number}"/>
                         </table:template>
                     </table:Column>
                     <table:Column width="4em">
-                        <Label text="{I18N>/TYPE}" wrapping="true"/>
+                        <Label text="{I18N>/TYPE}" wrapping="true" hAlign="Center"/>
                         <table:template>
-                            <Text text="{list>repair_type_code}"/>
+                            <Text text="{list>repair_type_name}"/>
                         </table:template>
                     </table:Column>
                     <table:Column id="assetNoColumn" width="12em">
@@ -435,16 +450,23 @@
                             <Text id="mold_sequence" text="{list>mold_sequence}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldRequestDateColumn" width="10em" hAlign="Center">
-                        <Label text="Request {I18N>/DATE}" wrapping="true"/>
-                        <table:template>
-                            <Text id="repair_request_date" text="{path: 'list>repair_request_date', formatter: '.dateFormatter.toDateString'}"/>
-                        </table:template>
-                    </table:Column>
-                    <table:Column id="moldStatusColumn" width="13em">
+                    <table:Column id="moldStatusColumn" width="10em">
                         <Label text="{I18N>/STATUS}" wrapping="true"/>
                         <table:template>
                             <Text id="repair_progress_status_name" text="{list>repair_progress_status_name}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column id="moldRequestDateColumn" width="8em" hAlign="Center">
+                        <Label text="Request {I18N>/DATE}" wrapping="true"/>
+                        <table:template>
+                            <!--<Text id="repair_request_date" text="{path: 'list>repair_request_date', formatter: '.dateFormatter.toDateString'}"/>-->
+                            <Text id="repair_request_date" text="{list>repair_request_date}"/>
+                        </table:template>
+                    </table:Column>
+                    <table:Column width="7em" hAlign="Center">
+                        <Label text="Remodel/Repair Esti. Cost" wrapping="true"/>
+                        <table:template>
+                            <Button type="Transparent" text="Cost" />
                         </table:template>
                     </table:Column>
                     <table:Column width="13em">
@@ -462,10 +484,10 @@
                     <table:Column id="moldDescriptionColumn" width="10em">
                         <Label text="{I18N>/DESCRIPTION}" wrapping="true"/>
                         <table:template>
-                            <Text id="class_desc" text="{list>class_desc}"/>
+                            <Text id="spec_name" text="{list>spec_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="5em" hAlign="Center">
+                    <table:Column width="10em" hAlign="Center">
                         <Label text="Prod Supplier"/>
                         <table:template>
                             <Text text="{list>production_supplier_name}"/>
@@ -495,7 +517,7 @@
                             <Text text="{list>family_part_numbers}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="13em">
+                    <table:Column width="6em" hAlign="Center">
                         <Label text="Tool Type" wrapping="true"/>
                         <table:template>
                             <Text text="{list>mold_item_type_name}"/>
@@ -513,13 +535,13 @@
                             </core:Icon>
                         </table:template>
                     </table:Column>
-                    <table:Column id="moldProjectNameColumn" width="20em">
+                    <table:Column id="moldProjectNameColumn" width="10em">
                         <Label text="Factor" wrapping="true"/>
                         <table:template>
                             <Text id="repair_factor" text="{list>repair_factor}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="13em">
+                    <table:Column width="10em">
                         <Label text="Specification Number" wrapping="true"/>
                         <table:template>
                             <Text text="{list>eco_number}"/>
@@ -543,13 +565,13 @@
                             <Text text="{path: 'list>repair_amount', formatter: '.numberFormatter.toNumberString'}" textAlign="Right" />
                         </table:template>
                     </table:Column>
-                    <table:Column width="13em">
+                    <table:Column width="6em">
                         <Label text="Investment/Cost" wrapping="true"/>
                         <table:template>
-                            <Text text="{list>investment_ecst_type_code}"/>
+                            <Text text="{list>investment_ecst_type_name}"/>
                         </table:template>
                     </table:Column>
-                    <table:Column width="13em">
+                    <table:Column width="10em">
                         <Label text="Account" wrapping="true"/>
                         <table:template>
                             <Text text="{list>account_code}"/>

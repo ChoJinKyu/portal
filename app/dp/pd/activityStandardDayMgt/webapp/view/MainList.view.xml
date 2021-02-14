@@ -45,12 +45,12 @@
                             <ComboBox
                                 id="searchCompanyCombo"
                                 width="100%"
-                                selectedKey=""
+                                selectedKey="LGESL"
                                 items="{
-                                    path: '/CompanyView'
+                                    path: 'org>/Org_Company'
                                 }">
                                 <items>
-                                    <core:Item key="{company_code}" text="{company_code}" />
+                                    <core:Item key="{org>company_code}" text="{org>company_code}: {org>company_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -68,7 +68,7 @@
                                     path: '/OrgView'
                                 }">
                                 <items>
-                                    <core:Item key="{org_code}" text="{org_code}" />
+                                    <core:Item key="{org_code}" text="{org_code}: {org_name}" />
                                 </items>
                             </ComboBox>
                             <layoutData>
@@ -79,7 +79,7 @@
                             <Label text="{I18N>/PART} {I18N>/CATEGORY}: " labelFor="searchPCField"></Label>
                             <HBox>
                                 <SearchField id="searchPCField" search=".onSearchPartCategory" />
-                                <Input id="searchPCInput" placeholder="Input data" visible ="false"></Input>
+                                <Input id="searchPCInput" visible ="false"></Input>
                             </HBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S12" />
@@ -109,7 +109,7 @@
                         </VBox>
                         <VBox>
                             <Label text="{I18N>/ACTIVITY_NAME}: " labelFor="searchActivity"></Label>
-                            <Input id="searchActivity" placeholder="Activity Name"></Input>
+                            <Input id="searchActivity"></Input>
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M2 S12" />
                             </layoutData>
@@ -146,46 +146,49 @@
                     </OverflowToolbar>
                 </headerToolbar>
                 <columns>
-                    <Column id="mainColumnCom" minScreenWidth="Tablet" hAlign="Center" width="6rem">
+                    <Column id="mainColumnCom" minScreenWidth="Tablet" hAlign="Center" width="6%">
                         <Text text="{I18N>/COMPANY}" />
                     </Column>
-                    <Column id="mainColumnAU" minScreenWidth="Tablet" hAlign="Center" width="6rem">
+                    <Column id="mainColumnAU" minScreenWidth="Tablet" hAlign="Center" width="6%">
                         <Text text="{I18N>/ORG_CODE}" />
                     </Column>
-                    <Column id="mainColumnPC" minScreenWidth="Tablet" hAlign="Center">
+                    <Column id="mainColumnAUName" minScreenWidth="Tablet" hAlign="Left" width="5%">
+                        <Text text="{I18N>/ORG_NAME}" />
+                    </Column>
+                    <Column id="mainColumnPC" minScreenWidth="Tablet" hAlign="Left" width="9%">
                         <Text text="{I18N>/PART} {I18N>/CATEGORY}" />
                     </Column>
-                    <Column id="mainColumnPT" minScreenWidth="Tablet" hAlign="Center">
+                    <Column id="mainColumnPT" minScreenWidth="Tablet" hAlign="Left" width="8%">
                         <Text text="{I18N>/PROJECT_TYPE}" />
                     </Column>
-                    <Column id="mainColumnAC" minScreenWidth="Tablet" hAlign="Center">
+                    <Column id="mainColumnAC" minScreenWidth="Tablet" hAlign="Center" width="10%">
                         <Text text="{I18N>/ACTIVITY_CODE}" />
                     </Column>
-                    <Column id="mainColumnAN" minScreenWidth="Tablet" hAlign="Center">
+                    <Column id="mainColumnAN" minScreenWidth="Tablet" hAlign="Left" width="9%">
                         <Text text="{I18N>/ACTIVITY_NAME}" />
                     </Column>
-                    <Column id="mainColumnUseYn" minScreenWidth="Tablet" hAlign="Center" width="5rem">
+                    <Column id="mainColumnUseYn" minScreenWidth="Tablet" hAlign="Center" width="5%">
                         <Text text="{I18N>/USE_FLAG}" />
                     </Column>
-                    <Column id="mainColumnS" minScreenWidth="Tablet" hAlign="Right" width="5rem">
+                    <Column id="mainColumnS" minScreenWidth="Tablet" hAlign="Right" width="3%">
                         <Text text="s" />
                     </Column>
-                    <Column id="mainColumnA" minScreenWidth="Tablet" hAlign="Right" width="5rem">
+                    <Column id="mainColumnA" minScreenWidth="Tablet" hAlign="Right" width="3%">
                         <Text text="a" />
                     </Column>
-                    <Column id="mainColumnB" minScreenWidth="Tablet" hAlign="Right" width="5rem">
+                    <Column id="mainColumnB" minScreenWidth="Tablet" hAlign="Right" width="3%">
                         <Text text="b" />
                     </Column>
-                    <Column id="mainColumnC" minScreenWidth="Tablet" hAlign="Right" width="5rem">
+                    <Column id="mainColumnC" minScreenWidth="Tablet" hAlign="Right" width="3%">
                         <Text text="c" />
                     </Column>
-                    <Column id="mainColumnD" minScreenWidth="Tablet" hAlign="Right" width="5rem">
+                    <Column id="mainColumnD" minScreenWidth="Tablet" hAlign="Right" width="3%">
                         <Text text="d" />
                     </Column>
-                    <Column id="mainColumnUDM" minScreenWidth="Tablet" hAlign="Right">
+                    <Column id="mainColumnUDM" minScreenWidth="Tablet" hAlign="Center" width="12%">
                         <Text text="{I18N>/LOCAL_UPDATE_DTM}" />
                     </Column>
-                    <Column id="mainColumnUUI" minScreenWidth="Tablet" hAlign="Center" width="6rem">
+                    <Column id="mainColumnUUI" minScreenWidth="Tablet" hAlign="Center" width="6%">
                         <Text text="{I18N>/UPDATE_USER_ID}" />
                     </Column>
                 </columns>
@@ -194,6 +197,7 @@
                         <cells>
                             <Text text="{list>company_code}" />
                             <Text text="{list>org_code}" />
+                            <Text text="{list>org_name}" />
                             <Text text="{list>category_name}" />
                             <Text text="{list>part_project_type_name}" />
                             <Text text="{list>activity_code}" />

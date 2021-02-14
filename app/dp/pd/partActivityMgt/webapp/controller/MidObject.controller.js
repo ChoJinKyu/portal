@@ -19,10 +19,11 @@ sap.ui.define([
 	"sap/m/ComboBox",
     "sap/ui/core/Item",
     "sap/m/ObjectStatus",
-    "sap/f/LayoutType"
+    "sap/f/LayoutType",
+    "dp/util/control/ui/ActivityCodeDialog"
 ], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
 	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
-	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus, LayoutType) {
+	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus, LayoutType, ActivityCodeDialog) {
 		
 	"use strict";
 
@@ -68,11 +69,11 @@ sap.ui.define([
 			this.setModel(oViewModel, "midObjectView");
 			
 			this.setModel(new ManagedModel(), "master");
-            this.setModel(new ManagedListModel(), "languages");            
+            // this.setModel(new ManagedListModel(), "languages");            
 
 			oTransactionManager = new TransactionManager();
 			oTransactionManager.addDataModel(this.getModel("master"));
-            oTransactionManager.addDataModel(this.getModel("languages"));            
+            // oTransactionManager.addDataModel(this.getModel("languages"));            
 
 			this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
             
@@ -145,34 +146,57 @@ sap.ui.define([
 		 */
         onPageDeleteEditButtonPress: function(){
 			this.onPageSaveButtonPress("D");
-		},
+        },
+        
+        onDialogActivityPress : function(){
 
-		onLngTableAddButtonPress: function(){
-			var oTable = this.byId("lngTable"),
-				oLanguagesModel = this.getModel("languages");
-			oLanguagesModel.addRecord({
-				"tenant_id": this._sTenantId,
-				"activity_code": this._sActivityCode,
-				"language_code": "",
-				"code_name": ""			
-			}, "/PdPartBaseActivityLng", 0);
-		},
+            if(!this.oSearchActivityDialog){
+                this.oSearchActivityDialog = new ActivityCodeDialog({
+                    title: "Select Activity",
+                    multiSelection: false,
+                    items: {
+                        filters: [
+                            new Filter("tenant_id", FilterOperator.EQ, "L2101")
+                        ]
+                    }
+                });
+                this.oSearchActivityDialog.attachEvent("apply", function(oEvent){ 
+                    console.log(oEvent.getParameter("item"));
+                    this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_code);
+                    this.byId("searchActivityName").setText(oEvent.getParameter("item").activity_name);
+                }.bind(this));
+            }
 
-		onLngTableDeleteButtonPress: function(){
-			var oTable = this.byId("lngTable"),
-				oModel = this.getModel("languages"),
-				aItems = oTable.getSelectedItems(),
-				aIndices = [];
-			aItems.forEach(function(oItem){
-				aIndices.push(oModel.getProperty("/PdPartBaseActivityLng").indexOf(oItem.getBindingContext("languages").getObject()));
-			});
-			aIndices = aIndices.sort(function(a, b){return b-a;});
-			aIndices.forEach(function(nIndex){
-				//oModel.removeRecord(nIndex);
-				oModel.markRemoved(nIndex);
-			});
-			oTable.removeSelections(true);
-		},
+            this.oSearchActivityDialog.open();
+
+        },
+
+		// onLngTableAddButtonPress: function(){
+		// 	var oTable = this.byId("lngTable"),
+		// 		oLanguagesModel = this.getModel("languages");
+		// 	oLanguagesModel.addRecord({
+		// 		"tenant_id": this._sTenantId,
+		// 		"activity_code": this._sActivityCode,
+		// 		"language_code": "",
+		// 		"code_name": ""			
+		// 	}, "/PdPartBaseActivityLng", 0);
+		// },
+
+		// onLngTableDeleteButtonPress: function(){
+		// 	var oTable = this.byId("lngTable"),
+		// 		oModel = this.getModel("languages"),
+		// 		aItems = oTable.getSelectedItems(),
+		// 		aIndices = [];
+		// 	aItems.forEach(function(oItem){
+		// 		aIndices.push(oModel.getProperty("/PdPartBaseActivityLng").indexOf(oItem.getBindingContext("languages").getObject()));
+		// 	});
+		// 	aIndices = aIndices.sort(function(a, b){return b-a;});
+		// 	aIndices.forEach(function(nIndex){
+		// 		//oModel.removeRecord(nIndex);
+		// 		oModel.markRemoved(nIndex);
+		// 	});
+		// 	oTable.removeSelections(true);
+		// },
 		
 		/**
 		 * Event handler for saving page changes
@@ -182,19 +206,19 @@ sap.ui.define([
            
             var oView = this.getView();
             var oMasterModel = this.getModel("master");
-            var oLanguagesModel = this.getModel("languages");
+            // var oLanguagesModel = this.getModel("languages");
             
             var v_this = this;            
                 
             var oMasterData = oMasterModel.oData;
-            var oLngData = oLanguagesModel.oData;            
+            // var oLngData = oLanguagesModel.oData;            
 
-            var oLngTable = this.byId("lngTable");            
+            // var oLngTable = this.byId("lngTable");            
            
             var CUType = CUDType;
 
-            if(CUType !== "D" ){
-                if(!oMasterModel.isChanged() && !oLanguagesModel.isChanged()) {
+            if(CUType === "U" ){
+                if(!oMasterModel.isChanged()) {
                         MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
                         return;
                 }
@@ -215,13 +239,13 @@ sap.ui.define([
             var activeFlg = "false";           
 
             console.log(oMasterData.attachment_mandatory_flag);
-            if (oMasterData.attachment_mandatory_flag === true) {
+            if (oMasterData.attachment_mandatory_flag === "true") {
                 attachmentMandatoryFlag = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
             }
-            if (oMasterData.approve_mandatory_flag === true) {
+            if (oMasterData.approve_mandatory_flag === "true") {
                 approveMandatoryFlag = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
             }
-            if (oMasterData.active_flag === true) {
+            if (oMasterData.active_flag === "true") {
                 activeFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
             }            
 
@@ -246,31 +270,40 @@ sap.ui.define([
 
                     update_user_id  : this.loginUserId,
                     crud_type_code  : CUType
-            };           
+            };
             
+            console.log(pdMstVal);
+            
+
+            // var input = {
+            //     inputData : {
+            //         crud_type : CUType,
+            //         pdMst : pdMstVal,
+            //         pdDtl: []
+            //     }
+            // };
 
             var input = {
                 inputData : {
                     crud_type : CUType,
-                    pdMst : pdMstVal,
-                    pdDtl: []
+                    pdMst : pdMstVal
                 }
             };
 
-            var pdDtlVal = [];
+            // var pdDtlVal = [];
             
-            for (var i = 0; i <  oLngTable.getItems().length; i++) {
-                pdDtlVal.push({
-                    tenant_id: oLngData.PdPartBaseActivityLng[i].tenant_id,
-                    activity_code: oLngData.PdPartBaseActivityLng[i].activity_code,
-                    language_cd: oLngData.PdPartBaseActivityLng[i].language_cd,
-                    code_name: oLngData.PdPartBaseActivityLng[i].code_name,
-                    update_user_id: this.loginUserId,                        
-                    crud_type_code: oLngData.PdPartBaseActivityLng[i]._row_state_
-                });
-            }
+            // for (var i = 0; i <  oLngTable.getItems().length; i++) {
+            //     pdDtlVal.push({
+            //         tenant_id: oLngData.PdPartBaseActivityLng[i].tenant_id,
+            //         activity_code: oLngData.PdPartBaseActivityLng[i].activity_code,
+            //         language_cd: oLngData.PdPartBaseActivityLng[i].language_cd,
+            //         code_name: oLngData.PdPartBaseActivityLng[i].code_name,
+            //         update_user_id: this.loginUserId,                        
+            //         crud_type_code: oLngData.PdPartBaseActivityLng[i]._row_state_
+            //     });
+            // }
 
-            input.inputData.pdDtl = pdDtlVal;                      
+            // input.inputData.pdDtl = pdDtlVal;                      
 
             if(this.validator.validate(this.byId("page")) !== true) return;
 
@@ -302,6 +335,12 @@ sap.ui.define([
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     }else {
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                        // 저장 후 재조회
+                                        v_this.getModel("contModel").setProperty("/createMode", false);                
+                                        v_this._bindView("/pdPartactivityTemplateView(tenant_id='" + v_this._sTenantId + "',company_code='" + v_this._sCompanyCode
+                                        + "',org_type_code='" + v_this._sOrgTypeCode + "',org_code='" + v_this._sOrgCode + "',part_project_type_code='" + v_this._sPartProjectTypeCode 
+                                        + "',activity_code='" + v_this._sActivityCode + "')");
+
                                         v_this._toShowMode();                                
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                     }
@@ -349,26 +388,26 @@ sap.ui.define([
                 + "',org_type_code='" + this._sOrgTypeCode + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
                 + "',activity_code='" + this._sActivityCode + "')");
                 
-                oView.setBusy(true);
+                // oView.setBusy(true);
                 
-                var oLanguagesModel = this.getModel("languages");                
+                // var oLanguagesModel = this.getModel("languages");                
 
-                oLanguagesModel.setTransactionModel(this.getModel());               
+                // oLanguagesModel.setTransactionModel(this.getModel());               
 
-                oLanguagesModel.read("/PdPartBaseActivityLng", {
-					filters: [
-						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-						new Filter("activity_code", FilterOperator.EQ, this._sActivityCode),
-					],
-					success: function(oData){
-						oView.setBusy(false);
-					}
-                });
+                // oLanguagesModel.read("/PdPartBaseActivityLng", {
+				// 	filters: [
+				// 		new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+				// 		new Filter("activity_code", FilterOperator.EQ, this._sActivityCode),
+				// 	],
+				// 	success: function(oData){
+				// 		oView.setBusy(false);
+				// 	}
+                // });
                 
                 this._toShowMode();
             }
-            this.validator.clearValueState(this.byId("pageSubSection1"));
-            this.validator.clearValueState(this.byId("lngTable"));
+            this.validator.clearValueState(this.byId("page"));
+            // this.validator.clearValueState(this.byId("lngTable"));
         },
 
 		/* =========================================================== */
@@ -376,20 +415,20 @@ sap.ui.define([
 		/* =========================================================== */
 
 		_onMasterDataChanged: function(oEvent){
-			if(this.getModel("contModel").getProperty("/createMode") == true){
-				var oMasterModel = this.getModel("master");
-                var oLanguagesModel = this.getModel("languages");                
-                var sTenantId = oMasterModel.getProperty("/tenant_id");
-                var sActivityCode = oMasterModel.getProperty("/activity_code");
+			// if(this.getModel("contModel").getProperty("/createMode") == true){
+			// 	var oMasterModel = this.getModel("master");
+            //     var oLanguagesModel = this.getModel("languages");                
+            //     var sTenantId = oMasterModel.getProperty("/tenant_id");
+            //     var sActivityCode = oMasterModel.getProperty("/activity_code");
 
-                var olanguagesData = oLanguagesModel.getData();
-				olanguagesData.PdPartBaseActivityLng.forEach(function(oItem, nIndex){
-					oLanguagesModel.setProperty("/PdPartBaseActivityLng/"+nIndex+"/tenant_id", sTenantId);
-					oLanguagesModel.setProperty("/PdPartBaseActivityLng/"+nIndex+"/activity_code", sActivityCode);
-                });               
+            //     var olanguagesData = oLanguagesModel.getData();
+			// 	olanguagesData.PdPartBaseActivityLng.forEach(function(oItem, nIndex){
+			// 		oLanguagesModel.setProperty("/PdPartBaseActivityLng/"+nIndex+"/tenant_id", sTenantId);
+			// 		oLanguagesModel.setProperty("/PdPartBaseActivityLng/"+nIndex+"/activity_code", sActivityCode);
+            //     });               
                 
-				//oLanguagesModel.setData(olanguagesData);
-			}
+			// 	//oLanguagesModel.setData(olanguagesData);
+			// }
 		},
 
 		/**
@@ -407,8 +446,15 @@ sap.ui.define([
             this._sPartProjectTypeCode = oArgs.partProjectTypeCode;
             this._sActivityCode = oArgs.activityCode;
             // this._sCategoryGroupCode = oArgs.categoryGroupCode;
+            this._slayout = oArgs.layout;
             
             this._fnInitControlModel();
+
+            //Flexible 넓은 화면 레이아웃 일 때 Main List 화면 테이블의 컬럼을 줄이기 위한 설정
+            if(this._slayout === "TwoColumnsMidExpanded" ){
+                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("local_update_dtm").setVisible(false);
+                this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("update_user_id").setVisible(false);
+            }
 
 			if(this._sActivityCode == "new"){
 				//It comes Add button pressed from the before page.
@@ -422,21 +468,22 @@ sap.ui.define([
                     "org_type_code": "",
                     "org_code": "",
                     "part_project_type_code": "",
-                    "activity_code": "new",
+                    "activity_code": "",
                     "category_group_code": "",
                     "attachment_mandatory_flag": true,
-                    "approve_mandatory_flag": true					
+                    "approve_mandatory_flag": true,
+                    "active_flag": true			
                 }, "/pdPartactivityTemplateView");
                 
-				var oLanguagesModel = this.getModel("languages");
-				oLanguagesModel.setTransactionModel(this.getModel());
-				oLanguagesModel.setData([], "/PdPartBaseActivityLng");
-				oLanguagesModel.addRecord({
-					"tenant_id": this._sTenantId,
-					"activity_code": this._sActivityCode,
-					"language_code": "",
-					"code_name": ""			
-                }, "/PdPartBaseActivityLng");
+				// var oLanguagesModel = this.getModel("languages");
+				// oLanguagesModel.setTransactionModel(this.getModel());
+				// oLanguagesModel.setData([], "/PdPartBaseActivityLng");
+				// oLanguagesModel.addRecord({
+				// 	"tenant_id": this._sTenantId,
+				// 	"activity_code": this._sActivityCode,
+				// 	"language_code": "",
+				// 	"code_name": ""			
+                // }, "/PdPartBaseActivityLng");
                 
 				this._toEditMode();
 			}else{
@@ -449,21 +496,22 @@ sap.ui.define([
                 + "',org_type_code='" + this._sOrgTypeCode + "',org_code='" + this._sOrgCode + "',part_project_type_code='" + this._sPartProjectTypeCode 
                 + "',activity_code='" + this._sActivityCode + "')");
                 
-				oView.setBusy(true);
-				var oLanguagesModel = this.getModel("languages");
-				oLanguagesModel.setTransactionModel(this.getModel());
-				oLanguagesModel.read("/PdPartBaseActivityLng", {
-					filters: [
-						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-						new Filter("activity_code", FilterOperator.EQ, this._sActivityCode),
-					],
-					success: function(oData){
-						oView.setBusy(false);
-					}
-                });
+				// oView.setBusy(true);
+				// var oLanguagesModel = this.getModel("languages");
+				// oLanguagesModel.setTransactionModel(this.getModel());
+				// oLanguagesModel.read("/PdPartBaseActivityLng", {
+				// 	filters: [
+				// 		new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+				// 		new Filter("activity_code", FilterOperator.EQ, this._sActivityCode),
+				// 	],
+				// 	success: function(oData){
+				// 		oView.setBusy(false);
+				// 	}
+                // });
                 
 				this._toShowMode();
-			}
+            }
+            this.validator.clearValueState(this.byId("page"));
 			oTransactionManager.setServiceModel(this.getModel());
         },
         
@@ -504,8 +552,8 @@ sap.ui.define([
             this.byId("pageSaveButton").setEnabled(true);
             this.byId("pageCancelButton").setEnabled(true);
             this.byId("pageDeleteButton").setEnabled(true);
-			this.byId("lngTableAddButton").setEnabled(true);
-            this.byId("lngTableDeleteButton").setEnabled(true);                      
+			// this.byId("lngTableAddButton").setEnabled(true);
+            // this.byId("lngTableDeleteButton").setEnabled(true);                      
             
             this.getView().getModel("contModel").setProperty("/editMode", true);
             this.getView().getModel("contModel").setProperty("/readMode", false);
@@ -518,8 +566,8 @@ sap.ui.define([
             this.byId("pageSaveButton").setEnabled(false);
             this.byId("pageCancelButton").setEnabled(false);
             this.byId("pageDeleteButton").setEnabled(false);
-			this.byId("lngTableAddButton").setEnabled(false);
-            this.byId("lngTableDeleteButton").setEnabled(false);           
+			// this.byId("lngTableAddButton").setEnabled(false);
+            // this.byId("lngTableDeleteButton").setEnabled(false);           
 
             this.getView().getModel("contModel").setProperty("/editMode", false);
             this.getView().getModel("contModel").setProperty("/readMode", true);

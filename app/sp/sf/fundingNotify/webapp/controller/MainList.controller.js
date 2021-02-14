@@ -35,10 +35,16 @@ sap.ui.define([
 		 */
         onInit: function () {
             var oViewModel,
+                searchModel,
                 oResourceBundle = this.getResourceBundle();
 
 			var oMultilingual = new Multilingual();
-			this.setModel(oMultilingual.getModel(), "I18N");
+            this.setModel(oMultilingual.getModel(), "I18N");
+
+            searchModel = new JSONModel({
+                sTitle:"",
+                sSearchDateS: []
+            });
 
             // Model used to manipulate control states
             oViewModel = new JSONModel({
@@ -46,6 +52,7 @@ sap.ui.define([
                 mainListTableTitle: oResourceBundle.getText("mainListTableTitle"),
                 tableNoDataText: oResourceBundle.getText("tableNoDataText")
             });
+            this.setModel(searchModel, "sSearch");
             this.setModel(oViewModel, "mainListView");
 
             // Add the mainList page to the flp routing history
@@ -226,22 +233,23 @@ sap.ui.define([
         },
 
         _getSearchStates: function () {
-            var sTitle, searchDateS, aSearchFilters = [],
-                sFromDate = this.byId("searchDateS").getFrom(),
-                sToDate = this.byId("searchDateS").getTo();
-            
-            if (!!(sTitle = this.byId("searchTitle").getValue())) {
+            var sTitle, aSearchFilters = [],
+                sFromDate = this.getModel("sSearch").getProperty("/sSearchDateS/value1"),
+                sToDate = this.getModel("sSearch").getProperty("/sSearchDateS/value2");
+                
+            if (!!(sTitle = this.getModel("sSearch").getProperty("/sTitle"))) {
                 aSearchFilters.push(new Filter("tolower(funding_notify_title)", FilterOperator.Contains, "'"+sTitle.toLowerCase().replace("'","''")+"'"));
-            };
+            }
 
             if(!!sFromDate || !!sToDate){
                 aSearchFilters.push(new Filter({
                     filters: [
-                        new Filter("funding_notify_start_date", FilterOperator.BT, sFromDate, new Date(sToDate.toString())),
-                        new Filter("funding_notify_end_date", FilterOperator.BT, sFromDate, new Date(sToDate.toString()))
+                        new Filter("funding_notify_start_date", FilterOperator.LE, sToDate.setHours("09", "00", "00", "00")),
+                        new Filter("funding_notify_end_date", FilterOperator.GE,  sFromDate.setHours("09", "00", "00", "00"))
                     ],
-                    // and : false
+                    and : true
                 }));
+                        
             }
             
             return aSearchFilters;
@@ -255,7 +263,15 @@ sap.ui.define([
                 persoService: MainListPersoService,
                 hasGrouping: true
             }).activate();
+        }, 
+
+        _utcTimeZon: function (oDate) {
+
+
+
+            return oDate;
         }
+
 
     });
 });

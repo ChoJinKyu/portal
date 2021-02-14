@@ -16,6 +16,9 @@ using {dp.Mm_Material_Group_Lng as mtlGroupLng} from  '../../../../../db/cds/dp/
 // 자재구매그룹
 using {dp.Mm_Material_Org as mtlOrg } from '../../../../../db/cds/dp/mm/DP_MM_MATERIAL_ORG-model';
 
+// 구매그룹/자재구매그룹명
+using {cm.Org_Purchasing_Group as purGroup} from '../../../../../db/cds/cm/CM_ORG_PURCHASING_GROUP-model';
+
 using {op.Pu_Pr_Account as prAcct}   from '../../../../../db/cds/op/pu/pr/OP_PU_PR_ACCOUNT-model';
 using {op.Pu_Pr_Dtl_His as prDtlHis} from '../../../../../db/cds/op/pu/pr/OP_PU_PR_DTL_HIS-model';
 
@@ -26,7 +29,7 @@ using {op.Pu_Cctr_Mst as cctrMst}    from '../../../../../db/cds/op/pu/cctr/OP_P
 using {op.Pu_Order_Mst as orderMst}  from '../../../../../db/cds/op/pu/order/OP_PU_ORDER_MST-model';
 using {op.Pu_Wbs_Mst as wbsMst}      from '../../../../../db/cds/op/pu/wbs/OP_PU_WBS_MST-model';
 
-// Sess
+// Session
 using {cm.Spp_User_Session_View as sppUserSession} from '../../../../../db/cds/cm/util/CM_SPP_USER_SESSION_VIEW-model';
 
 
@@ -62,7 +65,8 @@ service PrReviewMgtService {
             ,dtl.pr_desc  // 구매요청내역
             ,dtl.pr_unit  // 구매요청단위
             ,dtl.pr_quantity  // 구매요청수량
-            ,case when dtl.closing_flag = true then 0 else dtl.pr_quantity end as remain_quantity : Decimal(30, 10)  // 잔여수량
+            ,dtl.pr_quantity - dtl.closing_quantity as remain_quantity : Decimal(30, 10)  // 잔여수량
+            //,case when dtl.closing_flag = true then 0 else dtl.pr_quantity end as remain_quantity : Decimal(30, 10)  // 잔여수량  -- by dokim
             ,dtl.delivery_request_date  // 납품요청일자
             ,dtl.buyer_empno  // 구매담당자사번
             ,cm_get_emp_name_func(dtl.tenant_id, dtl.buyer_empno) as buyer_name : String(240)  // 구매담당자명
@@ -162,13 +166,15 @@ service PrReviewMgtService {
             ,dtl.buyer_department_code  // 구매담당자부서
             ,cm_get_dept_name_func(dtl.tenant_id, dtl.buyer_department_code) as buyer_department_name : String(240)  // 구매담당자부서
             ,dtl.purchasing_group_code  // 구매그룹코드
-            ,dtl.purchasing_group_code as purchasing_group_name  // 구매그룹코드  -- by dokim
-            ,mtl.purchasing_group_code as material_purchasing_group_code  // 자재구매그룹
-            ,mtl.purchasing_group_code as material_purchasing_group_name  // 자재구매그룹  -- by dokim
+            ,ifnull(purGr.purchasing_group_name, dtl.purchasing_group_code) as purchasing_group_name : String(30)  // 구매그룹명
+            ,mtlPur.purchasing_group_code as material_purchasing_group_code  // 자재구매그룹
+            ,ifnull(mtlPurGr.purchasing_group_name, mtlPur.purchasing_group_code) as material_purchasing_group_name : String(30)  // 자재구매그룹명
 
             ,dtl.pr_quantity  // 구매요청수량
             ,dtl.pr_unit  // 구매요청단위
-            ,case when dtl.closing_flag = true then 0 else dtl.pr_quantity end as remain_quantity : Decimal(30, 10)  // 잔여수량  -- by dokim
+            ,dtl.closing_quantity  // 마감수량
+            ,dtl.pr_quantity - dtl.closing_quantity as remain_quantity : Decimal(30, 10)  // 잔여수량
+            //,case when dtl.closing_flag = true then 0 else dtl.pr_quantity end as remain_quantity : Decimal(30, 10)  // 잔여수량  -- by dokim
 
             ,dtl.estimated_price  // 단가예산
             ,dtl.currency_code  // 통화코드
@@ -225,13 +231,25 @@ service PrReviewMgtService {
         on  mtlGr.tenant_id = dtl.tenant_id
         and mtlGr.material_group_code = dtl.material_group_code
 
+        // 구매그룹명
+        left outer join purGroup purGr
+        on  purGr.tenant_id             = dtl.tenant_id
+        and purGr.purchasing_group_code = dtl.purchasing_group_code
+        and purGr.use_flag              = true
+
         // 자재구매그룹
-        left outer join mtlOrg mtl
-        on  mtl.tenant_id     = dtl.tenant_id
-        and mtl.company_code  = dtl.company_code
-        and mtl.org_type_code = dtl.org_type_code
-        and mtl.org_code      = dtl.org_code
-        and mtl.material_code = dtl.material_code
+        left outer join mtlOrg mtlPur
+        on  mtlPur.tenant_id     = dtl.tenant_id
+        and mtlPur.company_code  = dtl.company_code
+        and mtlPur.org_type_code = dtl.org_type_code
+        and mtlPur.org_code      = dtl.org_code
+        and mtlPur.material_code = dtl.material_code
+
+        // 자재구매그룹명
+        left outer join purGroup mtlPurGr
+        on  mtlPurGr.tenant_id             = mtlPur.tenant_id
+        and mtlPurGr.purchasing_group_code = mtlPur.purchasing_group_code
+        and mtlPurGr.use_flag              = true
     ;
 
    // 구매요청 검토/접수 상세 - 계정정보
@@ -257,6 +275,7 @@ service PrReviewMgtService {
             ,acct.pr_quantity  // 구매요청수량
             ,acct.distrb_rate  // 배분율
             ,dtl.account_assignment_category_code  // 계정지정범주코드
+
         from prAcct acct
         inner join prDtl dtl
         on  dtl.tenant_id      = acct.tenant_id
@@ -264,15 +283,12 @@ service PrReviewMgtService {
         and dtl.pr_number      = acct.pr_number
         and dtl.pr_item_number = acct.pr_item_number
 
-       // Master Table에 아직 Data가 없다. 있을때 inner join으로 변경하자.  -- by dokim
-       //inner join acctMst acctMst
         left outer join acctMst acctMst
         on  acctMst.tenant_id     = acct.tenant_id
         and acctMst.company_code  = acct.company_code
         and acctMst.language_code = 'KO'
         and acctMst.account_code  = acct.account_code
 
-       //inner join cctrMst cctrMst
         left outer join cctrMst cctrMst
         on  cctrMst.tenant_id     = acct.tenant_id
         and cctrMst.company_code  = acct.company_code
@@ -280,19 +296,16 @@ service PrReviewMgtService {
         and cctrMst.cctr_code     = acct.cctr_code
         and $now between cctrMst.effective_start_date and cctrMst.effective_end_date
 
-       //inner join wbsMst wbsMst
         left outer join wbsMst wbsMst
         on  wbsMst.tenant_id    = acct.tenant_id
         and wbsMst.company_code = acct.company_code
         and wbsMst.wbs_code = acct.wbs_code
 
-       //inner join assetMst assetMst
         left outer join assetMst assetMst
         on  assetMst.tenant_id    = acct.tenant_id
         and assetMst.company_code = acct.company_code
         and assetMst.asset_number = acct.asset_number
 
-       //inner join orderMst orderMst
         left outer join orderMst orderMst
         on  orderMst.tenant_id    = acct.tenant_id
         and orderMst.company_code = acct.company_code
@@ -311,11 +324,15 @@ service PrReviewMgtService {
             ,hist.local_update_dtm  // 변경일자 - 로컬수정시간
             ,hist.job_type_code  // 업무유형코드
             ,cm_get_code_name_func(hist.tenant_id, 'OP_PR_REVIEW_JOB_TYPE_CODE', hist.job_type_code, 'KO') as job_type_name : String(240)  // 업무유형명
-            ,hist.before_desc  // 이전내역
-            ,hist.after_desc  // 이후내역
+            //,hist.before_desc  // 이전내역
+            //,hist.after_desc  // 이후내역
+            ,ifnull(cm_get_code_name_func(hist.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', hist.before_desc, 'KO'), hist.before_desc) as before_desc : String(240)  // 이전내역
+            ,ifnull(cm_get_code_name_func(hist.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', hist.after_desc, 'KO'), hist.after_desc) as after_desc : String(240)  // 이후내역
+
             ,hist.remark AS processed_reason  // 처리사유
             ,hist.update_user_id as worker_empno  // 처리자사번
             ,cm_get_emp_name_func(hist.tenant_id, hist.update_user_id) as worker_name : String(240)  // 처리자명
+
         from prDtlHis hist
         inner join prDtl dtl
         on  dtl.tenant_id      = hist.tenant_id

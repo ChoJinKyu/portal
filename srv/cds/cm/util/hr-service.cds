@@ -8,9 +8,11 @@ namespace cm.util;
 service HrService {
 
     @readonly
-    view Employee @(restrict: [
-        { grant: 'READ', where: 'tenant_id = $user.TENANT_ID'}
-    ])as
+    view Employee 
+    // @(restrict: [
+    //     { grant: 'READ', where: 'tenant_id = $user.TENANT_ID'}
+    // ])
+    as
         select
             key e.tenant_id,
             key e.employee_number,
@@ -28,13 +30,29 @@ service HrService {
             on e.employee_number = u.employee_number;
 
     @readonly
-    view Department @(restrict: [
-        { grant: 'READ', where: 'tenant_id = $user.TENANT_ID'}
-    ])as
+    view Department 
+    // @(restrict: [
+    //     { grant: 'READ', where: 'tenant_id = $user.TENANT_ID'}
+    // ])
+    as
         select
             key d.tenant_id,
             key d.department_id,
                 d.department_local_name
         from Dept as d;
+
+    @readonly
+    entity Employee_Entity as select from employee mixin {
+        DeptInfo: Association to Dept on department_id = DeptInfo.department_id and tenant_id = DeptInfo.tenant_id;
+    } into {
+        tenant_id,
+        employee_number,
+        user_local_name,
+        email_id,
+        mobile_phone_number,
+        job_title,
+        DeptInfo.department_local_name,
+        DeptInfo.department_id
+    }
 
 }

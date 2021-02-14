@@ -193,7 +193,7 @@
                                         </items>
                                     </SegmentedButton>
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                        <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData> 
                                 </VBox>
                                 <VBox id="v_general_sd_exception_flag">
@@ -210,7 +210,7 @@
                                         </items>
                                     </SegmentedButton>
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                        <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData> 
                                 </VBox> 
                                 <VBox id="v_general_maker_material_code_mngt_flag">
@@ -227,16 +227,16 @@
                                         </items>
                                     </SegmentedButton>
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                        <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData> 
                                 </VBox>                                   
-                                <VBox id="v_general_vendor_pool_apply_exception_flag">
+                                <!-- <VBox id="v_general_vendor_pool_apply_exception_flag">
                                     <Label text="{I18N>/VP_EXCEPTION_FLAG}" design="Bold" required="true" width="8rem"/> 
-                                        <!-- <Switch id="general_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
+                                        <Switch id="general_vendor_pool_apply_exception_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
                                             </layoutData>
-                                        </Switch>  -->
+                                        </Switch> 
                                     <SegmentedButton id="general_vendor_pool_apply_exception_flag" >
                                         <items>
                                             <SegmentedButtonItem key="true" text="Yes" />
@@ -244,9 +244,9 @@
                                         </items>
                                     </SegmentedButton>
                                     <layoutData>
-                                        <layout:GridData span="XL1 L1 M1 S12" />
+                                        <layout:GridData span="XL2 L2 M2 S12" />
                                     </layoutData> 
-                                </VBox>                                                                       
+                                </VBox>                                                                        -->
                                 <VBox id="v_general_equipment_grade_code">
                                     <Label text="{I18N>/REVIEW_GRADE}" design="Bold"/> 
                                         <HBox>
@@ -355,27 +355,27 @@
                                     </table:template>
                                 </table:Column>
                                 
-                                <table:Column label="{I18N>/SUPPLIER_NAME}" width="8em" filterProperty="supplier_local_name">
+                                <table:Column label="{I18N>/SUPPLIER_NAME}" hAlign="Center" width="14em" filterProperty="supplier_local_name">
                                     <table:template>
                                         <Text text="{suplist>supplier_local_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/SUPPLIER_NAME}" width="10em" filterProperty="supplier_english_name">
+                                <table:Column label="{I18N>/SUPPLIER_NAME}" hAlign="Center" width="14em" filterProperty="supplier_english_name">
                                     <table:template>
                                         <Text text="{suplist>supplier_english_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="Supplier Name(Eng)" width="0em" filterProperty="supplier_company_code">
+                                <table:Column label="Supplier Name(Eng)" hAlign="Center" width="0em" filterProperty="supplier_company_code">
                                     <table:template>
                                         <Text text="{suplist>supplier_company_code}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/COMPANY}" width="8em" filterProperty="supplier_company_name">
+                                <table:Column label="{I18N>/COMPANY}" hAlign="Center" width="8em" filterProperty="supplier_company_name">
                                     <table:template>
                                         <Text text="{suplist>supplier_company_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="거래상태" width="8em" filterProperty="supplier_status_code">
+                                <table:Column label="거래상태" hAlign="Center" width="8em" filterProperty="supplier_status_code">
                                     <table:template>
                                         <Text text="{suplist>inactive_status_code}" wrapping="false" />
                                     </table:template>
@@ -385,7 +385,7 @@
                                         <Text text="{suplist>inactive_status_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>                                 -->
-                                <table:Column label="{I18N>/EVAL_CONTROL_FLAG}" width="8em" filterProperty="supeval_control_flag">
+                                <table:Column label="{I18N>/EVAL_CONTROL_FLAG}" hAlign="Center" width="8em" filterProperty="supeval_control_flag">
                                     <table:template>
                                         <Switch id="suptable_supeval_control_flag" state="{suplist>supeval_control_flag}" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
@@ -395,7 +395,7 @@
                                         <!-- <Text text="{suplist>supeval_control_flag}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/EVAL_CONTROL_START_DATE}" width="10em" filterProperty="supeval_control_start_date">
+                                <table:Column label="{I18N>/EVAL_CONTROL_START_DATE}" hAlign="Center" width="10em" filterProperty="supeval_control_start_date">
                                     <table:template>
                                         <!-- <DatePicker  
                                         placeholder="Date" 
@@ -421,7 +421,7 @@
                                         <!-- <Text text="{suplist>supeval_control_start_date}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/EVAL_CONTROL_END_DATE}" width="10em" filterProperty="supeval_control_end_date">
+                                <table:Column label="{I18N>/EVAL_CONTROL_END_DATE}" hAlign="Center" width="10em" filterProperty="supeval_control_end_date">
                                     <table:template>
                                     <!-- <DatePicker 
                                      value="{ path: 'suplist>supeval_control_end_date', type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yyyyMMdd' } }" 
@@ -442,7 +442,7 @@
                                         
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/RM_CONTROL_FLAG}" width="8em" filterProperty="supplier_rm_control_flag">
+                                <table:Column label="{I18N>/RM_CONTROL_FLAG}" hAlign="Center" width="8em" filterProperty="supplier_rm_control_flag">
                                     <table:template>
                                         <Switch id="suptable_supplier_rm_control_flag" state="{suplist>supplier_rm_control_flag}" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
@@ -452,28 +452,28 @@
                                         <!-- <Text text="{suplist>supplier_rm_control_flag}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/BASIC_PORTION}" width="8em" filterProperty="supplier_base_portion_rate">
+                                <!-- <table:Column label="{I18N>/BASIC_PORTION}" width="8em" filterProperty="supplier_base_portion_rate">
                                     <table:template>
                                         <Input id="suptable_supplier_base_portion_rate" placeholder="" value="{suplist>supplier_base_portion_rate}"></Input> 
                                         
                                     </table:template>
-                                </table:Column>
-                                <table:Column label="{I18N>/USE_FLAG}" width="8em" filterProperty="vendor_pool_mapping_use_flag">
+                                </table:Column> -->
+                                <table:Column label="{I18N>/USE_FLAG}" hAlign="Center" width="8em" filterProperty="vendor_pool_mapping_use_flag">
                                     <table:template>
-                                        <Switch id="suptable_vendor_pool_mapping_use_flag" state="{suplist>vendor_pool_mapping_use_flag}" customTextOn="Yes" customTextOff="No">
+                                        <!-- <Switch id="suptable_vendor_pool_mapping_use_flag" state="{suplist>vendor_pool_mapping_use_flag}" customTextOn="Yes" customTextOff="No">
                                             <layoutData>
                                                 <FlexItemData growFactor="1" />
                                             </layoutData>
-                                        </Switch>                                     
-                                        <!-- <Text text="{suplist>vendor_pool_mapping_use_flag}" wrapping="false" /> -->
+                                        </Switch>                                      -->
+                                        <Text text="{suplist>vendor_pool_mapping_use_flag}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/REGISTER_REASON}" width="8em" filterProperty="register_reason">
+                                <!-- <table:Column label="{I18N>/REGISTER_REASON}" width="8em" filterProperty="register_reason">
                                     <table:template>
                                         <Text text="{sppList>register_reason}" wrapping="false" />
                                     </table:template>
-                                </table:Column>
-                                <table:Column label="{I18N>/REG_DATE}" width="8em" filterProperty="local_update_dtm">
+                                </table:Column> -->
+                                <table:Column label="{I18N>/REG_DATE}" hAlign="Center" width="8em" filterProperty="local_update_dtm">
                                     <table:template>
                                     <!-- <DatePicker  
                                         placeholder="Date" 
@@ -484,7 +484,7 @@
                                         <Text  text="{path: 'suplist>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"/>
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="" width="0em" filterProperty="approval_number">
+                                <table:Column label="" width="0em" hAlign="Center" filterProperty="approval_number">
                                     <table:template>
                                         <Text text="{suplist>approval_number}" wrapping="false" />
                                     </table:template>
@@ -524,7 +524,7 @@
                                         }" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/MATERIAL_CODE}" width="20%" filterProperty="material_code">
+                                <table:Column label="{I18N>/MATERIAL_CODE}" hAlign="Center"  width="20%" filterProperty="material_code">
                                     <table:template>
                                         <!-- <lib-m:CodePicker id="material_code"
                                             placeholder="Enter a material name"
@@ -549,22 +549,22 @@
                                             />                                        
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/MATERIAL_SPEC}" width="50%" filterProperty="material_desc">
+                                <table:Column label="{I18N>/MATERIAL_SPEC}" hAlign="Center" width="50%" filterProperty="material_desc">
                                     <table:template>
                                         <Text text="{matlist>material_desc}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="Use Flag" width="0em" filterProperty="vendor_pool_mapping_use_flag">
+                                <table:Column label="Use Flag" hAlign="Center" width="0em" filterProperty="vendor_pool_mapping_use_flag">
                                     <table:template>
                                         <Text text="{matlist>vendor_pool_mapping_use_flag}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/REGISTER_REASON}" width="15%" filterProperty="register_reason">
+                                <!-- <table:Column label="{I18N>/REGISTER_REASON}" width="15%" filterProperty="register_reason">
                                     <table:template>
                                         <Text text="{matlist>register_reason}" wrapping="false" />
                                     </table:template>
-                                </table:Column>
-                                <table:Column label="{I18N>/REG_DATE}" width="15%" filterProperty="local_update_dtm">
+                                </table:Column> -->
+                                <table:Column label="{I18N>/REG_DATE}" hAlign="Center" width="15%" filterProperty="local_update_dtm">
                                     <table:template>
                                         <!-- <DatePicker  
                                             placeholder="Date" 
@@ -575,7 +575,7 @@
                                         <!-- <Text text="{matlist>local_update_dtm}" wrapping="false" /> -->
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="" width="0em" filterProperty="approval_number">
+                                <table:Column label="" width="0em" hAlign="Center" filterProperty="approval_number">
                                     <table:template>
                                         <Text text="{matlist>approval_number}" wrapping="false" />
                                     </table:template>
@@ -618,7 +618,7 @@
                                         }" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/EMPLOYEE_NAME}" width="20%" filterProperty="user_local_name">
+                                <table:Column label="{I18N>/EMPLOYEE_NAME}" hAlign="Center" width="20%" filterProperty="user_local_name">
                                     <table:template>
                                         <!-- <lib-m:CodePicker id="user_local_name"
                                             placeholder="Enter a vendor_pool_person_empno"
@@ -653,18 +653,18 @@
                                         <Text text="{manlist>user_english_name}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/USER_POSITION}" width="20%" filterProperty="job_title">
+                                <table:Column label="{I18N>/USER_POSITION}" hAlign="Center" width="20%" filterProperty="job_title">
                                     <table:template>
                                         <Text text="{manlist>job_title}" wrapping="false" />
                                     </table:template>
                                 </table:Column>    
-                                <table:Column label="담당자역할" width="20%" filterProperty="vendor_pool_person_role_text">
+                                <!-- <table:Column label="담당자역할" width="20%" filterProperty="vendor_pool_person_role_text">
                                     <table:template>
                                         <Input id="vendor_pool_person_role_text" placeholder="Input data" value="{manlist>vendor_pool_person_role_text}"></Input> 
 
                                     </table:template>
-                                </table:Column>                                                            
-                                <table:Column label="{I18N>/DEPARTMENT}" width="20%" filterProperty="department_korean_name">
+                                </table:Column>                                                             -->
+                                <table:Column label="{I18N>/DEPARTMENT}" hAlign="Center" width="40%" filterProperty="department_korean_name">
                                     <table:template>
                                         <Text text="{manlist>department_local_name}" wrapping="false" />
                                     </table:template>
@@ -690,7 +690,7 @@
                                         <Text text="{manlist>vendor_pool_mapping_use_flag}" wrapping="false" />
                                     </table:template>
                                 </table:Column>
-                                <table:Column label="{I18N>/REG_DATE}" width="20%" filterProperty="local_update_dtm">
+                                <table:Column label="{I18N>/REG_DATE}" hAlign="Center" width="20%" filterProperty="local_update_dtm">
                                     <table:template>
                                         <Text  text="{path: 'manlist>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}"/>
                                         <!-- <Text text="{manlist>local_update_dtm}" wrapping="false" /> -->

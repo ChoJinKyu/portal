@@ -1,0 +1,44 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	class="sapUiSizeCompact" 
+    xmlns:html="http://www.w3.org/1999/xhtml">
+    <UploadCollection
+        busyIndicatorDelay="0"
+        fileType="bmp,gif,jpg,jpeg,png,tif,doc,pdf,ppt,xls,xlsx,htm,txt,text"
+        typeMissmatch="onTypeMissmatch"
+        maximumFileSize="10"
+        fileSizeExceed="onFileSizeExceed"
+        multiple="true"
+        change="onChange"
+        uploadUrl="srv-api/cm/fileupload/api/v1/singleUpload"
+        beforeUploadStarts="onBeforeUploadStarts"
+        uploadComplete="onUploadComplete"
+        fileDeleted="onFileDeleted"
+        items="{
+            path : 'fileList>/records'
+        }">
+        <items>
+            <UploadCollectionItem
+                documentId="{fileList>fileId}"
+                fileName="{fileList>fileName}"
+                thumbnailUrl="{path : 'fileList>fileExt', formatter : '._getTypeIcon'}"
+                enableEdit="false"
+                visibleEdit="false"
+                enableDelete="true"
+                visibleDelete="true"
+                selected="true"
+                press="onFileDownload">
+                <attributes>
+                    <ObjectAttribute title="{I18N>/REGISTER}{I18N>/DATE_TIME}" text="{fileList>uploadDate}" />
+                    <ObjectAttribute title="{I18N>/FILE}{I18N>/SIZE}" text="{path : 'fileList>fileSize', formatter : '._formatAttribute'}" />
+                </attributes>
+                <statuses>
+                    <ObjectStatus title="{I18N>/STATUS}"
+                        text="{= ${fileList>state} !== 'Error' ? ${I18N>/UPLOAD} + ' ' + ${I18N>/COMPLETE} : ${I18N>/UPLOAD} + ' ' + ${I18N>/ERROR} }"
+                        state="{fileList>state}" />
+                </statuses>
+            </UploadCollectionItem>
+        </items>
+    </UploadCollection>
+</core:FragmentDefinition>

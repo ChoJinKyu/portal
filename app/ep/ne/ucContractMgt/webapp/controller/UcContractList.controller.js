@@ -23,8 +23,10 @@ sap.ui.define([
     "cm/util/control/ui/CmDialogHelp",
     "sp/util/control/ui/SupplierDialog",
     "ep/util/controller/EpBaseController"
+    // "ep/util/model/ViewModel"
 ], function (BaseController, Validator, JSONModel, DateFormatter, TablePersoController, UcContractListPersoService, Fragment, NumberFormatter, Sorter,
-    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox, CmDialogHelp, SupplierDialog, EpBaseController) {
+    Filter, FilterOperator, MessageBox, MessageToast, Dialog, DialogType, Button, ButtonType, Text, Label, Input, VBox,
+    CmDialogHelp, SupplierDialog, EpBaseController) {
     "use strict";
 
     return BaseController.extend("ep.ne.ucContractMgt.controller.UcContractList", {
@@ -43,6 +45,12 @@ sap.ui.define([
 		 */
         onInit: function () {
 
+            // this.setModel(new ViewModel(), "viewModel");
+
+            // JSONModel.prototype.setProperty =  function(sPath, oValue, oContext, bAsyncUpdate) {
+            //     console.log("##ViewModel setProperty Call##");
+            // }
+
             this.getRouter().getRoute("mainPage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this._oTPC = new TablePersoController({
@@ -59,6 +67,7 @@ sap.ui.define([
             this.getView().byId("searchEndDate").setSecondDateValue(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 365));
 
         },
+
 
         onRenderedFirst: function () {
             this.byId("pageSearchButton").firePress();
@@ -140,17 +149,22 @@ sap.ui.define([
 
         onTableItemPress: function (oEvent) {
 
-            // var oViewModel = this.getModel('viewModel');
-            // var sPath = oEvent.getSource().getBindingContextPath();
-            // console.log("sPath=", oEvent.getSource().getBindingContextPath());
-            // var oRecord = oViewModel.getProperty(sPath);
+            console.log("oEvent.getSource=", oEvent.getSource());
 
-            // this.getRouter().navTo("detailPage", {
-            //     tenantId: oRecord.tenant_id,
-            //     companyCode: oRecord.company_code,
-            //     netPriceContractDocumentNo: oRecord.net_price_contract_document_no,
-            //     netPriceContractDegree: oRecord.net_price_contract_degree,
-            // }, true);
+            var oViewModel = this.getModel('viewModel');
+
+            var bindingContext = oEvent.getParameters().rowBindingContext;
+            if (bindingContext) {
+                var sPath = oEvent.getParameters().rowBindingContext.getPath();
+                // console.log("sPath=", sPath);
+                var oRecord = oViewModel.getProperty(sPath);
+                // console.log("oRecord=", oRecord);
+
+                this.getRouter().navTo("detailPage", {
+                    netPriceContractDocumentNo: oRecord.net_price_contract_document_no,
+                    netPriceContractDegree: oRecord.net_price_contract_degree,
+                }, true);
+            }
         },
 
 		/**
@@ -228,7 +242,7 @@ sap.ui.define([
                 oViewData = oViewModel.getProperty("/list"),
                 oSelected = oTable.getSelectedIndices();
 
-                console.log("oViewData=", oViewData);
+            console.log("oViewData=", oViewData);
 
             var loiNumberArr = [];
 
@@ -426,7 +440,7 @@ sap.ui.define([
                 }));
             }
             if (searchSupplierName) {
-                aSearchFilters.push(new Filter("supplier_code", FilterOperator.EQ, searchSupplierName));
+                aSearchFilters.push(new Filter("supplier_code", FilterOperator.Contains, searchSupplierName));
             }
             console.log("aSearchFilters==", aSearchFilters);
             return aSearchFilters;

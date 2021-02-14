@@ -1,7 +1,7 @@
 using { dp as repairMstAssetView } from '../../../../../db/cds/dp/md/DP_MD_REPAIR_MST_ASSET_VIEW-model';
 using { dp as repairItem } from '../../../../../db/cds/dp/md/DP_MD_REPAIR_ITEM-model';
+using { dp as moldMstAssetSpecView } from '../../../../../db/cds/dp/md/DP_MD_MST_ASSET_SPEC_VIEW-model';
 using { dp as moldMst } from '../../../../../db/cds/dp/md/DP_MD_MST-model';
-using { dp as moldAsset } from '../../../../../db/cds/dp/md/DP_MD_ASSET-model';
 using { dp as moldMstSpecView } from '../../../../../db/cds/dp/md/DP_MD_MST_SPEC_VIEW-model';
 
 using {cm as orgMapping} from '../../../../../db/cds/cm/CM_PUR_ORG_TYPE_MAPPING-model';
@@ -13,8 +13,7 @@ service RemodelRepairMgtService {
 
     entity RepairMstAssetView as projection on repairMstAssetView.Md_Repair_Mst_Asset_View;
     entity RepairItem as projection on repairItem.Md_Repair_Item;
-    entity MoldMasters as projection on moldMst.Md_Mst;
-    entity MoldAsset as projection on moldAsset.Md_Asset;
+    entity MoldMstAssetSpecView as projection on moldMstAssetSpecView.Md_Mst_Asset_Spec_View;
     entity MoldMasterSpec as projection on moldMstSpecView.Md_Mst_Spec_View;
 
     view Divisions as

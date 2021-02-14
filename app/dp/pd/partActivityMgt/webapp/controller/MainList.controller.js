@@ -195,6 +195,10 @@ sap.ui.define([
 		 * @private
 		 */
         _onRoutedThisPage: function () {
+
+            this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("local_update_dtm").setVisible(true);
+            this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("update_user_id").setVisible(true);
+
             this.getModel("mainListViewModel").setProperty("/headerExpanded", true);
             this.byId("pageSearchButton").firePress();
         },

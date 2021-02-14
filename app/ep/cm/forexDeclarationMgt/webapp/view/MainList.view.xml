@@ -186,7 +186,7 @@
                     <Text text="{list>po_number}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainPoName" width="10rem">
+                <t:Column id="mainPoName" width="20rem">
                 <Label text="PO명" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>po_name}"/>
@@ -198,31 +198,39 @@
                     <Text text="{list>plant_name}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainCurrencyName" width="4rem">
+                <t:Column id="mainCurrencyName" width="4rem" hAlign="Center">
                 <Label text="통화" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>currency_name}"/>
                 </t:template>
                 </t:Column>  
-                <t:Column id="mainPoAmount" width="5rem">
+                <t:Column id="mainPoAmount" width="5rem" hAlign="Right">
                 <Label text="PO금액" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>po_amount}"/>
+                    <!-- <Text text="{list>po_amount}"/> -->
+                    <Text  text="{
+                                path: 'list>po_amount',
+                                formatter: '.numberFormatter.toNumberString'
+                            }" />
                 </t:template>
                 </t:Column>
-                <t:Column id="mainPrepayAmount" width="5rem">
+                <t:Column id="mainPrepayAmount" width="5rem" hAlign="Right">
                 <Label text="선급금액" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>prepay_amount}"/>
+                    <!-- <Text text="{list>prepay_amount}"/> -->
+                    <Text  text="{
+                            path: 'list>prepay_amount',
+                            formatter: '.numberFormatter.toNumberString'
+                        }" />
                 </t:template>
                 </t:Column>
-                <t:Column id="mainSupplierName" width="6rem">
+                <t:Column id="mainSupplierName" width="8rem">
                 <Label text="협력사" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>supplier_name}"/>
                 </t:template>
                 </t:Column> 
-                <t:Column id="mainPoDate" width="8rem">
+                <t:Column id="mainPoDate" width="8rem" hAlign="Center">
                 <Label text="PO일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -231,7 +239,7 @@
                             }"/>
                 </t:template>
                 </t:Column>  
-                <t:Column id="mainReceiptScheduledDate" width="8rem">
+                <t:Column id="mainReceiptScheduledDate" width="8rem" hAlign="Center">
                 <Label text="입고예정일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -240,7 +248,7 @@
                             }"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainReceiptDate" width="8rem">
+                <t:Column id="mainReceiptDate" width="8rem" hAlign="Center">
                 <Label text="입고일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -249,7 +257,7 @@
                             }"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainDeclareScheduledDate" width="8rem">
+                <t:Column id="mainDeclareScheduledDate" width="8rem" hAlign="Center">
                 <Label text="신고예정일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -258,7 +266,7 @@
                             }"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainDeclareDate" width="8rem">
+                <t:Column id="mainDeclareDate" width="8rem" hAlign="Center">
                 <Label text="신고일자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{
@@ -267,31 +275,31 @@
                             }"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainManagementTargetFlag" width="8rem">
+                <t:Column id="mainManagementTargetFlag" width="6.5rem">
                 <Label text="관리대상여부" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>management_target_flag}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainDeclareTargetFlag" width="8rem">
+                <t:Column id="mainDeclareTargetFlag" width="6.5rem">
                 <Label text="신고대상여부" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>declare_target_flag}"/>
                 </t:template>
                 </t:Column> 
-                <t:Column id="mainForexDeclareStatusName" width="8rem">
+                <t:Column id="mainForexDeclareStatusName" width="6rem">
                 <Label text="진행상태" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>forex_declare_status_name}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainPurchasingDepartmentName" width="8rem">
+                <t:Column id="mainPurchasingDepartmentName" width="12rem">
                 <Label text="구매담당부서" textAlign="Center" width="100%" tooltip="구매담당부서"/>
                 <t:template>
                     <Text text="{list>purchasing_department_name}"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainBuyerName" width="8rem">
+                <t:Column id="mainBuyerName" width="6rem">
                 <Label text="구매담당자" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{list>buyer_name}"/>

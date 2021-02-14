@@ -102,7 +102,7 @@
             columnResize="onColumnResize">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
-                    <Title id="mainTableTitle" text="부품 기준 Activity List {= ${list>/PdPartBaseActivityView}.length > 0 ? '(' + ${list>/PdPartBaseActivityView}.length + ')' : ''}" level="H2"/>
+                    <Title id="mainTableTitle" text="부품 기준 Activity List {= ${list>/PdPartBaseActivityView}.length > 0 ? '(' + ${list>/PdPartBaseActivityView}.length + ')' : '(0)'}" level="H2"/>
                     <ToolbarSpacer/>
                     <!-- <Button text="Copy" id="buttonCopy" press=".onCopy"  type="Transparent"/> -->
                     <Button text="{I18N>/CREATE}" id="buttonCreateIdea" press=".onCreate"  type="Transparent"/>
@@ -110,7 +110,7 @@
                     <!-- <Button text="{I18N>/SAVE}" id="buttonSave" press=""  type="Transparent"/> -->
 
                     <ToolbarSeparator/>
-                    <Button id="rTableExportButton" text="{I18N>/EXCEL}" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />                    
+                    <Button id="rTableExportButton" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />                    
                     <Button icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
                         <layoutData>
                             <OverflowToolbarLayoutData priority="NeverOverflow" />
@@ -130,46 +130,46 @@
                         }" />
                     </t:template>
                 </t:Column> -->
-                <t:Column id="activity_code" hAlign="Center">
-                <Label text="{I18N>/PROD_ACTIVITY_CODE}" textAlign="Center" width="100%"/>
+                <t:Column id="sequence" width="60px">
+                <Label text="{I18N>/SEQUENCE}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>activity_code}"/>
+                    <Text text="{list>sequence}" textAlign="Right" width="100%" wrapping="false"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="activity_name" hAlign="Left">
-                <Label text="{I18N>/PROD_ACTIVITY_NAME}" textAlign="Center" width="100%"/>
+                <t:Column id="activity_code">
+                <Label text="{I18N>/PROD_ACTIVITY_CODE}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>activity_name}"/>
+                    <Text text="{list>activity_code}" textAlign="Center" width="100%" wrapping="false"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="description" hAlign="Left">
-                <Label text="{I18N>/DESCRIPTION}" textAlign="Center" width="100%"/>
+                <t:Column id="activity_name">
+                <Label text="{I18N>/PROD_ACTIVITY_NAME}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>description}"/>
+                    <Text text="{list>activity_name}" textAlign="Left" width="100%" wrapping="false"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="description">
+                <Label text="{I18N>/DESCRIPTION}" wrapping="false" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>description}" textAlign="Left" width="100%" wrapping="false"/>
+                </t:template>
+                </t:Column>
+                <t:Column id="active_flag_val">
+                <Label text="{I18N>/STATUS}" wrapping="false" textAlign="Center" width="100%"/>
+                <t:template>
+                    <Text text="{list>active_flag_val}" textAlign="Center" width="100%" wrapping="false"/>                    
                 </t:template>
                 </t:Column>                
-                <t:Column id="sequence" hAlign="Center">
-                <Label text="{I18N>/SEQUENCE}" textAlign="Center" width="100%"/>
+                <t:Column id="local_update_dtm">
+                <Label text="{I18N>/UPDATE} {I18N>/DATE_TIME}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>sequence}"/>
-                </t:template>
-                </t:Column>  
-                <t:Column id="active_flag_val" hAlign="Center">
-                <Label text="{I18N>/STATUS}" textAlign="Center" width="100%"/>
-                <t:template>
-                    <Text text="{list>active_flag_val}"/>                    
-                </t:template>
-                </t:Column>                
-                <t:Column id="local_update_dtm" hAlign="Center">
-                <Label text="{I18N>/UPDATE} {I18N>/DATE_TIME}" textAlign="Center" width="100%" wrapping="true" />
-                <t:template>
-                    <Text text="{path: 'list>local_update_dtm', formatter: '.dateFormatter.toDateTimeString'}"/>                    
+                    <Text text="{path: 'list>local_update_dtm', formatter: '.dateFormatter.toDateTimeString'}" textAlign="Center" width="100%" wrapping="false"/>                    
                 </t:template>
                 </t:Column> 
-                <t:Column id="update_user_id" hAlign="Center">
-                <Label text="{I18N>/UPDATE_USER_ID}" textAlign="Center" width="100%" wrapping="true" />
+                <t:Column id="update_user_id">
+                <Label text="{I18N>/UPDATE_USER_ID}" wrapping="false" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>update_user_id}"/>                                       
+                    <Text text="{list>update_user_id}" textAlign="Left" width="100%" wrapping="false"/>                                       
                 </t:template>
                 </t:Column>                                                                                                                                       
             </t:columns>

@@ -14,11 +14,25 @@ select
 			   ) AS org_name,
     mst.const_name,
     mst.ep_item_code,
+    (select                
+        ep_item_class_name as name        
+    from EP_UC_ITEM_CLASS
+    where
+        tenant_id = mst.tenant_id
+        and company_code = mst.company_code
+        and ep_item_class_code = mst.ep_item_code
+        and level_number = 1) as ep_item_name,
     mst.const_start_date,
     mst.const_end_date,
     mst.quotation_status_code,
     (select cm_get_code_name_func(mst.tenant_id, 'EP_QUOTATION_STATUS', mst.quotation_status_code, 'KO') from dummy) as quotation_status_name,
     mst.supplier_code,
+    ( select sp_view.supplier_local_name as supplier_name
+    from sp_sm_supplier_view sp_view
+    where sp_view.tenant_id = mst.tenant_id
+    and sp_view.company_code = mst.company_code
+    and sp_view.supplier_code = mst.supplier_code) as supplier_name,
+    mst.supplier_person_id,
     mst.buyer_empno,
     (select cm_get_emp_name_func(mst.tenant_id, mst.buyer_empno) from dummy) as buyer_name,
     --'윤구매' AS buyer_name,
@@ -40,6 +54,7 @@ select
     (select cm_get_emp_name_func(mst.tenant_id, mst.facility_person_empno) from dummy) as facility_person_name,
     mst.facility_department_code,
     mst.completion_attch_group_number,
+    mst.delivery_request_date,
     mst.local_create_dtm,
     mst.local_update_dtm,
     mst.create_user_id,

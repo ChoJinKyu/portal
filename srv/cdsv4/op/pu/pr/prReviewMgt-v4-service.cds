@@ -32,4 +32,14 @@ service PrReviewMgtV4Service {
     /* PR Review 재작성 요청 및 마감, 구매담당자 변경 */
     action CallPrReviewSaveProc(inputData : ProcInputType) returns array of OutType;
 
+    /* Procedure Validation Input Type */
+    type ProcVldtInputType : {
+        jobType : String(30);
+        prItemTbl : array of PrItemType;
+        employeeNumber : String(30);
+    };
+
+    /* PR Review Validation Check */
+    action CallPrReviewVldtProc(inputData : ProcVldtInputType) returns array of OutType;
+
 }

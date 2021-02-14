@@ -327,10 +327,6 @@ sap.ui.define([
 
             var oView = this.getView();
 
-
-
-
-
             if (sSurffix == "S") {
                 var s_Operation_ORG_S = this.getView().byId("search_Operation_ORG_S").getSelectedKey();
                 var s_Operation_UNIT_S = this.getView().byId("search_Operation_UNIT_S").getSelectedKey();
@@ -434,7 +430,7 @@ sap.ui.define([
             this.byId("pop_regular_evaluation_flag").setEnabled(false);
             this.byId("pop_maker_material_code_mngt_flag").setEnabled(false);
             this.byId("pop_sd_exception_flag").setEnabled(false);
-            this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(false);
+            // this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(false);
             this.byId("pop_equipment_grade_code").setEnabled(false);
             this.byId("pop_equipment_type_code").setEnabled(false);
             this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(false);
@@ -492,8 +488,8 @@ sap.ui.define([
                 } else if (pop_h_lv == "1") {
                     pop_target_level = "2";
                 }
-
-                if (pop_h_lv == "2") {
+                // pop_d_state
+                if (pop_d_state == "leaf") {
                     MessageToast.show("해당 Operation Unit에서 정의된 레벨 하위는 구성할 수 없습니다.");
                 }
                 else if (pop_h_lv == "1") {
@@ -511,7 +507,7 @@ sap.ui.define([
                     this.byId("v_pop_regular_evaluation_flag").setVisible(true);
                     this.byId("v_pop_sd_exception_flag").setVisible(true);
                     this.byId("v_pop_maker_material_code_mngt_flag").setVisible(true);
-                    this.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(true);
+                    // this.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(true);
                     this.byId("v_review_grade").setVisible(true);
                     this.byId("v_equipment_type").setVisible(true);
                     this.byId("v_internal_rate").setVisible(true);
@@ -532,7 +528,7 @@ sap.ui.define([
                     this.byId("pop_regular_evaluation_flag").setEnabled(true);
                     this.byId("pop_sd_exception_flag").setEnabled(true);
                     this.byId("pop_maker_material_code_mngt_flag").setEnabled(true);
-                    this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(true);
+                    // this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(true);
                     this.byId("pop_equipment_grade_code").setEnabled(true);
                     this.byId("pop_equipment_type_code").setEnabled(true);
                     this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(true);
@@ -550,7 +546,7 @@ sap.ui.define([
                     this.byId("v_pop_regular_evaluation_flag").setVisible(false);
                     this.byId("v_pop_sd_exception_flag").setVisible(false);
                     this.byId("v_pop_maker_material_code_mngt_flag").setVisible(false);
-                    this.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(false);
+                    // this.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(false);
                     this.byId("v_review_grade").setVisible(false);
                     this.byId("v_equipment_type").setVisible(false);
                     this.byId("v_internal_rate").setVisible(false);
@@ -570,7 +566,7 @@ sap.ui.define([
                     this.byId("pop_regular_evaluation_flag").setEnabled(false);
                     this.byId("pop_sd_exception_flag").setEnabled(false);
                     this.byId("pop_maker_material_code_mngt_flag").setEnabled(false);
-                    this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(false);
+                    // this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(false);
                     this.byId("pop_equipment_grade_code").setEnabled(false);
                     this.byId("pop_equipment_type_code").setEnabled(false);
                     this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(false);
@@ -614,7 +610,7 @@ sap.ui.define([
                     this.byId("v_pop_regular_evaluation_flag").setVisible(true);
                     this.byId("v_pop_sd_exception_flag").setVisible(true);
                     this.byId("v_pop_maker_material_code_mngt_flag").setVisible(true);
-                    this.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(true);
+                    // this.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(true);
                     this.byId("v_review_grade").setVisible(true);
                     this.byId("v_equipment_type").setVisible(true);
                     this.byId("v_internal_rate").setVisible(true);
@@ -635,7 +631,7 @@ sap.ui.define([
                     this.byId("pop_plan_base").setEnabled(true);
                     this.byId("pop_regular_evaluation_flag").setEnabled(true);
                     this.byId("pop_sd_exception_flag").setEnabled(true);
-                    this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(true);
+                    // this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(true);
                     this.byId("pop_maker_material_code_mngt_flag").setEnabled(true);
                     this.byId("pop_equipment_grade_code").setEnabled(true);
                     this.byId("pop_equipment_type_code").setEnabled(true);
@@ -654,7 +650,7 @@ sap.ui.define([
                     this.byId("v_pop_regular_evaluation_flag").setVisible(false);
                     this.byId("v_pop_sd_exception_flag").setVisible(false);
                     this.byId("v_pop_maker_material_code_mngt_flag").setVisible(false);
-                    this.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(false);
+                    // this.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(false);
                     this.byId("v_review_grade").setVisible(false);
                     this.byId("v_equipment_type").setVisible(false);
                     this.byId("v_internal_rate").setVisible(false);
@@ -675,7 +671,7 @@ sap.ui.define([
                     this.byId("pop_plan_base").setEnabled(false);
                     this.byId("pop_regular_evaluation_flag").setEnabled(false);
                     this.byId("pop_sd_exception_flag").setEnabled(false);
-                    this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(false);
+                    // this.byId("pop_vendor_pool_apply_exception_flag").setEnabled(false);
                     this.byId("pop_maker_material_code_mngt_flag").setEnabled(false);
                     this.byId("pop_equipment_grade_code").setEnabled(false);
                     this.byId("pop_equipment_type_code").setEnabled(false);
@@ -868,10 +864,10 @@ sap.ui.define([
             this.getView().byId("pop_industry_class_code").setSelectedKey("");
             this.getView().byId("pop_inp_type_code").setSelectedKey("");
             this.getView().byId("pop_plan_base").setSelectedKey("");
-            this.getView().byId("pop_regular_evaluation_flag").setState(false);
-            this.getView().byId("pop_sd_exception_flag").setState(false);
-            this.getView().byId("pop_vendor_pool_apply_exception_flag").setState(false);
-            this.getView().byId("pop_maker_material_code_mngt_flag").setState(false);
+            this.getView().byId("pop_regular_evaluation_flag").setSelectedKey("false");
+            this.getView().byId("pop_sd_exception_flag").setSelectedKey("false");
+            // this.getView().byId("pop_vendor_pool_apply_exception_flag").setState(false);
+            this.getView().byId("pop_maker_material_code_mngt_flag").setSelectedKey("false");
             this.getView().byId("pop_equipment_grade_code").setSelectedKey("");
             this.getView().byId("pop_equipment_type_code").setSelectedKey("");
             this.getView().byId("pop_dom_oversea_netprice_diff_rate").setValue("");
@@ -991,14 +987,36 @@ sap.ui.define([
             var svendor_pool_desc = this.getView().byId("pop_vendor_pool_desc").getValue().trim();
 
             if (pop_d_state == "leaf") {
+
+                var eval_flag = this.getView().byId("pop_regular_evaluation_flag").getSelectedKey();
+                var mngt_flag = this.getView().byId("pop_maker_material_code_mngt_flag").getSelectedKey();
+                var sd_flag = this.getView().byId("pop_sd_exception_flag").getSelectedKey();
+                // var vp_flag = this.getView().byId("general_vendor_pool_apply_exception_flag").getSelectedKey();
+
+                if(eval_flag == "true"){
+                    eval_flag = true;
+                }else{
+                    eval_flag = false;
+                }
+                if(mngt_flag == "true"){
+                    mngt_flag = true;
+                }else{
+                    mngt_flag = false;
+                }
+                if(sd_flag == "true"){
+                    sd_flag = true;
+                }else{
+                    sd_flag = false;
+                }
+                
                 var srepr_department_code = this.getView().byId("pop_repr_department_code").getValue().trim();
                 var sindustry_class_code = this.getView().byId("pop_industry_class_code").getSelectedKey();
                 var sinp_type_code = this.getView().byId("pop_inp_type_code").getSelectedKey();
                 var splan_base = this.getView().byId("pop_plan_base").getSelectedKey();
-                var sregular_evaluation_flag = this.getView().byId("pop_regular_evaluation_flag").getState();
-                var smaker_material_code_mngt_flag = this.getView().byId("pop_maker_material_code_mngt_flag").getState();
-                var ssd_exception_flag = this.getView().byId("pop_sd_exception_flag").getState();
-                var svendor_pool_apply_exception_flag = this.getView().byId("pop_vendor_pool_apply_exception_flag").getState();
+                var sregular_evaluation_flag = eval_flag;
+                var smaker_material_code_mngt_flag = mngt_flag;
+                var ssd_exception_flag = sd_flag;
+                // var svendor_pool_apply_exception_flag = this.getView().byId("pop_vendor_pool_apply_exception_flag").getState();
                 var sequipment_grade_code = this.getView().byId("pop_equipment_grade_code").getSelectedKey();
                 var sequipment_type_code = this.getView().byId("pop_equipment_type_code").getSelectedKey();
                 var sdom_oversea_netprice_diff_rate = this.getView().byId("pop_dom_oversea_netprice_diff_rate").getValue().trim();
@@ -1064,7 +1082,7 @@ sap.ui.define([
                     , maker_material_code_mngt_flag: smaker_material_code_mngt_flag
                     , regular_evaluation_flag: sregular_evaluation_flag
                     , sd_exception_flag: ssd_exception_flag
-                    , vendor_pool_apply_exception_flag: svendor_pool_apply_exception_flag
+                    // , vendor_pool_apply_exception_flag: svendor_pool_apply_exception_flag
                     , equipment_grade_code: sequipment_grade_code
                     , equipment_type_code: sequipment_type_code
                     // "local_create_dtm": "2020-11-09T00:00:00Z",
@@ -1196,7 +1214,7 @@ sap.ui.define([
                                             that.byId("v_pop_regular_evaluation_flag").setVisible(true);
                                             that.byId("v_pop_sd_exception_flag").setVisible(true);
                                             that.byId("v_pop_maker_material_code_mngt_flag").setVisible(true);
-                                            that.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(true);
+                                            // that.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(true);
                                             that.byId("v_review_grade").setVisible(true);
                                             that.byId("v_equipment_type").setVisible(true);
                                             that.byId("v_internal_rate").setVisible(true);
@@ -1217,7 +1235,7 @@ sap.ui.define([
                                             that.byId("pop_regular_evaluation_flag").setEnabled(true);
                                             that.byId("pop_sd_exception_flag").setEnabled(true);
                                             that.byId("pop_maker_material_code_mngt_flag").setEnabled(true);
-                                            that.byId("pop_vendor_pool_apply_exception_flag").setEnabled(true);
+                                            // that.byId("pop_vendor_pool_apply_exception_flag").setEnabled(true);
                                             that.byId("pop_equipment_grade_code").setEnabled(true);
                                             that.byId("pop_equipment_type_code").setEnabled(true);
                                             that.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(true);
@@ -1235,7 +1253,7 @@ sap.ui.define([
                                             that.byId("v_pop_regular_evaluation_flag").setVisible(false);
                                             that.byId("v_pop_sd_exception_flag").setVisible(false);
                                             that.byId("v_pop_maker_material_code_mngt_flag").setVisible(false);
-                                            that.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(false);
+                                            // that.byId("v_pop_vendor_pool_apply_exception_flag").setVisible(false);
                                             that.byId("v_review_grade").setVisible(false);
                                             that.byId("v_equipment_type").setVisible(false);
                                             that.byId("v_internal_rate").setVisible(false);
@@ -1255,7 +1273,7 @@ sap.ui.define([
                                             that.byId("pop_regular_evaluation_flag").setEnabled(false);
                                             that.byId("pop_sd_exception_flag").setEnabled(false);
                                             that.byId("pop_maker_material_code_mngt_flag").setEnabled(false);
-                                            that.byId("pop_vendor_pool_apply_exception_flag").setEnabled(false);
+                                            // that.byId("pop_vendor_pool_apply_exception_flag").setEnabled(false);
                                             that.byId("pop_equipment_grade_code").setEnabled(false);
                                             that.byId("pop_equipment_type_code").setEnabled(false);
                                             that.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(false);
@@ -1719,7 +1737,11 @@ sap.ui.define([
             pOperation_unit_code = oData.operation_unit_code;
             pTemp_type = oData.temp_type;
 
-            
+            if(oData.leaf_yn == "Y"){
+                pDrill_state = "leaf";
+            }else{
+                pDrill_state = "expanded";
+            }
 
             var oNextUIState = this.getOwnerComponent().getHelper().getNextUIState(1);
             this.getRouter().navTo("midPage", {
@@ -1730,6 +1752,7 @@ sap.ui.define([
                 orgCode: pOrg_code,
                 operationUnitCode: pOperation_unit_code,
                 temptype: pTemp_type,
+                drill: pDrill_state,
                 target: "NEXT"
             });
 

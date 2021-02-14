@@ -99,7 +99,7 @@
                                                 required="true"/>
                                                 <Text text="{scenario_name}" width="100%" visible="{=!${DetailView>/isEditMode}}"/>
                                             <layoutData>
-                                                <l:GridData span="XL6 L6 M12 S12" />
+                                                <l:GridData span="XL6 L6 M12 S12" linebreak="true"/>
                                             </layoutData>
                                         </VBox>
                                         <VBox>

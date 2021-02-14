@@ -36,8 +36,7 @@ sap.ui.define([
         metadata: {
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "65%"},
-                keyField: { type: "string", group: "Misc", defaultValue: "supplier_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "supplier_code" },
+                largeEpItem: { type: "string", group: "Misc", defaultValue: "" },
                 items: { type: "sap.ui.core.Control"}
             }
         },
@@ -63,12 +62,19 @@ sap.ui.define([
                 },
                 change : this.onLargeEpItemChange
             }).attachComplete(function(oEvent){
-                var sFirstKey = oEvent.getSource().getItems().length && oEvent.getSource().getItems()[0].getKey();
+                var sFirstKey = this.getProperty("largeEpItem");
+                if(sFirstKey){
+                    oEvent.getSource().setSelectedKey(sFirstKey);
+                }else{
+                    oEvent.getSource().setSelectedIndex(0);
+                    sFirstKey = oEvent.getSource().getItems().length && oEvent.getSource().getSelectedKey();
+                };
+                
                 if(sFirstKey){
                     var oCreateEvent = new Event(
                         "change",
                         this.oLargeEpItem,
-                        {selectedItem:oEvent.getSource().getItems()[0]}
+                        {selectedItem:oEvent.getSource().getSelectedItem()}
                     )
                     this.onLargeEpItemChange(oCreateEvent);
                 };
@@ -116,14 +122,14 @@ sap.ui.define([
                             ]
                         })
                     ],
-                    layoutData: new GridData({ span: "XL6 L6 M6 S10"})
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 }),
                 new VBox({
                     items: [
                         new Label({ text: this.getModel("I18N").getText("/KEYWORD")+" :"}),
                         this.oKeyWordId
                     ],
-                    layoutData: new GridData({ span: "XL5 L5 M5 S10"})
+                    layoutData: new GridData({ span: "XL2 L3 M5 S10"})
                 })
             ]
         },
@@ -153,7 +159,6 @@ sap.ui.define([
         },
 
         onMiddleEpItemSelectionChange : function(oEvent){
-            console.log(oEvent)
             var sSelectKey = oEvent.getParameter("selectedItem") && oEvent.getParameter("selectedItem").getKey();
             var oSmallEpItem = oEvent.getSource().getParent().getItems()[2];
             
@@ -209,28 +214,6 @@ sap.ui.define([
             ];
         },
 
-         loadSupplierData : function(oThis){
-            var that = oThis,
-            cFilters = that.getProperty("items") && that.getProperty("items").filters || [new Filter("tenant_id", FilterOperator.EQ, "L2100")];
-            
-            //if(!that.getModel("SUPPLIERVIEW").getProperty("/supplierStatus")){
-                oServiceModel.read("/UcItemView", {
-                    filters: cFilters.concat(new Filter("language_cd", FilterOperator.EQ, "KO")),
-                    sorters: [new Sorter("code", true)],
-                    success: function(oData){
-                        var aRecords = oData.results;
-                        aRecords.unshift({code:"", code_name: that.getModel("I18N").getText("/ALL")});
-                        that.oDialog.getModel("SUPPLIERVIEW").setProperty("/supplierStatus", aRecords);
-                    }.bind(this)
-                })
-            //}
-
-            
-            that.oDialog.setBusy(false);
-
-            
-        },
-
         loadData: function(){
             var aFilters = [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
                 // aSorters = [new Sorter("supplier_code", true)],
@@ -260,7 +243,6 @@ sap.ui.define([
                 aFilters.push(new Filter(aKeywordFilters));
             }
 
-            console.log('aFilters',aFilters)
             this.oDialog.setBusy(true);
 
             oServiceModel.read("/UcItemView", {
@@ -268,12 +250,10 @@ sap.ui.define([
                 // sorters: aSorters,
                 success: function(oData){
                     var aRecords = oData.results;
-                    console.log('success',aRecords)
                     this.oDialog.setData(aRecords, false);
                     this.oDialog.setBusy(false);
                     // if(!this.oDialog.getModel("SUPPLIERVIEW")){
                     //     this.oDialog.setBusy(true);
-                    //     this.loadSupplierData(this);
                     // }
                 }.bind(this)
             });

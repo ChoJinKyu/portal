@@ -18,7 +18,8 @@
             <f:title>
                 <f:DynamicPageTitle>
                     <f:heading>
-                        <Title text="{I18N>/VENDOR_POOL}" />
+                        <!-- <Title text="{I18N>/VENDOR_POOL}" /> -->
+                            <Title text="Vendor Pool" />
                     </f:heading>
                     <f:snappedContent>
                         <form:SimpleForm 
@@ -308,7 +309,7 @@
                     <table:Table
                         id="mainTable"
                         selectionMode="MultiToggle"
-                        fixedColumnCount="4"
+                        fixedColumnCount="6"
 
                         rows="{
                             path: 'list>/vpSearchOrderView',
@@ -344,27 +345,27 @@
 
                     <table:columns>
                             
-                            <table:Column id="table_1lv" label="레벨1" width="12rem" filterProperty="vendor_pool_level1_name" >
+                            <table:Column id="table_1lv" label="{I18N>/LEVEL1}" width="12rem" filterProperty="vendor_pool_level1_name" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>vendor_pool_level1_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column id="table_2lv" label="레벨2" width="12rem" filterProperty="vendor_pool_level2_name" >
+                            <table:Column id="table_2lv" label="{I18N>/LEVEL2}" width="12rem" filterProperty="vendor_pool_level2_name" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>vendor_pool_level2_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column id="table_3lv" label="레벨3" width="12rem" filterProperty="vendor_pool_level3_name" >
+                            <table:Column id="table_3lv" label="{I18N>/LEVEL3}" width="12rem" filterProperty="vendor_pool_level3_name" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>vendor_pool_level3_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column id="table_4lv" label="레벨4" width="12rem" filterProperty="vendor_pool_level4_name" >
+                            <table:Column id="table_4lv" label="{I18N>/LEVEL4}" width="12rem" filterProperty="vendor_pool_level4_name" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>vendor_pool_level4_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column id="table_5lv" label="레벨5" width="12rem" filterProperty="vendor_pool_level5_name" >
+                            <table:Column id="table_5lv" label="{I18N>/LEVEL5}" width="16rem" filterProperty="vendor_pool_level5_name" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>vendor_pool_level5_name}" wrapping="false" />
                                 </table:template>
@@ -389,19 +390,19 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="{I18N>/MTL_ATTRIBUTE}" width="8rem" filterProperty="vendor_pool_local_name" >
+                            <table:Column label="{I18N>/MTL_ATTRIBUTE}" width="8rem" filterProperty="vendor_pool_local_name" hAlign="Center" >
                                 <table:template>
                                     <Text text="{list>inp_type_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column id="table_review_grade" label="{I18N>/REVIEW_GRADE}" width="8rem">
+                            <table:Column id="table_review_grade" label="{I18N>/REVIEW_GRADE}" width="8rem" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>equipment_grade_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column id="table_equipment_type" label="{I18N>/EQUIPMENT_TYPE}" width="8rem">
+                            <table:Column id="table_equipment_type" label="{I18N>/EQUIPMENT_TYPE}" width="8rem" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>equipment_type_name}" wrapping="false" />
                                 </table:template>
@@ -425,25 +426,25 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="{I18N>/SUPPLIER_NAME}" width="8rem" filterProperty="supplier_local_name" >
+                            <table:Column label="{I18N>/SUPPLIER_NAME}" width="12rem" filterProperty="supplier_local_name" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>supplier_local_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Supplier Name(En)" width="8rem" filterProperty="supplier_english_name" >
+                            <table:Column label="공급업체 영문" width="12rem" filterProperty="supplier_english_name"  hAlign="Center">
                                 <table:template>
                                     <Text text="{list>supplier_english_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="{I18N>/COMPANY}" width="8rem" filterProperty="supplier_company_name" >
+                            <table:Column label="{I18N>/COMPANY}" width="8rem" filterProperty="supplier_company_name" hAlign="Center" >
                                 <table:template>
                                     <Text text="{list>supplier_company_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                             
-                            <table:Column label="Supplier Registered Type"  hAlign="Center" width="10rem">
+                            <table:Column label="{I18N>/SUPPLIER_REG_TYPE}"  hAlign="Center" width="10rem">
                                 <table:template>
                                     <Text text="{list>supplier_type_name}" wrapping="false" />
                                 </table:template>
@@ -477,11 +478,11 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="{I18N>/VP_EXCEPTION_FLAG}" width="8rem"  hAlign="Center">
+                            <!-- <table:Column label="{I18N>/VP_EXCEPTION_FLAG}" width="8rem"  hAlign="Center">
                                 <table:template >
                                     <Text text="{= !!${list>vendor_pool_apply_exception_flag} ? 'Y' : 'N'}" wrapping="false" />                               
                                 </table:template>
-                            </table:Column>
+                            </table:Column> -->
 
                             <table:Column label="{I18N>/SD_EXCEPTION_FLAG}" width="8rem" hAlign="Center">
                                 <table:template>
@@ -489,13 +490,13 @@
                                 </table:template>
                             </table:Column>
                                         
-                            <table:Column label="{I18N>/DEPARTMENT}" width="8rem" filterProperty="repr_department_name">
+                            <table:Column label="{I18N>/DEPARTMENT}" width="8rem" filterProperty="repr_department_name" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>repr_department_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="{I18N>/MANAGER}" width="8rem" filterProperty="managers_name">
+                            <table:Column label="{I18N>/MANAGER}" width="8rem" filterProperty="managers_name" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>managers_name}" wrapping="false" />
                                 </table:template>
@@ -507,13 +508,13 @@
                                 </table:template>
                             </table:Column>                        
 
-                            <table:Column label="{I18N>/EVAL_CONTROL_START_DATE}" width="8em">
+                            <table:Column label="{I18N>/EVAL_CONTROL_START_DATE}" width="8em" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>supeval_control_start_date}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="{I18N>/EVAL_CONTROL_END_DATE}" width="8em">
+                            <table:Column label="{I18N>/EVAL_CONTROL_END_DATE}" width="8em" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>supeval_control_end_date}" wrapping="false" />
                                 </table:template>

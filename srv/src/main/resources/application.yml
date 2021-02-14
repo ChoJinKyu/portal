@@ -26,3 +26,9 @@ logging:
             CustomAuthenticatedHandler: debug
           i18n: debug
         handlers: trace
+server:
+  servlet:
+    session:
+      timeout: 720m
+      cookie:
+        max-age: 720m
