@@ -32,6 +32,7 @@ select
     where sp_view.tenant_id = mst.tenant_id
     and sp_view.company_code = mst.company_code
     and sp_view.supplier_code = mst.supplier_code) as supplier_name,
+    mst.supplier_person_id,
     mst.buyer_empno,
     (select cm_get_emp_name_func(mst.tenant_id, mst.buyer_empno) from dummy) as buyer_name,
     --'윤구매' AS buyer_name,
@@ -53,6 +54,7 @@ select
     (select cm_get_emp_name_func(mst.tenant_id, mst.facility_person_empno) from dummy) as facility_person_name,
     mst.facility_department_code,
     mst.completion_attch_group_number,
+    mst.delivery_request_date,
     mst.local_create_dtm,
     mst.local_update_dtm,
     mst.create_user_id,

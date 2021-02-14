@@ -19,6 +19,7 @@ entity Uc_Quotation_List_View {
         quotation_status_name      : String(30)             @title : '견적상태';
         supplier_code              : String(30)             @title : '공급업체코드';
         supplier_name              : String(30)             @title : '공급업체';
+        supplier_person_id         : String(255)            @title : '공급업체담당자ID';
         buyer_empno                : String(30)             @title : '구매담당자사번';
         buyer_name                 : String(30)             @title : '구매담당자';
         const_person_empno         : String(30)             @title : '공사담당자사번';
@@ -37,6 +38,7 @@ entity Uc_Quotation_List_View {
         facility_person_name       : String(30)             @title : '시설담당자'; 
         facility_department_code   : String(50)             @title : '시설부서코드'; 
         completion_attch_group_number   : String(50)        @title : '준공첨부파일그룹번호'; 
+        delivery_request_date      : Date                   @title : '납품요청일자';
 
 
 }

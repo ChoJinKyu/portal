@@ -585,158 +585,119 @@ public class UcQuotationMgtV4Service implements EventHandler {
     }   
 
 
-    //action SaveUcQuotationExtraProc(inputData : array of UcQuotationExtraData) returns UcQuotationExtraData;
-    //공사계약할증 저장
-    // @Transactional(rollbackFor = SQLException.class)
-	// @On(event=SaveUcQuotationExtraProcContext.CDS_NAME)
-	// public void onSaveUcQuotationExtraProc(SaveUcQuotationExtraProcContext context) {
+    //계약종료 SaveUcQuotationStatusProc
+    @Transactional(rollbackFor = SQLException.class)
+	@On(event=SaveUcQuotationStatusProcContext.CDS_NAME)
+	public void onSaveUcQuotationStatusProc(SaveUcQuotationStatusProcContext context) {
 
-    //     log.info("### EP_UC_QUOTATION_EXTRA_SAVE_PROC 프로시저 호출시작 ###");
+        log.info("### EP_UC_QUOTATION_STATUS_SAVE_PROC 프로시저 호출시작 ###");
         
-    //     // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
-    //     String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";          
+        // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
+        String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";          
 
-    //     // local Temp table은 테이블명이 #(샵) 으로 시작해야 함
-    //     StringBuffer v_sql_createTableH = new StringBuffer();
-	// 	v_sql_createTableH.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_H_UC ( ")
-	// 								.append("TENANT_ID NVARCHAR(5), ")
-    //                                 .append("COMPANY_CODE NVARCHAR(10), ")
-    //                                 .append("CONST_QUOTATION_NUMBER NVARCHAR(30), ")
-    //                                 .append("CONST_QUOTATION_ITEM_NUMBER NVARCHAR(50), ")
-    //                                 .append("APPLY_EXTRA_SEQUENCE DECIMAL, ")
-    //                                 .append("NET_PRICE_CONTRACT_DOCUMENT_NO NVARCHAR(50), ")
-    //                                 .append("NET_PRICE_CONTRACT_DEGREE DECIMAL, ")
-    //                                 .append("NET_PRICE_CONTRACT_EXTRA_SEQ DECIMAL, ")
-    //                                 .append("EXTRA_NUMBER NVARCHAR(30), ")
-    //                                 .append("EXTRA_CLASS_NUMBER NVARCHAR(30), ")
-    //                                 .append("EXTRA_RATE DECIMAL, ")
-    //                                 .append("REMARK NVARCHAR(3000), ")
-    //                                 .append("LOCAL_CREATE_DTM SECONDDATE, ")
-    //                                 .append("LOCAL_UPDATE_DTM SECONDDATE, ")
-    //                                 .append("CREATE_USER_ID NVARCHAR(255), ")
-    //                                 .append("UPDATE_USER_ID NVARCHAR(255), ")
-    //                                 .append("SYSTEM_CREATE_DTM SECONDDATE, ")
-    //                                 .append("SYSTEM_UPDATE_DTM SECONDDATE, ")   
-    //                                 .append("ROW_STATE NVARCHAR(1) ") 
-    //                             .append(")");
+		// local Temp table은 테이블명이 #(샵) 으로 시작해야 함
+		StringBuffer v_sql_createTable = new StringBuffer();
+		v_sql_createTable.append("CREATE LOCAL TEMPORARY COLUMN TABLE #LOCAL_TEMP_EP_UC_QUOTATION_STATUS_SAVE_PROC ( ")
+									.append("TENANT_ID NVARCHAR(5), ")
+									.append("COMPANY_CODE NVARCHAR(10), ")
+									.append("CONST_QUOTATION_NUMBER NVARCHAR(30), ")
+									.append("QUOTATION_STATUS_CODE NVARCHAR(30), ")
+                                    .append("UPDATE_USER_ID NVARCHAR(255), ")
+                                    .append("ROW_STATE NVARCHAR(1) ") 
+								.append(")");
 
-		
+        String v_sql_dropTableM = "DROP TABLE #LOCAL_TEMP_EP_UC_QUOTATION_STATUS_SAVE_PROC";                                        
+		String v_sql_insertTableM = "INSERT INTO #LOCAL_TEMP_EP_UC_QUOTATION_STATUS_SAVE_PROC VALUES (?, ?, ?, ?, ?, ?)";
+		String v_sql_callProc = "CALL EP_UC_QUOTATION_STATUS_SAVE_PROC( I_M_TABLE => #LOCAL_TEMP_EP_UC_QUOTATION_STATUS_SAVE_PROC, O_M_TABLE => ? )";
 
-    //     // String v_sql_dropTableD = "DROP TABLE #LOCAL_TEMP_EP_UC_QUOTATION_HD_SAVE_PROC";                                        
-	// 	// String v_sql_insertTableD = "INSERT INTO #LOCAL_TEMP_EP_UC_QUOTATION_HD_SAVE_PROC VALUES (?, ?, ?, ?, ?,?, ?, ?, ?, ?,?, ?, ?, ?, ?,?, ?, ?, ?, ?,?, ?, ?, ?, ?,?,?)";
-    //     // String v_sql_callProc = "CALL EP_UC_QUOTATION_HD_SAVE_PROC( I_TABLE => #LOCAL_TEMP_EP_UC_QUOTATION_HD_SAVE_PROC, O_TABLE_MESSAGE => ? )";
+
+        Collection<OutData> v_result = new ArrayList<>(); 
+        Collection<InputData> v_inDetails = context.getInputData();
+
+
+        // Collection<OutType> v_result = new ArrayList<>(); 
+        // Collection<InputData> v_inDetails = context.getInputData();
+
+        // Commit Option
+        jdbc.execute(v_sql_commitOption);          
+
+        // Local Temp Table 생성
+        jdbc.execute(v_sql_createTable.toString()); 
+
+        // Detail Local Temp Table에 insert
+        List<Object[]> batchM = new ArrayList<Object[]>();
+        if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){
+            for(InputData v_inRow : v_inDetails){
+                Object[] values = new Object[] {
+                    v_inRow.get("tenant_id"),
+                    v_inRow.get("company_code"),
+                    v_inRow.get("const_quotation_number"),
+                    v_inRow.get("quotation_status_code"),                                 
+                    v_inRow.get("update_user_id"),                            
+                    v_inRow.get("row_state")};
+                batchM.add(values);
+            }
+        }    
+
+        int[] updateCountsD = jdbc.batchUpdate(v_sql_insertTableM, batchM);
+            
+        SqlReturnResultSet oMTable = new SqlReturnResultSet("O_M_TABLE", new RowMapper<OutData>(){
+            @Override
+            public OutData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+                OutData v_row = OutData.create();
+                v_row.setTenantId(v_rs.getString("tenant_id"));
+                v_row.setCompanyCode(v_rs.getString("company_code"));
+                v_row.setConstQuotationNumber(v_rs.getString("const_quotation_number"));
+                v_row.setQuotationStatusCode(v_rs.getString("quotation_status_code"));
+                v_result.add(v_row);
+                return v_row;
+            }
+        });     
+
+
+        // SqlReturnResultSet oMTable = new SqlReturnResultSet("O_M_TABLE", new RowMapper<InputData>(){
+        //     @Override
+        //     public InputData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
+        //         InputData v_row = InputData.create();
+        //         // log.info("master ----- tenant_id="+v_rs.getString("tenant_id"));
+        //         // log.info("master ----- getTenantId="+v_row.getTenantId());
+
+        //         v_row.setTenantId(v_rs.getString("tenant_id"));
+        //         v_row.setCompanyCode(v_rs.getString("company_code"));
+        //         v_row.setConstQuotationNumber(v_rs.getString("const_quotation_number"));
+        //         v_row.setQuotationStatusCode(v_rs.getString("quotation_status_code"));
+        //         v_row.setLocalUpdateDtm(null);
+        //         v_row.setUpdateUserId(v_rs.getString("update_user_id"));
+        //         v_row.setSystemUpdateDtm(null);
+        //         v_resultM.add(v_row);
+        //         return v_row;
+        //     }
+        //});
         
-    //     String v_sql_dropableH = "DROP TABLE #LOCAL_TEMP_H_UC";
-
-    //     String v_sql_insertTableH = "INSERT INTO #LOCAL_TEMP_H_UC VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-    //     String v_sql_callProc = "CALL EP_UC_QUOTATION_EXTRA_SAVE_PROC(I_M_TABLE => #LOCAL_TEMP_H_UC, O_M_TABLE => ?)";
-
-    //     //Collection<UcQuotationExtraData> v_inRows = context.getInputData();
-    //     Collection<UcQuotationExtraData> v_inHeaders = context.getInputData();
-
-    //     ///SaveReturnType v_result = inputData.create();
-    //     Collection<UcQuotationExtraData> v_result = new ArrayList<>(); 
-    //     Collection<UcQuotationExtraData> v_resultM = new ArrayList<>();
-
-
-    //     // Commit Option
-    //     jdbc.execute(v_sql_commitOption);
-
-    //     // Local Temp Table 생성
-    //     jdbc.execute(v_sql_createTableH.toString());
-
-
-
-    //     //Header Local Temp Table에 insert
-    //     List<Object[]> batchH = new ArrayList<Object[]>();
-    //     if(!v_inHeaders.isEmpty() && v_inHeaders.size() > 0){
-    //         for(UcQuotationExtraData v_inRow : v_inHeaders){
-    //             Object[] values = new Object[] {
-    //                 v_inRow.get("tenant_id"),
-    //                 v_inRow.get("company_code"),
-    //                 v_inRow.get("const_quotation_number"),
-    //                 v_inRow.get("const_quotation_item_number"),
-    //                 v_inRow.get("apply_extra_sequence"),
-    //                 v_inRow.get("net_price_contract_document_no"),
-    //                 v_inRow.get("net_price_contract_degree"),
-    //                 v_inRow.get("net_price_contract_extra_seq"),
-    //                 v_inRow.get("extra_number"),
-    //                 v_inRow.get("extra_class_number"),
-    //                 v_inRow.get("extra_rate"),
-    //                 v_inRow.get("remark"),
-    //                 v_inRow.get("local_create_dtm"),               
-    //                 v_inRow.get("local_update_dtm"),               
-    //                 v_inRow.get("create_user_id"),                 
-    //                 v_inRow.get("update_user_id"),                 
-    //                 v_inRow.get("system_create_dtm"),              
-    //                 v_inRow.get("system_update_dtm"),     
-    //                 v_inRow.get("row_state")
-    //             };
-    //             batchH.add(values);
-    //         }
-    //     }
-
-    //     int[] updateCountsH = jdbc.batchUpdate(v_sql_insertTableH, batchH);
-
-    //     boolean delFlag = false;
-
-    //     SqlReturnResultSet oMTable = new SqlReturnResultSet("O_M_TABLE", new RowMapper<UcQuotationExtraData>(){
-    //         @Override
-    //         public UcQuotationExtraData mapRow(ResultSet v_rs, int rowNum) throws SQLException {
-    //             UcQuotationExtraData v_row = UcQuotationExtraData.create();
-    //             v_row.setTenantId(v_rs.getString("tenant_id"));
-    //             v_row.setCompanyCode(v_rs.getString("company_code"));
-    //             v_row.setConstQuotationNumber(v_rs.getString("const_quotation_number"));
-    //             v_row.setConstQuotationItemNumber(v_rs.getString("const_quotation_item_number"));
-    //             v_row.setApplyExtraSequence(v_rs.getBigDecimal("apply_extra_sequence"));
-    //             v_row.setNetPriceContractDocumentNo(v_rs.getString("net_price_contract_document_no"));
-    //             v_row.setNetPriceContractDegree(v_rs.getLong("net_price_contract_degree"));
-    //             v_row.setNetPriceContractExtraSeq(v_rs.getBigDecimal("net_price_contract_extra_seq"));
-    //             v_row.setExtraNumber(v_rs.getString("extra_number"));
-    //             v_row.setExtraClassNumber(v_rs.getString("extra_class_number"));
-    //             v_row.setExtraRate(v_rs.getBigDecimal("extra_rate"));
-    //             v_row.setRemark(v_rs.getString("remark"));
-    //             v_row.setLocalCreateDtm(v_rs.getDate("local_create_dtm").toInstant());
-    //             v_row.setLocalUpdateDtm(v_rs.getDate("local_update_dtm").toInstant());
-    //             v_row.setCreateUserId(v_rs.getString("create_user_id"));
-    //             v_row.setUpdateUserId(v_rs.getString("update_user_id"));
-    //             v_row.setSystemCreateDtm(v_rs.getDate("system_create_dtm").toInstant());
-    //             v_row.setSystemUpdateDtm(v_rs.getDate("system_update_dtm").toInstant());
-    //             v_row.setRowState(v_rs.getString("row_state"));
-    //             v_resultM.add(v_row);
-    //             return v_row;
-    //         }
-    //     });
-
-    //     List<SqlParameter> paramList = new ArrayList<SqlParameter>();
-    //     paramList.add(oMTable);
-
+        List<SqlParameter> paramList = new ArrayList<SqlParameter>();
+        paramList.add(oMTable);
  
-    //     Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
-    //         @Override
-    //         public CallableStatement createCallableStatement(Connection connection) throws SQLException {
-    //             String callProc = "";
+        Map<String, Object> resultMap = jdbc.call(new CallableStatementCreator() {
+            @Override
+            public CallableStatement createCallableStatement(Connection connection) throws SQLException {
+                String callProc = "";
 
-    //             callProc = v_sql_callProc;
+                callProc = v_sql_callProc;
                 
-    //             CallableStatement callableStatement = connection.prepareCall(callProc);
-    //             return callableStatement;
-    //         }
-    //     }, paramList);     
+                CallableStatement callableStatement = connection.prepareCall(callProc);
+                return callableStatement;
+            }
+        }, paramList);     
+            
         
-    //     // Local Temp Table DROP
-    //     jdbc.execute(v_sql_dropableH);
-    //     // jdbc.execute(v_sql_dropableS);
-    //     // jdbc.execute(v_sql_dropableE);
+        // Local Temp Table DROP
+        jdbc.execute(v_sql_dropTableM);
 
-    //     //v_result.setInputData(v_resultM);
+        context.setResult(v_result);            
+        context.setCompleted();          
 
-    //     //context.setResult(v_result);            
-    //     context.setCompleted();          
+        log.info("### EP_UC_QUOTATION_STATUS_SAVE_PROC 프로시저 호출종료 ###");
 
-    //     log.info("### EP_UC_QUOTATION_EXTRA_SAVE_PROC 프로시저 호출종료 ###");
-
-    // }   
+    }
     
 }
