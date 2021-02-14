@@ -163,7 +163,9 @@
             cellClick=".onCellClickPress"
             rowSelectionChange=".onCheck"
             visibleRowCountMode="Auto"
-            columnResize="onColumnResize">
+            columnResize="onColumnResize"
+            rowActionCount="1"
+            >
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                 <Title text="외화신고대상 목록 : {= ${list>/ForexDeclarationView}.length > 0 ? '(' + ${list>/ForexDeclarationView}.length + ')' : ''}" level="H2"/>
@@ -275,16 +277,16 @@
                             }"/>
                 </t:template>
                 </t:Column>
-                <t:Column id="mainManagementTargetFlag" width="6.5rem">
+                <t:Column id="mainManagementTargetFlag" width="6.5rem"  hAlign="Center">
                 <Label text="관리대상여부" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>management_target_flag}"/>
+                    <Text text="{= ${list>management_target_flag} === true ? 'Y' : 'N'}"/> 
                 </t:template>
                 </t:Column>
-                <t:Column id="mainDeclareTargetFlag" width="6.5rem">
+                <t:Column id="mainDeclareTargetFlag" width="6.5rem"  hAlign="Center">
                 <Label text="신고대상여부" textAlign="Center" width="100%"/>
                 <t:template>
-                    <Text text="{list>declare_target_flag}"/>
+                    <Text text="{= ${list>declare_target_flag} === true ? 'Y' : 'N'}"/> 
                 </t:template>
                 </t:Column> 
                 <t:Column id="mainForexDeclareStatusName" width="6rem">
@@ -307,6 +309,11 @@
                 </t:Column> 
                                                                                                                                                          
             </t:columns>
+            <t:rowActionTemplate>
+                <t:RowAction>
+                    <t:RowActionItem type="Navigation"></t:RowActionItem>
+                </t:RowAction>
+            </t:rowActionTemplate>       
             </t:Table>
         </f:content>
         <!-- DynamicPage Footer -->

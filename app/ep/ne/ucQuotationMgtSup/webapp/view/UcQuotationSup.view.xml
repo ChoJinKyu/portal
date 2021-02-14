@@ -30,12 +30,6 @@
                         <Title text="[협력사]공사물량상세" wrapping="true" class="" />
                     </HBox>
                 </uxap:heading>            
-				<!-- <uxap:expandedHeading>
-					<Title text="LOI 업체선정 품의" wrapping="true" />
-				</uxap:expandedHeading>
-				<uxap:snappedHeading>
-					<Title text="LOI 업체선정 품의" wrapping="true" />
-				</uxap:snappedHeading> -->
                 <uxap:navigationActions>
 					<!-- <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/> -->
                 </uxap:navigationActions>
@@ -61,7 +55,6 @@
                         text="{
                                 path: 'viewModel>/ucmaster/quotation_write_date'
                             }" />
-
                     <ObjectStatus
                         id="createDepartment"
                         title="단가운영단위(플랜트) "
@@ -75,70 +68,181 @@
                         text="{viewModel>/ucmaster/quotation_status_name}"
                         state="Error" />
                 </layout:VerticalLayout>
-
-                <!-- <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                    <Label text="Process : "/>
-                    <HBox>
-                        <sc:MicroProcessFlow>
-                            <sc:content>
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="Error" stepWidth="3rem" icon="sap-icon://circle-task" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                                <sc:MicroProcessFlowItem state="None" stepWidth="3rem" />
-                            </sc:content>
-                        </sc:MicroProcessFlow>
-                    </HBox>
-                    <HBox>
-                        <Text text="LOI요청"  width="4em" renderWhitespace="true" />
-                        <Text text=" LOI업체&#10; 선정"  width="4em" renderWhitespace="true" />
-                        <Text text="LOI발행" width="6em" textAlign="Center" />
-                        <Text text=" LOI발행&#10; 통보" renderWhitespace="true" />
-                    </HBox>
-                </layout:VerticalLayout>   -->
-
 			</FlexBox>
 		</uxap:headerContent>
 
 		<uxap:sections>
-			
-					
-                    <uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="기본정보">
-                        <uxap:subSections>
-                            <uxap:ObjectPageSubSection id="pageUcSubSection1">
-                            </uxap:ObjectPageSubSection>
-                        </uxap:subSections>
-                    </uxap:ObjectPageSection>
+            <uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="기본정보">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection id="pageUcSubSection1">
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
 
-                    <!-- 첨부파일 시작 -->
-                    <uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
-                        <uxap:subSections>
-                            <uxap:ObjectPageSubSection>
-                                <uxap:blocks>
-                                    <!-- File Upload 시작-->
-                                    <UploadCollection
-                                        id="UploadCollection"
-                                        maximumFilenameLength="55"
-                                        maximumFileSize="10"
-                                        multiple="true"
-                                        sameFilenameAllowed="true"
-                                        instantUpload="false"
-                                        noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
-                                        change="onChange"
-                                        fileDeleted="onFileDeleted"
-                                        filenameLengthExceed="onFilenameLengthExceed"
-                                        fileSizeExceed="onFileSizeExceed"
-                                        typeMissmatch="onTypeMissmatch"
-                                        uploadComplete="onUploadComplete"
-                                        beforeUploadStarts="onBeforeUploadStarts" />
-                                    <!-- File Upload 끝-->
-                                </uxap:blocks>
-                            </uxap:ObjectPageSubSection>
-                        </uxap:subSections>
-                    </uxap:ObjectPageSection>
-                    <!-- 첨부파일 끝 -->
+            <!-- <uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="기본정보">
+				<uxap:subSections>
+                    <uxap:ObjectPageSubSection id="pageSubSection2">
+                        <form:SimpleForm id="midObjectForm" editable="{midObjectViewModel>/isEditMode}">                    
+                            <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin"> 
+
+                            </VBox>
+                        </form:SimpleForm>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection> -->
+
+
+            <!-- 준공정보 시작 -->
+			<!-- <uxap:ObjectPageSection titleUppercase="false" title="기본정보">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+                            <form:SimpleForm id="pageSearchForm1" maxContainerCols="2" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                                <form:content>
+                                    <VBox>
+                                        <Label text="* 공사명" design="Bold" class="sapMLabelNoText"/>
+                                        <HBox>
+                                            <Input value="{
+                                                   path: 'viewModel>/ucmaster/const_name',
+                                                   type: 'sap.ui.model.type.String',
+                                                   constraints: {
+                                                   maxLength: 200
+                                                }
+                                            }" required="true" width = "100%"
+                                            visible="{=!${midObjectViewModel>/isShowMode}}"
+                                            editable="{viewModel>/ucmaster/completion_flag}"/>
+                                            <Text text="{viewModel>/ucmaster/const_name}" 
+                                                visible="{midObjectViewModel>/isShowMode}"/> 
+                                        </HBox>
+                                        <layoutData>
+                                            <layout:GridData span="XL12 L12 M12 S12" />
+                                        </layoutData> 
+                                    </VBox>   
+
+                                    <VBox alignContent="Center"> 
+                                        <Label text="* 대분류(공종)" textAlign="left" design="Bold"/>
+                                        <Text text="{viewModel>/ucmaster/ep_item_name}" />
+                                        <layoutData>
+                                            <layout:GridData span="XL4 L4 M4 S12" />
+                                        </layoutData>    
+                                    </VBox>      
+
+                                    <VBox alignContent="Center">
+                                        <Label text="* 공사기간" design="Bold" class="sapUiTinyMarginEnd"/>
+                                        <HBox>
+                                            <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" value="{viewModel>/ucmaster/const_start_date}" required="true" placeholder="Date" width="100%"
+                                                visible="{=!${midObjectViewModel>/isShowMode}}"
+                                                editable="{viewModel>/ucmaster/completion_flag}"/>
+                                            <Text text="{viewModel>/ucmaster/const_start_date}" class="sapUiTinyMarginBegin"
+                                                visible="{midObjectViewModel>/isShowMode}"/> 
+                                            <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
+                                            <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" value="{viewModel>/ucmaster/const_end_date}" required="true" placeholder="Date" width="100%"
+                                                visible="{=!${midObjectViewModel>/isShowMode}}"
+                                                editable="{viewModel>/ucmaster/completion_flag}" />
+                                            <Text text="{viewModel>/ucmaster/const_end_date}" class="sapUiTinyMarginBegin"
+                                                visible="{midObjectViewModel>/isShowMode}"/> 
+                                        </HBox>
+                                        <layoutData>
+                                            <layout:GridData span="XL4 L4 M4 S12" />
+                                        </layoutData>     
+                                    </VBox> 
+                                    <VBox>
+                                        <Label text="견적통화" design="Bold" class="sapMLabelNoText"/>
+                                        <Text text="{viewModel>/ucmaster/currency_code}" />  
+                                        <layoutData>
+                                            <layout:GridData span="XL4 L4 M4 S12" />
+                                        </layoutData>     
+                                    </VBox>
+                                    
+                                    <VBox>
+                                        <Label text="물량검토자" design="Bold" class="sapMLabelNoText"/>
+                                        <Text text="{viewModel>/ucmaster/const_person_name}" />  
+                                        <layoutData>
+                                            <layout:GridData span="XL4 L4 M4 S12" />
+                                        </layoutData>     
+                                    </VBox>
+                                    
+                                    <VBox>
+                                        <Label text="구매담당자" design="Bold" class="sapMLabelNoText"/>
+                                        <Text text="{viewModel>/ucmaster/buyer_name}" />  
+                                        <layoutData>
+                                            <layout:GridData span="XL4 L4 M4 S12" />
+                                        </layoutData>     
+                                    </VBox>
+
+                                    <VBox>
+
+                                        <layoutData>
+                                            <layout:GridData span="XL4 L4 M4 S12" />
+                                        </layoutData>     
+                                    </VBox>
+
+
+
+                                    <VBox> 
+                                        <Label  text="비고" 
+                                                    design="Bold" 
+                                                    class="sapUiSmallMarginBottom"/>
+                                        <HBox>
+                                            <TextArea value="{viewModel>/ucmaster/remark}" rows="8" width = "1500px"
+                                                visible="{=!${midObjectViewModel>/isShowMode}}"
+                                                                    editable="{viewModel>/ucmaster/completion_flag}"/>                  
+                                            <Text text="{viewModel>/ucmaster/remark}" 
+                                                visible="{midObjectViewModel>/isShowMode}"/> 
+                                        </HBox>
+                                        <layoutData>
+                                            <layout:GridData span="XL12 L12 M12 S12" />
+                                        </layoutData>            
+                                    </VBox>
+
+
+
+
+
+                                    
+                                    
+                                </form:content>
+                            </form:SimpleForm>   
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection> -->
+            <!-- 준공정보 끝 -->
+
+
+
+
+
+            <!-- 첨부파일 시작 -->
+            <uxap:ObjectPageSection titleUppercase="false" title="첨부파일">
+                <uxap:subSections>
+                    <uxap:ObjectPageSubSection>
+                        <uxap:blocks>
+                            <!-- File Upload 시작-->
+                            <UploadCollection
+                                id="UploadCollection"
+                                maximumFilenameLength="55"
+                                maximumFileSize="10"
+                                multiple="true"
+                                sameFilenameAllowed="true"
+                                instantUpload="false"
+                                noDataDescription="Drop files or use the &quot;Add&quot; button to keep files ready for upload"
+                                change="onChange"
+                                fileDeleted="onFileDeleted"
+                                filenameLengthExceed="onFilenameLengthExceed"
+                                fileSizeExceed="onFileSizeExceed"
+                                typeMissmatch="onTypeMissmatch"
+                                uploadComplete="onUploadComplete"
+                                beforeUploadStarts="onBeforeUploadStarts" />
+                            <!-- File Upload 끝-->
+                        </uxap:blocks>
+                    </uxap:ObjectPageSubSection>
+                </uxap:subSections>
+            </uxap:ObjectPageSection>
+            <!-- 첨부파일 끝 -->
                     
-                    <uxap:ObjectPageSection id="pageSectionMain2" titleUppercase="false" title="품목정보">
-				        <uxap:subSections>
+            <uxap:ObjectPageSection id="pageSectionMain2" titleUppercase="false" title="품목정보">
+				<uxap:subSections>
                     <uxap:ObjectPageSubSection id="pageSubSection2">
                     <form:SimpleForm id="midObjectForm" editable="{midObjectViewModel>/isEditMode}">                    
                         <VBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin"> 
@@ -154,26 +258,34 @@
                             }"
                             cellClick=".onCellClick"
                             rowSelectionChange=".onCheck"
-                            visibleRowCountMode="Auto"
-                            columnResize="onColumnResize">
+                            visibleRowCountMode="Auto">
+                            <!-- <t:Table id="mainTable" 
+								sticky="HeaderToolbar,ColumnHeaders" 
+								inset="false" 
+                                items="{viewModel>/ucdetails/}"
+								class="sapFDynamicPageAlignContent" 
+								updateFinished=".onMidTableUpdateFinished"
+                                mode="MultiSelect" 
+                                noDataText="데이터가 없습니다."
+								width="auto"> -->
                             <t:extension>
                                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                                 
                                 <ToolbarSpacer/>
                                 <Button id="midTableAddButton" text="Add" type="Transparent" press=".onMidTableAddButtonPress()" />
-                                <!-- <Button text="exam"  press=".onVosButtonPress" /> -->
 								<Button id="midTableDeleteButton" text="Delete" type="Transparent" press=".onItemInfoDeleteButtonPress" />
                                 </OverflowToolbar>
                             </t:extension>
                             
                             <t:columns>
-                                <t:Column id="dtlColumnState" hAlign="Center" width="2em" >
+                                <t:Column id="dtlColumnState" hAlign="Center" width="2em" visible="{=!${midObjectViewModel>/isShowMode}}">
                                     <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
                                     <t:template>
                                         <ObjectStatus icon="{
                                             path: 'viewModel>row_state',
                                             formatter: '.formatter.toModelStateColumnIcon'
-                                        }" />
+                                        }" 
+                                        visible="{=!${midObjectViewModel>/isShowMode}}"/>
                                     </t:template>
                                 </t:Column>
                                 <t:Column id="mainItemSequence" width="6rem" hAlign="Center">
@@ -224,7 +336,7 @@
                                                             minimum: '0',
                                                             maximum: '1000000000000'
                                                         }
-                                                    }" textAlign="Right" 
+                                                    }" textAlign="Right"  required="true"
                                             change=".onQuantityChange"
                                             visible="{=!${midObjectViewModel>/isShowMode}}"/>  
                                     </HBox>
@@ -361,89 +473,36 @@
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection>
 						<uxap:blocks>
-                        <form:SimpleForm id="pageSearchForm" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
-                    <form:content>
-                            <VBox alignContent="Center">
-                                    <Label text="준공여부" textAlign="left" design="Bold" class="sapMLabelNoText" />
+                            <form:SimpleForm id="ucCompletionEditBox" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="4" labelSpanM="4" emptySpanL="0" emptySpanM="0" columnsL="2" columnsM="2">
+                                <form:content>
+                                    <VBox alignContent="Center">
+                                        <Label text="준공여부" textAlign="left" design="Bold" class="sapMLabelNoText" />
 
-                                    <SegmentedButton 
-                                        id="search_completionflag"
-                                        enabled="{=!${midObjectViewModel>/isShowMode}}"
-                                        selectedKey="{viewModel>/ucmaster/completion_flag}" 
-                                        selectionChange=".onSegmentChange"
-                                        
-                                        width="100%">
-                                        <items>
-                                            <SegmentedButtonItem text="Yes" width="6em" key="true"/>
-                                            <SegmentedButtonItem text="No" width="6em" key="false"/>
-                                        </items>
-                                    </SegmentedButton>
-                                    <layoutData>
-                                        <layout:GridData span="XL12 L12 M12 S12" />
-                                    </layoutData> 
-                                </VBox>   
+                                        <SegmentedButton 
+                                            id="search_completionflag"
+                                            enabled="{=!${midObjectViewModel>/isShowMode}}"
+                                            selectedKey="{viewModel>/ucmaster/completion_flag}" 
+                                            selectionChange=".onSegmentChange"
+                                            
+                                            width="100%">
+                                            <items>
+                                                <SegmentedButtonItem text="Yes" width="6em" key="true"/>
+                                                <SegmentedButtonItem text="No" width="6em" key="false"/>
+                                            </items>
+                                        </SegmentedButton>
+                                        <layoutData>
+                                            <layout:GridData span="XL12 L12 M12 S12" />
+                                        </layoutData> 
+                                    </VBox>   
 
-                            
-                                <!-- <form:SimpleForm id="completionForm1Show" editable="{viewModel>/ucmaster/completion_flag}">  -->
                                     <VBox alignContent="Center" alignItems="Stretch" visible="{viewModel>/ucmaster/completion_flag}"> 
-                                        <Label  text="* 준공일자" 
-                                                    design="Bold" 
+                                        <Label  text="준공일자" 
+                                                    design="Bold"  required="true"
                                                     class="sapUiSmallMarginBottom"/>
                                         <HBox>
-                                            <!-- <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" value="{viewModel>/ucmaster/completion_date}" required="true" placeholder="Date" width="100%"
-                                                visible="{=!${midObjectViewModel>/isShowMode}}"
-                                                editable="{viewModel>/ucmaster/completion_flag}"/> -->
-                    
-                                            <!-- <DatePicker placeholder="Date" id="completionDatePicker" value="{path: 'viewModel>/ucmaster/completion_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}" valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"
-                                                visible="{=!${midObjectViewModel>/isShowMode}}"
-                                                editable="{viewModel>/ucmaster/completion_flag}"/> -->
-
-                                            <!-- <DatePicker
-                                                id="changeDate"
-                                                value="{
-                                                    path:'viewModel>/ucmaster/completion_date',
-                                                    type:'sap.ui.model.odata.type.DateTime',
-                                                    formatOptions: {
-                                                        pattern: 'yyyy-MM-dd'
-                                                    }
-                                                }"
-                                                visible="{=!${midObjectViewModel>/isShowMode}}"
-                                                editable="{viewModel>/ucmaster/completion_flag}"/>  -->
-
-
                                             <DatePicker displayFormat="yyyy-MM-dd" valueFormat="yyyy-MM-dd" value="{viewModel>/ucmaster/completion_date}" required="true" placeholder="Date" width="100%"
                                                 visible="{=!${midObjectViewModel>/isShowMode}}"
                                                 editable="{viewModel>/ucmaster/completion_flag}"/> 
-                    
-
-
-                                            <!-- <DatePicker id="completionDate" placeholder="Date" 
-                                             visible="{=!${midObjectViewModel>/isShowMode}}"
-                                                editable="{viewModel>/ucmaster/completion_flag}"/> -->
-
-                                            
-                                            <!-- <DatePicker
-                                                value="{
-                                                    path:'viewModel>/ucmaster/completion_date',
-                                                    type:'sap.ui.model.odata.type.DateTime',
-                                                    formatOptions: {
-                                                        pattern: 'yyyy-MM-dd'
-                                                    }
-                                                }"
-                                                visible="{=!${midObjectViewModel>/isShowMode}}"
-                                                editable="{viewModel>/ucmaster/completion_flag}"/> -->
-                                            <!-- <DatePicker placeholder="Disable Date" value="{path: 'viewModel>/ucmaster/completion_date',type: 'sap.ui.model.odata.type.DateTime', formatOptions: { UTC: true, format: 'yMd' }}"
-                                                visible="{=!${midObjectViewModel>/isShowMode}}"
-                                                editable="{viewModel>/ucmaster/completion_flag}"/> -->
-
-                                            <!-- <Text text="{
-                                                path: 'viewModel>/ucmaster/completion_date',
-                                                type: 'sap.ui.model.type.Date',
-                                                formatOptions: {
-                                                    pattern: 'yyyy/MM/dd'
-                                                }                                        
-                                            }"  
-                                            class="sapUiTinyMarginBegin" visible="{midObjectViewModel>/isShowMode}"/>      -->
                                             <Text text="{viewModel>/ucmaster/completion_date}" class="sapUiTinyMarginBegin" visible="{midObjectViewModel>/isShowMode}"/> 
                                         </HBox> 
                                         <layoutData>
@@ -451,55 +510,21 @@
                                         </layoutData>   
                                     </VBox>
                                     <VBox alignContent="Center" alignItems="Stretch" visible="{viewModel>/ucmaster/completion_flag}"> 
-                                        <Label  text="* 시설담당자" 
+                                        <Label  text="시설담당자" 
                                                     design="Bold" 
                                                     class="sapUiSmallMarginBottom"/>
                                         <HBox>
-
-                                        <!-- <lib-m:CodePicker id="searchRequestorS"
-                                            placeholder="Employee name"
-                                            keyField="employee_number"
-                                            textField="user_local_name"
-                                            suggestionItems="{
-                                                path: 'viewModel>/ucmaster/facility_person_name',
-                                                filters: [
-                                                    {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                                ],
-                                                serviceUrl: 'srv-api/odata/v2/cm.util.HrService/',
-                                                entityName: 'Employee'
-                                            }"
-                                            visible="{=!${midObjectViewModel>/isShowMode}}"
-                                            editable="{viewModel>/ucmaster/completion_flag}"
-                                            >
-                                            <lib-m:CodePickerValueHelp contentWidth="500px" title="Choose a Employee"
-                                                keyFieldHeaderText="Employee ID" textFieldHeaderText="Employee" 
-                                                />
-                                        </lib-m:CodePicker>      -->
-                                        <HBox>
-                                            <!-- <SearchField id="facility_person_name"
-                                            search=".onDetailInputWithManValuePress" 
-                                            change="resetDetailCode"
-                                            visible="{=!${midObjectViewModel>/isShowMode}}"
-                                                editable="{viewModel>/ucmaster/completion_flag}"
-                                            />
-                                        <Input id="facility_person_empno" placeholder="Input data" visible ="false"></Input> -->
-
-                                            <Input id="saveFacilityPersonName" value="{viewModel>/ucmaster/facility_person_name}" required="true" placeholder="시설담당자" showValueHelp="true" valueHelpRequest=".openPlantPopup" width="100%" 
-                                                 visible="{=!${midObjectViewModel>/isShowMode}}"
+                                            <Input id="saveFacilityPersonName" value="{viewModel>/ucmaster/facility_person_name}" placeholder="시설담당자" showValueHelp="true" valueHelpRequest=".openPlantPopup" width="100%" 
+                                                    visible="{=!${midObjectViewModel>/isShowMode}}"
                                                 editable="{viewModel>/ucmaster/completion_flag}"/>
                                             <Input id="saveFacilityPersonCode" value="{viewModel>/ucmaster/facility_person_empno}" visible="false" />
-                                        </HBox>
-                                        <Text text="{viewModel>/ucmaster/facility_person_name}" 
-                                            visible="{midObjectViewModel>/isShowMode}"/> 
-                                              
+                                            <Text text="{viewModel>/ucmaster/facility_person_name}" 
+                                                visible="{midObjectViewModel>/isShowMode}"/> 
                                         </HBox>  
                                         <layoutData>
                                             <layout:GridData span="XL6 L6 M6 S12" />
                                         </layoutData>          
                                     </VBox>
-                                <!-- </form:SimpleForm>    -->
-
-                                
                                     <UploadCollection
                                         id="UploadCollection2"
                                         maximumFilenameLength="55"
@@ -520,11 +545,9 @@
                                         <layoutData>
                                             <layout:GridData span="XL12 L12 M12 S12" />
                                         </layoutData> 
-                                </UploadCollection>
+                                    </UploadCollection>
                                 </form:content>
                             </form:SimpleForm>   
-
-    
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
                 </uxap:subSections>

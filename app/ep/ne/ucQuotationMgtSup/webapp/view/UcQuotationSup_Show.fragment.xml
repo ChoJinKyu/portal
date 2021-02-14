@@ -10,7 +10,7 @@
 
         <form:SimpleForm id="ucUcQuotationSupForm1Show" editable="false"> 
             <VBox alignContent="Center" alignItems="Stretch"> 
-                <Label text="* 공사명" design="Bold" class="sapMLabelNoText"/>
+                <Label text="공사명" design="Bold" class="sapMLabelNoText"/>
                 <Text text="{viewModel>/ucmaster/const_name}" width="100%"/>
             </VBox>
         </form:SimpleForm>
@@ -18,7 +18,7 @@
         <form:SimpleForm id="ucUcQuotationSupForm2Show" editable="false">
         
             <VBox alignContent="Center">
-                <Label text="* 대분류(공종)" textAlign="left" design="Bold" class="sapMLabelNoText" />
+                <Label text="대분류(공종)" textAlign="left" design="Bold" class="sapMLabelNoText" />
                 <Text text="{viewModel>/ucmaster/ep_item_name}" />
                 <layoutData>
                     <layout:GridData span="XL4 L4 M4 S12" />
@@ -26,32 +26,14 @@
             </VBox>      
 
             <VBox alignContent="Center">
-                <Label text="* 공사기간" design="Bold" class="sapUiTinyMarginEnd"/>
+                <Label text="공사기간" design="Bold" class="sapUiTinyMarginEnd"/>
                 <!-- <Text text="{master>/const_start_date}" />
                 <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
                 <Text text="{master>/const_end_date}" /> -->
                 <HBox>
                     <Text text="{viewModel>/ucmaster/const_start_date}" class="sapUiTinyMarginBegin"/> 
-                    <!-- <Text text="{
-                                            path: 'viewModel>/ucmaster/const_start_date',
-                                            type: 'sap.ui.model.type.Date',
-                                            formatOptions: {
-                                                pattern: 'yyyy/MM/dd'
-                                            }                                        
-                                        }"  
-                                        class="sapUiTinyMarginBegin"/>  -->
-
                 <Text text="~" class="sapUiTinyMarginBegin sapUiTinyMarginEnd" />
-
                 <Text text="{viewModel>/ucmaster/const_end_date}" class="sapUiTinyMarginBegin"/> 
-                <!-- <Text text="{
-                                            path: 'viewModel>/ucmaster/const_end_date',
-                                            type: 'sap.ui.model.type.Date',
-                                            formatOptions: {
-                                                pattern: 'yyyy/MM/dd'
-                                            }                                        
-                                        }"  
-                                        class="sapUiTinyMarginBegin"/>  -->
                 </HBox>
                 <layoutData>
                     <layout:GridData span="XL4 L4 M4 S12" />

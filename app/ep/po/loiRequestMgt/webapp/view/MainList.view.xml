@@ -147,7 +147,8 @@
             cellClick=".onCellClickPress"
             rowSelectionChange=".onCheck"
             visibleRowCountMode="Auto"
-            columnResize="onColumnResize">
+            columnResize="onColumnResize"
+            rowActionCount="1">
             <t:extension>
                 <OverflowToolbar class="sapFDynamicPageAlignContent">
                 <!-- <Title text="Request List {= ${listModel>/LOIRequestListView}.length > 0 ? '(' + ${listModel>/LOIRequestListView}.length + ')' : ''}" level="H2"/> -->
@@ -228,6 +229,11 @@
                 </t:template>
                 </t:Column>                                                                                                                    
             </t:columns>
+            <t:rowActionTemplate>
+                <t:RowAction>
+                    <t:RowActionItem type="Navigation"></t:RowActionItem>
+                </t:RowAction>
+            </t:rowActionTemplate>   
             </t:Table>
         </f:content>
     </f:DynamicPage>
