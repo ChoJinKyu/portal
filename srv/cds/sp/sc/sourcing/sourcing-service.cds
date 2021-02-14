@@ -7,6 +7,7 @@ using {sp.Sc_Nego_Workbench_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_H
 using {sp.Sc_Nego_Workbench_View2} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
 using {sp.Sc_Nego_Item_Prices} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 using {sp.Sc_Nego_Suppliers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
+using {sp.Sc_Nego_Suppliers_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 using {sp.Sc_Nego_Item_Non_Price} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_NON_PRICE-model';
 using {sp.Sc_Nego_Item_Non_Price_Dtl} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_NON_PRICE_DTL-model';
 using {sp.Sc_Nego_Headers_New_Record_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW-model';
@@ -20,7 +21,7 @@ using {sp.Sc_Nego_Headers_New_Record_View} from '../../../../../db/cds/sp/sc/SP_
 
 
 // using {cm.Dummy}         from '../../../../../db/cds/cm/CM_DUMMY-model';
-using {sp.Sc_Session_Local_Func} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_USER_DEFINED_FUNCTION.cds';
+using {sp.Sc_Session_Local_Func} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_USER_DEFINED_FUNCTION-model.cds';
 
 
 @path : '/sp.sourcingService'
@@ -53,7 +54,7 @@ service SourcingService {
     entity NegoWorkbenchView @(title : '협상워크벤치목록')    as projection on Sc_Nego_Workbench_View;
 
     /* 협상을 요청하기 위한 아이템별 협력업체정보를 관리한다. */
-    entity NegoSuppliers @(title : '협상아이템업체정보')               as projection on Sc_Nego_Suppliers{ *,
+    entity NegoSuppliers @(title : '협상아이템업체정보')               as projection on Sc_Nego_Suppliers_View{ *,
         Item : redirected to NegoItemPrices
     };
     
@@ -69,7 +70,9 @@ service SourcingService {
     
     //////////////////////////////////////////////////////////////////////////////
     // Test Begin
-    entity NegoWorkbenchView2 as projection on Sc_Nego_Workbench_View2;
+    entity NegoWorkbenchView2 as projection on Sc_Nego_Workbench_View2{ *,
+        Items : redirected to NegoItemPrices
+    };
     view NegoWorkbenchViewMy as select *,
         // SP_SC_MY_SESSION( ).tenant_id as my_tenant_id :String(5)
         // SP_SC_SESSION_LOCAL_FUNC(TENANT_ID: wv.tenant_id).locale_lg as locale_lg :String(2)

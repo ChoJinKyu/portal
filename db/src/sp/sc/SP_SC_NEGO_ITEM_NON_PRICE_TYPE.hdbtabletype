@@ -8,7 +8,7 @@ nonpr_supeval_attr_val_type_cd   NVARCHAR(10)               ,  --#06
 nonpr_requirements_text          NVARCHAR(1000)             ,  --#07
 note_content                     BLOB                       ,  --#08
 target_score                     DECIMAL(28,3)              ,  --#09
-file_group_code                  NVARCHAR(30)                  --#10
+file_group_code                  NVARCHAR(30)               ,  --#10
 /* ,
 local_create_dtm SECONDDATE NOT NULL,
 local_update_dtm SECONDDATE NOT NULL,
@@ -16,4 +16,5 @@ create_user_id NVARCHAR(255) NOT NULL,
 update_user_id NVARCHAR(255) NOT NULL,
 system_create_dtm SECONDDATE NOT NULL,
 system_update_dtm SECONDDATE NOT NULL */
+_row_state_                    NVARCHAR(1)              --#99 UI Table Manged Status('D':Delete, ''|'U':Update, 'C':Create)
 );

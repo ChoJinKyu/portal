@@ -1,8 +1,35 @@
 namespace sp;
 
+
+/*********************************** Reference Model ************************************/
+/* Transaction Association */
 using util from '../../cm/util/util-model';
 using {sp as negoItemPrices} from '../../sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 // using {sp as nogoSuppliers} from '../../sp/sc/SP_SC_NEGO_SUPPLIERS-model';
+
+/* Master Association */
+/** 타스크럼 재정의[Redefined, Restricted, Materialized 등] */
+using { 
+    sp.Sc_Sm_Supplier_Mst,
+    sp.Sc_Sm_Supplier_Org,
+    sp.Sc_Sm_Supplier_Org_View
+    // sp.Sc_Employee_View,
+    // sp.Sc_Hr_Department,
+    // sp.Sc_Pur_Operation_Org,
+    // sp.Sc_Pu_Pr_Mst,
+    // sp.Sc_Approval_Mst
+} from '../../sp/sc/SP_SC_REFERENCE_OTHERS-model';
+
+using { sp.Sc_Mm_Material_Mst } from '../../sp/sc/SP_SC_REFERENCE_OTHERS-model';
+
+using {
+    sp.Sc_Supplier_Type_View
+    // sp.Sc_Incoterms_View,
+    // sp.Sc_Payment_Terms_View,
+    // sp.Sc_Market_Code_View,
+    // sp.Sc_Spec_Code_View
+} from '../../sp/sc/SP_SC_REFERENCE_COMMON-model';
+
 
 
 /***********************************************************************************/
@@ -43,21 +70,34 @@ entity Sc_Nego_Suppliers {
                                                on  Item.tenant_id        = $self.tenant_id
                                                and Item.nego_header_id   = $self.nego_header_id
                                                and Item.nego_item_number = $self.nego_item_number;
+        operation_org_type_code          : String(30)          @title : '운영조직타입코드';
         operation_org_code               : String(30)          @title : '운영조직코드';
-        operation_unit_code              : String(30)          @title : '운영단위코드';
-        nego_supplier_register_type_code : String(10)          @title : '협상공급업체등록유형코드';
-        evaluation_type_code             : String(10)          @title : '_평가유형코드-폐기예정';
-        nego_supeval_type_code           : String(10)          @title : '협상공급업체평가유형코드';
+        operation_unit_code              : String(30)          @title : '운영단위코드--삭제예정';
+        
+        nego_supplier_register_type_code : String(10)          @title : '협상공급업체등록유형코드-폐기예정' @description : 'UI:-폐기예정';
+        negotiation_supp_reg_status_cd   : String(10)          @title : '협상공급업체등록상태코드' @description : 'UI:';
+        //View에서 추가// supplier_register_type_code      : String(10)          @title : '협상공급업체등록유형코드';
+        evaluation_type_code             : String(10)          @title : '_평가유형코드-폐기예정' @description : 'UI:-폐기예정';
+        nego_supeval_type_code           : String(10)          @title : '협상공급업체평가유형코드' @description : 'UI:-폐기예정';
+        supplier_register_status_code    : String(10)          @title : '공급업체등록상태코드' @description : 'UI:쓰기전용필드-폐기판단';
         supplier_code                    : String(10)          @title : '공급업체코드';
-        supplier_name                    : String(300)         @title : '공급업체명';
+        supplier                         : Association to Sc_Sm_Supplier_Mst
+                                               on  supplier.tenant_id     = $self.tenant_id
+                                               and supplier.supplier_code = $self.supplier_code
+                                               ;
+        supplier_name                    : String(300)           @title : '공급업체명-폐기예정';
         //    supplier_group_code : String(30)   @title: '공급업체그룹코드' ;
-        supplier_type_code               : String(30)          @title : '공급업체유형코드';
-        excl_flag                        : String(1)           @title : '제외여부';
-        excl_reason_desc                 : String(1000)        @title : '제외사유설명';
-        include_flag                     : String(1)           @title : '포함여부';
-        nego_target_include_reason_desc  : String(1000)        @title : '협상대상포함사유설명';
-        only_maker_flat                  : String(1)           @title : 'Only Maker Flag';
-        contact                          : String(30)          @title : 'Contact';
+        supplier_type_code               : String(30)            @title : '공급업체유형코드';  // 실시간요건확인후폐기예정
+        supplier_type                    : Association to Sc_Supplier_Type_View             // 실시간요건확인후폐기예정
+                                               on  supplier_type.tenant_id          = $self.tenant_id
+                                               and supplier_type.supplier_type_code = $self.supplier_type_code
+                                               ;
+        excl_flag                        : String(1) default 'Y' @title : '제외여부' @description : 'UI:제외여부(Evaluation)';
+        excl_reason_desc                 : String(1000)          @title : '제외사유설명';
+        include_flag                     : String(1) default 'N' @title : '포함여부' @description : 'UI:포함여부(Potential)';
+        nego_target_include_reason_desc  : String(1000)          @title : '협상대상포함사유설명';
+        only_maker_flat                  : String(1)             @title : 'Only Maker Flag';  // 실시간요건확인후폐기예정
+        contact                          : String(30)            @title : 'Contact';
         //    special_flag : String(1)   @title: '특별여부' ;
         //    confirm_date : Date   @title: '확인일자' ;
         //    confirm_user_id : String(40)   @title: '확인사용자ID' ;
@@ -80,3 +120,47 @@ entity Sc_Nego_Suppliers {
 }
 
 extend Sc_Nego_Suppliers with util.Managed;
+
+view Sc_Nego_Suppliers_View as select from Sc_Nego_Suppliers
+mixin {
+    supplier_org : Association to Sc_Sm_Supplier_Org_View
+                        on  supplier_org.tenant_id     = $projection.tenant_id
+                        and supplier_org.company_code  = $projection.company_code
+                        and supplier_org.org_type_code = $projection.operation_org_type_code
+                        and supplier_org.org_code      = $projection.operation_org_code
+                        and supplier_org.supplier_code = $projection.supplier_code
+                    //    and operation_org.org_type_code = $projection.operation_org_type_code
+                        ;  
+} into {
+    *,
+    Item.company_code,
+    // Item.operation_org_code,
+    // Item.operation_org_type_code,
+    supplier_org.supplier_register_status_code,
+    supplier_org.supplier_register_status_name,
+    supplier_org.supplier_register_status_code as evaluation_type_code,
+    supplier_org.supplier_type_code,
+    supplier_org.supplier_type_name,
+    supplier_org.maker_only_flag
+} excluding {
+    only_maker_flat,
+    evaluation_type_code,
+    supplier_register_status_code,
+    supplier_type_code,
+    supplier_type
+};
+
+annotate Sc_Nego_Suppliers_View with @(
+    title       : '공급업체조직',
+    description : '공급업체조직'
+) {
+    company_code                  @title:'' @description:'UI:' @readonly;
+    operation_org_code            @title:'' @description:'UI:' @readonly;
+    operation_org_type_code       @title:'' @description:'UI:' @readonly;
+    supplier_register_status_code @title:'' @description:'UI:' @readonly;
+    supplier_register_status_name @title:'' @description:'UI:' @readonly;
+    evaluation_type_code          @title:'' @description:'UI:폐기예정' @readonly;
+    supplier_type_code            @title:'' @description:'UI:' @readonly;
+    supplier_type_name            @title:'' @description:'UI:' @readonly;
+    maker_only_flag               @title:'' @description:'UI:' @readonly;
+};

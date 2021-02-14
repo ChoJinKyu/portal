@@ -5,6 +5,7 @@ using {sp.Sc_Nego_Workbench_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_H
 using {sp.Sc_Nego_Workbench_View2} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
 using {sp.Sc_Nego_Item_Prices} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 using {sp.Sc_Nego_Suppliers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
+using {sp.Sc_Nego_Suppliers_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 using {sp.Sc_Nego_Item_Non_Price} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_NON_PRICE-model';
 using {sp.Sc_Nego_Item_Non_Price_Dtl} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_NON_PRICE_DTL-model';
 using {sp.Sc_Nego_Headers_New_Record_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS_NEW_RECORD_VIEW-model';
@@ -48,7 +49,7 @@ service SourcingV4Service {
     entity NegoWorkbenchView @(title : '협상워크벤치목록')    as projection on Sc_Nego_Workbench_View;
 
     /* 협상을 요청하기 위한 아이템별 협력업체정보를 관리한다. */
-    entity NegoSuppliers @(title : '협상아이템업체정보')               as projection on Sc_Nego_Suppliers{ *,
+    entity NegoSuppliers @(title : '협상아이템업체정보')               as projection on Sc_Nego_Suppliers_View{ *,
         Item : redirected to NegoItemPrices
     };
     
@@ -155,6 +156,7 @@ service SourcingV4Service {
         bid_conference_place            : type of Sc_Nego_Headers : bid_conference_place;         // Bid Conference Place	
         contact_point_empno             : type of Sc_Nego_Headers : contact_point_empno;          // Contact Point	
         phone_no                        : type of Sc_Nego_Headers : phone_no;                     // Phone No	
+        _row_state_                     : String(1) @Text:'UI:Row State' @Description:'UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
     };
 
     type tyNegoItemPrice {
@@ -209,6 +211,7 @@ service SourcingV4Service {
         requestor_empno              : type of Sc_Nego_Item_Prices : requestor_empno;
         budget_department_code       : type of Sc_Nego_Item_Prices : budget_department_code;
         request_department_code      : type of Sc_Nego_Item_Prices : request_department_code;
+        _row_state_                  : String(1) @Text:'UI:Row State' @Description:'UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
     };
 
     type tyNegoSupplier {
@@ -216,11 +219,14 @@ service SourcingV4Service {
         nego_header_id                   : type of Sc_Nego_Suppliers : nego_header_id;
         nego_item_number                 : type of Sc_Nego_Suppliers : nego_item_number;
         item_supplier_sequence           : type of Sc_Nego_Suppliers : item_supplier_sequence;
+        operation_org_type_code          : type of Sc_Nego_Suppliers : operation_org_type_code;
         operation_org_code               : type of Sc_Nego_Suppliers : operation_org_code;
         operation_unit_code              : type of Sc_Nego_Suppliers : operation_unit_code;
-        nego_supplier_register_type_code : type of Sc_Nego_Suppliers : nego_supplier_register_type_code;
-        evaluation_type_code             : type of Sc_Nego_Suppliers : evaluation_type_code;
-        nego_supeval_type_code           : type of Sc_Nego_Suppliers : nego_supeval_type_code;
+        nego_supplier_register_type_code : type of Sc_Nego_Suppliers : nego_supplier_register_type_code;  //#06-폐기예정
+        negotiation_supp_reg_status_cd   : type of Sc_Nego_Suppliers : negotiation_supp_reg_status_cd; 
+        evaluation_type_code             : type of Sc_Nego_Suppliers : evaluation_type_code;              //#08-폐기예정
+        nego_supeval_type_code           : type of Sc_Nego_Suppliers : nego_supeval_type_code;            //#09-폐기예정
+        supplier_register_status_code    : type of Sc_Nego_Suppliers : supplier_register_status_code;
         supplier_code                    : type of Sc_Nego_Suppliers : supplier_code;
         supplier_name                    : type of Sc_Nego_Suppliers : supplier_name;
         supplier_type_code               : type of Sc_Nego_Suppliers : supplier_type_code;
@@ -231,6 +237,7 @@ service SourcingV4Service {
         only_maker_flat                  : type of Sc_Nego_Suppliers : only_maker_flat;
         contact                          : type of Sc_Nego_Suppliers : contact;
         note_content                     : type of Sc_Nego_Suppliers : note_content;
+        _row_state_                      : String(1) @Text:'UI:Row State' @Description:'UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
     };
 
     type tyNegoItemNonPrice {
@@ -244,6 +251,7 @@ service SourcingV4Service {
         note_content                     : type of Sc_Nego_Item_Non_Price:note_content;
         target_score                     : type of Sc_Nego_Item_Non_Price:target_score;
         file_group_code                  : type of Sc_Nego_Item_Non_Price:file_group_code;
+        _row_state_                      : String(1) @Text:'UI:Row State' @Description:'UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
     };
 
     type tyNegoItemNonPriceDtl {
@@ -257,6 +265,7 @@ service SourcingV4Service {
         supeval_to_value                 : type of Sc_Nego_Item_Non_Price_Dtl:supeval_to_value;
         supeval_text_value               : type of Sc_Nego_Item_Non_Price_Dtl:supeval_text_value;
         supeval_score                    : type of Sc_Nego_Item_Non_Price_Dtl:supeval_score;
+        _row_state_                      : String(1) @Text:'UI:Row State' @Description:'UI Table Manged Status("D":Delete, ""|"U":Update, "C":Create)';
     };
 
     type ReturnMsg : {
@@ -326,7 +335,9 @@ service SourcingV4Service {
     // Negotiation(견적&입찰) Workbench 정형 View
     // @(title:'UI:Workbench 뷰',description:'Nego(Header+ItemPrices) 정형뷰',readonly) 
     // @(title:'Nego(Header+ItemPrices) 정형뷰',description:'UI:Workbench 정형뷰',readonly)  
-    entity NegoWorkbenchView2 as projection on Sc_Nego_Workbench_View2;
+    entity NegoWorkbenchView2 as projection on Sc_Nego_Workbench_View2{ *,
+        Items : redirected to NegoItemPrices
+    };
     
     view NegoWorkbenchView3 as select from Sc_Nego_Headers_View {
     key tenant_id                                                                                   ,

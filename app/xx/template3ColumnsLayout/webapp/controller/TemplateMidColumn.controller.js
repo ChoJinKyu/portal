@@ -263,7 +263,7 @@ sap.ui.define([
 			this._sTenantId = oArgs.tenantId;
 			this._sCompanyCode = oArgs.companyCode;
 
-			if(oArgs.tenantId == "create" && oArgs.companyCode == "new"){
+			if(oArgs.companyCode == "new"){
 				//It comes Add button pressed from the before page.
 				this.getModel("midPageViewModel").setProperty("/isAddedMode", true);
 

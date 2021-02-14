@@ -10,7 +10,8 @@
     xmlns:si="sap.suite.ui.commons.statusindicator"
     xmlns:u="sap.ui.unified" 
     xmlns:table="sap.ui.table" 
-    xmlns="sap.m"
+    xmlns="sap.m" 
+    xmlns:lib-m="ext.lib.m" 
     xmlns:cm-ui="cm.util.control.ui"
     xmlns:dnd="sap.ui.core.dnd"
     core:require="{ I18NFormatter: 'dp/md/util/controller/I18NFormatter' }"
@@ -70,12 +71,14 @@
                         title="{I18N>/REQUESTOR}"
                         text="[{rrMgt>/user_english_name}]{rrMgt>/user_local_name}"/>
                     <ObjectStatus
-                        title="{I18N>/REQUEST_DATE}"
-                        text="{rrMgt>/repair_request_date}"/>
+                        title="{I18N>/REQUEST_DATE}" 
+                        text="{rrMgt>/repair_request_date}"
+                        />
+                     
 				</layout:VerticalLayout>
 
                 <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-					<HBox><Label text="{I18N>/STATUS}" /> <Label text=" :"/></HBox>
+					<HBox><Label text="{I18N>/STATUS}" /> <Label text=" :"/> <Text text="{rrMgt>/repair_request_date}"/>  </HBox>
                    <ObjectStatus
                         class="sapMObjectStatusLarge"
                         text="{= ${rrMgt>/repair_request_number} === undefined ?'New':''}{rrMgt>/repair_progress_status_code_nm}"

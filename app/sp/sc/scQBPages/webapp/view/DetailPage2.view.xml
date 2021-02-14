@@ -51,14 +51,14 @@
                         <FlexBox wrap="Wrap" >
                             
                             <layout:VerticalLayout class="sapUiSmallMarginBeginEnd" width="30rem">
-                                <ObjectStatus id="objectStatus_nego_document_number" title="Negotiation No" text="{path: 'NegoHeaders>/nego_document_number'}" class="sapUiLargeMarginBegin" />
-                                <ObjectStatus title="Buyer" text="{NegoHeaders>/buyer_employee/employee_name} [{NegoHeaders>/buyer_employee/department_name}]" class="sapUiLargeMarginBegin" />
-                                <ObjectStatus title="Create Date" text="{path: 'NegoHeaders>/local_create_dtm', type: 'sap.ui.model.odata.type.Date', 
+                                <ObjectStatus id="objectStatus_nego_document_number" title="{I18N>/NEGO_DOCUMENT_NUMBER}" text="{path: 'NegoHeaders>/nego_document_number'}" class="sapUiLargeMarginBegin" />
+                                <ObjectStatus title="{I18N>/BUYER}" text="{NegoHeaders>/buyer_employee/employee_name} [{NegoHeaders>/buyer_employee/department_name}]" class="sapUiLargeMarginBegin" />
+                                <ObjectStatus title="{I18N>/NW_CREATE_DTM}" text="{path: 'NegoHeaders>/local_create_dtm', type: 'sap.ui.model.odata.type.Date', 
                                                                         formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }"  class="sapUiLargeMarginBegin" />
                             </layout:VerticalLayout>
 
                             <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
-                                <Label text="Status :"/>
+                                <Label text="{I18N>/NEGO_PROGRESS_STATUS_CODE} :"/>
                                 <ObjectStatus class="sapMObjectStatusLarge" text="{path: 'NegoHeaders>/nego_progress_status/nego_progress_status_name' }" state="Error" />
                             </layout:VerticalLayout>
                             <layout:VerticalLayout class="sapUiSmallMarginBeginEnd">
@@ -69,11 +69,11 @@
 
                     <!-- Header Start -->
                     <uxap:sections>
-                        <uxap:ObjectPageSection id="objectPageSection" titleUppercase="false" title="Header" >
+                        <uxap:ObjectPageSection id="objectPageSection" titleUppercase="false" title="{I18N>/NW_SECTION_TITLE_HEADER}" >
                             <uxap:subSections >
                                 <uxap:ObjectPageSubSection>
                                     <uxap:blocks>
-                                        <Panel id="panel_Header" expandable="true" expanded="true" headerText="Header Content"  >
+                                        <Panel id="panel_Header" expandable="true" expanded="true" headerText="{I18N>/NW_SECTION_TITLE_HEADER} {I18N>/NW_CONTENT}"  >
                                             <content>
                                                 <layout:Grid
                                                     hSpacing="1"
@@ -82,13 +82,13 @@
                                                         <form:SimpleForm id="formHeader1" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" adjustLabelSpan="false" labelSpanL="0"         labelSpanM="0" emptySpanL="0" emptySpanM="0" columnsL="3" columnsM="3">
                                                             <form:content>
                                                                 <VBox class="sapUiNoMarginBottom">
-                                                                    <Label  text="Negotiation No"  />
+                                                                    <Label  text="{I18N>/NEGO_DOCUMENT_NUMBER}:"  />
                                                                     <Input  id="inputNegotiationNo" value="{NegoHeaders>/nego_document_number}" enabled="false" visible="{=${propInfo>/isEditMode} }"/>
                                                                     <Text  id="textNegotiationNo" text="{NegoHeaders>/nego_document_number}" visible="{=!${propInfo>/isEditMode} }"/>
                                                                 </VBox>
 
                                                                 <VBox class="sapUiNoMarginBottom">
-                                                                    <Label  text="Type"  />
+                                                                    <Label text="{I18N>/NEGO_TYPE_CODE}:"  />
                                                                     <Text  id="textType" text="{NegoHeaders>/nego_type/nego_type_name}" />
                                                                         
                                                                     <!-- nego type name 위한 temp성 콤보 -->
@@ -103,38 +103,37 @@
                                                                         }" 
                                                                         editable="false" enabled="false" visible="false"
                                                                         selectedKey="{NegoHeaders>/nego_type_code}" value="{NegoHeaders>/nego_type/nego_type_name}"
-                                                                        width="100%" required="true">
+                                                                        width="100%" >
                                                                         <core:ListItem key="{nego_type_code}" text="{nego_type_name}" />
                                                                     </ComboBox>
                                                                 </VBox>
 
                                                                 <VBox class="sapUiNoMarginBottom">
-                                                                    <Label  text="Outcome"  />
+                                                                    <Label text="{I18N>/OUTCOME_CODE}:"   />
                                                                     <Text  id="textOutcome" text="{NegoHeaders>/outcome/outcome_name}" />
                                                                 </VBox>
                                                             </form:content>
                                                         </form:SimpleForm>
                                                         
                                                         <VBox  class="sapUiMediumMarginTop">
-                                                            <Label  text="Title:" required="true" class="nameTitle"  />
+                                                            <Label text="{I18N>/NEGO_DOCUMENT_TITLE}:" required="true" class="nameTitle"  />
                                                             
                                                             <Input  id="inputTitle" width="100%" value="{NegoHeaders>/nego_document_title}" visible="{=${propInfo>/isEditMode}}"
-                                                                placeholder="최대 300자까지 입력 할 수 있습니다."/>
+                                                                placeholder="최대 300자까지 입력 할 수 있습니다." maxLength="300"/>
                                                             <Text  id="textTitle" text="{NegoHeaders>/nego_document_title}" visible="{=!${propInfo>/isEditMode} }"/>
                                                         </VBox>
                                                     
                                                         <VBox class="sapUiMediumMarginTop">
-                                                            <Label  text="Description:" class="nameTitle sapUiTinyMarginBottom" />
+                                                            <Label  text="{I18N>/NEGO_DOCUMENT_DESC}:" class="nameTitle sapUiTinyMarginBottom" />
                                                             <rte:RichTextEditor id="reDescription" editorType="TinyMCE4" width="100%" height="400px" customToolbar="true" 
                                                                 showGroupFont="true" showGroupLink="true" showGroupInsert="false" value="{NegoHeaders>/nego_document_desc}"
-                                                                editable="{=${propInfo>/isEditMode}}" 
+                                                                
                                                                 />
                                                             <!-- <FormattedText id="formTextDescription" htmlText="{NegoHeaders>/nego_document_desc}" visible="{=!${propInfo>/isEditMode}}"/> -->
                                                         </VBox>
 
                                                         <VBox  width="100%" height="100%" alignItems="Start" class="sapUiMediumMarginTop" >
-                                                    
-                                                            <Label  text="Quate Style:" class="nameTitle " />
+                                                            <Label  text="{I18N>/NW_QUATE_STYLE}:" class="nameTitle " />
                                                             <RadioButtonGroup id="rbg1" columns="2" width="100%" selectedIndex="{=${NegoHeaders>/negotiation_style_code}==='Blind' ? 1 : 0 }" 
                                                                 visible="{=${propInfo>/isEditMode}}" 
                                                                 buttons="{
@@ -146,7 +145,11 @@
                                                                     }}"
                                                                     >
                                                                     <!-- filters: [{path: 'nego_type_code', operator: 'EQ', value1: ${NegoHeaders>/nego_type_code} }], -->
-                                                                <RadioButton key="{negotiation_style_code}" text="{negotiation_style_name}" />
+                                                                <RadioButton key="{negotiation_style_code}" text="{negotiation_style_name}" >
+                                                                    <customData>
+                                                                        <core:CustomData key="negotiation_style_code" value='{negotiation_style_code}'/>
+                                                                    </customData>
+                                                                </RadioButton>
                                                                 <!-- <RadioButton text="Sealed (Purchaser : X,Supplier :X)" />
                                                                 <RadioButton text="Blind (Purchaser : O,Supplier :X)" /> -->
                                                             </RadioButtonGroup>
@@ -157,9 +160,9 @@
                                                         <HBox  width="100%"  class="sapUiMediumMarginTop">
                                                             <VBox width="50%">
                                                             
-                                                                <Label  text="Period:" width="100px" required="true" class="sapMLabelNoText"/> 
+                                                                <Label  text="{I18N>/NW_PERIOD}:" width="100px" required="true" class="sapMLabelNoText"/> 
                                                                 <HBox  height="100%" alignItems="Center" >
-                                                                    <CheckBox id="checkbox_Immediately" text="Immediately" selected="{=${NegoHeaders>/immediate_apply_flag}==='Y'}" editable="{=${propInfo>/isEditMode}}"
+                                                                    <CheckBox id="checkbox_Immediately" text="{I18N>/NW_IMMEDIATELY}" selected="{=${NegoHeaders>/immediate_apply_flag}==='Y'}" editable="{=${propInfo>/isEditMode}}"
                                                                         select="selectImmediately" /> 
                                                                     <ToolbarSpacer width="1rem"/> 
                                                                     <FlexBox>
@@ -185,29 +188,31 @@
                                                             <HBox  width="50%" height="100%" alignItems="Center" >
                                                                 <HBox alignContent="Center" alignItems="Center" width="100%" class="sapUiSmallMarginEnd">
                                                                     <VBox width="100px">
-                                                                        <Label text="Max Round Count" width="120px"  required="true" class="sapMLabelNoText"/>
+                                                                        <Label text="{I18N>/NW_MAX_ROUND_COUNT}:" width="160px"  required="true" class="sapMLabelNoText"/>
                                                                         <Input value="{NegoHeaders>/max_round_count}" width="100%" visible="{=${propInfo>/isEditMode}}" />
                                                                         <Text text="{NegoHeaders>/max_round_count}" width="100%" visible="{=!${propInfo>/isEditMode}}" textAlign="Center"/>
                                                                     </VBox>
                                                                     <VBox>
                                                                         <Label text=""  class="sapMLabelNoText"/>
-                                                                        <CheckBox  selected="{=${NegoHeaders>/auto_round}==='Y'}" class="" editable="{=${propInfo>/isEditMode}}"/>
+                                                                        <CheckBox select="selectedAutoRound" selected="{=${NegoHeaders>/auto_round}==='Y'}" editable="{=${propInfo>/isEditMode}}"/>
+                                                                        <!-- <CheckBox id="checkbox_Immediately" text="{I18N>/NW_IMMEDIATELY}" selected="{=${NegoHeaders>/immediate_apply_flag}==='Y'}" editable="{=${propInfo>/isEditMode}}"
+                                                                        select="selectImmediately" />  -->
                                                                     </VBox>
                                                                     <VBox>
                                                                         <Label text=""  class="sapMLabelNoText"/>
-                                                                        <Text text="Auto Round" class="sapUiTinyMarginEnd"/>
+                                                                        <Text text="{I18N>/NW_AUTO_ROUND}" class="sapUiTinyMarginEnd"/>
                                                                     </VBox>
                                                                     <VBox>
                                                                         <Label text=""  class="sapMLabelNoText"/>
                                                                         <Input value="{NegoHeaders>/auto_round_terms}" width="100px"  visible="{=${propInfo>/isEditMode}}"  />
                                                                         <Text text="{NegoHeaders>/auto_round_terms}" width="100px" visible="{=!${propInfo>/isEditMode}}" textAlign="Center"/>
                                                                     </VBox>
-                                                                    <VBox>
+                                                                    <VBox class="sapUiLargeMarginEnd">
                                                                         <Label text=""  class="sapMLabelNoText"/>
-                                                                        <Text text="Minute" class="sapUiTinyMarginBegin sapUiMediumMarginEnd"/>
+                                                                        <Text text="{I18N>/NW_MINUTE}" class="sapUiTinyMarginBegin sapUiMediumMarginEnd"/>
                                                                     </VBox>
-                                                                    <VBox class=" sapUiLargeMarginBegin">
-                                                                        <Label text="Previous Round" class="sapMLabelNoText"/>
+                                                                    <VBox class="sapUiLargeMarginBegin">
+                                                                        <Label text="{I18N>/NW_PREVIOUS_ROUND}:" class="sapMLabelNoText"/>
                                                                         <SegmentedButton id="prSegmentButton" selectedKey="{NegoHeaders>/previous_round}" 
                                                                             visible="{=${propInfo>/isEditMode}}" >
                                                                             <items>
@@ -222,9 +227,9 @@
                                                         </HBox>
 
                                                         <VBox  class="sapUiMediumMarginTop">
-                                                            <Label  text="Note To Supplier:" class="sapMLabelNoText sapUiTinyMarginBottom"/>
+                                                            <Label  text="{I18N>/NW_NOTE_TO_SUPPLIER}:" class="sapMLabelNoText sapUiTinyMarginBottom"/>
                                                             <rte:RichTextEditor id="reNoteToSupplier" editorType="TinyMCE4" width="100%" height="400px" customToolbar="true" 
-                                                                value="{NegoHeaders>/note_content}" editable="{=${propInfo>/isEditMode}}" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
+                                                                value="{NegoHeaders>/note_content}" showGroupFont="true" showGroupLink="true" showGroupInsert="false"/>
                                                             <!-- <FormattedText id="formTextNoteToSupplier" htmlText="{NegoHeaders>/note_content}"  visible="{=!${propInfo>/isEditMode}}"/> -->
                                                         </VBox>
 
@@ -259,7 +264,7 @@
                                                                 width="auto">
                                                                 <headerToolbar>
                                                                     <OverflowToolbar>
-                                                                        <Title text="Attachments (0)" level="H2"/>
+                                                                        <Title text="{I18N>/Attachments} (0)" level="H2"/>
                                                                         <ToolbarSpacer/>
                                                                         
                                                                         <Button text="Load Attached file From Requisition" type="Transparent" press=".createConfirmBox" visible="{=${propInfo>/isEditMode}}" />
@@ -329,10 +334,10 @@
                     <!-- Header End -->
                     <!-- Control Start -->
                     <uxap:sections>
-                        <uxap:ObjectPageSection titleUppercase="false" title="Control" visible="true">
+                        <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/NW_SECTION_TITLE_CONTROL}" visible="true">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
-                                    <Panel id="panel_Control" expandable="true" expanded="true" headerText="Control Content">
+                                    <Panel id="panel_Control" expandable="true" expanded="true" headerText="{I18N>/NW_SECTION_TITLE_CONTROL} {I18N>/NW_CONTENT}">
                                         <form:SimpleForm  
                                         class="sapUiTinyMargin "
                                         layout="ResponsiveGridLayout"
@@ -343,7 +348,8 @@
                                             <VBox width="100%">
                                                 <HBox width="100%" class="sapUiSmallMarginBottom"  >
                                                     <VBox width="25%">
-                                                        <Label  text="Award Type" 
+                                                        <Label  text="{I18N>/AWARD_TYPE_CODE}:" 
+                                                                required="true"
                                                                 class="sapMLabelNoText"/> 
                                                         <Select width="90%" selectedKey="{NegoHeaders>/award_type_code}" change="selectAwardTypeChange"
                                                                 items="{
@@ -366,7 +372,7 @@
                                                         </layoutData>
                                                     </VBox>
                                                     <VBox width="25%" class=" "   >
-                                                        <Label  text="Target Price Setup " 
+                                                        <Label  text="{I18N>/TARGET_AMOUNT_CONFIG_FLAG}:" 
                                                                 class="sapMLabelNoText"/>
                                                         <SegmentedButton selectedKey="{NegoHeaders>/target_amount_config_flag}" >
                                                             <items>
@@ -380,7 +386,7 @@
                                                         </layoutData>
                                                     </VBox>
                                                     <VBox width="25%">
-                                                        <Label  text="Target Total Amount" visible="true"/> 
+                                                        <Label  text="{I18N>/NW_TARGET_AMOUNT}:" visible="true"/> 
                                                         <Input value="{
                                                                 path: 'NegoHeaders>/target_amount',
                                                                 formatter: '.numberFormatter.toNumberString'
@@ -394,8 +400,9 @@
 
                                                 <HBox width="100%" class="sapUiSmallMarginBottom">
                                                     <VBox width="25%">
-                                                        <Label  text="Award Method" 
-                                                                class="sapMLabelNoText"/> 
+                                                        <Label  text="{I18N>/AWARD_METHOD_CODE}:" 
+                                                                class="sapMLabelNoText"
+                                                                required="true"/> 
                                                         <Select selectedKey="{NegoHeaders>/award_method_code}" width="90%" change="selectAwardMethodChange" id="selectAwardMethod"
                                                             items="{
                                                                 path: '/Sc_Award_Method_Code_View',
@@ -416,7 +423,7 @@
                                                         </layoutData>
                                                     </VBox>
                                                     <VBox width="75%" visible="{= ${NegoHeaders>/award_method_code} === 'MP' ? true : false }">
-                                                        <Label  text="Number of Award Supplier" 
+                                                        <Label  text="{I18N>/NUMBER_OF_AWARD_SUPPLIER}:" 
                                                                 class="sapMLabelNoText"/> 
                                                         <HBox >
                                                             <Select width="100%" change="selectNumberSupplierChange" selectedKey="{NegoHeaders>/number_of_award_supplier}" 
@@ -447,7 +454,7 @@
                                                 </HBox>
                                                 <HBox width="100%" class="sapUiSmallMarginBottom"  >
                                                     <VBox width="25%" class=" "  >
-                                                        <Label  text="Participative" 
+                                                        <Label  text="{I18N>/SUPPLIER_PARTICIPATION_FLAG}:" 
                                                                 class="sapMLabelNoText"/>
                                                         <SegmentedButton selectedKey="{NegoHeaders>/supplier_participation_flag}" >
                                                             <items>
@@ -460,7 +467,7 @@
                                                         </layoutData>
                                                     </VBox>
                                                     <VBox width="25%" class=" ">
-                                                        <Label  text="Partial Quotation" 
+                                                        <Label  text="{I18N>/PARTIAL_ALLOW_FLAG}:" 
                                                                 class="sapMLabelNoText"/> 
                                                         <SegmentedButton selectedKey="{NegoHeaders>/partial_allow_flag}" >
                                                             <items>
@@ -477,7 +484,7 @@
                                                 <HBox width="100%" class="sapUiSmallMarginBottom  " >
                                                     
                                                     <VBox width="25%" class="">
-                                                        <Label  text="Bid Conference Date" 
+                                                        <Label  text="{I18N>/BID_CONFERENCE_DATE}:" 
                                                                 class="sapMLabelNoText"/>
                                                         <DateTimePicker placeholder=""  width="90%"
                                                                             valueFormat="yyyy/MM/ddTHH:mm" displayFormat="yyyy/MM/dd HH:mm" visible="{=${propInfo>/isEditMode}}"
@@ -493,7 +500,7 @@
                                                         </layoutData>
                                                     </VBox>
                                                     <VBox width="25%" >
-                                                        <Label  text="Bid Conference" 
+                                                        <Label  text="{I18N>/BID_CONFERENCE}:" 
                                                                 class="sapMLabelNoText"/>
                                                         <SegmentedButton selectedKey="{NegoHeaders>/bid_conference}" >
                                                             <items>
@@ -508,7 +515,7 @@
                                                 </HBox>
                                                 <HBox width="100%" class="sapUiSmallMarginBottom">
                                                     <VBox width="75%">
-                                                        <Label  text="Bid Conference Place:" 
+                                                        <Label  text="{I18N>/BID_CONFERENCE_PLACE}:" 
                                                                 class="sapMLabelNoText"/>
                                                         <Input width="97%" value="{NegoHeaders>/bid_conference_place}" placeholder="최대 200 자까지 입력 할 수 있습니다."/>
                                                     </VBox>
@@ -517,14 +524,14 @@
 
                                                 <HBox width="100%" class="">
                                                     <VBox width="25%">
-                                                        <Label  text="Contact Point" 
+                                                        <Label  text="{I18N>/CONTACT_POINT}:" 
                                                                 class="sapMLabelNoText"/>
                                                         <Input id="inputContactPoint" placeholder="사용자 이름" width="90%" showValueHelp="true" valueHelpRequest=".onPressBuyerPop" 
                                                             value="{NegoHeaders>/contact_point/employee_name}"/>
                                                     </VBox>
                                                     <!-- <VBox width="15%" /> -->
                                                     <VBox width="25%">
-                                                        <Label  text="Phone No" 
+                                                        <Label  text="{I18N>/PHONE_NO}:" 
                                                                 class="sapMLabelNoText"/>
                                                         <Input value="{NegoHeaders>/phone_no}" width="90%" class=" " id="aa" type="Number"/>
                                                     </VBox>
@@ -543,7 +550,7 @@
                                             <VBox width="100%">
                                                 <HBox width="100%" class="sapUiSmallMarginBottom"  >
                                                     <VBox width="25%">
-                                                        <Label  text="Award Type" 
+                                                        <Label text="{I18N>/AWARD_TYPE_CODE}:"  
                                                                 class="sapMLabelNoText"/> 
                                                         <Text text="{NegoHeaders>/award_type/award_type_name}" />
                                                         <layoutData>
@@ -551,7 +558,7 @@
                                                         </layoutData>
                                                     </VBox>
                                                     <VBox width="25%" class=" "   >
-                                                        <Label  text="Target Price Setup " 
+                                                        <Label  text="{I18N>/TARGET_AMOUNT_CONFIG_FLAG}:" 
                                                                 class="sapMLabelNoText"/>
                                                         <Text text="{=${NegoHeaders>/target_amount_config_flag}==='Y' ? 'Yes' : 'No'}"  />
                                                         <layoutData>
@@ -559,7 +566,7 @@
                                                         </layoutData>
                                                     </VBox>
                                                     <VBox width="25%">
-                                                        <Label  text="Target Total Amount" visible="true"/> 
+                                                        <Label  text="{I18N>/NW_TARGET_AMOUNT}:" visible="true"/> 
                                                         <Text text="{
                                                                 path: 'NegoHeaders>/target_amount',
                                                                 formatter: '.numberFormatter.toNumberString'
@@ -573,7 +580,7 @@
 
                                                 <HBox width="100%" class="sapUiSmallMarginBottom">
                                                     <VBox width="25%">
-                                                        <Label  text="Award Method" 
+                                                        <Label  text="{I18N>/AWARD_METHOD_CODE}:" 
                                                                 class="sapMLabelNoText"/> 
                                                         <Text text="{NegoHeaders>/award_method/award_method_name}" />
                                                         
@@ -581,11 +588,11 @@
                                                             <layout:GridData span="XL3 L4 M6 S12"/>
                                                         </layoutData>
                                                     </VBox>
-                                                    <VBox width="75%" visible="{= ${award>/method} === '1' ? true : false }">
-                                                        <Label  text="Number of Award Supplier" 
+                                                    <VBox width="75%" visible="{= ${NegoHeaders>/award_method_code} === 'MP' ? true : false }">
+                                                        <Label  text="{I18N>/NUMBER_OF_AWARD_SUPPLIER}:" 
                                                                 class="sapMLabelNoText"/> 
                                                         <HBox >
-                                                            <Select width="100%" change="selectNumberSupplierChange" visible="false" selectedKey="{NegoHeaders>/number_of_award_supplier}"
+                                                            <Select width="100%" change="selectNumberSupplierChange" visible="true" selectedKey="{NegoHeaders>/number_of_award_supplier}"
                                                                 id="selectNumberSupplier2" enabled="false">
                                                                 <core:Item key="1" text="1" />
                                                                 <core:Item key="2" text="2" />
@@ -612,7 +619,7 @@
                                                 </HBox>
                                                 <HBox width="100%" class="sapUiSmallMarginBottom"  >
                                                     <VBox width="25%" class=" "  >
-                                                        <Label  text="Participative" 
+                                                        <Label  text="{I18N>/SUPPLIER_PARTICIPATION_FLAG}:" 
                                                                 class="sapMLabelNoText"/>
                                                         <Text text="{=${NegoHeaders>/supplier_participation_flag}==='Y' ? 'Yes' : 'No'}"  />
                                                         <layoutData>
@@ -620,7 +627,7 @@
                                                         </layoutData>
                                                     </VBox>
                                                     <VBox width="25%" class=" ">
-                                                        <Label  text="Partial Quotation" 
+                                                        <Label  text="{I18N>/PARTIAL_ALLOW_FLAG}:" 
                                                                 class="sapMLabelNoText"/> 
                                                         <Text text="{=${NegoHeaders>/partial_allow_flag}==='Y' ? 'Yes' : 'No'}"   />  
                                                         <layoutData>
@@ -632,7 +639,7 @@
                                                 <HBox width="100%" class="sapUiSmallMarginBottom  " >
                                                     
                                                     <VBox width="25%" class="">
-                                                        <Label  text="Bid Conference Date:" 
+                                                        <Label  text="{I18N>/BID_CONFERENCE_DATE}:" 
                                                                 class="sapMLabelNoText"/>
                                                         <!-- <Text text="{NegoHeaders>/bid_conference_date}"  /> -->
                                                         <Text text="{path: 'NegoHeaders>/bid_conference_date', type: 'sap.ui.model.odata.type.DateTime', 
@@ -648,7 +655,7 @@
                                                         </layoutData>
                                                     </VBox>
                                                     <VBox width="25%" >
-                                                        <Label  text="Bid Conference:" 
+                                                        <Label  text="{I18N>/BID_CONFERENCE}:" 
                                                                 class="sapMLabelNoText"/>
                                                         <Text text="{=${NegoHeaders>/bid_conference}==='Y' ? 'Yes' : 'No'}"   />
                                                         <layoutData>
@@ -658,7 +665,7 @@
                                                 </HBox>
                                                 <HBox width="100%" class="sapUiSmallMarginBottom">
                                                     <VBox width="75%">
-                                                        <Label  text="Bid Conference Place:" 
+                                                        <Label  text="{I18N>/BID_CONFERENCE_PLACE}:" 
                                                                 class="sapMLabelNoText"/>
                                                         <Text text="{NegoHeaders>/bid_conference_place}"   /> 
                                                     </VBox>
@@ -667,13 +674,13 @@
 
                                                 <HBox width="100%" class="">
                                                     <VBox width="25%">
-                                                        <Label  text="Contact Point" 
+                                                        <Label  text="{I18N>/CONTACT_POINT}:" 
                                                                 class="sapMLabelNoText"/>
                                                         <Text text="{NegoHeaders>/contact_point/employee_name}"   />
                                                     </VBox>
                                                     <!-- <VBox width="15%" /> -->
                                                     <VBox width="25%">
-                                                        <Label  text="Phone No" 
+                                                        <Label  text="{I18N>/PHONE_NO}:" 
                                                                 class="sapMLabelNoText"/>
                                                         <Text text="{NegoHeaders>/phone_no}"   />
                                                     </VBox>
@@ -730,14 +737,14 @@
                     <!-- Control End -->
                     <!-- Non Price Start visible="{=${propInfo>/isNPMode}}"-->
                     <uxap:sections >
-                        <uxap:ObjectPageSection id="npSection" titleUppercase="false" title="Non Price" visible="{=${propInfo>/isNPMode}}">
+                        <uxap:ObjectPageSection id="npSection" titleUppercase="false" title="{I18N>/NW_SECTION_TITLE_NONPRICE}" visible="{=${propInfo>/isNPMode}}">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
-                                    <Panel id="panel_NonPrice" expandable="true" expanded="true" headerText="Non Price Content">
+                                    <Panel id="panel_NonPrice" expandable="true" expanded="true" headerText="{I18N>/NW_SECTION_TITLE_NONPRICE} {I18N>/NW_CONTENT}">
                                         <t:Table id="tableNonPrice"
                                             minAutoRowCount="2"
                                             visibleRowCountMode="Auto"
-                                            rows="{viewModel>/NPHeader}"
+                                            rows="{NegoHeaders>/ItemsNonPrice}"
                                             cellClick="mTableOnCellClick"
                                             selectionMode="{=${propInfo>/isEditMode} ? 'MultiToggle' : 'None' }"
                                             ariaLabelledBy="title">
@@ -751,45 +758,50 @@
 
                                             <!-- visible="{= ${/propInfo/outCome} === '' }" -->
                                             <t:columns>
+                                                <t:Column minScreenWidth="Tablet" hAlign="Center" width="40px" visible="{=${propInfo>/isEditMode}}">
+                                                    <ObjectStatus icon="sap-icon://document" text="State" visible="false" />
+                                                    <t:template>
+                                                        <ObjectStatus icon="{
+                                                            path: 'NegoHeaders>_row_state_',
+                                                            formatter: '.formatter.toModelStateColumnIcon'
+                                                        }" />
+                                                    </t:template>
+                                                </t:Column>
                                                 <t:Column width="" hAlign="Center" >
                                                     <Label text="평가항목 유형" />
                                                     <t:template>
-                                                        <!-- <Button 
-                                                            icon="sap-icon://account" press="onSupplierButtonPress" >
-                                                        </Button> -->
-                                                        <Text text="{viewModel>h1}"/>
+                                                         <!-- <Text text="{viewModel>h1}"/> -->
+                                                        <Text text="{NegoHeaders>nonpr_supeval_attr_type_code}"/>
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width="" hAlign="Center">
                                                     <Label text="요구사항" />
                                                     <t:template>
-                                                        <Text text="{viewModel>h2}" />
+                                                        <Text text="{NegoHeaders>nonpr_requirements_text}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width="" hAlign="Center">
                                                     <Label text="비고" />
                                                     <t:template>
-                                                    <Label text="{viewModel>h3}" />
+                                                        <Label text="{NegoHeaders>note_content}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width="" hAlign="Center">
                                                     <Label text="평가속성" />
                                                     <t:template>
-                                                        <!-- <Input id="abc" showValueHelp="true" valueHelpRequest="."></Input> -->
-                                                        <Text text="{viewModel>h4}" />
+                                                       <Text text="{NegoHeaders>nonpr_supeval_attr_val_type_cd}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width=""  hAlign="Center">
                                                     <Label text="점수 산정 방법" />
                                                     <t:template>
-                                                        <!-- <Input id="inputPartNo" showValueHelp="true" valueHelpRequest=".onPartNoPress" ></Input> -->
-                                                        <Text text="{viewModel>h5}" />
+                                                        <Text text="{NegoHeaders>nonpr_score_comput_method_code}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width=""  hAlign="Center">
                                                     <Label text="Target Score"/>
                                                     <t:template>
-                                                        <Label text="{viewModel>h6}" />
+                                                        <Label text="{NegoHeaders>target_score}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width="" hAlign="Center">
@@ -808,10 +820,10 @@
                     <!-- Non Price End -->
                     <!-- Line Start -->
                     <uxap:sections>
-                        <uxap:ObjectPageSection titleUppercase="false" title="Lines">
+                        <uxap:ObjectPageSection titleUppercase="false" title="{I18N>/NW_SECTION_TITLE_LINES}">
                             <uxap:subSections>
                                 <uxap:ObjectPageSubSection>
-                                    <Panel id="panel_Line" expandable="true" expanded="true" headerText="Line Content">
+                                    <Panel id="panel_Line" expandable="true" expanded="true" headerText="{I18N>/NW_SECTION_TITLE_LINES} {I18N>/NW_CONTENT}">
                                         <VBox>
                                             <smartTable:SmartTable id="sTable1" tableType="Table"
                                                 useExportToExcel="false" beforeExport="onBeforeExport" 
@@ -890,7 +902,7 @@
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center" >
                                                                     <Input id="multiinput_purOperationOrg_code" visible="{=${propInfo>/isEditMode}}" 
-                                                                        value="{NegoHeaders>operation_unit_code} : {NegoHeaders>operation_unit_name}"
+                                                                        value="{NegoHeaders>operation_org_code} : {NegoHeaders>operation_org/operation_org_name}"
                                                                         showValueHelp="true" valueHelpRequest=".onOperationOrgPress" textAlign="Center"
                                                                         showSuggestion="true" showSecondaryValues="true" suggestionItemSelected=".onSuggesionItemSelectedOprOrg"
                                                                         suggestionItems="{
@@ -898,6 +910,8 @@
                                                                             templateShareable:true,
                                                                             sorter: { path: 'org>org_code' }
                                                                         }"
+                                                                        onfocusout=".onfocusoutMultiInput_org"
+                                                                        valueState="{NegoHeaders>__metadata/_valueStates/operation_org_code/valueState}" valueStateText="{NegoHeaders>__metadata/_valueStates/operation_org_code/valueStateText}"
                                                                         >
                                                                         <core:ListItem key="{org>org_code}" text="{org>org_name}"  additionalText="{org>org_code}"/>
                                                                         <!-- <tokens>
@@ -908,7 +922,7 @@
                                                                         </layoutData>
                                                                     </Input>
                                                                     <!-- <Input value="{NegoHeaders>operation_unit_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/> -->
-                                                                    <Text text="{NegoHeaders>operation_unit_code} : {NegoHeaders>operation_unit_name}" visible="{=!${propInfo>/isEditMode}}" textAlign="Center"/>
+                                                                    <Text text="{NegoHeaders>operation_org_code} : {NegoHeaders>operation_org/operation_org_name}" visible="{=!${propInfo>/isEditMode}}" textAlign="Center"/>
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
@@ -947,7 +961,9 @@
                                                             <Label text="Description" required="true" />
                                                             <t:template>
                                                                 <FlexBox width="100%" >
-                                                                    <Input value="{NegoHeaders>material_desc}" visible="{=${propInfo>/isEditMode}}" width="100%" maxLength="200" placeholder="최대 200 자까지 입력 할 수 있습니다.">
+                                                                    <Input value="{NegoHeaders>material_desc}" visible="{=${propInfo>/isEditMode}}" width="100%" maxLength="200" placeholder="최대 200 자까지 입력 할 수 있습니다."
+                                                                        valueState="{NegoHeaders>__metadata/_valueStates/material_desc/valueState}" 
+                                                                        valueStateText="{NegoHeaders>__metadata/_valueStates/material_desc/valueStateText}">
                                                                         <layoutData>
                                                                             <FlexItemData growFactor="1"/>
                                                                         </layoutData>
@@ -970,7 +986,7 @@
                                                                             }}" 
                                                                         showSecondaryValues= "true"
                                                                         selectedKey="{NegoHeaders>specification}" visible="{=${propInfo>/isEditMode}}"
-                                                                        width="100%" required="true">
+                                                                        width="100%" >
                                                                         <core:ListItem key="{specification_code}" text="{specification_name}" additionalText="{specification_code}"/>
                                                                     </ComboBox>
                                                                     
@@ -1044,7 +1060,9 @@
                                                             <Label text="수량" required="true"/>
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <Input value="{NegoHeaders>request_quantity}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/>
+                                                                    <Input value="{NegoHeaders>request_quantity}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
+                                                                        valueState="{NegoHeaders>__metadata/_valueStates/request_quantity/valueState}" 
+                                                                        valueStateText="{NegoHeaders>__metadata/_valueStates/request_quantity/valueStateText}"/>
                                                                     <Text text="{NegoHeaders>request_quantity}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -1053,7 +1071,9 @@
                                                             <Label text="UOM" required="true" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <Input value="{NegoHeaders>uom_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"/>
+                                                                    <Input value="{NegoHeaders>uom_code}" visible="{=${propInfo>/isEditMode}}" textAlign="Center"
+                                                                        valueState="{NegoHeaders>__metadata/_valueStates/uom_code/valueState}" 
+                                                                        valueStateText="{NegoHeaders>__metadata/_valueStates/uom_code/valueStateText}"/>
                                                                     <Text text="{NegoHeaders>uom_code}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
@@ -1088,7 +1108,7 @@
                                                                             }}" 
                                                                         showSecondaryValues= "true"
                                                                         selectedKey="{NegoHeaders>currency_code}" visible="{=${propInfo>/isEditMode}}"
-                                                                        width="100%" required="true">
+                                                                        width="100%" >
                                                                         <core:ListItem key="{common>currency_code}" text="{common>currency_code_name}" additionalText="{common>currency_code}"/>
                                                                     </ComboBox>
                                                                     <Text text="{NegoHeaders>currency_code}" visible="{=!${propInfo>/isEditMode}}" />
@@ -1129,10 +1149,12 @@
                                                             <Label text="협력사 공개" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <ToggleButton text="{=${NegoHeaders>bidding_start_net_price_flag} === 'Y' || ${NegoHeaders>bidding_start_net_price_flag} === true ? 'YES' : 'NO'}" visible="{=${propInfo>/isEditMode}}" pressed="{NegoHeaders>bidding_start_net_price_flag}"  />
+                                                                    <ToggleButton text="{=${NegoHeaders>bidding_start_net_price_flag} === 'Y' ? 'YES' : 'NO'}" 
+                                                                        visible="{=${propInfo>/isEditMode}}" pressed="{=${NegoHeaders>bidding_start_net_price_flag} === 'Y' ? true : false}"  
+                                                                        press="onPressBiddingFlag"/>
 
                                                                     <!-- <lib-m:FlagToggleButton  enabled="{=${propInfo>/isEditMode}}" pressed="{NegoHeaders>bidding_start_net_price_flag}" /> -->
-                                                                    <Text text="{=${NegoHeaders>bidding_start_net_price_flag} === true ? 'YES' : 'NO'}" visible="{=!${propInfo>/isEditMode}}" /> 
+                                                                    <Text text="{=${NegoHeaders>bidding_start_net_price_flag} === 'Y' ? 'YES' : 'NO'}" visible="{=!${propInfo>/isEditMode}}" /> 
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
@@ -1164,13 +1186,12 @@
                                                             <Label text="납기요청일" />
                                                             <t:template>
                                                                 <FlexBox justifyContent="Center">
-                                                                    <DatePicker 
+                                                                    <!-- <DatePicker 
                                                                             valueFormat="yyyy/MM/dd" displayFormat="yyyy/MM/dd" visible="{=${propInfo>/isEditMode}}"
                                                                             value="{path: 'NegoHeaders>maturity_date', type: 'sap.ui.model.odata.type.Date', 
-                                                                                    formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" />
-                                                                    <!-- <Input value="{NegoHeaders>maturity_date}" visible="{=${propInfo>/isEditMode}}"/> -->
+                                                                                    formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" /> -->
                                                                     <Text text="{path: 'NegoHeaders>maturity_date', type: 'sap.ui.model.odata.type.Date', 
-                                                                        formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }" visible="{=!${propInfo>/isEditMode}}" />
+                                                                        formatOptions: { pattern: 'yyyy/MM/dd' , UTC: true} }"  />
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
@@ -1278,7 +1299,7 @@
                                                                             }}" 
                                                                         showSecondaryValues= "true"
                                                                         selectedKey="{NegoHeaders>incoterms_code}" visible="{=${propInfo>/isEditMode}}"
-                                                                        width="100%" required="true">
+                                                                        width="100%" >
                                                                         <core:ListItem key="{incoterms_code}" text="{incoterms_name}" additionalText="{incoterms_code}"/>
                                                                     </ComboBox>
                                                                     <Text text="{NegoHeaders>incoterms/incoterms_name}" visible="{=!${propInfo>/isEditMode}}" />
@@ -1298,11 +1319,11 @@
                                                                                 descending: true
                                                                             }}" 
                                                                         showSecondaryValues= "true"
-                                                                        selectedKey="{}" visible="{=${propInfo>/isEditMode}}"
-                                                                        width="100%" required="true">
+                                                                        selectedKey="{NegoHeaders>payment_terms_code}" visible="{=${propInfo>/isEditMode}}"
+                                                                        width="100%" >
                                                                         <core:ListItem key="{payment_terms_code}" text="{payment_terms_name}" additionalText="{payment_terms_code}"/>
                                                                     </ComboBox>
-                                                                    <Text text="{}" visible="{=!${propInfo>/isEditMode}}" />
+                                                                    <Text text="{NegoHeaders>payment_terms/payment_terms_name}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
@@ -1319,11 +1340,11 @@
                                                                                 descending: true
                                                                             }}" 
                                                                         showSecondaryValues= "true"
-                                                                        selectedKey="{}" visible="{=${propInfo>/isEditMode}}"
-                                                                        width="100%" required="true">
+                                                                        selectedKey="{NegoHeaders>market_code}" visible="{=${propInfo>/isEditMode}}"
+                                                                        width="100%" >
                                                                         <core:ListItem key="{market_code}" text="{market_name}" additionalText="{market_code}"/>
                                                                     </ComboBox>
-                                                                    <Text text="" visible="{=!${propInfo>/isEditMode}}" />
+                                                                    <Text text="{NegoHeaders>market/market_name}" visible="{=!${propInfo>/isEditMode}}" />
                                                                 </FlexBox>
                                                             </t:template>
                                                         </t:Column>
@@ -1332,7 +1353,7 @@
                                             </smartTable:SmartTable>
 
 
-                                            <Panel id="panel_SuppliersContent" width="100%" expandable="true" expanded="false" headerText="Suppliers">
+                                            <Panel id="panel_SuppliersContent" width="100%" expandable="true" expanded="false" headerText="{I18N>/SUPPLIERS_TITLE}">
                                                 <form:SimpleForm editable="true"  layout="ColumnLayout"
                                                     columnsM="2" width="100%" 
                                                     columnsL="3"
@@ -1347,7 +1368,7 @@
                                                     <Text   text="{NegoItemPrices>/vendor_pool_code}"/>
                                                 </form:SimpleForm>
                                                 
-                                                <Panel id="panel_Evaluation" expandable="true" expanded="true" headerText="Evaluation Supplier">
+                                                <Panel id="panel_Evaluation" expandable="true" expanded="true" headerText="{I18N>/NW_SECTION_TITLE_SUPPLIER_01}">
                                                     <Table 
                                                         sticky="HeaderToolbar,ColumnHeaders" 
                                                         inset="false" 
@@ -1408,7 +1429,7 @@
                                                         </items>
                                                     </Table>
                                                 </Panel>
-                                                <Panel id="panel_Potential" expandable="true" expanded="true" headerText="Potential Supplier">
+                                                <Panel id="panel_Potential" expandable="true" expanded="true" headerText="{I18N>/NW_SECTION_TITLE_SUPPLIER_02}">
                                                     <Table 
                                                         sticky="HeaderToolbar,ColumnHeaders" 
                                                         inset="false" 
@@ -1449,7 +1470,7 @@
                                                         </items>
                                                     </Table>
                                                 </Panel>
-                                                <Panel id="panel_Specific" expandable="true" expanded="true" headerText="Specific Supplier">
+                                                <Panel id="panel_Specific" expandable="true" expanded="true" headerText="{I18N>/NW_SECTION_TITLE_SUPPLIER_03}">
                                                     <Table 
                                                         id="table_Specific"
                                                         sticky="HeaderToolbar,ColumnHeaders" 
@@ -1496,18 +1517,10 @@
                                                             <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true" width="10%">
                                                                 <Text text="Contact" />
                                                             </Column>
-                                                            <!-- <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                                                <Text text="Delete" />
-                                                            </Column> -->
                                                         </columns>
                                                         <items>
                                                             <ColumnListItem type="Inactive" >
                                                                 <cells>
-                                                                    <!-- <Text text="{NegoItemPrices>item_supplier_sequence}">
-                                                                        <customData>
-                                                                            <core:CustomData key="item_supplier_sequence" value='{NegoItemPrices>item_supplier_sequence}'/>
-                                                                        </customData>
-                                                                    </Text> -->
                                                                     <ObjectStatus icon="{
                                                                         path: 'NegoItemPrices>_row_state_',
                                                                         formatter: '.formatter.toModelStateColumnIcon'
@@ -1518,7 +1531,6 @@
                                                                     <Label text="{NegoItemPrices>supplier_type_name}"/>
                                                                     <Label text="{NegoItemPrices>only_maker_flag}"/>
                                                                     <Button icon="sap-icon://value-help" />
-                                                                    <!-- <Text text=""/> -->
                                                                 </cells>
                                                             </ColumnListItem>
                                                         </items>
@@ -1536,7 +1548,7 @@
                     <uxap:footer>
                         <OverflowToolbar>
                             <ToolbarSpacer />
-                            <Button text="{I18N>/TEMP_SAVE}" type="Emphasized" press=".onPageSaveButtonPress" />
+                            <Button text="{I18N>/TEMP_SAVE}" visible="{=${propInfo>/isEditMode}}" type="Emphasized" press=".onPageSaveButtonPress" />
                             <Button text="{I18N>/CANCEL}" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageCancelButtonPress" />
                             <Button text="{I18N>/DELETE}" visible="{=${propInfo>/isEditMode}}" type="Transparent" press=".onPageDeleteButtonPress" />
                             <Button text="{I18N>/EDIT}" visible="{=!${propInfo>/isEditMode}}" type="Transparent" press=".onPageEditButtonPress" />

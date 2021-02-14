@@ -203,6 +203,49 @@ sap.ui.define([
                 }
             });
         },
+
+        
+
+		/**
+		 * Event handler for saving page changes
+		 * @public
+		 */
+
+        _onPageLngCheckData: function () {
+            // check master
+            var oMasterModel = this.getModel("master");
+            var oDetailsModel = this.getModel("details");
+            var oDetailsData = oDetailsModel.getData();
+            var oDetailsTable = this.byId("midTable");
+
+            var aCheckLng = [];
+
+            for (var i = 0; i < oDetailsTable.getItems().length; i++) {
+                
+                if ( oDetailsModel.getProperty("/MdCategoryItemLng/"+i)._row_state_ === "C" )
+                {                    
+                    aCheckLng.push(oDetailsTable.getItems()[i].getCells()[1].getSelectedKey() );
+                }             
+            }
+
+            for (var i = 0; i < aCheckLng.length; i++) {
+                for (var j = 0; j < oDetailsTable.getItems().length; j++) {
+                    if ( oDetailsModel.getProperty("/MdCategoryItemLng/"+j)._row_state_ == null )
+                    {                    
+                        if (aCheckLng[i] === oDetailsTable.getItems()[j].getCells()[1].getSelectedKey())
+                        {
+                            MessageToast.show("Language code 중복");
+                            return false;
+                        }
+                    }             
+                }
+                
+            }
+
+            return true;
+
+        },
+
 		/**
 		 * Event handler for saving page changes
 		 * @public
@@ -237,6 +280,9 @@ sap.ui.define([
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
 				onClose : function(sButton) {
 					if (sButton === MessageBox.Action.OK) {
+                        if (!that._onPageLngCheckData()) {
+                            return;
+                        }
                         oView.setBusy(true);
 
                         
@@ -598,7 +644,8 @@ sap.ui.define([
             //language_code : comboBox
             var oLanguageCode = new ComboBox({
                     selectedKey: "{details>language_code}",
-                    required : true
+                    required : true,
+                    editable: "{= ${details>_row_state_} === 'C' ? true : false}"
                 });
                 oLanguageCode.bindItems({
                     path: 'util>/Code',
@@ -617,8 +664,7 @@ sap.ui.define([
 			this.oEditableTemplate = new ColumnListItem({
 				cells: [
 					new ObjectStatus({
-                        icon:{ path:'details>_row_state_', formatter: this.formattericon
-                                }                              
+                        icon:{ path:'details>_row_state_', formatter: this.formattericon }                              
                     }),
                     oLanguageCode,
 					new Input({

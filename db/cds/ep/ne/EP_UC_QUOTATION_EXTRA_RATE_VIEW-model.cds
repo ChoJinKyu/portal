@@ -16,6 +16,7 @@ entity Uc_Quotation_Extra_Rate_View {
         extra_class_number             : String(30);
         extra_rate                     : Decimal;
         remark                         : String(3000);
+        net_price_contract_title       : String(100);
 }
 
 extend Uc_Quotation_Extra_Rate_View with util.Managed;

@@ -41,8 +41,18 @@ sap.ui.define([
                         "$select": "message_code,message_contents"
                     },
                     filters: [
-                        new Filter("tenant_id", FilterOperator.EQ, "'L2100'"),
-                        new Filter("language_code", FilterOperator.EQ, "'" + UserChoices.getLanguage() + "'")
+                        new Filter({
+                            path: "tenant_id",
+                            operator: FilterOperator.EQ,
+                            value1: "L2100",
+                            caseSensitive: false
+                        }),
+                        new Filter({
+                            path: "language_code",
+                            operator: FilterOperator.EQ,
+                            value1: UserChoices.getLanguage(),
+                            caseSensitive: false
+                        })
                     ],
                     sorters: [
                         new Sorter("chain_code"),

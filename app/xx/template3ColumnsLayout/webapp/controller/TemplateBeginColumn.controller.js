@@ -36,7 +36,7 @@ sap.ui.define([
             this.setModel(new JSONModel(), "beginPageViewModel");
 
 			oMultilingual.attachEvent("ready", function(oEvent){
-				var oI18nModel = oEvent.getParameter("model");
+				// var oI18nModel = oEvent.getParameter("model");
 				this.addHistoryEntry({
 					title: "3컬럼 Layout",
 					icon: "sap-icon://table-view",
@@ -52,7 +52,6 @@ sap.ui.define([
 		/* =========================================================== */
 		/* event handlers                                              */
         /* =========================================================== */
-        
         onSearchCountryDialogPress: function(oEvent){
             var oInput = oEvent.getSource();
             if(!this.oSearchCountryDialog){

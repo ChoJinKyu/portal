@@ -93,6 +93,8 @@ sap.ui.define([
                             + "')", {
                             filters: [],
                     success: function (oData) { 
+                        var d = oModel.getProperty("/repair_request_date");
+                        oModel.setProperty("/repair_request_date", d.substring(0, 4) + "-" +d.substring(4, 6)+"-"+d.substring(6, 8));
                         oUiModel.setProperty("/editFlag", false);    
                         oUiModel.setProperty("/viewFlag", true);    
                         that._setBtnStatus();
@@ -116,13 +118,20 @@ sap.ui.define([
                             oModel.setProperty("/create_user_id", session.USER_ID); 
                             oModel.setProperty("/user_local_name", session.EMPLOYEE_NAME); 
                             oModel.setProperty("/user_english_name", session.ENGLISH_EMPLOYEE_NAME); 
-                            oModel.setProperty("/repair_request_date", today);
+                            oModel.setProperty("/repair_request_date", today.substring(0, 4) + "-" +today.substring(4, 6)+"-"+today.substring(6, 8));
             
                            
                     }
                 });
 
             };  
+        },
+
+        dateParse : function(str){
+            var y = str.substring(0, 4);
+            var m = str.substring(4, 2);
+            var d = str.substring(6, 2);
+            return new Date(y,m-1,d)
         },
         onPageEditButtonPress : function(){
             var oUiModel = this.getView().getModel("mode");

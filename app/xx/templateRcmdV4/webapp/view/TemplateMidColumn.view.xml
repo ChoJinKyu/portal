@@ -1,0 +1,198 @@
+<mvc:View controllerName="xx.templateRcmdV4.controller.TemplateMidColumn" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns="sap.m" 
+	xmlns:uxap="sap.uxap" 
+	xmlns:layout="sap.ui.layout" 
+    xmlns:form="sap.ui.layout.form"
+	xmlns:core="sap.ui.core"
+    xmlns:lib-m="ext.lib.control.m"
+	height="100%">
+
+	<uxap:ObjectPageLayout id="page"
+            toggleHeaderOnTitleClick="true"
+            alwaysShowContentHeader = "true"
+            preserveHeaderStateOnScroll="false"
+            headerContentPinnable="true"
+            isChildPage="true"
+            upperCaseAnchorBar="false"
+            showTitleInHeaderContent="true"
+            showEditHeaderButton="true" 
+            showFooter="false">
+		<uxap:headerTitle>
+			<uxap:ObjectPageDynamicHeaderTitle>
+				<uxap:expandedHeading>
+					<Title text="{company_name}" wrapping="true" />
+				</uxap:expandedHeading>
+				<uxap:snappedHeading>
+					<Title text="{company_name}" wrapping="true" />
+				</uxap:snappedHeading>
+				<uxap:expandedContent>
+				</uxap:expandedContent>
+				<uxap:snappedContent>
+				</uxap:snappedContent>
+				<uxap:snappedTitleOnMobile>
+					<Title text="{company_name}" />
+				</uxap:snappedTitleOnMobile>
+                <uxap:navigationActions>
+					<OverflowToolbarButton id="pageEnterFullScreenButton" type="Transparent" icon="sap-icon://full-screen" press="onPageEnterFullScreenButtonPress" tooltip="Enter Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/fullScreen} !== null }"/>
+					<OverflowToolbarButton id="pageExitFullScreenButton" type="Transparent" icon="sap-icon://exit-full-screen" press="onPageExitFullScreenButtonPress" tooltip="Exit Full Screen Mode" visible="{= ${/actionButtonsInfo/midColumn/exitFullScreen} !== null }"/>
+					<OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                </uxap:navigationActions>
+			</uxap:ObjectPageDynamicHeaderTitle>
+		</uxap:headerTitle>
+
+		<uxap:headerContent>
+            <FlexBox
+                    alignItems="Start"
+                    justifyContent="SpaceBetween">
+                <items>
+                    <Panel backgroundDesign="Transparent" class="sapUiNoContentPadding">
+                        <content>
+                            <layout:HorizontalLayout allowWrapping="true">
+                                <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                                    <ObjectAttribute title="Location" text="{country_code}"/>
+                                    <ObjectAttribute title="Currency" text="{currency_code}"/>
+                                </layout:VerticalLayout>
+                                <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                                    <ObjectAttribute title="Language" text="{language_code}"/>
+                                </layout:VerticalLayout>
+                                <layout:VerticalLayout class="sapUiLargeMarginEnd">
+                                    <ObjectAttribute title="Availability"/>
+                                    <ObjectStatus text="In Stock" state="Success" />
+                                </layout:VerticalLayout>
+                            </layout:HorizontalLayout>
+                        </content>
+                    </Panel>
+                </items>
+            </FlexBox>
+		</uxap:headerContent>
+
+		<uxap:sections>
+			<uxap:ObjectPageSection titleUppercase="false" title="Tenant">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<form:SimpleForm editable="false" >
+						    <ObjectAttribute title="{tenant/tenant_name}" text="{tenant_id}"/>
+                        </form:SimpleForm>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="Company">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+                        <form:SimpleForm editable="false">
+
+                            <core:Title text="Normal" />
+                            <Label text="{I18N>/CODE}"/>
+                            <Text text="{company_code}"/>
+                            <Label text="{I18N>/NAME}"/>
+                            <Text text="{company_name}"/>
+                            <Label text="Used"/>
+                            <Text text="{
+                                    path: 'use_flag',
+                                    formatter: '.viewFormatter.toYesNo'
+                                }"/>
+
+                            <core:Title text="Settings" />
+                            <Label text="{I18N>/CURRENCY}"/>
+                            <Text text="{currency_code}" />
+                            <Label text="{I18N>/COUNTRY}"/>
+                            <Text text="{country_code}" />
+                            <Label text="{I18N>/LANGUAGE}"/>
+                            <Text text="{language_code}" />
+
+                        </form:SimpleForm>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" title="History" visible="{= !${midObjectViewModel>/isAddedMode}}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<form:SimpleForm editable="false" >
+		                    <core:Title text="Created" />
+							<Label text="By"/>
+							<Text text="{create_user_id}"/>
+							<Label text="At"/>
+							<Text text="{
+									path: 'system_create_dtm',
+									formatter: '.dateFormatter.toUTCDateTimeString'
+								}"/>
+		                    <core:Title text="Updates" />
+							<Label text="By"/>
+							<Text text="{update_user_id}"/>
+							<Label text="At"/>
+							<Text text="{
+									path: 'system_update_dtm',
+									formatter: '.dateFormatter.toUTCDateTimeString'
+								}"/>
+						</form:SimpleForm>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+			<uxap:ObjectPageSection titleUppercase="false" title="Departments">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<Table id="departmentList" 
+								sticky="HeaderToolbar,ColumnHeaders" 
+								inset="false" 
+                                items="{
+                                    path: '/Department',
+                                    parameters: {
+                                        expand: 'company,parent,children'
+                                    },
+                                    sorter: [{
+                                        path: 'parent_department_code'
+                                    },{
+                                        path: 'sort_number'
+                                    }]
+                                }"
+                                growing="true"
+                                growingThreshold="10"
+								class="sapFDynamicPageAlignContent" 
+								mode="None" 
+								width="auto">
+							<headerToolbar>
+								<OverflowToolbar>
+                                    <Title text="Departments" level="H2"/>
+									<ToolbarSpacer/>
+									<!-- Add the Personalization button -->
+									<Button id="departmentListAddButton" text="Add" type="Transparent" press=".onDepartmentListAddButtonPress" />
+									<!-- <Button id="departmentListDeleteButton" text="Delete" type="Transparent" press=".onDepartmentListDeleteButtonPress" /> -->
+								</OverflowToolbar>
+							</headerToolbar>
+							<columns>
+								<Column minScreenWidth="Tablet" hAlign="Right" width="5rem">
+									<Label text="{I18N>/CODE}" />
+								</Column>
+								<Column minScreenWidth="Tablet" hAlign="Left" demandPopin="true" importance="High" popinDisplay="WithoutHeader">
+									<Label text="{I18N>/DEPARTMENT}" />
+								</Column>
+								<Column minScreenWidth="Tablet" hAlign="Left" demandPopin="true" popinDisplay="WithoutHeader" >
+									<Label text="Parent Dept." />
+								</Column>
+								<Column minScreenWidth="Tablet" hAlign="Center" width="10rem">
+									<Label text="Children Dept." />
+								</Column>
+							</columns>
+                            <items>
+                                <ColumnListItem type="Navigation" press=".onDepartmentListItemPress">
+                                    <cells>
+                                        <Text text="{department_code}"/>
+                                        <Text text="{department_name}"/>
+                                        <Text text="{parent/department_name}"/>
+                                        <Text text="{= ${children}.length > 0 ? ${children}.length + ' Chidren' : '' }"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+						</Table>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+
+		</uxap:sections>
+		
+	</uxap:ObjectPageLayout>
+</mvc:View>

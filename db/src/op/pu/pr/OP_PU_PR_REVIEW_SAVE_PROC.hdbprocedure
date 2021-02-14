@@ -37,10 +37,11 @@ BEGIN
 
 	DECLARE v_pr_number NVARCHAR(50);
 	DECLARE v_pr_item_number NVARCHAR(10);
+    DECLARE v_local_dtm SECONDDATE;
+    DECLARE v_system_dtm SECONDDATE;
 
     /* History 관리 변수 - Start */
     DECLARE v_insert_idx INT = 0;
-    DECLARE v_update_dtm SECONDDATE;
 	DECLARE v_bf_pr_progress_status_code NVARCHAR(50);
     DECLARE v_history_tmp TABLE(TENANT_ID NVARCHAR(5)
                                ,COMPANY_CODE NVARCHAR(10)
@@ -51,7 +52,8 @@ BEGIN
                                ,AFTER_DESC NVARCHAR(50)
                                ,REMARK NVARCHAR(3000)
                                ,EMPLOYEE_NUMBER NVARCHAR(30)
-                               ,UPDATE_DTM SECONDDATE
+                               ,LOCAL_DTM SECONDDATE
+                               ,SYSTEM_DTM SECONDDATE
                                );
     DECLARE v_history_tbl TABLE(TENANT_ID NVARCHAR(5)
                                ,COMPANY_CODE NVARCHAR(10)
@@ -62,7 +64,8 @@ BEGIN
                                ,AFTER_DESC NVARCHAR(50)
                                ,REMARK NVARCHAR(3000)
                                ,EMPLOYEE_NUMBER NVARCHAR(30)
-                               ,UPDATE_DTM SECONDDATE
+                               ,LOCAL_DTM SECONDDATE
+                               ,SYSTEM_DTM SECONDDATE
                                );
     /* History 관리 변수 - End */
 
@@ -146,6 +149,8 @@ BEGIN
     FOR l_pr_item AS c_pr_item DO
         v_pr_number      = l_pr_item.PR_NUMBER;
         v_pr_item_number = l_pr_item.PR_ITEM_NUMBER;
+        v_local_dtm      = NOW();
+        v_system_dtm     = NOW();
 
         /* 공통 Check - Start */
         /* 구매요청검토 화면의 모든 작업은 구매요청생성상태코드(pr_create_status_code)가 결재완료(30), 생성완료(50) 상태에서만 가능하다. */
@@ -194,8 +199,6 @@ BEGIN
         /* 공통 Check - End */
 
         /* 이력정보를 가지고 있다가 작업 종료시 Update 함. - Start */
-        v_update_dtm = NOW();  -- 이력정보에도 같은 시간을 update하려고 여기서 선언
-
         v_insert_idx = :v_insert_idx + 1;
 
         /* RFQ작성(RFQ), 입찰작성(BIDDING)의 경우 담당자를 변경 했을 경우 담당자 변경으로 이력 추가 - Start  */
@@ -215,14 +218,15 @@ BEGIN
                                       ,PD.COMPANY_CODE
                                       ,PD.PR_NUMBER
                                       ,PD.PR_ITEM_NUMBER
-                                      ,:I_JOB_TYPE AS JOB_TYPE_CODE
+                                      ,'CHANGE' AS JOB_TYPE_CODE
                                       ,CASE WHEN NULLIF(PD.BUYER_EMPNO, '') IS NULL THEN NULL
                                             ELSE PD.BUYER_EMPNO || '/' || CM_GET_EMP_NAME_FUNC(PD.TENANT_ID, PD.BUYER_EMPNO)
                                        END AS BEFORE_DESC
                                       ,:I_EMPLOYEE_NUMBER || '/' || CM_GET_EMP_NAME_FUNC(PD.TENANT_ID, :I_EMPLOYEE_NUMBER) AS AFTER_DESC
                                       ,'Automatically change buyer.' AS REMARK  -- 구매담당자를 자동 변경
                                       ,:I_EMPLOYEE_NUMBER AS EMPLOYEE_NUMBER
-                                      ,:v_update_dtm AS UPDATE_DTM
+                                      ,:v_local_dtm AS LOCAL_DTM
+                                      ,:v_system_dtm AS SYSTEM_DTM
                                 FROM   OP_PU_PR_DTL PD
                                 WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                                 AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
@@ -243,17 +247,19 @@ BEGIN
                                ,:I_JOB_TYPE AS JOB_TYPE_CODE
                                ,CASE WHEN :I_JOB_TYPE IN ('CHANGE') THEN PD.BUYER_EMPNO || '/' || CM_GET_EMP_NAME_FUNC(PD.TENANT_ID, PD.BUYER_EMPNO)
                                      WHEN :I_JOB_TYPE IN ('RFQ', 'BIDDING') THEN NULL
-                                     WHEN :I_JOB_TYPE IN ('CLOSING', 'CLOSING_CANCEL') THEN PD.PR_PROGRESS_STATUS_CODE
+                                     WHEN :I_JOB_TYPE IN ('CLOSING', 'REWRITE') THEN PD.PR_PROGRESS_STATUS_CODE  -- 마감취소시 마감할때의 상태값을 알기위해 진행상태코드를 저장함.
+                                     WHEN :I_JOB_TYPE IN ('CLOSING_CANCEL') THEN 'CLOSING'
                                      ELSE CM_GET_CODE_NAME_FUNC(PD.TENANT_ID, 'OP_PR_REVIEW_JOB_TYPE_CODE', :I_JOB_TYPE, 'KO')
                                 END AS BEFORE_DESC
                                ,CASE WHEN :I_JOB_TYPE IN ('CHANGE') THEN :I_BUYER_EMPNO || '/' || CM_GET_EMP_NAME_FUNC(PD.TENANT_ID, :I_BUYER_EMPNO)
                                      WHEN :I_JOB_TYPE IN ('RFQ', 'BIDDING') THEN NULL
-                                     WHEN :I_JOB_TYPE IN ('CLOSING', 'CLOSING_CANCEL') THEN CM_GET_CODE_NAME_FUNC(PD.TENANT_ID, 'OP_PR_REVIEW_JOB_TYPE_CODE', :I_JOB_TYPE, 'KO')
+                                     --WHEN :I_JOB_TYPE IN ('CLOSING', 'CLOSING_CANCEL') THEN CM_GET_CODE_NAME_FUNC(PD.TENANT_ID, 'OP_PR_REVIEW_JOB_TYPE_CODE', :I_JOB_TYPE, 'KO')
                                      ELSE CM_GET_CODE_NAME_FUNC(PD.TENANT_ID, 'OP_PR_REVIEW_JOB_TYPE_CODE', :I_JOB_TYPE, 'KO')
                                 END AS AFTER_DESC
                                ,:I_PROCESSED_REASON AS REMARK
                                ,:I_EMPLOYEE_NUMBER AS EMPLOYEE_NUMBER
-                               ,:v_update_dtm AS UPDATE_DTM
+                               ,:v_local_dtm AS LOCAL_DTM
+                               ,:v_system_dtm AS SYSTEM_DTM
                          FROM   OP_PU_PR_DTL PD
                          WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                          AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
@@ -291,9 +297,9 @@ BEGIN
                         -- PR_NUMBER로 한번에 Update 하자.
                         UPDATE OP_PU_PR_MST PM
                         SET    PM.PR_CREATE_STATUS_CODE = '15'  -- 임시저장상태로 변경
-                              ,PM.LOCAL_UPDATE_DTM  = :v_update_dtm
+                              ,PM.LOCAL_UPDATE_DTM  = :v_local_dtm
                               ,PM.UPDATE_USER_ID    = :I_EMPLOYEE_NUMBER
-                              ,PM.SYSTEM_UPDATE_DTM = :v_update_dtm
+                              ,PM.SYSTEM_UPDATE_DTM = :v_system_dtm
                         WHERE  PM.TENANT_ID      = l_pr_item.TENANT_ID
                         AND    PM.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PM.PR_NUMBER      = l_pr_item.PR_NUMBER
@@ -303,9 +309,9 @@ BEGIN
                         -- DTL은 Update 할 필요가 있을까? 어차피 INIT상태에서만 재작성 요청이 가능하므로 Update 안함.
                         UPDATE OP_PU_PR_DTL PD
                         SET    PD.PR_PROGRESS_STATUS_CODE = 'INIT'
-                              ,PD.LOCAL_UPDATE_DTM  = :v_update_dtm
+                              ,PD.LOCAL_UPDATE_DTM  = :v_local_dtm
                               ,PD.UPDATE_USER_ID    = :I_EMPLOYEE_NUMBER
-                              ,PD.SYSTEM_UPDATE_DTM = :v_update_dtm
+                              ,PD.SYSTEM_UPDATE_DTM = :v_system_dtm
                         WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
@@ -356,9 +362,9 @@ BEGIN
                         SET  PD.CLOSING_FLAG            = TRUE
                             ,PD.PR_PROGRESS_STATUS_CODE = 'CLOSING'
                             ,PD.CLOSING_QUANTITY        = PD.PR_QUANTITY  -- 우선 마감수량은 요청수량으로 하자.  -- by dokim
-                            ,PD.LOCAL_UPDATE_DTM        = :v_update_dtm
+                            ,PD.LOCAL_UPDATE_DTM        = :v_local_dtm
                             ,PD.UPDATE_USER_ID          = :I_EMPLOYEE_NUMBER
-                            ,PD.SYSTEM_UPDATE_DTM = :v_update_dtm
+                            ,PD.SYSTEM_UPDATE_DTM       = :v_system_dtm
                         WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
@@ -413,9 +419,9 @@ BEGIN
                         SET  PD.CLOSING_FLAG            = FALSE
                             ,PD.PR_PROGRESS_STATUS_CODE = :v_bf_pr_progress_status_code
                             ,PD.CLOSING_QUANTITY        = 0  -- 우선 마감수량은 0으로 초기화하자.  -- by dokim
-                            ,PD.LOCAL_UPDATE_DTM        = :v_update_dtm
+                            ,PD.LOCAL_UPDATE_DTM        = :v_local_dtm
                             ,PD.UPDATE_USER_ID          = :I_EMPLOYEE_NUMBER
-                            ,PD.SYSTEM_UPDATE_DTM       = :v_update_dtm
+                            ,PD.SYSTEM_UPDATE_DTM       = :v_system_dtm
                         WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
@@ -465,9 +471,9 @@ BEGIN
                         UPDATE OP_PU_PR_DTL PD
                         SET  PD.BUYER_EMPNO           = :I_BUYER_EMPNO
                             ,PD.BUYER_DEPARTMENT_CODE = :v_buyer_department_code
-                            ,PD.LOCAL_UPDATE_DTM      = :v_update_dtm
+                            ,PD.LOCAL_UPDATE_DTM      = :v_local_dtm
                             ,PD.UPDATE_USER_ID        = :I_EMPLOYEE_NUMBER
-                            ,PD.SYSTEM_UPDATE_DTM     = :v_update_dtm
+                            ,PD.SYSTEM_UPDATE_DTM     = :v_system_dtm
                         WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
@@ -517,9 +523,9 @@ BEGIN
                         SET  PD.PR_PROGRESS_STATUS_CODE = 'RUN'
                             ,PD.BUYER_EMPNO             = :I_EMPLOYEE_NUMBER
                             ,PD.BUYER_DEPARTMENT_CODE   = :v_user_department_code
-                            ,PD.LOCAL_UPDATE_DTM        = :v_update_dtm
+                            ,PD.LOCAL_UPDATE_DTM        = :v_local_dtm
                             ,PD.UPDATE_USER_ID          = :I_EMPLOYEE_NUMBER
-                            ,PD.SYSTEM_UPDATE_DTM       = :v_update_dtm
+                            ,PD.SYSTEM_UPDATE_DTM       = :v_system_dtm
                         WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER
@@ -569,9 +575,9 @@ BEGIN
                         SET  PD.PR_PROGRESS_STATUS_CODE = 'RUN'
                             ,PD.BUYER_EMPNO             = :I_EMPLOYEE_NUMBER
                             ,PD.BUYER_DEPARTMENT_CODE   = :v_user_department_code
-                            ,PD.LOCAL_UPDATE_DTM        = :v_update_dtm
+                            ,PD.LOCAL_UPDATE_DTM        = :v_local_dtm
                             ,PD.UPDATE_USER_ID          = :I_EMPLOYEE_NUMBER
-                            ,PD.SYSTEM_UPDATE_DTM       = :v_update_dtm
+                            ,PD.SYSTEM_UPDATE_DTM       = :v_system_dtm
                         WHERE  PD.TENANT_ID      = l_pr_item.TENANT_ID
                         AND    PD.COMPANY_CODE   = l_pr_item.COMPANY_CODE
                         AND    PD.PR_NUMBER      = l_pr_item.PR_NUMBER

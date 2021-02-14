@@ -8,7 +8,7 @@ entity Uc_Approval_Extra_Rate_View {
     key company_code                   : String(10) not null;
     key net_price_contract_document_no : String(50) not null;
     key net_price_contract_degree      : Integer64 not null;
-    //key net_price_contract_extra_seq   : Decimal not null;
+    key net_price_contract_extra_seq   : Decimal not null;
         extra_number                   : String(30);
         extra_class_number             : String(30);
         extra_class_name               : String(100);

@@ -16,16 +16,16 @@ using {sp.Sc_Nego_Item_Non_Price} from '../../sp/sc/SP_SC_NEGO_ITEM_NON_PRICE-mo
 //     sp.Sc_Pur_Operation_Org,
 //     sp.Sc_Pu_Pr_Mst,
 //     sp.Sc_Approval_Mst
-// } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+// } from '../../sp/sc/SP_SC_REFERENCE_OTHERS-model';
 
-// using { sp.Sc_Mm_Material_Mst } from '../../sp/sc/SP_SC_REFERENCE_OTHERS.model';
+// using { sp.Sc_Mm_Material_Mst } from '../../sp/sc/SP_SC_REFERENCE_OTHERS-model';
 
 // using {
 //     sp.Sc_Incoterms_View,
 //     sp.Sc_Payment_Terms_View,
 //     sp.Sc_Market_Code_View,
 //     sp.Sc_Spec_Code_View
-// } from '../../sp/sc/SP_SC_REFERENCE_COMMON.model';
+// } from '../../sp/sc/SP_SC_REFERENCE_COMMON-model';
 
 /////////////////////////////////// Reference Type ///////////////////////////////////
 // TYPE-POOLS
@@ -52,8 +52,8 @@ entity Sc_Nego_Item_Non_Price_Dtl {
                                       and ItemsNonPrice.nego_header_id = $self.nego_header_id
                                       and ItemsNonPrice.nonpr_item_number = $self.nonpr_item_number;
 
-        supeval_from_date       : Date                @title : '평가시작일자' @description : 'UI:Response Value From';
-        supeval_to_date         : Date                @title : '평가종료일자' @description : 'UI:Response Value To';
+        supeval_from_date       : DateTime            @title : '평가시작일자' @description : 'UI:Response Value From';
+        supeval_to_date         : DateTime            @title : '평가종료일자' @description : 'UI:Response Value To';
         supeval_from_value      : Decimal(28, 3)      @title : '평가범위시작값' @description : 'UI:Response Value From(>)';
         supeval_to_value        : Decimal(28, 3)      @title : '평가범위종료값' @description : 'UI:Response Value To(<=)';
         supeval_text_value      : String(100)         @title : '평가단일값' @description : 'UI:Response Value';

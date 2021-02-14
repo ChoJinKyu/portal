@@ -96,8 +96,8 @@
 								<ColumnListItem type="Inactive">
 									<cells>
 										<Text text="{details>_row_state_}"/>
-										<Input value="{details>language_code}"/>
-										<Input value="{details>spmd_category_code_name}"/>
+										<Input id="tableLngCode" value="{details>language_code}" /> <!--editable="false" -->
+										<Input id="tableCtgrName" value="{details>spmd_category_code_name}"/>
 									</cells>
 								</ColumnListItem>
 							</items>

@@ -158,6 +158,31 @@ define view Sc_Market_Code_View as
     } 
     where group_code = 'DP_VI_MARKET_CODE';
 
+@cds.autoexpose  // SP_SM_SUPPLIER_TYPE : SupplierType[예:]
+define view Sc_Supplier_Type_View as
+    select from codeMst.Code_Dtl {
+        key tenant_id,
+        key code      as supplier_type_code,
+            sort_no,
+            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name 
+                      as supplier_type_name
+    } 
+    where group_code = 'SP_SM_SUPPLIER_TYPE';
+
+@cds.autoexpose  // SP_SM_BP_STATUS_CODE : SupplierType[예:] -- 미사용시폐기예정
+define view Sc_Bp_Status_View as
+    select from codeMst.Code_Dtl {
+        key tenant_id,
+        key code      as bp_status_code,
+            sort_no,
+            children[lower(language_cd) = substring($user.locale, 1, 2)].code_name 
+                      as bp_status_CODE_name
+    } 
+    where group_code = 'SP_SM_BP_STATUS_CODE';
+
+
+//////////////////////////////////////////////////////////////////////
+// Test - Begin
 @cds.autoexpose  //
 define view Sc_Award_Type_Code_View1 as
     select
@@ -173,6 +198,7 @@ define view Sc_Award_Type_Code_View1 as
             and ( lower(children.language_cd) = substring($user.locale, 1, 2) )
         )
     where cd.group_code = 'SP_SC_AWARD_TYPE_CODE';
+
 
 /* 
 --# DB SQL Statement
@@ -190,3 +216,6 @@ left outer join codeLng.Code_Lng as children
     )
 where cd.group_code = 'SP_SC_AWARD_TYPE_CODE';
  */
+
+// Test - End
+//////////////////////////////////////////////////////////////////////

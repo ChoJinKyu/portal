@@ -413,11 +413,12 @@ sap.ui.define([
 			var oArgs = oEvent.getParameter("arguments"),
 				oView = this.getView();
 			this._sTenantId = this.getSessionUserInfo().TENANT_ID;
-			this._sMoldId = oArgs.moldId;
+            this._sMoldId = oArgs.moldId;
+            this._sRepairRequestNumber = oArgs.repairRequestNumber;
 
 			if(oArgs.moldId === "new"){
 				//It comes Add button pressed from the before page.
-				var oMasterModel = this.getModel("master");
+				var oMasterModel = this.getModel("repairItem");
 				/*oMasterModel.setData({
 					tenant_id: this._sTenantId
 				});*/
@@ -426,25 +427,21 @@ sap.ui.define([
                 oUiModel.setProperty("/newFlag", true);
 			}else{
 
-				this._bindView("/MoldMasters(tenant_id='" + this._sTenantId + "',mold_id='" + this._sMoldId + "')", "master", [], function(oData){
-                    this._toShowMode();
+				this._bindView("/RepairItem(tenant_id='" + this._sTenantId + "',repair_request_number='" + this._sRepairRequestNumber + "')", "repairItem", [], function(oData){
+                    console.log(oData);
                 }.bind(this));
-/*
-                this._bindView("/MoldMasterSpec(tenant_id='" + this._sTenantId + "',mold_id='" + this._sMoldId + "')", "repairMstAssetView", [], function(oData){
-                    
+
+                this._bindView("/MoldMstAssetSpecView(tenant_id='" + this._sTenantId + "',mold_id='" + this._sMoldId + "')", "moldView", [], function(oData){
+                    console.log(oData);
                 });
 
                 var schFilter = [
-                                    new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-                                    new Filter("mold_id", FilterOperator.EQ, this._sMoldId)
-                                ];
-                this._bindView("/MoldSchedule", "schedule", schFilter, function(oData){
-                    
+                        new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+                        new Filter("repair_request_number", FilterOperator.EQ, this._sRepairRequestNumber)
+                    ];
+                this._bindView("/RepairMstAssetView", "history", schFilter, function(oData){
+                    console.log(oData);
                 });
-
-                this._bindView("/MoldSpec(tenant_id='" + this._sTenantId + "',mold_id='"+this._sMoldId+"')", "asset", [], function(oData){
-                    
-                });*/
             }
             
             oTransactionManager.setServiceModel(this.getModel());

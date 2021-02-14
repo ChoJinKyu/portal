@@ -324,8 +324,11 @@ service PrReviewMgtService {
             ,hist.local_update_dtm  // 변경일자 - 로컬수정시간
             ,hist.job_type_code  // 업무유형코드
             ,cm_get_code_name_func(hist.tenant_id, 'OP_PR_REVIEW_JOB_TYPE_CODE', hist.job_type_code, 'KO') as job_type_name : String(240)  // 업무유형명
-            ,hist.before_desc  // 이전내역
-            ,hist.after_desc  // 이후내역
+            //,hist.before_desc  // 이전내역
+            //,hist.after_desc  // 이후내역
+            ,ifnull(cm_get_code_name_func(hist.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', hist.before_desc, 'KO'), hist.before_desc) as before_desc : String(240)  // 이전내역
+            ,ifnull(cm_get_code_name_func(hist.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', hist.after_desc, 'KO'), hist.after_desc) as after_desc : String(240)  // 이후내역
+
             ,hist.remark AS processed_reason  // 처리사유
             ,hist.update_user_id as worker_empno  // 처리자사번
             ,cm_get_emp_name_func(hist.tenant_id, hist.update_user_id) as worker_name : String(240)  // 처리자명

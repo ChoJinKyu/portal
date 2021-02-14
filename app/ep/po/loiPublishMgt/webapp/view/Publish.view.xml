@@ -7,6 +7,7 @@
     xmlns:sc="sap.suite.ui.commons"
 	xmlns:core="sap.ui.core"
     xmlns:richtexteditor="sap.ui.richtexteditor"
+    xmlns:sp-ui="sp.util.control.ui"
 	height="100%">
 
 	<uxap:ObjectPageLayout id="page"
@@ -157,22 +158,31 @@
 								</OverflowToolbar>
 							</headerToolbar>
 							<columns>
-                                <Column id="midOrgTypeCodeColumn" minScreenWidth="Tablet" hAlign="Center">
+                                <Column minScreenWidth="Tablet" hAlign="Center" width="150px">
 									<Text text="플랜트" />
 								</Column>
-								<Column id="midValueColumn" minScreenWidth="Tablet" hAlign="Center" width="200px">
+								<Column minScreenWidth="Tablet" hAlign="Center">
 									<Text text="품명" />
 								</Column>
-								<Column id="midValueColumn2" minScreenWidth="Tablet" hAlign="Center"  width="200px">
+								<Column minScreenWidth="Tablet" hAlign="Center"  width="200px">
 									<Text text="규격" />
 								</Column>                                
-                                <Column id="midStartDateColumn" minScreenWidth="Tablet" hAlign="Center"  width="70px" >
+                                <Column minScreenWidth="Tablet" hAlign="Center"  width="70px" >
 									<Text text="단위" />
 								</Column>
-                                <Column id="midEndDateColumn" minScreenWidth="Tablet" hAlign="Center"  width="50px">
+                                <Column  minScreenWidth="Tablet" hAlign="Center"  width="80px">
 									<Text text="수량" />
-								</Column>
-                                <Column id="midEndDateColumn6" minScreenWidth="Tablet" hAlign="Center" >
+                                </Column>
+                                <Column minScreenWidth="Tablet" hAlign="Center"  width="120px">
+									<Text text="단가" />
+                                </Column>
+                                <Column minScreenWidth="Tablet" hAlign="Center"  width="120px">
+									<Text text="금액" />
+                                </Column>
+                                <Column minScreenWidth="Tablet" hAlign="Center"  width="120px">
+									<Text text="납기일자" />
+								</Column>                                                                                                
+                                <Column minScreenWidth="Tablet" hAlign="Center" >
 									<Text text="비고" />
 								</Column>
 
@@ -185,7 +195,13 @@
                                         <Text text="{details>spec_desc}"/>
                                         <Text text="{details>unit}"/>
                                         <Text text="{details>request_quantity}"/>
-                                        <Text text="{details>delivery_request_date}"/>
+                                        <Text text="{details>request_net_price}"/>
+                                        <Text text="{details>request_amount}"/>
+                                        <Text text="{
+                                            path: 'details>delivery_request_date',
+                                            formatter: '.dateFormatter.toUTCDateString'
+                                        }"/>            
+                                        <Text text="{details>remark}"/>
 									</cells>
 								</ColumnListItem>
 							</items>
@@ -230,5 +246,16 @@
                 <Button id="pageByPassButton" type="Emphasized" text="ByPass" press=".onPageSaveButtonPress('B')" />
 			</OverflowToolbar>
 		</uxap:footer>
-	</uxap:ObjectPageLayout>
+    </uxap:ObjectPageLayout>
+    
+    <sp-ui:SupplierWithOrgDialog id="supplierWithOrgDialog" 
+        title="협력사 검색"
+        items="{
+            filters: [
+                {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
+            ]
+        }"
+        apply=".onSupplierDialogApplyPress"
+    /> 
+
 </mvc:View>

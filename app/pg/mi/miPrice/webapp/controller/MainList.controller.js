@@ -179,6 +179,10 @@ sap.ui.define([
             oViewControl.setProperty("/enabled", true);
 		},
 
+        onChangeData : function(oEvent){
+            this.getModel("viewControl").setProperty("/enabled", true);
+
+        },
 		onMainTableDeleteButtonPress: function(){
             //--- m Table 일 경우,
 			// var oTable = this.byId("mainTable"),
@@ -207,11 +211,76 @@ sap.ui.define([
 
             var table = this.byId("mainTable"),
                 model = this.getModel("list");
-            table.getSelectedIndices().reverse().forEach(function (idx) {
-                model.markRemoved(idx);
+
+                if(table.getSelectedIndices().length > 0){
+                    table.getSelectedIndices().reverse().forEach(function (idx) {
+                        model.markRemoved(idx);
+                    });
+
+                    table.clearSelection();
+                }else{
+                    MessageToast.show(this.getModel("I18N").getText("/NCM01010"));
+                }
+            
+        },
+
+        _validator : function(){
+            var oModel = this.getModel("list");
+            var oList = oModel.getChanges();
+            var sEmptyMsg = this.getModel("I18N").getText("/ECM01002");
+            var bReturn = true;
+       
+            oList.forEach( function (oRow) {
+                
+                var oValueStates = {};
+                //필수값 체크
+                var sMi_material_code = (oRow.mi_material_code === undefined || oRow.mi_material_code === null) ? "" : oRow.mi_material_code;
+                var sMi_material_name = (oRow.mi_material_name === undefined || oRow.mi_material_name === null) ? "" : oRow.mi_material_name;
+                var sCurrency_unit = (oRow.currency_unit === undefined || oRow.currency_unit === null) ? "" : oRow.currency_unit;
+                var sQuantity_unit = (oRow.quantity_unit === undefined || oRow.quantity_unit === null) ? "" : oRow.quantity_unit;
+                var sExchange_unit = (oRow.exchange_unit === undefined || oRow.exchange_unit === null) ? "" : oRow.exchange_unit;
+                var sExchange = (oRow.exchange === undefined || oRow.exchange === null) ? "" : oRow.exchange;
+                var sTermsdelv = (oRow.termsdelv === undefined || oRow.termsdelv === null) ? "" : oRow.termsdelv;
+                var sSourcing_group_code = (oRow.sourcing_group_code === undefined || oRow.sourcing_group_code === null) ? "" : oRow.sourcing_group_code;
+                var sDelivery_mm = (oRow.delivery_mm === undefined || oRow.delivery_mm === null) ? "" : oRow.delivery_mm;
+                var sMi_date = (oRow.mi_date === undefined || oRow.mi_date === null) ? "" : oRow.mi_date;
+                var sPrice = (oRow.price === undefined || oRow.price === null) ? "" : oRow.price.toString();
+
+                if(sMi_material_code === "")oValueStates.mi_material_code = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                else if(sMi_material_code !== "" && sMi_material_name === "")oValueStates.mi_material_code = {valueState: "Error", valueStateText: "등록이 안된 코드입니다"};
+                else if(sMi_material_code.length > 10)oValueStates.mi_material_code = {valueState: "Error", valueStateText: "10자 이하의 값을 입력하십시오."}; //임시 공통 Validation 완성후 삭제
+                
+                if(sCurrency_unit === "")oValueStates.currency_unit = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                if(sQuantity_unit === "")oValueStates.quantity_unit = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                
+                if(sExchange_unit.length > 40)oValueStates.exchange_unit = {valueState: "Error", valueStateText: "40자 이하의 값을 입력하십시오."};
+
+                if(sExchange === "")oValueStates.exchange = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                else if(sExchange.length > 40)oValueStates.exchange = {valueState: "Error", valueStateText: "40자 이하의 값을 입력하십시오."};  //임시 공통 Validation 완성후 삭제
+                
+                if(sSourcing_group_code.length > 10)oValueStates.sourcing_group_code = {valueState: "Error", valueStateText: "10자 이하의 값을 입력하십시오."};  //임시 공통 Validation 완성후 삭제
+                if(sDelivery_mm.length > 10)oValueStates.delivery_mm = {valueState: "Error", valueStateText: "10자 이하의 값을 입력하십시오."};  //임시 공통 Validation 완성후 삭제
+                
+                if(sTermsdelv === "")oValueStates.termsdelv = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                if(sMi_date === "")oValueStates.mi_date = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                
+                if(sPrice === "")oValueStates.price = {valueState: "Error", valueStateText: sEmptyMsg}; //임시 공통 Validation 완성후 삭제
+                else if(sPrice.indexOf(".") > 0 && (sPrice.length - sPrice.indexOf(".")) > 6)oValueStates.price = {valueState: "Error", valueStateText: "소수점 5자리까지 유효합니다."}; 
+
+
+                if('mi_material_code' in oValueStates || 'currency_unit' in oValueStates || 'quantity_unit' in oValueStates || 'exchange_unit' in oValueStates || 
+                'sourcing_group_code' in oValueStates || 'exchange' in oValueStates || 'termsdelv' in oValueStates || 'delivery_mm' in oValueStates || 'mi_date' in oValueStates || 'price' in oValueStates){
+                    bReturn = false;
+                }
+
+                oRow.__metadata = {_valueStates : oValueStates};
             });
 
-            table.clearSelection();
+            //if(!bReturn){
+            oModel.setProperty("/MIMaterialPriceManagementView", oModel.getProperty("/MIMaterialPriceManagementView"));
+            //}
+
+            return bReturn;              
         },
        
         onMainTableSaveButtonPress: function(){
@@ -230,9 +299,9 @@ sap.ui.define([
             
         //    if(this.validator.validate(this.byId("mainTable")) !== true) return;
 
-        this.validator.setModel(this.getModel("list"), "list");
-        if(this.validator.validate(this.byId("mainTable"))){
-
+        //this.validator.setModel(this.getModel("list"), "list");
+        //if(this.validator.validate(this.byId("mainTable"))){
+        if(this._validator()){
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
 				initialFocus : sap.m.MessageBox.Action.CANCEL,
@@ -414,7 +483,7 @@ sap.ui.define([
 						// });
 					};
 				}.bind(this)
-            });
+                });
             }else{
                console.log("checkRequire");
                 return; 
@@ -621,41 +690,82 @@ sap.ui.define([
 
                     if (oExcelData) {
                         var aData = oExcelData[Object.keys(oExcelData)[0]];
-
-                        aData.forEach(function (oRow) {
+                        var iDataLength = aData.length;
+                        var iSuccessLength = 0;
+                        that.validator.clearValueState(that.byId("mainTable"));
+                        aData.reverse().forEach(function (oRow) {
                             var aKeys = Object.keys(oRow),
+                                aValidKeys = ["currency_unit", "quantity_unit", "exchange", "termsdelv"],
+                                oValueStates = {},
                                 newObj = {};
 
                             //oRow.mi_date = new Date( oRow.mi_date );
-                            if(oModel.getObject("/CurrencyUnitView(tenant_id='"+sTenantId+"',currency_code='"+that.replaceSpecialCharacters(oRow.currency_unit)+"',language_code='"+sLanguageCode+"')") === undefined)oRow.currency_unit = "";
-                            if(oModel.getObject("/UnitOfMeasureView(tenant_id='"+sTenantId+"',uom_code='"+that.replaceSpecialCharacters(oRow.quantity_unit)+"',language_code='"+sLanguageCode+"')") === undefined)oRow.quantity_unit = "";
-                            if(oModel.getObject("/MIExchangeView(tenant_id='"+sTenantId+"',exchage='"+that.replaceSpecialCharacters(oRow.exchange)+"')") === undefined)oRow.exchange = "";
-                            if(oModel.getObject("/MITermsdelvView(tenant_id='"+sTenantId+"',termsdelv='"+that.replaceSpecialCharacters(oRow.termsdelv)+"')") === undefined)oRow.termsdelv = "";
-                            /*if(oModel.getObject("/MIMatCodeView(tenant_id='"+sTenantId+"',mi_material_code='"+that.replaceSpecialCharacters(oRow.mi_material_code)+"')") !== undefined){
-                                
-                            }*/
+                            aValidKeys.forEach(function(sValidKey){
+                                var sValue = oRow[sValidKey];
+                                var sObjectPath = "";
 
-                            var sMiDate = (oRow.mi_date).toString();
-                            var dMiDate;
-                            if(sMiDate !== ""){
+                                if(sValue !== undefined && sValue !== ""){
+                                    sValue = that.replaceSpecialCharacters(sValue);
+                                    if(sValidKey === "currency_unit")sObjectPath = "/CurrencyUnitView(tenant_id='"+sTenantId+"',currency_code='"+sValue+"',language_code='"+sLanguageCode+"')";
+                                    else if(sValidKey === "quantity_unit")sObjectPath = "/UnitOfMeasureView(tenant_id='"+sTenantId+"',uom_code='"+sValue+"',language_code='"+sLanguageCode+"')"
+                                    else if(sValidKey === "exchange")sObjectPath = "/MIExchangeView(tenant_id='"+sTenantId+"',exchage='"+sValue+"')";
+                                    else if(sValidKey === "termsdelv")sObjectPath = "/MITermsdelvView(tenant_id='"+sTenantId+"',termsdelv='"+sValue+"')";
+
+                                    if(oModel.getObject(sObjectPath) === undefined){
+                                        oRow[sValidKey] = "";
+                                        oValueStates[sValidKey] = {valueState: "Error", valueStateText: "유효값이 아닙니다."};
+                                    }
+
+                                }else{
+                                    //oValueStates[sValidKey] = {valueState: "Error", valueStateText: "필수 입력 값입니다."};
+                                }
+                            });
+
+                            var iPrice = oRow.price;
+                            if(iPrice !== undefined && iPrice !== ""){
+                                if(!isNaN(iPrice)){//jQuery.isNumeric(iPrice)
+                                    oRow.price = iPrice.toFixed(5);
+                                    //oValueStates.price = {valueState: "Error", valueStateText: "소수점 5자리까지 유효합니다."};
+                                }else{
+                                    oRow.price = undefined;
+                                    oValueStates.price = {valueState: "Error", valueStateText: "숫자만 입력가능합니다."};
+                                }
+                            }
+    
+                            var sMiDate = oRow.mi_date;
+                            
+                            if(sMiDate !== undefined && sMiDate !== ""){
+                                var dMiDate,
+                                sMiDate = sMiDate.toString();
                                 if(sMiDate.length === 8){
                                     dMiDate = new Date(sMiDate.substr(0,4) + "-" + sMiDate.substr(4,2) + "-" + sMiDate.substr(6,2));
                                 }else if(sMiDate.length === 10){
                                     dMiDate = new Date(sMiDate);
                                 }
 
+                                if(dMiDate instanceof Date)oRow.mi_date = dMiDate;
+                                else {
+                                    oRow.mi_date = "";
+                                    oValueStates.mi_date = {valueState: "Error", valueStateText: "날짜타입이 아닙니다"};
+                                }
                             }
-                            if(dMiDate instanceof Date)oRow.mi_date = dMiDate;
-                            else oRow.mi_date = "";
 
                             that._getMiMaterial(oRow.mi_material_code).then(function(returnData) {
+
+                                if(!returnData.result){
+                                    oValueStates.mi_material_code = {valueState: "Error", valueStateText: "등록이 안된 코드입니다"};
+                                }
                                 oRow.mi_material_name = returnData.mi_material_name;
                                 oRow.category_code = returnData.category_code;
                                 oRow.category_name = returnData.category_name;
-                                oListModel.addRecord(oRow, "/MIMaterialPriceManagementView", 0);
+                                oRow.__metadata = {_valueStates : oValueStates};
 
+                                oListModel.addRecord(oRow, "/MIMaterialPriceManagementView", 0);
                                 oViewControl.setProperty("/enabled", true);
-                                that.validator.clearValueState(that.byId("mainTable"));
+
+                                iSuccessLength ++;
+                                if(iDataLength === iSuccessLength)MessageToast.show("업로드가 완료되었습니다.");
+                                
                             });
                         });
                     }
@@ -675,17 +785,21 @@ sap.ui.define([
         _getMiMaterial: function(mi_material_code) {
             var promise = jQuery.Deferred(),
             oModel = this.getModel(),
-            oResult = {mi_material_name : "", category_code : "", category_name :""};
+            oResult = {result:false, mi_material_name : "", category_code : "", category_name :""};
 
             oModel.read("/MIMatListView", {
                     filters: [new Filter("mi_material_code", FilterOperator.EQ, mi_material_code)],
                     success: function(oData) {
-                        if(oData["results"].length > 0)oResult = oData["results"][0];
+                        if(oData["results"].length > 0){
+                            oResult = oData["results"][0];
+                            oResult.result = true;
+                        }
                         promise.resolve(oResult);
                         
                     }.bind(this),						
                     error: function(oData){						
-                        promise.reject(oData);	
+                        //promise.reject(oData);
+                        promise.reject(oResult);	
                     }
                 });
 
@@ -695,7 +809,8 @@ sap.ui.define([
 
 
 
-        replaceSpecialCharacters: function(attribute) {
+        replaceSpecialCharacters: function(sAttr) {
+            var attribute = sAttr.toString();
         // replace the single quotes
             attribute = attribute.replace(/'/g, "''");
 

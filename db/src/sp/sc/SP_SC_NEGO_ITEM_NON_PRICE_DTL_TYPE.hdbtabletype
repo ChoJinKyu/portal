@@ -3,12 +3,12 @@ tenant_id               NVARCHAR(5) NOT NULL       ,  --#01
 nego_header_id          BIGINT NOT NULL            ,  --#02
 nonpr_item_number       NVARCHAR(10) NOT NULL      ,  --#03
 nonpr_dtl_item_number   NVARCHAR(10) NOT NULL      ,  --#04
-supeval_from_date       DATE                       ,  --#05
-supeval_to_date         DATE                       ,  --#06
+supeval_from_date       SECONDDATE                 ,  --#05
+supeval_to_date         SECONDDATE                 ,  --#06
 supeval_from_value      DECIMAL(28,3)              ,  --#07
 supeval_to_value        DECIMAL(28,3)              ,  --#08
 supeval_text_value      NVARCHAR(100)              ,  --#09
-supeval_score           DECIMAL(28,3)                 --#10
+supeval_score           DECIMAL(28,3)              ,  --#10
 /* ,
 local_create_dtm SECONDDATE NOT NULL,
 local_update_dtm SECONDDATE NOT NULL,
@@ -16,4 +16,5 @@ create_user_id NVARCHAR(255) NOT NULL,
 update_user_id NVARCHAR(255) NOT NULL,
 system_create_dtm SECONDDATE NOT NULL,
 system_update_dtm SECONDDATE NOT NULL */
+_row_state_                    NVARCHAR(1)         --#99 UI Table Manged Status('D':Delete, ''|'U':Update, 'C':Create)
 );

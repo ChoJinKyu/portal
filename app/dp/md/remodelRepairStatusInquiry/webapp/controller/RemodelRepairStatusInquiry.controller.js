@@ -82,6 +82,7 @@ sap.ui.define([
             
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
+            
             this.setModel(new ManagedListModel(), "list");
 
             this._oTPC = new TablePersoController({

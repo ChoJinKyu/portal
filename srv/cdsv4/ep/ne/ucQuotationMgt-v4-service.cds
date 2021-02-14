@@ -119,6 +119,22 @@ service UcQuotationMgtV4Service {
 
     action SaveUcQuotationDtlProc(inputData : saveReturnType) returns saveReturnType;
  
-    //action SaveUcQuotationExtraProc(inputData : array of UcQuotationExtraData) returns UcQuotationExtraData;
+    type InputData : {
+        tenant_id                  : String;   
+        company_code               : String;   
+        const_quotation_number     : String;   
+        quotation_status_code      : String;   
+        update_user_id             : String;
+        row_state                  : String; 
+    };
+
+    type OutData : {
+        tenant_id                  : String;   
+        company_code               : String;   
+        const_quotation_number     : String;   
+        quotation_status_code      : String;   
+    };
+
+    action SaveUcQuotationStatusProc(inputData : array of InputData) returns array of OutData;
 
 }
