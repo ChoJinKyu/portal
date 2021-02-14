@@ -466,6 +466,7 @@ END;
             , nego_header_id
             , nego_item_number
             , item_supplier_sequence
+            , operation_org_type_code
             , operation_org_code
             , operation_unit_code
             , nego_supplier_register_type_code
@@ -496,6 +497,7 @@ END;
             , MAP(NS.item_supplier_sequence
                 , '', LPAD(IFNULL(V_NIPM.item_supplier_sequence_max,0)+ROW_NUMBER() OVER(PARTITION BY NS.tenant_id, NS.nego_header_id, NS.nego_item_number ORDER BY NS.nego_supplier_register_type_code) ,5 ,'0')
                 , NS.item_supplier_sequence) AS item_supplier_sequence
+            , ifnull(nullif(NS.operation_org_type_code,''),'BU') AS operation_org_type_code
             , NS.operation_org_code
             , NS.operation_unit_code
             , NS.nego_supplier_register_type_code
