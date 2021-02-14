@@ -52,8 +52,8 @@ entity Sc_Nego_Item_Non_Price_Dtl {
                                       and ItemsNonPrice.nego_header_id = $self.nego_header_id
                                       and ItemsNonPrice.nonpr_item_number = $self.nonpr_item_number;
 
-        supeval_from_date       : Date                @title : '평가시작일자' @description : 'UI:Response Value From';
-        supeval_to_date         : Date                @title : '평가종료일자' @description : 'UI:Response Value To';
+        supeval_from_date       : DateTime            @title : '평가시작일자' @description : 'UI:Response Value From';
+        supeval_to_date         : DateTime            @title : '평가종료일자' @description : 'UI:Response Value To';
         supeval_from_value      : Decimal(28, 3)      @title : '평가범위시작값' @description : 'UI:Response Value From(>)';
         supeval_to_value        : Decimal(28, 3)      @title : '평가범위종료값' @description : 'UI:Response Value To(<=)';
         supeval_text_value      : String(100)         @title : '평가단일값' @description : 'UI:Response Value';
