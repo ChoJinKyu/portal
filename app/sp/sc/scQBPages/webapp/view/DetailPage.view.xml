@@ -424,7 +424,7 @@
                                                 <t:Column width="" hAlign="Center">
                                                     <Label text="비고" />
                                                     <t:template>
-                                                    <Label text="{NegoHeaders>note_content}" />
+                                                        <Label text="{NegoHeaders>note_content}" />
                                                     </t:template>
                                                 </t:Column>
                                                 <t:Column width="" hAlign="Center">
@@ -497,7 +497,6 @@
                                                         
                                                         <Button  text="{I18N>/VENDOR_POOL} Change" type="Transparent" press=".createConfirmBox"  />
                                                         <Button  text="{I18N>/SIMPLE_CHANGE}" type="Transparent" press=".onSimpleChangePress"  /> 
-
 
                                                         <u:FileUploader uploadComplete="handleUploadComplete" change=".createConfirmBox" style="Transparent" 
                                                             buttonOnly="true" iconOnly="true" icon="sap-icon://upload" tooltip="Upload"  />
@@ -993,7 +992,6 @@
                                                 </t:Table>  
                                             </smartTable:SmartTable>
 
-
                                             <Panel id="panel_SuppliersContent" width="100%" expandable="true" expanded="false" headerText="{I18N>/SUPPLIERS_TITLE}">
                                                 <form:SimpleForm editable="true"  layout="ColumnLayout"
                                                     columnsM="2" width="100%" 
@@ -1158,18 +1156,10 @@
                                                             <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true" width="10%">
                                                                 <Text text="Contact" />
                                                             </Column>
-                                                            <!-- <Column minScreenWidth="Tablet" hAlign="Center"  demandPopin="true">
-                                                                <Text text="Delete" />
-                                                            </Column> -->
                                                         </columns>
                                                         <items>
                                                             <ColumnListItem type="Inactive" >
                                                                 <cells>
-                                                                    <!-- <Text text="{NegoItemPrices>item_supplier_sequence}">
-                                                                        <customData>
-                                                                            <core:CustomData key="item_supplier_sequence" value='{NegoItemPrices>item_supplier_sequence}'/>
-                                                                        </customData>
-                                                                    </Text> -->
                                                                     <ObjectStatus icon="{
                                                                         path: 'NegoItemPrices>_row_state_',
                                                                         formatter: '.formatter.toModelStateColumnIcon'
@@ -1180,7 +1170,6 @@
                                                                     <Label text="{NegoItemPrices>supplier_type_name}"/>
                                                                     <Label text="{NegoItemPrices>only_maker_flag}"/>
                                                                     <Button icon="sap-icon://value-help" />
-                                                                    <!-- <Text text=""/> -->
                                                                 </cells>
                                                             </ColumnListItem>
                                                         </items>

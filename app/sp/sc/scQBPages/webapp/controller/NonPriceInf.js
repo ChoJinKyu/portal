@@ -53,36 +53,37 @@ sap.ui.define([
             if (that._NPSelectIndex >= 0) {
 
                 console.log("조회 번호", that._NPSelectIndex);
-                var oModel = that.getView().getModel("viewModel");
+                var oModel = that.getView().getModel("NegoHeaders"); //viewModel
 
-                var oNPHeader = oModel.oData.NPHeader[that._NPSelectIndex];
+                var oNPHeader = oModel.getData().ItemsNonPrice[that._NPSelectIndex];
+                // var oNPHeader = oModel.oData.NPHeader[that._NPSelectIndex];
                 // var oHeader = oNPHeaderModel.oData
 
                 var h1;
                 var h4;
                 var h5;
-                if (oNPHeader.h1 == "Commercial") {
+                if (oNPHeader.nonpr_supeval_attr_type_code == "Commercial") {
                     h1 = "1";
-                } else if (oNPHeader.h1 == "Technical") {
+                } else if (oNPHeader.nonpr_supeval_attr_type_code == "Technical") {
                     h1 = "2";
                 }
-                if (oNPHeader.h4 == "Date") {
+                if (oNPHeader.nonpr_supeval_attr_val_type_cd == "Date") {
                     h4 = "1";
-                } else if (oNPHeader.h4 == "Number") {
+                } else if (oNPHeader.nonpr_supeval_attr_val_type_cd == "Number") {
                     h4 = "2";
-                } else if (oNPHeader.h4 == "Text") {
+                } else if (oNPHeader.nonpr_supeval_attr_val_type_cd == "Text") {
                     h4 = "3";
                 }
                 // console.log()
-                if (oNPHeader.h5 == "Automatic") {
+                if (oNPHeader.nonpr_score_comput_method_code == "Automatic") {
                     h5 = "1";
                 } else {  //None
                     h5 = "2";
                 }
 
-
-                for (var i = 0; i < oNPHeader.item.length; i++) {
-                    var aa = oNPHeader.item[i];
+                //oNPHeader.item
+                for (var i = 0; i < oNPHeader.ItemsNonPriceDtl.length; i++) {
+                    var aa = oNPHeader.ItemsNonPriceDtl[i];
                     var addItem = this._NPFirstLine();
                     var oCells = addItem.getCells();
 
@@ -114,8 +115,12 @@ sap.ui.define([
                 }
 
                 var NPHeaderStr = new JSONModel({
-                    h1: h1, h2: oNPHeader.h2, h3: oNPHeader.h3,
-                    h4: h4, h5: h5, h6: oNPHeader.h6
+                    h1: h1, 
+                    h2: oNPHeader.nonpr_requirements_text, 
+                    h3: oNPHeader.note_content,
+                    h4: h4, 
+                    h5: h5, 
+                    h6: oNPHeader.target_score
                 });
 
                 var aa = that.getView().getModel("NPInfPopupUtil");
@@ -228,12 +233,16 @@ sap.ui.define([
 
         },
         _NPTableArrayAdd: function (NPHeaderData) {
-            var oModel = that.getView().getModel("viewModel");
+            var oModel = that.getView().getModel("NegoHeaders");//that.getView().getModel("viewModel");
 
-            var oNPHeader = oModel.oData.NPHeader;
+            var oNPHeader = oModel.getData().ItemsNonPrice;// oModel.oData.NPHeader;
 
             oNPHeader.push(NPHeaderData);
             oModel.refresh(true);
+
+            that.getView().byId("tableNonPrice").setVisibleRowCountMode("Fixed");
+            that.getView().byId("tableNonPrice").setVisibleRowCount( oNPHeader.length );
+
 
         },
         _NPTableArrayUpdate: function (NPHeaderData) {
@@ -241,9 +250,7 @@ sap.ui.define([
 
             var oNPHeader = oModel.oData.NPHeader;
 
-
             oNPHeader[that._NPSelectIndex] = NPHeaderData;
-
 
             oModel.refresh(true);
             // console.log("oRow = ",oRow);
@@ -255,7 +262,7 @@ sap.ui.define([
             this._NPNone(e.oSource.getParent());
 
             var oHeader = inputHeader;
-            var oItems = inputHeader.item;
+            var oItems = inputHeader.ItemsNonPriceDtl;//inputHeader.item;
             console.log("oItems == ", oItems);
             var flag = true;
             var errorObject = []
@@ -263,23 +270,23 @@ sap.ui.define([
             var oPopupType = that.getView().getModel("NPInfPopupUtil").oData.type;
 
             // Header 부분 입력 값 확인
-            if (oHeader.h1.length < 1) {
+            if (oHeader.nonpr_supeval_attr_type_code.length < 1) {
                 flag = false;
                 errorObject.push("h1");
             }
-            if (oHeader.h2.length < 1) {
+            if (oHeader.nonpr_requirements_text.length < 1) {
                 flag = false;
                 errorObject.push("h2");
             }
-            if (oHeader.h4.length < 1) {
+            if (oHeader.nonpr_supeval_attr_val_type_cd.length < 1) {
                 flag = false;
                 errorObject.push("h4");
             }
-            if (oHeader.h5.length < 1) {
+            if (oHeader.nonpr_score_comput_method_code.length < 1) {
                 flag = false;
                 errorObject.push("h5");
             }
-            if (oHeader.h6.length < 1) {
+            if (oHeader.target_score.length < 1) {
                 flag = false;
                 errorObject.push("h6");
             } else {
@@ -302,33 +309,47 @@ sap.ui.define([
 
             var errItemObject = [];
 
-
+            // var type = that.getView().getMode("NPHeaderModel").h4;
 
             // Item 부분 입력 값 확인
             for (var i = 0; i < oItems.length; i++) {
-
 
                 var oItem = oItems[i];
                 var Iflag = true;
                 var oErrorRow = [];
 
+                var checkTemp1 = oPopupType === "1" ? "supeval_from_date" : oPopupType === "2" ? "supeval_from_value" : "supeval_text_value";
+                var checkTemp2 = oPopupType === "1" ? "supeval_to_date" : oPopupType === "2" ? "supeval_to_value" : "supeval_score";
+                var checkTemp3 = "supeval_score";
 
-
-
-                if (oItems[i].v1.length < 1) {
+                if (oItems[i][checkTemp1].length < 1) {
                     Iflag = false;
                     oErrorRow.push("1");
                 }
-                if (oItems[i].v2.length < 1) {
+                if (oItems[i][checkTemp2].length < 1) {
                     Iflag = false;
                     oErrorRow.push("2");
                 }
                 if (oPopupType != "3") {
-                    if (oItems[i].v3.length < 1) {
+                    if (oItems[i][checkTemp3].length < 1) {
                         Iflag = false;
                         oErrorRow.push("3");
                     }
                 }
+                // if (oItems[i].v1.length < 1) {
+                //     Iflag = false;
+                //     oErrorRow.push("1");
+                // }
+                // if (oItems[i].v2.length < 1) {
+                //     Iflag = false;
+                //     oErrorRow.push("2");
+                // }
+                // if (oPopupType != "3") {
+                //     if (oItems[i].v3.length < 1) {
+                //         Iflag = false;
+                //         oErrorRow.push("3");
+                //     }
+                // }
 
                 if (Iflag == false) {
                     flag = false;
@@ -447,9 +468,9 @@ sap.ui.define([
 
             for (var i = 0; i < oItems.length; i++) {
                 var oItem = oItems[i];
-                var oCell;
+                var oCell = oItem.getCells()[6];
                 if (IntType == "1") {
-                    oCell = oItem.getCells()[3];
+                    // oCell = oItem.getCells()[3];
 
                     // Date 값 validation check
                     if (oItem.getCells()[1].isValidValue() == false) {
@@ -485,10 +506,10 @@ sap.ui.define([
                         flag = false;
                         console.log("from : to =====", oItem.getCells()[1].getValue(), " : ", oItem.getCells()[2].getValue());
                     }
-                } else if (IntType == "2") {
-                    oCell = oItem.getCells()[6];
-                } else if (IntType == "3") {
-                    oCell = oItem.getCells()[8];
+                // } else if (IntType == "2") {
+                //     oCell = oItem.getCells()[6];
+                // } else if (IntType == "3") {
+                //     oCell = oItem.getCells()[8];
                 }
                 var value = oCell.getValue();
 
@@ -511,14 +532,20 @@ sap.ui.define([
             var PVbox = e.oSource.getParent().getContent()[0].getItems()[0];
 
             var oNPHeaderData = {};
-            oNPHeaderData.h1 = PVbox.getItems()[0].getItems()[0].getItems()[1].getSelectedItem().getText();
-            oNPHeaderData.h2 = PVbox.getItems()[0].getItems()[1].getItems()[1].getValue();
-            oNPHeaderData.h3 = PVbox.getItems()[1].getItems()[0].getItems()[1].getValue();
-            oNPHeaderData.h4 = PVbox.getItems()[2].getItems()[0].getItems()[1].getSelectedItem().getText();
-            oNPHeaderData.h5 = PVbox.getItems()[2].getItems()[1].getItems()[1].getSelectedItem().getText();
-            oNPHeaderData.h6 = PVbox.getItems()[2].getItems()[2].getItems()[1].getValue();
+            oNPHeaderData._row_state_                       = "C";
+            oNPHeaderData.nonpr_supeval_attr_type_code      = PVbox.getItems()[0].getItems()[0].getItems()[1].getSelectedItem().getText();
+            oNPHeaderData.nonpr_requirements_text           = PVbox.getItems()[0].getItems()[1].getItems()[1].getValue();
+            oNPHeaderData.note_content                      = PVbox.getItems()[1].getItems()[0].getItems()[1].getValue();
+            oNPHeaderData.nonpr_supeval_attr_val_type_cd    = PVbox.getItems()[2].getItems()[0].getItems()[1].getSelectedItem().getText();
+            oNPHeaderData.nonpr_score_comput_method_code    = PVbox.getItems()[2].getItems()[1].getItems()[1].getSelectedItem().getText();
+            oNPHeaderData.target_score                      = PVbox.getItems()[2].getItems()[2].getItems()[1].getValue();
 
-
+            // oNPHeaderData.h1 = PVbox.getItems()[0].getItems()[0].getItems()[1].getSelectedItem().getText();
+            // oNPHeaderData.h2 = PVbox.getItems()[0].getItems()[1].getItems()[1].getValue();
+            // oNPHeaderData.h3 = PVbox.getItems()[1].getItems()[0].getItems()[1].getValue();
+            // oNPHeaderData.h4 = PVbox.getItems()[2].getItems()[0].getItems()[1].getSelectedItem().getText();
+            // oNPHeaderData.h5 = PVbox.getItems()[2].getItems()[1].getItems()[1].getSelectedItem().getText();
+            // oNPHeaderData.h6 = PVbox.getItems()[2].getItems()[2].getItems()[1].getValue();
 
             var typeFlagModel = that.getView().getModel("NPInfPopupUtil");
 
@@ -532,22 +559,30 @@ sap.ui.define([
                 var oItem = oItems[i];
                 var sItem = {};
 
-                if (typeFlag == "1") {
-                    sItem.v1 = oItem.getCells()[1].getValue();
-                    sItem.v2 = oItem.getCells()[2].getValue();
-                    sItem.v3 = oItem.getCells()[3].getValue();
-                } else if (typeFlag == "2") {
-                    sItem.v1 = oItem.getCells()[4].getValue();
-                    sItem.v2 = oItem.getCells()[5].getValue();
-                    sItem.v3 = oItem.getCells()[6].getValue();
-                } else if (typeFlag == "3") {
-                    sItem.v1 = oItem.getCells()[7].getValue();
-                    sItem.v2 = oItem.getCells()[8].getValue();
-                }
+                sItem.supeval_from_date     = oItem.getCells()[1].getDateValue();
+                sItem.supeval_to_date       = oItem.getCells()[2].getDateValue();
+                sItem.supeval_from_value    = oItem.getCells()[3].getValue();
+                sItem.supeval_to_value      = oItem.getCells()[4].getValue();
+                sItem.supeval_text_value    = oItem.getCells()[5].getValue();
+                sItem.supeval_score         = oItem.getCells()[6].getValue();
+                    
+                //  if (typeFlag == "1") {
+                //     sItem.v1 = oItem.getCells()[1].getValue();
+                //     sItem.v2 = oItem.getCells()[2].getValue();
+                //     sItem.v3 = oItem.getCells()[3].getValue();
+                // } else if (typeFlag == "2") {
+                //     sItem.v1 = oItem.getCells()[4].getValue();
+                //     sItem.v2 = oItem.getCells()[5].getValue();
+                //     sItem.v3 = oItem.getCells()[6].getValue();
+                // } else if (typeFlag == "3") {
+                //     sItem.v1 = oItem.getCells()[7].getValue();
+                //     sItem.v2 = oItem.getCells()[8].getValue();
+                // }
                 oItemArray.push(sItem);
             }
 
-            oNPHeaderData.item = oItemArray;
+            // oNPHeaderData.item = oItemArray;
+            oNPHeaderData.ItemsNonPriceDtl = oItemArray;
 
             console.log("Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", oNPHeaderData);
 
@@ -598,13 +633,13 @@ sap.ui.define([
 
             newLine.addCell(oDatePicker.clone());
 
-            newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
+            // newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
 
             newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
 
             newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
 
-            newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
+            // newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
 
             newLine.addCell(new sap.m.Input({ value: "" }));
 
@@ -642,13 +677,13 @@ sap.ui.define([
 
             newLine.addCell(oDatePicker.clone());
 
-            newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
+            // newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
 
             newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
 
             newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
 
-            newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
+            // newLine.addCell(new sap.m.Input({ value: "", type: "Number" }));
 
             newLine.addCell(new sap.m.Input({ value: "" }));
 

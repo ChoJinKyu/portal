@@ -173,13 +173,13 @@
                                 hAlign="Center">
                                 <Label text="Response Value To" required="true" />
                             </Column>
-                            <!-- <Column width="30%"
+                            <Column width="30%"
                                 visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
                                 minScreenWidth="Desktop"
                                 demandPopin="true"
                                 hAlign="Center">
                                 <Label text="점수" required="true" />
-                            </Column> -->
+                            </Column>
 
 
                             <Column width="30%"
@@ -187,22 +187,22 @@
                                 hAlign="Center"
                                 minScreenWidth="Tablet"
                                 demandPopin="true">
-                                <Label text="Response Value From" required="true" />
+                                <Label text="Response Value From( > )" required="true" />
                             </Column>
                             <Column width="30%"
                                 visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}"
                                 minScreenWidth="Desktop"
                                 demandPopin="true"
                                 hAlign="Center">
-                                <Label text="Response Value To" required="true" />
+                                <Label text="Response Value To(  ) " required="true" />
                             </Column>
-                            <!-- <Column width="30%"
+                            <Column width="30%"
                                 visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}"
                                 minScreenWidth="Desktop"
                                 demandPopin="true"
                                 hAlign="Center">
                                 <Label text="점수" required="true" />
-                            </Column> -->
+                            </Column>
 
 
                             <Column width="60%"
@@ -212,9 +212,8 @@
                                 demandPopin="true">
                                 <Label text="Response Value" required="true" />
                             </Column>
-
                             <Column width="30%"
-                                
+                                visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}"
                                 minScreenWidth="Desktop"
                                 demandPopin="true"
                                 hAlign="Center">
@@ -236,20 +235,20 @@
                                         value="2015-11-23"
                                         valueFormat="yyyy-MM-dd"
                                         displayFormat="long"/>
-                                    <!-- <Input value=""
-                                        visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}" /> -->
+                                    <Input value=""
+                                        visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}" />
 
                                     <Input value="1"
                                         visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
                                     <Input value="1.2"
                                         visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
-                                    <!-- <Input value="100"
-                                        visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" /> -->
+                                    <Input value="100"
+                                        visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
 
                                     <Input value=""
                                         visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}" />
-
-                                    <Input value="" /> 
+                                    <Input value=""
+                                        visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}" /> 
 
 
                                     <!-- <Text text="4" />
