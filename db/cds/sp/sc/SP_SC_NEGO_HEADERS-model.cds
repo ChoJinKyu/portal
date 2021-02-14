@@ -43,9 +43,9 @@ using {
 // using {sp as negoHeaders} from '../../sp/sc/SP_SC_NEGO_HEADERS-model';
 
 entity Sc_Nego_Headers {
-    key tenant_id : type of orgTenant.Org_Tenant : tenant_id @title : '테넌트ID';
+    key tenant_id : type of orgTenant.Org_Tenant : tenant_id     @title : '테넌트ID';
         // key tenant_id                       : Association to orgTenant.Org_Tenant @title : '테넌트ID';
-    key nego_header_id                  : Integer64 not null @title : '협상헤더ID';
+    key nego_header_id                  : Integer64 not null     @title : '협상헤더ID';
         Items                           : Composition of many Sc_Nego_Item_Prices
                                               on  Items.tenant_id      = $self.tenant_id
                                               and Items.nego_header_id = $self.nego_header_id;
@@ -53,15 +53,15 @@ entity Sc_Nego_Headers {
                                               on  ItemsNonPrice.tenant_id      = $self.tenant_id
                                               and ItemsNonPrice.nego_header_id = $self.nego_header_id;
         reference_nego_header_id        : type of nego_header_id @title : '참조협상헤더ID';
-        previous_nego_header_id         : Integer64          @title : '기존협상헤더ID';
-        operation_org_code              : String(10)         @title : '운영조직코드';
-        operation_unit_code             : String(10)         @title : '운영단위코드--폐기예정';
-        reference_nego_document_number  : Integer            @title : '참조협상문서번호';
-        nego_document_round             : Integer            @title : '협상문서회차';
-        nego_document_number            : String(50)         @title : '협상문서번호';
-        nego_document_title             : String(300)        @title : '협상문서제목';
-        nego_document_desc              : LargeBinary        @title : '협상문서설명';
-        nego_progress_status_code       : String(30)         @title : '협상진행상태코드';
+        previous_nego_header_id         : type of nego_header_id @title : '기존협상헤더ID';
+        operation_org_code              : String(10)             @title : '운영조직코드';
+        operation_unit_code             : String(10)             @title : '운영단위코드--폐기예정';
+        reference_nego_document_number  : Integer                @title : '참조협상문서번호';
+        nego_document_round             : Integer                @title : '협상문서회차';
+        nego_document_number            : String(50)             @title : '협상문서번호';
+        nego_document_title             : String(300)            @title : '협상문서제목';
+        nego_document_desc              : LargeBinary            @title : '협상문서설명';
+        nego_progress_status_code       : String(30)             @title : '협상진행상태코드';
         nego_progress_status : Association to Sc_Nego_Prog_Status_Code_View
                             on nego_progress_status.tenant_id       = $self.tenant_id
                               and nego_progress_status.nego_progress_status_code = $self.nego_progress_status_code;
@@ -70,50 +70,50 @@ entity Sc_Nego_Headers {
                             on award_progress_status.tenant_id       = $self.tenant_id
                               and award_progress_status.award_progress_status_code = $self.award_progress_status_code;
         //    award_date : Date   @title: '낙찰일자' ;
-        reply_times                     : Integer            @title : '회신횟수';
-        supplier_count                  : Integer            @title : '공급업체개수';
-        nego_type_code                  : String(25)         @title : '협상유형코드';
+        reply_times                     : Integer                @title : '회신횟수';
+        supplier_count                  : Integer                @title : '공급업체개수';
+        nego_type_code                  : String(25)             @title : '협상유형코드';
         nego_type      : Association to one Sc_Nego_Type_Code 
                             on nego_type.tenant_id       = $self.tenant_id
                               and nego_type.nego_type_code = $self.nego_type_code;
         //    purchasing_order_type_code : String(30)   @title: '구매주문유형코드' ;
-        outcome_code   : type of Sc_Outcome_Code:outcome_code  @title : '아웃컴코드';
+        outcome_code   : type of Sc_Outcome_Code:outcome_code    @title : '아웃컴코드';
         outcome        : Association to Sc_Outcome_Code 
                             on outcome.tenant_id = $self.tenant_id 
                               and outcome.nego_type_code = $self.nego_type_code
                               and outcome.outcome_code = $self.outcome_code
                             //   excluding { local_create_dtm }
                               ;
-        negotiation_output_class_code   : String(100)        @title : '협상산출물분류코드-삭제예정(OUTCOME_CODE대체)';
+        negotiation_output_class_code   : String(100)            @title : '협상산출물분류코드-삭제예정(OUTCOME_CODE대체)';
         // buyer_empno                     : String(30)         @title : '구매담당자사번';
         buyer_empno                     : type of Sc_Employee_View : employee_number @title : '구매담당자사번';
         buyer_employee : Association to Sc_Employee_View    //UseCase        
                             on buyer_employee.tenant_id = $self.tenant_id
                               and buyer_employee.employee_number = $self.buyer_empno;
-        buyer_department_code           : String(10)         @title : '구매담당자부서코드';
+        buyer_department_code           : String(10)             @title : '구매담당자부서코드';
         buyer_department : Association to Sc_Hr_Department    //UseCase        
                             on buyer_department.tenant_id = $self.tenant_id
                               and buyer_department.department_code = $self.buyer_department_code;
         //    ship_to_location_code : Integer   @title: '납품처위치코드' ;
         //    submit_date : Date   @title: '제출일자' ;
-        immediate_apply_flag            : String(1)          @title : '즉시적용여부';
-        open_date                       : DateTime           @title : '오픈일자';
-        closing_date                    : DateTime           @title : '마감일자';
+        immediate_apply_flag            : String(1)              @title : '즉시적용여부';
+        open_date                       : DateTime               @title : '오픈일자';
+        closing_date                    : DateTime               @title : '마감일자';
         //    reference_closing_date : Date   @title: '참조마감일자' ;
         //    cancel_date : Date   @title: '취소일자' ;
-        auto_rfq                        : String(1)          @title : 'Auto RFQ';
-        items_count                     : Integer            @title : '품목수';
-        negotiation_style_code          : String(30)         @title : '협상스타일코드' @description : 'UI:Bid Style|Quote Style';
+        auto_rfq                        : String(1)              @title : 'Auto RFQ';
+        items_count                     : Integer                @title : '품목수';
+        negotiation_style_code          : String(30)             @title : '협상스타일코드' @description : 'UI:Bid Style|Quote Style';
         negotiation_style : Association to one Sc_Negotiation_Style_Map
                             on    negotiation_style.tenant_id              = $self.tenant_id
                               and negotiation_style.nego_type_code         = $self.nego_type_code
                               and negotiation_style.negotiation_style_code = $self.negotiation_style_code
                             @title : '협상유형&협상스타일 Navi.';
-        close_date_ext_enabled_hours    : Integer            @title : '마감일자동연장가능시간수';
-        close_date_ext_enabled_count    : Integer            @title : '마감일자동연장가능횟수';
-        actual_extension_count          : Integer            @title : '실제연장횟수';
-        remaining_hours                 : PriceAmountT       @title : '잔여시간';
-        note_content                    : LargeBinary        @title : '노트내용' @description : 'UI:Note to Content';
+        close_date_ext_enabled_hours    : Integer                @title : '마감일자동연장가능시간수';
+        close_date_ext_enabled_count    : Integer                @title : '마감일자동연장가능횟수';
+        actual_extension_count          : Integer                @title : '실제연장횟수';
+        remaining_hours                 : PriceAmountT           @title : '잔여시간';
+        note_content                    : LargeBinary            @title : '노트내용' @description : 'UI:Note to Content';
         award_type_code                 : Sc_Award_Type_Code_View:award_type_code @title : '낙찰유형코드' @description : 'UI:Award Type';
         award_type : Association to Sc_Award_Type_Code_View
                             on    award_type.tenant_id       = $self.tenant_id
@@ -243,7 +243,7 @@ entity Sc_Nego_Headers_View as
         award_method_map2,                                      //[가능]명시적으로 포함 시켜야 실제 디자인타임에 Association으로 적용됨
         award_method_map2.sort_no as nego_award_method_sort_no, //[가능]Association으로 추가되지 않고 디자인타임의 Left Outer Join으로 적용된다.
         round(seconds_between($now, closing_date)/3600,2) as remain_times  : Decimal(28, 2),
-        operation_org //[가능]명시적으로 포함 시켜야 실제 디자인타임에 Association으로 적용됨
+        operation_org                                           //[가능]명시적으로 포함 시켜야 실제 디자인타임에 Association으로 적용됨
     };
 
   annotate Sc_Nego_Headers_View with @( 
