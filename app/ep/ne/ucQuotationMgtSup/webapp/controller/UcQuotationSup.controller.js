@@ -1686,7 +1686,7 @@ console.log(" check document_no----------------->" ,dtl_net_price_contract_docum
                 
             // });
 
-             console.log("oDtlData=", oDtlData);
+            console.log("oDtlData=", oDtlData);
             oViewModel.setProperty("/ucdetails", oDtlData);
             this.byId("mainTable").clearSelection();
         },
@@ -2155,6 +2155,8 @@ console.log("@@@@@@@@@@@@@@@@@@ 0 " , oEvent.mParameters.item.department_local_n
              dtlData.forEach(function (item, index) {
                  input.push(dtlData[index]);
              });
+
+             
             
             var document_no = "";
             var degree = "";
@@ -2180,7 +2182,7 @@ console.log("@@@@@@@@@@@@@@@@@@ 0 " , oEvent.mParameters.item.department_local_n
                 //console.log("chkIdx ---> " , chkIdx);
 
                                 //oView.byId("popTable2").removeSelectionInterval(chkIdx,1);
-                                oView.byId("popTable2").clearSelection();
+                                
 
                                 dtlData.splice(chkIdx, 1);
 
@@ -2191,6 +2193,10 @@ console.log("@@@@@@@@@@@@@@@@@@ 0 " , oEvent.mParameters.item.department_local_n
                 });
             }
 
+            console.log("dtlData=", dtlData);
+            oViewModel.setProperty("/ucdetails", dtlData);
+
+            oView.byId("popTable2").clearSelection();
 
             // console.log("sel_val.length========", sel_val);
             // console.log("oSelected========", oSelected);
