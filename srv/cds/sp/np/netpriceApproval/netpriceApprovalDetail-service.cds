@@ -174,13 +174,15 @@ service NpApprovalDetailService {
             /*  ,   vpm.vendor_pool_local_name              /  Vendor Pool         협력사풀 명  ,   vpm.vendor_pool_english_name */
             
             /* 펑션으로 빼야할듯 LGD의 경우 다름 */
-            ,(select vendor_pool_local_name from PG_VP_VENDOR_POOL_MST where tenant_id = pad.tenant_id
-                and org_code  =  (select bizunit_code 
-                                    from CM_PUR_OPERATION_ORG 
-                                    where tenant_id = pad.tenant_id 
-                                    and org_code = pad.org_code )
-                and vendor_pool_code = pad.vendor_pool_code
-            ) as vendor_pool_local_name : String 
+            ,   (select vendor_pool_local_name 
+                    from PG_VP_VENDOR_POOL_MST 
+                    where tenant_id = pad.tenant_id
+                    and org_code  =  (select bizunit_code 
+                                        from CM_PUR_OPERATION_ORG 
+                                        where tenant_id = pad.tenant_id 
+                                        and org_code = pad.org_code )
+                    and vendor_pool_code = pad.vendor_pool_code
+                ) as vendor_pool_local_name : String 
 
 
             ,   pad.net_price_approval_reason_code	    /*	Reason code	*/
@@ -269,7 +271,7 @@ service NpApprovalDetailService {
 
         INNER JOIN CM_SPP_USER_SESSION_VIEW  ssi
             ON pad.tenant_id        = ssi.TENANT_ID
-            /*  AND pad.company_code     = ssi.COMPANY_CODE */
+        /*  AND pad.company_code     = ssi.COMPANY_CODE */
 
         LEFT JOIN SP_NP_NET_PRICE_MST npm             /*  기준단가 마스터 */
                 ON pad.tenant_id        = npm.tenant_id
@@ -296,7 +298,7 @@ service NpApprovalDetailService {
                AND pad.org_type_code    = vpm.org_type_code
                AND pad.org_code         = vpm.org_code
                AND pad.vendor_pool_code = vpm.vendor_pool_code
-                */
+        */
     ;
 
 
@@ -321,11 +323,14 @@ service NpApprovalDetailService {
 			    ) AS org_name : String                  /*	구매운영조직코드 명	*/     
 
             ,   pad.material_code	                    /*	Material Code	자재코드*/
+            ,   pad.material_desc	                    /*	Description	    자재내역    */
+
+            /*
             ,   (SELECT mmm.material_desc
                    FROM DP_MM_MATERIAL_MST mmm
                   WHERE mmm.tenant_id = pad.tenant_id
                     AND mmm.material_code = pad.material_code
-                ) as material_desc : String              /*	Description	    자재내역*/
+                ) as material_desc : String              	Description	    자재내역*/
 
             ,   pad.supplier_code	                    /*	Supplier Code	공급업체코드 */
             ,   sm.supplier_local_name	                /*	Supplier Name	*/
