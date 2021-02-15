@@ -16,7 +16,7 @@ sap.ui.define([
         CalculationBuilderVariable, ObjectPageHeaderContent ) {
         "use strict";
         
-		return Controller.extend("sp.se.evalProgressList.controller.SheetMgt", {
+		return Controller.extend("sp.se.evalProgressList.controller.EvaluInstance", {
 
 			onInit: function () {
                 var oView,oMultilingual;
@@ -25,7 +25,7 @@ sap.ui.define([
                 oMultilingual = new Multilingual();
                 oView.setModel(oMultilingual.getModel(), "I18N");
 
-                // this.getOwnerComponent().getRouter().getRoute("SheetMgt").attachPatternMatched(this._onPatternMatched, this);
+                // this.getOwnerComponent().getRouter().getRoute("EvaluInstance").attachPatternMatched(this._onPatternMatched, this);
                 
             }
             , onAfterRendering: function () {
@@ -33,7 +33,7 @@ sap.ui.define([
 
                 oSheetMgtPage = this.byId("sheetMgtPage");
                 sId = oSheetMgtPage.getHeaderContent()[0].getParent().getId();
-                jQuery("#"+sId).removeClass("sapFDynamicPageHeaderWithContent");
+                jQuery("#"+sId).removeClass("sapFDynamicPageHeaderWithContent");    //sapUxAPObjectPageHeaderContent
                 oSheetMgtPage.getHeaderContent()[0].getParent().onAfterRendering = function(){
                     jQuery("#"+this.getId()).removeClass("sapFDynamicPageHeaderWithContent");
                 }
