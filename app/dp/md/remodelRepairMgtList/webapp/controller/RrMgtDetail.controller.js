@@ -20,9 +20,10 @@ sap.ui.define([
     "sap/ui/model/FilterOperator",
     "sap/ui/richtexteditor/RichTextEditor",
     "dp/md/util/controller/ProcessUI", 
+    "dp/md/util/controller/SupplierDialog",
 ], function (BaseController, DateFormatter, ManagedModel, ManagedListModel, TransactionManager, Multilingual, Validator,
     ColumnListItem, Label, MessageBox, MessageToast, UploadCollectionParameter,
-    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ProcessUI
+    Fragment, syncStyleClass, History, Device, JSONModel, Filter, FilterOperator, RichTextEditor, ProcessUI, SupplierDialog
 ) {
     "use strict";
 
@@ -147,10 +148,10 @@ sap.ui.define([
         },
         _setBtnStatus : function(){
             var oUiModel = this.getView().getModel("mode");
-             console.log("_setBtnStatus>>>>> ", oUiModel);
+           //  console.log("_setBtnStatus>>>>> ", oUiModel);
             var oModel = this.getModel("rrMgt") ;
 
-            console.log("oModel>>>>> ", oModel);
+           // console.log("oModel>>>>> ", oModel);
             if(oUiModel.getProperty("/editFlag")){
                 if(oModel.getProperty("/repair_progress_status_code") === "RA"){ // Requst 
                     oUiModel.setProperty("/btnDraft", false);    
@@ -189,7 +190,7 @@ sap.ui.define([
                 }
             }
 
-               console.log("_setBtnStatus 222 >>>>> ", oUiModel);
+            //   console.log("_setBtnStatus 222 >>>>> ", oUiModel);
           
         },
 
@@ -220,7 +221,27 @@ sap.ui.define([
               return null;
             }
         },
+        // MOLD_SUPPLIER 팝업창 띄우기 
+        onMoldSupplierValuePress : function(){ 
+            var mst = this.getModel("rrMgt").getData(); 
+             if (!this.oCodeSelectionValueHelp) {
+                    this.oCodeSelectionValueHelp = new SupplierDialog({
+                        multiSelection: false 
+                      , items: {
+                            filters: [
+                                new Filter("tenant_id", FilterOperator.EQ, "L2100") 
+                                ,  new Filter("company_code", FilterOperator.EQ, mst.company_code) 
+                                ,  new Filter("org_code", FilterOperator.EQ, mst.org_code) 
+                            ]
+                        }
+                    });
 
+                    this.oCodeSelectionValueHelp.attachEvent("apply", function (oEvent) {
+                        this.byId("input_supplier_code").setValue(oEvent.getParameter("item").supplier_code);
+                    }.bind(this));
+                }
+                this.oCodeSelectionValueHelp.open();
+        } ,
         onPageDraftButtonPress: function () {
             var mst = this.getModel("rrMgt").getData(); 
             var data = {
@@ -309,7 +330,7 @@ sap.ui.define([
                                     MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
                                 if (result.resultCode > -1) { 
                                     result.request_number = result.repair_request_number 
-                                    console.log("result>>>> ", result);
+                                  //  console.log("result>>>> ", result);
                                     that._srchDetail(result);
                                 }
                             });
