@@ -63,7 +63,7 @@
                             </MultiInput>  -->
 
 
-                            <Label text="{I18N>/PR_REQUEST_DATE}" labelFor="searchRequestDate" required="true"></Label>
+                            <Label text="{I18N>/PR_REQUEST_DATE}" labelFor="searchRequestDate"></Label>
                             <DateRangeSelection id="searchRequestDate" width="100%" change="handleChange"/>
                             <Label text="{I18N>/PR_CREATE_STATUS_CODE}" labelFor="SearchPr_create_status" required="false"></Label>
                             <MultiComboBox
@@ -240,7 +240,7 @@
                             <!--EDM Type-->
                             <core:CustomData key="type" value="DateTime" />
                             <!--format 시간은 분단위 까지만 출력됩니다.-->
-                            <core:CustomData key="format" value="yyyy-mm-dd HH:mm:ss" />
+                            <core:CustomData key="format" value="yyyy-mm-dd" />
                         </customData>
                         </Column> 
                         <Column id="mainColumnPR_COUNT"  hAlign="Center"  width="7.5em" >

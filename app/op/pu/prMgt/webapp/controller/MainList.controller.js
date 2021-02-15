@@ -532,7 +532,7 @@ sap.ui.define([
 		 */
         onPageSearchButtonPress: function (oEvent) {
 
-            if(this.validator.validate(this.byId("searchRequestDate")) !== true) return;
+            //if(this.validator.validate(this.byId("searchRequestDate")) !== true) return;
 
             if (oEvent.getParameters().refreshButtonPressed) {
                 // Search field's 'refresh' button has been pressed.
@@ -569,6 +569,8 @@ sap.ui.define([
                 this.getModel("mainListViewModel").setProperty("/headerExpanded", false);             
                 //this.getView().getModel("mainListViewModel").setProperty("/headerExpandFlag", false);
             }
+
+            this.getModel("fcl").setProperty("/layout", this.getOwnerComponent().getHelper().getNextUIState(1).layout);
 
             var oItem = oEvent.getSource();
             oItem.setNavigated(true);
