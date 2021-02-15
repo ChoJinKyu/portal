@@ -14,6 +14,7 @@ SELECT parent_id
       ,evaluation_distrb_score_weight
       ,evaluation_execute_mode_code
       ,evaluation_article_type_code
+      ,evaluation_distrb_scr_type_cd
       ,evaluation_result_input_type_cd
       ,qttive_item_uom_code
       ,qttive_eval_article_calc_formula
@@ -40,6 +41,7 @@ FROM   HIERARCHY (
                                 ,esei.evaluation_distrb_score_weight /*평가배점가중치*/
                                 ,esei.evaluation_execute_mode_code
                                 ,esei.evaluation_article_type_code
+                                ,esei.evaluation_distrb_scr_type_cd
                                 ,esei.evaluation_result_input_type_cd
                                 ,esei.qttive_item_uom_code
                                 ,esei.qttive_eval_article_calc_formula
