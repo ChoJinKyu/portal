@@ -200,9 +200,10 @@ sap.ui.define([
         
         onInputChange: function(oEvent){
            
-            // var _oInput = oEvent.getSource();
-            // var val = _oInput.getValue();
-            //     val = val.replace(/[^\d]/g, '');
+            var _oInput = oEvent.getSource();
+            
+            _oInput.setValue("");
+               
             this.byId("searchActivityName").setValue("");                          
                 
         },

@@ -19,7 +19,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{I18N>/ACTIVITY_MANAGEMENT}" />
+                    <Title text="{I18N>/ACTIVITY_MANAGEMENT} {I18N>/MANAGEMENT}" />
                 </f:heading>
                 <f:snappedContent>
                 </f:snappedContent>
