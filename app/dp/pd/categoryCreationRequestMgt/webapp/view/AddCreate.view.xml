@@ -19,7 +19,6 @@
 		isChildPage="true"
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
-		showTitleSelector="true"
 		showEditHeaderButton="true" 
         showFooter="false"
         >

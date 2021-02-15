@@ -618,7 +618,6 @@ sap.ui.define([
 
         
         , onSearchPartCategory: function (oEvent) {
-            console.log(oEvent);
            // var oArgs = oEvent.getParameter("arguments");
         
             this.setObj = "searchField";
@@ -626,7 +625,6 @@ sap.ui.define([
             if(oEvent == 1){
                 this.setObj = "pGroupCategory";
             }
-            console.log(oEvent);
             if (!this.treeDialog) {
                 this.treeDialog = Fragment.load({
                     id: oView.getId(),
@@ -680,7 +678,6 @@ sap.ui.define([
         }
 
         , selectPartCategoryValue: function (oEvent) {
-            console.log(oEvent.getId());
             if( oEvent.getParameters().rowContext.sPath != undefined){
                 var row = this.getView().getModel("tree").getObject(oEvent.getParameters().rowContext.sPath);
                 if(this.setObj == "pGroupCategory"){
