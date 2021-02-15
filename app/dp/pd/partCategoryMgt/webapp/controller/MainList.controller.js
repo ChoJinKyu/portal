@@ -75,12 +75,22 @@ sap.ui.define([
                     })
                     // 성공시
                     .then((function (jNodes) {
+                        
                         this.getView().setModel(new JSONModel({
                             "pdPartCategoryView": {
                                 "nodes": jNodes[0],
                                 "list": jNodes[1]
                             }
                         }), "tree");
+                    //    var treeData = this.getModel("tree").oData.pdPartCategoryView.list.results;
+
+                    //    for(var i=0; i>treeData.legnth; i++) {
+                    //        var local_update_dtm = treeData[i].local_update_dtm;
+                    //        treeData[i].local_update_dtm = this.dateFormatter.toDateTimeString(local_update_dtm);
+                    //    }
+
+                    //    this.getModel("tree").oData.pdPartCategoryView.list.results = treeData;
+                       
                     }).bind(this))
                     // 실패시
                     .catch(function (oError) {

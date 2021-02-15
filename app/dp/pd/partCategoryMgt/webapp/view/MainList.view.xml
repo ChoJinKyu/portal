@@ -107,7 +107,7 @@
                     }">
                     <t:extension>
                         <OverflowToolbar>
-                            <Title id="title" text="{I18N>/PART} {I18N>/CATEGORY} {I18N>/LIST}" level="H2"/> 
+                            <Title id="title" text="{I18N>/PART} {I18N>/CATEGORY} {I18N>/LIST} ({= ${tree>/pdPartCategoryView/list/results}.length || 0})" level="H2"/> 
                             <ToolbarSpacer/>
                             <!-- <Button id="mainTableCreate2Button" text="Creation Request" type="Transparent" press=".onMainTableCreate2ButtonPress" enabled="{= ${master>/indices} === 2 ? ${sm>/screen} === 'M' ? true : false : false}"  /> -->
                             <Button id="mainTableCreate0Button" text="{I18N>/CREATE_SAME_LEVEL}" type="Transparent" press=".onMainTableCreate0ButtonPress" enabled="{= ${master>/indices} === 0 ? ${sm>/screen} === 'M' ? true : false : false}"  />
@@ -161,6 +161,7 @@
                         <t:Column label="{I18N>/LOCAL_UPDATE_DTM}" hAlign="Center">    
                             <t:template>
                                 <Text text="{tree>local_update_dtm}" wrapping="false" />
+                                <!-- <Text text="{path : 'tree>local_update_dtm', formatter: '.dateFormatter.toUTCDateTimeString'}" /> -->
                             </t:template>
                         </t:Column>
                         <t:Column label="" width="2rem" >

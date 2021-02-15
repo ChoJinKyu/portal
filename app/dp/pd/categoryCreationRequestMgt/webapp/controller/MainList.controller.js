@@ -209,7 +209,7 @@ sap.ui.define([
 			    aSearchFilters.push(new Filter("progress_status_code", FilterOperator.EQ, status));
             }
 
-            var searchCategoryCombo = this.getView().byId("searchCategoryCombo").getValue();
+            var searchCategoryCombo = this.getView().byId("searchCategoryCombo").getSelectedKey();
             if (searchCategoryCombo != "") {
                 aSearchFilters.push(new Filter("category_group_code", FilterOperator.EQ, searchCategoryCombo) );
             }

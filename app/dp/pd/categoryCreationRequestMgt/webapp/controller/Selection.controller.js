@@ -88,7 +88,7 @@ sap.ui.define([
 
         _setProcessStatus : function(){
             var aFilters = [
-                new Filter("tenant_id", "EQ", "L1100"),
+                new Filter("tenant_id", "EQ", "L2101"),
                 new Filter("group_code", "EQ", "DP_PD_PROGRESS_STATUS"),
                 new Filter("language_cd", "EQ", this.language_cd)
             ];
@@ -460,6 +460,7 @@ sap.ui.define([
                 success: function (oData) {
                     //oView.byId("ideaCompany").setValue(oData.company_code);
                     oView.setBusy(false);
+                    console.log("oData=========>",oData.results);
                     v_this._toShowMode();
                 }
             });
@@ -585,7 +586,8 @@ sap.ui.define([
                 MessageToast.show("Leaf Category만 선택할 수 있습니다.");
                 return;
             } else {
-                this.byId("searchField").setValue(row.category_code);
+                this.byId("searchField").setValue(row.category_name);
+                this.byId("similarCategoryName").setText(row.category_name);
                 this.byId("similarCategoryCode").setText(row.category_code);
 
                 this.partCategoryPopupClose();
