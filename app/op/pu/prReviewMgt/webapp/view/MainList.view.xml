@@ -262,7 +262,8 @@
                                 icon="sap-icon://excel-attachment" 
                                 press="onExcel($event, 'Download', ${list>/Pr_ReviewListView}, {
                                     tId: 'mainTable', 
-                                    fileName: 'PR Review List'
+                                    fileName: 'PR Review List',
+                                    numbers: ['pr_quantity', 'remain_quantity', 'estimated_price']
                                 })"
                             >
                                 <layoutData>
