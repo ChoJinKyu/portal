@@ -16,7 +16,9 @@ service ActivityMappingService {
     entity ActivityMapping as projection on activityMapping.Pd_Activity_Mapping;
     entity PdOperationOrg as projection on pdOperationOrg.Pd_Operation_Org_View;
     entity PdProdActivityTemplate as projection on prodActivityTemplate.Pd_Product_Activity_Template;
+    entity PdProdActivityTemplateView as projection on prodActivityTemplate.Pd_Product_Activity_Template_View;
     entity PdPartActivityTemplate as projection on partActivityTemplate.Pd_Part_Activity_Template;
+    entity PdSelectActivityTemplate as projection on partActivityTemplate.Pd_Select_An_Activity_View;
     entity PdGetCmCodeCombo as projection on getCmCodeCombo.Pd_Get_Cm_Code_Combo_View;
     entity ActivityMappingNameView as projection on activityMapping.Pd_Activity_Mapping_Name_View;
 
