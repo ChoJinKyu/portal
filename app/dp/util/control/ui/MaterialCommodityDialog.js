@@ -18,7 +18,7 @@ sap.ui.define([
 
         metadata: {
             properties: {
-                contentWidth: { type: "string", group: "Appearance", defaultValue: "40em"},
+                contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "commodity_code" },
                 textField: { type: "string", group: "Misc", defaultValue: "commodity_name" }
             }

@@ -166,6 +166,9 @@ sap.ui.define([
                     this.getModel("jSearch").setProperty(["/", e[0]].join(""), e[1].oldValue);
                 }, this);
             });
+            this.after("search", "jSearch", "list", "Pr_ReviewListView", function() {
+                this.byId("mainTable").removeSelections(true);
+            });
         },
         /* =========================================================== */
         /* event handlers                                              */

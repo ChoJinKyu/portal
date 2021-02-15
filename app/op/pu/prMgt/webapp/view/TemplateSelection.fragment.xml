@@ -108,8 +108,8 @@
       
         <ToolbarSpacer/>
         <HBox alignItems="End" justifyContent="End" >
-            <Button text="Cancel" class="sapUiSmallMarginEnd" press=".onDialogClose"/>
-            <Button text="Apply" class="sapUiSmallMarginEnd" type="Emphasized" press=".onMainTableAddButtonPress"/>
+            <Button text="{I18N>/TEMPLATE} {I18N>/CANCEL}" class="sapUiSmallMarginEnd" press=".onDialogClose"/>
+            <Button text="{I18N>/TEMPLATE} {I18N>/APPLY}"  class="sapUiSmallMarginEnd" type="Emphasized" press=".onMainTableAddButtonPress"/>
         </HBox>
     </Dialog>
 </core:FragmentDefinition>
