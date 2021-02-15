@@ -1,4 +1,4 @@
-<mvc:View controllerName="dp.md.assetList.controller.AssetList" 
+<mvc:View controllerName="dp.md.assetListSup.controller.AssetList" 
     xmlns:mvc="sap.ui.core.mvc" 
     xmlns="sap.m" 
     xmlns:f="sap.f" 

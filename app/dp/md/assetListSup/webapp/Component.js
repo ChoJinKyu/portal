@@ -3,7 +3,7 @@ sap.ui.define([
 ], function (UIComponent) {
 	"use strict";
 
-	return UIComponent.extend("dp.md.assetList.Component", {
+	return UIComponent.extend("dp.md.assetListSup.Component", {
 
 		metadata : {
 			manifest: "json"

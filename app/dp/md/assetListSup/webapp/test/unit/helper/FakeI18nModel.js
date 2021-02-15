@@ -3,7 +3,7 @@ sap.ui.define([
 ], function (Model) {
 	"use strict";
 
-	return Model.extend("dp.md.assetList.test.unit.helper.FakeI18nModel", {
+	return Model.extend("dp.md.assetListSup.test.unit.helper.FakeI18nModel", {
 
 		constructor : function (mTexts) {
 			Model.call(this);

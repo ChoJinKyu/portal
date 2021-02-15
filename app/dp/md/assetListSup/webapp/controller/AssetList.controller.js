@@ -34,7 +34,7 @@ sap.ui.define([
     ComboBox, ColumnListItem, Input, MessageBox, MessageToast, ObjectIdentifier, SearchField, Text, Token) {
     "use strict";
 
-    return BaseController.extend("dp.md.assetList.controller.AssetList", {
+    return BaseController.extend("dp.md.assetListSup.controller.AssetList", {
 
         dateFormatter: DateFormatter,
 
@@ -472,7 +472,7 @@ sap.ui.define([
        
         callAjax: function (data, fn , callback) {
             console.log("send data >>>> ", data);
-            var url = "/dp/md/assetList/webapp/srv-api/odata/v4/dp.AssetListV4Service/" + fn;
+            var url = "/dp/md/assetListSup/webapp/srv-api/odata/v4/dp.AssetListV4Service/" + fn;
 
             $.ajax({
                 url: url,

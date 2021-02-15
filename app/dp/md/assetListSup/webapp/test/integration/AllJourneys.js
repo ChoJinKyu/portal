@@ -7,7 +7,7 @@ sap.ui.define([
 	"use strict";
 	Opa5.extendConfig({
 		arrangements: new Startup(),
-		viewNamespace: "dp.md.assetList.view."
+		viewNamespace: "dp.md.assetListSup.view."
 	});
 
 });

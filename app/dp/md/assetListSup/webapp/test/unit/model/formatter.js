@@ -1,5 +1,5 @@
 sap.ui.define([
-"dp/assetList/model/formatter"
+"dp/assetListSup/model/formatter"
 ], function (formatter) {
 	"use strict";
 
