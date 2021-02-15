@@ -5,7 +5,7 @@ using {sp.Sc_Nego_Headers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-
 using {sp.Sc_Nego_Headers_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
 using {sp.Sc_Nego_Workbench_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
 using {sp.Sc_Nego_Workbench_View2} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_HEADERS-model';
-using {sp.Sc_Nego_Item_Prices} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
+using {sp.Sc_Nego_Item_Prices,sp.Sc_Nego_Item_Prices_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_PRICES-model';
 using {sp.Sc_Nego_Suppliers} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 using {sp.Sc_Nego_Suppliers_View} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_SUPPLIERS-model';
 using {sp.Sc_Nego_Item_Non_Price} from '../../../../../db/cds/sp/sc/SP_SC_NEGO_ITEM_NON_PRICE-model';
@@ -47,7 +47,7 @@ service SourcingService {
 
     ///////////////////////////////////////////// Nego Item Prices + Suppliers////////////////////////////////
     /* 협상을 요청하기 위한 아이템의 가격정보를 관리한다. */
-    entity NegoItemPrices @(title : '협상아이템정보')                as projection on Sc_Nego_Item_Prices{ *,
+    entity NegoItemPrices @(title : '협상아이템정보')                as projection on Sc_Nego_Item_Prices_View{ *,
         Header : redirected to NegoHeadersView
     };
     // @(title : 'Negotiation(견적&입찰) Workbench 정형뷰') 
