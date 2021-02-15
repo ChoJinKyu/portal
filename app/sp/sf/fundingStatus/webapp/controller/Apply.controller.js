@@ -281,6 +281,10 @@ sap.ui.define([
         , onCreatePopupClose: function(){
             this.byId("investmentPlanDetails").close();
         }
+
+        , onFilterSelect : function() {
+            // MessageBox.alert("dasf");
+        }
         
     })
 });

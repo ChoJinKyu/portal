@@ -79,7 +79,7 @@
                         icon="sap-icon://begin"
                         iconColor="Positive"
                         count="{/ProductCollectionStats/Counts/Weight/Overweight}"
-                        text="계획"
+                        text="계약"
                         key="step5" />
                     <IconTabSeparator icon="sap-icon://open-command-field" />
                     <IconTabFilter
