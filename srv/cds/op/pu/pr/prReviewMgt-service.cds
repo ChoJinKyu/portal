@@ -59,18 +59,18 @@ service PrReviewMgtService {
             ,dtl.requestor_empno  // 요청자사번
             ,dtl.requestor_name  // 요청자명
             ,dtl.request_date  // 요청일자
-            ,ifnull(hrEmp.department_id, mst.requestor_department_code) as requestor_department_code : String(240)  // 요청자부서코드
-            ,ifnull(cm_get_dept_name_func(hrEmp.tenant_id, hrEmp.department_id), mst.requestor_department_name) as requestor_department_name : String(240)  // 요청자부서명
+            ,ifnull(hrEmp.department_code, mst.requestor_department_code) as requestor_department_code : String(240)  // 요청자부서코드
+            ,ifnull(cm_get_dept_name_func(hrEmp.tenant_id, hrEmp.department_code), mst.requestor_department_name) as requestor_department_name : String(240)  // 요청자부서명
 
             ,dtl.pr_desc  // 구매요청내역
             ,dtl.pr_unit  // 구매요청단위
             ,dtl.pr_quantity  // 구매요청수량
-            ,dtl.pr_quantity - dtl.closing_quantity as remain_quantity : Decimal(30, 10)  // 잔여수량
+            ,ifnull(dtl.pr_quantity, 0) - ifnull(dtl.closing_quantity, 0) as remain_quantity : Decimal(30, 10)  // 잔여수량
             //,case when dtl.closing_flag = true then 0 else dtl.pr_quantity end as remain_quantity : Decimal(30, 10)  // 잔여수량  -- by dokim
             ,dtl.delivery_request_date  // 납품요청일자
             ,dtl.buyer_empno  // 구매담당자사번
             ,cm_get_emp_name_func(dtl.tenant_id, dtl.buyer_empno) as buyer_name : String(240)  // 구매담당자명
-            ,dtl.buyer_department_code  // 구매담당자부서
+            ,ifnull(dtl.buyer_department_code, hrEmpBuyer.department_code) as buyer_department_code : String(30)  // 구매담당자부서
 
             ,mst.pr_create_status_code  // 구매요청생성상태코드
             ,cm_get_code_name_func(mst.tenant_id, 'OP_PR_CREATE_STATUS_CODE', mst.pr_create_status_code, 'KO') as pr_create_status_name : String(240)  // 구매요청생성상태코드
@@ -109,6 +109,11 @@ service PrReviewMgtService {
         left outer join hrEmployee hrEmp
         on  hrEmp.tenant_id = dtl.tenant_id
         and hrEmp.employee_number = dtl.requestor_empno
+
+        // 구매담당자 부서
+        left outer join hrEmployee hrEmpBuyer
+        on  hrEmpBuyer.tenant_id = dtl.tenant_id
+        and hrEmpBuyer.employee_number = dtl.buyer_empno
 
         // 조직코드
         left outer join operationOrg org
@@ -158,13 +163,13 @@ service PrReviewMgtService {
 
             ,dtl.requestor_empno  // 구매요청자사번
             ,cm_get_emp_name_func(dtl.tenant_id, dtl.requestor_empno) as requestor_name : String(240)  // 구매요청자명
-            ,cm_get_dept_name_func(hrEmp.tenant_id, hrEmp.department_id) as requestor_department_name : String(240)
+            ,cm_get_dept_name_func(hrEmp.tenant_id, hrEmp.department_code) as requestor_department_name : String(240)
             ,dtl.requestor_name as erp_requestor_name // 요청자명
  
             ,dtl.buyer_empno  // 구매담당자사번
             ,cm_get_emp_name_func(dtl.tenant_id, dtl.buyer_empno) as buyer_name : String(240)  // 구매담당자명
-            ,dtl.buyer_department_code  // 구매담당자부서
-            ,cm_get_dept_name_func(dtl.tenant_id, dtl.buyer_department_code) as buyer_department_name : String(240)  // 구매담당자부서
+            ,ifnull(dtl.buyer_department_code, hrEmpBuyer.department_code) as buyer_department_code : String(30)  // 구매담당자부서
+            ,cm_get_dept_name_func(dtl.tenant_id, ifnull(dtl.buyer_department_code, hrEmpBuyer.department_code)) as buyer_department_name : String(240)  // 구매담당자부서
             ,dtl.purchasing_group_code  // 구매그룹코드
             ,ifnull(purGr.purchasing_group_name, dtl.purchasing_group_code) as purchasing_group_name : String(30)  // 구매그룹명
             ,mtlPur.purchasing_group_code as material_purchasing_group_code  // 자재구매그룹
@@ -173,7 +178,7 @@ service PrReviewMgtService {
             ,dtl.pr_quantity  // 구매요청수량
             ,dtl.pr_unit  // 구매요청단위
             ,dtl.closing_quantity  // 마감수량
-            ,dtl.pr_quantity - dtl.closing_quantity as remain_quantity : Decimal(30, 10)  // 잔여수량
+            ,ifnull(dtl.pr_quantity, 0) - ifnull(dtl.closing_quantity, 0) as remain_quantity : Decimal(30, 10)  // 잔여수량
             //,case when dtl.closing_flag = true then 0 else dtl.pr_quantity end as remain_quantity : Decimal(30, 10)  // 잔여수량  -- by dokim
 
             ,dtl.estimated_price  // 단가예산
@@ -211,6 +216,11 @@ service PrReviewMgtService {
         left outer join hrEmployee hrEmp
         on  hrEmp.tenant_id = dtl.tenant_id
         and hrEmp.employee_number = dtl.requestor_empno
+
+        // 구매담당자 부서
+        left outer join hrEmployee hrEmpBuyer
+        on  hrEmpBuyer.tenant_id = dtl.tenant_id
+        and hrEmpBuyer.employee_number = dtl.buyer_empno
 
         // 조직코드
         left outer join operationOrg org
