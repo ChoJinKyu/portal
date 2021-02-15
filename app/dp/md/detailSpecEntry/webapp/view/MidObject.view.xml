@@ -22,7 +22,7 @@
 			<uxap:ObjectPageDynamicHeaderTitle>
 				<uxap:heading>
                     <HBox alignItems="Center">
-                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
+                        <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
                     </HBox>
                 </uxap:heading>
                 <uxap:navigationActions>
