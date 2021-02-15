@@ -81,7 +81,7 @@ sap.ui.define([
         /**
         * Search 버튼 클릭(Filter 추출)
         */
-        onSearch: function (init) {
+        onSearch: function () {
             var aFilters = [new Filter("tenant_id", FilterOperator.EQ, "L2100")],
                 sProgress = this.byId("searchProgressSegmentButton").getSelectedKey(),
                 sTaxId = this.byId("searchTaxId").getValue(),

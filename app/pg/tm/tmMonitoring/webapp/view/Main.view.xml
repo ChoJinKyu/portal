@@ -98,13 +98,13 @@
 								</customData>
 								<Text text="{I18N>/TENANT_NAME}"/>
 							</Column>
-							<Column hAlign="Center" width="30%">
+							<Column width="30%">
 								<customData>
 									<core:CustomData key="p13nData" value='\{"columnKey": "company_name", "columnIndex":"4", "leadingProperty": "company_name", "sortProperty": "company_name"}'/>
 								</customData>
 								<Text text="{I18N>/COMPANY}"/>
 							</Column>
-							<Column hAlign="Center" width="10%">
+							<Column width="10%">
 								<customData>
 									<core:CustomData key="p13nData" value='\{"columnKey": "bizunit_name", "columnIndex":"5", "leadingProperty": "bizunit_name", "sortProperty": "bizunit_name"}'/>
 								</customData>
