@@ -27,9 +27,7 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-            this.oMaterialClassCode = new Input({ 
-                placeholder : this.getModel("I18N").getText("/CLASS")+" "+ this.getModel("I18N").getText("/CODE")
-            });
+            this.oMaterialClassCode = new Input();
             
             this.oMaterialClassCode.attachEvent("change", this.loadData.bind(this));
             

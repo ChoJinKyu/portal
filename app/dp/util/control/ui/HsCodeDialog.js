@@ -27,7 +27,7 @@ sap.ui.define([
         renderer: Renderer,
 
         createSearchFilters: function(){
-            this.oCompanyCode = new Input({ placeholder: this.getModel("I18N").getText("/COUNTRY_CODE")});
+            this.oCompanyCode = new Input();
             
             this.oCompanyCode.attachEvent("change", this.loadData.bind(this));
             
