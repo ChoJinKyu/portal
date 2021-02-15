@@ -197,10 +197,10 @@ sap.ui.define([
             }
 
             oModel.addRecord({
-                "tenant_id": "L2100",
+                "tenant_id": "L2101",
                 "company_code": "LGESL",
                 "org_type_code": "AU",
-                "org_code": this.byId("searchOrgCombo").getSelectedKey(),
+                "org_code": this.byId("searchAUCombo").getSelectedKey(),
                 "activity_code": null,
                 "product_activity_code": null,
                 "activity_dependency_code": null,
@@ -363,7 +363,7 @@ sap.ui.define([
                             product_activity_code: oData.ActivityMappingNameView[i].product_activity_code,
                             activity_dependency_code: oData.ActivityMappingNameView[i].activity_dependency_code,
                             active_flag: oData.ActivityMappingNameView[i].active_flag.toString(),
-                            update_user_id: oData.ActivityMappingNameView[i].update_user_id,
+                            update_user_id: "Test",
                             system_update_dtm: now,
                             crud_type_code: oData.ActivityMappingNameView[i]._row_state_,
                             update_activity_code: oData.ActivityMappingNameView[i].activity_code_org,
@@ -501,7 +501,7 @@ sap.ui.define([
             oFilters.push(new Filter({
                 filters: [
                     new Filter("product_activity_code", FilterOperator.Contains, sValue),
-                    new Filter("product_activity_name", FilterOperator.Contains, sValue)
+                    new Filter("activity_name", FilterOperator.Contains, sValue)
                 ],
                 and: false
             }));

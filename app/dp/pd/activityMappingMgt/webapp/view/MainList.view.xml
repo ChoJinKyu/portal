@@ -122,7 +122,7 @@
                     <OverflowToolbar>
                         <Title id="mainTableTitle" text="Activity {I18N>/MAPPING} {I18N>/LIST} ({=(${list>/ActivityMappingNameView})?${list>/ActivityMappingNameView}.length:0})" level="H2"/>
                         <ToolbarSpacer/>
-                        <Button id="mainTableAddButton" text="{I18N>/ADD}" type="Transparent" press=".onMainTableAddButtonPress('mainTable', 'list', 'ActivityMappingNameView', 'tenant_id')" />
+                        <Button id="mainTableAddButton" text="{I18N>/ADDITION}" type="Transparent" press=".onMainTableAddButtonPress('mainTable', 'list', 'ActivityMappingNameView', 'tenant_id')" />
                         <Button id="mainTableDelButton" text="{I18N>/DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" />
                         <Button id="mainTableCancButton" text="{I18N>/CANCEL}" type="Transparent" press=".onMainTableCancButtonPress" />
                         <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress" />
