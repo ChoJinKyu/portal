@@ -26,7 +26,7 @@
 		editHeaderButtonPress="handleEditBtnPress" >
 		<uxap:headerTitle>
 			<uxap:ObjectPageDynamicHeaderTitle>
-                <uxap:expandedHeading>
+                <!-- <uxap:expandedHeading>
                     <FlexBox fitContainer="true" alignItems="Center">
                         <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="back to the list" />
                         <Title text="Participating Supplier Selection Cancel Approval" wrapping="true" />
@@ -50,17 +50,18 @@
 				</uxap:snappedTitleOnMobile>
 
 				<uxap:actions>
-				 <!-- <Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" enabled="{= ${appMaster>/approve_status_code} === 'AR'?false:${mode>/viewFlag} }"/> --> 
-				</uxap:actions>
+				 <Button id="pageEditButton" text="Edit" type="Emphasized" press=".onPageEditButtonPress" enabled="{= ${appMaster>/approve_status_code} === 'AR'?false:${mode>/viewFlag} }"/> 
+				</uxap:actions> -->
 
                 <!-- <uxap:navigationActions>
 					<OverflowToolbarButton type="Transparent" icon="sap-icon://decline" text="back" tooltip="back to the list" press=".onPageNavBackButtonPress" />
                 </uxap:navigationActions> -->
-                <!-- <uxap:heading> 
+                <uxap:heading> 
                     <HBox alignItems="End">
+                        <OverflowToolbarButton type="Transparent" icon="sap-icon://nav-back" press=".onPageNavBackButtonPress"  tooltip="Close column" />
                         <Title text="Participating Supplier Selection Cancel Approval" wrapping="true" class="" />
                     </HBox>
-				</uxap:heading> -->
+				</uxap:heading>
 			</uxap:ObjectPageDynamicHeaderTitle>
 		</uxap:headerTitle>
 
