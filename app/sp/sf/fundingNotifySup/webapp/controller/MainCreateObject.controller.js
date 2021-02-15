@@ -103,19 +103,18 @@ sap.ui.define([
                     oPramCheackValue.push("")
                 }
             }
-
                 
-            if(!this._onCheckPhone(oPramDataModel.getProperty("/appl_user_tel_number"))){
+            if(!this._onCheckPhone(oPramDataModel.getProperty("/appl_user_tel_number")) && !!oPramDataModel.getProperty("/appl_user_tel_number")){
                 MessageBox.alert("전화번호 내용을 확인 해주세요.");
                 return;
             };
 
-            if(!this._onCheckEmail(oPramDataModel.getProperty("/appl_user_email_address"))){
+            if(!this._onCheckEmail(oPramDataModel.getProperty("/appl_user_email_address")) && !!oPramDataModel.getProperty("/appl_user_email_address")){
                 MessageBox.alert("이메일 내용을 확인해 주세요.");
                 return;
             };
 
-            if(!this._onCheckDatePicker(hopeYyyyMm)){
+            if(!this._onCheckDatePicker(hopeYyyyMm) && !!hopeYyyyMm){
                 MessageBox.alert("날짜 내용을 확인해 주세요.");
                 return;
             };
@@ -167,8 +166,8 @@ sap.ui.define([
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, urlPram.tenantId));
             aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, urlPram.fundingNotifyNumber));
             
-            // this._onObjectRead(aFilters);
-            this.onPageNavBackButtonPress();
+            this._onObjectRead(aFilters);
+            // this.onPageNavBackButtonPress();
             MessageToast.show(oI18n.getText("/NCM01001"));
         },
 
@@ -867,7 +866,7 @@ sap.ui.define([
             var check = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/,
                 regExp = /^\d{2,3}-\d{3,4}-\d{4}$/;
 
-            if(!check.test(str) && str != "" && !regExp.test(str)){
+            if(!check.test(str) && !regExp.test(str)){
                 return false;
             }else{
                 return true;
