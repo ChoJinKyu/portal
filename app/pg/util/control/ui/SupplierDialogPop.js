@@ -119,7 +119,7 @@ sap.ui.define([
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/VpSupplierMstView", {
                 filters: aFilters,
                 sorters: [
-                    new Sorter("supplier_code", true)
+                    new Sorter("supplier_code", false)
                 ],
                 success: function (oData) {
                     var aRecords = oData.results;
@@ -141,7 +141,7 @@ sap.ui.define([
             //     this.oSupplierCodePop.setValue(null);
             //     this.oSupplierCodePop.setValue(this.oSearchObj.supplierCode);
             // }
-            
+
             this.oDialog.open();
         }
     });

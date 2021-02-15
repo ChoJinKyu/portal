@@ -34,7 +34,7 @@ sap.ui.define([
             that = this;
             this.oMatrialCodePop = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_CODE") });
             this.oMatrialNamePop = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_DESC") });
-            this.oMatrialSpecPop = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_SPEC")})
+            //this.oMatrialSpecPop = new Input({ placeholder: this.getModel("I18N").getText("/MATERIAL_SPEC")});
 
             return [
                 new VBox({
@@ -50,43 +50,41 @@ sap.ui.define([
                         this.oMatrialNamePop
                     ],
                     layoutData: new GridData({ span: "XL2 L3 M3 S12" })
-                }),
-                new VBox({
-                    items: [
-                        new Label({ text: this.getModel("I18N").getText("/MATERIAL_SPEC") }),
-                        this.oMatrialSpecPop
-                    ],
-                    layoutData: new GridData({ span: "XL2 L3 M3 S12" })
                 })
+                // new VBox({
+                //     items: [
+                //         new Label({ text: this.getModel("I18N").getText("/MATERIAL_SPEC") }),
+                //         this.oMatrialSpecPop
+                //     ],
+                //     layoutData: new GridData({ span: "XL2 L3 M3 S12" })
+                // })
             ];
         },
 
         createTableColumns: function () {
            return [
                 new Column({
-                    width: "15%",
-                    hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_CODE")}),  // 자재코드
+                    width: "30%",
+                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL_CODE"), textAlign:"Center"}),  // 자재코드
                     template: new Text({text: "{material_code}"})
                 }),
                 new Column({
-                    width: "55%",
-                    hAlign: "Center",
+                    width: "80%",
                     label: new Label({text: this.getModel("I18N").getText("/MATERIAL_DESC"), textAlign:"Center"}),  // 자재설명
                     template: new Text({text: "{material_desc}"})
-                }),
-                new Column({
-                    width: "15%",
-                    hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/MATERIAL") + this.getModel("I18N").getText("/SPECIFICATION")}), // 자재규격
-                    template: new Text({text: "{material_spec}"})
-                }),
-                new Column({
-                    width: "15%",
-                    hAlign: "Center",
-                    label: new Label({text: this.getModel("I18N").getText("/BASE_UOM_CODE")}),  // 기본단위코드
-                    template: new Text({text: "{base_uom_code}"})
                 })
+                // new Column({
+                //     width: "15%",
+                //     hAlign: "Center",
+                //     label: new Label({text: this.getModel("I18N").getText("/MATERIAL") + this.getModel("I18N").getText("/SPECIFICATION")}), // 자재규격
+                //     template: new Text({text: "{material_spec}"})
+                // }),
+                // new Column({
+                //     width: "15%",
+                //     hAlign: "Center",
+                //     label: new Label({text: this.getModel("I18N").getText("/BASE_UOM_CODE")}),  // 기본단위코드
+                //     template: new Text({text: "{base_uom_code}"})
+                // })
             ];
         },
 
@@ -94,7 +92,7 @@ sap.ui.define([
             var aFilters = [];
             var sMatrialCodePop = this.oMatrialCodePop.getValue(),
                 sMatrialNamePop = this.oMatrialNamePop.getValue(),
-                sMatrialSpecPop = this.oMatrialSpecPop.getValue(),
+                //sMatrialSpecPop = this.oMatrialSpecPop.getValue(),
                 sTanentId = SppUserSessionUtil.getUserInfo().TENANT_ID,
                 sLanguageCd = SppUserSessionUtil.getUserInfo().LANGUAGE_CODE,
                 sCompanyCode = SppUserSessionUtil.getUserInfo().COMPANY_CODE;
@@ -121,9 +119,9 @@ sap.ui.define([
                 aFilters.push(new Filter("material_desc", FilterOperator.Contains, "'" + sMatrialNamePop.toUpperCase() + "'"));
             }
 
-            if (!!sMatrialSpecPop) {
-                aFilters.push(new Filter("material_spec", FilterOperator.Contains, "'" + sMatrialSpecPop.toUpperCase() + "'"));
-            }
+            // if (!!sMatrialSpecPop) {
+            //     aFilters.push(new Filter("material_spec", FilterOperator.Contains, "'" + sMatrialSpecPop.toUpperCase() + "'"));
+            // }
 
         
             ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/pg.vendorPoolMappingService/").read("/VpMaterialMst", {
