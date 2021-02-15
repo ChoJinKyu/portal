@@ -20,7 +20,8 @@ sap.ui.define([
     "ext/pg/util/control/ui/MaterialDialog",
     "ext/pg/util/control/ui/SupplierDialog",
     "ext/pg/util/control/ui/VendorPoolDialog",
-    "ext/pg/util/control/ui/VendorPoolDialogPop"
+    "ext/pg/util/control/ui/VendorPoolDialogPop",
+    "ext/sp/util/control/ui/MakerDialog",
 ],
     function (
         BaseController,
@@ -44,7 +45,8 @@ sap.ui.define([
         MatrialDialog,
         SupplierDialog,
         VendorPoolDialog,
-        VendorPoolDialogPop
+        VendorPoolDialogPop,
+        MakerDialog
     ) {
         "use strict";
 
@@ -257,6 +259,24 @@ sap.ui.define([
 
 
             /*========================================= ValueHelp : Start ===============================*/
+
+            vhMakerCode: function (oEvent) {
+                that.sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;
+                var generalInfoModel = this.getModel("generalInfoList");
+
+                if (!this.oMakerCodeDialog) {
+                    this.oMakerCodeDialog = new MakerDialog({
+                        multiSelection: false
+                    });
+
+                    this.oMakerCodeDialog.attachEvent("apply", function (oEvent) {
+                        generalInfoModel.setProperty(that.sPath + "/maker_code", oEvent.mParameters.item.maker_code);
+                        generalInfoModel.setProperty(that.sPath + "/maker_name", oEvent.mParameters.item.maker_local_name);
+                    }.bind(this));
+                }
+                this.oMakerCodeDialog.open();
+
+            },
 
             vhMaterialOrgCode: function (oEvent) {
                 //console.log("spath:::" + oEvent.getSource().getParent().getRowBindingContext().sPath);
@@ -740,6 +760,7 @@ sap.ui.define([
                                 generalInfoObj.net_price = parseFloat(item.net_price);
                                 generalInfoObj.vendor_pool_code = item.vendor_pool_code;
                                 generalInfoObj.market_code = item.market_code;
+                                //generalInfoObj.maker_name = item.maker_name;
                                 generalInfoObj.net_price_approval_reason_code = item.net_price_approval_reason_code;
                                 generalInfoObj.maker_code = item.maker_code;
                                 generalInfoObj.incoterms = item.incoterms;
