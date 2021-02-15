@@ -307,7 +307,7 @@ sap.ui.define([
     },
 
       onSearch: function () {
-            var mainModeFlag = this.getModel("list").getProperty("/mainMode");
+            this.mainModeFlag = this.getModel("list").getProperty("/mainMode");
             var aFilters = [];
             var aSorter = [];
             // aFilters.push(new Filter("spmd_category_code", FilterOperator.EQ, this.aSearchCategoryCd));
@@ -374,7 +374,7 @@ sap.ui.define([
                         if(oData.results == null || oData.results.length < 1){
                             MessageToast.show(this.getModel("I18N").getText("/NPG10004"));
                         }else{
-                            this.getModel("list").setProperty("/mainMode", mainModeFlag); 
+                            this.getModel("list").setProperty("/mainMode", this.mainModeFlag); 
                             //MessageToast.show(this.getModel("I18N").getText("/NPG10005",oData.results.length));
                         }
                     }).bind(this)
@@ -385,7 +385,7 @@ sap.ui.define([
         },
       
       onAdd: function () { 
-          
+
             if (this.getModel("list").getChanges().length > 0) {
                 MessageBox.confirm(this.getModel("I18N").getText("/NPG10018"), {
                     title: this.getModel("I18N").getText("/CONFIRM"),
@@ -593,6 +593,7 @@ sap.ui.define([
      * @private
      */
     _onRoutedThisPage: function(){     
+        this.mainModeFlag = "Main";
         this.getModel("list").setProperty("/mainMode", "Main");                
     },
 

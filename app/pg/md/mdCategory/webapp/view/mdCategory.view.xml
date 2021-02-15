@@ -86,7 +86,7 @@
                 inset="false" 
                 growing="true"
                 growingThreshold="15"
-                mode="{= ${list>/mainMode}==='Detail'?'None':'SingleSelectLeft'}" 
+                mode="{= ${list>/mainMode}==='Main'?'SingleSelectLeft':'None'}" 
                 selectionChange=".onSeletionChange"
                 noDataText="{I18N>/NCM0001}"
                 items="{

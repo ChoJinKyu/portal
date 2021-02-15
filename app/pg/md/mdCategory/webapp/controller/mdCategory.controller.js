@@ -187,7 +187,7 @@ sap.ui.define([
     },
 
       onSearch: function () {
-            var mainModeFlag = this.getModel("list").getProperty("/mainMode");
+            this.mainModeFlag = this.getModel("list").getProperty("/mainMode");
             var aSorter = [];
             aSorter.push(new Sorter("spmd_category_sort_sequence"));
 
@@ -224,7 +224,7 @@ sap.ui.define([
                         if(oData.results == null || oData.results.length < 1){
                             MessageToast.show(this.getModel("I18N").getText("/NPG10004"));
                         }else{
-                            this.getModel("list").setProperty("/mainMode", mainModeFlag); 
+                            this.getModel("list").setProperty("/mainMode", this.mainModeFlag); 
                             //MessageToast.show(this.getModel("I18N").getText("/NPG10005",oData.results.length));
                         }
                     }).bind(this)
@@ -380,7 +380,8 @@ sap.ui.define([
          * @param {sap.ui.base.Event} oEvent pattern match event in route 'object'
          * @private
          */
-        _onRoutedThisPage: function(){           
+        _onRoutedThisPage: function(){   
+            this.mainModeFlag = "Main";
             this.getModel("list").setProperty("/mainMode", "Main");            
         },
 
