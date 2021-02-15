@@ -92,8 +92,8 @@ sap.ui.define([
 
                     oCells[0].setText(String(i + 1));
 
-                    oCells[1].setValue( new Date(aa.supeval_from_date) );
-                    oCells[2].setValue( new Date(aa.supeval_to_date) );
+                    oCells[1].setDateValue( new Date(aa.supeval_from_date) );
+                    oCells[2].setDateValue( new Date(aa.supeval_to_date) );
                     oCells[3].setValue(aa.supeval_from_value);
                     oCells[4].setValue(aa.supeval_to_value);
                     oCells[5].setValue(aa.supeval_text_value);
@@ -521,6 +521,16 @@ sap.ui.define([
                 //     oCell = oItem.getCells()[6];
                 // } else if (IntType == "3") {
                 //     oCell = oItem.getCells()[8];
+                }else if( IntType == "2") {
+                    if( Number(oItem.getCells()[3].getValue()) > Number(oItem.getCells()[4].getValue()) ){//&& oItem.getCells()[1].getDateValue() != null && oItem.getCells()[2].getDateValue() != null) {
+                        oItem.getCells()[3].setValueState("Error");
+                        oItem.getCells()[3].setValueStateText("'Response Value From' must be less than 'Response Value To'");
+                        oItem.getCells()[4].setValueState("Error");
+                        oItem.getCells()[4].setValueStateText("'Response Value From' must be less than 'Response Value To'");
+
+                        flag = false;
+                        console.log("from : to =====", oItem.getCells()[3].getValue(), " : ", oItem.getCells()[4].getValue());
+                    }
                 }
                 var value = oCell.getValue();
 
