@@ -65,7 +65,8 @@ sap.ui.define([
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
-           
+            this._oFragments = []; // 해당 프래그먼트를 초기화 해야 잘못된 경로라고 안나옴 
+
             //this._showFormFragment();
         },
 
