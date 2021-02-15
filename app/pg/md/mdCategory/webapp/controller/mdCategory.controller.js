@@ -163,15 +163,12 @@ sap.ui.define([
     },
 
       onSearch: function () {
-            var oTable = this.byId("mainTable");
-            // oTable.setSelected(false);
-
             var aSorter = [];
             aSorter.push(new Sorter("spmd_category_sort_sequence"));
-            aSorter.push(new Sorter("spmd_category_code"));
 
             var tenant_combo = this.getView().byId("searchTenantCombo").getSelectedKey();
             var category_combo = this.getView().byId("searchChain");
+
             var sChain = this.getView().byId("searchChain").getSelectedKey();
 
             if(sChain == null || category_combo.getValue() == ""){
@@ -193,20 +190,16 @@ sap.ui.define([
                 .setTransactionModel(this.getView().getModel())
                 .read("/MdCategory", {
                     filters: aSearchFilters,
-                    sorter: {
-                        "$orderby": "spmd_category_sort_sequence"
-                    },
-                    // sorter: aSorter,
+                    sorters: aSorter,
                     urlParameters: {
                         "$expand": "org_infos"
                     },
                     success: (function (oData) {
-                        debugger;
                         this.getView().setBusy(false);
                         if(oData.results == null || oData.results.length < 1){
                             MessageToast.show(this.getModel("I18N").getText("/NPG10004"));
                         }else{
-                                MessageToast.show(this.getModel("I18N").getText("/NPG10005",oData.results.length));
+                            MessageToast.show(this.getModel("I18N").getText("/NPG10005",oData.results.length));
                         }
                     }).bind(this)
                 });
@@ -268,11 +261,11 @@ sap.ui.define([
             if (sButton === MessageBox.Action.OK) {
               view.setBusy(true);
               model.submitChanges({
-                success: (function (oEvent) {
-                  view.setBusy(false);
-                  MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
-                  this.onSearch();//this.refresh();
-                }).bind(this)
+                    success: (function (oEvent) {
+                        view.setBusy(false);
+                        MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
+                        this.onSearch();
+                    }).bind(this)
               });
             }
           }).bind(this)

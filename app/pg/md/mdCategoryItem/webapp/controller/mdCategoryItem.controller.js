@@ -347,7 +347,7 @@ sap.ui.define([
                         if(oData.results == null || oData.results.length < 1){
                             MessageToast.show(this.getModel("I18N").getText("/NPG10004"));
                         }else{
-                                MessageToast.show(this.getModel("I18N").getText("/NPG10005",oData.results.length));
+                            MessageToast.show(this.getModel("I18N").getText("/NPG10005",oData.results.length));
                         }
                     }).bind(this)
                 });
@@ -443,11 +443,11 @@ sap.ui.define([
             if (sButton === MessageBox.Action.OK) {
               view.setBusy(true);
               model.submitChanges({
-                groupId: "MdCategoryItem",
                 success: function (oEvent) {
                   view.setBusy(false);
                   MessageToast.show(this.getModel("I18N").getText("/NCM01001"));
-                  this.byId("mainTable").getBinding("items").refresh();
+                //   this.byId("mainTable").getBinding("items").refresh();
+                  this.onSearch();
                 }.bind(this)
               });
             }
