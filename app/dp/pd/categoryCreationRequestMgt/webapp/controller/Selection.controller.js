@@ -194,7 +194,7 @@ sap.ui.define([
                 }else if( flag == "A") {
                     progressCode = "C";
                 }else if( flag == "C") {
-                    progressCode = "D";
+                    progressCode = "C";
                 }else if( flag == "DL") {
                     CUType = "D";
                 }
@@ -259,11 +259,20 @@ sap.ui.define([
 
             var url = "srv-api/odata/v4/dp.creationRequestV4Service/PdCreationRequestSaveProc";
             var title, confirm;
-            if(flag!="DL") {
-                title = this.getModel("I18N").getText("/SAVE");
-                confirm = this.getModel("I18N").getText("/NCM00001");
-            } else {
+            if(flag=="DL") {    //삭제
                 title = this.getModel("I18N").getText("/DELETE");
+                confirm = this.getModel("I18N").getText("/NCM00001");
+            } else if(flag=="J") {    //반려
+                title = this.getModel("I18N").getText("/REJECT");
+                confirm = this.getModel("I18N").getText("/NCM00001");
+            } else if(flag=="A") {    //승인
+                title = this.getModel("I18N").getText("/APPROVAL");
+                confirm = this.getModel("I18N").getText("/NCM00001");
+            } else if(flag=="C") {    //확인&생성
+                title = this.getModel("I18N").getText("/CONFIRM_CREATE");
+                confirm = this.getModel("I18N").getText("/NCM00001");
+            }else {
+                title = this.getModel("I18N").getText("/SAVE");
                 confirm = this.getModel("I18N").getText("/NCM00003");
             }
 
@@ -282,7 +291,7 @@ sap.ui.define([
                             success: function (rst) {
                                 console.log(rst);
                                 if(rst.return_code =="OK"){
-                                    sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+                                    //sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     if(flag == "D"){
                                          sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         v_this.onPageNavBackButtonPress();
@@ -587,7 +596,6 @@ sap.ui.define([
                 return;
             } else {
                 this.byId("searchField").setValue(row.category_name);
-                this.byId("similarCategoryName").setText(row.category_name);
                 this.byId("similarCategoryCode").setText(row.category_code);
 
                 this.partCategoryPopupClose();
