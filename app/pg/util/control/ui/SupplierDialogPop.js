@@ -89,25 +89,31 @@ sap.ui.define([
 
 
             // Session Info
-            if (!!sTanentId) {
-                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTanentId));
+            // if (!!sTanentId) {
+            //     aFilters.push(new Filter("tenant_id", FilterOperator.EQ, sTanentId));
+            // }
+            
+            // if (!!sLanguageCd) {
+            //     aFilters.push(new Filter("language_cd", FilterOperator.EQ, sLanguageCd));
+            // }
+
+            // if (!!sCompanyCode) {
+            //     aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompanyCode));
+            // } 
+
+            if (!!this.oSearchObj.tanentId) {
+                aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.oSearchObj.tanentId));
+
+            if (!!this.oSearchObj.languageCd) {
+                aFilters.push(new Filter("language_cd", FilterOperator.EQ, this.oSearchObj.languageCd));
+
+            if (!!this.oSearchObj.orgCode) {
+                aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oSearchObj.orgCode));
             }
             
-            if (!!sLanguageCd) {
-                aFilters.push(new Filter("language_cd", FilterOperator.EQ, sLanguageCd));
+            if (!!this.oSearchObj.orgUnitCode) {
+                aFilters.push(new Filter("supplier_type_code", FilterOperator.EQ, this.oSearchObj.orgUnitCode));
             }
-
-            if (!!sCompanyCode) {
-                aFilters.push(new Filter("company_code", FilterOperator.EQ, sCompanyCode));
-            } 
-
-            // if (!!this.oSearchObj.orgCode) {
-            //     aFilters.push(new Filter("org_code", FilterOperator.EQ, this.oSearchObj.orgCode));
-            // }
-
-            // if (!!this.oSearchObj.orgUnitCode) {
-            //     aFilters.push(new Filter("supplier_type_code", FilterOperator.EQ, this.oSearchObj.orgUnitCode));
-            // }
 
             if (!!sSupplierCodePop) {
                 aFilters.push(new Filter("supplier_code", FilterOperator.Contains, "'" + sSupplierCodePop.toUpperCase() + "'"));
