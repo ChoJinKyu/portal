@@ -192,7 +192,16 @@ sap.ui.define([
                 
             
             },
-
+            
+            onExit: function (e) {
+                console.log( " on Exit !!!!!!!!!!!!");
+                if (this._NonPriceInfPopup) {
+                    this._NonPriceInfPopup.destroy(true);
+                }
+                if( this._SimpleChangeDialog ){
+                    this._SimpleChangeDialog.destroy(true);
+                }
+            },
 
             onNavBack: function(e){
 
@@ -523,7 +532,11 @@ sap.ui.define([
             },
 
             getDecodeString: function (oData) {
-                return decodeURIComponent(escape(window.atob(oData)));
+                var result = "";
+                if( oData ){
+                    result = decodeURIComponent(escape(window.atob(oData)))
+                } 
+                return result;
             },
 
             _update : function(uPath, uArray){
