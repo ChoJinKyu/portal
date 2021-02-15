@@ -101,6 +101,7 @@ sap.ui.define([
     var pop_orgtype = "";
     var pop_o_unitcode = "";
     var pop_d_state;
+    var pop_c_d_state;
     // var pop_vp_
     var pop_vp_cd = "";
     var pop_p_vp_cd = "";
@@ -131,7 +132,7 @@ sap.ui.define([
         onStatusColor: function (sStautsCodeParam) {
             var sReturnValue = 1;
 
-            if (sStautsCodeParam === "Complated") {
+            if (sStautsCodeParam === "Completed") {
                 sReturnValue = 7;
             }
             return sReturnValue;
@@ -492,7 +493,7 @@ sap.ui.define([
                 if (pop_d_state == "leaf") {
                     MessageToast.show("해당 Operation Unit에서 정의된 레벨 하위는 구성할 수 없습니다.");
                 }
-                else if (pop_h_lv == "1") {
+                else if (pop_d_state == "expanded" && pop_c_d_state == "leaf") {
                     pop_d_state = "leaf"
                     this.byId("pop_higher_level_path").setText(pop_lv);
                     this.byId("pop_operation_unit_name").setText(pop_org);
@@ -534,7 +535,7 @@ sap.ui.define([
                     this.byId("pop_dom_oversea_netprice_diff_rate").setEnabled(true);
                     this.byId("pop_domestic_net_price_diff_rate").setEnabled(true);
                 }
-                else {
+                else if (pop_d_state == "expanded" && pop_c_d_state == "expanded"){
                     this.byId("pop_higher_level_path").setText(pop_lv);
                     this.byId("pop_operation_unit_name").setText(pop_org);
                     this.byId("pop_operation_unit_name1").setText(this.byId("tpop_operation_unit_code").getValue());
@@ -598,7 +599,7 @@ sap.ui.define([
                 //     this.byId("pop_operation_unit_name").setText(pop_org);
                 // }
                 // else 
-                if (pop_target_level == "2") {
+                if (pop_d_state == "leaf") {
                     this.byId("pop_higher_level_path").setText(pop_h_path);
                     this.byId("pop_operation_unit_name").setText(pop_org);
                     this.byId("pop_operation_unit_name1").setText(this.byId("tpop_operation_unit_code").getValue());
@@ -840,6 +841,7 @@ sap.ui.define([
             // pop_hierarchy_level= row.;
             
             pop_d_state = row.drill_state;
+            pop_c_d_state = row.child_drill_state;
             pop_vp_cd = row.vendor_pool_code;
             console.log(this.getModel("util"));
 
