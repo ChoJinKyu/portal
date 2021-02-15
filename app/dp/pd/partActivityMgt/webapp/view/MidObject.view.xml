@@ -175,6 +175,7 @@
                                         visible="{contModel>/createMode}" 
                                         id="searchActivityInput"                                        
                                         showValueHelp="true"
+                                        liveChange=".onInputChange"
                                         required="true"
                                         value="{master>/activity_code}"
                                         valueHelpRequest=".onDialogActivityPress"/>
@@ -194,14 +195,14 @@
                                 </VBox>
                                 <VBox width="100%">			
                                     <Label text="{I18N>/ACTIVITY_NAME}"/>
-                                    <Text
-                                        id="searchActivityName"
+                                    <Text                                        
                                         width="50%"
                                         visible="{= !${contModel>/createMode} }"
                                         text="{master>/activity_name}">                                       
                                     </Text>
                                     <Input 
                                         width="50%"
+                                        id="searchActivityName"
                                         value="{
                                             path: 'master>/activity_name'
                                         }" visible="{contModel>/createMode}" editable="false"></Input>                                    
