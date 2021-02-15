@@ -314,11 +314,14 @@
         </content>
         
         <ToolbarSpacer/>
-        <beginButton>
+        <!-- <beginButton>
             <Button text="취소" type="Transparent" press=".onCreatePopupClose"/>
+        </beginButton> -->
+        <beginButton>
+            <Button id="popupCloseButton" text="닫기" type="Transparent" press=".onCreatePopupClose"/>
         </beginButton>
         <endButton>
-            <Button text="저장" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".onCreatePopupSave"/>
+            <Button id="popupSaveButton" text="저장" class="sapUiSmallMarginBeginEnd" type="Emphasized" press=".onCreatePopupSave"/>
         </endButton>
     </Dialog>
 </core:FragmentDefinition>
