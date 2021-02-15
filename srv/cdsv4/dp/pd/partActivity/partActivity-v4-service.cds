@@ -1,4 +1,6 @@
 //https://lgcommondev2-workspaces-ws-7bzzl-app1.jp10.applicationstudio.cloud.sap/odata/v4/dp.partActivityV4Service/PdpartActivitySaveProcCall
+using { dp.Pd_Part_Base_Activity_View as Dp_Pd_Part_Base_Activity_View} from '../../../../../db/cds/dp/pd/DP_PD_PART_BASE_ACTIVITY_VIEW-model';	
+using { dp.Pd_Part_Activity_Template as Dp_Pd_Part_Activity_Template} from '../../../../../db/cds/dp/pd/DP_PD_PART_ACTIVITY_TEMPLATE-model';	
 //using { dp as PartActivityTemplate } from '../../../../../db/cds/dp/pd/DP_PD_PART_ACTIVITY_TEMPLATE-model';
 //using {dp as activityMapping} from '../../../../../db/cds/dp/pd/DP_PD_ACTIVITY_MAPPING-model';
 //using {dp as partBaseActivity} from '../../../../../db/cds/dp/pd/DP_PD_PART_BASE_ACTIVITY-model';
@@ -41,5 +43,20 @@ service partActivityV4Service {
     }
 
     action PdpartActivitySaveProc(inputData : ProcInputType) returns OutType;
+
+    view SelectAnActivityView (
+    company_code : String(40),
+    org_code : String(40),
+    part_project_type_code : String(40)
+  ) as 
+    select key pa.tenant_id,
+	       key pa.activity_code,
+	           pa.activity_name,
+	           pa.active_flag,
+	           pa.active_flag_val
+    from   Dp_Pd_Part_Base_Activity_View pa
+    where  pa.tenant_id = 'L2101'
+    and	   not exists (select * from Dp_Pd_Part_Activity_Template where tenant_id = pa.tenant_id and company_code = :company_code and org_code = :org_code and part_project_type_code = :part_project_type_code and activity_code = pa.activity_code)
+    ;
 
 }
