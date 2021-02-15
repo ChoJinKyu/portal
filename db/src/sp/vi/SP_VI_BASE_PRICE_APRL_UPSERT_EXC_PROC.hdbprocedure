@@ -18,6 +18,7 @@ AS
 BEGIN
     DECLARE v_Record_Cnt INT := 0;
 	DECLARE v_Record_Item_Cnt INT := 0;
+	DECLARE v_Record_Type_Item_Cnt INT := 0;
     DECLARE v_Price_Type NVARCHAR(30);  
 	
 	DECLARE MYCOND CONDITION FOR SQL_ERROR_CODE 10001; 
@@ -38,6 +39,34 @@ BEGIN
              AND  X.APPLY_END_YYYYMM   = Y.APPLY_END_YYYYMM
              AND  X.APPLY_FLAG = Y.APPLY_FLAG
        ;  	
+ --입력화면의 중복체크  
+ SELECT SUM(CNT) INTO   v_Record_Type_Item_Cnt
+ FROM (
+      SELECT  TENANT_ID
+             ,APPROVAL_NUMBER
+    	     ,COMPANY_CODE
+    	     ,BIZUNIT_CODE
+    	     ,PLANT_CODE
+    	     ,SUPPLIER_CODE
+    	     ,MATERIAL_CODE
+    	     ,CURRENCY_CODE
+    	     ,APPLY_START_YYYYMM
+             ,APPLY_END_YYYYMM
+             ,COUNT(1)  AS CNT
+      FROM :I_ITEM
+      group by TENANT_ID
+             ,APPROVAL_NUMBER
+    	     ,COMPANY_CODE
+    	     ,BIZUNIT_CODE
+    	     ,PLANT_CODE
+    	     ,SUPPLIER_CODE
+    	     ,MATERIAL_CODE
+    	     ,CURRENCY_CODE
+    	     ,APPLY_START_YYYYMM
+             ,APPLY_END_YYYYMM
+       HAVING COUNT(1)  > 1   
+) X
+;
 	
     -- 10. 품의서 마스터(공통) 수정
     MERGE INTO CM_APPROVAL_MST T
@@ -272,6 +301,8 @@ BEGIN
 
     IF v_Record_Item_Cnt > 0 THEN
        O_MSG = SELECT '10001' RETURN_CODE, 'Duplicated' RETURN_MSG, '' RETURN_PARAM FROM DUMMY;
+    ELSEIF  v_Record_Type_Item_Cnt > 0 THEN     
+       O_MSG = SELECT '10002' RETURN_CODE, 'Duplicated' RETURN_MSG, '' RETURN_PARAM FROM DUMMY;
     END IF;
     
 END;
