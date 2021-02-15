@@ -284,6 +284,8 @@ sap.ui.define([
                         //oViewModel.refresh();
                          generalInfoModel.setProperty(that.sPath + "/org_code", oEvent.mParameters.item.org_code);
                          generalInfoModel.setProperty(that.sPath + "/material_code", oEvent.mParameters.item.material_code);
+                         generalInfoModel.setProperty(that.sPath + "/material_desc", oEvent.mParameters.item.material_desc);
+                         generalInfoModel.setProperty(that.sPath + "/uom", oEvent.mParameters.item.base_uom_code);
                     }.bind(that));
                 }
                 this.oSearchMultiMaterialMasterDialog.open();
@@ -308,6 +310,7 @@ sap.ui.define([
                         //console.log("달라지기 있기 없기 sPath:" + that.sPath);
                         //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.material_code);
                         generalInfoModel.setProperty(that.sPath + "/material_code", oEvent.mParameters.item.material_code);
+                        generalInfoModel.setProperty(that.sPath + "/material_desc", oEvent.mParameters.item.material_desc);
                     }.bind(this));
                 }
 
