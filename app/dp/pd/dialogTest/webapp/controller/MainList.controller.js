@@ -43,7 +43,7 @@ sap.ui.define([
                         multiSelection: false,
                         items: {
                             filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, "L2101")
+                                new Filter("tenant_id", FilterOperator.EQ, "L2100")
                             ]
                         }
                     });
@@ -64,7 +64,7 @@ sap.ui.define([
                         multiSelection: true,
                         items: {
                             filters: [
-                                new Filter("tenant_id", FilterOperator.EQ, "L2101")
+                                new Filter("tenant_id", FilterOperator.EQ, "L2100")
                             ]
                         }
                     });

@@ -122,7 +122,6 @@ sap.ui.define([
 			this._toEditMode();
         },
         
-
         /**
          * function : 언어코드 테이블 행 추가 버튼 클릭 이벤트
          * 언어코드 테이블의 행을 추가 시킨다.

@@ -20,7 +20,8 @@ sap.ui.define([
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "material_group_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "material_group_code" }
+                textField: { type: "string", group: "Misc", defaultValue: "material_group_code" },
+                items: { type: "sap.ui.core.Control"}
             }
         },
 
@@ -86,9 +87,7 @@ sap.ui.define([
         loadData: function(){
             var sMaterialGroup = this.oMaterialGroup.getValue(),
                 sMaterialGroupName = this.oMaterialGroupName.getValue(),
-                aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2101")
-                ];
+                aFilters = this.getProperty("items").filters || [];
 
                 if(sMaterialGroup){
                     aFilters.push(new Filter("tolower(material_group_code)", FilterOperator.Contains, "'" + sMaterialGroup.toLowerCase().replace("'","''") + "'"));

@@ -20,7 +20,8 @@ sap.ui.define([
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "hs_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "hs_code" }
+                textField: { type: "string", group: "Misc", defaultValue: "hs_code" },
+                items: { type: "sap.ui.core.Control"}
             }
         },
 
@@ -109,9 +110,7 @@ sap.ui.define([
             var sCompanyCode = this.oCompanyCode.getValue(),
                 sCompanyHsCode = this.oCompanyHsCode.getValue(),
                 sCompanyHsText = this.oCompanyHsText.getValue(),
-                aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2101")
-                ];
+                aFilters = this.getProperty("items").filters || [];
 
                 if(sCompanyCode){
                     aFilters.push(new Filter("tolower(country_code)", FilterOperator.Contains, "'" + sCompanyCode.toLowerCase().replace("'","''") + "'"));

@@ -83,7 +83,7 @@
                     width="auto">
                 <t:extension>
                     <OverflowToolbar class="sapFDynamicPageAlignContent">
-                        <Title id="mainTableTitle2" text="{I18N>/PRODUCT_ACTIVITY} {I18N>/MANAGEMENT} {I18N>/LIST} {= ${list>/PdProdActivityTemplateView}.length > 0 ? '(' + ${list>/PdProdActivityTemplateView}.length + ')' : '(0)'}" level="H2"/>
+                        <Title id="mainTableTitle2" text="{I18N>/PRODUCT_ACTIVITY} {I18N>/LIST} {= ${list>/PdProdActivityTemplateView}.length > 0 ? '(' + ${list>/PdProdActivityTemplateView}.length + ')' : '(0)'}" level="H2"/>
                         <ToolbarSpacer/>
                         <Button text="{I18N>/CREATE}" id="createActivity" press=".onCreateActivity"  type="Transparent"/>
                         <Button icon="sap-icon://excel-attachment" press="onExportPress" type="Transparent"/>

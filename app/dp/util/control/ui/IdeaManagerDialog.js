@@ -24,7 +24,8 @@ sap.ui.define([
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "idea_manager_empno" },
-                textField: { type: "string", group: "Misc", defaultValue: "idea_manager_empno" }
+                textField: { type: "string", group: "Misc", defaultValue: "idea_manager_empno" },
+                items: { type: "sap.ui.core.Control"}
             }
         },
 
@@ -164,9 +165,7 @@ sap.ui.define([
                 sBizunitCode = this.oBizunitCode._lastValue,
                 sLocalUserName = this.oLocalUserName.getValue(),
 
-                aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2100")
-                ];
+                aFilters = this.getProperty("items").filters || [];
 
                 if(sCompanyCode){
                     aFilters.push(new Filter("tolower(company_code)", FilterOperator.Contains, "'" + sCompanyCode.toLowerCase().replace("'","''") + "'"));

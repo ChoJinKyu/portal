@@ -20,7 +20,8 @@ sap.ui.define([
             properties: {
                 contentWidth: { type: "string", group: "Appearance", defaultValue: "800px"},
                 keyField: { type: "string", group: "Misc", defaultValue: "commodity_code" },
-                textField: { type: "string", group: "Misc", defaultValue: "commodity_code" }
+                textField: { type: "string", group: "Misc", defaultValue: "commodity_code" },
+                items: { type: "sap.ui.core.Control"}
             }
         },
 
@@ -85,9 +86,7 @@ sap.ui.define([
         loadData: function(){
             var sMaterialCommodity = this.oMaterialCommodity.getValue(),
                 sMaterialCommodityName = this.oMaterialCommodityName.getValue(),
-                aFilters = [
-                    new Filter("tenant_id", FilterOperator.EQ, "L2101")
-                ];
+                aFilters = this.getProperty("items").filters || [];
 
                 if(sMaterialCommodity){
                     aFilters.push(new Filter("tolower(commodity_code)", FilterOperator.Contains, "'" + sMaterialCommodity.toLowerCase().replace("'","''") + "'"));
