@@ -48,7 +48,10 @@ BEGIN
         , NAD.PAYTERMS_CODE
         , NAD.INCOTERMS
         , NAM.BUYER_EMPNO
-        , NAM.TENTPRC_FLAG
+        , CASE WHEN NAD.NET_PRICE_TYPE_CODE = 'T' THEN true
+               WHEN NAD.NET_PRICE_TYPE_CODE = 'N' THEN false
+               ELSE false
+          END AS TENTPRC_FLAG
         , NAD.EXRATE_TYPE_CODE
         , NAD.EXRATE_DATE
         , NAD.EXRATE
@@ -323,8 +326,8 @@ BEGIN
                          , NET_PRICE_SEQUENCE
                          , SUPPLIER_CODE
                          , MATERIAL_CODE
-                         , CURRENCY_CODE
                          , MARKET_CODE
+                         , CURRENCY_CODE
                          , EFFECTIVE_START_DATE
                          , EFFECTIVE_END_DATE
                          , PAYTERMS_CODE

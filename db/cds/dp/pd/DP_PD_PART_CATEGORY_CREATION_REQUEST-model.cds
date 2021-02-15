@@ -40,4 +40,5 @@ entity Pd_Part_Category_Creation_Request_View {
         category_creator                     : String;
         create_category_code                 : String;
         create_category_name                 : String;
+        local_update_dtm                     : DateTime;
 };
