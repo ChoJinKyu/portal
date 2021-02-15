@@ -101,10 +101,12 @@ sap.ui.define([
 
         onPageEditButtonPress: function () { // Edit 버튼 
             this._toEditMode();
+            this.setSelectedApproval(0);
         },
 
         onPageCancelEditButtonPress: function () { // 수정 취소 버튼 
-            this._toShowMode();
+            this._toShowMode(); 
+            this.setSelectedApproval(0); 
         },
 
         // 입찰대상 협력사 취소품의 이동 
@@ -259,6 +261,9 @@ sap.ui.define([
             oUiModel.setProperty("/viewFlag", true);
             this._toButtonStatus();
             this._toShowModeEachApproval();//품의서 별로 추가해서 처리해야 하는 내용 입력
+        },
+        _callApproverLineSet : function(){
+
         },
 
        _toButtonStatus : function(){ 
@@ -619,7 +624,13 @@ sap.ui.define([
         /**
          * 드래그시작
          */
-        onDragStartTable: function (oEvent) {
+        onDragStartTable: function (oEvent) { 
+
+            var oUiModel = this.getView().getModel("mode");
+            if(oUiModel.getData().viewFlag){ // view 모드일 경우 수정 못함 
+                return false;
+            }
+
          //   console.log(" *** start >> onDragStart", oEvent);
          //   console.log(" *** target", oEvent.getParameter("target"));
 
@@ -633,6 +644,12 @@ sap.ui.define([
          * 드래그 도착위치 
          */
         onDragDropTable: function (oEvent) {
+
+            var oUiModel = this.getView().getModel("mode");
+            if(oUiModel.getData().viewFlag){ // view 모드일 경우 수정 못함 
+                return false;
+            }
+
           //  console.log(" ***  start >> onDragDrop", oEvent);
             //  var oSwap = this.byId("ApproverTable").getSelectedItems();
             var oDragSession = oEvent.getParameter("dragSession");
@@ -719,7 +736,12 @@ sap.ui.define([
         },
         onItemApprovalPress : function (oEvent) { // 테이블의 row 클릭
 
-         var sPath = oEvent.getSource().getBindingContext("approver").getPath(), 
+            var oUiModel = this.getView().getModel("mode");
+            if(oUiModel.getData().viewFlag){ // view 모드일 경우 수정 못함 
+                return false;
+            }
+
+            var sPath = oEvent.getSource().getBindingContext("approver").getPath(), 
             oRecord = this.getModel("approver").getProperty(sPath);  // 해당 테이블의 path를 감지하여 editing 가능하게 하기 
            this.setSelectedApproval(String(oRecord.approve_sequence));   
         },
