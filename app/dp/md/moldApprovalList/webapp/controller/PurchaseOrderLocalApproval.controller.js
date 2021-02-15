@@ -452,12 +452,14 @@ sap.ui.define([
         },
 
         onPageRequestCancelButtonPress : function () {
-            if(this.getModel("appMaster").getProperty("/approve_status_code") !== "AR"){
+            /*if(this.getModel("appMaster").getProperty("/approve_status_code") !== "AR"){
                 MessageToast.show( "Request 상태일 때만 Request Cancel 가능합니다." );
                 return;
             }
             
-            this._onSubmit("DR");/** Draft */
+            this._onSubmit("DR");*//** Draft */
+            this.getModel("appMaster").setProperty("/approve_status_code", "DR"); // Draft 
+            this.approvalRequestCancel();
         },
 
         onPageRequestButtonPress : function () {
@@ -475,6 +477,59 @@ sap.ui.define([
             }
 
             this._onSubmit("AR");/** Approval Request */
+        },
+
+        onPageApprovalButtonPress : function (){
+            var oModel = this.getModel("purOrderItem"),
+                orderItems = oModel.getData().PurchaseOrderItems;
+                
+            var approvalMaster = {
+                tenant_id: this.tenant_id
+                , approval_number: this.approval_number
+                , company_code: this.company_code
+                , org_code: this.plant_code
+                , approve_status_code: 'AP'
+            };
+
+            this.approvalDetails_data = [];
+            
+            if(orderItems.length > 0){//orderItems != undefined && 
+                orderItems.forEach(function(item){
+                    this.approvalDetails_data.push({
+                        tenant_id : this.tenant_id, 
+                        approval_number : this.approval_number, 
+                        mold_id : item.mold_id, 
+                        _row_state_ : item._row_state_ == undefined ? "U" : item._row_state_
+                    });
+                }.bind(this));
+            }
+
+            var data = {
+                inputData: {
+                    approvalMaster: approvalMaster,
+                    approvalDetails: this.approvalDetails_data
+                }
+            }
+
+            var oView = this.getView();
+            var that = this;
+            MessageBox.confirm("승인하시겠습니까?", {
+                title: "Comfirmation",
+                initialFocus: sap.m.MessageBox.Action.CANCEL,
+                onClose: function (sButton) {
+                    if (sButton === MessageBox.Action.OK) {
+                        oView.setBusy(true);
+                        that.callAjax(data, "updateMoldMstStatusCode"
+                            , function(result){
+                                oView.setBusy(false);
+                                MessageToast.show(that.getModel("I18N").getText("/" + result.messageCode));
+                            if (result.resultCode > -1) {
+                                that.onLoadThisPage(result);
+                            }
+                        });
+                    };
+                }
+            });
         },
 
         _onSubmit : function (approveStatusCode) {
