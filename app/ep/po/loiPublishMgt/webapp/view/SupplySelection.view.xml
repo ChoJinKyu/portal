@@ -171,7 +171,7 @@
                                 <t:Column id="mainLoiNumber" width="6rem" hAlign="Center">
                                 <Label text="Line No." textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{details>item_sequence}"/>
+                                    <Text text="{details>item_sequence}" textAlign="Center"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainItemSequence" width="5rem">
@@ -195,25 +195,25 @@
                                 <t:Column id="mainSupplierName" width="4rem" hAlign="Center">
                                 <Label text="단위" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{details>unit}"/>
+                                    <Text text="{details>unit}" textAlign="Center"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainPublishDate" width="6rem" hAlign="Right">
-                                <Label text="수량" textAlign="Center" width="100%"/>
+                                <Label text="수량" textAlign="Center" width="100%" />
                                 <t:template>
-                                    <Text text="{details>request_quantity}"/>
+                                    <Text text="{details>request_quantity}" textAlign="Right"/>
                                 </t:template>
                                 </t:Column>  
                                 <t:Column id="mainDeliveryRequestDate" width="4rem" hAlign="Center">
                                 <Label text="통화" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{details>currency_code}"/>
+                                    <Text text="{details>currency_code}" textAlign="Center"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainRequestQuantity" width="6rem" hAlign="Right">
                                 <Label text="요청금액" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{details>request_amount}"/>
+                                    <Text text="{details>request_amount}" textAlign="Right"/>
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainCurrencyCode" width="6rem" hAlign="Left">
@@ -244,10 +244,10 @@
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainLoiSelectionStatusCode" width="8rem" hAlign="Right">
-                                <Label text="환산견적금액" textAlign="Center" width="100%" tooltip="업체선정진행상태"/>
+                                <Label text="환산견적금액" textAlign="Center" width="100%" tooltip="환산견적금액"/>
                                 <t:template>
-                                    <HBox justifyContent="Center">
-                                        <Text text="{details>quotation_amount}" visible="{= ${details>offline_flag} === true ? false : true }"/>
+                                    <HBox justifyContent="End">
+                                        <Text text="{details>quotation_amount}" textAlign="Right" visible="{= ${details>offline_flag} === true ? false : true }"/>
                                         <Input value="{
                                                             path: 'details>offline_quotation_amount',
                                                             type: 'sap.ui.model.type.Integer',
@@ -258,14 +258,14 @@
                                                         }" 
                                                         textAlign="Right" 
                                                         visible="{= ${details>offline_flag} === true &amp;&amp; ${midObjectViewModel>/isEditMode} === true ? true : false }" />
-                                        <Text text="{details>offline_quotation_amount}" visible="{= ${details>offline_flag} === true &amp;&amp; ${midObjectViewModel>/isEditMode} === false ? true : false }" />                     
+                                        <Text text="{details>offline_quotation_amount}" textAlign="Right" visible="{= ${details>offline_flag} === true &amp;&amp; ${midObjectViewModel>/isEditMode} === false ? true : false }" />                     
                                     </HBox>                      
                                 </t:template>
                                 </t:Column>
                                 <t:Column id="mainLoiPublishStatusCode" width="7rem" hAlign="Center">
-                                <Label text="요청납기일자" textAlign="Center" width="100%" tooltip="LOI발행상태"/>
+                                <Label text="요청납기일자" textAlign="Center" width="100%" tooltip="요청납기일자"/>
                                 <t:template>
-                                    <Text text="{details>delivery_request_date}"/>
+                                    <Text text="{details>delivery_request_date}" textAlign="Center"/>
                                 </t:template>
                                 </t:Column> 
                                 <t:Column id="mainPoStatusCode" width="10rem" hAlign="Center">
@@ -286,7 +286,7 @@
                                 <t:Column id="mainRequestDepartmentName" width="12rem">
                                 <Label text="견적비고" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <HBox justifyContent="Center">
+                                    <HBox>
                                         <Text text="{details>quotation_remark}" visible="{= ${details>offline_flag} === true ? false : true }"/>
                                         <Input value="{
                                                             path: 'details>offline_quotation_remark',
@@ -303,7 +303,7 @@
                                 <t:Column id="mainRequestorName" width="7rem">
                                 <Label text="견적번호" textAlign="Center" width="100%"/>
                                 <t:template>
-                                    <Text text="{details>quotation_remark}"/>
+                                    <Text text="{= ${details>offline_flag} === true ? '' : '12345678' }"/>
                                 </t:template>
                                 </t:Column>  
                             </t:columns>

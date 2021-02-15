@@ -66,8 +66,8 @@
                 <Label text="* 서명방식" design="Bold" required="true" class="sapMLabelNoText"/>
                 <SegmentedButton class="sapUiSmallMarginBottom" selectedKey="{master>/offline_flag}" width="100%">                                            
                     <items>
-                        <SegmentedButtonItem text="온라인" key="false" />
-                        <SegmentedButtonItem text="오프라인" key="true" />
+                        <SegmentedButtonItem text="온라인" key="false" width="5em" />
+                        <SegmentedButtonItem text="오프라인" key="true" width="5em" />
                     </items>
                 </SegmentedButton>   
                 <layoutData>
