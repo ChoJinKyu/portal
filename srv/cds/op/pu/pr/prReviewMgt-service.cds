@@ -90,7 +90,12 @@ service PrReviewMgtService {
             ,cm_get_code_name_func(dtl.tenant_id, 'OP_PR_PROGRESS_STATUS_CODE', ifnull(nullif(dtl.pr_progress_status_code, ''), 'INIT'), 'KO') as pr_progress_status_name : String(240)  // 구매요청진행상태코드
 
             ,dtl.approval_date  // 결재일자
-            ,dtl.confirmed_date  // 확정일자
+            //,dtl.confirmed_date  // 확정일자
+            ,case when mst.pr_create_status_code = '30' then dtl.approval_date
+                  when mst.pr_create_status_code = '50' then dtl.confirmed_date
+                  else null
+             end as confirmed_date : Date  // 확정일자
+
             ,dtl.remark  // 비고
             ,dtl.attch_group_number  // 첨부파일그룹번호
             ,dtl.delete_flag  // 삭제여부
