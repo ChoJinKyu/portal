@@ -99,7 +99,7 @@
                     
                     </form:SimpleForm>
 
-                    <VBox class="sapUiSmallMarginTop">
+                    <VBox class="sapUiTinyMarginTop">
                         <Label text="{I18N>/STATUS}">
                             <layoutData>
                                 <layout:GridData span="XL1 L1 M6 S12" />
