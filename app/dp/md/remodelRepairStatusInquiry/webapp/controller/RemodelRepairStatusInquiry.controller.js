@@ -143,14 +143,14 @@ sap.ui.define([
                         });
 
             var bindItemInfo = {
-                    path: '/Divisions',
+                    path: 'mdCom>/Divisions',
                     filters: filter,
                     template: new Item({
-                        key: "{org_code}", text: "[{org_code}] {org_name}"
+                        key: "{mdCom>org_code}", text: "[{mdCom>org_code}] {mdCom>org_name}"
                     })
                 };
 
-            this.getView().byId("searchDivisionS").bindItems(bindItemInfo);
+            // this.getView().byId("searchDivisionS").bindItems(bindItemInfo);
             this.getView().byId("searchDivisionE").bindItems(bindItemInfo);
         },
 
@@ -749,10 +749,10 @@ sap.ui.define([
                         });
 
             var bindInfo = {
-                    path: '/Divisions',
+                    path: 'mdCom>/Divisions',
                     filters: filter,
                     template: new Item({
-                    key: "{org_code}", text: "[{org_code}] {org_name}"
+                    key: "{mdCom>org_code}", text: "[{mdCom>org_code}] {mdCom>org_name}"
                     })
                 };
 
@@ -857,7 +857,7 @@ sap.ui.define([
                     ]
                 });
 
-                this.modelName = 'dse';
+                this.modelName = 'mdCom';
                 this.vhdPath = '/Models';
                 
                 this._oValueHelpDialog.setTitle('Model');
@@ -885,7 +885,7 @@ sap.ui.define([
                     ]
                 });
 
-                this.modelName = 'dse';
+                this.modelName = 'mdCom';
                 this.vhdPath = '/PartNumbers';
                 this._oValueHelpDialog.setTitle('Mold No');
                 this._oValueHelpDialog.setKey('mold_number');

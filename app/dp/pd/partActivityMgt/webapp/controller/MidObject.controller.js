@@ -163,7 +163,7 @@ sap.ui.define([
                 this.oSearchActivityDialog.attachEvent("apply", function(oEvent){ 
                     console.log(oEvent.getParameter("item"));
                     this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_code);
-                    this.byId("searchActivityName").setText(oEvent.getParameter("item").activity_name);
+                    this.byId("searchActivityName").setValue(oEvent.getParameter("item").activity_name);
                 }.bind(this));
             }
 
@@ -196,7 +196,16 @@ sap.ui.define([
 		// 		oModel.markRemoved(nIndex);
 		// 	});
 		// 	oTable.removeSelections(true);
-		// },
+        // },
+        
+        onInputChange: function(oEvent){
+           
+            // var _oInput = oEvent.getSource();
+            // var val = _oInput.getValue();
+            //     val = val.replace(/[^\d]/g, '');
+            this.byId("searchActivityName").setValue("");                          
+                
+        },
 		
 		/**
 		 * Event handler for saving page changes
@@ -350,13 +359,15 @@ sap.ui.define([
                                     
                                 }else{
                                     console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                    // sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                    MessageBox.error(rst.return_msg);
                                 }
                             },
                             error: function (rst) {
                                     console.log("eeeeee");
                                     console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                    MessageBox.error("예기치 않은 오류가 발생하였습니다.");
+                                    // sap.m.MessageToast.show( "error : "+rst.return_msg );
                                     // v_this.onSearch(rst.return_msg );
                             }
                         });

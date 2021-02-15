@@ -27,6 +27,7 @@ sap.ui.define([
     "sap/ui/table/Column",  
     'sap/m/Label',   
     "ext/pg/util/control/ui/MaterialDialogPop",
+    "ext/lib/util/ExcelUtil",
 ], function (
     BaseController, 
     History, 
@@ -55,7 +56,8 @@ sap.ui.define([
     HBox,
     Column,
     Label,
-    MaterialDialogPop) {
+    MaterialDialogPop,
+    ExcelUtil) {
     "use strict";
     
     var oTransactionManager;
@@ -978,6 +980,34 @@ sap.ui.define([
             }
 
         },
+        onSupExportPress: function (_oEvent) {
+            console.log("export");
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            var sFileName = "Supplier List";
+            var oData = this.getModel("suplist").getProperty("/VpSupplierDtlView"); //binded Data
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
+        },
+        onMatExportPress: function (_oEvent) {
+            console.log("export");
+            var sTableId = _oEvent.getSource().getParent().getParent().getId();
+            if (!sTableId) { return; }
+
+            var oTable = this.byId(sTableId);
+            var sFileName = "Material list";
+            var oData = this.getModel("matlist").getProperty("/vpMaterialDtlView"); //binded Data
+            ExcelUtil.fnExportExcel({
+                fileName: sFileName || "SpreadSheet",
+                table: oTable,
+                data: oData
+            });
+        },        
         //행추가
         supplierAddRow: function () {
             var oModel = this.getModel("suplist");

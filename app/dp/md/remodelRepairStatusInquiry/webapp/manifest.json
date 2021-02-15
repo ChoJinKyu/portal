@@ -19,6 +19,13 @@
           "odataVersion": "2.0"
         }
       },
+      "mdCommonService": {
+        "uri": "srv-api/odata/v2/dp.util.DpMdCommonService/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      },
       "commonUtilService": {
         "uri": "srv-api/odata/v2/cm.util.CommonService/",
         "type": "OData",
@@ -89,6 +96,16 @@
           "defaultBindingMode": "TwoWay",
           "defaultCountMode": "Inline",
           "refreshAfterChange": true,
+          "useBatch": true
+        }
+      },
+      "mdCom": {
+        "dataSource": "mdCommonService",
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay",
+          "defaultCountMode": "Inline",
+          "refreshAfterChange": false,
           "useBatch": true
         }
       },

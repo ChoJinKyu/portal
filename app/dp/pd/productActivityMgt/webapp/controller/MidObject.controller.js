@@ -510,12 +510,13 @@ sap.ui.define([
                                     } else if(CUType === "C"){
                                         v_this.onPageNavBackButtonPress.call(v_this);
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
-                                        v_this.onPageNavBackButtonPress.call(v_this);
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     }else {
+                                        console.log("aaa")
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         v_this._toShowMode();                                
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                        v_this._onRoutedThisPage();
                                     }
                                 }else{
                                     console.log(rst);

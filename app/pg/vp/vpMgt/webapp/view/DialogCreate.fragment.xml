@@ -348,7 +348,7 @@
                                     </layoutData> 
                                 </VBox>                         
                                 <VBox id="v_pop_maker_material_code_mngt_flag" >
-                                    <Label text = "Maker P/N" design="Bold" required="true" width="8rem"/> 
+                                    <Label text = "{I18N>/MAKER_MATERIAL_MNG_FLAG}" design="Bold" required="true" width="8rem"/> 
                                     
                                         <!-- <Switch id="pop_maker_material_code_mngt_flag" state="false" customTextOn="Yes" customTextOff="No">
                                             <layoutData>

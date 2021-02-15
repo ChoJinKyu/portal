@@ -23,9 +23,14 @@ import org.springframework.jdbc.core.CallableStatementCreator;
 
 import cds.gen.dp.partbaseactivityv4service.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 @ServiceName(PartBaseActivityV4Service_.CDS_NAME)
 public class PartBaseActivityMgtV4 implements EventHandler {
+
+    private final static Logger log = LoggerFactory.getLogger(PartBaseActivityV4Service_.class);
 
     @Autowired
     private JdbcTemplate jdbc;
@@ -246,9 +251,14 @@ public class PartBaseActivityMgtV4 implements EventHandler {
 
 
         // Local Temp Table DROP
-        jdbc.execute(v_sql_dropMstTable);
-        jdbc.execute(v_sql_dropLngtable);
-        jdbc.execute(v_sql_dropCatetable);
+        try{
+            jdbc.execute(v_sql_dropMstTable);
+            jdbc.execute(v_sql_dropLngtable);
+            jdbc.execute(v_sql_dropCatetable);
+        }catch(Exception e){
+            log.error("Part Base Activity Error  : {}", e);
+            
+        }
 
         context.setResult(v_row);
         context.setCompleted();

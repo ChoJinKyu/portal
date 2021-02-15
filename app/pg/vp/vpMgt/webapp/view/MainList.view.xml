@@ -334,6 +334,7 @@
                             <Button id="mainTableChangeListButton"       text="{I18N>/CHANGE_LIST}"      press=".onMainTableChangeListButtonPress"   enabled="false" />
                             <Button id="mainTableCombineButton"          text="{I18N>/COMBINE_MOVE}"     press=".onMainTableCombineButtonPress"   enabled="false" />
                             <Button id="mainTableSplitButton"            text="{I18N>/SPLIT}"            press=".onMainTableSplitButtonPress"  enabled="false" />
+                            <!-- <Button id="rTableExportButton" text="{I18N>/EXCEL}" type="Transparent" press=".onExportPress" class="sapUiTinyMargin" icon="sap-icon://excel-attachment" />                                 -->
                             <ToolbarSeparator/>
                             <Button icon="sap-icon://action-settings" press=".onMoldMstTablePersoButtonPressed" >
                                 <layoutData>
@@ -408,7 +409,7 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="Maker P/N Flag" width="8rem" hAlign="Center">
+                            <table:Column label="{I18N>/MAKER_MATERIAL_MNG_FLAG}" width="8rem" hAlign="Center">
                                 <table:template>
                                     <Text text="{= !!${list>maker_material_code_mngt_flag} ? 'Y' : 'N'}" wrapping="false" />
                                 </table:template>
