@@ -263,6 +263,7 @@ mixin {
             ;
 } into {
     *,
+    operation_org.bizunit_code,                                //Supplier의 
     Suppliers_Calc.specific_supplier_count as supplier_count,  //임시-폐기예정 : supplier_count to specific_supplier_count 변경완료후
     Suppliers_Calc
 };
