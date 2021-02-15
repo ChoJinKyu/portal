@@ -344,6 +344,8 @@ sap.ui.define([
                 oRootModel = this.getModel(),
                 oViewModel = this.getModel("viewModel");
             console.log("Search Start========");
+            console.log("aSearchFilters========", aSearchFilters);
+            console.log("aSorter========", aSorter);
             oView.setBusy(true);
             oRootModel.read("/UcApprovalMstView", {
                 filters: aSearchFilters,
@@ -427,10 +429,10 @@ sap.ui.define([
                     })
                 );
             }
-            if (searchStatusCode != "all") {
+            if (searchStatusCode && searchStatusCode != "all") {
                 aSearchFilters.push(new Filter("net_price_contract_status_code", FilterOperator.EQ, searchStatusCode));
             }
-            if (searchEffectiveStatus != "all") {
+            if (searchEffectiveStatus && searchEffectiveStatus != "all") {
                 aSearchFilters.push(new Filter("effective_status_code", FilterOperator.EQ, searchEffectiveStatus));
             }
             if (searchDayCount > 0) {
