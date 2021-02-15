@@ -196,6 +196,7 @@ public class PrCreateV4 implements EventHandler {
                     if(!v_inDetails.isEmpty() && v_inDetails.size() > 0){                        
                         for(SavedDetail v_inRow : v_inDetails){
                             log.info("SavedDetail ###"+v_inRow.getTenantId()+"###"+v_inRow.getCompanyCode()+"###"+v_inRow.getPrNumber()+"###"+v_inRow.getPrItemNumber());
+                            log.info("SavedDetail ##### pr_quantity -> " + v_inRow.getPrQuantity() + " ##### EstimatedPrice -> " + v_inRow.getEstimatedPrice());
                             values = new Object[] {
                                 v_inRow.getPrItemNumber(),
                                 v_inRow.getOrgTypeCode(),
@@ -207,7 +208,6 @@ public class PrCreateV4 implements EventHandler {
                                 v_inRow.getPrUnit(),
                                 v_inRow.getRequestorEmpno(),
                                 v_inRow.getRequestorName(),
-                                //(v_inRow.getDeliveryRequestDate()).substring(0, 10) ),
                                 v_inRow.getDeliveryRequestDate(),
                                 v_inRow.getBuyerEmpno(),
                                 v_inRow.getBuyerDepartmentCode(),

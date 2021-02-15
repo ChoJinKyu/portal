@@ -568,22 +568,15 @@ sap.ui.define([
                     that._fnReadServiceModel("", "/Pr_DtlView", aFilters, aSorters),
                     that._fnReadServiceModel("", "/Pr_Account", aAccountFilters, aSorters),
                     that._fnReadServiceModel("", "/Pr_Service", aServiceFilters, aSorters)
-            ).done(function(oDetailData, oAccountData, oServiceData){              
-
-                if(oDetailData.results.length > 0) {
-                    oViewModel.setProperty("/Pr_Dtl", oDetailData.results);
-                } else {
-                    oViewModel.setProperty("/Pr_Dtl", []);
-                }
+            ).done(function(oDetailData, oAccountData, oServiceData){
 
                 let oAccounts={}, oServices={};
-                let aPrDtlData = oViewModel.getProperty("/Pr_Dtl");
-                if(aPrDtlData && aPrDtlData.length > 0){
-                    aPrDtlData.forEach(function(itemDtl, idx){
-                        //조직명
-                        //itemDtl["org_name_desc"] = (itemDtl.org_name ? itemDtl.org_name: itemDtl.plant_name) + " [" + itemDtl.org_code + "]";
-                        itemDtl["org_name_desc"] =that._fnGetCodeNameDesc(itemDtl.org_code, itemDtl.org_name);
-
+                //let aPrDtlData = oViewModel.getProperty("/Pr_Dtl");
+                //let aPrDtlData = oDetailData.results;
+                let aPrDtlData = [];
+                let aDetailData = oDetailData.results;
+                if(aDetailData && aDetailData.length > 0){
+                    aDetailData.forEach(function(itemDtl, idx){
                         // 계정정보
                         if(oAccountData.results.length > 0){
                             oAccountData.results.forEach(function(itemAccount, idx){
@@ -595,7 +588,6 @@ sap.ui.define([
                                 }
                             });
                         }
-
                         // 서비스정보
                         if(oServiceData.results.length > 0){
                             oServiceData.results.forEach(function(itemService, idx){
@@ -607,8 +599,25 @@ sap.ui.define([
                                 }
                             });
                         }
+                        
+                        // 조직명
+                        itemDtl["org_name_desc"] = that._fnGetCodeNameDesc(itemDtl.org_code, itemDtl.org_name);
+                        // 구매요청수량
+                        itemDtl["pr_quantity"] = parseFloat(itemDtl["pr_quantity"]);
+                        // 예상가격
+                        itemDtl["estimated_price"] = parseFloat(itemDtl["estimated_price"]);
+                        // 가격단위
+                        itemDtl["price_unit"] = parseFloat(itemDtl["price_unit"]);
+
+                        aPrDtlData.push(itemDtl);
                     });
-                }                
+                }
+                
+                if(aPrDtlData.length > 0) {
+                    oViewModel.setProperty("/Pr_Dtl", aPrDtlData);
+                } else {
+                    oViewModel.setProperty("/Pr_Dtl", []);
+                }
             });
         },
 
@@ -892,7 +901,7 @@ sap.ui.define([
                                 msg += "\r\n - " + (idx+1) + "번째 열의 " + sI18NText; 
                                 bReturn = false;
                             }else if(key === "pr_quantity" || key === "estimated_price" || key === "price_unit"){
-                                var checkVal = Number.parseFloat(itemDtl[key]).toFixed(0);
+                                var checkVal = parseFloat(itemDtl[key]).toFixed(0);
                                 if(checkVal <= 0){
                                     msg += "\r\n - " + (idx+1) + "번째 열의 " + sI18NText + " (0 보다 큰 숫자를 입력하세요)"; 
                                     bReturn = false;
@@ -1130,20 +1139,18 @@ sap.ui.define([
                         buyer_empno         : (item.buyer_empno) ? item.buyer_empno : "",
                         buyer_department_code : item.buyer_department_code || "",
                         user_local_name     : (item.user_local_name) ? item.user_local_name : "",
-                        //currency_code       : (item.currency_code) ? item.currency_code : "KRW",
-                        currency_code         : item.currency_code || "KRW",
-                        estimated_price     : (item.estimated_price && item.estimated_price !== "") ? item.estimated_price+"" : "0", 
+                        currency_code       : item.currency_code || "KRW",
+                        estimated_price     : (item.estimated_price && item.estimated_price !== "") ? parseFloat(item.estimated_price+"") : 0, 
                         material_code       : (item.material_code) ? item.material_code : "",
                         material_group_code : (item.material_group_code) ? item.material_group_code : "",
-                        pr_desc             : (item.pr_desc) ? item.pr_desc : "",                        
-                        //pr_quantity         : (item.pr_quantity) ? item.pr_quantity : "0",
-                        pr_quantity         : item.pr_quantity || "0",
+                        pr_desc             : item.pr_desc || "",    
+                        pr_quantity         : (item.pr_quantity && item.pr_quantity !== "") ? parseFloat(item.pr_quantity+"") : 0, 
                         pr_unit             : (item.pr_unit) ? item.pr_unit : "",
                         requestor_empno     : (item.requestor_empno) ? item.requestor_empno : this.$session.employee_number,
                         requestor_name      : (item.requestor_name) ? item.requestor_name : this.$session.employee_name,
                         delivery_request_date: that._fnConvertDate(item.delivery_request_date),
                         purchasing_group_code: (item.purchasing_group_code) ? item.purchasing_group_code : "",
-                        price_unit          : (item.price_unit && item.price_unit !== "") ? item.price_unit+"" : "1",
+                        price_unit          : (item.price_unit && item.price_unit !== "") ? parseFloat(item.price_unit+"") : 1,
                         pr_progress_status_code: "INIT",
                         remark              : (item.remark) ? item.remark : "",
                         sloc_code           : (item.sloc_code) ? item.sloc_code : "",
