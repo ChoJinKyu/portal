@@ -715,9 +715,9 @@ sap.ui.define([
 
                     sMsg = oBundle.getText(eMessage);
                     if(errorType === 'E'){
-                        alert(sMsg);                    
+                        // alert(sMsg);                    
                     }else{
-                        alert(eMessageDetail);                    
+                        // alert(eMessageDetail);                    
                     }
                     
                     
