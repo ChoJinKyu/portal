@@ -261,19 +261,20 @@ sap.ui.define([
             var title, confirm;
             if(flag=="DL") {    //삭제
                 title = this.getModel("I18N").getText("/DELETE");
-                confirm = this.getModel("I18N").getText("/NCM00001");
+                confirm = this.getModel("I18N").getText("/NCM00003");
             } else if(flag=="J") {    //반려
                 title = this.getModel("I18N").getText("/REJECT");
-                confirm = this.getModel("I18N").getText("/NCM00001");
+                confirm = this.getModel("I18N").getText("/NSP00103");
             } else if(flag=="A") {    //승인
                 title = this.getModel("I18N").getText("/APPROVAL");
-                confirm = this.getModel("I18N").getText("/NCM00001");
+                confirm = this.getModel("I18N").getText("/NSP00104");
             } else if(flag=="C") {    //확인&생성
+                var oI18NModel = this.getModel("I18N");
                 title = this.getModel("I18N").getText("/CONFIRM_CREATE");
-                confirm = this.getModel("I18N").getText("/NCM00001");
+                confirm = oI18NModel.getText("/NDP40004", [oI18NModel.getText("/CONFIRM_CREATE")]);
             }else {
                 title = this.getModel("I18N").getText("/SAVE");
-                confirm = this.getModel("I18N").getText("/NCM00003");
+                confirm = this.getModel("I18N").getText("/NCM00001");
             }
 
 			oTransactionManager.setServiceModel(this.getModel());
