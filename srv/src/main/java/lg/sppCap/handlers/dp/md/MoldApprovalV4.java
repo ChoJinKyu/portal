@@ -623,10 +623,16 @@ public class MoldApprovalV4 implements EventHandler {
             // Local Temp Table에 insert
             List<Object[]> batch = new ArrayList<Object[]>();
             if(!v_inMultiData.isEmpty() && v_inMultiData.size() > 0){
+                String approvalNumber = "";
                 for(PaymentV4 v_inRow : v_inMultiData){
+                    if(v_inRow.getApprovalNumber().equals("New")){
+                        approvalNumber = this.APPROVAL_NUMBER;
+                    }else{
+                        approvalNumber = v_inRow.getApprovalNumber(); 
+                    }
                     Object[] valuesM = new Object[] {
                         v_inRow.get("tenant_id"),
-                        v_inRow.get("approval_number"),
+                        approvalNumber,
                         v_inRow.get("pay_sequence"),
                         v_inRow.get("split_pay_type_code"),
                         new BigDecimal((String)((v_inRow.get("pay_rate")==null||v_inRow.get("pay_rate")=="")?"0":v_inRow.get("pay_rate"))),

@@ -192,6 +192,7 @@
                         >
                     <headerToolbar>
                         <OverflowToolbar>
+                            <Title text="Payment Information" level="H2"/>
                             <ToolbarSpacer/>
                             <Button id="btnPaymentAdd"    type="Transparent" text="{I18N>/ROW_ADD}" press=".onPaymentAddRow" visible="{mode>/editFlag}">
                                 <customData>
