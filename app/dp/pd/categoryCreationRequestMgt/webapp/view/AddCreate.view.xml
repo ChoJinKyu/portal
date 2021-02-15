@@ -19,6 +19,7 @@
 		isChildPage="true"
 		upperCaseAnchorBar="false"
 		showTitleInHeaderContent="true"
+		showTitleSelector="true"
 		showEditHeaderButton="true" 
 		showFooter="false">
 		<uxap:headerTitle>
@@ -49,7 +50,7 @@
 		<uxap:sections>
 			<uxap:ObjectPageSection id="pageSectionMain1" titleUppercase="false" title="{I18N>/CATEGORY}">
 				<uxap:subSections>
-					<uxap:ObjectPageSubSection id="pageSubSection1">
+					<uxap:ObjectPageSubSection id="pageSubSection1" >
                     <form:SimpleForm id="midObjectForm" >
                         <HBox alignContent="Center" alignItems="Stretch" class="sapUiSmallMarginBegin">
                             <layout:Grid containerQuery="true" defaultSpan="XL2 L4">
@@ -80,7 +81,7 @@
                                 </VBox>
                                 <VBox>
                                     <Label text="{I18N>/SEQUENCE}: " labelFor="sequence" required="true" ></Label>
-                                    <MaskInput id="sequence" mask="999" placeholderSymbol=" " width="60%"   visible="{viewModel>/editMode}"  required="true"
+                                    <MaskInput id="sequence" mask="999" placeholderSymbol=" " width="10%"   visible="{viewModel>/editMode}"  required="true"
                                         placeholder="{I18N>/SEQUENCE}" value="{PdPartCategoryModel>/sequence}"/>
                                     <Text id="sequenceTxt" width="80%" textAlign="Left"  text="{PdPartCategoryModel>/sequence}" visible="{viewModel>/showMode}"/>
 
@@ -107,7 +108,8 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection id="pageSectionMain2" titleUppercase="false" title="{I18N>/LANGUAGE}">
+            <uxap:ObjectPageSection id="pageSectionMain2" titleUppercase="false" 
+                title="{I18N>/LANGUAGE} ({= (${pdPartCategoryLng})?${pdPartCategoryLng}.length:0})">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection2" >
 						<Table id="midTable2" 
@@ -143,23 +145,29 @@
                                         <!-- 상태 -->
 										<Text text="{pdPartCategoryLng>_row_state_}"/>
                                         <!-- 언어코드 -->
-                                        <ComboBox
-                                        enabled="{viewModel>/editMode}"
-                                        selectedKey="{pdPartCategoryLng>language_cd}"
-                                        width="100%"
-                                        items="{
-                                            path: 'common>/Code',
-                                            filters: [
-                                            {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
-                                            {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
-                                            ]
-                                        }">
-                                        <items>
-                                            <core:Item key="{common>code}" text="{common>code} : {common>code_description}"/>
-                                        </items>
+                                        
+                                        <ComboBox   
+                                            width="100%"
+                                            enabled="{viewModel>/editMode}"
+                                            placeholder="All"
+                                            showSecondaryValues= "true"
+                                            selectedKey="{pdPartCategoryLng>language_cd}"
+                                            items="{
+                                                path: 'common>/Code',
+                                                filters: [
+                                                {path: 'tenant_id', operator: 'EQ', value1: 'L2101'},
+                                                {path: 'group_code', operator: 'EQ', value1: 'CM_LANG_CODE'}
+                                                ]
+                                            }"
+                                        >
+                                        <core:ListItem 
+                                                key="{common>code}" 
+                                                text="{common>code_name}"
+                                                additionalText="{common>code}"/>
                                         </ComboBox>
                                         <!-- 메뉴명 -->
-										<Input value="{pdPartCategoryLng>code_name}"  required="true" enabled="{viewModel>/editMode}" />
+										<Input value="{pdPartCategoryLng>code_name}"  required="true" enabled="{viewModel>/editMode}"  />
+
 									</cells>
 								</ColumnListItem>
 							</items>
@@ -170,7 +178,8 @@
 			</uxap:ObjectPageSection>
 
 
-			<uxap:ObjectPageSection id="pageSectionMain5" titleUppercase="false" title="{I18N>/STANDARD_DAYS}">
+			<uxap:ObjectPageSection id="pageSectionMain5" titleUppercase="false" 
+                title="{I18N>/STANDARD_DAYS} ({= (${pdActivityStdDayView>/})?${pdActivityStdDayView>/}.length:0})">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection id="pageSubSection5" >
                                     
@@ -194,7 +203,8 @@
                                         labelFor="input"
                                         required="true"/>
                                     <VBox>
-                                        <SearchField id="searchField" search=".onSearchPartCategory" value="{master>/similar_category_code}" enabled="{viewModel>/editMode}"/>
+                                        <SearchField id="searchField" search=".onSearchPartCategory" value="{master>/similar_category_code}" enabled="{viewModel>/editMode}" visible="{viewModel>/showMode}" />
+                                            
                                     </VBox>
                                 </OverflowToolbar>
                             </t:extension>
@@ -241,59 +251,49 @@
                                         </ComboBox>
                                     </t:template>
                                 </t:Column>
-                                <t:Column
-                                    sortProperty="S"
-                                    filterProperty="S">
+                                <t:Column>
                                     <t:multiLabels>
                                         <Label text="Copy Form"/>
-                                        <Label text="S" textAlign="Center" width="100%"/>
+                                        <Label text="s" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
                                     <t:template>
-                                        <Text text="{pdActivityStdDayView>s_grade_standard_days_ori}"/>
+                                        <Text text="{pdActivityStdDayView>s_grade_standard_days_ori}" textAlign="Right"  width="100%"   />
                                     </t:template>
                                 </t:Column>
-                                <t:Column
-                                    sortProperty="A"
-                                    filterProperty="A">
+                                <t:Column>
                                     <t:multiLabels>
                                         <Label text="Copy Form"/>
-                                        <Label text="A" textAlign="Center" width="100%"/>
+                                        <Label text="a" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
                                     <t:template>
-                                        <Text text="{pdActivityStdDayView>a_grade_standard_days_ori}"/>
+                                        <Text text="{pdActivityStdDayView>a_grade_standard_days_ori}" textAlign="Right"  width="100%"  />
                                     </t:template>
                                 </t:Column>
-                                <t:Column
-                                    sortProperty="B"
-                                    filterProperty="B">
+                                <t:Column>
                                     <t:multiLabels>
                                         <Label text="Copy Form"/>
-                                        <Label text="B" textAlign="Center" width="100%"/>
+                                        <Label text="b" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
                                     <t:template>
-                                        <Text text="{pdActivityStdDayView>b_grade_standard_days_ori}"/>
+                                        <Text text="{pdActivityStdDayView>b_grade_standard_days_ori}" textAlign="Right"  width="100%"  />
                                     </t:template>
                                 </t:Column>
-                                <t:Column
-                                    sortProperty="C"
-                                    filterProperty="C">
+                                <t:Column>
                                     <t:multiLabels>
                                         <Label text="Copy Form"/>
-                                        <Label text="C" textAlign="Center" width="100%"/>
+                                        <Label text="c" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
                                     <t:template>
-                                        <Text text="{pdActivityStdDayView>c_grade_standard_days_ori}"/>
+                                        <Text text="{pdActivityStdDayView>c_grade_standard_days_ori}" textAlign="Right"  width="100%"  />
                                     </t:template>
                                 </t:Column>
-                                <t:Column
-                                    sortProperty="D"
-                                    filterProperty="D">
+                                <t:Column>
                                     <t:multiLabels>
                                         <Label text="Copy Form"/>
-                                        <Label text="D" textAlign="Center" width="100%"/>
+                                        <Label text="d" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
                                     <t:template>
-                                        <Text text="{pdActivityStdDayView>d_grade_standard_days_ori}"/>
+                                        <Text text="{pdActivityStdDayView>d_grade_standard_days_ori}" textAlign="Right"  width="100%"  />
                                     </t:template>
                                 </t:Column>
                                 <t:Column
@@ -305,65 +305,70 @@
                                         <Label text="Use" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
                                     <t:template>
-                                        <ComboBox selectedKey="{pdActivityStdDayView>active_flag}"  width="20em">
+                                        <ComboBox selectedKey="{pdActivityStdDayView>active_flag}"  width="20em"  enabled="{viewModel>/editMode}" >
                                             <core:Item key="true" text="Y"/>
                                             <core:Item key="false" text="N"/>
                                         </ComboBox>
                                     </t:template>
                                 </t:Column>
                                 <t:Column
-                                    sortProperty="S"
-                                    filterProperty="S">
+                                    sortProperty="s"
+                                    filterProperty="s">
                                     <t:multiLabels>
                                         <Label text="Target"/>
-                                        <Label text="S" textAlign="Center" width="100%"/>
+                                        <Label text="s" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
-                                    <t:template>
-                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>s_grade_standard_days}"  placeholder="0" />
+                                    <t:template  >
+                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>s_grade_standard_days}"  placeholder="0" textAlign="Right"  enabled="{viewModel>/editMode}" visible="{viewModel>/showMode}"  />
+										<Text text="{pdActivityStdDayView>s_grade_standard_days}" visible="{viewModel>/showMode}" width="100%" textAlign="Right" />
                                     </t:template>
                                 </t:Column>
                                 <t:Column
-                                    sortProperty="A"
-                                    filterProperty="A">
+                                    sortProperty="a"
+                                    filterProperty="a">
                                     <t:multiLabels>
                                         <Label text="Target"/>
-                                        <Label text="A" textAlign="Center" width="100%"/>
+                                        <Label text="a" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
                                     <t:template>
-                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>a_grade_standard_days}" placeholder="0" />
+                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>a_grade_standard_days}" placeholder="0" textAlign="Right"  enabled="{viewModel>/editMode}" visible="{viewModel>/showMode}"  />
+										<Text text="{pdActivityStdDayView>a_grade_standard_days}" visible="{viewModel>/showMode}" width="100%" textAlign="Right" />
                                     </t:template>
                                 </t:Column>
                                 <t:Column
-                                    sortProperty="B"
-                                    filterProperty="B">
+                                    sortProperty="b"
+                                    filterProperty="b">
                                     <t:multiLabels>
                                         <Label text="Target"/>
-                                        <Label text="B" textAlign="Center" width="100%"/>
+                                        <Label text="b" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
                                     <t:template>
-                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>b_grade_standard_days}"  placeholder="0" />
+                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>b_grade_standard_days}"  placeholder="0" textAlign="Right"  enabled="{viewModel>/editMode}" visible="{viewModel>/showMode}"  />
+										<Text text="{pdActivityStdDayView>b_grade_standard_days}" visible="{viewModel>/showMode}" width="100%" textAlign="Right" />
                                     </t:template>
                                 </t:Column>
                                 <t:Column
-                                    sortProperty="C"
-                                    filterProperty="C">
+                                    sortProperty="c"
+                                    filterProperty="c">
                                     <t:multiLabels>
                                         <Label text="Target"/>
-                                        <Label text="C" textAlign="Center" width="100%"/>
+                                        <Label text="c" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
                                     <t:template>
-                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>c_grade_standard_days}"   placeholder="0" />
+                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>c_grade_standard_days}"   placeholder="0" textAlign="Right"  enabled="{viewModel>/editMode}" visible="{viewModel>/showMode}"  />
+										<Text text="{pdActivityStdDayView>c_grade_standard_days}" visible="{viewModel>/showMode}" width="100%" textAlign="Right" />
                                     </t:template>
                                 </t:Column>
                                 <t:Column
-                                    sortProperty="D"
-                                    filterProperty="D">
+                                    sortProperty="d"
+                                    filterProperty="d">
                                     <t:multiLabels>
                                         <Label text="Target"/>
-                                        <Label text="D" textAlign="Center" width="100%"/>
+                                        <Label text="d" textAlign="Center" width="100%"/>
                                     </t:multiLabels>
                                     <t:template>
-                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>d_grade_standard_days}"  placeholder="0" />
+                                        <MaskInput mask="999" placeholderSymbol=" "  value="{pdActivityStdDayView>d_grade_standard_days}"  placeholder="0" textAlign="Right"  enabled="{viewModel>/editMode}" visible="{viewModel>/showMode}" />
+										<Text text="{pdActivityStdDayView>d_grade_standard_days}" visible="{viewModel>/showMode}" width="100%" textAlign="Right" />
                                     </t:template>
                                 </t:Column>
                                 

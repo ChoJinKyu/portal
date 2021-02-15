@@ -195,7 +195,7 @@
                     ]
                 },
                 {
-                    "pattern": "addCreateObject/{requestNumber}/{categoryCode}",
+                    "pattern": "addCreateObject/{requestNumber}",
                     "name": "addCreatePage",
                     "target": [
                         "addCreateObject"
