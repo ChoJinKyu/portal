@@ -17,7 +17,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="{i18n>appTitle}" />
+                    <Title text="Activity {I18N>/MAPPING} {I18N>/MANAGEMENT}" />
                 </f:heading>
                 <f:navigationActions>
                     <Button icon="sap-icon://unfavorite" type="Transparent" />
@@ -41,42 +41,66 @@
                     columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="사업본부: " required="true"></Label>
+                            <Label text="{I18N>/COMPANY}: " required="true"></Label>
                             <ComboBox
-                                id="searchOrgCombo"
+                                required="true"
+                                id="searchCompanyCombo"
                                 width="100%"
-                                selectedKey="BIZ00000"
+                                selectedKey="LGESL"
+                                showSecondaryValues= "true"
                                 items="{
-                                    path: '/PdOperationOrg',
-                                    filters: [
-                                        {path: 'tenant_id', operator: 'EQ', value1: 'L2100'}
-                                    ],
-                                    sorter: { path: 'operation_org_code'}
-                                }" required="true">
+                                    path: '/CompanyView'
+                                    
+                                    }">
+                                    <items>
+                                        <core:ListItem
+                                            key="{company_code}"
+                                            text="{company_name}"
+                                            additionalText="{company_code}"/>
+                                    </items>
+                                </ComboBox>
+                                <layoutData>
+                                    <layout:GridData span="XL2 L2 M3 S12" />
+                                </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="{I18N>/ORGANIZATION}: " labelFor="searchAUCombo" required="true"></Label>
+                            <ComboBox
+                                required="true"
+                                id="searchAUCombo"
+                                width="100%"
+                                selectedKey=""
+                                showSecondaryValues= "true"
+                                items="{
+                                    path: '/OrgView'
+                                }">
                                 <items>
-                                    <core:Item key="{operation_org_code}" text="[{operation_org_code}] {operation_org_name}" />
+                                    <core:ListItem
+                                        key="{org_code}" 
+                                        text="{org_name}" 
+                                        additionalText="{org_code}"/>
                                 </items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L2 M3 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="Product Activity: " labelFor="searchProductActivity"></Label>
-                            <Input id="searchProductActivity" placeholder="Product Activity Code or Name"></Input>
+                            <Label text="{I18N>/PRODUCT_ACTIVITY}: " labelFor="searchProductActivity"></Label>
+                            <Input id="searchProductActivity" />
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L3 M3 S12" />
                             </layoutData>
                         </VBox>
                         <VBox>
                             <Label text="Activity: " labelFor="searchActivity"></Label>
-                            <Input id="searchActivity" placeholder="Activity Code or Name"></Input>
+                            <Input id="searchActivity" />
                             <layoutData>
-                                <layout:GridData span="XL2 L3 M6 S12" />
+                                <layout:GridData span="XL2 L3 M3 S12" />
                             </layoutData>
                         </VBox>
                         <FlexBox alignItems="End" justifyContent="End">
-                            <Button id="btn_search" text="Search" type="Emphasized" press=".onPageSearchButtonPress"/>
+                            <Button id="btn_search" text="{I18N>/SEARCH}" type="Emphasized" press=".onPageSearchButtonPress"/>
                             <layoutData>
                                 <layout:GridData span="XL12 L12 M12 S12" />
                             </layoutData>
@@ -96,12 +120,12 @@
                 width="auto">
                 <headerToolbar>
                     <OverflowToolbar>
-                        <Title id="mainTableTitle" text="Activity Mappting List ({=(${list>/ActivityMappingNameView})?${list>/ActivityMappingNameView}.length:0})" level="H2"/>
+                        <Title id="mainTableTitle" text="Activity {I18N>/MAPPING} {I18N>/LIST} ({=(${list>/ActivityMappingNameView})?${list>/ActivityMappingNameView}.length:0})" level="H2"/>
                         <ToolbarSpacer/>
-                        <Button id="mainTableAddButton" text="Add" type="Transparent" press=".onMainTableAddButtonPress('mainTable', 'list', 'ActivityMappingNameView', 'tenant_id')" />
-                        <Button id="mainTableDelButton" text="Delete" type="Transparent" press=".onMainTableDeleteButtonPress" />
-                        <Button id="mainTableCancButton" text="Cancel" type="Transparent" press=".onMainTableCancButtonPress" />
-                        <Button id="mainTableSaveButton" text="Save" type="Emphasized" press=".onMainTableSaveButtonPress" />
+                        <Button id="mainTableAddButton" text="{I18N>/ADD}" type="Transparent" press=".onMainTableAddButtonPress('mainTable', 'list', 'ActivityMappingNameView', 'tenant_id')" />
+                        <Button id="mainTableDelButton" text="{I18N>/DELETE}" type="Transparent" press=".onMainTableDeleteButtonPress" />
+                        <Button id="mainTableCancButton" text="{I18N>/CANCEL}" type="Transparent" press=".onMainTableCancButtonPress" />
+                        <Button id="mainTableSaveButton" text="{I18N>/SAVE}" type="Emphasized" press=".onMainTableSaveButtonPress" />
                         <ToolbarSeparator/>
                         <Button id="rTableExportButton" type="Transparent" press=".onExportPress" icon="sap-icon://excel-attachment" />
                         <Button id="mainTablePersoButton" icon="sap-icon://action-settings" press=".onMainTablePersoButtonPressed" >
@@ -114,28 +138,28 @@
                 <columns>
                     <Column id="mainColumnstat" minScreenWidth="Tablet" hAlign="Left" width="1.5rem" />
                     <Column id="mainColumnBizUnit" minScreenWidth="Tablet" hAlign="Left" >
-                        <Text text="사업본부" />
+                        <Text text="{I18N>/BUSINESS_UNIT}" />
                     </Column>
                     <Column id="mainColumnPAC" minScreenWidth="Tablet" hAlign="Left" >
-                        <Text text="Product Activity Code" />
+                        <Text text="{I18N>/PRODUCT_ACTIVITY_CODE}" />
                     </Column>
                     <Column id="mainColumnPACN" minScreenWidth="Tablet" hAlign="Left" >
-                        <Text text="Product Activity Code명" />
+                        <Text text="{I18N>/PRODUCT_ACTIVITY_NAME}" />
                     </Column>
                     <Column id="mainColumnDependency" minScreenWidth="Tablet" hAlign="Left" >
-                        <Text text="종속유형" />
+                        <Text text="{I18N>/DEPENDANCY_TYPE}" />
                     </Column>
                     <Column id="mainColumnAC" minScreenWidth="Tablet" hAlign="Left" >
-                        <Text text="Activity Code" />
+                        <Text text="{I18N>/ACTIVITY_CODE}" />
                     </Column>
                     <Column id="mainColumnACN" minScreenWidth="Tablet" hAlign="Left" >
-                        <Text text="Activity Code명" />
+                        <Text text="{I18N>/ACTIVITY_NAME}" />
                     </Column>
                     <Column id="mainColumnUDT" minScreenWidth="Tablet" hAlign="Left" >
-                        <Text text="수정일자" />
+                        <Text text="{I18N>/LOCAL_UPDATE_DTM}" />
                     </Column>
                     <Column id="mainColumnUDU" minScreenWidth="Tablet" hAlign="Left" >
-                        <Text text="수정자" />
+                        <Text text="{I18N>/UPDATE_USER_ID}" />
                     </Column>
                 </columns>
                 <items>

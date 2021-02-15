@@ -41,8 +41,9 @@
                     columnsM="2">
                     <form:content>
                         <VBox>
-                            <Label text="{I18N>/COMPANY}: "></Label>
+                            <Label text="{I18N>/COMPANY}: " required="true"></Label>
                             <ComboBox
+                                required="true"
                                 id="searchCompanyCombo"
                                 width="100%"
                                 selectedKey="LGESL"
@@ -63,9 +64,10 @@
                                 </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="{I18N>/ORGANIZATION}: " labelFor="searchAUCombo"></Label>
+                            <Label text="{I18N>/ORGANIZATION}: " labelFor="searchAUCombo" required="true"></Label>
                             <!-- 테스트 테넌트번호 L1100, 원세팅테넌트번호 2100, 2600 -->
                             <ComboBox
+                                required="true"
                                 id="searchAUCombo"
                                 width="100%"
                                 selectedKey=""

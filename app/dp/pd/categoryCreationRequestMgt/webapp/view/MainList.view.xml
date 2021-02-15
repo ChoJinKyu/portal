@@ -38,8 +38,9 @@
                 <!-- <form:SimpleForm id="pageSearchForm" editable="true" layout="ResponsiveGridLayout"  > -->
                     <form:content>
                         <VBox>
-                            <Label text="{I18N>/CATEGORY_GROUP}: "></Label>
+                            <Label text="{I18N>/CATEGORY_GROUP}: " required="true"></Label>
                             <ComboBox
+                                required="true"
                                 id="searchCategoryCombo"
                                 width="100%"
                                 selectedKey=""

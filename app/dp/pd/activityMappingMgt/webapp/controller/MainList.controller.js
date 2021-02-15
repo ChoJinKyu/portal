@@ -75,11 +75,18 @@ sap.ui.define([
             } else {
                 var aSearchFilters = this._getSearchStates();
                     
-                if(this.byId("searchOrgCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchOrgCombo")) !== true) {
+                if(this.byId("searchCompanyCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchCompanyCombo")) !== true) {
                     MessageToast.show("필수 선택 항목입니다.");
                     return;
                 } else {
-                    this.validator.clearValueState(this.byId("searchOrgCombo"));
+                    this.validator.clearValueState(this.byId("searchCompanyCombo"));
+                }
+
+                if(this.byId("searchAUCombo").getSelectedKey() === "" && this.validator.validate(this.byId("searchAUCombo")) !== true) {
+                    MessageToast.show("필수 선택 항목입니다.");
+                    return;
+                } else {
+                    this.validator.clearValueState(this.byId("searchAUCombo"));
                 }
                 this._applySearch(aSearchFilters);
             }
@@ -126,8 +133,9 @@ sap.ui.define([
         },
 
         _getSearchStates: function () {
-            var sTenantId = "L2100",
-                sOrgCombo = this.getView().byId("searchOrgCombo").getSelectedKey(),
+            var sTenantId = "L2101",
+                sCompanyCombo = this.getView().byId("searchCompanyCombo").getSelectedKey(),
+                sAuCombo = this.getView().byId("searchAUCombo").getSelectedKey(),
                 sProductActivity = this.getView().byId("searchProductActivity").getValue(),
                 sActivity = this.getView().byId("searchActivity").getValue();
 
@@ -135,8 +143,12 @@ sap.ui.define([
                 new Filter("tenant_id", FilterOperator.EQ, sTenantId)
             ];
 
-            if (sOrgCombo && sOrgCombo.length > 0) {
-                aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, sOrgCombo));
+            if (sCompanyCombo && sCompanyCombo.length > 0) {
+                aSearchFilters.push(new Filter("company_code", FilterOperator.EQ, sCompanyCombo));
+            }
+
+            if (sAuCombo && sAuCombo.length > 0) {
+                aSearchFilters.push(new Filter("org_code", FilterOperator.EQ, sAuCombo));
             }
 
             if (sProductActivity && sProductActivity.length > 0) {
@@ -186,7 +198,7 @@ sap.ui.define([
 
             oModel.addRecord({
                 "tenant_id": "L2100",
-                "company_code": "*",
+                "company_code": "LGESL",
                 "org_type_code": "AU",
                 "org_code": this.byId("searchOrgCombo").getSelectedKey(),
                 "activity_code": null,
