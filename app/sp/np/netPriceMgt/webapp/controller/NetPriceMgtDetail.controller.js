@@ -772,7 +772,7 @@ sap.ui.define([
                                             var result = data.results[0];
                                             
                                             var oNewBasePriceData = {
-                                                "tenant_d": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                                                "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
                                                 "approval_number": result.approval_number,
                                                 "approval_title": result.approval_title,
                                                 "approval_contents" : result.approval_contents,
