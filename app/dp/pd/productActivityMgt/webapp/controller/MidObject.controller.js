@@ -134,14 +134,14 @@ sap.ui.define([
                 oDetailsModel = this.getModel("details"),
                 bFlag = false;
 
-            if(oDetailsModel.getProperty("/PdProdActivityTemplateLng").length < oLangDataModel.getProperty("/").length){
-                bFlag = true;
-            }
+            // if(oDetailsModel.getProperty("/PdProdActivityTemplateLng").length < oLangDataModel.getProperty("/").length){
+            //     bFlag = true;
+            // }
 
-            if(!bFlag){
-                MessageToast.show(this.getModel("I18N").getText("/NPG00002"));
-                return;
-            }
+            // if(!bFlag){
+            //     MessageToast.show(this.getModel("I18N").getText("/NPG00002"));
+            //     return;
+            // }
 
 			oDetailsModel.addRecord({
 				"tenant_id": this._sTenantId,
@@ -278,9 +278,11 @@ sap.ui.define([
                 this._sLoginUserName = "TestUserName";
             }
 
-            console.log(this._sTenantId);
-            console.log(this._sControlOptionCode);
-            console.log(this._slayout);
+            //ScrollTop
+            var oObjectPageLayout = this.getView().byId("page");
+            var oFirstSection = oObjectPageLayout.getSections()[0];
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
+
 
             this.getView().setBusy(true);
             
