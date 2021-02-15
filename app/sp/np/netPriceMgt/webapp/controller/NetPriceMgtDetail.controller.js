@@ -759,6 +759,7 @@ sap.ui.define([
                                 generalInfoObj.currency_code = item.currency_code;
                                 generalInfoObj.net_price = parseFloat(item.net_price);
                                 generalInfoObj.vendor_pool_code = item.vendor_pool_code;
+                                generalInfoObj.net_price_type_code = item.net_price_type_code;
                                 generalInfoObj.market_code = item.market_code;
                                 //generalInfoObj.maker_name = item.maker_name;
                                 generalInfoObj.net_price_approval_reason_code = item.net_price_approval_reason_code;

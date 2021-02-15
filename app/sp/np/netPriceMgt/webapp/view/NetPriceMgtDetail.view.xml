@@ -433,7 +433,7 @@
                                         <t:Column hAlign="Center" width="15rem">
                                             <Label text="Maker" textAlign="Center" />
                                             <t:template>
-                                                <Input type="Text" value="{generalInfoList>maker_name}" />
+                                                <Text text="{path: 'generalInfoList>maker_name'}" />
                                             </t:template>
                                         </t:Column>
                                         <t:Column hAlign="Center" width="10rem">
