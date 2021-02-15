@@ -135,16 +135,15 @@
 			<uxap:ObjectPageSection id="pageSectionMain" titleUppercase="false" title="{I18N>/BASIC_INFO}">
 				<uxap:subSections>
                     <uxap:ObjectPageSubSection>
-						<uxap:blocks>
-                            <VBox>
-                                <HBox alignItems="Center">
-                                    <Label
-                                        text="{I18N>/CATEGORY_GROUP}:"
-                                        class="sapUiTinyMarginEnd"
-                                        textAlign="Left"
-                                        labelFor="input"
-                                        required="true"/>
+                        <form:SimpleForm width="100%">
+                                <layout:Grid containerQuery="true" defaultSpan="XL12 L12">
                                     <VBox width="100%">
+                                        <Label
+                                            text="{I18N>/CATEGORY_GROUP}:"
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            required="true"/>
                                         <ComboBox
                                             width="50%"
                                             visible="{viewModel>/editMode}"
@@ -166,47 +165,35 @@
                                             </items>
                                         </ComboBox>
                                         <Text id="categoryGroupCodeTx" text="{master>/category_group_code}" visible="{viewModel>/showMode}" width="50%"/>
-                                    </VBox>
-                                </HBox>
-                                <HBox alignItems="Center">
-                                    <Label
-                                        text="{I18N>/REQUEST_TITLE}:"
-                                        class="sapUiTinyMarginEnd"
-                                        textAlign="Left"
-                                        labelFor="input"
-                                        required="true"/>
-                                    <VBox width="100%">
+                                    
+                                        <Label
+                                            text="{I18N>/REQUEST_TITLE}:"
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            required="true"/>
                                         <Input id="requestTitle" value="{master>/request_title}" visible="{viewModel>/editMode}" width="50%"/>
                                         <Text id="requestTitleTx" text="{master>/request_title}" visible="{viewModel>/showMode}" width="50%"/>
-                                    </VBox>
-                                </HBox>
-                                <HBox alignItems="Center">
-                                    <Label
-                                        text="{I18N>/REQUEST_CATEGORY_NAME}:"
-                                        class="sapUiTinyMarginEnd"
-                                        textAlign="Left"
-                                        labelFor="input"
-                                        required="true"/>
-                                    <VBox width="100%">
-                                        <Input id="requestCategoryName" value="{master>/request_category_name}" visible="{viewModel>/editMode}" width="50%" />
+                                    
+                                        <Label
+                                            text="{I18N>/REQUEST_CATEGORY_NAME}:"
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            required="true"/>
+                                        <Input id="requestCategoryName" value="{master>/request_category_name}" visible="{viewModel>/editMode}" width="50%"/>
                                         <Text id="requestCategoryNameTx" text="{master>/request_category_name}" visible="{viewModel>/showMode}" width="50%"/>
-                                    </VBox>
-                                </HBox>
-                                <HBox alignItems="Center">
-                                    <Label
-                                        text="{I18N>/SIMILAR_CATEGORY}: "
-                                        class="sapUiTinyMarginEnd"
-                                        textAlign="Left"
-                                        labelFor="input"
-                                        required="true"/>
-                                    <VBox width="100%">
+                                        
+                                        <Label
+                                            text="{I18N>/SIMILAR_CATEGORY}: "
+                                            class="sapUiTinyMarginEnd"
+                                            textAlign="Left"
+                                            labelFor="input"
+                                            required="true"/>
                                         <SearchField id="searchField" search=".onSearchPartCategory" value="{master>/similar_category_code}" visible="{viewModel>/editMode}" width="50%"/>
                                         <Text id="similarCategoryCode" text="{master>/similar_category_code}" visible="{viewModel>/showMode}" width="50%"/>
-                                    </VBox>
-                                </HBox>
-                                <VBox>
-                                    <Label text="{I18N>/DESCRIPTION}: " required="true"/>
-                                    <VBox width="100%">
+                                   
+                                        <Label text="{I18N>/DESCRIPTION}: " required="true"/>
                                         <!-- Text Editor 시작 -->
                                         <rte:RichTextEditor 
                                             width="100%" 
@@ -218,11 +205,12 @@
                                             showGroupInsert="true"
                                             visible="{viewModel>/editMode}" />
                                         <!-- Text Editor 끝 -->
-                                        <FormattedText height="200px" htmlText="{= ${master>/request_desc} ? ${master>/request_desc} : '' }" visible="{= !${viewModel>/editMode}}"/>
+                                        <FormattedText height="200px" htmlText="{= ${master>/request_desc} ? ${master>/request_desc} : '' }" visible="{= !${viewModel>/editMode}}" width="100%"/>
+                                        
                                     </VBox>
-                                </VBox>
-                            </VBox>
-						</uxap:blocks>
+                                </layout:Grid>
+                        </form:SimpleForm>
+
 					</uxap:ObjectPageSubSection>
                 </uxap:subSections>
             </uxap:ObjectPageSection>

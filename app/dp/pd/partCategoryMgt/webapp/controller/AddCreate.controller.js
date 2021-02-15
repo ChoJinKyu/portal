@@ -23,10 +23,13 @@ sap.ui.define([
     "sap/ui/model/odata/v2/ODataModel",
     "sap/ui/model/FilterType",
     "dp/util/control/ui/IdeaManagerDialog",
-    "ext/lib/formatter/NumberFormatter"
+    "ext/lib/formatter/NumberFormatter",
+    "ext/lib/core/service/ODataV2ServiceProvider",
+    "ext/lib/model/TreeListModel"
 ], function (BaseController, Multilingual, TransactionManager, ManagedModel, ManagedListModel, JSONModel, Validator, DateFormatter,
     Filter, FilterOperator, Fragment, MessageBox, MessageToast, History,
-    ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel,FilterType,IdeaManagerDialog,NumberFormatter) {
+    ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, RichTextEditor, ODataModel,FilterType,IdeaManagerDialog,NumberFormatter,ODataV2ServiceProvider
+    , TreeListModel) {
     "use strict";
 
     var oTransactionManager;
@@ -40,12 +43,12 @@ sap.ui.define([
 
         loginUserId: new String,
         loginUserName: new String,
-        supplier_code: new String,
-        supplier_local_name: new String,
         tenant_id: new String,
-        statusGloCode: new String,
-        supplierType: Boolean,
-
+        category_code: new String,
+        category_group_code: new String,
+        request_category_name: new String,
+        similar_category_code: new String,
+        pdPartCategoryLngArr: new Array,
         /* =========================================================== */
         /* lifecycle methods                                           */
         /* =========================================================== */
@@ -59,25 +62,16 @@ sap.ui.define([
             //로그인 세션 작업완료시 수정
             this.loginUserId = "TestUser";
             this.loginUserName = "TestUser";
-            this.tenant_id = "L2100";
-            this.supplier_code = "KR01820500";
-            this.supplier_local_name = "공급업체";
-            this.supplierType = true;
+            this.tenant_id = "L2101";
+            this.viewType = false;
 
-            if(!this.supplierType){
-                this.getView().byId('attachBlock').setVisible(true);
-            }
-            
-
-            //법인 필터
-            this.setCompanyFilter();
 
             var oMultilingual = new Multilingual();
             this.setModel(oMultilingual.getModel(), "I18N");
             this.setModel(new ManagedModel(), "master");
-            this.setModel(new ManagedModel(), "details");
-            this.setModel(new ManagedModel(), "supplierPerform");
-            this.setModel(new JSONModel(), "midObjectViewModel");
+            this.setModel(new ManagedModel(), "PdPartCategoryModel");
+            this.setModel(new ManagedModel(), "pdPartCategoryLng");
+            this.setModel(new ManagedModel(), "pdActivityStdDayView");
 
 			var oViewModel = new JSONModel({
                     showMode: true,                    
@@ -90,98 +84,16 @@ sap.ui.define([
             
             oTransactionManager = new TransactionManager();
             oTransactionManager.addDataModel(this.getModel("master"));
-            oTransactionManager.addDataModel(this.getModel("details"));
+            oTransactionManager.addDataModel(this.getModel("PdPartCategoryModel"));
+            oTransactionManager.addDataModel(this.getModel("pdPartCategoryLng"));
+            oTransactionManager.addDataModel(this.getModel("pdActivityStdDayView"));
 
-            //this.getRouter().getRoute("selectionPage").attachPatternMatched(this._onRoutedThisPage, this);
+            this.getRouter().getRoute("addCreatePage").attachPatternMatched(this._onRoutedThisPage, this);
 
             this.enableMessagePopover();
-        },
 
-        /**
-         * 세션에서 받은 tenant_id 로 필터 걸어주기
-         */
-        setCompanyFilter: function () {
-            var oSelect, oBinding, aFilters;
-            oSelect = this.getView().byId('ideaCompany');
-            oBinding = oSelect.getBinding("items");
-            aFilters = [];
-            aFilters.push( new Filter("tenant_id", 'EQ', this.tenant_id) );
-            //oBinding.filter(aFilters, FilterType.Application); 
-        },
-        
-
-        _fnInitModel : function(){
-            // console.log("_fnInitModel");
-            
-            var date = new Date();
-            var year = date.getFullYear();
-            var month = ("0" + (1 + date.getMonth())).slice(-2);
-            var day = ("0" + date.getDate()).slice(-2);
-            var toDate = year + "/" + month + "/" + day;
-            var toDate2 = year + "-" + month + "-" + day;
-
-            this.getView().byId("ideaDate").setText(toDate);
             
 
-            var oViewModel = this.getView().getModel("master");
-            oViewModel.setData({}, "/IdeaView");
-            oViewModel.setData({
-                "tenant_id": this._sTenantId,
-                "company_code": this._sCompanyCode,
-                "idea_number": "New",
-				"idea_title": "",
-                "idea_date": null,
-				
-				"idea_progress_status_code": "NEW",
-				"idea_progress_status_name": "NEW",
-                "supplier_code": this.supplier_code,
-                "supplier_local_name": this.supplier_local_name,
-                "idea_create_user_id": this.loginUserId,
-				
-				
-                "idea_create_user_local_name": this.loginUserName,
-				"bizunit_code": null,
-				"bizunit_name": null,
-				"idea_product_group_code": null,
-				"idea_product_group_name": null,
-
-
-				"idea_type_code": null,
-				"idea_type_name": null,
-				"idea_period_code": null,
-				"idea_period_name": null,
-				"idea_manager_empno": null,
-
-				"idea_manager_local_name": null,
-				"idea_part_desc": null,
-				"current_proposal_contents": null,
-				"change_proposal_contents": null,
-				"idea_contents": null,
-
-                "attch_group_number": null,                
-				"material_code": null,
-				"purchasing_uom_code": null,
-				"currency_code": null,
-                "vi_amount": null,
-                
-				"monthly_mtlmob_quantity": null,
-				"monthly_purchasing_amount": null,
-				"annual_purchasing_amount": null,
-				"perform_contents": null
-
-            }, "/IdeaView");
-            var oViewModel2 = this.getView().getModel("details");
-            oViewModel2.setData({}, "/SupplierIdea");
-            oViewModel2.setData({
-                "tenant_id": this._sTenantId,
-                "company_code": this._sCompanyCode,
-                "idea_number": "New",
-                "supplier_code": this.supplier_code,
-                "idea_progress_status_name": "NEW",
-                "idea_create_user_id": this.loginUserId,
-                "create_user_id": this.loginUserId,
-                "update_user_id": this.loginUserId,
-            }, "/SupplierIdea");
         },
 
 		/**
@@ -192,29 +104,25 @@ sap.ui.define([
         _onRoutedThisPage: function (oEvent) {
             var oArgs = oEvent.getParameter("arguments"),
                 oView = this.getView();
-            this._sTenantId = oArgs.tenantId;
-            this._sCompanyCode = oArgs.companyCode;
-            this._sIdeaNumber = oArgs.ideaNumber;
-            var oMasterModel = this.getModel("master");
-            oMasterModel.setProperty("/IdeaView", {});
-            var oDetailModel = this.getModel("details");
-            oDetailModel.setProperty("/SupplierIdea", {});
-
-            this.validator.clearValueState(this.byId("midObjectForm"));
-            if (oArgs.ideaNumber == "new") {
                 
-                // console.log("###신규저장");
-                this._fnInitModel();
-                this._sTenantId = oArgs.tenantId;
-                this._sCompanyCode = oArgs.companyCode;
-                this._sIdeaNumber = "new";
-                this._toEditMode();
-                oView.byId("ideaCompany").setValue(this._sCompanyCode);
-                oDetailModel.setTransactionModel(this.getModel());
-            } else {
-                // console.log("###수정");
-                this.onSearch(oArgs.ideaNumber);
-            }
+            this._sRequestNumber = oArgs.requestNumber;
+            
+            //세션에서 받아서 넣어 주어야 함
+            this._sLanguageCd = "KO";
+            //테스트용
+            // this.category_code = "PC2012300001";
+
+
+            var oMasterModel = this.getModel("master");
+            oMasterModel.setProperty("/pdPartCategoryCreationRequestView", {});
+
+            var oPdPartCategory = this.getModel("PdPartCategoryModel");
+            var oPdPartCategoryLng = this.getModel("pdPartCategoryLng");
+            var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
+
+            
+            this.validator.clearValueState(this.byId("midObjectForm"));
+            this.onSearch(oArgs.requestNumber);
         },
 
         
@@ -225,127 +133,335 @@ sap.ui.define([
 		 * 조회
 		 * @public
 		 */
-        onSearch: function (idea_number) {
+        onSearch: function (requestNumber) {
             var oView = this.getView();
-            var sObjectPath = "/IdeaView(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',idea_number='" + idea_number + "')";
-            var oMasterModel = this.getModel("master");
-            var v_this = this;
-            this.statusGloCode = "";
 
+            var sObjectPath = "/pdPartCategoryCreationRequestView(tenant_id='" + this.tenant_id + "',request_number='" + requestNumber + "')";
+            var oMasterModel = this.getModel("master");
+            var v_this = this;            
+            var oPdPartCategory = this.getModel("PdPartCategoryModel");
+            var oPdPartCategoryLng = this.getModel("pdPartCategoryLng");
+            var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
+
+
+            this.getModel("PdPartCategoryModel").setData({});
+            this.getModel("pdPartCategoryLng").setData([]);
+            this.getModel("pdActivityStdDayView").setData({});
             //테스트 에러로 
             //oView.setBusy(true);
             oMasterModel.setTransactionModel(this.getModel());
             oMasterModel.read(sObjectPath, {
                 success: function (oData) {
-                    oView.byId("ideaCompany").setValue(oData.company_code);
+                    // console.log("master");
+                    // console.log(oData);
+                    v_this.category_group_code = oData.category_group_code;
+                    v_this.request_category_name = oData.request_category_name;
+                    v_this.similar_category_code = oData.similar_category_code;
+
+                    if(oData.create_category_code == null || oData.create_category_code == ""  ){
+                        v_this.category_code = "new";
+                        v_this.viewType = false;
+                    }else{
+                        v_this.category_code = oData.create_category_code;
+                        v_this.viewType = true;
+                    }
+                    v_this.onSearchAfter(v_this.category_code);
+
+                    if(v_this.viewType){
+                        v_this._toShowMode();
+                    }else{
+                        v_this._toEditMode();
+                    }
+
                     oView.setBusy(false);
                 }
             });
             
-            var sObjectPath2 = "/SupplierIdea(tenant_id='" + this._sTenantId + "',company_code='" + this._sCompanyCode + "',idea_number='" + idea_number+ "')";
-            var oDetailsModel = this.getModel("details");
             
-            oView.setBusy(true);
-            oDetailsModel.setTransactionModel(this.getModel());
-            oDetailsModel.read(sObjectPath2, {
-                success: function (oData) {
-                    v_this.statusGloCode = oData.idea_progress_status_code;
-                    v_this._toShowMode();
-                    oView.setBusy(false);
-                }
-            });
 
         },
+
+        onSearchAfter: function (category_code) {
+            var oView = this.getView();
+            var v_this = this;            
+            var oPdPartCategory = this.getModel("PdPartCategoryModel");
+            var oPdPartCategoryLng = this.getModel("pdPartCategoryLng");
+            var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
+           
+            this.getModel("PdPartCategoryModel").setData({});
+            this.getModel("pdPartCategoryLng").setData([]);
+            this.getModel("pdActivityStdDayView").setData({});
+
+            var aFilters = [];
+            aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this.tenant_id ));
+            aFilters.push(new Filter("category_group_code", FilterOperator.EQ, this.category_group_code));
+            aFilters.push(new Filter("category_code", FilterOperator.EQ, category_code));
+
+            // console.log(aFilters);
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.PartCategoryService/").read("/PdPartCategory", {
+                filters: aFilters,
+                success: function (oData) {
+                    // console.log("PdPartCategory");
+                    // console.log(oData);
+                    //var oModel = new sap.ui.model.json.JSONModel(oData.results[0]);
+                    if(oData.results.length > 0){
+                        this.getModel("PdPartCategoryModel").setData(oData.results[0]);
+                    }
+                }.bind(this)
+            });
+
+    
+            var aFilters2 = [];
+            aFilters2.push(new Filter("tenant_id", FilterOperator.EQ, this.tenant_id ));
+            aFilters2.push(new Filter("category_group_code", FilterOperator.EQ, this.category_group_code));
+            aFilters2.push(new Filter("category_code", FilterOperator.EQ, category_code));
+            // aFilters2.push(new Filter("language_cd", FilterOperator.EQ, this._sLanguageCd));
+            
+                    // console.log(aFilters2);
+            //test
+            // aFilters2.push(new Filter("category_code", FilterOperator.EQ, "PC2012300001"));
+
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.PartCategoryService/").read("/pdPartCategoryLng", {
+                filters: aFilters2,
+                success: function (oData) {
+                    // console.log("pdPartCategoryLng");
+                    // console.log(oData);
+                    if( this.category_code =="new"){
+                        oData.results = [{
+                            "tenant_id": this.tenant_id,
+                            "category_group_code": this.category_group_code,
+                            "category_code": "new",
+                            "language_cd": "KO",
+                            "code_name": this.request_category_name,
+                            "local_create_dtm": "",
+                            "local_update_dtm": "",
+                            "create_user_id": "",
+                            "update_user_id": "",
+                            "system_create_dtm": "",
+                            "system_update_dtm": ""
+                        }];
+                    }
+                    this.getModel("pdPartCategoryLng").setData(oData.results);
+                    // console.log(this.getModel("pdPartCategoryLng"));
+                    this.pdPartCategoryLngArr = oData.results;
+                    
+                    // var sTitle = this.getModel("I18N").getText("/LANGUAGE")+" ";
+
+                    //console.log(sTitle+" ["+iTotalItems+"]");
+                    //this.byId("pageSectionMain2").setTitle(sTitle+"("+oData.results.length+")");
+
+                }.bind(this)
+            });
+
+            if(this.similar_category_code==null || this.similar_category_code =="" || this.similar_category_code == undefined){
+                this.similar_category_code = "new";
+            }
+            this.onSearchPdActivityStdDayView(this.similar_category_code);
+                
+        },
+
+        onSearchPdActivityStdDayView: function (similar_category_code) {
+            var oView = this.getView();
+            var v_this = this;
+            var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
+           
+            //테스트  pdPartCategoryCreationRequestView 에서 데이터를 가져오지 못하므로 임시 작업 
+            //similar_category_code = "PC2012300007";
+
+            var aFilters3 = [];
+            aFilters3.push(new Filter("tenant_id", FilterOperator.EQ, this.tenant_id ));
+            aFilters3.push(new Filter("category_group_code", FilterOperator.EQ, this.category_group_code));
+            aFilters3.push(new Filter("category_code", FilterOperator.EQ, similar_category_code ));
+            // aFilters3.push(new Filter("category_code", FilterOperator.EQ, this.similar_category_code ));
+
+
+            ODataV2ServiceProvider.getServiceByUrl("srv-api/odata/v2/dp.activityStdDayService/").read("/pdActivityStdDayView", {
+                filters: aFilters3,
+                success: function (oData) {
+                    // console.log("pdActivityStdDayView");
+                    // console.log(oData);
+                    this.getModel("pdActivityStdDayView").setData(oData.results);
+            
+                    this.toTop();
+                    
+                }.bind(this)
+            });
+            this.toTop();
+        },
+        /**
+         * 리스트 레코드 추가
+         * @public
+         */
+        toTop: function () {
+            //ScrollTop
+            var oObjectPageLayout = this.getView().byId("page");
+            var oFirstSection = oObjectPageLayout.getSections()[0];
+            oObjectPageLayout.scrollToSection(oFirstSection.getId(), 0, -500);
+        },
+
+        
+        /**
+         * 리스트 레코드 추가
+         * @public
+         */
+        onAdd: function () {
+            this.pdPartCategoryLngArr.push({
+                "tenant_id": this.tenant_id,
+                "category_group_code": this.category_group_code,
+                "category_code": "new",
+                "language_cd": "KO",
+                "code_name": "",
+                "local_create_dtm": "",
+                "local_update_dtm": "",
+                "create_user_id": "",
+                "update_user_id": "",
+                "system_create_dtm": "",
+                "system_update_dtm": ""
+            });
+            this.getModel("pdPartCategoryLng").setData(this.pdPartCategoryLngArr);
+            
+        },
+
+        onDelete: function () {
+            var oTable = this.byId("midTable2"),
+                oModel = this.getModel("pdPartCategoryLng"),
+                aItems = oTable.getSelectedItems(),
+                aIndices = [];
+            var v_this = this;
+            var cntArr = [];
+            aItems.forEach(function (oItem) {
+                // aIndices.push(oItem.getBindingContext("pdPartCategoryLng") )  ;
+                cntArr.push( oItem.getBindingContext("pdPartCategoryLng").sPath.split("/")[1] );
+
+            });
+            for(var i=cntArr.length-1; i > -1; i--){
+                v_this.pdPartCategoryLngArr.splice( cntArr[i]  , 1);
+            }
+            this.getModel("pdPartCategoryLng").setData(v_this.pdPartCategoryLngArr);
+            oTable.removeSelections(true);
+
+        },
+
+
 
 		/**
 		 * Event handler for saving page changes
 		 * @public
 		 */
-        onPageSaveButtonPress: function (flag) {
+        onPageSaveButtonPress: function () {
             
+            // console.log("onPageSaveButtonPress start");
             var oView = this.getView(),
-                oDetailsModel = this.getModel("details"),
                 v_this = this;
-            var oData = oDetailsModel.oData;
-            var statsCode = "DRAFT";
-            var CUType = "C";            
-                var inputData = {
-                    inputdata : {}
-                };
-            if (this._sIdeaNumber !== "new"){
-                CUType = "U";
-                /*
-                    진행상태에 대한 정의가 필요 하며 정의에 따른 진행상태 셋팅 필요
-                    idea_progress_status_code
-                    업체에서 SUBMIT인 경우 정의 필요
-                */
-                if( flag == "T"){
-                    if(!oDetailsModel.isChanged() ) {
-                        MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
-                        return;
-                    }
-                    statsCode = "DRAFT";
-                }else if( flag == "R"){
-                    statsCode = "SUBMIT";
-                }
-            }if( flag == "D"){
-                CUType = "D";
-                statsCode = "DELETE";
-            }
-            if(oData.vi_amount=="" ||  oData.vi_amount==null || parseInt(oData.vi_amount) == undefined || parseInt(oData.vi_amount) == NaN){
-                oData.vi_amount = "0";
-            }
-            if(oData.monthly_mtlmob_quantity=="" || oData.monthly_mtlmob_quantity==null || parseInt(oData.monthly_mtlmob_quantity) == undefined || parseInt(oData.monthly_mtlmob_quantity) == NaN){
-                oData.monthly_mtlmob_quantity = "0";
-            }
-            if(oData.monthly_purchasing_amount=="" || oData.monthly_purchasing_amount==null || parseInt(oData.monthly_purchasing_amount) == undefined || parseInt(oData.monthly_purchasing_amount) == NaN){
-                oData.monthly_purchasing_amount = "0";
-            }
-            if(oData.annual_purchasing_amount=="" || oData.annual_purchasing_amount==null || parseInt(oData.annual_purchasing_amount) == undefined || parseInt(oData.annual_purchasing_amount) == NaN){
-                oData.annual_purchasing_amount = "0";
-            }
-
-            inputData.inputdata = {
-                tenant_id                            : oData.tenant_id                  ,
-                company_code                         : oData.company_code               ,
-                idea_number                          : oData.idea_number                ,
-                idea_title                           : oData.idea_title                 ,
-                idea_progress_status_code            : statsCode                         ,
-
-                supplier_code                        : oData.supplier_code              ,
-                idea_create_user_id                  : this.loginUserId                 ,
-                bizunit_code                         : oData.bizunit_code               ,
-                idea_product_group_code              : oData.idea_product_group_code    ,
-                idea_type_code                       : oData.idea_type_code             ,
-
-                idea_period_code                     : oData.idea_period_code           ,
-                idea_manager_empno                   : oData.idea_manager_empno         ,
-                idea_part_desc                       : oData.idea_part_desc             ,
-                current_proposal_contents            : oData.current_proposal_contents  ,
-                change_proposal_contents             : oData.change_proposal_contents   ,
                 
-                idea_contents                        : oData.idea_contents              ,
-                attch_group_number                   : oData.attch_group_number         ,
-                create_user_id                       : this.loginUserId                 ,
-                update_user_id                       : this.loginUserId                 ,
-                material_code                        : oData.material_code         ,
-                
-                purchasing_uom_code                  : oData.purchasing_uom_code         ,
-                currency_code                        : oData.currency_code         ,
-                vi_amount                            : oData.vi_amount         ,
-                monthly_mtlmob_quantity              : oData.monthly_mtlmob_quantity         ,
-                monthly_purchasing_amount            : oData.monthly_purchasing_amount         ,
-                
-                annual_purchasing_amount             : oData.annual_purchasing_amount         ,
-                perform_contents                     : oData.perform_contents         ,
-                crd_type_code                        : CUType
-            }
-
             if(this.validator.validate(this.byId("midObjectForm")) !== true) return;
-
-            var url = "srv-api/odata/v4/dp.SupplierIdeaMgtV4Service/SaveIdeaProc";
             
-            // console.log(inputData);
+
+            var oPdPartCategory = this.getModel("PdPartCategoryModel");
+            var oPdPartCategoryLng = this.getModel("pdPartCategoryLng");
+            var oPdActivityStdDayView = this.getModel("pdActivityStdDayView");
+            var oTableLang = this.byId("midTable2");
+            
+
+            // if (this.category_code =! "new"){
+            //     CUType = "U";
+            //     if(!oPdPartCategory.isChanged() ) {
+            //         MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+            //         return;
+            //     }
+            // }
+
+            var oData = oPdPartCategory.oData;
+            var CUType = "C";
+
+            // console.log(oData);
+            // console.log(this.byId("statusButton").getSelectedKey());
+
+            //20210209 설계자 요청으로 category_code 에 requestNumber를 마스터 데이터에 넣기로 함
+            var pdMstVal = {
+					tenant_id       : this.tenant_id,
+                    category_group_code   : this.category_group_code,
+                    category_code     : this._sRequestNumber,
+                    parent_category_code        : oData.parent_category_code,
+                    sequence     : oData.sequence.trim(),
+
+                    active_flag  : this.getView().byId("statusButton").getSelectedKey(),
+                    update_user_id  : this.loginUserId,
+                    crud_type_code  : CUType
+            };
+
+            var input = {
+                inputData : {
+                    crud_type : CUType,
+                    pdMst : pdMstVal,
+                    pdDtl: [],
+                    pdSD: []
+                }
+            };
+            var pdDtlVal = [];
+            
+            for (var i = 0; i <  this.pdPartCategoryLngArr.length; i++) {
+                pdDtlVal.push({
+                    tenant_id: this.pdPartCategoryLngArr[i].tenant_id,
+                    category_group_code: this.pdPartCategoryLngArr[i].category_group_code,
+                    category_code: this.pdPartCategoryLngArr[i].category_code,
+                    langauge_cd: this.pdPartCategoryLngArr[i].language_cd,
+                    code_name: this.pdPartCategoryLngArr[i].code_name,
+                    
+                    update_user_id: this.loginUserId,
+                    crud_type_code: CUType
+                });
+            }
+            input.inputData.pdDtl = pdDtlVal;
+
+            
+            var pdSDVal = [];
+            
+            var oTableSd = this.byId("tableSd");
+            var oDataSd = oPdActivityStdDayView.oData;
+            
+            for (var i = 0; i < oDataSd.length; i++) {
+                
+                if(oDataSd[i].s_grade_standard_days=="" ||  oDataSd[i].s_grade_standard_days==null || parseInt(oDataSd[i].s_grade_standard_days) == undefined || parseInt(oDataSd[i].s_grade_standard_days) == NaN){
+                    oDataSd[i].s_grade_standard_days = "0";
+                }
+                if(oDataSd[i].a_grade_standard_days=="" ||  oDataSd[i].a_grade_standard_days==null || parseInt(oDataSd[i].a_grade_standard_days) == undefined || parseInt(oDataSd[i].a_grade_standard_days) == NaN){
+                    oDataSd[i].a_grade_standard_days = "0";
+                }
+                if(oDataSd[i].b_grade_standard_days=="" ||  oDataSd[i].b_grade_standard_days==null || parseInt(oDataSd[i].b_grade_standard_days) == undefined || parseInt(oDataSd[i].b_grade_standard_days) == NaN){
+                    oDataSd[i].b_grade_standard_days = "0";
+                }
+                if(oDataSd[i].c_grade_standard_days=="" ||  oDataSd[i].c_grade_standard_days==null || parseInt(oDataSd[i].c_grade_standard_days) == undefined || parseInt(oDataSd[i].c_grade_standard_days) == NaN){
+                    oDataSd[i].c_grade_standard_days = "0";
+                }
+                if(oDataSd[i].d_grade_standard_days=="" ||  oDataSd[i].d_grade_standard_days==null || parseInt(oDataSd[i].d_grade_standard_days) == undefined || parseInt(oDataSd[i].d_grade_standard_days) == NaN){
+                    oDataSd[i].d_grade_standard_days = "0";
+                }
+                pdSDVal.push({
+                    tenant_id: oDataSd[i].tenant_id,
+                    activity_code: oDataSd[i].activity_code,
+                    category_group_code: oDataSd[i].category_group_code,
+                    
+                    // category_code: oDataSd[i].category_code,
+                    category_code: "new",
+                    s_grade_standard_days: oDataSd[i].s_grade_standard_days.trim(),
+
+                    a_grade_standard_days: oDataSd[i].a_grade_standard_days.trim(),
+                    b_grade_standard_days: oDataSd[i].b_grade_standard_days.trim(),
+                    c_grade_standard_days: oDataSd[i].c_grade_standard_days.trim(),
+                    d_grade_standard_days: oDataSd[i].d_grade_standard_days.trim(),
+
+                    active_flag: oDataSd[i].active_flag.toString(),
+                    update_user_id: this.loginUserId,
+                    crud_type_code: CUType
+                });
+            }
+            input.inputData.pdSD = pdSDVal;
+
+
+            var url = "srv-api/odata/v4/dp.partCategoryV4Service/PdPartCategorySaveProc";
+            
+            console.log(input);
 			oTransactionManager.setServiceModel(this.getModel());
 			MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
 				title : this.getModel("I18N").getText("/SAVE"),
@@ -356,58 +472,44 @@ sap.ui.define([
                         $.ajax({
                             url: url,
                             type: "POST",
-                            data: JSON.stringify(inputData),
+                            data: JSON.stringify(input),
                             contentType: "application/json",
                             success: function (rst) {
                                 // console.log(rst);
-                                if(rst.return_code =="S"){
+                                if(rst.return_code =="OK"){
                                     sap.m.MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
-                                    if( flag == "T"){
-                                        v_this.onSearch(rst.return_msg );
-                                    }else if( flag == "R"){
-                                        v_this.onPageNavBackButtonPress();
-                                    }else if( flag == "D"){
-                                        v_this.onPageNavBackButtonPress();
-                                    }
+                                    v_this.onPageNavBackButtonPress();
                                 }else{
                                     // console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
+                                    MessageBox.error("error : "+rst.return_msg );
                                 }
                             },
                             error: function (rst) {
-                                    // console.log("eeeeee");
-                                    // console.log(rst);
-                                    sap.m.MessageToast.show( "error : "+rst.return_msg );
-                                    v_this.onSearch(rst.return_msg );
+                                // console.log(rst);
+                                MessageBox.error("error : "+rst.return_msg );
                             }
                         });
 					};
 				}
             });
             this.validator.clearValueState(this.byId("midObjectForm"));
+            
 
         },
 
         _toShowMode: function () {
             var oMasterModel = this.getModel("master");
-            var oDetailsModel = this.getModel("details");
-            var oData = oDetailsModel.oData;
+            var oPartCategoryService = this.getModel("partCategoryService");
+            var oData = oPartCategoryService.oData;
 
             this.getView().getModel("viewModel").setProperty("/showMode", true);
             this.getView().getModel("viewModel").setProperty("/editMode", false);
             this.byId("page").setProperty("showFooter", true);
             
             this.byId("pageNavBackButton").setVisible(true);
-            if(this.statusGloCode =="DRAFT" || this.statusGloCode =="REQUEST REWRITING"){
-                this.byId("pageEditButton").setEnabled(true);
-            }else{
-                this.byId("pageEditButton").setEnabled(false);
-            }
             this.byId("pageSaveButton").setEnabled(false);
             this.byId("pageCancelButton").setEnabled(false);
             this.byId("pageListButton").setEnabled(true);
-            this.byId("pageSubmitButton").setEnabled(false);
-            this.byId("pageDeleteButton").setEnabled(false);
         },
         
         _toEditMode: function () {
@@ -416,14 +518,9 @@ sap.ui.define([
             var oMasterModel = this.getModel("master")
             this.byId("page").setProperty("showFooter", true);
             this.byId("pageNavBackButton").setVisible(false);
-            this.byId("pageEditButton").setEnabled(false);
             this.byId("pageSaveButton").setEnabled(true);
-            if (this._sIdeaNumber !== "new"){
-                this.byId("pageDeleteButton").setEnabled(true);
-            }
             this.byId("pageCancelButton").setEnabled(true);
             this.byId("pageListButton").setEnabled(false);
-            this.byId("pageSubmitButton").setEnabled(true);
         },
 
         
@@ -443,11 +540,11 @@ sap.ui.define([
 		 */
         onPageCancelButtonPress: function () {
             this.validator.clearValueState(this.byId("midObjectForm"));
-            if (this._sIdeaNumber !== "new"){
-                this._toShowMode();
-            }else{
+            // if (this._sRequestNumber !== "new"){
+            //     this._toShowMode();
+            // }else{
                 this.getRouter().navTo("mainPage", {}, true);
-            }
+            // }
         },
 
 		/**
@@ -505,18 +602,97 @@ sap.ui.define([
                 }
             this.oSearchIdeaManagerDialog.open();
 
-        },
-
-        
-        /**
-         * 코드 체크
-         */
-        onNameChk : function(e) {
-            // console.log(e);
-            var oView = this.getView();
-            var ideaManagerId = this.getView().byId("ideaManagerId");
-            ideaManagerId.setValue("");
         }
 
+
+
+
+        , onMilestoneButtonPress: function (oEvent) {
+            if(oEvent.getSource().getPressed() ){
+                oEvent.getSource().setText("No");
+            }else{
+                oEvent.getSource().setText("Yes");
+            }
+        }
+
+
+        
+        , onSearchPartCategory: function (oEvent) {
+            var oButton = oEvent.getSource(),
+                oView = this.getView();
+
+            if (!this.treeDialog) {
+                this.treeDialog = Fragment.load({
+                    id: oView.getId(),
+                    name: "dp.pd.categoryCreationRequestMgt.view.PartCategory",
+                    controller: this
+                }).then(function (tDialog) {
+                    oView.addDependent(tDialog);
+                    return tDialog;
+                }.bind(this));
+            }
+
+            this.treeDialog.then(function (tDialog) {
+                tDialog.open();
+                this.onDialogTreeSearch();
+            }.bind(this));
+        }
+
+        , onDialogTreeSearch: function (oEvent) {
+
+            var treeFilter = [];
+
+
+            treeFilter.push(new Filter({
+                filters: [
+                    new Filter("tenant_id", FilterOperator.EQ, "L2101"),
+                    new Filter("category_group_code", FilterOperator.EQ, "CO")
+                ],
+                and: false
+            }));
+            
+            this.treeListModel = new TreeListModel(this.getView().getModel());
+            this.treeListModel
+                .read("/pdPartCategoryView", {
+                     filters: treeFilter
+                })
+                // 성공시
+                .then((function (jNodes) {
+                    this.getView().setModel(new JSONModel({
+                        "pdPartCategoryView": {
+                            "nodes": jNodes
+                        }
+                    }), "tree");
+                }).bind(this))
+                // 실패시
+                .catch(function (oError) {
+                })
+                // 모래시계해제
+                .finally((function () {
+                }).bind(this));
+
+        }
+
+        , selectPartCategoryValue: function (oEvent) {
+            
+            if( oEvent.getParameters().rowContext.sPath != undefined){
+                var row = this.getView().getModel("tree").getObject(oEvent.getParameters().rowContext.sPath);
+                this.getView().byId("searchField").setValue(  row.category_code );
+                //this.getView().byId("textCateCode").setText(  row.category_code );
+                
+                // this.getView().byId("searchField").setValue( "[" + row.category_code + " ] " + row.category_name);
+                // this.getView().byId("similarCategoryCode").setValue( "[" + row.category_code + " ] " + row.category_name);
+                this.onSearchPdActivityStdDayView(row.category_code);
+            }
+
+            this.partCategoryPopupClose();
+        }
+        
+        , partCategoryPopupClose: function (oEvent) {
+            this.byId("PartCategory").close();
+        }
+
+        
+        
     });
 });
