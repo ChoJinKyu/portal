@@ -47,6 +47,7 @@
                                 id="searchCategoryCombo"
                                 width="100%"
                                 selectedKey=""
+                                showSecondaryValues= "true"
                                 items="{
                                     path: 'util>/Code',
                                     filters: [
@@ -55,8 +56,11 @@
                                     ]
                                 }">
                                 <items>
-                                    <core:Item key="{util>code}" text="[{util>code}] {util>code_name}" />
-                                </items>
+                                    <core:ListItem
+                                        key="{util>code}" 
+                                        text="{util>code_name}" 
+                                        additionalText="{util>code}"/>
+                                 </items>
                             </ComboBox>
                             <layoutData>
                                 <layout:GridData span="XL2 L3 M6 S12" />

@@ -149,6 +149,7 @@
                                             width="50%"
                                             visible="{viewModel>/editMode}"
                                             id="categoryGroupCodeCombo"
+                                            showSecondaryValues= "true"
                                             selectedKey="{master>/category_group_code}"
                                             items="{
                                                 path: 'common>/Code',
@@ -158,7 +159,10 @@
                                                 ]
                                             }">
                                             <items>
-                                                <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
+                                                <core:ListItem
+                                                    key="{common>code}" 
+                                                    text="{common>code_name}" 
+                                                    additionalText="{common>code}"/>
                                             </items>
                                         </ComboBox>
                                         <Text id="categoryGroupCodeTx" text="{master>/category_group_code}" visible="{viewModel>/showMode}" width="50%"/>

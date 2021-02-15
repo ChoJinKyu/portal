@@ -57,14 +57,14 @@ sap.ui.define([
             console.log(" session >>> " , 'L2101');
             // Model used to manipulate control states
             oViewModel = new JSONModel({
-                assetListTableTitle: oResourceBundle.getText("assetListTableTitle"),
+                //assetListTableTitle: oResourceBundle.getText("assetListTableTitle"),
                 tableNoDataText: oResourceBundle.getText("tableNoDataText")
             });
             this.setModel(oViewModel, "assetListView");
 
             // Add the assetList page to the flp routing history
             this.addHistoryEntry({
-                title: oResourceBundle.getText("assetListViewTitle"),
+                //title: oResourceBundle.getText("assetListViewTitle"),
                 icon: "sap-icon://table-view",
                 intent: "#Template-display"
             }, true);
@@ -94,7 +94,6 @@ sap.ui.define([
         },
 
         onAfterRendering: function () {
-            //this.getModel().setDeferredGroups(["bindReceipt", "cancelBind", "delete", "receipt"]);
             //this.byId("pageSearchButton").firePress();
             return;
         },
@@ -394,8 +393,9 @@ sap.ui.define([
                 oRecord = this.getModel("list").getProperty(sPath);
             var pull_url = window.location.href;
             var complete_url;
+            
             // rrMgtDetail/{mold_id}/{request_number}
-            var targetPath = "/dp/md/remodelRepairMgtList/webapp/#/rrMgtDetail/"+oRecord.mold_id+"/New";
+            var targetPath = "/dp/md/remodelRepairMgtSup/webapp/#/rrMgtDetail/"+oRecord.mold_id+"/New";
             complete_url=pull_url.split(pull_url.substring(pull_url.indexOf("/dp"),pull_url.length));
             complete_url[0] = complete_url[0]+targetPath;
             window.location.href=complete_url[0];

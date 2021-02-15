@@ -128,7 +128,8 @@
     },
     "resourceRoots": {
       "ext.lib": "../../../../lib",
-      "dp.util": "../../../util"
+      "dp": "../../../../dp",
+      "dp.md.util": "../../../md/util"
     },
     "routing": {
       "config": {
@@ -165,7 +166,14 @@
               "target": [
                   "publishObject"
               ]
-          }
+          },
+        {
+            "pattern": "addCreateObject/{requestNumber}",
+            "name": "addCreatePage",
+            "target": [
+                "addCreateObject"
+            ]
+        }
       ],
       "targets": {
           "mainObject": {
@@ -181,6 +189,11 @@
         "publishObject": {
             "viewName": "Publish",
             "viewId": "publishPage",
+            "viewLevel": 2
+        },
+        "addCreateObject": {
+            "viewName": "AddCreate",
+            "viewId": "addCreatePage",
             "viewLevel": 2
         },
           "notFound": {

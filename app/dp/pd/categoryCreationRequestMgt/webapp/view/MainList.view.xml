@@ -43,6 +43,7 @@
                                 id="searchCategoryCombo"
                                 width="100%"
                                 selectedKey=""
+                                showSecondaryValues= "true"
                                 items="{
                                     path: 'common>/Code',
                                     filters: [
@@ -51,7 +52,10 @@
                                     ]
                                 }">
                                 <items>
-                                    <core:Item key="{common>code}" text="[{common>code}] {common>code_name}" />
+                                    <core:ListItem
+                                        key="{common>code}" 
+                                        text="{common>code_name}" 
+                                        additionalText="{common>code}"/>
                                 </items>
                             </ComboBox>
                             <layoutData>
