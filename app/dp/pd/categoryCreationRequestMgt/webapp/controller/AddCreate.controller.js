@@ -618,9 +618,15 @@ sap.ui.define([
 
         
         , onSearchPartCategory: function (oEvent) {
-            var oButton = oEvent.getSource(),
-                oView = this.getView();
-
+            console.log(oEvent);
+           // var oArgs = oEvent.getParameter("arguments");
+        
+            this.setObj = "searchField";
+            var oView = this.getView();
+            if(oEvent == 1){
+                this.setObj = "pGroupCategory";
+            }
+            console.log(oEvent);
             if (!this.treeDialog) {
                 this.treeDialog = Fragment.load({
                     id: oView.getId(),
@@ -674,18 +680,29 @@ sap.ui.define([
         }
 
         , selectPartCategoryValue: function (oEvent) {
-            
+            console.log(oEvent.getId());
             if( oEvent.getParameters().rowContext.sPath != undefined){
                 var row = this.getView().getModel("tree").getObject(oEvent.getParameters().rowContext.sPath);
-                this.getView().byId("searchField").setValue(  row.category_code );
-                //this.getView().byId("textCateCode").setText(  row.category_code );
-                
-                // this.getView().byId("searchField").setValue( "[" + row.category_code + " ] " + row.category_name);
-                // this.getView().byId("similarCategoryCode").setValue( "[" + row.category_code + " ] " + row.category_name);
-                this.onSearchPdActivityStdDayView(row.category_code);
+                if(this.setObj == "pGroupCategory"){
+                    if(row.drill_state == "leaf"){
+                        MessageToast.show("Parent Category만 선택할 수 있습니다.");
+                        return;
+                    } else {
+                        this.getView().byId(this.setObj).setValue(  row.category_code );
+                        this.onSearchPdActivityStdDayView(row.category_code);
+                    }
+                }else{
+                    if(row.drill_state != "leaf"){
+                        MessageToast.show("Leaf Category만 선택할 수 있습니다.");
+                        return;
+                    } else {
+                        this.getView().byId(this.setObj).setValue(  row.category_code );
+                        this.onSearchPdActivityStdDayView(row.category_code);
+                    }
+                }
             }
-
             this.partCategoryPopupClose();
+            
         }
         
         , partCategoryPopupClose: function (oEvent) {
