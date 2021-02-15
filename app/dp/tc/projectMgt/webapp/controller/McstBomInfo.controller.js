@@ -300,9 +300,9 @@ sap.ui.define([
                 let sPath = oCnxt.getPath();
                 let oRow = oTable.getModel("partListModel").getProperty(sPath);
                 if(oRow.change_info_code === "Old") {
-                    aAsisData.push( {material_code : oRow.material_code} );
+                    aAsisData.push( {material_code : oRow.material_code, material_desc : oRow.material_desc} );
                 } else if(oRow.change_info_code === "New") {
-                    aTobeData.push({material_code : oRow.material_code, change_reason : ""});
+                    aTobeData.push({material_code : oRow.material_code, material_desc : oRow.material_desc, change_reason : ""});
                 }
                 if(idx === 0) {
                     oBomMppingModel.setProperty("/tenant_id", oRow.tenant_id);
@@ -498,8 +498,12 @@ sap.ui.define([
             var aNewData = oBomMappingModel.getProperty("/Tobe");
             //저장시 material_desc 는 빼야 한다.
             var aSaveNewData = [];
+            var aSaveOldData = [];
             aNewData.forEach(function(oRow) {
                 aSaveNewData.push({material_code : oRow.material_code, change_reason : oRow.change_reason});
+            });
+            aOldData.forEach(function(oRow) {
+                aSaveOldData.push({material_code : oRow.material_code});
             });
 
             var oInputData = {
@@ -521,7 +525,7 @@ sap.ui.define([
             if(oBomMappData.mapping_id) {//update
                 oInputData.inputData.mapping_id = oBomMappData.mapping_id;
             } else {//create
-                oInputData.inputData.old_tbl = aOldData;
+                oInputData.inputData.old_tbl = aSaveOldData;
                 oInputData.inputData.project_code = oBomMappData.project_code;
                 oInputData.inputData.model_code = oBomMappData.model_code;
                 oInputData.inputData.version_number = oBomMappData.version_number;

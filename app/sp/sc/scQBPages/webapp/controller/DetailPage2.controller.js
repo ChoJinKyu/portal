@@ -421,7 +421,7 @@ sap.ui.define([
                     type: "GET",
                     contentType: "application/json",
                     success: function(data){
-                        // debugger;
+                        // 
                         var v_viewHeaderModel = oView.getModel("viewModel").getData();
                         v_viewHeaderModel.NegoHeaders = data.value[0];
 
@@ -447,14 +447,30 @@ sap.ui.define([
 
                         this._supplierNumberModel(String(data.value[0].number_of_award_supplier));
                         
-    
-
+                        // contact point add token
+                        if(data.value[0].contact_point != null){
+                            this.byId("inputContactPoint").addToken(new sap.m.Token({
+                                text: data.value[0].contact_point.employee_name,
+                                key: data.value[0].contact_point.employee_number
+                            }));
+                        }
+                        
+                        
                         oView.getModel("NegoHeaders").setProperty("/open_date" , new Date(data.value[0].open_date));
                         oView.getModel("NegoHeaders").setProperty("/closing_date" , new Date(data.value[0].closing_date));
                         oView.getModel("NegoHeaders").setProperty("/local_create_dtm" , new Date(data.value[0].local_create_dtm));
-                        oView.getModel("NegoHeaders").setProperty("/nego_document_desc" , decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))) );
-                        oView.getModel("NegoHeaders").setProperty("/note_content" , decodeURIComponent(escape(window.atob(data.value[0].note_content))) );
-                        oView.getModel("NegoHeaders").getProperty("/ItemsNonPrice")[0].note_content = decodeURIComponent(escape(window.atob(data.value[0].ItemsNonPrice[0].note_content)));
+                        if(data.value[0].nego_document_desc !=null){
+                            console.log("decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc)))======", decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))));
+                            oView.getModel("NegoHeaders").setProperty("/nego_document_desc" , decodeURIComponent(escape(window.atob(data.value[0].nego_document_desc))) );
+                        }
+                        if(data.value[0].note_content !=null){
+                            console.log("decodeURIComponent(escape(window.atob(data.value[0].note_content)))======", decodeURIComponent(escape(window.atob(data.value[0].note_content))));
+                            oView.getModel("NegoHeaders").setProperty("/note_content" , decodeURIComponent(escape(window.atob(data.value[0].note_content))) );
+                        }
+                        
+                        if(data.value[0].ItemsNonPrice.note_content){
+                            oView.getModel("NegoHeaders").getProperty("/ItemsNonPrice")[0].note_content = decodeURIComponent(escape(window.atob(data.value[0].ItemsNonPrice[0].note_content)));
+                        }
                         // editable="{=${propInfo>/isEditMode}}" 
                         this.byId("reDescription").setEditable(false);
                         this.byId("reNoteToSupplier").setEditable(false);
@@ -599,10 +615,14 @@ sap.ui.define([
                                 
                                 
                                 }  else {
-
+                                    if(this.byId("inputContactPoint").getTokens()[0]){
+                                        oModel.contact_point_empno = this.byId("inputContactPoint").getTokens()[0].getKey();
+                                    }
                                     this._CallUpsertProc("010");
                                     
                                 }
+                                
+                                
                             }
                         }.bind(this)
                     });
@@ -1518,10 +1538,19 @@ sap.ui.define([
                 }else if( typeof returnValue === "object" ){ // date type
                     result = new Date( oObj[oField] );
                 }else {
+                    
                     if( returnValue === "encoding" ){
-                        result = this.htmlEncoding(oObj[oField]);
+                        
+                        if(oObj[oField]){
+                            result = this.htmlEncoding(oObj[oField]);
+                        }else{
+                            result = null;
+                            returnValue = null;
+                        }
+                        
                     }else {
                         result = oObj[oField];
+                        // result = null;
                     }                    
                 }
 
@@ -1812,7 +1841,7 @@ sap.ui.define([
                 };
                 console.log(inputInfo);
 
-                debugger;
+                
 
                 // return;
 
@@ -1951,7 +1980,7 @@ sap.ui.define([
                     var oState = this._sumSupplierScore();
                 }
                 this._supplierNumInputStateChange(oState);
-                debugger;
+                
                 // var inputGroup = this.getView().getControlsByFieldGroupId("SupplierNumG1");
                 // for(var i=0; i< inputGroup.length; i++){
                 //     var cInput = inputGroup[i];
@@ -2133,14 +2162,31 @@ sap.ui.define([
                         }
                     });
                     this._EmployeeDialog.attachEvent("apply", function(oEvent){
-                        // oInput.setTokens(oEvent.getSource().getTokens());
+                        oInput.destroyTokens();
                         var oItem = oEvent.getParameters("item").item;
-                        this.getView().getModel("NegoHeaders").oData.contact_point = oItem;
-                        this.getView().getModel("NegoHeaders").oData.contact_point.employee_name = this.getView().getModel("NegoHeaders").oData.contact_point.user_local_name;
-                        console.log(this.getView().getModel("NegoHeaders").oData.contact_point.employee_number);
-                        this.getView().getModel("NegoHeaders").oData.contact_point_empno = this.getView().getModel("NegoHeaders").oData.contact_point.employee_number;
-                        oInput.setValue(oItem.user_local_name);
+                        oInput.addToken(new sap.m.Token({
+                            text: oItem.user_local_name,
+                            key: oItem.employee_number
+                        }));
                         oEvent.getSource().close(); //직접 닫아야 합니다.
+                        console.log("employee_number=========================", oItem.employee_number);
+                        
+                        // oInput.setTokens(oEvent.getSource().getTokens());
+                        
+                        // this.getView().getModel("NegoHeaders").oData.contact_point = oItem;
+                        // this.getView().getModel("NegoHeaders").oData.contact_point.employee_name = this.getView().getModel("NegoHeaders").oData.contact_point.user_local_name;
+                        // console.log(this.getView().getModel("NegoHeaders").oData.contact_point.employee_number);
+                        // this.getView().getModel("NegoHeaders").oData.contact_point_empno = this.getView().getModel("NegoHeaders").oData.contact_point.employee_number;
+                        // oInput.setValue(oItem.user_local_name);
+
+                        // // oInput.setTokens(oEvent.getSource().getTokens());
+                        // var oItem = oEvent.getParameters("item").item;
+                        // this.getView().getModel("NegoHeaders").oData.contact_point = oItem;
+                        // this.getView().getModel("NegoHeaders").oData.contact_point.employee_name = this.getView().getModel("NegoHeaders").oData.contact_point.user_local_name;
+                        // console.log(this.getView().getModel("NegoHeaders").oData.contact_point.employee_number);
+                        // this.getView().getModel("NegoHeaders").oData.contact_point_empno = this.getView().getModel("NegoHeaders").oData.contact_point.employee_number;
+                        // oInput.setValue(oItem.user_local_name);
+                        // oEvent.getSource().close(); //직접 닫아야 합니다.
                     }.bind(this));
                 }
                 this._EmployeeDialog.open();

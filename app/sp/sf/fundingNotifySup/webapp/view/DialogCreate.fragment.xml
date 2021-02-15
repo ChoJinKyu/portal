@@ -103,6 +103,8 @@
                         <VBox>
                             <Label text="신청금액(원) :" required="true"/>
                             <Input 
+                                id="applAmount"
+                                editable="false"
                                 fieldGroupIds="newInvestmentPlan"
                                 required="true"
                                 type="Number" 
@@ -262,6 +264,11 @@
                             </Column>
                             <Column hAlign="Right">
                                 <Label text="구입금액(원)" required="true"/>
+                                <footer>
+                                    <Text text="총 구입금액 : {
+                                        path: 'applicationSup>/popUpInvestPlanMst/sum_item_pur_amt', 
+                                        type: 'sap.ui.model.type.Integer'}" />
+                                </footer>
                             </Column>
                         </columns>
                         <items>
@@ -306,10 +313,10 @@
                         </items>
                     </Table>
                 </HBox>
-                <HBox class="investmentItemPurchasingAmtSum" alignItems="Center" justifyContent="End">
+                <!-- <HBox class="investmentItemPurchasingAmtSum" alignItems="Center" justifyContent="End">
                     <Label text="총 구입금액 : "/>
-                    <Text id ="investment_item_purchasing_amt_sum" text="{applicationSup>/popUpInvestPlanMst/sum_item_pur_amt}" class="inputPurchasingAmt" />
-                </HBox>
+                    <Text id ="investmentItemPurchasingAmtSum" text="{applicationSup>/popUpInvestPlanMst/sum_item_pur_amt}" class="inputPurchasingAmt" />
+                </HBox> -->
             </VBox>
         </content>
         

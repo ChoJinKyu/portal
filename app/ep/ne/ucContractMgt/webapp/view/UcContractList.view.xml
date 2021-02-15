@@ -135,7 +135,7 @@
                             </layoutData>
                         </VBox>
                         <VBox>
-                            <Label text="계약일수(%) :" labelFor="searchDayCount"></Label>
+                            <Label text="계약경과율(%) :" labelFor="searchDayCount"></Label>
                             <Slider id="searchDayCount" enableTickmarks="true" showAdvancedTooltip="true" step="5" min="0" max="100" width="100%" />
                             <layoutData>
                                 <layout:GridData span="XL2 L2 M12 S12" />
@@ -245,8 +245,8 @@
                     <Text text="{viewModel>effective_status_name}"/>
                 </t:template>
                 </t:Column> 
-                <t:Column id="mainDayCount" width="6rem" hAlign="Right">
-                <Label text="계약일수" textAlign="Center" width="100%"/>
+                <t:Column id="mainDayCount" width="8rem" hAlign="Right">
+                <Label text="계약경과율" textAlign="Center" width="100%"/>
                 <t:template>
                     <Text text="{viewModel>net_price_contract_day_count} %"/>
                     <!-- <Text  text="{
@@ -258,7 +258,7 @@
             </t:columns>
             <t:rowActionTemplate>
                 <t:RowAction>
-                    <t:RowActionItem type="Navigation"></t:RowActionItem>
+                    <t:RowActionItem type="Navigation" press="onTableItemPress"></t:RowActionItem>
                 </t:RowAction>
             </t:rowActionTemplate>            
             </t:Table>
