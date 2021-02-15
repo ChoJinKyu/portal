@@ -32,21 +32,7 @@
         "settings": {
           "odataVersion": "2.0"
         }
-      },
-      "purOrgMgrService": {
-            "uri": "srv-api/odata/v2/cm.PurOrgMgtService/",
-            "type": "OData",
-            "settings": {
-                "odataVersion": "2.0"
-            }
-       },
-      "userService": {
-                "uri": "srv-api/odata/v2/cm.UserMgtService/",
-                "type": "OData",
-                "settings": {
-                    "odataVersion": "2.0"
-                }
-            }
+      }
     }
   },
   "sap.fiori": {
@@ -125,27 +111,7 @@
                 "refreshAfterChange": false,
                 "useBatch": true
             }
-        },
-        "purOrg": {
-            "dataSource": "purOrgMgrService",
-            "preload": true,
-            "settings": {
-                "defaultBindingMode": "TwoWay",
-                "defaultCountMode": "Inline",
-                "refreshAfterChange": false,
-                "useBatch": true
-            }
-        },
-        "user": {
-            "dataSource": "userService",
-            "preload": true,
-            "settings": {
-                "defaultBindingMode": "TwoWay",
-                "defaultCountMode": "Inline",
-                "refreshAfterChange": false,
-                "useBatch": true
-            }
-        },
+        },            
         "contModel": {
             "type": "sap.ui.model.json.JSONModel",
             "settings": {

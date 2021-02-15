@@ -42,6 +42,7 @@ service PrCreateV4Service {
         org_type_code: String;
         org_code: String;
         buyer_empno: String;
+        buyer_department_code: String;
         currency_code: String;
         estimated_price: String;
         material_code: String;

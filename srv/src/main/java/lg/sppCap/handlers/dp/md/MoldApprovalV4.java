@@ -314,17 +314,15 @@ public class MoldApprovalV4 implements EventHandler {
     
     @On(event = DeleteApprovalContext.CDS_NAME)
     public void onDelete(DeleteApprovalContext context){
+        System.out.println(" approvalNumer " + this.APPROVAL_NUMBER);
 
         ApprDeleteData data = context.getInputData();
 
         Collection<ApprovalMasterV4> aMaster = data.getApprovalMaster();
         ResultMsg msg = ResultMsg.create();
-        String v_sql_callProc = "CALL DP_MD_APPROVAL_DELETE_ITEM_PROC(I_APPROVAL_NUMBER => ?,I_APPROVAL_TYPE_CODE => ? I_TENANT_ID => ?)";
+        String v_sql_callProc = "CALL DP_MD_APPROVAL_DELETE_ITEM_PROC(I_APPROVAL_NUMBER => ?,I_APPROVAL_TYPE_CODE => ?,I_TENANT_ID => ?)";
             
-        System.out.println("data>>> " + data);
         try {
-           
-
             if(!aMaster.isEmpty() && aMaster.size() > 0){
                 for(ApprovalMasterV4 row : aMaster ){
 
@@ -335,7 +333,6 @@ public class MoldApprovalV4 implements EventHandler {
                     msg.setPlantCode(row.getOrgCode());
                     
                     jdbc.update(v_sql_callProc, row.getApprovalNumber(), row.getApprovalTypeCode(), row.getTenantId());
-
                 }
             }
         }
