@@ -47,18 +47,18 @@ import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Delete;
 import com.sap.cds.Result;
 import lg.sppCap.frame.user.SppUserSession;
-import cds.gen.dp.rrmgtlistv4service.*;
+import cds.gen.dp.remodelrepairmgtv4service.*;
 
 
 @Component
-@ServiceName(RrMgtListV4Service_.CDS_NAME)
+@ServiceName(RemodelRepairMgtV4Service_.CDS_NAME)
 public class RemodelRepairMgtV4 implements EventHandler {
 
     @Autowired
     private JdbcTemplate jdbc;
 
     @Autowired
-    @Qualifier(RrMgtListV4Service_.CDS_NAME)
+    @Qualifier(RemodelRepairMgtV4Service_.CDS_NAME)
     private CdsService cdsService;
   
     @Autowired
