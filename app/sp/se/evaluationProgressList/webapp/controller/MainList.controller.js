@@ -9,15 +9,16 @@ sap.ui.define([
     "sap/ui/table/TablePersoController",
     "./MainListPersoService",
     "sap/ui/core/ListItem",
-    "sap/ui/core/Item"
+    "sap/ui/core/Item",
+    "sap/m/SegmentedButtonItem"
 ],
 	/**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
-     * 2021-01-20 개발시작
-     * A61987
+     * 2021-02-15 개발시작
+     * A61788
      */
     function (Controller, fioriLibrary, Filter, Sorter, MessageBox, Multilingual, ExcelUtil, 
-        TablePersoController, MainListPersoService, ListItem, Item) {
+        TablePersoController, MainListPersoService, ListItem, Item, SegmentedButtonItem) {
         "use strict";
         
 		return Controller.extend("sp.se.evalProgressList.controller.MainList", {
@@ -33,9 +34,14 @@ sap.ui.define([
 
                 oView.setModel(oMultilingual.getModel(), "I18N");
                 
-                this._bindOrgCodeComboItem();
                 this._setMainListViewModel();
-                this._doInitTablePerso();
+
+                this._bindOrgCodeComboItem();
+                this._bindEvalYearComboItem();
+                this._bindPeriodCodeItem();
+                
+                // this._doInitTablePerso();
+                //this._bindMainListTable();
 
                 oComponent.getRouter().getRoute("MainList").attachPatternMatched(this._onProductMatched, this);
             }
@@ -71,7 +77,7 @@ sap.ui.define([
                     new Filter("company_code", "EQ", oUserInfo.companyCode),
                     new Filter("evaluation_op_unt_person_empno", "EQ", oUserInfo.evalPersonEmpno)
                 ];
-                oComboOrgCode.setSelectedKey();
+                //oComboOrgCode.setSelectedKey();
                 oComboOrgCode.bindItems({
                     path : "util>/UserEvalOrgView",
                     filters : aFilters,
@@ -79,31 +85,31 @@ sap.ui.define([
                 });
 
                 // 2.
-                this.getOwnerComponent().getModel("util").read("/UserEvalOrgView",{
-                    filters : aFilters,
-                    urlParameters : { // odata 데이터중 한건만 가져오기
-                        $top : 1
-                    },
-                    success : function(oData){
-                        var aResults, sOrgCode;
+                // this.getOwnerComponent().getModel("util").read("/UserEvalOrgView",{
+                //     filters : aFilters,
+                //     urlParameters : { // odata 데이터중 한건만 가져오기
+                //         $top : 1
+                //     },
+                //     success : function(oData){
+                //         var aResults, sOrgCode;
 
-                        aResults = oData.results;
-                        if(!aResults.length){
-                            this._bindUnitComboItem(sOrgCode);
-                            return;
-                        }
-                        sOrgCode = aResults[0].org_code;
+                //         aResults = oData.results;
+                //         if(!aResults.length){
+                //             this._bindUnitComboItem(sOrgCode);
+                //             return;
+                //         }
+                //         sOrgCode = aResults[0].org_code;
 
-                        oComboOrgCode.setSelectedKey(sOrgCode);
+                //         oComboOrgCode.setSelectedKey(sOrgCode);
 
-                        // 평가조직 값에따른 평가운영단위 콤보박스 설정
-                        this._bindUnitComboItem(sOrgCode);
+                //         // 평가조직 값에따른 평가운영단위 콤보박스 설정
+                //         this._bindUnitComboItem(sOrgCode);
                             
-                    }.bind(this),
-                    error : function(){
+                //     }.bind(this),
+                //     error : function(){
                         
-                    }
-                });
+                //     }
+                // });
             }
             /***
              * 평가운영단위 (unitCode) 콤보박스 아이템 바인딩
@@ -113,6 +119,7 @@ sap.ui.define([
             , _bindUnitComboItem : function(sOrgCode){
                 var oComboUnitCode, aFilters, oUserInfo;
 
+                //평가운영단위
                 oComboUnitCode = this.byId("unitCode");
                 oUserInfo = this._getUserSession();
                 aFilters = [
@@ -123,7 +130,7 @@ sap.ui.define([
                 ];
                 oComboUnitCode.setSelectedKeys();
                 if(!sOrgCode){
-                    // this._bindEavluTypeItem();
+                    this._bindEvalTypeMultiComboItem();
                     return;
                 }
                 oComboUnitCode.bindItems({
@@ -136,105 +143,164 @@ sap.ui.define([
                     })
                 });
 
-                this.getOwnerComponent().getModel("util").read("/UserEvalUnitView",{
-                    filters : aFilters,
-                    urlParameters : {
-                        $top : 1
-                    },
-                    success : function(oData){
-                        var aResults, sEvalOperationUnitCode;
+                // this.getOwnerComponent().getModel("util").read("/UserEvalUnitView",{
+                //     filters : aFilters,
+                //     urlParameters : {
+                //         $top : 1
+                //     },
+                //     success : function(oData){
+                //         var aResults, sEvalOperationUnitCode;
 
-                        aResults = oData.results;
-                        if(!aResults.length){
-                            // this._bindEavluTypeItem(sOrgCode, sEvalOperationUnitCode);
-                            return;
-                        }
-                        sEvalOperationUnitCode = aResults[0].evaluation_operation_unit_code;
+                //         aResults = oData.results;
+                //         if(!aResults.length){
+                //             this._bindEvalTypeMultiComboItem(sOrgCode, sEvalOperationUnitCode);
+                //             return;
+                //         }
+                //         sEvalOperationUnitCode = aResults[0].evaluation_operation_unit_code;
 
-                        oComboUnitCode.setSelectedKeys(sEvalOperationUnitCode);
-                        // this._bindEavluTypeItem(sOrgCode, sEvalOperationUnitCode);
-                    }.bind(this),
-                    error : function(){
+                //         oComboUnitCode.setSelectedKeys(sEvalOperationUnitCode);
+                //         this._bindEvalTypeMultiComboItem(sOrgCode, sEvalOperationUnitCode);
+                //     }.bind(this),
+                //     error : function(){
                         
-                    }
-                });
+                //     }
+                // });
             }
             /***
              * 평가유형 (eavluType) 콤보박스 아이템 바인딩
              * 1. 세션유저 정보를 가지고 아이템을 구성한다.
              * 2. 첫번째 아이템으로 선택해준다.
              */
-            , _bindEavluTypeItem : function(sOrgCode, sEvaluOperationUnitCode, sSelectedKey ){
-                var oBtnEavluType, aFilters, oUserInfo, oComponent, oViewModel;
+            , _bindEvalTypeMultiComboItem : function(sOrgCode, aEvaluOperationUnitCode){
+                var oMultiComboTypeCode, aFilters, oUserInfo;
 
-                oBtnEavluType = this.byId("evaluType");
-                oComponent = this.getOwnerComponent();
-                oUserInfo = this._getUserSession();
-                oViewModel = oComponent.getModel("viewModel");
-                aFilters = [
-                    new Filter("tenant_id", "EQ", oUserInfo.tenantId),
-                    new Filter("company_code", "EQ", oUserInfo.companyCode),
-                    new Filter("evaluation_operation_unit_code", "EQ", sEvaluOperationUnitCode),
-                    new Filter("org_code", "EQ", sOrgCode),
-                    new Filter("use_flag", "EQ", true)
-                ];
+                    oMultiComboTypeCode = this.byId("evaluType");
+                    oUserInfo = this._getUserSession();
+                    aFilters = [
+                        new Filter("tenant_id", "EQ", oUserInfo.tenantId),
+                        new Filter("company_code", "EQ", oUserInfo.companyCode),
+                        new Filter("org_code", "EQ", sOrgCode),
+                        //new Filter("evaluation_operation_unit_code", "EQ", aEvaluOperationUnitCode)
+                    ];
 
-                oBtnEavluType.setSelectedKey();
-                oBtnEavluType.removeAllItems();
-                // oViewModel.setProperty("/Btn/UserEvalType", false);
-                // if(!sEvaluOperationUnitCode || !sOrgCode){
-                //     return;
-                // }
-                oBtnEavluType.bindItems({
-                    path : "util>/UserEvalTypeView",
+                    if(aEvaluOperationUnitCode.length>0){
+                       aEvaluOperationUnitCode.map(
+                            function(item){
+                            aFilters.push(
+                                new Filter("evaluation_operation_unit_code", "EQ", item)
+                            )}
+                        );
+                    }
+                    
+
+                    oMultiComboTypeCode.setSelectedKeys();
+                    if(!sOrgCode){
+                        // this._bindEvalTypeMultiComboItem();
+                        return;
+                    }
+                    oMultiComboTypeCode.bindItems({
+                        path : "util>/UserEvalTypeView",
+                        filters : aFilters,
+                        template : new ListItem({ 
+                            text : "{util>evaluation_type_name}", 
+                            key : "{util>evaluation_type_code}", 
+                            additionalText : "{util>evaluation_type_code}" 
+                        })
+                    });
+
+                    // this.getOwnerComponent().getModel("util").read("/UserEvalType",{
+                    //     filters : aFilters,
+                    //     urlParameters : {
+                    //         $top : 1
+                    //     },
+                    //     success : function(oData){
+                    //         var aResults, sEvalTypeCode;
+
+                    //         aResults = oData.results;
+                    //         if(!aResults.length){
+                    //             this._bindEvalTypeMultiComboItem(sOrgCode, sEvalTypeCode);
+                    //             return;
+                    //         }
+                    //         sEvalTypeCode = aResults[0].evaluation_operation_unit_code;
+
+                    //         oMultiComboTypeCode.setSelectedKeys(sEvalTypeCode);
+                    //         this._bindEvalTypeMultiComboItem(sOrgCode, sEvalTypeCode);
+                    //     }.bind(this),
+                    //     error : function(){
+                            
+                    //     }
+                    // });
+            }
+             /***
+             * 평가년도 (EvalYear) 콤보박스 아이템 바인딩
+             * 1. 세션유저 정보를 가지고 아이템을 구성한다.
+             * x 2. 첫번째 아이템으로 선택해준다.
+             */
+            , _bindEvalYearComboItem : function(){
+                var oComboUnitCode, aFilters, oUserInfo;
+
+                //평가운영단위
+                oComboUnitCode = this.byId("evalYear");
+                
+                oComboUnitCode.setSelectedKey();
+
+                oComboUnitCode.bindItems({
+                    path : "util>/YearView",
                     filters : aFilters,
-                    template : new SegmentedButtonItem({ 
-                        text : "{util>evaluation_type_name}", 
-                        key : "{util>evaluation_type_code}"
+                    template : new Item({ 
+                        text : "{util>year_code}", 
+                        key : "{util>year_name}"
                     })
                 });
+            }
+             /***
+             * 평가년도 (PeriodCode) 버튼 아이템 바인딩
+             * 1. odata를 읽어 아이템을 구성한다.
+             * x 2. 첫번째 아이템으로 선택해준다.
+             */
+            , _bindPeriodCodeItem : function(){
+                var oButtonPeriodCode, aFilters, oUserInfo;
 
-                oComponent.getModel("util").read("/UserEvalTypeView",{
+                //평가운영단위
+                oButtonPeriodCode = this.byId("periodCode");
+                
+                //oButtonPeriodCode.setSelectedKey();
+                oButtonPeriodCode.destroyItems();
+                oButtonPeriodCode.setSelectedKey();
+
+                oUserInfo = this._getUserSession();
+                aFilters = [
+                    new Filter("tenant_id", "EQ", oUserInfo.tenantId),
+                    new Filter("group_code", "EQ", "SP_SE_EVAL_PERIOD_CODE"),
+                    new Filter("language_cd", "EQ", "KO")
+                ];
+                
+                this.getOwnerComponent().getModel("common").read("/Code",{
                     filters : aFilters,
-                    // urlParameters : {
-                    //     $top : 1
-                    // },
                     success : function(oData){
-                        var aResults, sEvaluTypeCode, bNewFlg;
+                        var aResults, sEvalOperationUnitCode;
 
                         aResults = oData.results;
-                        bNewFlg = false;
                         if(!aResults.length){
-                            oViewModel.setProperty("/Btn/UserEvalType", bNewFlg);
                             return;
                         }
-                        if(aResults[0].new_flag === "Y"){
-                            bNewFlg = true;
-                        }
-                        sEvaluTypeCode = aResults[0].evaluation_type_code;
-                        
-                        if(sSelectedKey){
-                            oBtnEavluType.setSelectedKey(sSelectedKey);
-                            aResults.some(function(item){
-                                if(item.evaluation_type_code === sSelectedKey){
-                                    if(item.new_flag === "Y"){
-                                        bNewFlg = true;
-                                    }else{
-                                        bNewFlg = false;
-                                    }
-                                }
-                                return item.evaluation_type_code === sSelectedKey;
-                            });
-                        }else{
-                            oBtnEavluType.setSelectedKey(sEvaluTypeCode);
-                        }
+                        aResults.map(
+                            function(item){
+                                oButtonPeriodCode.addItem(
+                                     new SegmentedButtonItem({ 
+                                        text : item.code_name, 
+                                        key : item.code
+                                    })
+                                );
+                            }
+                        );
 
-                        oViewModel.setProperty("/Btn/UserEvalType", bNewFlg);
-                    },
+                    }.bind(this),
                     error : function(){
                         
                     }
                 });
+                 
             }
             /***
              * MainList Pattern Matched Evnet
@@ -249,7 +315,7 @@ sap.ui.define([
                 oViewModel = oComponent.getModel("viewModel");
 
                 if(oArgs.search){
-                    this.onPressSearch();
+                    // this.onPressSearch();
                 }
 
                 this._clearValueState(
@@ -271,7 +337,7 @@ sap.ui.define([
                     new : "Y"
                 };
                 //leaf
-                this.getOwnerComponent().getRouter().navTo("Detail", oNavParam);
+                this.getOwnerComponent().getRouter().navTo("SheetMgt", oNavParam);
             }
             /***
              * 데이터 조회
@@ -279,7 +345,7 @@ sap.ui.define([
             , onPressSearch : function(){
                 var oTable, oView, aFilters, oUserInfo, oViewModel, oCondData, oODataModel;
 
-                oTable = this.byId("treeTable");
+                oTable = this.byId("mainListTable");
                 oView = this.getView();
                 oUserInfo = this._getUserSession();
                 oViewModel = oView.getModel("viewModel");
@@ -287,10 +353,15 @@ sap.ui.define([
                 //조회용 데이터
                 oCondData = oViewModel.getProperty("/cond");
                 aFilters = [
+                    new Filter({ path:"language_cd", operator : "EQ", value1 : "KO" }),
                     new Filter({ path:"tenant_id", operator : "EQ", value1 : oUserInfo.tenantId }),
-                    new Filter({ path:"company_code", operator:"EQ", value1 : oUserInfo.companyCode }),
-                    new Filter({ path:"org_type_code", operator:"EQ", value1 : oUserInfo.orgTypeCode }),
+                    new Filter({ path:"company_code", operator:"EQ", value1 : oUserInfo.companyCode })
 
+                    // new Filter({ path:"evaluation_operation_unit_code", operator:"IN", value1:oViewModel.evaluation_operation_unit_code }),
+                    // new Filter({ path:"evaluation_type_code", operator:"IN", value1:oViewModel.evaluation_type_code }),
+                    // new Filter({ path:"regular_evaluation_year", operator:"EQ", value1:oViewModel.year_code }),
+                    // new Filter({ path:"regular_evaluation_period_code", operator:"EQ", value1:oViewModel.code }),
+                    // new Filter({ path:"regular.evaluation_name", operator:"LIKE",  value1:oViewModel.evaluation_name })
                 ];
 
                 //필수입력체크
@@ -335,33 +406,34 @@ sap.ui.define([
                     }
                 }
                 
-                oViewModel.setProperty("/Tree",{
-                    "nodes": [],
-                    "list": []
-                });
+                // oViewModel.setProperty("/Tree",{
+                //     "nodes": [],
+                //     "list": []
+                // });
 
                 oView.setBusy(true);
                 oView.setBusyIndicatorDelay(0);
                 this._readOdata({
                     model : this.getModel(),
-                    path : "/EvalItemListView",
+                    path : "/ListView",
                     param : {
                         filters : aFilters,
-                        sorters: [new Sorter("hierarchy_rank")]
+                        sorters: [new Sorter("regular_evaluation_id")]
                     }
                 })
                 // 성공시
-                .then((function (jNodes) {
-
-                    oViewModel.setProperty("/Tree",
-                        {
-                            "nodes": jNodes[0],
-                            "list": jNodes[1].results
-                        }
-                    );
+                .then((function (oData) {
+                        debugger;
+                    // oViewModel.setProperty("/Tree",
+                    //     {
+                    //         "nodes": jNodes[0],
+                    //         "list": jNodes[1].results
+                    //     }
+                    // );
                 }).bind(this))
                 // 실패시
                 .catch(function (oError) {
+                    debugger;
                 })
                 // 모래시계해제
                 .finally((function () {
@@ -400,6 +472,59 @@ sap.ui.define([
                     contentHeight : "30em"
                 });
             }
+            , onSelectionChangeOrgCode : function(oEvent){
+                var sOrgCode, oControl;
+
+                oControl = oEvent.getSource();
+                sOrgCode = oControl.getSelectedKey();
+
+                if(!sOrgCode){
+                    return;
+                }
+
+                this._bindUnitComboItem(sOrgCode);
+            }
+            , onSelectionChangeUnitCode : function(oEvent){
+                var sOrgCode, aEvalOperationUnitCode, oControl, oComboOrgCode;
+                
+                oControl = oEvent.getSource();
+                oComboOrgCode = this.byId("orgCode");
+                sOrgCode = oComboOrgCode.getSelectedKey();
+                aEvalOperationUnitCode = oControl.getSelectedKeys();
+
+                if(!aEvalOperationUnitCode){
+                    return;
+                }
+
+                this._bindEvalTypeMultiComboItem(sOrgCode, aEvalOperationUnitCode);
+            }
+
+            // , onSelectionChangeEvaluTypeCode : function(oEvent){
+            //     var oControl, oView, oViewModel, bUserEvalType, 
+            //         oBinding, aContexts, oSeletedItem, sSelectedKey,
+            //         oSeletedData;
+
+            //     oControl = oEvent.getSource();
+            //     oView = this.getView();
+            //     oViewModel = oView.getModel("viewModel");
+            //     bUserEvalType = false;
+            //     oBinding = oControl.getBinding("items");
+            //     aContexts = oBinding.getContexts();
+            //     sSelectedKey = oControl.getSelectedKey();
+
+            //     oSeletedItem = aContexts.filter(function(oContext){
+            //         var oRowData = oContext.getObject();
+            //         return sSelectedKey === oRowData.evaluation_type_code;
+            //     })[0];
+
+            //     if(oSeletedItem){
+            //         oSeletedData = oSeletedItem.getObject();
+            //         bUserEvalType = oSeletedData.new_flag === "Y" ? true : false;
+            //     }
+
+            //     oViewModel.setProperty("/Btn/UserEvalType", bUserEvalType);
+            // }
+
 
 		});
 	});
