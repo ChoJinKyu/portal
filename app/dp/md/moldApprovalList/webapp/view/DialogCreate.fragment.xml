@@ -4,7 +4,7 @@
     xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout" >
     
-    <Dialog id="dialogApprovalCategory" class="sapUiSmallMargin" title="" contentWidth="35%" >
+    <Dialog id="dialogApprovalCategory" class="sapUiSmallMargin" title="" contentWidth="35%"  >
         <content>  
             <VBox class="sapUiSmallMargin">
                 <form:SimpleForm
@@ -28,7 +28,7 @@
                         <!-- 팝업 콤보박스 영역 -->
                         <VBox>
                             <Label text="{path:'I18N>/COMPANY_NAME', formatter:'I18NFormatter'}" design="Bold" required="true"/> 
-                            <ComboBox id="searchCompanyF" width="70%" selectedKey="LGESL" change="dialogChangeComp" items="{
+                            <ComboBox id="searchCompanyF" width="100%" selectedKey="LGESL" change="dialogChangeComp" items="{
                                 path: 'org>/Company',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
@@ -40,12 +40,12 @@
                                 </items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox>
                             <Label text="{path:'I18N>/PLANT', formatter:'I18NFormatter'}" design="Bold" required="true"/> 
-                            <ComboBox id="searchPlantF" width="70%" selectedKey="A040" items="{
+                            <ComboBox id="searchPlantF" width="100%" selectedKey="A040" items="{
                                 path: 'purOrg>/Pur_Operation_Org',
                                 filters: [
                                     {path: 'tenant_id', operator: 'EQ', value1: 'L2101'}
@@ -56,7 +56,7 @@
                                 </items>
                             </ComboBox>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         
@@ -71,25 +71,25 @@
                         <VBox alignItems="Center" justifyContent="Center">
                             <ToggleButton id="localBudget" fieldGroupIds="toggleButtons" text="Budget" value="B" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox alignItems="Center" justifyContent="Center">
                             <ToggleButton id="supplierSelection" fieldGroupIds="toggleButtons" text="Supplier Selection" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox alignItems="Center" justifyContent="Center">
                             <ToggleButton id="localOrder" fieldGroupIds="toggleButtons" text="Order" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox alignItems="Center" justifyContent="Center">
                             <ToggleButton id="receipt" fieldGroupIds="toggleButtons" text="Receipt" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox>
@@ -101,12 +101,12 @@
                         <VBox alignItems="Center" justifyContent="Center">
                             <ToggleButton id="export" fieldGroupIds="toggleButtons" text="Export" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox alignItems="Center" justifyContent="Center">
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox>
@@ -118,19 +118,19 @@
                         <VBox alignItems="Center" justifyContent="Center">
                              <ToggleButton id="importBudget" fieldGroupIds="toggleButtons" text="Budget" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox alignItems="Center" justifyContent="Center">
                              <ToggleButton id="importOrder" fieldGroupIds="toggleButtons" text="Order" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox alignItems="Center" justifyContent="Center">
                             <ToggleButton id="importCompletion" fieldGroupIds="toggleButtons" text="Import Completion" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox>
@@ -142,12 +142,12 @@
                         <VBox alignItems="Center" justifyContent="Center">
                             <ToggleButton id="repModCompletion" fieldGroupIds="toggleButtons" text="Repair/Modifi. Completion" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox alignItems="Center" justifyContent="Center">
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox>
@@ -159,25 +159,25 @@
                         <VBox alignItems="Center" justifyContent="Center">
                             <ToggleButton id="otherIn" fieldGroupIds="toggleButtons" text="Other In" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox alignItems="Center" justifyContent="Center">
                             <ToggleButton id="otherOut" fieldGroupIds="toggleButtons" text="Other Out" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox alignItems="Center" justifyContent="Center">
                             <ToggleButton id="prodSupplierAmend" fieldGroupIds="toggleButtons" text="Prod Supplier Amend" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                         <VBox alignItems="Center" justifyContent="Center">
                             <ToggleButton id="itemCancel" fieldGroupIds="toggleButtons" text="Item Cancel" enabled="true" pressed="false" press=".onToggleHandleChange" width="18em"/>
                             <layoutData>
-                                <layout:GridData span="XL6 L3 M6 S12" />
+                                <layout:GridData span="XL6 L6 M6 S12" />
                             </layoutData> 
                         </VBox>
                     </form:content>
