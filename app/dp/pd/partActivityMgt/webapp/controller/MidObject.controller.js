@@ -153,26 +153,49 @@ sap.ui.define([
         
         onDialogActivityPress : function(){
 
-            if(!this.oSearchActivityDialog){
-                this.oSearchActivityDialog = new ActivityCodeDialog({
-                    title: "Select Activity",
-                    multiSelection: false,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, "L2101"),
-                            new Filter("company_code", FilterOperator.EQ, this.byId("searchCompanyCombo").getSelectedKey()),
-                            new Filter("org_code", FilterOperator.EQ, this.byId("searchOrgCombo").getSelectedKey()),
-                            new Filter("part_project_type_code", FilterOperator.EQ, this.byId("searchPartProjectCombo").getSelectedKey())
-                        ]
-                    }
-                });
-                this.oSearchActivityDialog.attachEvent("apply", function(oEvent){ 
-                    console.log(oEvent.getParameter("item"));
-                    this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_code);
-                    this.byId("searchActivityName").setValue(oEvent.getParameter("item").activity_name);
-                    this.byId("searchSequence").setValue(oEvent.getParameter("item").sequence);
-                }.bind(this));
-            }
+            // if(!this.oSearchActivityDialog){
+            //     this.oSearchActivityDialog = new ActivityCodeDialog({
+            //         title: "Select Activity",
+            //         multiSelection: false,
+            //         items: {
+            //             filters: [
+            //                 new Filter("tenant_id", FilterOperator.EQ, "L2101"),
+            //                 new Filter("company_code", FilterOperator.EQ, this.byId("searchCompanyCombo").getSelectedKey()),
+            //                 new Filter("org_code", FilterOperator.EQ, this.byId("searchOrgCombo").getSelectedKey()),
+            //                 new Filter("part_project_type_code", FilterOperator.EQ, this.byId("searchPartProjectCombo").getSelectedKey())
+            //             ]
+            //         }                    
+            //     });
+            //     console.log(this.oSearchActivityDialog);
+            //     this.oSearchActivityDialog.attachEvent("apply", function(oEvent){ 
+            //         console.log(oEvent.getParameter("item"));
+            //         this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_code);
+            //         this.byId("searchActivityName").setValue(oEvent.getParameter("item").activity_name);
+            //         this.byId("searchSequence").setValue(oEvent.getParameter("item").sequence);
+            //     }.bind(this));
+            // }
+
+            // this.oSearchActivityDialog.open();
+
+            this.oSearchActivityDialog = new ActivityCodeDialog({
+                title: "Select Activity",
+                multiSelection: false,
+                items: {
+                    filters: [
+                        new Filter("tenant_id", FilterOperator.EQ, "L2101"),
+                        new Filter("company_code", FilterOperator.EQ, this.byId("searchCompanyCombo").getSelectedKey()),
+                        new Filter("org_code", FilterOperator.EQ, this.byId("searchOrgCombo").getSelectedKey()),
+                        new Filter("part_project_type_code", FilterOperator.EQ, this.byId("searchPartProjectCombo").getSelectedKey())
+                    ]
+                }                    
+            });
+            
+            this.oSearchActivityDialog.attachEvent("apply", function(oEvent){ 
+                console.log(oEvent.getParameter("item"));
+                this.byId("searchActivityInput").setValue(oEvent.getParameter("item").activity_code);
+                this.byId("searchActivityName").setValue(oEvent.getParameter("item").activity_name);
+                this.byId("searchSequence").setValue(oEvent.getParameter("item").sequence);
+            }.bind(this));
 
             this.oSearchActivityDialog.open();
 
