@@ -230,6 +230,16 @@ sap.ui.define([
 
         },
 
+        /**
+         * 순번 Input 값이 변할 때마다 숫자값으로 변환
+         */
+        onSequenceChange : function(oEvent){
+            var _oInput = oEvent.getSource();
+            var val = _oInput.getValue();
+                val = val.replace(/[^\d]/g, '');
+            _oInput.setValue(val); 
+        },
+
 		/* =========================================================== */
 		/* internal methods                                            */
 		/* =========================================================== */
@@ -483,9 +493,7 @@ sap.ui.define([
                 });
             }
 
-            input.inputData.pdDtl = pdDtlVal;
-
-            console.log(input);         
+            input.inputData.pdDtl = pdDtlVal;        
 
             if(this.validator.validate(this.byId("page")) !== true) return;
 
@@ -504,7 +512,6 @@ sap.ui.define([
                             data: JSON.stringify(input),
                             contentType: "application/json",
                             success: function (rst) {
-                                  console.log(rst);
                                 if(rst.return_code =="OK"){
                                     if(CUType === "D") {
                                         v_this.onPageNavBackButtonPress.call(v_this);
@@ -516,21 +523,18 @@ sap.ui.define([
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                     }else {
-                                        console.log("aaa")
                                         MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
                                         v_this._toShowMode();                                
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                         v_this._onRoutedThisPage();
                                     }
                                 }else{
-                                    console.log(rst);
                                     sap.m.MessageToast.show( "error : "+rst.return_msg );
                                     MessageBox.error(rst.return_msg);
                                 }
                             },
                             error: function (rst) {
                                     console.log("error");
-                                    console.log(rst);
                                     MessageBox.error("예기치 않은 오류가 발생하였습니다.");
                             }
                         });
