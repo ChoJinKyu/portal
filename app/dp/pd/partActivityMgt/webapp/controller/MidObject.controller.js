@@ -6,7 +6,8 @@ sap.ui.define([
 	"ext/lib/model/TransactionManager",
 	"ext/lib/model/ManagedModel",
 	"ext/lib/model/ManagedListModel",
-	"ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/DateFormatter",
+    "ext/lib/formatter/Formatter",
 	"sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/core/Fragment",
@@ -22,7 +23,7 @@ sap.ui.define([
     "sap/f/LayoutType",
     "dp/util/control/ui/ActivityCodeDialog"
 ], function (BaseController, Multilingual, Validator, JSONModel, TransactionManager, ManagedModel, ManagedListModel, DateFormatter, 
-	Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
+	Formatter, Filter, FilterOperator, Fragment, MessageBox, MessageToast, 
 	ColumnListItem, ObjectIdentifier, Text, Input, ComboBox, Item, ObjectStatus, LayoutType, ActivityCodeDialog) {
 		
 	"use strict";
@@ -32,6 +33,8 @@ sap.ui.define([
 	return BaseController.extend("dp.pd.partActivityMgt.controller.MidObject", {
 
         dateFormatter: DateFormatter,
+
+        formatter: Formatter,
         
         validator: new Validator(),
         
@@ -201,6 +204,10 @@ sap.ui.define([
 		// 	});
 		// 	oTable.removeSelections(true);
         // },
+
+        onBulkAddRow: function () {
+            MessageBox.alert("준비중입니다.");
+        },
         
         onInputChange: function(oEvent){
            

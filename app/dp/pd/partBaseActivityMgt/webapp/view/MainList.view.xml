@@ -37,7 +37,7 @@
                     <form:content>                        
                          <VBox>
                             <Label
-                                text="코드/ 명/ 설명: "
+                                text="{I18N>/CODE_NAME_DESC}: "
                                 labelFor="searchPartBaseKeyword">
                             </Label>
                             <Input id="searchPartBaseKeyword" 

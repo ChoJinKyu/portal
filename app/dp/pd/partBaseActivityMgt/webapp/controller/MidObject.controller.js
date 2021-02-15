@@ -73,12 +73,12 @@ sap.ui.define([
 			
 			this.setModel(new ManagedModel(), "master");
             this.setModel(new ManagedListModel(), "languages");
-            this.setModel(new ManagedListModel(), "category");
+            // this.setModel(new ManagedListModel(), "category");
 
 			oTransactionManager = new TransactionManager();
 			oTransactionManager.addDataModel(this.getModel("master"));
             oTransactionManager.addDataModel(this.getModel("languages"));
-            oTransactionManager.addDataModel(this.getModel("category"));
+            // oTransactionManager.addDataModel(this.getModel("category"));
 
 			this.getModel("master").attachPropertyChange(this._onMasterDataChanged.bind(this));
 
@@ -139,23 +139,23 @@ sap.ui.define([
 			this.onPageSaveButtonPress("D");
         },
 
-        onBundleAddRow: function () {
-            MessageBox.alert("준비중입니다.");
-        },
+        // onBundleAddRow: function () {
+        //     MessageBox.alert("준비중입니다.");
+        // },
         
-        onCateAddRow: function () {
-            var oModel = this.getModel("category");
-            oModel.addRecord({"tenant_id": this._sTenantId}, 0);
-            this.validator.clearValueState(this.byId("cateTable"));
-        },
+        // onCateAddRow: function () {
+        //     var oModel = this.getModel("category");
+        //     oModel.addRecord({"tenant_id": this._sTenantId}, 0);
+        //     this.validator.clearValueState(this.byId("cateTable"));
+        // },
 
-        onCateDelRow: function (oEvent) {
-            var table = this.byId("cateTable"),
-                model = this.getModel("category");
-            table.getSelectedIndices().reverse().forEach(function (idx) {
-                model.markRemoved(idx);
-            });
-        },
+        // onCateDelRow: function (oEvent) {
+        //     var table = this.byId("cateTable"),
+        //         model = this.getModel("category");
+        //     table.getSelectedIndices().reverse().forEach(function (idx) {
+        //         model.markRemoved(idx);
+        //     });
+        // },
 
 		onLngTableAddButtonPress: function(){
 			var oTable = this.byId("lngTable"),
@@ -184,21 +184,21 @@ sap.ui.define([
 			oTable.removeSelections(true);
         },
 
-        onCateTableAddButtonPress: function(){
-			var oTable = this.byId("cateTable");
-            var oCateModel = this.getModel("category");
-            var aItems = oTable.getItems();
+        // onCateTableAddButtonPress: function(){
+		// 	var oTable = this.byId("cateTable");
+        //     var oCateModel = this.getModel("category");
+        //     var aItems = oTable.getItems();
 
-			oCateModel.addRecord({
-				"tenant_id": this._sTenantId,
-				"activity_code": this._sActivityCode,
-                "category_group_code": "",
-                "category_group_name": "",
-                "category_code": "",
-                "category_name": ""			
-            }, "/PdPartBaseActivityCategoryView", 0);           
+		// 	oCateModel.addRecord({
+		// 		"tenant_id": this._sTenantId,
+		// 		"activity_code": this._sActivityCode,
+        //         "category_group_code": "",
+        //         "category_group_name": "",
+        //         "category_code": "",
+        //         "category_name": ""			
+        //     }, "/PdPartBaseActivityCategoryView", 0);           
             
-        },
+        // },
         
         onInputChange: function(oEvent){
             // 숫자만 입력
@@ -209,74 +209,334 @@ sap.ui.define([
                 
         },
 
-		onCateTableDeleteButtonPress: function(){
-			var oTable = this.byId("cateTable"),
-				oModel = this.getModel("category"),
-				aItems = oTable.getSelectedItems(),
-				aIndices = [];
-			aItems.forEach(function(oItem){
-				aIndices.push(oModel.getProperty("/PdPartBaseActivityCategoryView").indexOf(oItem.getBindingContext("category").getObject()));
-			});
-			aIndices = aIndices.sort(function(a, b){return b-a;});
-			aIndices.forEach(function(nIndex){
-				//oModel.removeRecord(nIndex);
-				oModel.markRemoved(nIndex);
-			});
-			oTable.removeSelections(true);
-        },
+		// onCateTableDeleteButtonPress: function(){
+		// 	var oTable = this.byId("cateTable"),
+		// 		oModel = this.getModel("category"),
+		// 		aItems = oTable.getSelectedItems(),
+		// 		aIndices = [];
+		// 	aItems.forEach(function(oItem){
+		// 		aIndices.push(oModel.getProperty("/PdPartBaseActivityCategoryView").indexOf(oItem.getBindingContext("category").getObject()));
+		// 	});
+		// 	aIndices = aIndices.sort(function(a, b){return b-a;});
+		// 	aIndices.forEach(function(nIndex){
+		// 		//oModel.removeRecord(nIndex);
+		// 		oModel.markRemoved(nIndex);
+		// 	});
+		// 	oTable.removeSelections(true);
+        // },
         
-        onDialogCategoryPress : function(oEvent){
-            var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;           
+        // onDialogCategoryPress : function(oEvent){
+        //     var sPath = oEvent.getSource().getParent().getRowBindingContext().sPath;           
 
-            if(!this.oSearchCategoryDialog){
-                this.oSearchCategoryDialog = new CategoryDialog({
-                    title: "Category",
-                    multiSelection: false,
-                    items: {
-                        filters: [
-                            new Filter("tenant_id", FilterOperator.EQ, this.tenant_id)
-                        ]
-                    }
-                });
-                this.oSearchCategoryDialog.attachEvent("apply", function(oEvent){ 
-                    console.log(oEvent.getParameter("item"));
-                    var sModel = this.getModel("category");
+        //     if(!this.oSearchCategoryDialog){
+        //         this.oSearchCategoryDialog = new CategoryDialog({
+        //             title: "Category",
+        //             multiSelection: false,
+        //             items: {
+        //                 filters: [
+        //                     new Filter("tenant_id", FilterOperator.EQ, this.tenant_id)
+        //                 ]
+        //             }
+        //         });
+        //         this.oSearchCategoryDialog.attachEvent("apply", function(oEvent){ 
+        //             console.log(oEvent.getParameter("item"));
+        //             var sModel = this.getModel("category");
                     
-                    sModel.setProperty(sPath + "/category_group_code", oEvent.getParameter("item").category_group_code);
-                    sModel.setProperty(sPath + "/category_group_name", oEvent.getParameter("item").category_group_name);
-                    sModel.setProperty(sPath + "/category_code", oEvent.getParameter("item").category_code);
-                    sModel.setProperty(sPath + "/category_name", oEvent.getParameter("item").category_name);
+        //             sModel.setProperty(sPath + "/category_group_code", oEvent.getParameter("item").category_group_code);
+        //             sModel.setProperty(sPath + "/category_group_name", oEvent.getParameter("item").category_group_name);
+        //             sModel.setProperty(sPath + "/category_code", oEvent.getParameter("item").category_code);
+        //             sModel.setProperty(sPath + "/category_name", oEvent.getParameter("item").category_name);
                                             
-                }.bind(this));
-            }
+        //         }.bind(this));
+        //     }
 
-            this.oSearchCategoryDialog.open();
+        //     this.oSearchCategoryDialog.open();
 
-        },
+        // },
 		
 		/**
 		 * Event handler for saving page changes
 		 * @public
 		 */
+        // onPageSaveButtonPress: function(CUDType){
+           
+        //     var oView = this.getView();
+        //     var oMasterModel = this.getModel("master");
+        //     var oLanguagesModel = this.getModel("languages");
+        //     var oCategoryModel = this.getModel("category");
+        //     var v_this = this;            
+                
+        //     var oMasterData = oMasterModel.oData;
+        //     var oLngData = oLanguagesModel.oData;
+        //     var oCateData = oCategoryModel.oData;
+
+        //     var oLngTable = this.byId("lngTable");
+        //     var oCateTable = this.byId("cateTable");
+           
+        //     var CUType = CUDType;
+
+        //     if(CUType !== "D" ){
+        //         if(!oMasterModel.isChanged() && !oLanguagesModel.isChanged() && !oCategoryModel.isChanged()) {
+        //                 MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
+        //                 return;
+        //         }
+        //     }
+
+        //     if(CUType !== "D") {
+        //         if(this._sActivityCode !== "new"){
+        //             CUType = "U";                
+        //         } else {
+        //             CUType = "C";
+        //         }
+        //     }  
+
+        //     console.log(CUType);
+            
+        //     var activeFlg = "false";   
+            
+        //     var cateActiveFlg = "false";
+
+        //     if (oMasterData.active_flag === "true") {
+        //         activeFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+        //     }            
+
+        //     var pdMstVal = {
+		// 			tenant_id       : oMasterData.tenant_id,
+        //             activity_code   : oMasterData.activity_code,
+        //             description     : oMasterData.description,
+        //             sequence        : oMasterData.sequence,
+        //             active_flag     : activeFlg,
+
+        //             update_user_id  : this.loginUserId,
+        //             crud_type_code  : CUType
+        //     };           
+            
+
+        //     var input = {
+        //         inputData : {
+        //             crud_type : CUType,
+        //             pdMst : pdMstVal,
+        //             pdDtl: [],
+        //             pdCat: []
+        //         }
+        //     };
+
+        //     var pdDtlVal = [];
+            
+        //     for (var i = 0; i <  oLngTable.getItems().length; i++) {
+        //         pdDtlVal.push({
+        //             tenant_id: oLngData.PdPartBaseActivityLng[i].tenant_id,
+        //             activity_code: oLngData.PdPartBaseActivityLng[i].activity_code,
+        //             language_cd: oLngData.PdPartBaseActivityLng[i].language_cd,
+        //             code_name: oLngData.PdPartBaseActivityLng[i].code_name,
+        //             update_user_id: this.loginUserId,
+                                            
+        //             crud_type_code: oLngData.PdPartBaseActivityLng[i]._row_state_
+        //         });
+        //     }
+
+        //     input.inputData.pdDtl = pdDtlVal;
+
+        //     var pdCatVal = [];
+
+        //     var cateObj = this.getModel("category").getProperty("/PdPartBaseActivityCategoryView");
+
+        //     console.log(cateObj);
+
+        //     var sGrade;
+        //     var aGrade;
+        //     var bGrade;
+        //     var cGrade;
+        //     var dGrade;            
+            
+        //     for (var i = 0; i <  cateObj.length; i++) {
+                
+        //         if (oCateData.PdPartBaseActivityCategoryView[i].active_flag === true) {
+        //             cateActiveFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+        //         } else {
+        //             cateActiveFlg = "false"; 
+        //         }
+                
+        //         if(oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days=="" ||
+        //           oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days==null || 
+        //           parseInt(oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days) == undefined || 
+        //           parseInt(oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days) == NaN){
+                    
+        //             sGrade = null;                                  
+
+        //         }else{
+
+        //             sGrade = oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days.toString();
+        //         }
+
+        //         if(oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days=="" ||
+        //           oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days==null || 
+        //           parseInt(oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days) == undefined || 
+        //           parseInt(oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days) == NaN){
+
+        //             aGrade = null;
+
+        //         }else{
+
+        //             aGrade = oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days.toString();
+        //         }
+
+        //         if(oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days=="" ||
+        //           oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days==null || 
+        //           parseInt(oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days) == undefined || 
+        //           parseInt(oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days) == NaN){
+                      
+        //             bGrade = null;
+
+        //         }else{
+
+        //             bGrade = oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days.toString();
+        //         }
+
+        //         if(oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days=="" ||
+        //           oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days==null || 
+        //           parseInt(oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days) == undefined || 
+        //           parseInt(oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days) == NaN){
+                    
+        //             cGrade = null;
+
+        //         }else{
+
+        //             cGrade = oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days.toString();
+        //         }
+
+        //         if(oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days=="" ||
+        //           oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days==null || 
+        //           parseInt(oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days) == undefined || 
+        //           parseInt(oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days) == NaN){
+                    
+        //             dGrade = null;                      
+                    
+        //         }else{
+
+        //             dGrade = oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days.toString();
+        //         }               
+                
+        //         pdCatVal.push({
+        //             tenant_id: oCateData.PdPartBaseActivityCategoryView[i].tenant_id,
+        //             activity_code: oCateData.PdPartBaseActivityCategoryView[i].activity_code,
+        //             category_group_code: oCateData.PdPartBaseActivityCategoryView[i].category_group_code,
+        //             category_code: oCateData.PdPartBaseActivityCategoryView[i].category_code,
+        //             s_grade_standard_days: sGrade,
+                    
+        //             a_grade_standard_days: aGrade,
+        //             b_grade_standard_days: bGrade,
+        //             c_grade_standard_days: cGrade,
+        //             d_grade_standard_days: dGrade,                    
+        //             active_flag: cateActiveFlg,
+                    
+        //             update_user_id: this.loginUserId,                        
+        //             crud_type_code: oCateData.PdPartBaseActivityCategoryView[i]._row_state_
+        //         });
+        //     }
+
+        //     input.inputData.pdCat = pdCatVal;
+
+        //     console.log(input);
+
+        //     if(this.validator.validate(this.byId("page")) !== true) return;
+
+        //     var url = "srv-api/odata/v4/dp.partBaseActivityV4Service/PdpartBaseActivitySaveProc";
+            
+        //     // console.log(inputData);
+		// 	oTransactionManager.setServiceModel(this.getModel());
+		// 	MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
+		// 		title : this.getModel("I18N").getText("/SAVE"),
+		// 		initialFocus : sap.m.MessageBox.Action.CANCEL,
+		// 		onClose : function(sButton) {
+		// 			if (sButton === MessageBox.Action.OK) {
+        //                 //oView.setBusy(true);
+        //                 $.ajax({
+        //                     url: url,
+        //                     type: "POST",
+        //                     data: JSON.stringify(input),
+        //                     contentType: "application/json",
+        //                     success: function (rst) {
+        //                         console.log(rst);
+        //                         if(rst.return_code =="OK"){
+        //                             if(CUType === "D") {
+        //                                 v_this.handleClose.call(v_this);
+        //                                 v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+        //                                 MessageToast.show(v_this.getModel("I18N").getText("/NCM01002"));                                       
+        //                             } else if(CUType === "C"){
+        //                                 v_this.handleClose.call(v_this);
+        //                                 v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+        //                                 MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+        //                             }else {
+        //                                 MessageToast.show(v_this.getModel("I18N").getText("/NCM01001"));
+        //                                 // 저장 후 재조회
+        //                                 v_this.getModel("contModel").setProperty("/createMode", false);
+        //                                 v_this._bindView("/PdPartBaseActivityView(tenant_id='" + v_this._sTenantId + "',activity_code='" + v_this._sActivityCode + "')");
+        //                                 oView.setBusy(true);
+        //                                 var oLanguagesModel = v_this.getModel("languages");
+        //                                     oLanguagesModel.setTransactionModel(v_this.getModel());
+        //                                     oLanguagesModel.read("/PdPartBaseActivityLng", {
+        //                                         filters: [
+        //                                             new Filter("tenant_id", FilterOperator.EQ, v_this._sTenantId),
+        //                                             new Filter("activity_code", FilterOperator.EQ, v_this._sActivityCode),
+        //                                         ],
+        //                                         success: function(oData){
+        //                                             oView.setBusy(false);
+        //                                         }
+        //                                     });
+                                        
+        //                                 var oCategoryModel = v_this.getModel("category");
+        //                                 oCategoryModel.setTransactionModel(v_this.getModel());
+        //                                 oCategoryModel.read("/PdPartBaseActivityCategoryView", {
+        //                                     filters: [
+        //                                         new Filter("tenant_id", FilterOperator.EQ, v_this._sTenantId),
+        //                                         new Filter("activity_code", FilterOperator.EQ, v_this._sActivityCode),
+        //                                     ],
+        //                                     success: function(oData){
+        //                                         oView.setBusy(false);
+        //                                     }
+        //                                 });
+        //                                 v_this._toShowMode();                                
+        //                                 v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
+                                        
+        //                             }                                    
+                                    
+        //                         }else{
+        //                             console.log(rst);
+        //                             // sap.m.MessageToast.show( "error : "+rst.return_msg );
+        //                             MessageBox.error(rst.return_msg);
+        //                         }
+        //                     },
+        //                     error: function (rst) {
+        //                             console.log("eeeeee");
+        //                             console.log(rst);
+        //                             MessageBox.error("예기치 않은 오류가 발생하였습니다.");
+        //                             // sap.m.MessageToast.show( "error : "+rst.return_msg );
+        //                             // v_this.onSearch(rst.return_msg );
+        //                     }
+        //                 });
+		// 			};
+		// 		}
+        //     });
+        //     this.validator.clearValueState(this.byId("page"));
+		// },
+        
         onPageSaveButtonPress: function(CUDType){
            
             var oView = this.getView();
             var oMasterModel = this.getModel("master");
-            var oLanguagesModel = this.getModel("languages");
-            var oCategoryModel = this.getModel("category");
+            var oLanguagesModel = this.getModel("languages");            
             var v_this = this;            
                 
             var oMasterData = oMasterModel.oData;
-            var oLngData = oLanguagesModel.oData;
-            var oCateData = oCategoryModel.oData;
+            var oLngData = oLanguagesModel.oData;            
 
-            var oLngTable = this.byId("lngTable");
-            var oCateTable = this.byId("cateTable");
+            var oLngTable = this.byId("lngTable");            
            
             var CUType = CUDType;
 
             if(CUType !== "D" ){
-                if(!oMasterModel.isChanged() && !oLanguagesModel.isChanged() && !oCategoryModel.isChanged()) {
+                if(!oMasterModel.isChanged() && !oLanguagesModel.isChanged()) {
                         MessageToast.show(this.getModel("I18N").getText("/NCM01006"));
                         return;
                 }
@@ -292,9 +552,7 @@ sap.ui.define([
 
             console.log(CUType);
             
-            var activeFlg = "false";   
-            
-            var cateActiveFlg = "false";
+            var activeFlg = "false"; 
 
             if (oMasterData.active_flag === "true") {
                 activeFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
@@ -316,8 +574,7 @@ sap.ui.define([
                 inputData : {
                     crud_type : CUType,
                     pdMst : pdMstVal,
-                    pdDtl: [],
-                    pdCat: []
+                    pdDtl: []
                 }
             };
 
@@ -335,107 +592,7 @@ sap.ui.define([
                 });
             }
 
-            input.inputData.pdDtl = pdDtlVal;
-
-            var pdCatVal = [];
-
-            var cateObj = this.getModel("category").getProperty("/PdPartBaseActivityCategoryView");
-
-            console.log(cateObj);
-
-            var sGrade;
-            var aGrade;
-            var bGrade;
-            var cGrade;
-            var dGrade;            
-            
-            for (var i = 0; i <  cateObj.length; i++) {
-                
-                if (oCateData.PdPartBaseActivityCategoryView[i].active_flag === true) {
-                    cateActiveFlg = "true";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-                } else {
-                    cateActiveFlg = "false"; 
-                }
-                
-                if(oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days=="" ||
-                  oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days==null || 
-                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days) == undefined || 
-                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days) == NaN){
-                    
-                    sGrade = null;                                  
-
-                }else{
-
-                    sGrade = oCateData.PdPartBaseActivityCategoryView[i].s_grade_standard_days.toString();
-                }
-
-                if(oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days=="" ||
-                  oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days==null || 
-                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days) == undefined || 
-                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days) == NaN){
-
-                    aGrade = null;
-
-                }else{
-
-                    aGrade = oCateData.PdPartBaseActivityCategoryView[i].a_grade_standard_days.toString();
-                }
-
-                if(oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days=="" ||
-                  oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days==null || 
-                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days) == undefined || 
-                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days) == NaN){
-                      
-                    bGrade = null;
-
-                }else{
-
-                    bGrade = oCateData.PdPartBaseActivityCategoryView[i].b_grade_standard_days.toString();
-                }
-
-                if(oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days=="" ||
-                  oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days==null || 
-                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days) == undefined || 
-                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days) == NaN){
-                    
-                    cGrade = null;
-
-                }else{
-
-                    cGrade = oCateData.PdPartBaseActivityCategoryView[i].c_grade_standard_days.toString();
-                }
-
-                if(oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days=="" ||
-                  oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days==null || 
-                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days) == undefined || 
-                  parseInt(oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days) == NaN){
-                    
-                    dGrade = null;                      
-                    
-                }else{
-
-                    dGrade = oCateData.PdPartBaseActivityCategoryView[i].d_grade_standard_days.toString();
-                }               
-                
-                pdCatVal.push({
-                    tenant_id: oCateData.PdPartBaseActivityCategoryView[i].tenant_id,
-                    activity_code: oCateData.PdPartBaseActivityCategoryView[i].activity_code,
-                    category_group_code: oCateData.PdPartBaseActivityCategoryView[i].category_group_code,
-                    category_code: oCateData.PdPartBaseActivityCategoryView[i].category_code,
-                    s_grade_standard_days: sGrade,
-                    
-                    a_grade_standard_days: aGrade,
-                    b_grade_standard_days: bGrade,
-                    c_grade_standard_days: cGrade,
-                    d_grade_standard_days: dGrade,                    
-                    active_flag: cateActiveFlg,
-                    
-                    update_user_id: this.loginUserId,                        
-                    crud_type_code: oCateData.PdPartBaseActivityCategoryView[i]._row_state_
-                });
-            }
-
-            input.inputData.pdCat = pdCatVal;
+            input.inputData.pdDtl = pdDtlVal;            
 
             console.log(input);
 
@@ -485,17 +642,17 @@ sap.ui.define([
                                                 }
                                             });
                                         
-                                        var oCategoryModel = v_this.getModel("category");
-                                        oCategoryModel.setTransactionModel(v_this.getModel());
-                                        oCategoryModel.read("/PdPartBaseActivityCategoryView", {
-                                            filters: [
-                                                new Filter("tenant_id", FilterOperator.EQ, v_this._sTenantId),
-                                                new Filter("activity_code", FilterOperator.EQ, v_this._sActivityCode),
-                                            ],
-                                            success: function(oData){
-                                                oView.setBusy(false);
-                                            }
-                                        });
+                                        // var oCategoryModel = v_this.getModel("category");
+                                        // oCategoryModel.setTransactionModel(v_this.getModel());
+                                        // oCategoryModel.read("/PdPartBaseActivityCategoryView", {
+                                        //     filters: [
+                                        //         new Filter("tenant_id", FilterOperator.EQ, v_this._sTenantId),
+                                        //         new Filter("activity_code", FilterOperator.EQ, v_this._sActivityCode),
+                                        //     ],
+                                        //     success: function(oData){
+                                        //         oView.setBusy(false);
+                                        //     }
+                                        // });
                                         v_this._toShowMode();                                
                                         v_this.getOwnerComponent().getRootControl().byId("fcl").getBeginColumnPages()[0].byId("pageSearchButton").firePress();
                                         
@@ -521,7 +678,6 @@ sap.ui.define([
             this.validator.clearValueState(this.byId("page"));
 		},
 		
-		
 		/**
 		 * Event handler for cancel page editing
 		 * @public
@@ -543,10 +699,10 @@ sap.ui.define([
                 oView.setBusy(true);
                 
                 var oLanguagesModel = this.getModel("languages");
-                var oCategoryModel = this.getModel("category");
+                // var oCategoryModel = this.getModel("category");
 
                 oLanguagesModel.setTransactionModel(this.getModel());	
-                oCategoryModel.setTransactionModel(this.getModel());
+                // oCategoryModel.setTransactionModel(this.getModel());
 
                 oLanguagesModel.read("/PdPartBaseActivityLng", {
 					filters: [
@@ -558,15 +714,15 @@ sap.ui.define([
 					}
                 });
                 
-                oCategoryModel.read("/PdPartBaseActivityCategoryView", {
-					filters: [
-						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-						new Filter("activity_code", FilterOperator.EQ, this._sActivityCode),
-					],
-					success: function(oData){
-						oView.setBusy(false);
-					}
-                });
+                // oCategoryModel.read("/PdPartBaseActivityCategoryView", {
+				// 	filters: [
+				// 		new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+				// 		new Filter("activity_code", FilterOperator.EQ, this._sActivityCode),
+				// 	],
+				// 	success: function(oData){
+				// 		oView.setBusy(false);
+				// 	}
+                // });
                 
                 this._toShowMode();
             }
@@ -582,7 +738,7 @@ sap.ui.define([
 			if(this.getModel("contModel").getProperty("/createMode") == true){
 				var oMasterModel = this.getModel("master");
                 var oLanguagesModel = this.getModel("languages");
-                var oCategoryModel = this.getModel("category");
+                // var oCategoryModel = this.getModel("category");
 
                 var sTenantId = oMasterModel.getProperty("/tenant_id");
                 var sActivityCode = oMasterModel.getProperty("/activity_code");
@@ -593,11 +749,11 @@ sap.ui.define([
 					oLanguagesModel.setProperty("/PdPartBaseActivityLng/"+nIndex+"/activity_code", sActivityCode);
                 });
                
-                var oCategoryData = oCategoryModel.getData();
-                oCategoryData.PdPartBaseActivityCategoryView.forEach(function(oItem, nIndex){
-					oCategoryModel.setProperty("/PdPartBaseActivityCategoryView/"+nIndex+"/tenant_id", sTenantId);
-					oCategoryModel.setProperty("/PdPartBaseActivityCategoryView/"+nIndex+"/activity_code", sActivityCode);
-				});
+                // var oCategoryData = oCategoryModel.getData();
+                // oCategoryData.PdPartBaseActivityCategoryView.forEach(function(oItem, nIndex){
+				// 	oCategoryModel.setProperty("/PdPartBaseActivityCategoryView/"+nIndex+"/tenant_id", sTenantId);
+				// 	oCategoryModel.setProperty("/PdPartBaseActivityCategoryView/"+nIndex+"/activity_code", sActivityCode);
+				// });
 				//oLanguagesModel.setData(olanguagesData);
 			}
 		},
@@ -631,7 +787,7 @@ sap.ui.define([
                     "tenant_id": this._sTenantId,
                     "activity_code": "",                    
                     "description": "",
-                    "active_flag": true					
+                    "active_flag": "true"					
                 }, "/PdPartBaseActivityView");
                 
 				var oLanguagesModel = this.getModel("languages");
@@ -644,15 +800,9 @@ sap.ui.define([
 					"code_name": ""			
                 }, "/PdPartBaseActivityLng");
                 
-                var oCategoryModel = this.getModel("category");
-				oCategoryModel.setTransactionModel(this.getModel());
-				oCategoryModel.setData([], "/PdPartBaseActivityCategoryView");
-				// oCategoryModel.addRecord({
-				// 	"tenant_id": this._sTenantId,
-				// 	"activity_code": this._sActivityCode,
-				// 	"category_group_code": "",
-				// 	"category_code": ""			
-                // }, "/PdPartBaseActivityCategory");
+                // var oCategoryModel = this.getModel("category");
+				// oCategoryModel.setTransactionModel(this.getModel());
+				// oCategoryModel.setData([], "/PdPartBaseActivityCategoryView");				
                 
 				this._toEditMode();
 			}else{
@@ -672,17 +822,17 @@ sap.ui.define([
 					}
                 });
                 
-                var oCategoryModel = this.getModel("category");
-				oCategoryModel.setTransactionModel(this.getModel());
-				oCategoryModel.read("/PdPartBaseActivityCategoryView", {
-					filters: [
-						new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
-						new Filter("activity_code", FilterOperator.EQ, this._sActivityCode),
-					],
-					success: function(oData){
-						oView.setBusy(false);
-					}
-                });
+                // var oCategoryModel = this.getModel("category");
+				// oCategoryModel.setTransactionModel(this.getModel());
+				// oCategoryModel.read("/PdPartBaseActivityCategoryView", {
+				// 	filters: [
+				// 		new Filter("tenant_id", FilterOperator.EQ, this._sTenantId),
+				// 		new Filter("activity_code", FilterOperator.EQ, this._sActivityCode),
+				// 	],
+				// 	success: function(oData){
+				// 		oView.setBusy(false);
+				// 	}
+                // });
                 
 				this._toShowMode();
             }
