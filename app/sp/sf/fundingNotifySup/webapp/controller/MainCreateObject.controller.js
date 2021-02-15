@@ -633,7 +633,9 @@ sap.ui.define([
             aFilters.push(new Filter("supplier_code", FilterOperator.EQ, this._sSupplierCode));
             aFilters.push(new Filter("tenant_id", FilterOperator.EQ, this._sTenantId));
             aFilters.push(new Filter("funding_notify_number", FilterOperator.EQ, this._sFundingNotifyNumber));
-
+            
+            this.getModel("applicationSup").setProperty("/funding_notify_number", oArgs.fundingNotifyNumber);
+            
             this._onTransactionDivision();
             this._onObjectRead(aFilters);
         },
