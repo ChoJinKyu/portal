@@ -37,7 +37,6 @@
                     <VBox>
                         <Label text="{I18N>/COMPANY}"></Label>
                         <ComboBox width="100%"
-                            id="familyMaterialCodeDialogCompanyId"
                             selectedKey="{dialogModel>/company_code}" 
                             items="{rootModel>/company}"
                             change=".onChangeCompanyFmailyMaterialCodeDialog">
