@@ -23,7 +23,7 @@
                 <uxap:heading>
                     <HBox alignItems="End">
                         <OverflowToolbarButton id="pageNavBackButton" type="Transparent" icon="sap-icon://nav-back" tooltip="back to the list" press=".handleClose" visible="{= ${/actionButtonsInfo/midColumn/closeColumn} !== null }"/>
-                        <Title text="{I18N>/PART_ACTIVITY_DETAIL}" wrapping="true" class="" />
+                        <Title text="{I18N>/ACTIVITY_MANAGEMENT} {I18N>/DETAIL}" wrapping="true" class="" />
                     </HBox>
                 </uxap:heading>				
                 <uxap:navigationActions>
