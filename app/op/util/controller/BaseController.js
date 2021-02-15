@@ -296,11 +296,11 @@ sap.ui.define([
                 (r = r.value[0]);
 
                 // Message
-                (args && !args.skip)
-                &&
-                (r.return_code == "NG" 
+                r.return_code == "NG" 
                 ? MessageBox.error(r.return_msg)
-                : MessageBox.success(r.return_msg))
+                : args && !!args.skip
+                ? "skip"
+                : MessageBox.success(r.return_msg);
 
                 // Settled
                 return (

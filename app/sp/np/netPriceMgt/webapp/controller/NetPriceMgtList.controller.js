@@ -7,6 +7,7 @@ sap.ui.define([
     "sap/ui/core/Fragment",
     "sap/m/MessageBox",
     "sap/ui/core/Item",
+    "sap/m/Token",
     "sap/ui/core/routing/HashChanger",
     "sap/ui/core/Component",
     "sap/ui/core/ComponentContainer",
@@ -16,7 +17,8 @@ sap.ui.define([
     "dp/util/control/ui/MaterialMasterDialog",
     "ext/lib/model/ManagedModel",
     "ext/lib/model/ManagedListModel",
-    "ext/pg/util/control/ui/SupplierDialog"
+    "ext/pg/util/control/ui/SupplierDialog",
+    "ext/lib/util/Validator"
 ],
     function (
         BaseController, 
@@ -27,6 +29,7 @@ sap.ui.define([
         Fragment, 
         MessageBox, 
         Item,
+        Token,
         HashChanger, 
         Component, 
         ComponentContainer,
@@ -36,13 +39,15 @@ sap.ui.define([
         MaterialMasterDialog, 
         ManagedModel, 
         ManagedListModel,
-        SupplierDialog
+        SupplierDialog,
+        Validator
     ) {
         "use strict";
         var that;
         return BaseController.extend("sp.np.netPriceMgt.controller.NetPriceMgtList", {
             DateFormatter: DateFormatter,
             numberFormatter: NumberFormatter,
+            validator: new Validator(),
 
             onInit: function () {
                 that = this;
@@ -59,6 +64,9 @@ sap.ui.define([
              * Search 버튼 클릭(Filter 추출)
              */
             fnSearch: function () {
+
+                this.validator.validate(this.byId('pageSearchFormE'));
+                if (this.validator.validate(this.byId('pageSearchFormS')) !== true) return;
                 
                 this.sSurffix = this.byId("page").getHeaderExpanded() ? "E" : "S";
                 var oView = this.getView(),
@@ -81,19 +89,25 @@ sap.ui.define([
                 }
 
                 if (operationOrg.length > 0) {
-                    for (var i = 0; i < operationOrg.length; i++) {
-                        aFilter.push(new Filter("org_code", FilterOperator.EQ, operationOrg[i]));
-                    }
+                    // for (var i = 0; i < operationOrg.length; i++) {
+                    //     aFilter.push(new Filter("org_codes", FilterOperator.Contains, operationOrg[0]));
+                    // }
+                    aFilter.push(new Filter("org_codes", FilterOperator.Contains, operationOrg[0]));
                     oFilter.push(new Filter(aFilter, false));
                 }
 
                 if (!!status) {
                     oFilter.push(new Filter("approve_status_code", FilterOperator.EQ, status));
                 }
+
+                var approvalNo = that.byId("search_approval_no").getValue();
+                if (!!approvalNo) {
+                    oFilter.push(new Filter("approval_number", FilterOperator.EQ, approvalNo));
+                }
                 
                 var title = that.byId("search_title").getValue();
                 if (!!title) {
-                    oFilter.push(new Filter("approve_status_code", FilterOperator.Contains, title));
+                    oFilter.push(new Filter("approval_title", FilterOperator.Contains, title));
                 }
 
                 oModel.setTransactionModel(this.getModel());
@@ -235,11 +249,13 @@ sap.ui.define([
                 });
             },
            
-            vhEmployeeCode: function(){
+            vhEmployeeCode: function(oEvent){
+                var oSearch = this.byId(oEvent.getSource().sId);
+
                 if(!this.oEmployeeMultiSelectionValueHelp){
                     this.oEmployeeMultiSelectionValueHelp = new EmployeeDialog({
                         title: "Choose Employees",
-                        multiSelection: true,
+                        multiSelection: false,
                         items: {
                             filters: [
                                 new Filter("tenant_id", FilterOperator.EQ, SppUserSessionUtil.getUserInfo().TENANT_ID)
@@ -247,7 +263,9 @@ sap.ui.define([
                         }
                     });
                     this.oEmployeeMultiSelectionValueHelp.attachEvent("apply", function(oEvent){
-                        this.byId("multiInputWithEmployeeValueHelp").setTokens(oEvent.getSource().getTokens());
+                        //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item);
+                        oSearch.setValue(oEvent.mParameters.item.employee_number);
+                        //this.byId("multiInputWithEmployeeValueHelp").setTokens(oEvent.getSource().getTokens());
                     }.bind(this));
                 }
                 this.oEmployeeMultiSelectionValueHelp.open();
@@ -261,7 +279,7 @@ sap.ui.define([
                 if (!this.oSearchSupplierDialog) {
                     this.oSearchSupplierDialog = new SupplierDialog({
                         title: "Choose Supplier",
-                        multiSelection: true,
+                        multiSelection: false,
                         items: {
                             filters: [
                                 new Filter("tenant_id", "EQ", SppUserSessionUtil.getUserInfo().TENANT_ID)
@@ -271,18 +289,14 @@ sap.ui.define([
 
                     this.oSearchSupplierDialog.attachEvent("apply", function (oEvent) {
                         //console.log("oEvent 여기는 팝업에 내려오는곳 : ", oEvent.mParameters.item.vendor_pool_code);
-                        oSearch.setTokens(jQuery.map(oEvent.mParameters.items, function(oToken){
-                            return new Token({
-                                key: oToken.vendor_pool_code,
-                                text: oToken.vendor_pool_local_name,
-                            });
-                        }));
+                        //oSearch.setTokens(oEvent.getSource().getTokens());
+                        oSearch.setValue(oEvent.mParameters.item.supplier_code);
                     }.bind(this));
                 }
 
                 //searObject : 태넌트아이디, 검색 인풋아이디
                 var sSearchObj = {};
-                sSearchObj.tanentId = "L2100";
+                sSearchObj.tanentId = SppUserSessionUtil.getUserInfo().TENANT_ID;
                 //sSearchObj.vendorPoolCode = oSearch.getValue();
                 sSearchObj.supplierCode = oSearch.getValue();
                 this.oSearchSupplierDialog.open(sSearchObj);

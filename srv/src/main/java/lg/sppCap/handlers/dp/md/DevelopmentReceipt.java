@@ -158,6 +158,12 @@ public class DevelopmentReceipt implements EventHandler {
         CqnDelete scheduleDelete = Delete.from(MoldSchedules_.CDS_NAME).matching(schedule);
         Result resultSchedule = developmentReceiptService.run(scheduleDelete);
 
+        MoldAssets asset = MoldAssets.create();
+        asset.setTenantId((String) filterValues.get("tenant_id"));
+        asset.setMoldId((String) filterValues.get("mold_id"));
+        CqnDelete assetDelete = Delete.from(MoldAssets_.CDS_NAME).matching(asset);
+        Result resultAsset = developmentReceiptService.run(assetDelete);
+
         MoldMstView v_result = MoldMstView.create();
         v_result.setTenantId((String) filterValues.get("tenant_id"));
         v_result.setMoldId((String) filterValues.get("mold_id"));

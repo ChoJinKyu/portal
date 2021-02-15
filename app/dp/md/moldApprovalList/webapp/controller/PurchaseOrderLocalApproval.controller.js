@@ -101,7 +101,6 @@ sap.ui.define([
 
             this._bindViewPurchaseOrder("/Payments", "payment", schFilter, function (oData) {
                 
-                
             }.bind(this));
         },
 

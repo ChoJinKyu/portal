@@ -5,3 +5,17 @@
 .label-center{
     margin: auto;
 }
+
+/* readonlyField class 를 text 모양화 */
+.readonlyField, .readonlyField>div{
+    border: 0 !important;
+    background: none !important;
+}
+.readonlyField>div>input{
+    padding-left: 0 !important;
+    /* height: unset !important; 테이블에서 middle 정렬이 안된다 */
+}
+.readonlyField>span{
+    padding-left: 0 !important;
+    /* line-height: 0.75rem !important; 테이블에서 middle 정렬이 안된다 */
+}

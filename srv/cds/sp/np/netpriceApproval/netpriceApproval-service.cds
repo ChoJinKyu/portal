@@ -88,14 +88,24 @@ service NpApprovalService {
  
              , pam.local_create_dtm AS creation_date   /* creation date */
 
+             , (select STRING_AGG( pad.supplier_code, ',' ) as supplier_codes
+                  from SP_NP_NET_PRICE_APPROVAL_DTL pad
+                 where pad.tenant_id       = pam.tenant_id
+                   and pad.approval_number = pam.approval_number
+               ) as supplier_codes : String
+
+
+             , (select STRING_AGG( pad.org_code, ',' ) as org_codes
+                  from SP_NP_NET_PRICE_APPROVAL_DTL pad
+                 where pad.tenant_id       = pam.tenant_id
+                   and pad.approval_number = pam.approval_number
+               ) as org_codes : String
             /* , pam.detailes  */
 
           FROM SP_NP_NET_PRICE_APPROVAL_MST   pam
          INNER JOIN CM_SPP_USER_SESSION_VIEW  ssi
             ON ssi.TENANT_ID         = pam.tenant_id
-            /*
-           AND ssi.COMPANY_CODE      = pam.company_code
-           */
+
          INNER JOIN CM_APPROVAL_MST          cam
             ON cam.tenant_id         = pam.tenant_id
            AND cam.approval_number   = pam.approval_number

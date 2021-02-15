@@ -47,7 +47,7 @@ public class PrReviewMgtV4Service implements EventHandler {
     @On(event = CallPrReviewSaveProcContext.CDS_NAME)
     public void onCallPrReviewSaveProc(CallPrReviewSaveProcContext context) {
 
-        log.info("#### onCallPrReviewSaveProc Start ");
+        log.info("#### onCallPrReviewSaveProc Handlers Start ####");
 
         // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
         String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
@@ -65,7 +65,7 @@ public class PrReviewMgtV4Service implements EventHandler {
         String v_sql_dropTable = "DROP TABLE #LOCAL_TEMP_PR_REVIEW";
         String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_PR_REVIEW VALUES (?, ?, ?, ?, ?)";
 
-        log.info("#### LOCAL_TEMP Table Create Success ####");
+        log.info("#### onCallPrReviewSaveProc - LOCAL_TEMP Table Create Success ####");
 
         StringBuffer v_sql_callProc = new StringBuffer();
         v_sql_callProc.append("CALL OP_PU_PR_REVIEW_SAVE_PROC (")
@@ -78,12 +78,12 @@ public class PrReviewMgtV4Service implements EventHandler {
                       .append("O_MSG_TBL => ? ")
                       .append(")");
 
-        log.info("#### DB Connect Start ####");
+        log.info("#### onCallPrReviewSaveProc - DB Connect Start ####");
         ProcInputType v_inData = context.getInputData();
         Collection<PrItemType> v_inPrItemTbl = v_inData.getPrItemTbl();
         Collection<OutType> v_result = new ArrayList<>();
 
-        log.info("#### Proc Start ####");
+        log.info("#### onCallPrReviewSaveProc - Call Proc Start ####");
 
         // Commit Option
         jdbc.execute(v_sql_commitOption);
@@ -109,7 +109,7 @@ public class PrReviewMgtV4Service implements EventHandler {
 
         int[] updateCounts = jdbc.batchUpdate(v_sql_insertTable, batch_prItemTbl);
 
-        log.info("#### LOCAL_TEMP Data Insert Success ####");
+        log.info("#### onCallPrReviewSaveProc - LOCAL_TEMP Data Insert Success ####");
 
         SqlReturnResultSet oReturn = new SqlReturnResultSet("O_MSG_TBL", new RowMapper<OutType>() {
             @Override
@@ -120,13 +120,13 @@ public class PrReviewMgtV4Service implements EventHandler {
                 log.info("====> return_code : " + v_rs.getString("return_code"));
                 log.info("====> return_msg  : " + v_rs.getString("return_msg"));
 
-/*
                 if ("NG".equals(v_rs.getString("return_code"))) {
-                    log.info("#### Call Proc Error!!  ####");
+                    log.info("#### onCallPrReviewSaveProc - Call Proc Error!!  ####");
+/*
                     log.info("====> ErrorStatuses.BAD_REQUEST  : " + ErrorStatuses.BAD_REQUEST);
                     throw new ServiceException(ErrorStatuses.BAD_REQUEST, v_rs.getString("return_msg"));
-                }
 */
+                }
                 v_result.add(v_row);
                 return v_row;
             }
@@ -162,7 +162,7 @@ public class PrReviewMgtV4Service implements EventHandler {
             }
         }, paramList);
 
-        log.info("#### callProc Success ####");
+        log.info("#### onCallPrReviewSaveProc - Call Proc Success ####");
 
         // Local Temp Table DROP
         jdbc.execute(v_sql_dropTable);
@@ -170,15 +170,14 @@ public class PrReviewMgtV4Service implements EventHandler {
         context.setResult(v_result);
         context.setCompleted();
 
-        log.info("#### onCallPrReviewSaveProc End");
-
+        log.info("#### onCallPrReviewSaveProc Handlers End ####");
     }
 
     @Transactional(rollbackFor = SQLException.class)
     @On(event = CallPrReviewVldtProcContext.CDS_NAME)
     public void onCallPrReviewVldtProc(CallPrReviewVldtProcContext context) {
 
-        log.info("#### onCallPrReviewVldtProc Start ");
+        log.info("#### onCallPrReviewVldtProc Handlers Start ####");
 
         // local Temp table create or drop 시 이전에 실행된 내용이 commit 되지 않도록 set
         String v_sql_commitOption = "SET TRANSACTION AUTOCOMMIT DDL OFF;";
@@ -196,7 +195,7 @@ public class PrReviewMgtV4Service implements EventHandler {
         String v_sql_dropTable = "DROP TABLE #LOCAL_TEMP_PR_REVIEW";
         String v_sql_insertTable = "INSERT INTO #LOCAL_TEMP_PR_REVIEW VALUES (?, ?, ?, ?, ?)";
 
-        log.info("#### LOCAL_TEMP Table Create Success ####");
+        log.info("#### onCallPrReviewVldtProc - LOCAL_TEMP Table Create Success ####");
 
         StringBuffer v_sql_callProc = new StringBuffer();
         v_sql_callProc.append("CALL OP_PU_PR_REVIEW_VLDT_PROC (")
@@ -206,12 +205,12 @@ public class PrReviewMgtV4Service implements EventHandler {
                       .append("O_MSG_TBL => ? ")
                       .append(")");
 
-        log.info("#### DB Connect Start ####");
+        log.info("#### onCallPrReviewVldtProc - DB Connect Start ####");
         ProcVldtInputType v_inData = context.getInputData();
         Collection<PrItemType> v_inPrItemTbl = v_inData.getPrItemTbl();
         Collection<OutType> v_result = new ArrayList<>();
 
-        log.info("#### Proc Start ####");
+        log.info("#### onCallPrReviewVldtProc - Call Proc Start ####");
 
         // Commit Option
         jdbc.execute(v_sql_commitOption);
@@ -237,7 +236,7 @@ public class PrReviewMgtV4Service implements EventHandler {
 
         int[] updateCounts = jdbc.batchUpdate(v_sql_insertTable, batch_prItemTbl);
 
-        log.info("#### LOCAL_TEMP Data Insert Success ####");
+        log.info("#### onCallPrReviewVldtProc - LOCAL_TEMP Data Insert Success ####");
 
         SqlReturnResultSet oReturn = new SqlReturnResultSet("O_MSG_TBL", new RowMapper<OutType>() {
             @Override
@@ -248,13 +247,13 @@ public class PrReviewMgtV4Service implements EventHandler {
                 log.info("====> return_code : " + v_rs.getString("return_code"));
                 log.info("====> return_msg  : " + v_rs.getString("return_msg"));
 
-/*
                 if ("NG".equals(v_rs.getString("return_code"))) {
-                    log.info("#### Call Proc Error!!  ####");
+                    log.info("#### onCallPrReviewVldtProc - Call Proc Error!!  ####");
+/*
                     log.info("====> ErrorStatuses.BAD_REQUEST  : " + ErrorStatuses.BAD_REQUEST);
                     throw new ServiceException(ErrorStatuses.BAD_REQUEST, v_rs.getString("return_msg"));
-                }
 */
+                }
                 v_result.add(v_row);
                 return v_row;
             }
@@ -281,7 +280,7 @@ public class PrReviewMgtV4Service implements EventHandler {
             }
         }, paramList);
 
-        log.info("#### callProc Success ####");
+        log.info("#### onCallPrReviewVldtProc - Call Proc Success ####");
 
         // Local Temp Table DROP
         jdbc.execute(v_sql_dropTable);
@@ -289,8 +288,7 @@ public class PrReviewMgtV4Service implements EventHandler {
         context.setResult(v_result);
         context.setCompleted();
 
-        log.info("#### onCallPrReviewVldtProc End");
-
+        log.info("#### onCallPrReviewVldtProc Handlers End ####");
     }
 
 }

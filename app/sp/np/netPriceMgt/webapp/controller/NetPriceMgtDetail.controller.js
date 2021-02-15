@@ -188,6 +188,7 @@ sap.ui.define([
 
                     // 저장된 Approver가 없는 경우 Line 추가
                     this.onApproverAdd(0);
+                    that.btnCtrlFnc("CR");
      
                     // Process에 표시될 상태 및 아이콘 데이터 세팅
                    // this.onSetProcessFlowStateAndIcon(oDetailViewModel, oNewBasePriceData.approve_status_code);
@@ -221,6 +222,9 @@ sap.ui.define([
                     case "IA":
                         that.byId("approveBtn").setVisible(true);
                         that.byId("rejectBtn").setVisible(true);
+                    break;
+                    case "CR":
+                        that.byId("draftBtn").setVisible(true);
                     break;
                 }
             },
@@ -708,7 +712,7 @@ sap.ui.define([
                     }
                 }
                 
-                MessageBox.confirm("Are You Save Data?", {
+                MessageBox.confirm(this.getModel("I18N").getText("/NCM00001"), {
                     title : "Comfirmation",
                     initialFocus : sap.m.MessageBox.Action.CANCEL,
                     onClose : function(sButton) {
@@ -768,7 +772,7 @@ sap.ui.define([
                                             var result = data.results[0];
                                             
                                             var oNewBasePriceData = {
-                                                "tenant_d": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                                                "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
                                                 "approval_number": result.approval_number,
                                                 "approval_title": result.approval_title,
                                                 "approval_contents" : result.approval_contents,
@@ -827,80 +831,96 @@ sap.ui.define([
              * 삭제
              */
             onDelete: function () {
-                var procObj = {
-                    "param" : {
-                        "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
-                        "approval_number": that.pAppNum
-                    }
-                };
-
-                $.ajax({
-                    url: "srv-api/odata/v4/sp.netpriceApprovalDetailV4Service/ApprovalDeleteProc",
-                    type: "POST",
-                    data: JSON.stringify(procObj),
-                    contentType: "application/json",
-                    success: function (data) {
-                        console.log('data:', data);
-                        this.getRouter().navTo("NetPriceMgtList");
-                    },
-                    error: function (e) {
-                        var eMessage = "callProcError",
-                            errorType,
-                            eMessageDetail;
-                    
-                        if (e.responseJSON.error.message == undefined || e.responseJSON.error.message == null) {
-                            eMessage = "callProcError";
-                            eMessageDetail = "callProcError";
-                        } else {
-                            eMessage = e.responseJSON.error.message.substring(0, 8);
-                            eMessageDetail = e.responseJSON.error.message.substring(9);
-                            errorType = e.responseJSON.error.message.substring(0, 1);
-                            console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
-                            
+                MessageBox.confirm(this.getModel("I18N").getText("/NCM00003"), {
+                    title : "Comfirmation",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            var procObj = {
+                                "param" : {
+                                    "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                                    "approval_number": that.pAppNum
+                                }
+                            };
+            
+                            $.ajax({
+                                url: "srv-api/odata/v4/sp.netpriceApprovalDetailV4Service/ApprovalDeleteProc",
+                                type: "POST",
+                                data: JSON.stringify(procObj),
+                                contentType: "application/json",
+                                success: function (data) {
+                                    console.log('data:', data);
+                                    that.getRouter().navTo("NetPriceMgtList");
+                                },
+                                error: function (e) {
+                                    var eMessage = "callProcError",
+                                        errorType,
+                                        eMessageDetail;
+                                
+                                    if (e.responseJSON.error.message == undefined || e.responseJSON.error.message == null) {
+                                        eMessage = "callProcError";
+                                        eMessageDetail = "callProcError";
+                                    } else {
+                                        eMessage = e.responseJSON.error.message.substring(0, 8);
+                                        eMessageDetail = e.responseJSON.error.message.substring(9);
+                                        errorType = e.responseJSON.error.message.substring(0, 1);
+                                        console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                                        
+                                    }
+            
+                                    MessageToast.show(eMessageDetail);
+                                    console.log(eMessageDetail);
+                                }
+                            });
                         }
-
-                        MessageToast.show(eMessageDetail);
-                        console.log(eMessageDetail);
                     }
                 });
             },
 
-            onChangeStatus: function(status) {
-                var procObj = {
-                    "param" : {
-                        "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
-                        "approval_number": that.pAppNum,
-                        "approve_status_code": status
-                    }
-                };
-
-                $.ajax({
-                    url: "srv-api/odata/v4/sp.netpriceApprovalDetailV4Service/ApprovalStatusChangeProc",
-                    type: "POST",
-                    data: JSON.stringify(procObj),
-                    contentType: "application/json",
-                    success: function (data) {
-                        console.log('data:', data);
-                        MessageToast.show("변경되었습니다.");
-                    },
-                    error: function (e) {
-                        var eMessage = "callProcError",
-                            errorType,
-                            eMessageDetail;
-                    
-                        if (e.responseJSON.error.message == undefined || e.responseJSON.error.message == null) {
-                            eMessage = "callProcError";
-                            eMessageDetail = "callProcError";
-                        } else {
-                            eMessage = e.responseJSON.error.message.substring(0, 8);
-                            eMessageDetail = e.responseJSON.error.message.substring(9);
-                            errorType = e.responseJSON.error.message.substring(0, 1);
-                            console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
-                            
+            onChangeStatus: function(status, msg) {
+                MessageBox.confirm(msg, {
+                    title : "Comfirmation",
+                    initialFocus : sap.m.MessageBox.Action.CANCEL,
+                    onClose : function(sButton) {
+                        if (sButton === MessageBox.Action.OK) {
+                            var procObj = {
+                                "param" : {
+                                    "tenant_id": SppUserSessionUtil.getUserInfo().TENANT_ID,
+                                    "approval_number": that.pAppNum,
+                                    "approve_status_code": status
+                                }
+                            };
+            
+                            $.ajax({
+                                url: "srv-api/odata/v4/sp.netpriceApprovalDetailV4Service/ApprovalStatusChangeProc",
+                                type: "POST",
+                                data: JSON.stringify(procObj),
+                                contentType: "application/json",
+                                success: function (data) {
+                                    console.log('data:', data);
+                                    MessageToast.show("변경되었습니다.");
+                                },
+                                error: function (e) {
+                                    var eMessage = "callProcError",
+                                        errorType,
+                                        eMessageDetail;
+                                
+                                    if (e.responseJSON.error.message == undefined || e.responseJSON.error.message == null) {
+                                        eMessage = "callProcError";
+                                        eMessageDetail = "callProcError";
+                                    } else {
+                                        eMessage = e.responseJSON.error.message.substring(0, 8);
+                                        eMessageDetail = e.responseJSON.error.message.substring(9);
+                                        errorType = e.responseJSON.error.message.substring(0, 1);
+                                        console.log('errorMessage!:', e.responseJSON.error.message.substring(9));
+                                        
+                                    }
+            
+                                    MessageToast.show(eMessageDetail);
+                                    console.log(eMessageDetail);
+                                }
+                            });
                         }
-
-                        MessageToast.show(eMessageDetail);
-                        console.log(eMessageDetail);
                     }
                 });
             },
@@ -909,17 +929,17 @@ sap.ui.define([
              * 상신
              */
             onRequest: function () {
-                this.onChangeStatus("AR");
+                this.onChangeStatus("AR", this.getModel("I18N").getText("/NSP00105"));
             },
 
             /*승인요청 버튼 */
             onApprove: function() {
-                this.onChangeStatus("AP");
+                this.onChangeStatus("AP", this.getModel("I18N").getText("/NSP00104"));
             },
             
             /*반려 버튼 */
             onReject: function() {
-                this.onChangeStatus("RJ");
+                this.onChangeStatus("RJ", this.getModel("I18N").getText("/NSP00106"));
             },
             
             /*취소 버튼 */

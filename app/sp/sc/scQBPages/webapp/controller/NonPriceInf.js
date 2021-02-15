@@ -294,7 +294,7 @@ sap.ui.define([
                 flag = false;
                 errorObject.push("h6");
             } else {
-                var ItemCheckFlag = this._NPCheckItem(e, oPopupType, oHeader.h6);
+                var ItemCheckFlag = this._NPCheckItem(e, oPopupType, oHeader.target_score);
                 if (ItemCheckFlag == false) {
                     flag = ItemCheckFlag;
                 }
@@ -326,11 +326,11 @@ sap.ui.define([
                 var checkTemp2 = oPopupType === "1" ? "supeval_to_date" : oPopupType === "2" ? "supeval_to_value" : "supeval_score";
                 var checkTemp3 = "supeval_score";
 
-                if (oItems[i][checkTemp1].length < 1) {
+                if (oItems[i][checkTemp1] === null || oItems[i][checkTemp1].length < 1) {
                     Iflag = false;
                     oErrorRow.push("1");
                 }
-                if (oItems[i][checkTemp2].length < 1) {
+                if (oItems[i][checkTemp2] === null || oItems[i][checkTemp2].length < 1) {
                     Iflag = false;
                     oErrorRow.push("2");
                 }
@@ -500,7 +500,7 @@ sap.ui.define([
                     //     continue;
                     // }
 
-                    if (oItem.getCells()[1].getDateValue() > oItem.getCells()[2].getDateValue() && oItem.getCells()[1].getDateValue() != null && oItem.getCells()[2].getDateValue() != null) {
+                    if (oItem.getCells()[1].getDateValue() > oItem.getCells()[2].getDateValue() ){//&& oItem.getCells()[1].getDateValue() != null && oItem.getCells()[2].getDateValue() != null) {
                         oItem.getCells()[1].setValueState("Error");
                         // oItem.getCells()[1].setValueStateText("'Response Value From'은 'Response Value To'보다 클 수 없습니다.");
                         oItem.getCells()[1].setValueStateText("'Response Value From' must be less than 'Response Value To'");
