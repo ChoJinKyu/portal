@@ -15,7 +15,7 @@ sap.ui.define([
 
     "cm/util/control/ui/DepartmentDialog",
     "cm/util/control/ui/EmployeeDialog",    
-    "dp/util/control/ui/MaterialOrgDialog",
+    "dp/util/control/ui/MaterialMasterDialog",
     "cm/util/control/ui/PurOperationOrgDialog",
 
     "sap/f/LayoutType",
@@ -24,7 +24,7 @@ sap.ui.define([
     Filter, FilterOperator, Sorter, MessageBox, MessageToast, Fragment, 
     DepartmentDialog,
     EmployeeDialog,
-    MaterialOrgDialog,
+    MaterialMasterDialog,
     PurOperationOrgDialog,
     LayoutType
     ) {
@@ -179,7 +179,7 @@ sap.ui.define([
             // 자재코드
             type == "material_code"
             &&
-            this.dialog(new MaterialOrgDialog({
+            this.dialog(new MaterialMasterDialog({
                 title: "Choose Material Code",
                 multiSelection: true,
                 items: {
