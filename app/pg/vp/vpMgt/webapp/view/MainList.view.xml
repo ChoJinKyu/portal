@@ -288,7 +288,7 @@
                                 </layoutData>
                             </VBox>
                             <VBox>
-                                <Label text="Supplier Registered Type" labelFor="search_Sup_Type"></Label>
+                                <Label text="{I18N>/SUPPLIER_REG_TYPE}" labelFor="search_Sup_Type"></Label>
 
                                 <ComboBox id="search_Sup_Type" selectedKey=""  width="auto">
                                         <core:Item key="Potential" text="Potential"/>
@@ -426,13 +426,13 @@
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="{I18N>/SUPPLIER_NAME}" width="12rem" filterProperty="supplier_local_name" hAlign="Center">
+                            <table:Column label="{I18N>/SUPPLIER_LOCAL_NAME}" width="12rem" filterProperty="supplier_local_name" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>supplier_local_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="공급업체 영문" width="12rem" filterProperty="supplier_english_name"  hAlign="Center">
+                            <table:Column label="{I18N>/SUPPLIER_ENGLISH_NAME}" width="16rem" filterProperty="supplier_english_name"  hAlign="Center">
                                 <table:template>
                                     <Text text="{list>supplier_english_name}" wrapping="false" />
                                 </table:template>
@@ -461,18 +461,18 @@
                                     <Text text="{list>supplier_flag}" wrapping="false" />
                                 </table:template>
                             </table:Column> -->
-                            <table:Column label="{I18N>/MAKER_FLAG}" width="8rem" hAlign="Center">
+                            <table:Column label="{I18N>/MAKER_FLAG}" width="7rem" hAlign="Center">
                                 <table:template>
                                     <Text text="{path : 'list>maker_flag', formatter: '.fnSetFlagValue'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
                                         
-                            <table:Column label="{I18N>/SUPPLIER_FLAG}" width="8rem"  hAlign="Center">
+                            <table:Column label="{I18N>/SUPPLIER_FLAG}" width="7rem"  hAlign="Center">
                                 <table:template>
                                     <Text text="{path : 'list>supplier_flag', formatter: '.fnSetFlagValue'}" wrapping="false" />
                                 </table:template>
                             </table:Column>
-                            <table:Column label="{I18N>/STATUS}" hAlign="Center" width="8rem">
+                            <table:Column label="{I18N>/STATUS}" hAlign="Center" width="6rem">
                                 <table:template>
                                     <Text text="{list>supplier_status_name}" wrapping="false"  />
                                 </table:template>
@@ -484,25 +484,25 @@
                                 </table:template>
                             </table:Column> -->
 
-                            <table:Column label="{I18N>/SD_EXCEPTION_FLAG}" width="8rem" hAlign="Center">
+                            <table:Column label="{I18N>/SD_EXCEPTION_FLAG}" width="7rem" hAlign="Center">
                                 <table:template>
                                     <Text text="{= !!${list>sd_exception_flag} ? 'Y' : 'N'}" wrapping="false" />                                
                                 </table:template>
                             </table:Column>
                                         
-                            <table:Column label="{I18N>/DEPARTMENT}" width="8rem" filterProperty="repr_department_name" hAlign="Center">
+                            <table:Column label="{I18N>/DEPARTMENT}" width="16rem" filterProperty="repr_department_name" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>repr_department_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="{I18N>/MANAGER}" width="8rem" filterProperty="managers_name" hAlign="Center">
+                            <table:Column label="{I18N>/MANAGER}" width="10rem" filterProperty="managers_name" hAlign="Center">
                                 <table:template>
                                     <Text text="{list>managers_name}" wrapping="false" />
                                 </table:template>
                             </table:Column>
 
-                            <table:Column label="{I18N>/EVAL_CONTROL_FLAG}" width="8rem" hAlign="Center">
+                            <table:Column label="{I18N>/EVAL_CONTROL_FLAG}" width="7rem" hAlign="Center">
                                 <table:template>
                                     <Text text="{= !!${list>supeval_control_flag} ? 'Y' : 'N'}" wrapping="false" />  
                                 </table:template>
@@ -520,7 +520,7 @@
                                 </table:template>
                             </table:Column>   
 
-                            <table:Column label="{I18N>/RM_CONTROL_FLAG}" hAlign="Center" width="8em">
+                            <table:Column label="{I18N>/RM_CONTROL_FLAG}" hAlign="Center" width="7em">
                                 <table:template>
                                     <Text text="{= !!${list>supplier_rm_control_flag} ? 'Y' : 'N'}" wrapping="false" />  
                                 </table:template>
