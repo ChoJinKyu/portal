@@ -58,7 +58,7 @@ sap.ui.define([
                 console.log("조회 번호", that._NPSelectIndex);
                 var oModel = that.getView().getModel("NegoHeaders"); //viewModel
 
-                var oNPHeader = oModel.getData().ItemsNonPrice[that._NPSelectIndex];
+                var oNPHeader = that._selectedNPItem;//oModel.getData().ItemsNonPrice[that._NPSelectIndex];
                 // var oNPHeader = oModel.oData.NPHeader[that._NPSelectIndex];
                 // var oHeader = oNPHeaderModel.oData
 
@@ -92,28 +92,35 @@ sap.ui.define([
 
                     oCells[0].setText(String(i + 1));
 
-                    if (h4 == "1") {
+                    oCells[1].setValue( new Date(aa.supeval_from_date) );
+                    oCells[2].setValue( new Date(aa.supeval_to_date) );
+                    oCells[3].setValue(aa.supeval_from_value);
+                    oCells[4].setValue(aa.supeval_to_value);
+                    oCells[5].setValue(aa.supeval_text_value);
+                    oCells[6].setValue(aa.supeval_score);
 
-                        oCells[1].setValue(aa.v1);
+                    // if (h4 == "1") {
 
-                        oCells[2].setValue(aa.v2);
+                    //     oCells[1].setValue(aa.v1);
 
-                        oCells[3].setValue(aa.v3);
+                    //     oCells[2].setValue(aa.v2);
 
-                    } else if (h4 == "2") {
+                    //     oCells[3].setValue(aa.v3);
 
-                        oCells[4].setValue(aa.v1);
+                    // } else if (h4 == "2") {
 
-                        oCells[5].setValue(aa.v2);
+                    //     oCells[4].setValue(aa.v1);
 
-                        oCells[6].setValue(aa.v3);
+                    //     oCells[5].setValue(aa.v2);
 
-                    } else if (h4 == "3") {
+                    //     oCells[6].setValue(aa.v3);
 
-                        oCells[7].setValue(aa.v1);
+                    // } else if (h4 == "3") {
 
-                        oCells[8].setValue(aa.v2);
-                    }
+                    //     oCells[7].setValue(aa.v1);
+
+                    //     oCells[8].setValue(aa.v2);
+                    // }
                     tab.addItem(addItem);
                 }
 

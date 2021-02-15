@@ -144,7 +144,7 @@
             <VBox>
                 <ScrollContainer vertical="false" focusable="true" >
                     <Table id="idProductsTable"
-                        mode="MultiSelect"
+                        mode="{=${propInfo>/isEditMode} ? 'MultiSelect' : 'None' }"
                         inset="false">
                         <headerToolbar>
                             <OverflowToolbar class="NonPricePopHeader" visible="{=${propInfo>/isEditMode}}">
@@ -224,13 +224,13 @@
                             </Column>
                         </columns>
                         <items>
-                            <ColumnListItem>
+                            <!-- <ColumnListItem>
                                 <cells>
                                     <Label text="1" />
 
                                     <DatePicker editable="{=${propInfo>/isEditMode}}"
                                         visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}"
-                                        value="2015-11-23"
+                                        value="{NegoItemNonPrice>}"
                                         valueFormat="yyyy-MM-dd"
                                         displayFormat="long"/>
                                     <DatePicker editable="{=${propInfo>/isEditMode}}"
@@ -238,50 +238,18 @@
                                         value="2015-11-23"
                                         valueFormat="yyyy-MM-dd"
                                         displayFormat="long"/>
-                                    <!-- <Input value=""
-                                        visible="{= ${NPInfPopupUtil>/type} === '1' ? true : false}" /> -->
 
                                     <Input value="1" editable="{=${propInfo>/isEditMode}}"
                                         visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
                                     <Input value="1.2" editable="{=${propInfo>/isEditMode}}"
                                         visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" />
-                                    <!-- <Input value="100"
-                                        visible="{= ${NPInfPopupUtil>/type} === '2' ? true : false}" /> -->
 
                                     <Input value="" editable="{=${propInfo>/isEditMode}}"
                                         visible="{= ${NPInfPopupUtil>/type} === '3' ? true : false}" />
 
                                     <Input value="" editable="{=${propInfo>/isEditMode}}"/> 
-
-
-                                    <!-- <Text text="4" />
-                                    <Text text="5" /> -->
-                                    <!-- <ObjectIdentifier
-                                        title="{Name}"
-                                        text="{ProductId}"/>
-                                    <Text
-                                        text="{SupplierName}" />
-                                    <Text
-                                        text="{Width} x {Depth} x {Height} {DimUnit}" />
-                                    <ObjectNumber
-                                        number="{WeightMeasure}"
-                                        unit="{WeightUnit}"
-                                        state="{
-                                            parts: [
-                                                {path: 'WeightMeasure'},
-                                                {path: 'WeightUnit'}
-                                            ],
-                                            formatter: 'sap.m.sample.Table.Formatter.weightState'
-                                        }" />
-                                    <ObjectNumber
-                                            number="{
-                                                parts:[{path:'Price'},{path:'CurrencyCode'}],
-                                                type: 'sap.ui.model.type.Currency',
-                                                formatOptions: {showMeasure: false}
-                                            }"
-                                            unit="{CurrencyCode}" /> -->
                                 </cells>
-                            </ColumnListItem>
+                            </ColumnListItem> -->
                         </items>
                     </Table>
                 </ScrollContainer>
